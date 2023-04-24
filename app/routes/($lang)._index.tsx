@@ -12,7 +12,9 @@ import type {
 import {AnalyticsPageType} from '@shopify/hydrogen';
 import {routeHeaders, CACHE_SHORT} from '~/data/cache';
 import {type CollectionHero} from '~/components/Hero';
-
+import {weaverseLoader} from '@weaverse/hydrogen';
+import components from '~/weaverse/components';
+import RenderWeaverse from '~/weaverse';
 interface HomeSeoData {
   shop: {
     name: string;
@@ -22,7 +24,7 @@ interface HomeSeoData {
 
 export const headers = routeHeaders;
 
-export async function loader({params, context}: LoaderArgs) {
+export async function loader({params, context, request}: LoaderArgs) {
   const {language, country} = context.storefront.i18n;
 
   if (
@@ -42,10 +44,14 @@ export async function loader({params, context}: LoaderArgs) {
   });
 
   const seo = seoPayload.home();
-
+  const weaverseData = await weaverseLoader(
+    {params, context, request},
+    components,
+  );
   return defer(
     {
       shop,
+      weaverseData,
       primaryHero: hero,
       // These different queries are separated to illustrate how 3rd party content
       // fetching can be optimized for both above and below the fold.
@@ -120,7 +126,7 @@ export default function Homepage() {
       {primaryHero && (
         <Hero {...primaryHero} height="full" top loading="eager" />
       )}
-
+      <RenderWeaverse />
       {featuredProducts && (
         <Suspense>
           <Await resolve={featuredProducts}>
