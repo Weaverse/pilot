@@ -99,7 +99,10 @@ export default function Homepage() {
 
   return (
     <>
-      <RenderWeaverse />
+      <div className="p-8">
+        <h3 className="text-xl">Weaverse content render here!</h3>
+        <RenderWeaverse />
+      </div>
       {primaryHero && (
         <Hero {...primaryHero} height="full" top loading="eager" />
       )}
