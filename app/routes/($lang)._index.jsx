@@ -1,12 +1,13 @@
+import {Await, useLoaderData} from '@remix-run/react';
+import {AnalyticsPageType} from '@shopify/hydrogen';
 import {defer} from '@shopify/remix-oxygen';
 import {Suspense} from 'react';
-import {Await, useLoaderData} from '@remix-run/react';
-import {ProductSwimlane, FeaturedCollections, Hero} from '~/components';
+import {FeaturedCollections, Hero, ProductSwimlane} from '~/components';
+import {CACHE_SHORT, routeHeaders} from '~/data/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getHeroPlaceholder} from '~/lib/placeholders';
 import {seoPayload} from '~/lib/seo.server';
-import {AnalyticsPageType} from '@shopify/hydrogen';
-import {routeHeaders, CACHE_SHORT} from '~/data/cache';
+import RenderWeaverse from '~/weaverse';
 
 export const headers = routeHeaders;
 
@@ -98,10 +99,10 @@ export default function Homepage() {
 
   return (
     <>
+      <RenderWeaverse />
       {primaryHero && (
         <Hero {...primaryHero} height="full" top loading="eager" />
       )}
-
       {featuredProducts && (
         <Suspense>
           <Await resolve={featuredProducts}>
@@ -118,7 +119,6 @@ export default function Homepage() {
           </Await>
         </Suspense>
       )}
-
       {secondaryHero && (
         <Suspense fallback={<Hero {...skeletons[1]} />}>
           <Await resolve={secondaryHero}>
@@ -129,7 +129,6 @@ export default function Homepage() {
           </Await>
         </Suspense>
       )}
-
       {featuredCollections && (
         <Suspense>
           <Await resolve={featuredCollections}>
@@ -145,7 +144,6 @@ export default function Homepage() {
           </Await>
         </Suspense>
       )}
-
       {tertiaryHero && (
         <Suspense fallback={<Hero {...skeletons[2]} />}>
           <Await resolve={tertiaryHero}>
