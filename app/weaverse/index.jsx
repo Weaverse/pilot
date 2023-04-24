@@ -29,6 +29,10 @@ export function RenderWeaverse() {
       />
     );
   }
-  return null;
+  return (
+    <div style={{display: 'none'}}>
+      No weaverseData is returned from Remix loader!
+    </div>
+  );
 }
 export default RenderWeaverse;
