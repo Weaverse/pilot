@@ -44,14 +44,10 @@ export async function loader({params, context, request}: LoaderArgs) {
   });
 
   const seo = seoPayload.home();
-  const weaverseData = await weaverseLoader(
-    {params, context, request},
-    components,
-  );
   return defer(
     {
       shop,
-      weaverseData,
+      weaverseData: weaverseLoader({params, context, request}, components),
       primaryHero: hero,
       // These different queries are separated to illustrate how 3rd party content
       // fetching can be optimized for both above and below the fold.
