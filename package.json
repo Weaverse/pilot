@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "shopify hydrogen dev --port 3456",
     "build": "shopify hydrogen build",
-    "preview": "npm run build && shopify hydrogen preview",
+    "preview": "npm run build && shopify hydrogen preview --port 3456",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
@@ -23,7 +23,7 @@
     "@shopify/cli-hydrogen": "^4.1.1",
     "@shopify/hydrogen": "^2023.4.0",
     "@shopify/remix-oxygen": "^1.0.5",
-    "@weaverse/hydrogen": "1.0.28",
+    "@weaverse/hydrogen": "1.0.30",
     "clsx": "^1.2.1",
     "cross-env": "^7.0.3",
     "graphql": "^16.6.0",

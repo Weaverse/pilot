@@ -2,6 +2,10 @@ import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
 import components from './components';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
+
+const WeaverseHydrogenDisplay = ({data}) => (
+  <WeaverseHydrogenRoot components={components} data={data} />
+);
 export function RenderWeaverse() {
   let {weaverseData, ...rest} = useLoaderData();
   if (weaverseData) {
@@ -11,23 +15,13 @@ export function RenderWeaverse() {
         <Suspense>
           <Await resolve={weaverseData}>
             {(weaverseData) => {
-              return (
-                <WeaverseHydrogenRoot
-                  components={components}
-                  data={{...rest, weaverseData}}
-                />
-              );
+              return <WeaverseHydrogenDisplay data={{...rest, weaverseData}} />;
             }}
           </Await>
         </Suspense>
       );
     }
-    return (
-      <WeaverseHydrogenRoot
-        components={components}
-        data={{...rest, weaverseData}}
-      />
-    );
+    return <WeaverseHydrogenDisplay data={{...rest, weaverseData}} />;
   }
   return (
     <div style={{display: 'none'}}>

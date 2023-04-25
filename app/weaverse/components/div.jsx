@@ -3,6 +3,7 @@ import {forwardRef} from 'react';
 
 let Div = forwardRef((props, ref) => {
   let data = useLoaderData();
+  console.log('👉 --------> - props:', props);
   const {children, text, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
