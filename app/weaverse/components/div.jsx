@@ -2,8 +2,6 @@ import {useLoaderData} from '@remix-run/react';
 import {forwardRef} from 'react';
 
 let Div = forwardRef((props, ref) => {
-  let data = useLoaderData();
-  console.log('👉 --------> - props:', props);
   const {children, text, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
@@ -30,6 +28,5 @@ export let css = {
  * @returns
  */
 export let loader = async (loaderArgs) => {
-  console.log('👉 --------> - loaderArgs:', loaderArgs.data);
   return {text: 'this data is from div component loader'};
 };
