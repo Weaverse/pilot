@@ -30,5 +30,6 @@ export let css = {
  * @returns
  */
 export let loader = async (loaderArgs) => {
+  console.log('👉 --------> - loaderArgs:', loaderArgs.data);
   return {text: 'this data is from div component loader'};
 };
