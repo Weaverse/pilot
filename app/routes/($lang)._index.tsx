@@ -14,7 +14,7 @@ import {routeHeaders, CACHE_SHORT} from '~/data/cache';
 import {type CollectionHero} from '~/components/Hero';
 import {weaverseLoader} from '@weaverse/hydrogen';
 import components from '~/weaverse/components';
-import RenderWeaverse from '~/weaverse';
+import WeaverseContent from '~/weaverse';
 interface HomeSeoData {
   shop: {
     name: string;
@@ -125,7 +125,7 @@ export default function Homepage() {
       {primaryHero && (
         <Hero {...primaryHero} height="full" top loading="eager" />
       )}
-      <RenderWeaverse />
+      <WeaverseContent />
       {featuredProducts && (
         <Suspense>
           <Await resolve={featuredProducts}>
