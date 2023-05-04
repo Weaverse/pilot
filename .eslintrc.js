@@ -13,5 +13,6 @@ module.exports = {
     // TODO: Remove jest plugin from hydrogen/eslint-plugin
     'jest/no-deprecated-functions': 'off',
     'prefer-const': 'off',
+    'no-console': 'off',
   },
 };
