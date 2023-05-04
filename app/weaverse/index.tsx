@@ -9,7 +9,6 @@ function WeaverseHydrogen({data}) {
 export function WeaverseContent() {
   let {weaverseData, ...rest} = useLoaderData();
   if (weaverseData) {
-    // if weaverseData is Promise (Remix deferred loader)
     if (weaverseData.then) {
       return (
         <Suspense>
@@ -25,7 +24,7 @@ export function WeaverseContent() {
   }
   return (
     <div style={{display: 'none'}}>
-      No weaverseData is returned from Remix loader!
+      No weaverseData return from Remix loader!
     </div>
   );
 }
