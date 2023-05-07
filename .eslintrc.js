@@ -14,5 +14,6 @@ module.exports = {
     'jest/no-deprecated-functions': 'off',
     'prefer-const': 'off',
     'no-console': 'off',
+    'eslint-comments/disable-enable-pair': 'off',
   },
 };
