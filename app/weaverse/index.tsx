@@ -3,24 +3,23 @@ import components from './components';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
 
-function WeaverseHydrogen({data}) {
+function WeaverseRoot({data}) {
   return <WeaverseHydrogenRoot components={components} data={data} />;
 }
 export function WeaverseContent() {
-  let {weaverseData, ...rest} = useLoaderData();
+  let data = useLoaderData();
+  let {weaverseData, ...rest} = data;
   if (weaverseData) {
     if (weaverseData.then) {
       return (
         <Suspense>
           <Await resolve={weaverseData}>
-            {(weaverseData) => (
-              <WeaverseHydrogen data={{...rest, weaverseData}} />
-            )}
+            {(weaverseData) => <WeaverseRoot data={{...rest, weaverseData}} />}
           </Await>
         </Suspense>
       );
     }
-    return <WeaverseHydrogen data={{...rest, weaverseData}} />;
+    return <WeaverseRoot data={data} />;
   }
   return (
     <div style={{display: 'none'}}>
