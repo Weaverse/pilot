@@ -29,7 +29,7 @@ import {
   type EnhancedMenu,
 } from './lib/utils';
 import invariant from 'tiny-invariant';
-import {Shop, Cart} from '@shopify/hydrogen/storefront-api-types';
+import type {Shop, Cart} from '@shopify/hydrogen/storefront-api-types';
 import {useAnalytics} from './hooks/useAnalytics';
 
 export const links: LinksFunction = () => {
