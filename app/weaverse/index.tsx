@@ -1,10 +1,13 @@
 import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
 import components from './components';
+import sections from './sections';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
 
+export let allComponents = {...components, ...sections};
+
 function WeaverseRoot({data}) {
-  return <WeaverseHydrogenRoot components={components} data={data} />;
+  return <WeaverseHydrogenRoot components={allComponents} data={data} />;
 }
 export function WeaverseContent() {
   let data = useLoaderData();

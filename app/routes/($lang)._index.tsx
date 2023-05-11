@@ -13,8 +13,8 @@ import {AnalyticsPageType} from '@shopify/hydrogen';
 import {routeHeaders, CACHE_SHORT} from '~/data/cache';
 import {type CollectionHero} from '~/components/Hero';
 import {weaverseLoader} from '@weaverse/hydrogen';
-import components from '~/weaverse/components';
-import WeaverseContent from '~/weaverse';
+import WeaverseContent, {allComponents} from '~/weaverse';
+console.log('👉 --------> - allComponents:', allComponents)
 interface HomeSeoData {
   shop: {
     name: string;
@@ -49,7 +49,7 @@ export async function loader({params, context, request}: LoaderArgs) {
       shop,
       weaverseData: await weaverseLoader(
         {params, context, request},
-        components,
+        allComponents,
       ),
       primaryHero: hero,
       // These different queries are separated to illustrate how 3rd party content
