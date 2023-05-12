@@ -14,7 +14,7 @@ import {routeHeaders, CACHE_SHORT} from '~/data/cache';
 import {type CollectionHero} from '~/components/Hero';
 import {weaverseLoader} from '@weaverse/hydrogen';
 import WeaverseContent, {allComponents} from '~/weaverse';
-console.log('👉 --------> - allComponents:', allComponents)
+
 interface HomeSeoData {
   shop: {
     name: string;
@@ -24,9 +24,9 @@ interface HomeSeoData {
 
 export const headers = routeHeaders;
 
-export async function loader({params, context, request}: LoaderArgs) {
+export async function loader(args: LoaderArgs) {
+  let {params, context, request} = args;
   const {language, country} = context.storefront.i18n;
-
   if (
     params.lang &&
     params.lang.toLowerCase() !== `${language}-${country}`.toLowerCase()
@@ -42,15 +42,11 @@ export async function loader({params, context, request}: LoaderArgs) {
   }>(HOMEPAGE_SEO_QUERY, {
     variables: {handle: 'freestyle'},
   });
-
   const seo = seoPayload.home();
   return defer(
     {
       shop,
-      weaverseData: await weaverseLoader(
-        {params, context, request},
-        allComponents,
-      ),
+      weaverseData: await weaverseLoader(args, allComponents),
       primaryHero: hero,
       // These different queries are separated to illustrate how 3rd party content
       // fetching can be optimized for both above and below the fold.
