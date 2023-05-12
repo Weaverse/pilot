@@ -58,7 +58,7 @@ type PlaceholderType = {
 export let loader = async (args: WeaverseLoaderArgs) => {
   let data: PlaceholderType = await fetchWithServerCache({
     url: 'https://jsonplaceholder.typicode.com/photos/1',
-    storefront: args.context.storefront,
+    context: args.context,
   }).then((r) => r.json());
   return data;
 };
