@@ -1,6 +1,24 @@
+import type {
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-let Main = forwardRef((props, ref) => {
-  return <main ref={ref} {...props} />;
+export interface MainProps extends HydrogenComponentProps {}
+
+let Main = forwardRef<HTMLDivElement, MainProps>((props, ref) => {
+  return <div ref={ref} {...props} />;
 });
+
 export default Main;
+
+export let schema: HydrogenComponentSchema = {
+  type: 'main',
+  title: 'Main',
+  parentTypes: ['layout'],
+  inspector: {
+    settings: [],
+    styles: [],
+  },
+  toolbar: ['general-settings', ['duplicate', 'delete']],
+};
