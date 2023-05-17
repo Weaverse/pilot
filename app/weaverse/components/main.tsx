@@ -15,7 +15,6 @@ export default Main;
 export let schema: HydrogenComponentSchema = {
   type: 'main',
   title: 'Main',
-  parentTypes: ['layout'],
   inspector: {
     settings: [],
     styles: [],

@@ -66,15 +66,12 @@ export let loader = async (args: WeaverseLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: 'image-with-text',
   title: 'Image with Text',
-  parentTypes: ['layout'],
-  catalog: {
-    group: 'essential',
-    icon: 'HardDrive',
-    name: 'Button',
-  },
   inspector: {
     settings: [],
     styles: [],
   },
   toolbar: ['general-settings', ['duplicate', 'delete']],
+  flags: {
+    isSection: true,
+  },
 };
