@@ -8,17 +8,18 @@ import {forwardRef} from 'react';
 export interface TextProps extends HydrogenComponentProps {
   tagName: string;
   className?: string;
-  value: string;
+  text: string;
 }
 
 let Text = forwardRef<HTMLElement, TextProps>((props, ref) => {
-  let {tagName, value, ...rest} = props;
-  return React.createElement(tagName, {ref, ...rest}, value);
+  console.log('👉 --------> - props:', props)
+  let {text, tagName, ...rest} = props;
+  return React.createElement(tagName, {ref, ...rest}, text);
 });
 
 Text.defaultProps = {
   tagName: 'h1',
-  value: 'The quick brown fox jumps over the lazy dog',
+  text: 'The quick brown fox jumps over the lazy dog hehe',
   className: 'title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900',
 };
 
