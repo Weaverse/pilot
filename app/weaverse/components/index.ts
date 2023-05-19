@@ -7,6 +7,6 @@ export const components = {
   main,
   section,
   div,
-  text2: text,
+  text,
 };
 export default components;
