@@ -4,7 +4,7 @@ import type {
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-export interface MainProps extends HydrogenComponentProps {}
+interface MainProps extends HydrogenComponentProps {}
 
 let Main = forwardRef<HTMLDivElement, MainProps>((props, ref) => {
   let {data, ...rest} = props;

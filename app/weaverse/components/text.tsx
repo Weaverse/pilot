@@ -5,7 +5,7 @@ import type {
 import React from 'react';
 import {forwardRef} from 'react';
 
-export interface TextProps
+interface TextProps
   extends HydrogenComponentProps<{
     tagName: string;
     text: string;
