@@ -4,21 +4,22 @@ import type {
 } from '@weaverse/hydrogen';
 import {forwardRef, type ButtonHTMLAttributes} from 'react';
 
-interface ButtonProps
-  extends HydrogenComponentProps<{
-    type: ButtonHTMLAttributes<HTMLButtonElement>['type'];
-    text: string;
-  }> {}
+type ButtonData = {
+  type: ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  text: string;
+};
 
-let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  let {data, ...rest} = props;
-  let {type, text} = data;
-  return (
-    <button ref={ref} {...rest} type={type}>
-      {text}
-    </button>
-  );
-});
+let Button = forwardRef<HTMLButtonElement, HydrogenComponentProps<ButtonData>>(
+  (props, ref) => {
+    let {data, ...rest} = props;
+    let {type, text} = data;
+    return (
+      <button ref={ref} {...rest} type={type}>
+        {text}
+      </button>
+    );
+  },
+);
 
 Button.defaultProps = {
   data: {

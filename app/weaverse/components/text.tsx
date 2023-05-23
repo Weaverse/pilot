@@ -5,17 +5,18 @@ import type {
 import React from 'react';
 import {forwardRef} from 'react';
 
-interface TextProps
-  extends HydrogenComponentProps<{
-    tagName: string;
-    text: string;
-  }> {}
+type TextData = {
+  tagName: string;
+  text: string;
+};
 
-let Text = forwardRef<HTMLElement, TextProps>((props, ref) => {
-  let {data, ...rest} = props;
-  let {tagName, text} = data;
-  return React.createElement(tagName, {ref, ...rest}, text);
-});
+let Text = forwardRef<HTMLElement, HydrogenComponentProps<TextData>>(
+  (props, ref) => {
+    let {data, ...rest} = props;
+    let {tagName, text} = data;
+    return React.createElement(tagName, {ref, ...rest}, text);
+  },
+);
 
 Text.defaultProps = {
   data: {
