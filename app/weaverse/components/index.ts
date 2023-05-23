@@ -1,12 +1,9 @@
 import * as main from '~/weaverse/components/main';
-import * as section from '~/weaverse/components/section';
-import * as div from '~/weaverse/components/div';
 import * as text from '~/weaverse/components/text';
+import * as button from '~/weaverse/components/button';
 
-export const components = {
+export let components = {
   main,
-  section,
-  div,
   text,
+  button,
 };
-export default components;

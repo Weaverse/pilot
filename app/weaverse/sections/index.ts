@@ -1,7 +1,5 @@
-import * as ImageWithText from '~/weaverse/sections/image-with-text';
+import {imageWithText} from './image-with-text';
 
-export const sections = {
-  'image-with-text': ImageWithText,
+export let sections = {
+  ...imageWithText,
 };
-
-export default sections;

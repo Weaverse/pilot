@@ -3,8 +3,8 @@ import type {
   HydrogenComponentProps,
 } from '@weaverse/hydrogen';
 import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import components from './components';
-import sections from './sections';
+import {components} from './components';
+import {sections} from './sections';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
 
