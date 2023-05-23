@@ -6,35 +6,36 @@ import type {
 import {fetchWithServerCache} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-interface ImageWithTextProps
-  extends HydrogenComponentProps<
-    {image: string},
-    Awaited<ReturnType<typeof loader>>
-  > {}
+type ImageWithTextData = {
+  image: string;
+};
 
-let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
-  (props, ref) => {
-    let {loaderData, data, ...rest} = props;
-    return (
-      <section ref={ref} {...rest}>
-        <div className="text-gray-600 body-font bg-slate-300">
-          <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
-            <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-              {props.children}
-            </div>
-            <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
-              <img
-                className="object-cover object-center rounded"
-                alt="hero"
-                src={loaderData?.thumbnailUrl || data.image}
-              />
-            </div>
+type ImageWithTextLoaderData = Awaited<ReturnType<typeof loader>>;
+
+let ImageWithText = forwardRef<
+  HTMLElement,
+  HydrogenComponentProps<ImageWithTextData, ImageWithTextLoaderData>
+>((props, ref) => {
+  let {loaderData, data, ...rest} = props;
+  return (
+    <section ref={ref} {...rest}>
+      <div className="text-gray-600 body-font bg-slate-300">
+        <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+          <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center space-y-4">
+            {props.children}
+          </div>
+          <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
+            <img
+              className="object-cover object-center rounded"
+              alt="hero"
+              src={loaderData?.thumbnailUrl || data.image}
+            />
           </div>
         </div>
-      </section>
-    );
-  },
-);
+      </div>
+    </section>
+  );
+});
 
 export default ImageWithText;
 
