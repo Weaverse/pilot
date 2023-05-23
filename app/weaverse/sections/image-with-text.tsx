@@ -7,13 +7,14 @@ import {fetchWithServerCache} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
 export interface ImageWithTextProps
-  extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
-  image: string;
-}
+  extends HydrogenComponentProps<
+    {image: string},
+    Awaited<ReturnType<typeof loader>>
+  > {}
 
 let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
   (props, ref) => {
-    let {loaderData, image, ...rest} = props;
+    let {loaderData, data, ...rest} = props;
     return (
       <section ref={ref} {...rest}>
         <div className="text-gray-600 body-font bg-slate-300">
@@ -39,7 +40,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
               <img
                 className="object-cover object-center rounded"
                 alt="hero"
-                src={loaderData?.thumbnailUrl || image}
+                src={loaderData?.thumbnailUrl || data.image}
               />
             </div>
           </div>

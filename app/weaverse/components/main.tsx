@@ -7,7 +7,8 @@ import {forwardRef} from 'react';
 export interface MainProps extends HydrogenComponentProps {}
 
 let Main = forwardRef<HTMLDivElement, MainProps>((props, ref) => {
-  return <div ref={ref} {...props} />;
+  let {data, ...rest} = props;
+  return <div ref={ref} {...rest} />;
 });
 
 export default Main;
