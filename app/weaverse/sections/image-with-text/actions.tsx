@@ -24,6 +24,7 @@ export default Actions;
 export let schema: HydrogenComponentSchema = {
   type: 'image-with-text--actions',
   title: 'Actions',
+  childTypes: ['button'],
   inspector: {
     settings: [],
     styles: [],

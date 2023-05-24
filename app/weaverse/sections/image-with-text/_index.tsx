@@ -56,6 +56,7 @@ export let loader = async (args: WeaverseLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: 'image-with-text',
   title: 'Image with Text',
+  childTypes: ['text', 'image-with-text--actions'],
   inspector: {
     settings: [],
     styles: [],

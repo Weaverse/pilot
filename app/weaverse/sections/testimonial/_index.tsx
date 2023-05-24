@@ -37,6 +37,7 @@ Testimonial.defaultProps = {
 export let schema: HydrogenComponentSchema = {
   type: 'testimonial',
   title: 'Testimonial',
+  childTypes: ['testimonial--item'],
   inspector: {
     settings: [],
     styles: [],

@@ -34,8 +34,45 @@ export let schema: HydrogenComponentSchema = {
   type: 'button',
   title: 'Button',
   inspector: {
-    settings: [],
-    styles: [],
+    settings: [
+      {
+        groupType: 'basic',
+        groupHeader: 'Button',
+        inputs: [
+          {
+            type: 'text',
+            label: 'Button text',
+            name: 'text',
+            placeholder: 'Button text',
+          },
+          {
+            type: 'select',
+            label: 'Click action',
+            name: 'clickAction',
+            configs: {
+              options: [
+                {value: 'none', label: 'None'},
+                {value: 'openLink', label: 'Open link'},
+              ],
+            },
+            defaultValue: 'none',
+          },
+          {
+            type: 'text',
+            label: 'Link to',
+            name: 'linkTo',
+            placeholder: 'https://example.com',
+            condition: 'clickAction.eq.openLink',
+          },
+          {
+            type: 'switch',
+            label: 'Open in new tab',
+            name: 'openInNewTab',
+            condition: 'clickAction.eq.openLink',
+          },
+        ],
+      },
+    ],
   },
   toolbar: ['general-settings', ['duplicate', 'delete']],
 };

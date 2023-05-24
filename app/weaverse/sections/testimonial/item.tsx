@@ -67,7 +67,4 @@ export let schema: HydrogenComponentSchema = {
     styles: [],
   },
   toolbar: ['general-settings', ['duplicate', 'delete']],
-  flags: {
-    isSection: true,
-  },
 };
