@@ -31,3 +31,21 @@ export let schema: HydrogenComponentSchema = {
   },
   toolbar: ['general-settings', ['duplicate', 'delete']],
 };
+
+export let template: any = {
+  type: 'image-with-text--actions',
+  children: [
+    {
+      type: 'button',
+      data: {
+        text: 'Button',
+      },
+    },
+    {
+      type: 'button',
+      data: {
+        text: 'Button 2',
+      },
+    },
+  ],
+};

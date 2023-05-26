@@ -66,3 +66,20 @@ export let schema: HydrogenComponentSchema = {
     isSection: true,
   },
 };
+
+export let template: any = {
+  type: 'image-with-text',
+  data: {
+    image:
+      'https://cdn.shopify.com/s/files/1/0551/4566/0472/products/Main_c8ff0b5d-c712-429a-be00-b29bd55cbc9d.jpg?v=1655933474&width=100&height=125&crop=center',
+  },
+  children: [
+    {
+      type: 'text',
+      data: {
+        text: 'This is a text',
+      },
+      children: [],
+    },
+  ],
+}

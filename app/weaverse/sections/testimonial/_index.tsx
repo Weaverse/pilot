@@ -47,3 +47,33 @@ export let schema: HydrogenComponentSchema = {
     isSection: true,
   },
 };
+
+export let template: any = {
+  type: 'testimonial',
+  data: {
+    heading: 'Testimonials',
+  },
+  children: [
+    {
+      type: 'testimonial--item',
+      data: {
+        content:
+          'Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90&apos;s microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.',
+        authorImage: 'https://dummyimage.com/106x106',
+        authorName: 'Jean Doe',
+        authorTitle: 'UI DEVELOPER',
+      },
+    },
+    {
+      type: 'testimonial--item',
+      parentId: '11',
+      data: {
+        content:
+          'Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90&apos;s microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.',
+        authorImage: 'https://dummyimage.com/106x106',
+        authorName: 'Katie Jenkins',
+        authorTitle: 'UX DEVELOPER',
+      },
+    },
+  ],
+};
