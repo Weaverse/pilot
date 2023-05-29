@@ -1,6 +1,7 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  HydrogenComponentTemplate,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
@@ -32,7 +33,7 @@ export let schema: HydrogenComponentSchema = {
   toolbar: ['general-settings', ['duplicate', 'delete']],
 };
 
-export let template: any = {
+export let template: HydrogenComponentTemplate = {
   type: 'image-with-text--actions',
   children: [
     {

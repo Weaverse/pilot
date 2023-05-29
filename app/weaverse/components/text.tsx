@@ -39,7 +39,7 @@ export let schema: HydrogenComponentSchema = {
             type: 'text',
             label: 'Text',
             name: 'text',
-            placeholder: 'The quick brown fox jumps over the lazy dog',
+            placeholder: 'Enter text here',
           },
           {
             type: 'select',

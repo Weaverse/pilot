@@ -1,6 +1,7 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  HydrogenComponentTemplate,
   WeaverseLoaderArgs,
 } from '@weaverse/hydrogen';
 import {fetchWithServerCache} from '@weaverse/hydrogen';
@@ -67,7 +68,7 @@ export let schema: HydrogenComponentSchema = {
   },
 };
 
-export let template: any = {
+export let template: HydrogenComponentTemplate = {
   type: 'image-with-text',
   data: {
     image:

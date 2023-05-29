@@ -1,6 +1,7 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  HydrogenComponentTemplate,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
@@ -48,7 +49,7 @@ export let schema: HydrogenComponentSchema = {
   },
 };
 
-export let template: any = {
+export let template: HydrogenComponentTemplate = {
   type: 'testimonial',
   data: {
     heading: 'Testimonials',
