@@ -8,10 +8,9 @@ import {sections} from './sections';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
 
-// @ts-ignore
 export let allComponents: Record<
   string,
-  HydrogenComponent<HydrogenComponentProps<unknown>>
+  HydrogenComponent<HydrogenComponentProps<any, any>>
 > = {...components, ...sections};
 
 export function WeaverseContent() {
