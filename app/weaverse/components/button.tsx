@@ -9,10 +9,9 @@ type ButtonData = {
   text: string;
 };
 
-let Button = forwardRef<HTMLButtonElement, HydrogenComponentProps<ButtonData>>(
+let Button = forwardRef<HTMLButtonElement, HydrogenComponentProps & ButtonData>(
   (props, ref) => {
-    let {data, ...rest} = props;
-    let {type, text} = data;
+    let {type, text, ...rest} = props;
     return (
       <button ref={ref} {...rest} type={type}>
         {text}

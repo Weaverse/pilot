@@ -17,7 +17,9 @@ let ImageWithText = forwardRef<
   HTMLElement,
   HydrogenComponentProps<ImageWithTextData, ImageWithTextLoaderData>
 >((props, ref) => {
-  let {loaderData, data, ...rest} = props;
+  let {loaderData, image, ...rest} = props;
+  console.log('props', props);
+
   return (
     <section ref={ref} {...rest}>
       <div className="text-gray-600 body-font bg-slate-300">
@@ -29,7 +31,7 @@ let ImageWithText = forwardRef<
             <img
               className="object-cover object-center rounded"
               alt="hero"
-              src={loaderData?.thumbnailUrl || data.image}
+              src={loaderData?.thumbnailUrl || image}
             />
           </div>
         </div>
@@ -70,10 +72,8 @@ export let schema: HydrogenComponentSchema = {
 
 export let template: HydrogenComponentTemplate = {
   type: 'image-with-text',
-  data: {
-    image:
-      'https://cdn.shopify.com/s/files/1/0551/4566/0472/products/Main_c8ff0b5d-c712-429a-be00-b29bd55cbc9d.jpg?v=1655933474&width=100&height=125&crop=center',
-  },
+  image:
+    'https://cdn.shopify.com/s/files/1/0551/4566/0472/products/Main_c8ff0b5d-c712-429a-be00-b29bd55cbc9d.jpg?v=1655933474&width=100&height=125&crop=center',
   children: [
     {
       type: 'text',

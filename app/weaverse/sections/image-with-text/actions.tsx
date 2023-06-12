@@ -11,7 +11,7 @@ type ActionsData = {
 
 let Actions = forwardRef<HTMLDivElement, HydrogenComponentProps<ActionsData>>(
   (props, ref) => {
-    let {data, children, ...rest} = props;
+    let {children, ...rest} = props;
     return (
       <div ref={ref} {...rest} className="flex justify-center space-x-4">
         {children}
@@ -38,15 +38,11 @@ export let template: HydrogenComponentTemplate = {
   children: [
     {
       type: 'button',
-      data: {
-        text: 'Button',
-      },
+      text: 'Button',
     },
     {
       type: 'button',
-      data: {
-        text: 'Button 2',
-      },
+      text: 'Button 2',
     },
   ],
 };

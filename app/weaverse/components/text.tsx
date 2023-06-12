@@ -12,18 +12,15 @@ type TextData = {
 
 let Text = forwardRef<HTMLElement, HydrogenComponentProps<TextData>>(
   (props, ref) => {
-    let {data, ...rest} = props;
-    let {tagName, text} = data;
+    let {tagName, text, ...rest} = props;
     return React.createElement(tagName, {ref, ...rest}, text);
   },
 );
 
 Text.defaultProps = {
-  data: {
-    tagName: 'h1',
-    text: 'The quick brown fox jumps over the lazy dog',
-    className: 'title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900',
-  },
+  tagName: 'h1',
+  text: 'The quick brown fox jumps over the lazy dog',
+  className: 'title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900',
 };
 
 export let schema: HydrogenComponentSchema = {
