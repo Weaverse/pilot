@@ -1,18 +1,14 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  HydrogenComponentTemplate,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-type TestimonialData = {
+interface TestimonialProps extends HydrogenComponentProps {
   heading: string;
-};
+}
 
-let Testimonial = forwardRef<
-  HTMLElement,
-  HydrogenComponentProps<TestimonialData>
->((props, ref) => {
+let Testimonial = forwardRef<HTMLElement, TestimonialProps>((props, ref) => {
   let {heading, children, ...rest} = props;
   return (
     <section ref={ref} {...rest} className="text-gray-600 body-font">
@@ -36,38 +32,29 @@ export let schema: HydrogenComponentSchema = {
   type: 'testimonial',
   title: 'Testimonial',
   childTypes: ['testimonial--item'],
-  inspector: {
-    settings: [],
-    styles: [],
-  },
-  toolbar: ['general-settings', ['duplicate', 'delete']],
-  flags: {
-    isSection: true,
-  },
-};
-
-export let template: HydrogenComponentTemplate = {
-  type: 'testimonial',
-  data: {
-    heading: 'Testimonials',
-  },
-  children: [
+  inspector: [
     {
-      type: 'testimonial--item',
-      content:
-        'Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90&apos;s microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.',
-      authorImage: 'https://dummyimage.com/106x106',
-      authorName: 'Jean Doe',
-      authorTitle: 'UI DEVELOPER',
-    },
-    {
-      type: 'testimonial--item',
-      parentId: '11',
-      content:
-        'Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90&apos;s microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.',
-      authorImage: 'https://dummyimage.com/106x106',
-      authorName: 'Katie Jenkins',
-      authorTitle: 'UX DEVELOPER',
+      group: 'Testimonial',
+      inputs: [
+        {
+          type: 'text',
+          name: 'heading',
+          label: 'Heading',
+          placeholder: 'Enter heading here',
+          defaultValue: 'Testimonials',
+        },
+      ],
     },
   ],
+  toolbar: ['general-settings', ['duplicate', 'delete']],
+  presets: {
+    children: [
+      {
+        type: 'testimonial--item',
+      },
+      {
+        type: 'testimonial--item',
+      },
+    ],
+  },
 };

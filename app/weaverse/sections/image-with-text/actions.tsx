@@ -1,15 +1,12 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  HydrogenComponentTemplate,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-type ActionsData = {
-  image: string;
-};
+interface ImageWithTextActionsProps extends HydrogenComponentProps {}
 
-let Actions = forwardRef<HTMLDivElement, HydrogenComponentProps<ActionsData>>(
+let Actions = forwardRef<HTMLDivElement, ImageWithTextActionsProps>(
   (props, ref) => {
     let {children, ...rest} = props;
     return (
@@ -26,23 +23,9 @@ export let schema: HydrogenComponentSchema = {
   type: 'image-with-text--actions',
   title: 'Actions',
   childTypes: ['button'],
-  inspector: {
-    settings: [],
-    styles: [],
-  },
+  inspector: [],
   toolbar: ['general-settings', ['duplicate', 'delete']],
-};
-
-export let template: HydrogenComponentTemplate = {
-  type: 'image-with-text--actions',
-  children: [
-    {
-      type: 'button',
-      text: 'Button',
-    },
-    {
-      type: 'button',
-      text: 'Button 2',
-    },
-  ],
+  presets: {
+    children: [{type: 'button'}, {type: 'button'}],
+  },
 };
