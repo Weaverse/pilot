@@ -59,7 +59,7 @@ export let schema: HydrogenComponentSchema = {
   childTypes: ['text', 'image-with-text--actions'],
   inspector: [
     {
-      group: 'basic',
+      group: 'Image with Text',
       inputs: [
         {
           type: 'image',

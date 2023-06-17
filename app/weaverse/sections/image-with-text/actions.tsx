@@ -24,7 +24,7 @@ export let schema: HydrogenComponentSchema = {
   title: 'Actions',
   childTypes: ['button'],
   inspector: [],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ['duplicate', 'delete'],
   presets: {
     children: [{type: 'button'}, {type: 'button'}],
   },
