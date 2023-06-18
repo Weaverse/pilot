@@ -75,4 +75,7 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     children: [{type: 'text'}],
   },
+  flags: {
+    isSection: true,
+  },
 };

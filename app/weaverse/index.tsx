@@ -10,7 +10,7 @@ import {Suspense} from 'react';
 
 export let allComponents: Record<
   string,
-  HydrogenComponent<HydrogenComponentProps<any, any>>
+  HydrogenComponent<HydrogenComponentProps<any>>
 > = {...components, ...sections};
 
 export function WeaverseContent() {
