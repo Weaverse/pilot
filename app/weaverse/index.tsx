@@ -3,15 +3,16 @@ import type {
   HydrogenComponentProps,
 } from '@weaverse/hydrogen';
 import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import {components} from './components';
-import {sections} from './sections';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
 
-export let allComponents: Record<
-  string,
-  HydrogenComponent<HydrogenComponentProps<any>>
-> = {...components, ...sections};
+import {components} from './components';
+import {sections} from './sections';
+
+export let allComponents: Record<string, HydrogenComponent<any>> = {
+  ...components,
+  ...sections,
+};
 
 export function WeaverseContent() {
   let data = useLoaderData();
