@@ -12,9 +12,9 @@ import {
   type V2_MetaFunction,
 } from '@remix-run/react';
 import {useState} from 'react';
+
 import {getInputStyleClasses} from '~/lib/utils';
 import {Link} from '~/components';
-import type {CustomerAccessTokenCreatePayload} from '@shopify/hydrogen/storefront-api-types';
 
 export const handle = {
   isPublic: true,
@@ -24,7 +24,7 @@ export async function loader({context, params}: LoaderArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
-    return redirect(params.lang ? `${params.lang}/account` : '/account');
+    return redirect(params.locale ? `${params.locale}/account` : '/account');
   }
 
   // TODO: Query for this?
@@ -60,7 +60,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
     const customerAccessToken = await doLogin(context, {email, password});
     session.set('customerAccessToken', customerAccessToken);
 
-    return redirect(params.lang ? `/${params.lang}/account` : '/account', {
+    return redirect(params.locale ? `/${params.locale}/account` : '/account', {
       headers: {
         'Set-Cookie': await session.commit(),
       },
@@ -226,9 +226,7 @@ export async function doLogin(
     password: string;
   },
 ) {
-  const data = await storefront.mutate<{
-    customerAccessTokenCreate: CustomerAccessTokenCreatePayload;
-  }>(LOGIN_MUTATION, {
+  const data = await storefront.mutate(LOGIN_MUTATION, {
     variables: {
       input: {
         email,

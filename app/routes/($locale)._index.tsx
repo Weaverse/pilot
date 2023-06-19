@@ -1,58 +1,48 @@
 import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
 import {Suspense} from 'react';
 import {Await, useLoaderData} from '@remix-run/react';
+import {AnalyticsPageType} from '@shopify/hydrogen';
+
 import {ProductSwimlane, FeaturedCollections, Hero} from '~/components';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getHeroPlaceholder} from '~/lib/placeholders';
 import {seoPayload} from '~/lib/seo.server';
-import type {
-  CollectionConnection,
-  ProductConnection,
-} from '@shopify/hydrogen/storefront-api-types';
-import {AnalyticsPageType} from '@shopify/hydrogen';
-import {routeHeaders, CACHE_SHORT} from '~/data/cache';
-import {type CollectionHero} from '~/components/Hero';
-import {weaverseLoader} from '@weaverse/hydrogen';
+import {routeHeaders} from '~/data/cache';
 import WeaverseContent, {allComponents} from '~/weaverse';
-
-interface HomeSeoData {
-  shop: {
-    name: string;
-    description: string;
-  };
-}
+import {weaverseLoader} from '@weaverse/hydrogen';
 
 export const headers = routeHeaders;
 
-export async function loader(args: LoaderArgs) {
-  let {params, context, request} = args;
+export async function loader({params, context, request}: LoaderArgs) {
   const {language, country} = context.storefront.i18n;
+
   if (
-    params.lang &&
-    params.lang.toLowerCase() !== `${language}-${country}`.toLowerCase()
+    params.locale &&
+    params.locale.toLowerCase() !== `${language}-${country}`.toLowerCase()
   ) {
-    // If the lang URL param is defined, yet we still are on `EN-US`
-    // the the lang param must be invalid, send to the 404 page
+    // If the locale URL param is defined, yet we still are on `EN-US`
+    // the the locale param must be invalid, send to the 404 page
     throw new Response(null, {status: 404});
   }
 
-  const {shop, hero} = await context.storefront.query<{
-    hero: CollectionHero;
-    shop: HomeSeoData;
-  }>(HOMEPAGE_SEO_QUERY, {
+  const {shop, hero} = await context.storefront.query(HOMEPAGE_SEO_QUERY, {
     variables: {handle: 'freestyle'},
   });
+
   const seo = seoPayload.home();
-  return defer(
-    {
-      shop,
-      weaverseData: await weaverseLoader(args, allComponents),
-      primaryHero: hero,
-      // These different queries are separated to illustrate how 3rd party content
-      // fetching can be optimized for both above and below the fold.
-      featuredProducts: context.storefront.query<{
-        products: ProductConnection;
-      }>(HOMEPAGE_FEATURED_PRODUCTS_QUERY, {
+
+  return defer({
+    shop,
+    weaverseData: await weaverseLoader(
+      {params, context, request},
+      allComponents,
+    ),
+    primaryHero: hero,
+    // These different queries are separated to illustrate how 3rd party content
+    // fetching can be optimized for both above and below the fold.
+    featuredProducts: context.storefront.query(
+      HOMEPAGE_FEATURED_PRODUCTS_QUERY,
+      {
         variables: {
           /**
            * Country and language properties are automatically injected
@@ -62,46 +52,33 @@ export async function loader(args: LoaderArgs) {
           country,
           language,
         },
-      }),
-      secondaryHero: context.storefront.query<{hero: CollectionHero}>(
-        COLLECTION_HERO_QUERY,
-        {
-          variables: {
-            handle: 'backcountry',
-            country,
-            language,
-          },
-        },
-      ),
-      featuredCollections: context.storefront.query<{
-        collections: CollectionConnection;
-      }>(FEATURED_COLLECTIONS_QUERY, {
-        variables: {
-          country,
-          language,
-        },
-      }),
-      tertiaryHero: context.storefront.query<{hero: CollectionHero}>(
-        COLLECTION_HERO_QUERY,
-        {
-          variables: {
-            handle: 'winter-2022',
-            country,
-            language,
-          },
-        },
-      ),
-      analytics: {
-        pageType: AnalyticsPageType.home,
       },
-      seo,
-    },
-    {
-      headers: {
-        'Cache-Control': CACHE_SHORT,
+    ),
+    secondaryHero: context.storefront.query(COLLECTION_HERO_QUERY, {
+      variables: {
+        handle: 'backcountry',
+        country,
+        language,
       },
+    }),
+    featuredCollections: context.storefront.query(FEATURED_COLLECTIONS_QUERY, {
+      variables: {
+        country,
+        language,
+      },
+    }),
+    tertiaryHero: context.storefront.query(COLLECTION_HERO_QUERY, {
+      variables: {
+        handle: 'winter-2022',
+        country,
+        language,
+      },
+    }),
+    analytics: {
+      pageType: AnalyticsPageType.home,
     },
-  );
+    seo,
+  });
 }
 
 export default function Homepage() {
@@ -118,10 +95,11 @@ export default function Homepage() {
 
   return (
     <>
-      {/* {primaryHero && (
-        <Hero {...primaryHero} height="full" top loading="eager" />
-      )} */}
       <WeaverseContent />
+      {primaryHero && (
+        <Hero {...primaryHero} height="full" top loading="eager" />
+      )}
+
       {featuredProducts && (
         <Suspense>
           <Await resolve={featuredProducts}>
@@ -129,7 +107,7 @@ export default function Homepage() {
               if (!products?.nodes) return <></>;
               return (
                 <ProductSwimlane
-                  products={products.nodes}
+                  products={products}
                   title="Featured Products"
                   count={4}
                 />
@@ -157,7 +135,7 @@ export default function Homepage() {
               if (!collections?.nodes) return <></>;
               return (
                 <FeaturedCollections
-                  collections={collections.nodes}
+                  collections={collections}
                   title="Collections"
                 />
               );
@@ -181,7 +159,6 @@ export default function Homepage() {
 }
 
 const COLLECTION_CONTENT_FRAGMENT = `#graphql
-  ${MEDIA_FRAGMENT}
   fragment CollectionContent on Collection {
     id
     handle
@@ -207,11 +184,11 @@ const COLLECTION_CONTENT_FRAGMENT = `#graphql
       }
     }
   }
-`;
+  ${MEDIA_FRAGMENT}
+` as const;
 
 const HOMEPAGE_SEO_QUERY = `#graphql
-  ${COLLECTION_CONTENT_FRAGMENT}
-  query collectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
+  query seoCollectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
     hero: collection(handle: $handle) {
       ...CollectionContent
@@ -221,21 +198,21 @@ const HOMEPAGE_SEO_QUERY = `#graphql
       description
     }
   }
-`;
+  ${COLLECTION_CONTENT_FRAGMENT}
+` as const;
 
 const COLLECTION_HERO_QUERY = `#graphql
-  ${COLLECTION_CONTENT_FRAGMENT}
-  query collectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
+  query heroCollectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
     hero: collection(handle: $handle) {
       ...CollectionContent
     }
   }
-`;
+  ${COLLECTION_CONTENT_FRAGMENT}
+` as const;
 
 // @see: https://shopify.dev/api/storefront/2023-04/queries/products
 export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
-  ${PRODUCT_CARD_FRAGMENT}
   query homepageFeaturedProducts($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
     products(first: 8) {
@@ -244,7 +221,8 @@ export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
       }
     }
   }
-`;
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;
 
 // @see: https://shopify.dev/api/storefront/2023-04/queries/collections
 export const FEATURED_COLLECTIONS_QUERY = `#graphql
@@ -267,4 +245,4 @@ export const FEATURED_COLLECTIONS_QUERY = `#graphql
       }
     }
   }
-`;
+` as const;

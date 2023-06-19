@@ -6,16 +6,17 @@ import {
 } from '@shopify/remix-oxygen';
 import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
 import {useState} from 'react';
+
 import {getInputStyleClasses} from '~/lib/utils';
-import {doLogin} from './($lang).account.login';
-import type {CustomerCreatePayload} from '@shopify/hydrogen/storefront-api-types';
 import {Link} from '~/components';
+
+import {doLogin} from './($locale).account.login';
 
 export async function loader({context, params}: LoaderArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
-    return redirect(params.lang ? `${params.lang}/account` : '/account');
+    return redirect(params.locale ? `${params.locale}/account` : '/account');
   }
 
   return new Response(null);
@@ -46,9 +47,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
   }
 
   try {
-    const data = await storefront.mutate<{
-      customerCreate: CustomerCreatePayload;
-    }>(CUSTOMER_CREATE_MUTATION, {
+    const data = await storefront.mutate(CUSTOMER_CREATE_MUTATION, {
       variables: {
         input: {email, password},
       },
@@ -64,7 +63,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
     const customerAccessToken = await doLogin(context, {email, password});
     session.set('customerAccessToken', customerAccessToken);
 
-    return redirect(params.lang ? `${params.lang}/account` : '/account', {
+    return redirect(params.locale ? `${params.locale}/account` : '/account', {
       headers: {
         'Set-Cookie': await session.commit(),
       },

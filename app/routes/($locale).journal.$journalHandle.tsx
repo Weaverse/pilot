@@ -1,12 +1,13 @@
 import {json, type LinksFunction, type LoaderArgs} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {Image} from '@shopify/hydrogen';
-import {Blog} from '@shopify/hydrogen/storefront-api-types';
 import invariant from 'tiny-invariant';
+
 import {PageHeader, Section} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
+import {routeHeaders} from '~/data/cache';
+
 import styles from '../styles/custom-font.css';
-import {routeHeaders, CACHE_LONG} from '~/data/cache';
 
 const BLOG_HANDLE = 'journal';
 
@@ -21,9 +22,7 @@ export async function loader({request, params, context}: LoaderArgs) {
 
   invariant(params.journalHandle, 'Missing journal handle');
 
-  const {blog} = await context.storefront.query<{
-    blog: Blog;
-  }>(ARTICLE_QUERY, {
+  const {blog} = await context.storefront.query(ARTICLE_QUERY, {
     variables: {
       blogHandle: BLOG_HANDLE,
       articleHandle: params.journalHandle,
@@ -45,14 +44,7 @@ export async function loader({request, params, context}: LoaderArgs) {
 
   const seo = seoPayload.article({article, url: request.url});
 
-  return json(
-    {article, formattedDate, seo},
-    {
-      headers: {
-        'Cache-Control': CACHE_LONG,
-      },
-    },
-  );
+  return json({article, formattedDate, seo});
 }
 
 export default function Article() {
@@ -64,7 +56,7 @@ export default function Article() {
     <>
       <PageHeader heading={title} variant="blogPost">
         <span>
-          {formattedDate} &middot; {author.name}
+          {formattedDate} &middot; {author?.name}
         </span>
       </PageHeader>
       <Section as="article" padding="x">

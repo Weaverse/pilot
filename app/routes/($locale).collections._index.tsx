@@ -1,33 +1,24 @@
 import {json, type LoaderArgs} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
-import type {
-  Collection,
-  CollectionConnection,
-} from '@shopify/hydrogen/storefront-api-types';
+import type {Collection} from '@shopify/hydrogen/storefront-api-types';
 import {
-  Grid,
-  Heading,
-  PageHeader,
-  Section,
-  Link,
-  Pagination,
-  getPaginationVariables,
-  Button,
-} from '~/components';
+  Image,
+  Pagination__unstable as Pagination,
+  getPaginationVariables__unstable as getPaginationVariables,
+} from '@shopify/hydrogen';
+
+import {Grid, Heading, PageHeader, Section, Link, Button} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
-import {CACHE_SHORT, routeHeaders} from '~/data/cache';
-import {Image} from '@shopify/hydrogen';
+import {routeHeaders} from '~/data/cache';
 
-const PAGINATION_SIZE = 8;
+const PAGINATION_SIZE = 4;
 
 export const headers = routeHeaders;
 
 export const loader = async ({request, context: {storefront}}: LoaderArgs) => {
-  const variables = getPaginationVariables(request, PAGINATION_SIZE);
-  const {collections} = await storefront.query<{
-    collections: CollectionConnection;
-  }>(COLLECTIONS_QUERY, {
+  const variables = getPaginationVariables(request, {pageBy: PAGINATION_SIZE});
+  const {collections} = await storefront.query(COLLECTIONS_QUERY, {
     variables: {
       ...variables,
       country: storefront.i18n.country,
@@ -40,14 +31,7 @@ export const loader = async ({request, context: {storefront}}: LoaderArgs) => {
     url: request.url,
   });
 
-  return json(
-    {collections, seo},
-    {
-      headers: {
-        'Cache-Control': CACHE_SHORT,
-      },
-    },
-  );
+  return json({collections, seo});
 };
 
 export default function Collections() {
@@ -58,39 +42,13 @@ export default function Collections() {
       <PageHeader heading="Collections" />
       <Section>
         <Pagination connection={collections}>
-          {({
-            endCursor,
-            hasNextPage,
-            hasPreviousPage,
-            nextPageUrl,
-            nodes,
-            prevPageUrl,
-            startCursor,
-            nextLinkRef,
-            isLoading,
-          }) => (
+          {({nodes, isLoading, PreviousLink, NextLink}) => (
             <>
-              {hasPreviousPage && (
-                <div className="flex items-center justify-center mt-6">
-                  <Button
-                    to={prevPageUrl}
-                    variant="secondary"
-                    width="full"
-                    prefetch="intent"
-                    disabled={!isLoading}
-                    state={{
-                      pageInfo: {
-                        endCursor,
-                        hasNextPage,
-                        startCursor,
-                      },
-                      nodes,
-                    }}
-                  >
-                    {isLoading ? 'Loading...' : 'Previous products'}
-                  </Button>
-                </div>
-              )}
+              <div className="flex items-center justify-center mb-6">
+                <Button as={PreviousLink} variant="secondary" width="full">
+                  {isLoading ? 'Loading...' : 'Previous collections'}
+                </Button>
+              </div>
               <Grid
                 items={nodes.length === 3 ? 3 : 2}
                 data-test="collection-grid"
@@ -103,28 +61,11 @@ export default function Collections() {
                   />
                 ))}
               </Grid>
-              {hasNextPage && (
-                <div className="flex items-center justify-center mt-6">
-                  <Button
-                    ref={nextLinkRef}
-                    to={nextPageUrl}
-                    variant="secondary"
-                    width="full"
-                    prefetch="intent"
-                    disabled={!isLoading}
-                    state={{
-                      pageInfo: {
-                        endCursor,
-                        hasPreviousPage,
-                        startCursor,
-                      },
-                      nodes,
-                    }}
-                  >
-                    {isLoading ? 'Loading...' : 'Next products'}
-                  </Button>
-                </div>
-              )}
+              <div className="flex items-center justify-center mt-6">
+                <Button as={NextLink} variant="secondary" width="full">
+                  {isLoading ? 'Loading...' : 'Next collections'}
+                </Button>
+              </div>
             </>
           )}
         </Pagination>

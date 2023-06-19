@@ -20,7 +20,6 @@
 
     // Remix takes care of building everything in `./app` with `remix build`.
     // Wrangler takes care of building everything in `./worker` with `wrangler start` / `wrangler publish`.
-    "noEmit": true,
-    "verbatimModuleSyntax": true
+    "noEmit": true
   }
 }

@@ -8,13 +8,16 @@ import {
   useLocation,
   useNavigation,
 } from '@remix-run/react';
+import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
+import {AnalyticsPageType, Money, ShopPayButton} from '@shopify/hydrogen';
+import invariant from 'tiny-invariant';
+import clsx from 'clsx';
+import type {
+  SelectedOptionInput,
+  Product as ProductType,
+  ProductConnection,
+} from '@shopify/hydrogen/storefront-api-types';
 
-import {
-  AnalyticsPageType,
-  Money,
-  ShopifyAnalyticsProduct,
-  ShopPayButton,
-} from '@shopify/hydrogen';
 import {
   Heading,
   IconCaret,
@@ -31,19 +34,9 @@ import {
 } from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import {seoPayload} from '~/lib/seo.server';
-import invariant from 'tiny-invariant';
-import clsx from 'clsx';
-import type {
-  ProductVariant,
-  SelectedOptionInput,
-  Product as ProductType,
-  Shop,
-  ProductConnection,
-} from '@shopify/hydrogen/storefront-api-types';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import type {Storefront} from '~/lib/type';
-import type {Product} from 'schema-dts';
-import {routeHeaders, CACHE_SHORT} from '~/data/cache';
+import {routeHeaders} from '~/data/cache';
 
 export const headers = routeHeaders;
 
@@ -58,10 +51,7 @@ export async function loader({params, request, context}: LoaderArgs) {
     selectedOptions.push({name, value});
   });
 
-  const {shop, product} = await context.storefront.query<{
-    product: ProductType & {selectedVariant?: ProductVariant};
-    shop: Shop;
-  }>(PRODUCT_QUERY, {
+  const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       selectedOptions,
@@ -93,26 +83,19 @@ export async function loader({params, request, context}: LoaderArgs) {
     url: request.url,
   });
 
-  return defer(
-    {
-      product,
-      shop,
-      storeDomain: shop.primaryDomain.url,
-      recommended,
-      analytics: {
-        pageType: AnalyticsPageType.product,
-        resourceId: product.id,
-        products: [productAnalytics],
-        totalValue: parseFloat(selectedVariant.price.amount),
-      },
-      seo,
+  return defer({
+    product,
+    shop,
+    storeDomain: shop.primaryDomain.url,
+    recommended,
+    analytics: {
+      pageType: AnalyticsPageType.product,
+      resourceId: product.id,
+      products: [productAnalytics],
+      totalValue: parseFloat(selectedVariant.price.amount),
     },
-    {
-      headers: {
-        'Cache-Control': CACHE_SHORT,
-      },
-    },
-  );
+    seo,
+  });
 }
 
 export default function Product() {
@@ -266,7 +249,7 @@ export function ProductForm() {
                   as="span"
                   className="flex items-center justify-center gap-2"
                 >
-                  <span>Add to Bag</span> <span>·</span>{' '}
+                  <span>Add to Cart</span> <span>·</span>{' '}
                   <Money
                     withoutTrailingZeros
                     data={selectedVariant?.price!}
@@ -301,7 +284,7 @@ function ProductOptions({
   options,
   searchParamsWithDefaults,
 }: {
-  options: ProductType['options'];
+  options: Array<{name: string; values: string[]}>;
   searchParamsWithDefaults: URLSearchParams;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -430,9 +413,9 @@ function ProductOptionLink({
   [key: string]: any;
 }) {
   const {pathname} = useLocation();
-  const isLangPathname = /\/[a-zA-Z]{2}-[a-zA-Z]{2}\//g.test(pathname);
+  const isLocalePathname = /\/[a-zA-Z]{2}-[a-zA-Z]{2}\//g.test(pathname);
   // fixes internalized pathname
-  const path = isLangPathname
+  const path = isLocalePathname
     ? `/${pathname.split('/').slice(2).join('/')}`
     : pathname;
 
@@ -538,8 +521,6 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 `;
 
 const PRODUCT_QUERY = `#graphql
-  ${MEDIA_FRAGMENT}
-  ${PRODUCT_VARIANT_FRAGMENT}
   query Product(
     $country: CountryCode
     $language: LanguageCode
@@ -590,10 +571,11 @@ const PRODUCT_QUERY = `#graphql
       }
     }
   }
-`;
+  ${MEDIA_FRAGMENT}
+  ${PRODUCT_VARIANT_FRAGMENT}
+` as const;
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  ${PRODUCT_CARD_FRAGMENT}
   query productRecommendations(
     $productId: ID!
     $count: Int
@@ -609,33 +591,31 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       }
     }
   }
-`;
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;
 
 async function getRecommendedProducts(
   storefront: Storefront,
   productId: string,
 ) {
-  const products = await storefront.query<{
-    recommended: ProductType[];
-    additional: ProductConnection;
-  }>(RECOMMENDED_PRODUCTS_QUERY, {
+  const products = await storefront.query(RECOMMENDED_PRODUCTS_QUERY, {
     variables: {productId, count: 12},
   });
 
   invariant(products, 'No data returned from Shopify API');
 
-  const mergedProducts = products.recommended
+  const mergedProducts = (products.recommended ?? [])
     .concat(products.additional.nodes)
     .filter(
       (value, index, array) =>
         array.findIndex((value2) => value2.id === value.id) === index,
     );
 
-  const originalProduct = mergedProducts
-    .map((item: ProductType) => item.id)
-    .indexOf(productId);
+  const originalProduct = mergedProducts.findIndex(
+    (item) => item.id === productId,
+  );
 
   mergedProducts.splice(originalProduct, 1);
 
-  return mergedProducts;
+  return {nodes: mergedProducts};
 }

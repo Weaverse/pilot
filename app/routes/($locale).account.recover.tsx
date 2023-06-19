@@ -6,15 +6,15 @@ import {
 } from '@shopify/remix-oxygen';
 import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
 import {useState} from 'react';
+
 import {Link} from '~/components';
 import {getInputStyleClasses} from '~/lib/utils';
-import type {CustomerRecoverPayload} from '@shopify/hydrogen/storefront-api-types';
 
 export async function loader({context, params}: LoaderArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
-    return redirect(params.lang ? `${params.lang}/account` : '/account');
+    return redirect(params.locale ? `${params.locale}/account` : '/account');
   }
 
   return new Response(null);
@@ -38,9 +38,7 @@ export const action: ActionFunction = async ({request, context}) => {
   }
 
   try {
-    await context.storefront.mutate<{
-      customerRecover: CustomerRecoverPayload;
-    }>(CUSTOMER_RECOVER_MUTATION, {
+    await context.storefront.mutate(CUSTOMER_RECOVER_MUTATION, {
       variables: {email},
     });
 

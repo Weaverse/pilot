@@ -8,13 +8,14 @@ import {
 import type {
   Customer,
   CustomerUpdateInput,
-  CustomerUpdatePayload,
 } from '@shopify/hydrogen/storefront-api-types';
 import clsx from 'clsx';
 import invariant from 'tiny-invariant';
+
 import {Button, Text} from '~/components';
 import {getInputStyleClasses, assertApiErrors} from '~/lib/utils';
-import {getCustomer} from './($lang).account';
+
+import {getCustomer} from './($locale).account';
 
 export interface AccountOutletContext {
   customer: Customer;
@@ -98,9 +99,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
     formDataHas(formData, 'newPassword') &&
       (customer.password = formData.get('newPassword') as string);
 
-    const data = await context.storefront.mutate<{
-      customerUpdate: CustomerUpdatePayload;
-    }>(CUSTOMER_UPDATE_MUTATION, {
+    const data = await context.storefront.mutate(CUSTOMER_UPDATE_MUTATION, {
       variables: {
         customerAccessToken,
         customer,
@@ -109,7 +108,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
 
     assertApiErrors(data.customerUpdate);
 
-    return redirect(params?.lang ? `${params.lang}/account` : '/account');
+    return redirect(params?.locale ? `${params.locale}/account` : '/account');
   } catch (error: any) {
     return badRequest({formError: error.message});
   }

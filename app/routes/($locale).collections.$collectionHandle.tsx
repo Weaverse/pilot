@@ -1,22 +1,33 @@
 import {json, type LoaderArgs} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import type {
-  Collection as CollectionType,
-  CollectionConnection,
   Filter,
+  ProductCollectionSortKeys,
 } from '@shopify/hydrogen/storefront-api-types';
-import {flattenConnection, AnalyticsPageType} from '@shopify/hydrogen';
+import {
+  flattenConnection,
+  AnalyticsPageType,
+  Pagination__unstable as Pagination,
+  getPaginationVariables__unstable as getPaginationVariables,
+} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
-import {PageHeader, Section, Text, SortFilter} from '~/components';
-import {ProductGrid} from '~/components/ProductGrid';
+
+import {
+  PageHeader,
+  Section,
+  Text,
+  SortFilter,
+  Grid,
+  ProductCard,
+  Button,
+} from '~/components';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {CACHE_SHORT, routeHeaders} from '~/data/cache';
+import {routeHeaders} from '~/data/cache';
 import {seoPayload} from '~/lib/seo.server';
 import type {AppliedFilter, SortParam} from '~/components/SortFilter';
+import {getImageLoadingPriority} from '~/lib/const';
 
 export const headers = routeHeaders;
-
-const PAGINATION_SIZE = 48;
 
 type VariantFilterParam = Record<string, string | boolean>;
 type PriceFiltersQueryParam = Record<'price', {max?: number; min?: number}>;
@@ -29,6 +40,9 @@ type FiltersQueryParams = Array<
 >;
 
 export async function loader({params, request, context}: LoaderArgs) {
+  const paginationVariables = getPaginationVariables(request, {
+    pageBy: 8,
+  });
   const {collectionHandle} = params;
 
   invariant(collectionHandle, 'Missing collectionHandle param');
@@ -40,7 +54,6 @@ export async function loader({params, request, context}: LoaderArgs) {
   const {sortKey, reverse} = getSortValuesFromParam(
     searchParams.get('sort') as SortParam,
   );
-  const cursor = searchParams.get('cursor');
   const filters: FiltersQueryParams = [];
   const appliedFilters: AppliedFilter[] = [];
 
@@ -88,47 +101,38 @@ export async function loader({params, request, context}: LoaderArgs) {
     });
   }
 
-  const {collection, collections} = await context.storefront.query<{
-    collection: CollectionType;
-    collections: CollectionConnection;
-  }>(COLLECTION_QUERY, {
-    variables: {
-      handle: collectionHandle,
-      pageBy: PAGINATION_SIZE,
-      cursor,
-      filters,
-      sortKey,
-      reverse,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
+  const {collection, collections} = await context.storefront.query(
+    COLLECTION_QUERY,
+    {
+      variables: {
+        ...paginationVariables,
+        handle: collectionHandle,
+        filters,
+        sortKey,
+        reverse,
+        country: context.storefront.i18n.country,
+        language: context.storefront.i18n.language,
+      },
     },
-  });
+  );
 
   if (!collection) {
     throw new Response('collection', {status: 404});
   }
 
-  const collectionNodes = flattenConnection(collections);
   const seo = seoPayload.collection({collection, url: request.url});
 
-  return json(
-    {
-      collection,
-      appliedFilters,
-      collections: collectionNodes,
-      analytics: {
-        pageType: AnalyticsPageType.collection,
-        collectionHandle,
-        resourceId: collection.id,
-      },
-      seo,
+  return json({
+    collection,
+    appliedFilters,
+    collections: flattenConnection(collections),
+    analytics: {
+      pageType: AnalyticsPageType.collection,
+      collectionHandle,
+      resourceId: collection.id,
     },
-    {
-      headers: {
-        'Cache-Control': CACHE_SHORT,
-      },
-    },
-  );
+    seo,
+  });
 }
 
 export default function Collection() {
@@ -152,14 +156,33 @@ export default function Collection() {
         <SortFilter
           filters={collection.products.filters as Filter[]}
           appliedFilters={appliedFilters}
-          collections={collections as CollectionType[]}
+          collections={collections}
         >
-          <ProductGrid
-            key={collection.id}
-            collection={collection as CollectionType}
-            url={`/collections/${collection.handle}`}
-            data-test="product-grid"
-          />
+          <Pagination connection={collection.products}>
+            {({nodes, isLoading, PreviousLink, NextLink}) => (
+              <>
+                <div className="flex items-center justify-center mb-6">
+                  <Button as={PreviousLink} variant="secondary" width="full">
+                    {isLoading ? 'Loading...' : 'Load previous'}
+                  </Button>
+                </div>
+                <Grid layout="products">
+                  {nodes.map((product, i) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      loading={getImageLoadingPriority(i)}
+                    />
+                  ))}
+                </Grid>
+                <div className="flex items-center justify-center mt-6">
+                  <Button as={NextLink} variant="secondary" width="full">
+                    {isLoading ? 'Loading...' : 'Load more products'}
+                  </Button>
+                </div>
+              </>
+            )}
+          </Pagination>
         </SortFilter>
       </Section>
     </>
@@ -167,16 +190,17 @@ export default function Collection() {
 }
 
 const COLLECTION_QUERY = `#graphql
-  ${PRODUCT_CARD_FRAGMENT}
   query CollectionDetails(
     $handle: String!
     $country: CountryCode
     $language: LanguageCode
-    $pageBy: Int!
-    $cursor: String
     $filters: [ProductFilter!]
     $sortKey: ProductCollectionSortKeys!
     $reverse: Boolean
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
   ) @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
       id
@@ -195,8 +219,10 @@ const COLLECTION_QUERY = `#graphql
         altText
       }
       products(
-        first: $pageBy,
-        after: $cursor,
+        first: $first,
+        last: $last,
+        before: $startCursor,
+        after: $endCursor,
         filters: $filters,
         sortKey: $sortKey,
         reverse: $reverse
@@ -216,6 +242,8 @@ const COLLECTION_QUERY = `#graphql
           ...ProductCard
         }
         pageInfo {
+          hasPreviousPage
+          hasNextPage
           hasNextPage
           endCursor
         }
@@ -230,9 +258,13 @@ const COLLECTION_QUERY = `#graphql
       }
     }
   }
-`;
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;
 
-function getSortValuesFromParam(sortParam: SortParam | null) {
+function getSortValuesFromParam(sortParam: SortParam | null): {
+  sortKey: ProductCollectionSortKeys;
+  reverse: boolean;
+} {
   switch (sortParam) {
     case 'price-high-low':
       return {

@@ -1,8 +1,8 @@
 import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
 import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
 import {useRef, useState} from 'react';
+
 import {getInputStyleClasses} from '~/lib/utils';
-import type {CustomerActivatePayload} from '@shopify/hydrogen/storefront-api-types';
 
 type ActionData = {
   formError?: string;
@@ -17,7 +17,7 @@ export const handle = {
 export const action: ActionFunction = async ({
   request,
   context,
-  params: {lang, id, activationToken},
+  params: {locale, id, activationToken},
 }) => {
   if (
     !id ||
@@ -50,9 +50,7 @@ export const action: ActionFunction = async ({
   const {session, storefront} = context;
 
   try {
-    const data = await storefront.mutate<{
-      customerActivate: CustomerActivatePayload;
-    }>(CUSTOMER_ACTIVATE_MUTATION, {
+    const data = await storefront.mutate(CUSTOMER_ACTIVATE_MUTATION, {
       variables: {
         id: `gid://shopify/Customer/${id}`,
         input: {
@@ -73,7 +71,7 @@ export const action: ActionFunction = async ({
 
     session.set('customerAccessToken', accessToken);
 
-    return redirect(lang ? `${lang}/account` : '/account', {
+    return redirect(locale ? `${locale}/account` : '/account', {
       headers: {
         'Set-Cookie': await session.commit(),
       },

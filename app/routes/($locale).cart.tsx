@@ -1,4 +1,3 @@
-import {CartLoading, Cart} from '~/components';
 import {Await, useMatches} from '@remix-run/react';
 import {Suspense} from 'react';
 import invariant from 'tiny-invariant';
@@ -16,6 +15,8 @@ import type {
   UserError,
   CartBuyerIdentityInput,
 } from '@shopify/hydrogen/storefront-api-types';
+
+import {CartLoading, Cart} from '~/components';
 import {isLocalPath, getCartId} from '~/lib/utils';
 import {CartAction, type CartActions} from '~/lib/type';
 
@@ -360,8 +361,6 @@ export async function cartRemove({
 }
 
 const LINES_UPDATE_MUTATION = `#graphql
-  ${LINES_CART_FRAGMENT}
-  ${USER_ERROR_FRAGMENT}
   mutation ($cartId: ID!, $lines: [CartLineUpdateInput!]!, $language: LanguageCode, $country: CountryCode)
   @inContext(country: $country, language: $language) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) {
@@ -373,6 +372,8 @@ const LINES_UPDATE_MUTATION = `#graphql
       }
     }
   }
+  ${LINES_CART_FRAGMENT}
+  ${USER_ERROR_FRAGMENT}
 `;
 
 /**

@@ -1,8 +1,9 @@
-import {
-  type EnhancedMenu,
-  type EnhancedMenuItem,
-  useIsHomePath,
-} from '~/lib/utils';
+import {useParams, Form, Await, useMatches} from '@remix-run/react';
+import {useWindowScroll} from 'react-use';
+import {Disclosure} from '@headlessui/react';
+import {Suspense, useEffect, useMemo} from 'react';
+
+import type {LayoutQuery} from 'storefrontapi.generated';
 import {
   Drawer,
   useDrawer,
@@ -21,21 +22,21 @@ import {
   CartLoading,
   Link,
 } from '~/components';
-import {useParams, Form, Await, useMatches} from '@remix-run/react';
-import {useWindowScroll} from 'react-use';
-import {Disclosure} from '@headlessui/react';
-import {Suspense, useEffect, useMemo} from 'react';
+import type {ChildEnhancedMenuItem} from '~/lib/utils';
+import {type EnhancedMenu, useIsHomePath} from '~/lib/utils';
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
-import type {LayoutData} from '../root';
 
-export function Layout({
-  children,
-  layout,
-}: {
+type LayoutProps = {
   children: React.ReactNode;
-  layout: LayoutData;
-}) {
+  layout: LayoutQuery & {
+    headerMenu?: EnhancedMenu | null;
+    footerMenu?: EnhancedMenu | null;
+  };
+};
+
+export function Layout({children, layout}: LayoutProps) {
+  const {headerMenu, footerMenu} = layout;
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -44,15 +45,12 @@ export function Layout({
             Skip to content
           </a>
         </div>
-        <Header
-          title={layout?.shop.name ?? 'Hydrogen'}
-          menu={layout?.headerMenu}
-        />
+        {headerMenu && <Header title={layout.shop.name} menu={headerMenu} />}
         <main role="main" id="mainContent" className="flex-grow">
           {children}
         </main>
       </div>
-      <Footer menu={layout?.footerMenu} />
+      {footerMenu && <Footer menu={footerMenu} />}
     </>
   );
 }
@@ -199,7 +197,7 @@ function MobileHeader({
         </button>
         <Form
           method="get"
-          action={params.lang ? `/${params.lang}/search` : '/search'}
+          action={params.locale ? `/${params.locale}/search` : '/search'}
           className="items-center gap-2 sm:flex"
         >
           <button
@@ -290,7 +288,7 @@ function DesktopHeader({
       <div className="flex items-center gap-1">
         <Form
           method="get"
-          action={params.lang ? `/${params.lang}/search` : '/search'}
+          action={params.locale ? `/${params.locale}/search` : '/search'}
           className="flex items-center gap-2"
         >
           <Input
@@ -430,7 +428,7 @@ function Footer({menu}: {menu?: EnhancedMenu}) {
   );
 }
 
-const FooterLink = ({item}: {item: EnhancedMenuItem}) => {
+function FooterLink({item}: {item: ChildEnhancedMenuItem}) {
   if (item.to.startsWith('http')) {
     return (
       <a href={item.to} target={item.target} rel="noopener noreferrer">
@@ -444,7 +442,7 @@ const FooterLink = ({item}: {item: EnhancedMenuItem}) => {
       {item.title}
     </Link>
   );
-};
+}
 
 function FooterMenu({menu}: {menu?: EnhancedMenu}) {
   const styles = {
@@ -454,7 +452,7 @@ function FooterMenu({menu}: {menu?: EnhancedMenu}) {
 
   return (
     <>
-      {(menu?.items || []).map((item: EnhancedMenuItem) => (
+      {(menu?.items || []).map((item) => (
         <section key={item.id} className={styles.section}>
           <Disclosure>
             {({open}) => (
@@ -478,7 +476,7 @@ function FooterMenu({menu}: {menu?: EnhancedMenu}) {
                     <Suspense data-comment="This suspense fixes a hydration bug in Disclosure.Panel with static prop">
                       <Disclosure.Panel static>
                         <nav className={styles.nav}>
-                          {item.items.map((subItem) => (
+                          {item.items.map((subItem: ChildEnhancedMenuItem) => (
                             <FooterLink key={subItem.id} item={subItem} />
                           ))}
                         </nav>

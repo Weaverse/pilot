@@ -1,15 +1,12 @@
 import clsx from 'clsx';
-import {
-  flattenConnection,
-  Image,
-  Money,
-  ShopifyAnalyticsProduct,
-  useMoney,
-} from '@shopify/hydrogen';
+import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
+import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
+import type {MoneyV2, Product} from '@shopify/hydrogen/storefront-api-types';
+
+import type {ProductCardFragment} from 'storefrontapi.generated';
 import {Text, Link, AddToCartButton} from '~/components';
 import {isDiscounted, isNewArrival} from '~/lib/utils';
 import {getProductPlaceholder} from '~/lib/placeholders';
-import type {MoneyV2, Product} from '@shopify/hydrogen/storefront-api-types';
 
 export function ProductCard({
   product,
@@ -19,7 +16,7 @@ export function ProductCard({
   onClick,
   quickAdd,
 }: {
-  product: Product;
+  product: ProductCardFragment;
   label?: string;
   className?: string;
   loading?: HTMLImageElement['loading'];
@@ -120,7 +117,7 @@ export function ProductCard({
           }}
         >
           <Text as="span" className="flex items-center justify-center gap-2">
-            Add to Bag
+            Add to Cart
           </Text>
         </AddToCartButton>
       )}
