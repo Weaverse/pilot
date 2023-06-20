@@ -96,9 +96,9 @@ export default function Homepage() {
   return (
     <>
       <WeaverseContent />
-      {primaryHero && (
+      {/* {primaryHero && (
         <Hero {...primaryHero} height="full" top loading="eager" />
-      )}
+      )} */}
 
       {featuredProducts && (
         <Suspense>

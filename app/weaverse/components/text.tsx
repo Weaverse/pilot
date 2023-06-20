@@ -11,8 +11,6 @@ interface TextProps extends HydrogenComponentProps {
 }
 
 let Text = forwardRef<HTMLElement, TextProps>((props, ref) => {
-  console.log('Text', props);
-
   let {tagName, text, ...rest} = props;
   rest.className ??=
     'title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900';
