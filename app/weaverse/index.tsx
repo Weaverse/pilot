@@ -1,18 +1,7 @@
-import type {
-  HydrogenComponent,
-  HydrogenComponentProps,
-} from '@weaverse/hydrogen';
 import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
-
-import {components} from './components';
-import {sections} from './sections';
-
-export let allComponents: Record<string, HydrogenComponent<any>> = {
-  ...components,
-  ...sections,
-};
+import config from './config';
 
 export function WeaverseContent() {
   let data = useLoaderData();
@@ -24,7 +13,7 @@ export function WeaverseContent() {
           <Await resolve={weaverseData}>
             {(weaverseData) => (
               <WeaverseHydrogenRoot
-                components={allComponents}
+                {...config}
                 data={{...rest, weaverseData}}
               />
             )}
@@ -32,7 +21,7 @@ export function WeaverseContent() {
         </Suspense>
       );
     }
-    return <WeaverseHydrogenRoot components={allComponents} data={data} />;
+    return <WeaverseHydrogenRoot {...config} data={data} />;
   }
   return (
     <div style={{display: 'none'}}>
