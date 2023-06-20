@@ -9,7 +9,8 @@ import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getHeroPlaceholder} from '~/lib/placeholders';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
-import WeaverseContent, {allComponents} from '~/weaverse';
+import WeaverseContent from '~/weaverse';
+import config from '~/weaverse/config';
 
 export const headers = routeHeaders;
 
@@ -35,7 +36,7 @@ export async function loader({params, context, request}: LoaderArgs) {
     shop,
     weaverseData: await weaverseLoader(
       {params, context, request},
-      allComponents,
+      config.components,
     ),
     primaryHero: hero,
     // These different queries are separated to illustrate how 3rd party content
