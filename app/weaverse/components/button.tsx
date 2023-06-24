@@ -7,10 +7,13 @@ import {forwardRef, type ButtonHTMLAttributes} from 'react';
 interface ButtonProps extends HydrogenComponentProps {
   _type: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   text: string;
+  clickAction: 'none' | 'openLink';
+  linkTo: string;
+  openLinkInNewTab: boolean;
 }
 
 let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  let {_type, text, ...rest} = props;
+  let {_type, text, clickAction, linkTo, openLinkInNewTab, ...rest} = props;
   rest.className ??=
     'inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg';
   return (
@@ -57,7 +60,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: 'switch',
           label: 'Open in new tab',
-          name: 'openInNewTab',
+          name: 'openLinkInNewTab',
           condition: 'clickAction.eq.openLink',
           defaultValue: false,
         },
