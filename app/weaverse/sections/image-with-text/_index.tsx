@@ -27,7 +27,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
               <img
                 className="object-cover object-center rounded"
                 alt="hero"
-                src={loaderData?.thumbnailUrl || image}
+                src={image}
               />
             </div>
           </div>
@@ -64,7 +64,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: 'image',
           label: 'Image',
-          name: 'src',
+          name: 'image',
           defaultValue:
             'https://images.unsplash.com/photo-1617606002806-94e279c22567?auto=format&fit=crop&w=1000&q=80',
         },
@@ -73,7 +73,11 @@ export let schema: HydrogenComponentSchema = {
   ],
   toolbar: ['general-settings', ['duplicate', 'delete']],
   presets: {
-    children: [{type: 'text'}],
+    children: [
+      {type: 'text'},
+      {type: 'text'},
+      {type: 'image-with-text--actions'},
+    ],
   },
   flags: {
     isSection: true,

@@ -57,4 +57,7 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
+  flags: {
+    isSection: true,
+  },
 };
