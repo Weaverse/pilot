@@ -1,6 +1,6 @@
 import {components} from './components';
 import {sections} from './sections';
-export let allComponents = {
+let allComponents = {
   ...components,
   ...sections,
 };
