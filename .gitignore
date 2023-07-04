@@ -6,4 +6,5 @@ node_modules
 /.mf
 .env
 .vscode
+.turbo
 .shopify
