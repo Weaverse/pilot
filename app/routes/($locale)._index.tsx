@@ -2,19 +2,16 @@ import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
 import {Suspense} from 'react';
 import {Await, useLoaderData} from '@remix-run/react';
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {weaverseLoader} from '@weaverse/hydrogen';
 
 import {ProductSwimlane, FeaturedCollections, Hero} from '~/components';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getHeroPlaceholder} from '~/lib/placeholders';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
-import WeaverseContent from '~/weaverse';
-import config from '~/weaverse/config';
 
 export const headers = routeHeaders;
 
-export async function loader({params, context, request}: LoaderArgs) {
+export async function loader({params, context}: LoaderArgs) {
   const {language, country} = context.storefront.i18n;
 
   if (
@@ -34,10 +31,6 @@ export async function loader({params, context, request}: LoaderArgs) {
 
   return defer({
     shop,
-    weaverseData: await weaverseLoader(
-      {params, context, request},
-      config.components,
-    ),
     primaryHero: hero,
     // These different queries are separated to illustrate how 3rd party content
     // fetching can be optimized for both above and below the fold.
@@ -96,10 +89,9 @@ export default function Homepage() {
 
   return (
     <>
-      <WeaverseContent />
-      {/* {primaryHero && (
+      {primaryHero && (
         <Hero {...primaryHero} height="full" top loading="eager" />
-      )} */}
+      )}
 
       {featuredProducts && (
         <Suspense>
