@@ -1,6 +1,7 @@
 {
-  "name": "demo-store",
-  "private": true,
+  "name": "pilot",
+  "author": "Weaverse",
+  "private": false,
   "sideEffects": false,
   "version": "1.0.4",
   "scripts": {
