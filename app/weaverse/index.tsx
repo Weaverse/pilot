@@ -1,27 +1,37 @@
+import type {HydrogenPageData} from '@weaverse/hydrogen';
 import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
 import {useLoaderData, Await} from '@remix-run/react';
 import {Suspense} from 'react';
-import config from './config';
+
+import {components, themeSchema} from './config';
 
 export function WeaverseContent() {
-  let data = useLoaderData();
-  let {weaverseData, ...rest} = data;
+  let {weaverseData} = useLoaderData() as {
+    weaverseData: HydrogenPageData | Promise<HydrogenPageData>;
+  };
   if (weaverseData) {
-    if (weaverseData.then) {
+    if (weaverseData instanceof Promise) {
       return (
         <Suspense>
           <Await resolve={weaverseData}>
-            {(weaverseData) => (
+            {(weaverseData: HydrogenPageData) => (
               <WeaverseHydrogenRoot
-                {...config}
-                data={{...rest, weaverseData}}
+                components={components}
+                themeSchema={themeSchema}
+                weaverseData={weaverseData}
               />
             )}
           </Await>
         </Suspense>
       );
     }
-    return <WeaverseHydrogenRoot {...config} data={data} />;
+    return (
+      <WeaverseHydrogenRoot
+        components={components}
+        themeSchema={themeSchema}
+        weaverseData={weaverseData}
+      />
+    );
   }
   return (
     <div style={{display: 'none'}}>
