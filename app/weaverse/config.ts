@@ -1,12 +1,9 @@
 import type {HydrogenComponent, HydrogenThemeSchema} from '@weaverse/hydrogen';
+import * as main from './sections/main';
+import * as featuredProduct from './sections/featured-product';
+import * as hero from './sections/hero';
 
-import {components as _components} from './components';
-import {sections} from './sections';
-
-export let components: Record<string, HydrogenComponent> = {
-  ..._components,
-  ...sections,
-};
+export let components: HydrogenComponent[] = [main, hero, featuredProduct];
 
 export let themeSchema: HydrogenThemeSchema = {
   info: {
