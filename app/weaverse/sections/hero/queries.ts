@@ -1,0 +1,44 @@
+import {MEDIA_FRAGMENT} from '~/data/fragments';
+
+export let COLLECTION_CONTENT_FRAGMENT = `#graphql
+fragment CollectionContent on Collection {
+  id
+  handle
+  title
+  descriptionHtml
+  heading: metafield(namespace: "hero", key: "title") {
+    value
+  }
+  byline: metafield(namespace: "hero", key: "byline") {
+    value
+  }
+  cta: metafield(namespace: "hero", key: "cta") {
+    value
+  }
+  spread: metafield(namespace: "hero", key: "spread") {
+    reference {
+      ...Media
+    }
+  }
+  spreadSecondary: metafield(namespace: "hero", key: "spread_secondary") {
+    reference {
+      ...Media
+    }
+  }
+}
+${MEDIA_FRAGMENT}
+`;
+
+export let HOMEPAGE_SEO_QUERY = `#graphql
+  query seoCollectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    hero: collection(handle: $handle) {
+      ...CollectionContent
+    }
+    shop {
+      name
+      description
+    }
+  }
+  ${COLLECTION_CONTENT_FRAGMENT}
+`;

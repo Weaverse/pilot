@@ -15,7 +15,7 @@ import {components} from '~/weaverse/config';
 export const headers = routeHeaders;
 
 export async function loader(args: LoaderArgs) {
-  let {params, context, request} = args;
+  let {params, context} = args;
   const {language, country} = context.storefront.i18n;
 
   if (
@@ -95,10 +95,6 @@ export default function Homepage() {
   return (
     <>
       <WeaverseContent />
-      {/* {primaryHero && (
-        <Hero {...primaryHero} height="full" top loading="eager" />
-      )} */}
-
       {featuredProducts && (
         <Suspense>
           <Await resolve={featuredProducts}>
