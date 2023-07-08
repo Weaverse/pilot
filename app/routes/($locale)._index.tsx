@@ -32,7 +32,6 @@ export async function loader(args: LoaderArgs) {
   });
 
   const seo = seoPayload.home();
-
   return defer({
     shop,
     weaverseData: await weaverseLoader(args, components),
@@ -95,23 +94,6 @@ export default function Homepage() {
   return (
     <>
       <WeaverseContent />
-      {featuredProducts && (
-        <Suspense>
-          <Await resolve={featuredProducts}>
-            {({products}) => {
-              if (!products?.nodes) return <></>;
-              return (
-                <ProductSwimlane
-                  products={products}
-                  title="Featured Products"
-                  count={4}
-                />
-              );
-            }}
-          </Await>
-        </Suspense>
-      )}
-
       {secondaryHero && (
         <Suspense fallback={<Hero {...skeletons[1]} />}>
           <Await resolve={secondaryHero}>
