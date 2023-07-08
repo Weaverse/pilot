@@ -10,22 +10,20 @@ import {HOMEPAGE_FEATURED_PRODUCTS_QUERY} from './queries';
 
 interface FeaturedProductProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
-  collectionHandle?: string;
-  height?: 'full';
-  top?: boolean;
-  loading?: HTMLImageElement['loading'];
+  heading: string;
+  productCount: number;
 }
 
 let FeaturedProduct = forwardRef<HTMLElement, FeaturedProductProps>(
   (props, ref) => {
-    let {loaderData, height, loading, top, collectionHandle, ...rest} = props;
+    let {loaderData, heading, productCount, ...rest} = props;
     return (
       <section ref={ref} {...rest}>
         {loaderData?.products?.nodes ? (
           <ProductSwimlane
             products={loaderData.products}
-            title="Featured Products"
-            count={4}
+            title={heading}
+            count={productCount}
           />
         ) : null}
       </section>
@@ -49,21 +47,21 @@ export let loader = async ({context}: WeaverseLoaderArgs) => {
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'featured-product',
-  title: 'Featured product',
+  type: 'featured-products',
+  title: 'Featured products',
   inspector: [
     {
-      group: 'Featured product',
+      group: 'Featured products',
       inputs: [
         {
           type: 'text',
-          name: 'title',
+          name: 'heading',
           label: 'Heading',
           defaultValue: 'Featured Products',
         },
         {
           type: 'range',
-          name: 'count',
+          name: 'productCount',
           label: 'Number of products',
           defaultValue: 4,
           configs: {
