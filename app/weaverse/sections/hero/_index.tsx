@@ -13,13 +13,14 @@ import {SpreadMedia} from './spred-media';
 
 interface HeroProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
+  collectionHandle?: string;
   height?: 'full';
   top?: boolean;
   loading?: HTMLImageElement['loading'];
 }
 
 let Hero = forwardRef<HTMLElement, HeroProps>((props, ref) => {
-  let {loaderData, height, loading, top, ...rest} = props;
+  let {loaderData, height, loading, top, collectionHandle, ...rest} = props;
   let {byline, cta, handle, heading, spread, spreadSecondary} =
     loaderData || {};
   return (
@@ -79,9 +80,9 @@ let Hero = forwardRef<HTMLElement, HeroProps>((props, ref) => {
 
 export default Hero;
 
-export let loader = async ({context}: WeaverseLoaderArgs) => {
+export let loader = async ({context, itemData}: WeaverseLoaderArgs) => {
   let {hero} = await context.storefront.query(HOMEPAGE_SEO_QUERY, {
-    variables: {handle: 'freestyle'},
+    variables: {handle: itemData.data.collectionHandle || 'freestyle'},
   });
   return hero as CollectionContentFragment;
 };
@@ -89,25 +90,54 @@ export let loader = async ({context}: WeaverseLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: 'hero',
   title: 'Hero',
-  childTypes: ['text'],
   inspector: [
     {
       group: 'Hero',
       inputs: [
         {
-          type: 'image',
-          label: 'Image',
-          name: 'image',
-          defaultValue:
-            'https://images.unsplash.com/photo-1617606002806-94e279c22567?auto=format&fit=crop&w=1000&q=80',
+          type: 'collection',
+          name: 'collectionHandle',
+          label: 'Preview',
+          defaultValue: 'freestyle',
+        },
+        {
+          type: 'toggle-group',
+          name: 'loading',
+          label: 'Background image loading',
+          defaultValue: 'eager',
+          configs: {
+            options: [
+              {label: 'Eager', value: 'eager', icon: 'Lightning'},
+              {label: 'Lazy', value: 'lazy', icon: 'SpinnerGap'},
+            ],
+          },
+          helpText:
+            'Learn more about <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading" target="_blank" rel="noopener noreferrer">image loading strategies</a>.',
+        },
+        {
+          type: 'select',
+          label: 'Height',
+          name: 'height',
+          configs: {
+            options: [
+              {label: 'Auto', value: 'auto'},
+              {label: 'Fullscreen', value: 'full'},
+            ],
+          },
+          defaultValue: 'auto',
+        },
+        {
+          type: 'switch',
+          name: 'top',
+          label: 'Top',
+          defaultValue: true,
+          helpText:
+            'Push the hero to the top of the page by adding a negative margin.',
         },
       ],
     },
   ],
   toolbar: ['general-settings', ['duplicate', 'delete']],
-  presets: {
-    children: [{type: 'text'}, {type: 'text'}],
-  },
   flags: {
     isSection: true,
   },
