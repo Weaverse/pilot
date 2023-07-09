@@ -14,11 +14,11 @@ export function WeaverseContent() {
       return (
         <Suspense>
           <Await resolve={weaverseData}>
-            {(weaverseData: HydrogenPageData) => (
+            {(resolvedData: HydrogenPageData) => (
               <WeaverseHydrogenRoot
                 components={components}
                 themeSchema={themeSchema}
-                weaverseData={weaverseData}
+                weaverseData={resolvedData}
               />
             )}
           </Await>

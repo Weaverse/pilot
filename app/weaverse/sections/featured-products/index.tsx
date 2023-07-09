@@ -8,22 +8,22 @@ import type {HomepageFeaturedProductsQuery} from 'storefrontapi.generated';
 import {ProductSwimlane} from './product-swimlane';
 import {HOMEPAGE_FEATURED_PRODUCTS_QUERY} from './queries';
 
-interface FeaturedProductProps
+interface FeaturedProductsProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
   heading: string;
-  productCount: number;
+  productsCount: number;
 }
 
-let FeaturedProduct = forwardRef<HTMLElement, FeaturedProductProps>(
+let FeaturedProducts = forwardRef<HTMLElement, FeaturedProductsProps>(
   (props, ref) => {
-    let {loaderData, heading, productCount, ...rest} = props;
+    let {loaderData, heading, productsCount, ...rest} = props;
     return (
       <section ref={ref} {...rest}>
         {loaderData?.products?.nodes ? (
           <ProductSwimlane
             products={loaderData.products}
             title={heading}
-            count={productCount}
+            count={productsCount}
           />
         ) : null}
       </section>
@@ -31,7 +31,7 @@ let FeaturedProduct = forwardRef<HTMLElement, FeaturedProductProps>(
   },
 );
 
-export default FeaturedProduct;
+export default FeaturedProducts;
 
 export let loader = async ({context}: WeaverseLoaderArgs) => {
   let {language, country} = context.storefront.i18n;
@@ -61,7 +61,7 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'range',
-          name: 'productCount',
+          name: 'productsCount',
           label: 'Number of products',
           defaultValue: 4,
           configs: {
