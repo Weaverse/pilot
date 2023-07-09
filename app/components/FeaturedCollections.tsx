@@ -5,18 +5,22 @@ import {Heading, Section, Grid, Link} from '~/components';
 
 type FeaturedCollectionsProps = HomepageFeaturedCollectionsQuery & {
   title?: string;
+  count?: number;
   [key: string]: any;
 };
 
 export function FeaturedCollections({
   collections,
+  count,
   title = 'Collections',
   ...props
 }: FeaturedCollectionsProps) {
   const haveCollections = collections?.nodes?.length > 0;
   if (!haveCollections) return null;
 
-  const collectionsWithImage = collections.nodes.filter((item) => item.image);
+  const collectionsWithImage = collections.nodes
+    .filter((item) => item.image)
+    .slice(0, count);
 
   return (
     <Section {...props} heading={title}>

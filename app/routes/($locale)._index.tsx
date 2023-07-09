@@ -1,14 +1,14 @@
-import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
-import {Suspense} from 'react';
 import {Await, useLoaderData} from '@remix-run/react';
 import {AnalyticsPageType} from '@shopify/hydrogen';
+import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
 import {weaverseLoader} from '@weaverse/hydrogen';
+import {Suspense} from 'react';
 
-import {ProductSwimlane, FeaturedCollections, Hero} from '~/components';
+import {Hero} from '~/components';
+import {routeHeaders} from '~/data/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getHeroPlaceholder} from '~/lib/placeholders';
 import {seoPayload} from '~/lib/seo.server';
-import {routeHeaders} from '~/data/cache';
 import WeaverseContent from '~/weaverse';
 import {components} from '~/weaverse/config';
 
@@ -94,33 +94,6 @@ export default function Homepage() {
   return (
     <>
       <WeaverseContent />
-      {secondaryHero && (
-        <Suspense fallback={<Hero {...skeletons[1]} />}>
-          <Await resolve={secondaryHero}>
-            {({hero}) => {
-              if (!hero) return <></>;
-              return <Hero {...hero} />;
-            }}
-          </Await>
-        </Suspense>
-      )}
-
-      {featuredCollections && (
-        <Suspense>
-          <Await resolve={featuredCollections}>
-            {({collections}) => {
-              if (!collections?.nodes) return <></>;
-              return (
-                <FeaturedCollections
-                  collections={collections}
-                  title="Collections"
-                />
-              );
-            }}
-          </Await>
-        </Suspense>
-      )}
-
       {tertiaryHero && (
         <Suspense fallback={<Hero {...skeletons[2]} />}>
           <Await resolve={tertiaryHero}>
