@@ -87,7 +87,7 @@ type SpreadMediaProps = {
   sizes: string;
 };
 
-function SpreadMedia({data, loading, sizes}: SpreadMediaProps) {
+export function SpreadMedia({data, loading, sizes}: SpreadMediaProps) {
   return (
     <MediaFile
       data={data}

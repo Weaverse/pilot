@@ -8,8 +8,8 @@ import clsx from 'clsx';
 import {forwardRef} from 'react';
 import type {HeroCollectionContentQuery} from 'storefrontapi.generated';
 import {Heading, Link, Text} from '~/components';
-import {HOMEPAGE_SEO_QUERY} from './queries';
-import {SpreadMedia} from './spred-media';
+import {SpreadMedia} from '~/components/Hero';
+import {HOMEPAGE_SEO_QUERY} from '~/data/queries';
 
 interface HeroProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {

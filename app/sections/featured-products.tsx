@@ -4,26 +4,26 @@ import type {
   WeaverseLoaderArgs,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
-import type {HomepageFeaturedCollectionsQuery} from 'storefrontapi.generated';
-import {FEATURED_COLLECTIONS_QUERY} from './queries';
-import {FeaturedCollections as HomeFeaturedCollections} from '~/components';
+import type {HomepageFeaturedProductsQuery} from 'storefrontapi.generated';
+import {ProductSwimlane} from '~/components';
+import {HOMEPAGE_FEATURED_PRODUCTS_QUERY} from '~/data/queries';
 
-interface FeaturedCollectionsProps
+interface FeaturedProductsProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
   heading: string;
-  collectionsCount: number;
+  productsCount: number;
 }
 
-let FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
+let FeaturedProducts = forwardRef<HTMLElement, FeaturedProductsProps>(
   (props, ref) => {
-    let {loaderData, heading, collectionsCount, ...rest} = props;
+    let {loaderData, heading, productsCount, ...rest} = props;
     return (
       <section ref={ref} {...rest}>
-        {loaderData?.collections?.nodes ? (
-          <HomeFeaturedCollections
-            collections={loaderData.collections}
-            count={collectionsCount}
+        {loaderData?.products?.nodes ? (
+          <ProductSwimlane
+            products={loaderData.products}
             title={heading}
+            count={productsCount}
           />
         ) : null}
       </section>
@@ -31,12 +31,12 @@ let FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
   },
 );
 
-export default FeaturedCollections;
+export default FeaturedProducts;
 
 export let loader = async ({context}: WeaverseLoaderArgs) => {
   let {language, country} = context.storefront.i18n;
-  return await context.storefront.query<HomepageFeaturedCollectionsQuery>(
-    FEATURED_COLLECTIONS_QUERY,
+  return await context.storefront.query<HomepageFeaturedProductsQuery>(
+    HOMEPAGE_FEATURED_PRODUCTS_QUERY,
     {
       variables: {
         country,
@@ -47,26 +47,26 @@ export let loader = async ({context}: WeaverseLoaderArgs) => {
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'featured-collections',
-  title: 'Featured collections',
+  type: 'featured-products',
+  title: 'Featured products',
   inspector: [
     {
-      group: 'Featured collections',
+      group: 'Featured products',
       inputs: [
         {
           type: 'text',
           name: 'heading',
           label: 'Heading',
-          defaultValue: 'Featured Collections',
+          defaultValue: 'Featured Products',
         },
         {
           type: 'range',
-          name: 'collectionsCount',
-          label: 'Number of collections',
-          defaultValue: 3,
+          name: 'productsCount',
+          label: 'Number of products',
+          defaultValue: 4,
           configs: {
             min: 1,
-            max: 4,
+            max: 12,
             step: 1,
           },
         },
