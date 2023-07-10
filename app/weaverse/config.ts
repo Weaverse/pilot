@@ -1,14 +1,18 @@
 import type {HydrogenComponent, HydrogenThemeSchema} from '@weaverse/hydrogen';
-import * as featuredCollections from '~/sections/featured-collections';
-import * as featuredProducts from '~/sections/featured-products';
-import * as hero from '~/sections/hero';
-import * as main from '~/sections/main';
+import * as FeaturedCollections from '~/sections/featured-collections';
+import * as FeaturedProducts from '~/sections/featured-products';
+import * as Hero from '~/sections/hero';
+import * as Testimonial from '~/sections/testimonial';
+import * as TestimonialItem from '~/sections/testimonial/item';
+import * as Main from '~/sections/main';
 
 export let components: HydrogenComponent[] = [
-  main,
-  hero,
-  featuredProducts,
-  featuredCollections,
+  Main,
+  Hero,
+  FeaturedProducts,
+  FeaturedCollections,
+  Testimonial,
+  TestimonialItem,
 ];
 
 export let themeSchema: HydrogenThemeSchema = {

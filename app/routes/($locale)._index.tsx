@@ -29,7 +29,7 @@ export async function loader(args: LoaderArgs) {
   let seo = seoPayload.home();
   return defer({
     shop,
-    weaverseData: weaverseLoader(args, components),
+    weaverseData: await weaverseLoader(args, components),
     analytics: {
       pageType: AnalyticsPageType.home,
     },
