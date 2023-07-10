@@ -6,7 +6,7 @@ import type {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
-import type {HeroCollectionContentQuery} from 'storefrontapi.generated';
+import type {SeoCollectionContentQuery} from 'storefrontapi.generated';
 import {Heading, Link, Text} from '~/components';
 import {SpreadMedia} from '~/components/Hero';
 import {HOMEPAGE_SEO_QUERY} from '~/data/queries';
@@ -83,7 +83,7 @@ let Hero = forwardRef<HTMLElement, HeroProps>((props, ref) => {
 export default Hero;
 
 export let loader = async ({context, itemData}: WeaverseLoaderArgs) => {
-  let {hero} = await context.storefront.query<HeroCollectionContentQuery>(
+  let {hero} = await context.storefront.query<SeoCollectionContentQuery>(
     HOMEPAGE_SEO_QUERY,
     {
       variables: {handle: itemData.data.collectionHandle || 'freestyle'},
@@ -148,7 +148,4 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   toolbar: ['general-settings', ['duplicate', 'delete']],
-  flags: {
-    isSection: true,
-  },
 };
