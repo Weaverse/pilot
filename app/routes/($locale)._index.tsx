@@ -2,7 +2,7 @@ import {AnalyticsPageType} from '@shopify/hydrogen';
 import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
 import {weaverseLoader} from '@weaverse/hydrogen';
 import {routeHeaders} from '~/data/cache';
-import {HOMEPAGE_SEO_QUERY} from '~/data/queries';
+import {SHOP_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import WeaverseContent from '~/weaverse';
 import {components} from '~/weaverse/config';
@@ -22,10 +22,7 @@ export async function loader(args: LoaderArgs) {
     throw new Response(null, {status: 404});
   }
 
-  let {shop} = await context.storefront.query(HOMEPAGE_SEO_QUERY, {
-    variables: {handle: 'freestyle'},
-  });
-
+  let {shop} = await context.storefront.query(SHOP_QUERY);
   let seo = seoPayload.home();
   return defer({
     shop,
