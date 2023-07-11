@@ -29,6 +29,16 @@ fragment CollectionContent on Collection {
 ${MEDIA_FRAGMENT}
 `;
 
+export let SHOP_QUERY = `#graphql
+  query shopQuery($country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    shop {
+      name
+      description
+    }
+  }
+`;
+
 export let HOMEPAGE_SEO_QUERY = `#graphql
   query seoCollectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
