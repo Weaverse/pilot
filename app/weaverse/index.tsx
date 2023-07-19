@@ -1,24 +1,27 @@
-import type {HydrogenPageData} from '@weaverse/hydrogen';
+import type {WeaverseLoaderData} from '@weaverse/hydrogen';
 import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import {useLoaderData, Await} from '@remix-run/react';
+import {useLoaderData, Await, useNavigate} from '@remix-run/react';
 import {Suspense} from 'react';
 
 import {components, themeSchema} from './config';
 
 export function WeaverseContent() {
   let {weaverseData} = useLoaderData() as {
-    weaverseData: HydrogenPageData | Promise<HydrogenPageData>;
+    weaverseData: WeaverseLoaderData | Promise<WeaverseLoaderData>;
   };
+  let navigate = useNavigate();
+
   if (weaverseData) {
     if (weaverseData instanceof Promise) {
       return (
         <Suspense>
           <Await resolve={weaverseData}>
-            {(resolvedData: HydrogenPageData) => (
+            {(resolvedData: WeaverseLoaderData) => (
               <WeaverseHydrogenRoot
                 components={components}
                 themeSchema={themeSchema}
                 weaverseData={resolvedData}
+                navigate={navigate}
               />
             )}
           </Await>
@@ -30,6 +33,7 @@ export function WeaverseContent() {
         components={components}
         themeSchema={themeSchema}
         weaverseData={weaverseData}
+        navigate={navigate}
       />
     );
   }
@@ -39,4 +43,3 @@ export function WeaverseContent() {
     </div>
   );
 }
-export default WeaverseContent;
