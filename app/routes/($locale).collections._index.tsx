@@ -1,22 +1,28 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
-import type {Collection} from '@shopify/hydrogen/storefront-api-types';
 import {
+  getPaginationVariables__unstable as getPaginationVariables,
   Image,
   Pagination__unstable as Pagination,
-  getPaginationVariables__unstable as getPaginationVariables,
 } from '@shopify/hydrogen';
-
-import {Grid, Heading, PageHeader, Section, Link, Button} from '~/components';
+import type {Collection} from '@shopify/hydrogen/storefront-api-types';
+import {json, type LoaderArgs} from '@shopify/remix-oxygen';
+import {weaverseLoader} from '@weaverse/hydrogen';
+import {Button, Grid, Heading, Link, PageHeader, Section} from '~/components';
+import {routeHeaders} from '~/data/cache';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
-import {routeHeaders} from '~/data/cache';
+import {WeaverseContent} from '~/weaverse';
+import {components} from '~/weaverse/config';
 
 const PAGINATION_SIZE = 4;
 
 export const headers = routeHeaders;
 
-export const loader = async ({request, context: {storefront}}: LoaderArgs) => {
+export const loader = async (args: LoaderArgs) => {
+  let {
+    request,
+    context: {storefront},
+  } = args;
   const variables = getPaginationVariables(request, {pageBy: PAGINATION_SIZE});
   const {collections} = await storefront.query(COLLECTIONS_QUERY, {
     variables: {
@@ -31,7 +37,11 @@ export const loader = async ({request, context: {storefront}}: LoaderArgs) => {
     url: request.url,
   });
 
-  return json({collections, seo});
+  return json({
+    collections,
+    seo,
+    weaverseData: await weaverseLoader(args, components),
+  });
 };
 
 export default function Collections() {
@@ -39,6 +49,7 @@ export default function Collections() {
 
   return (
     <>
+      <WeaverseContent />
       <PageHeader heading="Collections" />
       <Section>
         <Pagination connection={collections}>
