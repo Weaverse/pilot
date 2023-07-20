@@ -4,6 +4,8 @@ import * as FeaturedProducts from '~/sections/featured-products';
 import * as Hero from '~/sections/hero';
 import * as Testimonial from '~/sections/testimonial';
 import * as TestimonialItem from '~/sections/testimonial/item';
+import * as ImageGallery from '~/sections/image-gallery';
+import * as ImageGalleryItem from '~/sections/image-gallery/image';
 import * as Main from '~/sections/main';
 
 export let components: HydrogenComponent[] = [
@@ -13,6 +15,8 @@ export let components: HydrogenComponent[] = [
   FeaturedCollections,
   Testimonial,
   TestimonialItem,
+  ImageGallery,
+  ImageGalleryItem,
 ];
 
 export let themeSchema: HydrogenThemeSchema = {

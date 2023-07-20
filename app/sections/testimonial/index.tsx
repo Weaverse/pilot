@@ -24,10 +24,6 @@ let Testimonial = forwardRef<HTMLElement, TestimonialProps>((props, ref) => {
 
 export default Testimonial;
 
-Testimonial.defaultProps = {
-  heading: 'Testimonials',
-};
-
 export let schema: HydrogenComponentSchema = {
   type: 'testimonial',
   title: 'Testimonial',
