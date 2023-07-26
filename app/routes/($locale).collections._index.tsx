@@ -6,13 +6,12 @@ import {
 } from '@shopify/hydrogen';
 import type {Collection} from '@shopify/hydrogen/storefront-api-types';
 import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {weaverseLoader} from '@weaverse/hydrogen';
 import {Button, Grid, Heading, Link, PageHeader, Section} from '~/components';
 import {routeHeaders} from '~/data/cache';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {components} from '~/weaverse/config';
+import {loadWeaversePage} from '~/weaverse/loader';
 
 const PAGINATION_SIZE = 4;
 
@@ -40,7 +39,7 @@ export const loader = async (args: LoaderArgs) => {
   return json({
     collections,
     seo,
-    weaverseData: await weaverseLoader(args, components),
+    weaverseData: await loadWeaversePage(args),
   });
 };
 

@@ -5,7 +5,7 @@ import {routeHeaders} from '~/data/cache';
 import {SHOP_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {components} from '~/weaverse/config';
+import {loadWeaversePage} from '~/weaverse/loader';
 
 export const headers = routeHeaders;
 
@@ -27,7 +27,7 @@ export async function loader(args: LoaderArgs) {
 
   return json({
     shop,
-    weaverseData: await weaverseLoader(args, components),
+    weaverseData: await loadWeaversePage(args),
     analytics: {
       pageType: AnalyticsPageType.home,
     },
