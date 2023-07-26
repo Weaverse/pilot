@@ -1,33 +1,9 @@
-import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-
-export let COLLECTION_CONTENT_FRAGMENT = `#graphql
-fragment CollectionContent on Collection {
-  id
-  handle
-  title
-  descriptionHtml
-  heading: metafield(namespace: "hero", key: "title") {
-    value
-  }
-  byline: metafield(namespace: "hero", key: "byline") {
-    value
-  }
-  cta: metafield(namespace: "hero", key: "cta") {
-    value
-  }
-  spread: metafield(namespace: "hero", key: "spread") {
-    reference {
-      ...Media
-    }
-  }
-  spreadSecondary: metafield(namespace: "hero", key: "spread_secondary") {
-    reference {
-      ...Media
-    }
-  }
-}
-${MEDIA_FRAGMENT}
-`;
+import {
+  COLLECTION_CONTENT_FRAGMENT,
+  MEDIA_FRAGMENT,
+  PRODUCT_CARD_FRAGMENT,
+  PRODUCT_VARIANT_FRAGMENT,
+} from '~/data/fragments';
 
 export let SHOP_QUERY = `#graphql
   query shopQuery($country: CountryCode, $language: LanguageCode)
@@ -87,4 +63,59 @@ export let FEATURED_COLLECTIONS_QUERY = `#graphql
       }
     }
   }
+` as const;
+
+export let PRODUCT_QUERY = `#graphql
+  query Product(
+    $country: CountryCode
+    $language: LanguageCode
+    $handle: String!
+    $selectedOptions: [SelectedOptionInput!]!
+  ) @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      id
+      title
+      vendor
+      handle
+      descriptionHtml
+      description
+      options {
+        name
+        values
+      }
+      selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {
+        ...ProductVariantFragment
+      }
+      media(first: 7) {
+        nodes {
+          ...Media
+        }
+      }
+      variants(first: 1) {
+        nodes {
+          ...ProductVariantFragment
+        }
+      }
+      seo {
+        description
+        title
+      }
+    }
+    shop {
+      name
+      primaryDomain {
+        url
+      }
+      shippingPolicy {
+        body
+        handle
+      }
+      refundPolicy {
+        body
+        handle
+      }
+    }
+  }
+  ${MEDIA_FRAGMENT}
+  ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
