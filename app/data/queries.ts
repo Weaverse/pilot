@@ -65,6 +65,21 @@ export let FEATURED_COLLECTIONS_QUERY = `#graphql
   }
 ` as const;
 
+export let PRODUCT_INFO_QUERY = `#graphql
+  query ProductInfo(
+    $country: CountryCode
+    $language: LanguageCode
+    $handle: String!
+  ) @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      id
+      title
+      vendor
+      handle
+    }
+  }
+` as const;
+
 export let PRODUCT_QUERY = `#graphql
   query Product(
     $country: CountryCode
@@ -118,4 +133,23 @@ export let PRODUCT_QUERY = `#graphql
   }
   ${MEDIA_FRAGMENT}
   ${PRODUCT_VARIANT_FRAGMENT}
+` as const;
+
+export let RECOMMENDED_PRODUCTS_QUERY = `#graphql
+  query productRecommendations(
+    $productId: ID!
+    $count: Int
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    recommended: productRecommendations(productId: $productId) {
+      ...ProductCard
+    }
+    additional: products(first: $count, sortKey: BEST_SELLING) {
+      nodes {
+        ...ProductCard
+      }
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
 ` as const;
