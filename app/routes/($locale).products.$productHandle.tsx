@@ -1,17 +1,11 @@
-import {Await, useLoaderData} from '@remix-run/react';
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType} from '@shopify/hydrogen';
 import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
 import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
-import {Suspense} from 'react';
 import invariant from 'tiny-invariant';
-
-import {ProductSwimlane, Skeleton} from '~/components';
 import {routeHeaders} from '~/data/cache';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {PRODUCT_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
-import type {Storefront} from '~/lib/type';
 import {WeaverseContent} from '~/weaverse';
 import {loadWeaversePage} from '~/weaverse/loader';
 
@@ -42,7 +36,6 @@ export async function loader(args: LoaderArgs) {
     throw new Response('product', {status: 404});
   }
 
-  const recommended = getRecommendedProducts(context.storefront, product.id);
   const firstVariant = product.variants.nodes[0];
   const selectedVariant = product.selectedVariant ?? firstVariant;
 
@@ -62,10 +55,7 @@ export async function loader(args: LoaderArgs) {
   });
 
   return defer({
-    product,
     shop,
-    storeDomain: shop.primaryDomain.url,
-    recommended,
     analytics: {
       pageType: AnalyticsPageType.product,
       resourceId: product.id,
@@ -78,65 +68,5 @@ export async function loader(args: LoaderArgs) {
 }
 
 export default function Product() {
-  const {recommended} = useLoaderData<typeof loader>();
-  return (
-    <>
-      <WeaverseContent />
-      <Suspense fallback={<Skeleton className="h-32" />}>
-        <Await
-          errorElement="There was a problem loading related products"
-          resolve={recommended}
-        >
-          {(products) => (
-            <ProductSwimlane title="Related Products" products={products} />
-          )}
-        </Await>
-      </Suspense>
-    </>
-  );
-}
-
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  query productRecommendations(
-    $productId: ID!
-    $count: Int
-    $country: CountryCode
-    $language: LanguageCode
-  ) @inContext(country: $country, language: $language) {
-    recommended: productRecommendations(productId: $productId) {
-      ...ProductCard
-    }
-    additional: products(first: $count, sortKey: BEST_SELLING) {
-      nodes {
-        ...ProductCard
-      }
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
-
-async function getRecommendedProducts(
-  storefront: Storefront,
-  productId: string,
-) {
-  const products = await storefront.query(RECOMMENDED_PRODUCTS_QUERY, {
-    variables: {productId, count: 12},
-  });
-
-  invariant(products, 'No data returned from Shopify API');
-
-  const mergedProducts = (products.recommended ?? [])
-    .concat(products.additional.nodes)
-    .filter(
-      (value, index, array) =>
-        array.findIndex((value2) => value2.id === value.id) === index,
-    );
-
-  const originalProduct = mergedProducts.findIndex(
-    (item) => item.id === productId,
-  );
-
-  mergedProducts.splice(originalProduct, 1);
-
-  return {nodes: mergedProducts};
+  return <WeaverseContent />;
 }
