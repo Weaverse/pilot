@@ -97,7 +97,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'range',
           name: 'productsCount',
           label: 'Number of products',
-          defaultValue: 4,
+          defaultValue: 12,
           configs: {
             min: 1,
             max: 12,
