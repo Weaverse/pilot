@@ -1,15 +1,15 @@
+import {Await, useLoaderData, useNavigate} from '@remix-run/react';
 import type {WeaverseLoaderData} from '@weaverse/hydrogen';
 import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import {useLoaderData, Await, useNavigate} from '@remix-run/react';
 import {Suspense} from 'react';
-
-import {components, themeSchema} from './config';
+import {components} from './components';
+import {themeSchema} from './theme-schema';
 
 export function WeaverseContent() {
-  let {weaverseData} = useLoaderData() as {
-    weaverseData: WeaverseLoaderData | Promise<WeaverseLoaderData>;
-  };
   let navigate = useNavigate();
+  let loaderData = useLoaderData();
+  let weaverseData: WeaverseLoaderData | Promise<WeaverseLoaderData> =
+    loaderData.weaverseData;
 
   if (weaverseData) {
     if (weaverseData instanceof Promise) {
