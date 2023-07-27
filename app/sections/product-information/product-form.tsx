@@ -14,8 +14,18 @@ export function ProductForm(props: {
     totalValue: number;
   };
   storeDomain: string;
+  addToCartText: string;
+  soldOutText: string;
+  showSalePrice: boolean;
 }) {
-  const {product, analytics, storeDomain} = props;
+  const {
+    product,
+    analytics,
+    storeDomain,
+    addToCartText,
+    soldOutText,
+    showSalePrice,
+  } = props;
 
   const [currentSearchParams] = useSearchParams();
   const {location} = useNavigation();
@@ -80,7 +90,7 @@ export function ProductForm(props: {
           <div className="grid items-stretch gap-4">
             {isOutOfStock ? (
               <Button variant="secondary" disabled>
-                <Text>Sold out</Text>
+                <Text>{soldOutText}</Text>
               </Button>
             ) : (
               <AddToCartButton
@@ -99,15 +109,15 @@ export function ProductForm(props: {
               >
                 <Text
                   as="span"
-                  className="flex items-center justify-center gap-2"
+                  className="flex items-center justify-center gap-2 !max-w-full"
                 >
-                  <span>Add to Cart</span> <span>·</span>{' '}
+                  <span>{addToCartText}</span> <span>·</span>{' '}
                   <Money
                     withoutTrailingZeros
                     data={selectedVariant?.price!}
                     as="span"
                   />
-                  {isOnSale && (
+                  {showSalePrice && isOnSale && (
                     <Money
                       withoutTrailingZeros
                       data={selectedVariant?.compareAtPrice!}

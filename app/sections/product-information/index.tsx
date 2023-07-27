@@ -1,28 +1,54 @@
-import {useLoaderData} from '@remix-run/react';
+import {AnalyticsPageType, ShopifyAnalyticsProduct} from '@shopify/hydrogen';
+import {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseLoaderArgs,
 } from '@weaverse/hydrogen';
+import clsx from 'clsx';
 import {forwardRef} from 'react';
+import {ProductQuery} from 'storefrontapi.generated';
 import {Heading, ProductGallery, Section, Text} from '~/components';
+import {AspectRatio} from '~/components/ProductGallery';
+import {PRODUCT_QUERY} from '~/data/queries';
 import {getExcerpt} from '~/lib/utils';
 import {ProductDetail} from './product-detail';
 import {ProductForm} from './product-form';
-import {ProductQuery} from 'storefrontapi.generated';
-import {PRODUCT_QUERY} from '~/data/queries';
-import {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
-import {AnalyticsPageType, ShopifyAnalyticsProduct} from '@shopify/hydrogen';
+
+let gallerySizeMap = {
+  small: 'lg:col-span-2',
+  medium: 'lg:col-span-3',
+  large: 'lg:col-span-4',
+};
 
 interface ProductInformationProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
-  // heading: string;
-  // productsCount: number;
+  gallerySize: 'small' | 'medium' | 'large';
+  aspectRatio: AspectRatio;
+  addToCartText: string;
+  soldOutText: string;
+  showVendor: boolean;
+  showSalePrice: boolean;
+  showDetails: boolean;
+  showShippingPolicy: boolean;
+  showRefundPolicy: boolean;
 }
 
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
-    let {loaderData, ...rest} = props;
+    let {
+      loaderData,
+      gallerySize,
+      aspectRatio,
+      addToCartText,
+      soldOutText,
+      showVendor,
+      showSalePrice,
+      showDetails,
+      showShippingPolicy,
+      showRefundPolicy,
+      ...rest
+    } = props;
     if (loaderData) {
       let {product, shop, analytics, storeDomain} = loaderData;
       if (product) {
@@ -31,18 +57,30 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         return (
           <section ref={ref} {...rest}>
             <Section as="div" className="px-0 md:px-8 lg:px-12">
-              <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-6">
                 <ProductGallery
                   media={media.nodes}
-                  className="w-full lg:col-span-2"
+                  className={clsx('w-full', gallerySizeMap[gallerySize])}
+                  aspectRatio={aspectRatio}
                 />
-                <div className="sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll">
-                  <section className="flex flex-col w-full max-w-xl gap-8 p-6 md:mx-auto md:max-w-sm md:px-0">
+                <div
+                  className={clsx(
+                    'sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll',
+                    gallerySizeMap[
+                      gallerySize === 'small'
+                        ? 'large'
+                        : gallerySize === 'large'
+                        ? 'small'
+                        : 'medium'
+                    ],
+                  )}
+                >
+                  <section className="flex flex-col w-full gap-8 p-6 md:mx-auto md:px-0">
                     <div className="grid gap-2">
                       <Heading as="h1" className="whitespace-normal">
                         {title}
                       </Heading>
-                      {vendor && (
+                      {showVendor && vendor && (
                         <Text className={'opacity-50 font-medium'}>
                           {vendor}
                         </Text>
@@ -52,22 +90,25 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       product={product}
                       analytics={analytics}
                       storeDomain={storeDomain}
+                      addToCartText={addToCartText}
+                      soldOutText={soldOutText}
+                      showSalePrice={showSalePrice}
                     />
                     <div className="grid gap-4 py-4">
-                      {descriptionHtml && (
+                      {showDetails && descriptionHtml && (
                         <ProductDetail
                           title="Product Details"
                           content={descriptionHtml}
                         />
                       )}
-                      {shippingPolicy?.body && (
+                      {showShippingPolicy && shippingPolicy?.body && (
                         <ProductDetail
                           title="Shipping"
                           content={getExcerpt(shippingPolicy.body)}
                           learnMore={`/policies/${shippingPolicy.handle}`}
                         />
                       )}
-                      {refundPolicy?.body && (
+                      {showRefundPolicy && refundPolicy?.body && (
                         <ProductDetail
                           title="Returns"
                           content={getExcerpt(refundPolicy.body)}
@@ -140,24 +181,83 @@ export let schema: HydrogenComponentSchema = {
   title: 'Product information',
   inspector: [
     {
-      group: 'Product information',
+      group: 'Product gallery',
+      inputs: [
+        {
+          type: 'toggle-group',
+          label: 'Gallery size',
+          name: 'gallerySize',
+          configs: {
+            options: [
+              {value: 'small', label: 'Small'},
+              {value: 'medium', label: 'Medium'},
+              {value: 'large', label: 'Large'},
+            ],
+          },
+          defaultValue: 'large',
+          helpText: 'Apply on large screens only.',
+        },
+        {
+          type: 'select',
+          label: 'Image aspect ratio',
+          name: 'aspectRatio',
+          configs: {
+            options: [
+              {value: 'auto', label: 'Adapt to image'},
+              {value: '1/1', label: '1/1'},
+              {value: '3/4', label: '3/4'},
+              {value: '4/5', label: '4/5'},
+              {value: '4/3', label: '4/3'},
+            ],
+          },
+          defaultValue: '4/5',
+        },
+      ],
+    },
+    {
+      group: 'Product form',
       inputs: [
         {
           type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Featured Products',
+          label: 'Add to cart text',
+          name: 'addToCartText',
+          defaultValue: 'Add to cart',
         },
         {
-          type: 'range',
-          name: 'productsCount',
-          label: 'Number of products',
-          defaultValue: 4,
-          configs: {
-            min: 1,
-            max: 12,
-            step: 1,
-          },
+          type: 'text',
+          label: 'Sold out text',
+          name: 'soldOutText',
+          defaultValue: 'Sold out',
+        },
+        {
+          type: 'switch',
+          label: 'Show vendor',
+          name: 'showVendor',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show sale price',
+          name: 'showSalePrice',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show details',
+          name: 'showDetails',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show shipping policy',
+          name: 'showShippingPolicy',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show refund policy',
+          name: 'showRefundPolicy',
+          defaultValue: true,
         },
       ],
     },
