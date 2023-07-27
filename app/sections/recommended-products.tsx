@@ -1,4 +1,3 @@
-import {Storefront} from '@shopify/hydrogen';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
