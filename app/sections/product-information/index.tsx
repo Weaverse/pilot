@@ -32,6 +32,7 @@ interface ProductInformationProps extends HydrogenComponentProps {
 
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
+    let {product, shop} = useLoaderData<ProductQuery>();
     let {
       gallerySize,
       aspectRatio,
