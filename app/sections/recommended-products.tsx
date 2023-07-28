@@ -82,6 +82,10 @@ export let loader = async ({context, params}: WeaverseLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: 'recommended-products',
   title: 'Recommended products',
+  limit: 1,
+  enabledOn: {
+    pages: ['PRODUCT'],
+  },
   inspector: [
     {
       group: 'Recommended products',

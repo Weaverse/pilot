@@ -1,31 +1,26 @@
-import {useNavigation, useSearchParams} from '@remix-run/react';
+import {useLoaderData, useNavigation, useSearchParams} from '@remix-run/react';
 import {Money, ShopPayButton, ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {useMemo} from 'react';
+import {ProductQuery} from 'storefrontapi.generated';
 import {AddToCartButton, Button, Text} from '~/components';
 import {ProductOptions} from './product-options';
-import {ProductQuery} from 'storefrontapi.generated';
 
 export function ProductForm(props: {
-  product: NonNullable<ProductQuery['product']>;
-  analytics: {
-    pageType: 'product';
-    resourceId: any;
-    products: ShopifyAnalyticsProduct[];
-    totalValue: number;
-  };
-  storeDomain: string;
   addToCartText: string;
   soldOutText: string;
   showSalePrice: boolean;
 }) {
-  const {
-    product,
-    analytics,
-    storeDomain,
-    addToCartText,
-    soldOutText,
-    showSalePrice,
-  } = props;
+  const {product, analytics, storeDomain} = useLoaderData<{
+    product: NonNullable<ProductQuery['product']>;
+    analytics: {
+      pageType: 'product';
+      resourceId: any;
+      products: ShopifyAnalyticsProduct[];
+      totalValue: number;
+    };
+    storeDomain: string;
+  }>();
+  const {addToCartText, soldOutText, showSalePrice} = props;
 
   const [currentSearchParams] = useSearchParams();
   const {location} = useNavigation();

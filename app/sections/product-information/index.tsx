@@ -1,16 +1,13 @@
-import {AnalyticsPageType, ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
+import {useLoaderData} from '@remix-run/react';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  WeaverseLoaderArgs,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
 import {ProductQuery} from 'storefrontapi.generated';
 import {Heading, ProductGallery, Section, Text} from '~/components';
 import {AspectRatio} from '~/components/ProductGallery';
-import {PRODUCT_QUERY} from '~/data/queries';
 import {getExcerpt} from '~/lib/utils';
 import {ProductDetail} from './product-detail';
 import {ProductForm} from './product-form';
@@ -21,8 +18,7 @@ let gallerySizeMap = {
   large: 'lg:col-span-4',
 };
 
-interface ProductInformationProps
-  extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
+interface ProductInformationProps extends HydrogenComponentProps {
   gallerySize: 'small' | 'medium' | 'large';
   aspectRatio: AspectRatio;
   addToCartText: string;
@@ -37,7 +33,6 @@ interface ProductInformationProps
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
     let {
-      loaderData,
       gallerySize,
       aspectRatio,
       addToCartText,
@@ -49,80 +44,72 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       showRefundPolicy,
       ...rest
     } = props;
-    if (loaderData) {
-      let {product, shop, analytics, storeDomain} = loaderData;
-      if (product) {
-        let {media, title, vendor, descriptionHtml} = product;
-        let {shippingPolicy, refundPolicy} = shop;
-        return (
-          <section ref={ref} {...rest}>
-            <Section as="div" className="px-0 md:px-8 lg:px-12">
-              <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-6">
-                <ProductGallery
-                  media={media.nodes}
-                  className={clsx('w-full', gallerySizeMap[gallerySize])}
-                  aspectRatio={aspectRatio}
-                />
-                <div
-                  className={clsx(
-                    'sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll',
-                    gallerySizeMap[
-                      gallerySize === 'small'
-                        ? 'large'
-                        : gallerySize === 'large'
-                        ? 'small'
-                        : 'medium'
-                    ],
-                  )}
-                >
-                  <section className="flex flex-col w-full gap-8 p-6 md:mx-auto md:px-0">
-                    <div className="grid gap-2">
-                      <Heading as="h1" className="whitespace-normal">
-                        {title}
-                      </Heading>
-                      {showVendor && vendor && (
-                        <Text className={'opacity-50 font-medium'}>
-                          {vendor}
-                        </Text>
-                      )}
-                    </div>
-                    <ProductForm
-                      product={product}
-                      analytics={analytics}
-                      storeDomain={storeDomain}
-                      addToCartText={addToCartText}
-                      soldOutText={soldOutText}
-                      showSalePrice={showSalePrice}
-                    />
-                    <div className="grid gap-4 py-4">
-                      {showDetails && descriptionHtml && (
-                        <ProductDetail
-                          title="Product Details"
-                          content={descriptionHtml}
-                        />
-                      )}
-                      {showShippingPolicy && shippingPolicy?.body && (
-                        <ProductDetail
-                          title="Shipping"
-                          content={getExcerpt(shippingPolicy.body)}
-                          learnMore={`/policies/${shippingPolicy.handle}`}
-                        />
-                      )}
-                      {showRefundPolicy && refundPolicy?.body && (
-                        <ProductDetail
-                          title="Returns"
-                          content={getExcerpt(refundPolicy.body)}
-                          learnMore={`/policies/${refundPolicy.handle}`}
-                        />
-                      )}
-                    </div>
-                  </section>
-                </div>
+    if (product) {
+      const {media, title, vendor, descriptionHtml} = product;
+      const {shippingPolicy, refundPolicy} = shop;
+      return (
+        <section ref={ref} {...rest}>
+          <Section as="div" className="px-0 md:px-8 lg:px-12">
+            <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-6">
+              <ProductGallery
+                media={media.nodes}
+                className={clsx('w-full', gallerySizeMap[gallerySize])}
+                aspectRatio={aspectRatio}
+              />
+              <div
+                className={clsx(
+                  'sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll',
+                  gallerySizeMap[
+                    gallerySize === 'small'
+                      ? 'large'
+                      : gallerySize === 'large'
+                      ? 'small'
+                      : 'medium'
+                  ],
+                )}
+              >
+                <section className="flex flex-col w-full gap-8 p-6 md:mx-auto md:px-0">
+                  <div className="grid gap-2">
+                    <Heading as="h1" className="whitespace-normal">
+                      {title}
+                    </Heading>
+                    {showVendor && vendor && (
+                      <Text className={'opacity-50 font-medium'}>{vendor}</Text>
+                    )}
+                  </div>
+                  <ProductForm
+                    addToCartText={addToCartText}
+                    soldOutText={soldOutText}
+                    showSalePrice={showSalePrice}
+                  />
+                  <div className="grid gap-4 py-4">
+                    {showDetails && descriptionHtml && (
+                      <ProductDetail
+                        title="Product Details"
+                        content={descriptionHtml}
+                      />
+                    )}
+                    {showShippingPolicy && shippingPolicy?.body && (
+                      <ProductDetail
+                        title="Shipping"
+                        content={getExcerpt(shippingPolicy.body)}
+                        learnMore={`/policies/${shippingPolicy.handle}`}
+                      />
+                    )}
+                    {showRefundPolicy && refundPolicy?.body && (
+                      <ProductDetail
+                        title="Returns"
+                        content={getExcerpt(refundPolicy.body)}
+                        learnMore={`/policies/${refundPolicy.handle}`}
+                      />
+                    )}
+                  </div>
+                </section>
               </div>
-            </Section>
-          </section>
-        );
-      }
+            </div>
+          </Section>
+        </section>
+      );
     }
     return <div ref={ref} {...rest} />;
   },
@@ -130,55 +117,10 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
 
 export default ProductInformation;
 
-export let loader = async ({context, request, params}: WeaverseLoaderArgs) => {
-  let {productHandle} = params;
-  let searchParams = new URL(request.url).searchParams;
-  let selectedOptions: SelectedOptionInput[] = [];
-  searchParams.forEach((value, name) => {
-    selectedOptions.push({name, value});
-  });
-
-  let {shop, product} = await context.storefront.query<ProductQuery>(
-    PRODUCT_QUERY,
-    {
-      variables: {
-        handle: productHandle,
-        selectedOptions,
-        country: context.storefront.i18n.country,
-        language: context.storefront.i18n.language,
-      },
-    },
-  );
-
-  if (product) {
-    let firstVariant = product.variants.nodes[0];
-    let selectedVariant = product.selectedVariant ?? firstVariant;
-    let productAnalytics: ShopifyAnalyticsProduct = {
-      productGid: product.id,
-      variantGid: selectedVariant.id,
-      name: product.title,
-      variantName: selectedVariant.title,
-      brand: product.vendor,
-      price: selectedVariant.price.amount,
-    };
-    return {
-      shop,
-      product,
-      storeDomain: shop.primaryDomain.url,
-      analytics: {
-        pageType: AnalyticsPageType.product,
-        resourceId: product.id,
-        products: [productAnalytics],
-        totalValue: parseFloat(selectedVariant.price.amount),
-      },
-    };
-  }
-  return null;
-};
-
 export let schema: HydrogenComponentSchema = {
   type: 'product-information',
   title: 'Product information',
+  limit: 1,
   enabledOn: {
     pages: ['PRODUCT'],
   },
