@@ -13,10 +13,10 @@ import {HOMEPAGE_SEO_QUERY} from '~/data/queries';
 
 interface HeroProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
-  collectionHandle?: string;
-  height?: 'full';
-  top?: boolean;
-  loading?: HTMLImageElement['loading'];
+  collectionHandle: string;
+  height: 'full';
+  top: boolean;
+  loading: HTMLImageElement['loading'];
 }
 
 let Hero = forwardRef<HTMLElement, HeroProps>((props, ref) => {
