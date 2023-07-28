@@ -1,24 +1,29 @@
-import {Await, useMatches} from '@remix-run/react';
-import {Suspense} from 'react';
-import invariant from 'tiny-invariant';
+import type {
+  CartBuyerIdentityInput,
+  CartInput,
+  CartLineInput,
+  CartLineUpdateInput,
+  Cart as CartType,
+  CartUserError,
+  UserError,
+} from '@shopify/hydrogen/storefront-api-types';
 import {
+  LoaderArgs,
   json,
   type ActionArgs,
   type AppLoadContext,
 } from '@shopify/remix-oxygen';
-import type {
-  Cart as CartType,
-  CartInput,
-  CartLineInput,
-  CartLineUpdateInput,
-  CartUserError,
-  UserError,
-  CartBuyerIdentityInput,
-} from '@shopify/hydrogen/storefront-api-types';
-
-import {CartLoading, Cart} from '~/components';
-import {isLocalPath, getCartId} from '~/lib/utils';
+import invariant from 'tiny-invariant';
 import {CartAction, type CartActions} from '~/lib/type';
+import {getCartId, isLocalPath} from '~/lib/utils';
+import {WeaverseContent} from '~/weaverse';
+import {loadWeaversePage} from '~/weaverse/loader';
+
+export async function loader(args: LoaderArgs) {
+  return json({
+    weaverseData: await loadWeaversePage(args),
+  });
+}
 
 export async function action({request, context}: ActionArgs) {
   const {session, storefront} = context;
@@ -174,17 +179,7 @@ export async function action({request, context}: ActionArgs) {
 }
 
 export default function CartRoute() {
-  const [root] = useMatches();
-  // @todo: finish on a separate PR
-  return (
-    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
-      <Suspense fallback={<CartLoading />}>
-        <Await resolve={root.data?.cart}>
-          {(cart) => <Cart layout="page" cart={cart} />}
-        </Await>
-      </Suspense>
-    </div>
-  );
+  return <WeaverseContent />;
 }
 
 /*
