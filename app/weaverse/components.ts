@@ -4,6 +4,7 @@ import * as CollectionList from '~/sections/collection-list';
 import * as FeaturedCollections from '~/sections/featured-collections';
 import * as FeaturedProducts from '~/sections/featured-products';
 import * as Hero from '~/sections/hero';
+import * as Cart from '~/sections/cart';
 import * as ImageGallery from '~/sections/image-gallery';
 import * as ImageGalleryItem from '~/sections/image-gallery/image';
 import * as Main from '~/sections/main';
@@ -14,6 +15,7 @@ import * as TestimonialItem from '~/sections/testimonial/item';
 
 export let components: HydrogenComponent[] = [
   Main,
+  Cart,
   Hero,
   FeaturedProducts,
   FeaturedCollections,

@@ -23,7 +23,6 @@ let CollectionList = forwardRef<HTMLElement, CollectionListProps>(
     let {collections} = useLoaderData<CollectionsQuery>();
     let {heading, prevButtonText, nextButtonText, imageAspectRatio, ...rest} =
       props;
-    console.log('👉 --------> - imageAspectRatio:', imageAspectRatio);
     return (
       <section ref={ref} {...rest}>
         <PageHeader heading={heading} />
