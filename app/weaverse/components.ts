@@ -9,6 +9,7 @@ import * as ProductInformation from '~/sections/product-information';
 import * as RecommendedProducts from '~/sections/recommended-products';
 import * as Testimonial from '~/sections/testimonial';
 import * as TestimonialItem from '~/sections/testimonial/item';
+import * as CollectionFilters from '~/sections/collection-filters';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -21,4 +22,5 @@ export let components: HydrogenComponent[] = [
   ImageGalleryItem,
   ProductInformation,
   RecommendedProducts,
+  CollectionFilters,
 ];

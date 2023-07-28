@@ -1,31 +1,17 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
-import type {
-  Filter,
-  ProductCollectionSortKeys,
-} from '@shopify/hydrogen/storefront-api-types';
 import {
-  flattenConnection,
   AnalyticsPageType,
-  Pagination,
+  flattenConnection,
   getPaginationVariables,
 } from '@shopify/hydrogen';
+import type {ProductCollectionSortKeys} from '@shopify/hydrogen/storefront-api-types';
+import {json, type LoaderArgs} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
-
-import {
-  PageHeader,
-  Section,
-  Text,
-  SortFilter,
-  Grid,
-  ProductCard,
-  Button,
-} from '~/components';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {routeHeaders} from '~/data/cache';
-import {seoPayload} from '~/lib/seo.server';
 import type {AppliedFilter, SortParam} from '~/components/SortFilter';
-import {getImageLoadingPriority} from '~/lib/const';
+import {routeHeaders} from '~/data/cache';
+import {COLLECTION_QUERY} from '~/data/queries';
+import {seoPayload} from '~/lib/seo.server';
+import {WeaverseContent} from '~/weaverse';
+import {loadWeaversePage} from '~/weaverse/loader';
 
 export const headers = routeHeaders;
 
@@ -39,7 +25,8 @@ type FiltersQueryParams = Array<
   VariantFilterParam | PriceFiltersQueryParam | VariantOptionFiltersQueryParam
 >;
 
-export async function loader({params, request, context}: LoaderArgs) {
+export async function loader(args: LoaderArgs) {
+  const {params, request, context} = args;
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 8,
   });
@@ -132,134 +119,13 @@ export async function loader({params, request, context}: LoaderArgs) {
       resourceId: collection.id,
     },
     seo,
+    weaverseData: await loadWeaversePage(args),
   });
 }
 
 export default function Collection() {
-  const {collection, collections, appliedFilters} =
-    useLoaderData<typeof loader>();
-
-  return (
-    <>
-      <PageHeader heading={collection.title}>
-        {collection?.description && (
-          <div className="flex items-baseline justify-between w-full">
-            <div>
-              <Text format width="narrow" as="p" className="inline-block">
-                {collection.description}
-              </Text>
-            </div>
-          </div>
-        )}
-      </PageHeader>
-      <Section>
-        <SortFilter
-          filters={collection.products.filters as Filter[]}
-          appliedFilters={appliedFilters}
-          collections={collections}
-        >
-          <Pagination connection={collection.products}>
-            {({nodes, isLoading, PreviousLink, NextLink}) => (
-              <>
-                <div className="flex items-center justify-center mb-6">
-                  <Button as={PreviousLink} variant="secondary" width="full">
-                    {isLoading ? 'Loading...' : 'Load previous'}
-                  </Button>
-                </div>
-                <Grid layout="products">
-                  {nodes.map((product, i) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      loading={getImageLoadingPriority(i)}
-                    />
-                  ))}
-                </Grid>
-                <div className="flex items-center justify-center mt-6">
-                  <Button as={NextLink} variant="secondary" width="full">
-                    {isLoading ? 'Loading...' : 'Load more products'}
-                  </Button>
-                </div>
-              </>
-            )}
-          </Pagination>
-        </SortFilter>
-      </Section>
-    </>
-  );
+  return <WeaverseContent />;
 }
-
-const COLLECTION_QUERY = `#graphql
-  query CollectionDetails(
-    $handle: String!
-    $country: CountryCode
-    $language: LanguageCode
-    $filters: [ProductFilter!]
-    $sortKey: ProductCollectionSortKeys!
-    $reverse: Boolean
-    $first: Int
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-  ) @inContext(country: $country, language: $language) {
-    collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      seo {
-        description
-        title
-      }
-      image {
-        id
-        url
-        width
-        height
-        altText
-      }
-      products(
-        first: $first,
-        last: $last,
-        before: $startCursor,
-        after: $endCursor,
-        filters: $filters,
-        sortKey: $sortKey,
-        reverse: $reverse
-      ) {
-        filters {
-          id
-          label
-          type
-          values {
-            id
-            label
-            count
-            input
-          }
-        }
-        nodes {
-          ...ProductCard
-        }
-        pageInfo {
-          hasPreviousPage
-          hasNextPage
-          hasNextPage
-          endCursor
-        }
-      }
-    }
-    collections(first: 100) {
-      edges {
-        node {
-          title
-          handle
-        }
-      }
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
 
 function getSortValuesFromParam(sortParam: SortParam | null): {
   sortKey: ProductCollectionSortKeys;
