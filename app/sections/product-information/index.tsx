@@ -179,6 +179,9 @@ export let loader = async ({context, request, params}: WeaverseLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: 'product-information',
   title: 'Product information',
+  enabledOn: {
+    pages: ['PRODUCT'],
+  },
   inspector: [
     {
       group: 'Product gallery',

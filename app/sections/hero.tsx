@@ -103,7 +103,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'collection',
           name: 'collectionHandle',
           label: 'Preview',
-          defaultValue: 'freestyle',
+          defaultValue: 'frontpage',
         },
         {
           type: 'toggle-group',
