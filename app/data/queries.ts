@@ -321,3 +321,46 @@ export let SEARCH_QUERY = `#graphql
 
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;
+
+export let BLOGS_QUERY = `#graphql
+  query Blog(
+    $language: LanguageCode
+    $blogHandle: String!
+    $pageBy: Int!
+    $cursor: String
+  ) @inContext(language: $language) {
+    blog(handle: $blogHandle) {
+      title
+      handle
+      seo {
+        title
+        description
+      }
+      articles(first: $pageBy, after: $cursor) {
+        edges {
+          node {
+            ...Article
+          }
+        }
+      }
+    }
+  }
+
+  fragment Article on Article {
+    author: authorV2 {
+      name
+    }
+    contentHtml
+    handle
+    id
+    image {
+      id
+      altText
+      url
+      width
+      height
+    }
+    publishedAt
+    title
+  }
+`;
