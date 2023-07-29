@@ -8,6 +8,7 @@ import * as Cart from '~/sections/cart';
 import * as ImageGallery from '~/sections/image-gallery';
 import * as ImageGalleryItem from '~/sections/image-gallery/image';
 import * as Main from '~/sections/main';
+import * as Search from '~/sections/search';
 import * as ProductInformation from '~/sections/product-information';
 import * as RecommendedProducts from '~/sections/recommended-products';
 import * as Testimonial from '~/sections/testimonial';
@@ -17,6 +18,7 @@ export let components: HydrogenComponent[] = [
   Main,
   Cart,
   Hero,
+  Search,
   FeaturedProducts,
   FeaturedCollections,
   Testimonial,

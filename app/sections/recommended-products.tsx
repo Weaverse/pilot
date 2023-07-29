@@ -95,6 +95,7 @@ export let schema: HydrogenComponentSchema = {
           name: 'heading',
           label: 'Heading',
           defaultValue: 'You may also like',
+          placeholder: 'Recommended products',
         },
         {
           type: 'range',

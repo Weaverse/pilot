@@ -58,6 +58,7 @@ export let schema: HydrogenComponentSchema = {
           name: 'heading',
           label: 'Heading',
           defaultValue: 'Featured Products',
+          placeholder: 'Featured Products',
         },
         {
           type: 'range',

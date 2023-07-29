@@ -36,7 +36,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'text',
           name: 'heading',
           label: 'Heading',
-          placeholder: 'Enter heading here',
+          placeholder: 'Section heading',
           defaultValue: 'Testimonials',
         },
       ],

@@ -168,12 +168,14 @@ export let schema: HydrogenComponentSchema = {
           label: 'Add to cart text',
           name: 'addToCartText',
           defaultValue: 'Add to cart',
+          placeholder: 'Add to cart',
         },
         {
           type: 'text',
           label: 'Sold out text',
           name: 'soldOutText',
           defaultValue: 'Sold out',
+          placeholder: 'Sold out',
         },
         {
           type: 'switch',
