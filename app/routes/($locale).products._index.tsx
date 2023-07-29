@@ -8,15 +8,22 @@ import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
+import {AllProductsQuery} from 'storefrontapi.generated';
+import {WeaverseContent} from '~/weaverse';
+import {loadWeaversePage} from '~/weaverse/loader';
 
 const PAGE_BY = 8;
 
 export const headers = routeHeaders;
 
-export async function loader({request, context: {storefront}}: LoaderArgs) {
+export async function loader(args: LoaderArgs) {
+  let {
+    request,
+    context: {storefront},
+  } = args;
   const variables = getPaginationVariables(request, {pageBy: PAGE_BY});
 
-  const data = await storefront.query(ALL_PRODUCTS_QUERY, {
+  const data = await storefront.query<AllProductsQuery>(ALL_PRODUCTS_QUERY, {
     variables: {
       ...variables,
       country: storefront.i18n.country,
@@ -47,6 +54,7 @@ export async function loader({request, context: {storefront}}: LoaderArgs) {
   return json({
     products: data.products,
     seo,
+    weaverseData: await loadWeaversePage(args),
   });
 }
 
@@ -85,6 +93,7 @@ export default function AllProducts() {
           }}
         </Pagination>
       </Section>
+      <WeaverseContent />
     </>
   );
 }
