@@ -8,6 +8,7 @@ import {themeSchema} from './theme-schema';
 export function WeaverseContent() {
   let navigate = useNavigate();
   let loaderData = useLoaderData();
+
   let weaverseData: WeaverseLoaderData | Promise<WeaverseLoaderData> =
     loaderData.weaverseData;
 
