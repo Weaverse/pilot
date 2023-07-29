@@ -21,6 +21,7 @@ import {NoResults} from './no-results';
 
 interface SearchProps extends HydrogenComponentProps {
   heading: string;
+  headingSize: 'display' | 'heading' | 'lead' | 'copy';
   searchInputPlaceholder: string;
   searchButtonText: string;
   noResultsText: string;
@@ -40,6 +41,7 @@ let Search = forwardRef<HTMLElement, SearchProps>((props, ref) => {
   let noResults = products?.nodes?.length === 0;
   let {
     heading,
+    headingSize,
     searchInputPlaceholder,
     searchButtonText,
     noResultsText,
@@ -52,7 +54,7 @@ let Search = forwardRef<HTMLElement, SearchProps>((props, ref) => {
   return (
     <section ref={ref} {...rest}>
       <PageHeader>
-        <Heading as="h1" size="copy">
+        <Heading as="h1" size={headingSize}>
           {heading}
         </Heading>
         <Form method="get" className="relative flex w-full text-heading">
@@ -135,6 +137,20 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Search',
         },
         {
+          type: 'select',
+          label: 'Heading size',
+          name: 'headingSize',
+          configs: {
+            options: [
+              {value: 'heading', label: 'Heading'},
+              {value: 'display', label: 'Display'},
+              {value: 'copy', label: 'Copy'},
+              {value: 'lead', label: 'Lead'},
+            ],
+          },
+          defaultValue: 'copy',
+        },
+        {
           type: 'text',
           name: 'searchInputPlaceholder',
           label: 'Search input placeholder',
@@ -144,22 +160,15 @@ export let schema: HydrogenComponentSchema = {
         {
           type: 'text',
           name: 'searchButtonText',
-          label: 'Search button',
+          label: 'Search button text',
           defaultValue: 'Go',
           placeholder: 'Go',
         },
       ],
     },
     {
-      group: 'No results',
+      group: 'Recommendations',
       inputs: [
-        {
-          type: 'text',
-          name: 'noResultsText',
-          label: 'No results text',
-          defaultValue: 'No results, try a different search.',
-          placeholder: 'No results, try a different search.',
-        },
         {
           type: 'switch',
           name: 'showRelatedCollections',
@@ -187,6 +196,18 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'Trending Products',
           placeholder: 'Trending Products',
           condition: 'showRelatedProducts.eq.true',
+        },
+      ],
+    },
+    {
+      group: 'No results',
+      inputs: [
+        {
+          type: 'text',
+          name: 'noResultsText',
+          label: 'No results text',
+          defaultValue: 'No results, try a different search.',
+          placeholder: 'No results, try a different search.',
         },
       ],
     },
