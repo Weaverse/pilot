@@ -19,12 +19,17 @@ import {
 import type {AppliedFilter} from '~/components/SortFilter';
 import {getImageLoadingPriority} from '~/lib/const';
 
-interface CollectionFiltersProps extends HydrogenComponentProps {}
+interface CollectionFiltersProps extends HydrogenComponentProps {
+  showCollectionDescription: boolean;
+  loadPrevText: string;
+  loadMoreText: string;
+}
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, ref) => {
-    const {...rest} = props;
-    const {collection, collections, appliedFilters} = useLoaderData<
+    let {showCollectionDescription, loadPrevText, loadMoreText, ...rest} =
+      props;
+    let {collection, collections, appliedFilters} = useLoaderData<
       CollectionDetailsQuery & {
         collections: Array<{handle: string; title: string}>;
         appliedFilters: AppliedFilter[];
@@ -34,7 +39,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       return (
         <section ref={ref} {...rest}>
           <PageHeader heading={collection.title}>
-            {collection?.description && (
+            {showCollectionDescription && collection?.description && (
               <div className="flex items-baseline justify-between w-full">
                 <div>
                   <Text format width="narrow" as="p" className="inline-block">
@@ -59,7 +64,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                         variant="secondary"
                         width="full"
                       >
-                        {isLoading ? 'Loading...' : 'Load previous'}
+                        {isLoading ? 'Loading...' : loadPrevText}
                       </Button>
                     </div>
                     <Grid layout="products">
@@ -73,7 +78,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                     </Grid>
                     <div className="flex items-center justify-center mt-6">
                       <Button as={NextLink} variant="secondary" width="full">
-                        {isLoading ? 'Loading...' : 'Load more products'}
+                        {isLoading ? 'Loading...' : loadMoreText}
                       </Button>
                     </div>
                   </>
@@ -103,49 +108,22 @@ export let schema: HydrogenComponentSchema = {
       group: 'Collection filters',
       inputs: [
         {
-          type: 'collection',
-          name: 'collectionHandle',
-          label: 'Preview',
-          defaultValue: 'frontpage',
-        },
-        {
-          type: 'toggle-group',
-          name: 'loading',
-          label: 'Background image loading',
-          defaultValue: 'eager',
-          configs: {
-            options: [
-              {label: 'Eager', value: 'eager', icon: 'Lightning'},
-              {
-                label: 'Lazy',
-                value: 'lazy',
-                icon: 'SpinnerGap',
-                weight: 'light',
-              },
-            ],
-          },
-          helpText:
-            'Learn more about <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading" target="_blank" rel="noopener noreferrer">image loading strategies</a>.',
-        },
-        {
-          type: 'select',
-          label: 'Height',
-          name: 'height',
-          configs: {
-            options: [
-              {label: 'Auto', value: 'auto'},
-              {label: 'Fullscreen', value: 'full'},
-            ],
-          },
-          defaultValue: 'auto',
-        },
-        {
           type: 'switch',
-          name: 'top',
-          label: 'Top',
+          name: 'showCollectionDescription',
+          label: 'Show collection description',
           defaultValue: true,
-          helpText:
-            'Push the hero to the top of the page by adding a negative margin.',
+        },
+        {
+          type: 'text',
+          name: 'loadPrevText',
+          label: 'Load previous text',
+          defaultValue: 'Load previous',
+        },
+        {
+          type: 'text',
+          name: 'loadMoreText',
+          label: 'Load more text',
+          defaultValue: 'Load more products',
         },
       ],
     },
