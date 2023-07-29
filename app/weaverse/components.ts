@@ -15,12 +15,14 @@ import * as Testimonial from '~/sections/testimonial';
 import * as TestimonialItem from '~/sections/testimonial/item';
 import * as CustomerLogin from '~/sections/customer/login';
 import * as CustomerRegister from '~/sections/customer/register';
+import * as Blogs from '~/sections/blogs';
 
 export let components: HydrogenComponent[] = [
   Main,
   Cart,
   Hero,
   Search,
+  Blogs,
   FeaturedProducts,
   FeaturedCollections,
   Testimonial,

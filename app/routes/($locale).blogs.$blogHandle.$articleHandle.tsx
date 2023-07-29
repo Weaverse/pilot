@@ -8,8 +8,7 @@ import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
 
 import styles from '../styles/custom-font.css';
-
-const BLOG_HANDLE = 'journal';
+import {ArticleDetailsQuery} from 'storefrontapi.generated';
 
 export const headers = routeHeaders;
 
@@ -20,15 +19,19 @@ export const links: LinksFunction = () => {
 export async function loader({request, params, context}: LoaderArgs) {
   const {language, country} = context.storefront.i18n;
 
-  invariant(params.journalHandle, 'Missing journal handle');
+  invariant(params.blogHandle, 'Missing blog handle');
+  invariant(params.articleHandle, 'Missing article handle');
 
-  const {blog} = await context.storefront.query(ARTICLE_QUERY, {
-    variables: {
-      blogHandle: BLOG_HANDLE,
-      articleHandle: params.journalHandle,
-      language,
+  const {blog} = await context.storefront.query<ArticleDetailsQuery>(
+    ARTICLE_QUERY,
+    {
+      variables: {
+        blogHandle: params.blogHandle,
+        articleHandle: params.articleHandle,
+        language,
+      },
     },
-  });
+  );
 
   if (!blog?.articleByHandle) {
     throw new Response(null, {status: 404});
@@ -49,6 +52,7 @@ export async function loader({request, params, context}: LoaderArgs) {
 
 export default function Article() {
   const {article, formattedDate} = useLoaderData<typeof loader>();
+  console.log('👉 --------> - article:', article);
 
   const {title, image, contentHtml, author} = article;
 
