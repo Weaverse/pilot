@@ -252,7 +252,7 @@ export let COLLECTION_QUERY = `#graphql
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;
 
-export const COLLECTIONS_QUERY = `#graphql
+export let COLLECTIONS_QUERY = `#graphql
   query Collections(
     $country: CountryCode
     $language: LanguageCode
@@ -288,3 +288,36 @@ export const COLLECTIONS_QUERY = `#graphql
     }
   }
 `;
+
+export let SEARCH_QUERY = `#graphql
+  query PaginatedProductsSearch(
+    $country: CountryCode
+    $endCursor: String
+    $first: Int
+    $language: LanguageCode
+    $last: Int
+    $searchTerm: String
+    $startCursor: String
+  ) @inContext(country: $country, language: $language) {
+    products(
+      first: $first,
+      last: $last,
+      before: $startCursor,
+      after: $endCursor,
+      sortKey: RELEVANCE,
+      query: $searchTerm
+    ) {
+      nodes {
+        ...ProductCard
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+    }
+  }
+
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;
