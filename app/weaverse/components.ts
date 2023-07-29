@@ -14,6 +14,7 @@ import * as RecommendedProducts from '~/sections/recommended-products';
 import * as Testimonial from '~/sections/testimonial';
 import * as TestimonialItem from '~/sections/testimonial/item';
 import * as CustomerLogin from '~/sections/customer/login';
+import * as CustomerRegister from '~/sections/customer/register';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -31,4 +32,5 @@ export let components: HydrogenComponent[] = [
   CollectionFilters,
   CollectionList,
   CustomerLogin,
+  CustomerRegister,
 ];
