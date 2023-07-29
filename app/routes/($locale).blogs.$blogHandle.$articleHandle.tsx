@@ -1,14 +1,12 @@
 import {json, type LinksFunction, type LoaderArgs} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
-import {Image} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
-
-import {PageHeader, Section} from '~/components';
-import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
-
-import styles from '../styles/custom-font.css';
+import {seoPayload} from '~/lib/seo.server';
 import {ArticleDetailsQuery} from 'storefrontapi.generated';
+import {ARTICLE_QUERY} from '~/data/queries';
+import {WeaverseContent} from '~/weaverse';
+import {loadWeaversePage} from '~/weaverse/loader';
+import styles from '../styles/custom-font.css';
 
 export const headers = routeHeaders;
 
@@ -16,7 +14,8 @@ export const links: LinksFunction = () => {
   return [{rel: 'stylesheet', href: styles}];
 };
 
-export async function loader({request, params, context}: LoaderArgs) {
+export async function loader(args: LoaderArgs) {
+  let {request, params, context} = args;
   const {language, country} = context.storefront.i18n;
 
   invariant(params.blogHandle, 'Missing blog handle');
@@ -47,66 +46,14 @@ export async function loader({request, params, context}: LoaderArgs) {
 
   const seo = seoPayload.article({article, url: request.url});
 
-  return json({article, formattedDate, seo});
+  return json({
+    article,
+    formattedDate,
+    seo,
+    weaverseData: await loadWeaversePage(args),
+  });
 }
 
 export default function Article() {
-  const {article, formattedDate} = useLoaderData<typeof loader>();
-  console.log('👉 --------> - article:', article);
-
-  const {title, image, contentHtml, author} = article;
-
-  return (
-    <>
-      <PageHeader heading={title} variant="blogPost">
-        <span>
-          {formattedDate} &middot; {author?.name}
-        </span>
-      </PageHeader>
-      <Section as="article" padding="x">
-        {image && (
-          <Image
-            data={image}
-            className="w-full mx-auto mt-8 md:mt-16 max-w-7xl"
-            sizes="90vw"
-            loading="eager"
-          />
-        )}
-        <div
-          dangerouslySetInnerHTML={{__html: contentHtml}}
-          className="article"
-        />
-      </Section>
-    </>
-  );
+  return <WeaverseContent />;
 }
-
-const ARTICLE_QUERY = `#graphql
-  query ArticleDetails(
-    $language: LanguageCode
-    $blogHandle: String!
-    $articleHandle: String!
-  ) @inContext(language: $language) {
-    blog(handle: $blogHandle) {
-      articleByHandle(handle: $articleHandle) {
-        title
-        contentHtml
-        publishedAt
-        author: authorV2 {
-          name
-        }
-        image {
-          id
-          altText
-          url
-          width
-          height
-        }
-        seo {
-          description
-          title
-        }
-      }
-    }
-  }
-`;
