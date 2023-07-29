@@ -48,7 +48,7 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
               {articles.map((article, i) => (
                 <ArticleCard
                   key={article.id}
-                  blogHandle={blog.handle}
+                  blogHandle={blog!.handle}
                   article={article}
                   loading={getImageLoadingPriority(i, 2)}
                   showAuthor={showAuthor}
