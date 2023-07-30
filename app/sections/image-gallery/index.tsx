@@ -61,26 +61,32 @@ export let schema: HydrogenComponentSchema = {
       {
         type: 'image-gallery--item',
         columnSpan: 2,
+        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-1.png',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
+        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-2.png',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
+        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-3.png',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
+        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-4.png',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
+        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-5.png',
       },
       {
         type: 'image-gallery--item',
         columnSpan: 2,
+        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-6.png',
       },
     ],
   },

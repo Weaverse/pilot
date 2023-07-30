@@ -74,5 +74,8 @@
     "type": "featured-collections",
     "heading": "Featured Collections",
     "collectionsCount": 4
+  },
+  {
+    "type": "video"
   }
 ]
