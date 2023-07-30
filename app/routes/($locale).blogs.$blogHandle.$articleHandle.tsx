@@ -5,7 +5,7 @@ import {seoPayload} from '~/lib/seo.server';
 import {ArticleDetailsQuery} from 'storefrontapi.generated';
 import {ARTICLE_QUERY} from '~/data/queries';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader';
+import {loadWeaversePage} from '~/weaverse/loader.server';
 import styles from '../styles/custom-font.css';
 
 export const headers = routeHeaders;

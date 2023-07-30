@@ -8,7 +8,7 @@ import {
 } from '@shopify/remix-oxygen';
 
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader';
+import {loadWeaversePage} from '~/weaverse/loader.server';
 
 export const handle = {
   isPublic: true,

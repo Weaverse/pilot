@@ -17,7 +17,7 @@ import invariant from 'tiny-invariant';
 import {CartAction, type CartActions} from '~/lib/type';
 import {getCartId, isLocalPath} from '~/lib/utils';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader';
+import {loadWeaversePage} from '~/weaverse/loader.server';
 
 export async function loader(args: LoaderArgs) {
   return json({

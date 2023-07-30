@@ -6,7 +6,7 @@ import {seoPayload} from '~/lib/seo.server';
 
 import {SEARCH_QUERY} from '~/data/queries';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader';
+import {loadWeaversePage} from '~/weaverse/loader.server';
 import {getFeaturedData} from './($locale).featured-products';
 
 export async function loader(args: LoaderArgs) {

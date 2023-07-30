@@ -7,7 +7,7 @@ import {
 } from '@shopify/remix-oxygen';
 
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader';
+import {loadWeaversePage} from '~/weaverse/loader.server';
 import {doLogin} from './($locale).account.login';
 
 export async function loader(args: LoaderArgs) {

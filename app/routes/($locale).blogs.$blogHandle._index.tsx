@@ -7,7 +7,7 @@ import {BLOGS_QUERY} from '~/data/queries';
 import {PAGINATION_SIZE} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader';
+import {loadWeaversePage} from '~/weaverse/loader.server';
 
 export const headers = routeHeaders;
 
