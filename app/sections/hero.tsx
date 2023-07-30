@@ -86,7 +86,7 @@ export let loader = async ({context, itemData}: WeaverseLoaderArgs) => {
   let {hero} = await context.storefront.query<SeoCollectionContentQuery>(
     HOMEPAGE_SEO_QUERY,
     {
-      variables: {handle: itemData.data.collectionHandle || 'freestyle'},
+      variables: {handle: itemData.data.collectionHandle || 'frontpage'},
     },
   );
   return hero;
