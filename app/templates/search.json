@@ -1,0 +1,14 @@
+[
+  {
+    "type": "search",
+    "heading": "Search",
+    "headingSize": "copy",
+    "searchInputPlaceholder": "Search our store...",
+    "searchButtonText": "Go",
+    "noResultsText": "No results, try a different search.",
+    "showRelatedCollections": true,
+    "relatedCollectionsTitle": "Trending Collections",
+    "showRelatedProducts": true,
+    "relatedProductsTitle": "Trending Products"
+  }
+]

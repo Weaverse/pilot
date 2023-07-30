@@ -1,0 +1,9 @@
+[
+  {
+    "type": "customer-register",
+    "heading": "Create an Account.",
+    "createButtonText": "Create Account",
+    "marginTop": 96,
+    "marginBottom": 96
+  }
+]
