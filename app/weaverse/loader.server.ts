@@ -6,5 +6,5 @@ export async function loadWeaversePage(
   args: LoaderArgs,
   configs?: WeaverseLoaderConfigs,
 ) {
-  return weaverseLoader(args, components, configs);
+  return await weaverseLoader(args, components, configs);
 }
