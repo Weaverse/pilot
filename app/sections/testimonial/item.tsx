@@ -2,6 +2,7 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
+import clsx from 'clsx';
 import {forwardRef} from 'react';
 
 interface TestimonialItemProps extends HydrogenComponentProps {
@@ -10,14 +11,26 @@ interface TestimonialItemProps extends HydrogenComponentProps {
   authorImage: string;
   authorName: string;
   authorTitle: string;
+  hideOnMobile: boolean;
 }
 
 let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
   (props, ref) => {
-    let {heading, content, authorImage, authorName, authorTitle, ...rest} =
-      props;
+    let {
+      heading,
+      content,
+      authorImage,
+      authorName,
+      authorTitle,
+      hideOnMobile,
+      ...rest
+    } = props;
     return (
-      <div ref={ref} {...rest}>
+      <div
+        ref={ref}
+        {...rest}
+        className={clsx(hideOnMobile && 'hidden sm:block')}
+      >
         <figure className="p-6 bg-gray-50 rounded dark:bg-gray-800">
           <blockquote className="text-sm text-gray-500 dark:text-gray-400">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -87,6 +100,12 @@ export let schema: HydrogenComponentSchema = {
           label: 'Author Title',
           defaultValue: 'International Customer',
           placeholder: 'Author title',
+        },
+        {
+          type: 'switch',
+          label: 'Hide on Mobile',
+          name: 'hideOnMobile',
+          defaultValue: false,
         },
       ],
     },

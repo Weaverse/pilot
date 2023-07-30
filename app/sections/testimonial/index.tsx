@@ -79,60 +79,25 @@ export let schema: HydrogenComponentSchema = {
     children: [
       {
         type: 'testimonial--item',
-        heading: 'Reliable shipping for every order',
-        content:
-          'This online store has a very robust and beautiful collection of products. Under the hood it integrates seamlessly with the best ecommerce platforms and fulfillment services.',
-        authorImage:
-          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
-        authorName: 'Bonnie Green',
-        authorTitle: 'Shipping Manager at Acme Co.',
       },
       {
         type: 'testimonial--item',
-        heading: 'Fast delivery across the country',
-        content:
-          'I order from this store weekly and my packages always arrive on time. Their logistics network ensures speedy delivery no matter where I am.',
-        authorImage:
-          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png',
-        authorName: 'James Davis',
-        authorTitle: 'Repeat Customer',
+        hideOnMobile: true,
       },
       {
         type: 'testimonial--item',
-        heading: 'User-friendly online shopping',
-        content:
-          'As someone new to online shopping, I found this store so easy to navigate. Checking out is a breeze and customer service is very responsive.',
-        authorImage:
-          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png',
-        authorName: 'Sarah Kim',
-        authorTitle: 'First-time Online Shopper',
+        hideOnMobile: true,
       },
       {
         type: 'testimonial--item',
-        heading: 'Top-notch customer service',
-        content: `I had an issue with an order and their customer service resolved it quickly and pleasantly. I'll definitely shop here again due to their support.`,
-        authorImage:
-          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/karen-nelson.png',
-        authorName: 'Michael Davis',
-        authorTitle: 'Satisfied Customer',
       },
       {
         type: 'testimonial--item',
-        heading: 'High-quality products',
-        content: `Everything I've purchased from this store has been top-notch. The products are made well and worth the price.`,
-        authorImage:
-          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png',
-        authorName: 'Jessica Lee',
-        authorTitle: 'Repeat Customer',
+        hideOnMobile: true,
       },
       {
         type: 'testimonial--item',
-        heading: 'Fast shipping worldwide',
-        content: `I've ordered from this store from multiple countries and always receive my packages quicker than expected.`,
-        authorImage:
-          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
-        authorName: 'John Smith',
-        authorTitle: 'Global Customer',
+        hideOnMobile: true,
       },
     ],
   },
