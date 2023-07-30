@@ -11,9 +11,9 @@ interface VideoProps extends HydrogenComponentProps {
 }
 
 let Video = forwardRef<HTMLElement, VideoProps>((props, ref) => {
-  let {heading, description, ...rest} = props;
+  let {heading, description, videoUrl, ...rest} = props;
   return (
-    <section ref={ref} {...rest} className="bg-white dark:bg-gray-900">
+    <section ref={ref} {...rest}>
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:px-12 sm:text-center lg:py-16">
         <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
           {heading}
@@ -23,7 +23,7 @@ let Video = forwardRef<HTMLElement, VideoProps>((props, ref) => {
         </p>
         <iframe
           className="mx-auto mt-8 w-full max-w-2xl h-64 rounded-lg lg:mt-12 sm:h-96"
-          src="https://www.youtube.com/embed/-akQyQN8rYM"
+          src={videoUrl}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
