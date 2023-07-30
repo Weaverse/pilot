@@ -1,18 +1,20 @@
 import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import type {Page as PageType} from '@shopify/hydrogen/storefront-api-types';
-import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import {PageHeader} from '~/components';
+import {PageDetailsQuery} from 'storefrontapi.generated';
 import {routeHeaders} from '~/data/cache';
+import {PAGE_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
+import {WeaverseContent} from '~/weaverse';
+import {loadWeaversePage} from '~/weaverse/loader';
 
 export const headers = routeHeaders;
 
-export async function loader({request, params, context}: LoaderArgs) {
+export async function loader(args: LoaderArgs) {
+  let {request, params, context} = args;
   invariant(params.pageHandle, 'Missing page handle');
 
-  const {page} = await context.storefront.query(PAGE_QUERY, {
+  const {page} = await context.storefront.query<PageDetailsQuery>(PAGE_QUERY, {
     variables: {
       handle: params.pageHandle,
       language: context.storefront.i18n.language,
@@ -25,35 +27,13 @@ export async function loader({request, params, context}: LoaderArgs) {
 
   const seo = seoPayload.page({page, url: request.url});
 
-  return json({page, seo});
+  return json({
+    page,
+    seo,
+    weaverseData: await loadWeaversePage(args),
+  });
 }
 
 export default function Page() {
-  const {page} = useLoaderData<typeof loader>();
-
-  return (
-    <>
-      <PageHeader heading={page.title}>
-        <div
-          dangerouslySetInnerHTML={{__html: page.body}}
-          className="prose dark:prose-invert"
-        />
-      </PageHeader>
-    </>
-  );
+  return <WeaverseContent />;
 }
-
-const PAGE_QUERY = `#graphql
-  query PageDetails($language: LanguageCode, $handle: String!)
-  @inContext(language: $language) {
-    page(handle: $handle) {
-      id
-      title
-      body
-      seo {
-        description
-        title
-      }
-    }
-  }
-`;
