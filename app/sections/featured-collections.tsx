@@ -49,6 +49,10 @@ export let loader = async ({context}: WeaverseLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: 'featured-collections',
   title: 'Featured collections',
+  limit: 1,
+  enabledOn: {
+    pages: ['INDEX'],
+  },
   inspector: [
     {
       group: 'Featured collections',
@@ -64,7 +68,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'range',
           name: 'collectionsCount',
           label: 'Number of collections',
-          defaultValue: 3,
+          defaultValue: 4,
           configs: {
             min: 1,
             max: 4,

@@ -49,6 +49,10 @@ export let loader = async ({context}: WeaverseLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: 'featured-products',
   title: 'Featured products',
+  limit: 1,
+  enabledOn: {
+    pages: ['INDEX'],
+  },
   inspector: [
     {
       group: 'Featured products',
@@ -64,7 +68,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'range',
           name: 'productsCount',
           label: 'Number of products',
-          defaultValue: 4,
+          defaultValue: 12,
           configs: {
             min: 1,
             max: 12,

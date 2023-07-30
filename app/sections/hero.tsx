@@ -126,8 +126,8 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'select',
-          label: 'Height',
           name: 'height',
+          label: 'Height',
           configs: {
             options: [
               {label: 'Auto', value: 'auto'},

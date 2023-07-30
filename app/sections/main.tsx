@@ -6,6 +6,10 @@ import {forwardRef} from 'react';
 
 interface MainProps extends HydrogenComponentProps {}
 
+/*
+  Main is the default Weaverse component that is used to render the main content.
+  This component wraps all the sections/components inside a Weaverse page.
+*/
 let Main = forwardRef<HTMLDivElement, MainProps>((props, ref) => {
   let {...rest} = props;
   return <div ref={ref} {...rest} />;
@@ -17,5 +21,4 @@ export let schema: HydrogenComponentSchema = {
   type: 'main',
   title: 'Main',
   inspector: [],
-  toolbar: ['general-settings'],
 };
