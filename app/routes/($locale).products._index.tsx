@@ -1,14 +1,10 @@
+import {getPaginationVariables} from '@shopify/hydrogen';
 import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
-import invariant from 'tiny-invariant';
-import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
-
-import {PageHeader, Section, ProductCard, Grid} from '~/components';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getImageLoadingPriority} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
-import {routeHeaders} from '~/data/cache';
 import {AllProductsQuery} from 'storefrontapi.generated';
+import invariant from 'tiny-invariant';
+import {routeHeaders} from '~/data/cache';
+import {ALL_PRODUCTS_QUERY} from '~/data/queries';
+import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
 import {loadWeaversePage} from '~/weaverse/loader.server';
 
@@ -59,65 +55,5 @@ export async function loader(args: LoaderArgs) {
 }
 
 export default function AllProducts() {
-  const {products} = useLoaderData<typeof loader>();
-
-  return (
-    <>
-      <PageHeader heading="All Products" variant="allCollections" />
-      <Section>
-        <Pagination connection={products}>
-          {({nodes, isLoading, NextLink, PreviousLink}) => {
-            const itemsMarkup = nodes.map((product, i) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                loading={getImageLoadingPriority(i)}
-              />
-            ));
-
-            return (
-              <>
-                <div className="flex items-center justify-center mt-6">
-                  <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                    {isLoading ? 'Loading...' : 'Previous'}
-                  </PreviousLink>
-                </div>
-                <Grid data-test="product-grid">{itemsMarkup}</Grid>
-                <div className="flex items-center justify-center mt-6">
-                  <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                    {isLoading ? 'Loading...' : 'Next'}
-                  </NextLink>
-                </div>
-              </>
-            );
-          }}
-        </Pagination>
-      </Section>
-      <WeaverseContent />
-    </>
-  );
+  return <WeaverseContent />;
 }
-
-const ALL_PRODUCTS_QUERY = `#graphql
-  query AllProducts(
-    $country: CountryCode
-    $language: LanguageCode
-    $first: Int
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-  ) @inContext(country: $country, language: $language) {
-    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
-      nodes {
-        ...ProductCard
-      }
-      pageInfo {
-        hasPreviousPage
-        hasNextPage
-        startCursor
-        endCursor
-      }
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;

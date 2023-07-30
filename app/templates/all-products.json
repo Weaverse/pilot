@@ -1,0 +1,10 @@
+[
+  {
+    "type": "all-products",
+    "heading": "All Products",
+    "prevPageText": "Previous",
+    "nextPageText": "Next",
+    "paddingTop": 0,
+    "paddingBottom": 0
+  }
+]
