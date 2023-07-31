@@ -14,11 +14,10 @@ module.exports = {
     'no-useless-escape': 'off',
     '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
     'no-case-declarations': 'off',
-    'prefer-const': 'off',
-    'no-console': 'off',
-    'eslint-comments/disable-enable-pair': 'off',
     // TODO: Remove jest plugin from hydrogen/eslint-plugin
     'jest/no-deprecated-functions': 'off',
-    // Turn off semicolon rule
+    'eslint-comments/disable-enable-pair': 'off',
+    'prefer-const': 'off',
+    'no-console': 'off',
   },
 };
