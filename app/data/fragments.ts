@@ -47,6 +47,7 @@ export let PRODUCT_CARD_FRAGMENT = `#graphql
     variants(first: 1) {
       nodes {
         id
+        availableForSale
         image {
           url
           altText
@@ -114,8 +115,8 @@ export let COLLECTION_CONTENT_FRAGMENT = `#graphql
       }
     }
   }
-  ${MEDIA_FRAGMENT}
-`;
+${MEDIA_FRAGMENT}
+` as const;
 
 export let PRODUCT_VARIANT_FRAGMENT = `#graphql
   fragment ProductVariantFragment on ProductVariant {
