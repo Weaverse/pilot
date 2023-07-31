@@ -1,6 +1,5 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType, getSelectedProductOptions} from '@shopify/hydrogen';
-import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
 import {defer, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
 import {
   ProductQuery,
