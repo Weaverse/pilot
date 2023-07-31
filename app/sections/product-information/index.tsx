@@ -5,7 +5,7 @@ import type {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
-import {ProductQuery} from 'storefrontapi.generated';
+import {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
 import {Heading, ProductGallery, Section, Text} from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import {ProductDetail} from './product-detail';
@@ -52,7 +52,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       return (
         <section ref={ref} {...rest}>
           <Section as="div" className="px-0 md:px-8 lg:px-12">
-            <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-6">
               <ProductGallery
                 media={media.nodes}
                 className={clsx('w-full', gallerySizeMap[gallerySize])}

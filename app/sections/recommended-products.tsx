@@ -1,11 +1,12 @@
-import {useLoaderData} from '@remix-run/react';
+import {Await, useLoaderData} from '@remix-run/react';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+import {Suspense, forwardRef} from 'react';
 import {ProductCardFragment} from 'storefrontapi.generated';
 import {ProductSwimlane} from '~/components';
+import {Skeleton} from '~/components';
 
 interface RecommendedProductsProps extends HydrogenComponentProps {
   heading: string;
@@ -21,11 +22,20 @@ let RecommendedProducts = forwardRef<HTMLElement, RecommendedProductsProps>(
     if (recommended) {
       return (
         <section ref={ref} {...rest}>
-          <ProductSwimlane
-            title={heading}
-            count={productsCount}
-            products={recommended}
-          />
+          <Suspense fallback={<Skeleton className="h-32" />}>
+            <Await
+              errorElement="There was a problem loading related products"
+              resolve={recommended}
+            >
+              {(products) => (
+                <ProductSwimlane
+                  title={heading}
+                  count={productsCount}
+                  products={products}
+                />
+              )}
+            </Await>
+          </Suspense>
         </section>
       );
     }
