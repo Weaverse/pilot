@@ -7,7 +7,6 @@ import clsx from 'clsx';
 import {forwardRef} from 'react';
 import {ProductQuery} from 'storefrontapi.generated';
 import {Heading, ProductGallery, Section, Text} from '~/components';
-import {AspectRatio} from '~/components/ProductGallery';
 import {getExcerpt} from '~/lib/utils';
 import {ProductDetail} from './product-detail';
 import {ProductForm} from './product-form';
@@ -20,7 +19,6 @@ let gallerySizeMap = {
 
 interface ProductInformationProps extends HydrogenComponentProps {
   gallerySize: 'small' | 'medium' | 'large';
-  aspectRatio: AspectRatio;
   addToCartText: string;
   soldOutText: string;
   showVendor: boolean;
@@ -32,10 +30,13 @@ interface ProductInformationProps extends HydrogenComponentProps {
 
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
-    let {product, shop} = useLoaderData<ProductQuery>();
+    let {product, shop, variants} = useLoaderData<
+      ProductQuery & {
+        variants: VariantsQuery;
+      }
+    >();
     let {
       gallerySize,
-      aspectRatio,
       addToCartText,
       soldOutText,
       showVendor,
@@ -45,17 +46,16 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       showRefundPolicy,
       ...rest
     } = props;
-    if (product) {
+    if (product && variants) {
       const {media, title, vendor, descriptionHtml} = product;
       const {shippingPolicy, refundPolicy} = shop;
       return (
         <section ref={ref} {...rest}>
           <Section as="div" className="px-0 md:px-8 lg:px-12">
-            <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-6">
+            <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-3">
               <ProductGallery
                 media={media.nodes}
                 className={clsx('w-full', gallerySizeMap[gallerySize])}
-                aspectRatio={aspectRatio}
               />
               <div
                 className={clsx(
@@ -79,6 +79,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     )}
                   </div>
                   <ProductForm
+                    variants={variants.product?.variants.nodes || []}
                     addToCartText={addToCartText}
                     soldOutText={soldOutText}
                     showSalePrice={showSalePrice}
@@ -142,21 +143,6 @@ export let schema: HydrogenComponentSchema = {
           },
           defaultValue: 'large',
           helpText: 'Apply on large screens only.',
-        },
-        {
-          type: 'select',
-          label: 'Image aspect ratio',
-          name: 'aspectRatio',
-          configs: {
-            options: [
-              {value: 'auto', label: 'Adapt to image'},
-              {value: '1/1', label: '1/1'},
-              {value: '3/4', label: '3/4'},
-              {value: '4/5', label: '4/5'},
-              {value: '4/3', label: '4/3'},
-            ],
-          },
-          defaultValue: '4/5',
         },
       ],
     },
