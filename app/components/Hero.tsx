@@ -5,6 +5,7 @@ import type {
   Media,
   Video as MediaVideo,
 } from '@shopify/hydrogen/storefront-api-types';
+
 import type {CollectionContentFragment} from 'storefrontapi.generated';
 import {Heading, Text, Link} from '~/components';
 
@@ -87,7 +88,7 @@ type SpreadMediaProps = {
   sizes: string;
 };
 
-export function SpreadMedia({data, loading, sizes}: SpreadMediaProps) {
+function SpreadMedia({data, loading, sizes}: SpreadMediaProps) {
   return (
     <MediaFile
       data={data}

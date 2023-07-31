@@ -27,7 +27,7 @@ export let HOMEPAGE_SEO_QUERY = `#graphql
     }
   }
   ${COLLECTION_CONTENT_FRAGMENT}
-`;
+` as const;
 
 // @see: https://shopify.dev/api/storefront/2023-04/queries/products
 export let HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
@@ -331,7 +331,6 @@ export let BLOGS_QUERY = `#graphql
   ) @inContext(language: $language) {
     blog(handle: $blogHandle) {
       title
-      handle
       seo {
         title
         description
@@ -432,4 +431,21 @@ export let ALL_PRODUCTS_QUERY = `#graphql
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
+` as const;
+
+export let VARIANTS_QUERY = `#graphql
+  query variants(
+    $country: CountryCode
+    $language: LanguageCode
+    $handle: String!
+  ) @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      variants(first: 250) {
+        nodes {
+          ...ProductVariantFragment
+        }
+      }
+    }
+  }
+  ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;

@@ -1,11 +1,22 @@
-import {useLoaderData, useNavigation, useSearchParams} from '@remix-run/react';
-import {Money, ShopPayButton, ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {useMemo} from 'react';
-import {ProductQuery} from 'storefrontapi.generated';
+import {Listbox} from '@headlessui/react';
+import {useLoaderData} from '@remix-run/react';
+import {
+  Money,
+  ShopPayButton,
+  ShopifyAnalyticsProduct,
+  VariantSelector,
+} from '@shopify/hydrogen';
+import clsx from 'clsx';
+import {useRef} from 'react';
+import {
+  ProductQuery,
+  ProductVariantFragmentFragment,
+} from 'storefrontapi.generated';
 import {AddToCartButton, Button, Text} from '~/components';
-import {ProductOptions} from './product-options';
+import {Heading, IconCaret, IconCheck, Link} from '~/components';
 
 export function ProductForm(props: {
+  variants: ProductVariantFragmentFragment[];
   addToCartText: string;
   soldOutText: string;
   showSalePrice: boolean;
@@ -20,48 +31,16 @@ export function ProductForm(props: {
     };
     storeDomain: string;
   }>();
-  const {addToCartText, soldOutText, showSalePrice} = props;
+  const {variants, addToCartText, soldOutText, showSalePrice} = props;
 
-  const [currentSearchParams] = useSearchParams();
-  const {location} = useNavigation();
-
-  /**
-   * We update `searchParams` with in-flight request data from `location` (if available)
-   * to create an optimistic UI, e.g. check the product option before the
-   * request has completed.
-   */
-  const searchParams = useMemo(() => {
-    return location
-      ? new URLSearchParams(location.search)
-      : currentSearchParams;
-  }, [currentSearchParams, location]);
-
-  const firstVariant = product.variants.nodes[0];
-
-  /**
-   * We're making an explicit choice here to display the product options
-   * UI with a default variant, rather than wait for the user to select
-   * options first. Developers are welcome to opt-out of this behavior.
-   * By default, the first variant's options are used.
-   */
-  const searchParamsWithDefaults = useMemo<URLSearchParams>(() => {
-    const clonedParams = new URLSearchParams(searchParams);
-
-    for (const {name, value} of firstVariant.selectedOptions) {
-      if (!searchParams.has(name)) {
-        clonedParams.set(name, value);
-      }
-    }
-
-    return clonedParams;
-  }, [searchParams, firstVariant.selectedOptions]);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   /**
    * Likewise, we're defaulting to the first variant for purposes
    * of add to cart if there is none returned from the loader.
    * A developer can opt out of this, too.
    */
-  const selectedVariant = product.selectedVariant ?? firstVariant;
+  const selectedVariant = product.selectedVariant!;
   const isOutOfStock = !selectedVariant?.availableForSale;
 
   const isOnSale =
@@ -77,10 +56,101 @@ export function ProductForm(props: {
   return (
     <div className="grid gap-10">
       <div className="grid gap-4">
-        <ProductOptions
+        <VariantSelector
+          handle={product.handle}
           options={product.options}
-          searchParamsWithDefaults={searchParamsWithDefaults}
-        />
+          variants={variants}
+        >
+          {({option}) => {
+            return (
+              <div
+                key={option.name}
+                className="flex flex-col flex-wrap mb-4 gap-y-2 last:mb-0"
+              >
+                <Heading as="legend" size="lead" className="min-w-[4rem]">
+                  {option.name}
+                </Heading>
+                <div className="flex flex-wrap items-baseline gap-4">
+                  {option.values.length > 7 ? (
+                    <div className="relative w-full">
+                      <Listbox>
+                        {({open}) => (
+                          <>
+                            <Listbox.Button
+                              ref={closeRef}
+                              className={clsx(
+                                'flex items-center justify-between w-full py-3 px-4 border border-primary',
+                                open
+                                  ? 'rounded-b md:rounded-t md:rounded-b-none'
+                                  : 'rounded',
+                              )}
+                            >
+                              <span>{option.value}</span>
+                              <IconCaret direction={open ? 'up' : 'down'} />
+                            </Listbox.Button>
+                            <Listbox.Options
+                              className={clsx(
+                                'border-primary bg-contrast absolute bottom-12 z-30 grid h-48 w-full overflow-y-scroll rounded-t border px-2 py-2 transition-[max-height] duration-150 sm:bottom-auto md:rounded-b md:rounded-t-none md:border-t-0 md:border-b',
+                                open ? 'max-h-48' : 'max-h-0',
+                              )}
+                            >
+                              {option.values
+                                .filter((value) => value.isAvailable)
+                                .map(({value, to, isActive}) => (
+                                  <Listbox.Option
+                                    key={`option-${option.name}-${value}`}
+                                    value={value}
+                                  >
+                                    {({active}) => (
+                                      <Link
+                                        to={to}
+                                        className={clsx(
+                                          'text-primary w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
+                                          active && 'bg-primary/10',
+                                        )}
+                                        onClick={() => {
+                                          if (!closeRef?.current) return;
+                                          closeRef.current.click();
+                                        }}
+                                      >
+                                        {value}
+                                        {isActive && (
+                                          <span className="ml-2">
+                                            <IconCheck />
+                                          </span>
+                                        )}
+                                      </Link>
+                                    )}
+                                  </Listbox.Option>
+                                ))}
+                            </Listbox.Options>
+                          </>
+                        )}
+                      </Listbox>
+                    </div>
+                  ) : (
+                    option.values.map(({value, isAvailable, isActive, to}) => (
+                      <Link
+                        key={option.name + value}
+                        to={to}
+                        preventScrollReset
+                        prefetch="intent"
+                        replace
+                        className={clsx(
+                          'leading-none py-1 border-b-[1.5px] cursor-pointer transition-all duration-200',
+                          isActive ? 'border-primary/50' : 'border-primary/0',
+                          isAvailable ? 'opacity-100' : 'opacity-50',
+                        )}
+                      >
+                        {value}
+                      </Link>
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          }}
+        </VariantSelector>
         {selectedVariant && (
           <div className="grid items-stretch gap-4">
             {isOutOfStock ? (
@@ -91,7 +161,7 @@ export function ProductForm(props: {
               <AddToCartButton
                 lines={[
                   {
-                    merchandiseId: selectedVariant.id,
+                    merchandiseId: selectedVariant.id!,
                     quantity: 1,
                   },
                 ]}
@@ -104,7 +174,7 @@ export function ProductForm(props: {
               >
                 <Text
                   as="span"
-                  className="flex items-center justify-center gap-2 !max-w-full"
+                  className="flex items-center justify-center gap-2"
                 >
                   <span>{addToCartText}</span> <span>·</span>{' '}
                   <Money

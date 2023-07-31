@@ -1,11 +1,17 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {AnalyticsPageType} from '@shopify/hydrogen';
-import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
-import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
-import {ProductRecommendationsQuery} from 'storefrontapi.generated';
+import {AnalyticsPageType, getSelectedProductOptions} from '@shopify/hydrogen';
+import {defer, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
+import {
+  ProductQuery,
+  ProductRecommendationsQuery,
+} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
-import {PRODUCT_QUERY, RECOMMENDED_PRODUCTS_QUERY} from '~/data/queries';
+import {
+  PRODUCT_QUERY,
+  RECOMMENDED_PRODUCTS_QUERY,
+  VARIANTS_QUERY,
+} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import type {Storefront} from '~/lib/type';
 
@@ -15,16 +21,11 @@ import {loadWeaversePage} from '~/weaverse/loader.server';
 export const headers = routeHeaders;
 
 export async function loader(args: LoaderArgs) {
-  const {params, request, context} = args;
+  let {params, request, context} = args;
   const {productHandle} = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
-  const searchParams = new URL(request.url).searchParams;
-
-  const selectedOptions: SelectedOptionInput[] = [];
-  searchParams.forEach((value, name) => {
-    selectedOptions.push({name, value});
-  });
+  const selectedOptions = getSelectedProductOptions(request);
 
   const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
@@ -35,8 +36,25 @@ export async function loader(args: LoaderArgs) {
     },
   });
 
+  // In order to show which variants are available in the UI, we need to query
+  // all of them. But there might be a *lot*, so instead separate the variants
+  // into it's own separate query that is deferred. So there's a brief moment
+  // where variant options might show as available when they're not, but after
+  // this deferred query resolves, the UI will update.
+  const variants = context.storefront.query(VARIANTS_QUERY, {
+    variables: {
+      handle: productHandle,
+      country: context.storefront.i18n.country,
+      language: context.storefront.i18n.language,
+    },
+  });
+
   if (!product?.id) {
     throw new Response('product', {status: 404});
+  }
+
+  if (!product.selectedVariant) {
+    return redirectToFirstVariant({product, request});
   }
 
   const recommended = getRecommendedProducts(context.storefront, product.id);
@@ -59,6 +77,7 @@ export async function loader(args: LoaderArgs) {
   });
 
   return defer({
+    variants,
     product,
     shop,
     storeDomain: shop.primaryDomain.url,
@@ -72,6 +91,25 @@ export async function loader(args: LoaderArgs) {
     seo,
     weaverseData: await loadWeaversePage(args),
   });
+}
+
+function redirectToFirstVariant({
+  product,
+  request,
+}: {
+  product: ProductQuery['product'];
+  request: Request;
+}) {
+  const searchParams = new URLSearchParams(new URL(request.url).search);
+  const firstVariant = product!.variants.nodes[0];
+  for (const option of firstVariant.selectedOptions) {
+    searchParams.set(option.name, option.value);
+  }
+
+  throw redirect(
+    `/products/${product!.handle}?${searchParams.toString()}`,
+    302,
+  );
 }
 
 export default function Product() {

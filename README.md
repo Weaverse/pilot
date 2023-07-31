@@ -1,11 +1,8 @@
-# Hydrogen template: Demo Store
+# Pilot 👨🏻‍✈️ - Weaverse's Hydrogen-driven Shopify Theme
 
-Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dovetail with [Remix](https://remix.run/), Shopify’s full stack web framework. This template contains a **full-featured setup** of components, queries and tooling to get started with Hydrogen.
+Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse, designed to create lightning-fast storefronts with exceptional performance. This theme combines a collection of powerful tools and features to streamline your Shopify development experience.
 
-[Check out Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
-[Get familiar with Remix](https://remix.run/docs/en/v1)
-
-## What's included
+### What's included
 
 - Remix
 - Hydrogen
@@ -17,27 +14,21 @@ Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dov
 - TypeScript and JavaScript flavors
 - Tailwind CSS (via PostCSS)
 - Full-featured setup of components and routes
+- Easy to edit and customize with **Weaverse Hydrogen Editor**
 
-## Getting started
+### Getting started
 
-**Requirements:**
+Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:
 
-- Node.js version 16.14.0 or higher
+1. Install [Weaverse Shopify App](https://apps.shopify.com/weaverse) from Shopify App Store.
+2. Create new Hydrogen storefront inside Weaverse.
+3. Clone the repository that Weaverse has created for you.
+4. Set environment variables in `.env` file then start the development server with `npm i && npm run dev`.
+5. Open the Weaverse editor to start customizing and tailoring your storefront according to your preferences.
 
-```bash
-npm create @shopify/hydrogen@latest -- --template demo-store
-```
+### References
 
-Remember to update `.env` with your shop's domain and Storefront API token!
+- [Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
+- [Remix.run](https://remix.run/docs/en/v1)
 
-## Building for production
-
-```bash
-npm run build
-```
-
-## Local development
-
-```bash
-npm run dev
-```
+Let Pilot empower your Shopify store with top-notch performance and unmatched customization possibilities! 🚀
