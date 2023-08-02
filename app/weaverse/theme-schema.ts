@@ -5,6 +5,8 @@ export let themeSchema: HydrogenThemeSchema = {
     name: 'Pilot',
     version: '1.0.0',
     author: 'Weaverse',
+    authorProfilePhoto:
+      'https://ucarecdn.com/174c3d08-fc53-4088-8d12-8eaf7090cdec/',
     documentationUrl: 'https://help.weaverse.io/',
     supportUrl: 'https://help.weaverse.io/',
   },
