@@ -1,5 +1,5 @@
 import {CartForm, type CartQueryData} from '@shopify/hydrogen';
-import {LoaderArgs, json, type ActionArgs} from '@shopify/remix-oxygen';
+import {type LoaderArgs, type ActionArgs, json} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
 import {isLocalPath} from '~/lib/utils';
 import {WeaverseContent} from '~/weaverse';
