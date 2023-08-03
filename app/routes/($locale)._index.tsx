@@ -1,5 +1,5 @@
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
+import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
 import {routeHeaders} from '~/data/cache';
 import {SHOP_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
@@ -24,9 +24,9 @@ export async function loader(args: LoaderArgs) {
   let {shop} = await context.storefront.query(SHOP_QUERY);
   let seo = seoPayload.home();
 
-  return json({
+  return defer({
     shop,
-    weaverseData: await loadWeaversePage(args),
+    weaverseData: loadWeaversePage(args),
     analytics: {
       pageType: AnalyticsPageType.home,
     },
