@@ -7,7 +7,7 @@ export function WeaverseContent() {
   return (
     <WeaverseHydrogenRoot
       components={components}
-      ErrorComponent={GenericError}
+      errorComponent={GenericError}
     />
   );
 }
