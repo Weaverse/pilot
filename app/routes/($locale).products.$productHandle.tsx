@@ -1,6 +1,7 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {AnalyticsPageType, getSelectedProductOptions} from '@shopify/hydrogen';
+import {AnalyticsPageType} from '@shopify/hydrogen';
 import {defer, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
+import {getSelectedProductOptions} from '@weaverse/hydrogen';
 import {
   ProductQuery,
   ProductRecommendationsQuery,
@@ -14,7 +15,6 @@ import {
 } from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import type {Storefront} from '~/lib/type';
-
 import {WeaverseContent} from '~/weaverse';
 import {loadWeaversePage} from '~/weaverse/loader.server';
 
