@@ -1,21 +1,21 @@
 import {
-  defer,
-  type LinksFunction,
-  type LoaderArgs,
-  type AppLoadContext,
-} from '@shopify/remix-oxygen';
-import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
   useLoaderData,
   useMatches,
   useRouteError,
 } from '@remix-run/react';
-import {ShopifySalesChannel, Seo} from '@shopify/hydrogen';
+import {Seo, ShopifySalesChannel} from '@shopify/hydrogen';
+import {
+  defer,
+  type AppLoadContext,
+  type LinksFunction,
+  type LoaderArgs,
+} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
 
 import {Layout} from '~/components';
@@ -25,9 +25,10 @@ import favicon from '../public/favicon.svg';
 
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
-import styles from './styles/app.css';
-import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
+import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
+import styles from './styles/app.css';
+import {WeaverseStudio} from './weaverse';
 
 export const links: LinksFunction = () => {
   return [
@@ -91,6 +92,7 @@ export default function App() {
         </Layout>
         <ScrollRestoration />
         <Scripts />
+        <WeaverseStudio />
       </body>
     </html>
   );
