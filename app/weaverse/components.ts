@@ -11,7 +11,7 @@ import * as ImageGalleryItem from '~/sections/image-gallery/image';
 import * as Main from '~/sections/main';
 import * as Search from '~/sections/search';
 import * as ProductInformation from '~/sections/product-information';
-import * as RecommendedProducts from '~/sections/recommended-products';
+import * as RelatedProducts from '~/sections/related-products';
 import * as Testimonial from '~/sections/testimonial';
 import * as TestimonialItem from '~/sections/testimonial/item';
 import * as CustomerLogin from '~/sections/customer/login';
@@ -38,7 +38,7 @@ export let components: HydrogenComponent[] = [
   ImageGallery,
   ImageGalleryItem,
   ProductInformation,
-  RecommendedProducts,
+  RelatedProducts,
   CollectionFilters,
   CollectionList,
   CustomerLogin,

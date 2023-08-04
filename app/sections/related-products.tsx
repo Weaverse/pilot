@@ -8,12 +8,12 @@ import {ProductCardFragment} from 'storefrontapi.generated';
 import {ProductSwimlane} from '~/components';
 import {Skeleton} from '~/components';
 
-interface RecommendedProductsProps extends HydrogenComponentProps {
+interface RelatedProductsProps extends HydrogenComponentProps {
   heading: string;
   productsCount: number;
 }
 
-let RecommendedProducts = forwardRef<HTMLElement, RecommendedProductsProps>(
+let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
   (props, ref) => {
     let {recommended} = useLoaderData<{
       recommended: {nodes: ProductCardFragment[]};
@@ -43,25 +43,25 @@ let RecommendedProducts = forwardRef<HTMLElement, RecommendedProductsProps>(
   },
 );
 
-export default RecommendedProducts;
+export default RelatedProducts;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'recommended-products',
-  title: 'Recommended products',
+  type: 'related-products',
+  title: 'Related products',
   limit: 1,
   enabledOn: {
     pages: ['PRODUCT'],
   },
   inspector: [
     {
-      group: 'Recommended products',
+      group: 'Related products',
       inputs: [
         {
           type: 'text',
           name: 'heading',
           label: 'Heading',
           defaultValue: 'You may also like',
-          placeholder: 'Recommended products',
+          placeholder: 'Related products',
         },
         {
           type: 'range',
