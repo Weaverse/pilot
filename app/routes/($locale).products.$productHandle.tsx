@@ -1,6 +1,11 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {defer, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
+import {
+  defer,
+  redirect,
+  type LoaderArgs,
+  AppLoadContext,
+} from '@shopify/remix-oxygen';
 import {getSelectedProductOptions} from '@weaverse/hydrogen';
 import {
   ProductQuery,
@@ -54,7 +59,7 @@ export async function loader(args: LoaderArgs) {
   }
 
   if (!product.selectedVariant) {
-    return redirectToFirstVariant({product, request});
+    return redirectToFirstVariant({product, request, context});
   }
 
   const recommended = getRecommendedProducts(context.storefront, product.id);
@@ -96,18 +101,22 @@ export async function loader(args: LoaderArgs) {
 function redirectToFirstVariant({
   product,
   request,
+  context,
 }: {
   product: ProductQuery['product'];
   request: Request;
+  context: AppLoadContext;
 }) {
   const searchParams = new URLSearchParams(new URL(request.url).search);
   const firstVariant = product!.variants.nodes[0];
   for (const option of firstVariant.selectedOptions) {
     searchParams.set(option.name, option.value);
   }
+  let selectedLocale = context.storefront.i18n;
 
   throw redirect(
-    `/products/${product!.handle}?${searchParams.toString()}`,
+    selectedLocale.pathPrefix +
+      `/products/${product!.handle}?${searchParams.toString()}`,
     302,
   );
 }
