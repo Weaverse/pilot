@@ -23,12 +23,13 @@ import {seoPayload} from '~/lib/seo.server';
 
 import favicon from '../public/favicon.svg';
 
+import {WeaverseStudio} from '@weaverse/hydrogen';
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
 import {useAnalytics} from './hooks/useAnalytics';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import styles from './styles/app.css';
-import {WeaverseStudio} from './weaverse';
+import {getWeaverseThemeConfigs} from './weaverse/loader.server';
 
 export const links: LinksFunction = () => {
   return [
@@ -64,6 +65,7 @@ export async function loader({request, context}: LoaderArgs) {
       shopId: layout.shop.id,
     },
     seo,
+    weaverseThemeConfigs: getWeaverseThemeConfigs(request),
   });
 }
 

@@ -1,7 +1,6 @@
-import {HydrogenStudio, WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import {components} from './components';
-import {themeSchema} from './theme-schema';
+import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
 import {GenericError} from '~/components/GenericError';
+import {components} from './components';
 
 export function WeaverseContent() {
   return (
@@ -10,8 +9,4 @@ export function WeaverseContent() {
       errorComponent={GenericError}
     />
   );
-}
-
-export function WeaverseStudio() {
-  return <HydrogenStudio themeSchema={themeSchema} />;
 }
