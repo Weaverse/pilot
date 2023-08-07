@@ -1,6 +1,6 @@
 import type {HydrogenThemeSchema} from '@weaverse/hydrogen';
 
-export let themeSchema: HydrogenThemeSchema = {
+export let schema: HydrogenThemeSchema = {
   info: {
     name: 'Pilot',
     version: '1.0.0',
