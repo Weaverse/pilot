@@ -85,7 +85,10 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body
+        style={{opacity: 0, transition: 'opacity 0.15s ease-in-out'}}
+        className="!opacity-100"
+      >
         <Layout
           key={`${locale.language}-${locale.country}`}
           layout={data.layout}
