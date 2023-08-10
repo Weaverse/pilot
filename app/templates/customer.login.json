@@ -1,9 +1,0 @@
-[
-  {
-    "type": "customer-login",
-    "heading": "Sign in.",
-    "signInButtonText": "Sign in",
-    "marginTop": 96,
-    "marginBottom": 96
-  }
-]
