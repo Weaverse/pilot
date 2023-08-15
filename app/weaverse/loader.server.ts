@@ -3,9 +3,9 @@ import {WeaverseLoaderConfigs, weaverseLoader} from '@weaverse/hydrogen';
 import {countries} from '~/data/countries';
 import {components} from './components';
 
-export async function loadWeaversePage(
+export function loadWeaversePage(
   args: LoaderArgs,
   configs?: WeaverseLoaderConfigs,
 ) {
-  return await weaverseLoader(args, components, countries, configs);
+  return weaverseLoader(args, components, countries, configs);
 }
