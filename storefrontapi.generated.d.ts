@@ -690,7 +690,7 @@ export type BlogQueryVariables = StorefrontAPI.Exact<{
 
 export type BlogQuery = {
   blog?: StorefrontAPI.Maybe<
-    Pick<StorefrontAPI.Blog, 'title'> & {
+    Pick<StorefrontAPI.Blog, 'title' | 'handle'> & {
       seo?: StorefrontAPI.Maybe<
         Pick<StorefrontAPI.Seo, 'title' | 'description'>
       >;
@@ -1684,7 +1684,7 @@ interface GeneratedQueryTypes {
     return: PaginatedProductsSearchQuery;
     variables: PaginatedProductsSearchQueryVariables;
   };
-  '#graphql\n  query Blog(\n    $language: LanguageCode\n    $blogHandle: String!\n    $pageBy: Int!\n    $cursor: String\n  ) @inContext(language: $language) {\n    blog(handle: $blogHandle) {\n      title\n      seo {\n        title\n        description\n      }\n      articles(first: $pageBy, after: $cursor) {\n        edges {\n          node {\n            ...Article\n          }\n        }\n      }\n    }\n  }\n\n  fragment Article on Article {\n    author: authorV2 {\n      name\n    }\n    contentHtml\n    handle\n    id\n    image {\n      id\n      altText\n      url\n      width\n      height\n    }\n    publishedAt\n    title\n  }\n': {
+  '#graphql\n  query Blog(\n    $language: LanguageCode\n    $blogHandle: String!\n    $pageBy: Int!\n    $cursor: String\n  ) @inContext(language: $language) {\n    blog(handle: $blogHandle) {\n      title\n      handle\n      seo {\n        title\n        description\n      }\n      articles(first: $pageBy, after: $cursor) {\n        edges {\n          node {\n            ...Article\n          }\n        }\n      }\n    }\n  }\n\n  fragment Article on Article {\n    author: authorV2 {\n      name\n    }\n    contentHtml\n    handle\n    id\n    image {\n      id\n      altText\n      url\n      width\n      height\n    }\n    publishedAt\n    title\n  }\n': {
     return: BlogQuery;
     variables: BlogQueryVariables;
   };

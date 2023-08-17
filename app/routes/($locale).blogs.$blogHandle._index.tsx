@@ -55,6 +55,6 @@ export const loader = async (args: LoaderArgs) => {
   });
 };
 
-export default function Journals() {
+export default function Blogs() {
   return <WeaverseContent />;
 }
