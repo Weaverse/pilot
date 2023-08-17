@@ -331,6 +331,7 @@ export let BLOGS_QUERY = `#graphql
   ) @inContext(language: $language) {
     blog(handle: $blogHandle) {
       title
+      handle
       seo {
         title
         description

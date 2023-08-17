@@ -1,5 +1,5 @@
 import {LoaderArgs} from '@shopify/remix-oxygen';
-import {WeaverseLoaderConfigs, weaverseLoader} from '@weaverse/hydrogen';
+import {type WeaverseLoaderConfigs, weaverseLoader} from '@weaverse/hydrogen';
 import {countries} from '~/data/countries';
 import {components} from './components';
 

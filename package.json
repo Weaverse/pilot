@@ -3,7 +3,7 @@
   "private": false,
   "sideEffects": false,
   "author": "Weaverse",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "scripts": {
     "dev": "shopify hydrogen dev --codegen-unstable --port 3456",
     "build": "shopify hydrogen build",
