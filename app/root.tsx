@@ -8,6 +8,7 @@ import {
   useLoaderData,
   useMatches,
   useRouteError,
+  LiveReload,
 } from '@remix-run/react';
 import {Seo, ShopifySalesChannel} from '@shopify/hydrogen';
 import {
@@ -94,6 +95,7 @@ export default function App() {
         </Layout>
         <ScrollRestoration />
         <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
@@ -142,6 +144,7 @@ export function ErrorBoundary({error}: {error: Error}) {
           )}
         </Layout>
         <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
