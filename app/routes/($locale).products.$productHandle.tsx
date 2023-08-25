@@ -1,11 +1,6 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {
-  defer,
-  redirect,
-  type LoaderArgs,
-  AppLoadContext,
-} from '@shopify/remix-oxygen';
+import {defer, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
 import {getSelectedProductOptions} from '@weaverse/hydrogen';
 import {
   ProductQuery,
@@ -31,7 +26,6 @@ export async function loader(args: LoaderArgs) {
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
   const selectedOptions = getSelectedProductOptions(request);
-
   const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
@@ -40,6 +34,14 @@ export async function loader(args: LoaderArgs) {
       language: context.storefront.i18n.language,
     },
   });
+
+  if (!product?.id) {
+    throw new Response('product', {status: 404});
+  }
+
+  if (!product.selectedVariant) {
+    return redirectToFirstVariant({product, request});
+  }
 
   // In order to show which variants are available in the UI, we need to query
   // all of them. But there might be a *lot*, so instead separate the variants
@@ -54,15 +56,10 @@ export async function loader(args: LoaderArgs) {
     },
   });
 
-  if (!product?.id) {
-    throw new Response('product', {status: 404});
-  }
-
-  if (!product.selectedVariant) {
-    return redirectToFirstVariant({product, request, context});
-  }
-
   const recommended = getRecommendedProducts(context.storefront, product.id);
+
+  // TODO: firstVariant is never used because we will always have a selectedVariant due to redirect
+  // Investigate if we can avoid the redirect for product pages with no search params for first variant
   const firstVariant = product.variants.nodes[0];
   const selectedVariant = product.selectedVariant ?? firstVariant;
 
@@ -101,22 +98,18 @@ export async function loader(args: LoaderArgs) {
 function redirectToFirstVariant({
   product,
   request,
-  context,
 }: {
   product: ProductQuery['product'];
   request: Request;
-  context: AppLoadContext;
 }) {
   const searchParams = new URLSearchParams(new URL(request.url).search);
   const firstVariant = product!.variants.nodes[0];
   for (const option of firstVariant.selectedOptions) {
     searchParams.set(option.name, option.value);
   }
-  let selectedLocale = context.storefront.i18n;
 
   throw redirect(
-    selectedLocale.pathPrefix +
-      `/products/${product!.handle}?${searchParams.toString()}`,
+    `/products/${product!.handle}?${searchParams.toString()}`,
     302,
   );
 }
