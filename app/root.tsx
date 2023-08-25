@@ -3,12 +3,13 @@ import {
   Meta,
   Outlet,
   Scripts,
+  LiveReload,
   ScrollRestoration,
   isRouteErrorResponse,
   useLoaderData,
   useMatches,
   useRouteError,
-  LiveReload,
+  type ShouldRevalidateFunction,
 } from '@remix-run/react';
 import {Seo, ShopifySalesChannel} from '@shopify/hydrogen';
 import {
@@ -29,6 +30,25 @@ import {NotFound} from './components/NotFound';
 import {useAnalytics} from './hooks/useAnalytics';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import styles from './styles/app.css';
+
+// This is important to avoid re-fetching root queries on sub-navigations
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+  formMethod,
+  currentUrl,
+  nextUrl,
+}) => {
+  // revalidate when a mutation is performed e.g add to cart, login...
+  if (formMethod && formMethod !== 'GET') {
+    return true;
+  }
+
+  // revalidate when manually revalidating via useRevalidator
+  if (currentUrl.toString() === nextUrl.toString()) {
+    return true;
+  }
+
+  return false;
+};
 
 export const links: LinksFunction = () => {
   return [
