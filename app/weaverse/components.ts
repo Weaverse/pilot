@@ -20,6 +20,7 @@ import * as Page from '~/sections/page';
 import * as Video from '~/sections/video';
 import * as Blogs from '~/sections/blogs';
 import * as BlogPost from '~/sections/blog-post';
+import * as SingleProduct from '~/sections/single-product';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -43,4 +44,5 @@ export let components: HydrogenComponent[] = [
   CollectionList,
   CustomerLogin,
   CustomerRegister,
+  SingleProduct,
 ];
