@@ -13,7 +13,6 @@ interface SingleProductProps
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
     let {loaderData, ...rest} = props;
-    console.log(2222, props);
 
     return (
       <section ref={ref} {...rest}>
