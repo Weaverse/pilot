@@ -1,6 +1,6 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
+import {
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 

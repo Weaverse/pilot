@@ -11,8 +11,7 @@ interface MainProps extends HydrogenComponentProps {}
   This component wraps all the sections/components inside a Weaverse page.
 */
 let Main = forwardRef<HTMLDivElement, MainProps>((props, ref) => {
-  let {...rest} = props;
-  return <div ref={ref} {...rest} />;
+  return <div ref={ref} {...props} />;
 });
 
 export default Main;
