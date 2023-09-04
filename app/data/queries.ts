@@ -237,6 +237,7 @@ export let COLLECTION_QUERY = `#graphql
           hasNextPage
           hasNextPage
           endCursor
+          startCursor
         }
       }
     }
