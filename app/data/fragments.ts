@@ -1,4 +1,4 @@
-export let MEDIA_FRAGMENT = `#graphql
+export const MEDIA_FRAGMENT = `#graphql
   fragment Media on Media {
     __typename
     mediaContentType
@@ -75,7 +75,7 @@ export let PRODUCT_CARD_FRAGMENT = `#graphql
   }
 `;
 
-export let FEATURED_COLLECTION_FRAGMENT = `#graphql
+export const FEATURED_COLLECTION_FRAGMENT = `#graphql
   fragment FeaturedCollectionDetails on Collection {
     id
     title

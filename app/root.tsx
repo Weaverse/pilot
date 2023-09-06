@@ -1,23 +1,23 @@
 import {
+  defer,
+  type LinksFunction,
+  type LoaderArgs,
+  type AppLoadContext,
+} from '@shopify/remix-oxygen';
+import {
+  isRouteErrorResponse,
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
+  LiveReload,
   ScrollRestoration,
-  isRouteErrorResponse,
   useLoaderData,
   useMatches,
   useRouteError,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
-import {Seo, ShopifySalesChannel, useNonce} from '@shopify/hydrogen';
-import {
-  defer,
-  type AppLoadContext,
-  type LinksFunction,
-  type LoaderArgs,
-} from '@shopify/remix-oxygen';
+import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 
 import {Layout} from '~/components';
@@ -27,9 +27,9 @@ import favicon from '../public/favicon.svg';
 
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
-import {useAnalytics} from './hooks/useAnalytics';
-import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import styles from './styles/app.css';
+import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
+import {useAnalytics} from './hooks/useAnalytics';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -104,10 +104,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body
-        style={{opacity: 0, transition: 'opacity 0.15s ease-in-out'}}
-        className="!opacity-100"
-      >
+      <body>
         <Layout
           key={`${locale.language}-${locale.country}`}
           layout={data.layout}

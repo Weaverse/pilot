@@ -1,17 +1,10 @@
-import {CartForm, type CartQueryData} from '@shopify/hydrogen';
-import {type LoaderArgs, type ActionArgs, json} from '@shopify/remix-oxygen';
+import {Await, useMatches} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import {isLocalPath} from '~/lib/utils';
-import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader.server';
+import {type LoaderArgs, type ActionArgs, json} from '@shopify/remix-oxygen';
+import {CartForm, type CartQueryData} from '@shopify/hydrogen';
 
-export async function loader(args: LoaderArgs) {
-  let {cart} = args.context;
-  return json({
-    ...(await cart.get()),
-    weaverseData: await loadWeaversePage(args),
-  });
-}
+import {isLocalPath} from '~/lib/utils';
+import {Cart} from '~/components';
 
 export async function action({request, context}: ActionArgs) {
   const {session, cart} = context;
@@ -85,6 +78,19 @@ export async function action({request, context}: ActionArgs) {
   );
 }
 
+export async function loader({context}: LoaderArgs) {
+  const {cart} = context;
+  return json(await cart.get());
+}
+
 export default function CartRoute() {
-  return <WeaverseContent />;
+  const [root] = useMatches();
+  // @todo: finish on a separate PR
+  return (
+    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
+      <Await resolve={root.data?.cart}>
+        {(cart) => <Cart layout="page" cart={cart} />}
+      </Await>
+    </div>
+  );
 }
