@@ -4,12 +4,14 @@ import type {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
+import {Image} from '@shopify/hydrogen';
 
 interface ImageGalleryItemProps extends HydrogenComponentProps {
   src: string;
   columnSpan: number;
   borderRadius: number;
   hideOnMobile: boolean;
+  altText: string;
 }
 
 let columnSpanClasses: {[span: number]: string} = {
@@ -29,9 +31,9 @@ let radiusClasses: {[radius: string]: string} = {
 
 let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
   (props, ref) => {
-    let {src, columnSpan, borderRadius, hideOnMobile, ...rest} = props;
+    let {src, columnSpan, borderRadius, hideOnMobile, altText, ...rest} = props;
     return (
-      <img
+      <Image
         ref={ref}
         {...rest}
         className={clsx(
@@ -40,8 +42,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
           radiusClasses[borderRadius],
           hideOnMobile && 'hidden sm:block',
         )}
-        src={src}
-        alt="content gallery 1"
+        data={{url: src, altText}}
       />
     );
   },
@@ -62,6 +63,12 @@ export let schema: HydrogenComponentSchema = {
           label: 'Image',
           defaultValue:
             'https://images.placeholders.dev/?width=1000&height=1000&text=Pilot&bgColor=%23f4f4f5&textColor=%23a1a1aa',
+        },
+        {
+          type: 'text',
+          label: 'Alt Text',
+          name: 'altText',
+          defaultValue: 'Pilot Image',
         },
         {
           type: 'range',

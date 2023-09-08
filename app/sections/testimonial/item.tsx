@@ -4,6 +4,7 @@ import type {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
+import {Image} from '@shopify/hydrogen';
 
 interface TestimonialItemProps extends HydrogenComponentProps {
   heading: string;
@@ -39,10 +40,11 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
             <p className="my-4">"{content}"</p>
           </blockquote>
           <figcaption className="flex items-center space-x-3">
-            <img
-              className="w-9 h-9 rounded-full"
-              src={authorImage}
+            <Image
+              className="h-9 rounded-full"
+              data={{url: authorImage}}
               alt="author profile picture"
+              width={36}
             />
             <div className="space-y-0.5 font-medium dark:text-white">
               <div>{authorName}</div>
