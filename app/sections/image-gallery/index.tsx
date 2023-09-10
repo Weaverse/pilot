@@ -61,32 +61,32 @@ export let schema: HydrogenComponentSchema = {
       {
         type: 'image-gallery--item',
         columnSpan: 2,
-        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-1.png',
+        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-hand-placed-on-the-iridescent-keys-of-a-small-piano.jpg?v=1694236467',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-2.png',
+        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-open-novel-with-a-hand-on-it-by-dried-flowers.jpg?v=1694236467',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-3.png',
+        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-creamy-cold-drink-sits-on-a-wooden-table.jpg?v=1694236467',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-4.png',
+        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-hands-reach-to-feed-a-flying-seagull.jpg?v=1694236467',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-5.png',
+        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-nati-melnychuk-5ngCICAXiH0-unsplash.jpg?v=1694231122',
       },
       {
         type: 'image-gallery--item',
         columnSpan: 2,
-        src: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/content-gallery-6.png',
+        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-flatlay-of-a-coffee-mug-and-items-to-plan-travel.jpg?v=1694236467',
       },
     ],
   },

@@ -87,7 +87,7 @@ export let schema: HydrogenComponentSchema = {
           name: 'authorImage',
           label: 'Author image',
           defaultValue:
-            'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png',
+            'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-fashion-model-in-fur.jpg?v=1694236467',
         },
         {
           type: 'text',
