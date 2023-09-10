@@ -9,11 +9,14 @@ interface SingleProductProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
   heading: string;
   productsCount: number;
+  productId: string;
+  productHandle: string;
 }
+
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {loaderData, ...rest} = props;
-
+    let {loaderData, productId, productHandle, ...rest} = props;
+    console.log('productId, productHandle', {productId, productHandle});
     return (
       <section ref={ref} {...rest}>
         hello

@@ -43,6 +43,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
           hideOnMobile && 'hidden sm:block',
         )}
         data={{url: src, altText}}
+        sizes={`(min-width: 45em) 50vw, 100vw`}
       />
     );
   },

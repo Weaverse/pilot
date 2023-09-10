@@ -12,6 +12,7 @@ export function getWeaverseCsp(request: Request) {
       "'self'",
       'https://cdn.shopify.com',
       'https://shopify.com',
+      'https://*.youtube.com',
       ...weaverseHosts,
     ],
     styleSrc: [
