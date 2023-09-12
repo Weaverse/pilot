@@ -12,12 +12,13 @@ Here is the manual way to do it with rsync:
     ```
 2. Put your own pilot project into a same level directory.
 
-3. Run the following command to sync your project with the original pilot project:
+3. Run the following command to sync your project with the original pilot project, Keep in mind to
+   replace `your-pilot-project` with the name of your own pilot project.
 
     ```bash
     rsync -arv --exclude=node_modules --exclude=.git --exclude=.cache --exclude=.turbo --exclude=dist --exclude=.env ./pilot/ ./your-pilot-project
     ```
 
-Keep in mind to replace `your-pilot-project` with the name of your own pilot project.
-
-5. Commit and push your changes to your own pilot project.
+4. Commit and push your changes to your own pilot project.
+5. It is recommended to run the sync command every time you want to update your project with the latest changes from the
+   original pilot project.
