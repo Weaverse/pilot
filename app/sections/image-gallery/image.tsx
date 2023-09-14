@@ -7,11 +7,16 @@ import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
 
 interface ImageGalleryItemProps extends HydrogenComponentProps {
-  src: string;
+  // TODO: change src to imageData
+  src: {
+    url: string;
+    altText: string;
+    width?: number;
+    height?: number;
+  };
   columnSpan: number;
   borderRadius: number;
   hideOnMobile: boolean;
-  altText: string;
 }
 
 let columnSpanClasses: {[span: number]: string} = {
@@ -31,8 +36,8 @@ let radiusClasses: {[radius: string]: string} = {
 
 let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
   (props, ref) => {
-    let {src, columnSpan, borderRadius, hideOnMobile, altText, ...rest} = props;
-    let data = typeof src === 'string' ? {url: src, altText} : src;
+    let {src, columnSpan, borderRadius, hideOnMobile, ...rest} = props;
+    let data = typeof src === 'object' ? src : {url: src, altText: src};
     return (
       <Image
         ref={ref}
@@ -61,17 +66,18 @@ export let schema: HydrogenComponentSchema = {
       inputs: [
         {
           type: 'image',
+          // TODO: change src to imageData object
           name: 'src',
           label: 'Image',
           defaultValue:
             'https://images.placeholders.dev/?width=1000&height=1000&text=Pilot&bgColor=%23f4f4f5&textColor=%23a1a1aa',
         },
-        {
-          type: 'text',
-          label: 'Alt Text',
-          name: 'altText',
-          defaultValue: 'Pilot Image',
-        },
+        // {
+        //   type: 'text',
+        //   label: 'Alt Text',
+        //   name: 'altText',
+        //   defaultValue: 'Pilot Image',
+        // },
         {
           type: 'range',
           label: 'Column Span',
