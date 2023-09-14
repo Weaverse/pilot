@@ -32,6 +32,7 @@ let radiusClasses: {[radius: string]: string} = {
 let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
   (props, ref) => {
     let {src, columnSpan, borderRadius, hideOnMobile, altText, ...rest} = props;
+    let data = typeof src === 'string' ? {url: src, altText} : src;
     return (
       <Image
         ref={ref}
@@ -42,7 +43,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
           radiusClasses[borderRadius],
           hideOnMobile && 'hidden sm:block',
         )}
-        data={{url: src, altText}}
+        data={data}
         sizes={`(min-width: 45em) 50vw, 100vw`}
       />
     );
