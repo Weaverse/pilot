@@ -9,7 +9,12 @@ import {Image} from '@shopify/hydrogen';
 interface TestimonialItemProps extends HydrogenComponentProps {
   heading: string;
   content: string;
-  authorImage: string;
+  authorImage: {
+    url: string;
+    altText: string;
+    width?: number;
+    height?: number;
+  };
   authorName: string;
   authorTitle: string;
   hideOnMobile: boolean;
@@ -42,8 +47,12 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
           <figcaption className="flex items-center space-x-3">
             <Image
               className="h-9 rounded-full"
-              data={{url: authorImage}}
-              alt="author profile picture"
+              data={
+                typeof authorImage === 'object'
+                  ? authorImage
+                  : {url: authorImage}
+              }
+              alt={authorName}
               width={36}
             />
             <div className="space-y-0.5 font-medium dark:text-white">
