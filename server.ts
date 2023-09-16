@@ -9,11 +9,16 @@ import {
   cartSetIdDefault,
   createCartHandler,
   createStorefrontClient,
+  createWithCache,
   storefrontRedirect,
 } from '@shopify/hydrogen';
 
 import {HydrogenSession} from '~/lib/session.server';
 import {getLocaleFromRequest} from '~/lib/utils';
+import {createWeaverseClient, getWeaverseConfigs} from '@weaverse/hydrogen';
+import {components} from '~/weaverse/components';
+import {countries} from '~/data/countries';
+import {themeSchema} from '~/weaverse/theme-schema';
 
 /**
  * Export a fetch handler in module format.
@@ -71,6 +76,14 @@ export default {
           storefront,
           cart,
           env,
+          weaverse: createWeaverseClient({
+            storefront,
+            countries,
+            themeSchema,
+            components,
+            configs: getWeaverseConfigs(request, env),
+            withCache: createWithCache({cache, waitUntil}),
+          }),
         }),
       });
 
