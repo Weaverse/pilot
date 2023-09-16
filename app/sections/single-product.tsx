@@ -1,7 +1,7 @@
 import {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  WeaverseLoaderArgs,
+  ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
@@ -25,7 +25,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   },
 );
 
-export let loader = async ({context}: WeaverseLoaderArgs) => {
+export let loader = async ({context}: ComponentLoaderArgs) => {
   return null;
 };
 

@@ -1,5 +1,6 @@
 import {flattenConnection} from '@shopify/hydrogen';
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
+import {json} from '@shopify/remix-oxygen';
+import {RouteLoaderArgs} from '@weaverse/hydrogen';
 import type {BlogQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
@@ -7,21 +8,16 @@ import {BLOGS_QUERY} from '~/data/queries';
 import {PAGINATION_SIZE} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader.server';
 
 export const headers = routeHeaders;
 
-export const loader = async (args: LoaderArgs) => {
-  let {
-    params,
-    request,
-    context: {storefront},
-  } = args;
-  const {language, country} = storefront.i18n;
+export const loader = async (args: RouteLoaderArgs) => {
+  let {params, request, context} = args;
+  const {language, country} = context.storefront.i18n;
 
   invariant(params.blogHandle, 'Missing blog handle');
 
-  const {blog} = await storefront.query<BlogQuery>(BLOGS_QUERY, {
+  const {blog} = await context.storefront.query<BlogQuery>(BLOGS_QUERY, {
     variables: {
       blogHandle: params.blogHandle,
       pageBy: PAGINATION_SIZE,
@@ -51,7 +47,7 @@ export const loader = async (args: LoaderArgs) => {
     blog,
     articles,
     seo,
-    weaverseData: await loadWeaversePage(args),
+    weaverseData: await context.weaverse.loadPage(args),
   });
 };
 

@@ -1,7 +1,7 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {defer, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
-import {getSelectedProductOptions} from '@weaverse/hydrogen';
+import {defer, redirect} from '@shopify/remix-oxygen';
+import {RouteLoaderArgs, getSelectedProductOptions} from '@weaverse/hydrogen';
 import {
   ProductQuery,
   ProductRecommendationsQuery,
@@ -16,11 +16,10 @@ import {
 import {seoPayload} from '~/lib/seo.server';
 import type {Storefront} from '~/lib/type';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader.server';
 
 export const headers = routeHeaders;
 
-export async function loader(args: LoaderArgs) {
+export async function loader(args: RouteLoaderArgs) {
   let {params, request, context} = args;
   const {productHandle} = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
@@ -91,7 +90,7 @@ export async function loader(args: LoaderArgs) {
       totalValue: parseFloat(selectedVariant.price.amount),
     },
     seo,
-    weaverseData: await loadWeaversePage(args),
+    weaverseData: context.weaverse.loadPage(args),
   });
 }
 

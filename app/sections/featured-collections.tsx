@@ -1,7 +1,7 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  WeaverseLoaderArgs,
+  ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import type {HomepageFeaturedCollectionsQuery} from 'storefrontapi.generated';
@@ -33,7 +33,7 @@ let FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
 
 export default FeaturedCollections;
 
-export let loader = async ({context}: WeaverseLoaderArgs) => {
+export let loader = async ({context}: ComponentLoaderArgs) => {
   let {language, country} = context.storefront.i18n;
   return await context.storefront.query<HomepageFeaturedCollectionsQuery>(
     FEATURED_COLLECTIONS_QUERY,

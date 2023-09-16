@@ -17,6 +17,8 @@ export function CollectionCard({
         {collection?.image && (
           <Image
             data={collection.image}
+            width={collection.image.width || 600}
+            height={collection.image.height || 400}
             aspectRatio={imageAspectRatio}
             sizes="(max-width: 32em) 100vw, 45vw"
             loading={loading}

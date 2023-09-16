@@ -1,19 +1,19 @@
 import {getPaginationVariables} from '@shopify/hydrogen';
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
+import {json} from '@shopify/remix-oxygen';
+import {RouteLoaderArgs} from '@weaverse/hydrogen';
 import {routeHeaders} from '~/data/cache';
 import {COLLECTIONS_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader.server';
 
 const PAGINATION_SIZE = 4;
 
 export const headers = routeHeaders;
 
-export const loader = async (args: LoaderArgs) => {
+export const loader = async (args: RouteLoaderArgs) => {
   let {
     request,
-    context: {storefront},
+    context: {storefront, weaverse},
   } = args;
   const variables = getPaginationVariables(request, {pageBy: PAGINATION_SIZE});
   const {collections} = await storefront.query(COLLECTIONS_QUERY, {
@@ -32,7 +32,7 @@ export const loader = async (args: LoaderArgs) => {
   return json({
     collections,
     seo,
-    weaverseData: await loadWeaversePage(args),
+    weaverseData: await weaverse.loadPage(args),
   });
 };
 

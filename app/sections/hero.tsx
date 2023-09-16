@@ -1,7 +1,7 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  WeaverseLoaderArgs,
+  ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import type {SeoCollectionContentQuery} from 'storefrontapi.generated';
@@ -30,7 +30,7 @@ let HeroSection = forwardRef<HTMLElement, HeroSectionProps>((props, ref) => {
 
 export default HeroSection;
 
-export let loader = async ({context, itemData}: WeaverseLoaderArgs) => {
+export let loader = async ({context, itemData}: ComponentLoaderArgs) => {
   let {hero} = await context.storefront.query<SeoCollectionContentQuery>(
     HOMEPAGE_SEO_QUERY,
     {

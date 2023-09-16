@@ -4,14 +4,14 @@ import {
   getPaginationVariables,
 } from '@shopify/hydrogen';
 import type {ProductCollectionSortKeys} from '@shopify/hydrogen/storefront-api-types';
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
+import {json} from '@shopify/remix-oxygen';
+import {RouteLoaderArgs} from '@weaverse/hydrogen';
 import invariant from 'tiny-invariant';
 import type {AppliedFilter, SortParam} from '~/components/SortFilter';
 import {routeHeaders} from '~/data/cache';
 import {COLLECTION_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader.server';
 
 export const headers = routeHeaders;
 
@@ -25,7 +25,7 @@ type FiltersQueryParams = Array<
   VariantFilterParam | PriceFiltersQueryParam | VariantOptionFiltersQueryParam
 >;
 
-export async function loader(args: LoaderArgs) {
+export async function loader(args: RouteLoaderArgs) {
   const {params, request, context} = args;
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 8,
@@ -119,7 +119,7 @@ export async function loader(args: LoaderArgs) {
       resourceId: collection.id,
     },
     seo,
-    weaverseData: await loadWeaversePage(args),
+    weaverseData: await context.weaverse.loadPage(args),
   });
 }
 

@@ -1,11 +1,11 @@
-import {json, type LinksFunction, type LoaderArgs} from '@shopify/remix-oxygen';
+import {json, type LinksFunction} from '@shopify/remix-oxygen';
+import {RouteLoaderArgs} from '@weaverse/hydrogen';
+import {ArticleDetailsQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
-import {seoPayload} from '~/lib/seo.server';
-import {ArticleDetailsQuery} from 'storefrontapi.generated';
 import {ARTICLE_QUERY} from '~/data/queries';
+import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {loadWeaversePage} from '~/weaverse/loader.server';
 import styles from '../styles/custom-font.css';
 
 export const headers = routeHeaders;
@@ -14,7 +14,7 @@ export const links: LinksFunction = () => {
   return [{rel: 'stylesheet', href: styles}];
 };
 
-export async function loader(args: LoaderArgs) {
+export async function loader(args: RouteLoaderArgs) {
   let {request, params, context} = args;
   const {language, country} = context.storefront.i18n;
 
@@ -50,7 +50,7 @@ export async function loader(args: LoaderArgs) {
     article,
     formattedDate,
     seo,
-    weaverseData: await loadWeaversePage(args),
+    weaverseData: await context.weaverse.loadPage(args),
   });
 }
 
