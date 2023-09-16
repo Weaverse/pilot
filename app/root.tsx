@@ -1,23 +1,22 @@
 import {
-  defer,
-  type LinksFunction,
-  type LoaderArgs,
-  type AppLoadContext,
-} from '@shopify/remix-oxygen';
-import {
-  isRouteErrorResponse,
   Links,
+  LiveReload,
   Meta,
   Outlet,
   Scripts,
-  LiveReload,
   ScrollRestoration,
+  isRouteErrorResponse,
   useLoaderData,
   useMatches,
   useRouteError,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
-import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
+import {Seo, ShopifySalesChannel, useNonce} from '@shopify/hydrogen';
+import {
+  defer,
+  type AppLoadContext,
+  type LinksFunction,
+} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
 
 import {Layout} from '~/components';
@@ -25,11 +24,13 @@ import {seoPayload} from '~/lib/seo.server';
 
 import favicon from '../public/favicon.svg';
 
+import {RouteLoaderArgs} from '@weaverse/hydrogen';
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
-import styles from './styles/app.css';
-import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
+import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
+import styles from './styles/app.css';
+import {GlobalStyle} from './weaverse/style';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -65,7 +66,7 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export async function loader({request, context}: LoaderArgs) {
+export async function loader({request, context}: RouteLoaderArgs) {
   const {session, storefront, cart} = context;
   const [customerAccessToken, layout] = await Promise.all([
     session.get('customerAccessToken'),
@@ -84,6 +85,7 @@ export async function loader({request, context}: LoaderArgs) {
       shopId: layout.shop.id,
     },
     seo,
+    weaverseTheme: await context.weaverse.loadThemeSettings(),
   });
 }
 
@@ -103,6 +105,7 @@ export default function App() {
         <Seo />
         <Meta />
         <Links />
+        <GlobalStyle />
       </head>
       <body>
         <Layout
