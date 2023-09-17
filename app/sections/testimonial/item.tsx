@@ -85,7 +85,7 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Testimonial heading',
         },
         {
-          type: 'text',
+          type: 'textarea',
           name: 'content',
           label: 'Content',
           defaultValue: `I've ordered to multiple countries without issue. Their calculated duties/taxes and import fees make international delivery transparent.`,

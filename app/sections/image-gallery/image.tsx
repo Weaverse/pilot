@@ -70,7 +70,7 @@ export let schema: HydrogenComponentSchema = {
           name: 'src',
           label: 'Image',
           defaultValue:
-            'https://images.placeholders.dev/?width=1000&height=1000&text=Pilot&bgColor=%23f4f4f5&textColor=%23a1a1aa',
+            'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/pilot-image-placeholder.svg',
         },
         // {
         //   type: 'text',
