@@ -90,7 +90,7 @@ export async function loader(args: RouteLoaderArgs) {
       totalValue: parseFloat(selectedVariant.price.amount),
     },
     seo,
-    weaverseData: context.weaverse.loadPage(args),
+    weaverseData: await context.weaverse.loadPage(args),
   });
 }
 

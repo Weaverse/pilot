@@ -26,7 +26,7 @@ export async function loader(args: RouteLoaderArgs) {
 
   return defer({
     shop,
-    weaverseData: context.weaverse.loadPage(args),
+    weaverseData: await context.weaverse.loadPage(args),
     analytics: {
       pageType: AnalyticsPageType.home,
     },
