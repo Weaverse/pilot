@@ -24,7 +24,7 @@ import {seoPayload} from '~/lib/seo.server';
 
 import favicon from '../public/favicon.svg';
 
-import {RouteLoaderArgs} from '@weaverse/hydrogen';
+import {RouteLoaderArgs, withWeaverse} from '@weaverse/hydrogen';
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
 import {useAnalytics} from './hooks/useAnalytics';
@@ -89,7 +89,7 @@ export async function loader({request, context}: RouteLoaderArgs) {
   });
 }
 
-export default function App() {
+function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
   const locale = data.selectedLocale ?? DEFAULT_LOCALE;
@@ -121,6 +121,7 @@ export default function App() {
     </html>
   );
 }
+export default withWeaverse(App);
 
 export function ErrorBoundary({error}: {error: Error}) {
   const nonce = useNonce();
