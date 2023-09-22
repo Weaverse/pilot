@@ -14,6 +14,8 @@ interface BlogsProps extends HydrogenComponentProps {
   layout: 'blog' | 'default';
   paddingTop: number;
   paddingBottom: number;
+  showExcerpt: boolean;
+  showReadmore: boolean;
   showDate: boolean;
   showAuthor: boolean;
   imageAspectRatio: string;
@@ -24,8 +26,10 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
     layout,
     paddingTop,
     paddingBottom,
+    showExcerpt,
     showAuthor,
     showDate,
+    showReadmore,
     imageAspectRatio,
     ...rest
   } = props;
@@ -42,7 +46,7 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
             paddingBottom: `${paddingBottom}px`,
           }}
         >
-          <PageHeader heading={blog.title} />
+          <PageHeader heading={blog.title} variant="blogPost" />
           <Section as="div">
             <Grid as="ol" layout={layout}>
               {articles.map((article, i) => (
@@ -52,7 +56,9 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
                   article={article}
                   loading={getImageLoadingPriority(i, 2)}
                   showAuthor={showAuthor}
+                  showExcerpt={showExcerpt}
                   showDate={showDate}
+                  showReadmore={showReadmore}
                   imageAspectRatio={imageAspectRatio}
                 />
               ))}
@@ -69,15 +75,19 @@ function ArticleCard({
   blogHandle,
   article,
   loading,
+  showExcerpt,
   showAuthor,
   showDate,
+  showReadmore,
   imageAspectRatio,
 }: {
   blogHandle: string;
   article: ArticleFragment;
   loading?: HTMLImageElement['loading'];
   showDate: boolean;
+  showExcerpt: boolean;
   showAuthor: boolean;
+  showReadmore: boolean;
   imageAspectRatio: string;
 }) {
   return (
@@ -95,11 +105,21 @@ function ArticleCard({
             />
           </div>
         )}
-        <h2 className="mt-4 font-medium">{article.title}</h2>
-        <div className="flex items-center space-x-1 mt-1">
-          {showDate && <span className="block">{article.publishedAt}</span>}
-          {showDate && showAuthor && <span>•</span>}
-          {showAuthor && <span className="block">{article.author?.name}</span>}
+        <div className="space-y-2.5">
+          <h2 className="mt-4 font-medium text-2xl">{article.title}</h2>
+          <div className="flex items-center space-x-1">
+            {showDate && <span className="block">{article.publishedAt}</span>}
+            {showDate && showAuthor && <span>•</span>}
+            {showAuthor && (
+              <span className="block">{article.author?.name}</span>
+            )}
+          </div>
+          {showExcerpt && <div className="text-sm"> {article.excerpt}</div>}
+          {showReadmore && (
+            <div>
+              <span className='underline'>Read more</span>
+            </div>
+          )}
         </div>
       </Link>
     </li>
@@ -115,7 +135,7 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ['BLOG'],
   },
-  toolbar: ['general-settings'],
+  toolbar: ['general-settings', ['delete']],
   inspector: [
     {
       group: 'Blogs',
@@ -178,14 +198,26 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'switch',
+          name: 'showExcerpt',
+          label: 'Show excerpt',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
           name: 'showDate',
           label: 'Show date',
-          defaultValue: true,
+          defaultValue: false,
         },
         {
           type: 'switch',
           name: 'showAuthor',
           label: 'Show author',
+          defaultValue: false,
+        },
+        {
+          type: 'switch',
+          name: 'showReadmore',
+          label: 'Show read more',
           defaultValue: true,
         },
       ],
