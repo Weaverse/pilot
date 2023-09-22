@@ -352,6 +352,8 @@ export let BLOGS_QUERY = `#graphql
       name
     }
     contentHtml
+    excerpt
+    excerptHtml
     handle
     id
     image {
