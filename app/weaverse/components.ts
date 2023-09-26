@@ -17,12 +17,14 @@ import * as SingleProduct from '~/sections/single-product';
 import * as Testimonial from '~/sections/testimonial';
 import * as TestimonialItem from '~/sections/testimonial/item';
 import * as Video from '~/sections/video';
+import * as collectHeader from '~/sections/collection-header';
 
 export let components: HydrogenComponent[] = [
   Main,
   Hero,
   Page,
   Video,
+  collectHeader,
   Blogs,
   BlogPost,
   AllProducts,
