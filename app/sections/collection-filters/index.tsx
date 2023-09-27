@@ -6,18 +6,11 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
+import {useInView} from 'react-intersection-observer';
 import {CollectionDetailsQuery} from 'storefrontapi.generated';
-import {
-  Button,
-  Grid,
-  PageHeader,
-  ProductCard,
-  Section,
-  SortFilter,
-  Text,
-} from '~/components';
+import {Button, PageHeader, Section, SortFilter, Text} from '~/components';
 import type {AppliedFilter} from '~/components/SortFilter';
-import {getImageLoadingPriority} from '~/lib/const';
+import {ProductsLoadedOnScroll} from './products-loaded-on-scroll';
 
 interface CollectionFiltersProps extends HydrogenComponentProps {
   showCollectionDescription: boolean;
@@ -26,18 +19,21 @@ interface CollectionFiltersProps extends HydrogenComponentProps {
 }
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
-  (props, ref) => {
+  (props, sectionRef) => {
     let {showCollectionDescription, loadPrevText, loadMoreText, ...rest} =
       props;
+
+    let {ref, inView} = useInView();
     let {collection, collections, appliedFilters} = useLoaderData<
       CollectionDetailsQuery & {
         collections: Array<{handle: string; title: string}>;
         appliedFilters: AppliedFilter[];
       }
     >();
+
     if (collection?.products && collections) {
       return (
-        <section ref={ref} {...rest}>
+        <section ref={sectionRef} {...rest}>
           <PageHeader heading={collection.title}>
             {showCollectionDescription && collection?.description && (
               <div className="flex items-baseline justify-between w-full">
@@ -56,7 +52,15 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
               collections={collections}
             >
               <Pagination connection={collection.products}>
-                {({nodes, isLoading, PreviousLink, NextLink}) => (
+                {({
+                  nodes,
+                  isLoading,
+                  PreviousLink,
+                  NextLink,
+                  nextPageUrl,
+                  hasNextPage,
+                  state,
+                }) => (
                   <>
                     <div className="flex items-center justify-center mb-6">
                       <Button
@@ -67,16 +71,17 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                         {isLoading ? 'Loading...' : loadPrevText}
                       </Button>
                     </div>
-                    <Grid layout="products">
-                      {nodes.map((product, i) => (
-                        <ProductCard
-                          key={product.id}
-                          product={product}
-                          loading={getImageLoadingPriority(i)}
-                        />
-                      ))}
-                    </Grid>
-                    <div className="flex items-center justify-center mt-6">
+                    <ProductsLoadedOnScroll
+                      nodes={nodes}
+                      inView={inView}
+                      nextPageUrl={nextPageUrl}
+                      hasNextPage={hasNextPage}
+                      state={state}
+                    />
+                    <div
+                      className="flex items-center justify-center mt-6"
+                      ref={ref}
+                    >
                       <Button as={NextLink} variant="secondary" width="full">
                         {isLoading ? 'Loading...' : loadMoreText}
                       </Button>
@@ -89,7 +94,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
         </section>
       );
     }
-    return <section ref={ref} {...rest} />;
+    return <section ref={sectionRef} {...rest} />;
   },
 );
 
