@@ -43,12 +43,12 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
               errorElement="There was a problem loading related products"
               resolve={relatedArticles}
             >
-              <div className="space-y-8 md:space-y-16 md:p-8 lg:p-12">
+              <div className="space-y-8 md:space-y-16 md:p-8 lg:p-12 p-4">
                 <h2 className="text-3xl font-bold max-w-prose text-center mx-auto">
                   {heading}
                 </h2>
                 <ol className="md:grid grid-cols-3 hiddenScroll md:gap-6">
-                  {relatedArticles.map((article, i) => (
+                  {relatedArticles.slice(0, articlesCount).map((article, i) => (
                     <ArticleCard
                       key={article.id}
                       blogHandle={blog!.handle}
@@ -162,7 +162,7 @@ export let schema: HydrogenComponentSchema = {
             type: 'switch',
             name: 'showExcerpt',
             label: 'Show excerpt',
-            defaultValue: true,
+            defaultValue: false,
           },
           {
             type: 'switch',
