@@ -747,7 +747,10 @@ export type ArticleDetailsQueryVariables = StorefrontAPI.Exact<{
 export type ArticleDetailsQuery = {
   blog?: StorefrontAPI.Maybe<{
     articleByHandle?: StorefrontAPI.Maybe<
-      Pick<StorefrontAPI.Article, 'title' | 'contentHtml' | 'publishedAt'> & {
+      Pick<
+        StorefrontAPI.Article,
+        'title' | 'contentHtml' | 'publishedAt' | 'tags'
+      > & {
         author?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ArticleAuthor, 'name'>>;
         image?: StorefrontAPI.Maybe<
           Pick<
@@ -760,6 +763,30 @@ export type ArticleDetailsQuery = {
         >;
       }
     >;
+    articles: {
+      nodes: Array<
+        Pick<
+          StorefrontAPI.Article,
+          | 'contentHtml'
+          | 'excerpt'
+          | 'excerptHtml'
+          | 'handle'
+          | 'id'
+          | 'publishedAt'
+          | 'title'
+        > & {
+          author?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.ArticleAuthor, 'name'>
+          >;
+          image?: StorefrontAPI.Maybe<
+            Pick<
+              StorefrontAPI.Image,
+              'id' | 'altText' | 'url' | 'width' | 'height'
+            >
+          >;
+        }
+      >;
+    };
   }>;
 };
 
@@ -1700,7 +1727,7 @@ interface GeneratedQueryTypes {
     return: BlogQuery;
     variables: BlogQueryVariables;
   };
-  '#graphql\n  query ArticleDetails(\n    $language: LanguageCode\n    $blogHandle: String!\n    $articleHandle: String!\n  ) @inContext(language: $language) {\n    blog(handle: $blogHandle) {\n      articleByHandle(handle: $articleHandle) {\n        title\n        contentHtml\n        publishedAt\n        author: authorV2 {\n          name\n        }\n        image {\n          id\n          altText\n          url\n          width\n          height\n        }\n        seo {\n          description\n          title\n        }\n      }\n    }\n  }\n': {
+  '#graphql\n  query ArticleDetails(\n    $language: LanguageCode\n    $blogHandle: String!\n    $articleHandle: String!\n  ) @inContext(language: $language) {\n    blog(handle: $blogHandle) {\n      articleByHandle(handle: $articleHandle) {\n        title\n        contentHtml\n        publishedAt\n        tags\n        author: authorV2 {\n          name\n        }\n        image {\n          id\n          altText\n          url\n          width\n          height\n        }\n        seo {\n          description\n          title\n        }\n      }\n      articles (first: 20) {\n        nodes {\n            ...Article\n        }\n      }\n    }\n  }\n  fragment Article on Article {\n    author: authorV2 {\n      name\n    }\n    contentHtml\n    excerpt\n    excerptHtml\n    handle\n    id\n    image {\n      id\n      altText\n      url\n      width\n      height\n    }\n    publishedAt\n    title\n  }\n': {
     return: ArticleDetailsQuery;
     variables: ArticleDetailsQueryVariables;
   };
