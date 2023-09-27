@@ -1,13 +1,13 @@
-import {useLoaderData} from '@remix-run/react';
-import {Image} from '@shopify/hydrogen';
-import {Article} from '@shopify/hydrogen/storefront-api-types';
+import { useLoaderData } from '@remix-run/react';
+import { Image } from '@shopify/hydrogen';
+import { Article } from '@shopify/hydrogen/storefront-api-types';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+import { forwardRef } from 'react';
 
-import {PageHeader, Section} from '~/components';
+import { IconFacebook, IconPinterest, Section } from '~/components';
 
 interface BlogPostProps extends HydrogenComponentProps {
   paddingTop: number;
@@ -20,8 +20,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
     article: Article;
     formattedDate: string;
   }>();
-  let {title, image, contentHtml, author} = article;
-
+  let {title, image, contentHtml, author, tags} = article;
   if (article) {
     return (
       <section ref={ref} {...rest}>
@@ -31,24 +30,37 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
             paddingBottom: `${paddingBottom}px`,
           }}
         >
-          <PageHeader heading={title} variant="blogPost">
-            <span>
-              {formattedDate} &middot; {author?.name}
-            </span>
-          </PageHeader>
-          <Section as="article" padding="x">
+          <div className="relative h-[520px]">
             {image && (
               <Image
                 data={image}
-                className="w-full mx-auto mt-8 md:mt-16 max-w-7xl"
+                className="w-full absolute inset-0 z-0 object-cover h-full"
                 sizes="90vw"
                 loading="eager"
               />
             )}
-            <div
-              dangerouslySetInnerHTML={{__html: contentHtml}}
-              className="article"
-            />
+            <div className="space-y-5 w-full h-full flex items-center justify-end py-16 flex-col relative z-10">
+              <span className="font-semibold">{formattedDate}</span>
+              <h1 className="font-bold text-heading">{title}</h1>
+              <span className="uppercase">by {author?.name}</span>
+            </div>
+          </div>
+          <Section as="article" padding="all">
+            <div className='lg:max-w-screen-lg md:max-w-screen-md max-w-screen-sm px-4 mx-auto space-y-8 md:space-y-16'>
+              <div dangerouslySetInnerHTML={{__html: contentHtml}} />
+              <div className='md:flex justify-between gap-2 space-y-2'>
+                <div>
+                  <strong>Tags:</strong>
+                  <span className="ml-2">{tags.join(', ')}</span>
+                </div>
+                <div className='flex gap-4 items-center'>
+                  <strong>Share:</strong>
+                  <IconPinterest  viewBox="0 0 24 24" />
+                  <IconFacebook  viewBox="0 0 24 24"/>
+
+                </div>
+              </div>
+            </div>
           </Section>
         </div>
       </section>
