@@ -19,13 +19,13 @@
 
 _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse, designed to create lightning-fast storefronts with exceptional performance. This theme combines a collection of powerful tools and features to streamline your Shopify development experience._
 
-### Demo
+## Demo
 
 - [Live store](https://pilot.weaverse.dev)
 - Try customizing Pilot on [Weaverse Playground](https://playground.weaverse.io)
   ![demo](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Home.png?v=1695816170)
 
-### What's included
+## What's included
 
 - Remix
 - Hydrogen
@@ -39,19 +39,19 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 - Full-featured setup of components and routes
 - Fully customizable inside [Weaverse](https://weaverse.io)
 
-### Getting started
+## Getting started
 
 Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:
 
 1. Install [Weaverse Hydrogen Customizer](https://apps.shopify.com/weaverse) from Shopify App Store.
 2. Create new Hydrogen storefront inside Weaverse.
-3. Initialize the project and start a local dev server with our CLI tool as instructed in the Weaverse editor.
+3. Initialize the project and start a local dev server with `@weaverse/cli` tool as instructed in the Weaverse editor.
    ![Init Weaverse Storefront](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/init-project_4882deaa-c661-47cc-a7bf-38b2704e6a0b.png?v=1695816089)
 4. Open the Weaverse editor to start customizing and tailoring your storefront according to your preferences.
 
-### Features overview
+## Features overview
 
-#### Fetching page data inside route's loader
+### Fetching page data inside route's loader
 
 Fetching page data inside route's loader is a common pattern in Hydrogen. Weaverse provides a convenient way to do that by using `context.weaverse.loadPage` function. It accepts `RouteLoaderArgs` as an argument and returns a promise with the page data.
 
@@ -88,7 +88,7 @@ let handleRequest = createRequestHandler({
 });
 ```
 
-#### Rendering page content
+### Rendering page content
 
 Weaverse pages is rendered using `<WeaverseContent />` component.
 
@@ -118,7 +118,7 @@ export default function Homepage() {
 
 Dead simple, right?
 
-#### Global theme settings
+### Global theme settings
 
 Weaverse global theme settings is loaded in the `root`'s loader with `context.weaverse.loadThemeSettings` function.
 
@@ -149,7 +149,7 @@ function Logo() {
 
 The `App` component is wrapped with `withWeaverse` HoC in order to SSR the theme settings.
 
-```tsx:root.text
+```tsx:root.tsx
 import {withWeaverse} from '@weaverse/hydrogen';
 
 function App() {
@@ -163,9 +163,9 @@ function App() {
 export default withWeaverse(App);
 ```
 
-#### Create a section
+### Create a section
 
-To create a section, you need to create a new file in `app/weaverse/sections` directory and register it in `app/weaverse/sections/index.ts` file.
+To create a section, you need to create a new file in [`app/sections`](app/sections) directory and register it in [`app/weaverse/components.ts`](app/weaverse/components.ts) file.
 
 ```tsx:app/weaverse/sections/Video.tsx
 import type {
@@ -246,7 +246,7 @@ export let schema: HydrogenComponentSchema = {
 
 What if your component needs to fetch data from Shopify API or any third-party API?
 
-Weaverse provide a powerful `loader` function to fetch data from any API, and it's run on the server-side 🤯😎.
+**Weaverse** provide a powerful `loader` function to fetch data from _any_ API, and it's run on the **server-side** 🤯😎.
 
 Just export a `loader` function from your component:
 
@@ -266,22 +266,22 @@ export let loader = async ({context, itemData}: ComponentLoaderArgs) => {
 
 And then you can use the data in your component with `Component.props.loaderData` 🤗
 
-#### Customizing the theme inside Weaverse Editor
+### Customizing the theme inside Weaverse Editor
 
-Weaverse provides a convenient way to customize your theme inside the Weaverse editor. You can add new sections, customize existing ones, and change the theme settings.
+Weaverse provides a convenient way to customize your theme inside the **Weaverse editor**. You can add new sections, customize existing ones, and change the theme settings.
 
-![Weaverse Editor](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Live_demo_-_Weaverse_Hydrogen_2023-09-27_18-58-23.jpg?v=1695815948)
+![Weaverse Editor](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Live_demo_-_Weaverse_Hydrogen_2023-09-27_18-58-23.png?v=1695826457)
 
-### References
+## References
 
 - [Weaverse docs](https://weaverse.io/docs)
 - [Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
 - [Remix.run](https://remix.run/)
 
-### License
+## License
 
 This project is provided under the [MIT License](LICENSE).
 
 ---
 
-Let Pilot empower your Shopify store with top-notch performance and unmatched customization possibilities! 🚀
+Let **Weaverse** & **Pilot** empower your Shopify store with top-notch performance and unmatched customization possibilities! 🚀
