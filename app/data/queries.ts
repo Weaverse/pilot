@@ -352,6 +352,8 @@ export let BLOGS_QUERY = `#graphql
       name
     }
     contentHtml
+    excerpt
+    excerptHtml
     handle
     id
     image {
@@ -377,6 +379,7 @@ export let ARTICLE_QUERY = `#graphql
         title
         contentHtml
         publishedAt
+        tags
         author: authorV2 {
           name
         }
@@ -392,7 +395,31 @@ export let ARTICLE_QUERY = `#graphql
           title
         }
       }
+      articles (first: 20) {
+        nodes {
+            ...Article
+        }
+      }
     }
+  }
+  fragment Article on Article {
+    author: authorV2 {
+      name
+    }
+    contentHtml
+    excerpt
+    excerptHtml
+    handle
+    id
+    image {
+      id
+      altText
+      url
+      width
+      height
+    }
+    publishedAt
+    title
   }
 `;
 

@@ -3,7 +3,7 @@
   "private": false,
   "sideEffects": false,
   "author": "Weaverse",
-  "version": "2.2.0",
+  "version": "2.2.2",
   "scripts": {
     "dev": "shopify hydrogen dev --codegen-unstable --port 3456",
     "build": "shopify hydrogen build",
@@ -20,11 +20,11 @@
   "dependencies": {
     "@headlessui/react": "1.7.17",
     "@remix-run/react": "1.19.1",
-    "@shopify/cli": "3.49.3",
-    "@shopify/cli-hydrogen": "5.3.1",
-    "@shopify/hydrogen": "2023.7.8",
+    "@shopify/cli": "3.49.2",
+    "@shopify/cli-hydrogen": "^5.3.0",
+    "@shopify/hydrogen": "^2023.7.8",
     "@shopify/remix-oxygen": "1.1.4",
-    "@weaverse/hydrogen": "1.2.1",
+    "@weaverse/hydrogen": "1.3.3",
     "clsx": "2.0.0",
     "cross-env": "7.0.3",
     "graphql": "16.8.1",
@@ -36,8 +36,7 @@
     "react-use": "17.4.0",
     "schema-dts": "1.1.2",
     "tiny-invariant": "1.3.1",
-    "typographic-base": "1.0.4",
-    "worktop": "0.7.3"
+    "typographic-base": "1.0.4"
   },
   "devDependencies": {
     "@remix-run/dev": "1.19.1",

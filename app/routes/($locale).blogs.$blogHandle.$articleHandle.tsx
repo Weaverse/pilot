@@ -37,6 +37,8 @@ export async function loader(args: RouteLoaderArgs) {
   }
 
   const article = blog.articleByHandle;
+  const relatedArticles = blog.articles.nodes
+  .filter(art => art?.handle !== params?.articleHandle);
 
   const formattedDate = new Intl.DateTimeFormat(`${language}-${country}`, {
     year: 'numeric',
@@ -48,6 +50,10 @@ export async function loader(args: RouteLoaderArgs) {
 
   return json({
     article,
+    blog: {
+      handle: params.blogHandle,
+    },
+    relatedArticles,
     formattedDate,
     seo,
     weaverseData: await context.weaverse.loadPage(args),
