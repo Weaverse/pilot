@@ -136,11 +136,6 @@ export let schema: HydrogenComponentSchema = {
                         step: 0.1
                     },
                 },
-                {
-                    type: 'position',
-                    name: 'position',
-                    label: 'Position'
-                }
             ],
         },
     ],
