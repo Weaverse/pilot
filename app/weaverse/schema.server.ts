@@ -2,7 +2,7 @@ import type {HydrogenThemeSchema} from '@weaverse/hydrogen';
 
 export let themeSchema: HydrogenThemeSchema = {
   info: {
-    version: '2.2.0',
+    version: '2.2.2',
     author: 'Weaverse',
     name: 'Pilot',
     authorProfilePhoto:
