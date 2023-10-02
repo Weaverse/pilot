@@ -2,7 +2,8 @@ import {RemixServer} from '@remix-run/react';
 import type {EntryContext} from '@shopify/remix-oxygen';
 import isbot from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
-import {createContentSecurityPolicy} from '@weaverse/hydrogen';
+import {createContentSecurityPolicy} from '@shopify/hydrogen';
+import {getWeaverseCsp} from '~/weaverse/create-weaverse.server';
 
 export default async function handleRequest(
   request: Request,
@@ -10,7 +11,9 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const {nonce, header, NonceProvider} = createContentSecurityPolicy(request);
+  const {nonce, header, NonceProvider} = createContentSecurityPolicy(
+    getWeaverseCsp(request),
+  );
   const body = await renderToReadableStream(
     <NonceProvider>
       <RemixServer context={remixContext} url={request.url} />
