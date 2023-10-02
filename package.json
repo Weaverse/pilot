@@ -3,7 +3,7 @@
   "private": false,
   "sideEffects": false,
   "author": "Weaverse",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "scripts": {
     "dev": "shopify hydrogen dev --codegen-unstable --port 3456",
     "build": "shopify hydrogen build",
@@ -24,7 +24,7 @@
     "@shopify/cli-hydrogen": "^5.3.0",
     "@shopify/hydrogen": "^2023.7.8",
     "@shopify/remix-oxygen": "1.1.4",
-    "@weaverse/hydrogen": "^2.0.0",
+    "@weaverse/hydrogen": "^2.0.1",
     "clsx": "2.0.0",
     "cross-env": "7.0.3",
     "graphql": "16.8.1",
