@@ -12,6 +12,7 @@ interface TestimonialProps extends HydrogenComponentProps {
 
 let Testimonial = forwardRef<HTMLElement, TestimonialProps>((props, ref) => {
   let {heading, description, children, ...rest} = props;
+  console.log('Testimonial props', props);
   return (
     <section ref={ref} {...rest}>
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
@@ -63,6 +64,11 @@ export let schema: HydrogenComponentSchema = {
           label: 'Heading',
           defaultValue: 'Testimonials',
           placeholder: 'Testimonials',
+        },
+        {
+          type: 'product',
+          name: 'product',
+          label: 'Product',
         },
         {
           type: 'textarea',
