@@ -15,7 +15,7 @@ export const Button = forwardRef(
     }: {
       as?: React.ElementType;
       className?: string;
-      variant?: 'primary' | 'secondary' | 'inline';
+      variant?: 'primary' | 'secondary' | 'inline' | 'secondary-white';
       width?: 'auto' | 'full';
       [key: string]: any;
     },
@@ -27,8 +27,9 @@ export const Button = forwardRef(
       'inline-block rounded font-medium text-center py-3 px-6';
 
     const variants = {
-      primary: `${baseButtonClasses} bg-primary text-contrast`,
-      secondary: `${baseButtonClasses} border border-primary/10 bg-contrast text-primary`,
+      primary: `${baseButtonClasses} border-2 border-button hover:bg-inverseButton hover:text-inverseButtonText bg-button text-buttonText`,
+      secondary: `${baseButtonClasses} border-2 border-button text-buttonTextInverse hover:bg-button hover:text-buttonText`,
+      'secondary-white': `${baseButtonClasses} border-2 border-inverseButton text-button hover:bg-inverseButton hover:text-inverseButtonText`,
       inline: 'border-b border-primary/10 leading-none pb-1',
     };
 
