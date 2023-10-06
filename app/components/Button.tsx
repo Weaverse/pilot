@@ -27,9 +27,9 @@ export const Button = forwardRef(
       'inline-block rounded font-medium text-center py-3 px-6';
 
     const variants = {
-      primary: `${baseButtonClasses} border-2 border-button hover:bg-inverseButton hover:text-inverseButtonText bg-button text-buttonText`,
+      primary: `${baseButtonClasses} border-2 border-button hover:bg-inverse-button hover:text-inverse-button-text bg-button text-button-text`,
       secondary: `${baseButtonClasses} border-2 border-button text-buttonTextInverse hover:bg-button hover:text-buttonText`,
-      'secondary-white': `${baseButtonClasses} border-2 border-inverseButton text-button hover:bg-inverseButton hover:text-inverseButtonText`,
+      'secondary-white': `${baseButtonClasses} border-2 border-inverse-button text-button hover:bg-inverse-button hover:text-inverse-button-text`,
       inline: 'border-b border-primary/10 leading-none pb-1',
     };
 

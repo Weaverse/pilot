@@ -39,7 +39,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
       >
         <figure className="p-6 bg-gray-50 rounded dark:bg-gray-800">
           <blockquote className="text-sm text-gray-500 dark:text-gray-400">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 className="font-semibold text-gray-900 dark:text-white">
               {heading}
             </h3>
             <p className="my-4">"{content}"</p>

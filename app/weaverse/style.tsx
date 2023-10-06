@@ -76,6 +76,7 @@ export function GlobalStyle() {
               --color-border: ${colorBorder};
 
               --body-base-size: ${bodyBaseSize}px;
+              font-size: var(--body-base-size);
               --body-base-spacing: ${bodyBaseSpacing}px;
               --body-base-lineheight: ${bodyBaseLineheight};
               --heading-base-size: ${headingBaseSize}px;
