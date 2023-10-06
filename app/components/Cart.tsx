@@ -16,6 +16,7 @@ import {
   Text,
   Link,
   FeaturedProducts,
+  Input,
 } from '~/components';
 import {getInputStyleClasses} from '~/lib/utils';
 
@@ -105,8 +106,7 @@ function CartDiscounts({
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
         <div className={clsx('flex', 'items-center gap-4 justify-between')}>
-          <input
-            className={getInputStyleClasses()}
+          <Input
             type="text"
             name="discountCode"
             placeholder="Discount code"
@@ -361,7 +361,7 @@ function CartLineQuantityAdjust({line}: {line: CartLine}) {
 
         <UpdateCartButton lines={[{id: lineId, quantity: nextQuantity}]}>
           <button
-            className="w-10 h-10 transition text-text/50 hover:text-text"
+            className="w-10 h-10 transition text-text hover:text-text"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"

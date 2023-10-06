@@ -7,7 +7,7 @@ import {
 import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
 import {useState} from 'react';
 
-import {Link} from '~/components';
+import {Button, Input, Link} from '~/components';
 import {getInputStyleClasses} from '~/lib/utils';
 
 export async function loader({context, params}: LoaderArgs) {
@@ -64,8 +64,8 @@ export default function Recover() {
       <div className="max-w-md w-full">
         {isSubmitted ? (
           <>
-            <h1 className="text-4xl">Request Sent.</h1>
-            <p className="mt-4">
+            <h2>Request Sent.</h2>
+            <p className="mt-8">
               If that email address is in our system, you will receive an email
               with instructions about how to reset your password in a few
               minutes.
@@ -73,16 +73,13 @@ export default function Recover() {
           </>
         ) : (
           <>
-            <h1 className="text-4xl">Forgot Password.</h1>
-            <p className="mt-4">
-              Enter the email address associated with your account to receive a
-              link to reset your password.
-            </p>
+            <h2>Reset your password</h2>
+            <p className="mt-8 text-subtle">Enter your email to reset your password</p>
             {/* TODO: Add onSubmit to validate _before_ submission with native? */}
             <Form
               method="post"
               noValidate
-              className="pt-6 pb-8 mt-4 mb-4 space-y-3"
+              className="mt-4 pb-8 mb-4 space-y-8"
             >
               {actionData?.formError && (
                 <div className="flex items-center justify-center mb-6 bg-zinc-500">
@@ -92,8 +89,7 @@ export default function Recover() {
                 </div>
               )}
               <div>
-                <input
-                  className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
+                <Input
                   id="email"
                   name="email"
                   type="email"
@@ -118,21 +114,16 @@ export default function Recover() {
                   </p>
                 )}
               </div>
-              <div className="flex items-center justify-between">
-                <button
-                  className="bg-primary text-contrast rounded py-2 px-4 focus:shadow-outline block w-full"
-                  type="submit"
-                >
-                  Request Reset Link
-                </button>
-              </div>
-              <div className="flex items-center mt-8 border-t border-gray-300">
-                <p className="align-baseline text-sm mt-6">
-                  Return to &nbsp;
-                  <Link className="inline underline" to="/account/login">
-                    Login
-                  </Link>
-                </p>
+              <div className="flex items-center justify-center flex-col gap-6">
+                <Button type="submit">Reset</Button>
+                <div className="flex items-center">
+                  <p className="align-baseline text-sm text-subtle">
+                    Remember your password? &nbsp;
+                    <Link className="inline underline" to="/account/login">
+                      Back to Login
+                    </Link>
+                  </p>
+                </div>
               </div>
             </Form>
           </>
