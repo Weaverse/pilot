@@ -2,16 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'WorkSans';
+  font-display: swap;
+  font-weight: 400;
+  src: url('./fonts/WorkSans.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'WorkSans';
+  font-display: swap;
+  font-weight: 400;
+  font-style: italic;
+  src: url('./fonts/WorkSans-Italic.woff2') format('woff2');
+}
+
 /* Tokens */
 :root {
   --color-primary: 20 20 20; /* Text, buttons, etc. */
   --color-contrast: 250 250 249; /* Backgrounds, borders, etc. */
   --color-accent: 191 72 0; /* Labels like "On sale" */
-  --font-size-fine: 0.75rem; /* text-xs */
-  --font-size-copy: 1rem; /* text-base */
-  --font-size-lead: 1.125rem; /* text-lg */
-  --font-size-heading: 2rem; /* text-2xl */
-  --font-size-display: 3rem; /* text-4xl */
+  
   --color-shop-pay: #5a31f4;
   --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
   --height-nav: 3rem;
@@ -29,6 +40,7 @@
   @supports (height: 100svh) {
     --screen-height: 100svh;
   }
+
   @supports (height: 100dvh) {
     --screen-height-dynamic: 100dvh;
   }
@@ -63,11 +75,12 @@ shop-pay-button {
   }
 
   body {
-    @apply border-primary/10 bg-contrast text-primary/90 antialiased;
+    /* @apply border-primary/10 bg-contrast text-primary/90 antialiased; */
   }
 
   html {
     scroll-padding-top: 10rem;
+    font-family: WorkSans;
   }
 
   model-viewer::part(default-progress-mask) {

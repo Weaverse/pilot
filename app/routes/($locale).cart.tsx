@@ -87,7 +87,7 @@ export default function CartRoute() {
   const [root] = useMatches();
   // @todo: finish on a separate PR
   return (
-    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
+    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start bg-background-subtle">
       <Await resolve={root.data?.cart}>
         {(cart) => <Cart layout="page" cart={cart} />}
       </Await>

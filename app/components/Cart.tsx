@@ -16,6 +16,7 @@ import {
   Text,
   Link,
   FeaturedProducts,
+  Input,
 } from '~/components';
 import {getInputStyleClasses} from '~/lib/utils';
 
@@ -49,13 +50,13 @@ export function CartDetails({
 }) {
   // @todo: get optimistic cart cost
   const cartHasItems = !!cart && cart.totalQuantity > 0;
-  const container = {
-    drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
-    page: 'w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12',
-  };
+  // const container = {
+  //   drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
+  //   page: 'w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12',
+  // };
 
   return (
-    <div className={container[layout]}>
+    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] w-full max-w-7xl mx-auto gap-5">
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -104,14 +105,8 @@ function CartDiscounts({
 
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div
-          className={clsx(
-            'flex',
-            'items-center gap-4 justify-between text-copy',
-          )}
-        >
-          <input
-            className={getInputStyleClasses()}
+        <div className={clsx('flex', 'items-center gap-4 justify-between')}>
+          <Input
             type="text"
             name="discountCode"
             placeholder="Discount code"
@@ -169,11 +164,28 @@ function CartLines({
       aria-labelledby="cart-contents"
       className={className}
     >
-      <ul className="grid gap-6 md:gap-10">
+      <table className="table-auto">
+        <thead>
+          <tr className="border-b border-gray-100 font-semibold p-2">
+            <th className="p-4 text-left border-b">Product</th>
+            <th className="p-4 border-b hidden lg:table-cell"></th>
+            <th className="p-4 border-b hidden lg:table-cell">Price</th>
+            <th className="p-4 border-b hidden lg:table-cell">Quantity</th>
+            <th className="p-4 border-b hidden lg:table-cell">Total</th>
+            <th className="p-4 border-b hidden lg:table-cell"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentLines.map((line) => (
+            <CartLineItem key={line.id} line={line as CartLine} />
+          ))}
+        </tbody>
+      </table>
+      {/* <ul className="grid gap-6 md:gap-10">
         {currentLines.map((line) => (
           <CartLineItem key={line.id} line={line as CartLine} />
         ))}
-      </ul>
+      </ul> */}
     </section>
   );
 }
@@ -185,7 +197,7 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl: string}) {
     <div className="flex flex-col mt-2">
       <a href={checkoutUrl} target="_self">
         <Button as="span" width="full">
-          Continue to Checkout
+          Checkout
         </Button>
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
@@ -208,22 +220,27 @@ function CartSummary({
   };
 
   return (
-    <section aria-labelledby="summary-heading" className={summary[layout]}>
+    <section
+      aria-labelledby="summary-heading"
+      className="bg-background p-6 space-y-5"
+    >
       <h2 id="summary-heading" className="sr-only">
         Order summary
       </h2>
-      <dl className="grid">
-        <div className="flex items-center justify-between font-medium">
-          <Text as="dt">Subtotal</Text>
-          <Text as="dd" data-test="subtotal">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between font-medium text-2xl">
+          <h2>Total</h2>
+          <div>
             {cost?.subtotalAmount?.amount ? (
               <Money data={cost?.subtotalAmount} />
             ) : (
               '-'
             )}
-          </Text>
+          </div>
         </div>
-      </dl>
+        <p>Shipping & taxes calculated at checkout</p>
+        <p className="underline">Add delivery note</p>
+      </div>
       {children}
     </section>
   );
@@ -232,13 +249,17 @@ function CartSummary({
 function CartLineItem({line}: {line: CartLine}) {
   if (!line?.id) return null;
 
-  const {id, quantity, merchandise} = line;
+  const {id, quantity, merchandise, cost} = line;
+  console.log('🚀 ~ line:', line);
 
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
 
   return (
-    <li key={id} className="flex gap-4">
-      <div className="flex-shrink">
+    <tr
+      key={line.id}
+      className="grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]"
+    >
+      <td className="py-2 row-start-1 row-end-3">
         {merchandise.image && (
           <Image
             width={110}
@@ -248,11 +269,10 @@ function CartLineItem({line}: {line: CartLine}) {
             alt={merchandise.title}
           />
         )}
-      </div>
-
-      <div className="flex justify-between flex-grow">
+      </td>
+      <td className="py-2 lg:p-4 text-sm">
         <div className="grid gap-2">
-          <Heading as="h3" size="copy">
+          <div className='font-medium'>
             {merchandise?.product?.handle ? (
               <Link to={`/products/${merchandise.product.handle}`}>
                 {merchandise?.product?.title || ''}
@@ -260,28 +280,34 @@ function CartLineItem({line}: {line: CartLine}) {
             ) : (
               <Text>{merchandise?.product?.title || ''}</Text>
             )}
-          </Heading>
-
-          <div className="grid pb-2">
-            {(merchandise?.selectedOptions || []).map((option) => (
-              <Text color="subtle" key={option.name}>
-                {option.name}: {option.value}
-              </Text>
-            ))}
           </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex justify-start text-copy">
-              <CartLineQuantityAdjust line={line} />
-            </div>
+          <div className="grid pb-2">
+            <Text>
+              {(merchandise?.selectedOptions || [])
+                .map((option) => option.value)
+                .join('/')}
+            </Text>
+          </div>
+        </div>
+      </td>
+      <td className="py-2 lg:p-4 hidden lg:table-cell">
+        <Money withoutTrailingZeros data={cost.amountPerQuantity} />
+      </td>
+      <td className="py-2 lg:p-4 row-start-2">
+        <div className="flex gap-2">
+          <CartLineQuantityAdjust line={line as CartLine} />
+          <div className="lg:hidden">
             <ItemRemoveButton lineIds={[id]} />
           </div>
         </div>
-        <Text>
-          <CartLinePrice line={line} as="span" />
-        </Text>
-      </div>
-    </li>
+      </td>
+      <td className="py-2 lg:p-4 col-start-3">
+        <CartLinePrice line={line as CartLine} />
+      </td>
+      <td className="py-2 lg:p-4 lg:table-cell hidden">
+        <ItemRemoveButton lineIds={[id]} />
+      </td>
+    </tr>
   );
 }
 
@@ -295,7 +321,7 @@ function ItemRemoveButton({lineIds}: {lineIds: CartLine['id'][]}) {
       }}
     >
       <button
-        className="flex items-center justify-center w-10 h-10 border rounded"
+        className="flex items-center justify-center w-10 h-10"
         type="submit"
       >
         <span className="sr-only">Remove</span>
@@ -321,7 +347,7 @@ function CartLineQuantityAdjust({line}: {line: CartLine}) {
           <button
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-10 h-10 transition text-primary/50 hover:text-primary disabled:text-primary/10"
+            className="w-10 h-10 transition "
             value={prevQuantity}
             disabled={quantity <= 1}
           >
@@ -335,7 +361,7 @@ function CartLineQuantityAdjust({line}: {line: CartLine}) {
 
         <UpdateCartButton lines={[{id: lineId, quantity: nextQuantity}]}>
           <button
-            className="w-10 h-10 transition text-primary/50 hover:text-primary"
+            className="w-10 h-10 transition text-text hover:text-text"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"
