@@ -50,7 +50,7 @@ export async function loader(args: RouteLoaderArgs) {
   return json({
     products: data.products,
     seo,
-    weaverseData: await context.weaverse.loadPage(args),
+    weaverseData: await context.weaverse.loadPage(),
   });
 }
 

@@ -37,8 +37,9 @@ export async function loader(args: RouteLoaderArgs) {
   }
 
   const article = blog.articleByHandle;
-  const relatedArticles = blog.articles.nodes
-  .filter(art => art?.handle !== params?.articleHandle);
+  const relatedArticles = blog.articles.nodes.filter(
+    (art) => art?.handle !== params?.articleHandle,
+  );
 
   const formattedDate = new Intl.DateTimeFormat(`${language}-${country}`, {
     year: 'numeric',
@@ -56,7 +57,7 @@ export async function loader(args: RouteLoaderArgs) {
     relatedArticles,
     formattedDate,
     seo,
-    weaverseData: await context.weaverse.loadPage(args),
+    weaverseData: await context.weaverse.loadPage(),
   });
 }
 

@@ -1,22 +1,24 @@
 import type {
+  ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import type {SeoCollectionContentQuery} from 'storefrontapi.generated';
 import {Hero} from '~/components/Hero';
 import {HOMEPAGE_SEO_QUERY} from '~/data/queries';
 
-interface HeroSectionProps
-  extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
+type HeroSectionData = {
   collectionHandle: string;
   height: 'full';
   top: boolean;
   loading: HTMLImageElement['loading'];
-}
+};
 
-let HeroSection = forwardRef<HTMLElement, HeroSectionProps>((props, ref) => {
+let HeroSection = forwardRef<
+  HTMLElement,
+  HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & HeroSectionData
+>((props, ref) => {
   let {loaderData, height, loading, top, collectionHandle, ...rest} = props;
   if (loaderData) {
     return (
@@ -30,11 +32,12 @@ let HeroSection = forwardRef<HTMLElement, HeroSectionProps>((props, ref) => {
 
 export default HeroSection;
 
-export let loader = async ({context, itemData}: ComponentLoaderArgs) => {
-  let {hero} = await context.storefront.query<SeoCollectionContentQuery>(
+export let loader = async (args: ComponentLoaderArgs<HeroSectionData>) => {
+  let {weaverse, data} = args;
+  let {hero} = await weaverse.storefront.query<SeoCollectionContentQuery>(
     HOMEPAGE_SEO_QUERY,
     {
-      variables: {handle: itemData.data.collectionHandle || 'frontpage'},
+      variables: {handle: data.collectionHandle || 'frontpage'},
     },
   );
   return hero;

@@ -119,7 +119,7 @@ export async function loader(args: RouteLoaderArgs) {
       resourceId: collection.id,
     },
     seo,
-    weaverseData: await context.weaverse.loadPage(args),
+    weaverseData: await context.weaverse.loadPage(),
   });
 }
 

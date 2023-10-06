@@ -1,5 +1,4 @@
 import {
-  useThemeSettings,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
