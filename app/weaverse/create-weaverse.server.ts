@@ -1,9 +1,5 @@
 import {Storefront, createWithCache} from '@shopify/hydrogen';
-import {
-  I18nLocale,
-  WeaverseClient,
-  getWeaverseConfigs,
-} from '@weaverse/hydrogen';
+import {I18nLocale, WeaverseClient} from '@weaverse/hydrogen';
 import {countries} from '~/data/countries';
 import {components} from '~/weaverse/components';
 import {themeSchema} from '~/weaverse/schema.server';
@@ -16,19 +12,13 @@ type CreateWeaverseArgs = {
   waitUntil: ExecutionContext['waitUntil'];
 };
 
-export function createWeaverseClient({
-  storefront,
-  request,
-  env,
-  cache,
-  waitUntil,
-}: CreateWeaverseArgs) {
+export function createWeaverseClient(args: CreateWeaverseArgs) {
+  let {cache, waitUntil, ...rest} = args;
   return new WeaverseClient({
-    storefront,
+    ...rest,
     countries,
     themeSchema,
     components,
-    configs: getWeaverseConfigs(request, env),
     withCache: createWithCache({cache, waitUntil}),
   });
 }
