@@ -1,26 +1,33 @@
 import {useThemeSettings} from '@weaverse/hydrogen';
 
+let hexToPercent = (hex: string) => {
+  let num = parseInt(hex, 16);
+  return Math.floor((num / 255) * 100);
+}
+
 function hexToRgbString(hexColor: string = ''): string {
   hexColor = hexColor.replace('#', '');
   let r = parseInt(hexColor.substring(0, 2), 16) || '';
   let g = parseInt(hexColor.substring(2, 4), 16) || '';
   let b = parseInt(hexColor.substring(4, 6), 16) || '';
-  return `${r} ${g} ${b}`.trim();
+  let a = hexToPercent(hexColor.substring(6, 8)) || '';
+  let val = `${r} ${g} ${b}`;
+  return `${val}${a ? ` / ${a}%` : ''}`.trim();
 }
 
 export function GlobalStyle() {
   let settings = useThemeSettings();
   let defaultSettings = {
     colorBackground: '#ffffff',
-    colorBackgroundSubtle: '#0f0f0f08',
+    colorBackgroundSubtle: '#0f0f0f0d',
     colorText: '#0f0f0f',
-    colorTextSubtle: '#666666',
+    colorTextSubtle: '#0f0f0fb3',
     colorButton: '#0f0f0f',
     colorButtonText: '#ffffff',
     colorInverseButton: '#ffffff',
     colorInverseButtonText: '#0f0f0f',
     colorSale: '#de4b4b',
-    colorBorder: '#0f0f0f',
+    colorBorder: '#0f0f0f80',
     bodyBaseSize: 18,
     bodyBaseSpacing: 0,
     bodyBaseLineheight: 1.5,
@@ -76,7 +83,6 @@ export function GlobalStyle() {
               --color-border: ${colorBorder};
 
               --body-base-size: ${bodyBaseSize}px;
-              font-size: var(--body-base-size);
               --body-base-spacing: ${bodyBaseSpacing}px;
               --body-base-lineheight: ${bodyBaseLineheight};
               --heading-base-size: ${headingBaseSize}px;
