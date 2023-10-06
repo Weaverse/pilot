@@ -19,6 +19,10 @@ import * as Testimonial from '~/sections/testimonial';
 import * as TestimonialItem from '~/sections/testimonial/item';
 import * as Video from '~/sections/video';
 import * as CollectionHeader from '~/sections/collection-header';
+import * as HeaderImage from '~/sections/header-image/header-image';
+import * as HeadingItem from '~/sections/header-image/heading-item';
+import * as SubHeadingItem from '~/sections/header-image/subheading-item';
+import * as DescriptionTextItem from '~/sections/header-image/description-text-item';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -26,6 +30,10 @@ export let components: HydrogenComponent[] = [
   Page,
   Video,
   CollectionHeader,
+  HeaderImage,
+  HeadingItem,
+  SubHeadingItem,
+  DescriptionTextItem,
   Blogs,
   BlogPost,
   AllProducts,
