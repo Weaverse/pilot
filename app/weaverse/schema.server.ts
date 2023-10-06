@@ -1,8 +1,9 @@
 import type {HydrogenThemeSchema} from '@weaverse/hydrogen';
+import pkg from '../../package.json';
 
 export let themeSchema: HydrogenThemeSchema = {
   info: {
-    version: '2.2.2',
+    version: pkg.version,
     author: 'Weaverse',
     name: 'Pilot',
     authorProfilePhoto:
