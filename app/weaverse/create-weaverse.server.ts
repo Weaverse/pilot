@@ -1,4 +1,4 @@
-import {Storefront, createWithCache} from '@shopify/hydrogen';
+import {Storefront} from '@shopify/hydrogen';
 import {I18nLocale, WeaverseClient} from '@weaverse/hydrogen';
 import {countries} from '~/data/countries';
 import {components} from '~/weaverse/components';
@@ -13,13 +13,11 @@ type CreateWeaverseArgs = {
 };
 
 export function createWeaverseClient(args: CreateWeaverseArgs) {
-  let {cache, waitUntil, ...rest} = args;
   return new WeaverseClient({
-    ...rest,
+    ...args,
     countries,
     themeSchema,
     components,
-    withCache: createWithCache({cache, waitUntil}),
   });
 }
 
