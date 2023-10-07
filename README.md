@@ -2,7 +2,7 @@
 
 <div align="center">
   <p style="text-align: center;">
-    <img alt="Version" src="https://img.shields.io/badge/version-2.2.2-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/badge/version-2.2.4-blue.svg?cacheSeconds=2592000" />
     <a href="#" target="_blank">
       <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?label=license" />
     </a>
@@ -53,7 +53,7 @@ Follow these steps to get started with Pilot and begin crafting your Hydrogen-dr
 
 ### Fetching page data inside route's loader
 
-Fetching page data inside route's loader is a common pattern in Hydrogen. Weaverse provides a convenient way to do that by using `context.weaverse.loadPage` function. It accepts `RouteLoaderArgs` as an argument and returns a promise with the page data.
+Fetching page data inside route's loader is a common pattern in **Hydrogen**. **Weaverse** provides a convenient way to do that by using `context.weaverse.loadPage` function.
 
 ```ts:routes/($locale)/_index.tsx
 import {defer} from '@shopify/remix-oxygen';
@@ -63,8 +63,8 @@ export async function loader(args: RouteLoaderArgs) {
   let {params, context} = args;
 
   return defer({
-    weaverseData: await context.weaverse.loadPage(args),
-    // Other data...
+    weaverseData: await context.weaverse.loadPage(),
+    // More route's loader data...
   });
 }
 ```

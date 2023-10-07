@@ -1,7 +1,5 @@
 import {getPaginationVariables} from '@shopify/hydrogen';
-import {json} from '@shopify/remix-oxygen';
-import {RouteLoaderArgs} from '@weaverse/hydrogen';
-import {AllProductsQuery} from 'storefrontapi.generated';
+import {json, LoaderArgs} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
 import {ALL_PRODUCTS_QUERY} from '~/data/queries';
@@ -12,20 +10,19 @@ const PAGE_BY = 8;
 
 export const headers = routeHeaders;
 
-export async function loader(args: RouteLoaderArgs) {
-  let {request, context} = args;
+export async function loader({
+  request,
+  context: {storefront, weaverse},
+}: LoaderArgs) {
   const variables = getPaginationVariables(request, {pageBy: PAGE_BY});
 
-  const data = await context.storefront.query<AllProductsQuery>(
-    ALL_PRODUCTS_QUERY,
-    {
-      variables: {
-        ...variables,
-        country: context.storefront.i18n.country,
-        language: context.storefront.i18n.language,
-      },
+  const data = await storefront.query(ALL_PRODUCTS_QUERY, {
+    variables: {
+      ...variables,
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
     },
-  );
+  });
 
   invariant(data, 'No data returned from Shopify API');
 
@@ -50,7 +47,7 @@ export async function loader(args: RouteLoaderArgs) {
   return json({
     products: data.products,
     seo,
-    weaverseData: await context.weaverse.loadPage(args),
+    weaverseData: await weaverse.loadPage(),
   });
 }
 
