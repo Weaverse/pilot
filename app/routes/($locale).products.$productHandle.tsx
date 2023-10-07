@@ -1,6 +1,6 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {defer, redirect} from '@shopify/remix-oxygen';
+import {defer, LoaderArgs, redirect} from '@shopify/remix-oxygen';
 import {RouteLoaderArgs, getSelectedProductOptions} from '@weaverse/hydrogen';
 import {
   ProductQuery,
@@ -19,12 +19,12 @@ import {WeaverseContent} from '~/weaverse';
 
 export const headers = routeHeaders;
 
-export async function loader(args: RouteLoaderArgs) {
-  let {params, request, context} = args;
+export async function loader({params, request, context}: LoaderArgs) {
   const {productHandle} = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
   const selectedOptions = getSelectedProductOptions(request);
+
   const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
