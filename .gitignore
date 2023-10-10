@@ -6,6 +6,6 @@ node_modules
 /public/build
 /.mf
 .env
-.shopify
 .vscode
+.shopify
 .turbo

@@ -5,6 +5,7 @@
 import type {WithCache, HydrogenCart} from '@shopify/hydrogen';
 import type {Storefront} from '~/lib/type';
 import type {HydrogenSession} from '~/lib/session.server';
+import type {WeaverseClient} from '@weaverse/hydrogen';
 
 declare global {
   /**
@@ -28,7 +29,7 @@ declare global {
 
 declare module '@shopify/remix-oxygen' {
   /**
-   * Declare local additions to `AppLoadContext` to include the session utilities we injected in `server.ts`.
+   * Declare local additions to the Remix loader context.
    */
   export interface AppLoadContext {
     waitUntil: ExecutionContext['waitUntil'];
@@ -36,6 +37,7 @@ declare module '@shopify/remix-oxygen' {
     storefront: Storefront;
     cart: HydrogenCart;
     env: Env;
+    weaverse: WeaverseClient;
   }
 
   /**
