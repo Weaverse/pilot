@@ -20,8 +20,10 @@ export function GlobalStyle() {
   let defaultSettings = {
     colorBackground: '#ffffff',
     colorBackgroundSubtle: '#0f0f0f0d',
+    colorInverseBackground: '#0f0f0f',
     colorText: '#0f0f0f',
     colorTextSubtle: '#0f0f0fb3',
+    colorInverseText: '#ffffff',
     colorButton: '#0f0f0f',
     colorButtonText: '#ffffff',
     colorInverseButton: '#ffffff',
@@ -39,8 +41,10 @@ export function GlobalStyle() {
     let {
       colorBackground,
       colorBackgroundSubtle,
+      colorInverseBackground,
       colorText,
       colorTextSubtle,
+      colorInverseText,
       colorButton,
       colorButtonText,
       colorInverseButton,
@@ -56,8 +60,10 @@ export function GlobalStyle() {
     } = settings;
     colorBackground = hexToRgbString(colorBackground?.toString());
     colorBackgroundSubtle = hexToRgbString(colorBackgroundSubtle?.toString());
+    colorInverseBackground = hexToRgbString(colorInverseBackground?.toString());
     colorText = hexToRgbString(colorText?.toString());
     colorTextSubtle = hexToRgbString(colorTextSubtle?.toString());
+    colorInverseText = hexToRgbString(colorInverseText?.toString());
     colorButton = hexToRgbString(colorButton?.toString());
     colorButtonText = hexToRgbString(colorButtonText?.toString());
     colorInverseButton = hexToRgbString(colorInverseButton?.toString());
@@ -73,8 +79,10 @@ export function GlobalStyle() {
             :root {
               --color-background: ${colorBackground};
               --color-background-subtle: ${colorBackgroundSubtle};
+              --color-inverse-background: ${colorInverseBackground};
               --color-text: ${colorText};
               --color-text-subtle: ${colorTextSubtle};
+              --color-inverse-text: ${colorInverseText};
               --color-button: ${colorButton};
               --color-button-text: ${colorButtonText};
               --color-inverse-button: ${colorInverseButton};

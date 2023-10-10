@@ -37,7 +37,7 @@ export function ProductDetail({
             {learnMore && (
               <div className="">
                 <Link
-                  className="pb-px border-b border-primary/30 text-primary/50"
+                  className="pb-px border-b border-primary/30 text-text/50"
                   to={learnMore}
                 >
                   Learn more

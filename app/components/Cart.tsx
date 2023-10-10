@@ -57,13 +57,13 @@ export function CartDetails({
 }) {
   // @todo: get optimistic cart cost
   const cartHasItems = !!cart && cart.totalQuantity > 0;
-  // const container = {
-  //   drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
-  //   page: 'w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12',
-  // };
+  const container = {
+    drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
+    page: 'grid grid-cols-1 md:grid-cols-[2fr_1fr] w-full max-w-7xl mx-auto gap-5',
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] w-full max-w-7xl mx-auto gap-5">
+    <div className={container[layout]}>
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -223,7 +223,7 @@ function CartSummary({
 }) {
   const summary = {
     drawer: 'grid gap-4 p-6 border-t md:px-12',
-    page: 'sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-primary/5 rounded w-full',
+    page: 'sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full',
   };
 
   return (
@@ -267,7 +267,9 @@ function CartLineItem({line}: {line: CartLine}) {
   console.log('🚀 ~ line:', line);
 
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
-
+    // Hide the line item if the optimistic data action is remove
+      // Do not remove the form from the DOM
+  let style = optimisticData?.action === 'remove' ? { display: 'none'} : {}
   return (
     <tr
      
@@ -275,11 +277,7 @@ function CartLineItem({line}: {line: CartLine}) {
      
       className="grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]"
     
-      style={{
-        // Hide the line item if the optimistic data action is remove
-        // Do not remove the form from the DOM
-        display: optimisticData?.action === 'remove' ? 'none' : 'flex',
-      }}
+      style={style}
     >
       <td className="py-2 row-start-1 row-end-3">
         {merchandise.image && (

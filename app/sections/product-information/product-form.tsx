@@ -105,8 +105,8 @@ export function ProductForm(props: {
                                       <Link
                                         to={to}
                                         className={clsx(
-                                          'text-primary w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
-                                          active && 'bg-primary/10',
+                                          'text-text w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
+                                          active && 'bg-background/10',
                                         )}
                                         onClick={() => {
                                           if (!closeRef?.current) return;

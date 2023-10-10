@@ -17,6 +17,13 @@
   src: url('./fonts/WorkSans-Italic.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: 'WorkSans';
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/WorkSans-Medium.woff2') format('woff2');
+}
+
 /* Tokens */
 :root {
   --color-primary: 20 20 20; /* Text, buttons, etc. */
@@ -28,15 +35,6 @@
   --height-nav: 3rem;
   --screen-height: 100vh;
   --screen-height-dynamic: 100vh;
-
-  @media (min-width: 32em) {
-    --height-nav: 4rem;
-  }
-  @media (min-width: 48em) {
-    --height-nav: 6rem;
-    --font-size-heading: 2.25rem; /* text-4xl */
-    --font-size-display: 3.75rem; /* text-6xl */
-  }
   @supports (height: 100svh) {
     --screen-height: 100svh;
   }
@@ -75,7 +73,7 @@ shop-pay-button {
   }
 
   body {
-    /* @apply border-primary/10 bg-contrast text-primary/90 antialiased; */
+    /* @apply border-primary/10 bg-contrast text-text/90 antialiased; */
   }
 
   html {
@@ -123,9 +121,9 @@ shop-pay-button {
     h4,
     h5,
     h6 {
-      @apply font-sans text-primary;
+      @apply font-sans text-text;
     }
-    @apply prose mx-auto mb-12 grid justify-center font-serif text-primary;
+    @apply prose mx-auto mb-12 grid justify-center font-serif text-text;
     p,
     ul,
     li {
