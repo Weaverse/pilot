@@ -1,7 +1,14 @@
 import clsx from 'clsx';
 import {useRef} from 'react';
 import {useScroll} from 'react-use';
-import {flattenConnection, CartForm, Image, Money} from '@shopify/hydrogen';
+import {
+  flattenConnection,
+  CartForm,
+  Image,
+  Money,
+  useOptimisticData,
+  OptimisticInput,
+} from '@shopify/hydrogen';
 import type {
   Cart as CartType,
   CartCost,
@@ -16,7 +23,6 @@ import {
   Text,
   Link,
   FeaturedProducts,
-  Input,
 } from '~/components';
 import {getInputStyleClasses} from '~/lib/utils';
 
@@ -50,13 +56,13 @@ export function CartDetails({
 }) {
   // @todo: get optimistic cart cost
   const cartHasItems = !!cart && cart.totalQuantity > 0;
-  // const container = {
-  //   drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
-  //   page: 'w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12',
-  // };
+  const container = {
+    drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
+    page: 'w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12',
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] w-full max-w-7xl mx-auto gap-5">
+    <div className={container[layout]}>
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -105,8 +111,14 @@ function CartDiscounts({
 
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div className={clsx('flex', 'items-center gap-4 justify-between')}>
-          <Input
+        <div
+          className={clsx(
+            'flex',
+            'items-center gap-4 justify-between text-copy',
+          )}
+        >
+          <input
+            className={getInputStyleClasses()}
             type="text"
             name="discountCode"
             placeholder="Discount code"
@@ -164,28 +176,11 @@ function CartLines({
       aria-labelledby="cart-contents"
       className={className}
     >
-      <table className="table-auto">
-        <thead>
-          <tr className="border-b border-gray-100 font-semibold p-2">
-            <th className="p-4 text-left border-b">Product</th>
-            <th className="p-4 border-b hidden lg:table-cell"></th>
-            <th className="p-4 border-b hidden lg:table-cell">Price</th>
-            <th className="p-4 border-b hidden lg:table-cell">Quantity</th>
-            <th className="p-4 border-b hidden lg:table-cell">Total</th>
-            <th className="p-4 border-b hidden lg:table-cell"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentLines.map((line) => (
-            <CartLineItem key={line.id} line={line as CartLine} />
-          ))}
-        </tbody>
-      </table>
-      {/* <ul className="grid gap-6 md:gap-10">
+      <ul className="grid gap-6 md:gap-10">
         {currentLines.map((line) => (
           <CartLineItem key={line.id} line={line as CartLine} />
         ))}
-      </ul> */}
+      </ul>
     </section>
   );
 }
@@ -197,7 +192,7 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl: string}) {
     <div className="flex flex-col mt-2">
       <a href={checkoutUrl} target="_self">
         <Button as="span" width="full">
-          Checkout
+          Continue to Checkout
         </Button>
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
@@ -220,46 +215,52 @@ function CartSummary({
   };
 
   return (
-    <section
-      aria-labelledby="summary-heading"
-      className="bg-background p-6 space-y-5"
-    >
+    <section aria-labelledby="summary-heading" className={summary[layout]}>
       <h2 id="summary-heading" className="sr-only">
         Order summary
       </h2>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between font-medium text-2xl">
-          <h2>Total</h2>
-          <div>
+      <dl className="grid">
+        <div className="flex items-center justify-between font-medium">
+          <Text as="dt">Subtotal</Text>
+          <Text as="dd" data-test="subtotal">
             {cost?.subtotalAmount?.amount ? (
               <Money data={cost?.subtotalAmount} />
             ) : (
               '-'
             )}
-          </div>
+          </Text>
         </div>
-        <p>Shipping & taxes calculated at checkout</p>
-        <p className="underline">Add delivery note</p>
-      </div>
+      </dl>
       {children}
     </section>
   );
 }
 
+type OptimisticData = {
+  action?: string;
+  quantity?: number;
+};
+
 function CartLineItem({line}: {line: CartLine}) {
+  const optimisticData = useOptimisticData<OptimisticData>(line?.id);
+
   if (!line?.id) return null;
 
-  const {id, quantity, merchandise, cost} = line;
-  console.log('🚀 ~ line:', line);
+  const {id, quantity, merchandise} = line;
 
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
 
   return (
-    <tr
-      key={line.id}
-      className="grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]"
+    <li
+      key={id}
+      className="flex gap-4"
+      style={{
+        // Hide the line item if the optimistic data action is remove
+        // Do not remove the form from the DOM
+        display: optimisticData?.action === 'remove' ? 'none' : 'flex',
+      }}
     >
-      <td className="py-2 row-start-1 row-end-3">
+      <div className="flex-shrink">
         {merchandise.image && (
           <Image
             width={110}
@@ -269,10 +270,11 @@ function CartLineItem({line}: {line: CartLine}) {
             alt={merchandise.title}
           />
         )}
-      </td>
-      <td className="py-2 lg:p-4 text-sm">
+      </div>
+
+      <div className="flex justify-between flex-grow">
         <div className="grid gap-2">
-          <div className='font-medium'>
+          <Heading as="h3" size="copy">
             {merchandise?.product?.handle ? (
               <Link to={`/products/${merchandise.product.handle}`}>
                 {merchandise?.product?.title || ''}
@@ -280,93 +282,102 @@ function CartLineItem({line}: {line: CartLine}) {
             ) : (
               <Text>{merchandise?.product?.title || ''}</Text>
             )}
-          </div>
+          </Heading>
+
           <div className="grid pb-2">
-            <Text>
-              {(merchandise?.selectedOptions || [])
-                .map((option) => option.value)
-                .join('/')}
-            </Text>
+            {(merchandise?.selectedOptions || []).map((option) => (
+              <Text color="subtle" key={option.name}>
+                {option.name}: {option.value}
+              </Text>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex justify-start text-copy">
+              <CartLineQuantityAdjust line={line} />
+            </div>
+            <ItemRemoveButton lineId={id} />
           </div>
         </div>
-      </td>
-      <td className="py-2 lg:p-4 hidden lg:table-cell">
-        <Money withoutTrailingZeros data={cost.amountPerQuantity} />
-      </td>
-      <td className="py-2 lg:p-4 row-start-2">
-        <div className="flex gap-2">
-          <CartLineQuantityAdjust line={line as CartLine} />
-          <div className="lg:hidden">
-            <ItemRemoveButton lineIds={[id]} />
-          </div>
-        </div>
-      </td>
-      <td className="py-2 lg:p-4 col-start-3">
-        <CartLinePrice line={line as CartLine} />
-      </td>
-      <td className="py-2 lg:p-4 lg:table-cell hidden">
-        <ItemRemoveButton lineIds={[id]} />
-      </td>
-    </tr>
+        <Text>
+          <CartLinePrice line={line} as="span" />
+        </Text>
+      </div>
+    </li>
   );
 }
 
-function ItemRemoveButton({lineIds}: {lineIds: CartLine['id'][]}) {
+function ItemRemoveButton({lineId}: {lineId: CartLine['id']}) {
   return (
     <CartForm
       route="/cart"
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{
-        lineIds,
+        lineIds: [lineId],
       }}
     >
       <button
-        className="flex items-center justify-center w-10 h-10"
+        className="flex items-center justify-center w-10 h-10 border rounded"
         type="submit"
       >
         <span className="sr-only">Remove</span>
         <IconRemove aria-hidden="true" />
       </button>
+      <OptimisticInput id={lineId} data={{action: 'remove'}} />
     </CartForm>
   );
 }
 
 function CartLineQuantityAdjust({line}: {line: CartLine}) {
+  const optimisticId = line?.id;
+  const optimisticData = useOptimisticData<OptimisticData>(optimisticId);
+
   if (!line || typeof line?.quantity === 'undefined') return null;
-  const {id: lineId, quantity} = line;
-  const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
-  const nextQuantity = Number((quantity + 1).toFixed(0));
+
+  const optimisticQuantity = optimisticData?.quantity || line.quantity;
+
+  const {id: lineId} = line;
+  const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
+  const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
 
   return (
     <>
       <label htmlFor={`quantity-${lineId}`} className="sr-only">
-        Quantity, {quantity}
+        Quantity, {optimisticQuantity}
       </label>
       <div className="flex items-center border rounded">
         <UpdateCartButton lines={[{id: lineId, quantity: prevQuantity}]}>
           <button
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-10 h-10 transition "
+            className="w-10 h-10 transition text-primary/50 hover:text-primary disabled:text-primary/10"
             value={prevQuantity}
-            disabled={quantity <= 1}
+            disabled={optimisticQuantity <= 1}
           >
             <span>&#8722;</span>
+            <OptimisticInput
+              id={optimisticId}
+              data={{quantity: prevQuantity}}
+            />
           </button>
         </UpdateCartButton>
 
         <div className="px-2 text-center" data-test="item-quantity">
-          {quantity}
+          {optimisticQuantity}
         </div>
 
         <UpdateCartButton lines={[{id: lineId, quantity: nextQuantity}]}>
           <button
-            className="w-10 h-10 transition text-text hover:text-text"
+            className="w-10 h-10 transition text-primary/50 hover:text-primary"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"
           >
             <span>&#43;</span>
+            <OptimisticInput
+              id={optimisticId}
+              data={{quantity: nextQuantity}}
+            />
           </button>
         </UpdateCartButton>
       </div>
