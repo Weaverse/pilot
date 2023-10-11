@@ -15,7 +15,7 @@ export const Button = forwardRef(
     }: {
       as?: React.ElementType;
       className?: string;
-      variant?: 'primary' | 'secondary' | 'inline';
+      variant?: 'primary' | 'secondary' | 'inline' | 'secondary-white';
       width?: 'auto' | 'full';
       [key: string]: any;
     },
@@ -24,12 +24,13 @@ export const Button = forwardRef(
     const Component = props?.to ? Link : as;
 
     const baseButtonClasses =
-      'inline-block rounded font-medium text-center py-3 px-6';
+      'inline-block rounded font-medium text-center py-3 px-4 text-sm font-medium';
 
     const variants = {
-      primary: `${baseButtonClasses} bg-primary text-contrast`,
-      secondary: `${baseButtonClasses} border border-primary/10 bg-contrast text-primary`,
-      inline: 'border-b border-primary/10 leading-none pb-1',
+      primary: `${baseButtonClasses} border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content`,
+      secondary: `${baseButtonClasses} border-2 border-btn text-btnTextInverse hover:bg-btn hover:text-btn-content`,
+      'secondary-white': `${baseButtonClasses} border-2 border-inv-btn text-btn hover:bg-inv-btn hover:text-inv-btn-content`,
+      inline: 'border-b border-bar/10 leading-none pb-1',
     };
 
     const widths = {

@@ -8,7 +8,7 @@ import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
 import {useState} from 'react';
 
 import {getInputStyleClasses} from '~/lib/utils';
-import {Link} from '~/components';
+import {Button, Input, Link} from '~/components';
 
 import {doLogin} from './($locale).account.login';
 
@@ -99,95 +99,92 @@ export default function Register() {
 
   return (
     <div className="flex justify-center my-24 px-4">
-      <div className="max-w-md w-full">
-        <h1 className="text-4xl">Create an Account.</h1>
+      <div className="max-w-sm w-full">
+        <h2 className="text-center">Create account</h2>
         {/* TODO: Add onSubmit to validate _before_ submission with native? */}
-        <Form
-          method="post"
-          noValidate
-          className="pt-6 pb-8 mt-4 mb-4 space-y-3"
-        >
+        <Form method="post" noValidate className="pt-6 pb-8 mt-4 mb-4">
           {actionData?.formError && (
             <div className="flex items-center justify-center mb-6 bg-zinc-500">
               <p className="m-4 text-s text-contrast">{actionData.formError}</p>
             </div>
           )}
-          <div>
-            <input
-              className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              placeholder="Email address"
-              aria-label="Email address"
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
-              onBlur={(event) => {
-                setNativeEmailError(
-                  event.currentTarget.value.length &&
-                    !event.currentTarget.validity.valid
-                    ? 'Invalid email address'
-                    : null,
-                );
-              }}
-            />
-            {nativeEmailError && (
-              <p className="text-red-500 text-xs">{nativeEmailError} &nbsp;</p>
-            )}
-          </div>
-          <div>
-            <input
-              className={`mb-1 ${getInputStyleClasses(nativePasswordError)}`}
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="Password"
-              aria-label="Password"
-              minLength={8}
-              required
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
-              onBlur={(event) => {
-                if (
-                  event.currentTarget.validity.valid ||
-                  !event.currentTarget.value.length
-                ) {
-                  setNativePasswordError(null);
-                } else {
-                  setNativePasswordError(
-                    event.currentTarget.validity.valueMissing
-                      ? 'Please enter a password'
-                      : 'Passwords must be at least 8 characters',
+          <div className="space-y-3">
+            <div>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="Email"
+                aria-label="Email"
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus
+                onBlur={(event) => {
+                  setNativeEmailError(
+                    event.currentTarget.value.length &&
+                      !event.currentTarget.validity.valid
+                      ? 'Invalid email address'
+                      : null,
                   );
-                }
-              }}
-            />
-            {nativePasswordError && (
-              <p className="text-red-500 text-xs">
-                {' '}
-                {nativePasswordError} &nbsp;
-              </p>
-            )}
+                }}
+              />
+              {nativeEmailError && (
+                <p className="text-red-500 text-xs">
+                  {nativeEmailError} &nbsp;
+                </p>
+              )}
+            </div>
+            <div>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Password"
+                aria-label="Password"
+                minLength={8}
+                required
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus
+                onBlur={(event) => {
+                  if (
+                    event.currentTarget.validity.valid ||
+                    !event.currentTarget.value.length
+                  ) {
+                    setNativePasswordError(null);
+                  } else {
+                    setNativePasswordError(
+                      event.currentTarget.validity.valueMissing
+                        ? 'Please enter a password'
+                        : 'Passwords must be at least 8 characters',
+                    );
+                  }
+                }}
+              />
+              {nativePasswordError && (
+                <p className="text-red-500 text-xs">
+                  {' '}
+                  {nativePasswordError} &nbsp;
+                </p>
+              )}
+            </div>
           </div>
-          <div className="flex items-center justify-between">
-            <button
-              className="bg-primary text-contrast rounded py-2 px-4 focus:shadow-outline block w-full"
+          <div className="mt-8 flex flex-col items-center justify-center gap-6">
+            <Button
               type="submit"
               disabled={!!(nativePasswordError || nativeEmailError)}
             >
-              Create Account
-            </button>
-          </div>
-          <div className="flex items-center mt-8 border-t border-gray-300">
-            <p className="align-baseline text-sm mt-6">
-              Already have an account? &nbsp;
-              <Link className="inline underline" to="/account/login">
-                Sign in
-              </Link>
-            </p>
+              Create account
+            </Button>
+            <div className="flex items-center">
+              <p className="align-baseline text-sm">
+                Already have an account? &nbsp;
+                <Link className="inline underline" to="/account/login">
+                  Log in here
+                </Link>
+              </p>
+            </div>
           </div>
         </Form>
       </div>

@@ -7,10 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: 'rgb(var(--color-primary) / <alpha-value>)',
-        contrast: 'rgb(var(--color-contrast) / <alpha-value>)',
-        notice: 'rgb(var(--color-accent) / <alpha-value>)',
-        shopPay: 'rgb(var(--color-shop-pay) / <alpha-value>)',
+        base: 'rgb(var(--color-background) / <alpha-value>)', // background color
+        'inv-base': 'rgb(var(--color-inverse-background) / <alpha-value>)', // background inverse color
+        body: 'rgb(var(--color-text) / <alpha-value>)', // body text color
+        'inv-body': 'rgb(var(--color-inverse-text) / <alpha-value>)', // body text inverse color
+        btn: 'rgb(var(--color-button) / <alpha-value>)', // button background color
+        'btn-content': 'rgb(var(--color-button-text) / <alpha-value>)', // button text color
+        'inv-btn': 'rgb(var(--color-inverse-button) / <alpha-value>)', // button inverse background color
+        'inv-btn-content': 'rgb(var(--color-inverse-button-text) / <alpha-value>)', // button inverse text color
+        sale: 'rgb(var(--color-sale) / <alpha-value>)', // sale background color
+        bar: 'rgb(var(--color-border) / <alpha-value>)', // border color
       },
       screens: {
         sm: '32em',
@@ -39,22 +45,30 @@ export default {
         mobileGallery: 'calc(100vw - 3rem)',
       },
       fontFamily: {
-        sans: ['Helvetica Neue', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['WorkSans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         serif: ['"IBMPlexSerif"', 'Palatino', 'ui-serif'],
       },
       fontSize: {
-        display: ['var(--font-size-display)', '1.1'],
-        heading: ['var(--font-size-heading)', '1.25'],
-        lead: ['var(--font-size-lead)', '1.333'],
-        copy: ['var(--font-size-copy)', '1.5'],
-        fine: ['var(--font-size-fine)', '1.333'],
+        xs: ['calc(var(--body-base-size) * 0.75)', 1],
+        sm: ['calc(var(--body-base-size) * 0.875)', 1],
+        base: ['var(--body-base-size)', 1],
+        lg: ['calc(var(--body-base-size) * 1.125)', 1],
+        xl: ['calc(var(--body-base-size) * 1.25)', 1],
+        '2xl': ['calc(var(--body-base-size) * 1.5)', 1],
+        '3xl': ['calc(var(--body-base-size) * 1.875)', 1],
+        '4xl': ['calc(var(--body-base-size) * 2.25)', 1],
+        '5xl': ['calc(var(--body-base-size) * 3)', 1],
+        '6xl': ['calc(var(--body-base-size) * 3.75)', 1],
+        '7xl': ['calc(var(--body-base-size) * 4.5)', 1],
+        '8xl': ['calc(var(--body-base-size) * 6)', 1],
+        '9xl': ['calc(var(--body-base-size) * 8)', 1],
       },
       maxWidth: {
         'prose-narrow': '45ch',
         'prose-wide': '80ch',
       },
       boxShadow: {
-        border: 'inset 0px 0px 0px 1px rgb(var(--color-primary) / 0.08)',
+        border: 'inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)',
         darkHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.4)',
         lightHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05)',
       },
