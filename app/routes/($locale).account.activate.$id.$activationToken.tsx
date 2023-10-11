@@ -211,7 +211,7 @@ export default function Activate() {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-background text-contrast rounded py-2 px-4 focus:shadow-outline block w-full"
+              className="bg-base text-contrast rounded py-2 px-4 focus:shadow-outline block w-full"
               type="submit"
             >
               Save

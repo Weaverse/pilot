@@ -23,10 +23,10 @@ export function Text({
 }) {
   const colors: Record<string, string> = {
     default: 'inherit',
-    primary: 'text-text/90',
-    subtle: 'text-text/50',
-    notice: 'text-notice',
-    contrast: 'text-contrast/90',
+    primary: 'text-body/90',
+    subtle: 'text-body/50',
+    notice: 'text-sale',
+    contrast: 'text-body/90',
   };
 
   const sizes: Record<string, string> = {
@@ -126,9 +126,9 @@ export function Section({
 
   const dividers = {
     none: 'border-none',
-    top: 'border-t border-primary/05',
-    bottom: 'border-b border-primary/05',
-    both: 'border-y border-primary/05',
+    top: 'border-t border-bar/05',
+    bottom: 'border-b border-bar/05',
+    both: 'border-y border-bar/05',
   };
 
   const displays = {

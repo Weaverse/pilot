@@ -55,7 +55,7 @@ export async function action({request, context}: ActionArgs) {
 
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
-   */
+   */q
   const cartId = result.cart.id;
   const headers = cart.setCartId(result.cart.id);
 
@@ -87,7 +87,7 @@ export default function CartRoute() {
   const [root] = useMatches();
   // @todo: finish on a separate PR
   return (
-    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start bg-background-subtle">
+    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start bg-inv-base/5">
       <Await resolve={root.data?.cart}>
         {(cart) => <Cart layout="page" cart={cart} />}
       </Await>

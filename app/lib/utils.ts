@@ -222,11 +222,11 @@ export function parseMenu(
 }
 
 export const INPUT_STYLE_CLASSES =
-  'appearance-none rounded dark:bg-transparent border focus:border-primary/50 focus:ring-0 w-full py-2 px-3 text-text/90 placeholder:text-text/50 leading-tight focus:shadow-outline';
+  'appearance-none rounded dark:bg-transparent border focus:border-bar/50 focus:ring-0 w-full py-2 px-3 text-body/90 placeholder:text-body/50 leading-tight focus:shadow-outline';
 
 export const getInputStyleClasses = (isError?: string | null) => {
   return `${INPUT_STYLE_CLASSES} ${
-    isError ? 'border-red-500' : 'border-primary/20'
+    isError ? 'border-red-500' : 'border-bar/20'
   }`;
 };
 

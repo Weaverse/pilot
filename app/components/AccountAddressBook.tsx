@@ -59,7 +59,7 @@ function Address({
     <div className="lg:p-8 p-6 border border-gray-200 rounded flex flex-col">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-background/20 text-text/50">
+          <span className="px-3 py-1 text-xs font-medium rounded-full bg-base/20 text-body/50">
             Default
           </span>
         </div>
@@ -86,7 +86,7 @@ function Address({
         </Link>
         <Form action="address/delete" method="delete">
           <input type="hidden" name="addressId" value={address.id} />
-          <button className="text-left text-text/50 ml-6 text-sm">
+          <button className="text-left text-body/50 ml-6 text-sm">
             Remove
           </button>
         </Form>

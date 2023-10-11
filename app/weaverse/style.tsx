@@ -7,6 +7,9 @@ let hexToPercent = (hex: string) => {
 
 function hexToRgbString(hexColor: string = ''): string {
   hexColor = hexColor.replace('#', '');
+  if (hexColor.length === 3) {
+    hexColor = hexColor.replace(/(.)/g, '$1$1');
+  }
   let r = parseInt(hexColor.substring(0, 2), 16) || '';
   let g = parseInt(hexColor.substring(2, 4), 16) || '';
   let b = parseInt(hexColor.substring(4, 6), 16) || '';
@@ -19,17 +22,15 @@ export function GlobalStyle() {
   let settings = useThemeSettings();
   let defaultSettings = {
     colorBackground: '#ffffff',
-    colorBackgroundSubtle: '#0f0f0f0d',
     colorInverseBackground: '#0f0f0f',
     colorText: '#0f0f0f',
-    colorTextSubtle: '#0f0f0fb3',
     colorInverseText: '#ffffff',
     colorButton: '#0f0f0f',
     colorButtonText: '#ffffff',
     colorInverseButton: '#ffffff',
     colorInverseButtonText: '#0f0f0f',
     colorSale: '#de4b4b',
-    colorBorder: '#0f0f0f80',
+    colorBorder: '#0F0F0F',
     bodyBaseSize: 18,
     bodyBaseSpacing: 0,
     bodyBaseLineheight: 1.5,
@@ -40,10 +41,8 @@ export function GlobalStyle() {
     settings = {...defaultSettings, ...settings};
     let {
       colorBackground,
-      colorBackgroundSubtle,
       colorInverseBackground,
       colorText,
-      colorTextSubtle,
       colorInverseText,
       colorButton,
       colorButtonText,
@@ -59,10 +58,8 @@ export function GlobalStyle() {
       navHeightTablet
     } = settings;
     colorBackground = hexToRgbString(colorBackground?.toString());
-    colorBackgroundSubtle = hexToRgbString(colorBackgroundSubtle?.toString());
     colorInverseBackground = hexToRgbString(colorInverseBackground?.toString());
     colorText = hexToRgbString(colorText?.toString());
-    colorTextSubtle = hexToRgbString(colorTextSubtle?.toString());
     colorInverseText = hexToRgbString(colorInverseText?.toString());
     colorButton = hexToRgbString(colorButton?.toString());
     colorButtonText = hexToRgbString(colorButtonText?.toString());
@@ -78,10 +75,8 @@ export function GlobalStyle() {
           __html: `
             :root {
               --color-background: ${colorBackground};
-              --color-background-subtle: ${colorBackgroundSubtle};
               --color-inverse-background: ${colorInverseBackground};
               --color-text: ${colorText};
-              --color-text-subtle: ${colorTextSubtle};
               --color-inverse-text: ${colorInverseText};
               --color-button: ${colorButton};
               --color-button-text: ${colorButtonText};

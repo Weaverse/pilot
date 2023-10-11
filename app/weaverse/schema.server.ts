@@ -19,19 +19,13 @@ export let themeSchema: HydrogenThemeSchema = {
           type: 'color',
           label: 'Background',
           name: 'colorBackground',
-          defaultValue: '#FFF',
-        },
-        {
-          type: 'color',
-          label: 'Background subtle',
-          name: 'colorBackgroundSubtle',
-          defaultValue: '#0F0F0F08',
+          defaultValue: '#ffffff',
         },
         {
           type: 'color',
           label: 'Inverse background',
           name: 'colorInverseBackground',
-          defaultValue: '#FFF',
+          defaultValue: '#0f0f0f',
         },
         {
           type: 'color',
@@ -41,15 +35,9 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: 'color',
-          label: 'Text subtle',
-          name: 'colorTextSubtle',
-          defaultValue: '#0F0F0F80',
-        },
-        {
-          type: 'color',
           label: 'Inverse text',
           name: 'colorInverseText',
-          defaultValue: '#FFF',
+          defaultValue: '#ffffff',
         },
         {
           type: 'color',

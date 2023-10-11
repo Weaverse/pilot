@@ -15,7 +15,7 @@ export function Modal({
       aria-modal="true"
       id="modal-bg"
     >
-      <div className="fixed inset-0 transition-opacity bg-opacity-75 bg-background/40"></div>
+      <div className="fixed inset-0 transition-opacity bg-opacity-75 bg-base/40"></div>
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
           <div
@@ -32,7 +32,7 @@ export function Modal({
             <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
               <Link
                 to={cancelLink}
-                className="p-4 -m-4 transition text-text hover:text-text/50"
+                className="p-4 -m-4 transition text-body hover:text-body/50"
               >
                 <IconClose aria-label="Close panel" />
               </Link>

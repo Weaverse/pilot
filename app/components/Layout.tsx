@@ -188,8 +188,8 @@ function MobileHeader({
       role="banner"
       className={`${
         isHome
-          ? 'bg-background text-text shadow-darkHeader'
-          : 'bg-background text-text'
+          ? 'bg-base text-body shadow-darkHeader'
+          : 'bg-base text-body'
       } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
     >
       <div className="flex items-center justify-start w-full gap-4">
@@ -211,7 +211,7 @@ function MobileHeader({
             <IconSearch />
           </button>
           <Input
-            className='focus:border-border'
+            className='focus:border-bar/15'
             type="search"
             variant="minisearch"
             placeholder="Search"
@@ -258,8 +258,8 @@ function DesktopHeader({
       role="banner"
       className={`${
         isHome
-          ? 'bg-background text-text shadow-darkHeader'
-          : 'bg-background text-text'
+          ? 'bg-base text-body shadow-darkHeader'
+          : 'bg-base text-body'
       } ${
         !isHome && y > 50 && ' shadow-lightHeader'
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4`}
@@ -292,7 +292,7 @@ function DesktopHeader({
           className="flex items-center gap-2"
         >
           <Input
-            className='focus:border-border'
+            className='focus:border-bar/15'
             type="search"
             variant="minisearch"
             placeholder="Search"
@@ -366,7 +366,7 @@ function Badge({
       <>
         <IconBag />
         <div
-          className='bg-inverse-background text-inverse-text absolute top-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px'
+          className='bg-inv-base text-inv-body absolute top-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px'
         >
           <span>{count || 0}</span>
         </div>
@@ -406,7 +406,7 @@ function Footer({menu}: {menu?: EnhancedMenu}) {
       as="footer"
       role="contentinfo"
       className={`grid min-h-[25rem] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount}
-        bg-inverse-background text-inverse-text overflow-hidden`}
+        bg-inv-base text-inv-body overflow-hidden`}
     >
       <FooterMenu menu={menu} />
       <CountrySelector />

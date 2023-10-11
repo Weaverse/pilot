@@ -41,7 +41,7 @@ export function ProductOptions({
                         <Listbox.Button
                           ref={closeRef}
                           className={clsx(
-                            'flex items-center justify-between w-full py-3 px-4 border border-primary',
+                            'flex items-center justify-between w-full py-3 px-4 border border-bar',
                             open
                               ? 'rounded-b md:rounded-t md:rounded-b-none'
                               : 'rounded',
@@ -54,7 +54,7 @@ export function ProductOptions({
                         </Listbox.Button>
                         <Listbox.Options
                           className={clsx(
-                            'border-primary bg-contrast absolute bottom-12 z-30 grid h-48 w-full overflow-y-scroll rounded-t border px-2 py-2 transition-[max-height] duration-150 sm:bottom-auto md:rounded-b md:rounded-t-none md:border-t-0 md:border-b',
+                            'border-bar bg-contrast absolute bottom-12 z-30 grid h-48 w-full overflow-y-scroll rounded-t border px-2 py-2 transition-[max-height] duration-150 sm:bottom-auto md:rounded-b md:rounded-t-none md:border-t-0 md:border-b',
                             open ? 'max-h-48' : 'max-h-0',
                           )}
                         >
@@ -68,8 +68,8 @@ export function ProductOptions({
                                   optionName={option.name}
                                   optionValue={value}
                                   className={clsx(
-                                    'text-text w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
-                                    active && 'bg-background/10',
+                                    'text-body w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
+                                    active && 'bg-base/10',
                                   )}
                                   searchParams={searchParamsWithDefaults}
                                   onClick={() => {
@@ -108,7 +108,7 @@ export function ProductOptions({
                           searchParams={searchParamsWithDefaults}
                           className={clsx(
                             'leading-none py-1 border-b-[1.5px] cursor-pointer transition-all duration-200',
-                            checked ? 'border-primary/50' : 'border-primary/0',
+                            checked ? 'border-bar/50' : 'border-bar/0',
                           )}
                         />
                       </Text>
