@@ -17,40 +17,25 @@
   src: url('./fonts/WorkSans-Italic.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: 'WorkSans';
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/WorkSans-Medium.woff2') format('woff2');
+}
+
 /* Tokens */
 :root {
-  --color-primary: 20 20 20; /* Text, buttons, etc. */
-  --color-contrast: 250 250 249; /* Backgrounds, borders, etc. */
-  --color-accent: 191 72 0; /* Labels like "On sale" */
-  
-  --color-shop-pay: #5a31f4;
   --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
   --height-nav: 3rem;
   --screen-height: 100vh;
   --screen-height-dynamic: 100vh;
-
-  @media (min-width: 32em) {
-    --height-nav: 4rem;
-  }
-  @media (min-width: 48em) {
-    --height-nav: 6rem;
-    --font-size-heading: 2.25rem; /* text-4xl */
-    --font-size-display: 3.75rem; /* text-6xl */
-  }
   @supports (height: 100svh) {
     --screen-height: 100svh;
   }
 
   @supports (height: 100dvh) {
     --screen-height-dynamic: 100dvh;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary: 250 250 250;
-    --color-contrast: 32 33 36;
-    --color-accent: 235 86 40;
   }
 }
 
@@ -75,7 +60,8 @@ shop-pay-button {
   }
 
   body {
-    /* @apply border-primary/10 bg-contrast text-primary/90 antialiased; */
+    @apply bg-base text-body/90 antialiased;
+    border-color: rgb(var(--color-border) / 15);
   }
 
   html {
@@ -123,9 +109,9 @@ shop-pay-button {
     h4,
     h5,
     h6 {
-      @apply font-sans text-primary;
+      @apply font-sans text-body;
     }
-    @apply prose mx-auto mb-12 grid justify-center font-serif text-primary;
+    @apply prose mx-auto mb-12 grid justify-center font-serif text-body;
     p,
     ul,
     li {

@@ -111,13 +111,13 @@ export default function Search() {
               return (
                 <>
                   <div className="flex items-center justify-center mt-6">
-                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
+                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-bar/10 bg-contrast text-body w-full">
                       {isLoading ? 'Loading...' : 'Previous'}
                     </PreviousLink>
                   </div>
                   <Grid data-test="product-grid">{itemsMarkup}</Grid>
                   <div className="flex items-center justify-center mt-6">
-                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
+                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-bar/10 bg-contrast text-body w-full">
                       {isLoading ? 'Loading...' : 'Next'}
                     </NextLink>
                   </div>
