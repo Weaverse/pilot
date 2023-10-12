@@ -107,7 +107,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: 'range',
           label: 'Body base line height',
-          name: 'bodyBaseLineheight',
+          name: 'bodyBaseLineHeight',
           configs: {
             min: 1,
             max: 2,
@@ -115,7 +115,7 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: 'rem',
           },
           defaultValue: 1.5,
-        }, 
+        },
         {
           type: 'range',
           label: 'Heading base size',

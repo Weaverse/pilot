@@ -3,7 +3,7 @@ import {useThemeSettings} from '@weaverse/hydrogen';
 let hexToPercent = (hex: string) => {
   let num = parseInt(hex, 16);
   return Math.floor((num / 255) * 100);
-}
+};
 
 function hexToRgbString(hexColor: string = ''): string {
   hexColor = hexColor.replace('#', '');
@@ -33,7 +33,7 @@ export function GlobalStyle() {
     colorBorder: '#0F0F0F',
     bodyBaseSize: 18,
     bodyBaseSpacing: 0,
-    bodyBaseLineheight: 1.5,
+    bodyBaseLineHeight: 1.5,
     headingBaseSize: 38,
   };
 
@@ -52,10 +52,10 @@ export function GlobalStyle() {
       colorBorder,
       bodyBaseSize,
       bodyBaseSpacing,
-      bodyBaseLineheight,
+      bodyBaseLineHeight,
       headingBaseSize,
       navHeightDesktop,
-      navHeightTablet
+      navHeightTablet,
     } = settings;
     colorBackground = hexToRgbString(colorBackground?.toString());
     colorInverseBackground = hexToRgbString(colorInverseBackground?.toString());
@@ -71,6 +71,7 @@ export function GlobalStyle() {
     return (
       <style
         id="global-theme-style"
+        key="global-theme-style"
         dangerouslySetInnerHTML={{
           __html: `
             :root {
@@ -87,7 +88,7 @@ export function GlobalStyle() {
 
               --body-base-size: ${bodyBaseSize}px;
               --body-base-spacing: ${bodyBaseSpacing}px;
-              --body-base-lineheight: ${bodyBaseLineheight};
+              --body-base-line-height: ${bodyBaseLineHeight};
               --heading-base-size: ${headingBaseSize}px;
               --height-nav: ${settings.navHeightMobile}rem;
             }
@@ -96,7 +97,7 @@ export function GlobalStyle() {
               -webkit-text-size-adjust: 100%;
               font-size: calc(var(--body-base-size)*0.92);
               letter-spacing: var(--body-base-spacing);
-              line-height: var(--body-base-lineheight);
+              line-height: var(--body-base-line-height);
               text-rendering: optimizeSpeed;
             }
 
