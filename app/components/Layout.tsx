@@ -30,6 +30,7 @@ import {
 } from '~/lib/utils';
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
+import {Logo} from './Logo';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -220,17 +221,7 @@ function MobileHeader({
         </Form>
       </div>
 
-      <Link
-        className="flex items-center self-stretch leading-[3rem] md:leading-[4rem] justify-center flex-grow w-full h-full"
-        to="/"
-      >
-        <Heading
-          className="font-bold text-center leading-none"
-          as={isHome ? 'h1' : 'h2'}
-        >
-          {title}
-        </Heading>
-      </Link>
+      <Logo />
 
       <div className="flex items-center justify-end w-full gap-4">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
@@ -265,10 +256,8 @@ function DesktopHeader({
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4`}
     >
       <div className="flex gap-12">
-        <Link className="font-bold" to="/" prefetch="intent">
-          {title}
-        </Link>
-        <nav className="flex gap-8">
+        <Logo />
+        <nav className="flex gap-8 items-center">
           {/* Top level menu items */}
           {(menu?.items || []).map((item) => (
             <Link
