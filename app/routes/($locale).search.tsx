@@ -78,7 +78,7 @@ export default function Search() {
         <Heading as="h1" size="copy">
           Search
         </Heading>
-        <Form method="get" className="relative flex w-full text-heading">
+        <Form method="get" className="relative flex w-full text-2xl">
           <Input
             defaultValue={searchTerm}
             name="q"

@@ -7,8 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: 'rgb(var(--color-background) / <alpha-value>)', // background color
-        'inv-base': 'rgb(var(--color-inverse-background) / <alpha-value>)', // background inverse color
+        primary: 'rgb(var(--color-background) / <alpha-value>)', // background color
+        contrast: 'rgb(var(--color-background) / <alpha-value>)', // temporary background color - replace primary after
+        secondary: 'rgb(var(--color-inverse-background) / <alpha-value>)', // background inverse color
         body: 'rgb(var(--color-text) / <alpha-value>)', // body text color
         'inv-body': 'rgb(var(--color-inverse-text) / <alpha-value>)', // body text inverse color
         btn: 'rgb(var(--color-button) / <alpha-value>)', // button background color
