@@ -69,7 +69,7 @@ export function ProductOptions({
                                   optionValue={value}
                                   className={clsx(
                                     'text-body w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
-                                    active && 'bg-base/10',
+                                    active && 'bg-primary/10',
                                   )}
                                   searchParams={searchParamsWithDefaults}
                                   onClick={() => {

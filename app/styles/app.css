@@ -60,7 +60,7 @@ shop-pay-button {
   }
 
   body {
-    @apply bg-base text-body/90 antialiased;
+    @apply bg-primary text-body/90 antialiased;
     border-color: rgb(var(--color-border) / 15);
   }
 
@@ -82,6 +82,9 @@ shop-pay-button {
   input[type='search']::-webkit-search-results-button,
   input[type='search']::-webkit-search-results-decoration {
     -webkit-appearance: none;
+  }
+  input[type='checkbox'] {
+    @apply text-btn;
   }
 
   a.active {
