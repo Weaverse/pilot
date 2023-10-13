@@ -23,6 +23,11 @@ import * as HeaderImage from '~/sections/header-image/header-image';
 import * as HeadingItem from '~/sections/header-image/heading-item';
 import * as SubHeadingItem from '~/sections/header-image/subheading-item';
 import * as DescriptionTextItem from '~/sections/header-image/description-text-item';
+import * as VideoWithText from '~/sections/video-with-text/video-with-text';
+import * as VideoSubheadingItem from '~/sections/video-with-text/video-subheading-item';
+import * as VideoHeadingItem from '~/sections/video-with-text/video-heading-item';
+import * as VideoDescriptionItem from '~/sections/video-with-text/video-description-item';
+import * as VideoButtonItem from '~/sections/video-with-text/video-button-item';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -34,6 +39,11 @@ export let components: HydrogenComponent[] = [
   HeadingItem,
   SubHeadingItem,
   DescriptionTextItem,
+  VideoWithText,
+  VideoSubheadingItem,
+  VideoHeadingItem,
+  VideoDescriptionItem,
+  VideoButtonItem,
   Blogs,
   BlogPost,
   AllProducts,
