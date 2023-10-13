@@ -41,7 +41,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
             )}
             <div className="space-y-5 w-full h-full flex items-center justify-end py-16 flex-col relative z-10">
               <span className="font-semibold">{formattedDate}</span>
-              <h1 className="font-bold text-heading">{title}</h1>
+              <h1 className="font-bold text-2xl">{title}</h1>
               <span className="uppercase">by {author?.name}</span>
             </div>
           </div>

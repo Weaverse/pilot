@@ -29,10 +29,10 @@ export function Modal({
             }}
             tabIndex={0}
           >
-            <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
+            <div className="absolute top-0 right-0 hidden pr-4 sm:block">
               <Link
                 to={cancelLink}
-                className="p-4 -m-4 transition text-body hover:text-body/50"
+                className="-m-4 transition text-body hover:text-body/50"
               >
                 <IconClose aria-label="Close panel" />
               </Link>
