@@ -18,7 +18,7 @@ let HeadingItem = forwardRef<HTMLDivElement, HeadingItemProps>((props, ref) => {
   } as CSSProperties;
   return (
     <div ref={ref} {...rest} style={headingStyle}>
-      <h1 className='font-sans mb-4 text-display font-medium leading-5'>{heading}</h1>
+      <h1 className='font-sans mb-4 text-4xl font-medium leading-5'>{heading}</h1>
     </div>
   );
 });

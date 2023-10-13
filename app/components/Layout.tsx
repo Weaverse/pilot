@@ -30,6 +30,7 @@ import {
 } from '~/lib/utils';
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
+import {Logo} from './Logo';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -188,8 +189,8 @@ function MobileHeader({
       role="banner"
       className={`${
         isHome
-          ? 'bg-base text-body shadow-darkHeader'
-          : 'bg-base text-body'
+          ? 'bg-primary text-body shadow-darkHeader'
+          : 'bg-primary text-body'
       } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
     >
       <div className="flex items-center justify-start w-full gap-4">
@@ -220,17 +221,7 @@ function MobileHeader({
         </Form>
       </div>
 
-      <Link
-        className="flex items-center self-stretch leading-[3rem] md:leading-[4rem] justify-center flex-grow w-full h-full"
-        to="/"
-      >
-        <Heading
-          className="font-bold text-center leading-none"
-          as={isHome ? 'h1' : 'h2'}
-        >
-          {title}
-        </Heading>
-      </Link>
+      <Logo />
 
       <div className="flex items-center justify-end w-full gap-4">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
@@ -258,17 +249,16 @@ function DesktopHeader({
       role="banner"
       className={`${
         isHome
-          ? 'bg-base text-body shadow-darkHeader'
-          : 'bg-base text-body'
+          ? 'bg-primary text-body shadow-darkHeader'
+          : 'bg-primary text-body'
       } ${
         !isHome && y > 50 && ' shadow-lightHeader'
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4`}
     >
       <div className="flex gap-12">
-        <Link className="font-bold" to="/" prefetch="intent">
-          {title}
-        </Link>
-        <nav className="flex gap-8">
+      <input type="checkbox" />
+        <Logo />
+        <nav className="flex gap-8 items-center">
           {/* Top level menu items */}
           {(menu?.items || []).map((item) => (
             <Link
@@ -366,7 +356,7 @@ function Badge({
       <>
         <IconBag />
         <div
-          className='bg-inv-base text-inv-body absolute top-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px'
+          className='bg-secondary text-inv-body absolute top-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px'
         >
           <span>{count || 0}</span>
         </div>
@@ -406,7 +396,7 @@ function Footer({menu}: {menu?: EnhancedMenu}) {
       as="footer"
       role="contentinfo"
       className={`grid min-h-[25rem] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount}
-        bg-inv-base text-inv-body overflow-hidden`}
+        bg-secondary text-inv-body overflow-hidden`}
     >
       <FooterMenu menu={menu} />
       <CountrySelector />

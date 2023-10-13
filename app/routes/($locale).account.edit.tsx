@@ -12,7 +12,7 @@ import type {
 import clsx from 'clsx';
 import invariant from 'tiny-invariant';
 
-import {Button, Text} from '~/components';
+import {Button, Input, Text} from '~/components';
 import {getInputStyleClasses, assertApiErrors} from '~/lib/utils';
 
 import {getCustomer} from './($locale).account';
@@ -131,9 +131,7 @@ export default function AccountDetailsEdit() {
 
   return (
     <>
-      <Text className="mt-4 mb-6" as="h3" size="lead">
-        Update your profile
-      </Text>
+      <div className="font-semibold">Edit account</div>
       <Form method="post">
         {actionData?.formError && (
           <div className="flex items-center justify-center mb-6 bg-red-100 rounded">
@@ -141,8 +139,7 @@ export default function AccountDetailsEdit() {
           </div>
         )}
         <div className="mt-3">
-          <input
-            className={getInputStyleClasses()}
+          <Input
             id="firstName"
             name="firstName"
             type="text"
@@ -153,8 +150,7 @@ export default function AccountDetailsEdit() {
           />
         </div>
         <div className="mt-3">
-          <input
-            className={getInputStyleClasses()}
+          <Input
             id="lastName"
             name="lastName"
             type="text"
@@ -165,8 +161,7 @@ export default function AccountDetailsEdit() {
           />
         </div>
         <div className="mt-3">
-          <input
-            className={getInputStyleClasses()}
+          <Input
             id="phone"
             name="phone"
             type="tel"
@@ -177,8 +172,8 @@ export default function AccountDetailsEdit() {
           />
         </div>
         <div className="mt-3">
-          <input
-            className={getInputStyleClasses(actionData?.fieldErrors?.email)}
+          <Input
+            variant={actionData?.fieldErrors?.email ? 'error' : 'default'}
             id="email"
             name="email"
             type="email"
@@ -194,9 +189,7 @@ export default function AccountDetailsEdit() {
             </p>
           )}
         </div>
-        <Text className="mb-6 mt-6" as="h3" size="lead">
-          Change your password
-        </Text>
+        <div className="mt-6 font-semibold">Change password</div>
         <Password
           name="currentPassword"
           label="Current password"
@@ -233,20 +226,15 @@ export default function AccountDetailsEdit() {
             {actionData.fieldErrors.newPassword2} &nbsp;
           </Text>
         )}
-        <div className="mt-6">
+        <div className="mt-6 flex gap-4 items-center justify-end">
+          <Button to=".." variant="secondary">
+            Cancel
+          </Button>
           <Button
-            className="text-sm mb-2"
-            variant="primary"
-            width="full"
             type="submit"
             disabled={state !== 'idle'}
           >
             {state !== 'idle' ? 'Saving' : 'Save'}
-          </Button>
-        </div>
-        <div className="mb-4">
-          <Button to=".." className="text-sm" variant="secondary" width="full">
-            Cancel
           </Button>
         </div>
       </Form>

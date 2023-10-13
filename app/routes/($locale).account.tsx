@@ -40,6 +40,7 @@ import {
   type FeaturedData,
 } from './($locale).featured-products';
 import {doLogout} from './($locale).account.logout';
+import {Container} from '~/components/Container';
 
 // Combining json + Response + defer in a loader breaks the
 // types returned by useLoaderData. This is a temporary fix.
@@ -68,7 +69,7 @@ export async function loader({request, context, params}: LoaderArgs) {
   const heading = customer
     ? customer.firstName
       ? `Welcome, ${customer.firstName}.`
-      : `Welcome to your account.`
+      : `My account`
     : 'Account Details';
 
   return defer(
@@ -131,7 +132,7 @@ function Account({customer, heading, featuredData}: AccountType) {
   const addresses = flattenConnection(customer.addresses);
 
   return (
-    <>
+    <Container>
       <PageHeader heading={heading}>
         <Form method="post" action={usePrefixPathWithLocale('/account/logout')}>
           <button type="submit" className="text-body/50">
@@ -160,7 +161,7 @@ function Account({customer, heading, featuredData}: AccountType) {
           </Await>
         </Suspense>
       )}
-    </>
+    </Container>
   );
 }
 
@@ -172,7 +173,7 @@ function AccountOrderHistory({orders}: OrderCardsProps) {
   return (
     <div className="mt-6">
       <div className="grid w-full gap-4 p-4 py-6 md:gap-8 md:p-8 lg:p-12">
-        <h2 className="font-bold text-lead">Order History</h2>
+        <h2 className="font-bold text-lg">Order History</h2>
         {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />}
       </div>
     </div>
