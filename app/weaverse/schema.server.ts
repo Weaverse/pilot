@@ -160,7 +160,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: 'range',
           label: 'Heading base line height',
-          name: 'headingBaseLineheight',
+          name: 'headingBaseLineHeight',
           configs: {
             min: 1,
             max: 2,
