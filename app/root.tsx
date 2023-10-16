@@ -125,7 +125,7 @@ function App() {
 
 export default withWeaverse(App);
 
-export function ErrorBoundary({error}: {error: Error}) {
+const ErrorBoundaryComponent = ({error}: {error: Error}) => {
   const nonce = useNonce();
   const [root] = useMatches();
   const locale = root?.data?.selectedLocale ?? DEFAULT_LOCALE;
@@ -174,7 +174,9 @@ export function ErrorBoundary({error}: {error: Error}) {
       </body>
     </html>
   );
-}
+};
+
+export const ErrorBoundary = withWeaverse(ErrorBoundaryComponent);
 
 const LAYOUT_QUERY = `#graphql
   query layout(
