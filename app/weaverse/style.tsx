@@ -20,25 +20,25 @@ function hexToRgbString(hexColor: string = ''): string {
 
 export function GlobalStyle() {
   let settings = useThemeSettings();
-  let defaultSettings = {
-    colorBackground: '#ffffff',
-    colorInverseBackground: '#0f0f0f',
-    colorText: '#0f0f0f',
-    colorInverseText: '#ffffff',
-    colorButton: '#0f0f0f',
-    colorButtonText: '#ffffff',
-    colorInverseButton: '#ffffff',
-    colorInverseButtonText: '#0f0f0f',
-    colorSale: '#de4b4b',
-    colorBorder: '#0F0F0F',
-    bodyBaseSize: 18,
-    bodyBaseSpacing: 0,
-    bodyBaseLineHeight: 1.5,
-    headingBaseSize: 38,
-  };
-
+  /** default settings now can be retrieve from theme schema */
+  // let defaultSettings = {
+  //   colorBackground: '#ffffff',
+  //   colorInverseBackground: '#0f0f0f',
+  //   colorText: '#0f0f0f',
+  //   colorInverseText: '#ffffff',
+  //   colorButton: '#0f0f0f',
+  //   colorButtonText: '#ffffff',
+  //   colorInverseButton: '#ffffff',
+  //   colorInverseButtonText: '#0f0f0f',
+  //   colorSale: '#de4b4b',
+  //   colorBorder: '#0F0F0F',
+  //   bodyBaseSize: 18,
+  //   bodyBaseSpacing: 0,
+  //   bodyBaseLineHeight: 1.5,
+  //   headingBaseSize: 38,
+  // };
   if (settings) {
-    settings = {...defaultSettings, ...settings};
+    // settings = {...defaultSettings, ...settings};
     let {
       colorBackground,
       colorInverseBackground,
@@ -57,16 +57,16 @@ export function GlobalStyle() {
       navHeightDesktop,
       navHeightTablet,
     } = settings;
-    colorBackground = hexToRgbString(colorBackground?.toString());
-    colorInverseBackground = hexToRgbString(colorInverseBackground?.toString());
-    colorText = hexToRgbString(colorText?.toString());
-    colorInverseText = hexToRgbString(colorInverseText?.toString());
-    colorButton = hexToRgbString(colorButton?.toString());
-    colorButtonText = hexToRgbString(colorButtonText?.toString());
-    colorInverseButton = hexToRgbString(colorInverseButton?.toString());
-    colorInverseButtonText = hexToRgbString(colorInverseButtonText?.toString());
-    colorSale = hexToRgbString(colorSale?.toString());
-    colorBorder = hexToRgbString(colorBorder?.toString());
+    colorBackground = hexToRgbString(colorBackground);
+    colorInverseBackground = hexToRgbString(colorInverseBackground);
+    colorText = hexToRgbString(colorText);
+    colorInverseText = hexToRgbString(colorInverseText);
+    colorButton = hexToRgbString(colorButton);
+    colorButtonText = hexToRgbString(colorButtonText);
+    colorInverseButton = hexToRgbString(colorInverseButton);
+    colorInverseButtonText = hexToRgbString(colorInverseButtonText);
+    colorSale = hexToRgbString(colorSale);
+    colorBorder = hexToRgbString(colorBorder);
 
     return (
       <style
