@@ -9,7 +9,6 @@ interface ContentColumnWithImageProps extends HydrogenComponentProps {
   heading: string;
   headingSize: string;
   headingAlignment: string;
-  loading: HTMLImageElement['loading'];
 }
 
 let ContentColumnWithImage = forwardRef<HTMLElement, ContentColumnWithImageProps>((props, ref) => {
@@ -36,8 +35,8 @@ let ContentColumnWithImage = forwardRef<HTMLElement, ContentColumnWithImageProps
 export default ContentColumnWithImage;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'content-column-with-image',
-  title: 'Content column with image',
+  type: 'column-with-image',
+  title: 'Column with image',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
@@ -81,11 +80,11 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['content-column--item'],
+  childTypes: ['column--item'],
   presets: {
     children: [
       {
-        type: 'content-column--item',
+        type: 'column--item',
       },
     ],
   },

@@ -4,6 +4,7 @@ import type {
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 import { Image } from '@shopify/hydrogen';
+import clsx from 'clsx';
 import { CSSProperties } from 'react';
 
 
@@ -19,22 +20,26 @@ interface ContentColumnItemProps extends HydrogenComponentProps {
   descriptionText: string;
   buttonLabel: string;
   buttonLink: string;
+  hideOnMobile: boolean;
 }
 
 let ContentColumnItem = forwardRef<HTMLDivElement, ContentColumnItemProps>((props, ref) => {
-  let { imageSrc, titleText, contentAlignment, descriptionText, buttonLabel, buttonLink, ...rest } = props;
+  let { imageSrc, titleText, contentAlignment, descriptionText, buttonLabel, buttonLink, hideOnMobile, ...rest } = props;
   let contentStyle: CSSProperties = {
     textAlign: `${contentAlignment}`,
   } as CSSProperties;
   return (
-    <div ref={ref} {...rest} className='flex flex-col items-center pt-8 sm-max:w-full sm-max:pt-0'>
+    <div ref={ref} {...rest} className={clsx(
+      'flex flex-col items-center pt-8 sm-max:w-full sm-max:pt-0',
+      hideOnMobile && 'hidden sm:block',
+      )}>
       <div className='h-64 w-64 border border-solid border-gray-500 rounded-md'>
         <Image data={imageSrc} className='w-full h-full' />
       </div>
       <div className='text-center w-full sm-max:w-64' style={contentStyle}>
-        <p className='font-sans font-semibold mt-4 text-sm'>{titleText}</p>
-        <p className='font-sans text-sm font-normal mt-2' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>
-        <a href={buttonLink} className='px-4 py-3 mt-4 cursor-pointer rounded border-2 border-solid border-gray-900 inline-block'>{buttonLabel}</a>
+        {titleText && <p className='font-sans font-semibold mt-4 text-sm'>{titleText}</p>}
+        {descriptionText && <p className='font-sans text-sm font-normal mt-2' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>}
+        {buttonLabel && <a href={buttonLink} className='px-4 py-3 mt-4 cursor-pointer rounded border-2 border-solid border-gray-900 inline-block'>{buttonLabel}</a>}
       </div>
     </div>
   );
@@ -43,11 +48,11 @@ let ContentColumnItem = forwardRef<HTMLDivElement, ContentColumnItemProps>((prop
 export default ContentColumnItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'content-column--item',
-  title: 'Content column item',
+  type: 'column--item',
+  title: 'Column item',
   inspector: [
     {
-      group: 'Content',
+      group: 'Column',
       inputs: [
         {
           type: 'image',
@@ -100,7 +105,13 @@ export let schema: HydrogenComponentSchema = {
           label: 'Button link',
           name: 'buttonLink',
           placeholder: 'Button link',
-        }
+        },
+        {
+          type: 'switch',
+          label: 'Hide on Mobile',
+          name: 'hideOnMobile',
+          defaultValue: false,
+        },
       ],
     },
   ],
