@@ -30,6 +30,8 @@ import * as ImageWTextButtonItem from '~/sections/image-with-text/content-item/b
 import * as ImageComponent from '~/sections/image-with-text/images-item/images';
 import * as ImageItems from '~/sections/image-with-text/images-item/item';
 import * as ContentComponent from '~/sections/image-with-text/content-item/index';
+import * as ContentColumnWithImage from '~/sections/column-with-text/index';
+import * as ContentColumnItem from '~/sections/column-with-text/item';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -48,6 +50,8 @@ export let components: HydrogenComponent[] = [
   ImageWTextButtonItem,
   ImageComponent,
   ImageItems,
+  ContentColumnWithImage,
+  ContentColumnItem,
   Blogs,
   BlogPost,
   AllProducts,
