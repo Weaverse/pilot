@@ -18,7 +18,7 @@ let SubHeadingItem = forwardRef<HTMLDivElement, SubHeadingItemProps>((props, ref
   } as CSSProperties;
   return (
     <div ref={ref} {...rest} style={headingStyle}>
-      <p className='font-sans mb-4 text-heading font-normal leading-6'>{subHeading}</p>
+      <p className='font-sans mb-4 text-2xl font-normal leading-6'>{subHeading}</p>
     </div>
   );
 });

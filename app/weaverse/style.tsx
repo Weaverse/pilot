@@ -3,10 +3,13 @@ import {useThemeSettings} from '@weaverse/hydrogen';
 let hexToPercent = (hex: string) => {
   let num = parseInt(hex, 16);
   return Math.floor((num / 255) * 100);
-}
+};
 
 function hexToRgbString(hexColor: string = ''): string {
   hexColor = hexColor.replace('#', '');
+  if (hexColor.length === 3) {
+    hexColor = hexColor.replace(/(.)/g, '$1$1');
+  }
   let r = parseInt(hexColor.substring(0, 2), 16) || '';
   let g = parseInt(hexColor.substring(2, 4), 16) || '';
   let b = parseInt(hexColor.substring(4, 6), 16) || '';
@@ -17,30 +20,30 @@ function hexToRgbString(hexColor: string = ''): string {
 
 export function GlobalStyle() {
   let settings = useThemeSettings();
-  let defaultSettings = {
-    colorBackground: '#ffffff',
-    colorBackgroundSubtle: '#0f0f0f0d',
-    colorText: '#0f0f0f',
-    colorTextSubtle: '#0f0f0fb3',
-    colorButton: '#0f0f0f',
-    colorButtonText: '#ffffff',
-    colorInverseButton: '#ffffff',
-    colorInverseButtonText: '#0f0f0f',
-    colorSale: '#de4b4b',
-    colorBorder: '#0f0f0f80',
-    bodyBaseSize: 18,
-    bodyBaseSpacing: 0,
-    bodyBaseLineheight: 1.5,
-    headingBaseSize: 38,
-  };
-
+  /** default settings now can be retrieve from theme schema */
+  // let defaultSettings = {
+  //   colorBackground: '#ffffff',
+  //   colorInverseBackground: '#0f0f0f',
+  //   colorText: '#0f0f0f',
+  //   colorInverseText: '#ffffff',
+  //   colorButton: '#0f0f0f',
+  //   colorButtonText: '#ffffff',
+  //   colorInverseButton: '#ffffff',
+  //   colorInverseButtonText: '#0f0f0f',
+  //   colorSale: '#de4b4b',
+  //   colorBorder: '#0F0F0F',
+  //   bodyBaseSize: 18,
+  //   bodyBaseSpacing: 0,
+  //   bodyBaseLineHeight: 1.5,
+  //   headingBaseSize: 38,
+  // };
   if (settings) {
-    settings = {...defaultSettings, ...settings};
+    // settings = {...defaultSettings, ...settings};
     let {
       colorBackground,
-      colorBackgroundSubtle,
+      colorInverseBackground,
       colorText,
-      colorTextSubtle,
+      colorInverseText,
       colorButton,
       colorButtonText,
       colorInverseButton,
@@ -49,32 +52,33 @@ export function GlobalStyle() {
       colorBorder,
       bodyBaseSize,
       bodyBaseSpacing,
-      bodyBaseLineheight,
+      bodyBaseLineHeight,
       headingBaseSize,
       navHeightDesktop,
-      navHeightTablet
+      navHeightTablet,
     } = settings;
-    colorBackground = hexToRgbString(colorBackground?.toString());
-    colorBackgroundSubtle = hexToRgbString(colorBackgroundSubtle?.toString());
-    colorText = hexToRgbString(colorText?.toString());
-    colorTextSubtle = hexToRgbString(colorTextSubtle?.toString());
-    colorButton = hexToRgbString(colorButton?.toString());
-    colorButtonText = hexToRgbString(colorButtonText?.toString());
-    colorInverseButton = hexToRgbString(colorInverseButton?.toString());
-    colorInverseButtonText = hexToRgbString(colorInverseButtonText?.toString());
-    colorSale = hexToRgbString(colorSale?.toString());
-    colorBorder = hexToRgbString(colorBorder?.toString());
+    colorBackground = hexToRgbString(colorBackground);
+    colorInverseBackground = hexToRgbString(colorInverseBackground);
+    colorText = hexToRgbString(colorText);
+    colorInverseText = hexToRgbString(colorInverseText);
+    colorButton = hexToRgbString(colorButton);
+    colorButtonText = hexToRgbString(colorButtonText);
+    colorInverseButton = hexToRgbString(colorInverseButton);
+    colorInverseButtonText = hexToRgbString(colorInverseButtonText);
+    colorSale = hexToRgbString(colorSale);
+    colorBorder = hexToRgbString(colorBorder);
 
     return (
       <style
         id="global-theme-style"
+        key="global-theme-style"
         dangerouslySetInnerHTML={{
           __html: `
             :root {
               --color-background: ${colorBackground};
-              --color-background-subtle: ${colorBackgroundSubtle};
+              --color-inverse-background: ${colorInverseBackground};
               --color-text: ${colorText};
-              --color-text-subtle: ${colorTextSubtle};
+              --color-inverse-text: ${colorInverseText};
               --color-button: ${colorButton};
               --color-button-text: ${colorButtonText};
               --color-inverse-button: ${colorInverseButton};
@@ -84,7 +88,7 @@ export function GlobalStyle() {
 
               --body-base-size: ${bodyBaseSize}px;
               --body-base-spacing: ${bodyBaseSpacing}px;
-              --body-base-lineheight: ${bodyBaseLineheight};
+              --body-base-line-height: ${bodyBaseLineHeight};
               --heading-base-size: ${headingBaseSize}px;
               --height-nav: ${settings.navHeightMobile}rem;
             }
@@ -93,7 +97,7 @@ export function GlobalStyle() {
               -webkit-text-size-adjust: 100%;
               font-size: calc(var(--body-base-size)*0.92);
               letter-spacing: var(--body-base-spacing);
-              line-height: var(--body-base-lineheight);
+              line-height: var(--body-base-line-height);
               text-rendering: optimizeSpeed;
             }
 

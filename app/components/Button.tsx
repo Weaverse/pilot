@@ -27,10 +27,10 @@ export const Button = forwardRef(
       'inline-block rounded font-medium text-center py-3 px-4 text-sm font-medium';
 
     const variants = {
-      primary: `${baseButtonClasses} border-2 border-btn hover:bg-inverse-btn hover:text-inverse-btn-text bg-btn text-btn-text`,
-      secondary: `${baseButtonClasses} border-2 border-btn text-btnTextInverse hover:bg-btn hover:text-btn-text`,
-      'secondary-white': `${baseButtonClasses} border-2 border-inverse-btn text-btn hover:bg-inverse-btn hover:text-inverse-btn-text`,
-      inline: 'border-b border-primary/10 leading-none pb-1',
+      primary: `${baseButtonClasses} border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content`,
+      secondary: `${baseButtonClasses} border-2 border-btn text-btnTextInverse hover:bg-btn hover:text-btn-content`,
+      'secondary-white': `${baseButtonClasses} border-2 border-inv-btn text-btn hover:bg-inv-btn hover:text-inv-btn-content`,
+      inline: 'border-b border-bar/10 leading-none pb-1',
     };
 
     const widths = {

@@ -180,7 +180,7 @@ export default function Login() {
             </div>
             <div className="flex justify-between items-center">
               <Link
-                className="inline-block align-baseline text-sm text-subtle font-medium"
+                className="inline-block align-baseline text-sm text-body/70 font-medium"
                 to="/account/recover"
               >
                 Forgot your password?
@@ -194,7 +194,7 @@ export default function Login() {
             >
               Sign in
             </Button>
-            <Link className="inline underline text-subtle" to="/account/register">
+            <Link className="inline underline text-body/70" to="/account/register">
               Create an account
             </Link>
           </div>

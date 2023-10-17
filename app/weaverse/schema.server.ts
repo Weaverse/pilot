@@ -13,19 +13,36 @@ export let themeSchema: HydrogenThemeSchema = {
   },
   inspector: [
     {
+      group: 'Logo',
+      inputs: [
+        {
+          type: 'image',
+          name: 'logoData',
+          label: 'Logo',
+          defaultValue: {
+            id: 'gid://shopify/MediaImage/34144817938616',
+            alt: '',
+            url: 'https://cdn.shopify.com/s/files/1/0623/5095/0584/files/Pilot_logo_b04f1938-06e5-414d-8a47-d5fcca424000.png?v=1697101908',
+            width: 320,
+            height: 116,
+          },
+        },
+      ],
+    },
+    {
       group: 'Colors',
       inputs: [
         {
           type: 'color',
           label: 'Background',
           name: 'colorBackground',
-          defaultValue: '#FFF',
+          defaultValue: '#ffffff',
         },
         {
           type: 'color',
-          label: 'Background subtle',
-          name: 'colorBackgroundSubtle',
-          defaultValue: '#0F0F0F08',
+          label: 'Inverse background',
+          name: 'colorInverseBackground',
+          defaultValue: '#0f0f0f',
         },
         {
           type: 'color',
@@ -35,9 +52,9 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: 'color',
-          label: 'Text subtle',
-          name: 'colorTextSubtle',
-          defaultValue: '#0F0F0F80',
+          label: 'Inverse text',
+          name: 'colorInverseText',
+          defaultValue: '#ffffff',
         },
         {
           type: 'color',
@@ -107,7 +124,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: 'range',
           label: 'Body base line height',
-          name: 'bodyBaseLineheight',
+          name: 'bodyBaseLineHeight',
           configs: {
             min: 1,
             max: 2,
@@ -115,7 +132,7 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: 'rem',
           },
           defaultValue: 1.5,
-        }, 
+        },
         {
           type: 'range',
           label: 'Heading base size',
@@ -143,7 +160,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: 'range',
           label: 'Heading base line height',
-          name: 'headingBaseLineheight',
+          name: 'headingBaseLineHeight',
           configs: {
             min: 1,
             max: 2,

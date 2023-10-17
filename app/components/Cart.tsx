@@ -57,13 +57,13 @@ export function CartDetails({
 }) {
   // @todo: get optimistic cart cost
   const cartHasItems = !!cart && cart.totalQuantity > 0;
-  // const container = {
-  //   drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
-  //   page: 'w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12',
-  // };
+  const container = {
+    drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
+    page: 'grid grid-cols-1 md:grid-cols-[2fr_1fr] w-full max-w-7xl mx-auto gap-5',
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] w-full max-w-7xl mx-auto gap-5">
+    <div className={container[layout]}>
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -229,7 +229,7 @@ function CartSummary({
   return (
     <section
       aria-labelledby="summary-heading"
-      className="bg-background p-6 space-y-5"
+      className="bg-primary p-6 space-y-5"
     >
       <h2 id="summary-heading" className="sr-only">
         Order summary
@@ -267,7 +267,9 @@ function CartLineItem({line}: {line: CartLine}) {
   console.log('🚀 ~ line:', line);
 
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
-
+    // Hide the line item if the optimistic data action is remove
+      // Do not remove the form from the DOM
+  let style = optimisticData?.action === 'remove' ? { display: 'none'} : {}
   return (
     <tr
      
@@ -275,11 +277,7 @@ function CartLineItem({line}: {line: CartLine}) {
      
       className="grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]"
     
-      style={{
-        // Hide the line item if the optimistic data action is remove
-        // Do not remove the form from the DOM
-        display: optimisticData?.action === 'remove' ? 'none' : 'flex',
-      }}
+      style={style}
     >
       <td className="py-2 row-start-1 row-end-3">
         {merchandise.image && (
@@ -394,7 +392,7 @@ function CartLineQuantityAdjust({line}: {line: CartLine}) {
 
         <UpdateCartButton lines={[{id: lineId, quantity: nextQuantity}]}>
           <button
-            className="w-10 h-10 transition text-text hover:text-text"
+            className="w-10 h-10 transition text-body hover:text-body"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"

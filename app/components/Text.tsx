@@ -23,16 +23,16 @@ export function Text({
 }) {
   const colors: Record<string, string> = {
     default: 'inherit',
-    primary: 'text-primary/90',
-    subtle: 'text-primary/50',
-    notice: 'text-notice',
-    contrast: 'text-contrast/90',
+    primary: 'text-body/90',
+    subtle: 'text-body/50',
+    notice: 'text-sale',
+    contrast: 'text-body/90',
   };
 
   const sizes: Record<string, string> = {
-    lead: 'text-lead font-medium',
-    copy: 'text-copy',
-    fine: 'text-fine subpixel-antialiased',
+    lead: 'text-lg font-medium',
+    copy: '',
+    fine: 'text-xs subpixel-antialiased',
   };
 
   const widths: Record<string, string> = {
@@ -72,10 +72,10 @@ export function Heading({
   width?: 'default' | 'narrow' | 'wide';
 } & React.HTMLAttributes<HTMLHeadingElement>) {
   const sizes = {
-    display: 'font-bold text-display',
-    heading: 'font-bold text-heading',
-    lead: 'font-bold text-lead',
-    copy: 'font-medium text-copy',
+    display: 'font-bold text-4xl',
+    heading: 'font-bold text-2xl leading-tight',
+    lead: 'font-bold text-lg leading-snug',
+    copy: 'font-medium leading-normal',
   };
 
   const widths = {
@@ -126,9 +126,9 @@ export function Section({
 
   const dividers = {
     none: 'border-none',
-    top: 'border-t border-primary/05',
-    bottom: 'border-b border-primary/05',
-    both: 'border-y border-primary/05',
+    top: 'border-t border-bar/05',
+    bottom: 'border-b border-bar/05',
+    both: 'border-y border-bar/05',
   };
 
   const displays = {

@@ -74,7 +74,7 @@ export default function Recover() {
         ) : (
           <>
             <h2>Reset your password</h2>
-            <p className="mt-8 text-subtle">Enter your email to reset your password</p>
+            <p className="mt-8 text-body/70">Enter your email to reset your password</p>
             {/* TODO: Add onSubmit to validate _before_ submission with native? */}
             <Form
               method="post"
@@ -117,7 +117,7 @@ export default function Recover() {
               <div className="flex items-center justify-center flex-col gap-6">
                 <Button type="submit">Reset</Button>
                 <div className="flex items-center">
-                  <p className="align-baseline text-sm text-subtle">
+                  <p className="align-baseline text-sm text-body/70">
                     Remember your password? &nbsp;
                     <Link className="inline underline" to="/account/login">
                       Back to Login
