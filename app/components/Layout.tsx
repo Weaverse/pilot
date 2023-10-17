@@ -211,13 +211,12 @@ function MobileHeader({
           >
             <IconSearch />
           </button>
-          <Input
-            className='focus:border-bar/15'
+          {/* <Input
             type="search"
             variant="minisearch"
             placeholder="Search"
             name="q"
-          />
+          /> */}
         </Form>
       </div>
 
@@ -256,7 +255,6 @@ function DesktopHeader({
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4`}
     >
       <div className="flex gap-12">
-      <input type="checkbox" />
         <Logo />
         <nav className="flex gap-8 items-center">
           {/* Top level menu items */}
@@ -281,13 +279,12 @@ function DesktopHeader({
           action={params.locale ? `/${params.locale}/search` : '/search'}
           className="flex items-center gap-2"
         >
-          <Input
-            className='focus:border-bar/15'
+          {/* <Input
             type="search"
             variant="minisearch"
             placeholder="Search"
             name="q"
-          />
+          /> */}
           <button
             type="submit"
             className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"

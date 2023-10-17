@@ -1,4 +1,4 @@
-import formsPlugin from '@tailwindcss/forms';
+// import formsPlugin from '@tailwindcss/forms';
 import typographyPlugin from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
@@ -75,5 +75,10 @@ export default {
       },
     },
   },
-  plugins: [formsPlugin, typographyPlugin],
+  plugins: [
+    require('@tailwindcss/forms')({
+    // strategy: 'base', // only generate global styles
+    strategy: 'class', // only generate classes
+  }), 
+  typographyPlugin],
 };
