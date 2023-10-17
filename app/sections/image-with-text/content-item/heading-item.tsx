@@ -14,11 +14,11 @@ interface HeadingItemProps extends HydrogenComponentProps {
 let ImageWTextHeadingItem = forwardRef<HTMLDivElement, HeadingItemProps>((props, ref) => {
   let { heading, headingSize, ...rest } = props;
   let styleSubheading: CSSProperties = {
-    '--font-size-display': `${headingSize}`,
+    fontSize: headingSize,
   } as CSSProperties;
   return (
     <div ref={ref} {...rest} style={styleSubheading}>
-      <p className='mb-5 text-gray-950 font-sans text-display font-bold leading-5'>{heading}</p>
+      <p className='mb-5 text-gray-950 font-sans font-bold leading-5'>{heading}</p>
     </div>
   );
 });
