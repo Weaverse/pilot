@@ -23,6 +23,8 @@ import * as HeaderImage from '~/sections/header-image/header-image';
 import * as HeadingItem from '~/sections/header-image/heading-item';
 import * as SubHeadingItem from '~/sections/header-image/subheading-item';
 import * as DescriptionTextItem from '~/sections/header-image/description-text-item';
+import * as ContentColumnWithImage from '~/sections/content-column-with-image/index';
+import * as ContentColumnItem from '~/sections/content-column-with-image/item';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -34,6 +36,8 @@ export let components: HydrogenComponent[] = [
   HeadingItem,
   SubHeadingItem,
   DescriptionTextItem,
+  ContentColumnWithImage,
+  ContentColumnItem,
   Blogs,
   BlogPost,
   AllProducts,
