@@ -115,7 +115,7 @@ function Country({
     >
       <Button
         className={clsx([
-          'text-contrast dark:text-primary',
+          'text-contrast dark:text-body',
           'bg-primary dark:bg-contrast w-full p-2 transition rounded flex justify-start',
           'items-center text-left cursor-pointer py-2 px-4',
         ])}

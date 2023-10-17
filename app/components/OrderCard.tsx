@@ -56,7 +56,7 @@ export function OrderCard({order}: {order: OrderCardFragment}) {
                 className={`px-3 py-1 text-xs font-medium rounded-full ${
                   order.fulfillmentStatus === 'FULFILLED'
                     ? 'bg-green-100 text-green-800'
-                    : 'bg-primary/5 text-primary/50'
+                    : 'bg-primary/5 text-body/50'
                 }`}
               >
                 <Text size="fine">

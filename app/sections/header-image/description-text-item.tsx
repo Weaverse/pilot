@@ -13,7 +13,7 @@ let DescriptionTextItem = forwardRef<HTMLDivElement, DescriptionTextItemProps>((
   let { descriptionText, ...rest } = props;
   return (
     <div ref={ref} {...rest}>
-        <p className='font-sans mb-5 text-base font-normal leading-6' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>
+        <p className='font-sans mb-5 font-normal leading-6' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>
     </div>
   );
 });
