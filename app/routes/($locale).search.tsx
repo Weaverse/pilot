@@ -7,6 +7,7 @@ import {
   FeaturedCollections,
   Grid,
   Heading,
+  IconSearch,
   Input,
   PageHeader,
   ProductCard,
@@ -74,21 +75,19 @@ export default function Search() {
 
   return (
     <>
-      <PageHeader>
-        <Heading as="h1" size="copy">
-          Search
-        </Heading>
-        <Form method="get" className="relative flex w-full text-2xl">
+      <PageHeader className="bg-secondary/5 justify-center items-center !gap-5">
+        {searchTerm && (
+          <h3 className="uppercase w-full text-center">{noResults ? "No result" : `${products.nodes.length} results`} for "{searchTerm}"</h3>
+        )}
+        <Form method="get" className="lg:w-[400px]">
           <Input
+            prefix={<IconSearch />}
+            className="bg-primary"
             defaultValue={searchTerm}
             name="q"
-            placeholder="Search…"
+            placeholder="Search"
             type="search"
-            variant="search"
           />
-          <button className="absolute right-0 py-2" type="submit">
-            Go
-          </button>
         </Form>
       </PageHeader>
       {!searchTerm || noResults ? (

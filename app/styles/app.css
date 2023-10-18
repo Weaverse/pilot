@@ -83,9 +83,7 @@ shop-pay-button {
   input[type='search']::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
-  input[type='checkbox'] {
-    @apply text-btn;
-  }
+
 
   a.active {
     @apply border-b;
