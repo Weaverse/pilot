@@ -4,27 +4,26 @@ import {
   HydrogenComponentSchema,
   ComponentLoaderArgs,
   getSelectedProductOptions,
+  WeaverseProduct,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import {ProductInfoQuery} from 'storefrontapi.generated';
 import {PRODUCT_QUERY} from '~/data/queries';
 
-interface SingleProductProps
-  extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
+type SingleProductData = {
   heading: string;
   productsCount: number;
-  productId: string;
-  productHandle: string;
-}
+  product: WeaverseProduct;
+};
+
+type SingleProductProps = HydrogenComponentProps<
+  Awaited<ReturnType<typeof loader>>
+> &
+  SingleProductData;
 
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {loaderData, productId, productHandle, ...rest} = props;
-    console.log('productId, productHandle', {
-      productId,
-      productHandle,
-      loaderData,
-    });
+    let {loaderData, product, ...rest} = props;
     let productTitle = loaderData?.product?.title;
     return (
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
@@ -64,16 +63,17 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   },
 );
 
-export let loader = async ({weaverse, data}: ComponentLoaderArgs) => {
+export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
+  let {weaverse, data} = args;
   let {storefront} = weaverse;
+  let selectedOptions = getSelectedProductOptions(weaverse.request);
 
-  let {productId, productHandle} = data;
-  const selectedOptions = getSelectedProductOptions(weaverse.request);
-
-  if (productHandle) {
+  if (data?.product) {
     let product = await storefront.query<ProductInfoQuery>(PRODUCT_QUERY, {
       variables: {
-        handle: productHandle,
+        handle: data.product.handle,
+        // Should not get from request since this section could be used everywhere
+        // TODO: update the query to not require `selectedOptions` or create a new query for this component
         selectedOptions,
         language: storefront.i18n.language,
         country: storefront.i18n.country,
