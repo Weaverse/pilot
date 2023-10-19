@@ -113,11 +113,7 @@ function CartDiscounts({
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
         <div className={clsx('flex', 'items-center gap-4 justify-between')}>
-          <Input
-            type="text"
-            name="discountCode"
-            placeholder="Discount code"
-          />
+          <Input type="text" name="discountCode" placeholder="Discount code" />
           <button className="flex justify-end font-medium whitespace-nowrap">
             Apply Discount
           </button>
@@ -158,41 +154,34 @@ function CartLines({
   const scrollRef = useRef(null);
   const {y} = useScroll(scrollRef);
 
-  const className = clsx([
-    y > 0 ? 'border-t' : '',
-    layout === 'page'
-      ? 'flex-grow md:translate-y-4'
-      : 'px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12',
-  ]);
-
   return (
     <section
       ref={scrollRef}
       aria-labelledby="cart-contents"
-      className={className}
+      className={clsx([
+        y > 0 ? 'border-t' : '',
+        layout === 'page'
+          ? 'flex-grow md:translate-y-4'
+          : 'px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12',
+      ])}
     >
       <table className="table-auto">
-        <thead>
-          <tr className="border-b border-gray-100 font-semibold p-2">
-            <th className="p-4 text-left border-b">Product</th>
-            <th className="p-4 border-b hidden lg:table-cell"></th>
-            <th className="p-4 border-b hidden lg:table-cell">Price</th>
-            <th className="p-4 border-b hidden lg:table-cell">Quantity</th>
-            <th className="p-4 border-b hidden lg:table-cell">Total</th>
-            <th className="p-4 border-b hidden lg:table-cell"></th>
+        {layout === 'page' && <thead>
+          <tr className="font-semibold p-2">
+            <th className="p-4 text-left border-bar/15 border-b border-bar">Product</th>
+            <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
+            <th className="p-4 border-b border-bar/15 hidden lg:table-cell">Price</th>
+            <th className="p-4 border-b border-bar/15 hidden lg:table-cell">Quantity</th>
+            <th className="p-4 border-b border-bar/15 hidden lg:table-cell">Total</th>
+            <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
           </tr>
-        </thead>
+        </thead>}
         <tbody>
           {currentLines.map((line) => (
-            <CartLineItem key={line.id} line={line as CartLine} />
+            <CartLineItem key={line.id} line={line as CartLine} layout={layout}/>
           ))}
         </tbody>
       </table>
-      {/* <ul className="grid gap-6 md:gap-10">
-        {currentLines.map((line) => (
-          <CartLineItem key={line.id} line={line as CartLine} />
-        ))}
-      </ul> */}
     </section>
   );
 }
@@ -258,25 +247,24 @@ type OptimisticData = {
   quantity?: number;
 };
 
-function CartLineItem({line}: {line: CartLine}) {
+function CartLineItem({line, layout}: {line: CartLine, layout: 'drawer' | 'page'}) {
   const optimisticData = useOptimisticData<OptimisticData>(line?.id);
-
+  let styles = {
+    page: "grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]",
+    drawer: "grid gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]"
+  }
   if (!line?.id) return null;
 
   const {id, quantity, merchandise, cost} = line;
-  console.log('🚀 ~ line:', line);
 
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
-    // Hide the line item if the optimistic data action is remove
-      // Do not remove the form from the DOM
-  let style = optimisticData?.action === 'remove' ? { display: 'none'} : {}
+  // Hide the line item if the optimistic data action is remove
+  // Do not remove the form from the DOM
+  let style = optimisticData?.action === 'remove' ? {display: 'none'} : {};
   return (
     <tr
-     
       key={line.id}
-     
-      className="grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]"
-    
+      className={styles[layout]}
       style={style}
     >
       <td className="py-2 row-start-1 row-end-3">
@@ -285,14 +273,14 @@ function CartLineItem({line}: {line: CartLine}) {
             width={110}
             height={110}
             data={merchandise.image}
-            className="object-cover object-center w-24 h-24 border rounded md:w-28 md:h-28"
+            className="object-cover object-center w-24 h-24 rounded md:w-28 md:h-28"
             alt={merchandise.title}
           />
         )}
       </td>
       <td className="py-2 lg:p-4 text-sm">
         <div className="grid gap-2">
-          <div className='font-medium'>
+          <div className="font-medium">
             {merchandise?.product?.handle ? (
               <Link to={`/products/${merchandise.product.handle}`}>
                 {merchandise?.product?.title || ''}
@@ -310,20 +298,20 @@ function CartLineItem({line}: {line: CartLine}) {
           </div>
         </div>
       </td>
-      <td className="py-2 lg:p-4 hidden lg:table-cell">
+      <td className="py-2 lg:p-4">
         <Money withoutTrailingZeros data={cost.amountPerQuantity} />
       </td>
       <td className="py-2 lg:p-4 row-start-2">
         <div className="flex gap-2">
           <CartLineQuantityAdjust line={line as CartLine} />
-          <div className="lg:hidden">
+          {<div className="lg:hidden">
             <ItemRemoveButton lineId={id} />
-          </div>
+          </div>}
         </div>
       </td>
-      <td className="py-2 lg:p-4 col-start-3">
+     {layout === 'page' && <td className="py-2 lg:p-4 col-start-3 hidden lg:table-cell">
         <CartLinePrice line={line as CartLine} />
-      </td>
+      </td>}
       <td className="py-2 lg:p-4 lg:table-cell hidden">
         <ItemRemoveButton lineIds={[id]} />
       </td>

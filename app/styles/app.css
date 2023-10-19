@@ -48,20 +48,14 @@
   }
 }
 
-shop-pay-button {
-  width: 100%;
-  height: 3rem;
-  display: table;
-}
-
 @layer base {
   * {
     font-variant-ligatures: none;
+    border-color: rgb(var(--color-border) / .15);
   }
 
   body {
     @apply bg-primary text-body/90 antialiased;
-    border-color: rgb(var(--color-border) / 15);
   }
 
   html {

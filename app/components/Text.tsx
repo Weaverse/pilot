@@ -75,7 +75,7 @@ export function Heading({
     display: 'font-bold text-4xl',
     heading: 'font-bold text-2xl leading-tight',
     lead: 'font-bold text-lg leading-snug',
-    copy: 'font-medium leading-normal',
+    copy: 'font-medium text-base leading-normal',
   };
 
   const widths = {
