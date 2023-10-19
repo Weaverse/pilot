@@ -31,6 +31,7 @@ import {
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 import {Logo} from './Logo';
+import clsx from 'clsx';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -211,13 +212,6 @@ function MobileHeader({
           >
             <IconSearch />
           </button>
-          <Input
-            className='focus:border-bar/15'
-            type="search"
-            variant="minisearch"
-            placeholder="Search"
-            name="q"
-          />
         </Form>
       </div>
 
@@ -247,16 +241,13 @@ function DesktopHeader({
   return (
     <header
       role="banner"
-      className={`${
-        isHome
-          ? 'bg-primary text-body shadow-darkHeader'
-          : 'bg-primary text-body'
-      } ${
-        !isHome && y > 50 && ' shadow-lightHeader'
-      } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4`}
+      className={clsx(
+        'bg-primary text-body',
+        y > 50 && ' shadow-header',
+        'hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4',
+      )}
     >
       <div className="flex gap-12">
-      <input type="checkbox" />
         <Logo />
         <nav className="flex gap-8 items-center">
           {/* Top level menu items */}
@@ -267,7 +258,9 @@ function DesktopHeader({
               target={item.target}
               prefetch="intent"
               className={({isActive}) =>
-                isActive ? 'pb-1 border-b -mb-px font-medium' : 'pb-1 font-medium'
+                isActive
+                  ? 'pb-1 border-b -mb-px font-medium'
+                  : 'pb-1 font-medium'
               }
             >
               {item.title}
@@ -281,13 +274,12 @@ function DesktopHeader({
           action={params.locale ? `/${params.locale}/search` : '/search'}
           className="flex items-center gap-2"
         >
-          <Input
-            className='focus:border-bar/15'
+          {/* <Input
             type="search"
             variant="minisearch"
             placeholder="Search"
             name="q"
-          />
+          /> */}
           <button
             type="submit"
             className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
@@ -355,9 +347,7 @@ function Badge({
     () => (
       <>
         <IconBag />
-        <div
-          className='bg-secondary text-inv-body absolute top-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px'
-        >
+        <div className="bg-secondary text-inv-body absolute top-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px">
           <span>{count || 0}</span>
         </div>
       </>
@@ -440,7 +430,7 @@ function FooterMenu({menu}: {menu?: EnhancedMenu}) {
             {({open}) => (
               <>
                 <Disclosure.Button className="text-left md:cursor-default">
-                  <Heading className="flex justify-between" size="lead" as="h3">
+                  <Heading className="flex justify-between" size="copy" as="h3">
                     {item.title}
                     {item?.items?.length > 0 && (
                       <span className="md:hidden">

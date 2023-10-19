@@ -32,6 +32,10 @@ import * as ImageItems from '~/sections/image-with-text/images-item/item';
 import * as ContentComponent from '~/sections/image-with-text/content-item/index';
 import * as ContentColumnWithImage from '~/sections/column-with-text/index';
 import * as ContentColumnItem from '~/sections/column-with-text/item';
+import * as RichText from '~/sections/rich-text/index';
+import * as RichTextHeadingItem from '~/sections/rich-text/headings-item';
+import * as RichTextDescriptionItem from '~/sections/rich-text/descriptions-item';
+import * as RichTextButtonItem from '~/sections/rich-text/buttons-item';
 import * as VideoWithText from '~/sections/video-with-text/video-with-text';
 import * as VideoSubheadingItem from '~/sections/video-with-text/video-subheading-item';
 import * as VideoHeadingItem from '~/sections/video-with-text/video-heading-item';
@@ -57,6 +61,10 @@ export let components: HydrogenComponent[] = [
   ImageItems,
   ContentColumnWithImage,
   ContentColumnItem,
+  RichText,
+  RichTextHeadingItem,
+  RichTextDescriptionItem,
+  RichTextButtonItem,
   VideoWithText,
   VideoSubheadingItem,
   VideoHeadingItem,

@@ -1,4 +1,3 @@
-import formsPlugin from '@tailwindcss/forms';
 import typographyPlugin from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
@@ -6,6 +5,9 @@ export default {
   content: ['./app/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      opacity: {
+        15: '0.15',
+      },
       colors: {
         primary: 'rgb(var(--color-background) / <alpha-value>)', // background color
         contrast: 'rgb(var(--color-background) / <alpha-value>)', // temporary background color - replace primary after
@@ -15,7 +17,8 @@ export default {
         btn: 'rgb(var(--color-button) / <alpha-value>)', // button background color
         'btn-content': 'rgb(var(--color-button-text) / <alpha-value>)', // button text color
         'inv-btn': 'rgb(var(--color-inverse-button) / <alpha-value>)', // button inverse background color
-        'inv-btn-content': 'rgb(var(--color-inverse-button-text) / <alpha-value>)', // button inverse text color
+        'inv-btn-content':
+          'rgb(var(--color-inverse-button-text) / <alpha-value>)', // button inverse text color
         sale: 'rgb(var(--color-sale) / <alpha-value>)', // sale background color
         bar: 'rgb(var(--color-border) / <alpha-value>)', // border color
       },
@@ -70,10 +73,14 @@ export default {
       },
       boxShadow: {
         border: 'inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)',
-        darkHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.4)',
-        lightHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05)',
+        header: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05)',
       },
     },
   },
-  plugins: [formsPlugin, typographyPlugin],
+  plugins: [
+    require('@tailwindcss/forms')({
+      strategy: 'class',
+    }),
+    typographyPlugin,
+  ],
 };

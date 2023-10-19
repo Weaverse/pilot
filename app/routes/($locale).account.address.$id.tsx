@@ -14,6 +14,7 @@ import {Button, Input, Text} from '~/components';
 import {assertApiErrors, getInputStyleClasses} from '~/lib/utils';
 
 import type {AccountOutletContext} from './($locale).account.edit';
+import { Checkbox } from '~/components/Checkbox';
 
 interface ActionData {
   formError?: string;
@@ -281,12 +282,10 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-4">
-            <input
-              type="checkbox"
+            <Checkbox
               name="defaultAddress"
               id="defaultAddress"
               defaultChecked={defaultAddress?.id === address?.id}
-              className="border-gray-500 rounded-sm cursor-pointer border-1"
             />
             <label
               className="inline-block ml-2 text-sm cursor-pointer"
