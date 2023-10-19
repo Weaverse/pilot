@@ -10,10 +10,11 @@ import {flattenConnection} from '@shopify/hydrogen';
 import type {MailingAddressInput} from '@shopify/hydrogen/storefront-api-types';
 import invariant from 'tiny-invariant';
 
-import {Button, Text} from '~/components';
+import {Button, Input, Text} from '~/components';
 import {assertApiErrors, getInputStyleClasses} from '~/lib/utils';
 
 import type {AccountOutletContext} from './($locale).account.edit';
+import { Checkbox } from '~/components/Checkbox';
 
 interface ActionData {
   formError?: string;
@@ -148,9 +149,9 @@ export default function EditAddress() {
 
   return (
     <>
-      <Text className="mt-4 mb-6" as="h3" size="lead">
-        {isNewAddress ? 'Add address' : 'Edit address'}
-      </Text>
+      <div className="font-semibold">
+        {isNewAddress ? 'Add new address' : 'Edit address'}
+      </div>
       <div className="max-w-lg">
         <Form method="post">
           <input
@@ -164,8 +165,7 @@ export default function EditAddress() {
             </div>
           )}
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="firstName"
               name="firstName"
               required
@@ -177,8 +177,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="lastName"
               name="lastName"
               required
@@ -190,8 +189,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="company"
               name="company"
               type="text"
@@ -202,8 +200,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="address1"
               name="address1"
               type="text"
@@ -215,8 +212,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="address2"
               name="address2"
               type="text"
@@ -227,8 +223,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="city"
               name="city"
               type="text"
@@ -240,8 +235,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="province"
               name="province"
               type="text"
@@ -253,8 +247,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="zip"
               name="zip"
               type="text"
@@ -266,8 +259,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="country"
               name="country"
               type="text"
@@ -279,8 +271,7 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+            <Input
               id="phone"
               name="phone"
               type="tel"
@@ -291,12 +282,10 @@ export default function EditAddress() {
             />
           </div>
           <div className="mt-4">
-            <input
-              type="checkbox"
+            <Checkbox
               name="defaultAddress"
               id="defaultAddress"
               defaultChecked={defaultAddress?.id === address?.id}
-              className="border-gray-500 rounded-sm cursor-pointer border-1"
             />
             <label
               className="inline-block ml-2 text-sm cursor-pointer"
@@ -305,23 +294,18 @@ export default function EditAddress() {
               Set as default address
             </label>
           </div>
-          <div className="mt-8">
-            <Button
-              className="w-full rounded focus:shadow-outline"
-              type="submit"
-              variant="primary"
-              disabled={state !== 'idle'}
-            >
-              {state !== 'idle' ? 'Saving' : 'Save'}
-            </Button>
-          </div>
-          <div>
+          <div className="mt-6 flex gap-4 items-center justify-end">
             <Button
               to=".."
-              className="w-full mt-2 rounded focus:shadow-outline"
               variant="secondary"
             >
               Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={state !== 'idle'}
+            >
+              {state !== 'idle' ? 'Saving' : 'Save'}
             </Button>
           </div>
         </Form>

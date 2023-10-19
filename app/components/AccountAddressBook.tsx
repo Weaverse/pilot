@@ -14,7 +14,7 @@ export function AccountAddressBook({
   return (
     <>
       <div className="grid w-full gap-4 p-4 py-6 md:gap-8 md:p-8 lg:p-12">
-        <h3 className="font-bold text-lead">Address Book</h3>
+        <h3 className="font-bold text-lg">Address Book</h3>
         <div>
           {!addresses?.length && (
             <Text className="mb-1" width="narrow" as="p" size="copy">
@@ -25,9 +25,8 @@ export function AccountAddressBook({
             <Button
               to="address/add"
               className="mt-2 text-sm w-full mb-6"
-              variant="secondary"
             >
-              Add an Address
+              Add new Address
             </Button>
           </div>
           {Boolean(addresses?.length) && (
@@ -59,7 +58,7 @@ function Address({
     <div className="lg:p-8 p-6 border border-gray-200 rounded flex flex-col">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/20 text-primary/50">
+          <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/20 text-body/50">
             Default
           </span>
         </div>
@@ -86,7 +85,7 @@ function Address({
         </Link>
         <Form action="address/delete" method="delete">
           <input type="hidden" name="addressId" value={address.id} />
-          <button className="text-left text-primary/50 ml-6 text-sm">
+          <button className="text-left text-body/50 ml-6 text-sm">
             Remove
           </button>
         </Form>

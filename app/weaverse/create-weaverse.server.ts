@@ -39,6 +39,12 @@ export function getWeaverseCsp(request: Request) {
       'https://fonts.gstatic.com',
       ...weaverseHosts,
     ],
+    imgSrc: [
+      "'self'",
+      "data:",
+      'https://cdn.shopify.com',
+      ...weaverseHosts,
+    ],
     styleSrc: [
       "'self'",
       "'unsafe-inline'",
