@@ -24,7 +24,7 @@
     "@shopify/cli-hydrogen": "^5.4.3",
     "@shopify/hydrogen": "2023.7.11",
     "@shopify/remix-oxygen": "1.1.7",
-    "@weaverse/hydrogen": "^2.2.5",
+    "@weaverse/hydrogen": "2.3.0",
     "clsx": "2.0.0",
     "cross-env": "7.0.3",
     "graphql": "16.8.1",
