@@ -16,8 +16,7 @@
     "baseUrl": ".",
     "types": ["@shopify/oxygen-workers-types"],
     "paths": {
-      "~/*": ["app/*"],
-      "react": ["node_modules/@types/react"]
+      "~/*": ["app/*"]
     },
     "noEmit": true
   }
