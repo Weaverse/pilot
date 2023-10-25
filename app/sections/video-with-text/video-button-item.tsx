@@ -7,13 +7,14 @@ import { forwardRef } from 'react';
 interface VideoButtonProps extends HydrogenComponentProps {
   buttonLabel: string;
   buttonLink: string;
+  enableNewtab: boolean;
 }
 
 let VideoButtonItem = forwardRef<HTMLDivElement, VideoButtonProps>((props, ref) => {
-  let {buttonLabel, buttonLink, ...rest} = props;
+  let {buttonLabel, buttonLink, enableNewtab, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
-      <a href={buttonLink} className='bg-gray-900 text-white py-3 px-4 rounded'>{buttonLabel}</a>
+      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className='bg-gray-900 text-white py-3 px-4 rounded'>{buttonLabel}</a>
     </div>
   );
 });
@@ -39,6 +40,25 @@ export let schema: HydrogenComponentSchema = {
           name: 'buttonLink',
           label: 'Button link',
           placeholder: 'https://',
+        },
+        {
+          type: 'switch',
+          name: 'enableNewtab',
+          label: 'Open in new tab',
+          defaultValue: true,
+        },
+        {
+          type: 'toggle-group',
+          label: 'Button style',
+          name: 'buttonStyle',
+          configs: {
+            options: [
+              { label: '1', value: '1' },
+              { label: '2', value: '2' },
+              { label: '3', value: '3' },
+            ],
+          },
+          defaultValue: '1',
         },
       ],
     },

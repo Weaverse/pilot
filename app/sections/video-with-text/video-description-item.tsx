@@ -6,13 +6,15 @@ import { forwardRef } from 'react';
 
 interface VideoDescriptionProps extends HydrogenComponentProps {
   descriptionText: string;
+  descriptionSize: string;
+  descriptionColor: string;
 }
 
 let VideoDescriptionItem = forwardRef<HTMLDivElement, VideoDescriptionProps>((props, ref) => {
-  let {descriptionText, ...rest} = props;
+  let {descriptionText, descriptionSize, descriptionColor, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
-      <p className='font-sans mb-5 text-base font-normal leading-6' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>
+      <p className='font-sans mb-5 text-base font-normal leading-6' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>
     </div>
   );
 });
@@ -28,10 +30,31 @@ export let schema: HydrogenComponentSchema = {
       group: 'Description',
       inputs: [
         {
-          type: 'richtext',
+          type: 'textarea',
           label: 'Text',
           name: 'descriptionText',
           defaultValue: 'Pair large text with an video to tell a story.',
+        },
+        {
+          type: 'toggle-group',
+          label: 'Description size',
+          name: 'descriptionSize',
+          configs: {
+            options: [
+              { label: 'XS', value: '14px' },
+              { label: 'S', value: '16px' },
+              { label: 'M', value: '18px' },
+              { label: 'L', value: '20px' },
+              { label: 'XL', value: '22px' },
+            ],
+          },
+          defaultValue: '16px',
+        },
+        {
+          type: 'color',
+          name: 'descriptionColor',
+          label: 'Description color',
+          defaultValue: '#333333',
         },
       ],
     },

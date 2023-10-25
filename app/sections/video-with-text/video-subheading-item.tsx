@@ -7,13 +7,14 @@ import { forwardRef } from 'react';
 interface VideoSubheadingProps extends HydrogenComponentProps {
   subHeading: string;
   subHeadingSize: string;
+  subHeadingColor: string;
 }
 
 let VideoSubheadingItem = forwardRef<HTMLDivElement, VideoSubheadingProps>((props, ref) => {
-  let {subHeading, subHeadingSize, ...rest} = props;
+  let {subHeading, subHeadingSize, subHeadingColor, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
-      <p className='font-sans mb-4 font-normal leading-6' style={{fontSize: `${subHeadingSize}`}}>{subHeading}</p>
+      <p className='font-sans mb-4 font-normal leading-6' style={{fontSize: `${subHeadingSize}`, color: subHeadingColor}}>{subHeading}</p>
     </div>
   );
 });
@@ -49,6 +50,12 @@ export let schema: HydrogenComponentSchema = {
             ],
           },
           defaultValue: '16px',
+        },
+        {
+          type: 'color',
+          name: 'subHeadingColor',
+          label: 'Subheading color',
+          defaultValue: '#333333',
         },
       ],
     },
