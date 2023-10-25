@@ -5,7 +5,7 @@ import {
   type LoaderArgs,
 } from '@shopify/remix-oxygen';
 import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
-import {useState} from 'react';
+import {useState, type MouseEvent} from 'react';
 
 import {getInputStyleClasses} from '~/lib/utils';
 import {Button, Input, Link} from '~/components';
@@ -120,7 +120,7 @@ export default function Register() {
                 aria-label="Email"
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
-                onBlur={(event) => {
+                onBlur={(event: MouseEvent<HTMLInputElement>) => {
                   setNativeEmailError(
                     event.currentTarget.value.length &&
                       !event.currentTarget.validity.valid
@@ -147,7 +147,7 @@ export default function Register() {
                 required
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
-                onBlur={(event) => {
+                onBlur={(event: MouseEvent<HTMLInputElement>) => {
                   if (
                     event.currentTarget.validity.valid ||
                     !event.currentTarget.value.length

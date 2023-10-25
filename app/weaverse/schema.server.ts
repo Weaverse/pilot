@@ -21,7 +21,7 @@ export let themeSchema: HydrogenThemeSchema = {
           label: 'Logo',
           defaultValue: {
             id: 'gid://shopify/MediaImage/34144817938616',
-            alt: '',
+            altText: '',
             url: 'https://cdn.shopify.com/s/files/1/0623/5095/0584/files/Pilot_logo_b04f1938-06e5-414d-8a47-d5fcca424000.png?v=1697101908',
             width: 320,
             height: 116,
