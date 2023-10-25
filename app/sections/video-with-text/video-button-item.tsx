@@ -13,7 +13,7 @@ interface VideoButtonProps extends HydrogenComponentProps {
 let VideoButtonItem = forwardRef<HTMLDivElement, VideoButtonProps>((props, ref) => {
   let {buttonLabel, buttonLink, enableNewtab, ...rest} = props;
   return (
-    <div ref={ref} {...rest}>
+    <div ref={ref} {...rest} className='mt-3'>
       <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className='bg-gray-900 text-white py-3 px-4 rounded'>{buttonLabel}</a>
     </div>
   );

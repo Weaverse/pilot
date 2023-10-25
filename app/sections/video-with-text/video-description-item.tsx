@@ -14,7 +14,7 @@ let VideoDescriptionItem = forwardRef<HTMLDivElement, VideoDescriptionProps>((pr
   let {descriptionText, descriptionSize, descriptionColor, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
-      <p className='font-sans mb-5 text-base font-normal leading-6' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>
+      <p className='font-sans text-base font-normal leading-6' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>
     </div>
   );
 });

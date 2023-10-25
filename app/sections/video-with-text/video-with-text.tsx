@@ -45,7 +45,7 @@ let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>((props, ref) => 
           </svg>
         </div>}
       {enableOverlay && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
-      <div className='relative mx-12 sm-max:mx-0 sm-max:w-5/6 z-10'>
+      <div className='relative flex flex-col gap-5 mx-12 sm-max:mx-0 sm-max:w-5/6 z-10'>
         {children}
       </div>
     </section>

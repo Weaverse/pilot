@@ -14,7 +14,7 @@ let VideoSubheadingItem = forwardRef<HTMLDivElement, VideoSubheadingProps>((prop
   let {subHeading, subHeadingSize, subHeadingColor, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
-      <p className='font-sans mb-4 font-normal leading-6' style={{fontSize: `${subHeadingSize}`, color: subHeadingColor}}>{subHeading}</p>
+      <p className='font-sans font-normal leading-6' style={{fontSize: `${subHeadingSize}`, color: subHeadingColor}}>{subHeading}</p>
     </div>
   );
 });
