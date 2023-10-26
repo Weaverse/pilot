@@ -62,8 +62,6 @@ export let components: HydrogenComponent[] = [
   RichTextHeadingItem,
   RichTextDescriptionItem,
   RichTextButtonItem,
-  ImageHotspot,
-  ImageHotspotItem,
   PromotionGrid,
   PromotionGridItem,
   Blogs,
