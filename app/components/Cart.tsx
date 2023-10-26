@@ -166,19 +166,33 @@ function CartLines({
       ])}
     >
       <table className="table-auto">
-        {layout === 'page' && <thead>
-          <tr className="font-semibold p-2">
-            <th className="p-4 text-left border-bar/15 border-b border-bar">Product</th>
-            <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
-            <th className="p-4 border-b border-bar/15 hidden lg:table-cell">Price</th>
-            <th className="p-4 border-b border-bar/15 hidden lg:table-cell">Quantity</th>
-            <th className="p-4 border-b border-bar/15 hidden lg:table-cell">Total</th>
-            <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
-          </tr>
-        </thead>}
+        {layout === 'page' && (
+          <thead>
+            <tr className="font-semibold p-2">
+              <th className="p-4 text-left border-bar/15 border-b border-bar">
+                Product
+              </th>
+              <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
+              <th className="p-4 border-b border-bar/15 hidden lg:table-cell">
+                Price
+              </th>
+              <th className="p-4 border-b border-bar/15 hidden lg:table-cell">
+                Quantity
+              </th>
+              <th className="p-4 border-b border-bar/15 hidden lg:table-cell">
+                Total
+              </th>
+              <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
+            </tr>
+          </thead>
+        )}
         <tbody>
           {currentLines.map((line) => (
-            <CartLineItem key={line.id} line={line as CartLine} layout={layout}/>
+            <CartLineItem
+              key={line.id}
+              line={line as CartLine}
+              layout={layout}
+            />
           ))}
         </tbody>
       </table>
@@ -247,12 +261,18 @@ type OptimisticData = {
   quantity?: number;
 };
 
-function CartLineItem({line, layout}: {line: CartLine, layout: 'drawer' | 'page'}) {
+function CartLineItem({
+  line,
+  layout,
+}: {
+  line: CartLine;
+  layout: 'drawer' | 'page';
+}) {
   const optimisticData = useOptimisticData<OptimisticData>(line?.id);
   let styles = {
-    page: "grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]",
-    drawer: "grid gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]"
-  }
+    page: 'grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]',
+    drawer: 'grid gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]',
+  };
   if (!line?.id) return null;
 
   const {id, quantity, merchandise, cost} = line;
@@ -262,11 +282,7 @@ function CartLineItem({line, layout}: {line: CartLine, layout: 'drawer' | 'page'
   // Do not remove the form from the DOM
   let style = optimisticData?.action === 'remove' ? {display: 'none'} : {};
   return (
-    <tr
-      key={line.id}
-      className={styles[layout]}
-      style={style}
-    >
+    <tr key={line.id} className={styles[layout]} style={style}>
       <td className="py-2 row-start-1 row-end-3">
         {merchandise.image && (
           <Image
@@ -304,16 +320,20 @@ function CartLineItem({line, layout}: {line: CartLine, layout: 'drawer' | 'page'
       <td className="py-2 lg:p-4 row-start-2">
         <div className="flex gap-2">
           <CartLineQuantityAdjust line={line as CartLine} />
-          {<div className="lg:hidden">
-            <ItemRemoveButton lineId={id} />
-          </div>}
+          {
+            <div className="lg:hidden">
+              <ItemRemoveButton lineId={id} />
+            </div>
+          }
         </div>
       </td>
-     {layout === 'page' && <td className="py-2 lg:p-4 col-start-3 hidden lg:table-cell">
-        <CartLinePrice line={line as CartLine} />
-      </td>}
+      {layout === 'page' && (
+        <td className="py-2 lg:p-4 col-start-3 hidden lg:table-cell">
+          <CartLinePrice line={line as CartLine} />
+        </td>
+      )}
       <td className="py-2 lg:p-4 lg:table-cell hidden">
-        <ItemRemoveButton lineIds={[id]} />
+        <ItemRemoveButton lineId={id} />
       </td>
     </tr>
   );

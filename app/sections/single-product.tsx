@@ -96,7 +96,7 @@ export let schema: HydrogenComponentSchema = {
         {
           label: 'Choose product',
           type: 'product',
-          defaultValue: '',
+          name: 'product',
         },
       ],
     },
