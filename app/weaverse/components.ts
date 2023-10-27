@@ -37,6 +37,7 @@ import * as RichTextHeadingItem from '~/sections/rich-text/headings-item';
 import * as RichTextDescriptionItem from '~/sections/rich-text/descriptions-item';
 import * as RichTextButtonItem from '~/sections/rich-text/buttons-item';
 import * as Map from '~/sections/map';
+import * as NewsLetter from '~/sections/news-letter';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -62,6 +63,7 @@ export let components: HydrogenComponent[] = [
   RichTextDescriptionItem,
   RichTextButtonItem,
   Map,
+  NewsLetter,
   Blogs,
   BlogPost,
   AllProducts,
