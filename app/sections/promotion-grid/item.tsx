@@ -6,6 +6,7 @@ import type {
 import { forwardRef } from 'react';
 import { Image } from '@shopify/hydrogen';
 import {IconImageBlank} from '~/components';
+import clsx from 'clsx';
 
 interface PromotionItemProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;
@@ -23,10 +24,12 @@ interface PromotionItemProps extends HydrogenComponentProps {
   buttonLabel2: string;
   buttonLink2: string;
   openInNewTab: boolean;
+  buttonStyle1: string;
+  buttonStyle2: string;
 }
 
 let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, ref) => {
-  let { backgroundImage, subHeading, subHeadingSize, subHeadingColor, heading, headingSize, headingColor, descriptionText, descriptionSize, descriptionColor, buttonLabel1, buttonLink1, buttonLabel2, buttonLink2, openInNewTab, ...rest } = props;
+  let { backgroundImage, subHeading, subHeadingSize, subHeadingColor, heading, headingSize, headingColor, descriptionText, descriptionSize, descriptionColor, buttonLabel1, buttonLink1, buttonLabel2, buttonLink2, openInNewTab, buttonStyle1, buttonStyle2, ...rest } = props;
   return (
     <div ref={ref} {...rest} className='relative w-96 aspect-video' >
       <div className='absolute inset-0'>
@@ -41,8 +44,8 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, r
           {heading && <p className='font-medium' style={{fontSize: headingSize, color: headingColor}}>{heading}</p>}
           {descriptionText && <p className='text-sm font-normal' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>}
           <div className='flex gap-3 mt-3'>
-            {buttonLabel1 && <a href={buttonLink1} target={openInNewTab ? '_blank' : ''} className='px-4 py-3 w-fit cursor-pointer rounded border-2 border-solid border-gray-900 inline-block'>{buttonLabel1}</a>}
-            {buttonLabel2 && <a href={buttonLink2} target={openInNewTab ? '_blank' : ''} className='px-4 py-3 w-fit cursor-pointer rounded border-2 border-solid border-gray-900 inline-block'>{buttonLabel2}</a>}
+            {buttonLabel1 && <a href={buttonLink1} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle1)}>{buttonLabel1}</a>}
+            {buttonLabel2 && <a href={buttonLink2} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle2)}>{buttonLabel2}</a>}
           </div>
         </div>
       </div>
@@ -179,29 +182,29 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'toggle-group',
-          label: 'Button #1 style',
+          label: 'Button style #1',
           name: 'buttonStyle1',
           configs: {
             options: [
-              { label: '1', value: '1' },
-              { label: '2', value: '2' },
-              { label: '3', value: '3' },
+              { label: '1', value: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white' },
+              { label: '2', value: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white' },
+              { label: '3', value: 'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white' },
             ],
           },
-          defaultValue: '1',
+          defaultValue: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
         },
         {
           type: 'toggle-group',
-          label: 'Button #2 style',
+          label: 'Button style #2',
           name: 'buttonStyle2',
           configs: {
             options: [
-              { label: '1', value: '1' },
-              { label: '2', value: '2' },
-              { label: '3', value: '3' },
+              { label: '1', value: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white' },
+              { label: '2', value: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white' },
+              { label: '3', value: 'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white' },
             ],
           },
-          defaultValue: '1',
+          defaultValue: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
         },
       ],
     },
