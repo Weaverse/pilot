@@ -5,6 +5,7 @@ import type {
 import { forwardRef } from 'react';
 import { CSSProperties } from 'react';
 import {IconMapBlank} from '~/components';
+import clsx from 'clsx';
 
 
 interface MapProps extends HydrogenComponentProps {
@@ -17,10 +18,11 @@ interface MapProps extends HydrogenComponentProps {
   buttonLink: string;
   openInNewTab: boolean;
   sectionHeight: string;
+  buttonStyle: string;
 }
 
 let Map = forwardRef<HTMLElement, MapProps>((props, ref) => {
-  let { heading, textColor, contentAlignment, descriptionText, address, buttonLabel, buttonLink, openInNewTab, sectionHeight, ...rest } = props;
+  let { heading, textColor, contentAlignment, descriptionText, address, buttonLabel, buttonLink, openInNewTab, sectionHeight, buttonStyle, ...rest } = props;
   let sectionStyle: CSSProperties = {
     '--section-height': `${sectionHeight}px`,
     justifyContent: `${contentAlignment}`,
@@ -39,7 +41,7 @@ let Map = forwardRef<HTMLElement, MapProps>((props, ref) => {
           {heading && <p className='font-sans text-2xl font-bold' style={{ color: textColor }}>{heading}</p>}
           {address && <p className='font-sans text-sm font-normal' style={{ color: textColor }}>{address}</p>}
           {descriptionText && <p className='font-sans text-sm font-normal' style={{ color: textColor }}>{descriptionText}</p>}
-          {buttonLabel && <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className='px-4 py-3 w-fit cursor-pointer rounded border-2 border-solid border-gray-900 inline-block'>{buttonLabel}</a>}
+          {buttonLabel && <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle)}>{buttonLabel}</a>}
         </div>
       </div>
     </section>
@@ -118,12 +120,12 @@ export let schema: HydrogenComponentSchema = {
           name: 'buttonStyle',
           configs: {
             options: [
-              { label: '1', value: '1' },
-              { label: '2', value: '2' },
-              { label: '3', value: '3' },
+              { label: '1', value: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white' },
+              { label: '2', value: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white' },
+              { label: '3', value: 'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white' },
             ],
           },
-          defaultValue: '1',
+          defaultValue: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
         },
         {
           type: 'range',
