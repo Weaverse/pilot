@@ -5,6 +5,7 @@ import type {
 import { forwardRef } from 'react';
 import { CSSProperties } from 'react';
 import clsx from 'clsx';
+import { IconArrowInput } from '~/components';
 
 interface NewsLetterProps extends HydrogenComponentProps {
   contentAlignment: string;
@@ -37,10 +38,7 @@ let NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
         <div className='flex w-full mt-3 gap-2 justify-center items-center'>
           <div className='flex justify-center items-center relative sm-max:w-4/5'>
             <input type="text" className='pr-8 pl-3 py-2 rounded border-2 border-solid border-gray-400 font-normal w-full' placeholder='Enter your email' />
-            <svg xmlns="http://www.w3.org/2000/svg" className='absolute z-10 right-2 cursor-pointer' width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2.5 8H13.5" stroke="#0F0F0F" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M9 3.5L13.5 8L9 12.5" stroke="#0F0F0F" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            <IconArrowInput className='absolute z-10 cursor-pointer right-2 !w-4 !h-4' />
           </div>
           {buttonLabel && <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('flex cursor-pointer py-2 px-4 rounded sm-max:px-3', buttonStyle)}>{buttonLabel}</a>}
         </div>
