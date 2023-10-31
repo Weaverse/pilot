@@ -41,6 +41,7 @@ import * as VideoSubheadingItem from '~/sections/video-with-text/video-subheadin
 import * as VideoHeadingItem from '~/sections/video-with-text/video-heading-item';
 import * as VideoDescriptionItem from '~/sections/video-with-text/video-description-item';
 import * as VideoButtonItem from '~/sections/video-with-text/video-button-item';
+import * as Map from '~/sections/map';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -70,6 +71,7 @@ export let components: HydrogenComponent[] = [
   VideoHeadingItem,
   VideoDescriptionItem,
   VideoButtonItem,
+  Map,
   Blogs,
   BlogPost,
   AllProducts,
