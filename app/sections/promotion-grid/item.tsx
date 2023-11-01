@@ -14,7 +14,6 @@ interface PromotionItemProps extends HydrogenComponentProps {
   subHeadingSize: string;
   subHeadingColor: string;
   heading: string;
-  headingSize: string;
   headingColor: string;
   descriptionText: string;
   descriptionSize: string;
@@ -29,7 +28,7 @@ interface PromotionItemProps extends HydrogenComponentProps {
 }
 
 let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, ref) => {
-  let { backgroundImage, subHeading, subHeadingSize, subHeadingColor, heading, headingSize, headingColor, descriptionText, descriptionSize, descriptionColor, buttonLabel1, buttonLink1, buttonLabel2, buttonLink2, openInNewTab, buttonStyle1, buttonStyle2, ...rest } = props;
+  let { backgroundImage, subHeading, subHeadingSize, subHeadingColor, heading, headingColor, descriptionText, descriptionSize, descriptionColor, buttonLabel1, buttonLink1, buttonLabel2, buttonLink2, openInNewTab, buttonStyle1, buttonStyle2, ...rest } = props;
   return (
     <div ref={ref} {...rest} className='relative w-96 aspect-video' >
       <div className='absolute inset-0'>
@@ -41,7 +40,7 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, r
       <div className='relative flex flex-col items-center z-10 w-full py-10'>
         <div className='w-5/6 flex flex-col text-center items-center gap-5'>
           {subHeading && <p className='font-normal' style={{fontSize: subHeadingSize, color: subHeadingColor}}>{subHeading}</p>}
-          {heading && <p className='font-medium' style={{fontSize: headingSize, color: headingColor}}>{heading}</p>}
+          {heading && <h3 className='font-medium' style={{color:headingColor}}>{heading}</h3>}
           {descriptionText && <p className='text-sm font-normal' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>}
           <div className='flex gap-3 mt-3'>
             {buttonLabel1 && <a href={buttonLink1} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle1)}>{buttonLabel1}</a>}
@@ -101,21 +100,6 @@ export let schema: HydrogenComponentSchema = {
           label: 'Heading',
           defaultValue: 'Heading for Image',
           placeholder: 'Heading for image section',
-        },
-        {
-          type: 'toggle-group',
-          label: 'Heading size',
-          name: 'headingSize',
-          configs: {
-            options: [
-              { label: 'XS', value: '22px' },
-              { label: 'S', value: '24px' },
-              { label: 'M', value: '26px' },
-              { label: 'L', value: '28px' },
-              { label: 'XL', value: '30px' },
-            ],
-          },
-          defaultValue: '24px',
         },
         {
           type: 'color',

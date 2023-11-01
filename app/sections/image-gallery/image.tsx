@@ -1,19 +1,14 @@
+import {Image} from '@shopify/hydrogen';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  WeaverseImage,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
 
 interface ImageGalleryItemProps extends HydrogenComponentProps {
-  // TODO: change src to imageData
-  src: {
-    url: string;
-    altText: string;
-    width?: number;
-    height?: number;
-  };
+  src: WeaverseImage;
   columnSpan: number;
   borderRadius: number;
   hideOnMobile: boolean;
@@ -66,18 +61,11 @@ export let schema: HydrogenComponentSchema = {
       inputs: [
         {
           type: 'image',
-          // TODO: change src to imageData object
           name: 'src',
           label: 'Image',
           defaultValue:
             'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/pilot-image-placeholder.svg',
         },
-        // {
-        //   type: 'text',
-        //   label: 'Alt Text',
-        //   name: 'altText',
-        //   defaultValue: 'Pilot Image',
-        // },
         {
           type: 'range',
           label: 'Column Span',

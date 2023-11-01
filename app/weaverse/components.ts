@@ -36,6 +36,12 @@ import * as RichText from '~/sections/rich-text/index';
 import * as RichTextHeadingItem from '~/sections/rich-text/headings-item';
 import * as RichTextDescriptionItem from '~/sections/rich-text/descriptions-item';
 import * as RichTextButtonItem from '~/sections/rich-text/buttons-item';
+import * as VideoWithText from '~/sections/video-with-text/video-with-text';
+import * as VideoSubheadingItem from '~/sections/video-with-text/video-subheading-item';
+import * as VideoHeadingItem from '~/sections/video-with-text/video-heading-item';
+import * as VideoDescriptionItem from '~/sections/video-with-text/video-description-item';
+import * as VideoButtonItem from '~/sections/video-with-text/video-button-item';
+import * as Map from '~/sections/map';
 import * as PromotionGrid from '~/sections/promotion-grid/promotion-grid';
 import * as PromotionGridItem from '~/sections/promotion-grid/item';
 
@@ -62,6 +68,12 @@ export let components: HydrogenComponent[] = [
   RichTextHeadingItem,
   RichTextDescriptionItem,
   RichTextButtonItem,
+  VideoWithText,
+  VideoSubheadingItem,
+  VideoHeadingItem,
+  VideoDescriptionItem,
+  VideoButtonItem,
+  Map,
   PromotionGrid,
   PromotionGridItem,
   Blogs,
