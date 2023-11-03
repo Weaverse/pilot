@@ -28,7 +28,7 @@ export default ImageWTextSubheadingItem;
 
 export let schema: HydrogenComponentSchema = {
   type: 'subheading-image--Item',
-  title: 'Subheading',
+  title: 'Subheading item',
   limit: 1,
   inspector: [
     {
