@@ -2,15 +2,14 @@ import {
   json,
   redirect,
   type ActionFunction,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
-import {useState} from 'react';
+import {Form, useActionData, type MetaFunction} from '@remix-run/react';
+import {useState, type MouseEvent} from 'react';
 
 import {Button, Input, Link} from '~/components';
-import {getInputStyleClasses} from '~/lib/utils';
 
-export async function loader({context, params}: LoaderArgs) {
+export async function loader({context, params}: LoaderFunctionArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
@@ -50,7 +49,7 @@ export const action: ActionFunction = async ({request, context}) => {
   }
 };
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{title: 'Recover Password'}];
 };
 
@@ -74,13 +73,11 @@ export default function Recover() {
         ) : (
           <>
             <h2>Reset your password</h2>
-            <p className="mt-8 text-body/70">Enter your email to reset your password</p>
+            <p className="mt-8 text-body/70">
+              Enter your email to reset your password
+            </p>
             {/* TODO: Add onSubmit to validate _before_ submission with native? */}
-            <Form
-              method="post"
-              noValidate
-              className="mt-4 pb-8 mb-4 space-y-8"
-            >
+            <Form method="post" noValidate className="mt-4 pb-8 mb-4 space-y-8">
               {actionData?.formError && (
                 <div className="flex items-center justify-center mb-6 bg-zinc-500">
                   <p className="m-4 text-s text-contrast">
@@ -99,7 +96,7 @@ export default function Recover() {
                   aria-label="Email address"
                   // eslint-disable-next-line jsx-a11y/no-autofocus
                   autoFocus
-                  onBlur={(event) => {
+                  onBlur={(event: MouseEvent<HTMLInputElement>) => {
                     setNativeEmailError(
                       event.currentTarget.value.length &&
                         !event.currentTarget.validity.valid

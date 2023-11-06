@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import {useState} from 'react';
-import { IconClose, IconSearch } from '.';
+import {IconClose} from '.';
 
 const variants = {
   default: '',
@@ -30,16 +30,16 @@ export function Input({
   let commonClasses = clsx(
     'w-full rounded-sm border px-3 py-2.5',
     focused ? 'border-bar/50' : 'border-bar/10',
-    className
+    className,
   );
 
-  let handleClear = (e) => {
+  let handleClear = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.previousSibling.value = '';
-  }
+  };
   if (type === 'search') {
-    suffix = <IconClose onClick={handleClear}/>
+    suffix = <IconClose onClick={handleClear} />;
   }
   let hasChild = Boolean(prefix || suffix);
 

@@ -175,7 +175,7 @@ export type ShopQueryQuery = {
 };
 
 export type SeoCollectionContentQueryVariables = StorefrontAPI.Exact<{
-  handle?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
+  handle?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
@@ -303,7 +303,7 @@ export type HomepageFeaturedCollectionsQuery = {
 export type ProductInfoQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  handle: StorefrontAPI.Scalars['String'];
+  handle: StorefrontAPI.Scalars['String']['input'];
 }>;
 
 export type ProductInfoQuery = {
@@ -315,7 +315,7 @@ export type ProductInfoQuery = {
 export type ProductQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  handle: StorefrontAPI.Scalars['String'];
+  handle: StorefrontAPI.Scalars['String']['input'];
   selectedOptions:
     | Array<StorefrontAPI.SelectedOptionInput>
     | StorefrontAPI.SelectedOptionInput;
@@ -438,8 +438,8 @@ export type ProductQuery = {
 };
 
 export type ProductRecommendationsQueryVariables = StorefrontAPI.Exact<{
-  productId: StorefrontAPI.Scalars['ID'];
-  count?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
+  productId: StorefrontAPI.Scalars['ID']['input'];
+  count?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
@@ -506,7 +506,7 @@ export type ProductRecommendationsQuery = {
 };
 
 export type CollectionInfoQueryVariables = StorefrontAPI.Exact<{
-  handle: StorefrontAPI.Scalars['String'];
+  handle: StorefrontAPI.Scalars['String']['input'];
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
@@ -526,18 +526,22 @@ export type CollectionInfoQuery = {
 };
 
 export type CollectionDetailsQueryVariables = StorefrontAPI.Exact<{
-  handle: StorefrontAPI.Scalars['String'];
+  handle: StorefrontAPI.Scalars['String']['input'];
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
   filters?: StorefrontAPI.InputMaybe<
     Array<StorefrontAPI.ProductFilter> | StorefrontAPI.ProductFilter
   >;
   sortKey: StorefrontAPI.ProductCollectionSortKeys;
-  reverse?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Boolean']>;
-  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  startCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
-  endCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
+  reverse?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Boolean']['input']>;
+  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  startCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  endCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
 }>;
 
 export type CollectionDetailsQuery = {
@@ -606,10 +610,14 @@ export type CollectionDetailsQuery = {
 export type CollectionsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  startCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
-  endCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
+  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  startCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  endCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
 }>;
 
 export type CollectionsQuery = {
@@ -637,12 +645,18 @@ export type CollectionsQuery = {
 
 export type PaginatedProductsSearchQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
-  endCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
-  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
+  endCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  searchTerm?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
-  startCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
+  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  searchTerm?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  startCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
 }>;
 
 export type PaginatedProductsSearchQuery = {
@@ -683,9 +697,9 @@ export type PaginatedProductsSearchQuery = {
 
 export type BlogQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  blogHandle: StorefrontAPI.Scalars['String'];
-  pageBy: StorefrontAPI.Scalars['Int'];
-  cursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
+  blogHandle: StorefrontAPI.Scalars['String']['input'];
+  pageBy: StorefrontAPI.Scalars['Int']['input'];
+  cursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
 }>;
 
 export type BlogQuery = {
@@ -740,8 +754,8 @@ export type ArticleFragment = Pick<
 
 export type ArticleDetailsQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  blogHandle: StorefrontAPI.Scalars['String'];
-  articleHandle: StorefrontAPI.Scalars['String'];
+  blogHandle: StorefrontAPI.Scalars['String']['input'];
+  articleHandle: StorefrontAPI.Scalars['String']['input'];
 }>;
 
 export type ArticleDetailsQuery = {
@@ -793,10 +807,14 @@ export type ArticleDetailsQuery = {
 export type AllProductsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  startCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
-  endCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
+  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  startCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  endCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
 }>;
 
 export type AllProductsQuery = {
@@ -838,7 +856,7 @@ export type AllProductsQuery = {
 export type VariantsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  handle: StorefrontAPI.Scalars['String'];
+  handle: StorefrontAPI.Scalars['String']['input'];
 }>;
 
 export type VariantsQuery = {
@@ -874,8 +892,8 @@ export type VariantsQuery = {
 
 export type LayoutQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  headerMenuHandle: StorefrontAPI.Scalars['String'];
-  footerMenuHandle: StorefrontAPI.Scalars['String'];
+  headerMenuHandle: StorefrontAPI.Scalars['String']['input'];
+  footerMenuHandle: StorefrontAPI.Scalars['String']['input'];
 }>;
 
 export type LayoutQuery = {
@@ -982,7 +1000,7 @@ export type GetShopPrimaryDomainQuery = {
 };
 
 export type CustomerActivateMutationVariables = StorefrontAPI.Exact<{
-  id: StorefrontAPI.Scalars['ID'];
+  id: StorefrontAPI.Scalars['ID']['input'];
   input: StorefrontAPI.CustomerActivateInput;
 }>;
 
@@ -999,8 +1017,8 @@ export type CustomerActivateMutation = {
 
 export type CustomerAddressUpdateMutationVariables = StorefrontAPI.Exact<{
   address: StorefrontAPI.MailingAddressInput;
-  customerAccessToken: StorefrontAPI.Scalars['String'];
-  id: StorefrontAPI.Scalars['ID'];
+  customerAccessToken: StorefrontAPI.Scalars['String']['input'];
+  id: StorefrontAPI.Scalars['ID']['input'];
 }>;
 
 export type CustomerAddressUpdateMutation = {
@@ -1012,8 +1030,8 @@ export type CustomerAddressUpdateMutation = {
 };
 
 export type CustomerAddressDeleteMutationVariables = StorefrontAPI.Exact<{
-  customerAccessToken: StorefrontAPI.Scalars['String'];
-  id: StorefrontAPI.Scalars['ID'];
+  customerAccessToken: StorefrontAPI.Scalars['String']['input'];
+  id: StorefrontAPI.Scalars['ID']['input'];
 }>;
 
 export type CustomerAddressDeleteMutation = {
@@ -1031,8 +1049,8 @@ export type CustomerAddressDeleteMutation = {
 
 export type CustomerDefaultAddressUpdateMutationVariables =
   StorefrontAPI.Exact<{
-    addressId: StorefrontAPI.Scalars['ID'];
-    customerAccessToken: StorefrontAPI.Scalars['String'];
+    addressId: StorefrontAPI.Scalars['ID']['input'];
+    customerAccessToken: StorefrontAPI.Scalars['String']['input'];
   }>;
 
 export type CustomerDefaultAddressUpdateMutation = {
@@ -1045,7 +1063,7 @@ export type CustomerDefaultAddressUpdateMutation = {
 
 export type CustomerAddressCreateMutationVariables = StorefrontAPI.Exact<{
   address: StorefrontAPI.MailingAddressInput;
-  customerAccessToken: StorefrontAPI.Scalars['String'];
+  customerAccessToken: StorefrontAPI.Scalars['String']['input'];
 }>;
 
 export type CustomerAddressCreateMutation = {
@@ -1060,7 +1078,7 @@ export type CustomerAddressCreateMutation = {
 };
 
 export type CustomerUpdateMutationVariables = StorefrontAPI.Exact<{
-  customerAccessToken: StorefrontAPI.Scalars['String'];
+  customerAccessToken: StorefrontAPI.Scalars['String']['input'];
   customer: StorefrontAPI.CustomerUpdateInput;
 }>;
 
@@ -1177,7 +1195,7 @@ export type LineItemFullFragment = Pick<
 export type CustomerOrderQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  orderId: StorefrontAPI.Scalars['ID'];
+  orderId: StorefrontAPI.Scalars['ID']['input'];
 }>;
 
 export type CustomerOrderQuery = {
@@ -1274,7 +1292,7 @@ export type CustomerOrderQuery = {
 };
 
 export type CustomerRecoverMutationVariables = StorefrontAPI.Exact<{
-  email: StorefrontAPI.Scalars['String'];
+  email: StorefrontAPI.Scalars['String']['input'];
 }>;
 
 export type CustomerRecoverMutation = {
@@ -1299,7 +1317,7 @@ export type CustomerCreateMutation = {
 };
 
 export type CustomerResetMutationVariables = StorefrontAPI.Exact<{
-  id: StorefrontAPI.Scalars['ID'];
+  id: StorefrontAPI.Scalars['ID']['input'];
   input: StorefrontAPI.CustomerResetInput;
 }>;
 
@@ -1315,7 +1333,7 @@ export type CustomerResetMutation = {
 };
 
 export type CustomerDetailsQueryVariables = StorefrontAPI.Exact<{
-  customerAccessToken: StorefrontAPI.Scalars['String'];
+  customerAccessToken: StorefrontAPI.Scalars['String']['input'];
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
@@ -1487,9 +1505,9 @@ export type CustomerDetailsFragment = Pick<
 };
 
 export type ApiAllProductsQueryVariables = StorefrontAPI.Exact<{
-  query?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']>;
-  count?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
-  reverse?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Boolean']>;
+  query?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
+  count?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  reverse?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Boolean']['input']>;
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
   sortKey?: StorefrontAPI.InputMaybe<StorefrontAPI.ProductSortKeys>;
@@ -1530,7 +1548,7 @@ export type ApiAllProductsQuery = {
 export type FeaturedItemsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  pageBy?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
+  pageBy?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
 }>;
 
 export type FeaturedItemsQuery = {
@@ -1576,7 +1594,7 @@ export type FeaturedItemsQuery = {
 
 export type PageDetailsQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  handle: StorefrontAPI.Scalars['String'];
+  handle: StorefrontAPI.Scalars['String']['input'];
 }>;
 
 export type PageDetailsQuery = {
@@ -1596,10 +1614,10 @@ export type PolicyHandleFragment = Pick<
 
 export type PoliciesHandleQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  privacyPolicy: StorefrontAPI.Scalars['Boolean'];
-  shippingPolicy: StorefrontAPI.Scalars['Boolean'];
-  termsOfService: StorefrontAPI.Scalars['Boolean'];
-  refundPolicy: StorefrontAPI.Scalars['Boolean'];
+  privacyPolicy: StorefrontAPI.Scalars['Boolean']['input'];
+  shippingPolicy: StorefrontAPI.Scalars['Boolean']['input'];
+  termsOfService: StorefrontAPI.Scalars['Boolean']['input'];
+  refundPolicy: StorefrontAPI.Scalars['Boolean']['input'];
 }>;
 
 export type PoliciesHandleQuery = {
@@ -1649,7 +1667,7 @@ export type PoliciesIndexQuery = {
 };
 
 export type SitemapsQueryVariables = StorefrontAPI.Exact<{
-  urlLimits?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']>;
+  urlLimits?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
 
@@ -1711,7 +1729,7 @@ interface GeneratedQueryTypes {
     return: CollectionInfoQuery;
     variables: CollectionInfoQueryVariables;
   };
-  '#graphql\n  query CollectionDetails(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n    $filters: [ProductFilter!]\n    $sortKey: ProductCollectionSortKeys!\n    $reverse: Boolean\n    $first: Int\n    $last: Int\n    $startCursor: String\n    $endCursor: String\n  ) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      id\n      handle\n      title\n      description\n      seo {\n        description\n        title\n      }\n      image {\n        id\n        url\n        width\n        height\n        altText\n      }\n      products(\n        first: $first,\n        last: $last,\n        before: $startCursor,\n        after: $endCursor,\n        filters: $filters,\n        sortKey: $sortKey,\n        reverse: $reverse\n      ) {\n        filters {\n          id\n          label\n          type\n          values {\n            id\n            label\n            count\n            input\n          }\n        }\n        nodes {\n          ...ProductCard\n        }\n        pageInfo {\n          hasPreviousPage\n          hasNextPage\n          hasNextPage\n          endCursor\n          startCursor\n        }\n      }\n    }\n    collections(first: 100) {\n      edges {\n        node {\n          title\n          handle\n        }\n      }\n    }\n  }\n  #graphql\n  fragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    variants(first: 1) {\n      nodes {\n        id\n        availableForSale\n        image {\n          url\n          altText\n          width\n          height\n        }\n        price {\n          amount\n          currencyCode\n        }\n        compareAtPrice {\n          amount\n          currencyCode\n        }\n        selectedOptions {\n          name\n          value\n        }\n        product {\n          handle\n          title\n        }\n      }\n    }\n  }\n\n': {
+  '#graphql\n  query CollectionDetails(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n    $filters: [ProductFilter!]\n    $sortKey: ProductCollectionSortKeys!\n    $reverse: Boolean\n    $first: Int\n    $last: Int\n    $startCursor: String\n    $endCursor: String\n  ) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      id\n      handle\n      title\n      description\n      seo {\n        description\n        title\n      }\n      image {\n        id\n        url\n        width\n        height\n        altText\n      }\n      products(\n        first: $first,\n        last: $last,\n        before: $startCursor,\n        after: $endCursor,\n        filters: $filters,\n        sortKey: $sortKey,\n        reverse: $reverse\n      ) {\n        filters {\n          id\n          label\n          type\n          values {\n            id\n            label\n            count\n            input\n          }\n        }\n        nodes {\n          ...ProductCard\n        }\n        pageInfo {\n          hasPreviousPage\n          hasNextPage\n          endCursor\n          startCursor\n        }\n      }\n    }\n    collections(first: 100) {\n      edges {\n        node {\n          title\n          handle\n        }\n      }\n    }\n  }\n  #graphql\n  fragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    variants(first: 1) {\n      nodes {\n        id\n        availableForSale\n        image {\n          url\n          altText\n          width\n          height\n        }\n        price {\n          amount\n          currencyCode\n        }\n        compareAtPrice {\n          amount\n          currencyCode\n        }\n        selectedOptions {\n          name\n          value\n        }\n        product {\n          handle\n          title\n        }\n      }\n    }\n  }\n\n': {
     return: CollectionDetailsQuery;
     variables: CollectionDetailsQueryVariables;
   };

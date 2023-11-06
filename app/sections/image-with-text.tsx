@@ -2,24 +2,23 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
-import { Image } from '@shopify/hydrogen';
-
+import {forwardRef} from 'react';
+import {CSSProperties} from 'react';
+import {Image} from '@shopify/hydrogen';
 
 interface ImageWithTextProps extends HydrogenComponentProps {
-  imageFisrt: {
+  imageFirst: {
     url: string;
     altText: string;
     width?: number;
     height?: number;
-  }
+  };
   imageSecond: {
     url: string;
     altText: string;
     width?: number;
     height?: number;
-  }
+  };
   heading: string;
   subHeading: string;
   subHeadingSize: string;
@@ -31,38 +30,86 @@ interface ImageWithTextProps extends HydrogenComponentProps {
   loading: HTMLImageElement['loading'];
 }
 
-let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>((props, ref) => {
-  let { imageFisrt, imageSecond, heading, subHeading, subHeadingSize, headingSize, descriptionText, textAlignment, buttonLabel, buttonLink, loading, ...rest } = props;
-  let styleSection: CSSProperties = {
-    '--height-section': '410px',
-    '--font-size-display': `${headingSize}`,
-    '--font-size-heading': `${subHeadingSize}`,
-    textAlign: `${textAlignment}`,
-  } as CSSProperties;
-  const isDescriptionEmpty = /^<p><br><\/p>$/i.test(descriptionText);
-  return (
-    <section ref={ref} {...rest} style={styleSection} className='bg-blue-100 h-[var(--height-section)] overflow-hidden w-full sm-max:h-auto sm-max:overflow-hidden'>
-      <div className='box-border h-full px-10 sm-max:px-6 sm-max:w-full'>
-        <div className='flex box-border h-full w-full sm-max:flex-col'>
-          <div className='w-2/5 h-full py-16 mr-5 sm-max:mr-0 sm-max:w-full sm-max:pb-12'>
-            {subHeading && <p className='font-sans text-heading mb-5 leading-6'>{subHeading}</p>}
-            {heading && <h1 className='mb-5 text-gray-950 font-sans text-display font-bold leading-5'>{heading}</h1>}
-            {!isDescriptionEmpty && (<p className='text-sm font-sans font-normal mb-5 leading-6 sm-max:w-full' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>)}
-            {buttonLabel && <a className='text-center py-3 px-4 rounded bg-gray-950 text-white' href={buttonLink}>{buttonLabel}</a>}
-          </div>
-          <div className='w-3/5 flex h-full py-14 justify-end sm-max:order-first sm-max:w-full sm-max:py-10 sm-max:pb-0 sm-max:justify-center'>
-            <div className='z-10 sm:translate-x-8 sm:translate-y-8 sm-max:z-10 sm-max:translate-x-9 sm-max:translate-y-9'>
-              <Image data={imageFisrt} loading={loading} className='sm:object-contain sm-max:object-contain'/>
+let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
+  (props, ref) => {
+    let {
+      imageFirst,
+      imageSecond,
+      heading,
+      subHeading,
+      subHeadingSize,
+      headingSize,
+      descriptionText,
+      textAlignment,
+      buttonLabel,
+      buttonLink,
+      loading,
+      ...rest
+    } = props;
+    let styleSection: CSSProperties = {
+      '--height-section': '410px',
+      '--font-size-display': `${headingSize}`,
+      '--font-size-heading': `${subHeadingSize}`,
+      textAlign: `${textAlignment}`,
+    } as CSSProperties;
+    const isDescriptionEmpty = /^<p><br><\/p>$/i.test(descriptionText);
+    return (
+      <section
+        ref={ref}
+        {...rest}
+        style={styleSection}
+        className="bg-blue-100 h-[var(--height-section)] overflow-hidden w-full sm-max:h-auto sm-max:overflow-hidden"
+      >
+        <div className="box-border h-full px-10 sm-max:px-6 sm-max:w-full">
+          <div className="flex box-border h-full w-full sm-max:flex-col">
+            <div className="w-2/5 h-full py-16 mr-5 sm-max:mr-0 sm-max:w-full sm-max:pb-12">
+              {subHeading && (
+                <p className="font-sans text-heading mb-5 leading-6">
+                  {subHeading}
+                </p>
+              )}
+              {heading && (
+                <h1 className="mb-5 text-gray-950 font-sans text-display font-bold leading-5">
+                  {heading}
+                </h1>
+              )}
+              {!isDescriptionEmpty && (
+                <p
+                  className="text-sm font-sans font-normal mb-5 leading-6 sm-max:w-full"
+                  dangerouslySetInnerHTML={{__html: descriptionText}}
+                ></p>
+              )}
+              {buttonLabel && (
+                <a
+                  className="text-center py-3 px-4 rounded bg-gray-950 text-white"
+                  href={buttonLink}
+                >
+                  {buttonLabel}
+                </a>
+              )}
             </div>
-            <div>
-              <Image data={imageSecond} loading={loading} className='sm:object-contain sm-max:object-contain'/>
+            <div className="w-3/5 flex h-full py-14 justify-end sm-max:order-first sm-max:w-full sm-max:py-10 sm-max:pb-0 sm-max:justify-center">
+              <div className="z-10 sm:translate-x-8 sm:translate-y-8 sm-max:z-10 sm-max:translate-x-9 sm-max:translate-y-9">
+                <Image
+                  data={imageFirst}
+                  loading={loading}
+                  className="sm:object-contain sm-max:object-contain"
+                />
+              </div>
+              <div>
+                <Image
+                  data={imageSecond}
+                  loading={loading}
+                  className="sm:object-contain sm-max:object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-});
+      </section>
+    );
+  },
+);
 
 export default ImageWithText;
 
@@ -76,20 +123,21 @@ export let schema: HydrogenComponentSchema = {
       inputs: [
         {
           type: 'image',
-          name: 'imageFisrt',
+          name: 'imageFirst',
           label: 'Image 1',
-          defaultValue:{
+          defaultValue: {
             url: 'https://thang-weaverse-test-shop.myshopify.com/cdn/shop/files/gift-card-envelopes.jpg?v=1696497046&width=1100',
             altText: 'imageIndex',
-          }
-        }, {
+          },
+        },
+        {
           type: 'image',
           name: 'imageSecond',
           label: 'Image 2',
-          defaultValue:{
+          defaultValue: {
             url: 'https://thang-weaverse-test-shop.myshopify.com/cdn/shop/files/gift-card.jpg?v=1696497401&width=1100',
             altText: 'imageIndex',
-          }
+          },
         },
         {
           type: 'text',
@@ -104,11 +152,11 @@ export let schema: HydrogenComponentSchema = {
           name: 'subHeadingSize',
           configs: {
             options: [
-              { label: 'XS', value: '14px' },
-              { label: 'S', value: '16px' },
-              { label: 'M', value: '18px' },
-              { label: 'L', value: '20px' },
-              { label: 'XL', value: '22px' },
+              {label: 'XS', value: '14px'},
+              {label: 'S', value: '16px'},
+              {label: 'M', value: '18px'},
+              {label: 'L', value: '20px'},
+              {label: 'XL', value: '22px'},
             ],
           },
           defaultValue: '16px',
@@ -126,20 +174,21 @@ export let schema: HydrogenComponentSchema = {
           name: 'headingSize',
           configs: {
             options: [
-              { label: 'XS', value: '22px' },
-              { label: 'S', value: '24px' },
-              { label: 'M', value: '26px' },
-              { label: 'L', value: '28px' },
-              { label: 'XL', value: '30px' },
+              {label: 'XS', value: '22px'},
+              {label: 'S', value: '24px'},
+              {label: 'M', value: '26px'},
+              {label: 'L', value: '28px'},
+              {label: 'XL', value: '30px'},
             ],
           },
           defaultValue: '24px',
         },
         {
-          type: 'text-editor',
+          type: 'richtext',
           label: 'Text',
           name: 'descriptionText',
-          defaultValue: 'Pair large text with an image to tell a story, explain a detail about your product, or describe a new promotion.',
+          defaultValue:
+            'Pair large text with an image to tell a story, explain a detail about your product, or describe a new promotion.',
         },
         {
           type: 'toggle-group',
@@ -147,9 +196,9 @@ export let schema: HydrogenComponentSchema = {
           name: 'textAlignment',
           configs: {
             options: [
-              { label: 'Left', value: 'left' },
-              { label: 'Center', value: 'center' },
-              { label: 'Right', value: 'right' },
+              {label: 'Left', value: 'left'},
+              {label: 'Center', value: 'center'},
+              {label: 'Right', value: 'right'},
             ],
           },
           defaultValue: 'left',
@@ -164,7 +213,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'text',
           name: 'buttonLink',
           label: 'Button link',
-          placeholder: 'https://'
+          placeholder: 'https://',
         },
         {
           type: 'toggle-group',
@@ -173,7 +222,7 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'eager',
           configs: {
             options: [
-              { label: 'Eager', value: 'eager', icon: 'Lightning' },
+              {label: 'Eager', value: 'eager', icon: 'Lightning'},
               {
                 label: 'Lazy',
                 value: 'lazy',

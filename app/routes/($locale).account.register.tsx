@@ -2,17 +2,17 @@ import {
   redirect,
   json,
   type ActionFunction,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
-import {useState} from 'react';
+import {Form, useActionData, type MetaFunction} from '@remix-run/react';
+import {useState, type MouseEvent} from 'react';
 
 import {getInputStyleClasses} from '~/lib/utils';
 import {Button, Input, Link} from '~/components';
 
 import {doLogin} from './($locale).account.login';
 
-export async function loader({context, params}: LoaderArgs) {
+export async function loader({context, params}: LoaderFunctionArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
@@ -86,7 +86,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
   }
 };
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{title: 'Register'}];
 };
 
@@ -120,7 +120,7 @@ export default function Register() {
                 aria-label="Email"
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
-                onBlur={(event) => {
+                onBlur={(event: MouseEvent<HTMLInputElement>) => {
                   setNativeEmailError(
                     event.currentTarget.value.length &&
                       !event.currentTarget.validity.valid
@@ -147,7 +147,7 @@ export default function Register() {
                 required
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
-                onBlur={(event) => {
+                onBlur={(event: MouseEvent<HTMLInputElement>) => {
                   if (
                     event.currentTarget.validity.valid ||
                     !event.currentTarget.value.length

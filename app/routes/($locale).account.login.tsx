@@ -3,15 +3,15 @@ import {
   redirect,
   type ActionFunction,
   type AppLoadContext,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
 import {
   Form,
   useActionData,
   useLoaderData,
-  type V2_MetaFunction,
+  type MetaFunction,
 } from '@remix-run/react';
-import {useState} from 'react';
+import {MouseEvent, useState} from 'react';
 
 import {getInputStyleClasses} from '~/lib/utils';
 import {Input, Link, Button} from '~/components';
@@ -20,7 +20,7 @@ export const handle = {
   isPublic: true,
 };
 
-export async function loader({context, params}: LoaderArgs) {
+export async function loader({context, params}: LoaderFunctionArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
@@ -89,7 +89,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
   }
 };
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{title: 'Login'}];
 };
 
@@ -106,17 +106,13 @@ export default function Login() {
       <div className="max-w-sm w-full">
         <h2 className="text-center">Login</h2>
         {/* TODO: Add onSubmit to validate _before_ submission with native? */}
-        <Form
-          method="post"
-          noValidate
-          className="pt-6 pb-8 mt-4 mb-4"
-        >
+        <Form method="post" noValidate className="pt-6 pb-8 mt-4 mb-4">
           {actionData?.formError && (
             <div className="flex items-center justify-center mb-6 bg-zinc-500">
               <p className="m-4 text-sm">{actionData.formError}</p>
             </div>
           )}
-          <div className='space-y-3'>
+          <div className="space-y-3">
             <div>
               <Input
                 id="email"
@@ -128,7 +124,7 @@ export default function Login() {
                 aria-label="Email"
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
-                onBlur={(event) => {
+                onBlur={(event: MouseEvent<HTMLInputElement>) => {
                   setNativeEmailError(
                     event.currentTarget.value.length &&
                       !event.currentTarget.validity.valid
@@ -156,7 +152,7 @@ export default function Login() {
                 required
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
-                onBlur={(event) => {
+                onBlur={(event: MouseEvent<HTMLInputElement>) => {
                   if (
                     event.currentTarget.validity.valid ||
                     !event.currentTarget.value.length
@@ -194,7 +190,10 @@ export default function Login() {
             >
               Sign in
             </Button>
-            <Link className="inline underline text-body/70" to="/account/register">
+            <Link
+              className="inline underline text-body/70"
+              to="/account/register"
+            >
               Create an account
             </Link>
           </div>
