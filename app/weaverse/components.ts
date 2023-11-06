@@ -42,6 +42,8 @@ import * as VideoHeadingItem from '~/sections/video-with-text/video-heading-item
 import * as VideoDescriptionItem from '~/sections/video-with-text/video-description-item';
 import * as VideoButtonItem from '~/sections/video-with-text/video-button-item';
 import * as Map from '~/sections/map';
+import * as PromotionGrid from '~/sections/promotion-grid/promotion-grid';
+import * as PromotionGridItem from '~/sections/promotion-grid/item';
 
 export let components: HydrogenComponent[] = [
   Main,
@@ -72,6 +74,8 @@ export let components: HydrogenComponent[] = [
   VideoDescriptionItem,
   VideoButtonItem,
   Map,
+  PromotionGrid,
+  PromotionGridItem,
   Blogs,
   BlogPost,
   AllProducts,
