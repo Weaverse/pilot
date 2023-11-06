@@ -2,7 +2,7 @@
 
 <div align="center">
   <p style="text-align: center;">
-    <img alt="Version" src="https://img.shields.io/badge/version-2.2.4-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/badge/version-2.3.0-blue.svg?cacheSeconds=2592000" />
     <a href="#" target="_blank">
       <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?label=license" />
     </a>
@@ -46,7 +46,7 @@ Follow these steps to get started with Pilot and begin crafting your Hydrogen-dr
 1. Install [Weaverse Hydrogen Customizer](https://apps.shopify.com/weaverse) from Shopify App Store.
 2. Create new Hydrogen storefront inside Weaverse.
 3. Initialize the project and start a local dev server with `@weaverse/cli` tool as instructed in the Weaverse editor.
-   ![Init Weaverse Storefront](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/init-project_4882deaa-c661-47cc-a7bf-38b2704e6a0b.png?v=1695816089)
+   ![Init Weaverse Storefront](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/New_storefront.png?v=1699244454)
 4. Open the Weaverse editor to start customizing and tailoring your storefront according to your preferences.
 
 ## Features overview
@@ -270,7 +270,7 @@ And then you can use the data in your component with `Component.props.loaderData
 
 Weaverse provides a convenient way to customize your theme inside the **Weaverse editor**. You can add new sections, customize existing ones, and change the theme settings.
 
-![Weaverse Editor](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Live_demo_-_Weaverse_Hydrogen_2023-09-27_18-58-23.png?v=1695826457)
+![Weaverse Editor](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
 
 ## References
 
