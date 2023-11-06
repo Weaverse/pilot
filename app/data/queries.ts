@@ -29,7 +29,7 @@ export let HOMEPAGE_SEO_QUERY = `#graphql
   ${COLLECTION_CONTENT_FRAGMENT}
 ` as const;
 
-// @see: https://shopify.dev/api/storefront/2023-04/queries/products
+// @see: https://shopify.dev/api/storefront/current/queries/products
 export let HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
   query homepageFeaturedProducts($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
@@ -42,7 +42,7 @@ export let HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
   ${PRODUCT_CARD_FRAGMENT}
 `;
 
-// @see: https://shopify.dev/api/storefront/2023-04/queries/collections
+// @see: https://shopify.dev/api/storefront/current/queries/collections
 export let FEATURED_COLLECTIONS_QUERY = `#graphql
   query homepageFeaturedCollections($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
@@ -234,7 +234,6 @@ export let COLLECTION_QUERY = `#graphql
         }
         pageInfo {
           hasPreviousPage
-          hasNextPage
           hasNextPage
           endCursor
           startCursor
