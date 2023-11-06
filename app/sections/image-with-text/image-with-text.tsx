@@ -1,26 +1,43 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  WeaverseImage,
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 import { CSSProperties } from 'react';
+import { Image } from '@shopify/hydrogen';
+import { IconImageBlank } from '~/components';
 
 interface ImageWithTextProps extends HydrogenComponentProps {
+  image: WeaverseImage,
   textAlignment: string;
+  sectionHeight: number;
+  backgroundColor: string;
+  loading: HTMLImageElement['loading'];
 }
 
 let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>((props, ref) => {
-  let { textAlignment, children, ...rest } = props;
+  let { textAlignment, image, sectionHeight, backgroundColor, loading, children, ...rest } = props;
   let styleSection: CSSProperties = {
-    '--section-height': '410px',
+    '--section-height': `${sectionHeight}px`,
+    backgroundColor: backgroundColor,
     textAlign: `${textAlignment}`,
   } as CSSProperties;
 
   return (
-    <section ref={ref} {...rest} style={styleSection} className='bg-blue-100 h-[var(--section-height)] overflow-hidden w-full sm-max:h-auto sm-max:overflow-hidden'>
-      <div className='box-border h-full px-10 sm-max:px-6 sm-max:w-full'>
-        <div className='flex justify-center box-border h-full w-full sm-max:flex-col'>
-          {children}
+    <section ref={ref} {...rest} style={styleSection} className='h-[var(--section-height)] sm-max:h-auto sm-max:overflow-hidden'>
+      <div className='h-full px-10 sm-max:px-6 sm-max:w-full'>
+        <div className='flex justify-center items-center gap-5 h-full w-full sm-max:flex-col'>
+          <div className='w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10'>
+            {children}
+          </div>
+          <div className='w-1/2 flex flex-1 items-center justify-center sm-max:order-first sm-max:w-full sm-max:py-10 sm-max:pb-0 sm-max:justify-center'>
+            {image ? <Image data={image} loading={loading} className='!w-1/2 !aspect-square sm-max:!w-full' /> :
+              <div className='flex justify-center items-center bg-gray-200 w-1/2 aspect-square'>
+                <IconImageBlank className='h-32 w-32 opacity-80' viewBox='0 0 100 100' />
+              </div>
+            }
+          </div>
         </div>
       </div>
     </section>
@@ -38,6 +55,11 @@ export let schema: HydrogenComponentSchema = {
       group: 'Image',
       inputs: [
         {
+          type: 'image',
+          name: 'image',
+          label: 'Image',
+        },
+        {
           type: 'toggle-group',
           label: 'Text alignment',
           name: 'textAlignment',
@@ -50,17 +72,60 @@ export let schema: HydrogenComponentSchema = {
           },
           defaultValue: 'left',
         },
+        {
+          type: 'range',
+          name: 'sectionHeight',
+          label: 'Section height',
+          defaultValue: 450,
+          configs: {
+            min: 400,
+            max: 700,
+            step: 10,
+            unit: 'px',
+          },
+        },
+        {
+          type: 'color',
+          name: 'backgroundColor',
+          label: 'Background color',
+          defaultValue: '#f4f4f4',
+        },
+        {
+          type: 'toggle-group',
+          name: 'loading',
+          label: 'Image loading',
+          defaultValue: 'eager',
+          configs: {
+            options: [
+              { label: 'Eager', value: 'eager', icon: 'Lightning' },
+              {
+                label: 'Lazy',
+                value: 'lazy',
+                icon: 'SpinnerGap',
+                weight: 'light',
+              },
+            ],
+          },
+          helpText:
+            'Learn more about <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading" target="_blank" rel="noopener noreferrer">image loading strategies</a>.',
+        },
       ],
     },
   ],
-  childTypes: ['Content--Item','Image--Component'],
+  childTypes: ['subheading-image--Item', 'Heading--Item', 'Description--Item', 'Button--Item'],
   presets: {
     children: [
       {
-        type: 'Content--Item',
+        type: 'subheading-image--Item',
       },
       {
-        type: 'Image--Component',
+        type: 'Heading--Item',
+      },
+      {
+        type: 'Description--Item',
+      },
+      {
+        type: 'Button--Item',
       },
     ],
   },

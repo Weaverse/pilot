@@ -1,6 +1,6 @@
 import {flattenConnection} from '@shopify/hydrogen';
 import {json} from '@shopify/remix-oxygen';
-import {RouteLoaderArgs} from '@weaverse/hydrogen';
+import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import type {BlogQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';

@@ -1,4 +1,4 @@
-import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, Form, useLoaderData} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
@@ -24,7 +24,7 @@ import {
   type FeaturedData,
 } from './($locale).featured-products';
 
-export async function loader({request, context: {storefront}}: LoaderArgs) {
+export async function loader({request, context: {storefront}}: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
   const searchTerm = searchParams.get('q')!;
   const variables = getPaginationVariables(request, {pageBy: 8});
@@ -175,7 +175,7 @@ function NoResults({
 }
 
 export function getNoResultRecommendations(
-  storefront: LoaderArgs['context']['storefront'],
+  storefront: LoaderFunctionArgs['context']['storefront'],
 ) {
   return getFeaturedData(storefront, {pageBy: PAGINATION_SIZE});
 }

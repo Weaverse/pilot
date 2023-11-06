@@ -3,22 +3,18 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
 
 
 interface HeadingItemProps extends HydrogenComponentProps {
   heading: string;
-  headingSize: string;
+  headingColor: string;
 }
 
 let HeadingItem = forwardRef<HTMLDivElement, HeadingItemProps>((props, ref) => {
-  let {heading, headingSize, ...rest } = props;
-  let headingStyle: CSSProperties = {
-    '--font-size-display': `${headingSize}`,
-  } as CSSProperties;
+  let { heading, headingColor, ...rest } = props;
   return (
-    <div ref={ref} {...rest} style={headingStyle}>
-      <h1 className='font-sans mb-4 text-4xl font-medium leading-5'>{heading}</h1>
+    <div ref={ref} {...rest}>
+      <h3 className='font-medium' style={{ color: headingColor }}>{heading}</h3>
     </div>
   );
 });
@@ -40,19 +36,10 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Heading for image section',
         },
         {
-          type: 'toggle-group',
-          label: 'Heading size',
-          name: 'headingSize',
-          configs: {
-            options: [
-              { label: 'XS', value: '22px' },
-              { label: 'S', value: '24px' },
-              { label: 'M', value: '26px' },
-              { label: 'L', value: '28px' },
-              { label: 'XL', value: '30px' },
-            ],
-          },
-          defaultValue: '24px',
+          type: 'color',
+          name: 'headingColor',
+          label: 'Heading color',
+          defaultValue: '#333333',
         },
       ],
     },
