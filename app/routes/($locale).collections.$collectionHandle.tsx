@@ -5,7 +5,7 @@ import {
 } from '@shopify/hydrogen';
 import type {ProductCollectionSortKeys} from '@shopify/hydrogen/storefront-api-types';
 import {json} from '@shopify/remix-oxygen';
-import {RouteLoaderArgs} from '@weaverse/hydrogen';
+import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import invariant from 'tiny-invariant';
 import type {AppliedFilter, SortParam} from '~/components/SortFilter';
 import {routeHeaders} from '~/data/cache';

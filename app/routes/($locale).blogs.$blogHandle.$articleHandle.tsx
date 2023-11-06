@@ -1,5 +1,5 @@
 import {json, type LinksFunction} from '@shopify/remix-oxygen';
-import {RouteLoaderArgs} from '@weaverse/hydrogen';
+import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import {ArticleDetailsQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';

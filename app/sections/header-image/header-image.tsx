@@ -1,34 +1,30 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  WeaverseImage,
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 import { CSSProperties } from 'react';
 import clsx from 'clsx';
 import { Image } from '@shopify/hydrogen';
+import { IconImageBlank } from '~/components';
 
 interface HeaderImageProps extends HydrogenComponentProps {
-  backgroundImage: {
-    url: string;
-    altText: string;
-    width?: number;
-    height?: number;
-  };
+  backgroundImage: WeaverseImage;
   contentAlignment: string;
   enableOverlay: boolean;
   overlayColor: string;
   overlayOpacity: number;
-  sectionHeight: string;
-  buttonLabel: string;
-  buttonLink: string;
-  loading: HTMLImageElement['loading'];
+  sectionHeightDesktop: number;
+  sectionHeightMobile: number;
 }
 
 let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
-  let { backgroundImage, contentAlignment, enableOverlay, overlayColor, overlayOpacity, sectionHeight, buttonLabel, buttonLink, loading, children, ...rest } = props;
+  let { backgroundImage, contentAlignment, enableOverlay, overlayColor, overlayOpacity, sectionHeightDesktop, sectionHeightMobile, children, ...rest } = props;
   let sectionStyle: CSSProperties = {
     justifyContent: `${contentAlignment}`,
-    '--section-height': `${sectionHeight}`,
+    '--section-height-desktop': `${sectionHeightDesktop}px`,
+    '--section-height-mobile': `${sectionHeightMobile}px`,
     '--overlay-opacity': `${overlayOpacity}%`,
     '--overlay-color': `${overlayColor}`
   } as CSSProperties;
@@ -36,18 +32,18 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
 
   return (
     <section ref={ref} {...rest} className={clsx(
-      'flex relative self-stretch gap-3 items-center overflow-hidden h-[var(--section-height)]',
-      enableOverlay && backgroundImage ? 'text-white' : 'text-black'
+      'flex relative self-stretch gap-3 items-center overflow-hidden h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]',
     )} style={sectionStyle}>
       <div className='absolute inset-0'>
-        {backgroundImage && <Image data={backgroundImage} loading={loading} className='w-full h-full object-cover' />}
-        {enableOverlay && backgroundImage && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
+        {backgroundImage ? <Image data={backgroundImage} className='w-full h-full object-cover' /> :
+          <div className='w-full h-full flex justify-center items-center bg-gray-200'>
+            <IconImageBlank className='!w-24 !h-24 opacity-30' viewBox='0 0 100 100' />
+          </div>
+        }
+        {enableOverlay && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
       </div>
-      <div className='text-center relative mx-12 z-10'>
-        {children?.map((child) => {
-              return child;
-            })}
-        {buttonLabel && <a href={`${buttonLink}`} className='bg-gray-900 text-white py-3 px-4 rounded'>{buttonLabel}</a>}
+      <div className='z-10 w-1/2 h-fit flex flex-col justify-between items-center gap-5 text-center sm-max:w-5/6'>
+        {children}
       </div>
     </section>
   );
@@ -108,58 +104,47 @@ export let schema: HydrogenComponentSchema = {
           condition: `enableOverlay.eq.true`
         },
         {
-          type: 'text',
-          name: 'sectionHeight',
-          label: 'Section height',
-          defaultValue: '480px',
-          placeholder: 'Example: 100px',
-        },
-        {
-          type: 'text',
-          name: 'buttonLabel',
-          label: 'Button label',
-          defaultValue: 'Button',
-        },
-        {
-          type: 'text',
-          name: 'buttonLink',
-          label: 'Button link',
-          placeholder: 'https://',
-        },
-        {
-          type: 'toggle-group',
-          name: 'loading',
-          label: 'Background image loading',
-          defaultValue: 'eager',
+          type: 'range',
+          name: 'sectionHeightDesktop',
+          label: 'Section height desktop',
+          defaultValue: 450,
           configs: {
-            options: [
-              { label: 'Eager', value: 'eager', icon: 'Lightning' },
-              {
-                label: 'Lazy',
-                value: 'lazy',
-                icon: 'SpinnerGap',
-                weight: 'light',
-              },
-            ],
+            min: 400,
+            max: 700,
+            step: 10,
+            unit: 'px',
           },
-          helpText:
-            'Learn more about <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading" target="_blank" rel="noopener noreferrer">image loading strategies</a>.',
+        },
+        {
+          type: 'range',
+          name: 'sectionHeightMobile',
+          label: 'Section height mobile',
+          defaultValue: 350,
+          configs: {
+            min: 300,
+            max: 600,
+            step: 10,
+            unit: 'px',
+          },
         },
       ],
     },
   ],
-  childTypes: ['heading--item', 'subheading--item', 'description-text--item'],
+  childTypes: ['subheading--item', 'heading--item', 'description-text--item', 'button-image--item'],
   presets: {
     children: [
-      {
-        type: 'heading--item',
-      },
       {
         type: 'subheading--item',
       },
       {
+        type: 'heading--item',
+      },
+      {
         type: 'description-text--item',
-      }
+      },
+      {
+        type: 'button-image--item',
+      },
     ],
   },
 };

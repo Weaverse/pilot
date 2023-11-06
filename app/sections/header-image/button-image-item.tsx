@@ -7,27 +7,26 @@ import clsx from 'clsx';
 
 
 interface ButtonItemProps extends HydrogenComponentProps {
-  buttonLabel: string;
   buttonLink: string;
+  buttonLabel: string;
   openInNewTab: boolean;
   buttonStyle: string;
 }
 
-let ImageWTextButtonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
-  let { buttonLabel, buttonLink, openInNewTab, buttonStyle, ...rest } = props;
+let buttonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
+  let { buttonLink, buttonLabel, openInNewTab, buttonStyle, ...rest } = props;
   return (
-    <div ref={ref} {...rest}>
-      <a className={clsx('py-3 px-4 rounded cursor-pointer inline-block', buttonStyle)} target={openInNewTab ? '_blank' : ''} href={buttonLink}>{buttonLabel}</a>
+    <div ref={ref} {...rest} className='mt-3'>
+      {buttonLabel && <a href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''} className={clsx('py-3 px-4 rounded', buttonStyle)}>{buttonLabel}</a>}
     </div>
   );
 });
 
-export default ImageWTextButtonItem;
+export default buttonItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'Button--Item',
+  type: 'button-image--item',
   title: 'Button item',
-  limit: 1,
   inspector: [
     {
       group: 'Button',
@@ -42,7 +41,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'text',
           name: 'buttonLink',
           label: 'Button link',
-          placeholder: 'https://'
+          placeholder: 'https://',
         },
         {
           type: 'switch',
@@ -64,6 +63,6 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
         },
       ],
-    }
+    },
   ],
-};
+}

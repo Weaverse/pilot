@@ -5,31 +5,31 @@ import type {
 import { forwardRef } from 'react';
 import { CSSProperties } from 'react';
 
-
-interface SubHeadingItemProps extends HydrogenComponentProps {
+interface SubheadingProps extends HydrogenComponentProps {
   subHeading: string;
   subHeadingSize: string;
   subHeadingColor: string;
 }
 
-let SubHeadingItem = forwardRef<HTMLDivElement, SubHeadingItemProps>((props, ref) => {
+let ImageWTextSubheadingItem = forwardRef<HTMLDivElement, SubheadingProps>((props, ref) => {
   let { subHeading, subHeadingSize, subHeadingColor, ...rest } = props;
-  let headingStyle: CSSProperties = {
+  let styleContent: CSSProperties = {
     fontSize: subHeadingSize,
     color: subHeadingColor,
   } as CSSProperties;
   return (
     <div ref={ref} {...rest}>
-      <p style={headingStyle} className='font-normal'>{subHeading}</p>
+      {subHeading && <p className='font-normal' style={styleContent}>{subHeading}</p>}
     </div>
   );
 });
 
-export default SubHeadingItem;
+export default ImageWTextSubheadingItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'subheading--item',
+  type: 'subheading-image--Item',
   title: 'Subheading item',
+  limit: 1,
   inspector: [
     {
       group: 'Subheading',
@@ -63,6 +63,6 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: '#333333',
         },
       ],
-    },
+    }
   ],
-}
+};

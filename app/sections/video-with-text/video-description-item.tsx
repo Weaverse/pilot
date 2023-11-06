@@ -3,32 +3,26 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
 
-
-interface DescriptionItemProps extends HydrogenComponentProps {
+interface VideoDescriptionProps extends HydrogenComponentProps {
   descriptionText: string;
   descriptionSize: string;
   descriptionColor: string;
 }
 
-let ImageWTextDescriptionItem = forwardRef<HTMLDivElement, DescriptionItemProps>((props, ref) => {
-  let { descriptionText, descriptionSize, descriptionColor, ...rest } = props;
-  let styleDescription: CSSProperties = {
-    fontSize: descriptionSize,
-    color: descriptionColor,
-  } as CSSProperties;
+let VideoDescriptionItem = forwardRef<HTMLDivElement, VideoDescriptionProps>((props, ref) => {
+  let {descriptionText, descriptionSize, descriptionColor, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
-      <p className='font-normal sm-max:w-full' style={styleDescription}>{descriptionText}</p>
+      <p className='font-sans text-base font-normal leading-6' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>
     </div>
   );
 });
 
-export default ImageWTextDescriptionItem;
+export default VideoDescriptionItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'Description--Item',
+  type: 'video-description--item',
   title: 'Description item',
   limit: 1,
   inspector: [
@@ -39,11 +33,11 @@ export let schema: HydrogenComponentSchema = {
           type: 'textarea',
           label: 'Text',
           name: 'descriptionText',
-          defaultValue: 'Pair large text with an image to tell a story, explain a detail about your product, or describe a new promotion.',
+          defaultValue: 'Pair large text with an video to tell a story.',
         },
         {
           type: 'toggle-group',
-          label: 'Text size',
+          label: 'Description size',
           name: 'descriptionSize',
           configs: {
             options: [
@@ -63,6 +57,6 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: '#333333',
         },
       ],
-    }
+    },
   ],
-};
+}
