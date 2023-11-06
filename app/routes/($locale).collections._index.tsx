@@ -1,5 +1,6 @@
 import {getPaginationVariables} from '@shopify/hydrogen';
-import {json, LoaderArgs} from '@shopify/remix-oxygen';
+import {json} from '@shopify/remix-oxygen';
+import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import {routeHeaders} from '~/data/cache';
 import {COLLECTIONS_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
@@ -9,7 +10,7 @@ const PAGINATION_SIZE = 4;
 
 export const headers = routeHeaders;
 
-export const loader = async (args: LoaderArgs) => {
+export const loader = async (args: RouteLoaderArgs) => {
   let {
     request,
     context: {storefront, weaverse},

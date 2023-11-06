@@ -1,6 +1,7 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {defer, LoaderArgs, redirect} from '@shopify/remix-oxygen';
+import {defer, redirect} from '@shopify/remix-oxygen';
+import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import {
   ProductQuery,
   ProductRecommendationsQuery,
@@ -19,7 +20,7 @@ import {getSelectedProductOptions} from '@weaverse/hydrogen';
 
 export const headers = routeHeaders;
 
-export async function loader({params, request, context}: LoaderArgs) {
+export async function loader({params, request, context}: RouteLoaderArgs) {
   const {productHandle} = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
@@ -38,7 +39,7 @@ export async function loader({params, request, context}: LoaderArgs) {
   }
 
   if (!product.selectedVariant) {
-    return redirectToFirstVariant({product, request});
+    throw redirectToFirstVariant({product, request});
   }
 
   // In order to show which variants are available in the UI, we need to query
@@ -106,7 +107,7 @@ function redirectToFirstVariant({
     searchParams.set(option.name, option.value);
   }
 
-  throw redirect(
+  return redirect(
     `/products/${product!.handle}?${searchParams.toString()}`,
     302,
   );
