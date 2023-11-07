@@ -11,7 +11,7 @@ interface DescriptionItemProps extends HydrogenComponentProps {
 let RichTextDescriptionItem = forwardRef<HTMLParagraphElement, DescriptionItemProps>((props, ref) => {
   let { descriptionText, ...rest } = props;
   return (
-    <p ref={ref} {...rest} className='font-sans text-sm font-normal' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>
+    <p ref={ref} {...rest} className='font-sans text-sm font-normal text-[var(--text-color)]' dangerouslySetInnerHTML={{ __html: descriptionText }}></p>
   );
 });
 
