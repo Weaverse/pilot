@@ -3,18 +3,20 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
+import clsx from 'clsx';
 
 interface VideoButtonProps extends HydrogenComponentProps {
   buttonLabel: string;
   buttonLink: string;
   enableNewtab: boolean;
+  buttonStyle: string;
 }
 
 let VideoButtonItem = forwardRef<HTMLDivElement, VideoButtonProps>((props, ref) => {
-  let {buttonLabel, buttonLink, enableNewtab, ...rest} = props;
+  let {buttonLabel, buttonLink, enableNewtab, buttonStyle, ...rest} = props;
   return (
     <div ref={ref} {...rest} className='mt-3'>
-      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className='bg-gray-900 text-white py-3 px-4 rounded'>{buttonLabel}</a>
+      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle)}>{buttonLabel}</a>
     </div>
   );
 });
@@ -53,12 +55,12 @@ export let schema: HydrogenComponentSchema = {
           name: 'buttonStyle',
           configs: {
             options: [
-              { label: '1', value: '1' },
-              { label: '2', value: '2' },
-              { label: '3', value: '3' },
+              { label: '1', value: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white' },
+              { label: '2', value: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white' },
+              { label: '3', value: 'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white' },
             ],
           },
-          defaultValue: '1',
+          defaultValue: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
         },
       ],
     },
