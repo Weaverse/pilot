@@ -11,7 +11,7 @@ interface HeadingItemProps extends HydrogenComponentProps {
 let RichTextHeadingItem = forwardRef<HTMLParagraphElement, HeadingItemProps>((props, ref) => {
   let { heading, ...rest } = props;
   return (
-    <p ref={ref} {...rest} className='font-sans text-2xl font-bold'>{heading}</p>
+    <p ref={ref} {...rest} className='font-sans text-2xl font-bold text-[var(--text-color)]'>{heading}</p>
   );
 });
 

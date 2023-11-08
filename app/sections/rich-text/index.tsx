@@ -9,14 +9,20 @@ interface RichTextProps extends HydrogenComponentProps {
   contentAlignment: string;
   sectionHeight: string;
   backgroundColor: string;
+  textColor: string;
+  topPadding: string;
+  bottomPadding: string;
 }
 
 let RichText = forwardRef<HTMLElement, RichTextProps>((props, ref) => {
-  let { contentAlignment, sectionHeight, backgroundColor, children, ...rest } = props;
+  let { contentAlignment, sectionHeight, backgroundColor, textColor, topPadding, bottomPadding, children, ...rest } = props;
   let sectionStyle: CSSProperties = {
     alignItems: `${contentAlignment}`,
     '--section-height': `${sectionHeight}px`,
     backgroundColor: `${backgroundColor}`,
+    '--text-color': `${textColor}`,
+    paddingTop: `${topPadding}px`,
+    paddingBottom: `${bottomPadding}px`,
   } as CSSProperties;
   return (
     <section ref={ref} {...rest} className='py-16 px-10 h-[var(--section-height)] flex flex-col justify-center' style={sectionStyle}>
@@ -44,6 +50,12 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: '#F7F7F7',
         },
         {
+          type: 'color',
+          name: 'textColor',
+          label: 'Text color',
+          defaultValue: '#000000',
+        },
+        {
           type: 'toggle-group',
           label: 'Content alignment',
           name: 'contentAlignment',
@@ -64,6 +76,30 @@ export let schema: HydrogenComponentSchema = {
           configs: {
             min: 300,
             max: 500,
+            step: 10,
+            unit: 'px',
+          },
+        },
+        {
+          type: 'range',
+          name: 'topPadding',
+          label: 'Top padding',
+          defaultValue: 40,
+          configs: {
+            min: 10,
+            max: 100,
+            step: 10,
+            unit: 'px',
+          },
+        },
+        {
+          type: 'range',
+          name: 'bottomPadding',
+          label: 'Bottom padding',
+          defaultValue: 40,
+          configs: {
+            min: 10,
+            max: 100,
             step: 10,
             unit: 'px',
           },
