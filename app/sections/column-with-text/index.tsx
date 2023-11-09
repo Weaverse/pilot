@@ -7,24 +7,32 @@ import { CSSProperties } from 'react';
 
 interface ContentColumnWithImageProps extends HydrogenComponentProps {
   heading: string;
-  headingSize: string;
+  textColor: string;
+  gap: number;
   headingAlignment: string;
+  topPadding: number;
+  bottomPadding: number;
 }
 
 let ContentColumnWithImage = forwardRef<HTMLElement, ContentColumnWithImageProps>((props, ref) => {
-  let {heading, headingSize, headingAlignment, children, ...rest } = props;
+  let {heading, textColor, headingAlignment, gap, topPadding, bottomPadding, children, ...rest } = props;
   let headingStyle: CSSProperties = {
     justifyContent: `${headingAlignment}`,
-    fontSize: `${headingSize}`,
+  } as CSSProperties;
+  let sectionStyle: CSSProperties = {
+    paddingTop: `${topPadding}px`,
+    paddingBottom: `${bottomPadding}px`,
+    '--text-color': `${textColor}`,
+    '--gap-item': `${gap}px`,
   } as CSSProperties;
 
   return (
-    <section ref={ref} {...rest} className='w-full h-full'>
-      <div className='px-10 py-10 sm-max:px-6'>
-        <div className='mb-5 flex' style={headingStyle}>
-          <p className='font-sans font-bold'>{heading}</p>
+    <section ref={ref} {...rest} className='w-full h-full' style={sectionStyle}>
+      <div className='px-10 py-10 flex flex-col gap-5 sm-max:px-6'>
+        <div className='flex' style={headingStyle}>
+          <h3 className='text-[var(--text-color)] font-medium'>{heading}</h3>
         </div>
-        <div className='flex flex-wrap gap-5 justify-center'>
+        <div className='flex flex-wrap gap-[var(--gap-item)] justify-center'>
           {children}
         </div>
       </div>
@@ -50,19 +58,10 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Heading for Image section',
         },
         {
-          type: 'toggle-group',
-          label: 'Heading size',
-          name: 'headingSize',
-          configs: {
-            options: [
-              { label: 'XS', value: '20px' },
-              { label: 'S', value: '24px' },
-              { label: 'M', value: '30px' },
-              { label: 'L', value: '36px' },
-              { label: 'XL', value: '40px' },
-            ],
-          },
-          defaultValue: '24px',
+          type: 'color',
+          name: 'textColor',
+          label: 'Text color',
+          defaultValue: '#000000',
         },
         {
           type: 'toggle-group',
@@ -76,6 +75,42 @@ export let schema: HydrogenComponentSchema = {
             ],
           },
           defaultValue: 'center',
+        },
+        {
+          type: 'range',
+          name: 'gap',
+          label: 'Gap',
+          defaultValue: 20,
+          configs: {
+            min: 10,
+            max: 50,
+            step: 1,
+            unit: 'px',
+          },
+        },
+        {
+          type: 'range',
+          name: 'topPadding',
+          label: 'Top padding',
+          defaultValue: 0,
+          configs: {
+            min: 0,
+            max: 100,
+            step: 5,
+            unit: 'px',
+          },
+        },
+        {
+          type: 'range',
+          name: 'bottomPadding',
+          label: 'Bottom padding',
+          defaultValue: 0,
+          configs: {
+            min: 0,
+            max: 100,
+            step: 5,
+            unit: 'px',
+          },
         },
       ],
     },
