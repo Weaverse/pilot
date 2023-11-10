@@ -6,15 +6,14 @@ import { forwardRef } from 'react';
 
 interface VideoHeadingProps extends HydrogenComponentProps {
   heading: string;
-  headingSize: string;
   headingColor: string;
 }
 
 let VideoHeadingItem = forwardRef<HTMLDivElement, VideoHeadingProps>((props, ref) => {
-  let {heading, headingSize, headingColor, ...rest} = props;
+  let {heading, headingColor, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
-      <h1 className='font-sans font-medium leading-5' style={{fontSize: `${headingSize}`, color: headingColor}}>{heading}</h1>
+      <h3 className='font-medium' style={{color: headingColor}}>{heading}</h3>
     </div>
   );
 });
@@ -35,21 +34,6 @@ export let schema: HydrogenComponentSchema = {
           label: 'Heading',
           defaultValue: 'Heading for Video',
           placeholder: 'Heading for video section',
-        },
-        {
-          type: 'toggle-group',
-          label: 'Heading size',
-          name: 'headingSize',
-          configs: {
-            options: [
-              { label: 'XS', value: '22px' },
-              { label: 'S', value: '24px' },
-              { label: 'M', value: '26px' },
-              { label: 'L', value: '28px' },
-              { label: 'XL', value: '30px' },
-            ],
-          },
-          defaultValue: '24px',
         },
         {
           type: 'color',
