@@ -23,7 +23,7 @@ type SingleProductProps = HydrogenComponentProps<
 
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {loaderData, product, ...rest} = props;
+    let {loaderData, product, children, ...rest} = props;
     let productTitle = loaderData?.product?.title;
     return (
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
@@ -44,6 +44,8 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 <p className="text-2xl text-zinc-500 md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed dark:text-zinc-400">
                   $99.99
                 </p>
+              {children}
+
                 <p className="max-w-[600px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-zinc-400">
                   Product description goes here. It explains the key features
                   and benefits of the product.
@@ -88,6 +90,8 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
 export let schema: HydrogenComponentSchema = {
   type: 'single-product',
   title: 'Single product',
+  childTypes: ['judgeme-review',],
+
   limit: 1,
   inspector: [
     {
