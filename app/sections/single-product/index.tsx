@@ -1,20 +1,18 @@
-import {Link} from '@remix-run/react';
+import { Money, ShopPayButton } from '@shopify/hydrogen';
+import { defer } from '@shopify/remix-oxygen';
 import {
+  ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  ComponentLoaderArgs,
-  getSelectedProductOptions,
   WeaverseProduct,
+  getSelectedProductOptions,
 } from '@weaverse/hydrogen';
-import {forwardRef, useState} from 'react';
-import {ProductQuery} from 'storefrontapi.generated';
-import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
-import {defer, redirect} from '@shopify/remix-oxygen';
-import {ProductForm} from '../product-information/product-form';
-import {ProductVariants} from './variants';
-import {CartForm, Image, Money} from '@shopify/hydrogen';
-import {AddToCartButton, Button, ProductGallery} from '~/components';
+import { forwardRef, useState } from 'react';
+import { ProductQuery } from 'storefrontapi.generated';
+import { AddToCartButton, ProductGallery } from '~/components';
+import { PRODUCT_QUERY, VARIANTS_QUERY } from '~/data/queries';
 import { Quantity } from './quantity';
+import { ProductVariants } from './variants';
 
 type SingleProductData = {
   heading: string;
@@ -30,9 +28,8 @@ type SingleProductProps = HydrogenComponentProps<
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
     let {loaderData, children, ...rest} = props;
-    let product = loaderData?.data.product.product;
+    let {storeDomain, product, variants} = loaderData?.data!;
     let productTitle = product?.title;
-    let variants = loaderData?.data?.variants;
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
     let [quantity, setQuantity] = useState<number>(1);
     return (
@@ -68,23 +65,6 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 />
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
-
-              {/* <CartForm
-                route="/cart"
-                inputs={{
-                  lines: [
-                    {
-                      merchandiseId: selectedVariant.id!,
-                      quantity: 1,
-                    },
-                  ],
-                }}
-                action={CartForm.ACTIONS.LinesAdd}
-              >
-                <Button as="button" type="submit" className="w-full">
-                  Add to Cart
-                </Button>
-              </CartForm> */}
               <AddToCartButton
                 lines={[
                   {
@@ -97,6 +77,16 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               >
                 <span> Add to Cart</span>
               </AddToCartButton>
+              <ShopPayButton
+                width="100%"
+                variantIdsAndQuantities={[
+                  {
+                    id: selectedVariant.id!,
+                    quantity,
+                  },
+                ]}
+                storeDomain={storeDomain}
+              />
             </div>
           </div>
         </div>
@@ -113,7 +103,7 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
     return null;
   }
   let productHandle = data.product.handle;
-  let product = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
+  let {product, shop} = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       // Should not get from request since this section could be used everywhere
@@ -138,6 +128,7 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   return defer({
     product,
     variants: variants?.product?.variants,
+    storeDomain: shop.primaryDomain.url,
   });
 };
 
