@@ -5,47 +5,47 @@ import type {
 import { forwardRef } from 'react';
 import clsx from 'clsx';
 
-interface ButtonItemProps extends HydrogenComponentProps {
+interface VideoButtonProps extends HydrogenComponentProps {
   buttonLabel: string;
   buttonLink: string;
-  openInNewTab: boolean;
+  enableNewtab: boolean;
   buttonStyle: string;
 }
 
-let RichTextButtonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
-  let { buttonLabel, buttonLink, openInNewTab, buttonStyle, ...rest } = props;
+let VideoButtonItem = forwardRef<HTMLDivElement, VideoButtonProps>((props, ref) => {
+  let {buttonLabel, buttonLink, enableNewtab, buttonStyle, ...rest} = props;
   return (
-    <div ref={ref} {...rest}>
-      <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 rounded cursor-pointer inline-block', buttonStyle)}>{buttonLabel}</a>
+    <div ref={ref} {...rest} className='mt-3'>
+      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle)}>{buttonLabel}</a>
     </div>
   );
 });
 
-export default RichTextButtonItem;
+export default VideoButtonItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'rich-text-button--item',
+  type: 'video-button--item',
   title: 'Button item',
+  limit: 1,
   inspector: [
     {
       group: 'Button',
       inputs: [
         {
           type: 'text',
-          label: 'Button label',
           name: 'buttonLabel',
-          placeholder: 'Button label',
-          defaultValue: 'Optional button',
+          label: 'Button label',
+          defaultValue: 'Button',
         },
         {
           type: 'text',
-          label: 'Button link',
           name: 'buttonLink',
-          placeholder: 'Button link',
+          label: 'Button link',
+          placeholder: 'https://',
         },
         {
           type: 'switch',
-          name: 'openInNewTab',
+          name: 'enableNewtab',
           label: 'Open in new tab',
           defaultValue: true,
         },
@@ -65,4 +65,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+}

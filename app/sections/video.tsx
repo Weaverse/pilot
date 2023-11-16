@@ -27,6 +27,7 @@ let Video = forwardRef<HTMLElement, VideoProps>((props, ref) => {
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          sandbox={'allow-presentation allow-same-origin allow-scripts'}
         />
       </div>
     </section>

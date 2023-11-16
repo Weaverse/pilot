@@ -4,14 +4,13 @@ import type {
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 
-
-interface HeadingItemProps extends HydrogenComponentProps {
+interface VideoHeadingProps extends HydrogenComponentProps {
   heading: string;
   headingColor: string;
 }
 
-let ImageWTextHeadingItem = forwardRef<HTMLDivElement, HeadingItemProps>((props, ref) => {
-  let { heading, headingColor, ...rest } = props;
+let VideoHeadingItem = forwardRef<HTMLDivElement, VideoHeadingProps>((props, ref) => {
+  let {heading, headingColor, ...rest} = props;
   return (
     <div ref={ref} {...rest}>
       <h3 className='font-medium' style={{color: headingColor}}>{heading}</h3>
@@ -19,11 +18,11 @@ let ImageWTextHeadingItem = forwardRef<HTMLDivElement, HeadingItemProps>((props,
   );
 });
 
-export default ImageWTextHeadingItem;
+export default VideoHeadingItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'Heading--Item',
-  title: 'heading item',
+  type: 'video-heading--item',
+  title: 'Heading item',
   limit: 1,
   inspector: [
     {
@@ -33,8 +32,8 @@ export let schema: HydrogenComponentSchema = {
           type: 'text',
           name: 'heading',
           label: 'Heading',
-          defaultValue: 'Heading for Image',
-          placeholder: 'Heading for image section',
+          defaultValue: 'Heading for Video',
+          placeholder: 'Heading for video section',
         },
         {
           type: 'color',
@@ -43,6 +42,6 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: '#333333',
         },
       ],
-    }
+    },
   ],
-};
+}
