@@ -71,7 +71,7 @@ export default JudgemeReview;
 
 
 export let schema: HydrogenComponentSchema = {
-  type: 'judgeme-review',
+  type: 'judgeme',
   title: 'Judgeme review',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
