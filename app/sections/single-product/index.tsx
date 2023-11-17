@@ -28,13 +28,16 @@ type SingleProductProps = HydrogenComponentProps<
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
     let {loaderData, children, ...rest} = props;
-    let {storeDomain, product, variants} = loaderData?.data!;
+    if (!loaderData) return <section {...rest} className='h-20 bg-gray-200 p-6' ref={ref}>
+        Please select product to show single product
+    </section>;
+    let {storeDomain, product, variants} = loaderData.data  ;
     let productTitle = product?.title;
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
     let [quantity, setQuantity] = useState<number>(1);
     return (
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6">
+        <div className="container px-4 md:px-6 mx-auto">
           <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
             <ProductGallery
               media={product?.media.nodes}
@@ -136,8 +139,7 @@ export let schema: HydrogenComponentSchema = {
   type: 'single-product',
   title: 'Single product',
   childTypes: ['judgeme'],
-
-  limit: 1,
+  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Single product',

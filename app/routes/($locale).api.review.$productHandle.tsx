@@ -1,6 +1,5 @@
 import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import invariant from 'tiny-invariant';
-import {json} from '@shopify/remix-oxygen';
 
 async function getInternalIdByHandle(api_token: string,shop_domain: string, handle: string) {
     let api = `https://judge.me/api/v1/products/-1?` + new URLSearchParams({
@@ -16,10 +15,12 @@ export async function loader(args: RouteLoaderArgs) {
     let { params, context} = args;
     let env = context.env
     let handle = params.productHandle
-    invariant(handle, 'Missing product handle');
     let api_token = env.JUDGEME_PUBLIC_TOKEN
     let shop_domain = env.PUBLIC_STORE_DOMAIN
-
+    invariant(handle, 'Missing product handle');
+    if (!api_token) return {
+      error: 'Missing JUDGEME_PUBLIC_TOKEN'
+    }
     let internalId = await getInternalIdByHandle(api_token, shop_domain, handle)
     if (internalId) {
       let data = await fetch(`https://judge.me/api/v1/reviews?`+ new URLSearchParams({
@@ -28,9 +29,10 @@ export async function loader(args: RouteLoaderArgs) {
         product_id: internalId
       })).then(res => res.json())
       let reviews = data.reviews
-      let rating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+      let rating = reviews.reduce((acc, review) => acc + review.rating, 0) / (reviews.length || 1)
       return {
-        rating
+        rating,
+        reviewNumber: reviews.length
       };
     }
     return {
