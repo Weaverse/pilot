@@ -1,4 +1,4 @@
-import { Money, ShopPayButton } from '@shopify/hydrogen';
+import { Image, Money, ShopPayButton } from '@shopify/hydrogen';
 import { defer } from '@shopify/remix-oxygen';
 import {
   ComponentLoaderArgs,
@@ -9,7 +9,7 @@ import {
 } from '@weaverse/hydrogen';
 import { forwardRef, useState } from 'react';
 import { ProductQuery } from 'storefrontapi.generated';
-import { AddToCartButton, ProductGallery } from '~/components';
+import { AddToCartButton } from '~/components';
 import { PRODUCT_QUERY, VARIANTS_QUERY } from '~/data/queries';
 import { Quantity } from './quantity';
 import { ProductVariants } from './variants';
@@ -28,10 +28,13 @@ type SingleProductProps = HydrogenComponentProps<
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
     let {loaderData, children, ...rest} = props;
-    if (!loaderData) return <section {...rest} className='h-20 bg-gray-200 p-6' ref={ref}>
-        Please select product to show single product
-    </section>;
-    let {storeDomain, product, variants} = loaderData.data  ;
+    if (!loaderData)
+      return (
+        <section {...rest} className="h-20 bg-gray-200 p-6" ref={ref}>
+          Please select product to show single product
+        </section>
+      );
+    let {storeDomain, product, variants} = loaderData.data;
     let productTitle = product?.title;
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
     let [quantity, setQuantity] = useState<number>(1);
@@ -39,9 +42,10 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
-            <ProductGallery
-              media={product?.media.nodes}
-              className="mx-auto aspect-[1/1] overflow-hidden rounded-xl object-cover object-center sm:w-full"
+            <Image
+              data={selectedVariant.image}
+              aspectRatio={'4/5'}
+              className="object-cover w-full h-full aspect-square fadeIn"
             />
             <div className="flex flex-col justify-start space-y-5">
               <div className="space-y-4">
