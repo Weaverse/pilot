@@ -1,12 +1,12 @@
+import {Listbox} from '@headlessui/react';
 import {VariantSelector} from '@shopify/hydrogen';
+import clsx from 'clsx';
+import {useRef} from 'react';
 import {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from 'storefrontapi.generated';
-import {Listbox} from '@headlessui/react';
 import {Heading, IconCaret, IconCheck, Link} from '~/components';
-import clsx from 'clsx';
-import {useRef} from 'react';
 
 interface ProductVariantsProps {
   selectedVariant: ProductVariantFragmentFragment;
@@ -19,36 +19,36 @@ interface ProductVariantsProps {
   options: NonNullable<ProductQuery['product']>['options'];
 }
 export function ProductVariants(props: ProductVariantsProps) {
-  let {selectedVariant, onSelectedVariantChange, options, variants, handle} = props;
+  let {selectedVariant, onSelectedVariantChange, options, variants, handle} =
+    props;
   const closeRef = useRef<HTMLButtonElement>(null);
-	let selectedOptions = selectedVariant?.selectedOptions
+  let selectedOptions = selectedVariant?.selectedOptions;
   let nodes = variants?.nodes;
-	let handleSelectOption = (optionName: string, value: string) => {
-		let newSelectedOptions = selectedOptions?.map((opt) => {
-			if (opt.name === optionName) {
-				return {
-					...opt,
-					value,
-				}
-			}
-			return opt
-		})
-		let newSelectedVariant = nodes?.find((variant) => {
-			let variantOptions = variant.selectedOptions
-			let isMatch = true
-			for (let i = 0; i < variantOptions.length; i++) {
-				if (variantOptions[i].value !== newSelectedOptions?.[i].value) {
-					isMatch = false
-					break
-				}
-			}
-			return isMatch
-		})
-		if (newSelectedVariant) {
-			onSelectedVariantChange(newSelectedVariant)
-		}
-
-	}
+  let handleSelectOption = (optionName: string, value: string) => {
+    let newSelectedOptions = selectedOptions?.map((opt) => {
+      if (opt.name === optionName) {
+        return {
+          ...opt,
+          value,
+        };
+      }
+      return opt;
+    });
+    let newSelectedVariant = nodes?.find((variant) => {
+      let variantOptions = variant.selectedOptions;
+      let isMatch = true;
+      for (let i = 0; i < variantOptions.length; i++) {
+        if (variantOptions[i].value !== newSelectedOptions?.[i].value) {
+          isMatch = false;
+          break;
+        }
+      }
+      return isMatch;
+    });
+    if (newSelectedVariant) {
+      onSelectedVariantChange(newSelectedVariant);
+    }
+  };
   return (
     <div>
       <VariantSelector
@@ -59,8 +59,9 @@ export function ProductVariants(props: ProductVariantsProps) {
       >
         {({option}) => {
           let optionName = option.name;
-					let selectedValue = selectedOptions?.find((opt) => opt.name === optionName)?.value
-          console.log("🚀 ~ selectedValue:", selectedValue)
+          let selectedValue = selectedOptions?.find(
+            (opt) => opt.name === optionName,
+          )?.value;
           return (
             <div
               key={option.name}
@@ -131,18 +132,19 @@ export function ProductVariants(props: ProductVariantsProps) {
                   option.values.map(({value, isAvailable, to}) => (
                     <Link
                       key={option.name + value}
-                      to={"/"}
+                      to={'/'}
                       preventScrollReset
                       prefetch="intent"
                       replace
                       className={clsx(
                         'leading-none py-1 cursor-pointer transition-all duration-200',
-                        selectedValue === value && 'border-bar/50 border-b-[1.5px]',
+                        selectedValue === value &&
+                          'border-bar/50 border-b-[1.5px]',
                         isAvailable ? 'opacity-100' : 'opacity-50',
                       )}
-											onClick={() => {
-												handleSelectOption(optionName, value)
-											}}
+                      onClick={() => {
+                        handleSelectOption(optionName, value);
+                      }}
                     >
                       {value}
                     </Link>
