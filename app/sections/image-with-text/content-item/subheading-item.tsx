@@ -5,33 +5,34 @@ import type {
 import { forwardRef } from 'react';
 import { CSSProperties } from 'react';
 
-interface ContentsProps extends HydrogenComponentProps {
+interface SubheadingProps extends HydrogenComponentProps {
   subHeading: string;
   subHeadingSize: string;
+  subHeadingColor: string;
 }
 
-let ContentComponent = forwardRef<HTMLDivElement, ContentsProps>((props, ref) => {
-  let { subHeading, subHeadingSize, children, ...rest } = props;
+let ImageWTextSubheadingItem = forwardRef<HTMLDivElement, SubheadingProps>((props, ref) => {
+  let { subHeading, subHeadingSize, subHeadingColor, ...rest } = props;
   let styleContent: CSSProperties = {
-    '--font-size-heading': `${subHeadingSize}`,
+    fontSize: subHeadingSize,
+    color: subHeadingColor,
   } as CSSProperties;
   return (
-    <div ref={ref} {...rest} className='w-2/5 py-16 mr-5 sm-max:mr-0 sm-max:w-full sm-max:pb-12' style={styleContent}>
-      {subHeading && <p className='font-sans text-heading mb-5 leading-6'>{subHeading}</p>}
-      {children}
+    <div ref={ref} {...rest}>
+      {subHeading && <p className='font-normal' style={styleContent}>{subHeading}</p>}
     </div>
   );
 });
 
-export default ContentComponent;
+export default ImageWTextSubheadingItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'Content--Item',
-  title: 'Content',
+  type: 'subheading-image--Item',
+  title: 'Subheading item',
   limit: 1,
   inspector: [
     {
-      group: 'Content',
+      group: 'Subheading',
       inputs: [
         {
           type: 'text',
@@ -55,21 +56,13 @@ export let schema: HydrogenComponentSchema = {
           },
           defaultValue: '16px',
         },
+        {
+          type: 'color',
+          name: 'subHeadingColor',
+          label: 'Subheading color',
+          defaultValue: '#333333',
+        },
       ],
     }
   ],
-  childTypes: ['Heading--Item', 'Description--Item', 'Button--Item'],
-  presets: {
-    children: [
-      {
-        type: 'Heading--Item',
-      },
-      {
-        type: 'Description--Item',
-      },
-      {
-        type: 'Button--Item',
-      },
-    ],
-  },
 };

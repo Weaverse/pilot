@@ -37,6 +37,7 @@ export function getWeaverseCsp(request: Request) {
       'https://shopify.com',
       'https://*.youtube.com',
       'https://fonts.gstatic.com',
+      'https://*.google.com',
       ...weaverseHosts,
     ],
     imgSrc: [

@@ -9,16 +9,18 @@ import { CSSProperties } from 'react';
 interface SubHeadingItemProps extends HydrogenComponentProps {
   subHeading: string;
   subHeadingSize: string;
+  subHeadingColor: string;
 }
 
 let SubHeadingItem = forwardRef<HTMLDivElement, SubHeadingItemProps>((props, ref) => {
-  let { subHeading, subHeadingSize, ...rest } = props;
+  let { subHeading, subHeadingSize, subHeadingColor, ...rest } = props;
   let headingStyle: CSSProperties = {
-    '--font-size-heading': `${subHeadingSize}`,
+    fontSize: subHeadingSize,
+    color: subHeadingColor,
   } as CSSProperties;
   return (
-    <div ref={ref} {...rest} style={headingStyle}>
-      <p className='font-sans mb-4 text-2xl font-normal leading-6'>{subHeading}</p>
+    <div ref={ref} {...rest}>
+      <p style={headingStyle} className='font-normal'>{subHeading}</p>
     </div>
   );
 });
@@ -53,6 +55,12 @@ export let schema: HydrogenComponentSchema = {
             ],
           },
           defaultValue: '16px',
+        },
+        {
+          type: 'color',
+          name: 'subHeadingColor',
+          label: 'Subheading color',
+          defaultValue: '#333333',
         },
       ],
     },

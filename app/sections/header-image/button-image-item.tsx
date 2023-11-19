@@ -5,26 +5,27 @@ import type {
 import { forwardRef } from 'react';
 import clsx from 'clsx';
 
+
 interface ButtonItemProps extends HydrogenComponentProps {
-  buttonLabel: string;
   buttonLink: string;
+  buttonLabel: string;
   openInNewTab: boolean;
   buttonStyle: string;
 }
 
-let RichTextButtonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
-  let { buttonLabel, buttonLink, openInNewTab, buttonStyle, ...rest } = props;
+let buttonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
+  let { buttonLink, buttonLabel, openInNewTab, buttonStyle, ...rest } = props;
   return (
-    <div ref={ref} {...rest}>
-      <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 rounded cursor-pointer inline-block', buttonStyle)}>{buttonLabel}</a>
+    <div ref={ref} {...rest} className='mt-3'>
+      {buttonLabel && <a href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''} className={clsx('py-3 px-4 rounded', buttonStyle)}>{buttonLabel}</a>}
     </div>
   );
 });
 
-export default RichTextButtonItem;
+export default buttonItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'rich-text-button--item',
+  type: 'button-image--item',
   title: 'Button item',
   inspector: [
     {
@@ -32,16 +33,15 @@ export let schema: HydrogenComponentSchema = {
       inputs: [
         {
           type: 'text',
-          label: 'Button label',
           name: 'buttonLabel',
-          placeholder: 'Button label',
-          defaultValue: 'Optional button',
+          label: 'Button label',
+          defaultValue: 'Button',
         },
         {
           type: 'text',
-          label: 'Button link',
           name: 'buttonLink',
-          placeholder: 'Button link',
+          label: 'Button link',
+          placeholder: 'https://',
         },
         {
           type: 'switch',
@@ -65,4 +65,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+}
