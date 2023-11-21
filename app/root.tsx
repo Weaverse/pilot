@@ -3,6 +3,7 @@ import {
   type LoaderFunctionArgs,
   type AppLoadContext,
   type SerializeFrom,
+  LinksFunction,
 } from '@shopify/remix-oxygen';
 import {
   isRouteErrorResponse,

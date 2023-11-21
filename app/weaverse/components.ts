@@ -43,7 +43,7 @@ import * as VideoButtonItem from '~/sections/video-with-text/video-button-item';
 import * as Map from '~/sections/map';
 import * as PromotionGrid from '~/sections/promotion-grid/promotion-grid';
 import * as PromotionGridItem from '~/sections/promotion-grid/item';
-import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
+import * as Judgeme from '~/sections/judgeme-review';import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
 import * as ImageHotspotItem from '~/sections/image-hotspots/items';
 
 export let components: HydrogenComponent[] = [
@@ -93,4 +93,5 @@ export let components: HydrogenComponent[] = [
   CollectionFilters,
   CollectionList,
   SingleProduct,
+  Judgeme,
 ];

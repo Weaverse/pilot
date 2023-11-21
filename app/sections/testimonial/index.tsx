@@ -1,6 +1,9 @@
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
+  useChildInstances,
+  useItemInstance,
+  useParentInstance,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
@@ -11,15 +14,17 @@ interface TestimonialProps extends HydrogenComponentProps {
 
 let Testimonial = forwardRef<HTMLElement, TestimonialProps>((props, ref) => {
   let {heading, description, children, ...rest} = props;
+
+  let itemInstance = useItemInstance();
+  let parentInstance = useParentInstance();
+  let childInstances = useChildInstances();
   return (
     <section ref={ref} {...rest}>
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div className="mx-auto max-w-screen-md text-center">
-          <h2 className="mb-4 tracking-tight font-extrabold text-gray-900 dark:text-white">
-            {heading}
-          </h2>
+          <h2 className="mb-4 tracking-tight font-extrabold">{heading}</h2>
           {description && (
-            <p className="mb-8 font-light text-gray-500 lg:mb-16 dark:text-gray-400 sm:text-xl">
+            <p className="mb-8 font-light text-gray-500 lg:mb-16 sm:text-xl">
               {description}
             </p>
           )}
