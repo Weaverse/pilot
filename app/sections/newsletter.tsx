@@ -1,13 +1,16 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
+import React, { forwardRef, useState, CSSProperties } from 'react';
 import clsx from 'clsx';
 import { IconArrowInput } from '~/components';
+import { CustomerCreateMutation } from 'storefrontapi.generated';
+import { CUSTOMER_CREATE } from '~/data/queries';
 
-interface NewsLetterProps extends HydrogenComponentProps {
+
+type NewsLetterData = {
   contentAlignment: string;
   sectionHeight: string;
   backgroundColor: string;
@@ -19,10 +22,16 @@ interface NewsLetterProps extends HydrogenComponentProps {
   buttonStyle: string;
   topPadding: string;
   bottomPadding: string;
-}
+};
 
-let NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
-  let { contentAlignment, sectionHeight, backgroundColor, subheading, heading, buttonLabel, buttonLink, openInNewTab, buttonStyle, topPadding, bottomPadding, ...rest } = props;
+type NewsletterProps = HydrogenComponentProps<
+  Awaited<ReturnType<typeof loader>>
+> &
+  NewsLetterData;
+
+
+let NewsLetter = forwardRef<HTMLElement, NewsletterProps>((props, ref) => {
+  let { loaderData, contentAlignment, sectionHeight, backgroundColor, subheading, heading, buttonLabel, buttonLink, openInNewTab, buttonStyle, topPadding, bottomPadding, ...rest } = props;
   let sectionStyle: CSSProperties = {
     alignItems: `${contentAlignment}`,
     '--section-height': `${sectionHeight}px`,
@@ -30,6 +39,15 @@ let NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
     paddingTop: `${topPadding}px`,
     paddingBottom: `${bottomPadding}px`,
   } as CSSProperties;
+
+  const [emailValue, setEmailValue] = useState('');
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailValue(event.target.value);
+  };
+
+  const handleSubmit = () => {
+  };
+
   return (
     <section ref={ref} {...rest} className='w-full px-10 h-[var(--section-height)] flex flex-col justify-center sm-max:px-8' style={sectionStyle}>
       <div className='text-center w-1/2 flex flex-col gap-5 sm-max:w-full'>
@@ -37,8 +55,10 @@ let NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
         {heading && <p className='text-base font-normal'>{heading}</p>}
         <div className='flex w-full mt-3 gap-2 justify-center items-center'>
           <div className='flex justify-center items-center relative sm-max:w-4/5'>
-            <input type="text" className='pr-8 pl-3 py-2 rounded border-2 border-solid border-gray-400 font-normal w-full' placeholder='Enter your email' />
-            <IconArrowInput className='absolute z-10 cursor-pointer right-2 !w-4 !h-4' />
+            <input type="text" className='pr-8 pl-3 py-2 rounded border-2 border-solid border-gray-400 font-normal w-full' placeholder='Enter your email'
+              value={emailValue}
+              onChange={handleInputChange} />
+            <IconArrowInput className='absolute z-10 cursor-pointer right-2 !w-4 !h-4' onClick={handleSubmit} />
           </div>
           {buttonLabel && <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('flex cursor-pointer py-2 px-4 rounded sm-max:px-3', buttonStyle)}>{buttonLabel}</a>}
         </div>
@@ -48,6 +68,21 @@ let NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
 });
 
 export default NewsLetter;
+
+export let loader = async (args: ComponentLoaderArgs<NewsLetterData>) => {
+  let { weaverse } = args;
+  let { storefront } = weaverse;
+  let abc = await storefront.mutate<CustomerCreateMutation>(CUSTOMER_CREATE, {
+    variables: {
+      input: {
+        email: 'Thang@gmail.com',
+        password: '5hopify',
+      },
+    }
+  });
+  return abc;
+};
+
 
 export let schema: HydrogenComponentSchema = {
   type: 'news-letter',
