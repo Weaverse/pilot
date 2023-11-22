@@ -80,7 +80,7 @@
     h4,
     h5,
     h6 {
-      @apply font-sans text-body;
+      @apply text-body;
     }
     @apply prose mx-auto mb-12 grid justify-center font-serif text-body;
     p,
