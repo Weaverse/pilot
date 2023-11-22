@@ -2,10 +2,10 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { useLoaderData } from '@remix-run/react';
-import { CollectionDetailsQuery } from 'storefrontapi.generated';
-import { CSSProperties } from 'react';
+import {forwardRef} from 'react';
+import {useLoaderData} from '@remix-run/react';
+import {CollectionDetailsQuery} from 'storefrontapi.generated';
+import {CSSProperties} from 'react';
 import clsx from 'clsx';
 
 interface HeaderProps extends HydrogenComponentProps {
@@ -18,15 +18,23 @@ interface HeaderProps extends HydrogenComponentProps {
 }
 
 let CollectHeader = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
-  let { sectionHeightDesktop, sectionHeightMobile, enableBackground, overlayOpacity, enableOverlay, contentPosition, ...rest } = props;
-  let { collection } = useLoaderData<
+  let {
+    sectionHeightDesktop,
+    sectionHeightMobile,
+    enableBackground,
+    overlayOpacity,
+    enableOverlay,
+    contentPosition,
+    ...rest
+  } = props;
+  let {collection} = useLoaderData<
     CollectionDetailsQuery & {
-      collections: Array<{ handle: string; title: string }>;
+      collections: Array<{handle: string; title: string}>;
     }
   >();
   let backgroundStyle: CSSProperties = {
     '--header-height-desktop': `${sectionHeightDesktop}px`,
-    '--header-height-mobile': `${sectionHeightMobile}px`
+    '--header-height-mobile': `${sectionHeightMobile}px`,
   } as CSSProperties;
 
   if (enableBackground) {
@@ -38,7 +46,7 @@ let CollectHeader = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
       '--overlay-opacity': `${overlayOpacity}`,
     } as CSSProperties;
   }
-  let positionClass: {[key: string]: string} =  {
+  let positionClass: {[key: string]: string} = {
     'top left': 'items-start justify-start',
     'top right': 'items-start justify-end',
     'top center': 'items-start justify-center',
@@ -50,20 +58,32 @@ let CollectHeader = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
     'bottom right': 'items-end justify-end',
   };
   return (
-    <section ref={ref} {...rest} style={backgroundStyle} className={clsx(
-      'flex relative overflow-hidden bg-center bg-no-repeat bg-cover h-[var(--header-height-mobile)] sm:h-[var(--header-height-desktop)]',
-      positionClass[contentPosition]
-    )}>
-      {enableOverlay && enableBackground && <div className="absolute inset-0 z-1 bg-black bg-opacity-[var(--overlay-opacity)]" style={overlayStyle}></div>}
-      <div className={clsx(
-        'text-center w-5/6 text-gray-700 z-2 relative',
-        enableBackground ? 'text-white' : 'text-gray-700',
-      )}>
-        <h1 className='text-4xl tracking-tight font-worksans font-normal leading-tight md:text-5xl'>
+    <section
+      ref={ref}
+      {...rest}
+      style={backgroundStyle}
+      className={clsx(
+        'flex relative overflow-hidden bg-center bg-no-repeat bg-cover h-[var(--header-height-mobile)] sm:h-[var(--header-height-desktop)]',
+        positionClass[contentPosition],
+      )}
+    >
+      {enableOverlay && enableBackground && (
+        <div
+          className="absolute inset-0 z-1 bg-black bg-opacity-[var(--overlay-opacity)]"
+          style={overlayStyle}
+        ></div>
+      )}
+      <div
+        className={clsx(
+          'text-center w-5/6 text-gray-700 z-2 relative',
+          enableBackground ? 'text-white' : 'text-gray-700',
+        )}
+      >
+        <h1 className="text-4xl tracking-tight font-normal leading-tight md:text-5xl">
           {collection?.title}
         </h1>
         {collection?.description && (
-          <p className="mt-4 dark:text-gray-400 font-worksans text-base md:text-sm">
+          <p className="mt-4 dark:text-gray-400 text-base md:text-sm">
             {collection.description}
           </p>
         )}
@@ -96,7 +116,7 @@ export let schema: HydrogenComponentSchema = {
           configs: {
             min: 350,
             max: 550,
-            step: 10
+            step: 10,
           },
         },
         {
@@ -107,7 +127,7 @@ export let schema: HydrogenComponentSchema = {
           configs: {
             min: 350,
             max: 550,
-            step: 10
+            step: 10,
           },
         },
         {
@@ -124,16 +144,16 @@ export let schema: HydrogenComponentSchema = {
           configs: {
             min: 0.1,
             max: 1,
-            step: 0.1
+            step: 0.1,
           },
-          condition: `enableOverlay.eq.true`
+          condition: `enableOverlay.eq.true`,
         },
         {
           type: 'position',
           name: 'contentPosition',
           label: 'Content position',
-          defaultValue: 'center center'
-        }
+          defaultValue: 'center center',
+        },
       ],
     },
   ],

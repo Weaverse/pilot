@@ -2,7 +2,7 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import {forwardRef} from 'react';
 
 interface VideoDescriptionProps extends HydrogenComponentProps {
   descriptionText: string;
@@ -10,14 +10,21 @@ interface VideoDescriptionProps extends HydrogenComponentProps {
   descriptionColor: string;
 }
 
-let VideoDescriptionItem = forwardRef<HTMLDivElement, VideoDescriptionProps>((props, ref) => {
-  let {descriptionText, descriptionSize, descriptionColor, ...rest} = props;
-  return (
-    <div ref={ref} {...rest}>
-      <p className='font-sans text-base font-normal leading-6' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>
-    </div>
-  );
-});
+let VideoDescriptionItem = forwardRef<HTMLDivElement, VideoDescriptionProps>(
+  (props, ref) => {
+    let {descriptionText, descriptionSize, descriptionColor, ...rest} = props;
+    return (
+      <div ref={ref} {...rest}>
+        <p
+          className="text-base font-normal leading-6"
+          style={{fontSize: descriptionSize, color: descriptionColor}}
+        >
+          {descriptionText}
+        </p>
+      </div>
+    );
+  },
+);
 
 export default VideoDescriptionItem;
 
@@ -41,11 +48,11 @@ export let schema: HydrogenComponentSchema = {
           name: 'descriptionSize',
           configs: {
             options: [
-              { label: 'XS', value: '14px' },
-              { label: 'S', value: '16px' },
-              { label: 'M', value: '18px' },
-              { label: 'L', value: '20px' },
-              { label: 'XL', value: '22px' },
+              {label: 'XS', value: '14px'},
+              {label: 'S', value: '16px'},
+              {label: 'M', value: '18px'},
+              {label: 'L', value: '20px'},
+              {label: 'XL', value: '22px'},
             ],
           },
           defaultValue: '16px',
@@ -59,4 +66,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-}
+};
