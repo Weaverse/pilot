@@ -79,9 +79,9 @@ let CollectHeader = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
           enableBackground ? 'text-white' : 'text-gray-700',
         )}
       >
-        <h1 className="text-4xl tracking-tight font-normal leading-tight md:text-5xl">
+        <h3 className="leading-tight font-medium">
           {collection?.title}
-        </h1>
+        </h3>
         {collection?.description && (
           <p className="mt-4 dark:text-gray-400 text-base md:text-sm">
             {collection.description}
@@ -98,6 +98,9 @@ export let schema: HydrogenComponentSchema = {
   type: 'collection-header',
   title: 'Collection header',
   toolbar: ['general-settings', ['duplicate', 'delete']],
+  enabledOn: {
+    pages: ['COLLECTION'],
+  },
   inspector: [
     {
       group: 'Header',
