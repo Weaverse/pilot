@@ -195,7 +195,7 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
   );
 };
 
-export const ErrorBoundary = withWeaverse(ErrorBoundaryComponent);
+export const ErrorBoundary = ErrorBoundaryComponent;
 
 const LAYOUT_QUERY = `#graphql
   query layout(
