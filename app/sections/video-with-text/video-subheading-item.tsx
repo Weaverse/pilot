@@ -2,7 +2,7 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import {forwardRef} from 'react';
 
 interface VideoSubheadingProps extends HydrogenComponentProps {
   subHeading: string;
@@ -10,14 +10,21 @@ interface VideoSubheadingProps extends HydrogenComponentProps {
   subHeadingColor: string;
 }
 
-let VideoSubheadingItem = forwardRef<HTMLDivElement, VideoSubheadingProps>((props, ref) => {
-  let {subHeading, subHeadingSize, subHeadingColor, ...rest} = props;
-  return (
-    <div ref={ref} {...rest}>
-      <p className='font-sans font-normal leading-6' style={{fontSize: `${subHeadingSize}`, color: subHeadingColor}}>{subHeading}</p>
-    </div>
-  );
-});
+let VideoSubheadingItem = forwardRef<HTMLDivElement, VideoSubheadingProps>(
+  (props, ref) => {
+    let {subHeading, subHeadingSize, subHeadingColor, ...rest} = props;
+    return (
+      <div ref={ref} {...rest}>
+        <p
+          className="font-normal leading-6"
+          style={{fontSize: `${subHeadingSize}`, color: subHeadingColor}}
+        >
+          {subHeading}
+        </p>
+      </div>
+    );
+  },
+);
 
 export default VideoSubheadingItem;
 
@@ -42,11 +49,11 @@ export let schema: HydrogenComponentSchema = {
           name: 'subHeadingSize',
           configs: {
             options: [
-              { label: 'XS', value: '14px' },
-              { label: 'S', value: '16px' },
-              { label: 'M', value: '18px' },
-              { label: 'L', value: '20px' },
-              { label: 'XL', value: '22px' },
+              {label: 'XS', value: '14px'},
+              {label: 'S', value: '16px'},
+              {label: 'M', value: '18px'},
+              {label: 'L', value: '20px'},
+              {label: 'XL', value: '22px'},
             ],
           },
           defaultValue: '16px',
@@ -60,4 +67,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-}
+};

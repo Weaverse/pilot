@@ -1,13 +1,11 @@
-import { Image, Money, ShopPayButton } from '@shopify/hydrogen';
-import { defer } from '@shopify/remix-oxygen';
+import {Image, Money, ShopPayButton} from '@shopify/hydrogen';
 import {
   ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseProduct,
-  getSelectedProductOptions,
 } from '@weaverse/hydrogen';
-import { forwardRef, useState } from 'react';
+import {forwardRef, useEffect, useState} from 'react';
 import { ProductQuery } from 'storefrontapi.generated';
 import { AddToCartButton } from '~/components';
 import { PRODUCT_QUERY, VARIANTS_QUERY } from '~/data/queries';
@@ -16,7 +14,6 @@ import { ProductVariants } from './variants';
 import { ProductPlaceholder } from './placeholder';
 
 type SingleProductData = {
-  heading: string;
   productsCount: number;
   product: WeaverseProduct;
 };
@@ -30,7 +27,7 @@ type SingleProductProps = HydrogenComponentProps<
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
     let {loaderData, children, ...rest} = props;
-    if (!loaderData)
+    if (!loaderData?.data)
     return (
         <section className="w-full py-12 md:py-24 lg:py-32" ref={ref}>
           <ProductPlaceholder/>
@@ -53,7 +50,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
             <div className="flex flex-col justify-start space-y-5">
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  {productTitle}
+                  {product?.title}
                 </h2>
                 <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
                   <Money
@@ -67,6 +64,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   {product?.descriptionHtml}
                 </p>
                 <ProductVariants
+                  product={product}
                   selectedVariant={selectedVariant}
                   onSelectedVariantChange={setSelectedVariant}
                   swatch={variantSwatch}
@@ -128,7 +126,6 @@ interface swatchData {
 export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   let {weaverse, data} = args;
   let {storefront} = weaverse;
-  let selectedOptions = getSelectedProductOptions(weaverse.request);
   if (!data?.product) {
     return null;
   }
@@ -136,18 +133,11 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   let {product, shop} = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
-      // Should not get from request since this section could be used everywhere
-      // TODO: update the query to not require `selectedOptions` or create a new query for this component
-      selectedOptions,
+      selectedOptions: [],
       language: storefront.i18n.language,
       country: storefront.i18n.country,
     },
   });
-  // In order to show which variants are available in the UI, we need to query
-  // all of them. But there might be a *lot*, so instead separate the variants
-  // into it's own separate query that is deferred. So there's a brief moment
-  // where variant options might show as available when they're not, but after
-  // this deferred query resolves, the UI will update.
   let variants = await storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
