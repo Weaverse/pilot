@@ -1,20 +1,16 @@
+import {Image} from '@shopify/hydrogen';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  WeaverseImage,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
 
 interface TestimonialItemProps extends HydrogenComponentProps {
   heading: string;
   content: string;
-  authorImage: {
-    url: string;
-    altText: string;
-    width?: number;
-    height?: number;
-  };
+  authorImage: WeaverseImage;
   authorName: string;
   authorTitle: string;
   hideOnMobile: boolean;
@@ -37,16 +33,14 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
         {...rest}
         className={clsx(hideOnMobile && 'hidden sm:block')}
       >
-        <figure className="p-6 bg-gray-50 rounded dark:bg-gray-800">
-          <blockquote className="text-sm text-gray-500 dark:text-gray-400">
-            <h3 className="font-semibold text-gray-900 dark:text-white">
-              {heading}
-            </h3>
+        <figure className="p-6 bg-gray-50 rounded">
+          <blockquote className="text-gray-500">
+            <h4 className="font-medium text-gray-900">{heading}</h4>
             <p className="my-4">"{content}"</p>
           </blockquote>
           <figcaption className="flex items-center space-x-3">
             <Image
-              className="h-9 rounded-full"
+              className="h-9 rounded-full object-cover object-center"
               data={
                 typeof authorImage === 'object'
                   ? authorImage
@@ -55,9 +49,9 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
               alt={authorName}
               width={36}
             />
-            <div className="space-y-0.5 font-medium dark:text-white">
+            <div className="space-y-0.5 font-medium">
               <div>{authorName}</div>
-              <div className="text-sm font-light text-gray-500 dark:text-gray-400">
+              <div className="text-sm font-light text-gray-500">
                 {authorTitle}
               </div>
             </div>

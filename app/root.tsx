@@ -65,6 +65,19 @@ export const links: LinksFunction = () => {
       href: 'https://shop.app',
     },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.googleapis.com',
+    },
+    {
+      href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap',
+      rel: 'preload',
+      as: 'style',
+    },
+    {
+      href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap',
+      rel: 'stylesheet',
+    },
   ];
 };
 
@@ -155,7 +168,7 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="font-sans">
         <Layout
           layout={rootData?.layout}
           key={`${locale.language}-${locale.country}`}
@@ -182,7 +195,7 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
   );
 };
 
-export const ErrorBoundary = withWeaverse(ErrorBoundaryComponent);
+export const ErrorBoundary = ErrorBoundaryComponent;
 
 const LAYOUT_QUERY = `#graphql
   query layout(

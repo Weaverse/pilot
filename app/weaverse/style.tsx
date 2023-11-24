@@ -20,25 +20,7 @@ function hexToRgbString(hexColor: string = ''): string {
 
 export function GlobalStyle() {
   let settings = useThemeSettings();
-  /** default settings now can be retrieve from theme schema */
-  // let defaultSettings = {
-  //   colorBackground: '#ffffff',
-  //   colorInverseBackground: '#0f0f0f',
-  //   colorText: '#0f0f0f',
-  //   colorInverseText: '#ffffff',
-  //   colorButton: '#0f0f0f',
-  //   colorButtonText: '#ffffff',
-  //   colorInverseButton: '#ffffff',
-  //   colorInverseButtonText: '#0f0f0f',
-  //   colorSale: '#de4b4b',
-  //   colorBorder: '#0F0F0F',
-  //   bodyBaseSize: 18,
-  //   bodyBaseSpacing: 0,
-  //   bodyBaseLineHeight: 1.5,
-  //   headingBaseSize: 38,
-  // };
   if (settings) {
-    // settings = {...defaultSettings, ...settings};
     let {
       colorBackground,
       colorInverseBackground,
@@ -54,6 +36,8 @@ export function GlobalStyle() {
       bodyBaseSpacing,
       bodyBaseLineHeight,
       headingBaseSize,
+      headingBaseSpacing,
+      headingBaseLineHeight,
       navHeightDesktop,
       navHeightTablet,
     } = settings;
@@ -75,6 +59,7 @@ export function GlobalStyle() {
         dangerouslySetInnerHTML={{
           __html: `
             :root {
+              /* Colors */
               --color-background: ${colorBackground};
               --color-inverse-background: ${colorInverseBackground};
               --color-text: ${colorText};
@@ -86,48 +71,58 @@ export function GlobalStyle() {
               --color-sale: ${colorSale};
               --color-border: ${colorBorder};
 
+              /* Typography */
               --body-base-size: ${bodyBaseSize}px;
-              --body-base-spacing: ${bodyBaseSpacing}px;
+              --body-base-spacing: ${bodyBaseSpacing};
               --body-base-line-height: ${bodyBaseLineHeight};
               --heading-base-size: ${headingBaseSize}px;
+              --heading-base-spacing: ${headingBaseSpacing};
+              --heading-base-line-height: ${headingBaseLineHeight};
+
               --height-nav: ${settings.navHeightMobile}rem;
             }
+
             body, button, input, select, textarea {
               -webkit-font-smoothing: antialiased;
               -webkit-text-size-adjust: 100%;
-              font-size: calc(var(--body-base-size)*0.92);
+              font-size: calc(var(--body-base-size) * 0.92);
               letter-spacing: var(--body-base-spacing);
               line-height: var(--body-base-line-height);
               text-rendering: optimizeSpeed;
+            }
+
+            .h0, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+              letter-spacing: var(--heading-base-spacing);
+              line-height: var(--heading-base-line-height);
             }
 
             /* Mobile sizes */
             h1, .h1 {
               font-size: calc(var(--heading-base-size) * 0.85);
             }
-
             h2, .h2 {
-              font-size: calc(var(--heading-base-size) * 0.73);
+              font-size: calc(var(--heading-base-size) * 0.63);
             }
-
             h3, .h3 {
-              font-size: calc(var(--heading-base-size) * 0.62);
+              font-size: calc(var(--heading-base-size) * 0.57);
+            }
+            h4, .h4 {
+              font-size: calc(var(--heading-base-size) * 0.55);
             }
 
             /* Desktop sizes */
-            @media (min-width: 768px) {
+            @media (min-width: 32em) {
               h1, .h1 {
                 font-size: var(--heading-base-size);
               }
-
               h2, .h2 {
                 font-size: calc(var(--heading-base-size) * 0.85);
               }
-
               h3, .h3 {
-                font-size: calc(var(--heading-base-size) * 0.65);
+                font-size: calc(var(--heading-base-size) * 0.7);
               }
             }
+
             @media (min-width: 32em) {
               body {
                 --height-nav: ${navHeightTablet}rem;

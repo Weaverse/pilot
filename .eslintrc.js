@@ -1,5 +1,5 @@
 /**
- * @type {import('@types/eslint').Linter.BaseConfig}
+ * @type {import("@types/eslint").Linter.BaseConfig}
  */
 module.exports = {
   extends: [
