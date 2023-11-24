@@ -1,30 +1,42 @@
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
-  useChildInstances,
-  useItemInstance,
-  useParentInstance,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
+import {
+  Container,
+  ContainerProps,
+  containerConfigs,
+} from '~/sections/shared/Container';
 
-interface TestimonialProps extends HydrogenComponentProps {
-  heading: string;
-  description: string;
-}
+type TestimonialProps = HydrogenComponentProps &
+  ContainerProps & {
+    heading: string;
+    description: string;
+  };
 
 let Testimonial = forwardRef<HTMLElement, TestimonialProps>((props, ref) => {
-  let {heading, description, children, ...rest} = props;
+  let {
+    heading,
+    description,
+    children,
+    width,
+    divider,
+    verticalPadding,
+    ...rest
+  } = props;
 
-  let itemInstance = useItemInstance();
-  let parentInstance = useParentInstance();
-  let childInstances = useChildInstances();
   return (
     <section ref={ref} {...rest}>
-      <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+      <Container
+        width={width}
+        verticalPadding={verticalPadding}
+        divider={divider}
+      >
         <div className="mx-auto max-w-screen-md text-center">
-          <h2 className="mb-4 tracking-tight font-extrabold">{heading}</h2>
+          <h2 className="mb-4 font-medium">{heading}</h2>
           {description && (
-            <p className="mb-8 font-light text-gray-500 lg:mb-16 sm:text-xl">
+            <p className="mb-8 font-light text-gray-500 lg:mb-16 sm:text-lg">
               {description}
             </p>
           )}
@@ -46,7 +58,7 @@ let Testimonial = forwardRef<HTMLElement, TestimonialProps>((props, ref) => {
             })}
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 });
@@ -58,8 +70,9 @@ export let schema: HydrogenComponentSchema = {
   title: 'Testimonials',
   childTypes: ['testimonial--item'],
   inspector: [
+    containerConfigs,
     {
-      group: 'Testimonials',
+      group: 'Content',
       inputs: [
         {
           type: 'text',

@@ -245,7 +245,8 @@ function DesktopHeader({
       className={clsx(
         'bg-primary text-body',
         y > 50 && ' shadow-header',
-        'hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4',
+        'hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between leading-none gap-8',
+        'w-full px-6 md:px-8 lg:px-12 py-4',
       )}
     >
       <div className="flex gap-12">

@@ -67,9 +67,9 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
                 <p className="text-heading mb-5 leading-6">{subHeading}</p>
               )}
               {heading && (
-                <h1 className="mb-5 text-gray-950 text-display font-bold leading-5">
+                <h3 className="mb-5 text-gray-950 text-display font-bold leading-5">
                   {heading}
-                </h1>
+                </h3>
               )}
               {!isDescriptionEmpty && (
                 <p

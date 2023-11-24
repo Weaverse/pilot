@@ -79,9 +79,7 @@ let CollectHeader = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
           enableBackground ? 'text-white' : 'text-gray-700',
         )}
       >
-        <h1 className="text-4xl tracking-tight font-normal leading-tight md:text-5xl">
-          {collection?.title}
-        </h1>
+        <h1 className="text-4xl md:text-5xl">{collection?.title}</h1>
         {collection?.description && (
           <p className="mt-4 dark:text-gray-400 text-base md:text-sm">
             {collection.description}
