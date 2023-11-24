@@ -158,7 +158,7 @@
       left: -4%;
       top: 50%;
       transform: translateY(-50%);
-      background: rgb(var(--color-primary));
+      background: rgb(var(--color-border));
       box-shadow: 0.5px 0.5px 0px 0.5px rgb(var(--color-contrast));
     }
   }
@@ -172,5 +172,20 @@
     img {
       @apply aspect-[inherit] w-full object-cover;
     }
+  }
+}
+
+.diagonal {
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: '';
+    @apply absolute -rotate-45 bg-bar/30;
+    z-index: 1;
+    left: -1px;
+    bottom: -1px;
+    width: 150%;
+    height: 1px;
+    transform-origin: top left;
   }
 }

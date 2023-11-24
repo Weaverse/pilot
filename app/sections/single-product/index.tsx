@@ -13,6 +13,7 @@ import { AddToCartButton } from '~/components';
 import { PRODUCT_QUERY, VARIANTS_QUERY } from '~/data/queries';
 import { Quantity } from './quantity';
 import { ProductVariants } from './variants';
+import { ProductPlaceholder } from './placeholder';
 
 type SingleProductData = {
   heading: string;
@@ -25,21 +26,23 @@ type SingleProductProps = HydrogenComponentProps<
 > &
   SingleProductData;
 
+
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
     let {loaderData, children, ...rest} = props;
     if (!loaderData)
-      return (
-        <section {...rest} className="h-20 bg-gray-200 p-6" ref={ref}>
-          Please select product to show single product
+    return (
+        <section className="w-full py-12 md:py-24 lg:py-32" ref={ref}>
+          <ProductPlaceholder/>
         </section>
       );
-    let {storeDomain, product, variants} = loaderData.data;
+    let {storeDomain, product, variants, variantSwatch} = loaderData.data;
     let productTitle = product?.title;
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
     let [quantity, setQuantity] = useState<number>(1);
+    
     return (
-      <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
+      <section ref={ref} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
             <Image
@@ -52,7 +55,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                   {productTitle}
                 </h2>
-                <p className="text-2xl text-zinc-500 md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed dark:text-zinc-400">
+                <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
                   <Money
                     withoutTrailingZeros
                     data={selectedVariant?.price!}
@@ -60,12 +63,13 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   />
                 </p>
                 {children}
-                <p className="max-w-[600px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-zinc-400">
+                <p className="max-w-[600px] leading-relaxed">
                   {product?.descriptionHtml}
                 </p>
                 <ProductVariants
                   selectedVariant={selectedVariant}
                   onSelectedVariantChange={setSelectedVariant}
+                  swatch={variantSwatch}
                   variants={variants}
                   options={product?.options}
                   handle={product?.handle}
@@ -102,6 +106,25 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   },
 );
 
+interface swatchConfig {
+  name: string;
+  size: string;
+  type: string;
+  shape: string;
+  displayName: string;
+}
+
+interface swatchData {
+  colors: {
+    name: string;
+    value: string;
+  }[];
+  images: {
+    name: string;
+    value: string;
+  }[];
+}
+
 export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   let {weaverse, data} = args;
   let {storefront} = weaverse;
@@ -132,10 +155,84 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
       country: storefront.i18n.country,
     },
   });
+
+  let swatchConfigs = [
+    {
+      name: 'Color',
+      size: 'md',
+      type: 'variant',
+      shape: 'circle',
+      displayName: 'Color',
+    },
+    {
+      name: 'Size',
+      size: 'md',
+      type: 'button',
+      shape: 'round',
+      displayName: 'Size',
+    },
+  ];
+
+  let swatchData = {
+    colorSwatches: [
+      {
+        name: 'red',
+        value: '#bc3535',
+      },
+      {
+        name: 'blue',
+        value: '#0000ff',
+      },
+      {
+        name: 'green',
+        value: '#00ff00',
+      },
+      {
+        name: 'yellow',
+        value: '#ffff00',
+      },
+      {
+        name: 'black',
+        value: '#000000',
+      },
+      {
+        name: 'white',
+        value: '#ffffff',
+      },
+    ],
+    imageSwatches: [
+      {
+        name: 'white',
+        value:
+          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/photo-1657960526734-108dcd75a24e.avif?v=1699076026',
+        // "value": {
+        //   url: ".."
+        //   id: "gid..."
+        //   alt: ...
+        //   width: ...
+        // }
+      },
+      {
+        name: 'red',
+        value:
+          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/photo-1657960526734-108dcd75a24e.avif?v=1699076026',
+      },
+      {
+        name: 'black',
+        value:
+          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/photo-1657960526734-108dcd75a24e.avif?v=1699076026',
+      },
+    ],
+  }
+
   return defer({
     product,
     variants: variants?.product?.variants,
     storeDomain: shop.primaryDomain.url,
+    variantSwatch: {
+      configs: swatchConfigs,
+      swatches: swatchData,
+    }
   });
 };
 
