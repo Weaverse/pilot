@@ -3,7 +3,7 @@
   "private": false,
   "sideEffects": false,
   "author": "Weaverse",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "scripts": {
     "dev": "shopify hydrogen dev --codegen --port 3456",
     "build": "shopify hydrogen build",
@@ -24,7 +24,7 @@
     "@shopify/cli-hydrogen": "^6.0.2",
     "@shopify/hydrogen": "^2023.10.2",
     "@shopify/remix-oxygen": "^2.0.1",
-    "@weaverse/hydrogen": "2.6.1",
+    "@weaverse/hydrogen": "2.7.1",
     "clsx": "2.0.0",
     "cross-env": "7.0.3",
     "graphql": "16.8.1",
@@ -64,6 +64,6 @@
     "typescript": "5.2.2"
   },
   "engines": {
-    "node": ">=16.13"
+    "node": ">=18"
   }
 }

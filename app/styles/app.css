@@ -2,28 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'WorkSans';
-  font-display: swap;
-  font-weight: 400;
-  src: url('./fonts/WorkSans.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'WorkSans';
-  font-display: swap;
-  font-weight: 400;
-  font-style: italic;
-  src: url('./fonts/WorkSans-Italic.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'WorkSans';
-  font-weight: 500;
-  font-display: swap;
-  src: url('./fonts/WorkSans-Medium.woff2') format('woff2');
-}
-
 /* Tokens */
 :root {
   --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
@@ -51,7 +29,7 @@
 @layer base {
   * {
     font-variant-ligatures: none;
-    border-color: rgb(var(--color-border) / .15);
+    border-color: rgb(var(--color-border) / 0.15);
   }
 
   body {
@@ -60,7 +38,6 @@
 
   html {
     scroll-padding-top: 10rem;
-    font-family: WorkSans;
   }
 
   model-viewer::part(default-progress-mask) {
@@ -77,7 +54,6 @@
   input[type='search']::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
-
 
   a.active {
     @apply border-b;
@@ -104,7 +80,7 @@
     h4,
     h5,
     h6 {
-      @apply font-sans text-body;
+      @apply text-body;
     }
     @apply prose mx-auto mb-12 grid justify-center font-serif text-body;
     p,

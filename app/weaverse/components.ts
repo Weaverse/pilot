@@ -45,6 +45,10 @@ import * as PromotionGrid from '~/sections/promotion-grid/promotion-grid';
 import * as PromotionGridItem from '~/sections/promotion-grid/item';
 import * as Judgeme from '~/sections/judgeme-review';import * as NewsLetter from '~/sections/newsletter';
 
+import * as Countdown from '~/sections/count-down/index';
+import * as CountDownHeading from '~/sections/count-down/heading-item';
+import * as CountDownSubheading from '~/sections/count-down/subheading-item';
+import * as CountDownTimer from '~/sections/count-down/timer-item';
 export let components: HydrogenComponent[] = [
   Main,
   Hero,
@@ -75,6 +79,10 @@ export let components: HydrogenComponent[] = [
   Map,
   PromotionGrid,
   PromotionGridItem,
+  Countdown,
+  CountDownHeading,
+  CountDownSubheading,
+  CountDownTimer,
   NewsLetter,
   Blogs,
   BlogPost,

@@ -6,13 +6,13 @@ import {routeHeaders} from '~/data/cache';
 import {ARTICLE_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import styles from '../styles/custom-font.css';
+// import styles from '../styles/custom-font.css';
 
 export const headers = routeHeaders;
 
-export const links: LinksFunction = () => {
-  return [{rel: 'stylesheet', href: styles}];
-};
+// export const links: LinksFunction = () => {
+//   return [{rel: 'stylesheet', href: styles}];
+// };
 
 export async function loader(args: RouteLoaderArgs) {
   let {request, params, context} = args;

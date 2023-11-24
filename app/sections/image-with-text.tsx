@@ -64,18 +64,16 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
           <div className="flex box-border h-full w-full sm-max:flex-col">
             <div className="w-2/5 h-full py-16 mr-5 sm-max:mr-0 sm-max:w-full sm-max:pb-12">
               {subHeading && (
-                <p className="font-sans text-heading mb-5 leading-6">
-                  {subHeading}
-                </p>
+                <p className="text-heading mb-5 leading-6">{subHeading}</p>
               )}
               {heading && (
-                <h1 className="mb-5 text-gray-950 font-sans text-display font-bold leading-5">
+                <h3 className="mb-5 text-gray-950 text-display font-bold leading-5">
                   {heading}
-                </h1>
+                </h3>
               )}
               {!isDescriptionEmpty && (
                 <p
-                  className="text-sm font-sans font-normal mb-5 leading-6 sm-max:w-full"
+                  className="text-sm font-normal mb-5 leading-6 sm-max:w-full"
                   dangerouslySetInnerHTML={{__html: descriptionText}}
                 ></p>
               )}
