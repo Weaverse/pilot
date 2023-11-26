@@ -12,6 +12,7 @@ import { PRODUCT_QUERY, VARIANTS_QUERY } from '~/data/queries';
 import { Quantity } from './quantity';
 import { ProductVariants } from './variants';
 import { ProductPlaceholder } from './placeholder';
+import { defer } from '@shopify/remix-oxygen';
 
 type SingleProductData = {
   productsCount: number;
@@ -26,7 +27,7 @@ type SingleProductProps = HydrogenComponentProps<
 
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {loaderData, children, ...rest} = props;
+    let {loaderData, children, product: _product, ...rest} = props;
     if (!loaderData?.data)
     return (
         <section className="w-full py-12 md:py-24 lg:py-32" ref={ref}>
@@ -34,9 +35,11 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
         </section>
       );
     let {storeDomain, product, variants, variantSwatch} = loaderData.data;
-    let productTitle = product?.title;
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
     let [quantity, setQuantity] = useState<number>(1);
+    useEffect(() => {
+      setSelectedVariant(variants?.nodes[0]);
+    }, [_product.handle]);
     
     return (
       <section ref={ref} className="w-full py-12 md:py-24 lg:py-32">
