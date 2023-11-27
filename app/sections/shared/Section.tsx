@@ -3,10 +3,12 @@ import {
   type InspectorGroup,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
-import React, {HTMLAttributes, forwardRef} from 'react';
+import type {HTMLAttributes} from 'react';
+import React, { forwardRef} from 'react';
+import type {
+  BackgroundImageProps} from './BackgroundImage';
 import {
   BackgroundImage,
-  BackgroundImageProps,
   backgroundImageInputs,
 } from './BackgroundImage';
 import {Overlay, overlayInputs} from './Overlay';

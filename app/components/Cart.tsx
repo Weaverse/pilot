@@ -1,31 +1,28 @@
+import {
+  CartForm,
+  Image,
+  Money,
+  OptimisticInput,
+  flattenConnection,
+  useOptimisticData,
+} from '@shopify/hydrogen';
+import type {
+  CartCost,
+  CartLine,
+  CartLineUpdateInput,
+  Cart as CartType,
+} from '@shopify/hydrogen/storefront-api-types';
 import clsx from 'clsx';
 import {useRef} from 'react';
 import {useScroll} from 'react-use';
 import {
-  flattenConnection,
-  CartForm,
-  Image,
-  Money,
-  useOptimisticData,
-  OptimisticInput,
-} from '@shopify/hydrogen';
-import type {
-  Cart as CartType,
-  CartCost,
-  CartLine,
-  CartLineUpdateInput,
-} from '@shopify/hydrogen/storefront-api-types';
-
-import {
   Button,
-  Heading,
-  IconRemove,
-  Text,
-  Link,
   FeaturedProducts,
+  IconRemove,
   Input,
+  Link,
+  Text,
 } from '~/components';
-import {getInputStyleClasses} from '~/lib/utils';
 
 type Layouts = 'page' | 'drawer';
 
@@ -224,10 +221,10 @@ function CartSummary({
   cost: CartCost;
   layout: Layouts;
 }) {
-  const summary = {
-    drawer: 'grid gap-4 p-6 border-t md:px-12',
-    page: 'sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-primary/5 rounded w-full',
-  };
+  // const summary = {
+  //   drawer: 'grid gap-4 p-6 border-t md:px-12',
+  //   page: 'sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-primary/5 rounded w-full',
+  // };
 
   return (
     <section

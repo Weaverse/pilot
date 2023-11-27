@@ -1,5 +1,6 @@
-import {Storefront} from '@shopify/hydrogen';
-import {I18nLocale, WeaverseClient} from '@weaverse/hydrogen';
+import type {Storefront} from '@shopify/hydrogen';
+import type {I18nLocale} from '@weaverse/hydrogen';
+import { WeaverseClient} from '@weaverse/hydrogen';
 import {countries} from '~/data/countries';
 import {components} from '~/weaverse/components';
 import {themeSchema} from '~/weaverse/schema.server';

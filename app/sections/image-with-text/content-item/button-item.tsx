@@ -17,7 +17,7 @@ let ImageWTextButtonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, r
   let { buttonLabel, buttonLink, openInNewTab, buttonStyle, ...rest } = props;
   return (
     <div ref={ref} {...rest}>
-      <a className={clsx('py-3 px-4 rounded cursor-pointer inline-block', buttonStyle)} target={openInNewTab ? '_blank' : ''} href={buttonLink}>{buttonLabel}</a>
+      <a className={clsx('py-3 px-4 rounded cursor-pointer inline-block', buttonStyle)} target={openInNewTab ? '_blank' : ''} href={buttonLink} rel="noreferrer">{buttonLabel}</a>
     </div>
   );
 });

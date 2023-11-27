@@ -2,7 +2,7 @@ import {Listbox} from '@headlessui/react';
 import {VariantSelector} from '@shopify/hydrogen';
 import clsx from 'clsx';
 import {useRef} from 'react';
-import {
+import type {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from 'storefrontapi.generated';

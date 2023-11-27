@@ -1,4 +1,4 @@
-import {InspectorGroup} from '@weaverse/hydrogen';
+import type {InspectorGroup} from '@weaverse/hydrogen';
 
 export function Overlay({color, opacity}: {color: string; opacity: number}) {
   return (
