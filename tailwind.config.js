@@ -53,6 +53,10 @@ export default {
         serif: ['"IBMPlexSerif"', 'Palatino', 'ui-serif'],
       },
       fontSize: {
+        scale: [
+          'calc(var(--min-size-px) + (var(--max-size) - var(--min-size)) * ((100vw - var(--wv-min-viewport-size, 320) * 1px) / (var(--wv-max-viewport-size, 1920) - var(--wv-min-viewport-size, 320))))',
+          1,
+        ],
         xs: ['calc(var(--body-base-size) * 0.75)', 1],
         sm: ['calc(var(--body-base-size) * 0.875)', 1.25],
         base: ['var(--body-base-size)', 'var(--body-base-line-height)'],
@@ -69,6 +73,9 @@ export default {
       },
       lineHeight: {
         normal: 'var(--body-base-line-height)',
+      },
+      letterSpacing: {
+        normal: 'var(--body-base-letter-spacing)',
       },
       maxWidth: {
         'prose-narrow': '45ch',
