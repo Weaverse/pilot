@@ -37,11 +37,8 @@ import * as Testimonial from '~/sections/testimonials';
 import * as TestimonialItems from '~/sections/testimonials/items';
 import * as TestimonialItem from '~/sections/testimonials/item';
 import * as Video from '~/sections/video';
-import * as VideoButtonItem from '~/sections/video-with-text/video-button-item';
-import * as VideoDescriptionItem from '~/sections/video-with-text/video-description-item';
-import * as VideoHeadingItem from '~/sections/video-with-text/video-heading-item';
-import * as VideoSubheadingItem from '~/sections/video-with-text/video-subheading-item';
-import * as VideoWithText from '~/sections/video-with-text/video-with-text';
+import * as VideoButtonItem from '~/sections/VideoWithText/video-button-item';
+import * as VideoWithText from '~/sections/VideoWithText/VideoWithText';
 
 export let components: HydrogenComponent[] = [
   ...atoms,
@@ -59,9 +56,6 @@ export let components: HydrogenComponent[] = [
   RichText,
   RichTextButtonItem,
   VideoWithText,
-  VideoSubheadingItem,
-  VideoHeadingItem,
-  VideoDescriptionItem,
   VideoButtonItem,
   Map,
   PromotionGrid,
