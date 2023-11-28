@@ -13,11 +13,8 @@ import * as CountDownSubheading from '~/sections/count-down/subheading-item';
 import * as CountDownTimer from '~/sections/count-down/timer-item';
 import * as FeaturedCollections from '~/sections/featured-collections';
 import * as FeaturedProducts from '~/sections/featured-products';
-import * as ButtonItem from '~/sections/header-image/button-image-item';
-import * as DescriptionTextItem from '~/sections/header-image/description-text-item';
-import * as HeaderImage from '~/sections/header-image/header-image';
-import * as HeadingItem from '~/sections/header-image/heading-item';
-import * as SubHeadingItem from '~/sections/header-image/subheading-item';
+import * as ButtonItem from '~/sections/HeaderImage/ButtonImage';
+import * as HeaderImage from '~/sections/HeaderImage/HeaderImage';
 import * as Hero from '~/sections/hero';
 import * as ImageGallery from '~/sections/image-gallery';
 import * as ImageGalleryItem from '~/sections/image-gallery/image';
@@ -59,9 +56,6 @@ export let components: HydrogenComponent[] = [
   Video,
   CollectionHeader,
   HeaderImage,
-  HeadingItem,
-  SubHeadingItem,
-  DescriptionTextItem,
   ButtonItem,
   ImageWithText,
   ImageWTextSubheadingItem,

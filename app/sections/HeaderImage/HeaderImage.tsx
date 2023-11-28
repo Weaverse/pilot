@@ -7,7 +7,6 @@ import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import clsx from 'clsx';
 import {Image} from '@shopify/hydrogen';
-
 import {IconImageBlank} from '~/components';
 
 interface HeaderImageProps extends HydrogenComponentProps {
@@ -18,13 +17,11 @@ interface HeaderImageProps extends HydrogenComponentProps {
   overlayOpacity: number;
   sectionHeightDesktop: number;
   sectionHeightMobile: number;
-  lazyLoad: boolean;
 }
 
 let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
   let {
     backgroundImage,
-    lazyLoad,
     contentAlignment,
     enableOverlay,
     overlayColor,
@@ -40,6 +37,7 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
     '--section-height-mobile': `${sectionHeightMobile}px`,
     '--overlay-opacity': `${overlayOpacity}%`,
     '--overlay-color': `${overlayColor}`,
+    '--max-width-content': '600px'
   } as CSSProperties;
 
   return (
@@ -47,7 +45,7 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
       ref={ref}
       {...rest}
       className={clsx(
-        'flex relative self-stretch gap-3 items-center overflow-hidden h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]',
+        'flex relative gap-3 items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]',
       )}
       style={sectionStyle}
     >
@@ -55,7 +53,6 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
         {backgroundImage ? (
           <Image
             data={backgroundImage}
-            loading={lazyLoad ? 'lazy' : 'eager'}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -70,7 +67,7 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
           <div className="absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]"></div>
         )}
       </div>
-      <div className="z-10 w-1/2 h-fit flex flex-col justify-between items-center gap-5 text-center sm-max:w-5/6">
+      <div className="z-10 w-[var(--max-width-content)] sm-max:w-5/6 h-fit flex flex-col text-center gap-5">
         {children}
       </div>
     </section>
@@ -91,12 +88,6 @@ export let schema: HydrogenComponentSchema = {
           type: 'image',
           name: 'backgroundImage',
           label: 'Background image',
-        },
-        {
-          label: 'Lazy load',
-          type: 'switch',
-          name: 'lazyLoad',
-          defaultValue: true,
         },
         {
           type: 'toggle-group',
@@ -165,21 +156,24 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   childTypes: [
-    'subheading--item',
-    'heading--item',
-    'description-text--item',
+    'subheading',
+    'heading',
+    'description',
     'button-image--item',
   ],
   presets: {
     children: [
       {
-        type: 'subheading--item',
+        type: 'subheading',
+        content: 'Subheading'
       },
       {
-        type: 'heading--item',
+        type: 'heading',
+        content: 'Heading for Image',
       },
       {
-        type: 'description-text--item',
+        type: 'description',
+        content: 'Pair large text with an image to tell a story.',
       },
       {
         type: 'button-image--item',
