@@ -29,10 +29,8 @@ import * as PromotionGridItem from '~/sections/promotion-grid/item';
 import * as PromotionGrid from '~/sections/promotion-grid/promotion-grid';
 import * as RelatedArticles from '~/sections/related-articles';
 import * as RelatedProducts from '~/sections/related-products';
-import * as RichTextButtonItem from '~/sections/rich-text/buttons-item';
-import * as RichTextDescriptionItem from '~/sections/rich-text/descriptions-item';
-import * as RichTextHeadingItem from '~/sections/rich-text/headings-item';
-import * as RichText from '~/sections/rich-text/index';
+import * as RichTextButtonItem from '~/sections/RichText/Button';
+import * as RichText from '~/sections/RichText/RichText';
 import {atoms} from '~/sections/shared/atoms';
 import * as SingleProduct from '~/sections/single-product';
 import * as Testimonial from '~/sections/testimonials';
@@ -59,8 +57,6 @@ export let components: HydrogenComponent[] = [
   ContentColumnWithImage,
   ContentColumnItem,
   RichText,
-  RichTextHeadingItem,
-  RichTextDescriptionItem,
   RichTextButtonItem,
   VideoWithText,
   VideoSubheadingItem,
