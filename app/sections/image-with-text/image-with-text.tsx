@@ -3,8 +3,8 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef  } from 'react';
 import { Image } from '@shopify/hydrogen';
 import { IconImageBlank } from '~/components';
 

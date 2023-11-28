@@ -3,11 +3,12 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 import clsx from 'clsx';
-import { Image } from '@shopify/hydrogen';
-import { IconImageBlank } from '~/components';
+import {Image} from '@shopify/hydrogen';
+
+import {IconImageBlank} from '~/components';
 
 interface HeaderImageProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;
@@ -17,32 +18,59 @@ interface HeaderImageProps extends HydrogenComponentProps {
   overlayOpacity: number;
   sectionHeightDesktop: number;
   sectionHeightMobile: number;
+  lazyLoad: boolean;
 }
 
 let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
-  let { backgroundImage, contentAlignment, enableOverlay, overlayColor, overlayOpacity, sectionHeightDesktop, sectionHeightMobile, children, ...rest } = props;
+  let {
+    backgroundImage,
+    lazyLoad,
+    contentAlignment,
+    enableOverlay,
+    overlayColor,
+    overlayOpacity,
+    sectionHeightDesktop,
+    sectionHeightMobile,
+    children,
+    ...rest
+  } = props;
   let sectionStyle: CSSProperties = {
     justifyContent: `${contentAlignment}`,
     '--section-height-desktop': `${sectionHeightDesktop}px`,
     '--section-height-mobile': `${sectionHeightMobile}px`,
     '--overlay-opacity': `${overlayOpacity}%`,
-    '--overlay-color': `${overlayColor}`
+    '--overlay-color': `${overlayColor}`,
   } as CSSProperties;
 
-
   return (
-    <section ref={ref} {...rest} className={clsx(
-      'flex relative self-stretch gap-3 items-center overflow-hidden h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]',
-    )} style={sectionStyle}>
-      <div className='absolute inset-0'>
-        {backgroundImage ? <Image data={backgroundImage} className='w-full h-full object-cover' /> :
-          <div className='w-full h-full flex justify-center items-center bg-gray-200'>
-            <IconImageBlank className='!w-24 !h-24 opacity-30' viewBox='0 0 100 100' />
+    <section
+      ref={ref}
+      {...rest}
+      className={clsx(
+        'flex relative self-stretch gap-3 items-center overflow-hidden h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]',
+      )}
+      style={sectionStyle}
+    >
+      <div className="absolute inset-0">
+        {backgroundImage ? (
+          <Image
+            data={backgroundImage}
+            loading={lazyLoad ? 'lazy' : 'eager'}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex justify-center items-center bg-gray-200">
+            <IconImageBlank
+              className="!w-24 !h-24 opacity-30"
+              viewBox="0 0 100 100"
+            />
           </div>
-        }
-        {enableOverlay && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
+        )}
+        {enableOverlay && (
+          <div className="absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]"></div>
+        )}
       </div>
-      <div className='z-10 w-1/2 h-fit flex flex-col justify-between items-center gap-5 text-center sm-max:w-5/6'>
+      <div className="z-10 w-1/2 h-fit flex flex-col justify-between items-center gap-5 text-center sm-max:w-5/6">
         {children}
       </div>
     </section>
@@ -65,14 +93,20 @@ export let schema: HydrogenComponentSchema = {
           label: 'Background image',
         },
         {
+          label: 'Lazy load',
+          type: 'switch',
+          name: 'lazyLoad',
+          defaultValue: true,
+        },
+        {
           type: 'toggle-group',
           label: 'Content alignment',
           name: 'contentAlignment',
           configs: {
             options: [
-              { label: 'Left', value: 'flex-start' },
-              { label: 'Center', value: 'center' },
-              { label: 'Right', value: 'flex-end' },
+              {label: 'Left', value: 'flex-start'},
+              {label: 'Center', value: 'center'},
+              {label: 'Right', value: 'flex-end'},
             ],
           },
           defaultValue: 'center',
@@ -101,7 +135,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: '%',
           },
-          condition: `enableOverlay.eq.true`
+          condition: `enableOverlay.eq.true`,
         },
         {
           type: 'range',
@@ -130,7 +164,12 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['subheading--item', 'heading--item', 'description-text--item', 'button-image--item'],
+  childTypes: [
+    'subheading--item',
+    'heading--item',
+    'description-text--item',
+    'button-image--item',
+  ],
   presets: {
     children: [
       {

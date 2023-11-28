@@ -2,8 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef  } from 'react';
 
 interface SubheadingProps extends HydrogenComponentProps {
   subHeading: string;

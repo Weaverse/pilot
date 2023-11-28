@@ -23,3 +23,5 @@ export type I18nLocale = Locale & {
 };
 
 export type Storefront = HydrogenStorefront<I18nLocale>;
+
+export type Alignment = 'left' | 'center' | 'right';

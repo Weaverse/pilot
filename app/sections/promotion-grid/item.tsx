@@ -43,8 +43,8 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, r
           {heading && <h3 className='font-medium' style={{color:headingColor}}>{heading}</h3>}
           {descriptionText && <p className='text-sm font-normal' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>}
           <div className='flex gap-3 mt-3'>
-            {buttonLabel1 && <a href={buttonLink1} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle1)}>{buttonLabel1}</a>}
-            {buttonLabel2 && <a href={buttonLink2} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle2)}>{buttonLabel2}</a>}
+            {buttonLabel1 && <a href={buttonLink1} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle1)} rel="noreferrer">{buttonLabel1}</a>}
+            {buttonLabel2 && <a href={buttonLink2} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle2)} rel="noreferrer">{buttonLabel2}</a>}
           </div>
         </div>
       </div>

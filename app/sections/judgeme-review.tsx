@@ -10,23 +10,35 @@ import {usePrefixPathWithLocale} from '~/lib/utils';
 
 let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
-    const {load, data} = useFetcher<{
+    let {load, data} = useFetcher<{
       rating: number;
       reviewNumber: number;
       error?: string;
     }>();
+
     let context = useParentInstance();
     let handle = context?.data?.product?.handle!;
-    const api = handle && usePrefixPathWithLocale(`/api/review/${handle}`);
+    let api = usePrefixPathWithLocale(`/api/review/${handle}`);
+
     useEffect(() => {
-      if (api) {
+      if (handle) {
         load(api);
       }
-    }, [load, api]);
-    if (!data) return null
-    if (data.error) return <div {...props} ref={ref}>{data.error}</div>;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [handle, api]);
+
+    if (!data) return null;
+    if (data.error) {
+      return (
+        <div {...props} ref={ref}>
+          {data.error}
+        </div>
+      );
+    }
+
     let rating = Math.round((data.rating || 0) * 100) / 100;
     let reviewNumber = data.reviewNumber || 0;
+
     return (
       <div {...props} ref={ref}>
         <StarsRating
@@ -43,6 +55,7 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
     );
   },
 );
+
 export default JudgemeReview;
 
 export let schema: HydrogenComponentSchema = {

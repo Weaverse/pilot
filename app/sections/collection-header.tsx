@@ -2,10 +2,10 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
+import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {useLoaderData} from '@remix-run/react';
-import {CollectionDetailsQuery} from 'storefrontapi.generated';
-import {CSSProperties} from 'react';
+import type {CollectionDetailsQuery} from 'storefrontapi.generated';
 import clsx from 'clsx';
 
 interface HeaderProps extends HydrogenComponentProps {

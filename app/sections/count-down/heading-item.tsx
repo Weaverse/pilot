@@ -2,7 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef, CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef } from 'react';
 
 
 interface CountDownHeadingProps extends HydrogenComponentProps {

@@ -24,6 +24,7 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     WEAVERSE_PROJECT_ID: string;
     WEAVERSE_HOST: string;
+    WEAVERSE_API_KEY: string;
     JUDGEME_PUBLIC_TOKEN: string;
   }
 }
