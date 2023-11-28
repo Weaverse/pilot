@@ -26,7 +26,7 @@ export default ImageWTextButtonItem;
 
 export let schema: HydrogenComponentSchema = {
   type: 'Button--Item',
-  title: 'Button item',
+  title: 'Button',
   limit: 1,
   inspector: [
     {

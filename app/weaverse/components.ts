@@ -18,11 +18,8 @@ import * as HeaderImage from '~/sections/HeaderImage/HeaderImage';
 import * as Hero from '~/sections/hero';
 import * as ImageGallery from '~/sections/image-gallery';
 import * as ImageGalleryItem from '~/sections/image-gallery/image';
-import * as ImageWTextButtonItem from '~/sections/image-with-text/content-item/button-item';
-import * as ImageWTextDescriptionItem from '~/sections/image-with-text/content-item/description-item';
-import * as ImageWTextHeadingItem from '~/sections/image-with-text/content-item/heading-item';
-import * as ImageWTextSubheadingItem from '~/sections/image-with-text/content-item/subheading-item';
-import * as ImageWithText from '~/sections/image-with-text/image-with-text';
+import * as ImageWTextButtonItem from '~/sections/image-with-text/content-item/ButtonItem';
+import * as ImageWithText from '~/sections/image-with-text/ImageWithText';
 import * as Judgeme from '~/sections/judgeme-review';
 import * as Main from '~/sections/main';
 import * as Map from '~/sections/map';
@@ -58,9 +55,6 @@ export let components: HydrogenComponent[] = [
   HeaderImage,
   ButtonItem,
   ImageWithText,
-  ImageWTextSubheadingItem,
-  ImageWTextHeadingItem,
-  ImageWTextDescriptionItem,
   ImageWTextButtonItem,
   ContentColumnWithImage,
   ContentColumnItem,
