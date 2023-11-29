@@ -25,7 +25,7 @@ export default VideoButtonItem;
 
 export let schema: HydrogenComponentSchema = {
   type: 'video-button--item',
-  title: 'Button item',
+  title: 'Button',
   limit: 1,
   inspector: [
     {

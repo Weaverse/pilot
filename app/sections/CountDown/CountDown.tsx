@@ -158,14 +158,16 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['count-down--heading', 'count-down--subheading', 'count-down--timer'],
+  childTypes: ['heading', 'subheading', 'count-down--timer'],
   presets: {
     children: [
       {
-        type: 'count-down--heading',
+        type: 'heading',
+        content: 'Countdown heading',
       },
       {
-        type: 'count-down--subheading',
+        type: 'subheading',
+        content: 'Countdown to our upcoming event',
       },
       {
         type: 'count-down--timer',

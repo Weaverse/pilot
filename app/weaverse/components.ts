@@ -7,10 +7,8 @@ import * as CollectionHeader from '~/sections/collection-header';
 import * as CollectionList from '~/sections/collection-list';
 import * as ContentColumnWithImage from '~/sections/column-with-text/index';
 import * as ContentColumnItem from '~/sections/column-with-text/item';
-import * as CountDownHeading from '~/sections/count-down/heading-item';
-import * as Countdown from '~/sections/count-down/index';
-import * as CountDownSubheading from '~/sections/count-down/subheading-item';
-import * as CountDownTimer from '~/sections/count-down/timer-item';
+import * as Countdown from '~/sections/CountDown/CountDown';
+import * as CountDownTimer from '~/sections/CountDown/Timer';
 import * as FeaturedCollections from '~/sections/featured-collections';
 import * as FeaturedProducts from '~/sections/featured-products';
 import * as ButtonItem from '~/sections/HeaderImage/ButtonImage';
@@ -37,7 +35,7 @@ import * as Testimonial from '~/sections/testimonials';
 import * as TestimonialItems from '~/sections/testimonials/items';
 import * as TestimonialItem from '~/sections/testimonials/item';
 import * as Video from '~/sections/video';
-import * as VideoButtonItem from '~/sections/VideoWithText/video-button-item';
+import * as VideoButtonItem from '~/sections/VideoWithText/VideoButtonItem';
 import * as VideoWithText from '~/sections/VideoWithText/VideoWithText';
 
 export let components: HydrogenComponent[] = [
@@ -61,8 +59,6 @@ export let components: HydrogenComponent[] = [
   PromotionGrid,
   PromotionGridItem,
   Countdown,
-  CountDownHeading,
-  CountDownSubheading,
   CountDownTimer,
   Blogs,
   BlogPost,
