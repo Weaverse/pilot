@@ -35,7 +35,8 @@ import * as SingleProduct from '~/sections/single-product';
 import * as Testimonial from '~/sections/testimonials';
 import * as TestimonialItems from '~/sections/testimonials/items';
 import * as TestimonialItem from '~/sections/testimonials/item';
-import * as Video from '~/sections/video';
+import * as Video from '~/sections/Video/video';
+import * as VideoItem from '~/sections/Video/VideoItem';
 import * as VideoButtonItem from '~/sections/VideoWithText/VideoButtonItem';
 import * as VideoWithText from '~/sections/VideoWithText/VideoWithText';
 
@@ -45,6 +46,7 @@ export let components: HydrogenComponent[] = [
   Hero,
   Page,
   Video,
+  VideoItem,
   CollectionHeader,
   HeaderImage,
   ButtonItem,
