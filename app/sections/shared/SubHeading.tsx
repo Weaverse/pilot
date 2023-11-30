@@ -3,8 +3,9 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
-import {CSSProperties, forwardRef} from 'react';
-import {Alignment} from '~/lib/type';
+import type {CSSProperties} from 'react';
+import { forwardRef} from 'react';
+import type {Alignment} from '~/lib/type';
 
 type Size = 'base' | 'large';
 type Weight = 'normal' | 'medium';

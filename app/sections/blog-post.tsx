@@ -1,6 +1,6 @@
 import { useLoaderData } from '@remix-run/react';
 import { Image } from '@shopify/hydrogen';
-import { Article } from '@shopify/hydrogen/storefront-api-types';
+import type { Article } from '@shopify/hydrogen/storefront-api-types';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,

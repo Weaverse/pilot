@@ -2,7 +2,7 @@ import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {AnalyticsPageType} from '@shopify/hydrogen';
 import {defer, redirect} from '@shopify/remix-oxygen';
 import {type RouteLoaderArgs} from '@weaverse/hydrogen';
-import {
+import type {
   ProductQuery,
   ProductRecommendationsQuery,
 } from 'storefrontapi.generated';

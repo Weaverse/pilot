@@ -1,10 +1,10 @@
 import {Image} from '@shopify/hydrogen';
-import {
+import type {
   InspectorGroup,
   PositionInputValue,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import {CSSProperties} from 'react';
+import type {CSSProperties} from 'react';
 
 export type BackgroundImageProps = {
   backgroundImage?: WeaverseImage;

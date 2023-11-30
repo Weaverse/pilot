@@ -1,9 +1,9 @@
+import {defer} from '@shopify/remix-oxygen';
 import {
-  defer,
+  type LinksFunction,
   type LoaderFunctionArgs,
   type AppLoadContext,
   type SerializeFrom,
-  LinksFunction,
 } from '@shopify/remix-oxygen';
 import {
   isRouteErrorResponse,
@@ -20,12 +20,9 @@ import {
 } from '@remix-run/react';
 import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
-
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
-
 import favicon from '../public/favicon.svg';
-
 import {withWeaverse} from '@weaverse/hydrogen';
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';

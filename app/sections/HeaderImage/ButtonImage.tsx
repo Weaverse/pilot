@@ -17,7 +17,7 @@ let buttonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
   let { buttonLink, buttonLabel, openInNewTab, buttonStyle, ...rest } = props;
   return (
     <div ref={ref} {...rest} className='mt-3'>
-      {buttonLabel && <a href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''} className={clsx('py-3 px-4 rounded', buttonStyle)}>{buttonLabel}</a>}
+      {buttonLabel && <a href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''} className={clsx('py-3 px-4 rounded', buttonStyle)} rel="noreferrer">{buttonLabel}</a>}
     </div>
   );
 });

@@ -3,10 +3,10 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef  } from 'react';
 import { Image } from '@shopify/hydrogen';
 import clsx from 'clsx';
-import { CSSProperties } from 'react';
 import { IconImageBlank } from '~/components';
 
 interface ContentColumnItemProps extends HydrogenComponentProps {
@@ -66,7 +66,7 @@ let ContentColumnItem = forwardRef<HTMLDivElement, ContentColumnItemProps>(
             <a
               href={buttonLink}
               target={openInNewTab ? '_blank' : ''}
-              className={clsx("px-4 py-3 mt-4 cursor-pointer rounded inline-block", buttonStyle)}
+              className={clsx("px-4 py-3 mt-4 cursor-pointer rounded inline-block", buttonStyle)} rel="noreferrer"
             >
               {buttonLabel}
             </a>

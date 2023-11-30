@@ -1,13 +1,13 @@
 import {Await, Link, useLoaderData} from '@remix-run/react';
+import {Image} from '@shopify/hydrogen';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {Suspense, forwardRef} from 'react';
-import {ArticleFragment} from 'storefrontapi.generated';
-import {Grid, Section, Skeleton} from '~/components';
+import type {ArticleFragment} from 'storefrontapi.generated';
+import {Skeleton} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
-import {Image} from '@shopify/hydrogen';
 
 interface RelatedArticlesProps extends HydrogenComponentProps {
   heading: string;
@@ -37,7 +37,7 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
     } = props;
     if (relatedArticles.length > 0) {
       return (
-        <section ref={ref}>
+        <section ref={ref} {...rest}>
           <Suspense fallback={<Skeleton className="h-32" />}>
             <Await
               errorElement="There was a problem loading related products"
@@ -159,29 +159,29 @@ export let schema: HydrogenComponentSchema = {
           },
         },
         {
-            type: 'switch',
-            name: 'showExcerpt',
-            label: 'Show excerpt',
-            defaultValue: false,
-          },
-          {
-            type: 'switch',
-            name: 'showDate',
-            label: 'Show date',
-            defaultValue: false,
-          },
-          {
-            type: 'switch',
-            name: 'showAuthor',
-            label: 'Show author',
-            defaultValue: false,
-          },
-          {
-            type: 'switch',
-            name: 'showReadmore',
-            label: 'Show read more',
-            defaultValue: true,
-          },
+          type: 'switch',
+          name: 'showExcerpt',
+          label: 'Show excerpt',
+          defaultValue: false,
+        },
+        {
+          type: 'switch',
+          name: 'showDate',
+          label: 'Show date',
+          defaultValue: false,
+        },
+        {
+          type: 'switch',
+          name: 'showAuthor',
+          label: 'Show author',
+          defaultValue: false,
+        },
+        {
+          type: 'switch',
+          name: 'showReadmore',
+          label: 'Show read more',
+          defaultValue: true,
+        },
       ],
     },
   ],

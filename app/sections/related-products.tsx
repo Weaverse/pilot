@@ -4,9 +4,8 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {Suspense, forwardRef} from 'react';
-import {ProductCardFragment} from 'storefrontapi.generated';
-import {ProductSwimlane} from '~/components';
-import {Skeleton} from '~/components';
+import type {ProductCardFragment} from 'storefrontapi.generated';
+import {ProductSwimlane,Skeleton} from '~/components';
 
 interface RelatedProductsProps extends HydrogenComponentProps {
   heading: string;

@@ -16,7 +16,7 @@ let VideoButtonItem = forwardRef<HTMLDivElement, VideoButtonProps>((props, ref) 
   let {buttonLabel, buttonLink, enableNewtab, buttonStyle, ...rest} = props;
   return (
     <div ref={ref} {...rest} className='mt-3'>
-      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle)}>{buttonLabel}</a>
+      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle)} rel="noreferrer">{buttonLabel}</a>
     </div>
   );
 });

@@ -2,8 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
+import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
-import {CSSProperties} from 'react';
 import {Image} from '@shopify/hydrogen';
 
 interface ImageWithTextProps extends HydrogenComponentProps {

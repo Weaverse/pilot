@@ -27,19 +27,13 @@ let Testimonials = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
         className={clsx(gapClasses[gap!], 'grid lg:grid-cols-3')}
       >
         <div className="space-y-6">
-          {children?.map((child, idx) => {
-            if (idx % 3 === 0) return child;
-          })}
+          {children?.filter((_, i) => i % 3 === 0)}
         </div>
         <div className="space-y-6">
-          {children?.map((child, idx) => {
-            if (idx % 3 === 1) return child;
-          })}
+          {children?.filter((_, i) => i % 3 === 1)}
         </div>
         <div className="space-y-6">
-          {children?.map((child, idx) => {
-            if (idx % 3 === 2) return child;
-          })}
+          {children?.filter((_, i) => i % 3 === 2)}
         </div>
       </div>
     );
