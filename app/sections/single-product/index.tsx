@@ -13,6 +13,7 @@ import { Quantity } from './quantity';
 import { ProductVariants } from './variants';
 import { ProductPlaceholder } from './placeholder';
 import { defer } from '@shopify/remix-oxygen';
+import {useThemeSettings} from '@weaverse/hydrogen';
 
 type SingleProductData = {
   productsCount: number;
@@ -28,13 +29,14 @@ type SingleProductProps = HydrogenComponentProps<
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
     let {loaderData, children, product: _product, ...rest} = props;
+    let {swatches} = useThemeSettings();
     if (!loaderData?.data)
     return (
         <section className="w-full py-12 md:py-24 lg:py-32" ref={ref}>
           <ProductPlaceholder/>
         </section>
       );
-    let {storeDomain, product, variants, variantSwatch} = loaderData.data;
+    let {storeDomain, product, variants} = loaderData.data;
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
     let [quantity, setQuantity] = useState<number>(1);
     useEffect(() => {
@@ -70,7 +72,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   product={product}
                   selectedVariant={selectedVariant}
                   onSelectedVariantChange={setSelectedVariant}
-                  swatch={variantSwatch}
+                  swatch={swatches}
                   variants={variants}
                   options={product?.options}
                   handle={product?.handle}
@@ -107,24 +109,6 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   },
 );
 
-interface swatchConfig {
-  name: string;
-  size: string;
-  type: string;
-  shape: string;
-  displayName: string;
-}
-
-interface swatchData {
-  colors: {
-    name: string;
-    value: string;
-  }[];
-  images: {
-    name: string;
-    value: string;
-  }[];
-}
 
 export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   let {weaverse, data} = args;
@@ -149,83 +133,10 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
     },
   });
 
-  let swatchConfigs = [
-    {
-      name: 'Color',
-      size: 'md',
-      type: 'variant',
-      shape: 'circle',
-      displayName: 'Color',
-    },
-    {
-      name: 'Size',
-      size: 'md',
-      type: 'button',
-      shape: 'round',
-      displayName: 'Size',
-    },
-  ];
-
-  let swatchData = {
-    colorSwatches: [
-      {
-        name: 'red',
-        value: '#bc3535',
-      },
-      {
-        name: 'blue',
-        value: '#0000ff',
-      },
-      {
-        name: 'green',
-        value: '#00ff00',
-      },
-      {
-        name: 'yellow',
-        value: '#ffff00',
-      },
-      {
-        name: 'black',
-        value: '#000000',
-      },
-      {
-        name: 'white',
-        value: '#ffffff',
-      },
-    ],
-    imageSwatches: [
-      {
-        name: 'white',
-        value:
-          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/photo-1657960526734-108dcd75a24e.avif?v=1699076026',
-        // "value": {
-        //   url: ".."
-        //   id: "gid..."
-        //   alt: ...
-        //   width: ...
-        // }
-      },
-      {
-        name: 'red',
-        value:
-          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/photo-1657960526734-108dcd75a24e.avif?v=1699076026',
-      },
-      {
-        name: 'black',
-        value:
-          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/photo-1657960526734-108dcd75a24e.avif?v=1699076026',
-      },
-    ],
-  }
-
   return defer({
     product,
     variants: variants?.product?.variants,
     storeDomain: shop.primaryDomain.url,
-    variantSwatch: {
-      configs: swatchConfigs,
-      swatches: swatchData,
-    }
   });
 };
 

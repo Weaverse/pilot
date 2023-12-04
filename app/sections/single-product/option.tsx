@@ -9,8 +9,8 @@ interface VariantOptionProps {
   // shape: string;
   displayName?: string;
   swatches: {
-    images: any[]
-    colors: any[]
+    imageSwatches: any[]
+    colorSwatches: any[]
   }
   values: {
     isActive: boolean;
@@ -68,7 +68,7 @@ export function VariantOption(props: VariantOptionProps) {
         <div className="flex gap-4">
           {values.map((value) => {
             let swatchColor: string =
-              swatches.colors.find(
+              swatches.colorSwatches.find(
                 (color) => color.name === value.value,
               )?.value || value.value;
             return (
@@ -99,7 +99,7 @@ export function VariantOption(props: VariantOptionProps) {
         <div className="flex gap-4">
           {values.map((value) => {
             let swatchImage: string =
-              swatches.images.find(
+              swatches.imageSwatches.find(
                 (image) => image.name === value.value,
               )?.value || '';
             return (

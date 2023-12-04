@@ -27,7 +27,7 @@ interface ProductVariantsProps {
 
 export function ProductVariants(props: ProductVariantsProps) {
   let {selectedVariant, onSelectedVariantChange, options, variants, handle, swatch} =
-    props;
+  props;
 
   const closeRef = useRef<HTMLButtonElement>(null);
   let selectedOptions = selectedVariant?.selectedOptions;
@@ -170,20 +170,6 @@ export function ProductVariants(props: ProductVariantsProps) {
     selectedOptionMap.set(opt.name, opt.value);
   });
 
-  let node = {
-    availableForSale: true,
-    selectedOptions: [
-      {
-        name: 'Size',
-        value: 'OS',
-      },
-      {
-        name: 'Color',
-        value: 'black',
-      },
-    ],
-    title: 'OS / black',
-  };
   return (
     <div className="space-y-6">
       <VariantSelector handle={handle} variants={nodes} options={options}>
@@ -205,7 +191,9 @@ export function ProductVariants(props: ProductVariantsProps) {
           });
           let handleSelectOptionValue = (value: string) =>
             handleSelectOption(optionName, value);
-          let config = swatch.configs.find((config) => config.name === optionName);
+          let config = swatch.configs.find((config) => {
+            return config.name.toLowerCase() === optionName.toLowerCase()
+          })
           let selectedValue = selectedOptions?.find(
             (opt) => opt.name === optionName,
           )?.value!;
@@ -222,7 +210,7 @@ export function ProductVariants(props: ProductVariantsProps) {
           );
         }}
       </VariantSelector>
-      {defaultVariant}
+      {/* {defaultVariant} */}
     </div>
   );
 }
