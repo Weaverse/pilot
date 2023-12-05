@@ -26,7 +26,7 @@ export default buttonItem;
 
 export let schema: HydrogenComponentSchema = {
   type: 'button-image--item',
-  title: 'Button item',
+  title: 'Button',
   inspector: [
     {
       group: 'Button',
