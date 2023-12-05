@@ -32,7 +32,7 @@ let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>((props, ref) => 
   } as CSSProperties;
 
   return (
-    <section ref={ref} {...rest} className='flex relative items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]' style={sectionStyle}>
+    <section ref={ref} {...rest} className='flex relative overflow-hidden items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]' style={sectionStyle}>
       {videoLink ? <ReactPlayer url={videoLink}
         playing={enableAutoPlay}
         volume={1} muted={enableMuted}
@@ -152,7 +152,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['subheading', 'heading', 'description', 'video-button--item'],
+  childTypes: ['subheading', 'heading', 'description', 'button'],
   presets: {
     children: [
       {
@@ -168,7 +168,8 @@ export let schema: HydrogenComponentSchema = {
         content: 'Pair large text with an image to tell a story.',
       },
       {
-        type: 'video-button--item',
+        type: 'button',
+        content: 'Button section',
       }
     ],
   },
