@@ -274,6 +274,12 @@ Weaverse provides a convenient way to customize your theme inside the **Weaverse
 
 ![Weaverse Editor](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
 
+### Local development inspects
+
+- Hydrogen app: http://localhost:3456
+- GraphiQL API browser: http://localhost:3456/graphiql
+- Server side network requests: http://localhost:3456/debug-network
+
 ## References
 
 - [Weaverse docs](https://weaverse.io/docs)
