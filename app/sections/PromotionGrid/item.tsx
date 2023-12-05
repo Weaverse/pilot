@@ -64,7 +64,7 @@ export let schema: HydrogenComponentSchema = {
         content: 'Include the smaller details of your promotion in text below the title.',
       },
       {
-        type: 'Button-items',
+        type: 'Button-Promotion-items',
       }
     ],
   },
