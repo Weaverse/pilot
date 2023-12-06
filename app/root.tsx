@@ -181,7 +181,13 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
               )}
             </>
           ) : (
-            <GenericError error={error instanceof Error ? error : undefined} />
+            <GenericError
+              error={
+                error instanceof Error
+                  ? error
+                  : (routeError as Error) || undefined
+              }
+            />
           )}
         </Layout>
         <ScrollRestoration nonce={nonce} />

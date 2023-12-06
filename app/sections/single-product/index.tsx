@@ -35,7 +35,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [product]);
 
-    if (!product) {
+    if (!product || !selectedVariant) {
       // TODO: should render placeholder instead of this message
       return (
         <section ref={ref} {...rest} className="h-20 bg-gray-200 p-6">
