@@ -26,12 +26,12 @@ let SIZE_MAP = {
   sm: 'w-8 h-8',
   md: 'w-10 h-10',
   lg: 'w-12 h-12',
-}
+};
 
 export function VariantOption(props: VariantOptionProps) {
   let {
     name,
-    type = 'dropdown',
+    type = 'default',
     values,
     displayName,
     shape = 'square',
@@ -109,8 +109,8 @@ export function VariantOption(props: VariantOptionProps) {
         <div className="flex gap-4">
           {values.map((value) => {
             let swatchImage: string =
-            swatches.imageSwatches.find((image) => image.name === value.value)
-            ?.value || '';
+              swatches.imageSwatches.find((image) => image.name === value.value)
+                ?.value || '';
             return (
               <button
                 key={value.value}
@@ -123,10 +123,13 @@ export function VariantOption(props: VariantOptionProps) {
                 )}
                 onClick={() => onSelectOptionValue(value.value)}
               >
-                <Image data={swatchImage} className={clsx(
-                  'w-full h-full object-cover',
-                  roundedClassName,
-                )}/>
+                <Image
+                  data={swatchImage}
+                  className={clsx(
+                    'w-full h-full object-cover',
+                    roundedClassName,
+                  )}
+                />
               </button>
             );
           })}
@@ -162,15 +165,31 @@ export function VariantOption(props: VariantOptionProps) {
           >
             {values.map((value) => {
               return (
-                <option
-                  key={value.value}
-                  value={value.value}
-                >
+                <option key={value.value} value={value.value}>
                   {value.value}
                 </option>
               );
             })}
           </select>
+        </div>
+      )}
+
+      {type === 'default' && (
+        <div className="flex gap-4">
+          {values.map((value) => (
+            <div
+              key={value.value}
+              className={clsx(
+                'leading-none py-1 cursor-pointer transition-all duration-200',
+                selectedOptionValue === value.value &&
+                  'border-bar/50 border-b-[1.5px]',
+                !value.isAvailable && 'opacity-50',
+              )}
+              onClick={() => onSelectOptionValue(value.value)}
+            >
+              {value.value}
+            </div>
+          ))}
         </div>
       )}
     </div>

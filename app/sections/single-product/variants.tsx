@@ -1,5 +1,5 @@
 import {VariantSelector} from '@shopify/hydrogen';
-import {
+import type {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from 'storefrontapi.generated';

@@ -1,20 +1,24 @@
 import {Image, Money, ShopPayButton} from '@shopify/hydrogen';
-import type {
-  ComponentLoaderArgs,
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseProduct,
+import {
+  useThemeSettings,
+  type ComponentLoaderArgs,
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
+  type WeaverseProduct,
 } from '@weaverse/hydrogen';
 import {forwardRef, useEffect, useState} from 'react';
-import {ProductQuery} from 'storefrontapi.generated';
+import type {ProductQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components';
 import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
 import {Quantity} from './quantity';
 import {ProductVariants} from './variants';
+import {ProductPlaceholder} from './placeholder';
+import {defer} from '@remix-run/server-runtime';
 
 type SingleProductData = {
   productsCount: number;
   product: WeaverseProduct;
+  hideUnavailableOptions: boolean;
 };
 
 type SingleProductProps = HydrogenComponentProps<
@@ -22,36 +26,38 @@ type SingleProductProps = HydrogenComponentProps<
 > &
   SingleProductData;
 
-
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {loaderData, children, product: _product, hideUnavailableOptions, ...rest} = props;
+    let {
+      loaderData,
+      children,
+      product: _product,
+      hideUnavailableOptions,
+      ...rest
+    } = props;
     let {swatches} = useThemeSettings();
-    if (!loaderData?.data)
-    return (
-        <section className="w-full py-12 md:py-24 lg:py-32" ref={ref}>
-          <ProductPlaceholder/>
-        </section>
-      );
-    let {storeDomain, product, variants} = loaderData.data;
+
+    let {storeDomain, product, variants} = loaderData?.data || {};
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
-    let atcText = selectedVariant?.availableForSale ? 'Add to Cart' : selectedVariant.quantityAvailable === -1 ? 'Unavailable' : 'Sold Out';
     let [quantity, setQuantity] = useState<number>(1);
     useEffect(() => {
       setSelectedVariant(variants?.nodes?.[0]);
       setQuantity(1);
-    }, [product]);
-
-    if (!product) {
-      // TODO: should render placeholder instead of this message
+    }, [product, variants?.nodes]);
+    if (!product)
       return (
-        <section ref={ref} {...rest} className="h-20 bg-gray-200 p-6">
-          Please select product to show single product
+        <section className="w-full py-12 md:py-24 lg:py-32" ref={ref} {...rest}>
+          <ProductPlaceholder />
         </section>
       );
-    }
+
+    let atcText = selectedVariant?.availableForSale
+      ? 'Add to Cart'
+      : selectedVariant?.quantityAvailable === -1
+      ? 'Unavailable'
+      : 'Sold Out';
     return (
-      <section ref={ref} className="w-full py-12 md:py-24 lg:py-32">
+      <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
             <Image
@@ -88,7 +94,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
               <AddToCartButton
-              disabled={!selectedVariant?.availableForSale}
+                disabled={!selectedVariant?.availableForSale}
                 lines={[
                   {
                     merchandiseId: selectedVariant.id!,
@@ -100,16 +106,18 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               >
                 <span> {atcText}</span>
               </AddToCartButton>
-              {selectedVariant?.availableForSale && <ShopPayButton
-                width="100%"
-                variantIdsAndQuantities={[
-                  {
-                    id: selectedVariant.id!,
-                    quantity,
-                  },
-                ]}
-                storeDomain={storeDomain}
-              />}
+              {selectedVariant?.availableForSale && (
+                <ShopPayButton
+                  width="100%"
+                  variantIdsAndQuantities={[
+                    {
+                      id: selectedVariant.id!,
+                      quantity,
+                    },
+                  ]}
+                  storeDomain={storeDomain}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -117,7 +125,6 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     );
   },
 );
-
 
 export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   let {weaverse, data} = args;
@@ -141,7 +148,6 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
       country: storefront.i18n.country,
     },
   });
-  console.log("🚀 ~ variants:", variants)
 
   return defer({
     product,
@@ -168,7 +174,7 @@ export let schema: HydrogenComponentSchema = {
           label: 'Hide unavailable options',
           type: 'switch',
           name: 'hideUnavailableOptions',
-        }
+        },
       ],
     },
   ],
