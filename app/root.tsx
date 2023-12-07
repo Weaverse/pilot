@@ -119,6 +119,7 @@ function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="msvalidate.01" content="BBDE8BD42C23C165D7189D0F35E70A3F" />
         <Seo />
         <Meta />
         <Links />

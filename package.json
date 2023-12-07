@@ -3,11 +3,11 @@
   "private": false,
   "sideEffects": false,
   "author": "Weaverse",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "scripts": {
-    "dev": "shopify hydrogen dev --codegen --port 3456",
+    "dev": "shopify hydrogen dev --worker --codegen --port 3456",
     "build": "shopify hydrogen build",
-    "preview": "npm run build && shopify hydrogen preview",
+    "preview": "npm run build && shopify hydrogen preview --worker",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "lint:fix": "eslint --fix --ext .js,.ts,.jsx,.tsx .",
     "format": "prettier --write --ignore-unknown .",
@@ -23,9 +23,9 @@
     "@remix-run/react": "2.1.0",
     "@remix-run/server-runtime": "2.1.0",
     "@shopify/cli": "3.51.0",
-    "@shopify/cli-hydrogen": "^6.0.2",
-    "@shopify/hydrogen": "~2023.10.2",
-    "@shopify/remix-oxygen": "^2.0.1",
+    "@shopify/cli-hydrogen": "^6.1.0",
+    "@shopify/hydrogen": "~2023.10.3",
+    "@shopify/remix-oxygen": "^2.0.2",
     "@weaverse/hydrogen": "2.8.0",
     "clsx": "2.0.0",
     "cross-env": "7.0.3",
@@ -66,6 +66,6 @@
     "typescript": "5.2.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=18.0.0"
   }
 }

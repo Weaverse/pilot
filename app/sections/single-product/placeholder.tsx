@@ -90,7 +90,11 @@ export function ProductPlaceholder(props: any) {
               >
                 <span>−</span>
               </button>
-              <input className="w-12 px-1 py-2.5 text-center" value="1" />
+              <input
+                className="w-12 px-1 py-2.5 text-center"
+                value="1"
+                readOnly
+              />
               <button
                 className="w-10 h-10 transition text-body hover:text-body"
                 name="increase-quantity"
@@ -102,7 +106,7 @@ export function ProductPlaceholder(props: any) {
           </div>
           <div>
             <button
-              className="inline-block rounded font-medium text-center py-3 px-4 text-sm font-medium border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content w-full"
+              className="inline-block rounded font-medium text-center py-3 px-4 text-sm border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content w-full"
               type="submit"
               data-test="add-to-cart"
             >
