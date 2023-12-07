@@ -1,12 +1,11 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, Form, useLoaderData} from '@remix-run/react';
+import {getPaginationVariables, Pagination} from '@shopify/hydrogen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Suspense} from 'react';
-import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
 
 import {
   FeaturedCollections,
   Grid,
-  Heading,
   IconSearch,
   Input,
   PageHeader,
@@ -24,7 +23,10 @@ import {
   type FeaturedData,
 } from './($locale).featured-products';
 
-export async function loader({request, context: {storefront}}: LoaderFunctionArgs) {
+export async function loader({
+  request,
+  context: {storefront},
+}: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
   const searchTerm = searchParams.get('q')!;
   const variables = getPaginationVariables(request, {pageBy: 8});
@@ -77,7 +79,10 @@ export default function Search() {
     <>
       <PageHeader className="bg-secondary/5 justify-center items-center !gap-5">
         {searchTerm && (
-          <h3 className="uppercase w-full text-center">{noResults ? "No result" : `${products.nodes.length} results`} for "{searchTerm}"</h3>
+          <h3 className="uppercase w-full text-center">
+            {noResults ? 'No result' : `${products.nodes.length} results`} for "
+            {searchTerm}"
+          </h3>
         )}
         <Form method="get" className="lg:w-[400px]">
           <Input

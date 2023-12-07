@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import {InputHTMLAttributes} from 'react';
+import type {InputHTMLAttributes} from 'react';
 
 export function Checkbox(props: InputHTMLAttributes<HTMLInputElement>) {
   let {className = '', ...rest} = props;

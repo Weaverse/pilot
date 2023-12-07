@@ -10,14 +10,6 @@ import clsx from 'clsx';
 
 interface PromotionItemProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;
-  subHeading: string;
-  subHeadingSize: string;
-  subHeadingColor: string;
-  heading: string;
-  headingColor: string;
-  descriptionText: string;
-  descriptionSize: string;
-  descriptionColor: string;
   buttonLabel1: string;
   buttonLink1: string;
   buttonLabel2: string;
@@ -28,7 +20,7 @@ interface PromotionItemProps extends HydrogenComponentProps {
 }
 
 let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, ref) => {
-  let { backgroundImage, subHeading, subHeadingSize, subHeadingColor, heading, headingColor, descriptionText, descriptionSize, descriptionColor, buttonLabel1, buttonLink1, buttonLabel2, buttonLink2, openInNewTab, buttonStyle1, buttonStyle2, ...rest } = props;
+  let { backgroundImage, buttonLabel1, buttonLink1, buttonLabel2, buttonLink2, openInNewTab, buttonStyle1, buttonStyle2, children, ...rest } = props;
   return (
     <div ref={ref} {...rest} className='relative w-96 aspect-video' >
       <div className='absolute inset-0'>
@@ -39,12 +31,10 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, r
       </div>
       <div className='relative flex flex-col items-center z-10 w-full py-10'>
         <div className='w-5/6 flex flex-col text-center items-center gap-5'>
-          {subHeading && <p className='font-normal' style={{fontSize: subHeadingSize, color: subHeadingColor}}>{subHeading}</p>}
-          {heading && <h3 className='font-medium' style={{color:headingColor}}>{heading}</h3>}
-          {descriptionText && <p className='text-sm font-normal' style={{fontSize: descriptionSize, color: descriptionColor}}>{descriptionText}</p>}
+          {children}
           <div className='flex gap-3 mt-3'>
-            {buttonLabel1 && <a href={buttonLink1} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle1)}>{buttonLabel1}</a>}
-            {buttonLabel2 && <a href={buttonLink2} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle2)}>{buttonLabel2}</a>}
+            {buttonLabel1 && <a href={buttonLink1} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle1)} rel="noreferrer">{buttonLabel1}</a>}
+            {buttonLabel2 && <a href={buttonLink2} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 w-fit cursor-pointer rounded inline-block', buttonStyle2)} rel="noreferrer">{buttonLabel2}</a>}
           </div>
         </div>
       </div>
@@ -56,83 +46,15 @@ export default PromotionGridItem;
 
 export let schema: HydrogenComponentSchema = {
   type: 'promotion-item',
-  title: 'Promotion item',
+  title: 'Promotion',
   inspector: [
     {
-      group: 'Promotion item',
+      group: 'Promotion',
       inputs: [
         {
           type: 'image',
           name: 'backgroundImage',
           label: 'Background image',
-        },
-        {
-          type: 'text',
-          name: 'subHeading',
-          label: 'Subheading',
-          defaultValue: 'Subheading',
-          placeholder: 'Subheading',
-        },
-        {
-          type: 'toggle-group',
-          label: 'Subheading size',
-          name: 'subHeadingSize',
-          configs: {
-            options: [
-              { label: 'XS', value: '14px' },
-              { label: 'S', value: '16px' },
-              { label: 'M', value: '18px' },
-              { label: 'L', value: '20px' },
-              { label: 'XL', value: '22px' },
-            ],
-          },
-          defaultValue: '16px',
-        },
-        {
-          type: 'color',
-          name: 'subHeadingColor',
-          label: 'Subheading color',
-          defaultValue: '#333333',
-        },
-        {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Heading for Image',
-          placeholder: 'Heading for image section',
-        },
-        {
-          type: 'color',
-          name: 'headingColor',
-          label: 'Heading color',
-          defaultValue: '#333333',
-        },
-        {
-          type: 'textarea',
-          name: 'descriptionText',
-          label: 'Text',
-          defaultValue: 'Include the smaller details of your promotion in text below the title.',
-        },
-        {
-          type: 'toggle-group',
-          label: 'Description size',
-          name: 'descriptionSize',
-          configs: {
-            options: [
-              { label: 'XS', value: '14px' },
-              { label: 'S', value: '16px' },
-              { label: 'M', value: '18px' },
-              { label: 'L', value: '20px' },
-              { label: 'XL', value: '22px' },
-            ],
-          },
-          defaultValue: '16px',
-        },
-        {
-          type: 'color',
-          name: 'descriptionColor',
-          label: 'Description color',
-          defaultValue: '#333333',
         },
         {
           type: 'text',
@@ -193,4 +115,21 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
+  childTypes: ['subheading', 'heading', 'description'],
+  presets: {
+    children: [
+      {
+        type: 'subheading',
+        content: 'Subheading',
+      },
+      {
+        type: 'heading',
+        content: 'Heading for Image',
+      },
+      {
+        type: 'description',
+        content: 'Include the smaller details of your promotion in text below the title.',
+      },
+    ],
+  },
 };

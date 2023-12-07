@@ -2,8 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef  } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { IconVideoBlank } from '~/components';
 
@@ -28,10 +28,11 @@ let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>((props, ref) => 
     '--section-height-mobile': `${sectionHeightMobile}px`,
     '--overlay-opacity': `${overlayOpacity}%`,
     '--overlay-color': `${overlayColor}`,
+    '--max-width-content': '600px',
   } as CSSProperties;
 
   return (
-    <section ref={ref} {...rest} className='flex relative items-center text-center overflow-hidden h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)] text-white' style={sectionStyle}>
+    <section ref={ref} {...rest} className='flex relative items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]' style={sectionStyle}>
       {videoLink ? <ReactPlayer url={videoLink}
         playing={enableAutoPlay}
         volume={1} muted={enableMuted}
@@ -43,7 +44,7 @@ let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>((props, ref) => 
           <IconVideoBlank viewBox="0 0 220 220" className='!w-56 !h-56' />
         </div>}
       {enableOverlay && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
-      <div className='relative flex flex-col gap-5 mx-12 sm-max:mx-0 sm-max:w-5/6 z-10'>
+      <div className='relative text-center flex flex-col gap-5 mx-12 w-[var(--max-width-content)] sm-max:mx-0 sm-max:w-5/6 z-10'>
         {children}
       </div>
     </section>
@@ -151,17 +152,20 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['video-subheading--item', 'video-heading--item', 'video-description--item', 'video-button--item'],
+  childTypes: ['subheading', 'heading', 'description', 'video-button--item'],
   presets: {
     children: [
       {
-        type: 'video-subheading--item',
+        type: 'subheading',
+        content: 'Subheading',
       },
       {
-        type: 'video-heading--item',
+        type: 'heading',
+        content: 'Heading for Video',
       },
       {
-        type: 'video-description--item',
+        type: 'description',
+        content: 'Pair large text with an image to tell a story.',
       },
       {
         type: 'video-button--item',

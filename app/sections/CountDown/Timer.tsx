@@ -2,7 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { useState, useEffect, forwardRef, CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 
 interface CountDownTimerProps extends HydrogenComponentProps {
   textColor: string;

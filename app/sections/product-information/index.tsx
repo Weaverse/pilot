@@ -5,7 +5,7 @@ import type {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
-import {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
+import type {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
 import {Heading, ProductGallery, Section, Text} from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import {ProductDetail} from './product-detail';

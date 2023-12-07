@@ -1,38 +1,36 @@
-import {useParams, Form, Await} from '@remix-run/react';
-import {useWindowScroll} from 'react-use';
 import {Disclosure} from '@headlessui/react';
-import {Suspense, useEffect, useMemo} from 'react';
+import {Await, Form, useParams} from '@remix-run/react';
 import {CartForm} from '@shopify/hydrogen';
-
+import {Suspense, useEffect, useMemo} from 'react';
+import {useWindowScroll} from 'react-use';
+import clsx from 'clsx';
 import type {LayoutQuery} from 'storefrontapi.generated';
 import {
-  Drawer,
-  useDrawer,
-  Text,
-  Input,
-  IconLogin,
-  IconAccount,
-  IconBag,
-  IconSearch,
-  Heading,
-  IconMenu,
-  IconCaret,
-  Section,
-  CountrySelector,
   Cart,
   CartLoading,
+  CountrySelector,
+  Drawer,
+  Heading,
+  IconAccount,
+  IconBag,
+  IconCaret,
+  IconLogin,
+  IconMenu,
+  IconSearch,
   Link,
+  Section,
+  Text,
+  useDrawer,
 } from '~/components';
-import {
-  type EnhancedMenu,
-  type ChildEnhancedMenuItem,
-  useIsHomePath,
-} from '~/lib/utils';
-import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
-import {Logo} from './Logo';
-import clsx from 'clsx';
+import {useIsHydrated} from '~/hooks/useIsHydrated';
+import {
+  useIsHomePath,
+  type ChildEnhancedMenuItem,
+  type EnhancedMenu,
+} from '~/lib/utils';
 import {useRootLoaderData} from '~/root';
+import {Logo} from './Logo';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -354,6 +352,7 @@ function Badge({
         </div>
       </>
     ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [count, dark],
   );
 

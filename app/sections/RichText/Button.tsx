@@ -16,7 +16,7 @@ let RichTextButtonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref
   let { buttonLabel, buttonLink, openInNewTab, buttonStyle, ...rest } = props;
   return (
     <div ref={ref} {...rest}>
-      <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 rounded cursor-pointer inline-block', buttonStyle)}>{buttonLabel}</a>
+      <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('px-4 py-3 rounded cursor-pointer inline-block', buttonStyle)} rel="noreferrer">{buttonLabel}</a>
     </div>
   );
 });

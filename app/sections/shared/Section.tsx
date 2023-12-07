@@ -1,9 +1,14 @@
-import {InspectorGroup} from '@weaverse/hydrogen';
+import {
+  type HydrogenComponentProps,
+  type InspectorGroup,
+} from '@weaverse/hydrogen';
 import clsx from 'clsx';
-import React, {HTMLAttributes, forwardRef} from 'react';
+import type {HTMLAttributes} from 'react';
+import React, { forwardRef} from 'react';
+import type {
+  BackgroundImageProps} from './BackgroundImage';
 import {
   BackgroundImage,
-  BackgroundImageProps,
   backgroundImageInputs,
 } from './BackgroundImage';
 import {Overlay, overlayInputs} from './Overlay';
@@ -12,10 +17,12 @@ export type SectionWidth = 'full' | 'stretch' | 'fixed';
 export type VerticalPadding = 'none' | 'small' | 'medium' | 'large';
 export type DividerType = 'none' | 'top' | 'bottom' | 'both';
 
-export type SectionProps = HTMLAttributes<HTMLElement> &
+export type SectionProps = HydrogenComponentProps &
+  HTMLAttributes<HTMLElement> &
   BackgroundImageProps & {
     as?: React.ElementType;
     width?: SectionWidth;
+    gap?: number;
     children?: React.ReactNode;
     className?: string;
     verticalPadding?: VerticalPadding;
@@ -25,6 +32,15 @@ export type SectionProps = HTMLAttributes<HTMLElement> &
     overlayOpacity?: number;
     backgroundColor?: string;
   };
+
+let gapClasses: Record<number, string> = {
+  0: '',
+  4: 'space-y-1',
+  8: 'space-y-2',
+  12: 'space-y-3',
+  16: 'space-y-4',
+  20: 'space-y-5',
+};
 
 let verticalPaddingClasses: Record<VerticalPadding, string> = {
   none: '',
@@ -43,9 +59,9 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   let {
     as: Component = 'section',
     width,
-    children,
-    verticalPadding,
+    gap,
     divider,
+    verticalPadding,
     backgroundColor,
     backgroundImage,
     backgroundFit,
@@ -54,6 +70,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     overlayColor,
     overlayOpacity,
     className,
+    children,
     ...rest
   } = props;
   return (
@@ -84,7 +101,11 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         {enableOverlay && (
           <Overlay color={overlayColor!} opacity={overlayOpacity!} />
         )}
-        <div className={clsx('relative', widthClasses[width!])}>{children}</div>
+        <div
+          className={clsx('relative', widthClasses[width!], gapClasses[gap!])}
+        >
+          {children}
+        </div>
       </Component>
       {(divider === 'bottom' || divider === 'both') && <Divider />}
     </>
@@ -98,6 +119,7 @@ function Divider() {
 Section.defaultProps = {
   as: 'section',
   width: 'fixed',
+  gap: 0,
   verticalPadding: 'medium',
   divider: 'none',
   enableOverlay: false,
@@ -122,6 +144,18 @@ export let layoutInputs: InspectorGroup['inputs'] = [
       ],
     },
     defaultValue: 'fixed',
+  },
+  {
+    type: 'range',
+    name: 'gap',
+    label: 'Items gap',
+    configs: {
+      min: 0,
+      max: 20,
+      step: 4,
+      unit: 'px',
+    },
+    defaultValue: 0,
   },
   {
     type: 'select',

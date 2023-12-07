@@ -1,19 +1,16 @@
 import {Image, Money, ShopPayButton} from '@shopify/hydrogen';
-import {
+import type {
   ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseProduct,
 } from '@weaverse/hydrogen';
 import {forwardRef, useEffect, useState} from 'react';
-import { ProductQuery } from 'storefrontapi.generated';
-import { AddToCartButton } from '~/components';
-import { PRODUCT_QUERY, VARIANTS_QUERY } from '~/data/queries';
-import { Quantity } from './quantity';
-import { ProductVariants } from './variants';
-import { ProductPlaceholder } from './placeholder';
-import { defer } from '@shopify/remix-oxygen';
-import {useThemeSettings} from '@weaverse/hydrogen';
+import {ProductQuery} from 'storefrontapi.generated';
+import {AddToCartButton} from '~/components';
+import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
+import {Quantity} from './quantity';
+import {ProductVariants} from './variants';
 
 type SingleProductData = {
   productsCount: number;
@@ -41,9 +38,18 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     let atcText = selectedVariant?.availableForSale ? 'Add to Cart' : selectedVariant.quantityAvailable === -1 ? 'Unavailable' : 'Sold Out';
     let [quantity, setQuantity] = useState<number>(1);
     useEffect(() => {
-      setSelectedVariant(variants?.nodes[0]);
-    }, [_product.handle]);
-    
+      setSelectedVariant(variants?.nodes?.[0]);
+      setQuantity(1);
+    }, [product]);
+
+    if (!product) {
+      // TODO: should render placeholder instead of this message
+      return (
+        <section ref={ref} {...rest} className="h-20 bg-gray-200 p-6">
+          Please select product to show single product
+        </section>
+      );
+    }
     return (
       <section ref={ref} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">

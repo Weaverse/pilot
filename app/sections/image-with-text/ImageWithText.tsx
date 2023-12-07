@@ -3,8 +3,8 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef  } from 'react';
 import { Image } from '@shopify/hydrogen';
 import { IconImageBlank } from '~/components';
 
@@ -112,17 +112,20 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['subheading-image--Item', 'Heading--Item', 'Description--Item', 'Button--Item'],
+  childTypes: ['subheading', 'heading', 'description', 'Button--Item'],
   presets: {
     children: [
       {
-        type: 'subheading-image--Item',
+        type: 'subheading',
+        content: 'Subheading',
       },
       {
-        type: 'Heading--Item',
+        type: 'heading',
+        content: 'Heading for image',
       },
       {
-        type: 'Description--Item',
+        type: 'description',
+        content: 'Pair large text with an image to tell a story.',
       },
       {
         type: 'Button--Item',

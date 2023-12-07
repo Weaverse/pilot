@@ -1,10 +1,10 @@
 import {Image} from '@shopify/hydrogen';
-import {
+import type {
   InspectorGroup,
   PositionInputValue,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import {CSSProperties} from 'react';
+import type {CSSProperties} from 'react';
 
 export type BackgroundImageProps = {
   backgroundImage?: WeaverseImage;
@@ -16,6 +16,7 @@ export function BackgroundImage(props: BackgroundImageProps) {
   let {backgroundImage, backgroundFit, backgroundPosition} = props;
   return (
     <Image
+      className="absolute inset-0 w-full h-full"
       data={backgroundImage}
       sizes="100vw"
       style={{
@@ -48,7 +49,7 @@ export let backgroundImageInputs: InspectorGroup['inputs'] = [
     label: 'Background fit',
     configs: {
       options: [
-        {value: 'auto', label: 'Auto', icon: 'CornersOut'},
+        {value: 'fill', label: 'Fill', icon: 'CornersOut'},
         {value: 'cover', label: 'Cover', icon: 'ArrowsOut'},
         {value: 'contain', label: 'Contain', icon: 'ArrowsIn'},
       ],

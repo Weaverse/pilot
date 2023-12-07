@@ -5,28 +5,28 @@ import type {
 import { forwardRef } from 'react';
 import clsx from 'clsx';
 
-interface VideoButtonProps extends HydrogenComponentProps {
-  buttonLabel: string;
+
+interface ButtonItemProps extends HydrogenComponentProps {
   buttonLink: string;
-  enableNewtab: boolean;
+  buttonLabel: string;
+  openInNewTab: boolean;
   buttonStyle: string;
 }
 
-let VideoButtonItem = forwardRef<HTMLDivElement, VideoButtonProps>((props, ref) => {
-  let {buttonLabel, buttonLink, enableNewtab, buttonStyle, ...rest} = props;
+let buttonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
+  let { buttonLink, buttonLabel, openInNewTab, buttonStyle, ...rest } = props;
   return (
     <div ref={ref} {...rest} className='mt-3'>
-      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle)}>{buttonLabel}</a>
+      {buttonLabel && <a href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''} className={clsx('py-3 px-4 rounded', buttonStyle)} rel="noreferrer">{buttonLabel}</a>}
     </div>
   );
 });
 
-export default VideoButtonItem;
+export default buttonItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'video-button--item',
-  title: 'Button item',
-  limit: 1,
+  type: 'button-image--item',
+  title: 'Button',
   inspector: [
     {
       group: 'Button',
@@ -45,7 +45,7 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'switch',
-          name: 'enableNewtab',
+          name: 'openInNewTab',
           label: 'Open in new tab',
           defaultValue: true,
         },

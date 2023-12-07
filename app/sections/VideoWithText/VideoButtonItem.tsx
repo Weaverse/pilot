@@ -5,28 +5,27 @@ import type {
 import { forwardRef } from 'react';
 import clsx from 'clsx';
 
-
-interface ButtonItemProps extends HydrogenComponentProps {
+interface VideoButtonProps extends HydrogenComponentProps {
   buttonLabel: string;
   buttonLink: string;
-  openInNewTab: boolean;
+  enableNewtab: boolean;
   buttonStyle: string;
 }
 
-let ImageWTextButtonItem = forwardRef<HTMLDivElement, ButtonItemProps>((props, ref) => {
-  let { buttonLabel, buttonLink, openInNewTab, buttonStyle, ...rest } = props;
+let VideoButtonItem = forwardRef<HTMLDivElement, VideoButtonProps>((props, ref) => {
+  let {buttonLabel, buttonLink, enableNewtab, buttonStyle, ...rest} = props;
   return (
-    <div ref={ref} {...rest}>
-      <a className={clsx('py-3 px-4 rounded cursor-pointer inline-block', buttonStyle)} target={openInNewTab ? '_blank' : ''} href={buttonLink}>{buttonLabel}</a>
+    <div ref={ref} {...rest} className='mt-3'>
+      <a href={buttonLink} target={enableNewtab ? '_blank' : ''} className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle)} rel="noreferrer">{buttonLabel}</a>
     </div>
   );
 });
 
-export default ImageWTextButtonItem;
+export default VideoButtonItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'Button--Item',
-  title: 'Button item',
+  type: 'video-button--item',
+  title: 'Button',
   limit: 1,
   inspector: [
     {
@@ -42,11 +41,11 @@ export let schema: HydrogenComponentSchema = {
           type: 'text',
           name: 'buttonLink',
           label: 'Button link',
-          placeholder: 'https://'
+          placeholder: 'https://',
         },
         {
           type: 'switch',
-          name: 'openInNewTab',
+          name: 'enableNewtab',
           label: 'Open in new tab',
           defaultValue: true,
         },
@@ -64,6 +63,6 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
         },
       ],
-    }
+    },
   ],
-};
+}

@@ -1,46 +1,19 @@
-import {
-  type HydrogenComponentProps,
-  type HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
+import {type HydrogenComponentSchema} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
-import {Section, SectionProps, sectionConfigs} from '~/sections/shared/Section';
+import type {SectionProps} from '~/sections/shared/Section';
+import {Section, sectionConfigs} from '~/sections/shared/Section';
 
-type TestimonialsProps = HydrogenComponentProps &
-  SectionProps & {
-    heading: string;
-    description: string;
-  };
+type TestimonialsProps = SectionProps & {
+  heading: string;
+  description: string;
+};
 
 let Testimonials = forwardRef<HTMLElement, TestimonialsProps>((props, ref) => {
   let {heading, description, children, ...rest} = props;
 
   return (
     <Section ref={ref} {...rest}>
-      <div className="mx-auto max-w-screen-md text-center">
-        <h2 className="mb-4 font-medium">{heading}</h2>
-        {description && (
-          <p className="mb-8 font-light text-gray-500 lg:mb-16 sm:text-lg">
-            {description}
-          </p>
-        )}
-      </div>
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="space-y-6">
-          {children?.map((child, idx) => {
-            if (idx % 3 === 0) return child;
-          })}
-        </div>
-        <div className="space-y-6">
-          {children?.map((child, idx) => {
-            if (idx % 3 === 1) return child;
-          })}
-        </div>
-        <div className="space-y-6">
-          {children?.map((child, idx) => {
-            if (idx % 3 === 2) return child;
-          })}
-        </div>
-      </div>
+      {children}
     </Section>
   );
 });
@@ -50,59 +23,22 @@ export default Testimonials;
 export let schema: HydrogenComponentSchema = {
   type: 'testimonials',
   title: 'Testimonials',
-  childTypes: ['testimonial--item'],
-  inspector: [
-    sectionConfigs,
-    {
-      group: 'Content',
-      inputs: [
-        {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Testimonials',
-          placeholder: 'Testimonials',
-        },
-        {
-          type: 'product',
-          name: 'product',
-          label: 'Product',
-        },
-        {
-          type: 'textarea',
-          name: 'description',
-          label: 'Description',
-          defaultValue:
-            'Hear from real customers about their experiences shopping with us. From fast shipping and easy returns to quality products and excellent service, see why customers love buying from our store.',
-          placeholder: 'Optional description',
-        },
-      ],
-    },
-  ],
+  childTypes: ['subheading', 'heading', 'description', 'testimonials-items'],
+  inspector: [sectionConfigs],
   toolbar: ['general-settings', ['duplicate', 'delete']],
   presets: {
     children: [
       {
-        type: 'testimonial--item',
+        type: 'heading',
+        content: 'See what our customers are saying',
       },
       {
-        type: 'testimonial--item',
-        hideOnMobile: true,
+        type: 'description',
+        content:
+          "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.",
       },
       {
-        type: 'testimonial--item',
-        hideOnMobile: true,
-      },
-      {
-        type: 'testimonial--item',
-      },
-      {
-        type: 'testimonial--item',
-        hideOnMobile: true,
-      },
-      {
-        type: 'testimonial--item',
-        hideOnMobile: true,
+        type: 'testimonials-items',
       },
     ],
   },

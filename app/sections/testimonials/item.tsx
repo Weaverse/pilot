@@ -66,10 +66,10 @@ export default TestimonialItem;
 
 export let schema: HydrogenComponentSchema = {
   type: 'testimonial--item',
-  title: 'Testimonial Item',
+  title: 'Testimonial',
   inspector: [
     {
-      group: 'Testimonial Item',
+      group: 'Testimonial',
       inputs: [
         {
           type: 'text',

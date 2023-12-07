@@ -3,7 +3,8 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import { forwardRef, CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef } from 'react';
 import clsx from 'clsx';
 import { Image } from '@shopify/hydrogen';
 
@@ -41,8 +42,8 @@ let Countdown = forwardRef<HTMLElement, CountDownProps>((props, ref) => {
       <div className='flex flex-col gap-3 items-center w-5/6 sm-max:w-full z-10'>
         {children}
         <div className='flex gap-3 mt-3'>
-          {buttonLabel1 && <a className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle1)} href={buttonLink1} target={enableNewtab ? '_blank' : ''}>{buttonLabel1}</a>}
-          {buttonLabel2 && <a className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle2)} href={buttonLink2} target={enableNewtab ? '_blank' : ''}>{buttonLabel2}</a>}
+          {buttonLabel1 && <a className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle1)} href={buttonLink1} target={enableNewtab ? '_blank' : ''} rel="noreferrer">{buttonLabel1}</a>}
+          {buttonLabel2 && <a className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle2)} href={buttonLink2} target={enableNewtab ? '_blank' : ''} rel="noreferrer">{buttonLabel2}</a>}
         </div>
       </div>
     </section>
@@ -158,14 +159,16 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['count-down--heading', 'count-down--subheading', 'count-down--timer'],
+  childTypes: ['heading', 'subheading', 'count-down--timer'],
   presets: {
     children: [
       {
-        type: 'count-down--heading',
+        type: 'heading',
+        content: 'Countdown heading',
       },
       {
-        type: 'count-down--subheading',
+        type: 'subheading',
+        content: 'Countdown to our upcoming event',
       },
       {
         type: 'count-down--timer',

@@ -4,7 +4,7 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
-import {PageDetailsQuery} from 'storefrontapi.generated';
+import type {PageDetailsQuery} from 'storefrontapi.generated';
 import {PageHeader} from '~/components';
 
 interface PageProps extends HydrogenComponentProps {
