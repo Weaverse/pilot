@@ -1,6 +1,6 @@
 import type {Storefront} from '@shopify/hydrogen';
 import type {I18nLocale} from '@weaverse/hydrogen';
-import { WeaverseClient} from '@weaverse/hydrogen';
+import {WeaverseClient} from '@weaverse/hydrogen';
 import {countries} from '~/data/countries';
 import {components} from '~/weaverse/components';
 import {themeSchema} from '~/weaverse/schema.server';
@@ -43,8 +43,9 @@ export function getWeaverseCsp(request: Request) {
     ],
     imgSrc: [
       "'self'",
-      "data:",
+      'data:',
       'cdn.shopify.com',
+      'localhost:3556',
       ...weaverseHosts,
     ],
     styleSrc: [
@@ -52,6 +53,7 @@ export function getWeaverseCsp(request: Request) {
       "'unsafe-inline'",
       'fonts.googleapis.com',
       'cdn.shopify.com',
+      'localhost:3556',
       ...weaverseHosts,
     ],
   };
