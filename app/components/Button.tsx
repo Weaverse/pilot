@@ -26,6 +26,8 @@ export const Button = forwardRef(
     const baseButtonClasses =
       'inline-block rounded font-medium text-center py-3 px-4 text-sm font-medium';
 
+      const disabledClasses = 'disabled:opacity-50 disabled:cursor-not-allowed disabled:select-none disabled:hover:bg-btn disabled:hover:text-btn-content';
+
     const variants = {
       primary: `${baseButtonClasses} border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content`,
       secondary: `${baseButtonClasses} border-2 border-btn text-btnTextInverse hover:bg-btn hover:text-btn-content`,
@@ -41,6 +43,7 @@ export const Button = forwardRef(
     const styles = clsx(
       missingClass(className, 'bg-') && variants[variant],
       missingClass(className, 'w-') && widths[width],
+      disabledClasses,
       className,
     );
 
