@@ -1,9 +1,9 @@
-import { VariantSelector } from '@shopify/hydrogen';
+import {VariantSelector} from '@shopify/hydrogen';
 import {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from 'storefrontapi.generated';
-import { VariantOption } from './option';
+import {VariantOption} from './option';
 
 interface ProductVariantsProps {
   selectedVariant: ProductVariantFragmentFragment;
@@ -18,6 +18,7 @@ interface ProductVariantsProps {
     configs: any[];
     swatches: any;
   };
+  hideUnavailableOptions?: boolean;
 }
 
 export function ProductVariants(props: ProductVariantsProps) {
@@ -28,6 +29,7 @@ export function ProductVariants(props: ProductVariantsProps) {
     variants,
     handle,
     swatch,
+    hideUnavailableOptions,
   } = props;
 
   let selectedOptions = selectedVariant?.selectedOptions;
@@ -53,9 +55,15 @@ export function ProductVariants(props: ProductVariantsProps) {
       }
       return isMatch;
     });
-    if (newSelectedVariant) {
-      onSelectedVariantChange(newSelectedVariant);
+    if (!newSelectedVariant) {
+      newSelectedVariant = {
+        ...selectedVariant,
+        selectedOptions: newSelectedOptions,
+        availableForSale: false,
+        quantityAvailable: -1,
+      };
     }
+    onSelectedVariantChange(newSelectedVariant);
   };
 
   let selectedOptionMap = new Map();
@@ -76,12 +84,15 @@ export function ProductVariants(props: ProductVariantsProps) {
                 return opt.value === clonedSelectedOptionMap.get(opt.name);
               });
             });
+            if (hideUnavailableOptions && !variant) {
+              return null
+            }
             return {
               ...value,
               isAvailable: variant ? variant.availableForSale : false,
               image: variant?.image,
             };
-          });
+          }).filter(Boolean);
           let handleSelectOptionValue = (value: string) =>
             handleSelectOption(optionName, value);
           let config = swatch.configs.find((config) => {

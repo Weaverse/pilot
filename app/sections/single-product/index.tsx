@@ -28,7 +28,7 @@ type SingleProductProps = HydrogenComponentProps<
 
 let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {loaderData, children, product: _product, ...rest} = props;
+    let {loaderData, children, product: _product, hideUnavailableOptions, ...rest} = props;
     let {swatches} = useThemeSettings();
     if (!loaderData?.data)
     return (
@@ -38,6 +38,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       );
     let {storeDomain, product, variants} = loaderData.data;
     let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
+    let atcText = selectedVariant?.availableForSale ? 'Add to Cart' : selectedVariant.quantityAvailable === -1 ? 'Unavailable' : 'Sold Out';
     let [quantity, setQuantity] = useState<number>(1);
     useEffect(() => {
       setSelectedVariant(variants?.nodes[0]);
@@ -76,10 +77,12 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   variants={variants}
                   options={product?.options}
                   handle={product?.handle}
+                  hideUnavailableOptions={hideUnavailableOptions}
                 />
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
               <AddToCartButton
+              disabled={!selectedVariant?.availableForSale}
                 lines={[
                   {
                     merchandiseId: selectedVariant.id!,
@@ -89,9 +92,9 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 variant="primary"
                 data-test="add-to-cart"
               >
-                <span> Add to Cart</span>
+                <span> {atcText}</span>
               </AddToCartButton>
-              <ShopPayButton
+              {selectedVariant?.availableForSale && <ShopPayButton
                 width="100%"
                 variantIdsAndQuantities={[
                   {
@@ -100,7 +103,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   },
                 ]}
                 storeDomain={storeDomain}
-              />
+              />}
             </div>
           </div>
         </div>
@@ -132,6 +135,7 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
       country: storefront.i18n.country,
     },
   });
+  console.log("🚀 ~ variants:", variants)
 
   return defer({
     product,
@@ -154,6 +158,11 @@ export let schema: HydrogenComponentSchema = {
           type: 'product',
           name: 'product',
         },
+        {
+          label: 'Hide unavailable options',
+          type: 'switch',
+          name: 'hideUnavailableOptions',
+        }
       ],
     },
   ],

@@ -45,11 +45,11 @@ export function VariantOption(props: VariantOptionProps) {
     shape === 'circle' ? 'rounded-full' : shape === 'round' ? 'rounded-md' : '';
 
   let defaultClassName = clsx(
-    'border cursor-pointer disabled:cursor-not-allowed disabled:opacity-50',
+    'border cursor-pointer',
     SIZE_MAP[size],
     roundedClassName,
   );
-  let disabledClassName = 'diagonal';
+  let disabledClassName = 'diagonal opacity-50';
   // show value by Type
   return (
     <div className="space-y-4">
@@ -68,7 +68,6 @@ export function VariantOption(props: VariantOptionProps) {
                   'bg-btn text-btn-content',
                 !value.isAvailable && disabledClassName,
               )}
-              disabled={!value.isAvailable}
               onClick={() => onSelectOptionValue(value.value)}
             >
               {value.value}
@@ -93,7 +92,6 @@ export function VariantOption(props: VariantOptionProps) {
                     'border-2 border-bar/70',
                   !value.isAvailable && disabledClassName,
                 )}
-                disabled={!value.isAvailable}
                 onClick={() => onSelectOptionValue(value.value)}
               >
                 <div
@@ -107,32 +105,34 @@ export function VariantOption(props: VariantOptionProps) {
           })}
         </div>
       )}
-      {type === 'image' && (
+      {type === 'custom-image' && (
         <div className="flex gap-4">
           {values.map((value) => {
             let swatchImage: string =
-              swatches.imageSwatches.find((image) => image.name === value.value)
-                ?.value || '';
+            swatches.imageSwatches.find((image) => image.name === value.value)
+            ?.value || '';
             return (
               <button
                 key={value.value}
                 className={clsx(
                   defaultClassName,
+                  'p-0.5',
                   selectedOptionValue === value.value &&
                     'border-2 border-bar/70',
                   !value.isAvailable && disabledClassName,
                 )}
                 onClick={() => onSelectOptionValue(value.value)}
-                style={{
-                  backgroundImage: `url(${swatchImage})`,
-                }}
-                disabled={!value.isAvailable}
-              ></button>
+              >
+                <Image data={swatchImage} className={clsx(
+                  'w-full h-full object-cover',
+                  roundedClassName,
+                )}/>
+              </button>
             );
           })}
         </div>
       )}
-      {type === 'variant' && (
+      {type === 'variant-image' && (
         <div className="flex gap-4">
           {values.map((value) => {
             return (
@@ -145,7 +145,6 @@ export function VariantOption(props: VariantOptionProps) {
                   !value.isAvailable && disabledClassName,
                 )}
                 onClick={() => onSelectOptionValue(value.value)}
-                disabled={!value.isAvailable}
               >
                 <Image data={value.image} />
               </button>
@@ -166,7 +165,6 @@ export function VariantOption(props: VariantOptionProps) {
                 <option
                   key={value.value}
                   value={value.value}
-                  disabled={!value.isAvailable}
                 >
                   {value.value}
                 </option>
