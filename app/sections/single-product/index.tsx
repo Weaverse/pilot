@@ -78,9 +78,12 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   />
                 </p>
                 {children}
-                <p className="max-w-[600px] leading-relaxed">
-                  {product?.descriptionHtml}
-                </p>
+                <p
+                  className="max-w-[600px] leading-relaxed"
+                  dangerouslySetInnerHTML={{
+                    __html: product?.descriptionHtml,
+                  }}
+                />
                 <ProductVariants
                   product={product}
                   selectedVariant={selectedVariant}
