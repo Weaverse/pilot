@@ -25,6 +25,7 @@ export function createWeaverseClient(args: CreateWeaverseArgs) {
 export function getWeaverseCsp(request: Request) {
   let url = new URL(request.url);
   // Get weaverse host from query params
+  let localhost = 'localhost:3556';
   let weaverseHost = url.searchParams.get('weaverseHost');
   let weaverseHosts = ['weaverse.io', '*.weaverse.io'];
   if (weaverseHost) {
@@ -39,21 +40,16 @@ export function getWeaverseCsp(request: Request) {
       '*.youtube.com',
       '*.google.com',
       'fonts.gstatic.com',
+      localhost,
       ...weaverseHosts,
     ],
-    imgSrc: [
-      "'self'",
-      'data:',
-      'cdn.shopify.com',
-      'localhost:3556',
-      ...weaverseHosts,
-    ],
+    imgSrc: ["'self'", 'data:', 'cdn.shopify.com', localhost, ...weaverseHosts],
     styleSrc: [
       "'self'",
       "'unsafe-inline'",
       'fonts.googleapis.com',
       'cdn.shopify.com',
-      'localhost:3556',
+      localhost,
       ...weaverseHosts,
     ],
   };
