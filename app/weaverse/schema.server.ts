@@ -1,6 +1,14 @@
 import type {HydrogenThemeSchema} from '@weaverse/hydrogen';
 import pkg from '../../package.json';
 
+let variantSwatch = {
+  configs: [],
+  swatches: {
+    imageSwatches:[],
+    colorSwatches:[]
+  },
+}
+
 export let themeSchema: HydrogenThemeSchema = {
   info: {
     version: pkg.version,
@@ -12,6 +20,17 @@ export let themeSchema: HydrogenThemeSchema = {
     supportUrl: 'https://help.weaverse.io/',
   },
   inspector: [
+    {
+      group: 'Product swatches',
+      inputs: [
+        {
+          type: 'swatches',
+          name: 'swatches',
+          label: 'Config swatches',
+          defaultValue: variantSwatch
+        },
+      ],
+    },
     {
       group: 'Logo',
       inputs: [
