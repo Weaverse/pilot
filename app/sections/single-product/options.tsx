@@ -28,6 +28,12 @@ let SIZE_MAP = {
   lg: 'w-12 h-12',
 };
 
+let BUTTON_SIZE_MAP = {
+  sm: 'min-w-[32px] h-8',
+  md: 'min-w-[40px] h-10',
+  lg: 'min-w-[48px] h-12',
+};
+
 export function VariantOption(props: VariantOptionProps) {
   let {
     name,
@@ -35,7 +41,7 @@ export function VariantOption(props: VariantOptionProps) {
     values,
     displayName,
     shape = 'square',
-    size = 'md', // 'small' | 'medium' | 'large
+    size = 'md',
     selectedOptionValue,
     onSelectOptionValue,
     swatches,
@@ -49,6 +55,14 @@ export function VariantOption(props: VariantOptionProps) {
     SIZE_MAP[size],
     roundedClassName,
   );
+
+  let defaultButtonClassName = clsx(
+    'border cursor-pointer',
+    BUTTON_SIZE_MAP[size],
+    'p-2 text-sm text-center',
+    roundedClassName,
+  );
+
   let disabledClassName = 'diagonal opacity-50';
   // show value by Type
   return (
@@ -63,7 +77,7 @@ export function VariantOption(props: VariantOptionProps) {
             <button
               key={value.value}
               className={clsx(
-                defaultClassName,
+                defaultButtonClassName,
                 selectedOptionValue === value.value &&
                   'bg-btn text-btn-content',
                 !value.isAvailable && disabledClassName,

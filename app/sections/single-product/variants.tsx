@@ -3,7 +3,7 @@ import type {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from 'storefrontapi.generated';
-import {VariantOption} from './option';
+import {VariantOption} from './options';
 
 interface ProductVariantsProps {
   selectedVariant: ProductVariantFragmentFragment;
