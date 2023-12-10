@@ -36,7 +36,7 @@ let Countdown = forwardRef<HTMLElement, CountDownProps>((props, ref) => {
   return (
     <section ref={ref} {...rest} className='flex relative items-center justify-center text-center px-10 py-16 w-full sm-max:px-4 h-[var(--section-height)]' style={sectionStyle}>
       <div className='absolute inset-0 bg-[var(--section-background-color)]'>
-        {backgroundImage && <Image data={backgroundImage} className='w-full h-full object-cover' />}
+        {backgroundImage && <Image data={backgroundImage} sizes="auto" className='w-full h-full object-cover' />}
         {backgroundImage && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
       </div>
       <div className='flex flex-col gap-3 items-center w-5/6 sm-max:w-full z-10'>

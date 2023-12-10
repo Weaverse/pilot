@@ -25,7 +25,10 @@ export function createWeaverseClient(args: CreateWeaverseArgs) {
 export function getWeaverseCsp(request: Request) {
   let url = new URL(request.url);
   // Get weaverse host from query params
-  let localhost = 'localhost:3556';
+  let localDirectives =
+    process.env.NODE_ENV === 'development'
+      ? ['localhost:*', 'ws://localhost:*', 'ws://127.0.0.1:*']
+      : [];
   let weaverseHost = url.searchParams.get('weaverseHost');
   let weaverseHosts = ['weaverse.io', '*.weaverse.io'];
   if (weaverseHost) {
@@ -40,16 +43,28 @@ export function getWeaverseCsp(request: Request) {
       '*.youtube.com',
       '*.google.com',
       'fonts.gstatic.com',
-      localhost,
+      ...localDirectives,
       ...weaverseHosts,
     ],
-    imgSrc: ["'self'", 'data:', 'cdn.shopify.com', localhost, ...weaverseHosts],
+    imgSrc: [
+      "'self'",
+      'data:',
+      'cdn.shopify.com',
+      ...localDirectives,
+      ...weaverseHosts,
+    ],
     styleSrc: [
       "'self'",
       "'unsafe-inline'",
       'fonts.googleapis.com',
       'cdn.shopify.com',
-      localhost,
+      ...localDirectives,
+      ...weaverseHosts,
+    ],
+    connectSrc: [
+      "'self'",
+      'https://monorail-edge.shopifysvc.com',
+      ...localDirectives,
       ...weaverseHosts,
     ],
   };

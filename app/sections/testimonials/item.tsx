@@ -48,6 +48,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
               }
               alt={authorName}
               width={36}
+              sizes="auto"
             />
             <div className="space-y-0.5 font-medium">
               <div>{authorName}</div>

@@ -92,6 +92,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
                   data={imageFirst}
                   loading={loading}
                   className="sm:object-contain sm-max:object-contain"
+                  sizes="auto"
                 />
               </div>
               <div>
@@ -99,6 +100,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
                   data={imageSecond}
                   loading={loading}
                   className="sm:object-contain sm-max:object-contain"
+                  sizes="auto"
                 />
               </div>
             </div>

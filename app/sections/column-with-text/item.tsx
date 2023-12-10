@@ -48,7 +48,7 @@ let ContentColumnItem = forwardRef<HTMLDivElement, ContentColumnItemProps>(
         )}
       >
         <div className="h-64 w-64 border border-solid border-gray-500 rounded-md">
-          {imageSrc ? <Image data={imageSrc} className="w-full h-full" /> :
+          {imageSrc ? <Image data={imageSrc} sizes="auto" className="w-full h-full" /> :
             <div className='w-full h-full bg-gray-200 flex justify-center items-center'>
               <IconImageBlank viewBox='0 0 100 100' className='!w-24 !h-24 opacity-40' />
             </div>}
