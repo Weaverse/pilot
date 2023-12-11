@@ -79,7 +79,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['heading', 'subheading', 'count-down--timer', 'Button-CountDown-items'],
+  childTypes: ['heading', 'subheading', 'count-down--timer', 'countdown-buttons'],
   presets: {
     children: [
       {
@@ -94,7 +94,7 @@ export let schema: HydrogenComponentSchema = {
         type: 'count-down--timer',
       },
       {
-        type: 'Button-CountDown-items',
+        type: 'countdown-buttons',
       }
     ],
   },

@@ -23,7 +23,7 @@ let ButtonItems = forwardRef<HTMLDivElement, ButtonItemsProps>((props, ref) => {
 export default ButtonItems;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'Button-CountDown-items',
+  type: 'countdown-buttons',
   title: 'Buttons',
   inspector: [
     {
