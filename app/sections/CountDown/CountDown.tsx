@@ -5,7 +5,6 @@ import type {
 } from '@weaverse/hydrogen';
 import type { CSSProperties } from 'react';
 import { forwardRef } from 'react';
-import clsx from 'clsx';
 import { Image } from '@shopify/hydrogen';
 
 
@@ -14,18 +13,11 @@ interface CountDownProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;
   overlayColor: string;
   overlayOpacity: number;
-  buttonLabel1: string;
-  buttonLink1: string;
-  buttonLabel2: string;
-  buttonLink2: string;
-  enableNewtab: boolean;
-  buttonStyle1: string;
-  buttonStyle2: string;
   sectionHeight: number;
 }
 
 let Countdown = forwardRef<HTMLElement, CountDownProps>((props, ref) => {
-  let { backgroundColor, backgroundImage, overlayColor, overlayOpacity, buttonLabel1, buttonLink1, buttonLabel2, buttonLink2, enableNewtab, buttonStyle1, buttonStyle2, sectionHeight, children, ...rest } = props;
+  let { backgroundColor, backgroundImage, overlayColor, overlayOpacity, sectionHeight, children, ...rest } = props;
   let sectionStyle: CSSProperties = {
     '--section-height': `${sectionHeight}px`,
     '--section-background-color': backgroundColor,
@@ -41,10 +33,6 @@ let Countdown = forwardRef<HTMLElement, CountDownProps>((props, ref) => {
       </div>
       <div className='flex flex-col gap-3 items-center w-5/6 sm-max:w-full z-10'>
         {children}
-        <div className='flex gap-3 mt-3'>
-          {buttonLabel1 && <a className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle1)} href={buttonLink1} target={enableNewtab ? '_blank' : ''} rel="noreferrer">{buttonLabel1}</a>}
-          {buttonLabel2 && <a className={clsx('py-3 px-4 cursor-pointer rounded', buttonStyle2)} href={buttonLink2} target={enableNewtab ? '_blank' : ''} rel="noreferrer">{buttonLabel2}</a>}
-        </div>
       </div>
     </section>
   );
@@ -88,78 +76,10 @@ export let schema: HydrogenComponentSchema = {
             unit: '%',
           },
         },
-        {
-          type: 'text',
-          name: 'buttonLabel1',
-          label: 'Button #1 label',
-          defaultValue: 'Shop this',
-        },
-        {
-          type: 'text',
-          name: 'buttonLink1',
-          label: 'Button #1 link',
-          placeholder: 'https://',
-        },
-        {
-          type: 'text',
-          name: 'buttonLabel2',
-          label: 'Button #2 label',
-          defaultValue: 'Shop all',
-        },
-        {
-          type: 'text',
-          name: 'buttonLink2',
-          label: 'Button #2 link',
-          placeholder: 'https://',
-        },
-        {
-          type: 'switch',
-          name: 'enableNewtab',
-          label: 'Open in new tab',
-          defaultValue: true,
-        },
-        {
-          type: 'toggle-group',
-          label: 'Button #1 style',
-          name: 'buttonStyle1',
-          configs: {
-            options: [
-              { label: '1', value: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white' },
-              { label: '2', value: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white' },
-              { label: '3', value: 'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white' },
-            ],
-          },
-          defaultValue: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
-        },
-        {
-          type: 'toggle-group',
-          label: 'Button #2 style',
-          name: 'buttonStyle2',
-          configs: {
-            options: [
-              { label: '1', value: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white' },
-              { label: '2', value: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white' },
-              { label: '3', value: 'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white' },
-            ],
-          },
-          defaultValue: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
-        },
-        {
-          type: 'range',
-          name: 'sectionHeight',
-          label: 'Section height',
-          defaultValue: 450,
-          configs: {
-            min: 400,
-            max: 700,
-            step: 10,
-            unit: 'px',
-          },
-        },
       ],
     },
   ],
-  childTypes: ['heading', 'subheading', 'count-down--timer'],
+  childTypes: ['heading', 'subheading', 'count-down--timer', 'countdown-buttons'],
   presets: {
     children: [
       {
@@ -173,6 +93,9 @@ export let schema: HydrogenComponentSchema = {
       {
         type: 'count-down--timer',
       },
+      {
+        type: 'countdown-buttons',
+      }
     ],
   },
 };
