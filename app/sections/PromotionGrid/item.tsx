@@ -17,7 +17,7 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>((props, r
   return (
     <div ref={ref} {...rest} className='relative w-96 aspect-video' >
       <div className='absolute inset-0'>
-        {backgroundImage ? <Image data={backgroundImage} loading='lazy' className='w-full h-full object-cover rounded-2xl' /> :
+        {backgroundImage ? <Image data={backgroundImage} sizes="auto" className='w-full h-full object-cover rounded-2xl' /> :
           <div className='w-full h-full flex justify-center items-center rounded-2xl bg-black bg-opacity-5'>
             <IconImageBlank viewBox="0 0 100 101" className='!w-24 !h-24 opacity-20' />
           </div>}

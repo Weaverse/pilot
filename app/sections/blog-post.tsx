@@ -36,7 +36,6 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
                 data={image}
                 className="w-full absolute inset-0 z-0 object-cover h-full"
                 sizes="90vw"
-                loading="eager"
               />
             )}
             <div className="space-y-5 w-full h-full flex items-center justify-end py-16 flex-col relative z-10">

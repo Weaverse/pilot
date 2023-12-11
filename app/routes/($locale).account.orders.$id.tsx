@@ -122,6 +122,7 @@ export default function OrderRoute() {
                                 data={lineItem.variant.image}
                                 width={96}
                                 height={96}
+                                sizes="auto"
                               />
                             </div>
                           )}

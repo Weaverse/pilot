@@ -54,6 +54,7 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
           <Image
             data={backgroundImage}
             className="w-full h-full object-cover"
+            sizes="auto"
           />
         ) : (
           <div className="w-full h-full flex justify-center items-center bg-gray-200">
