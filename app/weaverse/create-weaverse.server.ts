@@ -1,22 +1,11 @@
-import type {Storefront} from '@shopify/hydrogen';
-import type {I18nLocale} from '@weaverse/hydrogen';
+import type {WeaverseClientArgs} from '@weaverse/hydrogen';
 import {WeaverseClient} from '@weaverse/hydrogen';
-import {countries} from '~/data/countries';
 import {components} from '~/weaverse/components';
 import {themeSchema} from '~/weaverse/schema.server';
 
-type CreateWeaverseArgs = {
-  storefront: Storefront<I18nLocale>;
-  request: Request;
-  env: Env;
-  cache: Cache;
-  waitUntil: ExecutionContext['waitUntil'];
-};
-
-export function createWeaverseClient(args: CreateWeaverseArgs) {
+export function createWeaverseClient(args: WeaverseClientArgs) {
   return new WeaverseClient({
     ...args,
-    countries,
     themeSchema,
     components,
   });
