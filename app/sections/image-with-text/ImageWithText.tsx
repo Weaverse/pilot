@@ -28,15 +28,15 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>((props, ref) => 
     <section ref={ref} {...rest} style={styleSection} className='h-[var(--section-height)] sm-max:h-auto sm-max:overflow-hidden'>
       <div className='h-full px-10 sm-max:px-6 sm-max:w-full'>
         <div className='flex justify-center items-center gap-5 h-full w-full sm-max:flex-col'>
-          <div className='w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10'>
-            {children}
-          </div>
           <div className='w-1/2 flex flex-1 items-center justify-center sm-max:order-first sm-max:w-full sm-max:py-10 sm-max:pb-0 sm-max:justify-center'>
-            {image ? <Image data={image} loading={loading} className='!w-1/2 !aspect-square sm-max:!w-full' /> :
+            {image ? <Image data={image} loading={loading} sizes="auto" className='!w-1/2 !aspect-square sm-max:!w-full' /> :
               <div className='flex justify-center items-center bg-gray-200 w-1/2 aspect-square'>
                 <IconImageBlank className='h-32 w-32 opacity-80' viewBox='0 0 100 100' />
               </div>
             }
+          </div>
+          <div className='w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10'>
+            {children}
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['subheading', 'heading', 'description', 'Button--Item'],
+  childTypes: ['subheading', 'heading', 'description', 'button'],
   presets: {
     children: [
       {
@@ -128,7 +128,8 @@ export let schema: HydrogenComponentSchema = {
         content: 'Pair large text with an image to tell a story.',
       },
       {
-        type: 'Button--Item',
+        type: 'button',
+        content: 'Button section',
       },
     ],
   },

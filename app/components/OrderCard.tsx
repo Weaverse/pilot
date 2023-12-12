@@ -24,6 +24,7 @@ export function OrderCard({order}: {order: OrderCardFragment}) {
               className="w-full fadeIn cover"
               alt={lineItems[0].variant?.image?.altText ?? 'Order image'}
               src={lineItems[0].variant?.image.url}
+              sizes="auto"
             />
           </div>
         )}

@@ -64,6 +64,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               data={selectedVariant.image}
               aspectRatio={'4/5'}
               className="object-cover w-full h-full aspect-square fadeIn"
+              sizes="auto"
             />
             <div className="flex flex-col justify-start space-y-5">
               <div className="space-y-4">
