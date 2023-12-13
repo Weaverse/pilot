@@ -82,7 +82,7 @@ export function VariantOption(props: VariantOptionProps) {
                 defaultButtonClassName,
                 selectedOptionValue === value.value &&
                   'bg-btn text-btn-content',
-                !value.isAvailable && disabledClassName,
+                !value.isAvailable && 'opacity-50 bg-btn/30',
               )}
               onClick={() => onSelectOptionValue(value.value)}
             >
