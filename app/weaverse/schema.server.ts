@@ -17,7 +17,7 @@ export let themeSchema: HydrogenThemeSchema = {
     authorProfilePhoto:
       'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Weaverse_logo_-_3000x_e2fa8c13-dac2-4dcb-a2c2-f7aaf7a58169.png?v=1698245759',
     documentationUrl: 'https://weaverse.io/docs',
-    supportUrl: 'https://help.weaverse.io/',
+    supportUrl: 'https://weaverse.io/contact',
   },
   inspector: [
     {
@@ -252,6 +252,131 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: 'rem',
           },
           defaultValue: 6,
+        },
+      ],
+    },
+    {
+      group: 'Buttons',
+      inputs: [
+        {
+          type: 'heading',
+          label: 'Primary',
+        },
+        {
+          type: 'color',
+          label: 'Background color',
+          name: 'buttonPrimaryBg',
+          defaultValue: '#000',
+        },
+        {
+          type: 'color',
+          label: 'Background color (hover)',
+          name: 'buttonPrimaryBgHover',
+          defaultValue: '#00000000',
+        },
+        {
+          type: 'color',
+          label: 'Text color',
+          name: 'buttonPrimaryColor',
+          defaultValue: '#fff',
+        },
+        {
+          type: 'color',
+          label: 'Text color (hover)',
+          name: 'buttonPrimaryColorHover',
+          defaultValue: '#000',
+        },
+        {
+          type: 'color',
+          label: 'Border color',
+          name: 'buttonPrimaryBorder',
+          defaultValue: '#00000000',
+        },
+        {
+          type: 'color',
+          label: 'Border color (hover)',
+          name: 'buttonPrimaryBorderHover',
+          defaultValue: '#000',
+        },
+        {
+          type: 'heading',
+          label: 'Secondary',
+        },
+        {
+          type: 'color',
+          label: 'Background color',
+          name: 'buttonSecondaryBg',
+          defaultValue: '#00000000',
+        },
+        {
+          type: 'color',
+          label: 'Background color (hover)',
+          name: 'buttonSecondaryBgHover',
+          defaultValue: '#0F0F0F',
+        },
+        {
+          type: 'color',
+          label: 'Text color',
+          name: 'buttonSecondaryColor',
+          defaultValue: '#000',
+        },
+        {
+          type: 'color',
+          label: 'Text color (hover)',
+          name: 'buttonSecondaryColorHover',
+          defaultValue: '#fff',
+        },
+        {
+          type: 'color',
+          label: 'Border color',
+          name: 'buttonSecondaryBorder',
+          defaultValue: '#000',
+        },
+        {
+          type: 'color',
+          label: 'Border color (hover)',
+          name: 'buttonSecondaryBorderHover',
+          defaultValue: '#00000000',
+        },
+        {
+          type: 'heading',
+          label: 'Subtle',
+        },
+        {
+          type: 'color',
+          label: 'Background color',
+          name: 'buttonSubtleBg',
+          defaultValue: '#00000000',
+        },
+        {
+          type: 'color',
+          label: 'Background color (hover)',
+          name: 'buttonSubtleBgHover',
+          defaultValue: '#fff',
+        },
+        {
+          type: 'color',
+          label: 'Text color',
+          name: 'buttonSubtleColor',
+          defaultValue: '#fff',
+        },
+        {
+          type: 'color',
+          label: 'Text color (hover)',
+          name: 'buttonSubtleColorHover',
+          defaultValue: '#000',
+        },
+        {
+          type: 'color',
+          label: 'Border color',
+          name: 'buttonSubtleBorder',
+          defaultValue: '#fff',
+        },
+        {
+          type: 'color',
+          label: 'Border color (hover)',
+          name: 'buttonSubtleBorderHover',
+          defaultValue: '#00000000',
         },
       ],
     },

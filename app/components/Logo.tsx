@@ -15,7 +15,7 @@ export function Logo() {
       prefetch="intent"
     >
       <div className="max-w-[120px]">
-        <Image data={logoData} className="w-full h-full object-cover" />
+        <Image data={logoData} sizes="auto" className="w-full h-full object-cover" />
       </div>
     </Link>
   );

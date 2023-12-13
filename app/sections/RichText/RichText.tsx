@@ -100,7 +100,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['heading', 'description', 'rich-text-button--item'],
+  childTypes: ['heading', 'description', 'button'],
   presets: {
     children: [
       {
@@ -112,7 +112,8 @@ export let schema: HydrogenComponentSchema = {
         content: 'Pair large text with an image to tell a story, explain a detail about your product, or describe a new promotion.',
       },
       {
-        type: 'rich-text-button--item',
+        type: 'button',
+        content: 'Button section',
       }
     ],
   },

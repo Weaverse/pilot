@@ -288,6 +288,7 @@ function CartLineItem({
             data={merchandise.image}
             className="object-cover object-center w-24 h-24 rounded md:w-28 md:h-28"
             alt={merchandise.title}
+            sizes="auto"
           />
         )}
       </td>

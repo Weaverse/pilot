@@ -145,6 +145,7 @@ export function VariantOption(props: VariantOptionProps) {
                     'w-full h-full object-cover',
                     roundedClassName,
                   )}
+                  sizes="auto"
                 />
               </button>
             );
@@ -165,7 +166,7 @@ export function VariantOption(props: VariantOptionProps) {
                 )}
                 onClick={() => onSelectOptionValue(value.value)}
               >
-                <Image data={value.image} />
+                <Image data={value.image} sizes="auto" />
               </button>
             );
           })}

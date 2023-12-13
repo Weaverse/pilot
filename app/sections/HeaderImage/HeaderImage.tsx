@@ -54,6 +54,7 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
           <Image
             data={backgroundImage}
             className="w-full h-full object-cover"
+            sizes="auto"
           />
         ) : (
           <div className="w-full h-full flex justify-center items-center bg-gray-200">
@@ -159,7 +160,7 @@ export let schema: HydrogenComponentSchema = {
     'subheading',
     'heading',
     'description',
-    'button-image--item',
+    'button',
   ],
   presets: {
     children: [
@@ -176,7 +177,8 @@ export let schema: HydrogenComponentSchema = {
         content: 'Pair large text with an image to tell a story.',
       },
       {
-        type: 'button-image--item',
+        type: 'button',
+        content: 'Button section',
       },
     ],
   },
