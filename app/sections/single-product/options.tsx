@@ -1,13 +1,16 @@
 import clsx from 'clsx';
 import {Image} from '@shopify/hydrogen';
+import type { WeaverseImage } from '@weaverse/hydrogen';
 interface VariantOptionProps {
   selectedOptionValue: string;
   onSelectOptionValue: (optionValue: string) => void;
   name: string;
-  size?: 'sm' | 'md' | 'lg';
-  type?: string;
-  shape?: string;
-  displayName?: string;
+  config: {
+    type: string;
+    displayName: string;
+    size?: 'sm' | 'md' | 'lg';
+    shape?: string;
+  };
   swatches: {
     imageSwatches: any[];
     colorSwatches: any[];
@@ -37,15 +40,14 @@ let BUTTON_SIZE_MAP = {
 export function VariantOption(props: VariantOptionProps) {
   let {
     name,
-    type = 'default',
     values,
-    displayName,
-    shape = 'square',
-    size = 'md',
     selectedOptionValue,
     onSelectOptionValue,
     swatches,
+    config,
   } = props;
+
+  let {displayName, shape = 'square', size = 'md', type = 'default'} = config;
 
   let roundedClassName =
     shape === 'circle' ? 'rounded-full' : shape === 'round' ? 'rounded-md' : '';
@@ -80,7 +82,7 @@ export function VariantOption(props: VariantOptionProps) {
                 defaultButtonClassName,
                 selectedOptionValue === value.value &&
                   'bg-btn text-btn-content',
-                !value.isAvailable && disabledClassName,
+                !value.isAvailable && 'opacity-50 bg-btn/30',
               )}
               onClick={() => onSelectOptionValue(value.value)}
             >
@@ -122,7 +124,7 @@ export function VariantOption(props: VariantOptionProps) {
       {type === 'custom-image' && (
         <div className="flex gap-4">
           {values.map((value) => {
-            let swatchImage =
+            let swatchImage: WeaverseImage =
               swatches.imageSwatches.find((image) => image.name === value.value)
                 ?.value || '';
             return (

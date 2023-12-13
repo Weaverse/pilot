@@ -105,10 +105,7 @@ export function ProductVariants(props: ProductVariantsProps) {
           return (
             <VariantOption
               name={optionName}
-              displayName={config?.displayName}
-              type={config?.type}
-              shape={config?.shape}
-              size={config?.size}
+              config={config}
               values={values}
               selectedOptionValue={selectedValue}
               onSelectOptionValue={handleSelectOptionValue}
