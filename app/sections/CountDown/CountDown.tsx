@@ -3,10 +3,9 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import type { CSSProperties } from 'react';
-import { forwardRef } from 'react';
-import { Image } from '@shopify/hydrogen';
-
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
+import {Image} from '@shopify/hydrogen';
 
 interface CountDownProps extends HydrogenComponentProps {
   backgroundColor: string;
@@ -17,7 +16,15 @@ interface CountDownProps extends HydrogenComponentProps {
 }
 
 let Countdown = forwardRef<HTMLElement, CountDownProps>((props, ref) => {
-  let { backgroundColor, backgroundImage, overlayColor, overlayOpacity, sectionHeight, children, ...rest } = props;
+  let {
+    backgroundColor,
+    backgroundImage,
+    overlayColor,
+    overlayOpacity,
+    sectionHeight,
+    children,
+    ...rest
+  } = props;
   let sectionStyle: CSSProperties = {
     '--section-height': `${sectionHeight}px`,
     '--section-background-color': backgroundColor,
@@ -26,12 +33,25 @@ let Countdown = forwardRef<HTMLElement, CountDownProps>((props, ref) => {
   } as CSSProperties;
 
   return (
-    <section ref={ref} {...rest} className='flex relative items-center justify-center text-center px-10 py-16 w-full sm-max:px-4 h-[var(--section-height)]' style={sectionStyle}>
-      <div className='absolute inset-0 bg-[var(--section-background-color)]'>
-        {backgroundImage && <Image data={backgroundImage} sizes="auto" className='w-full h-full object-cover' />}
-        {backgroundImage && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
+    <section
+      ref={ref}
+      {...rest}
+      className="flex relative items-center justify-center text-center px-10 py-16 w-full sm-max:px-4 h-[var(--section-height)]"
+      style={sectionStyle}
+    >
+      <div className="absolute inset-0 bg-[var(--section-background-color)]">
+        {backgroundImage && (
+          <Image
+            data={backgroundImage}
+            sizes="auto"
+            className="w-full h-full object-cover"
+          />
+        )}
+        {backgroundImage && (
+          <div className="absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]"></div>
+        )}
       </div>
-      <div className='flex flex-col gap-3 items-center w-5/6 sm-max:w-full z-10'>
+      <div className="flex flex-col gap-3 items-center w-5/6 sm-max:w-full z-10">
         {children}
       </div>
     </section>
@@ -79,7 +99,12 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['heading', 'subheading', 'count-down--timer', 'countdown-buttons'],
+  childTypes: [
+    'heading',
+    'subheading',
+    'count-down--timer',
+    'countdown-buttons',
+  ],
   presets: {
     children: [
       {
@@ -95,7 +120,7 @@ export let schema: HydrogenComponentSchema = {
       },
       {
         type: 'countdown-buttons',
-      }
+      },
     ],
   },
 };

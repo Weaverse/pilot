@@ -1,4 +1,4 @@
-import {Image, Money, ShopPayButton} from '@shopify/hydrogen';
+import {Money, ShopPayButton} from '@shopify/hydrogen';
 import {
   useThemeSettings,
   type ComponentLoaderArgs,
@@ -14,11 +14,16 @@ import {Quantity} from './quantity';
 import {ProductVariants} from './variants';
 import {ProductPlaceholder} from './placeholder';
 import {defer} from '@remix-run/server-runtime';
+import {ProductMedia} from './product-media';
 
 type SingleProductData = {
   productsCount: number;
   product: WeaverseProduct;
   hideUnavailableOptions: boolean;
+  // product media props
+  showThumbnails: boolean;
+  numberOfThumbnails: number;
+  spacing: number;
 };
 
 type SingleProductProps = HydrogenComponentProps<
@@ -33,6 +38,9 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       children,
       product: _product,
       hideUnavailableOptions,
+      showThumbnails,
+      numberOfThumbnails,
+      spacing,
       ...rest
     } = props;
     let {swatches} = useThemeSettings();
@@ -59,12 +67,13 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     return (
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
-          <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
-            <Image
-              data={selectedVariant.image}
-              aspectRatio={'4/5'}
-              className="object-cover w-full h-full aspect-square fadeIn"
-              sizes="auto"
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
+            <ProductMedia
+              media={product?.media.nodes}
+              selectedVariant={selectedVariant}
+              showThumbnails={showThumbnails}
+              numberOfThumbnails={numberOfThumbnails}
+              spacing={spacing}
             />
             <div className="flex flex-col justify-start space-y-5">
               <div className="space-y-4">
@@ -178,6 +187,39 @@ export let schema: HydrogenComponentSchema = {
           label: 'Hide unavailable options',
           type: 'switch',
           name: 'hideUnavailableOptions',
+        },
+      ],
+    },
+    {
+      group: 'Product Media',
+      inputs: [
+        {
+          label: 'Show thumbnails',
+          name: 'showThumbnails',
+          type: 'switch',
+          defaultValue: true,
+        },
+        {
+          label: 'Number of thumbnails',
+          name: 'numberOfThumbnails',
+          type: 'range',
+          condition: 'showThumbnails.eq.true',
+          configs: {
+            min: 1,
+            max: 10,
+          },
+          defaultValue: 4,
+        },
+        {
+          label: 'Gap between images',
+          name: 'spacing',
+          type: 'range',
+          configs: {
+            min: 0,
+            step: 2,
+            max: 100,
+          },
+          defaultValue: 10,
         },
       ],
     },

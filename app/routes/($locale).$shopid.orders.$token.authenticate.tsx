@@ -10,7 +10,10 @@ import {Button, PageHeader} from '~/components';
  that are routing to your Hydrogen storefront. To prevent this, ensure that you redirect
  those requests back to Shopify.
 */
-export async function loader({request, context: {storefront}}: LoaderFunctionArgs) {
+export async function loader({
+  request,
+  context: {storefront},
+}: LoaderFunctionArgs) {
   const {origin} = new URL(request.url);
   const {shop} = await storefront.query(
     `#graphql

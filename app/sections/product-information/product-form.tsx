@@ -1,19 +1,22 @@
 import {Listbox} from '@headlessui/react';
 import {useLoaderData} from '@remix-run/react';
-import type {
-  ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {
-  Money,
-  ShopPayButton,
-  VariantSelector,
-} from '@shopify/hydrogen';
+import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
+import {Money, ShopPayButton, VariantSelector} from '@shopify/hydrogen';
 import clsx from 'clsx';
 import {useRef} from 'react';
 import type {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from 'storefrontapi.generated';
-import {AddToCartButton, Button, Text,Heading, IconCaret, IconCheck, Link} from '~/components';
+import {
+  AddToCartButton,
+  Button,
+  Text,
+  Heading,
+  IconCaret,
+  IconCheck,
+  Link,
+} from '~/components';
 
 export function ProductForm(props: {
   variants: ProductVariantFragmentFragment[];

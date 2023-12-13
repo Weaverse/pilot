@@ -2,10 +2,9 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { clsx } from 'clsx';
-import { forwardRef } from 'react';
-import type { CSSProperties } from 'react';
-
+import {clsx} from 'clsx';
+import {forwardRef} from 'react';
+import type {CSSProperties} from 'react';
 
 type ButtonStyle = 'primary' | 'secondary' | 'subtle';
 type ButtonProps = HydrogenComponentProps & {
@@ -22,31 +21,23 @@ let buttonStyleClasses: Record<ButtonStyle, string> = {
   subtle: 'transition btn-subtle',
 };
 
-let Button = forwardRef<HTMLDivElement, ButtonProps>((props, ref) => {
-  let {
-    content,
-    buttonStyle,
-    buttonLink,
-    openInNewTab,
-    className,
-    ...rest
-  } = props;
+let Button = forwardRef<HTMLAnchorElement, ButtonProps>((props, ref) => {
+  let {content, buttonStyle, buttonLink, openInNewTab, className, ...rest} =
+    props;
   let style = {} as CSSProperties;
   return (
-    <div ref={ref}
-    {...rest} className='mt-3'>
-      {content && <a
-        style={style}
-        className={clsx(
-          'py-3 px-4 rounded cursor-pointer',
-          buttonStyleClasses[buttonStyle!],
-          className,
-        )}
-        href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''}
-      >
-        {content}
-      </a>}
-    </div>
+    <a ref={ref}
+      {...rest}
+      style={style}
+      className={clsx(
+        'py-3 px-4 rounded cursor-pointer mt-3 w-fit mx-auto',
+        buttonStyleClasses[buttonStyle!],
+        className,
+      )}
+      href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''}
+    >
+      {content}
+    </a>
   );
 });
 
@@ -84,14 +75,14 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: true,
         },
         {
-          type: 'toggle-group',
-          label: 'Button style',
+          type: 'select',
           name: 'buttonStyle',
+          label: 'Button style',
           configs: {
             options: [
-              { label: 'primary', value: 'primary' },
-              { label: 'secondary', value: 'secondary' },
-              { label: 'subtle', value: 'subtle' },
+              {label: 'primary', value: 'primary'},
+              {label: 'secondary', value: 'secondary'},
+              {label: 'subtle', value: 'subtle'},
             ],
           },
           defaultValue: 'secondary',

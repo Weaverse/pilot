@@ -37,7 +37,7 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
     '--section-height-mobile': `${sectionHeightMobile}px`,
     '--overlay-opacity': `${overlayOpacity}%`,
     '--overlay-color': `${overlayColor}`,
-    '--max-width-content': '600px'
+    '--max-width-content': '600px',
   } as CSSProperties;
 
   return (
@@ -156,17 +156,12 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: [
-    'subheading',
-    'heading',
-    'description',
-    'button',
-  ],
+  childTypes: ['subheading', 'heading', 'description', 'button'],
   presets: {
     children: [
       {
         type: 'subheading',
-        content: 'Subheading'
+        content: 'Subheading',
       },
       {
         type: 'heading',

@@ -2,10 +2,10 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import type { CSSProperties } from 'react';
-import { forwardRef  } from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 import ReactPlayer from 'react-player/youtube';
-import { IconVideoBlank } from '~/components';
+import {IconVideoBlank} from '~/components';
 
 interface VideoWithTextProps extends HydrogenComponentProps {
   videoLink: string;
@@ -20,36 +20,65 @@ interface VideoWithTextProps extends HydrogenComponentProps {
   contentAlignment: string;
 }
 
-let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>((props, ref) => {
-  let { videoLink, enableOverlay, overlayColor, overlayOpacity, sectionHeightDesktop, sectionHeightMobile, enableAutoPlay, enableLoop, enableMuted, contentAlignment, children, ...rest } = props;
-  let sectionStyle: CSSProperties = {
-    justifyContent: `${contentAlignment}`,
-    '--section-height-desktop': `${sectionHeightDesktop}px`,
-    '--section-height-mobile': `${sectionHeightMobile}px`,
-    '--overlay-opacity': `${overlayOpacity}%`,
-    '--overlay-color': `${overlayColor}`,
-    '--max-width-content': '600px',
-  } as CSSProperties;
+let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>(
+  (props, ref) => {
+    let {
+      videoLink,
+      enableOverlay,
+      overlayColor,
+      overlayOpacity,
+      sectionHeightDesktop,
+      sectionHeightMobile,
+      enableAutoPlay,
+      enableLoop,
+      enableMuted,
+      contentAlignment,
+      children,
+      ...rest
+    } = props;
+    let sectionStyle: CSSProperties = {
+      justifyContent: `${contentAlignment}`,
+      '--section-height-desktop': `${sectionHeightDesktop}px`,
+      '--section-height-mobile': `${sectionHeightMobile}px`,
+      '--overlay-opacity': `${overlayOpacity}%`,
+      '--overlay-color': `${overlayColor}`,
+      '--max-width-content': '600px',
+    } as CSSProperties;
 
-  return (
-    <section ref={ref} {...rest} className='flex relative overflow-hidden items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]' style={sectionStyle}>
-      {videoLink ? <ReactPlayer url={videoLink}
-        playing={enableAutoPlay}
-        volume={1} muted={enableMuted}
-        loop={enableLoop} width={'100%'}
-        height={'auto'}
-        className='absolute aspect-video'
-        controls={false} /> :
-        <div className='absolute inset-0 flex items-center justify-center bg-gray-200'>
-          <IconVideoBlank viewBox="0 0 220 220" className='!w-56 !h-56' />
-        </div>}
-      {enableOverlay && <div className='absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]'></div>}
-      <div className='relative text-center flex flex-col gap-5 mx-12 w-[var(--max-width-content)] sm-max:mx-0 sm-max:w-5/6 z-10'>
-        {children}
-      </div>
-    </section>
-  );
-});
+    return (
+      <section
+        ref={ref}
+        {...rest}
+        className="flex relative overflow-hidden items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]"
+        style={sectionStyle}
+      >
+        {videoLink ? (
+          <ReactPlayer
+            url={videoLink}
+            playing={enableAutoPlay}
+            volume={1}
+            muted={enableMuted}
+            loop={enableLoop}
+            width={'100%'}
+            height={'auto'}
+            className="absolute aspect-video"
+            controls={false}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+            <IconVideoBlank viewBox="0 0 220 220" className="!w-56 !h-56" />
+          </div>
+        )}
+        {enableOverlay && (
+          <div className="absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]"></div>
+        )}
+        <div className="relative text-center flex flex-col gap-5 mx-12 w-[var(--max-width-content)] sm-max:mx-0 sm-max:w-5/6 z-10">
+          {children}
+        </div>
+      </section>
+    );
+  },
+);
 
 export default VideoWithText;
 
@@ -92,7 +121,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: '%',
           },
-          condition: `enableOverlay.eq.true`
+          condition: `enableOverlay.eq.true`,
         },
         {
           type: 'toggle-group',
@@ -100,9 +129,9 @@ export let schema: HydrogenComponentSchema = {
           name: 'contentAlignment',
           configs: {
             options: [
-              { label: 'Left', value: 'flex-start' },
-              { label: 'Center', value: 'center' },
-              { label: 'Right', value: 'flex-end' },
+              {label: 'Left', value: 'flex-start'},
+              {label: 'Center', value: 'center'},
+              {label: 'Right', value: 'flex-end'},
             ],
           },
           defaultValue: 'center',
@@ -170,7 +199,7 @@ export let schema: HydrogenComponentSchema = {
       {
         type: 'button',
         content: 'Button section',
-      }
+      },
     ],
   },
 };
