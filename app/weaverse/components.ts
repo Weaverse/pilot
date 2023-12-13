@@ -17,7 +17,9 @@ import * as Hero from '~/sections/hero';
 import * as ImageGallery from '~/sections/ImageGallery';
 import * as ImageGalleryItems from '~/sections/ImageGallery/items';
 import * as ImageGalleryItem from '~/sections/ImageGallery/image';
-import * as ImageWithText from '~/sections/image-with-text/ImageWithText';
+import * as ImageWithText from '~/sections/ImageWithText/ImageWithText';
+import * as ContentItems from '~/sections/ImageWithText/Content';
+import * as ImageItems from '~/sections/ImageWithText/Image';
 import * as Judgeme from '~/sections/judgeme-review';
 import * as Main from '~/sections/main';
 import * as Map from '~/sections/map';
@@ -48,6 +50,8 @@ export let components: HydrogenComponent[] = [
   CollectionHeader,
   HeaderImage,
   ImageWithText,
+  ContentItems,
+  ImageItems,
   ContentColumnWithImage,
   ContentColumnItem,
   RichText,
