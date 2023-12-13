@@ -22,7 +22,7 @@ let buttonStyleClasses: Record<ButtonStyle, string> = {
   subtle: 'transition btn-subtle',
 };
 
-let Button = forwardRef<HTMLDivElement, ButtonProps>((props, ref) => {
+let Button = forwardRef<HTMLAnchorElement, ButtonProps>((props, ref) => {
   let {
     content,
     buttonStyle,
@@ -33,20 +33,18 @@ let Button = forwardRef<HTMLDivElement, ButtonProps>((props, ref) => {
   } = props;
   let style = {} as CSSProperties;
   return (
-    <div ref={ref}
-    {...rest} className='mt-3'>
-      {content && <a
-        style={style}
-        className={clsx(
-          'py-3 px-4 rounded cursor-pointer',
-          buttonStyleClasses[buttonStyle!],
-          className,
-        )}
-        href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''}
-      >
-        {content}
-      </a>}
-    </div>
+    <a ref={ref}
+      {...rest}
+      style={style}
+      className={clsx(
+        'py-3 px-4 rounded cursor-pointer mt-3 w-fit mx-auto',
+        buttonStyleClasses[buttonStyle!],
+        className,
+      )}
+      href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''}
+    >
+      {content}
+    </a>
   );
 });
 
@@ -84,9 +82,9 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: true,
         },
         {
-          type: 'toggle-group',
-          label: 'Button style',
+          type: 'select',
           name: 'buttonStyle',
+          label: 'Button style',
           configs: {
             options: [
               { label: 'primary', value: 'primary' },
