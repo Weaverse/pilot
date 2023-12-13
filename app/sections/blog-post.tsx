@@ -1,13 +1,13 @@
-import { useLoaderData } from '@remix-run/react';
-import { Image } from '@shopify/hydrogen';
-import type { Article } from '@shopify/hydrogen/storefront-api-types';
+import {useLoaderData} from '@remix-run/react';
+import {Image} from '@shopify/hydrogen';
+import type {Article} from '@shopify/hydrogen/storefront-api-types';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import {forwardRef} from 'react';
 
-import { IconFacebook, IconPinterest, Section } from '~/components';
+import {IconFacebook, IconPinterest, Section} from '~/components';
 
 interface BlogPostProps extends HydrogenComponentProps {
   paddingTop: number;
@@ -45,18 +45,17 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
             </div>
           </div>
           <Section as="article" padding="all">
-            <div className='lg:max-w-screen-lg md:max-w-screen-md max-w-screen-sm px-4 mx-auto space-y-8 md:space-y-16'>
+            <div className="lg:max-w-screen-lg md:max-w-screen-md max-w-screen-sm px-4 mx-auto space-y-8 md:space-y-16">
               <div dangerouslySetInnerHTML={{__html: contentHtml}} />
-              <div className='md:flex justify-between gap-2 space-y-2'>
+              <div className="md:flex justify-between gap-2 space-y-2">
                 <div>
                   <strong>Tags:</strong>
                   <span className="ml-2">{tags.join(', ')}</span>
                 </div>
-                <div className='flex gap-4 items-center'>
+                <div className="flex gap-4 items-center">
                   <strong>Share:</strong>
-                  <IconPinterest  viewBox="0 0 24 24" />
-                  <IconFacebook  viewBox="0 0 24 24"/>
-
+                  <IconPinterest viewBox="0 0 24 24" />
+                  <IconFacebook viewBox="0 0 24 24" />
                 </div>
               </div>
             </div>

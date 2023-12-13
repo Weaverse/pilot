@@ -23,7 +23,7 @@ type SingleProductData = {
   // product media props
   showThumbnails: boolean;
   numberOfThumbnails: number;
-  spacing: number
+  spacing: number;
 };
 
 type SingleProductProps = HydrogenComponentProps<
@@ -197,13 +197,13 @@ export let schema: HydrogenComponentSchema = {
           label: 'Show thumbnails',
           name: 'showThumbnails',
           type: 'switch',
-          defaultValue: true
+          defaultValue: true,
         },
         {
           label: 'Number of thumbnails',
           name: 'numberOfThumbnails',
           type: 'range',
-          condition: "showThumbnails.eq.true",
+          condition: 'showThumbnails.eq.true',
           configs: {
             min: 1,
             max: 10,
@@ -212,15 +212,15 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           label: 'Gap between images',
-          name: "spacing",
+          name: 'spacing',
           type: 'range',
           configs: {
             min: 0,
             step: 2,
             max: 100,
           },
-          defaultValue: 10
-        }
+          defaultValue: 10,
+        },
       ],
     },
   ],

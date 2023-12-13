@@ -8,15 +8,22 @@ interface ImageGalleyItemsProps extends HydrogenComponentProps {
   gap: number;
 }
 
-let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>((props, ref) => {
-  let {children, gap, ...rest } = props;
+let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
+  (props, ref) => {
+    let {children, gap, ...rest} = props;
 
-  return (
-    <div ref={ref} {...rest} className="flex flex-col mt-8 sm:grid sm:grid-cols-4 sm:mt-12" style={{gap: `${gap}px`}}>
-      {children}
-    </div>
-  );
-});
+    return (
+      <div
+        ref={ref}
+        {...rest}
+        className="flex flex-col mt-8 sm:grid sm:grid-cols-4 sm:mt-12"
+        style={{gap: `${gap}px`}}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 
 export default ImageGalleyItems;
 

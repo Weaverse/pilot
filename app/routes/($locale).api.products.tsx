@@ -14,7 +14,10 @@ import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
  * @returns Product[]
  * @see https://shopify.dev/api/storefront/current/queries/products
  */
-export async function loader({request, context: {storefront}}: LoaderFunctionArgs) {
+export async function loader({
+  request,
+  context: {storefront},
+}: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
 

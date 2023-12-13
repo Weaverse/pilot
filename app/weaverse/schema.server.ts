@@ -4,10 +4,10 @@ import pkg from '../../package.json';
 let variantSwatch = {
   configs: [],
   swatches: {
-    imageSwatches:[],
-    colorSwatches:[]
+    imageSwatches: [],
+    colorSwatches: [],
   },
-}
+};
 
 export let themeSchema: HydrogenThemeSchema = {
   info: {
@@ -27,7 +27,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: 'swatches',
           name: 'swatches',
           label: 'Config swatches',
-          defaultValue: variantSwatch
+          defaultValue: variantSwatch,
         },
       ],
     },

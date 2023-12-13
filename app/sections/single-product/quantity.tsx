@@ -18,7 +18,9 @@ export function Quantity(props: QuantityProps) {
   };
   return (
     <div className="space-y-1.5">
-      <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug">Quantity</legend>
+      <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug">
+        Quantity
+      </legend>
       <div className="rounded-sm border w-fit">
         <button
           name="decrease-quantity"

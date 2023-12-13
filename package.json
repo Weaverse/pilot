@@ -5,6 +5,7 @@
   "author": "Weaverse",
   "version": "2.4.1",
   "scripts": {
+    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath .git-hooks || true",
     "dev": "shopify hydrogen dev --worker --codegen --port 3456",
     "build": "shopify hydrogen build",
     "preview": "npm run build && shopify hydrogen preview --worker",

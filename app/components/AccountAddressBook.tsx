@@ -22,10 +22,7 @@ export function AccountAddressBook({
             </Text>
           )}
           <div className="w-48">
-            <Button
-              to="address/add"
-              className="mt-2 text-sm w-full mb-6"
-            >
+            <Button to="address/add" className="mt-2 text-sm w-full mb-6">
               Add new Address
             </Button>
           </div>

@@ -2,8 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import type { CSSProperties } from 'react';
-import { forwardRef  } from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 
 interface ContentColumnWithImageProps extends HydrogenComponentProps {
   heading: string;
@@ -14,8 +14,20 @@ interface ContentColumnWithImageProps extends HydrogenComponentProps {
   bottomPadding: number;
 }
 
-let ContentColumnWithImage = forwardRef<HTMLElement, ContentColumnWithImageProps>((props, ref) => {
-  let {heading, textColor, headingAlignment, gap, topPadding, bottomPadding, children, ...rest } = props;
+let ContentColumnWithImage = forwardRef<
+  HTMLElement,
+  ContentColumnWithImageProps
+>((props, ref) => {
+  let {
+    heading,
+    textColor,
+    headingAlignment,
+    gap,
+    topPadding,
+    bottomPadding,
+    children,
+    ...rest
+  } = props;
   let headingStyle: CSSProperties = {
     justifyContent: `${headingAlignment}`,
   } as CSSProperties;
@@ -27,12 +39,12 @@ let ContentColumnWithImage = forwardRef<HTMLElement, ContentColumnWithImageProps
   } as CSSProperties;
 
   return (
-    <section ref={ref} {...rest} className='w-full h-full' style={sectionStyle}>
-      <div className='px-10 py-10 flex flex-col gap-5 sm-max:px-6'>
-        <div className='flex' style={headingStyle}>
-          <h3 className='text-[var(--text-color)] font-medium'>{heading}</h3>
+    <section ref={ref} {...rest} className="w-full h-full" style={sectionStyle}>
+      <div className="px-10 py-10 flex flex-col gap-5 sm-max:px-6">
+        <div className="flex" style={headingStyle}>
+          <h3 className="text-[var(--text-color)] font-medium">{heading}</h3>
         </div>
-        <div className='flex flex-wrap gap-[var(--gap-item)] justify-center'>
+        <div className="flex flex-wrap gap-[var(--gap-item)] justify-center">
           {children}
         </div>
       </div>
@@ -69,9 +81,9 @@ export let schema: HydrogenComponentSchema = {
           name: 'headingAlignment',
           configs: {
             options: [
-              { label: 'Left', value: 'flex-start' },
-              { label: 'Center', value: 'center' },
-              { label: 'Right', value: 'flex-end' },
+              {label: 'Left', value: 'flex-start'},
+              {label: 'Center', value: 'center'},
+              {label: 'Right', value: 'flex-end'},
             ],
           },
           defaultValue: 'center',

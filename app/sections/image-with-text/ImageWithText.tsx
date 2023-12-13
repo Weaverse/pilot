@@ -3,46 +3,71 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import type { CSSProperties } from 'react';
-import { forwardRef  } from 'react';
-import { Image } from '@shopify/hydrogen';
-import { IconImageBlank } from '~/components';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
+import {Image} from '@shopify/hydrogen';
+import {IconImageBlank} from '~/components';
 
 interface ImageWithTextProps extends HydrogenComponentProps {
-  image: WeaverseImage,
+  image: WeaverseImage;
   textAlignment: string;
   sectionHeight: number;
   backgroundColor: string;
   loading: HTMLImageElement['loading'];
 }
 
-let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>((props, ref) => {
-  let { textAlignment, image, sectionHeight, backgroundColor, loading, children, ...rest } = props;
-  let styleSection: CSSProperties = {
-    '--section-height': `${sectionHeight}px`,
-    backgroundColor: backgroundColor,
-    textAlign: `${textAlignment}`,
-  } as CSSProperties;
+let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
+  (props, ref) => {
+    let {
+      textAlignment,
+      image,
+      sectionHeight,
+      backgroundColor,
+      loading,
+      children,
+      ...rest
+    } = props;
+    let styleSection: CSSProperties = {
+      '--section-height': `${sectionHeight}px`,
+      backgroundColor: backgroundColor,
+      textAlign: `${textAlignment}`,
+    } as CSSProperties;
 
-  return (
-    <section ref={ref} {...rest} style={styleSection} className='h-[var(--section-height)] sm-max:h-auto sm-max:overflow-hidden'>
-      <div className='h-full px-10 sm-max:px-6 sm-max:w-full'>
-        <div className='flex justify-center items-center gap-5 h-full w-full sm-max:flex-col'>
-          <div className='w-1/2 flex flex-1 items-center justify-center sm-max:order-first sm-max:w-full sm-max:py-10 sm-max:pb-0 sm-max:justify-center'>
-            {image ? <Image data={image} loading={loading} sizes="auto" className='!w-1/2 !aspect-square sm-max:!w-full' /> :
-              <div className='flex justify-center items-center bg-gray-200 w-1/2 aspect-square'>
-                <IconImageBlank className='h-32 w-32 opacity-80' viewBox='0 0 100 100' />
-              </div>
-            }
-          </div>
-          <div className='w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10'>
-            {children}
+    return (
+      <section
+        ref={ref}
+        {...rest}
+        style={styleSection}
+        className="h-[var(--section-height)] sm-max:h-auto sm-max:overflow-hidden"
+      >
+        <div className="h-full px-10 sm-max:px-6 sm-max:w-full">
+          <div className="flex justify-center items-center gap-5 h-full w-full sm-max:flex-col">
+            <div className="w-1/2 flex flex-1 items-center justify-center sm-max:order-first sm-max:w-full sm-max:py-10 sm-max:pb-0 sm-max:justify-center">
+              {image ? (
+                <Image
+                  data={image}
+                  loading={loading}
+                  sizes="auto"
+                  className="!w-1/2 !aspect-square sm-max:!w-full"
+                />
+              ) : (
+                <div className="flex justify-center items-center bg-gray-200 w-1/2 aspect-square">
+                  <IconImageBlank
+                    className="h-32 w-32 opacity-80"
+                    viewBox="0 0 100 100"
+                  />
+                </div>
+              )}
+            </div>
+            <div className="w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10">
+              {children}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-});
+      </section>
+    );
+  },
+);
 
 export default ImageWithText;
 
@@ -65,9 +90,9 @@ export let schema: HydrogenComponentSchema = {
           name: 'textAlignment',
           configs: {
             options: [
-              { label: 'Left', value: 'left' },
-              { label: 'Center', value: 'center' },
-              { label: 'Right', value: 'right' },
+              {label: 'Left', value: 'left'},
+              {label: 'Center', value: 'center'},
+              {label: 'Right', value: 'right'},
             ],
           },
           defaultValue: 'left',
@@ -97,7 +122,7 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'eager',
           configs: {
             options: [
-              { label: 'Eager', value: 'eager', icon: 'Lightning' },
+              {label: 'Eager', value: 'eager', icon: 'Lightning'},
               {
                 label: 'Lazy',
                 value: 'lazy',
