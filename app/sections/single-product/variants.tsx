@@ -77,22 +77,24 @@ export function ProductVariants(props: ProductVariantsProps) {
         {({option}) => {
           let optionName = option.name;
           let clonedSelectedOptionMap = new Map(selectedOptionMap);
-          let values = option.values.map((value) => {
-            clonedSelectedOptionMap.set(optionName, value.value);
-            let variant = nodes?.find((variant) => {
-              return variant.selectedOptions.every((opt) => {
-                return opt.value === clonedSelectedOptionMap.get(opt.name);
+          let values = option.values
+            .map((value) => {
+              clonedSelectedOptionMap.set(optionName, value.value);
+              let variant = nodes?.find((variant) => {
+                return variant.selectedOptions.every((opt) => {
+                  return opt.value === clonedSelectedOptionMap.get(opt.name);
+                });
               });
-            });
-            if (hideUnavailableOptions && !variant) {
-              return null
-            }
-            return {
-              ...value,
-              isAvailable: variant ? variant.availableForSale : false,
-              image: variant?.image,
-            };
-          }).filter(Boolean);
+              if (hideUnavailableOptions && !variant) {
+                return null;
+              }
+              return {
+                ...value,
+                isAvailable: variant ? variant.availableForSale : false,
+                image: variant?.image,
+              };
+            })
+            .filter(Boolean);
           let handleSelectOptionValue = (value: string) =>
             handleSelectOption(optionName, value);
           let config = swatch.configs.find((config) => {
@@ -105,10 +107,7 @@ export function ProductVariants(props: ProductVariantsProps) {
           return (
             <VariantOption
               name={optionName}
-              displayName={config?.displayName}
-              type={config?.type}
-              shape={config?.shape}
-              size={config?.size}
+              config={config}
               values={values}
               selectedOptionValue={selectedValue}
               onSelectOptionValue={handleSelectOptionValue}

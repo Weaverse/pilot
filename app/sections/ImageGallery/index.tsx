@@ -32,15 +32,16 @@ export let schema: HydrogenComponentSchema = {
     children: [
       {
         type: 'heading',
-        content: "Hello World from Weaverse!",
+        content: 'Hello World from Weaverse!',
       },
       {
         type: 'description',
-        content: "Stay on trend this season with our newest arrivals. We've curated the latest looks in women's fashion so you can refresh your wardrobe with ease. From flowy dresses and printed blouses perfect for summer, to cozy sweaters and tall boots for cooler months, our new collection has versatile pieces to take you from work to weekend. Shop cute and comfortable athleisure wear, chic handbags, and so much more.",
+        content:
+          "Stay on trend this season with our newest arrivals. We've curated the latest looks in women's fashion so you can refresh your wardrobe with ease. From flowy dresses and printed blouses perfect for summer, to cozy sweaters and tall boots for cooler months, our new collection has versatile pieces to take you from work to weekend. Shop cute and comfortable athleisure wear, chic handbags, and so much more.",
       },
       {
         type: 'image-gallery--items',
-      }
+      },
     ],
   },
 };

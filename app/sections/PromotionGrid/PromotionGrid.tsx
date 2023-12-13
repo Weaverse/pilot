@@ -2,8 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import type { CSSProperties } from 'react';
-import { forwardRef  } from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 
 interface PromotionProps extends HydrogenComponentProps {
   gap: number;
@@ -12,16 +12,16 @@ interface PromotionProps extends HydrogenComponentProps {
 }
 
 let PromotionGrid = forwardRef<HTMLElement, PromotionProps>((props, ref) => {
-  let {gap, topPadding, bottomPadding, children, ...rest } = props;
+  let {gap, topPadding, bottomPadding, children, ...rest} = props;
   let spacingStyle: CSSProperties = {
     gap: `${gap}px`,
     paddingTop: `${topPadding}px`,
     paddingBottom: `${bottomPadding}px`,
   } as CSSProperties;
   return (
-    <section ref={ref} {...rest} className='w-full h-full'>
-      <div className='px-12 sm-max:px-6'>
-        <div className='flex flex-wrap justify-center' style={spacingStyle}>
+    <section ref={ref} {...rest} className="w-full h-full">
+      <div className="px-12 sm-max:px-6">
+        <div className="flex flex-wrap justify-center" style={spacingStyle}>
           {children}
         </div>
       </div>

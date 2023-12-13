@@ -4,7 +4,7 @@ import {
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
 import type {CSSProperties} from 'react';
-import { forwardRef} from 'react';
+import {forwardRef} from 'react';
 import type {Alignment} from '~/lib/type';
 
 type Size = 'base' | 'large';

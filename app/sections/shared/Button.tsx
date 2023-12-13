@@ -2,10 +2,9 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { clsx } from 'clsx';
-import { forwardRef } from 'react';
-import type { CSSProperties } from 'react';
-
+import {clsx} from 'clsx';
+import {forwardRef} from 'react';
+import type {CSSProperties} from 'react';
 
 type ButtonStyle = 'primary' | 'secondary' | 'subtle';
 type ButtonProps = HydrogenComponentProps & {
@@ -23,14 +22,8 @@ let buttonStyleClasses: Record<ButtonStyle, string> = {
 };
 
 let Button = forwardRef<HTMLAnchorElement, ButtonProps>((props, ref) => {
-  let {
-    content,
-    buttonStyle,
-    buttonLink,
-    openInNewTab,
-    className,
-    ...rest
-  } = props;
+  let {content, buttonStyle, buttonLink, openInNewTab, className, ...rest} =
+    props;
   let style = {} as CSSProperties;
   return (
     <a ref={ref}
@@ -87,9 +80,9 @@ export let schema: HydrogenComponentSchema = {
           label: 'Button style',
           configs: {
             options: [
-              { label: 'primary', value: 'primary' },
-              { label: 'secondary', value: 'secondary' },
-              { label: 'subtle', value: 'subtle' },
+              {label: 'primary', value: 'primary'},
+              {label: 'secondary', value: 'secondary'},
+              {label: 'subtle', value: 'subtle'},
             ],
           },
           defaultValue: 'secondary',

@@ -2,16 +2,18 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import {forwardRef} from 'react';
 
 interface VideoItemProps extends HydrogenComponentProps {
   videoUrl: string;
 }
 
 let VideoItem = forwardRef<HTMLIFrameElement, VideoItemProps>((props, ref) => {
-  let { videoUrl, ...rest } = props;
+  let {videoUrl, ...rest} = props;
   return (
-    <iframe ref={ref} {...rest}
+    <iframe
+      ref={ref}
+      {...rest}
       className="mx-auto mt-8 w-full max-w-2xl h-64 rounded-lg lg:mt-12 sm:h-96"
       src={videoUrl}
       title="YouTube video player"

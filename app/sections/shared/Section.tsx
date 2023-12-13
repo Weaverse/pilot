@@ -4,13 +4,9 @@ import {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import type {HTMLAttributes} from 'react';
-import React, { forwardRef} from 'react';
-import type {
-  BackgroundImageProps} from './BackgroundImage';
-import {
-  BackgroundImage,
-  backgroundImageInputs,
-} from './BackgroundImage';
+import React, {forwardRef} from 'react';
+import type {BackgroundImageProps} from './BackgroundImage';
+import {BackgroundImage, backgroundImageInputs} from './BackgroundImage';
 import {Overlay, overlayInputs} from './Overlay';
 
 export type SectionWidth = 'full' | 'stretch' | 'fixed';

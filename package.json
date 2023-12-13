@@ -5,6 +5,7 @@
   "author": "Weaverse",
   "version": "2.4.1",
   "scripts": {
+    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath .git-hooks || true",
     "dev": "shopify hydrogen dev --worker --codegen --port 3456",
     "build": "shopify hydrogen build",
     "preview": "npm run build && shopify hydrogen preview --worker",
@@ -32,6 +33,7 @@
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
     "isbot": "3.7.0",
+    "keen-slider": "^6.8.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-intersection-observer": "9.5.2",

@@ -86,7 +86,8 @@ let Map = forwardRef<HTMLElement, MapProps>((props, ref) => {
               className={clsx(
                 'px-4 py-3 w-fit cursor-pointer rounded inline-block',
                 buttonStyle,
-              )} rel="noreferrer"
+              )}
+              rel="noreferrer"
             >
               {buttonLabel}
             </a>
