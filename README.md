@@ -21,7 +21,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 ## Demo
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FWeaverse%2Fpilot&env=SESSION_SECRET,PUBLIC_STORE_DOMAIN,PUBLIC_STOREFRONT_API_TOKEN,WEAVERSE_PROJECT_ID&envDescription=SESSION_SECRET%2C%20PUBLIC_STORE_DOMAIN%2C%20PUBLIC_STOREFRONT_API_TOKEN%2C%20WEAVERSE_PROJECT_ID&envLink=https%3A%2F%2Fweaverse.io%2Fdocs%2Fguides%2F8460014-environment-variables&project-name=my-weaverse-hydrogen-project&repository-name=my-weaverse-hydrogen-project&demo-title=Weaverse%20Hydrogen%20Demo&demo-description=A%20Shopify%20Hydrogen%20storefront%20build%20with%20Weaverse&demo-url=https%3A%2F%2Fpilot.weaverse.dev&demo-image=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0728%2F0410%2F6547%2Ffiles%2FHome.png)
+[![Deploy with Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
 
 - [Live store](https://pilot.weaverse.dev)
 - Try customizing Pilot on [Weaverse Playground](https://playground.weaverse.io)
