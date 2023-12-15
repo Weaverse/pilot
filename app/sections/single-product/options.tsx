@@ -5,7 +5,7 @@ interface VariantOptionProps {
   selectedOptionValue: string;
   onSelectOptionValue: (optionValue: string) => void;
   name: string;
-  config: {
+  config?: {
     type: string;
     displayName: string;
     size?: 'sm' | 'md' | 'lg';
@@ -47,7 +47,7 @@ export function VariantOption(props: VariantOptionProps) {
     config,
   } = props;
 
-  let {displayName, shape = 'square', size = 'md', type = 'default'} = config;
+  let {displayName, shape = 'square', size = 'md', type = 'default'} = config || {};
 
   let roundedClassName =
     shape === 'circle' ? 'rounded-full' : shape === 'round' ? 'rounded-md' : '';
