@@ -39,6 +39,8 @@ import * as TestimonialItem from '~/sections/testimonials/item';
 import * as Video from '~/sections/Video/video';
 import * as VideoItem from '~/sections/Video/VideoItem';
 import * as VideoWithText from '~/sections/VideoWithText/VideoWithText';
+import * as SlideShow from '~/sections/SlideShow/SlideShow';
+import * as SlideShowItem from '~/sections/SlideShow/SlideItems';
 
 export let components: HydrogenComponent[] = [
   ...atoms,
@@ -81,4 +83,6 @@ export let components: HydrogenComponent[] = [
   CollectionList,
   SingleProduct,
   Judgeme,
+  SlideShow,
+  SlideShowItem,
 ];
