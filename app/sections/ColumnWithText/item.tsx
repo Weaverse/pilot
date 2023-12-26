@@ -93,7 +93,7 @@ export default ContentColumnItem;
 
 export let schema: HydrogenComponentSchema = {
   type: 'column--item',
-  title: 'Column item',
+  title: 'Column',
   inspector: [
     {
       group: 'Column',

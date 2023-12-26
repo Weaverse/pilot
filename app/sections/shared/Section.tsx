@@ -147,11 +147,11 @@ export let layoutInputs: InspectorGroup['inputs'] = [
     label: 'Items gap',
     configs: {
       min: 0,
-      max: 20,
+      max: 40,
       step: 4,
       unit: 'px',
     },
-    defaultValue: 0,
+    defaultValue: 20,
   },
   {
     type: 'select',

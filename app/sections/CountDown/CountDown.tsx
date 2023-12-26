@@ -62,7 +62,7 @@ export default Countdown;
 
 export let schema: HydrogenComponentSchema = {
   type: 'count-down',
-  title: 'Count down',
+  title: 'Countdown',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {

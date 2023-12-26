@@ -21,7 +21,6 @@ import * as ImageWithText from '~/sections/ImageWithText/ImageWithText';
 import * as ContentItems from '~/sections/ImageWithText/Content';
 import * as ImageItems from '~/sections/ImageWithText/Image';
 import * as Judgeme from '~/sections/judgeme-review';
-import * as Main from '~/sections/main';
 import * as Map from '~/sections/map';
 import * as Page from '~/sections/page';
 import * as ProductInformation from '~/sections/product-information';
@@ -42,7 +41,6 @@ import * as VideoWithText from '~/sections/VideoWithText/VideoWithText';
 
 export let components: HydrogenComponent[] = [
   ...atoms,
-  Main,
   Hero,
   Page,
   Video,

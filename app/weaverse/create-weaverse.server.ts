@@ -19,7 +19,7 @@ export function getWeaverseCsp(request: Request) {
       ? ['localhost:*', 'ws://localhost:*', 'ws://127.0.0.1:*']
       : [];
   let weaverseHost = url.searchParams.get('weaverseHost');
-  let weaverseHosts = ['weaverse.io', '*.weaverse.io'];
+  let weaverseHosts = ['*.weaverse.io', '*.shopify.com', '*.myshopify.com'];
   if (weaverseHost) {
     weaverseHosts.push(weaverseHost);
   }
@@ -27,7 +27,6 @@ export function getWeaverseCsp(request: Request) {
     frameAncestors: weaverseHosts,
     defaultSrc: [
       "'self'",
-      'cdn.shopify.com',
       'shopify.com',
       '*.youtube.com',
       '*.google.com',
@@ -35,18 +34,11 @@ export function getWeaverseCsp(request: Request) {
       ...localDirectives,
       ...weaverseHosts,
     ],
-    imgSrc: [
-      "'self'",
-      'data:',
-      'cdn.shopify.com',
-      ...localDirectives,
-      ...weaverseHosts,
-    ],
+    imgSrc: ["'self'", 'data:', ...localDirectives, ...weaverseHosts],
     styleSrc: [
       "'self'",
       "'unsafe-inline'",
       'fonts.googleapis.com',
-      'cdn.shopify.com',
       ...localDirectives,
       ...weaverseHosts,
     ],
