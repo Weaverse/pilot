@@ -60,15 +60,14 @@ export function ProductMedia(props: ProductMediaProps) {
     <div>
       <div ref={sliderRef} className="keen-slider">
         {media.map((med, i) => {
-          const image =
+          let image =
             med.__typename === 'MediaImage'
               ? {...med.image, altText: med.alt || 'Product image'}
               : null;
           return (
             image && (
-              <div className="keen-slider__slide">
+              <div className="keen-slider__slide" key={med.id}>
                 <Image
-                  key={i}
                   data={image}
                   loading={'lazy'}
                   aspectRatio={'4/5'}
@@ -82,13 +81,14 @@ export function ProductMedia(props: ProductMediaProps) {
       {showThumbnails && (
         <div ref={thumbnailRef} className="keen-slider thumbnail">
           {media.map((med, i) => {
-            const image =
+            let image =
               med.__typename === 'MediaImage'
                 ? {...med.image, altText: med.alt || 'Product image'}
                 : null;
             return (
               image && (
                 <div
+                key={med.id}
                   className={clsx(
                     'keen-slider__slide border-2 cursor-pointer',
                     i === activeInd ? 'border-bar/70' : '',
@@ -96,7 +96,6 @@ export function ProductMedia(props: ProductMediaProps) {
                   onClick={() => handleClickThumbnail(i)}
                 >
                   <Image
-                    key={i}
                     data={image}
                     loading="lazy"
                     width={200}
