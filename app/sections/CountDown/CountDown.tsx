@@ -96,6 +96,18 @@ export let schema: HydrogenComponentSchema = {
             unit: '%',
           },
         },
+        {
+          type: 'range',
+          name: 'sectionHeight',
+          label: 'Section height',
+          defaultValue: 450,
+          configs: {
+            min: 400,
+            max: 700,
+            step: 10,
+            unit: 'px',
+          },
+        },
       ],
     },
   ],

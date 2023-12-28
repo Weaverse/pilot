@@ -25,6 +25,7 @@ export default ButtonItems;
 export let schema: HydrogenComponentSchema = {
   type: 'countdown-buttons',
   title: 'Actions',
+  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Buttons',

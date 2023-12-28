@@ -106,6 +106,7 @@ export default CountDownTimer;
 export let schema: HydrogenComponentSchema = {
   type: 'count-down--timer',
   title: 'Timer',
+  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Timer',

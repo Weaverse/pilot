@@ -94,6 +94,7 @@ export default ContentColumnItem;
 export let schema: HydrogenComponentSchema = {
   type: 'column--item',
   title: 'Column',
+  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Column',
