@@ -47,6 +47,7 @@ export default PromotionGridItem;
 export let schema: HydrogenComponentSchema = {
   type: 'promotion-item',
   title: 'Promotion',
+  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Promotion',
