@@ -92,7 +92,7 @@ let ContentColumnItem = forwardRef<HTMLDivElement, ContentColumnItemProps>(
 export default ContentColumnItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'column--item',
+  type: 'column-with-image--item',
   title: 'Column',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [

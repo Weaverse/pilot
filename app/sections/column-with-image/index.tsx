@@ -127,11 +127,11 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['column--item'],
+  childTypes: ['column-with-image--item'],
   presets: {
     children: [
       {
-        type: 'column--item',
+        type: 'column-with-image--item',
       },
     ],
   },

@@ -104,7 +104,7 @@ let CountDownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
 export default CountDownTimer;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'count-down--timer',
+  type: 'countdown--timer',
   title: 'Timer',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
