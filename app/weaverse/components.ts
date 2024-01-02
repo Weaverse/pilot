@@ -1,11 +1,4 @@
 import type { HydrogenComponent } from '@weaverse/hydrogen';
-import * as ImageBanner from '~/sections/image-banner';
-import * as ImageGallery from '~/sections/image-gallery';
-import * as ImageGalleryItem from '~/sections/image-gallery/image';
-import * as ImageGalleryItems from '~/sections/image-gallery/items';
-import * as ContentItems from '~/sections/image-with-text/content2';
-import * as ImageItems from '~/sections/image-with-text/image2';
-import * as ImageWithText from '~/sections/image-with-text';
 import * as ButtonPromotionItems from '~/sections/PromotionGrid/ButtonItems';
 import * as PromotionGrid from '~/sections/PromotionGrid/PromotionGrid';
 import * as PromotionGridItem from '~/sections/PromotionGrid/item';
@@ -27,6 +20,13 @@ import * as CountDownTimer from '~/sections/countdown/timer';
 import * as FeaturedCollections from '~/sections/featured-collections';
 import * as FeaturedProducts from '~/sections/featured-products';
 import * as Hero from '~/sections/hero';
+import * as ImageBanner from '~/sections/image-banner';
+import * as ImageGallery from '~/sections/image-gallery';
+import * as ImageGalleryItem from '~/sections/image-gallery/image';
+import * as ImageGalleryItems from '~/sections/image-gallery/items';
+import * as ImageWithText from '~/sections/image-with-text';
+import * as ImageWithTextContent from '~/sections/image-with-text/content';
+import * as ImageWithTextImage from '~/sections/image-with-text/image';
 import * as Judgeme from '~/sections/judgeme-review';
 import * as Map from '~/sections/map';
 import * as Page from '~/sections/page';
@@ -48,8 +48,8 @@ export let components: HydrogenComponent[] = [
   CollectionHeader,
   ImageBanner,
   ImageWithText,
-  ContentItems,
-  ImageItems,
+  ImageWithTextContent,
+  ImageWithTextImage,
   ContentColumnWithImage,
   ContentColumnItem,
   RichText,
