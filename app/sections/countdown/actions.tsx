@@ -2,13 +2,14 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {forwardRef, CSSProperties} from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef } from 'react';
 
-interface ButtonItemsProps extends HydrogenComponentProps {
+interface ActionsProps extends HydrogenComponentProps {
   gap: number;
 }
 
-let ButtonItems = forwardRef<HTMLDivElement, ButtonItemsProps>((props, ref) => {
+let Actions = forwardRef<HTMLDivElement, ActionsProps>((props, ref) => {
   let {gap, children, ...rest} = props;
   let spacingStyle: CSSProperties = {
     gap: `${gap}px`,
@@ -20,7 +21,7 @@ let ButtonItems = forwardRef<HTMLDivElement, ButtonItemsProps>((props, ref) => {
   );
 });
 
-export default ButtonItems;
+export default Actions;
 
 export let schema: HydrogenComponentSchema = {
   type: 'countdown--actions',
