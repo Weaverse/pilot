@@ -78,8 +78,8 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
 export default HeaderImage;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'header-image',
-  title: 'Image',
+  type: 'image-banner',
+  title: 'Image banner',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
