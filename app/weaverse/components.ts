@@ -1,11 +1,11 @@
 import type { HydrogenComponent } from '@weaverse/hydrogen';
-import * as HeaderImage from '~/sections/HeaderImage/HeaderImage';
-import * as ImageGallery from '~/sections/ImageGallery';
-import * as ImageGalleryItem from '~/sections/ImageGallery/image';
-import * as ImageGalleryItems from '~/sections/ImageGallery/items';
-import * as ContentItems from '~/sections/ImageWithText/Content';
-import * as ImageItems from '~/sections/ImageWithText/Image';
-import * as ImageWithText from '~/sections/ImageWithText/ImageWithText';
+import * as ImageBanner from '~/sections/image-banner';
+import * as ImageGallery from '~/sections/image-gallery';
+import * as ImageGalleryItem from '~/sections/image-gallery/image';
+import * as ImageGalleryItems from '~/sections/image-gallery/items';
+import * as ContentItems from '~/sections/image-with-text/content2';
+import * as ImageItems from '~/sections/image-with-text/image2';
+import * as ImageWithText from '~/sections/image-with-text';
 import * as ButtonPromotionItems from '~/sections/PromotionGrid/ButtonItems';
 import * as PromotionGrid from '~/sections/PromotionGrid/PromotionGrid';
 import * as PromotionGridItem from '~/sections/PromotionGrid/item';
@@ -33,20 +33,20 @@ import * as Page from '~/sections/page';
 import * as ProductInformation from '~/sections/product-information';
 import * as RelatedArticles from '~/sections/related-articles';
 import * as RelatedProducts from '~/sections/related-products';
-import { atoms } from '~/sections/shared/atoms';
+import { commonComponents } from '~/sections/shared/atoms';
 import * as SingleProduct from '~/sections/single-product';
 import * as Testimonial from '~/sections/testimonials';
 import * as TestimonialItem from '~/sections/testimonials/item';
 import * as TestimonialItems from '~/sections/testimonials/items';
 
 export let components: HydrogenComponent[] = [
-  ...atoms,
+  ...commonComponents,
   Hero,
   Page,
   Video,
   VideoItem,
   CollectionHeader,
-  HeaderImage,
+  ImageBanner,
   ImageWithText,
   ContentItems,
   ImageItems,
