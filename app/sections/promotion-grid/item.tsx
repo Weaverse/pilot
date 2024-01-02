@@ -60,7 +60,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['subheading', 'heading', 'description', 'promotion-buttons'],
+  childTypes: ['subheading', 'heading', 'description', 'promotion-item--buttons'],
   presets: {
     children: [
       {
@@ -77,7 +77,7 @@ export let schema: HydrogenComponentSchema = {
           'Include the smaller details of your promotion in text below the title.',
       },
       {
-        type: 'promotion-buttons',
+        type: 'promotion-item--buttons',
       },
     ],
   },

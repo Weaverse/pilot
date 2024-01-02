@@ -2,13 +2,14 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {forwardRef, CSSProperties} from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef } from 'react';
 
 interface ButtonItemsProps extends HydrogenComponentProps {
   gap: number;
 }
 
-let ButtonItems = forwardRef<HTMLDivElement, ButtonItemsProps>((props, ref) => {
+let PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>((props, ref) => {
   let {gap, children, ...rest} = props;
   let spacingStyle: CSSProperties = {
     gap: `${gap}px`,
@@ -20,10 +21,10 @@ let ButtonItems = forwardRef<HTMLDivElement, ButtonItemsProps>((props, ref) => {
   );
 });
 
-export default ButtonItems;
+export default PromotionItemButtons;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'promotion-buttons',
+  type: 'promotion-item--buttons',
   title: 'Buttons',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [

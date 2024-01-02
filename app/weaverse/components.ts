@@ -1,7 +1,4 @@
 import type { HydrogenComponent } from '@weaverse/hydrogen';
-import * as ButtonPromotionItems from '~/sections/PromotionGrid/ButtonItems';
-import * as PromotionGrid from '~/sections/PromotionGrid/PromotionGrid';
-import * as PromotionGridItem from '~/sections/PromotionGrid/item';
 import * as RichText from '~/sections/RichText/RichText';
 import * as VideoItem from '~/sections/Video/VideoItem';
 import * as Video from '~/sections/Video/video';
@@ -31,6 +28,9 @@ import * as Judgeme from '~/sections/judgeme-review';
 import * as Map from '~/sections/map';
 import * as Page from '~/sections/page';
 import * as ProductInformation from '~/sections/product-information';
+import * as PromotionGrid from '~/sections/promotion-grid';
+import * as PromotionGridButtons from '~/sections/promotion-grid/buttons';
+import * as PromotionGridItem from '~/sections/promotion-grid/item';
 import * as RelatedArticles from '~/sections/related-articles';
 import * as RelatedProducts from '~/sections/related-products';
 import { commonComponents } from '~/sections/shared/atoms';
@@ -57,7 +57,7 @@ export let components: HydrogenComponent[] = [
   Map,
   PromotionGrid,
   PromotionGridItem,
-  ButtonPromotionItems,
+  PromotionGridButtons,
   Countdown,
   CountDownTimer,
   CountdownActions,
