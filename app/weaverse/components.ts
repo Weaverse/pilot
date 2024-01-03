@@ -12,7 +12,6 @@ import * as CountdownActions from '~/sections/countdown/actions';
 import * as CountDownTimer from '~/sections/countdown/timer';
 import * as FeaturedCollections from '~/sections/featured-collections';
 import * as FeaturedProducts from '~/sections/featured-products';
-import * as Hero from '~/sections/hero';
 import * as ImageBanner from '~/sections/image-banner';
 import * as ImageGallery from '~/sections/image-gallery';
 import * as ImageGalleryItem from '~/sections/image-gallery/image';
@@ -44,7 +43,6 @@ export let components: HydrogenComponent[] = [
   BlogPost,
   Blogs,
   CollectionBanner,
-  Hero,
   Page,
   VideoEmbed,
   VideoEmbedItem,
