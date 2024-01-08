@@ -36,7 +36,7 @@ import * as TestimonialItems from '~/sections/testimonials/items';
 import * as VideoBanner from '~/sections/video-banner';
 import * as VideoEmbed from '~/sections/video-embed';
 import * as VideoEmbedItem from '~/sections/video-embed/video';
-
+import * as MetaDemo from '~/sections/meta-demo';
 export let components: HydrogenComponent[] = [
   ...commonComponents,
   AllProducts,
@@ -75,4 +75,5 @@ export let components: HydrogenComponent[] = [
   CollectionList,
   SingleProduct,
   Judgeme,
+  MetaDemo
 ];
