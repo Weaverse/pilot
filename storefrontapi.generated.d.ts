@@ -1825,7 +1825,7 @@ interface GeneratedQueryTypes {
     return: SitemapsQuery;
     variables: SitemapsQueryVariables;
   };
-  '#graphql\n  query MetaObjects ($type: String!, $first: Int)\n  {\n    metaobjects(type: $type, first: $first) {\n      nodes {\n        fields { \n          key\n          type\n          value\n          reference {\n            ... on MediaImage {\n              alt\n              image {\n                altText\n                url\n                width\n                height\n              }\n            }\n          }\n        }\n        handle\n        id\n        type\n      }\n    }\n  }\n  ': {
+  '#graphql\n  query MetaObjects ($type: String!, $first: Int)\n  {\n    metaobjects(type: $type, first: $first) {\n      nodes {\n        fields {\n          key\n          type\n          value\n          reference {\n            ... on MediaImage {\n              alt\n              image {\n                altText\n                url\n                width\n                height\n              }\n            }\n          }\n        }\n        handle\n        id\n        type\n      }\n    }\n  }\n  ': {
     return: MetaObjectsQuery;
     variables: MetaObjectsQueryVariables;
   };

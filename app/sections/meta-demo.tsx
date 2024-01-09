@@ -1,22 +1,26 @@
-import { defer } from "@remix-run/server-runtime";
-import { Image } from "@shopify/hydrogen";
-import type { ComponentLoaderArgs, HydrogenComponentProps, HydrogenComponentSchema } from "@weaverse/hydrogen";
-import clsx from "clsx";
-import { forwardRef } from "react";
+import {defer} from '@remix-run/server-runtime';
+import {Image} from '@shopify/hydrogen';
+import type {
+  ComponentLoaderArgs,
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+} from '@weaverse/hydrogen';
+import clsx from 'clsx';
+import {forwardRef} from 'react';
 
 type MetaObjectField = {
   key: string;
   type: string;
   value: any;
   reference?: any;
-}
+};
 
 type MetaobjectData = {
   handle: string;
   id: string;
   type: string;
   fields: MetaObjectField[];
-}
+};
 
 type MetaDemoProps = HydrogenComponentProps & {
   metaDemo: {
@@ -28,43 +32,68 @@ type MetaDemoProps = HydrogenComponentProps & {
   gap: number;
 };
 
-let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>(
-  (props, ref) => {
-    let { loaderData, metaDemo, title, itemsPerRow, gap, className, ...rest } = props;
-    if (!metaDemo) {
-      return (
-        <section className={clsx("w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto", className)} ref={ref} {...rest}>
-          <p className="text-center">Please select a metaobject definition</p>
-        </section>
-      )
-    }
-    let items = loaderData?.data?.metaobjects.map((metaObject: MetaobjectData, ind: number) => {
-      let {fields} = metaObject
-      let image = fields.find((field) => field.key === "avatar")
-      let imageData = image?.reference?.image
-      let name = fields.find((field) => field.key === "name")?.value
-      let title = fields.find((field) => field.key === "title")?.value
-      return <div key={ind} className="flex flex-col gap-2 items-center">
-        <div className="rounded-md overflow-hidden w-44">
-        <Image data={imageData} sizes="auto" className="h-auto" aspectRatio="1/1" />
-        </div>
-        <h3 className="font-semibold text-xl">{name}</h3>
-        <p>{title}</p>
-      </div>
-    })
+let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
+  let {loaderData, metaDemo, title, itemsPerRow, gap, className, ...rest} =
+    props;
+  if (!metaDemo) {
     return (
-      <section className={clsx("max-w-7xl px-6 py-12 md:py-24 lg:py-32 w-fit mx-auto", className)} ref={ref} {...rest}>
-        <h2 className="text-center font-semibold mb-8">{title}</h2>
-        <div className='grid w-fit mx-auto' style={{
-          gridTemplateColumns: `repeat(${itemsPerRow}, minmax(0, 1fr))`,
-          gap: `${gap}px`
-        }}>
-          {items}
-          </div>
+      <section
+        className={clsx(
+          'w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto',
+          className,
+        )}
+        ref={ref}
+        {...rest}
+      >
+        <p className="text-center">Please select a metaobject definition</p>
       </section>
     );
   }
-);
+  let items = loaderData?.data?.metaobjects.map(
+    (metaObject: MetaobjectData, ind: number) => {
+      let {fields} = metaObject;
+      let image = fields.find((field) => field.key === 'avatar');
+      let imageData = image?.reference?.image;
+      let name = fields.find((field) => field.key === 'name')?.value;
+      let title = fields.find((field) => field.key === 'title')?.value;
+      return (
+        <div key={ind} className="flex flex-col gap-2 items-center">
+          <div className="rounded-md overflow-hidden w-44">
+            <Image
+              data={imageData}
+              sizes="auto"
+              className="h-auto"
+              aspectRatio="1/1"
+            />
+          </div>
+          <h3 className="font-semibold text-xl">{name}</h3>
+          <p>{title}</p>
+        </div>
+      );
+    },
+  );
+  return (
+    <section
+      className={clsx(
+        'max-w-7xl px-6 py-12 md:py-24 lg:py-32 w-fit mx-auto',
+        className,
+      )}
+      ref={ref}
+      {...rest}
+    >
+      <h2 className="text-center font-semibold mb-8">{title}</h2>
+      <div
+        className="grid w-fit mx-auto"
+        style={{
+          gridTemplateColumns: `repeat(${itemsPerRow}, minmax(0, 1fr))`,
+          gap: `${gap}px`,
+        }}
+      >
+        {items}
+      </div>
+    </section>
+  );
+});
 
 export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
   let {weaverse, data} = args;
@@ -77,7 +106,7 @@ export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
   {
     metaobjects(type: $type, first: $first) {
       nodes {
-        fields { 
+        fields {
           key
           type
           value
@@ -99,18 +128,17 @@ export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
       }
     }
   }
-  `
-  let {metaobjects} = await storefront.query( query, {
+  `;
+  let {metaobjects} = await storefront.query(query, {
     variables: {
-      "type": data.metaDemo.type,
-      "first": 10
-    }
-  })
+      type: data.metaDemo.type,
+      first: 10,
+    },
+  });
   return defer({
-    metaobjects: metaobjects.nodes
-  })
-}
-
+    metaobjects: metaobjects.nodes,
+  });
+};
 
 export let schema: HydrogenComponentSchema = {
   type: 'meta-demo',
@@ -122,15 +150,16 @@ export let schema: HydrogenComponentSchema = {
       inputs: [
         {
           label: 'Select metaobject definition',
-          type: 'definition',
-          helpText: '<a href="https://weaverse.io/docs/hydrogen/overview" target="_blank">How to display this demo section</a>',
+          type: 'metaobject',
+          helpText:
+            '<a href="https://weaverse.io/docs/hydrogen/overview" target="_blank">How to display this demo section</a>',
           name: 'metaDemo',
         },
         {
           label: 'Title',
           type: 'text',
           name: 'title',
-          defaultValue: 'Title'
+          defaultValue: 'Title',
         },
         {
           label: 'Items per row',
@@ -152,7 +181,7 @@ export let schema: HydrogenComponentSchema = {
             max: 100,
           },
           defaultValue: 10,
-        }
+        },
       ],
     },
   ],
