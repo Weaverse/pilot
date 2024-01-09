@@ -8,7 +8,7 @@ import {useLoaderData} from '@remix-run/react';
 import type {CollectionDetailsQuery} from 'storefrontapi.generated';
 import clsx from 'clsx';
 
-interface HeaderProps extends HydrogenComponentProps {
+interface CollectionBannerProps extends HydrogenComponentProps {
   sectionHeightDesktop: number;
   sectionHeightMobile: number;
   enableBackground: boolean;
@@ -17,7 +17,7 @@ interface HeaderProps extends HydrogenComponentProps {
   contentPosition: string;
 }
 
-let CollectHeader = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
+let CollectionBanner = forwardRef<HTMLElement, CollectionBannerProps>((props, ref) => {
   let {
     sectionHeightDesktop,
     sectionHeightMobile,
@@ -90,11 +90,11 @@ let CollectHeader = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
   );
 });
 
-export default CollectHeader;
+export default CollectionBanner;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'collection-header',
-  title: 'Collection header',
+  type: 'collection-banner',
+  title: 'Collection banner',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   enabledOn: {
     pages: ['COLLECTION'],

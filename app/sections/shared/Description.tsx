@@ -80,7 +80,7 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'p',
         },
         {
-          type: 'textarea',
+          type: 'richtext',
           name: 'content',
           label: 'Content',
           defaultValue:

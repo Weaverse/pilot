@@ -7,7 +7,7 @@ import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
 
-interface CountDownProps extends HydrogenComponentProps {
+interface CountdownProps extends HydrogenComponentProps {
   backgroundColor: string;
   backgroundImage: WeaverseImage;
   overlayColor: string;
@@ -15,7 +15,7 @@ interface CountDownProps extends HydrogenComponentProps {
   sectionHeight: number;
 }
 
-let Countdown = forwardRef<HTMLElement, CountDownProps>((props, ref) => {
+let Countdown = forwardRef<HTMLElement, CountdownProps>((props, ref) => {
   let {
     backgroundColor,
     backgroundImage,
@@ -96,14 +96,26 @@ export let schema: HydrogenComponentSchema = {
             unit: '%',
           },
         },
+        {
+          type: 'range',
+          name: 'sectionHeight',
+          label: 'Section height',
+          defaultValue: 450,
+          configs: {
+            min: 400,
+            max: 700,
+            step: 10,
+            unit: 'px',
+          },
+        },
       ],
     },
   ],
   childTypes: [
     'heading',
     'subheading',
-    'count-down--timer',
-    'countdown-buttons',
+    'countdown--timer',
+    'countdown--actions',
   ],
   presets: {
     children: [
@@ -116,10 +128,10 @@ export let schema: HydrogenComponentSchema = {
         content: 'Countdown to our upcoming event',
       },
       {
-        type: 'count-down--timer',
+        type: 'countdown--timer',
       },
       {
-        type: 'countdown-buttons',
+        type: 'countdown--actions',
       },
     ],
   },

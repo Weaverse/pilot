@@ -10,7 +10,7 @@ interface CountDownTimerProps extends HydrogenComponentProps {
   startDate: number;
 }
 
-let CountDownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
+let CountdownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
   (props, ref) => {
     let {textColor, startDate, ...rest} = props;
     const [timeRemaining, setTimeRemaining] = useState(
@@ -33,8 +33,8 @@ let CountDownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
     }, [startDate]);
 
     function calculateTimeRemaining(startTime: number) {
-      const now = new Date().getTime();
-      const difference = startTime - now;
+      let now = new Date().getTime();
+      let difference = startTime - now;
       if (difference <= 0) {
         return {
           days: 0,
@@ -44,12 +44,12 @@ let CountDownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
         };
       }
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
+      let days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      let hours = Math.floor(
         (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
       );
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((difference % (1000 * 60)) / 1000);
       return {
         days,
         hours,
@@ -101,11 +101,12 @@ let CountDownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
   },
 );
 
-export default CountDownTimer;
+export default CountdownTimer;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'count-down--timer',
+  type: 'countdown--timer',
   title: 'Timer',
+  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Timer',

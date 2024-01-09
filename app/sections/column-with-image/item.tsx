@@ -1,15 +1,15 @@
+import { Image } from '@shopify/hydrogen';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
 import clsx from 'clsx';
-import {IconImageBlank} from '~/components';
+import type { CSSProperties } from 'react';
+import { forwardRef } from 'react';
+import { IconImageBlank } from '~/components';
 
-interface ContentColumnItemProps extends HydrogenComponentProps {
+interface ColumnWithImageItemProps extends HydrogenComponentProps {
   imageSrc: WeaverseImage;
   titleText: string;
   contentAlignment: string;
@@ -21,7 +21,7 @@ interface ContentColumnItemProps extends HydrogenComponentProps {
   hideOnMobile: boolean;
 }
 
-let ContentColumnItem = forwardRef<HTMLDivElement, ContentColumnItemProps>(
+let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
   (props, ref) => {
     let {
       imageSrc,
@@ -89,11 +89,12 @@ let ContentColumnItem = forwardRef<HTMLDivElement, ContentColumnItemProps>(
   },
 );
 
-export default ContentColumnItem;
+export default ColumnWithImageItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'column--item',
+  type: 'column-with-image--item',
   title: 'Column',
+  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Column',

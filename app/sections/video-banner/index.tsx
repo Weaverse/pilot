@@ -7,7 +7,7 @@ import {forwardRef} from 'react';
 import ReactPlayer from 'react-player/youtube';
 import {IconVideoBlank} from '~/components';
 
-interface VideoWithTextProps extends HydrogenComponentProps {
+interface VideoBannerProps extends HydrogenComponentProps {
   videoLink: string;
   enableOverlay: boolean;
   overlayColor: string;
@@ -20,7 +20,7 @@ interface VideoWithTextProps extends HydrogenComponentProps {
   contentAlignment: string;
 }
 
-let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>(
+let VideoBanner = forwardRef<HTMLElement, VideoBannerProps>(
   (props, ref) => {
     let {
       videoLink,
@@ -80,11 +80,11 @@ let VideoWithText = forwardRef<HTMLElement, VideoWithTextProps>(
   },
 );
 
-export default VideoWithText;
+export default VideoBanner;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'video-with-text',
-  title: 'Video with text',
+  type: 'video-banner',
+  title: 'Video banner',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {

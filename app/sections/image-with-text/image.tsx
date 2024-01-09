@@ -29,7 +29,7 @@ let ImageItems = forwardRef<HTMLDivElement, ImageItemsProps>((props, ref) => {
 export default ImageItems;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'image-items',
+  type: 'image-with-text--image',
   title: 'Image',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   limit: 1,

@@ -2,10 +2,10 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef } from 'react';
 
-interface ContentColumnWithImageProps extends HydrogenComponentProps {
+interface ColumnWithImageProps extends HydrogenComponentProps {
   heading: string;
   textColor: string;
   gap: number;
@@ -14,9 +14,9 @@ interface ContentColumnWithImageProps extends HydrogenComponentProps {
   bottomPadding: number;
 }
 
-let ContentColumnWithImage = forwardRef<
+let ColumnWithImage = forwardRef<
   HTMLElement,
-  ContentColumnWithImageProps
+  ColumnWithImageProps
 >((props, ref) => {
   let {
     heading,
@@ -52,7 +52,7 @@ let ContentColumnWithImage = forwardRef<
   );
 });
 
-export default ContentColumnWithImage;
+export default ColumnWithImage;
 
 export let schema: HydrogenComponentSchema = {
   type: 'column-with-image',
@@ -127,11 +127,11 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['column--item'],
+  childTypes: ['column-with-image--item'],
   presets: {
     children: [
       {
-        type: 'column--item',
+        type: 'column-with-image--item',
       },
     ],
   },

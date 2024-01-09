@@ -62,8 +62,8 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     let atcText = selectedVariant?.availableForSale
       ? 'Add to Cart'
       : selectedVariant?.quantityAvailable === -1
-      ? 'Unavailable'
-      : 'Sold Out';
+        ? 'Unavailable'
+        : 'Sold Out';
     return (
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
@@ -182,6 +182,7 @@ export let schema: HydrogenComponentSchema = {
           label: 'Choose product',
           type: 'product',
           name: 'product',
+          shouldRevalidate: true,
         },
         {
           label: 'Hide unavailable options',

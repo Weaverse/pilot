@@ -27,7 +27,7 @@ let VideoItem = forwardRef<HTMLIFrameElement, VideoItemProps>((props, ref) => {
 export default VideoItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'video--item',
+  type: 'video-embed--item',
   title: 'Video',
   inspector: [
     {

@@ -24,7 +24,7 @@ let ContentItems = forwardRef<HTMLDivElement, ContentItemsProps>((props, ref) =>
 export default ContentItems;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'content-items',
+  type: 'image-with-text--content',
   title: 'Content',
   limit: 1,
   toolbar: ['general-settings', ['duplicate', 'delete']],
