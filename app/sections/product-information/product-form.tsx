@@ -164,7 +164,7 @@ export function ProductForm(props: {
               <AddToCartButton
                 lines={[
                   {
-                    merchandiseId: selectedVariant.id!,
+                    merchandiseId: selectedVariant?.id,
                     quantity: 1,
                   },
                 ]}
@@ -180,11 +180,13 @@ export function ProductForm(props: {
                   className="flex items-center justify-center gap-2"
                 >
                   <span>{addToCartText}</span> <span>·</span>{' '}
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant?.price!}
-                    as="span"
-                  />
+                  {selectedVariant?.price ? (
+                    <Money
+                      withoutTrailingZeros
+                      data={selectedVariant.price}
+                      as="span"
+                    />
+                  ) : null}
                   {showSalePrice && isOnSale && (
                     <Money
                       withoutTrailingZeros
