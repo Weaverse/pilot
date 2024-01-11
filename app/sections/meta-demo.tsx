@@ -1,4 +1,3 @@
-import {defer} from '@remix-run/server-runtime';
 import {Image} from '@shopify/hydrogen';
 import type {
   ComponentLoaderArgs,
@@ -49,7 +48,8 @@ let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
       </section>
     );
   }
-  let items = loaderData?.data?.metaobjects.map(
+  console.log('loaderData', loaderData);
+  let items = loaderData?.metaobjects.map(
     (metaObject: MetaobjectData, ind: number) => {
       let {fields} = metaObject;
       let image = fields.find((field) => field.key === 'avatar');
@@ -135,9 +135,9 @@ export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
       first: 10,
     },
   });
-  return defer({
+  return {
     metaobjects: metaobjects.nodes,
-  });
+  };
 };
 
 export let schema: HydrogenComponentSchema = {
