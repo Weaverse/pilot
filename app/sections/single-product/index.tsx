@@ -1,19 +1,18 @@
 import {Money, ShopPayButton} from '@shopify/hydrogen';
 import {
-  useThemeSettings,
   type ComponentLoaderArgs,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
+  useThemeSettings,
   type WeaverseProduct,
 } from '@weaverse/hydrogen';
 import {forwardRef, useEffect, useState} from 'react';
 import type {ProductQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components';
-import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
+import {PRODUCT_QUERY} from '~/data/queries';
 import {Quantity} from './quantity';
 import {ProductVariants} from './variants';
 import {ProductPlaceholder} from './placeholder';
-import {defer} from '@remix-run/server-runtime';
 import {ProductMedia} from './product-media';
 
 type SingleProductData = {
@@ -45,14 +44,15 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     } = props;
     let {swatches} = useThemeSettings();
 
-    let {storeDomain, product, variants} = loaderData?.data || {};
-    let [selectedVariant, setSelectedVariant] = useState(variants?.nodes[0]);
+    let {storeDomain, product} = loaderData || {};
+    let [selectedVariant, setSelectedVariant] = useState<any>(null);
     let [quantity, setQuantity] = useState<number>(1);
     useEffect(() => {
+      let variants = product?.variants as any;
       setSelectedVariant(variants?.nodes?.[0]);
       setQuantity(1);
-    }, [product, variants?.nodes]);
-    if (!product)
+    }, [product]);
+    if (!product || !selectedVariant)
       return (
         <section className="w-full py-12 md:py-24 lg:py-32" ref={ref} {...rest}>
           <ProductPlaceholder />
@@ -81,11 +81,13 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   {product?.title}
                 </h2>
                 <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant?.price!}
-                    as="span"
-                  />
+                  {selectedVariant ? (
+                    <Money
+                      withoutTrailingZeros
+                      data={selectedVariant.price}
+                      as="span"
+                    />
+                  ) : null}
                 </p>
                 {children}
                 <p
@@ -99,7 +101,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   selectedVariant={selectedVariant}
                   onSelectedVariantChange={setSelectedVariant}
                   swatch={swatches}
-                  variants={variants}
+                  variants={product.variants}
                   options={product?.options}
                   handle={product?.handle}
                   hideUnavailableOptions={hideUnavailableOptions}
@@ -110,7 +112,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 disabled={!selectedVariant?.availableForSale}
                 lines={[
                   {
-                    merchandiseId: selectedVariant.id!,
+                    merchandiseId: selectedVariant?.id,
                     quantity,
                   },
                 ]}
@@ -124,7 +126,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   width="100%"
                   variantIdsAndQuantities={[
                     {
-                      id: selectedVariant.id!,
+                      id: selectedVariant?.id,
                       quantity,
                     },
                   ]}
@@ -154,19 +156,19 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
       country: storefront.i18n.country,
     },
   });
-  let variants = await storefront.query(VARIANTS_QUERY, {
-    variables: {
-      handle: productHandle,
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
-    },
-  });
+  // let variants = await storefront.query(VARIANTS_QUERY, {
+  //   variables: {
+  //     handle: productHandle,
+  //     language: storefront.i18n.language,
+  //     country: storefront.i18n.country,
+  //   },
+  // });
 
-  return defer({
+  return {
     product,
-    variants: variants?.product?.variants,
+    // variants: variants?.product?.variants,
     storeDomain: shop.primaryDomain.url,
-  });
+  };
 };
 
 export let schema: HydrogenComponentSchema = {

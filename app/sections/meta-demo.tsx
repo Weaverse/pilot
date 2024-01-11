@@ -48,7 +48,6 @@ let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
       </section>
     );
   }
-  console.log('loaderData', loaderData);
   let items = loaderData?.metaobjects.map(
     (metaObject: MetaobjectData, ind: number) => {
       let {fields} = metaObject;
@@ -154,6 +153,7 @@ export let schema: HydrogenComponentSchema = {
           helpText:
             '<a href="https://weaverse.io/docs/hydrogen/overview" target="_blank">How to display this demo section</a>',
           name: 'metaDemo',
+          shouldRevalidate: true,
         },
         {
           label: 'Title',
