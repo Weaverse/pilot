@@ -151,7 +151,7 @@ export let schema: HydrogenComponentSchema = {
           label: 'Select metaobject definition',
           type: 'metaobject',
           helpText:
-            '<a href="https://weaverse.io/docs/hydrogen/overview" target="_blank">How to display this demo section</a>',
+            '<a href="https://weaverse.io/docs/marketplace/the-pilot-theme#metaobjects" target="_blank">How to display this demo section</a>',
           name: 'metaDemo',
           shouldRevalidate: true,
         },
