@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
+import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import type {SectionProps} from '~/sections/shared/Section';
 import {Section, sectionConfigs} from '~/sections/shared/Section';

@@ -166,3 +166,7 @@
     transform-origin: top left;
   }
 }
+
+.vt-product-image {
+  view-transition-name: product-image;
+}

@@ -1,10 +1,10 @@
-import {useLoaderData} from '@remix-run/react';
+import {Await, useLoaderData} from '@remix-run/react';
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
-import {forwardRef} from 'react';
+import {forwardRef, Suspense} from 'react';
 import type {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
 import {Heading, ProductGallery, Section, Text} from '~/components';
 import {getExcerpt} from '~/lib/utils';
@@ -64,8 +64,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     gallerySize === 'small'
                       ? 'large'
                       : gallerySize === 'large'
-                      ? 'small'
-                      : 'medium'
+                        ? 'small'
+                        : 'medium'
                   ],
                 )}
               >
@@ -78,12 +78,18 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       <Text className={'opacity-50 font-medium'}>{vendor}</Text>
                     )}
                   </div>
-                  <ProductForm
-                    variants={variants.product?.variants.nodes || []}
-                    addToCartText={addToCartText}
-                    soldOutText={soldOutText}
-                    showSalePrice={showSalePrice}
-                  />
+                  <Suspense>
+                    <Await resolve={variants}>
+                      {(variants) => (
+                        <ProductForm
+                          variants={variants.product?.variants.nodes || []}
+                          addToCartText={addToCartText}
+                          soldOutText={soldOutText}
+                          showSalePrice={showSalePrice}
+                        />
+                      )}
+                    </Await>
+                  </Suspense>
                   <div className="grid gap-4 py-4">
                     {showDetails && descriptionHtml && (
                       <ProductDetail
