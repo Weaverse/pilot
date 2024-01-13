@@ -31,7 +31,6 @@ export function Link(props: LinkProps) {
   const rootData = useRootLoaderData();
   let {enableViewTransition} = useThemeSettings();
   const selectedLocale = rootData?.selectedLocale;
-  console.log('enableViewTransition', enableViewTransition);
   let toWithLocale = to;
 
   if (typeof to === 'string') {
