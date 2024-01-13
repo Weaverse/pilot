@@ -380,5 +380,16 @@ export let themeSchema: HydrogenThemeSchema = {
         },
       ],
     },
+    {
+      group: 'Effect',
+      inputs: [
+        {
+          type: 'switch',
+          label: 'Enable View Transition',
+          name: 'enableViewTransition',
+          defaultValue: true,
+        },
+      ],
+    },
   ],
 };

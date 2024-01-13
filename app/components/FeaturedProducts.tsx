@@ -110,12 +110,7 @@ function FeatureProductsContent({
   return (
     <>
       {products.map((product) => (
-        <ProductCard
-          product={product}
-          key={product.id}
-          onClick={onClick}
-          quickAdd
-        />
+        <ProductCard product={product} key={product.id} quickAdd />
       ))}
     </>
   );

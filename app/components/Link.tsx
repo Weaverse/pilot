@@ -5,6 +5,7 @@ import {
   type LinkProps as RemixLinkProps,
 } from '@remix-run/react';
 import {useRootLoaderData} from '~/root';
+import {useThemeSettings} from '@weaverse/hydrogen';
 
 type LinkProps = Omit<RemixLinkProps, 'className'> & {
   className?: RemixNavLinkProps['className'] | RemixLinkProps['className'];
@@ -28,8 +29,8 @@ type LinkProps = Omit<RemixLinkProps, 'className'> & {
 export function Link(props: LinkProps) {
   const {to, className, ...resOfProps} = props;
   const rootData = useRootLoaderData();
+  let {enableViewTransition} = useThemeSettings();
   const selectedLocale = rootData?.selectedLocale;
-
   let toWithLocale = to;
 
   if (typeof to === 'string') {
@@ -38,9 +39,21 @@ export function Link(props: LinkProps) {
 
   if (typeof className === 'function') {
     return (
-      <RemixNavLink to={toWithLocale} className={className} {...resOfProps} />
+      <RemixNavLink
+        unstable_viewTransition={enableViewTransition}
+        to={toWithLocale}
+        className={className}
+        {...resOfProps}
+      />
     );
   }
 
-  return <RemixLink to={toWithLocale} className={className} {...resOfProps} />;
+  return (
+    <RemixLink
+      unstable_viewTransition={enableViewTransition}
+      to={toWithLocale}
+      className={className}
+      {...resOfProps}
+    />
+  );
 }
