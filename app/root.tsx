@@ -30,6 +30,9 @@ import styles from './styles/app.css';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
 import {GlobalStyle} from './weaverse/style';
+import roboto400 from '@fontsource/roboto/400.css';
+import roboto500 from '@fontsource/roboto/500.css';
+import roboto700 from '@fontsource/roboto/700.css';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -52,6 +55,18 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
 export const links: LinksFunction = () => {
   return [
+    {
+      rel: 'stylesheet',
+      href: roboto400,
+    },
+    {
+      rel: 'stylesheet',
+      href: roboto500,
+    },
+    {
+      rel: 'stylesheet',
+      href: roboto700,
+    },
     {rel: 'stylesheet', href: styles},
     {
       rel: 'preconnect',
@@ -62,19 +77,6 @@ export const links: LinksFunction = () => {
       href: 'https://shop.app',
     },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
-    {
-      rel: 'preconnect',
-      href: 'https://fonts.googleapis.com',
-    },
-    {
-      href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap',
-      rel: 'preload',
-      as: 'style',
-    },
-    {
-      href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap',
-      rel: 'stylesheet',
-    },
   ];
 };
 
