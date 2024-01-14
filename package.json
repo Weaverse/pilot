@@ -19,6 +19,7 @@
   ],
   "prettier": "@shopify/prettier-config",
   "dependencies": {
+    "@fontsource/roboto": "^5.0.8",
     "@headlessui/react": "1.7.18",
     "@remix-run/react": "2.4.1",
     "@remix-run/server-runtime": "2.4.1",
