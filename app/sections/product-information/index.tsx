@@ -201,6 +201,7 @@ export default ProductInformation;
 export let schema: HydrogenComponentSchema = {
   type: 'product-information',
   title: 'Product information',
+  childTypes: ['judgeme'],
   limit: 1,
   enabledOn: {
     pages: ['PRODUCT'],
