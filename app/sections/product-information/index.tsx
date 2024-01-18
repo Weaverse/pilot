@@ -1,121 +1,194 @@
-import {Await, useLoaderData} from '@remix-run/react';
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
+import {useLoaderData} from '@remix-run/react';
+import {Money, ShopPayButton} from '@shopify/hydrogen';
+import {
+  useThemeSettings,
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import clsx from 'clsx';
-import {forwardRef, Suspense} from 'react';
+import {forwardRef, useEffect, useState} from 'react';
 import type {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
-import {Heading, ProductGallery, Section, Text} from '~/components';
+import {AddToCartButton, Text} from '~/components';
 import {getExcerpt} from '~/lib/utils';
+import {ProductPlaceholder} from '../single-product/placeholder';
+import {ProductMedia} from '../single-product/product-media';
+import {Quantity} from '../single-product/quantity';
+import {ProductVariants} from '../single-product/variants';
 import {ProductDetail} from './product-detail';
-import {ProductForm} from './product-form';
-
-let gallerySizeMap = {
-  small: 'lg:col-span-2',
-  medium: 'lg:col-span-3',
-  large: 'lg:col-span-4',
-};
-
 interface ProductInformationProps extends HydrogenComponentProps {
-  gallerySize: 'small' | 'medium' | 'large';
   addToCartText: string;
   soldOutText: string;
+  unavailableText: string;
   showVendor: boolean;
   showSalePrice: boolean;
   showDetails: boolean;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
+  hideUnavailableOptions: boolean;
+  // product media props
+  showThumbnails: boolean;
+  numberOfThumbnails: number;
+  spacing: number;
 }
 
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
-    let {product, shop, variants} = useLoaderData<
+    let {
+      product,
+      shop,
+      variants: _variants,
+      storeDomain,
+    } = useLoaderData<
       ProductQuery & {
         variants: VariantsQuery;
+        storeDomain: string;
       }
     >();
+    let variants = _variants?.product?.variants;
+    let [selectedVariant, setSelectedVariant] = useState<any>(
+      product?.selectedVariant,
+    );
     let {
-      gallerySize,
       addToCartText,
       soldOutText,
+      unavailableText,
       showVendor,
       showSalePrice,
       showDetails,
       showShippingPolicy,
       showRefundPolicy,
+      hideUnavailableOptions,
+      showThumbnails,
+      numberOfThumbnails,
+      spacing,
+      children,
       ...rest
     } = props;
+    let [quantity, setQuantity] = useState<number>(1);
+    let atcText = selectedVariant?.availableForSale
+      ? addToCartText
+      : selectedVariant?.quantityAvailable === -1
+        ? unavailableText
+        : soldOutText;
+    useEffect(() => {
+      if (!selectedVariant) {
+        setSelectedVariant(variants?.nodes?.[0]);
+      }
+    }, [selectedVariant, variants?.nodes]);
+    let {swatches} = useThemeSettings();
+
+    let handleSelectedVariantChange = (variant: any) => {
+      setSelectedVariant(variant);
+      // update the url
+      let searchParams = new URLSearchParams(window.location.search);
+      for (const option of variant.selectedOptions) {
+        searchParams.set(option.name, option.value);
+      }
+      let url = `${window.location.pathname}?${searchParams.toString()}`;
+      window.history.replaceState({}, '', url);
+    };
+
+    if (!product || !selectedVariant)
+      return (
+        <section className="w-full py-12 md:py-24 lg:py-32" ref={ref} {...rest}>
+          <ProductPlaceholder />
+        </section>
+      );
     if (product && variants) {
-      const {media, title, vendor, descriptionHtml} = product;
+      const {title, vendor, descriptionHtml} = product;
       const {shippingPolicy, refundPolicy} = shop;
       return (
         <section ref={ref} {...rest}>
-          <Section as="div" className="px-0 md:px-8 lg:px-12">
-            <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-6">
-              <ProductGallery
-                media={media.nodes}
-                className={clsx('w-full', gallerySizeMap[gallerySize])}
+          <div className="container p-6 md:p-8 lg:p-12  lg:px-12 px-4 md:px-6 mx-auto">
+            <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
+              <ProductMedia
+                media={product?.media.nodes}
+                selectedVariant={selectedVariant}
+                showThumbnails={showThumbnails}
+                numberOfThumbnails={numberOfThumbnails}
+                spacing={spacing}
               />
-              <div
-                className={clsx(
-                  'sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll',
-                  gallerySizeMap[
-                    gallerySize === 'small'
-                      ? 'large'
-                      : gallerySize === 'large'
-                        ? 'small'
-                        : 'medium'
-                  ],
-                )}
-              >
-                <section className="flex flex-col w-full gap-8 p-6 md:mx-auto md:px-0">
-                  <div className="grid gap-2">
-                    <Heading as="h1" className="whitespace-normal">
+              <div className="flex flex-col justify-start space-y-5">
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-2">
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                       {title}
-                    </Heading>
+                    </h2>
                     {showVendor && vendor && (
                       <Text className={'opacity-50 font-medium'}>{vendor}</Text>
                     )}
                   </div>
-                  <Suspense>
-                    <Await resolve={variants}>
-                      {(variants) => (
-                        <ProductForm
-                          variants={variants.product?.variants.nodes || []}
-                          addToCartText={addToCartText}
-                          soldOutText={soldOutText}
-                          showSalePrice={showSalePrice}
-                        />
-                      )}
-                    </Await>
-                  </Suspense>
-                  <div className="grid gap-4 py-4">
-                    {showDetails && descriptionHtml && (
-                      <ProductDetail
-                        title="Product Details"
-                        content={descriptionHtml}
+                  <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
+                    {selectedVariant ? (
+                      <Money
+                        withoutTrailingZeros
+                        data={selectedVariant.price}
+                        as="span"
                       />
-                    )}
-                    {showShippingPolicy && shippingPolicy?.body && (
-                      <ProductDetail
-                        title="Shipping"
-                        content={getExcerpt(shippingPolicy.body)}
-                        learnMore={`/policies/${shippingPolicy.handle}`}
-                      />
-                    )}
-                    {showRefundPolicy && refundPolicy?.body && (
-                      <ProductDetail
-                        title="Returns"
-                        content={getExcerpt(refundPolicy.body)}
-                        learnMore={`/policies/${refundPolicy.handle}`}
-                      />
-                    )}
-                  </div>
-                </section>
+                    ) : null}
+                  </p>
+                  {children}
+                  <p
+                    className="max-w-[600px] leading-relaxed"
+                    dangerouslySetInnerHTML={{
+                      __html: descriptionHtml,
+                    }}
+                  />
+                  <ProductVariants
+                    product={product}
+                    selectedVariant={selectedVariant}
+                    onSelectedVariantChange={handleSelectedVariantChange}
+                    swatch={swatches}
+                    variants={product.variants}
+                    options={product?.options}
+                    handle={product?.handle}
+                    hideUnavailableOptions={hideUnavailableOptions}
+                  />
+                </div>
+                <Quantity value={quantity} onChange={setQuantity} />
+                <AddToCartButton
+                  disabled={!selectedVariant?.availableForSale}
+                  lines={[
+                    {
+                      merchandiseId: selectedVariant?.id,
+                      quantity,
+                    },
+                  ]}
+                  variant="primary"
+                  data-test="add-to-cart"
+                >
+                  <span> {atcText}</span>
+                </AddToCartButton>
+                {selectedVariant?.availableForSale && (
+                  <ShopPayButton
+                    width="100%"
+                    variantIdsAndQuantities={[
+                      {
+                        id: selectedVariant?.id,
+                        quantity,
+                      },
+                    ]}
+                    storeDomain={storeDomain}
+                  />
+                )}
+                <div className="grid gap-4 py-4">
+                  {showShippingPolicy && shippingPolicy?.body && (
+                    <ProductDetail
+                      title="Shipping"
+                      content={getExcerpt(shippingPolicy.body)}
+                      learnMore={`/policies/${shippingPolicy.handle}`}
+                    />
+                  )}
+                  {showRefundPolicy && refundPolicy?.body && (
+                    <ProductDetail
+                      title="Returns"
+                      content={getExcerpt(refundPolicy.body)}
+                      learnMore={`/policies/${refundPolicy.handle}`}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </Section>
+          </div>
         </section>
       );
     }
@@ -134,25 +207,6 @@ export let schema: HydrogenComponentSchema = {
   },
   inspector: [
     {
-      group: 'Product gallery',
-      inputs: [
-        {
-          type: 'toggle-group',
-          label: 'Gallery size',
-          name: 'gallerySize',
-          configs: {
-            options: [
-              {value: 'small', label: 'Small'},
-              {value: 'medium', label: 'Medium'},
-              {value: 'large', label: 'Large'},
-            ],
-          },
-          defaultValue: 'large',
-          helpText: 'Apply on large screens only.',
-        },
-      ],
-    },
-    {
       group: 'Product form',
       inputs: [
         {
@@ -168,6 +222,13 @@ export let schema: HydrogenComponentSchema = {
           name: 'soldOutText',
           defaultValue: 'Sold out',
           placeholder: 'Sold out',
+        },
+        {
+          type: 'text',
+          label: 'Unavailable text',
+          name: 'unavailableText',
+          defaultValue: 'Unavailable',
+          placeholder: 'Unavailable',
         },
         {
           type: 'switch',
@@ -198,6 +259,44 @@ export let schema: HydrogenComponentSchema = {
           label: 'Show refund policy',
           name: 'showRefundPolicy',
           defaultValue: true,
+        },
+        {
+          label: 'Hide unavailable options',
+          type: 'switch',
+          name: 'hideUnavailableOptions',
+        },
+      ],
+    },
+    {
+      group: 'Product Media',
+      inputs: [
+        {
+          label: 'Show thumbnails',
+          name: 'showThumbnails',
+          type: 'switch',
+          defaultValue: true,
+        },
+        {
+          label: 'Number of thumbnails',
+          name: 'numberOfThumbnails',
+          type: 'range',
+          condition: 'showThumbnails.eq.true',
+          configs: {
+            min: 1,
+            max: 10,
+          },
+          defaultValue: 4,
+        },
+        {
+          label: 'Gap between images',
+          name: 'spacing',
+          type: 'range',
+          configs: {
+            min: 0,
+            step: 2,
+            max: 100,
+          },
+          defaultValue: 10,
         },
       ],
     },
