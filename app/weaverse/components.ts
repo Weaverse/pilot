@@ -29,7 +29,7 @@ import * as RelatedArticles from '~/sections/related-articles';
 import * as RelatedProducts from '~/sections/related-products';
 import { commonComponents } from '~/sections/shared/atoms';
 import * as SingleProduct from '~/sections/single-product';
-import * as Judgeme from '~/sections/single-product/judgeme-review';
+import * as Judgeme from '~/components/product-form/judgeme-review';
 import * as Testimonial from '~/sections/testimonials';
 import * as TestimonialItem from '~/sections/testimonials/item';
 import * as TestimonialItems from '~/sections/testimonials/items';

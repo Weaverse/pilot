@@ -10,10 +10,10 @@ import {forwardRef, useEffect, useState} from 'react';
 import type {ProductQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components';
 import {PRODUCT_QUERY} from '~/data/queries';
-import {Quantity} from './quantity';
-import {ProductVariants} from './variants';
-import {ProductPlaceholder} from './placeholder';
-import {ProductMedia} from './product-media';
+import {Quantity} from '../../components/product-form/quantity';
+import {ProductVariants} from '../../components/product-form/variants';
+import {ProductPlaceholder} from '../../components/product-form/placeholder';
+import {ProductMedia} from '../../components/product-form/product-media';
 
 type SingleProductData = {
   productsCount: number;

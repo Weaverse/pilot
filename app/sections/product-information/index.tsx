@@ -9,10 +9,10 @@ import {forwardRef, useEffect, useState} from 'react';
 import type {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
 import {AddToCartButton, Text} from '~/components';
 import {getExcerpt} from '~/lib/utils';
-import {ProductPlaceholder} from '../single-product/placeholder';
-import {ProductMedia} from '../single-product/product-media';
-import {Quantity} from '../single-product/quantity';
-import {ProductVariants} from '../single-product/variants';
+import {ProductPlaceholder} from '../../components/product-form/placeholder';
+import {ProductMedia} from '../../components/product-form/product-media';
+import {Quantity} from '../../components/product-form/quantity';
+import {ProductVariants} from '../../components/product-form/variants';
 import {ProductDetail} from './product-detail';
 interface ProductInformationProps extends HydrogenComponentProps {
   addToCartText: string;
