@@ -1,9 +1,11 @@
+import type {
+  ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {
   AnalyticsPageType,
-  getSelectedProductOptions,
-  ShopifyAnalyticsProduct,
+  getSelectedProductOptions
 } from '@shopify/hydrogen';
-import {defer, LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import type { LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {defer} from '@shopify/remix-oxygen';
 import type {ProductRecommendationsQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
@@ -16,8 +18,9 @@ import {seoPayload} from '~/lib/seo.server';
 import type {Storefront} from '~/lib/type';
 import {WeaverseContent} from '~/weaverse';
 import {useLoaderData, useSearchParams} from '@remix-run/react';
-import {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
+import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
 import {useEffect} from 'react';
+import { getJudgemeReviews } from '~/lib/judgeme';
 
 export const headers = routeHeaders;
 
@@ -51,7 +54,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   // into it's own separate query that is deferred. So there's a brief moment
   // where variant options might show as available when they're not, but after
   // this deferred query resolves, the UI will update.
-  const variants = context.storefront.query(VARIANTS_QUERY, {
+  const variants = await context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
       country: context.storefront.i18n.country,
@@ -81,6 +84,13 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     url: request.url,
   });
 
+  let judgeme_API_TOKEN = context.env.JUDGEME_PUBLIC_TOKEN;
+  let judgemeReviews = null;
+  if (judgeme_API_TOKEN) {
+    let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
+    judgemeReviews = await getJudgemeReviews(judgeme_API_TOKEN, shop_domain, productHandle);
+  }
+
   return defer({
     variants,
     product,
@@ -95,6 +105,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     },
     seo,
     weaverseData: await context.weaverse.loadPage(),
+    judgemeReviews
   });
 }
 
