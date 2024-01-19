@@ -4,29 +4,32 @@ import type {
 } from '@weaverse/hydrogen';
 import StarsRating from 'react-star-rate';
 import {useParentInstance} from '@weaverse/hydrogen';
-import {useFetcher} from '@remix-run/react';
+import {useFetcher, useLoaderData} from '@remix-run/react';
 import {forwardRef, useEffect} from 'react';
 import {usePrefixPathWithLocale} from '~/lib/utils';
+type JudgemeReviewsData = {
+  rating: number;
+  reviewNumber: number;
+  error?: string;
+};
 
 let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
-    let {load, data} = useFetcher<{
-      rating: number;
-      reviewNumber: number;
-      error?: string;
+    let loaderData = useLoaderData<{
+      judgemeReviews: JudgemeReviewsData;
     }>();
-
+    let judgemeReviews = loaderData?.judgemeReviews;
+    let {load, data: fetchData} = useFetcher<JudgemeReviewsData>();
     let context = useParentInstance();
     let handle = context?.data?.product?.handle!;
     let api = usePrefixPathWithLocale(`/api/review/${handle}`);
 
     useEffect(() => {
-      if (handle) {
-        load(api);
-      }
+      if (judgemeReviews || !handle) return;
+      load(api);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [handle, api]);
-
+    let data = judgemeReviews || fetchData;
     if (!data) return null;
     if (data.error) {
       return (
