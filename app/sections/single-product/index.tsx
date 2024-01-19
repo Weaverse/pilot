@@ -9,7 +9,7 @@ import {
 import {forwardRef, useEffect, useState} from 'react';
 import type {ProductQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components';
-import {PRODUCT_QUERY} from '~/data/queries';
+import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
 import {Quantity} from '../../components/product-form/quantity';
 import {ProductVariants} from '../../components/product-form/variants';
 import {ProductPlaceholder} from '../../components/product-form/placeholder';
@@ -44,14 +44,14 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     } = props;
     let {swatches} = useThemeSettings();
 
-    let {storeDomain, product} = loaderData || {};
+    let {storeDomain, product, variants: _variants} = loaderData || {};
+    let variants = _variants?.product?.variants;
     let [selectedVariant, setSelectedVariant] = useState<any>(null);
     let [quantity, setQuantity] = useState<number>(1);
     useEffect(() => {
-      let variants = product?.variants as any;
       setSelectedVariant(variants?.nodes?.[0]);
       setQuantity(1);
-    }, [product]);
+    }, [variants?.nodes]);
     if (!product || !selectedVariant)
       return (
         <section className="w-full py-12 md:py-24 lg:py-32" ref={ref} {...rest}>
@@ -101,7 +101,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   selectedVariant={selectedVariant}
                   onSelectedVariantChange={setSelectedVariant}
                   swatch={swatches}
-                  variants={product.variants}
+                  variants={variants}
                   options={product?.options}
                   handle={product?.handle}
                   hideUnavailableOptions={hideUnavailableOptions}
@@ -156,17 +156,17 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
       country: storefront.i18n.country,
     },
   });
-  // let variants = await storefront.query(VARIANTS_QUERY, {
-  //   variables: {
-  //     handle: productHandle,
-  //     language: storefront.i18n.language,
-  //     country: storefront.i18n.country,
-  //   },
-  // });
+  let variants = await storefront.query(VARIANTS_QUERY, {
+    variables: {
+      handle: productHandle,
+      language: storefront.i18n.language,
+      country: storefront.i18n.country,
+    },
+  });
 
   return {
     product,
-    // variants: variants?.product?.variants,
+    variants,
     storeDomain: shop.primaryDomain.url,
   };
 };
