@@ -41,6 +41,8 @@ import * as SlideShow from '~/sections/SlideShow/SlideShow';
 import * as SlideShowItem from '~/sections/SlideShow/SlideItems';
 
 import * as NewsLetter from '~/sections/newsletter';
+import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
+import * as ImageHotspotItem from '~/sections/image-hotspots/items';
 
 export let components: HydrogenComponent[] = [
   ...commonComponents,
@@ -62,6 +64,8 @@ export let components: HydrogenComponent[] = [
   PromotionGrid,
   PromotionGridItem,
   PromotionGridButtons,
+  ImageHotspot,
+  ImageHotspotItem,
   Countdown,
   CountDownTimer,
   CountdownActions,
