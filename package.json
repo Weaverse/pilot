@@ -38,7 +38,6 @@
     "react-dom": "18.2.0",
     "react-intersection-observer": "9.5.3",
     "react-player": "^2.14.1",
-    "react-star-rate": "^0.2.0",
     "react-use": "17.4.2",
     "schema-dts": "1.1.2",
     "tiny-invariant": "1.3.1",
