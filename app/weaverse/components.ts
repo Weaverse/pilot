@@ -1,4 +1,4 @@
-import type { HydrogenComponent } from '@weaverse/hydrogen';
+import type {HydrogenComponent} from '@weaverse/hydrogen';
 import * as AllProducts from '~/sections/all-products';
 import * as BlogPost from '~/sections/blog-post';
 import * as Blogs from '~/sections/blogs';
@@ -27,7 +27,7 @@ import * as PromotionGridButtons from '~/sections/promotion-grid/buttons';
 import * as PromotionGridItem from '~/sections/promotion-grid/item';
 import * as RelatedArticles from '~/sections/related-articles';
 import * as RelatedProducts from '~/sections/related-products';
-import { commonComponents } from '~/sections/shared/atoms';
+import {commonComponents} from '~/sections/shared/atoms';
 import * as SingleProduct from '~/sections/single-product';
 import * as Judgeme from '~/components/product-form/judgeme-review';
 import * as Testimonial from '~/sections/testimonials';
@@ -37,6 +37,13 @@ import * as VideoBanner from '~/sections/video-banner';
 import * as VideoEmbed from '~/sections/video-embed';
 import * as VideoEmbedItem from '~/sections/video-embed/video';
 import * as MetaDemo from '~/sections/meta-demo';
+import * as SlideShow from '~/sections/SlideShow/SlideShow';
+import * as SlideShowItem from '~/sections/SlideShow/SlideItems';
+
+import * as NewsLetter from '~/sections/newsletter';
+import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
+import * as ImageHotspotItem from '~/sections/image-hotspots/items';
+
 export let components: HydrogenComponent[] = [
   ...commonComponents,
   AllProducts,
@@ -57,9 +64,15 @@ export let components: HydrogenComponent[] = [
   PromotionGrid,
   PromotionGridItem,
   PromotionGridButtons,
+  ImageHotspot,
+  ImageHotspotItem,
   Countdown,
   CountDownTimer,
   CountdownActions,
+  NewsLetter,
+  Blogs,
+  BlogPost,
+  AllProducts,
   FeaturedProducts,
   FeaturedCollections,
   Testimonial,
@@ -75,5 +88,7 @@ export let components: HydrogenComponent[] = [
   CollectionList,
   SingleProduct,
   Judgeme,
-  MetaDemo
+  MetaDemo,
+  SlideShow,
+  SlideShowItem,
 ];
