@@ -367,3 +367,11 @@ export function IconVideoBlank(props: IconProps) {
     </Icon>
   );
 }
+export function IconArrowInput(props: IconProps) {
+  return (
+    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+      <path d="M2.5 8H13.5" stroke="#0F0F0F" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M9 3.5L13.5 8L9 12.5" stroke="#0F0F0F" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </Icon>
+  );
+}
