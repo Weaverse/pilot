@@ -1,4 +1,4 @@
-import type { HydrogenComponent } from '@weaverse/hydrogen';
+import type {HydrogenComponent} from '@weaverse/hydrogen';
 import * as AllProducts from '~/sections/all-products';
 import * as BlogPost from '~/sections/blog-post';
 import * as Blogs from '~/sections/blogs';
@@ -27,7 +27,7 @@ import * as PromotionGridButtons from '~/sections/promotion-grid/buttons';
 import * as PromotionGridItem from '~/sections/promotion-grid/item';
 import * as RelatedArticles from '~/sections/related-articles';
 import * as RelatedProducts from '~/sections/related-products';
-import { commonComponents } from '~/sections/shared/atoms';
+import {commonComponents} from '~/sections/shared/atoms';
 import * as SingleProduct from '~/sections/single-product';
 import * as Judgeme from '~/components/product-form/judgeme-review';
 import * as Testimonial from '~/sections/testimonials';
@@ -78,7 +78,7 @@ export let components: HydrogenComponent[] = [
   CollectionList,
   SingleProduct,
   Judgeme,
-  MetaDemo
+  MetaDemo,
   SlideShow,
   SlideShowItem,
 ];
