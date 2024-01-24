@@ -58,7 +58,7 @@ export function ProductMedia(props: ProductMediaProps) {
   }, [selectedVariant, media, moveToIdx]);
   return (
     <div>
-      <div ref={sliderRef} className="keen-slider">
+      <div ref={sliderRef} className="keen-slider vt-product-image">
         {media.map((med, i) => {
           let image =
             med.__typename === 'MediaImage'
@@ -69,7 +69,7 @@ export function ProductMedia(props: ProductMediaProps) {
               <div className="keen-slider__slide" key={med.id}>
                 <Image
                   data={image}
-                  loading={'lazy'}
+                  loading={i === 0 ? 'eager' : 'lazy'}
                   aspectRatio={'4/5'}
                   className="object-cover w-full h-full aspect-square fadeIn"
                 />
@@ -88,7 +88,7 @@ export function ProductMedia(props: ProductMediaProps) {
             return (
               image && (
                 <div
-                key={med.id}
+                  key={med.id}
                   className={clsx(
                     'keen-slider__slide border-2 cursor-pointer',
                     i === activeInd ? 'border-bar/70' : '',
