@@ -13,11 +13,35 @@ interface ProductMediaProps {
 }
 
 export function ProductMedia(props: ProductMediaProps) {
-  let {selectedVariant, media, showThumbnails, numberOfThumbnails, spacing} =
-    props;
+  let {
+    selectedVariant,
+    media: _media,
+    showThumbnails,
+    numberOfThumbnails,
+    spacing,
+  } = props;
+  let media = _media.filter((med) => med.__typename === 'MediaImage');
+
+  let slideOptions = {
+    initial: 0,
+    loop: true,
+    slides: {
+      perView: 1,
+      spacing: 0,
+    },
+  };
+
+  let thumbnailOptions = {
+    initial: 0,
+    slides: {
+      perView: numberOfThumbnails,
+      spacing: spacing,
+    },
+  };
+
   let [activeInd, setAcitveInd] = useState(0);
   const [sliderRef, instanceRef] = useKeenSlider({
-    loop: true,
+    ...slideOptions,
     slideChanged(slider) {
       let pos = slider.track.details.rel;
       setAcitveInd(pos);
@@ -39,25 +63,28 @@ export function ProductMedia(props: ProductMediaProps) {
     },
     [instanceRef],
   );
-  const [thumbnailRef, thumbnailInstance] = useKeenSlider({
-    initial: 0,
-    slides: {
-      perView: numberOfThumbnails,
-      spacing: spacing,
-    },
-  });
+  const [thumbnailRef, thumbnailInstance] = useKeenSlider(thumbnailOptions);
   let handleClickThumbnail = (idx: number) => {
     moveToIdx(idx);
   };
+
   useEffect(() => {
+    // instanceRef.current?.update(slideOptions);
+    // thumbnailInstance.current?.update(thumbnailOptions);
     let selectedInd = media.findIndex((med) => {
       if (med.__typename !== 'MediaImage') return false;
       return med.image?.url === selectedVariant.image.url;
     });
     moveToIdx(selectedInd);
-  }, [selectedVariant, media, moveToIdx]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVariant?.id, moveToIdx]);
   return (
-    <div>
+    <div
+      className="grid"
+      style={{
+        gap: spacing,
+      }}
+    >
       <div ref={sliderRef} className="keen-slider">
         {media.map((med, i) => {
           let image =
@@ -88,7 +115,7 @@ export function ProductMedia(props: ProductMediaProps) {
             return (
               image && (
                 <div
-                key={med.id}
+                  key={med.id}
                   className={clsx(
                     'keen-slider__slide border-2 cursor-pointer',
                     i === activeInd ? 'border-bar/70' : '',
