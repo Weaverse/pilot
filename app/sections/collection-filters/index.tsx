@@ -7,7 +7,7 @@ import type {
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import {useInView} from 'react-intersection-observer';
-import {CollectionDetailsQuery} from 'storefrontapi.generated';
+import type {CollectionDetailsQuery} from 'storefrontapi.generated';
 import {Button, PageHeader, Section, SortFilter, Text} from '~/components';
 import type {AppliedFilter} from '~/components/SortFilter';
 import {ProductsLoadedOnScroll} from './products-loaded-on-scroll';

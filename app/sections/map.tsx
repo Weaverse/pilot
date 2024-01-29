@@ -2,8 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
+import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
-import {CSSProperties} from 'react';
 import {IconMapBlank} from '~/components';
 import clsx from 'clsx';
 
@@ -87,6 +87,7 @@ let Map = forwardRef<HTMLElement, MapProps>((props, ref) => {
                 'px-4 py-3 w-fit cursor-pointer rounded inline-block',
                 buttonStyle,
               )}
+              rel="noreferrer"
             >
               {buttonLabel}
             </a>

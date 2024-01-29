@@ -6,41 +6,40 @@ import {
   useMatches,
   useOutlet,
 } from '@remix-run/react';
-import {Suspense} from 'react';
-import {
-  json,
-  defer,
-  redirect,
-  type LoaderFunctionArgs,
-  type AppLoadContext,
-} from '@shopify/remix-oxygen';
 import {flattenConnection} from '@shopify/hydrogen';
+import {
+  defer,
+  json,
+  redirect,
+  type AppLoadContext,
+  type LoaderFunctionArgs,
+} from '@shopify/remix-oxygen';
+import {Suspense} from 'react';
 
 import type {
   CustomerDetailsFragment,
   OrderCardFragment,
 } from 'storefrontapi.generated';
 import {
+  AccountAddressBook,
+  AccountDetails,
   Button,
+  Modal,
   OrderCard,
   PageHeader,
-  Text,
-  AccountDetails,
-  AccountAddressBook,
-  Modal,
   ProductSwimlane,
+  Text,
 } from '~/components';
 import {FeaturedCollections} from '~/components/FeaturedCollections';
-import {usePrefixPathWithLocale} from '~/lib/utils';
-import {CACHE_NONE, routeHeaders} from '~/data/cache';
 import {ORDER_CARD_FRAGMENT} from '~/components/OrderCard';
+import {CACHE_NONE, routeHeaders} from '~/data/cache';
+import {usePrefixPathWithLocale} from '~/lib/utils';
 
+import {doLogout} from './($locale).account.logout';
 import {
   getFeaturedData,
   type FeaturedData,
 } from './($locale).featured-products';
-import {doLogout} from './($locale).account.logout';
-import {Container} from '~/components/Container';
 
 // Combining json + defer in a loader breaks the
 // types returned by useLoaderData. This is a temporary fix.
@@ -133,7 +132,7 @@ function Account({customer, heading, featuredData}: AccountType) {
   const addresses = flattenConnection(customer.addresses);
 
   return (
-    <Container>
+    <div className="container mx-auto px-4 max-w-screen-xl">
       <PageHeader heading={heading}>
         <Form method="post" action={usePrefixPathWithLocale('/account/logout')}>
           <button type="submit" className="text-body/50">
@@ -162,7 +161,7 @@ function Account({customer, heading, featuredData}: AccountType) {
           </Await>
         </Suspense>
       )}
-    </Container>
+    </div>
   );
 }
 

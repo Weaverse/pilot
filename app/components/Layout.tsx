@@ -1,49 +1,47 @@
-import {useParams, Form, Await} from '@remix-run/react';
-import {useWindowScroll} from 'react-use';
 import {Disclosure} from '@headlessui/react';
-import {Suspense, useEffect, useMemo} from 'react';
+import {Await, Form, useParams} from '@remix-run/react';
 import {CartForm} from '@shopify/hydrogen';
-
-import type {LayoutQuery} from 'storefrontapi.generated';
+import {Suspense, useEffect, useMemo} from 'react';
+import {useWindowScroll} from 'react-use';
+import clsx from 'clsx';
+import {type LayoutQuery} from 'storefrontapi.generated';
 import {
-  Drawer,
-  useDrawer,
-  Text,
-  Input,
-  IconLogin,
-  IconAccount,
-  IconBag,
-  IconSearch,
-  Heading,
-  IconMenu,
-  IconCaret,
-  Section,
-  CountrySelector,
   Cart,
   CartLoading,
+  CountrySelector,
+  Drawer,
+  Heading,
+  IconAccount,
+  IconBag,
+  IconCaret,
+  IconLogin,
+  IconMenu,
+  IconSearch,
   Link,
+  Section,
+  Text,
+  useDrawer,
 } from '~/components';
-import {
-  type EnhancedMenu,
-  type ChildEnhancedMenuItem,
-  useIsHomePath,
-} from '~/lib/utils';
-import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
-import {Logo} from './Logo';
-import clsx from 'clsx';
+import {useIsHydrated} from '~/hooks/useIsHydrated';
+import {
+  useIsHomePath,
+  type ChildEnhancedMenuItem,
+  type EnhancedMenu,
+} from '~/lib/utils';
 import {useRootLoaderData} from '~/root';
+import {Logo} from './Logo';
 
 type LayoutProps = {
   children: React.ReactNode;
-  layout: LayoutQuery & {
+  layout?: LayoutQuery & {
     headerMenu?: EnhancedMenu | null;
     footerMenu?: EnhancedMenu | null;
   };
 };
 
 export function Layout({children, layout}: LayoutProps) {
-  const {headerMenu, footerMenu} = layout;
+  const {headerMenu, footerMenu} = layout || {};
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -52,7 +50,9 @@ export function Layout({children, layout}: LayoutProps) {
             Skip to content
           </a>
         </div>
-        {headerMenu && <Header title={layout.shop.name} menu={headerMenu} />}
+        {headerMenu && layout?.shop.name && (
+          <Header title={layout.shop.name} menu={headerMenu} />
+        )}
         <main role="main" id="mainContent" className="flex-grow">
           {children}
         </main>
@@ -245,7 +245,8 @@ function DesktopHeader({
       className={clsx(
         'bg-primary text-body',
         y > 50 && ' shadow-header',
-        'hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-4',
+        'hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between leading-none gap-8',
+        'w-full px-6 md:px-8 lg:px-12 py-4',
       )}
     >
       <div className="flex gap-12">
@@ -353,6 +354,7 @@ function Badge({
         </div>
       </>
     ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [count, dark],
   );
 

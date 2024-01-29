@@ -1,11 +1,12 @@
-import {json, type LinksFunction} from '@shopify/remix-oxygen';
+import {json} from '@shopify/remix-oxygen';
 import {type RouteLoaderArgs} from '@weaverse/hydrogen';
-import {ArticleDetailsQuery} from 'storefrontapi.generated';
+import type {ArticleDetailsQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
 import {ARTICLE_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
+
 // import styles from '../styles/custom-font.css';
 
 export const headers = routeHeaders;

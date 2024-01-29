@@ -2,7 +2,7 @@
 
 <div align="center">
   <p style="text-align: center;">
-    <img alt="Version" src="https://img.shields.io/badge/version-2.3.1-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/badge/version-2.4.1-blue.svg?cacheSeconds=2592000" />
     <a href="#" target="_blank">
       <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?label=license" />
     </a>
@@ -21,8 +21,9 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 ## Demo
 
+
 - [Live store](https://pilot.weaverse.dev)
-- Try customizing Pilot on [Weaverse Playground](https://playground.weaverse.io)
+- Try customizing Pilot on [Weaverse Playground](https://studio.weaverse.io/demo)
   ![demo](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Home.png?v=1695816170)
 
 ## What's included
@@ -38,6 +39,13 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 - Tailwind CSS (via PostCSS)
 - Full-featured setup of components and routes
 - Fully customizable inside [Weaverse](https://weaverse.io)
+
+
+## Deployment
+- [Deploy to Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen)
+- Deploy to Vercel:
+  [![Deploy with Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
+
 
 ## Getting started
 
@@ -271,6 +279,12 @@ And then you can use the data in your component with `Component.props.loaderData
 Weaverse provides a convenient way to customize your theme inside the **Weaverse editor**. You can add new sections, customize existing ones, and change the theme settings.
 
 ![Weaverse Editor](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
+
+### Local development inspects
+
+- Hydrogen app: http://localhost:3456
+- GraphiQL API browser: http://localhost:3456/graphiql
+- Server side network requests: http://localhost:3456/debug-network
 
 ## References
 

@@ -1,20 +1,18 @@
-import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
 import {
   Form,
   useActionData,
+  useNavigation,
   useOutletContext,
   useParams,
-  useNavigation,
 } from '@remix-run/react';
 import {flattenConnection} from '@shopify/hydrogen';
 import type {MailingAddressInput} from '@shopify/hydrogen/storefront-api-types';
+import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
-
-import {Button, Input, Text} from '~/components';
-import {assertApiErrors, getInputStyleClasses} from '~/lib/utils';
-
+import {Button, Input} from '~/components';
+import {assertApiErrors} from '~/lib/utils';
+import {Checkbox} from '~/components/Checkbox';
 import type {AccountOutletContext} from './($locale).account.edit';
-import { Checkbox } from '~/components/Checkbox';
 
 interface ActionData {
   formError?: string;
@@ -295,16 +293,10 @@ export default function EditAddress() {
             </label>
           </div>
           <div className="mt-6 flex gap-4 items-center justify-end">
-            <Button
-              to=".."
-              variant="secondary"
-            >
+            <Button to=".." variant="secondary">
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={state !== 'idle'}
-            >
+            <Button type="submit" disabled={state !== 'idle'}>
               {state !== 'idle' ? 'Saving' : 'Save'}
             </Button>
           </div>

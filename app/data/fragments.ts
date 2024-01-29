@@ -122,6 +122,7 @@ export let PRODUCT_VARIANT_FRAGMENT = `#graphql
   fragment ProductVariantFragment on ProductVariant {
     id
     availableForSale
+    quantityAvailable
     selectedOptions {
       name
       value

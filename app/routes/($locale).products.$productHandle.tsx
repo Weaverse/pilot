@@ -1,11 +1,12 @@
-import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {AnalyticsPageType} from '@shopify/hydrogen';
-import {defer, redirect} from '@shopify/remix-oxygen';
-import {type RouteLoaderArgs} from '@weaverse/hydrogen';
+import type {
+  ShopifyAnalyticsProduct} from '@shopify/hydrogen';
 import {
-  ProductQuery,
-  ProductRecommendationsQuery,
-} from 'storefrontapi.generated';
+  AnalyticsPageType,
+  getSelectedProductOptions
+} from '@shopify/hydrogen';
+import type { LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {defer} from '@shopify/remix-oxygen';
+import type {ProductRecommendationsQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
 import {
@@ -16,11 +17,14 @@ import {
 import {seoPayload} from '~/lib/seo.server';
 import type {Storefront} from '~/lib/type';
 import {WeaverseContent} from '~/weaverse';
-import {getSelectedProductOptions} from '@weaverse/hydrogen';
+import {useLoaderData, useSearchParams} from '@remix-run/react';
+import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
+import {useEffect} from 'react';
+import { getJudgemeReviews } from '~/lib/judgeme';
 
 export const headers = routeHeaders;
 
-export async function loader({params, request, context}: RouteLoaderArgs) {
+export async function loader({params, request, context}: LoaderFunctionArgs) {
   const {productHandle} = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
@@ -38,8 +42,11 @@ export async function loader({params, request, context}: RouteLoaderArgs) {
     throw new Response('product', {status: 404});
   }
 
-  if (!product.selectedVariant) {
-    throw redirectToFirstVariant({product, request});
+  if (!product.selectedVariant && product.options.length) {
+    // set the selectedVariant to the first variant if there is only one option
+    if (product.options.length < 2) {
+      product.selectedVariant = product.variants.nodes[0];
+    }
   }
 
   // In order to show which variants are available in the UI, we need to query
@@ -47,7 +54,7 @@ export async function loader({params, request, context}: RouteLoaderArgs) {
   // into it's own separate query that is deferred. So there's a brief moment
   // where variant options might show as available when they're not, but after
   // this deferred query resolves, the UI will update.
-  const variants = context.storefront.query(VARIANTS_QUERY, {
+  const variants = await context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
       country: context.storefront.i18n.country,
@@ -77,6 +84,13 @@ export async function loader({params, request, context}: RouteLoaderArgs) {
     url: request.url,
   });
 
+  let judgeme_API_TOKEN = context.env.JUDGEME_PUBLIC_TOKEN;
+  let judgemeReviews = null;
+  if (judgeme_API_TOKEN) {
+    let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
+    judgemeReviews = await getJudgemeReviews(judgeme_API_TOKEN, shop_domain, productHandle);
+  }
+
   return defer({
     variants,
     product,
@@ -91,29 +105,50 @@ export async function loader({params, request, context}: RouteLoaderArgs) {
     },
     seo,
     weaverseData: await context.weaverse.loadPage(),
+    judgemeReviews
   });
 }
 
-function redirectToFirstVariant({
-  product,
-  request,
-}: {
-  product: ProductQuery['product'];
-  request: Request;
-}) {
-  const searchParams = new URLSearchParams(new URL(request.url).search);
-  const firstVariant = product!.variants.nodes[0];
-  for (const option of firstVariant.selectedOptions) {
-    searchParams.set(option.name, option.value);
-  }
+// function redirectToFirstVariant({
+//   product,
+//   request,
+// }: {
+//   product: ProductQuery['product'];
+//   request: Request;
+// }) {
+//   const searchParams = new URLSearchParams(new URL(request.url).search);
+//   const firstVariant = product!.variants.nodes[0];
+//   for (const option of firstVariant.selectedOptions) {
+//     searchParams.set(option.name, option.value);
+//   }
+//
+//   return redirect(
+//     `/products/${product!.handle}?${searchParams.toString()}`,
+//     302,
+//   );
+// }
 
-  return redirect(
-    `/products/${product!.handle}?${searchParams.toString()}`,
-    302,
-  );
-}
+/**
+ * We need to handle the route change from client to keep the view transition persistent
+ */
+let useApplyFirstVariant = () => {
+  let {product} = useLoaderData<typeof loader>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (!product.selectedVariant) {
+      let selectedOptions = product.variants?.nodes?.[0]?.selectedOptions;
+      selectedOptions?.forEach((option: SelectedOptionInput) => {
+        searchParams.set(option.name, option.value);
+      });
+      setSearchParams(searchParams);
+    }
+    // eslint-disable-next-line
+  }, [product]);
+};
 
 export default function Product() {
+  useApplyFirstVariant();
   return <WeaverseContent />;
 }
 

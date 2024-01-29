@@ -40,6 +40,24 @@ export function GlobalStyle() {
       headingBaseLineHeight,
       navHeightDesktop,
       navHeightTablet,
+      buttonPrimaryBg,
+      buttonPrimaryBgHover,
+      buttonPrimaryColor,
+      buttonPrimaryColorHover,
+      buttonPrimaryBorder,
+      buttonPrimaryBorderHover,
+      buttonSecondaryBg,
+      buttonSecondaryBgHover,
+      buttonSecondaryColor,
+      buttonSecondaryColorHover,
+      buttonSecondaryBorder,
+      buttonSecondaryBorderHover,
+      buttonSubtleBg,
+      buttonSubtleBgHover,
+      buttonSubtleColor,
+      buttonSubtleColorHover,
+      buttonSubtleBorder,
+      buttonSubtleBorderHover,
     } = settings;
     colorBackground = hexToRgbString(colorBackground);
     colorInverseBackground = hexToRgbString(colorInverseBackground);
@@ -51,7 +69,6 @@ export function GlobalStyle() {
     colorInverseButtonText = hexToRgbString(colorInverseButtonText);
     colorSale = hexToRgbString(colorSale);
     colorBorder = hexToRgbString(colorBorder);
-
     return (
       <style
         id="global-theme-style"
@@ -132,6 +149,39 @@ export function GlobalStyle() {
               body {
                 --height-nav: ${navHeightDesktop}rem;
               }
+            }
+            .btn-primary{
+              background-color: ${buttonPrimaryBg};
+              color: ${buttonPrimaryColor};
+              border: 2px solid ${buttonPrimaryBorder};
+            }
+            .btn-primary:hover{
+              background-color: ${buttonPrimaryBgHover}!important;
+              color: ${buttonPrimaryColorHover}!important;
+              border: 2px solid ${buttonPrimaryBorderHover} !important;
+              transition: 0.3s background-color color border;
+            }
+            .btn-secondary{
+              background-color: ${buttonSecondaryBg};
+              color: ${buttonSecondaryColor};
+              border: 2px solid ${buttonSecondaryBorder};
+            }
+            .btn-secondary:hover{
+              background-color: ${buttonSecondaryBgHover}!important;
+              color: ${buttonSecondaryColorHover}!important;
+              border: 2px solid ${buttonSecondaryBorderHover} !important;
+              transition: 0.3s background-color color border;
+            }
+            .btn-subtle{
+              background-color: ${buttonSubtleBg};
+              color: ${buttonSubtleColor};
+              border: 2px solid ${buttonSubtleBorder};
+            }
+            .btn-subtle:hover{
+              background-color: ${buttonSubtleBgHover}!important;
+              color: ${buttonSubtleColorHover}!important;
+              border: 2px solid ${buttonSubtleBorderHover} !important;
+              transition: 0.3s background-color color border;
             }
           `,
         }}

@@ -1,4 +1,4 @@
-import {useLoaderData, useMatches} from '@remix-run/react';
+import {useLoaderData} from '@remix-run/react';
 import {Image} from '@shopify/hydrogen';
 import type {
   HydrogenComponentProps,
@@ -117,7 +117,7 @@ function ArticleCard({
           {showExcerpt && <div className="text-sm"> {article.excerpt}</div>}
           {showReadmore && (
             <div>
-              <span className='underline'>Read more</span>
+              <span className="underline">Read more</span>
             </div>
           )}
         </div>

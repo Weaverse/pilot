@@ -1,9 +1,9 @@
+import {defer} from '@shopify/remix-oxygen';
 import {
-  defer,
+  type LinksFunction,
   type LoaderFunctionArgs,
   type AppLoadContext,
   type SerializeFrom,
-  LinksFunction,
 } from '@shopify/remix-oxygen';
 import {
   isRouteErrorResponse,
@@ -20,12 +20,9 @@ import {
 } from '@remix-run/react';
 import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
-
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
-
 import favicon from '../public/favicon.svg';
-
 import {withWeaverse} from '@weaverse/hydrogen';
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
@@ -33,6 +30,9 @@ import styles from './styles/app.css';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
 import {GlobalStyle} from './weaverse/style';
+import roboto400 from '@fontsource/roboto/400.css';
+import roboto500 from '@fontsource/roboto/500.css';
+import roboto700 from '@fontsource/roboto/700.css';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -55,6 +55,18 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
 export const links: LinksFunction = () => {
   return [
+    {
+      rel: 'stylesheet',
+      href: roboto400,
+    },
+    {
+      rel: 'stylesheet',
+      href: roboto500,
+    },
+    {
+      rel: 'stylesheet',
+      href: roboto700,
+    },
     {rel: 'stylesheet', href: styles},
     {
       rel: 'preconnect',
@@ -65,19 +77,6 @@ export const links: LinksFunction = () => {
       href: 'https://shop.app',
     },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
-    {
-      rel: 'preconnect',
-      href: 'https://fonts.googleapis.com',
-    },
-    {
-      href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap',
-      rel: 'preload',
-      as: 'style',
-    },
-    {
-      href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap',
-      rel: 'stylesheet',
-    },
   ];
 };
 
@@ -184,7 +183,13 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
               )}
             </>
           ) : (
-            <GenericError error={error instanceof Error ? error : undefined} />
+            <GenericError
+              error={
+                error instanceof Error
+                  ? error
+                  : (routeError as Error) || undefined
+              }
+            />
           )}
         </Layout>
         <ScrollRestoration nonce={nonce} />
@@ -195,7 +200,7 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
   );
 };
 
-export const ErrorBoundary = withWeaverse(ErrorBoundaryComponent);
+export const ErrorBoundary = ErrorBoundaryComponent;
 
 const LAYOUT_QUERY = `#graphql
   query layout(
@@ -272,7 +277,7 @@ async function getLayoutData({storefront, env}: AppLoadContext) {
       - /blog/news/blog-post -> /news/blog-post
       - /collections/all -> /products
   */
-  const customPrefixes = {BLOG: '', CATALOG: 'products'};
+  const customPrefixes = {CATALOG: 'products'};
 
   const headerMenu = data?.headerMenu
     ? parseMenu(

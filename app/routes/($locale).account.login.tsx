@@ -1,3 +1,4 @@
+import {Form, useActionData, type MetaFunction} from '@remix-run/react';
 import {
   json,
   redirect,
@@ -5,16 +6,9 @@ import {
   type AppLoadContext,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {
-  Form,
-  useActionData,
-  useLoaderData,
-  type MetaFunction,
-} from '@remix-run/react';
-import {MouseEvent, useState} from 'react';
-
-import {getInputStyleClasses} from '~/lib/utils';
-import {Input, Link, Button} from '~/components';
+import type {MouseEvent} from 'react';
+import {useState} from 'react';
+import {Button, Input, Link} from '~/components';
 
 export const handle = {
   isPublic: true,
@@ -94,7 +88,6 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Login() {
-  const {shopName} = useLoaderData<typeof loader>();
   const actionData = useActionData<ActionData>();
   const [nativeEmailError, setNativeEmailError] = useState<null | string>(null);
   const [nativePasswordError, setNativePasswordError] = useState<null | string>(
@@ -201,10 +194,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
-
-function FormComp() {
-  return <></>;
 }
 
 const LOGIN_MUTATION = `#graphql

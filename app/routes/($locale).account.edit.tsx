@@ -230,10 +230,7 @@ export default function AccountDetailsEdit() {
           <Button to=".." variant="secondary">
             Cancel
           </Button>
-          <Button
-            type="submit"
-            disabled={state !== 'idle'}
-          >
+          <Button type="submit" disabled={state !== 'idle'}>
             {state !== 'idle' ? 'Saving' : 'Save'}
           </Button>
         </div>
