@@ -2,11 +2,11 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import StarsRating from 'react-star-rate';
 import {useParentInstance} from '@weaverse/hydrogen';
 import {useFetcher, useLoaderData} from '@remix-run/react';
 import {forwardRef, useEffect} from 'react';
 import {usePrefixPathWithLocale} from '~/lib/utils';
+import {StarRating} from '../StarRating';
 type JudgemeReviewsData = {
   rating: number;
   reviewNumber: number;
@@ -44,16 +44,10 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
     return (
       <div {...props} ref={ref}>
-        <StarsRating
-          style={{
-            style: {
-              fontSize: '16px',
-            },
-          }}
-          allowClear={false}
-          value={rating}
-        />{' '}
-        ({reviewNumber})
+        <div className="space-x-2">
+          <StarRating rating={rating} />
+          <span className='align-top'>({reviewNumber})</span>
+        </div>
       </div>
     );
   },

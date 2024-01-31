@@ -72,8 +72,11 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     useEffect(() => {
       if (!selectedVariant) {
         setSelectedVariant(variants?.nodes?.[0]);
+      } else if (selectedVariant?.id !== product?.selectedVariant?.id) {
+        setSelectedVariant(product?.selectedVariant);
       }
-    }, [selectedVariant, variants?.nodes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [product?.id]);
     let {swatches} = useThemeSettings();
 
     let handleSelectedVariantChange = (variant: any) => {
