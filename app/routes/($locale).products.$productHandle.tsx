@@ -1,10 +1,6 @@
-import type {
-  ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {
-  AnalyticsPageType,
-  getSelectedProductOptions
-} from '@shopify/hydrogen';
-import type { LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
+import {AnalyticsPageType, getSelectedProductOptions} from '@shopify/hydrogen';
+import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {defer} from '@shopify/remix-oxygen';
 import type {ProductRecommendationsQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
@@ -20,7 +16,7 @@ import {WeaverseContent} from '~/weaverse';
 import {useLoaderData, useSearchParams} from '@remix-run/react';
 import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
 import {useEffect} from 'react';
-import { getJudgemeReviews } from '~/lib/judgeme';
+import {getJudgemeReviews} from '~/lib/judgeme';
 
 export const headers = routeHeaders;
 
@@ -88,7 +84,11 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   let judgemeReviews = null;
   if (judgeme_API_TOKEN) {
     let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
-    judgemeReviews = await getJudgemeReviews(judgeme_API_TOKEN, shop_domain, productHandle);
+    judgemeReviews = await getJudgemeReviews(
+      judgeme_API_TOKEN,
+      shop_domain,
+      productHandle,
+    );
   }
 
   return defer({
@@ -105,7 +105,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     },
     seo,
     weaverseData: await context.weaverse.loadPage(),
-    judgemeReviews
+    judgemeReviews,
   });
 }
 
@@ -141,7 +141,9 @@ let useApplyFirstVariant = () => {
       selectedOptions?.forEach((option: SelectedOptionInput) => {
         searchParams.set(option.name, option.value);
       });
-      setSearchParams(searchParams);
+      setSearchParams(searchParams, {
+        replace: true, // prevent adding a new entry to the history stack
+      });
     }
     // eslint-disable-next-line
   }, [product]);
