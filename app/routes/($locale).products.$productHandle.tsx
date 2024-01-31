@@ -1,5 +1,5 @@
 import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {AnalyticsPageType, getSelectedProductOptions} from '@shopify/hydrogen';
+import {AnalyticsPageType} from '@shopify/hydrogen';
 import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {defer} from '@shopify/remix-oxygen';
 import type {ProductRecommendationsQuery} from 'storefrontapi.generated';
@@ -17,6 +17,7 @@ import {useLoaderData, useSearchParams} from '@remix-run/react';
 import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
 import {useEffect} from 'react';
 import {getJudgemeReviews} from '~/lib/judgeme';
+import {getSelectedProductOptions} from '@weaverse/hydrogen';
 
 export const headers = routeHeaders;
 
