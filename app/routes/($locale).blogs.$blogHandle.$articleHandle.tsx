@@ -58,7 +58,10 @@ export async function loader(args: RouteLoaderArgs) {
     relatedArticles,
     formattedDate,
     seo,
-    weaverseData: await context.weaverse.loadPage(),
+    weaverseData: await context.weaverse.loadPage({
+      type: 'ARTICLE',
+      handle: params.articleHandle,
+    }),
   });
 }
 

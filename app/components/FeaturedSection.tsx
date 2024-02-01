@@ -13,7 +13,7 @@ export function FeaturedSection() {
 
   useEffect(() => {
     load(path);
-  }, [load, path]);
+  }, [path]);
 
   if (!data) return null;
 

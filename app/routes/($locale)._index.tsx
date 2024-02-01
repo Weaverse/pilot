@@ -1,14 +1,14 @@
 import {AnalyticsPageType} from '@shopify/hydrogen';
 import {defer} from '@shopify/remix-oxygen';
-import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import {routeHeaders} from '~/data/cache';
 import {SHOP_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen'
 
 export const headers = routeHeaders;
 
-export async function loader(args: RouteLoaderArgs) {
+export async function loader(args: LoaderFunctionArgs) {
   let {params, context} = args;
   let {language, country} = context.storefront.i18n;
 
@@ -26,7 +26,9 @@ export async function loader(args: RouteLoaderArgs) {
 
   return defer({
     shop,
-    weaverseData: await context.weaverse.loadPage(),
+    weaverseData: await context.weaverse.loadPage({
+      type: 'INDEX'
+    }),
     analytics: {
       pageType: AnalyticsPageType.home,
     },

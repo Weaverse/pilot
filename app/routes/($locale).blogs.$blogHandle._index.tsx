@@ -47,7 +47,10 @@ export const loader = async (args: RouteLoaderArgs) => {
     blog,
     articles,
     seo,
-    weaverseData: await context.weaverse.loadPage(),
+    weaverseData: await context.weaverse.loadPage({
+      type: 'BLOG',
+      handle: params.blogHandle,
+    }),
   });
 };
 

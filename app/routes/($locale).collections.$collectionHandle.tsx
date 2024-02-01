@@ -125,7 +125,10 @@ export async function loader(args: RouteLoaderArgs) {
       resourceId: collection.id,
     },
     seo,
-    weaverseData: await context.weaverse.loadPage(),
+    weaverseData: await context.weaverse.loadPage({
+      type: 'COLLECTION',
+      handle: collectionHandle,
+    }),
   });
 }
 
