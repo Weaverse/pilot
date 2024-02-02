@@ -48,7 +48,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
 
   // In order to show which variants are available in the UI, we need to query
   // all of them. But there might be a *lot*, so instead separate the variants
-  // into it's own separate query that is deferred. So there's a brief moment
+  // into its own separate query that is deferred. So there's a brief moment
   // where variant options might show as available when they're not, but after
   // this deferred query resolves, the UI will update.
   const variants = await context.storefront.query(VARIANTS_QUERY, {
@@ -105,7 +105,10 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
       totalValue: parseFloat(selectedVariant.price.amount),
     },
     seo,
-    weaverseData: await context.weaverse.loadPage(),
+    weaverseData: await context.weaverse.loadPage({
+      type: 'PRODUCT',
+      handle: productHandle
+    }),
     judgemeReviews,
   });
 }
