@@ -13,7 +13,6 @@ export async function loader(args: LoaderFunctionArgs) {
   let {params, context} = args;
   let {language, country} = context.storefront.i18n;
 
-  console.log(111, params, context, language, country);
   let pageType: PageType = 'INDEX';
   if (
     params.locale &&
