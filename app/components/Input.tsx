@@ -45,7 +45,7 @@ export function Input({
 
   let rawInput = (
     <input
-      // type={type}
+      type={type}
       className={clsx(
         'w-full focus-visible:outline-none !shadow-none focus:ring-0',
         hasChild ? 'grow border-none bg-transparent p-0' : commonClasses,
