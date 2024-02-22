@@ -1,12 +1,12 @@
-import {Await, Form, useLoaderData} from '@remix-run/react';
-import {getPaginationVariables, Pagination} from '@shopify/hydrogen';
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Await, Form, useLoaderData} from '@remix-run/react';
 import {Suspense} from 'react';
+import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
 
 import {
   FeaturedCollections,
   Grid,
-  IconSearch,
+  Heading,
   Input,
   PageHeader,
   ProductCard,
@@ -77,22 +77,21 @@ export default function Search() {
 
   return (
     <>
-      <PageHeader className="bg-secondary/5 justify-center items-center !gap-5">
-        {searchTerm && (
-          <h3 className="uppercase w-full text-center">
-            {noResults ? 'No result' : `${products.nodes.length} results`} for "
-            {searchTerm}"
-          </h3>
-        )}
-        <Form method="get" className="lg:w-[400px]">
+      <PageHeader>
+        <Heading as="h1" size="copy">
+          Search
+        </Heading>
+        <Form method="get" className="relative flex w-full text-heading">
           <Input
-            prefix={<IconSearch />}
-            className="bg-primary"
             defaultValue={searchTerm}
             name="q"
-            placeholder="Search"
+            placeholder="Search…"
             type="search"
+            variant="search"
           />
+          <button className="absolute right-0 py-2" type="submit">
+            Go
+          </button>
         </Form>
       </PageHeader>
       {!searchTerm || noResults ? (
@@ -115,13 +114,13 @@ export default function Search() {
               return (
                 <>
                   <div className="flex items-center justify-center mt-6">
-                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-bar/10 bg-contrast text-body w-full">
+                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
                       {isLoading ? 'Loading...' : 'Previous'}
                     </PreviousLink>
                   </div>
                   <Grid data-test="product-grid">{itemsMarkup}</Grid>
                   <div className="flex items-center justify-center mt-6">
-                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-bar/10 bg-contrast text-body w-full">
+                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
                       {isLoading ? 'Loading...' : 'Next'}
                     </NextLink>
                   </div>

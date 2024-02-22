@@ -5,25 +5,22 @@ import {
   type ActionFunctionArgs,
   json,
 } from '@shopify/remix-oxygen';
-import {CartForm, type CartQueryData} from '@shopify/hydrogen';
+import {CartForm, type CartQueryDataReturn} from '@shopify/hydrogen';
 
 import {isLocalPath} from '~/lib/utils';
 import {Cart} from '~/components';
 import {useRootLoaderData} from '~/root';
 
 export async function action({request, context}: ActionFunctionArgs) {
-  const {session, cart} = context;
+  const {cart} = context;
 
-  const [formData, customerAccessToken] = await Promise.all([
-    request.formData(),
-    session.get('customerAccessToken'),
-  ]);
+  const formData = await request.formData();
 
   const {action, inputs} = CartForm.getFormInput(formData);
   invariant(action, 'No cartAction defined');
 
   let status = 200;
-  let result: CartQueryData;
+  let result: CartQueryDataReturn;
 
   switch (action) {
     case CartForm.ACTIONS.LinesAdd:
@@ -51,7 +48,6 @@ export async function action({request, context}: ActionFunctionArgs) {
     case CartForm.ACTIONS.BuyerIdentityUpdate:
       result = await cart.updateBuyerIdentity({
         ...inputs.buyerIdentity,
-        customerAccessToken,
       });
       break;
     default:
@@ -70,10 +66,14 @@ export async function action({request, context}: ActionFunctionArgs) {
     headers.set('Location', redirectTo);
   }
 
-  const {cart: cartResult, errors} = result;
+  const {cart: cartResult, errors, userErrors} = result;
+
+  headers.append('Set-Cookie', await context.session.commit());
+
   return json(
     {
       cart: cartResult,
+      userErrors,
       errors,
       analytics: {
         cartId,
@@ -92,7 +92,7 @@ export default function CartRoute() {
   const rootData = useRootLoaderData();
   // @todo: finish on a separate PR
   return (
-    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start bg-secondary/5">
+    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
       <Await resolve={rootData?.cart}>
         {(cart) => <Cart layout="page" cart={cart} />}
       </Await>

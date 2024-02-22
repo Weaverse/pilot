@@ -280,6 +280,24 @@ Weaverse provides a convenient way to customize your theme inside the **Weaverse
 
 ![Weaverse Editor](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
 
+
+## Setup for using Customer Account API (`/account` section)
+
+### Setup public domain using Cloudflare Tunnel
+
+1. Use [untun](https://github.com/unjs/untun) to start a tunnel with your public domain
+```bash
+npx untun@latest tunnel http://localhost:3456
+```
+
+### Include public domain in Customer Account API settings
+
+1. Go to your Shopify admin => `Hydrogen` or `Headless` app/channel => Customer Account API => Application setup
+1. Edit `Callback URI(s)` to include `https://<your-cf-tunnel>.trycloudflare.com/account/authorize`
+1. Edit `Javascript origin(s)` to include your public domain `https://<your-cf-tunnel>.trycloudflare.com` or keep it blank
+1. Edit `Logout URI` to include your public domain `https://<your-cf-tunnel>.trycloudflare.com` or keep it blank
+
+
 ### Local development inspects
 
 - Hydrogen app: http://localhost:3456

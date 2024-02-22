@@ -8,14 +8,14 @@ import {
 import type {
   Customer,
   CustomerUpdateInput,
-} from '@shopify/hydrogen/storefront-api-types';
-import clsx from 'clsx';
+} from '@shopify/hydrogen/customer-account-api-types';
 import invariant from 'tiny-invariant';
 
-import {Button, Input, Text} from '~/components';
-import {getInputStyleClasses, assertApiErrors} from '~/lib/utils';
+import {Button, Text} from '~/components';
+import {getInputStyleClasses} from '~/lib/utils';
+import {CUSTOMER_UPDATE_MUTATION} from '~/graphql/customer-account/CustomerUpdateMutation';
 
-import {getCustomer} from './($locale).account';
+import {doLogout} from './($locale).account_.logout';
 
 export interface AccountOutletContext {
   customer: Customer;
@@ -35,8 +35,6 @@ export interface ActionData {
   };
 }
 
-const badRequest = (data: ActionData) => json(data, {status: 400});
-
 const formDataHas = (formData: FormData, key: string) => {
   if (!formData.has(key)) return false;
 
@@ -51,38 +49,10 @@ export const handle = {
 export const action: ActionFunction = async ({request, context, params}) => {
   const formData = await request.formData();
 
-  const customerAccessToken = await context.session.get('customerAccessToken');
-
-  invariant(
-    customerAccessToken,
-    'You must be logged in to update your account details.',
-  );
-
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
-  await getCustomer(context, customerAccessToken);
-
-  if (
-    formDataHas(formData, 'newPassword') &&
-    !formDataHas(formData, 'currentPassword')
-  ) {
-    return badRequest({
-      fieldErrors: {
-        currentPassword:
-          'Please enter your current password before entering a new password.',
-      },
-    });
-  }
-
-  if (
-    formData.has('newPassword') &&
-    formData.get('newPassword') !== formData.get('newPassword2')
-  ) {
-    return badRequest({
-      fieldErrors: {
-        newPassword2: 'New passwords must match.',
-      },
-    });
+  if (!(await context.customerAccount.isLoggedIn())) {
+    throw await doLogout(context);
   }
 
   try {
@@ -92,25 +62,38 @@ export const action: ActionFunction = async ({request, context, params}) => {
       (customer.firstName = formData.get('firstName') as string);
     formDataHas(formData, 'lastName') &&
       (customer.lastName = formData.get('lastName') as string);
-    formDataHas(formData, 'email') &&
-      (customer.email = formData.get('email') as string);
-    formDataHas(formData, 'phone') &&
-      (customer.phone = formData.get('phone') as string);
-    formDataHas(formData, 'newPassword') &&
-      (customer.password = formData.get('newPassword') as string);
 
-    const data = await context.storefront.mutate(CUSTOMER_UPDATE_MUTATION, {
-      variables: {
-        customerAccessToken,
-        customer,
+    const {data, errors} = await context.customerAccount.mutate(
+      CUSTOMER_UPDATE_MUTATION,
+      {
+        variables: {
+          customer,
+        },
+      },
+    );
+
+    invariant(!errors?.length, errors?.[0]?.message);
+
+    invariant(
+      !data?.customerUpdate?.userErrors?.length,
+      data?.customerUpdate?.userErrors?.[0]?.message,
+    );
+
+    return redirect(params?.locale ? `${params.locale}/account` : '/account', {
+      headers: {
+        'Set-Cookie': await context.session.commit(),
       },
     });
-
-    assertApiErrors(data.customerUpdate);
-
-    return redirect(params?.locale ? `${params.locale}/account` : '/account');
   } catch (error: any) {
-    return badRequest({formError: error.message});
+    return json(
+      {formError: error?.message},
+      {
+        status: 400,
+        headers: {
+          'Set-Cookie': await context.session.commit(),
+        },
+      },
+    );
   }
 };
 
@@ -131,7 +114,9 @@ export default function AccountDetailsEdit() {
 
   return (
     <>
-      <div className="font-semibold">Edit account</div>
+      <Text className="mt-4 mb-6" as="h3" size="lead">
+        Update your profile
+      </Text>
       <Form method="post">
         {actionData?.formError && (
           <div className="flex items-center justify-center mb-6 bg-red-100 rounded">
@@ -139,7 +124,8 @@ export default function AccountDetailsEdit() {
           </div>
         )}
         <div className="mt-3">
-          <Input
+          <input
+            className={getInputStyleClasses()}
             id="firstName"
             name="firstName"
             type="text"
@@ -150,7 +136,8 @@ export default function AccountDetailsEdit() {
           />
         </div>
         <div className="mt-3">
-          <Input
+          <input
+            className={getInputStyleClasses()}
             id="lastName"
             name="lastName"
             type="text"
@@ -160,120 +147,23 @@ export default function AccountDetailsEdit() {
             defaultValue={customer.lastName ?? ''}
           />
         </div>
-        <div className="mt-3">
-          <Input
-            id="phone"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            placeholder="Mobile"
-            aria-label="Mobile"
-            defaultValue={customer.phone ?? ''}
-          />
-        </div>
-        <div className="mt-3">
-          <Input
-            variant={actionData?.fieldErrors?.email ? 'error' : 'default'}
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            placeholder="Email address"
-            aria-label="Email address"
-            defaultValue={customer.email ?? ''}
-          />
-          {actionData?.fieldErrors?.email && (
-            <p className="text-red-500 text-xs">
-              {actionData.fieldErrors.email} &nbsp;
-            </p>
-          )}
-        </div>
-        <div className="mt-6 font-semibold">Change password</div>
-        <Password
-          name="currentPassword"
-          label="Current password"
-          passwordError={actionData?.fieldErrors?.currentPassword}
-        />
-        {actionData?.fieldErrors?.currentPassword && (
-          <Text size="fine" className="mt-1 text-red-500">
-            {actionData.fieldErrors.currentPassword} &nbsp;
-          </Text>
-        )}
-        <Password
-          name="newPassword"
-          label="New password"
-          passwordError={actionData?.fieldErrors?.newPassword}
-        />
-        <Password
-          name="newPassword2"
-          label="Re-enter new password"
-          passwordError={actionData?.fieldErrors?.newPassword2}
-        />
-        <Text
-          size="fine"
-          color="subtle"
-          className={clsx(
-            'mt-1',
-            actionData?.fieldErrors?.newPassword && 'text-red-500',
-          )}
-        >
-          Passwords must be at least 8 characters.
-        </Text>
-        {actionData?.fieldErrors?.newPassword2 ? <br /> : null}
-        {actionData?.fieldErrors?.newPassword2 && (
-          <Text size="fine" className="mt-1 text-red-500">
-            {actionData.fieldErrors.newPassword2} &nbsp;
-          </Text>
-        )}
-        <div className="mt-6 flex gap-4 items-center justify-end">
-          <Button to=".." variant="secondary">
-            Cancel
-          </Button>
-          <Button type="submit" disabled={state !== 'idle'}>
+        <div className="mt-6">
+          <Button
+            className="text-sm mb-2"
+            variant="primary"
+            width="full"
+            type="submit"
+            disabled={state !== 'idle'}
+          >
             {state !== 'idle' ? 'Saving' : 'Save'}
+          </Button>
+        </div>
+        <div className="mb-4">
+          <Button to=".." className="text-sm" variant="secondary" width="full">
+            Cancel
           </Button>
         </div>
       </Form>
     </>
   );
 }
-
-function Password({
-  name,
-  passwordError,
-  label,
-}: {
-  name: string;
-  passwordError?: string;
-  label: string;
-}) {
-  return (
-    <div className="mt-3">
-      <input
-        className={getInputStyleClasses(passwordError)}
-        id={name}
-        name={name}
-        type="password"
-        autoComplete={
-          name === 'currentPassword' ? 'current-password' : undefined
-        }
-        placeholder={label}
-        aria-label={label}
-        minLength={8}
-      />
-    </div>
-  );
-}
-
-const CUSTOMER_UPDATE_MUTATION = `#graphql
-  mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
-    customerUpdate(customerAccessToken: $customerAccessToken, customer: $customer) {
-      customerUserErrors {
-        code
-        field
-        message
-      }
-    }
-  }
-  `;

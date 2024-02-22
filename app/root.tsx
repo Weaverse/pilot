@@ -86,26 +86,33 @@ export const useRootLoaderData = () => {
 };
 
 export async function loader({request, context}: LoaderFunctionArgs) {
-  const {session, storefront, cart} = context;
-  const [customerAccessToken, layout] = await Promise.all([
-    session.get('customerAccessToken'),
-    getLayoutData(context),
-  ]);
+  const {storefront, customerAccount, cart} = context;
+  const layout = await getLayoutData(context);
+
+  const isLoggedInPromise = customerAccount.isLoggedIn();
+  const cartPromise = cart.get();
 
   const seo = seoPayload.root({shop: layout.shop, url: request.url});
 
-  return defer({
-    isLoggedIn: Boolean(customerAccessToken),
-    layout,
-    selectedLocale: storefront.i18n,
-    cart: cart.get(),
-    analytics: {
-      shopifySalesChannel: ShopifySalesChannel.hydrogen,
-      shopId: layout.shop.id,
+  return defer(
+    {
+      isLoggedIn: isLoggedInPromise,
+      layout,
+      selectedLocale: storefront.i18n,
+      cart: cartPromise,
+      analytics: {
+        shopifySalesChannel: ShopifySalesChannel.hydrogen,
+        shopId: layout.shop.id,
+      },
+      seo,
+      weaverseTheme: await context.weaverse.loadThemeSettings(),
     },
-    seo,
-    weaverseTheme: await context.weaverse.loadThemeSettings(),
-  });
+    {
+      headers: {
+        'Set-Cookie': await context.session.commit(),
+      },
+    },
+  );
 }
 
 function App() {
