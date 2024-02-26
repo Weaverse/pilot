@@ -1,5 +1,6 @@
 import {WeaverseContent} from '~/weaverse';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+
 export async function loader({context}: LoaderFunctionArgs) {
   let weaverseData = await context.weaverse.loadPage({
     type: 'CUSTOM',

@@ -7,8 +7,8 @@ import type {
   ProductCollectionSortKeys,
   ProductFilter,
 } from '@shopify/hydrogen/storefront-api-types';
-import {json} from '@shopify/remix-oxygen';
-import {type RouteLoaderArgs} from '@weaverse/hydrogen';
+import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+
 import invariant from 'tiny-invariant';
 import type {SortParam} from '~/components/SortFilter';
 import {FILTER_URL_PREFIX} from '~/components/SortFilter';
@@ -17,13 +17,13 @@ import {COLLECTION_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {parseAsCurrency} from '~/lib/utils';
 import {WeaverseContent} from '~/weaverse';
+import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
 
 export const headers = routeHeaders;
 
-export async function loader(args: RouteLoaderArgs) {
-  const {params, request, context} = args;
+export async function loader({params, request, context}: LoaderFunctionArgs) {
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 8,
+    pageBy: PAGINATION_SIZE,
   });
   const {collectionHandle} = params;
   const locale = context.storefront.i18n;
@@ -31,6 +31,7 @@ export async function loader(args: RouteLoaderArgs) {
   invariant(collectionHandle, 'Missing collectionHandle param');
 
   const searchParams = new URL(request.url).searchParams;
+
   const {sortKey, reverse} = getSortValuesFromParam(
     searchParams.get('sort') as SortParam,
   );

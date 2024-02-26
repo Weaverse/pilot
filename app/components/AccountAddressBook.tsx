@@ -1,7 +1,7 @@
 import {Form} from '@remix-run/react';
-import type {MailingAddress} from '@shopify/hydrogen/storefront-api-types';
+import type {CustomerAddress} from '@shopify/hydrogen/customer-account-api-types';
 
-import type {CustomerDetailsFragment} from 'storefrontapi.generated';
+import type {CustomerDetailsFragment} from 'customer-accountapi.generated';
 import {Button, Link, Text} from '~/components';
 
 export function AccountAddressBook({
@@ -9,7 +9,7 @@ export function AccountAddressBook({
   addresses,
 }: {
   customer: CustomerDetailsFragment;
-  addresses: MailingAddress[];
+  addresses: CustomerAddress[];
 }) {
   return (
     <>
@@ -22,8 +22,12 @@ export function AccountAddressBook({
             </Text>
           )}
           <div className="w-48">
-            <Button to="address/add" className="mt-2 text-sm w-full mb-6">
-              Add new Address
+            <Button
+              to="address/add"
+              className="mt-2 text-sm w-full mb-6"
+              variant="secondary"
+            >
+              Add an Address
             </Button>
           </div>
           {Boolean(addresses?.length) && (
@@ -48,7 +52,7 @@ function Address({
   address,
   defaultAddress,
 }: {
-  address: MailingAddress;
+  address: CustomerAddress;
   defaultAddress?: boolean;
 }) {
   return (

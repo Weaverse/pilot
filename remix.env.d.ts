@@ -3,8 +3,8 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type {WithCache, HydrogenCart} from '@shopify/hydrogen';
-import type {Storefront} from '~/lib/type';
-import type {HydrogenSession} from '~/lib/session.server';
+import type {Storefront, CustomerAccount} from '~/lib/type';
+import type {AppSession} from '~/lib/session.server';
 import type {WeaverseClient} from '@weaverse/hydrogen';
 
 declare global {
@@ -37,18 +37,12 @@ declare module '@shopify/remix-oxygen' {
    */
   export interface AppLoadContext {
     waitUntil: ExecutionContext['waitUntil'];
-    session: HydrogenSession;
+    session: AppSession;
     storefront: Storefront;
+    customerAccount: CustomerAccount;
     cart: HydrogenCart;
     env: Env;
     weaverse: WeaverseClient;
-  }
-
-  /**
-   * Declare the data we expect to access via `context.session`.
-   */
-  export interface SessionData {
-    customerAccessToken: string;
   }
 }
 

@@ -1,28 +1,31 @@
-import {
-  CartForm,
-  Image,
-  Money,
-  OptimisticInput,
-  flattenConnection,
-  useOptimisticData,
-} from '@shopify/hydrogen';
-import type {
-  CartCost,
-  CartLine,
-  CartLineUpdateInput,
-  Cart as CartType,
-} from '@shopify/hydrogen/storefront-api-types';
 import clsx from 'clsx';
 import {useRef} from 'react';
 import {useScroll} from 'react-use';
 import {
+  flattenConnection,
+  CartForm,
+  Image,
+  Money,
+  useOptimisticData,
+  OptimisticInput,
+  type CartReturn,
+} from '@shopify/hydrogen';
+import type {
+  Cart as CartType,
+  CartCost,
+  CartLine,
+  CartLineUpdateInput,
+} from '@shopify/hydrogen/storefront-api-types';
+
+import {
   Button,
-  FeaturedProducts,
+  Heading,
   IconRemove,
-  Input,
-  Link,
   Text,
+  Link,
+  FeaturedProducts,
 } from '~/components';
+import {getInputStyleClasses} from '~/lib/utils';
 
 type Layouts = 'page' | 'drawer';
 
@@ -33,7 +36,7 @@ export function Cart({
 }: {
   layout: Layouts;
   onClose?: () => void;
-  cart: CartType | null;
+  cart: CartReturn | null;
 }) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
 
@@ -56,7 +59,7 @@ export function CartDetails({
   const cartHasItems = !!cart && cart.totalQuantity > 0;
   const container = {
     drawer: 'grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]',
-    page: 'grid grid-cols-1 md:grid-cols-[2fr_1fr] w-full max-w-7xl mx-auto gap-5',
+    page: 'w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12',
   };
 
   return (
@@ -109,8 +112,18 @@ function CartDiscounts({
 
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div className={clsx('flex', 'items-center gap-4 justify-between')}>
-          <Input type="text" name="discountCode" placeholder="Discount code" />
+        <div
+          className={clsx(
+            'flex',
+            'items-center gap-4 justify-between text-copy',
+          )}
+        >
+          <input
+            className={getInputStyleClasses()}
+            type="text"
+            name="discountCode"
+            placeholder="Discount code"
+          />
           <button className="flex justify-end font-medium whitespace-nowrap">
             Apply Discount
           </button>
@@ -151,48 +164,24 @@ function CartLines({
   const scrollRef = useRef(null);
   const {y} = useScroll(scrollRef);
 
+  const className = clsx([
+    y > 0 ? 'border-t' : '',
+    layout === 'page'
+      ? 'flex-grow md:translate-y-4'
+      : 'px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12',
+  ]);
+
   return (
     <section
       ref={scrollRef}
       aria-labelledby="cart-contents"
-      className={clsx([
-        y > 0 ? 'border-t' : '',
-        layout === 'page'
-          ? 'flex-grow md:translate-y-4'
-          : 'px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12',
-      ])}
+      className={className}
     >
-      <table className="table-auto">
-        {layout === 'page' && (
-          <thead>
-            <tr className="font-semibold p-2">
-              <th className="p-4 text-left border-bar/15 border-b border-bar">
-                Product
-              </th>
-              <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
-              <th className="p-4 border-b border-bar/15 hidden lg:table-cell">
-                Price
-              </th>
-              <th className="p-4 border-b border-bar/15 hidden lg:table-cell">
-                Quantity
-              </th>
-              <th className="p-4 border-b border-bar/15 hidden lg:table-cell">
-                Total
-              </th>
-              <th className="p-4 border-b border-bar/15 hidden lg:table-cell"></th>
-            </tr>
-          </thead>
-        )}
-        <tbody>
-          {currentLines.map((line) => (
-            <CartLineItem
-              key={line.id}
-              line={line as CartLine}
-              layout={layout}
-            />
-          ))}
-        </tbody>
-      </table>
+      <ul className="grid gap-6 md:gap-10">
+        {currentLines.map((line) => (
+          <CartLineItem key={line.id} line={line as CartLine} />
+        ))}
+      </ul>
     </section>
   );
 }
@@ -204,7 +193,7 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl: string}) {
     <div className="flex flex-col mt-2">
       <a href={checkoutUrl} target="_self">
         <Button as="span" width="full">
-          Checkout
+          Continue to Checkout
         </Button>
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
@@ -221,33 +210,28 @@ function CartSummary({
   cost: CartCost;
   layout: Layouts;
 }) {
-  // const summary = {
-  //   drawer: 'grid gap-4 p-6 border-t md:px-12',
-  //   page: 'sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-primary/5 rounded w-full',
-  // };
+  const summary = {
+    drawer: 'grid gap-4 p-6 border-t md:px-12',
+    page: 'sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-primary/5 rounded w-full',
+  };
 
   return (
-    <section
-      aria-labelledby="summary-heading"
-      className="bg-primary p-6 space-y-5"
-    >
+    <section aria-labelledby="summary-heading" className={summary[layout]}>
       <h2 id="summary-heading" className="sr-only">
         Order summary
       </h2>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between font-medium text-2xl">
-          <h2>Total</h2>
-          <div>
+      <dl className="grid">
+        <div className="flex items-center justify-between font-medium">
+          <Text as="dt">Subtotal</Text>
+          <Text as="dd" data-test="subtotal">
             {cost?.subtotalAmount?.amount ? (
               <Money data={cost?.subtotalAmount} />
             ) : (
               '-'
             )}
-          </div>
+          </Text>
         </div>
-        <p>Shipping & taxes calculated at checkout</p>
-        <p className="underline">Add delivery note</p>
-      </div>
+      </dl>
       {children}
     </section>
   );
@@ -258,43 +242,40 @@ type OptimisticData = {
   quantity?: number;
 };
 
-function CartLineItem({
-  line,
-  layout,
-}: {
-  line: CartLine;
-  layout: 'drawer' | 'page';
-}) {
+function CartLineItem({line}: {line: CartLine}) {
   const optimisticData = useOptimisticData<OptimisticData>(line?.id);
-  let styles = {
-    page: 'grid lg:table-row gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]',
-    drawer: 'grid gap-2 grid-rows-2 grid-cols-[100px_1fr_64px]',
-  };
+
   if (!line?.id) return null;
 
-  const {id, quantity, merchandise, cost} = line;
+  const {id, quantity, merchandise} = line;
 
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
-  // Hide the line item if the optimistic data action is remove
-  // Do not remove the form from the DOM
-  let style = optimisticData?.action === 'remove' ? {display: 'none'} : {};
+
   return (
-    <tr key={line.id} className={styles[layout]} style={style}>
-      <td className="py-2 row-start-1 row-end-3">
+    <li
+      key={id}
+      className="flex gap-4"
+      style={{
+        // Hide the line item if the optimistic data action is remove
+        // Do not remove the form from the DOM
+        display: optimisticData?.action === 'remove' ? 'none' : 'flex',
+      }}
+    >
+      <div className="flex-shrink">
         {merchandise.image && (
           <Image
             width={110}
             height={110}
             data={merchandise.image}
-            className="object-cover object-center w-24 h-24 rounded md:w-28 md:h-28"
+            className="object-cover object-center w-24 h-24 border rounded md:w-28 md:h-28"
             alt={merchandise.title}
-            sizes="auto"
           />
         )}
-      </td>
-      <td className="py-2 lg:p-4 text-sm">
+      </div>
+
+      <div className="flex justify-between flex-grow">
         <div className="grid gap-2">
-          <div className="font-medium">
+          <Heading as="h3" size="copy">
             {merchandise?.product?.handle ? (
               <Link to={`/products/${merchandise.product.handle}`}>
                 {merchandise?.product?.title || ''}
@@ -302,38 +283,28 @@ function CartLineItem({
             ) : (
               <Text>{merchandise?.product?.title || ''}</Text>
             )}
-          </div>
+          </Heading>
+
           <div className="grid pb-2">
-            <Text>
-              {(merchandise?.selectedOptions || [])
-                .map((option) => option.value)
-                .join('/')}
-            </Text>
+            {(merchandise?.selectedOptions || []).map((option) => (
+              <Text color="subtle" key={option.name}>
+                {option.name}: {option.value}
+              </Text>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex justify-start text-copy">
+              <CartLineQuantityAdjust line={line} />
+            </div>
+            <ItemRemoveButton lineId={id} />
           </div>
         </div>
-      </td>
-      <td className="py-2 lg:p-4">
-        <Money withoutTrailingZeros data={cost.amountPerQuantity} />
-      </td>
-      <td className="py-2 lg:p-4 row-start-2">
-        <div className="flex gap-2">
-          <CartLineQuantityAdjust line={line as CartLine} />
-          {
-            <div className="lg:hidden">
-              <ItemRemoveButton lineId={id} />
-            </div>
-          }
-        </div>
-      </td>
-      {layout === 'page' && (
-        <td className="py-2 lg:p-4 col-start-3 hidden lg:table-cell">
-          <CartLinePrice line={line as CartLine} />
-        </td>
-      )}
-      <td className="py-2 lg:p-4 lg:table-cell hidden">
-        <ItemRemoveButton lineId={id} />
-      </td>
-    </tr>
+        <Text>
+          <CartLinePrice line={line} as="span" />
+        </Text>
+      </div>
+    </li>
   );
 }
 
@@ -347,7 +318,7 @@ function ItemRemoveButton({lineId}: {lineId: CartLine['id']}) {
       }}
     >
       <button
-        className="flex items-center justify-center w-10 h-10"
+        className="flex items-center justify-center w-10 h-10 border rounded"
         type="submit"
       >
         <span className="sr-only">Remove</span>
@@ -380,7 +351,7 @@ function CartLineQuantityAdjust({line}: {line: CartLine}) {
           <button
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-10 h-10 transition "
+            className="w-10 h-10 transition text-primary/50 hover:text-primary disabled:text-primary/10"
             value={prevQuantity}
             disabled={optimisticQuantity <= 1}
           >
@@ -398,7 +369,7 @@ function CartLineQuantityAdjust({line}: {line: CartLine}) {
 
         <UpdateCartButton lines={[{id: lineId, quantity: nextQuantity}]}>
           <button
-            className="w-10 h-10 transition text-body hover:text-body"
+            className="w-10 h-10 transition text-primary/50 hover:text-primary"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"

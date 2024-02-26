@@ -227,6 +227,7 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
         navigate(`${location.pathname}?${params.toString()}`);
         return;
       }
+
       const price = {
         ...(minPrice === undefined ? {} : {min: minPrice}),
         ...(maxPrice === undefined ? {} : {max: maxPrice}),

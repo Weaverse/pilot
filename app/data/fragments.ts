@@ -70,6 +70,7 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
           handle
           title
         }
+        sku
       }
     }
   }
