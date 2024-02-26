@@ -14,7 +14,8 @@
     "lint:fix": "eslint --fix --ext .js,.ts,.jsx,.tsx .",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "hydrogen": "shopify hydrogen"
   },
   "browserslist": [
     "defaults"
