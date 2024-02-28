@@ -9,3 +9,6 @@ node_modules
 .vscode
 .shopify
 .turbo
+/test-results/
+/playwright-report/
+/playwright/.cache/
