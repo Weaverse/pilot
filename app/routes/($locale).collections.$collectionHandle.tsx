@@ -136,7 +136,7 @@ export default function Collection() {
   return <WeaverseContent />;
 }
 
-function getSortValuesFromParam(sortParam: SortParam | null): {
+export function getSortValuesFromParam(sortParam: SortParam | null): {
   sortKey: ProductCollectionSortKeys;
   reverse: boolean;
 } {
