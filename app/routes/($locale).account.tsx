@@ -6,35 +6,32 @@ import {
   useMatches,
   useOutlet,
 } from '@remix-run/react';
-import {Suspense} from 'react';
+import { flattenConnection } from '@shopify/hydrogen';
 import {
   defer,
-  redirect,
-  type LoaderFunctionArgs,
-  type AppLoadContext,
+  type LoaderFunctionArgs
 } from '@shopify/remix-oxygen';
-import {flattenConnection} from '@shopify/hydrogen';
+import { Suspense } from 'react';
 
 import type {
   CustomerDetailsFragment,
   OrderCardFragment,
 } from 'customer-accountapi.generated';
 import {
+  AccountAddressBook,
+  AccountDetails,
   Button,
+  Modal,
   OrderCard,
   PageHeader,
-  Text,
-  AccountDetails,
-  AccountAddressBook,
-  Modal,
   ProductSwimlane,
+  Text,
 } from '~/components';
-import {FeaturedCollections} from '~/components/FeaturedCollections';
-import {usePrefixPathWithLocale} from '~/lib/utils';
-import {CACHE_NONE, routeHeaders} from '~/data/cache';
-import {CUSTOMER_DETAILS_QUERY} from '~/graphql/customer-account/CustomerDetailsQuery';
-
-import {doLogout} from './($locale).account_.logout';
+import { FeaturedCollections } from '~/components/FeaturedCollections';
+import { CACHE_NONE, routeHeaders } from '~/data/cache';
+import { CUSTOMER_DETAILS_QUERY } from '~/graphql/customer-account/CustomerDetailsQuery';
+import { usePrefixPathWithLocale } from '~/lib/utils';
+import { doLogout } from './($locale).account_.logout';
 import {
   getFeaturedData,
   type FeaturedData,
