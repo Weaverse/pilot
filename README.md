@@ -2,7 +2,7 @@
 
 <div align="center">
   <p style="text-align: center;">
-    <img alt="Version" src="https://img.shields.io/badge/version-2.4.1-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/badge/version-2.5.0-blue.svg?cacheSeconds=2592000" />
     <a href="#" target="_blank">
       <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?label=license" />
     </a>
@@ -43,9 +43,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 ## Deployment
 - [Deploy to Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen)
-- Deploy to Vercel:
-  [![Deploy with Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
-
+- Deploy to Vercel: [![Deploy to Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
 
 ## Getting started
 
