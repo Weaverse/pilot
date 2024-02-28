@@ -1,8 +1,7 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, Form, useLoaderData} from '@remix-run/react';
-import {Suspense} from 'react';
-import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
-
+import { Await, Form, useLoaderData } from '@remix-run/react';
+import { getPaginationVariables, Pagination } from '@shopify/hydrogen';
+import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { Suspense } from 'react';
 import {
   FeaturedCollections,
   Grid,
@@ -14,10 +13,9 @@ import {
   Section,
   Text,
 } from '~/components';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
-
+import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
+import { getImageLoadingPriority, PAGINATION_SIZE } from '~/lib/const';
+import { seoPayload } from '~/lib/seo.server';
 import {
   getFeaturedData,
   type FeaturedData,
@@ -29,7 +27,7 @@ export async function loader({
 }: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
   const searchTerm = searchParams.get('q')!;
-  const variables = getPaginationVariables(request, {pageBy: 8});
+  const variables = getPaginationVariables(request, {pageBy: PAGINATION_SIZE});
 
   const {products} = await storefront.query(SEARCH_QUERY, {
     variables: {
