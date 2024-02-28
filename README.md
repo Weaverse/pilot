@@ -47,7 +47,11 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 ## Getting started
 
-Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:
+**Requirements:**
+
+- Node.js version 18.0.0 or higher
+
+**Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:**
 
 1. Install [Weaverse Hydrogen Customizer](https://apps.shopify.com/weaverse) from Shopify App Store.
 2. Create new Hydrogen storefront inside Weaverse.
