@@ -175,33 +175,34 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
         <Links />
       </head>
       <body className="font-sans">
-        <Layout
-          layout={rootData?.layout}
-          key={`${locale.language}-${locale.country}`}
-        >
-          {isRouteError ? (
-            <>
-              {routeError.status === 404 ? (
-                <NotFound type={pageType} />
-              ) : (
-                <GenericError
-                  error={{message: `${routeError.status} ${routeError.data}`}}
-                />
-              )}
-            </>
+      {isRouteError ? (
+        <>
+          {routeError.status === 404 ? (
+            <NotFound type={pageType} />
           ) : (
             <GenericError
-              error={
-                error instanceof Error
-                  ? error
-                  : (routeError as Error) || undefined
-              }
+              error={{message: `${routeError.status} ${routeError.data}`}}
             />
           )}
-        </Layout>
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
+        </>
+      ) : (
+        <GenericError
+          error={
+            error instanceof Error
+              ? error
+              : (routeError as Error) || undefined
+          }
+        />
+      )}
+        {/*<Layout*/}
+        {/*  layout={rootData?.layout}*/}
+        {/*  key={`${locale.language}-${locale.country}`}*/}
+        {/*>*/}
+        {/*  */}
+        {/*</Layout>*/}
+        {/*<ScrollRestoration nonce={nonce} />*/}
+        {/*<Scripts nonce={nonce} />*/}
+        {/*<LiveReload nonce={nonce} />*/}
       </body>
     </html>
   );
