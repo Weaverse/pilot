@@ -4,7 +4,7 @@ import {Link} from './Link';
 
 export function Logo() {
   let settings = useThemeSettings();
-  let {logoData} = settings;
+  let logoData = settings?.logoData;
   if (!logoData) {
     return null;
   }
