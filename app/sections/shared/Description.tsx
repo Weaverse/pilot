@@ -44,8 +44,8 @@ let Description = forwardRef<
         alignmentClasses[alignment!],
         className,
       )}
+      dangerouslySetInnerHTML={{__html: content}}
     >
-      {content}
     </Tag>
   );
 });
