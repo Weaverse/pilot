@@ -1,0 +1,25 @@
+import type { LoaderFunctionArgs } from '@shopify/remix-oxygen';
+
+export async function loader({ params, context }: LoaderFunctionArgs) {
+  const { language, country } = context.storefront.i18n;
+
+  if (
+    params.locale &&
+    params.locale.toLowerCase() !== `${language}-${country}`.toLowerCase()
+  ) {
+
+    let weaverseData = await context.weaverse.loadPage({
+      type: 'CUSTOM',
+    });
+    if (weaverseData?.page?.id && !weaverseData.page.id.includes('fallback')) {
+      return {
+        weaverseData,
+      };
+    }
+    // If the locale URL param is defined, yet we still are still at the default locale
+    // then the the locale param must be invalid, send to the 404 page
+    throw new Response(null, { status: 404 });
+  }
+
+  return null;
+}
