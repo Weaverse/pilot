@@ -76,7 +76,7 @@ export function ProductMedia(props: ProductMediaProps) {
     });
     moveToIdx(selectedInd);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedVariant?.id, moveToIdx]);
+  }, [selectedVariant?.id]);
 
   return (
     <div
