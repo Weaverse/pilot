@@ -43,8 +43,8 @@ import * as SlideShowItem from '~/sections/SlideShow/SlideItems';
 import * as NewsLetter from '~/sections/newsletter';
 import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
 import * as ImageHotspotItem from '~/sections/image-hotspots/items';
-import * as ProductList from '~/sections/product-list'
-
+import * as ProductList from '~/sections/product-list';
+import * as ContactForm from '~/sections/contact-form';
 export let components: HydrogenComponent[] = [
   ...commonComponents,
   AllProducts,
@@ -92,5 +92,6 @@ export let components: HydrogenComponent[] = [
   MetaDemo,
   SlideShow,
   SlideShowItem,
-  ProductList
+  ProductList,
+  ContactForm,
 ];
