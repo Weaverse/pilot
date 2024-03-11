@@ -34,7 +34,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 ## Deployment
 - [Deploy to Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen)
-- Deploy to Vercel: [![Deploy to Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
+- [Deploy to Vercel](https://wvse.cc/deploy-pilot-to-vercel)
 
 ## Getting started
 
