@@ -36,6 +36,11 @@ let gapClasses: Record<number, string> = {
   12: 'space-y-3',
   16: 'space-y-4',
   20: 'space-y-5',
+  24: 'space-y-3 lg:space-y-6',
+  28: 'space-y-3.5 lg:space-y-7',
+  32: 'space-y-4 lg:space-y-8',
+  36: 'space-y-4 lg:space-y-9',
+  40: 'space-y-5 lg:space-y-10',
 };
 
 let verticalPaddingClasses: Record<VerticalPadding, string> = {
@@ -144,7 +149,7 @@ export let layoutInputs: InspectorGroup['inputs'] = [
   {
     type: 'range',
     name: 'gap',
-    label: 'Items gap',
+    label: 'Items spacing',
     configs: {
       min: 0,
       max: 40,
