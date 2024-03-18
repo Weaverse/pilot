@@ -192,17 +192,17 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'bold',
         },
         {
-          type: 'toggle-group',
+          type: 'select',
           name: 'tracking',
           label: 'Letter spacing',
           configs: {
             options: [
-              {value: 'tight', label: 'Tight', icon: 'ArrowsInLineHorizontal'},
-              {value: 'inherit', label: 'Inherit', icon: 'Placeholder'},
-              {value: 'wide', label: 'Wide', icon: 'ArrowsOutLineHorizontal'},
+              {value: 'tight', label: 'Tight'},
+              {value: 'inherit', label: 'Inherit'},
+              {value: 'wide', label: 'Wide'},
             ],
           },
-          defaultValue: 'normal',
+          defaultValue: 'inherit',
         },
         {
           type: 'toggle-group',
@@ -210,9 +210,9 @@ export let schema: HydrogenComponentSchema = {
           label: 'Alignment',
           configs: {
             options: [
-              {value: 'left', label: 'Left', icon: 'AlignLeft'},
-              {value: 'center', label: 'Center', icon: 'AlignCenterHorizontal'},
-              {value: 'right', label: 'Right', icon: 'AlignRight'},
+              {value: 'left', label: 'Left', icon: 'align-start-vertical'},
+              {value: 'center', label: 'Center', icon: 'align-center-vertical'},
+              {value: 'right', label: 'Right', icon: 'align-end-vertical'},
             ],
           },
           defaultValue: 'center',
