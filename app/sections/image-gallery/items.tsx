@@ -16,7 +16,7 @@ let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
       <div
         ref={ref}
         {...rest}
-        className="flex flex-col mt-8 sm:grid sm:grid-cols-4 sm:mt-12"
+        className="flex flex-col sm:grid sm:grid-cols-4"
         style={{gap: `${gap}px`}}
       >
         {children}
@@ -29,19 +29,20 @@ export default ImageGalleyItems;
 
 export let schema: HydrogenComponentSchema = {
   type: 'image-gallery--items',
-  title: 'Items',
+  title: 'Images',
   inspector: [
     {
-      group: 'Image',
+      group: 'Images',
       inputs: [
         {
           type: 'range',
-          label: 'Gap',
+          label: 'Images gap',
           name: 'gap',
           configs: {
             min: 16,
             max: 40,
             step: 6,
+            unit: 'px',
           },
           defaultValue: 16,
         },
