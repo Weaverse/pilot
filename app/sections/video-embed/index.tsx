@@ -1,7 +1,7 @@
 import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import type {SectionProps} from '~/sections/shared/Section';
-import {Section, sectionConfigs} from '~/sections/shared/Section';
+import {Section, sectionInspector} from '~/sections/shared/Section';
 
 type VideoEmbedProps = SectionProps & {
   heading: string;
@@ -23,7 +23,7 @@ export let schema: HydrogenComponentSchema = {
   type: 'video',
   title: 'Video embed',
   toolbar: ['general-settings', ['duplicate', 'delete']],
-  inspector: [sectionConfigs],
+  inspector: [sectionInspector],
   childTypes: ['heading', 'description', 'video-embed--item'],
   presets: {
     children: [

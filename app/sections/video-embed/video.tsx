@@ -40,7 +40,7 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'https://www.youtube.com/embed/Su-x4Mo5xmU',
           placeholder: 'https://www.youtube.com/embed/Su-x4Mo5xmU',
           helpText:
-            'How to get youtube <a target="_blank" href="https://support.google.com/youtube/answer/171780?hl=en#:~:text=On%20a%20computer%2C%20go%20to,appears%2C%20copy%20the%20HTML%20code.">embed code</a>.',
+            'How to get YouTube <a target="_blank" href="https://support.google.com/youtube/answer/171780?hl=en#:~:text=On%20a%20computer%2C%20go%20to,appears%2C%20copy%20the%20HTML%20code.">embed code</a>.',
         },
       ],
     },
