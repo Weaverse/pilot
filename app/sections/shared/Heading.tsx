@@ -143,7 +143,7 @@ export let schema: HydrogenComponentSchema = {
               {value: 'heading', label: 'Heading'},
               {value: 'display', label: 'Display'},
               {value: 'jumbo', label: 'Jumbo'},
-              {value: 'scale', label: 'Auto Scale'},
+              {value: 'scale', label: 'Auto scale'},
             ],
           },
           defaultValue: 'default',

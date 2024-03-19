@@ -18,7 +18,7 @@ type DescriptionProps = HydrogenComponentProps & {
 type Width = 'full' | 'narrow';
 
 let widthClasses: Record<Width, string> = {
-  full: 'w-full lg:w-3/4 mx-auto',
+  full: 'w-full mx-auto',
   narrow: 'w-full md:w-1/2 lg:w-3/4 max-w-4xl mx-auto',
 };
 
