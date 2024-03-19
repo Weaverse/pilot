@@ -29,6 +29,7 @@ export function getWeaverseCsp(request: Request) {
       "'self'",
       'shopify.com',
       '*.youtube.com',
+      '*.youtu.be',
       '*.google.com',
       'fonts.gstatic.com',
       ...localDirectives,
