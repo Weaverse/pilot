@@ -1,7 +1,7 @@
 import {type HydrogenComponentSchema} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import type {SectionProps} from '~/sections/shared/Section';
-import {Section, sectionConfigs} from '~/sections/shared/Section';
+import {Section, sectionInspector} from '~/sections/shared/Section';
 
 type TestimonialsProps = SectionProps & {
   heading: string;
@@ -24,7 +24,7 @@ export let schema: HydrogenComponentSchema = {
   type: 'testimonials',
   title: 'Testimonials',
   childTypes: ['subheading', 'heading', 'description', 'testimonials-items'],
-  inspector: [sectionConfigs],
+  inspector: [sectionInspector],
   toolbar: ['general-settings', ['duplicate', 'delete']],
   presets: {
     children: [

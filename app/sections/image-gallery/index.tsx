@@ -1,15 +1,12 @@
 import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import type {SectionProps} from '~/sections/shared/Section';
-import {Section, sectionConfigs} from '~/sections/shared/Section';
+import {Section, sectionInspector} from '~/sections/shared/Section';
 
-type ImageGalleryProps = SectionProps & {
-  heading: string;
-  description: string;
-};
+type ImageGalleryProps = SectionProps;
 
 let ImageGallery = forwardRef<HTMLElement, ImageGalleryProps>((props, ref) => {
-  let {heading, description, children, ...rest} = props;
+  let {children, ...rest} = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
@@ -23,7 +20,7 @@ export let schema: HydrogenComponentSchema = {
   type: 'image-gallery',
   title: 'Image gallery',
   childTypes: ['heading', 'description', 'image-gallery--items'],
-  inspector: [sectionConfigs],
+  inspector: [sectionInspector],
   toolbar: ['general-settings', ['duplicate', 'delete']],
   presets: {
     children: [
@@ -34,7 +31,7 @@ export let schema: HydrogenComponentSchema = {
       {
         type: 'description',
         content:
-          'Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.',
+          'Showcase your chosen images. This visual focus will enhance user engagement and understanding of your offerings.',
       },
       {
         type: 'image-gallery--items',
