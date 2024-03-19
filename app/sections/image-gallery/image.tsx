@@ -64,7 +64,7 @@ export let schema: HydrogenComponentSchema = {
           name: 'src',
           label: 'Image',
           defaultValue:
-            'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/pilot-image-placeholder.svg',
+            'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
         },
         {
           type: 'range',
