@@ -2,7 +2,7 @@ import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
-import ReactPlayer from 'react-player/youtube';
+import ReactPlayer from 'react-player';
 import {overlayInputs} from '~/sections/shared/Overlay';
 import {gapClasses} from '~/sections/shared/Section';
 
@@ -17,7 +17,7 @@ type VideoHeroProps = {
   children: React.ReactNode;
 };
 
-let FALLBACK_VIDEO = 'https://www.youtube.com/embed/Su-x4Mo5xmU';
+let FALLBACK_VIDEO = 'https://www.youtube.com/watch?v=Su-x4Mo5xmU';
 
 let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {
   let {
@@ -95,12 +95,11 @@ export let schema: HydrogenComponentSchema = {
       inputs: [
         {
           type: 'text',
-          name: 'videoLink',
+          name: 'videoURL',
           label: 'Video URL',
-          defaultValue: 'https://www.youtube.com/embed/Su-x4Mo5xmU',
-          placeholder: 'https://www.youtube.com/embed/Su-x4Mo5xmU',
-          helpText:
-            'How to get YouTube <a target="_blank" href="https://support.google.com/youtube/answer/171780?hl=en#:~:text=On%20a%20computer%2C%20go%20to,appears%2C%20copy%20the%20HTML%20code.">embed code</a>.',
+          defaultValue: 'https://www.youtube.com/watch?v=Su-x4Mo5xmU',
+          placeholder: 'https://www.youtube.com/watch?v=Su-x4Mo5xmU',
+          helpText: 'Support YouTube, Vimeo, MP4, WebM, and HLS streams.',
         },
         {
           type: 'heading',
