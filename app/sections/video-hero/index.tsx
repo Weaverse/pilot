@@ -3,17 +3,11 @@ import clsx from 'clsx';
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import ReactPlayer from 'react-player/youtube';
-import type {SectionWidth, VerticalPadding} from '~/sections/shared/Section';
-import {
-  gapClasses,
-  verticalPaddingClasses,
-  widthClasses,
-} from '~/sections/shared/Section';
+import {overlayInputs} from '~/sections/shared/Overlay';
+import {gapClasses} from '~/sections/shared/Section';
 
 type VideoHeroProps = {
   videoURL: string;
-  width: SectionWidth;
-  verticalPadding: VerticalPadding;
   gap: number;
   enableOverlay: boolean;
   overlayColor: string;
@@ -28,9 +22,7 @@ let FALLBACK_VIDEO = 'https://www.youtube.com/embed/Su-x4Mo5xmU';
 let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {
   let {
     videoURL,
-    width,
     gap,
-    verticalPadding,
     sectionHeightDesktop,
     sectionHeightMobile,
     children,
@@ -48,11 +40,7 @@ let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {
     <section
       ref={ref}
       {...rest}
-      className={clsx(
-        'overflow-hidden',
-        widthClasses[width],
-        verticalPaddingClasses[verticalPadding],
-      )}
+      className="overflow-hidden w-full h-full"
       style={sectionStyle}
     >
       <div
@@ -84,7 +72,7 @@ let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {
         ) : null}
         <div
           className={clsx(
-            'absolute inset-0 flex items-center flex-col justify-center z-10 text-white',
+            'absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center z-10 text-white',
             gapClasses[gap],
           )}
         >
@@ -119,33 +107,6 @@ export let schema: HydrogenComponentSchema = {
           label: 'Layout',
         },
         {
-          type: 'select',
-          name: 'width',
-          label: 'Content width',
-          configs: {
-            options: [
-              {value: 'full', label: 'Full page'},
-              {value: 'stretch', label: 'Stretch'},
-              {value: 'fixed', label: 'Fixed'},
-            ],
-          },
-          defaultValue: 'full',
-        },
-        {
-          type: 'select',
-          name: 'verticalPadding',
-          label: 'Vertical padding',
-          configs: {
-            options: [
-              {value: 'none', label: 'None'},
-              {value: 'small', label: 'Small'},
-              {value: 'medium', label: 'Medium'},
-              {value: 'large', label: 'Large'},
-            ],
-          },
-          defaultValue: 'none',
-        },
-        {
           type: 'range',
           name: 'sectionHeightDesktop',
           label: 'Height on desktop',
@@ -172,7 +133,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: 'range',
           name: 'gap',
-          label: 'Items spacing',
+          label: 'Content spacing',
           configs: {
             min: 0,
             max: 40,
@@ -181,41 +142,13 @@ export let schema: HydrogenComponentSchema = {
           },
           defaultValue: 20,
         },
-        {
-          type: 'heading',
-          label: 'Overlay',
-        },
-        {
-          type: 'switch',
-          name: 'enableOverlay',
-          label: 'Enable overlay',
-          defaultValue: true,
-        },
-        {
-          type: 'color',
-          name: 'overlayColor',
-          label: 'Overlay color',
-          defaultValue: '#000000',
-          condition: 'enableOverlay.eq.true',
-        },
-        {
-          type: 'range',
-          name: 'overlayOpacity',
-          label: 'Overlay opacity',
-          defaultValue: 50,
-          configs: {
-            min: 0,
-            max: 100,
-            step: 1,
-            unit: '%',
-          },
-          condition: 'enableOverlay.eq.true',
-        },
+        ...overlayInputs,
       ],
     },
   ],
   childTypes: ['subheading', 'heading', 'description', 'button'],
   presets: {
+    enableOverlay: true,
     children: [
       {
         type: 'subheading',
