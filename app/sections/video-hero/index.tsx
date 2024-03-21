@@ -72,7 +72,7 @@ let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {
         ) : null}
         <div
           className={clsx(
-            'absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center z-10 text-white',
+            'absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center z-10',
             gapClasses[gap],
           )}
         >
