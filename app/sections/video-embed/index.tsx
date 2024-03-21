@@ -29,12 +29,12 @@ export let schema: HydrogenComponentSchema = {
     children: [
       {
         type: 'heading',
-        content: 'This is how Shopify Headless done right!',
+        content: 'Video embed',
       },
       {
         type: 'description',
         content:
-          'Our Hydrogen store is set up by Shopify Experts and can be customized with Weaverse. It can be easily published to Oxygen and then handed over to the merchants. The Hydrogen store offers the ability to connect to any data source from the server side, eliminating the need for developers to create custom apps. Weaverse provides a user-friendly way for merchants to edit their storefront, similar to the Liquid theme customizer. It also offers developers a powerful toolset and a reusable bootstrap theme, which can save up to 70% of their time when building a headless storefront.',
+          'A picture is worth a thousand words, and a video is worth even more. Utilize this space to engage, inform, and convince your customers.',
       },
       {
         type: 'video-embed--item',
