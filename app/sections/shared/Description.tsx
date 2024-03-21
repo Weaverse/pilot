@@ -3,13 +3,13 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
-import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import type {Alignment} from '~/lib/type';
 
 type DescriptionProps = HydrogenComponentProps & {
   content: string;
   as?: 'p' | 'div';
+  color?: string;
   width?: Width;
   alignment?: Alignment;
   className?: string;
@@ -32,13 +32,20 @@ let Description = forwardRef<
   HTMLParagraphElement | HTMLDivElement,
   DescriptionProps
 >((props, ref) => {
-  let {as: Tag = 'p', width, content, alignment, className, ...rest} = props;
-  let style = {} as CSSProperties;
+  let {
+    as: Tag = 'p',
+    width,
+    content,
+    color,
+    alignment,
+    className,
+    ...rest
+  } = props;
   return (
     <Tag
       ref={ref}
       {...rest}
-      style={style}
+      style={{color}}
       className={clsx(
         widthClasses[width!],
         alignmentClasses[alignment!],
@@ -86,6 +93,11 @@ export let schema: HydrogenComponentSchema = {
             "Pair large text with an image or full-width video to showcase your brand's lifestyle to describe and showcase an important detail of your products that you can tag on your image.",
           placeholder:
             "Pair large text with an image or full-width video to showcase your brand's lifestyle to describe and showcase an important detail of your products that you can tag on your image.",
+        },
+        {
+          type: 'color',
+          name: 'color',
+          label: 'Text color',
         },
         {
           type: 'toggle-group',

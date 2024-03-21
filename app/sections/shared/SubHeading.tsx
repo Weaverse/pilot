@@ -3,7 +3,6 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
-import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import type {Alignment} from '~/lib/type';
 
@@ -12,6 +11,7 @@ type Weight = 'normal' | 'medium';
 type SubHeadingProps = HydrogenComponentProps & {
   content: string;
   as?: 'h4' | 'h5' | 'h6' | 'div' | 'p';
+  color?: string;
   size?: Size;
   weight?: Weight;
   alignment: Alignment;
@@ -41,18 +41,18 @@ let SubHeading = forwardRef<
   let {
     as: Tag = 'p',
     content,
+    color,
     size,
     weight,
     alignment,
     className,
     ...rest
   } = props;
-  let style = {} as CSSProperties;
   return (
     <Tag
       ref={ref}
       {...rest}
-      style={style}
+      style={{color}}
       className={clsx(
         sizes[size!],
         weightClasses[weight!],
@@ -103,6 +103,11 @@ export let schema: HydrogenComponentSchema = {
           label: 'Content',
           defaultValue: 'Section subheading',
           placeholder: 'Section subheading',
+        },
+        {
+          type: 'color',
+          name: 'color',
+          label: 'Text color',
         },
         {
           type: 'select',

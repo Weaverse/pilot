@@ -3,8 +3,8 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
-import {forwardRef} from 'react';
 import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 import type {Alignment} from '~/lib/type';
 
 type Size = 'default' | 'lead' | 'heading' | 'display' | 'jumbo' | 'scale';
@@ -14,6 +14,7 @@ type HeadingProps = HydrogenComponentProps & {
   content: string;
   as?: 'h1' | 'h2' | 'h3' | 'h4';
   size?: Size;
+  color?: string;
   weight?: Weight;
   tracking?: Tracking;
   alignment?: Alignment;
@@ -55,6 +56,7 @@ let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
     as: Tag = 'h2',
     content,
     size,
+    color,
     weight,
     tracking,
     alignment,
@@ -63,9 +65,10 @@ let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
     className,
     ...rest
   } = props;
-  let style = {} as CSSProperties;
+  let style: CSSProperties = {color};
   if (size === 'scale') {
     style = {
+      ...style,
       '--min-size-px': `${minSize}px`,
       '--min-size': minSize,
       '--max-size': maxSize,
@@ -131,6 +134,11 @@ export let schema: HydrogenComponentSchema = {
           label: 'Content',
           defaultValue: 'Section heading',
           placeholder: 'Section heading',
+        },
+        {
+          type: 'color',
+          name: 'color',
+          label: 'Text color',
         },
         {
           type: 'select',
