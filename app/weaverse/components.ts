@@ -33,7 +33,7 @@ import * as Judgeme from '~/components/product-form/judgeme-review';
 import * as Testimonial from '~/sections/testimonials';
 import * as TestimonialItem from '~/sections/testimonials/item';
 import * as TestimonialItems from '~/sections/testimonials/items';
-import * as VideoBanner from '~/sections/video-banner';
+import * as VideoHero from '~/sections/video-hero';
 import * as VideoEmbed from '~/sections/video-embed';
 import * as VideoEmbedItem from '~/sections/video-embed/video';
 import * as MetaDemo from '~/sections/meta-demo';
@@ -43,7 +43,7 @@ import * as SlideShowItem from '~/sections/SlideShow/SlideItems';
 import * as NewsLetter from '~/sections/newsletter';
 import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
 import * as ImageHotspotItem from '~/sections/image-hotspots/items';
-import * as ProductList from '~/sections/product-list'
+import * as ProductList from '~/sections/product-list';
 
 export let components: HydrogenComponent[] = [
   ...commonComponents,
@@ -60,7 +60,7 @@ export let components: HydrogenComponent[] = [
   ImageWithTextImage,
   ColumnWithImage,
   ColumnWithImageItem,
-  VideoBanner,
+  VideoHero,
   Map,
   PromotionGrid,
   PromotionGridItem,
@@ -92,5 +92,5 @@ export let components: HydrogenComponent[] = [
   MetaDemo,
   SlideShow,
   SlideShowItem,
-  ProductList
+  ProductList,
 ];

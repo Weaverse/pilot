@@ -29,6 +29,8 @@ export function getWeaverseCsp(request: Request) {
       "'self'",
       'shopify.com',
       '*.youtube.com',
+      '*.youtu.be',
+      '*.vimeo.com',
       '*.google.com',
       'fonts.gstatic.com',
       ...localDirectives,
@@ -45,6 +47,7 @@ export function getWeaverseCsp(request: Request) {
     connectSrc: [
       "'self'",
       'https://monorail-edge.shopifysvc.com',
+      'https://vimeo.com',
       ...localDirectives,
       ...weaverseHosts,
     ],

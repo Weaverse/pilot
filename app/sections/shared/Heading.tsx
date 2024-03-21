@@ -3,8 +3,8 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
-import {forwardRef} from 'react';
 import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 import type {Alignment} from '~/lib/type';
 
 type Size = 'default' | 'lead' | 'heading' | 'display' | 'jumbo' | 'scale';
@@ -14,6 +14,7 @@ type HeadingProps = HydrogenComponentProps & {
   content: string;
   as?: 'h1' | 'h2' | 'h3' | 'h4';
   size?: Size;
+  color?: string;
   weight?: Weight;
   tracking?: Tracking;
   alignment?: Alignment;
@@ -55,6 +56,7 @@ let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
     as: Tag = 'h2',
     content,
     size,
+    color,
     weight,
     tracking,
     alignment,
@@ -63,9 +65,10 @@ let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
     className,
     ...rest
   } = props;
-  let style = {} as CSSProperties;
+  let style: CSSProperties = {color};
   if (size === 'scale') {
     style = {
+      ...style,
       '--min-size-px': `${minSize}px`,
       '--min-size': minSize,
       '--max-size': maxSize,
@@ -133,6 +136,11 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Section heading',
         },
         {
+          type: 'color',
+          name: 'color',
+          label: 'Text color',
+        },
+        {
           type: 'select',
           name: 'size',
           label: 'Text size',
@@ -143,7 +151,7 @@ export let schema: HydrogenComponentSchema = {
               {value: 'heading', label: 'Heading'},
               {value: 'display', label: 'Display'},
               {value: 'jumbo', label: 'Jumbo'},
-              {value: 'scale', label: 'Auto Scale'},
+              {value: 'scale', label: 'Auto scale'},
             ],
           },
           defaultValue: 'default',
@@ -192,17 +200,17 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'bold',
         },
         {
-          type: 'toggle-group',
+          type: 'select',
           name: 'tracking',
           label: 'Letter spacing',
           configs: {
             options: [
-              {value: 'tight', label: 'Tight', icon: 'ArrowsInLineHorizontal'},
-              {value: 'inherit', label: 'Inherit', icon: 'Placeholder'},
-              {value: 'wide', label: 'Wide', icon: 'ArrowsOutLineHorizontal'},
+              {value: 'tight', label: 'Tight'},
+              {value: 'inherit', label: 'Inherit'},
+              {value: 'wide', label: 'Wide'},
             ],
           },
-          defaultValue: 'normal',
+          defaultValue: 'inherit',
         },
         {
           type: 'toggle-group',
@@ -210,9 +218,9 @@ export let schema: HydrogenComponentSchema = {
           label: 'Alignment',
           configs: {
             options: [
-              {value: 'left', label: 'Left', icon: 'AlignLeft'},
-              {value: 'center', label: 'Center', icon: 'AlignCenterHorizontal'},
-              {value: 'right', label: 'Right', icon: 'AlignRight'},
+              {value: 'left', label: 'Left', icon: 'align-start-vertical'},
+              {value: 'center', label: 'Center', icon: 'align-center-vertical'},
+              {value: 'right', label: 'Right', icon: 'align-end-vertical'},
             ],
           },
           defaultValue: 'center',

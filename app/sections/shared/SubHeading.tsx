@@ -3,7 +3,6 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
-import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import type {Alignment} from '~/lib/type';
 
@@ -12,6 +11,7 @@ type Weight = 'normal' | 'medium';
 type SubHeadingProps = HydrogenComponentProps & {
   content: string;
   as?: 'h4' | 'h5' | 'h6' | 'div' | 'p';
+  color?: string;
   size?: Size;
   weight?: Weight;
   alignment: Alignment;
@@ -41,18 +41,18 @@ let SubHeading = forwardRef<
   let {
     as: Tag = 'p',
     content,
+    color,
     size,
     weight,
     alignment,
     className,
     ...rest
   } = props;
-  let style = {} as CSSProperties;
   return (
     <Tag
       ref={ref}
       {...rest}
-      style={style}
+      style={{color}}
       className={clsx(
         sizes[size!],
         weightClasses[weight!],
@@ -105,6 +105,11 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Section subheading',
         },
         {
+          type: 'color',
+          name: 'color',
+          label: 'Text color',
+        },
+        {
           type: 'select',
           name: 'size',
           label: 'Text size',
@@ -134,9 +139,9 @@ export let schema: HydrogenComponentSchema = {
           label: 'Alignment',
           configs: {
             options: [
-              {value: 'left', label: 'Left', icon: 'AlignLeft'},
-              {value: 'center', label: 'Center', icon: 'AlignCenterHorizontal'},
-              {value: 'right', label: 'Right', icon: 'AlignRight'},
+              {value: 'left', label: 'Left', icon: 'align-start-vertical'},
+              {value: 'center', label: 'Center', icon: 'align-center-vertical'},
+              {value: 'right', label: 'Right', icon: 'align-end-vertical'},
             ],
           },
           defaultValue: 'center',
