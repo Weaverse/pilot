@@ -5,8 +5,9 @@ import * as Blogs from '~/sections/blogs';
 import * as CollectionBanner from '~/sections/collection-banner';
 import * as CollectionFilters from '~/sections/collection-filters';
 import * as CollectionList from '~/sections/collection-list';
-import * as ColumnWithImage from '~/sections/column-with-image';
-import * as ColumnWithImageItem from '~/sections/column-with-image/item';
+import * as ColumnsWithImages from '~/sections/columns-with-images';
+import * as ColumnsWithImagesItems from '~/sections/columns-with-images/items';
+import * as ColumnWithImageItem from '~/sections/columns-with-images/column';
 import * as Countdown from '~/sections/countdown';
 import * as CountdownActions from '~/sections/countdown/actions';
 import * as CountDownTimer from '~/sections/countdown/timer';
@@ -58,7 +59,8 @@ export let components: HydrogenComponent[] = [
   ImageWithText,
   ImageWithTextContent,
   ImageWithTextImage,
-  ColumnWithImage,
+  ColumnsWithImages,
+  ColumnsWithImagesItems,
   ColumnWithImageItem,
   VideoHero,
   Map,
