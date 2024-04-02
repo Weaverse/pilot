@@ -4,9 +4,9 @@ import {
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-interface ImageGalleyItemsProps extends HydrogenComponentProps {
+type ImageGalleyItemsProps = HydrogenComponentProps & {
   gap: number;
-}
+};
 
 let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
   (props, ref) => {

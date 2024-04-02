@@ -19,7 +19,7 @@ export default ImageGallery;
 export let schema: HydrogenComponentSchema = {
   type: 'image-gallery',
   title: 'Image gallery',
-  childTypes: ['heading', 'description', 'image-gallery--items'],
+  childTypes: ['subheading', 'heading', 'description', 'image-gallery--items'],
   inspector: [sectionInspector],
   toolbar: ['general-settings', ['duplicate', 'delete']],
   presets: {
