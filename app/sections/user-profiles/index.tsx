@@ -14,7 +14,7 @@ const UserCard = () => {
         alt="Profile picture"
         className="object-cover w-full"
         height="320"
-        src="/placeholder.svg"
+        src="https://cdn.shopify.com/s/files/1/0728/0410/6547/files/medium_3.webp?v=1702346343"
         style={{aspectRatio: '320/320', objectFit: 'cover'}}
         width="320"
       />
