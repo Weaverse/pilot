@@ -43,7 +43,8 @@ import * as SlideShowItem from '~/sections/SlideShow/SlideItems';
 import * as NewsLetter from '~/sections/newsletter';
 import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
 import * as ImageHotspotItem from '~/sections/image-hotspots/items';
-import * as ProductList from '~/sections/product-list'
+import * as ProductList from '~/sections/product-list';
+import * as UserProfiles from '~/sections/user-profiles';
 
 export let components: HydrogenComponent[] = [
   ...commonComponents,
@@ -71,6 +72,7 @@ export let components: HydrogenComponent[] = [
   CountDownTimer,
   CountdownActions,
   NewsLetter,
+  UserProfiles,
   Blogs,
   BlogPost,
   AllProducts,
@@ -92,5 +94,5 @@ export let components: HydrogenComponent[] = [
   MetaDemo,
   SlideShow,
   SlideShowItem,
-  ProductList
+  ProductList,
 ];
