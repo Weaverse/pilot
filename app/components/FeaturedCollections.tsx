@@ -11,12 +11,15 @@ type FeaturedCollectionsProps = HomepageFeaturedCollectionsQuery & {
 export function FeaturedCollections({
   collections,
   title = 'Collections',
+  count,
   ...props
 }: FeaturedCollectionsProps) {
   const haveCollections = collections?.nodes?.length > 0;
   if (!haveCollections) return null;
 
-  const collectionsWithImage = collections.nodes.filter((item) => item.image);
+  const collectionsWithImage = collections.nodes
+    .filter((item) => item.image)
+    .slice(0, count);
 
   return (
     <Section {...props} heading={title}>
