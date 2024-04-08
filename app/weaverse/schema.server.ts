@@ -210,7 +210,7 @@ export let themeSchema: HydrogenThemeSchema = {
             max: 2,
             step: 0.1,
           },
-          defaultValue: 1.2,
+          defaultValue: 1.5,
         },
       ],
     },

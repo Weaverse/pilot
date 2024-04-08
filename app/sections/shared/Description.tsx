@@ -3,13 +3,13 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
-import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import type {Alignment} from '~/lib/type';
 
 type DescriptionProps = HydrogenComponentProps & {
   content: string;
   as?: 'p' | 'div';
+  color?: string;
   width?: Width;
   alignment?: Alignment;
   className?: string;
@@ -18,7 +18,7 @@ type DescriptionProps = HydrogenComponentProps & {
 type Width = 'full' | 'narrow';
 
 let widthClasses: Record<Width, string> = {
-  full: 'w-full lg:w-3/4 mx-auto',
+  full: 'w-full mx-auto',
   narrow: 'w-full md:w-1/2 lg:w-3/4 max-w-4xl mx-auto',
 };
 
@@ -32,21 +32,27 @@ let Description = forwardRef<
   HTMLParagraphElement | HTMLDivElement,
   DescriptionProps
 >((props, ref) => {
-  let {as: Tag = 'p', width, content, alignment, className, ...rest} = props;
-  let style = {} as CSSProperties;
+  let {
+    as: Tag = 'p',
+    width,
+    content,
+    color,
+    alignment,
+    className,
+    ...rest
+  } = props;
   return (
     <Tag
       ref={ref}
       {...rest}
-      style={style}
+      style={{color}}
       className={clsx(
         widthClasses[width!],
         alignmentClasses[alignment!],
         className,
       )}
       dangerouslySetInnerHTML={{__html: content}}
-    >
-    </Tag>
+    ></Tag>
   );
 });
 
@@ -89,16 +95,21 @@ export let schema: HydrogenComponentSchema = {
             "Pair large text with an image or full-width video to showcase your brand's lifestyle to describe and showcase an important detail of your products that you can tag on your image.",
         },
         {
+          type: 'color',
+          name: 'color',
+          label: 'Text color',
+        },
+        {
           type: 'toggle-group',
           name: 'width',
           label: 'Width',
           configs: {
             options: [
-              {value: 'full', label: 'Full', icon: 'ArrowsHorizontal'},
+              {value: 'full', label: 'Full', icon: 'move-horizontal'},
               {
                 value: 'narrow',
                 label: 'Narrow',
-                icon: 'ArrowsInLineHorizontal',
+                icon: 'fold-horizontal',
               },
             ],
           },
@@ -110,9 +121,9 @@ export let schema: HydrogenComponentSchema = {
           label: 'Alignment',
           configs: {
             options: [
-              {value: 'left', label: 'Left', icon: 'AlignLeft'},
-              {value: 'center', label: 'Center', icon: 'AlignCenterHorizontal'},
-              {value: 'right', label: 'Right', icon: 'AlignRight'},
+              {value: 'left', label: 'Left', icon: 'align-start-vertical'},
+              {value: 'center', label: 'Center', icon: 'align-center-vertical'},
+              {value: 'right', label: 'Right', icon: 'align-end-vertical'},
             ],
           },
           defaultValue: 'center',

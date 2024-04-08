@@ -1,19 +1,16 @@
-import { Image } from '@shopify/hydrogen';
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseImage,
+import {Image} from '@shopify/hydrogen';
+import {
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
+  type WeaverseImage,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
-import type { CSSProperties } from 'react';
-import { forwardRef } from 'react';
-import { IconImageBlank } from '~/components';
+import {forwardRef} from 'react';
 
 interface ColumnWithImageItemProps extends HydrogenComponentProps {
   imageSrc: WeaverseImage;
-  titleText: string;
-  contentAlignment: string;
-  descriptionText: string;
+  heading: string;
+  text: string;
   buttonLabel: string;
   buttonLink: string;
   openInNewTab: boolean;
@@ -21,13 +18,15 @@ interface ColumnWithImageItemProps extends HydrogenComponentProps {
   hideOnMobile: boolean;
 }
 
+let FALLBACK_IMAGE =
+  'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg';
+
 let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
   (props, ref) => {
     let {
       imageSrc,
-      titleText,
-      contentAlignment,
-      descriptionText,
+      heading,
+      text,
       buttonLabel,
       buttonLink,
       openInNewTab,
@@ -35,39 +34,44 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
       hideOnMobile,
       ...rest
     } = props;
-    let contentStyle: CSSProperties = {
-      textAlign: `${contentAlignment}`,
-    } as CSSProperties;
+
+    let imageData =
+      typeof imageSrc === 'object'
+        ? imageSrc
+        : {url: imageSrc || FALLBACK_IMAGE, altText: imageSrc};
     return (
       <div
         ref={ref}
         {...rest}
         className={clsx(
-          'flex flex-col items-center sm-max:w-full sm-max:pt-0',
+          {
+            'col-span-6':
+              childCount === 1 ||
+              childCount === 2 ||
+              childCount === 4 ||
+              (childCount === 5 && itemIndex < 3),
+            'col-span-4':
+              childCount === 3 ||
+              (childCount === 5 && itemIndex >= 3) ||
+              childCount > 5,
+          },
           hideOnMobile && 'hidden sm:block',
         )}
       >
-        <div className="h-64 w-64 border border-solid border-gray-500 rounded-md">
-          {imageSrc ? (
-            <Image data={imageSrc} sizes="auto" className="w-full h-full" />
-          ) : (
-            <div className="w-full h-full bg-gray-200 flex justify-center items-center">
-              <IconImageBlank
-                viewBox="0 0 100 100"
-                className="!w-24 !h-24 opacity-40"
-              />
-            </div>
-          )}
-        </div>
-        <div className="text-center w-full sm-max:w-64" style={contentStyle}>
-          {titleText && (
+        <Image
+          data={imageData}
+          sizes="auto"
+          className="h-72 object-cover object-center w-full rounded-lg"
+        />
+        <div className="text-center w-full sm-max:w-64">
+          {heading && (
             <p className="text-[var(--text-color)] font-normal mt-4 text-sm">
-              {titleText}
+              {heading}
             </p>
           )}
-          {descriptionText && (
+          {text && (
             <p className="text-sm font-normal mt-2 text-[var(--text-color)]">
-              {descriptionText}
+              {text}
             </p>
           )}
           {buttonLabel && (
@@ -106,30 +110,20 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'text',
-          name: 'titleText',
-          label: 'Title',
-          placeholder: 'Item title',
-          defaultValue: 'Item title',
+          name: 'heading',
+          label: 'Heading',
+          placeholder: 'Example heading',
+          defaultValue: 'Example heading',
         },
+
         {
-          type: 'toggle-group',
-          label: 'Content alignment',
-          name: 'contentAlignment',
-          configs: {
-            options: [
-              {label: 'Left', value: 'left'},
-              {label: 'Center', value: 'center'},
-              {label: 'Right', value: 'right'},
-            ],
-          },
-          defaultValue: 'center',
-        },
-        {
-          type: 'textarea',
+          type: 'richtext',
           label: 'Text',
-          name: 'descriptionText',
-          placeholder: 'Brief description',
-          defaultValue: 'Brief description',
+          name: 'text',
+          placeholder:
+            'Use this section to promote content throughout every page of your site. Add images for further impact.',
+          defaultValue:
+            'Use this section to promote content throughout every page of your site. Add images for further impact.',
         },
         {
           type: 'text',
@@ -137,18 +131,6 @@ export let schema: HydrogenComponentSchema = {
           name: 'buttonLabel',
           placeholder: 'Button label',
           defaultValue: 'Optional button',
-        },
-        {
-          type: 'text',
-          label: 'Button link',
-          name: 'buttonLink',
-          placeholder: 'Button link',
-        },
-        {
-          type: 'switch',
-          name: 'openInNewTab',
-          label: 'Open in new tab',
-          defaultValue: true,
         },
         {
           type: 'toggle-group',
@@ -177,6 +159,19 @@ export let schema: HydrogenComponentSchema = {
             'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
         },
         {
+          type: 'text',
+          label: 'Button link',
+          name: 'buttonLink',
+          placeholder: 'Button link',
+        },
+        {
+          type: 'switch',
+          name: 'openInNewTab',
+          label: 'Open link in new tab',
+          defaultValue: true,
+          condition: 'buttonLink.ne.nil',
+        },
+        {
           type: 'switch',
           label: 'Hide on Mobile',
           name: 'hideOnMobile',
@@ -185,4 +180,13 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
+  presets: {
+    imageSrc:
+      'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
+    children: [
+      {
+        type: 'button',
+      },
+    ],
+  },
 };

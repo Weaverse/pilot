@@ -57,18 +57,18 @@ export let schema: HydrogenComponentSchema = {
   title: 'Image',
   inspector: [
     {
-      group: 'Image Gallery Item',
+      group: 'Image gallery item',
       inputs: [
         {
           type: 'image',
           name: 'src',
           label: 'Image',
           defaultValue:
-            'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/pilot-image-placeholder.svg',
+            'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
         },
         {
           type: 'range',
-          label: 'Column Span',
+          label: 'Column span',
           name: 'columnSpan',
           configs: {
             min: 1,
@@ -79,7 +79,7 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'range',
-          label: 'Border Radius',
+          label: 'Border radius',
           name: 'borderRadius',
           configs: {
             min: 0,
@@ -91,7 +91,7 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: 'switch',
-          label: 'Hide on Mobile',
+          label: 'Hide on mobile',
           name: 'hideOnMobile',
           defaultValue: false,
         },
