@@ -176,10 +176,11 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 'secondary',
         },
         {
-          type: 'text',
+          type: 'url',
           label: 'Button link',
           name: 'buttonLink',
-          placeholder: 'Button link',
+          placeholder: '/products',
+          defaultValue: '/products',
         },
         {
           type: 'switch',
