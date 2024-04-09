@@ -5,6 +5,7 @@ import {
 import {clsx} from 'clsx';
 import {forwardRef} from 'react';
 import type {CSSProperties} from 'react';
+import {Link} from '~/components';
 
 type ButtonStyle = 'primary' | 'secondary' | 'subtle';
 type ButtonProps = HydrogenComponentProps & {
@@ -26,7 +27,8 @@ let Button = forwardRef<HTMLAnchorElement, ButtonProps>((props, ref) => {
     props;
   let style = {} as CSSProperties;
   return (
-    <a ref={ref}
+    <Link
+      ref={ref}
       {...rest}
       style={style}
       className={clsx(
@@ -34,10 +36,12 @@ let Button = forwardRef<HTMLAnchorElement, ButtonProps>((props, ref) => {
         buttonStyleClasses[buttonStyle!],
         className,
       )}
-      href={`${buttonLink}`} target={openInNewTab ? '_blank' : ''}
+      to={buttonLink || '#'}
+      target={openInNewTab ? '_blank' : '_self'}
+      rel="noreferrer"
     >
       {content}
-    </a>
+    </Link>
   );
 });
 
@@ -66,7 +70,7 @@ export let schema: HydrogenComponentSchema = {
           type: 'text',
           name: 'buttonLink',
           label: 'Button link',
-          placeholder: 'https://',
+          placeholder: 'https://example.com',
         },
         {
           type: 'switch',
