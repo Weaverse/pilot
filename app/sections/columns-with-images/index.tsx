@@ -3,7 +3,7 @@ import {forwardRef} from 'react';
 import type {SectionProps} from '~/sections/shared/Section';
 import {Section, sectionInspector} from '~/sections/shared/Section';
 
-type ColumnsWithImagesProps = SectionProps;
+interface ColumnsWithImagesProps extends SectionProps {}
 
 let ColumnsWithImages = forwardRef<HTMLElement, ColumnsWithImagesProps>(
   (props, ref) => {
@@ -26,6 +26,10 @@ export let schema: HydrogenComponentSchema = {
   childTypes: ['subheading', 'heading', 'description'],
   presets: {
     children: [
+      {
+        type: 'heading',
+        content: 'Columns with images',
+      },
       {
         type: 'columns-with-images--items',
       },

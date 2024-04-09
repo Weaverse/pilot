@@ -16,7 +16,13 @@ interface ColumnWithImageItemProps extends HydrogenComponentProps {
   openInNewTab: boolean;
   buttonStyle: string;
   hideOnMobile: boolean;
+  size: 'large' | 'medium';
 }
+
+let sizeMap = {
+  large: 'col-span-6',
+  medium: 'col-span-4',
+};
 
 let FALLBACK_IMAGE =
   'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg';
@@ -32,6 +38,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
       openInNewTab,
       buttonStyle,
       hideOnMobile,
+      size,
       ...rest
     } = props;
 
@@ -43,20 +50,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
       <div
         ref={ref}
         {...rest}
-        className={clsx(
-          {
-            'col-span-6':
-              childCount === 1 ||
-              childCount === 2 ||
-              childCount === 4 ||
-              (childCount === 5 && itemIndex < 3),
-            'col-span-4':
-              childCount === 3 ||
-              (childCount === 5 && itemIndex >= 3) ||
-              childCount > 5,
-          },
-          hideOnMobile && 'hidden sm:block',
-        )}
+        className={clsx(hideOnMobile && 'hidden sm:block', sizeMap[size])}
       >
         <Image
           data={imageData}
@@ -65,9 +59,9 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
         />
         <div className="text-center w-full sm-max:w-64">
           {heading && (
-            <p className="text-[var(--text-color)] font-normal mt-4 text-sm">
+            <h3 className="text-[var(--text-color)] font-normal mt-4 text-sm">
               {heading}
-            </p>
+            </h3>
           )}
           {text && (
             <p className="text-sm font-normal mt-2 text-[var(--text-color)]">
@@ -115,7 +109,6 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Example heading',
           defaultValue: 'Example heading',
         },
-
         {
           type: 'richtext',
           label: 'Text',
@@ -124,6 +117,34 @@ export let schema: HydrogenComponentSchema = {
             'Use this section to promote content throughout every page of your site. Add images for further impact.',
           defaultValue:
             'Use this section to promote content throughout every page of your site. Add images for further impact.',
+        },
+        {
+          type: 'select',
+          name: 'size',
+          label: 'Size',
+          configs: {
+            options: [
+              {
+                label: 'Large',
+                value: 'large',
+              },
+              {
+                label: 'Medium',
+                value: 'medium',
+              },
+            ],
+          },
+          defaultValue: 'medium',
+        },
+        {
+          type: 'switch',
+          label: 'Hide on Mobile',
+          name: 'hideOnMobile',
+          defaultValue: false,
+        },
+        {
+          type: 'heading',
+          label: 'Button (optional)',
         },
         {
           type: 'text',
@@ -139,24 +160,20 @@ export let schema: HydrogenComponentSchema = {
           configs: {
             options: [
               {
-                label: '1',
-                value:
-                  'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
+                label: 'Primary',
+                value: 'primary',
               },
               {
-                label: '2',
-                value:
-                  'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
+                label: 'Secondary',
+                value: 'secondary',
               },
               {
-                label: '3',
-                value:
-                  'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white',
+                label: 'Subtle',
+                value: 'subtle',
               },
             ],
           },
-          defaultValue:
-            'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
+          defaultValue: 'secondary',
         },
         {
           type: 'text',
@@ -170,12 +187,6 @@ export let schema: HydrogenComponentSchema = {
           label: 'Open link in new tab',
           defaultValue: true,
           condition: 'buttonLink.ne.nil',
-        },
-        {
-          type: 'switch',
-          label: 'Hide on Mobile',
-          name: 'hideOnMobile',
-          defaultValue: false,
         },
       ],
     },

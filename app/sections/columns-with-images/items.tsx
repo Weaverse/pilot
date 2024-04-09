@@ -4,9 +4,9 @@ import {
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-type ColumnsWithImagesItemsProps = HydrogenComponentProps & {
+interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
   gap: number;
-};
+}
 
 let ColumnsWithImagesItems = forwardRef<
   HTMLDivElement,
@@ -45,7 +45,7 @@ export let schema: HydrogenComponentSchema = {
             step: 6,
             unit: 'px',
           },
-          defaultValue: 16,
+          defaultValue: 24,
         },
       ],
     },
