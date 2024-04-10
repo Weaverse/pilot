@@ -1,26 +1,21 @@
 import {AnalyticsPageType} from '@shopify/hydrogen';
-import {defer} from '@shopify/remix-oxygen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {routeHeaders} from '~/data/cache';
 import {SHOP_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import type {LoadPageParams, PageType} from '@weaverse/hydrogen';
-
+import type {LoadPageParams} from '@weaverse/hydrogen';
 export const headers = routeHeaders;
 
 export async function loader(args: LoaderFunctionArgs) {
   let {params, context} = args;
-  let {language, country} = context.storefront.i18n;
-
-  let locale = `${language}-${country}`.toLowerCase();
+  let {pathPrefix} = context.storefront.i18n;
+  let locale = pathPrefix.slice(1);
   let weaverseQuery: LoadPageParams = {
     type: 'INDEX',
   };
 
   if (params.locale && params.locale.toLowerCase() !== locale) {
-    // If the locale URL param is defined, yet we still are on `EN-US`
-    // the locale param must be invalid
     // Update for Weaverse: if it not locale, it probably is a custom page handle
     weaverseQuery.type = 'CUSTOM';
   }

@@ -2,13 +2,10 @@ import {WeaverseContent} from '~/weaverse';
 import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import type {LoadPageParams} from '@weaverse/hydrogen';
 
-export async function loader({params, context, request}: LoaderFunctionArgs) {
-  const {language, country} = context.storefront.i18n;
-  let weaverseQuery: LoadPageParams = {
+export async function loader({context}: LoaderFunctionArgs) {
+  let weaverseData = await context.weaverse.loadPage({
     type: 'CUSTOM',
-    locale: `${language}-${country}`.toLowerCase(),
-  };
-  let weaverseData = await context.weaverse.loadPage(weaverseQuery);
+  });
   if (weaverseData?.page?.id && !weaverseData.page.id.includes('fallback')) {
     return {
       weaverseData,
