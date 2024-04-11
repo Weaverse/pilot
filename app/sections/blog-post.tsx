@@ -44,7 +44,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
               <span className="uppercase">by {author?.name}</span>
             </div>
           </div>
-          <Section as="article" padding="all">
+          <Section as="article" padding="all" className="prose mx-auto">
             <div className="lg:max-w-screen-lg md:max-w-screen-md max-w-screen-sm px-4 mx-auto space-y-8 md:space-y-16">
               <div dangerouslySetInnerHTML={{__html: contentHtml}} />
               <div className="md:flex justify-between gap-2 space-y-2">

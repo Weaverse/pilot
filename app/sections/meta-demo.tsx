@@ -6,6 +6,7 @@ import type {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
+import {METAOBJECTS_QUERY} from '~/data/queries';
 
 type MetaObjectField = {
   key: string;
@@ -100,35 +101,7 @@ export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
   if (!data?.metaDemo) {
     return null;
   }
-  let query = `#graphql
-  query MetaObjects ($type: String!, $first: Int)
-  {
-    metaobjects(type: $type, first: $first) {
-      nodes {
-        fields {
-          key
-          type
-          value
-          reference {
-            ... on MediaImage {
-              alt
-              image {
-                altText
-                url
-                width
-                height
-              }
-            }
-          }
-        }
-        handle
-        id
-        type
-      }
-    }
-  }
-  `;
-  let {metaobjects} = await storefront.query(query, {
+  let {metaobjects} = await storefront.query(METAOBJECTS_QUERY, {
     variables: {
       type: data.metaDemo.type,
       first: 10,

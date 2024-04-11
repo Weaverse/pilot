@@ -16,10 +16,10 @@ let VideoItem = forwardRef<HTMLIFrameElement, VideoItemProps>((props, ref) => {
       {...rest}
       className="mx-auto mt-8 w-full max-w-2xl h-64 rounded-lg lg:mt-12 sm:h-96"
       src={videoUrl}
+      allowFullScreen
       title="YouTube video player"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      sandbox={'allow-presentation allow-same-origin allow-scripts'}
+      sandbox="allow-presentation allow-same-origin allow-scripts"
     />
   );
 });
@@ -36,9 +36,11 @@ export let schema: HydrogenComponentSchema = {
         {
           type: 'text',
           name: 'videoUrl',
-          label: 'Video URL',
-          defaultValue: 'https://www.youtube.com/embed/-akQyQN8rYM',
-          placeholder: 'https://www.youtube.com/embed/-akQyQN8rYM',
+          label: 'Embed URL',
+          defaultValue: 'https://www.youtube.com/embed/Su-x4Mo5xmU',
+          placeholder: 'https://www.youtube.com/embed/Su-x4Mo5xmU',
+          helpText:
+            'How to get YouTube <a target="_blank" href="https://support.google.com/youtube/answer/171780?hl=en#:~:text=On%20a%20computer%2C%20go%20to,appears%2C%20copy%20the%20HTML%20code.">embed code</a>.',
         },
       ],
     },

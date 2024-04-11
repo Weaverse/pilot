@@ -44,14 +44,14 @@ export let backgroundImageInputs: InspectorGroup['inputs'] = [
     label: 'Background image',
   },
   {
-    type: 'toggle-group',
+    type: 'select',
     name: 'backgroundFit',
     label: 'Background fit',
     configs: {
       options: [
-        {value: 'fill', label: 'Fill', icon: 'CornersOut'},
-        {value: 'cover', label: 'Cover', icon: 'ArrowsOut'},
-        {value: 'contain', label: 'Contain', icon: 'ArrowsIn'},
+        {value: 'fill', label: 'Fill'},
+        {value: 'cover', label: 'Cover'},
+        {value: 'contain', label: 'Contain'},
       ],
     },
     defaultValue: 'cover',

@@ -1,5 +1,20 @@
 # @weaverse/pilot
 
+## 2.5.3
+
+### Patch Changes
+
+- 3a975da: Adding url input type
+- Updated dependencies [3a975da]
+  - @weaverse/hydrogen@3.1.1
+
+## 2.5.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/hydrogen@3.1.0
+
 ## 2.5.1
 
 ### Patch Changes

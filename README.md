@@ -1,21 +1,12 @@
 <h1 align="center">Pilot - Shopify Hydrogen Theme</h1>
 
 <div align="center">
-  <p style="text-align: center;">
-    <img alt="Version" src="https://img.shields.io/badge/version-2.5.1-blue.svg?cacheSeconds=2592000" />
-    <a href="#" target="_blank">
-      <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?label=license" />
-    </a>
-    <a href="https://twitter.com/weaverseio" target="_blank">
-      <img alt="Twitter: weaverseio" src="https://img.shields.io/twitter/follow/weaverseio.svg?style=social&label=@weaverse.io" />
-    </a>
-  </p>
-
-![Weaverse + Hydrogen + Shopify](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Logos.png?v=1695811776)
 
 📚 [Read the docs](https://weaverse.io/docs) | 🗣 [Join our community on Slack](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg) | 🐞 [Report a bug](https://github.com/weaverse/pilot/issues)
 
 </div>
+
+![Weaverse + Hydrogen + Shopify](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Logos.png?v=1695811776)
 
 _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse, designed to create lightning-fast storefronts with exceptional performance. This theme combines a collection of powerful tools and features to streamline your Shopify development experience._
 
@@ -43,7 +34,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 ## Deployment
 - [Deploy to Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen)
-- Deploy to Vercel: [![Deploy to Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
+- [Deploy to Vercel](https://wvse.cc/deploy-pilot-to-vercel)
 
 ## Getting started
 

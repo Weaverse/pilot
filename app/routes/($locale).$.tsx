@@ -1,5 +1,5 @@
 import { WeaverseContent } from '~/weaverse';
-import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import type { LoaderFunctionArgs } from '@shopify/remix-oxygen';
 
 export async function loader({ context }: LoaderFunctionArgs) {
   let weaverseData = await context.weaverse.loadPage({
@@ -11,6 +11,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
       weaverseData,
     };
   }
+  // If Weaverse Data not found, return 404
   throw new Response(null, { status: 404 });
 }
 

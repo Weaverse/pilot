@@ -15,40 +15,46 @@ export type DividerType = 'none' | 'top' | 'bottom' | 'both';
 
 export type SectionProps = HydrogenComponentProps &
   HTMLAttributes<HTMLElement> &
-  BackgroundImageProps & {
-    as?: React.ElementType;
-    width?: SectionWidth;
-    gap?: number;
-    children?: React.ReactNode;
-    className?: string;
-    verticalPadding?: VerticalPadding;
-    divider?: DividerType;
-    enableOverlay?: boolean;
-    overlayColor?: string;
-    overlayOpacity?: number;
-    backgroundColor?: string;
-  };
+  BackgroundImageProps &
+  Partial<{
+    as: React.ElementType;
+    width: SectionWidth;
+    gap: number;
+    className: string;
+    verticalPadding: VerticalPadding;
+    divider: DividerType;
+    enableOverlay: boolean;
+    overlayColor: string;
+    overlayOpacity: number;
+    backgroundColor: string;
+    children: React.ReactNode;
+  }>;
 
-let gapClasses: Record<number, string> = {
+export let gapClasses: Record<number, string> = {
   0: '',
   4: 'space-y-1',
   8: 'space-y-2',
   12: 'space-y-3',
   16: 'space-y-4',
   20: 'space-y-5',
+  24: 'space-y-3 lg:space-y-6',
+  28: 'space-y-3.5 lg:space-y-7',
+  32: 'space-y-4 lg:space-y-8',
+  36: 'space-y-4 lg:space-y-9',
+  40: 'space-y-5 lg:space-y-10',
 };
 
-let verticalPaddingClasses: Record<VerticalPadding, string> = {
+export let verticalPaddingClasses: Record<VerticalPadding, string> = {
   none: '',
   small: 'py-4 md:py-6 lg:py-8',
   medium: 'py-8 md:py-12 lg:py-16',
   large: 'py-12 md:py-24 lg:py-32',
 };
 
-let widthClasses: Record<SectionWidth, string> = {
-  full: 'w-full',
-  stretch: 'w-full px-6 md:px-8 lg:px-12',
-  fixed: 'max-w-screen-xl px-3 md:px-4 lg:px-6 mx-auto',
+export let widthClasses: Record<SectionWidth, string> = {
+  full: 'w-full h-full',
+  stretch: 'w-full h-full px-3 md:px-10 lg:px-16',
+  fixed: 'w-full h-full max-w-screen-xl px-3 md:px-4 lg:px-6 mx-auto',
 };
 
 export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
@@ -67,6 +73,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     overlayOpacity,
     className,
     children,
+    style,
     ...rest
   } = props;
   return (
@@ -85,6 +92,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : '',
           backgroundSize: backgroundFit,
           backgroundPosition,
+          ...style,
         }}
       >
         {backgroundImage && (
@@ -144,7 +152,7 @@ export let layoutInputs: InspectorGroup['inputs'] = [
   {
     type: 'range',
     name: 'gap',
-    label: 'Items gap',
+    label: 'Items spacing',
     configs: {
       min: 0,
       max: 40,
@@ -183,7 +191,7 @@ export let layoutInputs: InspectorGroup['inputs'] = [
   },
 ];
 
-export let sectionConfigs: InspectorGroup = {
+export let sectionInspector: InspectorGroup = {
   group: 'General',
   inputs: [...layoutInputs, ...backgroundImageInputs, ...overlayInputs],
 };
