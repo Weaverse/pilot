@@ -67,10 +67,10 @@ export let schema: HydrogenComponentSchema = {
           placeholder: 'Button label',
         },
         {
-          type: 'text',
+          type: 'url',
           name: 'buttonLink',
           label: 'Button link',
-          placeholder: 'https://example.com',
+          placeholder: '/products',
         },
         {
           type: 'switch',

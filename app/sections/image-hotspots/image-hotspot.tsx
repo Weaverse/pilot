@@ -3,11 +3,10 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
-import { Image } from '@shopify/hydrogen';
-import { CSSProperties } from 'react';
-import { IconImageBlank } from '~/components';
-
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
+import {Image} from '@shopify/hydrogen';
+import {IconImageBlank} from '~/components';
 
 interface ImageHotspotProps extends HydrogenComponentProps {
   imageHostpots: WeaverseImage;
@@ -18,20 +17,39 @@ interface ImageHotspotProps extends HydrogenComponentProps {
 }
 
 let ImageHotspot = forwardRef<HTMLElement, ImageHotspotProps>((props, ref) => {
-  let { imageHostpots, heading, children, sectionHeight, topPadding, bottomPadding, ...rest } = props;
+  let {
+    imageHostpots,
+    heading,
+    children,
+    sectionHeight,
+    topPadding,
+    bottomPadding,
+    ...rest
+  } = props;
   let sectionStyles: CSSProperties = {
     '--section-height': `${sectionHeight}px`,
     paddingTop: `${topPadding}px`,
-    paddingBottom: `${bottomPadding}px`
+    paddingBottom: `${bottomPadding}px`,
   } as CSSProperties;
   return (
-    <section ref={ref} {...rest} className='flex flex-col gap-5 px-10 sm-max:px-6' style={sectionStyles}>
+    <section
+      ref={ref}
+      {...rest}
+      className="flex flex-col gap-5 px-10 sm-max:px-6"
+      style={sectionStyles}
+    >
       <h3>{heading}</h3>
-      <div className='relative w-full h-[var(--section-height)] sm-max:w-full'>
-        {imageHostpots ? <Image data={imageHostpots} className='w-full h-full object-cover' /> :
-          <div className='w-full h-full flex items-center justify-center bg-gray-200'>
-            <IconImageBlank className='!w-24 !h-24 opacity-20' viewBox='0 0 100 101' />
-          </div>}
+      <div className="relative w-full h-[var(--section-height)] sm-max:w-full">
+        {imageHostpots ? (
+          <Image data={imageHostpots} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+            <IconImageBlank
+              className="!w-24 !h-24 opacity-20"
+              viewBox="0 0 100 101"
+            />
+          </div>
+        )}
         {children}
       </div>
     </section>

@@ -13,6 +13,7 @@ export function FeaturedSection() {
 
   useEffect(() => {
     load(path);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
   if (!data) return null;
