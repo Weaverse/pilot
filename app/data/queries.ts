@@ -462,7 +462,8 @@ export let VARIANTS_QUERY = `#graphql
   }
   ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
-export let CUSTOMER_CREATE = `#graphql mutation customerCreate($input: CustomerCreateInput!) {
+export let CUSTOMER_CREATE =
+  `#graphql mutation customerCreate($input: CustomerCreateInput!) {
   customerCreate(input: $input) {
     customer {
       id
@@ -475,3 +476,32 @@ export let CUSTOMER_CREATE = `#graphql mutation customerCreate($input: CustomerC
     }
   }
 }` as const;
+
+export const METAOBJECTS_QUERY = `#graphql
+  query MetaObjects ($type: String!, $first: Int)
+  {
+    metaobjects(type: $type, first: $first) {
+      nodes {
+        fields {
+          key
+          type
+          value
+          reference {
+            ... on MediaImage {
+              alt
+              image {
+                altText
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+        handle
+        id
+        type
+      }
+    }
+  }
+  `;
