@@ -1,12 +1,13 @@
 import {
   Link as RemixLink,
   NavLink as RemixNavLink,
-  type NavLinkProps as RemixNavLinkProps,
   type LinkProps as RemixLinkProps,
+  type NavLinkProps as RemixNavLinkProps,
 } from '@remix-run/react';
 
-import {useRootLoaderData} from '~/root';
 import {useThemeSettings} from '@weaverse/hydrogen';
+import {forwardRef} from 'react';
+import {useRootLoaderData} from '~/root';
 
 type LinkProps = Omit<RemixLinkProps, 'className'> & {
   className?: RemixNavLinkProps['className'] | RemixLinkProps['className'];
@@ -27,33 +28,41 @@ type LinkProps = Omit<RemixLinkProps, 'className'> & {
  *
  * Ultimately, it is up to you to decide how to implement this behavior.
  */
-export function Link(props: LinkProps) {
-  const {to, className, ...resOfProps} = props;
-  const rootData = useRootLoaderData();
-  let {enableViewTransition} = useThemeSettings();
-  const selectedLocale = rootData?.selectedLocale;
+export let Link = forwardRef(
+  (props: LinkProps, ref: React.Ref<HTMLAnchorElement>) => {
+    let {to, className, ...resOfProps} = props;
+    let rootData = useRootLoaderData();
+    let {enableViewTransition} = useThemeSettings();
+    let selectedLocale = rootData?.selectedLocale;
 
-  let toWithLocale = to;
+    let toWithLocale = to;
 
-  if (typeof toWithLocale === 'string' && selectedLocale?.pathPrefix) {
-    if (!toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)) {
-      toWithLocale = `${selectedLocale.pathPrefix}${to}`;
+    if (typeof toWithLocale === 'string' && selectedLocale?.pathPrefix) {
+      if (!toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)) {
+        toWithLocale = `${selectedLocale.pathPrefix}${to}`;
+      }
     }
-  }
 
-  if (typeof className === 'function') {
+    if (typeof className === 'function') {
+      return (
+        <RemixNavLink
+          ref={ref}
+          unstable_viewTransition={enableViewTransition}
+          to={toWithLocale}
+          className={className}
+          {...resOfProps}
+        />
+      );
+    }
+
     return (
-      <RemixNavLink
+      <RemixLink
+        ref={ref}
         unstable_viewTransition={enableViewTransition}
         to={toWithLocale}
         className={className}
-        {...resOfProps} />
+        {...resOfProps}
+      />
     );
-  }
-
-  return <RemixLink
-    unstable_viewTransition={enableViewTransition}
-    to={toWithLocale}
-    className={className}
-    {...resOfProps} />;
-}
+  },
+);

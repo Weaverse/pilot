@@ -4,9 +4,9 @@ import {
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 
-interface ImageGalleyItemsProps extends HydrogenComponentProps {
+type ImageGalleyItemsProps = HydrogenComponentProps & {
   gap: number;
-}
+};
 
 let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
   (props, ref) => {
@@ -16,7 +16,7 @@ let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
       <div
         ref={ref}
         {...rest}
-        className="flex flex-col mt-8 sm:grid sm:grid-cols-4 sm:mt-12"
+        className="flex flex-col sm:grid sm:grid-cols-4"
         style={{gap: `${gap}px`}}
       >
         {children}
@@ -29,19 +29,20 @@ export default ImageGalleyItems;
 
 export let schema: HydrogenComponentSchema = {
   type: 'image-gallery--items',
-  title: 'Items',
+  title: 'Images',
   inspector: [
     {
-      group: 'Image',
+      group: 'Images',
       inputs: [
         {
           type: 'range',
-          label: 'Gap',
+          label: 'Images gap',
           name: 'gap',
           configs: {
             min: 16,
             max: 40,
             step: 6,
+            unit: 'px',
           },
           defaultValue: 16,
         },
@@ -55,32 +56,32 @@ export let schema: HydrogenComponentSchema = {
       {
         type: 'image-gallery--item',
         columnSpan: 2,
-        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-hand-placed-on-the-iridescent-keys-of-a-small-piano.jpg?v=1694236467',
+        src: 'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-open-novel-with-a-hand-on-it-by-dried-flowers.jpg?v=1694236467',
+        src: 'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-creamy-cold-drink-sits-on-a-wooden-table.jpg?v=1694236467',
+        src: 'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-hands-reach-to-feed-a-flying-seagull.jpg?v=1694236467',
+        src: 'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
       },
       {
         type: 'image-gallery--item',
         hideOnMobile: true,
-        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-nati-melnychuk-5ngCICAXiH0-unsplash.jpg?v=1694231122',
+        src: 'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
       },
       {
         type: 'image-gallery--item',
         columnSpan: 2,
-        src: 'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-flatlay-of-a-coffee-mug-and-items-to-plan-travel.jpg?v=1694236467',
+        src: 'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
       },
     ],
   },

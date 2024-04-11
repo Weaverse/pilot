@@ -5,8 +5,9 @@ import * as Blogs from '~/sections/blogs';
 import * as CollectionBanner from '~/sections/collection-banner';
 import * as CollectionFilters from '~/sections/collection-filters';
 import * as CollectionList from '~/sections/collection-list';
-import * as ColumnWithImage from '~/sections/column-with-image';
-import * as ColumnWithImageItem from '~/sections/column-with-image/item';
+import * as ColumnsWithImages from '~/sections/columns-with-images';
+import * as ColumnsWithImagesItems from '~/sections/columns-with-images/items';
+import * as ColumnWithImageItem from '~/sections/columns-with-images/column';
 import * as Countdown from '~/sections/countdown';
 import * as CountdownActions from '~/sections/countdown/actions';
 import * as CountDownTimer from '~/sections/countdown/timer';
@@ -33,7 +34,7 @@ import * as Judgeme from '~/components/product-form/judgeme-review';
 import * as Testimonial from '~/sections/testimonials';
 import * as TestimonialItem from '~/sections/testimonials/item';
 import * as TestimonialItems from '~/sections/testimonials/items';
-import * as VideoBanner from '~/sections/video-banner';
+import * as VideoHero from '~/sections/video-hero';
 import * as VideoEmbed from '~/sections/video-embed';
 import * as VideoEmbedItem from '~/sections/video-embed/video';
 import * as MetaDemo from '~/sections/meta-demo';
@@ -59,9 +60,10 @@ export let components: HydrogenComponent[] = [
   ImageWithText,
   ImageWithTextContent,
   ImageWithTextImage,
-  ColumnWithImage,
+  ColumnsWithImages,
+  ColumnsWithImagesItems,
   ColumnWithImageItem,
-  VideoBanner,
+  VideoHero,
   Map,
   PromotionGrid,
   PromotionGridItem,
