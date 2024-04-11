@@ -15,7 +15,6 @@ import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 export async function loader({request, context, params}: LoaderFunctionArgs) {
   const {cart} = context;
   // N.B. This route will probably be removed in the future.
-  const session = context.session as any;
   const {code} = params;
 
   const url = new URL(request.url);

@@ -1,4 +1,4 @@
-import {useFetcher, useLocation, useMatches} from '@remix-run/react';
+import {useFetcher, useLocation} from '@remix-run/react';
 import {useCallback, useEffect, useRef} from 'react';
 import {useInView} from 'react-intersection-observer';
 import clsx from 'clsx';

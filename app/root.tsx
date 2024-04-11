@@ -151,7 +151,6 @@ function App() {
 export default withWeaverse(App);
 
 const ErrorBoundaryComponent = ({error}: {error: Error}) => {
-  const nonce = useNonce();
   const routeError = useRouteError();
   const rootData = useRootLoaderData();
   const locale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
@@ -175,25 +174,25 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
         <Links />
       </head>
       <body className="font-sans">
-      {isRouteError ? (
-        <>
-          {routeError.status === 404 ? (
-            <NotFound type={pageType} />
-          ) : (
-            <GenericError
-              error={{message: `${routeError.status} ${routeError.data}`}}
-            />
-          )}
-        </>
-      ) : (
-        <GenericError
-          error={
-            error instanceof Error
-              ? error
-              : (routeError as Error) || undefined
-          }
-        />
-      )}
+        {isRouteError ? (
+          <>
+            {routeError.status === 404 ? (
+              <NotFound type={pageType} />
+            ) : (
+              <GenericError
+                error={{message: `${routeError.status} ${routeError.data}`}}
+              />
+            )}
+          </>
+        ) : (
+          <GenericError
+            error={
+              error instanceof Error
+                ? error
+                : (routeError as Error) || undefined
+            }
+          />
+        )}
         {/*<Layout*/}
         {/*  layout={rootData?.layout}*/}
         {/*  key={`${locale.language}-${locale.country}`}*/}

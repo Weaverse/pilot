@@ -3,3 +3,5 @@ node_modules
 bin
 *.d.ts
 dist
+/customer-accountapi.generated.d.ts
+/storefrontapi.generated.d.ts

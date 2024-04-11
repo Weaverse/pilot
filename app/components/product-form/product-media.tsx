@@ -1,7 +1,7 @@
 import {Image} from '@shopify/hydrogen';
 import clsx from 'clsx';
 import {useKeenSlider} from 'keen-slider/react';
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import type {MediaFragment} from 'storefrontapi.generated';
 
 interface ProductMediaProps {
@@ -79,10 +79,7 @@ export function ProductMedia(props: ProductMediaProps) {
   }, [selectedVariant?.id]);
 
   return (
-    <div
-      className="grid vt-product-image"
-      style={{ gap: spacing, }}
-    >
+    <div className="grid vt-product-image" style={{gap: spacing}}>
       <div ref={sliderRef} className="keen-slider">
         {media.map((med, i) => {
           let image =

@@ -3,7 +3,8 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from '@weaverse/hydrogen';
-import { forwardRef, CSSProperties } from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {IconImageBlank} from '~/components';
 import clsx from 'clsx';
@@ -43,7 +44,15 @@ let SlideShowItem = forwardRef<HTMLDivElement, CountDownProps>((props, ref) => {
   } as CSSProperties;
 
   return (
-    <div ref={ref} {...rest} className={clsx('flex relative h-full px-10 py-16 w-full sm-max:px-4', positionClass[contentPosition])} style={slideStyle}>
+    <div
+      ref={ref}
+      {...rest}
+      className={clsx(
+        'flex relative h-full px-10 py-16 w-full sm-max:px-4',
+        positionClass[contentPosition],
+      )}
+      style={slideStyle}
+    >
       <div className="absolute inset-0">
         {backgroundImage ? (
           <Image
@@ -67,7 +76,6 @@ let SlideShowItem = forwardRef<HTMLDivElement, CountDownProps>((props, ref) => {
         {children}
       </div>
     </div>
-
   );
 });
 
@@ -121,11 +129,12 @@ export let schema: HydrogenComponentSchema = {
       },
       {
         type: 'heading',
-        content: 'Slide Heading'
+        content: 'Slide Heading',
       },
       {
         type: 'description',
-        content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown."
+        content:
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown.",
       },
       {
         type: 'button',
