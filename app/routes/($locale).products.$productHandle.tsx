@@ -107,7 +107,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     seo,
     weaverseData: await context.weaverse.loadPage({
       type: 'PRODUCT',
-      handle: productHandle
+      handle: productHandle,
     }),
     judgemeReviews,
   });

@@ -1,7 +1,7 @@
-import { Await, Form, useLoaderData } from '@remix-run/react';
-import { getPaginationVariables, Pagination } from '@shopify/hydrogen';
-import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { Suspense } from 'react';
+import {Await, Form, useLoaderData} from '@remix-run/react';
+import {getPaginationVariables, Pagination} from '@shopify/hydrogen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Suspense} from 'react';
 import {
   FeaturedCollections,
   Grid,
@@ -13,9 +13,9 @@ import {
   Section,
   Text,
 } from '~/components';
-import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
-import { getImageLoadingPriority, PAGINATION_SIZE } from '~/lib/const';
-import { seoPayload } from '~/lib/seo.server';
+import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
+import {seoPayload} from '~/lib/seo.server';
 import {
   getFeaturedData,
   type FeaturedData,

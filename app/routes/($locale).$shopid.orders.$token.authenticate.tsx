@@ -11,9 +11,9 @@ import {Button, PageHeader} from '~/components';
  those requests back to Shopify.
 */
 export async function loader({
-                               request,
-                               context: {storefront},
-                             }: LoaderFunctionArgs) {
+  request,
+  context: {storefront},
+}: LoaderFunctionArgs) {
   const {origin} = new URL(request.url);
   const {shop} = await storefront.query(
     `#graphql

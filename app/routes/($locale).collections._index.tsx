@@ -33,7 +33,7 @@ export const loader = async (args: RouteLoaderArgs) => {
     collections,
     seo,
     weaverseData: await weaverse.loadPage({
-      type: 'COLLECTION_LIST'
+      type: 'COLLECTION_LIST',
     }),
   });
 };

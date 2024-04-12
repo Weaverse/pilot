@@ -2,13 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {
-  forwardRef,
-  CSSProperties,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef, useState, useCallback, useEffect} from 'react';
 import {useKeenSlider} from 'keen-slider/react.es';
 import clsx from 'clsx';
 

@@ -2,9 +2,9 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import type { CSSProperties } from 'react';
-import { forwardRef  } from 'react';
-import { clsx } from 'clsx';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
+import {clsx} from 'clsx';
 
 type AlignImage = 'left' | 'right';
 interface ImageWithTextProps extends HydrogenComponentProps {
@@ -18,23 +18,36 @@ let AlignImageClasses: Record<AlignImage, string> = {
   right: 'flex-row',
 };
 
-let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>((props, ref) => {
-  let { imageAlignment, sectionHeight, backgroundColor, children, ...rest } = props;
-  let styleSection: CSSProperties = {
-    '--section-height': `${sectionHeight}px`,
-    backgroundColor: backgroundColor,
-  } as CSSProperties;
+let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
+  (props, ref) => {
+    let {imageAlignment, sectionHeight, backgroundColor, children, ...rest} =
+      props;
+    let styleSection: CSSProperties = {
+      '--section-height': `${sectionHeight}px`,
+      backgroundColor,
+    } as CSSProperties;
 
-  return (
-    <section ref={ref} {...rest} style={styleSection} className='h-[var(--section-height)] sm-max:h-auto sm-max:overflow-hidden'>
-      <div className='h-full px-10 sm-max:px-6 sm-max:w-full'>
-        <div className={clsx('flex justify-center items-center gap-5 h-full w-full sm-max:flex-col', AlignImageClasses[imageAlignment!] )}>
-          {children}
+    return (
+      <section
+        ref={ref}
+        {...rest}
+        style={styleSection}
+        className="h-[var(--section-height)] sm-max:h-auto sm-max:overflow-hidden"
+      >
+        <div className="h-full px-10 sm-max:px-6 sm-max:w-full">
+          <div
+            className={clsx(
+              'flex justify-center items-center gap-5 h-full w-full sm-max:flex-col',
+              AlignImageClasses[imageAlignment!],
+            )}
+          >
+            {children}
+          </div>
         </div>
-      </div>
-    </section>
-  );
-});
+      </section>
+    );
+  },
+);
 
 export default ImageWithText;
 
@@ -52,8 +65,8 @@ export let schema: HydrogenComponentSchema = {
           name: 'imageAlignment',
           configs: {
             options: [
-              { label: 'Left', value: 'left', icon: 'AlignLeft' },
-              { label: 'Right', value: 'right', icon: 'AlignRight' },
+              {label: 'Left', value: 'left', icon: 'AlignLeft'},
+              {label: 'Right', value: 'right', icon: 'AlignRight'},
             ],
           },
           defaultValue: 'left',

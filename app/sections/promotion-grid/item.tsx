@@ -60,7 +60,12 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['subheading', 'heading', 'description', 'promotion-item--buttons'],
+  childTypes: [
+    'subheading',
+    'heading',
+    'description',
+    'promotion-item--buttons',
+  ],
   presets: {
     children: [
       {

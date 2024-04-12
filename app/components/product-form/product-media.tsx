@@ -35,7 +35,7 @@ export function ProductMedia(props: ProductMediaProps) {
     initial: 0,
     slides: {
       perView: numberOfThumbnails,
-      spacing: spacing,
+      spacing,
     },
   };
 
