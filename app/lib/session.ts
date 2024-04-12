@@ -1,4 +1,4 @@
-import {type HydrogenSession} from '@shopify/hydrogen';
+import type {HydrogenSession} from '@shopify/hydrogen';
 import {
   createCookieSessionStorage,
   type SessionStorage,

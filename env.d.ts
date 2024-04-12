@@ -1,10 +1,21 @@
-/// <reference types="@remix-run/dev" />
+/// <reference types="vite/client" />
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
-import type {HydrogenCart} from '@shopify/hydrogen';
-import type {CustomerAccount, Storefront} from '~/lib/type';
-import type {AppSession} from '~/lib/session.server';
+// Enhance TypeScript's built-in typings.
+import '@total-typescript/ts-reset';
+
+import type {
+  Storefront,
+  CustomerAccount,
+  HydrogenCart,
+  HydrogenSessionData,
+} from '@shopify/hydrogen';
+import type {
+  LanguageCode,
+  CountryCode,
+} from '@shopify/hydrogen/storefront-api-types';
+import type {AppSession} from '~/lib/session';
 import type {WeaverseClient} from '@weaverse/hydrogen';
 
 declare global {
@@ -29,22 +40,33 @@ declare global {
     WEAVERSE_API_KEY: string;
     JUDGEME_PUBLIC_TOKEN: string;
   }
+
+  /**
+   * The I18nLocale used for Storefront API query context.
+   */
+  type I18nLocale = {
+    language: LanguageCode;
+    country: CountryCode;
+    pathPrefix: string;
+  };
 }
 
 declare module '@shopify/remix-oxygen' {
   /**
    * Declare local additions to the Remix loader context.
    */
-  export interface AppLoadContext {
-    waitUntil: ExecutionContext['waitUntil'];
-    session: AppSession;
-    storefront: Storefront;
-    customerAccount: CustomerAccount;
-    cart: HydrogenCart;
+  interface AppLoadContext {
     env: Env;
+    cart: HydrogenCart;
+    storefront: Storefront<I18nLocale>;
+    customerAccount: CustomerAccount;
+    session: AppSession;
+    waitUntil: ExecutionContext['waitUntil'];
     weaverse: WeaverseClient;
   }
-}
 
-// Needed to make this file a module.
-export {};
+  /**
+   * Declare local additions to the Remix session data.
+   */
+  interface SessionData extends HydrogenSessionData {}
+}

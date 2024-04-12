@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import {useRef} from 'react';
-import {useScroll} from 'react-use';
+import useScroll from 'react-use/esm/useScroll';
 import {
   flattenConnection,
   CartForm,
@@ -286,11 +286,13 @@ function CartLineItem({line}: {line: CartLine}) {
           </Heading>
 
           <div className="grid pb-2">
-            {(merchandise?.selectedOptions || []).filter(option => option.value !== 'Default Title').map((option) => (
-              <Text color="subtle" key={option.name}>
-                {option.name}: {option.value}
-              </Text>
-            ))}
+            {(merchandise?.selectedOptions || [])
+              .filter((option) => option.value !== 'Default Title')
+              .map((option) => (
+                <Text color="subtle" key={option.name}>
+                  {option.name}: {option.value}
+                </Text>
+              ))}
           </div>
 
           <div className="flex items-center gap-2">

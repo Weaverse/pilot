@@ -2,7 +2,7 @@ import {Disclosure} from '@headlessui/react';
 import {Await, Form, useParams} from '@remix-run/react';
 import {CartForm} from '@shopify/hydrogen';
 import {Suspense, useEffect, useMemo} from 'react';
-import {useWindowScroll} from 'react-use';
+import useWindowScroll from 'react-use/esm/useWindowScroll';
 import clsx from 'clsx';
 import {type LayoutQuery} from 'storefrontapi.generated';
 import {

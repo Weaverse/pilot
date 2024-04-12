@@ -1,8 +1,7 @@
 import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
-import ReactPlayer from 'react-player';
+import {forwardRef, lazy, Suspense} from 'react';
 import {overlayInputs} from '~/sections/shared/Overlay';
 import {gapClasses} from '~/sections/shared/Section';
 
@@ -16,7 +15,12 @@ type VideoHeroProps = {
   sectionHeightMobile: number;
   children: React.ReactNode;
 };
-
+let RP = lazy(() => import('react-player/lazy'));
+let ReactPlayer = (props: any) => (
+  <Suspense fallback={null}>
+    <RP {...props} />
+  </Suspense>
+);
 let FALLBACK_VIDEO = 'https://www.youtube.com/watch?v=Su-x4Mo5xmU';
 
 let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {

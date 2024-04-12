@@ -11,7 +11,6 @@ import {
   Meta,
   Outlet,
   Scripts,
-  LiveReload,
   ScrollRestoration,
   useLoaderData,
   useMatches,
@@ -26,13 +25,13 @@ import favicon from '../public/favicon.svg';
 import {withWeaverse} from '@weaverse/hydrogen';
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
-import styles from './styles/app.css';
+import styles from './styles/app.css?url';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
 import {GlobalStyle} from './weaverse/style';
-import roboto400 from '@fontsource/roboto/400.css';
-import roboto500 from '@fontsource/roboto/500.css';
-import roboto700 from '@fontsource/roboto/700.css';
+import roboto400 from '@fontsource/roboto/400.css?url';
+import roboto500 from '@fontsource/roboto/500.css?url';
+import roboto700 from '@fontsource/roboto/700.css?url';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -142,7 +141,6 @@ function App() {
         </Layout>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
       </body>
     </html>
   );

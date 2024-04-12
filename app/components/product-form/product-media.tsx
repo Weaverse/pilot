@@ -1,6 +1,6 @@
 import {Image} from '@shopify/hydrogen';
 import clsx from 'clsx';
-import {useKeenSlider} from 'keen-slider/react';
+import {useKeenSlider} from 'keen-slider/react.es';
 import {useEffect, useState} from 'react';
 import type {MediaFragment} from 'storefrontapi.generated';
 
