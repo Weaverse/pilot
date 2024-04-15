@@ -24,7 +24,6 @@ export function getWeaverseCsp(request: Request) {
   if (weaverseHost) {
     weaverseHosts.push(weaverseHost);
   }
-  console.log('weaverseHosts', weaverseHosts);
   return {
     frameAncestors: weaverseHosts,
     defaultSrc: [

@@ -5,6 +5,7 @@ import {
   type LoaderFunctionArgs,
   type SerializeFrom,
 } from '@shopify/remix-oxygen';
+import type {MetaFunction, ShouldRevalidateFunction} from '@remix-run/react';
 import {
   isRouteErrorResponse,
   Links,
@@ -15,10 +16,6 @@ import {
   useLoaderData,
   useMatches,
   useRouteError,
-} from '@remix-run/react';
-import type {
-  MetaFunction,
-  type ShouldRevalidateFunction,
 } from '@remix-run/react';
 import type {SeoConfig} from '@shopify/hydrogen';
 import {getSeoMeta, ShopifySalesChannel, useNonce} from '@shopify/hydrogen';
