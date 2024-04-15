@@ -14,6 +14,7 @@ import {
   getStorefrontHeaders,
   type AppLoadContext,
 } from '@shopify/remix-oxygen';
+
 import {AppSession} from '~/lib/session';
 import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
 import {createWeaverseClient} from '~/weaverse/create-weaverse.server';
