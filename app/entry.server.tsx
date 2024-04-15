@@ -15,7 +15,6 @@ export default async function handleRequest(
   const {nonce, header, NonceProvider} = createContentSecurityPolicy(
     getWeaverseCsp(request),
   );
-  let a = createContentSecurityPolicy();
   const body = await renderToReadableStream(
     <NonceProvider>
       <RemixServer context={remixContext} url={request.url} />

@@ -96,6 +96,7 @@ export function ProductMedia(props: ProductMediaProps) {
                   loading={i === 0 ? 'eager' : 'lazy'}
                   aspectRatio={'4/5'}
                   className="object-cover w-full h-full aspect-square fadeIn"
+                  sizes={'auto'}
                 />
               </div>
             )

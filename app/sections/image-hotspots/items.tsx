@@ -133,7 +133,7 @@ let ProductHotspotItems = forwardRef<HTMLDivElement, ProductsHotspotProps>(
           <div className="w-1/2 bg-gray-300 h-full flex justify-center items-center aspect-square">
             {ProductImage ? (
               ProductImage.map((image, index) => (
-                <Image key={index} data={image ?? {}} />
+                <Image key={index} data={image ?? {}} sizes="auto" />
               ))
             ) : (
               <IconImageBlank className="!w-9 !h-9" viewBox="0 0 100 100" />
