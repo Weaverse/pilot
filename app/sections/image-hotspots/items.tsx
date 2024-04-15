@@ -8,9 +8,10 @@ import {getSelectedProductOptions} from '@weaverse/hydrogen';
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
+import clsx from 'clsx';
+
 import type {ProductQuery} from 'storefrontapi.generated';
 import {PRODUCT_QUERY} from '~/data/queries';
-import clsx from 'clsx';
 import {IconImageBlank, Link} from '~/components';
 
 type ProductData = {

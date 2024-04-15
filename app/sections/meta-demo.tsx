@@ -6,6 +6,7 @@ import type {
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import {forwardRef} from 'react';
+
 import {METAOBJECTS_QUERY} from '~/data/queries';
 
 type MetaObjectField = {

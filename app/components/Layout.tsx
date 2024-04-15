@@ -4,6 +4,7 @@ import {CartForm} from '@shopify/hydrogen';
 import {Suspense, useEffect, useMemo} from 'react';
 import useWindowScroll from 'react-use/esm/useWindowScroll';
 import clsx from 'clsx';
+
 import {type LayoutQuery} from 'storefrontapi.generated';
 import {
   Cart,
@@ -30,6 +31,7 @@ import {
   type EnhancedMenu,
 } from '~/lib/utils';
 import {useRootLoaderData} from '~/root';
+
 import {Logo} from './Logo';
 
 type LayoutProps = {

@@ -1,7 +1,10 @@
-import {getPaginationVariables} from '@shopify/hydrogen';
+import type {SeoConfig} from '@shopify/hydrogen';
+import {getPaginationVariables, getSeoMeta} from '@shopify/hydrogen';
 import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {json} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
+import type {MetaFunction} from '@remix-run/react';
+
 import {routeHeaders} from '~/data/cache';
 import {ALL_PRODUCTS_QUERY} from '~/data/queries';
 import {PAGINATION_SIZE} from '~/lib/const';
@@ -53,6 +56,9 @@ export async function loader({
   });
 }
 
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
+};
 export default function AllProducts() {
   return <WeaverseContent />;
 }

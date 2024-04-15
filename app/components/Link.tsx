@@ -4,9 +4,9 @@ import {
   type LinkProps as RemixLinkProps,
   type NavLinkProps as RemixNavLinkProps,
 } from '@remix-run/react';
-
 import {useThemeSettings} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
+
 import {useRootLoaderData} from '~/root';
 
 type LinkProps = Omit<RemixLinkProps, 'className'> & {

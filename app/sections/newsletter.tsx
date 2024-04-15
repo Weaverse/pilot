@@ -1,14 +1,12 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
 import type {CSSProperties} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
+
 import {IconArrowInput} from '~/components';
-import type {CustomerCreateMutation} from 'storefrontapi.generated';
-import {CUSTOMER_CREATE} from '~/data/queries';
 
 type NewsLetterData = {
   contentAlignment: string;
@@ -24,10 +22,7 @@ type NewsLetterData = {
   bottomPadding: string;
 };
 
-type NewsletterProps = HydrogenComponentProps<
-  Awaited<ReturnType<typeof loader>>
-> &
-  NewsLetterData;
+type NewsletterProps = HydrogenComponentProps & NewsLetterData;
 
 let NewsLetter = forwardRef<HTMLElement, NewsletterProps>((props, ref) => {
   let {
@@ -58,7 +53,9 @@ let NewsLetter = forwardRef<HTMLElement, NewsletterProps>((props, ref) => {
     setEmailValue(event.target.value);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    // TODO: create an API route to handle the email submission
+  };
 
   return (
     <section
@@ -104,20 +101,6 @@ let NewsLetter = forwardRef<HTMLElement, NewsletterProps>((props, ref) => {
 });
 
 export default NewsLetter;
-
-export let loader = async (args: ComponentLoaderArgs<NewsLetterData>) => {
-  let {weaverse} = args;
-  let {storefront} = weaverse;
-  let abc = await storefront.mutate<CustomerCreateMutation>(CUSTOMER_CREATE, {
-    variables: {
-      input: {
-        email: 'Thang@gmail.com',
-        password: '5hopify',
-      },
-    },
-  });
-  return abc;
-};
 
 export let schema: HydrogenComponentSchema = {
   type: 'news-letter',

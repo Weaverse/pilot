@@ -1,9 +1,15 @@
-import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {AnalyticsPageType} from '@shopify/hydrogen';
+import type {SeoConfig, ShopifyAnalyticsProduct} from '@shopify/hydrogen';
+import {AnalyticsPageType, getSeoMeta} from '@shopify/hydrogen';
 import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {defer} from '@shopify/remix-oxygen';
-import type {ProductRecommendationsQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
+import type {MetaFunction} from '@remix-run/react';
+import {useLoaderData, useSearchParams} from '@remix-run/react';
+import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
+import {useEffect} from 'react';
+import {getSelectedProductOptions} from '@weaverse/hydrogen';
+
+import type {ProductRecommendationsQuery} from 'storefrontapi.generated';
 import {routeHeaders} from '~/data/cache';
 import {
   PRODUCT_QUERY,
@@ -13,11 +19,7 @@ import {
 import {seoPayload} from '~/lib/seo.server';
 import type {Storefront} from '~/lib/type';
 import {WeaverseContent} from '~/weaverse';
-import {useLoaderData, useSearchParams} from '@remix-run/react';
-import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
-import {useEffect} from 'react';
 import {getJudgemeReviews} from '~/lib/judgeme';
-import {getSelectedProductOptions} from '@weaverse/hydrogen';
 
 export const headers = routeHeaders;
 
@@ -113,6 +115,9 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   });
 }
 
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
+};
 // function redirectToFirstVariant({
 //   product,
 //   request,
@@ -149,7 +154,7 @@ let useApplyFirstVariant = () => {
         replace: true, // prevent adding a new entry to the history stack
       });
     }
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 };
 

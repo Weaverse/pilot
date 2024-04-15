@@ -2,6 +2,7 @@ import {Image} from '@shopify/hydrogen';
 import clsx from 'clsx';
 import {useKeenSlider} from 'keen-slider/react.es';
 import {useEffect, useState} from 'react';
+
 import type {MediaFragment} from 'storefrontapi.generated';
 
 interface ProductMediaProps {
@@ -63,6 +64,7 @@ export function ProductMedia(props: ProductMediaProps) {
   }
 
   let [thumbnailRef, thumbnailInstance] = useKeenSlider(thumbnailOptions);
+
   function handleClickThumbnail(idx: number) {
     moveToIdx(idx);
   }

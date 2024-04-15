@@ -2,6 +2,7 @@ import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import type {CSSProperties} from 'react';
 import {forwardRef, lazy, Suspense} from 'react';
+
 import {overlayInputs} from '~/sections/shared/Overlay';
 import {gapClasses} from '~/sections/shared/Section';
 

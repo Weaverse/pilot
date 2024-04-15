@@ -5,6 +5,7 @@ import type {
 } from '@weaverse/hydrogen';
 import {getPaginationVariables} from '@shopify/hydrogen';
 import {forwardRef} from 'react';
+
 import {ProductSwimlane} from '~/components';
 import {COLLECTION_QUERY} from '~/data/queries';
 import type {SortParam} from '~/components/SortFilter';

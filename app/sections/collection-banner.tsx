@@ -5,8 +5,9 @@ import type {
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {useLoaderData} from '@remix-run/react';
-import type {CollectionDetailsQuery} from 'storefrontapi.generated';
 import clsx from 'clsx';
+
+import type {CollectionDetailsQuery} from 'storefrontapi.generated';
 
 interface CollectionBannerProps extends HydrogenComponentProps {
   sectionHeightDesktop: number;

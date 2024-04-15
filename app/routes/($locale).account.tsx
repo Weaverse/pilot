@@ -28,6 +28,7 @@ import {FeaturedCollections} from '~/components/FeaturedCollections';
 import {CACHE_NONE, routeHeaders} from '~/data/cache';
 import {CUSTOMER_DETAILS_QUERY} from '~/graphql/customer-account/CustomerDetailsQuery';
 import {usePrefixPathWithLocale} from '~/lib/utils';
+
 import {doLogout} from './($locale).account_.logout';
 import {
   getFeaturedData,

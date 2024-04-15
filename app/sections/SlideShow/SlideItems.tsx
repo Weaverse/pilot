@@ -6,8 +6,9 @@ import type {
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
-import {IconImageBlank} from '~/components';
 import clsx from 'clsx';
+
+import {IconImageBlank} from '~/components';
 
 interface CountDownProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;

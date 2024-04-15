@@ -1,7 +1,8 @@
 import {WeaverseClient} from '@weaverse/hydrogen';
+import type {CreateWeaverseClientArgs} from '@weaverse/hydrogen';
+
 import {components} from '~/weaverse/components';
 import {themeSchema} from '~/weaverse/schema.server';
-import type {CreateWeaverseClientArgs} from '@weaverse/hydrogen';
 
 export function createWeaverseClient(args: CreateWeaverseClientArgs) {
   return new WeaverseClient({
@@ -23,6 +24,7 @@ export function getWeaverseCsp(request: Request) {
   if (weaverseHost) {
     weaverseHosts.push(weaverseHost);
   }
+  console.log('weaverseHosts', weaverseHosts);
   return {
     frameAncestors: weaverseHosts,
     defaultSrc: [

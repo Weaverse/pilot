@@ -5,6 +5,7 @@ import type {
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
+
 import {IconImageBlank} from '~/components';
 
 interface PromotionItemProps extends HydrogenComponentProps {

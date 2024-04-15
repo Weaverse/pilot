@@ -4,9 +4,10 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
-import {METAOBJECTS_QUERY} from '~/data/queries';
 import clsx from 'clsx';
 import {Image} from '@shopify/hydrogen';
+
+import {METAOBJECTS_QUERY} from '~/data/queries';
 import {Button} from '~/components';
 
 const UserCard = ({user}: {user: any}) => {

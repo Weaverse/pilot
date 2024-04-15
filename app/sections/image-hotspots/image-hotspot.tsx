@@ -6,6 +6,7 @@ import type {
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
+
 import {IconImageBlank} from '~/components';
 
 interface ImageHotspotProps extends HydrogenComponentProps {

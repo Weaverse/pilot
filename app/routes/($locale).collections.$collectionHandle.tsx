@@ -1,7 +1,9 @@
+import type {SeoConfig} from '@shopify/hydrogen';
 import {
   AnalyticsPageType,
   flattenConnection,
   getPaginationVariables,
+  getSeoMeta,
 } from '@shopify/hydrogen';
 import type {
   ProductCollectionSortKeys,
@@ -9,6 +11,8 @@ import type {
 } from '@shopify/hydrogen/storefront-api-types';
 import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
+import type {MetaFunction} from '@remix-run/react';
+
 import type {SortParam} from '~/components/SortFilter';
 import {FILTER_URL_PREFIX} from '~/components/SortFilter';
 import {routeHeaders} from '~/data/cache';
@@ -131,6 +135,10 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     }),
   });
 }
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
+};
 
 export default function Collection() {
   return <WeaverseContent />;

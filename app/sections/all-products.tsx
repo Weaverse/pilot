@@ -5,6 +5,7 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
+
 import type {AllProductsQuery} from 'storefrontapi.generated';
 import {Grid, PageHeader, ProductCard, Section} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';

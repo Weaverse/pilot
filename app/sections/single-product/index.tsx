@@ -7,9 +7,11 @@ import {
   type WeaverseProduct,
 } from '@weaverse/hydrogen';
 import {forwardRef, useEffect, useState} from 'react';
+
 import type {ProductQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components';
 import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
+
 import {Quantity} from '../../components/product-form/quantity';
 import {ProductVariants} from '../../components/product-form/variants';
 import {ProductPlaceholder} from '../../components/product-form/placeholder';

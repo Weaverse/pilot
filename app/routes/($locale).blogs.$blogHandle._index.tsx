@@ -1,8 +1,11 @@
-import {flattenConnection} from '@shopify/hydrogen';
+import type {SeoConfig} from '@shopify/hydrogen';
+import {flattenConnection, getSeoMeta} from '@shopify/hydrogen';
 import {json} from '@shopify/remix-oxygen';
 import {type RouteLoaderArgs} from '@weaverse/hydrogen';
-import type {BlogQuery} from 'storefrontapi.generated';
 import invariant from 'tiny-invariant';
+import type {MetaFunction} from '@remix-run/react';
+
+import type {BlogQuery} from 'storefrontapi.generated';
 import {routeHeaders} from '~/data/cache';
 import {BLOGS_QUERY} from '~/data/queries';
 import {PAGINATION_SIZE} from '~/lib/const';
@@ -52,6 +55,10 @@ export const loader = async (args: RouteLoaderArgs) => {
       handle: params.blogHandle,
     }),
   });
+};
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
 };
 
 export default function Blogs() {

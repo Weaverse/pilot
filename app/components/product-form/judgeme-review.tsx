@@ -5,7 +5,9 @@ import type {
 import {useParentInstance} from '@weaverse/hydrogen';
 import {useFetcher, useLoaderData} from '@remix-run/react';
 import {forwardRef, useEffect} from 'react';
+
 import {usePrefixPathWithLocale} from '~/lib/utils';
+
 import {StarRating} from '../StarRating';
 type JudgemeReviewsData = {
   rating: number;
