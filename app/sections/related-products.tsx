@@ -4,6 +4,7 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {Suspense, forwardRef} from 'react';
+
 import type {ProductCardFragment} from 'storefrontapi.generated';
 import {ProductSwimlane, Skeleton} from '~/components';
 

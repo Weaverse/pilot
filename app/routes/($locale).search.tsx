@@ -1,7 +1,14 @@
-import { Await, Form, useLoaderData } from '@remix-run/react';
-import { getPaginationVariables, Pagination } from '@shopify/hydrogen';
-import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { Suspense } from 'react';
+import type {MetaFunction} from '@remix-run/react';
+import {Await, Form, useLoaderData} from '@remix-run/react';
+import type {SeoConfig} from '@shopify/hydrogen';
+import {
+  getPaginationVariables,
+  getSeoMeta,
+  Pagination,
+} from '@shopify/hydrogen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Suspense} from 'react';
+
 import {
   FeaturedCollections,
   Grid,
@@ -13,9 +20,10 @@ import {
   Section,
   Text,
 } from '~/components';
-import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
-import { getImageLoadingPriority, PAGINATION_SIZE } from '~/lib/const';
-import { seoPayload } from '~/lib/seo.server';
+import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
+import {seoPayload} from '~/lib/seo.server';
+
 import {
   getFeaturedData,
   type FeaturedData,
@@ -67,6 +75,10 @@ export async function loader({
       : Promise.resolve(null),
   });
 }
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
+};
 
 export default function Search() {
   const {searchTerm, products, noResultRecommendations} =

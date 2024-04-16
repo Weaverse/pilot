@@ -3,15 +3,14 @@ import type {
   HydrogenComponentSchema,
   ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
-import {
-  getPaginationVariables,
-} from '@shopify/hydrogen';
+import {getPaginationVariables} from '@shopify/hydrogen';
 import {forwardRef} from 'react';
+
 import {ProductSwimlane} from '~/components';
-import { COLLECTION_QUERY } from '~/data/queries'
-import type { SortParam } from '~/components/SortFilter'
-import { getSortValuesFromParam } from '~/routes/($locale).collections.$collectionHandle'
-import { PAGINATION_SIZE } from '~/lib/const'
+import {COLLECTION_QUERY} from '~/data/queries';
+import type {SortParam} from '~/components/SortFilter';
+import {getSortValuesFromParam} from '~/routes/($locale).collections.$collectionHandle';
+import {PAGINATION_SIZE} from '~/lib/const';
 
 interface ProductListProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
@@ -19,29 +18,27 @@ interface ProductListProps
   productsCount: number;
 }
 
-let ProductList = forwardRef<HTMLElement, ProductListProps>(
-  (props, ref) => {
-    let {loaderData, heading, productsCount, ...rest} = props;
-    let products = loaderData?.collection?.products
-    return (
-      <section ref={ref} {...rest}>
-        {products?.nodes?.length ? (
-          <ProductSwimlane
-            products={products}
-            title={heading}
-            count={productsCount}
-          />
-        ) : null}
-      </section>
-    );
-  },
-);
+let ProductList = forwardRef<HTMLElement, ProductListProps>((props, ref) => {
+  let {loaderData, heading, productsCount, ...rest} = props;
+  let products = loaderData?.collection?.products;
+  return (
+    <section ref={ref} {...rest}>
+      {products?.nodes?.length ? (
+        <ProductSwimlane
+          products={products}
+          title={heading}
+          count={productsCount}
+        />
+      ) : null}
+    </section>
+  );
+});
 
 export default ProductList;
 
 export let loader = async ({weaverse, data}: ComponentLoaderArgs) => {
   let {language, country} = weaverse.storefront.i18n;
-  let collectionHandle = data?.collection?.handle
+  let collectionHandle = data?.collection?.handle;
 
   const searchParams = new URL(weaverse.request.url).searchParams;
 
@@ -51,20 +48,17 @@ export let loader = async ({weaverse, data}: ComponentLoaderArgs) => {
   const paginationVariables = getPaginationVariables(weaverse.request, {
     pageBy: PAGINATION_SIZE,
   });
-  return await weaverse.storefront.query(
-    COLLECTION_QUERY,
-    {
-      variables: {
-        ...paginationVariables,
-        handle: collectionHandle,
-        country,
-        language,
-        sortKey,
-        reverse,
-        filters: [],
-      },
+  return await weaverse.storefront.query(COLLECTION_QUERY, {
+    variables: {
+      ...paginationVariables,
+      handle: collectionHandle,
+      country,
+      language,
+      sortKey,
+      reverse,
+      filters: [],
     },
-  );
+  });
 };
 
 export let schema: HydrogenComponentSchema = {
@@ -76,9 +70,9 @@ export let schema: HydrogenComponentSchema = {
       group: 'Product List',
       inputs: [
         {
-          type: "collection",
-          name: "collection",
-          label: "Collection",
+          type: 'collection',
+          name: 'collection',
+          label: 'Collection',
         },
         {
           type: 'text',

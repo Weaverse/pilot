@@ -4,6 +4,7 @@ import type {
   ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
+
 import type {HomepageFeaturedProductsQuery} from 'storefrontapi.generated';
 import {ProductSwimlane} from '~/components';
 import {HOMEPAGE_FEATURED_PRODUCTS_QUERY} from '~/data/queries';

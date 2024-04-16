@@ -6,12 +6,9 @@ import {
   useMatches,
   useOutlet,
 } from '@remix-run/react';
-import { flattenConnection } from '@shopify/hydrogen';
-import {
-  defer,
-  type LoaderFunctionArgs
-} from '@shopify/remix-oxygen';
-import { Suspense } from 'react';
+import {flattenConnection} from '@shopify/hydrogen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Suspense} from 'react';
 
 import type {
   CustomerDetailsFragment,
@@ -27,11 +24,12 @@ import {
   ProductSwimlane,
   Text,
 } from '~/components';
-import { FeaturedCollections } from '~/components/FeaturedCollections';
-import { CACHE_NONE, routeHeaders } from '~/data/cache';
-import { CUSTOMER_DETAILS_QUERY } from '~/graphql/customer-account/CustomerDetailsQuery';
-import { usePrefixPathWithLocale } from '~/lib/utils';
-import { doLogout } from './($locale).account_.logout';
+import {FeaturedCollections} from '~/components/FeaturedCollections';
+import {CACHE_NONE, routeHeaders} from '~/data/cache';
+import {CUSTOMER_DETAILS_QUERY} from '~/graphql/customer-account/CustomerDetailsQuery';
+import {usePrefixPathWithLocale} from '~/lib/utils';
+
+import {doLogout} from './($locale).account_.logout';
 import {
   getFeaturedData,
   type FeaturedData,

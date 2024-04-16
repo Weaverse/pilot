@@ -1,8 +1,10 @@
 import {VariantSelector} from '@shopify/hydrogen';
+
 import type {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from 'storefrontapi.generated';
+
 import {VariantOption} from './options';
 
 interface ProductVariantsProps {

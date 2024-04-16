@@ -1,38 +1,39 @@
-import {defer} from '@shopify/remix-oxygen';
 import {
+  type AppLoadContext,
+  defer,
   type LinksFunction,
   type LoaderFunctionArgs,
-  type AppLoadContext,
   type SerializeFrom,
 } from '@shopify/remix-oxygen';
+import type {MetaFunction, ShouldRevalidateFunction} from '@remix-run/react';
 import {
   isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
-  LiveReload,
   ScrollRestoration,
   useLoaderData,
   useMatches,
   useRouteError,
-  type ShouldRevalidateFunction,
 } from '@remix-run/react';
-import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
+import type {SeoConfig} from '@shopify/hydrogen';
+import {getSeoMeta, ShopifySalesChannel, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
+import {withWeaverse} from '@weaverse/hydrogen';
+import roboto400 from '@fontsource/roboto/400.css?url';
+import roboto500 from '@fontsource/roboto/500.css?url';
+import roboto700 from '@fontsource/roboto/700.css?url';
+
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
-import favicon from '../public/favicon.svg';
-import {withWeaverse} from '@weaverse/hydrogen';
+
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
-import styles from './styles/app.css';
+import styles from './styles/app.css?url';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
 import {GlobalStyle} from './weaverse/style';
-import roboto400 from '@fontsource/roboto/400.css';
-import roboto500 from '@fontsource/roboto/500.css';
-import roboto700 from '@fontsource/roboto/700.css';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -76,10 +77,9 @@ export const links: LinksFunction = () => {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg'},
   ];
 };
-
 export const useRootLoaderData = () => {
   const [root] = useMatches();
   return root?.data as SerializeFrom<typeof loader>;
@@ -115,6 +115,10 @@ export async function loader({request, context}: LoaderFunctionArgs) {
   );
 }
 
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
+};
+
 function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
@@ -128,7 +132,6 @@ function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Seo />
         <Meta />
         <Links />
         <GlobalStyle />
@@ -142,7 +145,6 @@ function App() {
         </Layout>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
       </body>
     </html>
   );
@@ -193,15 +195,6 @@ const ErrorBoundaryComponent = ({error}: {error: Error}) => {
             }
           />
         )}
-        {/*<Layout*/}
-        {/*  layout={rootData?.layout}*/}
-        {/*  key={`${locale.language}-${locale.country}`}*/}
-        {/*>*/}
-        {/*  */}
-        {/*</Layout>*/}
-        {/*<ScrollRestoration nonce={nonce} />*/}
-        {/*<Scripts nonce={nonce} />*/}
-        {/*<LiveReload nonce={nonce} />*/}
       </body>
     </html>
   );

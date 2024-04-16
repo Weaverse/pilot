@@ -11,7 +11,7 @@ export let action: ActionFunction = async ({request, context}) => {
       'x-api-key': env.WEAVERSE_API_KEY,
     },
     body: JSON.stringify({
-      to: env.STORE_EMAIL,
+      // to: env.STORE_EMAIL,
       email: formData.get('email'),
       name: formData.get('name'),
       subject: `New message from ${formData.get('name')}`,

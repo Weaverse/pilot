@@ -1,4 +1,5 @@
 import type {HydrogenThemeSchema} from '@weaverse/hydrogen';
+
 import pkg from '../../package.json';
 
 let variantSwatch = {

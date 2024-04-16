@@ -1,7 +1,8 @@
-import { WeaverseContent } from '~/weaverse';
-import type { LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 
-export async function loader({ context }: LoaderFunctionArgs) {
+import {WeaverseContent} from '~/weaverse';
+
+export async function loader({context}: LoaderFunctionArgs) {
   let weaverseData = await context.weaverse.loadPage({
     type: 'CUSTOM',
   });
@@ -12,7 +13,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
     };
   }
   // If Weaverse Data not found, return 404
-  throw new Response(null, { status: 404 });
+  throw new Response(null, {status: 404});
 }
 
 export default function Component() {

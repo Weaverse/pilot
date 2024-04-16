@@ -3,22 +3,13 @@ import type {
   Article,
   Blog,
   Collection,
+  Image,
   Page,
   Product,
   ProductVariant,
   ShopPolicy,
-  Image,
 } from '@shopify/hydrogen/storefront-api-types';
-import type {
-  Article as SeoArticle,
-  BreadcrumbList,
-  Blog as SeoBlog,
-  CollectionPage,
-  Offer,
-  Organization,
-  Product as SeoProduct,
-  WebPage,
-} from 'schema-dts';
+import type {BreadcrumbList, CollectionPage, Offer} from 'schema-dts';
 
 import type {ShopFragment} from 'storefrontapi.generated';
 
@@ -28,7 +19,7 @@ function root({
 }: {
   shop: ShopFragment;
   url: Request['url'];
-}): SeoConfig<Organization> {
+}): SeoConfig {
   return {
     title: shop?.name,
     titleTemplate: '%s | Hydrogen Demo Store',
@@ -61,7 +52,7 @@ function root({
   };
 }
 
-function home(): SeoConfig<WebPage> {
+function home(): SeoConfig {
   return {
     title: 'Home',
     titleTemplate: '%s | Hydrogen Demo Store',
@@ -104,7 +95,7 @@ function productJsonLd({
   product: ProductRequiredFields;
   selectedVariant: SelectedVariantRequiredFields;
   url: Request['url'];
-}): SeoConfig<SeoProduct | BreadcrumbList>['jsonLd'] {
+}): SeoConfig['jsonLd'] {
   const origin = new URL(url).origin;
   const variants = product.variants.nodes;
   const description = truncate(
@@ -171,7 +162,7 @@ function product({
   product: ProductRequiredFields;
   selectedVariant: SelectedVariantRequiredFields;
   url: Request['url'];
-}): SeoConfig<SeoProduct | BreadcrumbList> {
+}): SeoConfig {
   const description = truncate(
     product?.seo?.description ?? product?.description ?? '',
   );
@@ -200,7 +191,7 @@ function collectionJsonLd({
 }: {
   url: Request['url'];
   collection: CollectionRequiredFields;
-}): SeoConfig<CollectionPage | BreadcrumbList>['jsonLd'] {
+}): SeoConfig['jsonLd'] {
   const siteUrl = new URL(url);
   const itemListElement: CollectionPage['mainEntity'] =
     collection.products.nodes.map((product, index) => {
@@ -252,7 +243,7 @@ function collection({
 }: {
   collection: CollectionRequiredFields;
   url: Request['url'];
-}): SeoConfig<CollectionPage | BreadcrumbList> {
+}): SeoConfig {
   return {
     title: collection?.seo?.title,
     description: truncate(
@@ -280,7 +271,7 @@ function collectionsJsonLd({
 }: {
   url: Request['url'];
   collections: CollectionListRequiredFields;
-}): SeoConfig<CollectionPage>['jsonLd'] {
+}): SeoConfig['jsonLd'] {
   const itemListElement: CollectionPage['mainEntity'] = collections.nodes.map(
     (collection, index) => {
       return {
@@ -310,7 +301,7 @@ function listCollections({
 }: {
   collections: CollectionListRequiredFields;
   url: Request['url'];
-}): SeoConfig<CollectionPage> {
+}): SeoConfig {
   return {
     title: 'Collections',
     titleTemplate: '%s | Collections',
@@ -334,7 +325,7 @@ function article({
     >;
   };
   url: Request['url'];
-}): SeoConfig<SeoArticle> {
+}): SeoConfig {
   return {
     title: article?.seo?.title ?? article?.title,
     description: truncate(article?.seo?.description ?? ''),
@@ -369,7 +360,7 @@ function blog({
 }: {
   blog: Pick<Blog, 'seo' | 'title'>;
   url: Request['url'];
-}): SeoConfig<SeoBlog> {
+}): SeoConfig {
   return {
     title: blog?.seo?.title,
     description: truncate(blog?.seo?.description || ''),
@@ -391,7 +382,7 @@ function page({
 }: {
   page: Pick<Page, 'title' | 'seo'>;
   url: Request['url'];
-}): SeoConfig<WebPage> {
+}): SeoConfig {
   return {
     description: truncate(page?.seo?.description || ''),
     title: page?.seo?.title ?? page?.title,
@@ -411,7 +402,7 @@ function policy({
 }: {
   policy: Pick<ShopPolicy, 'title' | 'body'>;
   url: Request['url'];
-}): SeoConfig<WebPage> {
+}): SeoConfig {
   return {
     description: truncate(policy?.body ?? ''),
     title: policy?.title,
@@ -426,7 +417,7 @@ function policies({
 }: {
   policies: Array<Pick<ShopPolicy, 'title' | 'handle'>>;
   url: Request['url'];
-}): SeoConfig<WebPage | BreadcrumbList> {
+}): SeoConfig {
   const origin = new URL(url).origin;
   const itemListElement: BreadcrumbList['itemListElement'] = policies
     .filter(Boolean)

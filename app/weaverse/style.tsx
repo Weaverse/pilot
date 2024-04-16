@@ -5,7 +5,7 @@ let hexToPercent = (hex: string) => {
   return Math.floor((num / 255) * 100);
 };
 
-function hexToRgbString(hexColor: string = ''): string {
+function hexToRgbString(hexColor = ''): string {
   hexColor = hexColor.replace('#', '');
   if (hexColor.length === 3) {
     hexColor = hexColor.replace(/(.)/g, '$1$1');

@@ -6,6 +6,7 @@ import type {
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
+
 import {IconImageBlank} from '~/components';
 
 interface ImageHotspotProps extends HydrogenComponentProps {
@@ -41,7 +42,11 @@ let ImageHotspot = forwardRef<HTMLElement, ImageHotspotProps>((props, ref) => {
       <h3>{heading}</h3>
       <div className="relative w-full h-[var(--section-height)] sm-max:w-full">
         {imageHostpots ? (
-          <Image data={imageHostpots} className="w-full h-full object-cover" />
+          <Image
+            data={imageHostpots}
+            className="w-full h-full object-cover"
+            sizes="auto"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200">
             <IconImageBlank

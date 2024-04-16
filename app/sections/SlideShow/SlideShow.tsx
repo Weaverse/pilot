@@ -2,8 +2,9 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef, CSSProperties, useState, useCallback, useEffect } from 'react';
-import { useKeenSlider } from 'keen-slider/react';
+import type {CSSProperties} from 'react';
+import {forwardRef, useState, useCallback, useEffect} from 'react';
+import {useKeenSlider} from 'keen-slider/react.es';
 import clsx from 'clsx';
 
 interface SlideShowProps extends HydrogenComponentProps {
@@ -11,11 +12,7 @@ interface SlideShowProps extends HydrogenComponentProps {
 }
 
 let SlideShow = forwardRef<HTMLElement, SlideShowProps>((props, ref) => {
-  let {
-    sectionHeight,
-    children,
-    ...rest
-  } = props;
+  let {sectionHeight, children, ...rest} = props;
   const [activeIndex, setActiveIndex] = useState(0);
   const [sliderRef, instanceRef] = useKeenSlider({
     loop: true,
@@ -44,7 +41,10 @@ let SlideShow = forwardRef<HTMLElement, SlideShowProps>((props, ref) => {
       return children?.map((child, index) => (
         <span
           key={index}
-          className={clsx('h-1 w-full cursor-pointer rounded-sm', index === activeIndex ? 'bg-gray-700' : 'bg-gray-300')}
+          className={clsx(
+            'h-1 w-full cursor-pointer rounded-sm',
+            index === activeIndex ? 'bg-gray-700' : 'bg-gray-300',
+          )}
           onClick={() => handleClickNavigation(index)}
         ></span>
       ));
@@ -69,18 +69,15 @@ let SlideShow = forwardRef<HTMLElement, SlideShowProps>((props, ref) => {
       className="h-[var(--section-height)] relative"
       style={sectionStyle}
     >
-      <div ref={sliderRef} className='keen-slider h-full'>
+      <div ref={sliderRef} className="keen-slider h-full">
         {children?.map((child, index) => (
-          <div
-            key={index}
-            className={clsx('keen-slider__slide')}
-          >
+          <div key={index} className={clsx('keen-slider__slide')}>
             {child}
           </div>
         ))}
       </div>
-      <div className='absolute bottom-7 left-1/2 w-1/3 transform -translate-x-1/2 flex gap-1'>
-          {renderNavigation()}
+      <div className="absolute bottom-7 left-1/2 w-1/3 transform -translate-x-1/2 flex gap-1">
+        {renderNavigation()}
       </div>
     </section>
   );

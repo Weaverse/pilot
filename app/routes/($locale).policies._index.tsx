@@ -1,6 +1,9 @@
 import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import type {MetaFunction} from '@remix-run/react';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
+import type {SeoConfig} from '@shopify/hydrogen';
+import {getSeoMeta} from '@shopify/hydrogen';
 
 import {PageHeader, Section, Heading, Link} from '~/components';
 import {routeHeaders} from '~/data/cache';
@@ -31,6 +34,10 @@ export async function loader({
     seo,
   });
 }
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
+};
 
 export default function Policies() {
   const {policies} = useLoaderData<typeof loader>();

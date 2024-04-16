@@ -4,6 +4,7 @@ import type {
   ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
+
 import type {HomepageFeaturedCollectionsQuery} from 'storefrontapi.generated';
 import {FeaturedCollections as HomeFeaturedCollections} from '~/components';
 import {FEATURED_COLLECTIONS_QUERY} from '~/data/queries';

@@ -36,7 +36,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
         <figure className="p-6 bg-gray-50 rounded">
           <blockquote className="text-gray-500">
             <h4 className="font-medium text-gray-900">{heading}</h4>
-            <p className="my-4">"{content}"</p>
+            <p className="my-4" dangerouslySetInnerHTML={{__html: content}} />
           </blockquote>
           <figcaption className="flex items-center space-x-3">
             <Image

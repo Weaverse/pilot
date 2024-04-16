@@ -8,9 +8,10 @@ import {getSelectedProductOptions} from '@weaverse/hydrogen';
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
+import clsx from 'clsx';
+
 import type {ProductQuery} from 'storefrontapi.generated';
 import {PRODUCT_QUERY} from '~/data/queries';
-import clsx from 'clsx';
 import {IconImageBlank, Link} from '~/components';
 
 type ProductData = {
@@ -132,7 +133,7 @@ let ProductHotspotItems = forwardRef<HTMLDivElement, ProductsHotspotProps>(
           <div className="w-1/2 bg-gray-300 h-full flex justify-center items-center aspect-square">
             {ProductImage ? (
               ProductImage.map((image, index) => (
-                <Image key={index} data={image ?? {}} />
+                <Image key={index} data={image ?? {}} sizes="auto" />
               ))
             ) : (
               <IconImageBlank className="!w-9 !h-9" viewBox="0 0 100 100" />

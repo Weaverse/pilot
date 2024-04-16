@@ -7,9 +7,11 @@ import {
   type WeaverseProduct,
 } from '@weaverse/hydrogen';
 import {forwardRef, useEffect, useState} from 'react';
+
 import type {ProductQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components';
 import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
+
 import {Quantity} from '../../components/product-form/quantity';
 import {ProductVariants} from '../../components/product-form/variants';
 import {ProductPlaceholder} from '../../components/product-form/placeholder';
@@ -62,8 +64,8 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     let atcText = selectedVariant?.availableForSale
       ? 'Add to Cart'
       : selectedVariant?.quantityAvailable === -1
-        ? 'Unavailable'
-        : 'Sold Out';
+      ? 'Unavailable'
+      : 'Sold Out';
     return (
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
