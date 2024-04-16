@@ -25,6 +25,7 @@ export function getWeaverseCsp(request: Request) {
     [x: string]: string[] | string | boolean;
   } = {
     defaultSrc: [
+      'data:',
       '*.youtube.com',
       '*.youtu.be',
       '*.vimeo.com',
