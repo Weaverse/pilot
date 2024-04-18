@@ -52,6 +52,7 @@ let Description = forwardRef<
         alignmentClasses[alignment!],
         className,
       )}
+      suppressHydrationWarning
       dangerouslySetInnerHTML={{__html: content}}
     ></Tag>
   );

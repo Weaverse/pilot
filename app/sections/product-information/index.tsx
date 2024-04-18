@@ -70,8 +70,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let atcText = selectedVariant?.availableForSale
       ? addToCartText
       : selectedVariant?.quantityAvailable === -1
-      ? unavailableText
-      : soldOutText;
+        ? unavailableText
+        : soldOutText;
     useEffect(() => {
       if (!selectedVariant) {
         setSelectedVariant(variants?.nodes?.[0]);
@@ -134,6 +134,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   </p>
                   {children}
                   <p
+                    suppressHydrationWarning
                     className="max-w-[600px] leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html: descriptionHtml,

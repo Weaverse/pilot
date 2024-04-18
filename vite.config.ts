@@ -8,19 +8,26 @@ export default defineConfig({
   plugins: [
     hydrogen(),
     oxygen(),
-    remix({
-      presets: [hydrogen.preset()],
-      future: {
-        v3_fetcherPersist: true,
-        v3_relativeSplatPath: false,
-        v3_throwAbortReason: true,
-      },
-    }),
+    remix({presets: [hydrogen.preset()]}),
     tsconfigPaths(),
   ],
   ssr: {
     optimizeDeps: {
       include: ['typographic-base/index', 'textr'],
     },
+  },
+  server: {
+    warmup: {
+      clientFiles: [
+        './app/entry.client.tsx',
+        './app/root.tsx',
+        './app/routes/**/*',
+      ],
+    },
+  },
+  build: {
+    // Allow a strict Content-Security-Policy
+    // withtout inlining assets as base64:
+    assetsInlineLimit: 0,
   },
 });

@@ -148,21 +148,23 @@ export default function Product() {
   return (
     <>
       <WeaverseContent />
-      <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: product.selectedVariant?.price.amount || '0',
-              vendor: product.vendor,
-              variantId: product.selectedVariant?.id || '',
-              variantTitle: product.selectedVariant?.title || '',
-              quantity: 1,
-            },
-          ],
-        }}
-      />
+      {product.selectedVariant && (
+        <Analytics.ProductView
+          data={{
+            products: [
+              {
+                id: product.id,
+                title: product.title,
+                price: product.selectedVariant?.price.amount || '0',
+                vendor: product.vendor,
+                variantId: product.selectedVariant?.id || '',
+                variantTitle: product.selectedVariant?.title || '',
+                quantity: 1,
+              },
+            ],
+          }}
+        />
+      )}
     </>
   );
 }

@@ -29,6 +29,7 @@ let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
         >
           <PageHeader heading={page.title}>
             <div
+              suppressHydrationWarning
               dangerouslySetInnerHTML={{__html: page.body}}
               className="prose dark:prose-invert"
             />
