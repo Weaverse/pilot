@@ -40,6 +40,7 @@ import {NotFound} from './components/NotFound';
 import styles from './styles/app.css?url';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {GlobalStyle} from './weaverse/style';
+import {GoogleGTM} from '~/components/GoogleTagManager';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -97,7 +98,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
   const isLoggedInPromise = context.customerAccount.isLoggedIn();
 
   const seo = seoPayload.root({shop: layout.shop, url: request.url});
-
+  const googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
   return defer(
     {
       shop: getShopAnalytics({
@@ -114,6 +115,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
       cart: cart.get(),
       seo,
       weaverseTheme: await context.weaverse.loadThemeSettings(),
+      googleGtmID,
     },
     {
       headers: {
@@ -157,6 +159,7 @@ function App() {
         </Analytics.Provider>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
+        <GoogleGTM />
       </body>
     </html>
   );

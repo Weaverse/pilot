@@ -30,11 +30,12 @@ export function getWeaverseCsp(request: Request) {
       '*.youtu.be',
       '*.vimeo.com',
       '*.google.com',
+      '*.google-analytics.com',
       'fonts.gstatic.com',
       ...weaverseHosts,
     ],
     styleSrc: ['fonts.googleapis.com', ...weaverseHosts],
-    connectSrc: ['https://vimeo.com', ...weaverseHosts],
+    connectSrc: ['vimeo.com', '*.google-analytics.com', ...weaverseHosts],
   };
   if (isDesignMode) {
     updatedCsp.frameAncestors = ['*'];
