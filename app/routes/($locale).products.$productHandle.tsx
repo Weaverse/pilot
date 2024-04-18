@@ -1,9 +1,7 @@
-import type {SeoConfig, ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {AnalyticsPageType, getSeoMeta} from '@shopify/hydrogen';
-import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {getSeoMeta, UNSTABLE_Analytics as Analytics} from '@shopify/hydrogen';
+import type {LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
 import {defer} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
-import type {MetaFunction} from '@remix-run/react';
 import {useLoaderData, useSearchParams} from '@remix-run/react';
 import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
 import {useEffect} from 'react';
@@ -50,10 +48,10 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
 
   // In order to show which variants are available in the UI, we need to query
   // all of them. But there might be a *lot*, so instead separate the variants
-  // into its own separate query that is deferred. So there's a brief moment
+  // into it's own separate query that is deferred. So there's a brief moment
   // where variant options might show as available when they're not, but after
   // this deferred query resolves, the UI will update.
-  const variants = await context.storefront.query(VARIANTS_QUERY, {
+  const variants = context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
       country: context.storefront.i18n.country,
@@ -67,15 +65,6 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   // Investigate if we can avoid the redirect for product pages with no search params for first variant
   const firstVariant = product.variants.nodes[0];
   const selectedVariant = product.selectedVariant ?? firstVariant;
-
-  const productAnalytics: ShopifyAnalyticsProduct = {
-    productGid: product.id,
-    variantGid: selectedVariant.id,
-    name: product.title,
-    variantName: selectedVariant.title,
-    brand: product.vendor,
-    price: selectedVariant.price.amount,
-  };
 
   const seo = seoPayload.product({
     product,
@@ -100,12 +89,6 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     shop,
     storeDomain: shop.primaryDomain.url,
     recommended,
-    analytics: {
-      pageType: AnalyticsPageType.product,
-      resourceId: product.id,
-      products: [productAnalytics],
-      totalValue: parseFloat(selectedVariant.price.amount),
-    },
     seo,
     weaverseData: await context.weaverse.loadPage({
       type: 'PRODUCT',
@@ -115,8 +98,8 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   });
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+export const meta = ({matches}: MetaArgs<typeof loader>) => {
+  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 // function redirectToFirstVariant({
 //   product,
@@ -160,7 +143,28 @@ let useApplyFirstVariant = () => {
 
 export default function Product() {
   useApplyFirstVariant();
-  return <WeaverseContent />;
+  const {product, variants} = useLoaderData<typeof loader>();
+
+  return (
+    <>
+      <WeaverseContent />
+      <Analytics.ProductView
+        data={{
+          products: [
+            {
+              id: product.id,
+              title: product.title,
+              price: product.selectedVariant?.price.amount || '0',
+              vendor: product.vendor,
+              variantId: product.selectedVariant?.id || '',
+              variantTitle: product.selectedVariant?.title || '',
+              quantity: 1,
+            },
+          ],
+        }}
+      />
+    </>
+  );
 }
 
 async function getRecommendedProducts(

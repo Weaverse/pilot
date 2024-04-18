@@ -1,6 +1,9 @@
 import {Disclosure} from '@headlessui/react';
 import {Await, Form, useParams} from '@remix-run/react';
-import {CartForm} from '@shopify/hydrogen';
+import {
+  CartForm,
+  unstable_useAnalytics as useAnalytics,
+} from '@shopify/hydrogen';
 import {Suspense, useEffect, useMemo} from 'react';
 import useWindowScroll from 'react-use/esm/useWindowScroll';
 import clsx from 'clsx';
@@ -26,9 +29,9 @@ import {
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {
-  useIsHomePath,
   type ChildEnhancedMenuItem,
   type EnhancedMenu,
+  useIsHomePath,
 } from '~/lib/utils';
 import {useRootLoaderData} from '~/root';
 
@@ -330,6 +333,7 @@ function CartCount({
             dark={isHome}
             openCart={openCart}
             count={cart?.totalQuantity || 0}
+            cart={cart}
           />
         )}
       </Await>
@@ -341,10 +345,12 @@ function Badge({
   openCart,
   dark,
   count,
+  cart,
 }: {
   count: number;
   dark: boolean;
   openCart: () => void;
+  cart: any;
 }) {
   const isHydrated = useIsHydrated();
 
@@ -361,9 +367,16 @@ function Badge({
     [count, dark],
   );
 
+  const {publish} = useAnalytics();
+
+  function handleOpenCart() {
+    publish('custom_sidecart_viewed', {cart});
+    openCart();
+  }
+
   return isHydrated ? (
     <button
-      onClick={openCart}
+      onClick={handleOpenCart}
       className="relative flex items-center justify-center w-8 h-8 focus:ring-border"
     >
       {BadgeCounter}

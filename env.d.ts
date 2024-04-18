@@ -28,6 +28,8 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
+    PUBLIC_CHECKOUT_DOMAIN: string;
+
     WEAVERSE_PROJECT_ID: string;
     WEAVERSE_HOST: string;
     WEAVERSE_API_KEY: string;
