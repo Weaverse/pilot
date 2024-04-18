@@ -51,7 +51,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   // into it's own separate query that is deferred. So there's a brief moment
   // where variant options might show as available when they're not, but after
   // this deferred query resolves, the UI will update.
-  const variants = context.storefront.query(VARIANTS_QUERY, {
+  const variants = await context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
       country: context.storefront.i18n.country,
@@ -143,7 +143,7 @@ let useApplyFirstVariant = () => {
 
 export default function Product() {
   useApplyFirstVariant();
-  const {product, variants} = useLoaderData<typeof loader>();
+  const {product} = useLoaderData<typeof loader>();
 
   return (
     <>
