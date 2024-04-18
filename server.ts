@@ -16,7 +16,6 @@ import {
 } from '@shopify/remix-oxygen';
 
 import {AppSession} from '~/lib/session';
-import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
 import {createWeaverseClient} from '~/weaverse/create-weaverse.server';
 import {getLocaleFromRequest} from '~/lib/utils';
 
@@ -68,16 +67,11 @@ export default {
         customerAccountUrl: env.PUBLIC_CUSTOMER_ACCOUNT_API_URL,
       });
 
-      /*
-       * Create a cart handler that will be used to
-       * create and update the cart in the session.
-       */
       const cart = createCartHandler({
         storefront,
         customerAccount,
         getCartId: cartGetIdDefault(request.headers),
         setCartId: cartSetIdDefault(),
-        cartQueryFragment: CART_QUERY_FRAGMENT,
       });
 
       /**
