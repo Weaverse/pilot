@@ -76,6 +76,15 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style,
     ...rest
   } = props;
+  let backgroundImageStyles = {}
+  if (backgroundImage) {
+    backgroundImageStyles = {
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: backgroundFit,
+      backgroundPosition,
+    }
+  }
+
   return (
     <>
       {(divider === 'top' || divider === 'both') && <Divider />}
@@ -89,9 +98,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         )}
         style={{
           backgroundColor,
-          backgroundImage: backgroundImage ? `url(${backgroundImage})` : '',
-          backgroundSize: backgroundFit,
-          backgroundPosition,
+          ...backgroundImageStyles,
           ...style,
         }}
       >
