@@ -31,6 +31,7 @@ export function getWeaverseCsp(request: Request) {
       '*.vimeo.com',
       '*.google.com',
       '*.google-analytics.com',
+      '*.googletagmanager.com',
       'fonts.gstatic.com',
       ...weaverseHosts,
     ],
