@@ -8,8 +8,7 @@ import {routeHeaders} from '~/data/cache';
 import {COLLECTIONS_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
 import {WeaverseContent} from '~/weaverse';
-
-const PAGINATION_SIZE = 4;
+import {PAGINATION_SIZE} from '~/lib/const';
 
 export const headers = routeHeaders;
 

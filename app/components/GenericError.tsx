@@ -31,6 +31,7 @@ export function GenericError({
               overflow: 'auto',
               maxWidth: '100%',
             }}
+            suppressHydrationWarning
             dangerouslySetInnerHTML={{
               __html: addLinksToStackTrace(error.stack),
             }}

@@ -16,8 +16,8 @@ export default async function handleRequest(
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     ...getWeaverseCsp(request),
     shop: {
-      checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
-      storeDomain: context.env.PUBLIC_STORE_DOMAIN,
+      checkoutDomain: context.env?.PUBLIC_CHECKOUT_DOMAIN,
+      storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
     },
   });
   const body = await renderToReadableStream(

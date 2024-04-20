@@ -46,7 +46,10 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
           </div>
           <Section as="article" padding="all" className="prose mx-auto">
             <div className="lg:max-w-screen-lg md:max-w-screen-md max-w-screen-sm px-4 mx-auto space-y-8 md:space-y-16">
-              <div dangerouslySetInnerHTML={{__html: contentHtml}} />
+              <div
+                suppressHydrationWarning
+                dangerouslySetInnerHTML={{__html: contentHtml}}
+              />
               <div className="md:flex justify-between gap-2 space-y-2">
                 <div>
                   <strong>Tags:</strong>

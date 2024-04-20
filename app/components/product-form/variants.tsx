@@ -6,6 +6,7 @@ import type {
 } from 'storefrontapi.generated';
 
 import {VariantOption} from './options';
+import {node} from 'prop-types';
 
 interface ProductVariantsProps {
   selectedVariant: ProductVariantFragmentFragment;

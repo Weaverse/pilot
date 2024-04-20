@@ -97,7 +97,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
   const isLoggedInPromise = context.customerAccount.isLoggedIn();
 
   const seo = seoPayload.root({shop: layout.shop, url: request.url});
-
+  const googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
   return defer(
     {
       shop: getShopAnalytics({
@@ -114,6 +114,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
       cart: cart.get(),
       seo,
       weaverseTheme: await context.weaverse.loadThemeSettings(),
+      googleGtmID,
     },
     {
       headers: {
@@ -207,8 +208,8 @@ export function ErrorBoundary({error}: {error: Error}) {
             <GenericError error={error instanceof Error ? error : undefined} />
           )}
         </Layout>
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
+        {/*<ScrollRestoration nonce={nonce} />*/}
+        {/*<Scripts nonce={nonce} />*/}
       </body>
     </html>
   );

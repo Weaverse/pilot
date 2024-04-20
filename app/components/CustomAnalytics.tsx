@@ -1,10 +1,17 @@
-import {unstable_useAnalytics as useAnalytics} from '@shopify/hydrogen';
+import {Script, unstable_useAnalytics as useAnalytics} from '@shopify/hydrogen';
 import {useEffect} from 'react';
+import {useLoaderData} from '@remix-run/react';
+import {loader} from '~/root';
 
 export function CustomAnalytics() {
-  const {subscribe} = useAnalytics();
+  const {subscribe, canTrack} = useAnalytics();
+  const data = useLoaderData<typeof loader>();
 
   useEffect(() => {
+    setTimeout(() => {
+      let isTrackingAllowed = canTrack();
+      console.log('CustomAnalytics - isTrackingAllowed', isTrackingAllowed);
+    }, 1000);
     // Standard events
     subscribe('page_viewed', (data) => {
       console.log('CustomAnalytics - Page viewed:', data);
@@ -28,5 +35,33 @@ export function CustomAnalytics() {
     });
   }, []);
 
-  return null;
+  let id = data.googleGtmID;
+  if (!id) {
+    return null;
+  }
+
+  return (
+    <>
+      {/* Initialize GTM container */}
+      <Script
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: `
+              dataLayer = window.dataLayer || [];
+
+              function gtag(){
+                dataLayer.push(arguments)
+              };
+
+              gtag('js', new Date());
+              gtag({'gtm.start': new Date().getTime(),event:'gtm.js'})
+              gtag('config', "${id}");
+          `,
+        }}
+      />
+
+      {/* Load GTM script */}
+      <Script async src={`https://www.googletagmanager.com/gtm.js?id=${id}`} />
+    </>
+  );
 }

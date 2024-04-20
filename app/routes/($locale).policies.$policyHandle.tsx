@@ -63,6 +63,7 @@ export default function Policies() {
         </PageHeader>
         <div className="flex-grow w-full md:w-7/12">
           <div
+            suppressHydrationWarning
             dangerouslySetInnerHTML={{__html: policy.body}}
             className="prose dark:prose-invert"
           />

@@ -131,6 +131,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   </p>
                   {children}
                   <p
+                    suppressHydrationWarning
                     className="max-w-[600px] leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html: descriptionHtml,

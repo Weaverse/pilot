@@ -32,6 +32,7 @@ export function ProductDetail({
 
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
             <div
+              suppressHydrationWarning
               className="prose dark:prose-invert"
               dangerouslySetInnerHTML={{__html: content}}
             />
