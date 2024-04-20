@@ -46,11 +46,6 @@ let Button = forwardRef<HTMLAnchorElement, ButtonProps>((props, ref) => {
   );
 });
 
-Button.defaultProps = {
-  content: 'Button',
-  buttonStyle: 'secondary',
-};
-
 export default Button;
 
 export let schema: HydrogenComponentSchema = {

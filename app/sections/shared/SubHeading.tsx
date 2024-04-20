@@ -66,14 +66,6 @@ let SubHeading = forwardRef<
   );
 });
 
-SubHeading.defaultProps = {
-  as: 'p',
-  size: 'base',
-  weight: 'normal',
-  alignment: 'center',
-  content: 'Section subheading',
-};
-
 export default SubHeading;
 
 export let schema: HydrogenComponentSchema = {

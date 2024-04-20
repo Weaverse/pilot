@@ -1,11 +1,11 @@
-import {Image} from '@shopify/hydrogen';
+import { Image } from '@shopify/hydrogen';
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
   type WeaverseImage,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
-import {forwardRef} from 'react';
+import { forwardRef } from 'react';
 
 interface ColumnWithImageItemProps extends HydrogenComponentProps {
   imageSrc: WeaverseImage;
@@ -45,7 +45,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
     let imageData =
       typeof imageSrc === 'object'
         ? imageSrc
-        : {url: imageSrc || FALLBACK_IMAGE, altText: imageSrc};
+        : { url: imageSrc || FALLBACK_IMAGE, altText: imageSrc };
     return (
       <div
         ref={ref}

@@ -54,7 +54,7 @@ let Description = forwardRef<
       )}
       suppressHydrationWarning
       dangerouslySetInnerHTML={{__html: content}}
-    ></Tag>
+    />
   );
 });
 

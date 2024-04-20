@@ -1,12 +1,24 @@
-import type {InspectorGroup} from '@weaverse/hydrogen';
+import type { InspectorGroup } from '@weaverse/hydrogen';
 
-export function Overlay({color, opacity}: {color: string; opacity: number}) {
-  return (
-    <div
-      className="absolute inset-0"
-      style={{backgroundColor: color, opacity: opacity / 100}}
-    />
-  );
+type OverlayProps = {
+  enable?: boolean;
+  color?: string;
+  opacity?: number;
+};
+
+export function Overlay({ enable, color, opacity }: OverlayProps) {
+  if (enable) {
+    return (
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundColor: color,
+          opacity: (opacity || 100) / 100
+        }}
+      />
+    );
+  }
+  return null;
 }
 
 export let overlayInputs: InspectorGroup['inputs'] = [

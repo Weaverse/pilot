@@ -1,32 +1,32 @@
-import {getSeoMeta, UNSTABLE_Analytics as Analytics} from '@shopify/hydrogen';
-import type {LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
-import {defer} from '@shopify/remix-oxygen';
+import { getSeoMeta, UNSTABLE_Analytics as Analytics } from '@shopify/hydrogen';
+import type { LoaderFunctionArgs, MetaArgs } from '@shopify/remix-oxygen';
+import { defer } from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
-import {useLoaderData, useSearchParams} from '@remix-run/react';
-import type {SelectedOptionInput} from '@shopify/hydrogen/storefront-api-types';
-import {useEffect} from 'react';
-import {getSelectedProductOptions} from '@weaverse/hydrogen';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
+import type { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types';
+import { useEffect } from 'react';
+import { getSelectedProductOptions } from '@weaverse/hydrogen';
 
-import type {ProductRecommendationsQuery} from 'storefrontapi.generated';
-import {routeHeaders} from '~/data/cache';
+import type { ProductRecommendationsQuery } from 'storefrontapi.generated';
+import { routeHeaders } from '~/data/cache';
 import {
   PRODUCT_QUERY,
   RECOMMENDED_PRODUCTS_QUERY,
   VARIANTS_QUERY,
 } from '~/data/queries';
-import {seoPayload} from '~/lib/seo.server';
-import type {Storefront} from '~/lib/type';
-import {WeaverseContent} from '~/weaverse';
-import {getJudgemeReviews} from '~/lib/judgeme';
+import { seoPayload } from '~/lib/seo.server';
+import type { Storefront } from '~/lib/type';
+import { WeaverseContent } from '~/weaverse';
+import { getJudgemeReviews } from '~/lib/judgeme';
 
 export const headers = routeHeaders;
 
-export async function loader({params, request, context}: LoaderFunctionArgs) {
-  const {productHandle} = params;
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
+  const { productHandle } = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
   const selectedOptions = getSelectedProductOptions(request);
-  const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
+  const { shop, product } = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       selectedOptions,
@@ -36,7 +36,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   });
 
   if (!product?.id) {
-    throw new Response('product', {status: 404});
+    throw new Response('product', { status: 404 });
   }
 
   if (!product.selectedVariant && product.options.length) {
@@ -98,7 +98,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   });
 }
 
-export const meta = ({matches}: MetaArgs<typeof loader>) => {
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 // function redirectToFirstVariant({
@@ -124,7 +124,7 @@ export const meta = ({matches}: MetaArgs<typeof loader>) => {
  * We need to handle the route change from client to keep the view transition persistent
  */
 let useApplyFirstVariant = () => {
-  let {product} = useLoaderData<typeof loader>();
+  let { product } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -143,7 +143,7 @@ let useApplyFirstVariant = () => {
 
 export default function Product() {
   useApplyFirstVariant();
-  const {product} = useLoaderData<typeof loader>();
+  const { product } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -176,7 +176,7 @@ async function getRecommendedProducts(
   const products = await storefront.query<ProductRecommendationsQuery>(
     RECOMMENDED_PRODUCTS_QUERY,
     {
-      variables: {productId, count: 12},
+      variables: { productId, count: 12 },
     },
   );
 
@@ -195,5 +195,5 @@ async function getRecommendedProducts(
 
   mergedProducts.splice(originalProduct, 1);
 
-  return {nodes: mergedProducts};
+  return { nodes: mergedProducts };
 }

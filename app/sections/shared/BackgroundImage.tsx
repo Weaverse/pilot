@@ -14,20 +14,23 @@ export type BackgroundImageProps = {
 
 export function BackgroundImage(props: BackgroundImageProps) {
   let {backgroundImage, backgroundFit, backgroundPosition} = props;
-  return (
-    <Image
-      className="absolute inset-0 w-full h-full"
-      data={backgroundImage}
-      sizes="100vw"
-      style={{
-        objectFit: backgroundFit,
-        objectPosition: backgroundPosition,
-      }}
-    />
-  );
+  if (backgroundImage) {
+    return (
+      <Image
+        className="absolute inset-0 w-full h-full"
+        data={backgroundImage}
+        sizes="auto"
+        style={{
+          objectFit: backgroundFit,
+          objectPosition: backgroundPosition,
+        }}
+      />
+    );
+  }
+  return null;
 }
 
-export let backgroundImageInputs: InspectorGroup['inputs'] = [
+export let backgroundInputs: InspectorGroup['inputs'] = [
   {
     type: 'heading',
     label: 'Background',
@@ -36,7 +39,7 @@ export let backgroundImageInputs: InspectorGroup['inputs'] = [
     type: 'color',
     name: 'backgroundColor',
     label: 'Background color',
-    defaultValue: '#ffffff',
+    defaultValue: '',
   },
   {
     type: 'image',
