@@ -92,17 +92,6 @@ let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
   );
 });
 
-Heading.defaultProps = {
-  as: 'h2',
-  size: 'default',
-  weight: 'bold',
-  tracking: 'inherit',
-  alignment: 'center',
-  content: 'Section heading',
-  minSize: 16,
-  maxSize: 72,
-};
-
 export default Heading;
 
 export let schema: HydrogenComponentSchema = {

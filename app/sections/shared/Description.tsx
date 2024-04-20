@@ -52,7 +52,7 @@ let Description = forwardRef<
         className,
       )}
       dangerouslySetInnerHTML={{__html: content}}
-    ></Tag>
+    />
   );
 });
 

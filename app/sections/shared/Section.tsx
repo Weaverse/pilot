@@ -3,11 +3,11 @@ import {
   type InspectorGroup,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
-import type {HTMLAttributes} from 'react';
-import React, {forwardRef} from 'react';
-import type {BackgroundImageProps} from './BackgroundImage';
-import {BackgroundImage, backgroundImageInputs} from './BackgroundImage';
-import {Overlay, overlayInputs} from './Overlay';
+import type { HTMLAttributes } from 'react';
+import React, { forwardRef } from 'react';
+import type { BackgroundImageProps } from './BackgroundImage';
+import { BackgroundImage, backgroundInputs } from './BackgroundImage';
+import { Overlay, overlayInputs } from './Overlay';
 
 export type SectionWidth = 'full' | 'stretch' | 'fixed';
 export type VerticalPadding = 'none' | 'small' | 'medium' | 'large';
@@ -76,14 +76,6 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style,
     ...rest
   } = props;
-  let backgroundImageStyles = {}
-  if (backgroundImage) {
-    backgroundImageStyles = {
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: backgroundFit,
-      backgroundPosition,
-    }
-  }
 
   return (
     <>
@@ -96,25 +88,19 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           verticalPaddingClasses[verticalPadding!],
           className,
         )}
-        style={{
-          backgroundColor,
-          ...backgroundImageStyles,
-          ...style,
-        }}
+        style={{ backgroundColor, ...style }}
       >
-        {backgroundImage && (
-          <BackgroundImage
-            backgroundImage={backgroundImage}
-            backgroundFit={backgroundFit}
-            backgroundPosition={backgroundPosition}
-          />
-        )}
-        {enableOverlay && (
-          <Overlay color={overlayColor!} opacity={overlayOpacity!} />
-        )}
-        <div
-          className={clsx('relative', widthClasses[width!], gapClasses[gap!])}
-        >
+        <BackgroundImage
+          backgroundImage={backgroundImage}
+          backgroundFit={backgroundFit}
+          backgroundPosition={backgroundPosition}
+        />
+        <Overlay
+          enable={enableOverlay}
+          color={overlayColor}
+          opacity={overlayOpacity}
+        />
+        <div className={clsx('relative', widthClasses[width!], gapClasses[gap!])}>
           {children}
         </div>
       </Component>
@@ -127,17 +113,6 @@ function Divider() {
   return <div className="border-t w-2/3 lg:w-1/2 mx-auto" />;
 }
 
-Section.defaultProps = {
-  as: 'section',
-  width: 'fixed',
-  gap: 0,
-  verticalPadding: 'medium',
-  divider: 'none',
-  enableOverlay: false,
-  overlayColor: '#000000',
-  overlayOpacity: 50,
-};
-
 export let layoutInputs: InspectorGroup['inputs'] = [
   {
     type: 'heading',
@@ -149,9 +124,9 @@ export let layoutInputs: InspectorGroup['inputs'] = [
     label: 'Content width',
     configs: {
       options: [
-        {value: 'full', label: 'Full page'},
-        {value: 'stretch', label: 'Stretch'},
-        {value: 'fixed', label: 'Fixed'},
+        { value: 'full', label: 'Full page' },
+        { value: 'stretch', label: 'Stretch' },
+        { value: 'fixed', label: 'Fixed' },
       ],
     },
     defaultValue: 'fixed',
@@ -174,10 +149,10 @@ export let layoutInputs: InspectorGroup['inputs'] = [
     label: 'Vertical padding',
     configs: {
       options: [
-        {value: 'none', label: 'None'},
-        {value: 'small', label: 'Small'},
-        {value: 'medium', label: 'Medium'},
-        {value: 'large', label: 'Large'},
+        { value: 'none', label: 'None' },
+        { value: 'small', label: 'Small' },
+        { value: 'medium', label: 'Medium' },
+        { value: 'large', label: 'Large' },
       ],
     },
     defaultValue: 'medium',
@@ -188,10 +163,10 @@ export let layoutInputs: InspectorGroup['inputs'] = [
     label: 'Divider',
     configs: {
       options: [
-        {value: 'none', label: 'None'},
-        {value: 'top', label: 'Top'},
-        {value: 'bottom', label: 'Bottom'},
-        {value: 'both', label: 'Both'},
+        { value: 'none', label: 'None' },
+        { value: 'top', label: 'Top' },
+        { value: 'bottom', label: 'Bottom' },
+        { value: 'both', label: 'Both' },
       ],
     },
     defaultValue: 'none',
@@ -200,5 +175,5 @@ export let layoutInputs: InspectorGroup['inputs'] = [
 
 export let sectionInspector: InspectorGroup = {
   group: 'General',
-  inputs: [...layoutInputs, ...backgroundImageInputs, ...overlayInputs],
+  inputs: [...layoutInputs, ...backgroundInputs, ...overlayInputs],
 };
