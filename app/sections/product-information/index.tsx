@@ -1,22 +1,19 @@
-import {useLoaderData} from '@remix-run/react';
-import {Money, ShopPayButton} from '@shopify/hydrogen';
+import { useLoaderData } from '@remix-run/react';
+import { Money, ShopPayButton } from '@shopify/hydrogen';
 import {
   useThemeSettings,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {forwardRef, useEffect, useState} from 'react';
-
-import type {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
-import {AddToCartButton, Text} from '~/components';
-import {getExcerpt} from '~/lib/utils';
-
-import {ProductPlaceholder} from '../../components/product-form/placeholder';
-import {ProductMedia} from '../../components/product-form/product-media';
-import {Quantity} from '../../components/product-form/quantity';
-import {ProductVariants} from '../../components/product-form/variants';
-
-import {ProductDetail} from './product-detail';
+import { forwardRef, useEffect, useState } from 'react';
+import type { ProductQuery, VariantsQuery } from 'storefrontapi.generated';
+import { AddToCartButton, Text } from '~/components';
+import { getExcerpt } from '~/lib/utils';
+import { ProductPlaceholder } from '../../components/product-form/placeholder';
+import { ProductMedia } from '../../components/product-form/product-media';
+import { Quantity } from '../../components/product-form/quantity';
+import { ProductVariants } from '../../components/product-form/variants';
+import { ProductDetail } from './product-detail';
 interface ProductInformationProps extends HydrogenComponentProps {
   addToCartText: string;
   soldOutText: string;
@@ -70,8 +67,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let atcText = selectedVariant?.availableForSale
       ? addToCartText
       : selectedVariant?.quantityAvailable === -1
-      ? unavailableText
-      : soldOutText;
+        ? unavailableText
+        : soldOutText;
     useEffect(() => {
       if (!selectedVariant) {
         setSelectedVariant(variants?.nodes?.[0]);
@@ -80,7 +77,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [product?.id]);
-    let {swatches} = useThemeSettings();
+    let { swatches } = useThemeSettings();
 
     let handleSelectedVariantChange = (variant: any) => {
       setSelectedVariant(variant);
@@ -100,8 +97,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         </section>
       );
     if (product && variants) {
-      const {title, vendor, descriptionHtml} = product;
-      const {shippingPolicy, refundPolicy} = shop;
+      const { title, vendor, descriptionHtml } = product;
+      const { shippingPolicy, refundPolicy } = shop;
       return (
         <section ref={ref} {...rest}>
           <div className="container p-6 md:p-8 lg:p-12  lg:px-12 px-4 md:px-6 mx-auto">
