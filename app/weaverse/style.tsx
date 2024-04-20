@@ -6,6 +6,7 @@ let hexToPercent = (hex: string) => {
 };
 
 function hexToRgbString(hexColor: string = ''): string {
+  if (!hexColor) return '';
   hexColor = hexColor.replace('#', '');
   if (hexColor.length === 3) {
     hexColor = hexColor.replace(/(.)/g, '$1$1');
