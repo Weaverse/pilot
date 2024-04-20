@@ -2,8 +2,8 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import type { CSSProperties } from 'react';
-import { forwardRef } from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 
 interface ActionsProps extends HydrogenComponentProps {
   gap: number;

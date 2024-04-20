@@ -2,24 +2,32 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import { forwardRef, CSSProperties } from 'react';
+import type {CSSProperties} from 'react';
+import {forwardRef} from 'react';
 
 interface ContentItemsProps extends HydrogenComponentProps {
   gap: number;
 }
 
-let ContentItems = forwardRef<HTMLDivElement, ContentItemsProps>((props, ref) => {
-  let { children, gap, ...rest } = props;
-  let style = {
-    gap: `${gap}px`,
-    textAlign: 'left',
-  } as CSSProperties;
-  return (
-    <div ref={ref} {...rest} className='w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10' style={style}>
-      {children}
-    </div>
-  );
-});
+let ContentItems = forwardRef<HTMLDivElement, ContentItemsProps>(
+  (props, ref) => {
+    let {children, gap, ...rest} = props;
+    let style = {
+      gap: `${gap}px`,
+      textAlign: 'left',
+    } as CSSProperties;
+    return (
+      <div
+        ref={ref}
+        {...rest}
+        className="w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10"
+        style={style}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 
 export default ContentItems;
 

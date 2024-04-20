@@ -1,6 +1,9 @@
-import {getPaginationVariables} from '@shopify/hydrogen';
+import type {SeoConfig} from '@shopify/hydrogen';
+import {getPaginationVariables, getSeoMeta} from '@shopify/hydrogen';
 import {json} from '@shopify/remix-oxygen';
 import {type RouteLoaderArgs} from '@weaverse/hydrogen';
+import type {MetaFunction} from '@remix-run/react';
+
 import {routeHeaders} from '~/data/cache';
 import {COLLECTIONS_QUERY} from '~/data/queries';
 import {seoPayload} from '~/lib/seo.server';
@@ -33,9 +36,13 @@ export const loader = async (args: RouteLoaderArgs) => {
     collections,
     seo,
     weaverseData: await weaverse.loadPage({
-      type: 'COLLECTION_LIST'
+      type: 'COLLECTION_LIST',
     }),
   });
+};
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return getSeoMeta(data!.seo as SeoConfig);
 };
 
 export default function Collections() {

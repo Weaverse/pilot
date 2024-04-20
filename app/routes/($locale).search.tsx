@@ -1,7 +1,13 @@
-import { Await, Form, useLoaderData } from '@remix-run/react';
-import { getPaginationVariables, Pagination } from '@shopify/hydrogen';
-import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { Suspense } from 'react';
+import {Await, Form, useLoaderData} from '@remix-run/react';
+import {
+  getPaginationVariables,
+  getSeoMeta,
+  Pagination,
+  UNSTABLE_Analytics as Analytics,
+} from '@shopify/hydrogen';
+import {defer, type LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
+import {Suspense} from 'react';
+
 import {
   FeaturedCollections,
   Grid,
@@ -13,12 +19,13 @@ import {
   Section,
   Text,
 } from '~/components';
-import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
-import { getImageLoadingPriority, PAGINATION_SIZE } from '~/lib/const';
-import { seoPayload } from '~/lib/seo.server';
+import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
+import {seoPayload} from '~/lib/seo.server';
+
 import {
-  getFeaturedData,
   type FeaturedData,
+  getFeaturedData,
 } from './($locale).featured-products';
 
 export async function loader({
@@ -67,6 +74,10 @@ export async function loader({
       : Promise.resolve(null),
   });
 }
+
+export const meta = ({matches}: MetaArgs<typeof loader>) => {
+  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+};
 
 export default function Search() {
   const {searchTerm, products, noResultRecommendations} =
@@ -128,6 +139,7 @@ export default function Search() {
           </Pagination>
         </Section>
       )}
+      <Analytics.SearchView data={{searchTerm, searchResults: products}} />
     </>
   );
 }

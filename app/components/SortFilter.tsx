@@ -8,7 +8,7 @@ import {
   useSearchParams,
   useNavigate,
 } from '@remix-run/react';
-import {useDebounce} from 'react-use';
+import useDebounce from 'react-use/esm/useDebounce';
 import type {
   Filter,
   ProductFilter,

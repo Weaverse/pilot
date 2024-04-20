@@ -1,7 +1,7 @@
 import {Image} from '@shopify/hydrogen';
+import clsx from 'clsx';
 
 import type {MediaFragment} from 'storefrontapi.generated';
-import clsx from 'clsx';
 
 /**
  * A client component that defines a media gallery for hosting images, 3D models, and videos of products

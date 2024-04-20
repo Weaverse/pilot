@@ -1,14 +1,12 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  ComponentLoaderArgs,
 } from '@weaverse/hydrogen';
-import React, { forwardRef, useState, CSSProperties } from 'react';
+import type {CSSProperties} from 'react';
+import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
-import { IconArrowInput } from '~/components';
-import { CustomerCreateMutation } from 'storefrontapi.generated';
-import { CUSTOMER_CREATE } from '~/data/queries';
 
+import {IconArrowInput} from '~/components';
 
 type NewsLetterData = {
   contentAlignment: string;
@@ -24,14 +22,24 @@ type NewsLetterData = {
   bottomPadding: string;
 };
 
-type NewsletterProps = HydrogenComponentProps<
-  Awaited<ReturnType<typeof loader>>
-> &
-  NewsLetterData;
-
+type NewsletterProps = HydrogenComponentProps & NewsLetterData;
 
 let NewsLetter = forwardRef<HTMLElement, NewsletterProps>((props, ref) => {
-  let { loaderData, contentAlignment, sectionHeight, backgroundColor, subheading, heading, buttonLabel, buttonLink, openInNewTab, buttonStyle, topPadding, bottomPadding, ...rest } = props;
+  let {
+    loaderData,
+    contentAlignment,
+    sectionHeight,
+    backgroundColor,
+    subheading,
+    heading,
+    buttonLabel,
+    buttonLink,
+    openInNewTab,
+    buttonStyle,
+    topPadding,
+    bottomPadding,
+    ...rest
+  } = props;
   let sectionStyle: CSSProperties = {
     alignItems: `${contentAlignment}`,
     '--section-height': `${sectionHeight}px`,
@@ -46,21 +54,46 @@ let NewsLetter = forwardRef<HTMLElement, NewsletterProps>((props, ref) => {
   };
 
   const handleSubmit = () => {
+    // TODO: create an API route to handle the email submission
   };
 
   return (
-    <section ref={ref} {...rest} className='w-full px-10 h-[var(--section-height)] flex flex-col justify-center sm-max:px-8' style={sectionStyle}>
-      <div className='text-center w-1/2 flex flex-col gap-5 sm-max:w-full'>
-        {subheading && <p className='text-2xl font-medium'>{subheading}</p>}
-        {heading && <p className='text-base font-normal'>{heading}</p>}
-        <div className='flex w-full mt-3 gap-2 justify-center items-center'>
-          <div className='flex justify-center items-center relative sm-max:w-4/5'>
-            <input type="text" className='pr-8 pl-3 py-2 rounded border-2 border-solid border-gray-400 font-normal w-full' placeholder='Enter your email'
+    <section
+      ref={ref}
+      {...rest}
+      className="w-full px-10 h-[var(--section-height)] flex flex-col justify-center sm-max:px-8"
+      style={sectionStyle}
+    >
+      <div className="text-center w-1/2 flex flex-col gap-5 sm-max:w-full">
+        {subheading && <p className="text-2xl font-medium">{subheading}</p>}
+        {heading && <p className="text-base font-normal">{heading}</p>}
+        <div className="flex w-full mt-3 gap-2 justify-center items-center">
+          <div className="flex justify-center items-center relative sm-max:w-4/5">
+            <input
+              type="text"
+              className="pr-8 pl-3 py-2 rounded border-2 border-solid border-gray-400 font-normal w-full"
+              placeholder="Enter your email"
               value={emailValue}
-              onChange={handleInputChange} />
-            <IconArrowInput className='absolute z-10 cursor-pointer right-2 !w-4 !h-4' onClick={handleSubmit} />
+              onChange={handleInputChange}
+            />
+            <IconArrowInput
+              className="absolute z-10 cursor-pointer right-2 !w-4 !h-4"
+              onClick={handleSubmit}
+            />
           </div>
-          {buttonLabel && <a href={buttonLink} target={openInNewTab ? '_blank' : ''} className={clsx('flex cursor-pointer py-2 px-4 rounded sm-max:px-3', buttonStyle)}>{buttonLabel}</a>}
+          {buttonLabel && (
+            <a
+              href={buttonLink}
+              target={openInNewTab ? '_blank' : ''}
+              className={clsx(
+                'flex cursor-pointer py-2 px-4 rounded sm-max:px-3',
+                buttonStyle,
+              )}
+              rel="noreferrer"
+            >
+              {buttonLabel}
+            </a>
+          )}
         </div>
       </div>
     </section>
@@ -68,21 +101,6 @@ let NewsLetter = forwardRef<HTMLElement, NewsletterProps>((props, ref) => {
 });
 
 export default NewsLetter;
-
-export let loader = async (args: ComponentLoaderArgs<NewsLetterData>) => {
-  let { weaverse } = args;
-  let { storefront } = weaverse;
-  let abc = await storefront.mutate<CustomerCreateMutation>(CUSTOMER_CREATE, {
-    variables: {
-      input: {
-        email: 'Thang@gmail.com',
-        password: '5hopify',
-      },
-    }
-  });
-  return abc;
-};
-
 
 export let schema: HydrogenComponentSchema = {
   type: 'news-letter',
@@ -104,9 +122,9 @@ export let schema: HydrogenComponentSchema = {
           name: 'contentAlignment',
           configs: {
             options: [
-              { label: 'Left', value: 'flex-start' },
-              { label: 'Center', value: 'center' },
-              { label: 'Right', value: 'flex-end' },
+              {label: 'Left', value: 'flex-start'},
+              {label: 'Center', value: 'center'},
+              {label: 'Right', value: 'flex-end'},
             ],
           },
           defaultValue: 'center',
@@ -148,12 +166,25 @@ export let schema: HydrogenComponentSchema = {
           name: 'buttonStyle',
           configs: {
             options: [
-              { label: '1', value: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white' },
-              { label: '2', value: 'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white' },
-              { label: '3', value: 'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white' },
+              {
+                label: '1',
+                value:
+                  'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
+              },
+              {
+                label: '2',
+                value:
+                  'transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white',
+              },
+              {
+                label: '3',
+                value:
+                  'transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white',
+              },
             ],
           },
-          defaultValue: 'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
+          defaultValue:
+            'transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white',
         },
         {
           type: 'range',
@@ -194,4 +225,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-}
+};

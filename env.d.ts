@@ -1,11 +1,15 @@
-/// <reference types="@remix-run/dev" />
+/// <reference types="vite/client" />
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
-import type {HydrogenCart} from '@shopify/hydrogen';
-import type {CustomerAccount, Storefront} from '~/lib/type';
-import type {AppSession} from '~/lib/session.server';
+import type {HydrogenCart, HydrogenSessionData} from '@shopify/hydrogen';
+import type {
+  LanguageCode,
+  CountryCode,
+} from '@shopify/hydrogen/storefront-api-types';
+import type {AppSession} from '~/lib/session';
 import type {WeaverseClient} from '@weaverse/hydrogen';
+import type {Storefront, CustomerAccount} from '~/lib/type';
 
 declare global {
   /**
@@ -24,6 +28,8 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
+    PUBLIC_CHECKOUT_DOMAIN: string;
+
     WEAVERSE_PROJECT_ID: string;
     WEAVERSE_HOST: string;
     WEAVERSE_API_KEY: string;
@@ -35,15 +41,20 @@ declare module '@shopify/remix-oxygen' {
   /**
    * Declare local additions to the Remix loader context.
    */
-  export interface AppLoadContext {
-    waitUntil: ExecutionContext['waitUntil'];
-    session: AppSession;
+  interface AppLoadContext {
+    env: Env;
+    cart: HydrogenCart;
     storefront: Storefront;
     customerAccount: CustomerAccount;
-    cart: HydrogenCart;
-    env: Env;
+    session: AppSession;
+    waitUntil: ExecutionContext['waitUntil'];
     weaverse: WeaverseClient;
   }
+
+  /**
+   * Declare local additions to the Remix session data.
+   */
+  interface SessionData extends HydrogenSessionData {}
 }
 
 // Needed to make this file a module.

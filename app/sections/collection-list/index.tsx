@@ -6,9 +6,11 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
+
 import type {CollectionsQuery} from 'storefrontapi.generated';
 import {Button, Grid, PageHeader, Section} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
+
 import {CollectionCard} from './collection-card';
 
 interface CollectionListProps extends HydrogenComponentProps {

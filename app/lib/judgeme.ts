@@ -1,4 +1,3 @@
-
 type JudgemeProductData = {
   product: {
     id: string;
@@ -22,13 +21,17 @@ async function getInternalIdByHandle(
     new URLSearchParams({
       api_token,
       shop_domain,
-      handle: handle,
+      handle,
     });
   let data = (await fetch(api).then((res) => res.json())) as JudgemeProductData;
   return data?.product?.id;
 }
 
-export let getJudgemeReviews = async(api_token: string, shop_domain: string, handle: string) => {
+export let getJudgemeReviews = async (
+  api_token: string,
+  shop_domain: string,
+  handle: string,
+) => {
   if (!api_token) {
     return {
       error: 'Missing JUDGEME_PUBLIC_TOKEN',
@@ -56,4 +59,4 @@ export let getJudgemeReviews = async(api_token: string, shop_domain: string, han
   return {
     rating: 0,
   };
-}
+};

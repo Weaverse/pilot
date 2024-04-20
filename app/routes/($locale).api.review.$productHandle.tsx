@@ -1,6 +1,7 @@
 import {type RouteLoaderArgs} from '@weaverse/hydrogen';
 import invariant from 'tiny-invariant';
-import { getJudgemeReviews } from '~/lib/judgeme';
+
+import {getJudgemeReviews} from '~/lib/judgeme';
 
 export async function loader(args: RouteLoaderArgs) {
   let {params, context} = args;
@@ -10,5 +11,5 @@ export async function loader(args: RouteLoaderArgs) {
   let shop_domain = env.PUBLIC_STORE_DOMAIN;
   invariant(handle, 'Missing product handle');
   let reviews = await getJudgemeReviews(api_token, shop_domain, handle);
-  return reviews
+  return reviews;
 }

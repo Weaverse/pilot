@@ -1,4 +1,5 @@
 import type {HydrogenComponent} from '@weaverse/hydrogen';
+
 import * as AllProducts from '~/sections/all-products';
 import * as BlogPost from '~/sections/blog-post';
 import * as Blogs from '~/sections/blogs';
@@ -40,7 +41,6 @@ import * as VideoEmbedItem from '~/sections/video-embed/video';
 import * as MetaDemo from '~/sections/meta-demo';
 import * as SlideShow from '~/sections/SlideShow/SlideShow';
 import * as SlideShowItem from '~/sections/SlideShow/SlideItems';
-
 import * as NewsLetter from '~/sections/newsletter';
 import * as ImageHotspot from '~/sections/image-hotspots/image-hotspot';
 import * as ImageHotspotItem from '~/sections/image-hotspots/items';

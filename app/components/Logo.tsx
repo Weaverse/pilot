@@ -1,5 +1,6 @@
 import {useThemeSettings} from '@weaverse/hydrogen';
 import {Image} from '@shopify/hydrogen';
+
 import {Link} from './Link';
 
 export function Logo() {

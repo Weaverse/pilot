@@ -5,6 +5,7 @@ import type {
 } from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import {Image} from '@shopify/hydrogen';
+
 import {IconImageBlank} from '~/components';
 
 interface PromotionItemProps extends HydrogenComponentProps {
@@ -60,7 +61,12 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['subheading', 'heading', 'description', 'promotion-item--buttons'],
+  childTypes: [
+    'subheading',
+    'heading',
+    'description',
+    'promotion-item--buttons',
+  ],
   presets: {
     children: [
       {

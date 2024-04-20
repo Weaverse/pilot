@@ -4,8 +4,9 @@ import type {
 } from '@weaverse/hydrogen';
 import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
-import {IconMapBlank} from '~/components';
 import clsx from 'clsx';
+
+import {IconMapBlank} from '~/components';
 
 interface MapProps extends HydrogenComponentProps {
   heading: string;

@@ -5,6 +5,7 @@ import type {
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {Suspense, forwardRef} from 'react';
+
 import type {ArticleFragment} from 'storefrontapi.generated';
 import {Skeleton} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';

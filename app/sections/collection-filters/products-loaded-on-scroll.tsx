@@ -1,5 +1,6 @@
 import {useNavigate} from '@remix-run/react';
 import {useEffect} from 'react';
+
 import {Grid, ProductCard} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
 

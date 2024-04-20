@@ -4,6 +4,7 @@ import {
 } from '@weaverse/hydrogen';
 import {clsx} from 'clsx';
 import {forwardRef} from 'react';
+
 import type {Alignment} from '~/lib/type';
 
 type DescriptionProps = HydrogenComponentProps & {

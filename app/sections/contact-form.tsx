@@ -1,9 +1,10 @@
 import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
 import {forwardRef} from 'react';
 import {Form} from '@remix-run/react';
+
 import {Button, Input} from '~/components';
 
-let ContactForm = forwardRef<HTMLDivElement, {}>((props, ref) => {
+let ContactForm = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <div ref={ref} {...props} className="bg-gray-200">
       <Form

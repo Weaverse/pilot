@@ -6,13 +6,16 @@ import {
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
 import {forwardRef, useEffect, useState} from 'react';
+
 import type {ProductQuery, VariantsQuery} from 'storefrontapi.generated';
 import {AddToCartButton, Text} from '~/components';
 import {getExcerpt} from '~/lib/utils';
+
 import {ProductPlaceholder} from '../../components/product-form/placeholder';
 import {ProductMedia} from '../../components/product-form/product-media';
 import {Quantity} from '../../components/product-form/quantity';
 import {ProductVariants} from '../../components/product-form/variants';
+
 import {ProductDetail} from './product-detail';
 interface ProductInformationProps extends HydrogenComponentProps {
   addToCartText: string;
@@ -67,15 +70,15 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let atcText = selectedVariant?.availableForSale
       ? addToCartText
       : selectedVariant?.quantityAvailable === -1
-        ? unavailableText
-        : soldOutText;
+      ? unavailableText
+      : soldOutText;
     useEffect(() => {
       if (!selectedVariant) {
         setSelectedVariant(variants?.nodes?.[0]);
       } else if (selectedVariant?.id !== product?.selectedVariant?.id) {
         setSelectedVariant(product?.selectedVariant);
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [product?.id]);
     let {swatches} = useThemeSettings();
 

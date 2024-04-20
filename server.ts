@@ -1,9 +1,6 @@
+// @ts-ignore
 // Virtual entry point for the app
-import * as remixBuild from '@remix-run/dev/server-build';
-import {
-  createRequestHandler,
-  getStorefrontHeaders,
-} from '@shopify/remix-oxygen';
+import * as remixBuild from 'virtual:remix/server-build';
 import {
   cartGetIdDefault,
   cartSetIdDefault,
@@ -12,10 +9,15 @@ import {
   storefrontRedirect,
   createCustomerAccountClient,
 } from '@shopify/hydrogen';
+import {
+  createRequestHandler,
+  getStorefrontHeaders,
+  type AppLoadContext,
+} from '@shopify/remix-oxygen';
 
-import {AppSession} from '~/lib/session.server';
-import {getLocaleFromRequest} from '~/lib/utils';
+import {AppSession} from '~/lib/session';
 import {createWeaverseClient} from '~/weaverse/create-weaverse.server';
+import {getLocaleFromRequest} from '~/lib/utils';
 
 /**
  * Export a fetch handler in module format.
@@ -79,13 +81,13 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: () => ({
+        getLoadContext: (): AppLoadContext => ({
           session,
-          waitUntil,
           storefront,
           customerAccount,
           cart,
           env,
+          waitUntil,
           weaverse: createWeaverseClient({
             storefront,
             request,

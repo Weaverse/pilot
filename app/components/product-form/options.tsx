@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import {Image} from '@shopify/hydrogen';
 import type {WeaverseImage} from '@weaverse/hydrogen';
+
 interface VariantOptionProps {
   selectedOptionValue: string;
   onSelectOptionValue: (optionValue: string) => void;
@@ -47,7 +48,12 @@ export function VariantOption(props: VariantOptionProps) {
     config,
   } = props;
 
-  let {displayName, shape = 'square', size = 'md', type = 'default'} = config || {};
+  let {
+    displayName,
+    shape = 'square',
+    size = 'md',
+    type = 'default',
+  } = config || {};
 
   let roundedClassName =
     shape === 'circle' ? 'rounded-full' : shape === 'round' ? 'rounded-md' : '';

@@ -7,6 +7,7 @@ import type {CSSProperties} from 'react';
 import {forwardRef} from 'react';
 import clsx from 'clsx';
 import {Image} from '@shopify/hydrogen';
+
 import {IconImageBlank} from '~/components';
 
 interface HeaderImageProps extends HydrogenComponentProps {
