@@ -10,10 +10,10 @@ function hexToRgbString(hexColor: string = ''): string {
   if (hexColor.length === 3) {
     hexColor = hexColor.replace(/(.)/g, '$1$1');
   }
-  let r = parseInt(hexColor.substring(0, 2), 16) || '';
-  let g = parseInt(hexColor.substring(2, 4), 16) || '';
-  let b = parseInt(hexColor.substring(4, 6), 16) || '';
-  let a = hexToPercent(hexColor.substring(6, 8)) || '';
+  let r = parseInt(hexColor.substring(0, 2), 16) || 0;
+  let g = parseInt(hexColor.substring(2, 4), 16) || 0;
+  let b = parseInt(hexColor.substring(4, 6), 16) || 0;
+  let a = hexToPercent(hexColor.substring(6, 8)) || 0;
   let val = `${r} ${g} ${b}`;
   return `${val}${a ? ` / ${a}%` : ''}`.trim();
 }
