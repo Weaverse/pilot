@@ -2,7 +2,7 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+import { forwardRef } from 'react';
 
 interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
   gap: number;
@@ -12,14 +12,14 @@ let ColumnsWithImagesItems = forwardRef<
   HTMLDivElement,
   ColumnsWithImagesItemsProps
 >((props, ref) => {
-  let {children, gap, ...rest} = props;
+  let { children, gap, ...rest } = props;
 
   return (
     <div
       ref={ref}
       {...rest}
       className="flex flex-col sm:grid sm:grid-cols-12"
-      style={{gap: `${gap}px`}}
+      style={{ gap: `${gap}px` }}
     >
       {children}
     </div>
@@ -41,11 +41,11 @@ export let schema: HydrogenComponentSchema = {
           name: 'gap',
           configs: {
             min: 16,
-            max: 40,
-            step: 6,
+            max: 80,
+            step: 4,
             unit: 'px',
           },
-          defaultValue: 24,
+          defaultValue: 40,
         },
       ],
     },
