@@ -39,7 +39,6 @@
     "graphql-tag": "2.12.6",
     "isbot": "^3.8.0",
     "keen-slider": "^6.8.6",
-    "lightbox.js-react": "^1.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-intersection-observer": "9.8.2",
