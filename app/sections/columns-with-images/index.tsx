@@ -25,6 +25,7 @@ export let schema: HydrogenComponentSchema = {
   inspector: [sectionInspector],
   childTypes: ['columns-with-images--items', 'subheading', 'heading', 'description'],
   presets: {
+    gap: 48,
     children: [
       {
         type: 'heading',
