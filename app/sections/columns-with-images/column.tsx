@@ -1,12 +1,12 @@
 import { Image } from '@shopify/hydrogen';
 import {
+  IMAGES_PLACEHOLDERS,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
   type WeaverseImage,
 } from '@weaverse/hydrogen';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
-import { FALLBACK_IMAGE } from '~/lib/const';
 import Button, { ButtonProps, buttonInputs } from '../shared/Button';
 
 interface ColumnWithImageItemProps extends ButtonProps, HydrogenComponentProps {
@@ -40,7 +40,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
     let imageData =
       typeof imageSrc === 'object'
         ? imageSrc
-        : { url: imageSrc || FALLBACK_IMAGE, altText: imageSrc };
+        : { url: imageSrc || IMAGES_PLACEHOLDERS.image, altText: imageSrc };
     return (
       <div
         ref={ref}
@@ -126,7 +126,6 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   presets: {
-    imageSrc:
-      'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
+    imageSrc: IMAGES_PLACEHOLDERS.image,
   },
 };
