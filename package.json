@@ -32,7 +32,7 @@
     "@shopify/cli-hydrogen": "^8.0.0",
     "@shopify/hydrogen": "^2024.4.0",
     "@shopify/remix-oxygen": "^2.0.4",
-    "@weaverse/hydrogen": "3.1.4",
+    "@weaverse/hydrogen": "3.1.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "2.1.0",
     "cross-env": "7.0.3",
