@@ -78,9 +78,13 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     overlayOpacity,
     className,
     children,
-    style,
+    style = {},
     ...rest
   } = props;
+
+  if (backgroundColor) {
+    style.backgroundColor = backgroundColor
+  }
 
   return (
     <>
@@ -93,7 +97,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           verticalPaddingClasses[verticalPadding!],
           className,
         )}
-        style={{ backgroundColor, ...style }}
+        style={style}
       >
         <BackgroundImage
           backgroundImage={backgroundImage}
