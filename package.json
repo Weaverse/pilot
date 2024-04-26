@@ -18,7 +18,8 @@
     "format:check": "prettier --check --ignore-unknown .",
     "hydrogen": "shopify hydrogen",
     "e2e": "npx playwright test",
-    "e2e:ui": "npx playwright test --ui"
+    "e2e:ui": "npx playwright test --ui",
+    "prepare": "npm install --package-lock-only"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
