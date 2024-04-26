@@ -26,7 +26,6 @@
     "@fontsource/roboto": "^5.0.12",
     "@graphql-codegen/cli": "^5.0.2",
     "@headlessui/react": "1.7.18",
-    "@remix-run/cloudflare": "^2.8.1",
     "@remix-run/react": "2.8.1",
     "@remix-run/server-runtime": "2.8.1",
     "@shopify/cli": "3.58.0",
