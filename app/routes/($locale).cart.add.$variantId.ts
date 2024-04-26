@@ -1,5 +1,5 @@
 import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {json, redirect} from '@shopify/remix-oxygen';
+import {json} from '@shopify/remix-oxygen';
 
 export async function loader({params, context}: LoaderFunctionArgs) {
   const {cart} = context;
@@ -13,9 +13,27 @@ export async function loader({params, context}: LoaderFunctionArgs) {
         quantity: 1,
       },
     ];
-    await cart.addLines(inputLines);
+    let result = await cart.addLines(inputLines);
 
-    return redirect('/cart');
+    /**
+     * The Cart ID may change after each mutation. We need to update it each time in the session.
+     */
+    const cartId = result.cart.id;
+    const headers = cart.setCartId(cartId);
+    headers.set('Location', '/cart');
+
+    const {cart: cartResult, errors, userErrors} = result;
+
+    headers.append('Set-Cookie', await context.session.commit());
+
+    return json(
+      {
+        cart: cartResult,
+        userErrors,
+        errors,
+      },
+      {status: 303, headers},
+    );
   } catch (e) {
     console.error(e);
     return json({error: e});
