@@ -1,4 +1,5 @@
 import {
+  IMAGES_PLACEHOLDERS,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
@@ -56,18 +57,15 @@ export let schema: HydrogenComponentSchema = {
     children: [
       {
         type: 'column-with-image--item',
-        imageSrc:
-          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
+        imageSrc: IMAGES_PLACEHOLDERS.product_1,
       },
       {
         type: 'column-with-image--item',
-        imageSrc:
-          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
+        imageSrc: IMAGES_PLACEHOLDERS.product_2,
       },
       {
         type: 'column-with-image--item',
-        imageSrc:
-          'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
+        imageSrc: IMAGES_PLACEHOLDERS.product_3,
       },
     ],
   },

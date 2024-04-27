@@ -34,9 +34,9 @@ let sizes: Record<Size, string> = {
   default: '',
   lead: 'text-lg leading-snug',
   heading: 'text-lg sm:text-2xl',
-  display: 'text-xl sm:text-4xl',
+  display: 'text-xl sm:text-4xl sm:leading-normal',
   jumbo: 'text-2xl sm:text-5xl tracking-tight',
-  scale: 'text-scale leading-normal',
+  scale: 'text-scale',
 };
 
 let weightClasses: Record<Weight, string> = {
@@ -165,12 +165,12 @@ export let schema: HydrogenComponentSchema = {
           name: 'maxSize',
           label: 'Maximum scale size',
           configs: {
-            min: 64,
+            min: 48,
             max: 96,
             step: 1,
             unit: 'px',
           },
-          defaultValue: 72,
+          defaultValue: 64,
           condition: 'size.eq.scale',
           helpText:
             'See how scale text works <a href="https://css-tricks.com/snippets/css/fluid-typography/" target="_blank" rel="noreferrer">here</a>.',

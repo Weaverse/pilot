@@ -7,7 +7,7 @@ type OverlayProps = {
 };
 
 export function Overlay({ enable, color, opacity }: OverlayProps) {
-  if (enable) {
+  if (enable && color) {
     return (
       <div
         className="absolute inset-0"
