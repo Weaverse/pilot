@@ -40,6 +40,7 @@ import {NotFound} from './components/NotFound';
 import styles from './styles/app.css?url';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {GlobalStyle} from './weaverse/style';
+import {GlobalLoading} from '~/components/global-loading';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -156,6 +157,7 @@ function App() {
           </Layout>
           <CustomAnalytics />
         </Analytics.Provider>
+        <GlobalLoading />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
