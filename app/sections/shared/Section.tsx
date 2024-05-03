@@ -23,6 +23,7 @@ export type SectionProps = HydrogenComponentProps &
     className: string;
     verticalPadding: VerticalPadding;
     divider: DividerType;
+    borderRadius: number;
     enableOverlay: boolean;
     overlayColor: string;
     overlayOpacity: number;
@@ -69,6 +70,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     gap,
     divider,
     verticalPadding,
+    borderRadius,
     backgroundColor,
     backgroundImage,
     backgroundFit,
@@ -82,10 +84,6 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     ...rest
   } = props;
 
-  if (backgroundColor) {
-    style.backgroundColor = backgroundColor;
-  }
-
   return (
     <>
       {(divider === "top" || divider === "both") && <Divider />}
@@ -94,10 +92,11 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         {...rest}
         className={clsx(
           "relative",
+          widthClasses[width!],
           verticalPaddingClasses[verticalPadding!],
           className,
         )}
-        style={style}
+        style={{ ...style, backgroundColor, borderRadius }}
       >
         <BackgroundImage
           backgroundImage={backgroundImage}
@@ -109,11 +108,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           color={overlayColor}
           opacity={overlayOpacity}
         />
-        <div
-          className={clsx("relative", widthClasses[width!], gapClasses[gap!])}
-        >
-          {children}
-        </div>
+        <div className={clsx("relative", gapClasses[gap!])}>{children}</div>
       </Component>
       {(divider === "bottom" || divider === "both") && <Divider />}
     </>
@@ -181,6 +176,18 @@ export let layoutInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "none",
+  },
+  {
+    type: "range",
+    name: "borderRadius",
+    label: "Corner radius",
+    configs: {
+      min: 0,
+      max: 40,
+      step: 2,
+      unit: "px",
+    },
+    defaultValue: 0,
   },
 ];
 
