@@ -92,7 +92,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ['content-items', 'image-items'],
+  childTypes: ['image-with-text--content', 'image-with-text--image'],
   presets: {
     children: [
       {

@@ -45,7 +45,7 @@ export default ImageItems;
 
 export let schema: HydrogenComponentSchema = {
   type: 'image-with-text--image',
-  title: 'Image with text',
+  title: 'Image',
   toolbar: ['general-settings', ['duplicate', 'delete']],
   limit: 1,
   inspector: [

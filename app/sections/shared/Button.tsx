@@ -23,7 +23,7 @@ let variants = cva(
       variant: {
         primary: 'btn-primary border-2 px-5 py-3',
         secondary: 'btn-secondary border-2 px-5 py-3',
-        link: 'btn-link bg-transparent py-3 border-b-2 py-3',
+        link: 'btn-link bg-transparent py-2 border-b-2',
       },
       shape: {
         square: '',
