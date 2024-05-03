@@ -1,23 +1,23 @@
-import type {CartLineInput} from '@shopify/hydrogen/storefront-api-types';
-import type {ShopifyAddToCartPayload} from '@shopify/hydrogen';
+import type { CartLineInput } from "@shopify/hydrogen/storefront-api-types";
+import type { ShopifyAddToCartPayload } from "@shopify/hydrogen";
 import {
   AnalyticsEventName,
   CartForm,
   getClientBrowserParameters,
   sendShopifyAnalytics,
-} from '@shopify/hydrogen';
-import type {FetcherWithComponents} from '@remix-run/react';
-import {useEffect} from 'react';
+} from "@shopify/hydrogen";
+import type { FetcherWithComponents } from "@remix-run/react";
+import { useEffect } from "react";
 
-import {Button} from '~/components';
-import {usePageAnalytics} from '~/hooks/usePageAnalytics';
+import { Button } from "~/components";
+import { usePageAnalytics } from "~/hooks/usePageAnalytics";
 
 export function AddToCartButton({
   children,
   lines,
-  className = '',
-  variant = 'primary',
-  width = 'full',
+  className = "",
+  variant = "primary",
+  width = "full",
   disabled,
   analytics,
   ...props
@@ -25,8 +25,8 @@ export function AddToCartButton({
   children: React.ReactNode;
   lines: CartLineInput[];
   className?: string;
-  variant?: 'primary' | 'secondary' | 'inline';
-  width?: 'auto' | 'full';
+  variant?: "primary" | "secondary" | "inline";
+  width?: "auto" | "full";
   disabled?: boolean;
   analytics?: unknown;
   [key: string]: any;
@@ -53,7 +53,7 @@ export function AddToCartButton({
               width={width}
               variant={variant}
               className={className}
-              disabled={disabled ?? fetcher.state !== 'idle'}
+              disabled={disabled ?? fetcher.state !== "idle"}
               {...props}
             >
               {children}
@@ -74,7 +74,7 @@ function AddToCartAnalytics({
 }): JSX.Element {
   const fetcherData = fetcher.data;
   const formData = fetcher.formData;
-  const pageAnalytics = usePageAnalytics({hasUserConsent: true});
+  const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
 
   useEffect(() => {
     if (formData) {

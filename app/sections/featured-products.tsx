@@ -2,12 +2,12 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   ComponentLoaderArgs,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 
-import type {HomepageFeaturedProductsQuery} from 'storefrontapi.generated';
-import {ProductSwimlane} from '~/components';
-import {HOMEPAGE_FEATURED_PRODUCTS_QUERY} from '~/data/queries';
+import type { HomepageFeaturedProductsQuery } from "storefrontapi.generated";
+import { ProductSwimlane } from "~/components";
+import { HOMEPAGE_FEATURED_PRODUCTS_QUERY } from "~/data/queries";
 
 interface FeaturedProductsProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
@@ -17,7 +17,7 @@ interface FeaturedProductsProps
 
 let FeaturedProducts = forwardRef<HTMLElement, FeaturedProductsProps>(
   (props, ref) => {
-    let {loaderData, heading, productsCount, ...rest} = props;
+    let { loaderData, heading, productsCount, ...rest } = props;
     return (
       <section ref={ref} {...rest}>
         {loaderData?.products?.nodes ? (
@@ -34,8 +34,8 @@ let FeaturedProducts = forwardRef<HTMLElement, FeaturedProductsProps>(
 
 export default FeaturedProducts;
 
-export let loader = async ({weaverse}: ComponentLoaderArgs) => {
-  let {language, country} = weaverse.storefront.i18n;
+export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
+  let { language, country } = weaverse.storefront.i18n;
   return await weaverse.storefront.query<HomepageFeaturedProductsQuery>(
     HOMEPAGE_FEATURED_PRODUCTS_QUERY,
     {
@@ -48,27 +48,27 @@ export let loader = async ({weaverse}: ComponentLoaderArgs) => {
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'featured-products',
-  title: 'Featured products',
+  type: "featured-products",
+  title: "Featured products",
   limit: 1,
   enabledOn: {
-    pages: ['INDEX'],
+    pages: ["INDEX"],
   },
   inspector: [
     {
-      group: 'Featured products',
+      group: "Featured products",
       inputs: [
         {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Featured Products',
-          placeholder: 'Featured Products',
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "Featured Products",
+          placeholder: "Featured Products",
         },
         {
-          type: 'range',
-          name: 'productsCount',
-          label: 'Number of products',
+          type: "range",
+          name: "productsCount",
+          label: "Number of products",
           defaultValue: 12,
           configs: {
             min: 1,
@@ -79,5 +79,5 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

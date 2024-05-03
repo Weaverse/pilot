@@ -1,12 +1,12 @@
-import type {CustomerDetailsFragment} from 'customer-accountapi.generated';
-import {Link} from '~/components';
+import type { CustomerDetailsFragment } from "customer-accountapi.generated";
+import { Link } from "~/components";
 
 export function AccountDetails({
   customer,
 }: {
   customer: CustomerDetailsFragment;
 }) {
-  const {firstName, lastName, emailAddress, phoneNumber} = customer;
+  const { firstName, lastName, emailAddress, phoneNumber } = customer;
 
   return (
     <>
@@ -26,15 +26,15 @@ export function AccountDetails({
           <div className="mt-4 text-sm text-primary/50">Name</div>
           <p className="mt-1">
             {firstName || lastName
-              ? (firstName ? firstName + ' ' : '') + lastName
-              : 'Add name'}{' '}
+              ? (firstName ? firstName + " " : "") + lastName
+              : "Add name"}{" "}
           </p>
 
           <div className="mt-4 text-sm text-primary/50">Phone number</div>
-          <p className="mt-1">{phoneNumber?.phoneNumber ?? 'N/A'}</p>
+          <p className="mt-1">{phoneNumber?.phoneNumber ?? "N/A"}</p>
 
           <div className="mt-4 text-sm text-primary/50">Email address</div>
-          <p className="mt-1">{emailAddress?.emailAddress ?? 'N/A'}</p>
+          <p className="mt-1">{emailAddress?.emailAddress ?? "N/A"}</p>
         </div>
       </div>
     </>

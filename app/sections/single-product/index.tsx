@@ -1,21 +1,21 @@
-import {Money, ShopPayButton} from '@shopify/hydrogen';
+import { Money, ShopPayButton } from "@shopify/hydrogen";
 import {
   type ComponentLoaderArgs,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
   useThemeSettings,
   type WeaverseProduct,
-} from '@weaverse/hydrogen';
-import {forwardRef, useEffect, useState} from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef, useEffect, useState } from "react";
 
-import type {ProductQuery} from 'storefrontapi.generated';
-import {AddToCartButton} from '~/components';
-import {PRODUCT_QUERY, VARIANTS_QUERY} from '~/data/queries';
+import type { ProductQuery } from "storefrontapi.generated";
+import { AddToCartButton } from "~/components";
+import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/data/queries";
 
-import {Quantity} from '../../components/product-form/quantity';
-import {ProductVariants} from '../../components/product-form/variants';
-import {ProductPlaceholder} from '../../components/product-form/placeholder';
-import {ProductMedia} from '../../components/product-form/product-media';
+import { Quantity } from "../../components/product-form/quantity";
+import { ProductVariants } from "../../components/product-form/variants";
+import { ProductPlaceholder } from "../../components/product-form/placeholder";
+import { ProductMedia } from "../../components/product-form/product-media";
 
 type SingleProductData = {
   productsCount: number;
@@ -44,9 +44,9 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       spacing,
       ...rest
     } = props;
-    let {swatches} = useThemeSettings();
+    let { swatches } = useThemeSettings();
 
-    let {storeDomain, product, variants: _variants} = loaderData || {};
+    let { storeDomain, product, variants: _variants } = loaderData || {};
     let variants = _variants?.product?.variants;
     let [selectedVariant, setSelectedVariant] = useState<any>(null);
     let [quantity, setQuantity] = useState<number>(1);
@@ -62,10 +62,10 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       );
 
     let atcText = selectedVariant?.availableForSale
-      ? 'Add to Cart'
+      ? "Add to Cart"
       : selectedVariant?.quantityAvailable === -1
-        ? 'Unavailable'
-        : 'Sold Out';
+        ? "Unavailable"
+        : "Sold Out";
     return (
       <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
@@ -145,13 +145,13 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
 );
 
 export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
-  let {weaverse, data} = args;
-  let {storefront} = weaverse;
+  let { weaverse, data } = args;
+  let { storefront } = weaverse;
   if (!data?.product) {
     return null;
   }
   let productHandle = data.product.handle;
-  let {product, shop} = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
+  let { product, shop } = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       selectedOptions: [],
@@ -175,41 +175,41 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'single-product',
-  title: 'Single product',
-  childTypes: ['judgeme'],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "single-product",
+  title: "Single product",
+  childTypes: ["judgeme"],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Single product',
+      group: "Single product",
       inputs: [
         {
-          label: 'Choose product',
-          type: 'product',
-          name: 'product',
+          label: "Choose product",
+          type: "product",
+          name: "product",
           shouldRevalidate: true,
         },
         {
-          label: 'Hide unavailable options',
-          type: 'switch',
-          name: 'hideUnavailableOptions',
+          label: "Hide unavailable options",
+          type: "switch",
+          name: "hideUnavailableOptions",
         },
       ],
     },
     {
-      group: 'Product Media',
+      group: "Product Media",
       inputs: [
         {
-          label: 'Show thumbnails',
-          name: 'showThumbnails',
-          type: 'switch',
+          label: "Show thumbnails",
+          name: "showThumbnails",
+          type: "switch",
           defaultValue: true,
         },
         {
-          label: 'Number of thumbnails',
-          name: 'numberOfThumbnails',
-          type: 'range',
-          condition: 'showThumbnails.eq.true',
+          label: "Number of thumbnails",
+          name: "numberOfThumbnails",
+          type: "range",
+          condition: "showThumbnails.eq.true",
           configs: {
             min: 1,
             max: 10,
@@ -217,9 +217,9 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 4,
         },
         {
-          label: 'Gap between images',
-          name: 'spacing',
-          type: 'range',
+          label: "Gap between images",
+          name: "spacing",
+          type: "range",
           configs: {
             min: 0,
             step: 2,

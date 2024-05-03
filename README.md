@@ -12,7 +12,6 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 ## Demo
 
-
 - [Live store](https://pilot.weaverse.dev)
 - Try customizing Pilot on [Weaverse Playground](https://studio.weaverse.io/demo)
   ![demo](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Home.png?v=1695816170)
@@ -31,8 +30,8 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 - Full-featured setup of components and routes
 - Fully customizable inside [Weaverse](https://weaverse.io)
 
-
 ## Deployment
+
 - [Deploy to Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen)
 - [Deploy to Vercel](https://wvse.cc/deploy-pilot-to-vercel)
 
@@ -273,26 +272,28 @@ Weaverse provides a convenient way to customize your theme inside the **Weaverse
 
 ![Weaverse Editor](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
 
-
 ## Setup for using Customer Account API (`/account`)
 
 1. Run development with `--customer-account-push__unstable` flag to start the server with a tunnel to expose the local server to the public domain.
+
 ```bash
 shopify hydrogen dev --codegen --port 3456 --customer-account-push__unstable
 ```
+
 Or quicker way with:
+
 ```bash
 npm run dev:ca
 ```
 
 ### Include public domain in Customer Account API settings
+
 After run the server with `--customer-account-push__unstable` flag, you will get a public domain like `https://<your-cf-tunnel>.tryhydrogen.dev`. And it should be automatically added to the Customer Account API settings. If not, you can manually add it by following these steps:
 
 1. Go to your Shopify admin => `Hydrogen` or `Headless` app/channel => Customer Account API => Application setup
 2. Edit `Callback URI(s)` to include `https://<your-cf-tunnel>.tryhydrogen.dev/account/authorize`
 3. Edit `Javascript origin(s)` to include your public domain `https://<your-tunnel>.tryhydrogen.dev` or keep it blank
 4. Edit `Logout URI` to include your public domain `https://<your-tunnel>.tryhydrogen.dev` or keep it blank
-
 
 ### Local development inspects
 

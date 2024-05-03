@@ -2,20 +2,20 @@
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
-import type {HydrogenCart, HydrogenSessionData} from '@shopify/hydrogen';
+import type { HydrogenCart, HydrogenSessionData } from "@shopify/hydrogen";
 import type {
   LanguageCode,
   CountryCode,
-} from '@shopify/hydrogen/storefront-api-types';
-import type {AppSession} from '~/lib/session';
-import type {WeaverseClient} from '@weaverse/hydrogen';
-import type {Storefront, CustomerAccount} from '~/lib/type';
+} from "@shopify/hydrogen/storefront-api-types";
+import type { AppSession } from "~/lib/session";
+import type { WeaverseClient } from "@weaverse/hydrogen";
+import type { Storefront, CustomerAccount } from "~/lib/type";
 
 declare global {
   /**
    * A global `process` object is only available during build to access NODE_ENV.
    */
-  const process: {env: {NODE_ENV: 'production' | 'development'}};
+  const process: { env: { NODE_ENV: "production" | "development" } };
 
   /**
    * Declare expected Env parameter in fetch handler.
@@ -38,7 +38,7 @@ declare global {
   }
 }
 
-declare module '@shopify/remix-oxygen' {
+declare module "@shopify/remix-oxygen" {
   /**
    * Declare local additions to the Remix loader context.
    */
@@ -48,7 +48,7 @@ declare module '@shopify/remix-oxygen' {
     storefront: Storefront;
     customerAccount: CustomerAccount;
     session: AppSession;
-    waitUntil: ExecutionContext['waitUntil'];
+    waitUntil: ExecutionContext["waitUntil"];
     weaverse: WeaverseClient;
   }
 

@@ -1,7 +1,7 @@
-import {Disclosure} from '@headlessui/react';
-import clsx from 'clsx';
+import { Disclosure } from "@headlessui/react";
+import clsx from "clsx";
 
-import {IconClose, Link, Text} from '~/components';
+import { IconClose, Link, Text } from "~/components";
 
 export function ProductDetail({
   title,
@@ -14,7 +14,7 @@ export function ProductDetail({
 }) {
   return (
     <Disclosure key={title} as="div" className="grid w-full gap-2">
-      {({open}) => (
+      {({ open }) => (
         <>
           <Disclosure.Button className="text-left">
             <div className="flex justify-between">
@@ -23,18 +23,18 @@ export function ProductDetail({
               </Text>
               <IconClose
                 className={clsx(
-                  'transition-transform transform-gpu duration-200',
-                  !open && 'rotate-[45deg]',
+                  "transition-transform transform-gpu duration-200",
+                  !open && "rotate-[45deg]",
                 )}
               />
             </div>
           </Disclosure.Button>
 
-          <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
+          <Disclosure.Panel className={"pb-4 pt-2 grid gap-2"}>
             <div
               suppressHydrationWarning
               className="prose dark:prose-invert"
-              dangerouslySetInnerHTML={{__html: content}}
+              dangerouslySetInnerHTML={{ __html: content }}
             />
             {learnMore && (
               <div className="">

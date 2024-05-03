@@ -1,30 +1,30 @@
-import {Await} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { Await } from "@remix-run/react";
+import invariant from "tiny-invariant";
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   json,
-} from '@shopify/remix-oxygen';
+} from "@shopify/remix-oxygen";
 import {
   CartForm,
   type CartQueryDataReturn,
   UNSTABLE_Analytics as Analytics,
-} from '@shopify/hydrogen';
+} from "@shopify/hydrogen";
 
-import {isLocalPath} from '~/lib/utils';
-import {Cart} from '~/components/Cart';
-import {useRootLoaderData} from '~/root';
+import { isLocalPath } from "~/lib/utils";
+import { Cart } from "~/components/Cart";
+import { useRootLoaderData } from "~/root";
 
-export async function action({request, context}: ActionFunctionArgs) {
-  const {cart} = context;
+export async function action({ request, context }: ActionFunctionArgs) {
+  const { cart } = context;
 
   const [formData, customerAccessToken] = await Promise.all([
     request.formData(),
     context.customerAccount.getAccessToken(),
   ]);
 
-  const {action, inputs} = CartForm.getFormInput(formData);
-  invariant(action, 'No cartAction defined');
+  const { action, inputs } = CartForm.getFormInput(formData);
+  invariant(action, "No cartAction defined");
 
   let status = 200;
   let result: CartQueryDataReturn;
@@ -68,15 +68,15 @@ export async function action({request, context}: ActionFunctionArgs) {
   const cartId = result.cart.id;
   const headers = cart.setCartId(result.cart.id);
 
-  const redirectTo = formData.get('redirectTo') ?? null;
-  if (typeof redirectTo === 'string' && isLocalPath(redirectTo)) {
+  const redirectTo = formData.get("redirectTo") ?? null;
+  if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
     status = 303;
-    headers.set('Location', redirectTo);
+    headers.set("Location", redirectTo);
   }
 
-  const {cart: cartResult, errors, userErrors} = result;
+  const { cart: cartResult, errors, userErrors } = result;
 
-  headers.append('Set-Cookie', await context.session.commit());
+  headers.append("Set-Cookie", await context.session.commit());
 
   return json(
     {
@@ -84,12 +84,12 @@ export async function action({request, context}: ActionFunctionArgs) {
       userErrors,
       errors,
     },
-    {status, headers},
+    { status, headers },
   );
 }
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {cart} = context;
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { cart } = context;
   return json(await cart.get());
 }
 

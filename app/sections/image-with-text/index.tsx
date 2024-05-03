@@ -1,12 +1,12 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
-import {clsx} from 'clsx';
+} from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { forwardRef } from "react";
+import { clsx } from "clsx";
 
-type AlignImage = 'left' | 'right';
+type AlignImage = "left" | "right";
 interface ImageWithTextProps extends HydrogenComponentProps {
   sectionHeight: number;
   backgroundColor: string;
@@ -14,16 +14,16 @@ interface ImageWithTextProps extends HydrogenComponentProps {
 }
 
 let AlignImageClasses: Record<AlignImage, string> = {
-  left: 'flex-row-reverse',
-  right: 'flex-row',
+  left: "flex-row-reverse",
+  right: "flex-row",
 };
 
 let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
   (props, ref) => {
-    let {imageAlignment, sectionHeight, backgroundColor, children, ...rest} =
+    let { imageAlignment, sectionHeight, backgroundColor, children, ...rest } =
       props;
     let styleSection: CSSProperties = {
-      '--section-height': `${sectionHeight}px`,
+      "--section-height": `${sectionHeight}px`,
       backgroundColor,
     } as CSSProperties;
 
@@ -37,7 +37,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
         <div className="h-full px-10 sm-max:px-6 sm-max:w-full">
           <div
             className={clsx(
-              'flex justify-center items-center gap-5 h-full w-full sm-max:flex-col',
+              "flex justify-center items-center gap-5 h-full w-full sm-max:flex-col",
               AlignImageClasses[imageAlignment!],
             )}
           >
@@ -52,54 +52,54 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
 export default ImageWithText;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'image-with-text',
-  title: 'Image with text',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "image-with-text",
+  title: "Image with text",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Image',
+      group: "Image",
       inputs: [
         {
-          type: 'toggle-group',
-          label: 'Image alignment',
-          name: 'imageAlignment',
+          type: "toggle-group",
+          label: "Image alignment",
+          name: "imageAlignment",
           configs: {
             options: [
-              {label: 'Left', value: 'left', icon: 'AlignLeft'},
-              {label: 'Right', value: 'right', icon: 'AlignRight'},
+              { label: "Left", value: "left", icon: "AlignLeft" },
+              { label: "Right", value: "right", icon: "AlignRight" },
             ],
           },
-          defaultValue: 'left',
+          defaultValue: "left",
         },
         {
-          type: 'range',
-          name: 'sectionHeight',
-          label: 'Section height',
+          type: "range",
+          name: "sectionHeight",
+          label: "Section height",
           defaultValue: 450,
           configs: {
             min: 400,
             max: 700,
             step: 10,
-            unit: 'px',
+            unit: "px",
           },
         },
         {
-          type: 'color',
-          name: 'backgroundColor',
-          label: 'Background color',
-          defaultValue: '#f4f4f4',
+          type: "color",
+          name: "backgroundColor",
+          label: "Background color",
+          defaultValue: "#f4f4f4",
         },
       ],
     },
   ],
-  childTypes: ['image-with-text--content', 'image-with-text--image'],
+  childTypes: ["image-with-text--content", "image-with-text--image"],
   presets: {
     children: [
       {
-        type: 'image-with-text--content',
+        type: "image-with-text--content",
       },
       {
-        type: 'image-with-text--image',
+        type: "image-with-text--image",
       },
     ],
   },

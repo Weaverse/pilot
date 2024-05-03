@@ -1,19 +1,19 @@
-import {Image} from '@shopify/hydrogen';
+import { Image } from "@shopify/hydrogen";
 import type {
   InspectorGroup,
   PositionInputValue,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
+} from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
 
 export type BackgroundImageProps = {
   backgroundImage?: WeaverseImage;
-  backgroundFit?: CSSProperties['objectFit'];
+  backgroundFit?: CSSProperties["objectFit"];
   backgroundPosition?: PositionInputValue;
 };
 
 export function BackgroundImage(props: BackgroundImageProps) {
-  let {backgroundImage, backgroundFit, backgroundPosition} = props;
+  let { backgroundImage, backgroundFit, backgroundPosition } = props;
   if (backgroundImage) {
     return (
       <Image
@@ -30,41 +30,41 @@ export function BackgroundImage(props: BackgroundImageProps) {
   return null;
 }
 
-export let backgroundInputs: InspectorGroup['inputs'] = [
+export let backgroundInputs: InspectorGroup["inputs"] = [
   {
-    type: 'heading',
-    label: 'Background',
+    type: "heading",
+    label: "Background",
   },
   {
-    type: 'color',
-    name: 'backgroundColor',
-    label: 'Background color',
-    defaultValue: '',
+    type: "color",
+    name: "backgroundColor",
+    label: "Background color",
+    defaultValue: "",
   },
   {
-    type: 'image',
-    name: 'backgroundImage',
-    label: 'Background image',
+    type: "image",
+    name: "backgroundImage",
+    label: "Background image",
   },
   {
-    type: 'select',
-    name: 'backgroundFit',
-    label: 'Background fit',
+    type: "select",
+    name: "backgroundFit",
+    label: "Background fit",
     configs: {
       options: [
-        {value: 'fill', label: 'Fill'},
-        {value: 'cover', label: 'Cover'},
-        {value: 'contain', label: 'Contain'},
+        { value: "fill", label: "Fill" },
+        { value: "cover", label: "Cover" },
+        { value: "contain", label: "Contain" },
       ],
     },
-    defaultValue: 'cover',
-    condition: 'backgroundImage.ne.nil',
+    defaultValue: "cover",
+    condition: "backgroundImage.ne.nil",
   },
   {
-    type: 'position',
-    name: 'backgroundPosition',
-    label: 'Background position',
-    defaultValue: 'center',
-    condition: 'backgroundImage.ne.nil',
+    type: "position",
+    name: "backgroundPosition",
+    label: "Background position",
+    defaultValue: "center",
+    condition: "backgroundImage.ne.nil",
   },
 ];

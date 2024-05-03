@@ -1,17 +1,17 @@
-import {useLoaderData} from '@remix-run/react';
-import {Image} from '@shopify/hydrogen';
+import { useLoaderData } from "@remix-run/react";
+import { Image } from "@shopify/hydrogen";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 
-import type {ArticleFragment, BlogQuery} from 'storefrontapi.generated';
-import {Grid, Link, PageHeader, Section} from '~/components';
-import {getImageLoadingPriority} from '~/lib/const';
+import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
+import { Grid, Link, PageHeader, Section } from "~/components";
+import { getImageLoadingPriority } from "~/lib/const";
 
 interface BlogsProps extends HydrogenComponentProps {
-  layout: 'blog' | 'default';
+  layout: "blog" | "default";
   paddingTop: number;
   paddingBottom: number;
   showExcerpt: boolean;
@@ -33,8 +33,8 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
     imageAspectRatio,
     ...rest
   } = props;
-  let {blog, articles} = useLoaderData<
-    BlogQuery & {articles: ArticleFragment[]}
+  let { blog, articles } = useLoaderData<
+    BlogQuery & { articles: ArticleFragment[] }
   >();
 
   if (blog) {
@@ -83,7 +83,7 @@ function ArticleCard({
 }: {
   blogHandle: string;
   article: ArticleFragment;
-  loading?: HTMLImageElement['loading'];
+  loading?: HTMLImageElement["loading"];
   showDate: boolean;
   showExcerpt: boolean;
   showAuthor: boolean;
@@ -129,95 +129,95 @@ function ArticleCard({
 export default Blogs;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'blogs',
-  title: 'Blogs',
+  type: "blogs",
+  title: "Blogs",
   limit: 1,
   enabledOn: {
-    pages: ['BLOG'],
+    pages: ["BLOG"],
   },
-  toolbar: ['general-settings', ['delete']],
+  toolbar: ["general-settings", ["delete"]],
   inspector: [
     {
-      group: 'Blogs',
+      group: "Blogs",
       inputs: [
         {
-          type: 'select',
-          name: 'layout',
-          label: 'Layout',
+          type: "select",
+          name: "layout",
+          label: "Layout",
           configs: {
             options: [
-              {value: 'blog', label: 'Blog'},
-              {value: 'default', label: 'Default'},
+              { value: "blog", label: "Blog" },
+              { value: "default", label: "Default" },
             ],
           },
-          defaultValue: 'blog',
+          defaultValue: "blog",
         },
         {
-          type: 'range',
-          label: 'Top padding',
-          name: 'paddingTop',
+          type: "range",
+          label: "Top padding",
+          name: "paddingTop",
           configs: {
             min: 0,
             max: 100,
             step: 4,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 0,
         },
         {
-          type: 'range',
-          label: 'Bottom padding',
-          name: 'paddingBottom',
+          type: "range",
+          label: "Bottom padding",
+          name: "paddingBottom",
           configs: {
             min: 0,
             max: 100,
             step: 4,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 0,
         },
       ],
     },
     {
-      group: 'Article card',
+      group: "Article card",
       inputs: [
         {
-          type: 'select',
-          label: 'Image aspect ratio',
-          name: 'imageAspectRatio',
+          type: "select",
+          label: "Image aspect ratio",
+          name: "imageAspectRatio",
           configs: {
             options: [
-              {value: 'auto', label: 'Adapt to image'},
-              {value: '1/1', label: '1/1'},
-              {value: '3/2', label: '3/2'},
-              {value: '3/4', label: '3/4'},
-              {value: '4/3', label: '4/3'},
+              { value: "auto", label: "Adapt to image" },
+              { value: "1/1", label: "1/1" },
+              { value: "3/2", label: "3/2" },
+              { value: "3/4", label: "3/4" },
+              { value: "4/3", label: "4/3" },
             ],
           },
-          defaultValue: '3/2',
+          defaultValue: "3/2",
         },
         {
-          type: 'switch',
-          name: 'showExcerpt',
-          label: 'Show excerpt',
+          type: "switch",
+          name: "showExcerpt",
+          label: "Show excerpt",
           defaultValue: true,
         },
         {
-          type: 'switch',
-          name: 'showDate',
-          label: 'Show date',
+          type: "switch",
+          name: "showDate",
+          label: "Show date",
           defaultValue: false,
         },
         {
-          type: 'switch',
-          name: 'showAuthor',
-          label: 'Show author',
+          type: "switch",
+          name: "showAuthor",
+          label: "Show author",
           defaultValue: false,
         },
         {
-          type: 'switch',
-          name: 'showReadmore',
-          label: 'Show read more',
+          type: "switch",
+          name: "showReadmore",
+          label: "Show read more",
           defaultValue: true,
         },
       ],

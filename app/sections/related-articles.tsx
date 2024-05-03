@@ -1,14 +1,14 @@
-import {Await, Link, useLoaderData} from '@remix-run/react';
-import {Image} from '@shopify/hydrogen';
+import { Await, Link, useLoaderData } from "@remix-run/react";
+import { Image } from "@shopify/hydrogen";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {Suspense, forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { Suspense, forwardRef } from "react";
 
-import type {ArticleFragment} from 'storefrontapi.generated';
-import {Skeleton} from '~/components';
-import {getImageLoadingPriority} from '~/lib/const';
+import type { ArticleFragment } from "storefrontapi.generated";
+import { Skeleton } from "~/components";
+import { getImageLoadingPriority } from "~/lib/const";
 
 interface RelatedArticlesProps extends HydrogenComponentProps {
   heading: string;
@@ -22,9 +22,9 @@ interface RelatedArticlesProps extends HydrogenComponentProps {
 
 let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
   (props, ref) => {
-    let {blog, relatedArticles} = useLoaderData<{
+    let { blog, relatedArticles } = useLoaderData<{
       relatedArticles: any[];
-      blog: {handle: string};
+      blog: { handle: string };
     }>();
     let {
       heading,
@@ -85,7 +85,7 @@ function ArticleCard({
 }: {
   blogHandle: string;
   article: ArticleFragment;
-  loading?: HTMLImageElement['loading'];
+  loading?: HTMLImageElement["loading"];
   showDate: boolean;
   showExcerpt: boolean;
   showAuthor: boolean;
@@ -131,27 +131,27 @@ function ArticleCard({
 export default RelatedArticles;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'related-articles',
-  title: 'Related articles',
+  type: "related-articles",
+  title: "Related articles",
   limit: 1,
   enabledOn: {
-    pages: ['ARTICLE'],
+    pages: ["ARTICLE"],
   },
   inspector: [
     {
-      group: 'Related articles',
+      group: "Related articles",
       inputs: [
         {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Related articles',
-          placeholder: 'Related articles',
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "Related articles",
+          placeholder: "Related articles",
         },
         {
-          type: 'range',
-          name: 'articlesCount',
-          label: 'Number of articles',
+          type: "range",
+          name: "articlesCount",
+          label: "Number of articles",
           defaultValue: 3,
           configs: {
             min: 1,
@@ -160,31 +160,31 @@ export let schema: HydrogenComponentSchema = {
           },
         },
         {
-          type: 'switch',
-          name: 'showExcerpt',
-          label: 'Show excerpt',
+          type: "switch",
+          name: "showExcerpt",
+          label: "Show excerpt",
           defaultValue: false,
         },
         {
-          type: 'switch',
-          name: 'showDate',
-          label: 'Show date',
+          type: "switch",
+          name: "showDate",
+          label: "Show date",
           defaultValue: false,
         },
         {
-          type: 'switch',
-          name: 'showAuthor',
-          label: 'Show author',
+          type: "switch",
+          name: "showAuthor",
+          label: "Show author",
           defaultValue: false,
         },
         {
-          type: 'switch',
-          name: 'showReadmore',
-          label: 'Show read more',
+          type: "switch",
+          name: "showReadmore",
+          label: "Show read more",
           defaultValue: true,
         },
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

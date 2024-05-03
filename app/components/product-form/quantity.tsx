@@ -3,14 +3,14 @@ interface QuantityProps {
   onChange: (value: number) => void;
 }
 export function Quantity(props: QuantityProps) {
-  let {value, onChange} = props;
+  let { value, onChange } = props;
   let handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Prevent the user from entering non-numeric characters
     if (
-      e.key !== 'Backspace' &&
-      e.key !== 'Delete' &&
-      e.key !== 'ArrowLeft' &&
-      e.key !== 'ArrowRight' &&
+      e.key !== "Backspace" &&
+      e.key !== "Delete" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight" &&
       isNaN(Number(e.key))
     ) {
       e.preventDefault();

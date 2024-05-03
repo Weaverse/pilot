@@ -5,8 +5,8 @@ import {
   type LoaderFunctionArgs,
   MetaArgs,
   type SerializeFrom,
-} from '@shopify/remix-oxygen';
-import type {ShouldRevalidateFunction} from '@remix-run/react';
+} from "@shopify/remix-oxygen";
+import type { ShouldRevalidateFunction } from "@remix-run/react";
 import {
   isRouteErrorResponse,
   Links,
@@ -17,30 +17,30 @@ import {
   useLoaderData,
   useMatches,
   useRouteError,
-} from '@remix-run/react';
-import type {SeoConfig} from '@shopify/hydrogen';
+} from "@remix-run/react";
+import type { SeoConfig } from "@shopify/hydrogen";
 import {
   getSeoMeta,
   getShopAnalytics,
   UNSTABLE_Analytics as Analytics,
   useNonce,
-} from '@shopify/hydrogen';
-import {CustomAnalytics} from '~/components/CustomAnalytics';
-import invariant from 'tiny-invariant';
-import {withWeaverse} from '@weaverse/hydrogen';
-import roboto400 from '@fontsource/roboto/400.css?url';
-import roboto500 from '@fontsource/roboto/500.css?url';
-import roboto700 from '@fontsource/roboto/700.css?url';
+} from "@shopify/hydrogen";
+import { CustomAnalytics } from "~/components/CustomAnalytics";
+import invariant from "tiny-invariant";
+import { withWeaverse } from "@weaverse/hydrogen";
+import roboto400 from "@fontsource/roboto/400.css?url";
+import roboto500 from "@fontsource/roboto/500.css?url";
+import roboto700 from "@fontsource/roboto/700.css?url";
 
-import {Layout} from '~/components';
-import {seoPayload} from '~/lib/seo.server';
+import { Layout } from "~/components";
+import { seoPayload } from "~/lib/seo.server";
 
-import {GenericError} from './components/GenericError';
-import {NotFound} from './components/NotFound';
-import styles from './styles/app.css?url';
-import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
-import {GlobalStyle} from './weaverse/style';
-import {GlobalLoading} from '~/components/global-loading';
+import { GenericError } from "./components/GenericError";
+import { NotFound } from "./components/NotFound";
+import styles from "./styles/app.css?url";
+import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
+import { GlobalStyle } from "./weaverse/style";
+import { GlobalLoading } from "~/components/global-loading";
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -49,7 +49,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   nextUrl,
 }) => {
   // revalidate when a mutation is performed e.g add to cart, login...
-  if (formMethod && formMethod !== 'GET') {
+  if (formMethod && formMethod !== "GET") {
     return true;
   }
 
@@ -64,27 +64,27 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 export const links: LinksFunction = () => {
   return [
     {
-      rel: 'stylesheet',
+      rel: "stylesheet",
       href: roboto400,
     },
     {
-      rel: 'stylesheet',
+      rel: "stylesheet",
       href: roboto500,
     },
     {
-      rel: 'stylesheet',
+      rel: "stylesheet",
       href: roboto700,
     },
-    {rel: 'stylesheet', href: styles},
+    { rel: "stylesheet", href: styles },
     {
-      rel: 'preconnect',
-      href: 'https://cdn.shopify.com',
+      rel: "preconnect",
+      href: "https://cdn.shopify.com",
     },
     {
-      rel: 'preconnect',
-      href: 'https://shop.app',
+      rel: "preconnect",
+      href: "https://shop.app",
     },
-    {rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg'},
+    { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
   ];
 };
 export const useRootLoaderData = () => {
@@ -92,12 +92,12 @@ export const useRootLoaderData = () => {
   return root?.data as SerializeFrom<typeof loader>;
 };
 
-export async function loader({request, context}: LoaderFunctionArgs) {
-  const {storefront, cart, env} = context;
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const { storefront, cart, env } = context;
   const layout = await getLayoutData(context);
   const isLoggedInPromise = context.customerAccount.isLoggedIn();
 
-  const seo = seoPayload.root({shop: layout.shop, url: request.url});
+  const seo = seoPayload.root({ shop: layout.shop, url: request.url });
   const googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
   return defer(
     {
@@ -119,13 +119,13 @@ export async function loader({request, context}: LoaderFunctionArgs) {
     },
     {
       headers: {
-        'Set-Cookie': await context.session.commit(),
+        "Set-Cookie": await context.session.commit(),
       },
     },
   );
 }
 
-export const meta = ({data}: MetaArgs<typeof loader>) => {
+export const meta = ({ data }: MetaArgs<typeof loader>) => {
   return getSeoMeta(data!.seo as SeoConfig);
 };
 
@@ -167,18 +167,18 @@ function App() {
 
 export default withWeaverse(App);
 
-export function ErrorBoundary({error}: {error: Error}) {
+export function ErrorBoundary({ error }: { error: Error }) {
   const nonce = useNonce();
   const routeError = useRouteError();
   const rootData = useRootLoaderData();
   const locale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   const isRouteError = isRouteErrorResponse(routeError);
 
-  let title = 'Error';
-  let pageType = 'page';
+  let title = "Error";
+  let pageType = "page";
 
   if (isRouteError) {
-    title = 'Not found';
+    title = "Not found";
     if (routeError.status === 404) pageType = routeError.data || pageType;
   }
 
@@ -202,7 +202,7 @@ export function ErrorBoundary({error}: {error: Error}) {
                 <NotFound type={pageType} />
               ) : (
                 <GenericError
-                  error={{message: `${routeError.status} ${routeError.data}`}}
+                  error={{ message: `${routeError.status} ${routeError.data}` }}
                 />
               )}
             </>
@@ -273,16 +273,16 @@ const LAYOUT_QUERY = `#graphql
   }
 ` as const;
 
-async function getLayoutData({storefront, env}: AppLoadContext) {
+async function getLayoutData({ storefront, env }: AppLoadContext) {
   const data = await storefront.query(LAYOUT_QUERY, {
     variables: {
-      headerMenuHandle: 'main-menu',
-      footerMenuHandle: 'footer',
+      headerMenuHandle: "main-menu",
+      footerMenuHandle: "footer",
       language: storefront.i18n.language,
     },
   });
 
-  invariant(data, 'No data returned from Shopify API');
+  invariant(data, "No data returned from Shopify API");
 
   /*
     Modify specific links/routes (optional)
@@ -292,7 +292,7 @@ async function getLayoutData({storefront, env}: AppLoadContext) {
       - /blog/news/blog-post -> /news/blog-post
       - /collections/all -> /products
   */
-  const customPrefixes = {CATALOG: 'products'};
+  const customPrefixes = { CATALOG: "products" };
 
   const headerMenu = data?.headerMenu
     ? parseMenu(
@@ -312,5 +312,5 @@ async function getLayoutData({storefront, env}: AppLoadContext) {
       )
     : undefined;
 
-  return {shop: data.shop, headerMenu, footerMenu};
+  return { shop: data.shop, headerMenu, footerMenu };
 }

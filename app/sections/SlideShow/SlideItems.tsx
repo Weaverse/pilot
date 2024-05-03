@@ -2,13 +2,13 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
-import clsx from 'clsx';
+} from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { forwardRef } from "react";
+import { Image } from "@shopify/hydrogen";
+import clsx from "clsx";
 
-import {IconImageBlank} from '~/components';
+import { IconImageBlank } from "~/components";
 
 interface CountDownProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;
@@ -27,21 +27,21 @@ let SlideShowItem = forwardRef<HTMLDivElement, CountDownProps>((props, ref) => {
     ...rest
   } = props;
 
-  let positionClass: {[key: string]: string} = {
-    'top left': 'items-start justify-start',
-    'top right': 'items-start justify-end',
-    'top center': 'items-start justify-center',
-    'center left': 'items-center justify-start',
-    'center center': 'items-center justify-center',
-    'center right': 'items-center justify-end',
-    'bottom left': 'items-end justify-start',
-    'bottom center': 'items-end justify-center',
-    'bottom right': 'items-end justify-end',
+  let positionClass: { [key: string]: string } = {
+    "top left": "items-start justify-start",
+    "top right": "items-start justify-end",
+    "top center": "items-start justify-center",
+    "center left": "items-center justify-start",
+    "center center": "items-center justify-center",
+    "center right": "items-center justify-end",
+    "bottom left": "items-end justify-start",
+    "bottom center": "items-end justify-center",
+    "bottom right": "items-end justify-end",
   };
 
   let slideStyle: CSSProperties = {
-    '--overlay-color': overlayColor,
-    '--overlay-opacity': `${overlayOpacity}%`,
+    "--overlay-color": overlayColor,
+    "--overlay-opacity": `${overlayOpacity}%`,
   } as CSSProperties;
 
   return (
@@ -49,7 +49,7 @@ let SlideShowItem = forwardRef<HTMLDivElement, CountDownProps>((props, ref) => {
       ref={ref}
       {...rest}
       className={clsx(
-        'flex relative h-full px-10 py-16 w-full sm-max:px-4',
+        "flex relative h-full px-10 py-16 w-full sm-max:px-4",
         positionClass[contentPosition],
       )}
       style={slideStyle}
@@ -83,63 +83,63 @@ let SlideShowItem = forwardRef<HTMLDivElement, CountDownProps>((props, ref) => {
 export default SlideShowItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'slide-show--item',
-  title: 'Slide',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "slide-show--item",
+  title: "Slide",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Slide',
+      group: "Slide",
       inputs: [
         {
-          type: 'image',
-          name: 'backgroundImage',
-          label: 'Background image',
+          type: "image",
+          name: "backgroundImage",
+          label: "Background image",
         },
         {
-          type: 'position',
-          name: 'contentPosition',
-          label: 'Content position',
-          defaultValue: 'center center',
+          type: "position",
+          name: "contentPosition",
+          label: "Content position",
+          defaultValue: "center center",
         },
         {
-          type: 'color',
-          name: 'overlayColor',
-          label: 'Overlay color',
+          type: "color",
+          name: "overlayColor",
+          label: "Overlay color",
         },
         {
-          type: 'range',
-          name: 'overlayOpacity',
-          label: 'Overlay opacity',
+          type: "range",
+          name: "overlayOpacity",
+          label: "Overlay opacity",
           defaultValue: 50,
           configs: {
             min: 10,
             max: 100,
             step: 10,
-            unit: '%',
+            unit: "%",
           },
         },
       ],
     },
   ],
-  childTypes: ['subheading', 'heading', 'description', 'button'],
+  childTypes: ["subheading", "heading", "description", "button"],
   presets: {
     children: [
       {
-        type: 'subheading',
-        content: 'Subheading',
+        type: "subheading",
+        content: "Subheading",
       },
       {
-        type: 'heading',
-        content: 'Slide Heading',
+        type: "heading",
+        content: "Slide Heading",
       },
       {
-        type: 'description',
+        type: "description",
         content:
           "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown.",
       },
       {
-        type: 'button',
-        content: 'Button section',
+        type: "button",
+        content: "Button section",
       },
     ],
   },

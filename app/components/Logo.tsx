@@ -1,7 +1,7 @@
-import {useThemeSettings} from '@weaverse/hydrogen';
-import {Image} from '@shopify/hydrogen';
+import { useThemeSettings } from "@weaverse/hydrogen";
+import { Image } from "@shopify/hydrogen";
 
-import {Link} from './Link';
+import { Link } from "./Link";
 
 export function Logo() {
   let settings = useThemeSettings();

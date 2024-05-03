@@ -1,12 +1,12 @@
-import {VariantSelector} from '@shopify/hydrogen';
+import { VariantSelector } from "@shopify/hydrogen";
 
 import type {
   ProductQuery,
   ProductVariantFragmentFragment,
-} from 'storefrontapi.generated';
+} from "storefrontapi.generated";
 
-import {VariantOption} from './options';
-import {node} from 'prop-types';
+import { VariantOption } from "./options";
+import { node } from "prop-types";
 
 interface ProductVariantsProps {
   selectedVariant: ProductVariantFragmentFragment;
@@ -15,8 +15,8 @@ interface ProductVariantsProps {
     nodes: ProductVariantFragmentFragment[];
   };
   handle: string;
-  product: NonNullable<ProductQuery['product']>;
-  options: NonNullable<ProductQuery['product']>['options'];
+  product: NonNullable<ProductQuery["product"]>;
+  options: NonNullable<ProductQuery["product"]>["options"];
   swatch: {
     configs: any[];
     swatches: any;
@@ -77,7 +77,7 @@ export function ProductVariants(props: ProductVariantsProps) {
   return (
     <div className="space-y-6">
       <VariantSelector handle={handle} variants={nodes} options={options}>
-        {({option}) => {
+        {({ option }) => {
           let optionName = option.name;
           let clonedSelectedOptionMap = new Map(selectedOptionMap);
           let values = option.values

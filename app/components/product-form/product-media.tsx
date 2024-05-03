@@ -1,9 +1,9 @@
-import {Image} from '@shopify/hydrogen';
-import clsx from 'clsx';
-import {useKeenSlider} from 'keen-slider/react.es';
-import {useEffect, useState} from 'react';
+import { Image } from "@shopify/hydrogen";
+import clsx from "clsx";
+import { useKeenSlider } from "keen-slider/react.es";
+import { useEffect, useState } from "react";
 
-import type {MediaFragment} from 'storefrontapi.generated';
+import type { MediaFragment } from "storefrontapi.generated";
 
 interface ProductMediaProps {
   selectedVariant: any;
@@ -21,7 +21,7 @@ export function ProductMedia(props: ProductMediaProps) {
     numberOfThumbnails,
     spacing,
   } = props;
-  let media = _media.filter((med) => med.__typename === 'MediaImage');
+  let media = _media.filter((med) => med.__typename === "MediaImage");
 
   let slideOptions = {
     initial: 0,
@@ -73,7 +73,7 @@ export function ProductMedia(props: ProductMediaProps) {
     // instanceRef.current?.update(slideOptions);
     // thumbnailInstance.current?.update(thumbnailOptions);
     let selectedInd = media.findIndex((med) => {
-      if (med.__typename !== 'MediaImage') return false;
+      if (med.__typename !== "MediaImage") return false;
       return med.image?.url === selectedVariant.image.url;
     });
     moveToIdx(selectedInd);
@@ -81,22 +81,22 @@ export function ProductMedia(props: ProductMediaProps) {
   }, [selectedVariant?.id]);
 
   return (
-    <div className="grid vt-product-image" style={{gap: spacing}}>
+    <div className="grid vt-product-image" style={{ gap: spacing }}>
       <div ref={sliderRef} className="keen-slider">
         {media.map((med, i) => {
           let image =
-            med.__typename === 'MediaImage'
-              ? {...med.image, altText: med.alt || 'Product image'}
+            med.__typename === "MediaImage"
+              ? { ...med.image, altText: med.alt || "Product image" }
               : null;
           return (
             image && (
               <div className="keen-slider__slide" key={med.id}>
                 <Image
                   data={image}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  aspectRatio={'4/5'}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  aspectRatio={"4/5"}
                   className="object-cover w-full h-full aspect-square fadeIn"
-                  sizes={'auto'}
+                  sizes={"auto"}
                 />
               </div>
             )
@@ -107,16 +107,16 @@ export function ProductMedia(props: ProductMediaProps) {
         <div ref={thumbnailRef} className="keen-slider thumbnail">
           {media.map((med, i) => {
             let image =
-              med.__typename === 'MediaImage'
-                ? {...med.image, altText: med.alt || 'Product image'}
+              med.__typename === "MediaImage"
+                ? { ...med.image, altText: med.alt || "Product image" }
                 : null;
             return (
               image && (
                 <div
                   key={med.id}
                   className={clsx(
-                    'keen-slider__slide border-2 cursor-pointer',
-                    i === activeInd ? 'border-bar/70' : '',
+                    "keen-slider__slide border-2 cursor-pointer",
+                    i === activeInd ? "border-bar/70" : "",
                   )}
                   onClick={() => handleClickThumbnail(i)}
                 >

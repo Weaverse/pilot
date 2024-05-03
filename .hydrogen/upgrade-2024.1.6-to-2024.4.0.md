@@ -1,13 +1,15 @@
 # Hydrogen upgrade guide: 2024.1.6 to 2024.4.0
 
-----
+---
 
 ## Features
 
 ### Add `@shopify/mini-oxygen` as a dev dependency for local development [#1891](https://github.com/Shopify/hydrogen/pull/1891)
 
 #### package.json
+
 [#1891](https://github.com/Shopify/hydrogen/pull/1891)
+
 ```diff
  "devDependencies": {
     "@remix-run/dev": "^2.8.0",
@@ -21,7 +23,9 @@
 ### Support scaffolding projects from external repositories using the `--template` flag [#1867](https://github.com/Shopify/hydrogen/pull/1867)
 
 #### The following examples are equivalent
+
 [#1867](https://github.com/Shopify/hydrogen/pull/1867)
+
 ```bash
 npm create @shopify/hydrogen -- --template shopify/hydrogen-demo-store
 npm create @shopify/hydrogen -- --template github.com/shopify/hydrogen-demo-store
@@ -33,6 +37,7 @@ npm create @shopify/hydrogen -- --template https://github.com/shopify/hydrogen-d
 #### Step: 1. Remove the `<Seo />` component from `root.jsx` [#1875](https://github.com/Shopify/hydrogen/pull/1875)
 
 [#1875](https://github.com/Shopify/hydrogen/pull/1875)
+
 ```diff
 export default function App() {
    const nonce = useNonce();
@@ -63,6 +68,7 @@ export default function App() {
 #### Step: 2. Add a Remix meta export to each route that returns an seo property from a loader or handle: [#1875](https://github.com/Shopify/hydrogen/pull/1875)
 
 [#1875](https://github.com/Shopify/hydrogen/pull/1875)
+
 ```diff
 +import {getSeoMeta} from '@shopify/hydrogen';
 
@@ -95,7 +101,7 @@ export default function App() {
 If your root route loader also returns an seo property, make sure to merge that data:
 
 ```js
-export const meta = ({data, matches}) => {
+export const meta = ({ data, matches }) => {
   return getSeoMeta(
     matches[0].data.seo,
     // the current route seo data overrides the root route data
@@ -103,10 +109,11 @@ export const meta = ({data, matches}) => {
   );
 };
 ```
+
 Or more simply:
 
 ```js
-export const meta = ({data, matches}) => {
+export const meta = ({ data, matches }) => {
   return getSeoMeta(...matches.map((match) => match.data.seo));
 };
 ```
@@ -117,9 +124,9 @@ export const meta = ({data, matches}) => {
 Sometimes getSeoMeta might produce a property in a way you'd like to change. Map over the resulting array to change it. For example, Hydrogen removes query parameters from canonical URLs, add them back:
 
 ```js
-export const meta = ({data, location}) => {
+export const meta = ({ data, location }) => {
   return getSeoMeta(data.seo).map((meta) => {
-    if (meta.rel === 'canonical') {
+    if (meta.rel === "canonical") {
       return {
         ...meta,
         href: meta.href + location.search,
@@ -134,7 +141,9 @@ export const meta = ({data, location}) => {
 ### Codegen dependencies must be now listed explicitly in package.json [#1962](https://github.com/Shopify/hydrogen/pull/1962)
 
 #### Update package.json
+
 [#1962](https://github.com/Shopify/hydrogen/pull/1962)
+
 ```diff
 {
   "devDependencies": {
@@ -149,22 +158,24 @@ export const meta = ({data, location}) => {
 }
 ```
 
-----
+---
 
-----
+---
 
 ## Fixes
 
 ### Fix a bug where cart could be null, even though a new cart was created by adding a line item. [#1865](https://github.com/Shopify/hydrogen/pull/1865)
 
 #### Example
+
 [#1865](https://github.com/Shopify/hydrogen/pull/1865)
+
 ```ts
 import {
   createCartHandler,
   cartGetIdDefault,
   cartSetIdDefault,
-} from '@shopify/hydrogen';
+} from "@shopify/hydrogen";
 
 const cartHandler = createCartHandler({
   storefront,
@@ -174,7 +185,7 @@ const cartHandler = createCartHandler({
   cartMutateFragment: CART_MUTATE_FRAGMENT,
 });
 
-await cartHandler.addLines([{merchandiseId: '...'}]);
+await cartHandler.addLines([{ merchandiseId: "..." }]);
 // .get() now returns the cart as expected
 const cart = await cartHandler.get();
 ```
@@ -182,7 +193,9 @@ const cart = await cartHandler.get();
 ### Update Vite plugin imports, and how their options are passed to Remix [#1935](https://github.com/Shopify/hydrogen/pull/1935)
 
 #### vite.config.js
+
 [#1935](https://github.com/Shopify/hydrogen/pull/1935)
+
 ```diff
 -import {hydrogen, oxygen} from '@shopify/cli-hydrogen/experimental-vite';
 +import {hydrogen} from '@shopify/hydrogen/vite';
@@ -201,7 +214,9 @@ export default defineConfig({
 ### Change `storefrontRedirect` to ignore query parameters when matching redirects [#1900](https://github.com/Shopify/hydrogen/pull/1900)
 
 #### This is a breaking change. If you want to retain the legacy functionality that is query parameter sensitive, pass matchQueryParams to storefrontRedirect():
+
 [#1900](https://github.com/Shopify/hydrogen/pull/1900)
+
 ```js
 storefrontRedirect({
   request,
@@ -214,7 +229,9 @@ storefrontRedirect({
 ### Fix types returned by the session object [#1869](https://github.com/Shopify/hydrogen/pull/1869)
 
 #### In remix.env.d.ts or env.d.ts, add the following types
+
 [#1869](https://github.com/Shopify/hydrogen/pull/1869)
+
 ```diff
 import type {
   // ...

@@ -2,13 +2,13 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
-import clsx from 'clsx';
-import {Image} from '@shopify/hydrogen';
+} from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { forwardRef } from "react";
+import clsx from "clsx";
+import { Image } from "@shopify/hydrogen";
 
-import {IconImageBlank} from '~/components';
+import { IconImageBlank } from "~/components";
 
 interface HeaderImageProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;
@@ -34,11 +34,11 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
   } = props;
   let sectionStyle: CSSProperties = {
     justifyContent: `${contentAlignment}`,
-    '--section-height-desktop': `${sectionHeightDesktop}px`,
-    '--section-height-mobile': `${sectionHeightMobile}px`,
-    '--overlay-opacity': `${overlayOpacity}%`,
-    '--overlay-color': `${overlayColor}`,
-    '--max-width-content': '600px',
+    "--section-height-desktop": `${sectionHeightDesktop}px`,
+    "--section-height-mobile": `${sectionHeightMobile}px`,
+    "--overlay-opacity": `${overlayOpacity}%`,
+    "--overlay-color": `${overlayColor}`,
+    "--max-width-content": "600px",
   } as CSSProperties;
 
   return (
@@ -46,7 +46,7 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
       ref={ref}
       {...rest}
       className={clsx(
-        'flex relative gap-3 items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]',
+        "flex relative gap-3 items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]",
       )}
       style={sectionStyle}
     >
@@ -79,102 +79,102 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
 export default HeaderImage;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'image-banner',
-  title: 'Image banner',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "image-banner",
+  title: "Image banner",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Image',
+      group: "Image",
       inputs: [
         {
-          type: 'image',
-          name: 'backgroundImage',
-          label: 'Background image',
+          type: "image",
+          name: "backgroundImage",
+          label: "Background image",
         },
         {
-          type: 'toggle-group',
-          label: 'Content alignment',
-          name: 'contentAlignment',
+          type: "toggle-group",
+          label: "Content alignment",
+          name: "contentAlignment",
           configs: {
             options: [
-              {label: 'Left', value: 'flex-start'},
-              {label: 'Center', value: 'center'},
-              {label: 'Right', value: 'flex-end'},
+              { label: "Left", value: "flex-start" },
+              { label: "Center", value: "center" },
+              { label: "Right", value: "flex-end" },
             ],
           },
-          defaultValue: 'center',
+          defaultValue: "center",
         },
         {
-          type: 'switch',
-          name: 'enableOverlay',
-          label: 'Enable overlay',
+          type: "switch",
+          name: "enableOverlay",
+          label: "Enable overlay",
           defaultValue: true,
         },
         {
-          type: 'color',
-          name: 'overlayColor',
-          label: 'Overlay color',
-          defaultValue: '#333333',
+          type: "color",
+          name: "overlayColor",
+          label: "Overlay color",
+          defaultValue: "#333333",
           condition: `enableOverlay.eq.true`,
         },
         {
-          type: 'range',
-          name: 'overlayOpacity',
-          label: 'Overlay opacity',
+          type: "range",
+          name: "overlayOpacity",
+          label: "Overlay opacity",
           defaultValue: 50,
           configs: {
             min: 10,
             max: 100,
             step: 10,
-            unit: '%',
+            unit: "%",
           },
           condition: `enableOverlay.eq.true`,
         },
         {
-          type: 'range',
-          name: 'sectionHeightDesktop',
-          label: 'Section height desktop',
+          type: "range",
+          name: "sectionHeightDesktop",
+          label: "Section height desktop",
           defaultValue: 450,
           configs: {
             min: 400,
             max: 700,
             step: 10,
-            unit: 'px',
+            unit: "px",
           },
         },
         {
-          type: 'range',
-          name: 'sectionHeightMobile',
-          label: 'Section height mobile',
+          type: "range",
+          name: "sectionHeightMobile",
+          label: "Section height mobile",
           defaultValue: 350,
           configs: {
             min: 300,
             max: 600,
             step: 10,
-            unit: 'px',
+            unit: "px",
           },
         },
       ],
     },
   ],
-  childTypes: ['subheading', 'heading', 'description', 'button'],
+  childTypes: ["subheading", "heading", "description", "button"],
   presets: {
     children: [
       {
-        type: 'subheading',
-        content: 'Subheading',
+        type: "subheading",
+        content: "Subheading",
       },
       {
-        type: 'heading',
-        content: 'Heading for Image',
+        type: "heading",
+        content: "Heading for Image",
       },
       {
-        type: 'description',
-        content: 'Pair large text with an image to tell a story.',
+        type: "description",
+        content: "Pair large text with an image to tell a story.",
       },
       {
-        type: 'button',
-        content: 'Button section',
+        type: "button",
+        content: "Button section",
       },
     ],
   },

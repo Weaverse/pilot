@@ -1,18 +1,18 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import invariant from 'tiny-invariant';
+import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import invariant from "tiny-invariant";
 
 import {
   PRODUCT_CARD_FRAGMENT,
   FEATURED_COLLECTION_FRAGMENT,
-} from '~/data/fragments';
+} from "~/data/fragments";
 
-export async function loader({context: {storefront}}: LoaderFunctionArgs) {
+export async function loader({ context: { storefront } }: LoaderFunctionArgs) {
   return json(await getFeaturedData(storefront));
 }
 
 export async function getFeaturedData(
-  storefront: LoaderFunctionArgs['context']['storefront'],
-  variables: {pageBy?: number} = {},
+  storefront: LoaderFunctionArgs["context"]["storefront"],
+  variables: { pageBy?: number } = {},
 ) {
   const data = await storefront.query(FEATURED_ITEMS_QUERY, {
     variables: {
@@ -23,7 +23,7 @@ export async function getFeaturedData(
     },
   });
 
-  invariant(data, 'No featured items data returned from Shopify API');
+  invariant(data, "No featured items data returned from Shopify API");
 
   return data;
 }

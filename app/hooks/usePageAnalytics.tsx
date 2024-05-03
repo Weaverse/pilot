@@ -1,10 +1,14 @@
-import {useMatches} from '@remix-run/react';
-import type {ShopifyPageViewPayload} from '@shopify/hydrogen';
-import {useMemo} from 'react';
+import { useMatches } from "@remix-run/react";
+import type { ShopifyPageViewPayload } from "@shopify/hydrogen";
+import { useMemo } from "react";
 
-import {DEFAULT_LOCALE} from '~/lib/utils';
+import { DEFAULT_LOCALE } from "~/lib/utils";
 
-export function usePageAnalytics({hasUserConsent}: {hasUserConsent: boolean}) {
+export function usePageAnalytics({
+  hasUserConsent,
+}: {
+  hasUserConsent: boolean;
+}) {
   const matches = useMatches();
 
   return useMemo(() => {
@@ -13,10 +17,10 @@ export function usePageAnalytics({hasUserConsent}: {hasUserConsent: boolean}) {
     matches.forEach((event) => {
       const eventData = event?.data as Record<string, unknown>;
       if (eventData) {
-        eventData['analytics'] && Object.assign(data, eventData['analytics']);
+        eventData["analytics"] && Object.assign(data, eventData["analytics"]);
 
         const selectedLocale =
-          (eventData['selectedLocale'] as typeof DEFAULT_LOCALE) ||
+          (eventData["selectedLocale"] as typeof DEFAULT_LOCALE) ||
           DEFAULT_LOCALE;
 
         Object.assign(data, {

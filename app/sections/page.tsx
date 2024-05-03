@@ -1,12 +1,12 @@
-import {useLoaderData} from '@remix-run/react';
+import { useLoaderData } from "@remix-run/react";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 
-import type {PageDetailsQuery} from 'storefrontapi.generated';
-import {PageHeader} from '~/components';
+import type { PageDetailsQuery } from "storefrontapi.generated";
+import { PageHeader } from "~/components";
 
 interface PageProps extends HydrogenComponentProps {
   paddingTop: number;
@@ -14,8 +14,8 @@ interface PageProps extends HydrogenComponentProps {
 }
 
 let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
-  let {page} = useLoaderData<PageDetailsQuery>();
-  let {paddingTop, paddingBottom, ...rest} = props;
+  let { page } = useLoaderData<PageDetailsQuery>();
+  let { paddingTop, paddingBottom, ...rest } = props;
 
   if (page) {
     return (
@@ -30,7 +30,7 @@ let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
           <PageHeader heading={page.title}>
             <div
               suppressHydrationWarning
-              dangerouslySetInnerHTML={{__html: page.body}}
+              dangerouslySetInnerHTML={{ __html: page.body }}
               className="prose dark:prose-invert"
             />
           </PageHeader>
@@ -44,38 +44,38 @@ let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
 export default Page;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'page',
-  title: 'Page',
+  type: "page",
+  title: "Page",
   limit: 1,
   enabledOn: {
-    pages: ['PAGE'],
+    pages: ["PAGE"],
   },
-  toolbar: ['general-settings'],
+  toolbar: ["general-settings"],
   inspector: [
     {
-      group: 'Page',
+      group: "Page",
       inputs: [
         {
-          type: 'range',
-          label: 'Top padding',
-          name: 'paddingTop',
+          type: "range",
+          label: "Top padding",
+          name: "paddingTop",
           configs: {
             min: 0,
             max: 100,
             step: 4,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 32,
         },
         {
-          type: 'range',
-          label: 'Bottom padding',
-          name: 'paddingBottom',
+          type: "range",
+          label: "Bottom padding",
+          name: "paddingBottom",
           configs: {
             min: 0,
             max: 100,
             step: 4,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 32,
         },

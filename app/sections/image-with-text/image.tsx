@@ -2,19 +2,19 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
+import { Image } from "@shopify/hydrogen";
 
-import {IconImageBlank} from '~/components';
+import { IconImageBlank } from "~/components";
 
 interface ImageItemsProps extends HydrogenComponentProps {
   image: WeaverseImage;
-  loading: HTMLImageElement['loading'];
+  loading: HTMLImageElement["loading"];
 }
 
 let ImageItems = forwardRef<HTMLDivElement, ImageItemsProps>((props, ref) => {
-  let {image, loading, ...rest} = props;
+  let { image, loading, ...rest } = props;
 
   return (
     <div
@@ -44,32 +44,32 @@ let ImageItems = forwardRef<HTMLDivElement, ImageItemsProps>((props, ref) => {
 export default ImageItems;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'image-with-text--image',
-  title: 'Image',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "image-with-text--image",
+  title: "Image",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   limit: 1,
   inspector: [
     {
-      group: 'Image',
+      group: "Image",
       inputs: [
         {
-          type: 'image',
-          name: 'image',
-          label: 'Image',
+          type: "image",
+          name: "image",
+          label: "Image",
         },
         {
-          type: 'toggle-group',
-          name: 'loading',
-          label: 'Image loading',
-          defaultValue: 'eager',
+          type: "toggle-group",
+          name: "loading",
+          label: "Image loading",
+          defaultValue: "eager",
           configs: {
             options: [
-              {label: 'Eager', value: 'eager', icon: 'Lightning'},
+              { label: "Eager", value: "eager", icon: "Lightning" },
               {
-                label: 'Lazy',
-                value: 'lazy',
-                icon: 'SpinnerGap',
-                weight: 'light',
+                label: "Lazy",
+                value: "lazy",
+                icon: "SpinnerGap",
+                weight: "light",
               },
             ],
           },

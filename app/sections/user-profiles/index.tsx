@@ -2,22 +2,22 @@ import type {
   ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
-import clsx from 'clsx';
-import {Image} from '@shopify/hydrogen';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
+import clsx from "clsx";
+import { Image } from "@shopify/hydrogen";
 
-import {METAOBJECTS_QUERY} from '~/data/queries';
-import {Button} from '~/components';
+import { METAOBJECTS_QUERY } from "~/data/queries";
+import { Button } from "~/components";
 
-const UserCard = ({user}: {user: any}) => {
-  let {fields} = user;
-  let image = fields.find((field: any) => field.key === 'avatar');
+const UserCard = ({ user }: { user: any }) => {
+  let { fields } = user;
+  let image = fields.find((field: any) => field.key === "avatar");
   let imageData = image?.reference?.image;
-  let name = fields.find((field: any) => field.key === 'name')?.value;
-  let role = fields.find((field: any) => field.key === 'role')?.value;
+  let name = fields.find((field: any) => field.key === "name")?.value;
+  let role = fields.find((field: any) => field.key === "role")?.value;
   let description = fields.find(
-    (field: any) => field.key === 'description',
+    (field: any) => field.key === "description",
   )?.value;
   return (
     <div
@@ -27,8 +27,8 @@ const UserCard = ({user}: {user: any}) => {
       <Image
         className="object-cover w-full"
         data={imageData}
-        style={{aspectRatio: '320/320', objectFit: 'contain'}}
-        sizes={'auto'}
+        style={{ aspectRatio: "320/320", objectFit: "contain" }}
+        sizes={"auto"}
       />
       <div className="p-4">
         <h2 className="text-2xl font-bold hover:text-gray-700 transition-all duration-200">
@@ -42,7 +42,7 @@ const UserCard = ({user}: {user: any}) => {
         </p>
         <div className="flex mt-4 space-x-2">
           <Button>Follow</Button>
-          <Button variant={'secondary'}>Message</Button>
+          <Button variant={"secondary"}>Message</Button>
         </div>
       </div>
     </div>
@@ -59,12 +59,12 @@ interface UserProfilesProps extends HydrogenComponentProps {
 
 const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
   (props, ref) => {
-    let {loaderData, metaObjectData, itemsPerRow, className, ...rest} = props;
+    let { loaderData, metaObjectData, itemsPerRow, className, ...rest } = props;
     if (!metaObjectData) {
       return (
         <section
           className={clsx(
-            'w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto',
+            "w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto",
             className,
           )}
           ref={ref}
@@ -84,7 +84,7 @@ const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
           className="grid w-fit mx-auto"
           style={{
             gridTemplateColumns: `repeat(${itemsPerRow}, minmax(0, 1fr))`,
-            gap: '16rem',
+            gap: "16rem",
           }}
         >
           {loaderData?.userProfiles.map((user: any) => {
@@ -97,23 +97,23 @@ const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
 );
 
 export let schema: HydrogenComponentSchema = {
-  type: 'meta-demo',
-  title: 'Metaobject Demo',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "meta-demo",
+  title: "Metaobject Demo",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Metaobject Demo',
+      group: "Metaobject Demo",
       inputs: [
         {
-          label: 'Select metaobject definition',
-          type: 'metaobject',
-          name: 'metaObjectData',
+          label: "Select metaobject definition",
+          type: "metaobject",
+          name: "metaObjectData",
           shouldRevalidate: true,
         },
         {
-          label: 'Items per row',
-          name: 'itemsPerRow',
-          type: 'range',
+          label: "Items per row",
+          name: "itemsPerRow",
+          type: "range",
           configs: {
             min: 1,
             max: 10,
@@ -126,12 +126,12 @@ export let schema: HydrogenComponentSchema = {
 };
 
 export let loader = async (args: ComponentLoaderArgs<UserProfilesProps>) => {
-  let {weaverse, data} = args;
-  let {storefront} = weaverse;
+  let { weaverse, data } = args;
+  let { storefront } = weaverse;
   if (!data?.metaObjectData) {
     return null;
   }
-  let {metaobjects} = await storefront.query(METAOBJECTS_QUERY, {
+  let { metaobjects } = await storefront.query(METAOBJECTS_QUERY, {
     variables: {
       type: data.metaObjectData.type,
       first: 10,

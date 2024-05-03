@@ -1,20 +1,20 @@
-import type {SyntheticEvent} from 'react';
-import {useMemo, useState} from 'react';
-import {Menu, Disclosure} from '@headlessui/react';
-import type {Location} from '@remix-run/react';
+import type { SyntheticEvent } from "react";
+import { useMemo, useState } from "react";
+import { Menu, Disclosure } from "@headlessui/react";
+import type { Location } from "@remix-run/react";
 import {
   Link,
   useLocation,
   useSearchParams,
   useNavigate,
-} from '@remix-run/react';
-import useDebounce from 'react-use/esm/useDebounce';
+} from "@remix-run/react";
+import useDebounce from "react-use/esm/useDebounce";
 import type {
   Filter,
   ProductFilter,
-} from '@shopify/hydrogen/storefront-api-types';
+} from "@shopify/hydrogen/storefront-api-types";
 
-import {Heading, IconFilters, IconCaret, IconXMark, Text} from '~/components';
+import { Heading, IconFilters, IconCaret, IconXMark, Text } from "~/components";
 
 export type AppliedFilter = {
   label: string;
@@ -22,19 +22,19 @@ export type AppliedFilter = {
 };
 
 export type SortParam =
-  | 'price-low-high'
-  | 'price-high-low'
-  | 'best-selling'
-  | 'newest'
-  | 'featured';
+  | "price-low-high"
+  | "price-high-low"
+  | "best-selling"
+  | "newest"
+  | "featured";
 
 type Props = {
   filters: Filter[];
   appliedFilters?: AppliedFilter[];
   children: React.ReactNode;
-  collections?: Array<{handle: string; title: string}>;
+  collections?: Array<{ handle: string; title: string }>;
 };
-export const FILTER_URL_PREFIX = 'filter.';
+export const FILTER_URL_PREFIX = "filter.";
 
 export function SortFilter({
   filters,
@@ -49,7 +49,7 @@ export function SortFilter({
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={
-            'relative flex items-center justify-center w-8 h-8 focus:ring-primary/5'
+            "relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
           }
         >
           <IconFilters />
@@ -60,8 +60,8 @@ export function SortFilter({
         <div
           className={`transition-all duration-200 ${
             isOpen
-              ? 'opacity-100 min-w-full md:min-w-[240px] md:w-[240px] md:pr-8 max-h-full'
-              : 'opacity-0 md:min-w-[0px] md:w-[0px] pr-0 max-h-0 md:max-h-full'
+              ? "opacity-100 min-w-full md:min-w-[240px] md:w-[240px] md:pr-8 max-h-full"
+              : "opacity-0 md:min-w-[0px] md:w-[0px] pr-0 max-h-0 md:max-h-full"
           }`}
         >
           <FiltersDrawer filters={filters} appliedFilters={appliedFilters} />
@@ -75,16 +75,16 @@ export function SortFilter({
 export function FiltersDrawer({
   filters = [],
   appliedFilters = [],
-}: Omit<Props, 'children'>) {
+}: Omit<Props, "children">) {
   const [params] = useSearchParams();
   const location = useLocation();
 
-  const filterMarkup = (filter: Filter, option: Filter['values'][0]) => {
+  const filterMarkup = (filter: Filter, option: Filter["values"][0]) => {
     switch (filter.type) {
-      case 'PRICE_RANGE':
+      case "PRICE_RANGE":
         const priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
         const price = priceFilter
-          ? (JSON.parse(priceFilter) as ProductFilter['price'])
+          ? (JSON.parse(priceFilter) as ProductFilter["price"])
           : undefined;
         const min = isNaN(Number(price?.min)) ? undefined : Number(price?.min);
         const max = isNaN(Number(price?.max)) ? undefined : Number(price?.max);
@@ -120,11 +120,11 @@ export function FiltersDrawer({
         <div className="divide-y">
           {filters.map((filter: Filter) => (
             <Disclosure as="div" key={filter.id} className="w-full">
-              {({open}) => (
+              {({ open }) => (
                 <>
                   <Disclosure.Button className="flex justify-between w-full py-4">
                     <Text size="lead">{filter.label}</Text>
-                    <IconCaret direction={open ? 'up' : 'down'} />
+                    <IconCaret direction={open ? "up" : "down"} />
                   </Disclosure.Button>
                   <Disclosure.Panel key={filter.id}>
                     <ul key={filter.id} className="py-2">
@@ -147,7 +147,7 @@ export function FiltersDrawer({
   );
 }
 
-function AppliedFilters({filters = []}: {filters: AppliedFilter[]}) {
+function AppliedFilters({ filters = [] }: { filters: AppliedFilter[] }) {
   const [params] = useSearchParams();
   const location = useLocation();
   return (
@@ -193,7 +193,7 @@ function getSortLink(
   params: URLSearchParams,
   location: Location,
 ) {
-  params.set('sort', sort);
+  params.set("sort", sort);
   return `${location.pathname}?${params.toString()}`;
 }
 
@@ -209,7 +209,7 @@ function getFilterLink(
 
 const PRICE_RANGE_FILTER_DEBOUNCE = 500;
 
-function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
+function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
   const location = useLocation();
   const params = useMemo(
     () => new URLSearchParams(location.search),
@@ -229,10 +229,10 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
       }
 
       const price = {
-        ...(minPrice === undefined ? {} : {min: minPrice}),
-        ...(maxPrice === undefined ? {} : {max: maxPrice}),
+        ...(minPrice === undefined ? {} : { min: minPrice }),
+        ...(maxPrice === undefined ? {} : { max: maxPrice }),
       };
-      const newParams = filterInputToParams({price}, params);
+      const newParams = filterInputToParams({ price }, params);
       navigate(`${location.pathname}?${newParams.toString()}`);
     },
     PRICE_RANGE_FILTER_DEBOUNCE,
@@ -263,8 +263,8 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
           name="minPrice"
           className="text-black"
           type="number"
-          value={minPrice ?? ''}
-          placeholder={'$'}
+          value={minPrice ?? ""}
+          placeholder={"$"}
           onChange={onChangeMin}
         />
       </label>
@@ -274,8 +274,8 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
           name="maxPrice"
           className="text-black"
           type="number"
-          value={maxPrice ?? ''}
-          placeholder={'$'}
+          value={maxPrice ?? ""}
+          placeholder={"$"}
           onChange={onChangeMax}
         />
       </label>
@@ -288,7 +288,7 @@ function filterInputToParams(
   params: URLSearchParams,
 ) {
   const input =
-    typeof rawInput === 'string'
+    typeof rawInput === "string"
       ? (JSON.parse(rawInput) as ProductFilter)
       : rawInput;
 
@@ -296,7 +296,7 @@ function filterInputToParams(
     if (params.has(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value))) {
       return;
     }
-    if (key === 'price') {
+    if (key === "price") {
       // For price, we want to overwrite
       params.set(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
     } else {
@@ -308,28 +308,28 @@ function filterInputToParams(
 }
 
 export default function SortMenu() {
-  const items: {label: string; key: SortParam}[] = [
-    {label: 'Featured', key: 'featured'},
+  const items: { label: string; key: SortParam }[] = [
+    { label: "Featured", key: "featured" },
     {
-      label: 'Price: Low - High',
-      key: 'price-low-high',
+      label: "Price: Low - High",
+      key: "price-low-high",
     },
     {
-      label: 'Price: High - Low',
-      key: 'price-high-low',
+      label: "Price: High - Low",
+      key: "price-high-low",
     },
     {
-      label: 'Best Selling',
-      key: 'best-selling',
+      label: "Best Selling",
+      key: "best-selling",
     },
     {
-      label: 'Newest',
-      key: 'newest',
+      label: "Newest",
+      key: "newest",
     },
   ];
   const [params] = useSearchParams();
   const location = useLocation();
-  const activeItem = items.find((item) => item.key === params.get('sort'));
+  const activeItem = items.find((item) => item.key === params.get("sort"));
 
   return (
     <Menu as="div" className="relative z-40">
@@ -350,7 +350,7 @@ export default function SortMenu() {
             {() => (
               <Link
                 className={`block text-sm pb-2 px-3 ${
-                  activeItem?.key === item.key ? 'font-bold' : 'font-normal'
+                  activeItem?.key === item.key ? "font-bold" : "font-normal"
                 }`}
                 to={getSortLink(item.key, params, location)}
               >

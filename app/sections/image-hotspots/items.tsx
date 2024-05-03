@@ -3,16 +3,16 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseProduct,
-} from '@weaverse/hydrogen';
-import {getSelectedProductOptions} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
-import clsx from 'clsx';
+} from "@weaverse/hydrogen";
+import { getSelectedProductOptions } from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { forwardRef } from "react";
+import { Image } from "@shopify/hydrogen";
+import clsx from "clsx";
 
-import type {ProductQuery} from 'storefrontapi.generated';
-import {PRODUCT_QUERY} from '~/data/queries';
-import {IconImageBlank, Link} from '~/components';
+import type { ProductQuery } from "storefrontapi.generated";
+import { PRODUCT_QUERY } from "~/data/queries";
+import { IconImageBlank, Link } from "~/components";
 
 type ProductData = {
   verticalPosition: number;
@@ -27,13 +27,13 @@ type ProductsHotspotProps = HydrogenComponentProps<
 
 let ProductHotspotItems = forwardRef<HTMLDivElement, ProductsHotspotProps>(
   (props, ref) => {
-    let {product, verticalPosition, horizontalPosition, loaderData, ...rest} =
+    let { product, verticalPosition, horizontalPosition, loaderData, ...rest } =
       props;
 
     let Horizontal =
-      horizontalPosition >= 50 ? 'left-auto right-1/2' : 'right-auto left-1/2';
+      horizontalPosition >= 50 ? "left-auto right-1/2" : "right-auto left-1/2";
     let Vertical =
-      verticalPosition >= 50 ? 'top-auto bottom-full' : 'bottom-auto top-full';
+      verticalPosition >= 50 ? "top-auto bottom-full" : "bottom-auto top-full";
 
     let sectionStyle: CSSProperties = {
       left: `${horizontalPosition}%`,
@@ -62,7 +62,7 @@ let ProductHotspotItems = forwardRef<HTMLDivElement, ProductsHotspotProps>(
           </svg>
           <div
             className={clsx(
-              'hidden z-20 aspect-[2/1] bg-white absolute group-hover:flex flex-row justify-center items-center w-96 sm-max:w-36',
+              "hidden z-20 aspect-[2/1] bg-white absolute group-hover:flex flex-row justify-center items-center w-96 sm-max:w-36",
               Horizontal,
               Vertical,
             )}
@@ -92,12 +92,12 @@ let ProductHotspotItems = forwardRef<HTMLDivElement, ProductsHotspotProps>(
     const ProductPrice =
       loaderData?.product?.variants.nodes.map(
         (variant) => variant.price.amount,
-      ) || '0.00';
+      ) || "0.00";
     const ProductCurrency =
       loaderData?.product?.variants.nodes.map(
         (variant) => variant.price.currencyCode,
-      ) || '$';
-    const ProductTittle = loaderData?.product?.title || 'Product title';
+      ) || "$";
+    const ProductTittle = loaderData?.product?.title || "Product title";
 
     return (
       <div
@@ -125,7 +125,7 @@ let ProductHotspotItems = forwardRef<HTMLDivElement, ProductsHotspotProps>(
         </svg>
         <div
           className={clsx(
-            'hidden z-20 aspect-[2/1] bg-white absolute group-hover:flex flex-row justify-center items-center w-96 sm-max:w-36',
+            "hidden z-20 aspect-[2/1] bg-white absolute group-hover:flex flex-row justify-center items-center w-96 sm-max:w-36",
             Horizontal,
             Vertical,
           )}
@@ -162,8 +162,8 @@ let ProductHotspotItems = forwardRef<HTMLDivElement, ProductsHotspotProps>(
 export default ProductHotspotItems;
 
 export let loader = async (args: ComponentLoaderArgs<ProductData>) => {
-  let {weaverse, data} = args;
-  let {storefront, request} = weaverse;
+  let { weaverse, data } = args;
+  let { storefront, request } = weaverse;
   if (data.product) {
     return await storefront.query<ProductQuery>(PRODUCT_QUERY, {
       variables: {
@@ -178,39 +178,39 @@ export let loader = async (args: ComponentLoaderArgs<ProductData>) => {
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'product-hotspot--items',
-  title: 'Product hotspot items',
+  type: "product-hotspot--items",
+  title: "Product hotspot items",
   inspector: [
     {
-      group: 'Hotspot',
+      group: "Hotspot",
       inputs: [
         {
-          type: 'product',
-          name: 'product',
-          label: 'Product',
+          type: "product",
+          name: "product",
+          label: "Product",
         },
         {
-          type: 'range',
-          name: 'verticalPosition',
-          label: 'Vertical position',
+          type: "range",
+          name: "verticalPosition",
+          label: "Vertical position",
           defaultValue: 50,
           configs: {
             min: 5,
             max: 90,
             step: 5,
-            unit: '%',
+            unit: "%",
           },
         },
         {
-          type: 'range',
-          name: 'horizontalPosition',
-          label: 'Horizontal position',
+          type: "range",
+          name: "horizontalPosition",
+          label: "Horizontal position",
           defaultValue: 50,
           configs: {
             min: 5,
             max: 90,
             step: 5,
-            unit: '%',
+            unit: "%",
           },
         },
       ],

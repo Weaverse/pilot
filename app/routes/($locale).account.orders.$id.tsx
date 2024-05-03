@@ -1,38 +1,38 @@
-import invariant from 'tiny-invariant';
-import clsx from 'clsx';
-import {json, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
-import {Money, Image, flattenConnection} from '@shopify/hydrogen';
+import invariant from "tiny-invariant";
+import clsx from "clsx";
+import { json, redirect, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { useLoaderData, type MetaFunction } from "@remix-run/react";
+import { Money, Image, flattenConnection } from "@shopify/hydrogen";
 
-import type {OrderFragment} from 'customer-accountapi.generated';
-import {statusMessage} from '~/lib/utils';
-import {Link, Heading, PageHeader, Text} from '~/components';
-import {CUSTOMER_ORDER_QUERY} from '~/graphql/customer-account/CustomerOrderQuery';
+import type { OrderFragment } from "customer-accountapi.generated";
+import { statusMessage } from "~/lib/utils";
+import { Link, Heading, PageHeader, Text } from "~/components";
+import { CUSTOMER_ORDER_QUERY } from "~/graphql/customer-account/CustomerOrderQuery";
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Order ${data?.order?.name}`}];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Order ${data?.order?.name}` }];
 };
 
-export async function loader({request, context, params}: LoaderFunctionArgs) {
+export async function loader({ request, context, params }: LoaderFunctionArgs) {
   if (!params.id) {
-    return redirect(params?.locale ? `${params.locale}/account` : '/account');
+    return redirect(params?.locale ? `${params.locale}/account` : "/account");
   }
 
   const queryParams = new URL(request.url).searchParams;
-  const orderToken = queryParams.get('key');
+  const orderToken = queryParams.get("key");
 
-  invariant(orderToken, 'Order token is required');
+  invariant(orderToken, "Order token is required");
 
   try {
     const orderId = `gid://shopify/Order/${params.id}?key=${orderToken}`;
 
-    const {data, errors} = await context.customerAccount.query(
+    const { data, errors } = await context.customerAccount.query(
       CUSTOMER_ORDER_QUERY,
-      {variables: {orderId}},
+      { variables: { orderId } },
     );
 
     if (errors?.length || !data?.order || !data?.lineItems) {
-      throw new Error('Order not found');
+      throw new Error("Order not found");
     }
 
     const order: OrderFragment = data.order;
@@ -44,10 +44,10 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
     const firstDiscount = discountApplications[0]?.value;
 
     const discountValue =
-      firstDiscount?.__typename === 'MoneyV2' && firstDiscount;
+      firstDiscount?.__typename === "MoneyV2" && firstDiscount;
 
     const discountPercentage =
-      firstDiscount?.__typename === 'PricingPercentageValue' &&
+      firstDiscount?.__typename === "PricingPercentageValue" &&
       firstDiscount?.percentage;
 
     const fulfillmentStatus = flattenConnection(order.fulfillments)[0].status;
@@ -62,7 +62,7 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
       },
       {
         headers: {
-          'Set-Cookie': await context.session.commit(),
+          "Set-Cookie": await context.session.commit(),
         },
       },
     );
@@ -70,7 +70,7 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
     throw new Response(error instanceof Error ? error.message : undefined, {
       status: 404,
       headers: {
-        'Set-Cookie': await context.session.commit(),
+        "Set-Cookie": await context.session.commit(),
       },
     });
   }
@@ -301,9 +301,9 @@ export default function OrderRoute() {
                 <div
                   className={clsx(
                     `mt-3 px-3 py-1 text-xs font-medium rounded-full inline-block w-auto`,
-                    fulfillmentStatus === 'SUCCESS'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-primary/20 text-primary/50',
+                    fulfillmentStatus === "SUCCESS"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-primary/20 text-primary/50",
                   )}
                 >
                   <Text size="fine">{statusMessage(fulfillmentStatus!)}</Text>

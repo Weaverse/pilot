@@ -1,7 +1,7 @@
-import {Image} from '@shopify/hydrogen';
+import { Image } from "@shopify/hydrogen";
 
-import type {HomepageFeaturedCollectionsQuery} from 'storefrontapi.generated';
-import {Heading, Section, Grid, Link} from '~/components';
+import type { HomepageFeaturedCollectionsQuery } from "storefrontapi.generated";
+import { Heading, Section, Grid, Link } from "~/components";
 
 type FeaturedCollectionsProps = HomepageFeaturedCollectionsQuery & {
   title?: string;
@@ -10,7 +10,7 @@ type FeaturedCollectionsProps = HomepageFeaturedCollectionsQuery & {
 
 export function FeaturedCollections({
   collections,
-  title = 'Collections',
+  title = "Collections",
   count,
   ...props
 }: FeaturedCollectionsProps) {

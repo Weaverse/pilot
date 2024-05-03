@@ -1,11 +1,11 @@
-import {Image} from '@shopify/hydrogen';
+import { Image } from "@shopify/hydrogen";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import clsx from 'clsx';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import clsx from "clsx";
+import { forwardRef } from "react";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
   heading: string;
@@ -31,7 +31,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
       <div
         ref={ref}
         {...rest}
-        className={clsx(hideOnMobile && 'hidden sm:block')}
+        className={clsx(hideOnMobile && "hidden sm:block")}
       >
         <figure className="p-6 bg-gray-50 rounded">
           <blockquote className="text-gray-500">
@@ -39,16 +39,16 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
             <p
               className="my-4"
               suppressHydrationWarning
-              dangerouslySetInnerHTML={{__html: content}}
+              dangerouslySetInnerHTML={{ __html: content }}
             />
           </blockquote>
           <figcaption className="flex items-center space-x-3">
             <Image
               className="h-9 rounded-full object-cover object-center"
               data={
-                typeof authorImage === 'object'
+                typeof authorImage === "object"
                   ? authorImage
-                  : {url: authorImage}
+                  : { url: authorImage }
               }
               alt={authorName}
               width={36}
@@ -70,55 +70,55 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
 export default TestimonialItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'testimonial--item',
-  title: 'Testimonial',
+  type: "testimonial--item",
+  title: "Testimonial",
   inspector: [
     {
-      group: 'Testimonial',
+      group: "Testimonial",
       inputs: [
         {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Reliable international shipping',
-          placeholder: 'Testimonial heading',
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "Reliable international shipping",
+          placeholder: "Testimonial heading",
         },
         {
-          type: 'textarea',
-          name: 'content',
-          label: 'Content',
+          type: "textarea",
+          name: "content",
+          label: "Content",
           defaultValue: `I've ordered to multiple countries without issue. Their calculated duties/taxes and import fees make international delivery transparent.`,
-          placeholder: 'Testimonial content',
+          placeholder: "Testimonial content",
         },
         {
-          type: 'image',
-          name: 'authorImage',
-          label: 'Author image',
+          type: "image",
+          name: "authorImage",
+          label: "Author image",
           defaultValue:
-            'https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-fashion-model-in-fur.jpg?v=1694236467',
+            "https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-fashion-model-in-fur.jpg?v=1694236467",
         },
         {
-          type: 'text',
-          name: 'authorName',
-          label: 'Author Name',
-          defaultValue: 'Emma Thomas',
-          placeholder: 'Author name',
+          type: "text",
+          name: "authorName",
+          label: "Author Name",
+          defaultValue: "Emma Thomas",
+          placeholder: "Author name",
         },
         {
-          type: 'text',
-          name: 'authorTitle',
-          label: 'Author Title',
-          defaultValue: 'International Customer',
-          placeholder: 'Author title',
+          type: "text",
+          name: "authorTitle",
+          label: "Author Title",
+          defaultValue: "International Customer",
+          placeholder: "Author title",
         },
         {
-          type: 'switch',
-          label: 'Hide on Mobile',
-          name: 'hideOnMobile',
+          type: "switch",
+          label: "Hide on Mobile",
+          name: "hideOnMobile",
           defaultValue: false,
         },
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

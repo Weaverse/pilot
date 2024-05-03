@@ -5,15 +5,15 @@ import {
   useLoaderData,
   useMatches,
   useOutlet,
-} from '@remix-run/react';
-import {flattenConnection} from '@shopify/hydrogen';
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Suspense} from 'react';
+} from "@remix-run/react";
+import { flattenConnection } from "@shopify/hydrogen";
+import { defer, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { Suspense } from "react";
 
 import type {
   CustomerDetailsFragment,
   OrderCardFragment,
-} from 'customer-accountapi.generated';
+} from "customer-accountapi.generated";
 import {
   AccountAddressBook,
   AccountDetails,
@@ -23,22 +23,22 @@ import {
   PageHeader,
   ProductSwimlane,
   Text,
-} from '~/components';
-import {FeaturedCollections} from '~/components/FeaturedCollections';
-import {CACHE_NONE, routeHeaders} from '~/data/cache';
-import {CUSTOMER_DETAILS_QUERY} from '~/graphql/customer-account/CustomerDetailsQuery';
-import {usePrefixPathWithLocale} from '~/lib/utils';
+} from "~/components";
+import { FeaturedCollections } from "~/components/FeaturedCollections";
+import { CACHE_NONE, routeHeaders } from "~/data/cache";
+import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/CustomerDetailsQuery";
+import { usePrefixPathWithLocale } from "~/lib/utils";
 
-import {doLogout} from './($locale).account_.logout';
+import { doLogout } from "./($locale).account_.logout";
 import {
   getFeaturedData,
   type FeaturedData,
-} from './($locale).featured-products';
+} from "./($locale).featured-products";
 
 export const headers = routeHeaders;
 
-export async function loader({request, context, params}: LoaderFunctionArgs) {
-  const {data, errors} = await context.customerAccount.query(
+export async function loader({ request, context, params }: LoaderFunctionArgs) {
+  const { data, errors } = await context.customerAccount.query(
     CUSTOMER_DETAILS_QUERY,
   );
 
@@ -55,7 +55,7 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
     ? customer.firstName
       ? `Welcome, ${customer.firstName}.`
       : `Welcome to your account.`
-    : 'Account Details';
+    : "Account Details";
 
   return defer(
     {
@@ -65,8 +65,8 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
     },
     {
       headers: {
-        'Cache-Control': CACHE_NONE,
-        'Set-Cookie': await context.session.commit(),
+        "Cache-Control": CACHE_NONE,
+        "Set-Cookie": await context.session.commit(),
       },
     },
   );
@@ -79,7 +79,7 @@ export default function Authenticated() {
 
   // routes that export handle { renderInModal: true }
   const renderOutletInModal = matches.some((match) => {
-    const handle = match?.handle as {renderInModal?: boolean};
+    const handle = match?.handle as { renderInModal?: boolean };
     return handle?.renderInModal;
   });
 
@@ -88,13 +88,13 @@ export default function Authenticated() {
       return (
         <>
           <Modal cancelLink="/account">
-            <Outlet context={{customer: data.customer}} />
+            <Outlet context={{ customer: data.customer }} />
           </Modal>
           <Account {...data} />
         </>
       );
     } else {
-      return <Outlet context={{customer: data.customer}} />;
+      return <Outlet context={{ customer: data.customer }} />;
     }
   }
 
@@ -107,14 +107,14 @@ interface AccountType {
   heading: string;
 }
 
-function Account({customer, heading, featuredDataPromise}: AccountType) {
+function Account({ customer, heading, featuredDataPromise }: AccountType) {
   const orders = flattenConnection(customer.orders);
   const addresses = flattenConnection(customer.addresses);
 
   return (
     <>
       <PageHeader heading={heading}>
-        <Form method="post" action={usePrefixPathWithLocale('/account/logout')}>
+        <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
           <button type="submit" className="text-primary/50">
             Sign out
           </button>
@@ -149,7 +149,7 @@ type OrderCardsProps = {
   orders: OrderCardFragment[];
 };
 
-function AccountOrderHistory({orders}: OrderCardsProps) {
+function AccountOrderHistory({ orders }: OrderCardsProps) {
   return (
     <div className="mt-6">
       <div className="grid w-full gap-4 p-4 py-6 md:gap-8 md:p-8 lg:p-12">
@@ -170,7 +170,7 @@ function EmptyOrders() {
         <Button
           className="w-full mt-2 text-sm"
           variant="secondary"
-          to={usePrefixPathWithLocale('/')}
+          to={usePrefixPathWithLocale("/")}
         >
           Start Shopping
         </Button>
@@ -179,7 +179,7 @@ function EmptyOrders() {
   );
 }
 
-function Orders({orders}: OrderCardsProps) {
+function Orders({ orders }: OrderCardsProps) {
   return (
     <ul className="grid grid-flow-row grid-cols-1 gap-2 gap-y-6 md:gap-4 lg:gap-6 false sm:grid-cols-3">
       {orders.map((order) => (

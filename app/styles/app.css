@@ -1,4 +1,4 @@
-@import 'keen-slider/keen-slider.min.css';
+@import "keen-slider/keen-slider.min.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,10 +49,10 @@
     display: none;
   }
 
-  input[type='search']::-webkit-search-decoration,
-  input[type='search']::-webkit-search-cancel-button,
-  input[type='search']::-webkit-search-results-button,
-  input[type='search']::-webkit-search-results-decoration {
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
 
@@ -127,7 +127,7 @@
   .strike {
     position: relative;
     &::before {
-      content: '';
+      content: "";
       display: block;
       position: absolute;
       width: 108%;
@@ -143,7 +143,7 @@
   .card-image {
     @apply relative flex items-center justify-center overflow-clip rounded;
     &::before {
-      content: ' ';
+      content: " ";
       @apply absolute top-0 left-0 z-10 block h-full w-full rounded shadow-border;
     }
     img {
@@ -156,7 +156,7 @@
   position: relative;
   overflow: hidden;
   &::before {
-    content: '';
+    content: "";
     @apply absolute -rotate-45 bg-bar/30;
     z-index: 1;
     left: -1px;

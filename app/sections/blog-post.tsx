@@ -1,13 +1,13 @@
-import {useLoaderData} from '@remix-run/react';
-import {Image} from '@shopify/hydrogen';
-import type {Article} from '@shopify/hydrogen/storefront-api-types';
+import { useLoaderData } from "@remix-run/react";
+import { Image } from "@shopify/hydrogen";
+import type { Article } from "@shopify/hydrogen/storefront-api-types";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 
-import {IconFacebook, IconPinterest, Section} from '~/components';
+import { IconFacebook, IconPinterest, Section } from "~/components";
 
 interface BlogPostProps extends HydrogenComponentProps {
   paddingTop: number;
@@ -15,12 +15,12 @@ interface BlogPostProps extends HydrogenComponentProps {
 }
 
 let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
-  let {paddingTop, paddingBottom, ...rest} = props;
-  let {article, formattedDate} = useLoaderData<{
+  let { paddingTop, paddingBottom, ...rest } = props;
+  let { article, formattedDate } = useLoaderData<{
     article: Article;
     formattedDate: string;
   }>();
-  let {title, image, contentHtml, author, tags} = article;
+  let { title, image, contentHtml, author, tags } = article;
   if (article) {
     return (
       <section ref={ref} {...rest}>
@@ -48,12 +48,12 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
             <div className="lg:max-w-screen-lg md:max-w-screen-md max-w-screen-sm px-4 mx-auto space-y-8 md:space-y-16">
               <div
                 suppressHydrationWarning
-                dangerouslySetInnerHTML={{__html: contentHtml}}
+                dangerouslySetInnerHTML={{ __html: contentHtml }}
               />
               <div className="md:flex justify-between gap-2 space-y-2">
                 <div>
                   <strong>Tags:</strong>
-                  <span className="ml-2">{tags.join(', ')}</span>
+                  <span className="ml-2">{tags.join(", ")}</span>
                 </div>
                 <div className="flex gap-4 items-center">
                   <strong>Share:</strong>
@@ -73,38 +73,38 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
 export default BlogPost;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'blog-post',
-  title: 'Blog post',
+  type: "blog-post",
+  title: "Blog post",
   limit: 1,
   enabledOn: {
-    pages: ['ARTICLE'],
+    pages: ["ARTICLE"],
   },
-  toolbar: ['general-settings'],
+  toolbar: ["general-settings"],
   inspector: [
     {
-      group: 'Blog post',
+      group: "Blog post",
       inputs: [
         {
-          type: 'range',
-          label: 'Top padding',
-          name: 'paddingTop',
+          type: "range",
+          label: "Top padding",
+          name: "paddingTop",
           configs: {
             min: 0,
             max: 100,
             step: 4,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 0,
         },
         {
-          type: 'range',
-          label: 'Bottom padding',
-          name: 'paddingBottom',
+          type: "range",
+          label: "Bottom padding",
+          name: "paddingBottom",
           configs: {
             min: 0,
             max: 100,
             step: 4,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 0,
         },

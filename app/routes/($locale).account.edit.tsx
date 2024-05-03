@@ -1,21 +1,21 @@
-import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
+import { json, redirect, type ActionFunction } from "@shopify/remix-oxygen";
 import {
   useActionData,
   Form,
   useOutletContext,
   useNavigation,
-} from '@remix-run/react';
+} from "@remix-run/react";
 import type {
   Customer,
   CustomerUpdateInput,
-} from '@shopify/hydrogen/customer-account-api-types';
-import invariant from 'tiny-invariant';
+} from "@shopify/hydrogen/customer-account-api-types";
+import invariant from "tiny-invariant";
 
-import {Button, Text} from '~/components';
-import {getInputStyleClasses} from '~/lib/utils';
-import {CUSTOMER_UPDATE_MUTATION} from '~/graphql/customer-account/CustomerUpdateMutation';
+import { Button, Text } from "~/components";
+import { getInputStyleClasses } from "~/lib/utils";
+import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/CustomerUpdateMutation";
 
-import {doLogout} from './($locale).account_.logout';
+import { doLogout } from "./($locale).account_.logout";
 
 export interface AccountOutletContext {
   customer: Customer;
@@ -39,14 +39,14 @@ const formDataHas = (formData: FormData, key: string) => {
   if (!formData.has(key)) return false;
 
   const value = formData.get(key);
-  return typeof value === 'string' && value.length > 0;
+  return typeof value === "string" && value.length > 0;
 };
 
 export const handle = {
   renderInModal: true,
 };
 
-export const action: ActionFunction = async ({request, context, params}) => {
+export const action: ActionFunction = async ({ request, context, params }) => {
   const formData = await request.formData();
 
   // Double-check current user is logged in.
@@ -58,12 +58,12 @@ export const action: ActionFunction = async ({request, context, params}) => {
   try {
     const customer: CustomerUpdateInput = {};
 
-    formDataHas(formData, 'firstName') &&
-      (customer.firstName = formData.get('firstName') as string);
-    formDataHas(formData, 'lastName') &&
-      (customer.lastName = formData.get('lastName') as string);
+    formDataHas(formData, "firstName") &&
+      (customer.firstName = formData.get("firstName") as string);
+    formDataHas(formData, "lastName") &&
+      (customer.lastName = formData.get("lastName") as string);
 
-    const {data, errors} = await context.customerAccount.mutate(
+    const { data, errors } = await context.customerAccount.mutate(
       CUSTOMER_UPDATE_MUTATION,
       {
         variables: {
@@ -79,18 +79,18 @@ export const action: ActionFunction = async ({request, context, params}) => {
       data?.customerUpdate?.userErrors?.[0]?.message,
     );
 
-    return redirect(params?.locale ? `${params.locale}/account` : '/account', {
+    return redirect(params?.locale ? `${params.locale}/account` : "/account", {
       headers: {
-        'Set-Cookie': await context.session.commit(),
+        "Set-Cookie": await context.session.commit(),
       },
     });
   } catch (error: any) {
     return json(
-      {formError: error?.message},
+      { formError: error?.message },
       {
         status: 400,
         headers: {
-          'Set-Cookie': await context.session.commit(),
+          "Set-Cookie": await context.session.commit(),
         },
       },
     );
@@ -109,8 +109,8 @@ export const action: ActionFunction = async ({request, context, params}) => {
  */
 export default function AccountDetailsEdit() {
   const actionData = useActionData<ActionData>();
-  const {customer} = useOutletContext<AccountOutletContext>();
-  const {state} = useNavigation();
+  const { customer } = useOutletContext<AccountOutletContext>();
+  const { state } = useNavigation();
 
   return (
     <>
@@ -132,7 +132,7 @@ export default function AccountDetailsEdit() {
             autoComplete="given-name"
             placeholder="First name"
             aria-label="First name"
-            defaultValue={customer.firstName ?? ''}
+            defaultValue={customer.firstName ?? ""}
           />
         </div>
         <div className="mt-3">
@@ -144,7 +144,7 @@ export default function AccountDetailsEdit() {
             autoComplete="family-name"
             placeholder="Last name"
             aria-label="Last name"
-            defaultValue={customer.lastName ?? ''}
+            defaultValue={customer.lastName ?? ""}
           />
         </div>
         <div className="mt-6">
@@ -153,9 +153,9 @@ export default function AccountDetailsEdit() {
             variant="primary"
             width="full"
             type="submit"
-            disabled={state !== 'idle'}
+            disabled={state !== "idle"}
           >
-            {state !== 'idle' ? 'Saving' : 'Save'}
+            {state !== "idle" ? "Saving" : "Save"}
           </Button>
         </div>
         <div className="mb-4">

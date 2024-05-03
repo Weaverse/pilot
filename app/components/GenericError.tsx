@@ -1,10 +1,10 @@
-import {Button} from './Button';
-import {PageHeader, Text} from './Text';
+import { Button } from "./Button";
+import { PageHeader, Text } from "./Text";
 
 export function GenericError({
   error,
 }: {
-  error?: {message: string; stack?: string};
+  error?: { message: string; stack?: string };
 }) {
   const heading = `Something’s wrong here.`;
   let description = `We found an error while loading this page.`;
@@ -25,11 +25,11 @@ export function GenericError({
         {error?.stack && (
           <pre
             style={{
-              padding: '2rem',
-              background: 'hsla(10, 50%, 50%, 0.1)',
-              color: 'red',
-              overflow: 'auto',
-              maxWidth: '100%',
+              padding: "2rem",
+              background: "hsla(10, 50%, 50%, 0.1)",
+              color: "red",
+              overflow: "auto",
+              maxWidth: "100%",
             }}
             suppressHydrationWarning
             dangerouslySetInnerHTML={{
@@ -37,7 +37,7 @@ export function GenericError({
             }}
           />
         )}
-        <Button width="auto" variant="secondary" to={'/'}>
+        <Button width="auto" variant="secondary" to={"/"}>
           Take me to the home page
         </Button>
       </PageHeader>

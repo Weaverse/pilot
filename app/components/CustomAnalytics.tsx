@@ -1,37 +1,40 @@
-import {Script, unstable_useAnalytics as useAnalytics} from '@shopify/hydrogen';
-import {useEffect} from 'react';
-import {useLoaderData} from '@remix-run/react';
-import {loader} from '~/root';
+import {
+  Script,
+  unstable_useAnalytics as useAnalytics,
+} from "@shopify/hydrogen";
+import { useEffect } from "react";
+import { useLoaderData } from "@remix-run/react";
+import { loader } from "~/root";
 
 export function CustomAnalytics() {
-  const {subscribe, canTrack} = useAnalytics();
+  const { subscribe, canTrack } = useAnalytics();
   const data = useLoaderData<typeof loader>();
 
   useEffect(() => {
     setTimeout(() => {
       let isTrackingAllowed = canTrack();
-      console.log('CustomAnalytics - isTrackingAllowed', isTrackingAllowed);
+      console.log("CustomAnalytics - isTrackingAllowed", isTrackingAllowed);
     }, 1000);
     // Standard events
-    subscribe('page_viewed', (data) => {
-      console.log('CustomAnalytics - Page viewed:', data);
+    subscribe("page_viewed", (data) => {
+      console.log("CustomAnalytics - Page viewed:", data);
     });
-    subscribe('product_viewed', (data) => {
-      console.log('CustomAnalytics - Product viewed:', data);
+    subscribe("product_viewed", (data) => {
+      console.log("CustomAnalytics - Product viewed:", data);
     });
-    subscribe('collection_viewed', (data) => {
-      console.log('CustomAnalytics - Collection viewed:', data);
+    subscribe("collection_viewed", (data) => {
+      console.log("CustomAnalytics - Collection viewed:", data);
     });
-    subscribe('cart_viewed', (data) => {
-      console.log('CustomAnalytics - Cart viewed:', data);
+    subscribe("cart_viewed", (data) => {
+      console.log("CustomAnalytics - Cart viewed:", data);
     });
-    subscribe('cart_updated', (data) => {
-      console.log('CustomAnalytics - Cart updated:', data);
+    subscribe("cart_updated", (data) => {
+      console.log("CustomAnalytics - Cart updated:", data);
     });
 
     // Custom events
-    subscribe('custom_sidecart_viewed', (data) => {
-      console.log('CustomAnalytics - Custom sidecart opened:', data);
+    subscribe("custom_sidecart_viewed", (data) => {
+      console.log("CustomAnalytics - Custom sidecart opened:", data);
     });
   }, []);
 
