@@ -28,6 +28,7 @@ export type SectionProps = HydrogenComponentProps &
     overlayColor: string;
     overlayOpacity: number;
     backgroundColor: string;
+    bgColorFor: "section" | "content";
     children: React.ReactNode;
   }>;
 
@@ -57,10 +58,23 @@ export let verticalPaddingClasses: Record<VerticalPadding, string> = {
   large: "py-12 md:py-24 lg:py-32",
 };
 
+let paddingClasses = {
+  full: "",
+  stretch: "px-3 md:px-10 lg:px-16",
+  fixed: "px-3 md:px-4 lg:px-6 mx-auto",
+};
+
 export let widthClasses: Record<SectionWidth, string> = {
   full: "w-full h-full",
-  stretch: "w-full h-full px-3 md:px-10 lg:px-16",
-  fixed: "w-full h-full max-w-screen-xl px-3 md:px-4 lg:px-6 mx-auto",
+  stretch: "w-full h-full",
+  fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
+};
+
+export let alignmentClasses = {
+  unset: "",
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
 };
 
 export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
@@ -72,6 +86,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     verticalPadding,
     borderRadius,
     backgroundColor,
+    bgColorFor,
     backgroundImage,
     backgroundFit,
     backgroundPosition,
@@ -91,12 +106,16 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         ref={ref}
         {...rest}
         className={clsx(
-          "relative",
-          widthClasses[width!],
-          verticalPaddingClasses[verticalPadding!],
+          "relative overflow-hidden",
+          // bgColorFor === "section" && verticalPaddingClasses[verticalPadding!],
+          paddingClasses[width!],
           className,
         )}
-        style={{ ...style, backgroundColor, borderRadius }}
+        style={{
+          ...style,
+          backgroundColor: bgColorFor === "section" ? backgroundColor : "",
+          borderRadius,
+        }}
       >
         <BackgroundImage
           backgroundImage={backgroundImage}
@@ -108,7 +127,20 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           color={overlayColor}
           opacity={overlayOpacity}
         />
-        <div className={clsx("relative", gapClasses[gap!])}>{children}</div>
+        <div
+          className={clsx(
+            "relative",
+            widthClasses[width!],
+            gapClasses[gap!],
+            // bgColorFor === "content" &&
+            verticalPaddingClasses[verticalPadding!],
+          )}
+          style={{
+            backgroundColor: bgColorFor === "content" ? backgroundColor : "",
+          }}
+        >
+          {children}
+        </div>
       </Component>
       {(divider === "bottom" || divider === "both") && <Divider />}
     </>
