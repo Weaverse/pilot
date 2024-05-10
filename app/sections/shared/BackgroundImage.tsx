@@ -42,6 +42,19 @@ export let backgroundInputs: InspectorGroup["inputs"] = [
     defaultValue: "",
   },
   {
+    type: "select",
+    name: "bgColorFor",
+    label: "Background color for",
+    configs: {
+      options: [
+        { value: "section", label: "Section" },
+        { value: "content", label: "Content" },
+      ],
+    },
+    defaultValue: "section",
+    condition: "backgroundColor.ne.nil",
+  },
+  {
     type: "image",
     name: "backgroundImage",
     label: "Background image",
