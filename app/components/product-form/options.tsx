@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import {Image} from '@shopify/hydrogen';
-import type {WeaverseImage} from '@weaverse/hydrogen';
+import clsx from "clsx";
+import { Image } from "@shopify/hydrogen";
+import type { WeaverseImage } from "@weaverse/hydrogen";
 
 interface VariantOptionProps {
   selectedOptionValue: string;
@@ -9,7 +9,7 @@ interface VariantOptionProps {
   config?: {
     type: string;
     displayName: string;
-    size?: 'sm' | 'md' | 'lg';
+    size?: "sm" | "md" | "lg";
     shape?: string;
   };
   swatches: {
@@ -27,15 +27,15 @@ interface VariantOptionProps {
 }
 
 let SIZE_MAP = {
-  sm: 'w-8 h-8',
-  md: 'w-10 h-10',
-  lg: 'w-12 h-12',
+  sm: "w-8 h-8",
+  md: "w-10 h-10",
+  lg: "w-12 h-12",
 };
 
 let BUTTON_SIZE_MAP = {
-  sm: 'min-w-[32px] h-8',
-  md: 'min-w-[40px] h-10',
-  lg: 'min-w-[48px] h-12',
+  sm: "min-w-[32px] h-8",
+  md: "min-w-[40px] h-10",
+  lg: "min-w-[48px] h-12",
 };
 
 export function VariantOption(props: VariantOptionProps) {
@@ -50,28 +50,28 @@ export function VariantOption(props: VariantOptionProps) {
 
   let {
     displayName,
-    shape = 'square',
-    size = 'md',
-    type = 'default',
+    shape = "square",
+    size = "md",
+    type = "default",
   } = config || {};
 
   let roundedClassName =
-    shape === 'circle' ? 'rounded-full' : shape === 'round' ? 'rounded-md' : '';
+    shape === "circle" ? "rounded-full" : shape === "round" ? "rounded-md" : "";
 
   let defaultClassName = clsx(
-    'border cursor-pointer',
+    "border cursor-pointer",
     SIZE_MAP[size],
     roundedClassName,
   );
 
   let defaultButtonClassName = clsx(
-    'border cursor-pointer',
+    "border cursor-pointer",
     BUTTON_SIZE_MAP[size],
-    'p-2 text-sm text-center',
+    "p-2 text-sm text-center",
     roundedClassName,
   );
 
-  let disabledClassName = 'diagonal opacity-50';
+  let disabledClassName = "diagonal opacity-50";
   // show value by Type
   return (
     <div className="space-y-4">
@@ -79,7 +79,7 @@ export function VariantOption(props: VariantOptionProps) {
         <span className="font-bold">{displayName || name}:</span>
         <span className="ml-2">{selectedOptionValue}</span>
       </legend>
-      {type === 'button' && (
+      {type === "button" && (
         <div className="flex gap-4">
           {values.map((value) => (
             <button
@@ -87,8 +87,8 @@ export function VariantOption(props: VariantOptionProps) {
               className={clsx(
                 defaultButtonClassName,
                 selectedOptionValue === value.value &&
-                  'bg-btn text-btn-content',
-                !value.isAvailable && 'opacity-50 bg-btn/30',
+                  "bg-btn text-btn-content",
+                !value.isAvailable && "opacity-50 bg-btn/30",
               )}
               onClick={() => onSelectOptionValue(value.value)}
             >
@@ -98,7 +98,7 @@ export function VariantOption(props: VariantOptionProps) {
         </div>
       )}
 
-      {type === 'color' && (
+      {type === "color" && (
         <div className="flex gap-4">
           {values.map((value) => {
             let swatchColor: string =
@@ -109,15 +109,15 @@ export function VariantOption(props: VariantOptionProps) {
                 key={value.value}
                 className={clsx(
                   defaultClassName,
-                  'p-1',
+                  "p-1",
                   selectedOptionValue === value.value &&
-                    'border-2 border-bar/70',
+                    "border-2 border-bar/70",
                   !value.isAvailable && disabledClassName,
                 )}
                 onClick={() => onSelectOptionValue(value.value)}
               >
                 <div
-                  className={clsx('w-full h-full', roundedClassName)}
+                  className={clsx("w-full h-full", roundedClassName)}
                   style={{
                     backgroundColor: swatchColor,
                   }}
@@ -127,20 +127,20 @@ export function VariantOption(props: VariantOptionProps) {
           })}
         </div>
       )}
-      {type === 'custom-image' && (
+      {type === "custom-image" && (
         <div className="flex gap-4">
           {values.map((value) => {
             let swatchImage: WeaverseImage =
               swatches.imageSwatches.find((image) => image.name === value.value)
-                ?.value || '';
+                ?.value || "";
             return (
               <button
                 key={value.value}
                 className={clsx(
                   defaultClassName,
-                  'p-0.5',
+                  "p-0.5",
                   selectedOptionValue === value.value &&
-                    'border-2 border-bar/70',
+                    "border-2 border-bar/70",
                   !value.isAvailable && disabledClassName,
                 )}
                 onClick={() => onSelectOptionValue(value.value)}
@@ -148,7 +148,7 @@ export function VariantOption(props: VariantOptionProps) {
                 <Image
                   data={swatchImage}
                   className={clsx(
-                    'w-full h-full object-cover',
+                    "w-full h-full object-cover",
                     roundedClassName,
                   )}
                   sizes="auto"
@@ -158,7 +158,7 @@ export function VariantOption(props: VariantOptionProps) {
           })}
         </div>
       )}
-      {type === 'variant-image' && (
+      {type === "variant-image" && (
         <div className="flex gap-4">
           {values.map((value) => {
             return (
@@ -167,7 +167,7 @@ export function VariantOption(props: VariantOptionProps) {
                 className={clsx(
                   defaultClassName,
                   selectedOptionValue === value.value &&
-                    'border-2 border-bar/70',
+                    "border-2 border-bar/70",
                   !value.isAvailable && disabledClassName,
                 )}
                 onClick={() => onSelectOptionValue(value.value)}
@@ -178,7 +178,7 @@ export function VariantOption(props: VariantOptionProps) {
           })}
         </div>
       )}
-      {type === 'dropdown' && (
+      {type === "dropdown" && (
         <div>
           <select
             className="min-w-[120px] w-fit rounded-sm border p-1"
@@ -197,16 +197,16 @@ export function VariantOption(props: VariantOptionProps) {
         </div>
       )}
 
-      {type === 'default' && (
+      {type === "default" && (
         <div className="flex gap-4">
           {values.map((value) => (
             <div
               key={value.value}
               className={clsx(
-                'leading-none py-1 cursor-pointer transition-all duration-200',
+                "leading-none py-1 cursor-pointer transition-all duration-200",
                 selectedOptionValue === value.value &&
-                  'border-bar/50 border-b-[1.5px]',
-                !value.isAvailable && 'opacity-50',
+                  "border-bar/50 border-b-[1.5px]",
+                !value.isAvailable && "opacity-50",
               )}
               onClick={() => onSelectOptionValue(value.value)}
             >

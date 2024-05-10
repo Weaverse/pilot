@@ -1,6 +1,6 @@
 // @ts-ignore
 // Virtual entry point for the app
-import * as remixBuild from 'virtual:remix/server-build';
+import * as remixBuild from "virtual:remix/server-build";
 import {
   cartGetIdDefault,
   cartSetIdDefault,
@@ -8,16 +8,16 @@ import {
   createStorefrontClient,
   storefrontRedirect,
   createCustomerAccountClient,
-} from '@shopify/hydrogen';
+} from "@shopify/hydrogen";
 import {
   createRequestHandler,
   getStorefrontHeaders,
   type AppLoadContext,
-} from '@shopify/remix-oxygen';
+} from "@shopify/remix-oxygen";
 
-import {AppSession} from '~/lib/session';
-import {createWeaverseClient} from '~/weaverse/create-weaverse.server';
-import {getLocaleFromRequest} from '~/lib/utils';
+import { AppSession } from "~/lib/session";
+import { createWeaverseClient } from "~/weaverse/create-weaverse.server";
+import { getLocaleFromRequest } from "~/lib/utils";
 
 /**
  * Export a fetch handler in module format.
@@ -36,19 +36,19 @@ export default {
        * Open a cache instance in the worker and a custom session instance.
        */
       if (!env?.SESSION_SECRET) {
-        throw new Error('SESSION_SECRET environment variable is not set');
+        throw new Error("SESSION_SECRET environment variable is not set");
       }
 
       const waitUntil = executionContext.waitUntil.bind(executionContext);
       const [cache, session] = await Promise.all([
-        caches.open('hydrogen'),
+        caches.open("hydrogen"),
         AppSession.init(request, [env.SESSION_SECRET]),
       ]);
 
       /**
        * Create Hydrogen's Storefront client.
        */
-      const {storefront} = createStorefrontClient({
+      const { storefront } = createStorefrontClient({
         cache,
         waitUntil,
         i18n: getLocaleFromRequest(request),
@@ -109,14 +109,14 @@ export default {
          * If the redirect doesn't exist, then `storefrontRedirect`
          * will pass through the 404 response.
          */
-        return storefrontRedirect({request, response, storefront});
+        return storefrontRedirect({ request, response, storefront });
       }
 
       return response;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      return new Response('An unexpected error occurred', {status: 500});
+      return new Response("An unexpected error occurred", { status: 500 });
     }
   },
 };

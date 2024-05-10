@@ -3,39 +3,39 @@ import {
   getPaginationVariables,
   getSeoMeta,
   UNSTABLE_Analytics as Analytics,
-} from '@shopify/hydrogen';
+} from "@shopify/hydrogen";
 import type {
   ProductCollectionSortKeys,
   ProductFilter,
-} from '@shopify/hydrogen/storefront-api-types';
-import {json, type LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
-import invariant from 'tiny-invariant';
-import {useLoaderData} from '@remix-run/react';
+} from "@shopify/hydrogen/storefront-api-types";
+import { json, type LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
+import invariant from "tiny-invariant";
+import { useLoaderData } from "@remix-run/react";
 
-import type {SortParam} from '~/components/SortFilter';
-import {FILTER_URL_PREFIX} from '~/components/SortFilter';
-import {routeHeaders} from '~/data/cache';
-import {COLLECTION_QUERY} from '~/data/queries';
-import {PAGINATION_SIZE} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
-import {parseAsCurrency} from '~/lib/utils';
-import {WeaverseContent} from '~/weaverse';
+import type { SortParam } from "~/components/SortFilter";
+import { FILTER_URL_PREFIX } from "~/components/SortFilter";
+import { routeHeaders } from "~/data/cache";
+import { COLLECTION_QUERY } from "~/data/queries";
+import { PAGINATION_SIZE } from "~/lib/const";
+import { seoPayload } from "~/lib/seo.server";
+import { parseAsCurrency } from "~/lib/utils";
+import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
 
-export async function loader({params, request, context}: LoaderFunctionArgs) {
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const paginationVariables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
-  const {collectionHandle} = params;
+  const { collectionHandle } = params;
   const locale = context.storefront.i18n;
 
-  invariant(collectionHandle, 'Missing collectionHandle param');
+  invariant(collectionHandle, "Missing collectionHandle param");
 
   const searchParams = new URL(request.url).searchParams;
 
-  const {sortKey, reverse} = getSortValuesFromParam(
-    searchParams.get('sort') as SortParam,
+  const { sortKey, reverse } = getSortValuesFromParam(
+    searchParams.get("sort") as SortParam,
   );
   const filters = [...searchParams.entries()].reduce(
     (filters, [key, value]) => {
@@ -50,7 +50,7 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     [] as ProductFilter[],
   );
 
-  const {collection, collections} = await context.storefront.query(
+  const { collection, collections } = await context.storefront.query(
     COLLECTION_QUERY,
     {
       variables: {
@@ -66,10 +66,10 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   );
 
   if (!collection) {
-    throw new Response('collection', {status: 404});
+    throw new Response("collection", { status: 404 });
   }
 
-  const seo = seoPayload.collection({collection, url: request.url});
+  const seo = seoPayload.collection({ collection, url: request.url });
 
   const allFilterValues = collection.products.filters.flatMap(
     (filter) => filter.values,
@@ -93,18 +93,18 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
       });
       if (!foundValue) {
         // eslint-disable-next-line no-console
-        console.error('Could not find filter value for filter', filter);
+        console.error("Could not find filter value for filter", filter);
         return null;
       }
 
-      if (foundValue.id === 'filter.v.price') {
+      if (foundValue.id === "filter.v.price") {
         // Special case for price, we want to show the min and max values as the label.
         const input = JSON.parse(foundValue.input as string) as ProductFilter;
         const min = parseAsCurrency(input.price?.min ?? 0, locale);
         const max = input.price?.max
           ? parseAsCurrency(input.price.max, locale)
-          : '';
-        const label = min && max ? `${min} - ${max}` : 'Price';
+          : "";
+        const label = min && max ? `${min} - ${max}` : "Price";
 
         return {
           filter,
@@ -124,18 +124,18 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     collections: flattenConnection(collections),
     seo,
     weaverseData: await context.weaverse.loadPage({
-      type: 'COLLECTION',
+      type: "COLLECTION",
       handle: collectionHandle,
     }),
   });
 }
 
-export const meta = ({matches}: MetaArgs<typeof loader>) => {
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 
 export default function Collection() {
-  const {collection} = useLoaderData<typeof loader>();
+  const { collection } = useLoaderData<typeof loader>();
   return (
     <>
       <WeaverseContent />
@@ -156,34 +156,34 @@ export function getSortValuesFromParam(sortParam: SortParam | null): {
   reverse: boolean;
 } {
   switch (sortParam) {
-    case 'price-high-low':
+    case "price-high-low":
       return {
-        sortKey: 'PRICE',
+        sortKey: "PRICE",
         reverse: true,
       };
-    case 'price-low-high':
+    case "price-low-high":
       return {
-        sortKey: 'PRICE',
+        sortKey: "PRICE",
         reverse: false,
       };
-    case 'best-selling':
+    case "best-selling":
       return {
-        sortKey: 'BEST_SELLING',
+        sortKey: "BEST_SELLING",
         reverse: false,
       };
-    case 'newest':
+    case "newest":
       return {
-        sortKey: 'CREATED',
+        sortKey: "CREATED",
         reverse: true,
       };
-    case 'featured':
+    case "featured":
       return {
-        sortKey: 'MANUAL',
+        sortKey: "MANUAL",
         reverse: false,
       };
     default:
       return {
-        sortKey: 'RELEVANCE',
+        sortKey: "RELEVANCE",
         reverse: false,
       };
   }

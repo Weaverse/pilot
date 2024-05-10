@@ -3,21 +3,21 @@
  */
 module.exports = {
   extends: [
-    '@remix-run/eslint-config',
-    'plugin:hydrogen/recommended',
-    'plugin:hydrogen/typescript',
+    "@remix-run/eslint-config",
+    "plugin:hydrogen/recommended",
+    "plugin:hydrogen/typescript",
   ],
   rules: {
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/naming-convention': 'off',
-    'hydrogen/prefer-image-component': 'off',
-    'no-useless-escape': 'off',
-    '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
-    'no-case-declarations': 'off',
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "hydrogen/prefer-image-component": "off",
+    "no-useless-escape": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+    "no-case-declarations": "off",
     // TODO: Remove jest plugin from hydrogen/eslint-plugin
-    'jest/no-deprecated-functions': 'off',
-    'import/order': [
-      'error',
+    "jest/no-deprecated-functions": "off",
+    "import/order": [
+      "error",
       {
         /**
          * @description
@@ -39,13 +39,13 @@ module.exports = {
          * import sibling from './foo';
          * ```
          */
-        groups: ['builtin', 'external', 'internal', 'parent', 'sibling'],
-        'newlines-between': 'always',
+        groups: ["builtin", "external", "internal", "parent", "sibling"],
+        "newlines-between": "always",
       },
     ],
-    'prefer-const': 'off',
-    'jsx-a11y/click-events-have-key-events': 'warn',
-    'jsx-a11y/no-static-element-interactions': 'warn',
-    'jsx-a11y/label-has-associated-control': 'warn',
+    "prefer-const": "off",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/label-has-associated-control": "warn",
   },
 };

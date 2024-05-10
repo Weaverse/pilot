@@ -1,12 +1,12 @@
-import {Await, useLoaderData} from '@remix-run/react';
+import { Await, useLoaderData } from "@remix-run/react";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {Suspense, forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { Suspense, forwardRef } from "react";
 
-import type {ProductCardFragment} from 'storefrontapi.generated';
-import {ProductSwimlane, Skeleton} from '~/components';
+import type { ProductCardFragment } from "storefrontapi.generated";
+import { ProductSwimlane, Skeleton } from "~/components";
 
 interface RelatedProductsProps extends HydrogenComponentProps {
   heading: string;
@@ -15,10 +15,10 @@ interface RelatedProductsProps extends HydrogenComponentProps {
 
 let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
   (props, ref) => {
-    let {recommended} = useLoaderData<{
-      recommended: {nodes: ProductCardFragment[]};
+    let { recommended } = useLoaderData<{
+      recommended: { nodes: ProductCardFragment[] };
     }>();
-    let {heading, productsCount, ...rest} = props;
+    let { heading, productsCount, ...rest } = props;
     if (recommended) {
       return (
         <section ref={ref} {...rest}>
@@ -46,27 +46,27 @@ let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
 export default RelatedProducts;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'related-products',
-  title: 'Related products',
+  type: "related-products",
+  title: "Related products",
   limit: 1,
   enabledOn: {
-    pages: ['PRODUCT'],
+    pages: ["PRODUCT"],
   },
   inspector: [
     {
-      group: 'Related products',
+      group: "Related products",
       inputs: [
         {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'You may also like',
-          placeholder: 'Related products',
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "You may also like",
+          placeholder: "Related products",
         },
         {
-          type: 'range',
-          name: 'productsCount',
-          label: 'Number of products',
+          type: "range",
+          name: "productsCount",
+          label: "Number of products",
           defaultValue: 12,
           configs: {
             min: 1,
@@ -77,5 +77,5 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

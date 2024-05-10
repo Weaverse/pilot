@@ -2,25 +2,25 @@ import type {
   ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 
-import type {SeoCollectionContentQuery} from 'storefrontapi.generated';
-import {Hero} from '~/components/Hero';
-import {HOMEPAGE_SEO_QUERY} from '~/data/queries';
+import type { SeoCollectionContentQuery } from "storefrontapi.generated";
+import { Hero } from "~/components/Hero";
+import { HOMEPAGE_SEO_QUERY } from "~/data/queries";
 
 type HeroSectionData = {
   collectionHandle: string;
-  height: 'full';
+  height: "full";
   top: boolean;
-  loading: HTMLImageElement['loading'];
+  loading: HTMLImageElement["loading"];
 };
 
 let HeroSection = forwardRef<
   HTMLElement,
   HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & HeroSectionData
 >((props, ref) => {
-  let {loaderData, height, loading, top, collectionHandle, ...rest} = props;
+  let { loaderData, height, loading, top, collectionHandle, ...rest } = props;
   if (loaderData) {
     return (
       <section ref={ref} {...rest}>
@@ -34,42 +34,42 @@ let HeroSection = forwardRef<
 export default HeroSection;
 
 export let loader = async (args: ComponentLoaderArgs<HeroSectionData>) => {
-  let {weaverse, data} = args;
-  let {hero} = await weaverse.storefront.query<SeoCollectionContentQuery>(
+  let { weaverse, data } = args;
+  let { hero } = await weaverse.storefront.query<SeoCollectionContentQuery>(
     HOMEPAGE_SEO_QUERY,
     {
-      variables: {handle: data.collectionHandle || 'frontpage'},
+      variables: { handle: data.collectionHandle || "frontpage" },
     },
   );
   return hero;
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'hero',
-  title: 'Hero',
+  type: "hero",
+  title: "Hero",
   inspector: [
     {
-      group: 'Hero',
+      group: "Hero",
       inputs: [
         {
-          type: 'collection',
-          name: 'collectionHandle',
-          label: 'Preview',
-          defaultValue: 'frontpage',
+          type: "collection",
+          name: "collectionHandle",
+          label: "Preview",
+          defaultValue: "frontpage",
         },
         {
-          type: 'toggle-group',
-          name: 'loading',
-          label: 'Background image loading',
-          defaultValue: 'eager',
+          type: "toggle-group",
+          name: "loading",
+          label: "Background image loading",
+          defaultValue: "eager",
           configs: {
             options: [
-              {label: 'Eager', value: 'eager', icon: 'Lightning'},
+              { label: "Eager", value: "eager", icon: "Lightning" },
               {
-                label: 'Lazy',
-                value: 'lazy',
-                icon: 'SpinnerGap',
-                weight: 'light',
+                label: "Lazy",
+                value: "lazy",
+                icon: "SpinnerGap",
+                weight: "light",
               },
             ],
           },
@@ -77,27 +77,27 @@ export let schema: HydrogenComponentSchema = {
             'Learn more about <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading" target="_blank" rel="noopener noreferrer">image loading strategies</a>.',
         },
         {
-          type: 'select',
-          name: 'height',
-          label: 'Height',
+          type: "select",
+          name: "height",
+          label: "Height",
           configs: {
             options: [
-              {label: 'Auto', value: 'auto'},
-              {label: 'Fullscreen', value: 'full'},
+              { label: "Auto", value: "auto" },
+              { label: "Fullscreen", value: "full" },
             ],
           },
-          defaultValue: 'auto',
+          defaultValue: "auto",
         },
         {
-          type: 'switch',
-          name: 'top',
-          label: 'Top',
+          type: "switch",
+          name: "top",
+          label: "Top",
           defaultValue: true,
           helpText:
-            'Push the hero to the top of the page by adding a negative margin.',
+            "Push the hero to the top of the page by adding a negative margin.",
         },
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

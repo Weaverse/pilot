@@ -1,8 +1,8 @@
-import type {HydrogenComponentSchema} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
-import {Form} from '@remix-run/react';
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { forwardRef } from "react";
+import { Form } from "@remix-run/react";
 
-import {Button, Input} from '~/components';
+import { Button, Input } from "~/components";
 
 let ContactForm = forwardRef<HTMLDivElement>((props, ref) => {
   return (
@@ -43,11 +43,11 @@ let ContactForm = forwardRef<HTMLDivElement>((props, ref) => {
 export default ContactForm;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'contact-form',
-  title: 'Contact form',
+  type: "contact-form",
+  title: "Contact form",
   limit: 1,
   enabledOn: {
-    pages: ['INDEX'],
+    pages: ["INDEX"],
   },
   inspector: [
     // {

@@ -1,9 +1,9 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import type {ProductSortKeys} from '@shopify/hydrogen/storefront-api-types';
-import {flattenConnection} from '@shopify/hydrogen';
-import invariant from 'tiny-invariant';
+import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
+import { flattenConnection } from "@shopify/hydrogen";
+import invariant from "tiny-invariant";
 
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
 
 /**
  * Fetch a given set of products from the storefront API
@@ -16,19 +16,19 @@ import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
  */
 export async function loader({
   request,
-  context: {storefront},
+  context: { storefront },
 }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
 
-  const query = searchParams.get('query') ?? '';
+  const query = searchParams.get("query") ?? "";
   const sortKey =
-    (searchParams.get('sortKey') as null | ProductSortKeys) ?? 'BEST_SELLING';
+    (searchParams.get("sortKey") as null | ProductSortKeys) ?? "BEST_SELLING";
 
   let reverse = false;
   try {
-    const _reverse = searchParams.get('reverse');
-    if (_reverse === 'true') {
+    const _reverse = searchParams.get("reverse");
+    if (_reverse === "true") {
       reverse = true;
     }
   } catch (_) {
@@ -37,15 +37,15 @@ export async function loader({
 
   let count = 4;
   try {
-    const _count = searchParams.get('count');
-    if (typeof _count === 'string') {
+    const _count = searchParams.get("count");
+    if (typeof _count === "string") {
       count = parseInt(_count);
     }
   } catch (_) {
     // noop
   }
 
-  const {products} = await storefront.query(API_ALL_PRODUCTS_QUERY, {
+  const { products } = await storefront.query(API_ALL_PRODUCTS_QUERY, {
     variables: {
       count,
       query,
@@ -57,7 +57,7 @@ export async function loader({
     cache: storefront.CacheLong(),
   });
 
-  invariant(products, 'No data returned from top products query');
+  invariant(products, "No data returned from top products query");
 
   return json({
     products: flattenConnection(products),

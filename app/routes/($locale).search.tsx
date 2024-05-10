@@ -1,12 +1,16 @@
-import {Await, Form, useLoaderData} from '@remix-run/react';
+import { Await, Form, useLoaderData } from "@remix-run/react";
 import {
   getPaginationVariables,
   getSeoMeta,
   Pagination,
   UNSTABLE_Analytics as Analytics,
-} from '@shopify/hydrogen';
-import {defer, type LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
-import {Suspense} from 'react';
+} from "@shopify/hydrogen";
+import {
+  defer,
+  type LoaderFunctionArgs,
+  MetaArgs,
+} from "@shopify/remix-oxygen";
+import { Suspense } from "react";
 
 import {
   FeaturedCollections,
@@ -18,25 +22,27 @@ import {
   ProductSwimlane,
   Section,
   Text,
-} from '~/components';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
+} from "~/components";
+import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
+import { getImageLoadingPriority, PAGINATION_SIZE } from "~/lib/const";
+import { seoPayload } from "~/lib/seo.server";
 
 import {
   type FeaturedData,
   getFeaturedData,
-} from './($locale).featured-products';
+} from "./($locale).featured-products";
 
 export async function loader({
   request,
-  context: {storefront},
+  context: { storefront },
 }: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
-  const searchTerm = searchParams.get('q')!;
-  const variables = getPaginationVariables(request, {pageBy: PAGINATION_SIZE});
+  const searchTerm = searchParams.get("q")!;
+  const variables = getPaginationVariables(request, {
+    pageBy: PAGINATION_SIZE,
+  });
 
-  const {products} = await storefront.query(SEARCH_QUERY, {
+  const { products } = await storefront.query(SEARCH_QUERY, {
     variables: {
       searchTerm,
       ...variables,
@@ -50,13 +56,13 @@ export async function loader({
   const seo = seoPayload.collection({
     url: request.url,
     collection: {
-      id: 'search',
-      title: 'Search',
-      handle: 'search',
-      descriptionHtml: 'Search results',
-      description: 'Search results',
+      id: "search",
+      title: "Search",
+      handle: "search",
+      descriptionHtml: "Search results",
+      description: "Search results",
       seo: {
-        title: 'Search',
+        title: "Search",
         description: `Showing ${products.nodes.length} search results for "${searchTerm}"`,
       },
       metafields: [],
@@ -75,12 +81,12 @@ export async function loader({
   });
 }
 
-export const meta = ({matches}: MetaArgs<typeof loader>) => {
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 
 export default function Search() {
-  const {searchTerm, products, noResultRecommendations} =
+  const { searchTerm, products, noResultRecommendations } =
     useLoaderData<typeof loader>();
   const noResults = products?.nodes?.length === 0;
 
@@ -111,7 +117,7 @@ export default function Search() {
       ) : (
         <Section>
           <Pagination connection={products}>
-            {({nodes, isLoading, NextLink, PreviousLink}) => {
+            {({ nodes, isLoading, NextLink, PreviousLink }) => {
               const itemsMarkup = nodes.map((product, i) => (
                 <ProductCard
                   key={product.id}
@@ -124,13 +130,13 @@ export default function Search() {
                 <>
                   <div className="flex items-center justify-center mt-6">
                     <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                      {isLoading ? 'Loading...' : 'Previous'}
+                      {isLoading ? "Loading..." : "Previous"}
                     </PreviousLink>
                   </div>
                   <Grid data-test="product-grid">{itemsMarkup}</Grid>
                   <div className="flex items-center justify-center mt-6">
                     <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                      {isLoading ? 'Loading...' : 'Next'}
+                      {isLoading ? "Loading..." : "Next"}
                     </NextLink>
                   </div>
                 </>
@@ -139,7 +145,7 @@ export default function Search() {
           </Pagination>
         </Section>
       )}
-      <Analytics.SearchView data={{searchTerm, searchResults: products}} />
+      <Analytics.SearchView data={{ searchTerm, searchResults: products }} />
     </>
   );
 }
@@ -167,7 +173,7 @@ function NoResults({
         >
           {(result) => {
             if (!result) return null;
-            const {featuredCollections, featuredProducts} = result;
+            const { featuredCollections, featuredProducts } = result;
 
             return (
               <>
@@ -189,9 +195,9 @@ function NoResults({
 }
 
 export function getNoResultRecommendations(
-  storefront: LoaderFunctionArgs['context']['storefront'],
+  storefront: LoaderFunctionArgs["context"]["storefront"],
 ) {
-  return getFeaturedData(storefront, {pageBy: PAGINATION_SIZE});
+  return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }
 
 const SEARCH_QUERY = `#graphql

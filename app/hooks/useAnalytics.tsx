@@ -1,21 +1,21 @@
-import {useLocation} from '@remix-run/react';
-import type {ShopifyPageViewPayload} from '@shopify/hydrogen';
+import { useLocation } from "@remix-run/react";
+import type { ShopifyPageViewPayload } from "@shopify/hydrogen";
 import {
   AnalyticsEventName,
   getClientBrowserParameters,
   sendShopifyAnalytics,
   useShopifyCookies,
-} from '@shopify/hydrogen';
-import {useEffect, useRef} from 'react';
+} from "@shopify/hydrogen";
+import { useEffect, useRef } from "react";
 
-import {usePageAnalytics} from './usePageAnalytics';
+import { usePageAnalytics } from "./usePageAnalytics";
 
 export function useAnalytics(hasUserConsent: boolean) {
-  useShopifyCookies({hasUserConsent});
+  useShopifyCookies({ hasUserConsent });
 
   const location = useLocation();
-  const lastLocationKey = useRef<string>('');
-  const pageAnalytics = usePageAnalytics({hasUserConsent});
+  const lastLocationKey = useRef<string>("");
+  const pageAnalytics = usePageAnalytics({ hasUserConsent });
 
   // Page view analytics
   // We want useEffect to execute only when location changes

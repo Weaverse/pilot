@@ -1,12 +1,12 @@
-import {flattenConnection, Image} from '@shopify/hydrogen';
+import { flattenConnection, Image } from "@shopify/hydrogen";
 
-import type {OrderCardFragment} from 'customer-accountapi.generated';
-import {Heading, Text, Link} from '~/components';
-import {statusMessage} from '~/lib/utils';
+import type { OrderCardFragment } from "customer-accountapi.generated";
+import { Heading, Text, Link } from "~/components";
+import { statusMessage } from "~/lib/utils";
 
-export function OrderCard({order}: {order: OrderCardFragment}) {
+export function OrderCard({ order }: { order: OrderCardFragment }) {
   if (!order?.id) return null;
-  const [legacyOrderId, key] = order!.id!.split('/').pop()!.split('?');
+  const [legacyOrderId, key] = order!.id!.split("/").pop()!.split("?");
   const lineItems = flattenConnection(order?.lineItems);
   const fulfillmentStatus = flattenConnection(order?.fulfillments)[0]?.status;
 
@@ -23,14 +23,14 @@ export function OrderCard({order}: {order: OrderCardFragment}) {
               width={168}
               height={168}
               className="w-full fadeIn cover"
-              alt={lineItems[0].image?.altText ?? 'Order image'}
+              alt={lineItems[0].image?.altText ?? "Order image"}
               src={lineItems[0].image.url}
             />
           </div>
         )}
         <div
           className={`flex-col justify-center text-left ${
-            !lineItems[0].image && 'md:col-span-2'
+            !lineItems[0].image && "md:col-span-2"
           }`}
         >
           <Heading as="h3" format size="copy">
@@ -57,9 +57,9 @@ export function OrderCard({order}: {order: OrderCardFragment}) {
                 <dd className="mt-2">
                   <span
                     className={`px-3 py-1 text-xs font-medium rounded-full ${
-                      fulfillmentStatus === 'SUCCESS'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-primary/5 text-primary/50'
+                      fulfillmentStatus === "SUCCESS"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-primary/5 text-primary/50"
                     }`}
                   >
                     <Text size="fine">{statusMessage(fulfillmentStatus)}</Text>

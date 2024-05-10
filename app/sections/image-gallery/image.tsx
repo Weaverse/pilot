@@ -1,11 +1,11 @@
-import {Image} from '@shopify/hydrogen';
+import { Image } from "@shopify/hydrogen";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import clsx from 'clsx';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import clsx from "clsx";
+import { forwardRef } from "react";
 
 interface ImageGalleryItemProps extends HydrogenComponentProps {
   src: WeaverseImage;
@@ -14,34 +14,34 @@ interface ImageGalleryItemProps extends HydrogenComponentProps {
   hideOnMobile: boolean;
 }
 
-let columnSpanClasses: {[span: number]: string} = {
-  1: 'col-span-1',
-  2: 'col-span-2',
-  3: 'col-span-3',
-  4: 'col-span-4',
+let columnSpanClasses: { [span: number]: string } = {
+  1: "col-span-1",
+  2: "col-span-2",
+  3: "col-span-3",
+  4: "col-span-4",
 };
 
-let radiusClasses: {[radius: string]: string} = {
-  0: '',
-  2: 'rounded-sm',
-  4: 'rounded',
-  6: 'rounded-md',
-  8: 'rounded-lg',
+let radiusClasses: { [radius: string]: string } = {
+  0: "",
+  2: "rounded-sm",
+  4: "rounded",
+  6: "rounded-md",
+  8: "rounded-lg",
 };
 
 let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
   (props, ref) => {
-    let {src, columnSpan, borderRadius, hideOnMobile, ...rest} = props;
-    let data = typeof src === 'object' ? src : {url: src, altText: src};
+    let { src, columnSpan, borderRadius, hideOnMobile, ...rest } = props;
+    let data = typeof src === "object" ? src : { url: src, altText: src };
     return (
       <Image
         ref={ref}
         {...rest}
         className={clsx(
-          'h-72 object-cover object-center w-full',
+          "h-72 object-cover object-center w-full",
           columnSpanClasses[columnSpan],
           radiusClasses[borderRadius],
-          hideOnMobile && 'hidden sm:block',
+          hideOnMobile && "hidden sm:block",
         )}
         data={data}
         sizes={`(min-width: 45em) 50vw, 100vw`}
@@ -53,23 +53,23 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
 export default ImageGalleryItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'image-gallery--item',
-  title: 'Image',
+  type: "image-gallery--item",
+  title: "Image",
   inspector: [
     {
-      group: 'Image gallery item',
+      group: "Image gallery item",
       inputs: [
         {
-          type: 'image',
-          name: 'src',
-          label: 'Image',
+          type: "image",
+          name: "src",
+          label: "Image",
           defaultValue:
-            'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
+            "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
         },
         {
-          type: 'range',
-          label: 'Column span',
-          name: 'columnSpan',
+          type: "range",
+          label: "Column span",
+          name: "columnSpan",
           configs: {
             min: 1,
             max: 4,
@@ -78,25 +78,25 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 1,
         },
         {
-          type: 'range',
-          label: 'Border radius',
-          name: 'borderRadius',
+          type: "range",
+          label: "Border radius",
+          name: "borderRadius",
           configs: {
             min: 0,
             max: 8,
             step: 2,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 8,
         },
         {
-          type: 'switch',
-          label: 'Hide on mobile',
-          name: 'hideOnMobile',
+          type: "switch",
+          label: "Hide on mobile",
+          name: "hideOnMobile",
           defaultValue: false,
         },
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

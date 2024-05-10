@@ -3,11 +3,11 @@
  */
 export function formatPrice(
   price: string | number,
-  currency = 'USD',
-  locale = 'en-US',
+  currency = "USD",
+  locale = "en-US",
 ) {
   const formatter = new Intl.NumberFormat(locale, {
-    style: 'currency',
+    style: "currency",
     currency,
   });
 
@@ -19,15 +19,15 @@ export function formatPrice(
  */
 export function normalizePrice(price: string | null) {
   if (!price || !/^[$\d.,]+$/.test(price)) {
-    throw new Error('Price was not found');
+    throw new Error("Price was not found");
   }
 
   return Number(
     price
-      .replace('$', '')
+      .replace("$", "")
       .trim()
-      .replace(/[.,](\d\d)$/, '-$1')
-      .replace(/[.,]/g, '')
-      .replace('-', '.'),
+      .replace(/[.,](\d\d)$/, "-$1")
+      .replace(/[.,]/g, "")
+      .replace("-", "."),
   );
 }

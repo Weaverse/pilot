@@ -1,18 +1,18 @@
-import {useLoaderData} from '@remix-run/react';
-import {Pagination} from '@shopify/hydrogen';
-import type {Filter} from '@shopify/hydrogen/storefront-api-types';
+import { useLoaderData } from "@remix-run/react";
+import { Pagination } from "@shopify/hydrogen";
+import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
-import {useInView} from 'react-intersection-observer';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
+import { useInView } from "react-intersection-observer";
 
-import type {CollectionDetailsQuery} from 'storefrontapi.generated';
-import {Button, PageHeader, Section, SortFilter, Text} from '~/components';
-import type {AppliedFilter} from '~/components/SortFilter';
+import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import { Button, PageHeader, Section, SortFilter, Text } from "~/components";
+import type { AppliedFilter } from "~/components/SortFilter";
 
-import {ProductsLoadedOnScroll} from './products-loaded-on-scroll';
+import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 
 interface CollectionFiltersProps extends HydrogenComponentProps {
   showCollectionDescription: boolean;
@@ -22,13 +22,13 @@ interface CollectionFiltersProps extends HydrogenComponentProps {
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, sectionRef) => {
-    let {showCollectionDescription, loadPrevText, loadMoreText, ...rest} =
+    let { showCollectionDescription, loadPrevText, loadMoreText, ...rest } =
       props;
 
-    let {ref, inView} = useInView();
-    let {collection, collections, appliedFilters} = useLoaderData<
+    let { ref, inView } = useInView();
+    let { collection, collections, appliedFilters } = useLoaderData<
       CollectionDetailsQuery & {
-        collections: Array<{handle: string; title: string}>;
+        collections: Array<{ handle: string; title: string }>;
         appliedFilters: AppliedFilter[];
       }
     >();
@@ -70,7 +70,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                         variant="secondary"
                         width="full"
                       >
-                        {isLoading ? 'Loading...' : loadPrevText}
+                        {isLoading ? "Loading..." : loadPrevText}
                       </Button>
                     </div>
                     <ProductsLoadedOnScroll
@@ -87,7 +87,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                         variant="secondary"
                         width="full"
                       >
-                        {isLoading ? 'Loading...' : loadMoreText}
+                        {isLoading ? "Loading..." : loadMoreText}
                       </Button>
                     </div>
                   </>
@@ -105,36 +105,36 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
 export default CollectionFilters;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'collection-filters',
-  title: 'Collection filters',
+  type: "collection-filters",
+  title: "Collection filters",
   limit: 1,
   enabledOn: {
-    pages: ['COLLECTION'],
+    pages: ["COLLECTION"],
   },
-  toolbar: ['general-settings'],
+  toolbar: ["general-settings"],
   inspector: [
     {
-      group: 'Collection filters',
+      group: "Collection filters",
       inputs: [
         {
-          type: 'switch',
-          name: 'showCollectionDescription',
-          label: 'Show collection description',
+          type: "switch",
+          name: "showCollectionDescription",
+          label: "Show collection description",
           defaultValue: true,
         },
         {
-          type: 'text',
-          name: 'loadPrevText',
-          label: 'Load previous text',
-          defaultValue: 'Load previous',
-          placeholder: 'Load previous',
+          type: "text",
+          name: "loadPrevText",
+          label: "Load previous text",
+          defaultValue: "Load previous",
+          placeholder: "Load previous",
         },
         {
-          type: 'text',
-          name: 'loadMoreText',
-          label: 'Load more text',
-          defaultValue: 'Load more products',
-          placeholder: 'Load more products',
+          type: "text",
+          name: "loadMoreText",
+          label: "Load more text",
+          defaultValue: "Load more products",
+          placeholder: "Load more products",
         },
       ],
     },

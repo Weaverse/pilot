@@ -1,33 +1,33 @@
-import {useFetcher, useLocation} from '@remix-run/react';
-import {useCallback, useEffect, useRef} from 'react';
-import {useInView} from 'react-intersection-observer';
-import clsx from 'clsx';
-import type {CartBuyerIdentityInput} from '@shopify/hydrogen/storefront-api-types';
-import {CartForm} from '@shopify/hydrogen';
+import { useFetcher, useLocation } from "@remix-run/react";
+import { useCallback, useEffect, useRef } from "react";
+import { useInView } from "react-intersection-observer";
+import clsx from "clsx";
+import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
+import { CartForm } from "@shopify/hydrogen";
 
-import {Heading, Button, IconCheck} from '~/components';
-import type {Localizations, Locale} from '~/lib/type';
-import {DEFAULT_LOCALE} from '~/lib/utils';
-import {useRootLoaderData} from '~/root';
+import { Heading, Button, IconCheck } from "~/components";
+import type { Localizations, Locale } from "~/lib/type";
+import { DEFAULT_LOCALE } from "~/lib/utils";
+import { useRootLoaderData } from "~/root";
 
 export function CountrySelector() {
   const fetcher = useFetcher();
   const closeRef = useRef<HTMLDetailsElement>(null);
   const rootData = useRootLoaderData();
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const {pathname, search} = useLocation();
+  const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
-    '',
+    "",
   )}${search}`;
 
   const countries = (fetcher.data ?? {}) as Localizations;
-  const defaultLocale = countries?.['default'];
+  const defaultLocale = countries?.["default"];
   const defaultLocalePrefix = defaultLocale
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
-    : '';
+    : "";
 
-  const {ref, inView} = useInView({
+  const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });
@@ -39,12 +39,12 @@ export function CountrySelector() {
 
   // Get available countries list when in view
   useEffect(() => {
-    if (!inView || fetcher.data || fetcher.state === 'loading') return;
-    fetcher.load('/api/countries');
+    if (!inView || fetcher.data || fetcher.state === "loading") return;
+    fetcher.load("/api/countries");
   }, [inView, fetcher]);
 
   const closeDropdown = useCallback(() => {
-    closeRef.current?.removeAttribute('open');
+    closeRef.current?.removeAttribute("open");
   }, []);
 
   return (
@@ -116,9 +116,9 @@ function Country({
     >
       <Button
         className={clsx([
-          'text-contrast dark:text-body',
-          'bg-primary dark:bg-contrast w-full p-2 transition rounded flex justify-start',
-          'items-center text-left cursor-pointer py-2 px-4',
+          "text-contrast dark:text-body",
+          "bg-primary dark:bg-contrast w-full p-2 transition rounded flex justify-start",
+          "items-center text-left cursor-pointer py-2 px-4",
         ])}
         type="submit"
         variant="primary"
@@ -169,7 +169,7 @@ function getCountryUrlPath({
   pathWithoutLocale: string;
   defaultLocalePrefix: string;
 }) {
-  let countryPrefixPath = '';
+  let countryPrefixPath = "";
   const countryLocalePrefix = `${countryLocale.language}-${countryLocale.country}`;
 
   if (countryLocalePrefix !== defaultLocalePrefix) {

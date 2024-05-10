@@ -1,8 +1,8 @@
-import type {HomepageFeaturedProductsQuery} from 'storefrontapi.generated';
-import {ProductCard, Section} from '~/components';
+import type { HomepageFeaturedProductsQuery } from "storefrontapi.generated";
+import { ProductCard, Section } from "~/components";
 
 const mockProducts = {
-  nodes: new Array(12).fill(''),
+  nodes: new Array(12).fill(""),
 };
 
 type ProductSwimlaneProps = HomepageFeaturedProductsQuery & {
@@ -11,7 +11,7 @@ type ProductSwimlaneProps = HomepageFeaturedProductsQuery & {
 };
 
 export function ProductSwimlane({
-  title = 'Featured Products',
+  title = "Featured Products",
   products = mockProducts,
   count = 12,
   ...props

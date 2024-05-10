@@ -1,4 +1,4 @@
-import type { InspectorGroup } from '@weaverse/hydrogen';
+import type { InspectorGroup } from "@weaverse/hydrogen";
 
 type OverlayProps = {
   enable?: boolean;
@@ -13,7 +13,7 @@ export function Overlay({ enable, color, opacity }: OverlayProps) {
         className="absolute inset-0"
         style={{
           backgroundColor: color,
-          opacity: (opacity || 100) / 100
+          opacity: (opacity || 100) / 100,
         }}
       />
     );
@@ -21,35 +21,35 @@ export function Overlay({ enable, color, opacity }: OverlayProps) {
   return null;
 }
 
-export let overlayInputs: InspectorGroup['inputs'] = [
+export let overlayInputs: InspectorGroup["inputs"] = [
   {
-    type: 'heading',
-    label: 'Overlay',
+    type: "heading",
+    label: "Overlay",
   },
   {
-    type: 'switch',
-    name: 'enableOverlay',
-    label: 'Enable overlay',
+    type: "switch",
+    name: "enableOverlay",
+    label: "Enable overlay",
     defaultValue: false,
   },
   {
-    type: 'color',
-    name: 'overlayColor',
-    label: 'Overlay color',
-    defaultValue: '#000000',
-    condition: 'enableOverlay.eq.true',
+    type: "color",
+    name: "overlayColor",
+    label: "Overlay color",
+    defaultValue: "#000000",
+    condition: "enableOverlay.eq.true",
   },
   {
-    type: 'range',
-    name: 'overlayOpacity',
-    label: 'Overlay opacity',
+    type: "range",
+    name: "overlayOpacity",
+    label: "Overlay opacity",
     defaultValue: 50,
     configs: {
       min: 0,
       max: 100,
       step: 1,
-      unit: '%',
+      unit: "%",
     },
-    condition: 'enableOverlay.eq.true',
+    condition: "enableOverlay.eq.true",
   },
 ];

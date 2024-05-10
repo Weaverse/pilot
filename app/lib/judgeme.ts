@@ -34,7 +34,7 @@ export let getJudgemeReviews = async (
 ) => {
   if (!api_token) {
     return {
-      error: 'Missing JUDGEME_PUBLIC_TOKEN',
+      error: "Missing JUDGEME_PUBLIC_TOKEN",
     };
   }
   let internalId = await getInternalIdByHandle(api_token, shop_domain, handle);

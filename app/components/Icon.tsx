@@ -1,13 +1,13 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-type IconProps = JSX.IntrinsicElements['svg'] & {
-  direction?: 'up' | 'right' | 'down' | 'left';
+type IconProps = JSX.IntrinsicElements["svg"] & {
+  direction?: "up" | "right" | "down" | "left";
 };
 
 function Icon({
   children,
   className,
-  fill = 'currentColor',
+  fill = "currentColor",
   stroke,
   ...props
 }: IconProps) {
@@ -18,7 +18,7 @@ function Icon({
       {...props}
       fill={fill}
       stroke={stroke}
-      className={clsx('w-5 h-5', className)}
+      className={clsx("w-5 h-5", className)}
     >
       {children}
     </svg>
@@ -27,7 +27,7 @@ function Icon({
 
 export function IconMenu(props: IconProps) {
   return (
-    <Icon {...props} stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} stroke={props.stroke || "currentColor"}>
       <title>Menu</title>
       <line x1="3" y1="6.375" x2="17" y2="6.375" strokeWidth="1.25" />
       <line x1="3" y1="10.375" x2="17" y2="10.375" strokeWidth="1.25" />
@@ -38,7 +38,7 @@ export function IconMenu(props: IconProps) {
 
 export function IconClose(props: IconProps) {
   return (
-    <Icon {...props} stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} stroke={props.stroke || "currentColor"}>
       <title>Close</title>
       <line
         x1="4.44194"
@@ -58,24 +58,24 @@ export function IconClose(props: IconProps) {
   );
 }
 
-export function IconArrow({direction = 'right'}: IconProps) {
+export function IconArrow({ direction = "right" }: IconProps) {
   let rotate;
 
   switch (direction) {
-    case 'right':
-      rotate = 'rotate-0';
+    case "right":
+      rotate = "rotate-0";
       break;
-    case 'left':
-      rotate = 'rotate-180';
+    case "left":
+      rotate = "rotate-180";
       break;
-    case 'up':
-      rotate = '-rotate-90';
+    case "up":
+      rotate = "-rotate-90";
       break;
-    case 'down':
-      rotate = 'rotate-90';
+    case "down":
+      rotate = "rotate-90";
       break;
     default:
-      rotate = 'rotate-0';
+      rotate = "rotate-0";
   }
 
   return (
@@ -87,27 +87,27 @@ export function IconArrow({direction = 'right'}: IconProps) {
 }
 
 export function IconCaret({
-  direction = 'down',
-  stroke = 'currentColor',
+  direction = "down",
+  stroke = "currentColor",
   ...props
 }: IconProps) {
   let rotate;
 
   switch (direction) {
-    case 'down':
-      rotate = 'rotate-0';
+    case "down":
+      rotate = "rotate-0";
       break;
-    case 'up':
-      rotate = 'rotate-180';
+    case "up":
+      rotate = "rotate-180";
       break;
-    case 'left':
-      rotate = '-rotate-90';
+    case "left":
+      rotate = "-rotate-90";
       break;
-    case 'right':
-      rotate = 'rotate-90';
+    case "right":
+      rotate = "rotate-90";
       break;
     default:
-      rotate = 'rotate-0';
+      rotate = "rotate-0";
   }
 
   return (
@@ -198,7 +198,7 @@ export function IconSearch(props: IconProps) {
 }
 
 export function IconCheck({
-  stroke = 'currentColor',
+  stroke = "currentColor",
   ...props
 }: React.ComponentProps<typeof Icon>) {
   return (
@@ -216,7 +216,7 @@ export function IconCheck({
 }
 
 export function IconXMark({
-  stroke = 'currentColor',
+  stroke = "currentColor",
   ...props
 }: React.ComponentProps<typeof Icon>) {
   return (
@@ -233,7 +233,7 @@ export function IconXMark({
 
 export function IconRemove(props: IconProps) {
   return (
-    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="transparent" stroke={props.stroke || "currentColor"}>
       <title>Remove</title>
       <path
         d="M4 6H16"
@@ -259,7 +259,7 @@ export function IconRemove(props: IconProps) {
 
 export function IconFilters(props: IconProps) {
   return (
-    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="transparent" stroke={props.stroke || "currentColor"}>
       <title>Filters</title>
       <circle cx="4.5" cy="6.5" r="2" />
       <line x1="6" y1="6.5" x2="14" y2="6.5" />
@@ -273,7 +273,7 @@ export function IconFilters(props: IconProps) {
 
 export function IconPinterest(props: IconProps) {
   return (
-    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="transparent" stroke={props.stroke || "currentColor"}>
       <path
         d="M11.25 8.25L8.25 21"
         strokeWidth="2"
@@ -291,7 +291,7 @@ export function IconPinterest(props: IconProps) {
 }
 export function IconFacebook(props: IconProps) {
   return (
-    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="transparent" stroke={props.stroke || "currentColor"}>
       <path
         d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
         strokeWidth="2"
@@ -315,7 +315,7 @@ export function IconFacebook(props: IconProps) {
 }
 export function IconMapBlank(props: IconProps) {
   return (
-    <Icon {...props} fill="none" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="none" stroke={props.stroke || "currentColor"}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -329,7 +329,7 @@ export function IconMapBlank(props: IconProps) {
 
 export function IconImageBlank(props: IconProps) {
   return (
-    <Icon {...props} fill="none" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="none" stroke={props.stroke || "currentColor"}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -349,7 +349,7 @@ export function IconImageBlank(props: IconProps) {
 }
 export function IconVideoBlank(props: IconProps) {
   return (
-    <Icon {...props} fill="none" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="none" stroke={props.stroke || "currentColor"}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -369,7 +369,7 @@ export function IconVideoBlank(props: IconProps) {
 }
 export function IconArrowInput(props: IconProps) {
   return (
-    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+    <Icon {...props} fill="transparent" stroke={props.stroke || "currentColor"}>
       <path
         d="M2.5 8H13.5"
         stroke="#0F0F0F"
@@ -395,7 +395,7 @@ export function IconFilledStar(props: IconProps) {
     <Icon
       {...props}
       viewBox="0 0 24 24"
-      stroke={props.stroke || 'currentColor'}
+      stroke={props.stroke || "currentColor"}
       stroke-width="2"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -412,7 +412,7 @@ export function IconStar(props: IconProps) {
     <Icon
       {...props}
       viewBox="0 0 24 24"
-      stroke={props.stroke || 'currentColor'}
+      stroke={props.stroke || "currentColor"}
       stroke-width="2"
       fill="none"
     >
@@ -426,7 +426,7 @@ export function IconHalfFilledStar(props: IconProps) {
     <Icon
       {...props}
       viewBox="0 0 24 24"
-      stroke={props.stroke || 'currentColor'}
+      stroke={props.stroke || "currentColor"}
       stroke-width="2"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />

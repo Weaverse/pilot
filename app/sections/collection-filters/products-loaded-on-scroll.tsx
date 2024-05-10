@@ -1,8 +1,8 @@
-import {useNavigate} from '@remix-run/react';
-import {useEffect} from 'react';
+import { useNavigate } from "@remix-run/react";
+import { useEffect } from "react";
 
-import {Grid, ProductCard} from '~/components';
-import {getImageLoadingPriority} from '~/lib/const';
+import { Grid, ProductCard } from "~/components";
+import { getImageLoadingPriority } from "~/lib/const";
 
 type ProductsLoadedOnScrollProps = {
   nodes: any;
@@ -13,7 +13,7 @@ type ProductsLoadedOnScrollProps = {
 };
 
 export function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
-  let {nodes, inView, nextPageUrl, hasNextPage, state} = props;
+  let { nodes, inView, nextPageUrl, hasNextPage, state } = props;
   let navigate = useNavigate();
 
   useEffect(() => {

@@ -1,13 +1,13 @@
-import {Image} from '@shopify/hydrogen';
+import { Image } from "@shopify/hydrogen";
 import type {
   ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import clsx from 'clsx';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import clsx from "clsx";
+import { forwardRef } from "react";
 
-import {METAOBJECTS_QUERY} from '~/data/queries';
+import { METAOBJECTS_QUERY } from "~/data/queries";
 
 type MetaObjectField = {
   key: string;
@@ -34,13 +34,13 @@ type MetaDemoProps = HydrogenComponentProps & {
 };
 
 let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
-  let {loaderData, metaDemo, title, itemsPerRow, gap, className, ...rest} =
+  let { loaderData, metaDemo, title, itemsPerRow, gap, className, ...rest } =
     props;
   if (!metaDemo) {
     return (
       <section
         className={clsx(
-          'w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto',
+          "w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto",
           className,
         )}
         ref={ref}
@@ -52,11 +52,11 @@ let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
   }
   let items = loaderData?.metaobjects.map(
     (metaObject: MetaobjectData, ind: number) => {
-      let {fields} = metaObject;
-      let image = fields.find((field) => field.key === 'avatar');
+      let { fields } = metaObject;
+      let image = fields.find((field) => field.key === "avatar");
       let imageData = image?.reference?.image;
-      let name = fields.find((field) => field.key === 'name')?.value;
-      let title = fields.find((field) => field.key === 'title')?.value;
+      let name = fields.find((field) => field.key === "name")?.value;
+      let title = fields.find((field) => field.key === "title")?.value;
       return (
         <div key={ind} className="flex flex-col gap-2 items-center">
           <div className="rounded-md overflow-hidden w-44">
@@ -76,7 +76,7 @@ let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
   return (
     <section
       className={clsx(
-        'max-w-7xl px-6 py-12 md:py-24 lg:py-32 w-fit mx-auto',
+        "max-w-7xl px-6 py-12 md:py-24 lg:py-32 w-fit mx-auto",
         className,
       )}
       ref={ref}
@@ -97,12 +97,12 @@ let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
 });
 
 export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
-  let {weaverse, data} = args;
-  let {storefront} = weaverse;
+  let { weaverse, data } = args;
+  let { storefront } = weaverse;
   if (!data?.metaDemo) {
     return null;
   }
-  let {metaobjects} = await storefront.query(METAOBJECTS_QUERY, {
+  let { metaobjects } = await storefront.query(METAOBJECTS_QUERY, {
     variables: {
       type: data.metaDemo.type,
       first: 10,
@@ -114,31 +114,31 @@ export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'meta-demo',
-  title: 'Metaobject Demo',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "meta-demo",
+  title: "Metaobject Demo",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Metaobject Demo',
+      group: "Metaobject Demo",
       inputs: [
         {
-          label: 'Select metaobject definition',
-          type: 'metaobject',
+          label: "Select metaobject definition",
+          type: "metaobject",
           helpText:
             '<a href="https://weaverse.io/docs/marketplace/the-pilot-theme#metaobjects" target="_blank">How to display this demo section</a>',
-          name: 'metaDemo',
+          name: "metaDemo",
           shouldRevalidate: true,
         },
         {
-          label: 'Title',
-          type: 'text',
-          name: 'title',
-          defaultValue: 'Title',
+          label: "Title",
+          type: "text",
+          name: "title",
+          defaultValue: "Title",
         },
         {
-          label: 'Items per row',
-          name: 'itemsPerRow',
-          type: 'range',
+          label: "Items per row",
+          name: "itemsPerRow",
+          type: "range",
           configs: {
             min: 1,
             max: 10,
@@ -146,9 +146,9 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 3,
         },
         {
-          label: 'Gap between items',
-          name: 'gap',
-          type: 'range',
+          label: "Gap between items",
+          name: "gap",
+          type: "range",
           configs: {
             min: 0,
             step: 2,

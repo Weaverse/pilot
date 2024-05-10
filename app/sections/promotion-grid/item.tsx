@@ -2,11 +2,11 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
+import { Image } from "@shopify/hydrogen";
 
-import {IconImageBlank} from '~/components';
+import { IconImageBlank } from "~/components";
 
 interface PromotionItemProps extends HydrogenComponentProps {
   backgroundImage: WeaverseImage;
@@ -14,7 +14,7 @@ interface PromotionItemProps extends HydrogenComponentProps {
 
 let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
   (props, ref) => {
-    let {backgroundImage, children, ...rest} = props;
+    let { backgroundImage, children, ...rest } = props;
     return (
       <div ref={ref} {...rest} className="relative w-96 aspect-video">
         <div className="absolute inset-0">
@@ -46,44 +46,44 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
 export default PromotionGridItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'promotion-item',
-  title: 'Promotion',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "promotion-item",
+  title: "Promotion",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Promotion',
+      group: "Promotion",
       inputs: [
         {
-          type: 'image',
-          name: 'backgroundImage',
-          label: 'Background image',
+          type: "image",
+          name: "backgroundImage",
+          label: "Background image",
         },
       ],
     },
   ],
   childTypes: [
-    'subheading',
-    'heading',
-    'description',
-    'promotion-item--buttons',
+    "subheading",
+    "heading",
+    "description",
+    "promotion-item--buttons",
   ],
   presets: {
     children: [
       {
-        type: 'subheading',
-        content: 'Subheading',
+        type: "subheading",
+        content: "Subheading",
       },
       {
-        type: 'heading',
-        content: 'Heading for Image',
+        type: "heading",
+        content: "Heading for Image",
       },
       {
-        type: 'description',
+        type: "description",
         content:
-          'Include the smaller details of your promotion in text below the title.',
+          "Include the smaller details of your promotion in text below the title.",
       },
       {
-        type: 'promotion-item--buttons',
+        type: "promotion-item--buttons",
       },
     ],
   },

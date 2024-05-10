@@ -1,9 +1,9 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {useState, useEffect, forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { useState, useEffect, forwardRef } from "react";
 
 interface CountDownTimerProps extends HydrogenComponentProps {
   textColor: string;
@@ -36,7 +36,7 @@ function calculateTimeRemaining(startTime: number) {
 }
 let CountdownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
   (props, ref) => {
-    let {textColor, startDate, ...rest} = props;
+    let { textColor, startDate, ...rest } = props;
     const [timeRemaining, setTimeRemaining] = useState(
       calculateTimeRemaining(startDate),
     );
@@ -57,7 +57,7 @@ let CountdownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
     }, [startDate]);
 
     let timerStyle: CSSProperties = {
-      '--timer-text-color': textColor,
+      "--timer-text-color": textColor,
     } as CSSProperties;
 
     return (
@@ -104,23 +104,23 @@ export default CountdownTimer;
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 export let schema: HydrogenComponentSchema = {
-  type: 'countdown--timer',
-  title: 'Timer',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "countdown--timer",
+  title: "Timer",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Timer',
+      group: "Timer",
       inputs: [
         {
-          type: 'color',
-          name: 'textColor',
-          label: 'Color',
-          defaultValue: '#000000',
+          type: "color",
+          name: "textColor",
+          label: "Color",
+          defaultValue: "#000000",
         },
         {
-          type: 'datepicker',
-          label: 'Start date',
-          name: 'startDate',
+          type: "datepicker",
+          label: "Start date",
+          name: "startDate",
           defaultValue: tomorrow.getTime(),
         },
       ],

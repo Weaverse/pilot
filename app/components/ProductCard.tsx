@@ -1,12 +1,12 @@
-import clsx from 'clsx';
-import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
-import type {MoneyV2, Product} from '@shopify/hydrogen/storefront-api-types';
+import clsx from "clsx";
+import type { ShopifyAnalyticsProduct } from "@shopify/hydrogen";
+import { flattenConnection, Image, Money, useMoney } from "@shopify/hydrogen";
+import type { MoneyV2, Product } from "@shopify/hydrogen/storefront-api-types";
 
-import type {ProductCardFragment} from 'storefrontapi.generated';
-import {Text, Link, AddToCartButton, Button} from '~/components';
-import {isDiscounted, isNewArrival} from '~/lib/utils';
-import {getProductPlaceholder} from '~/lib/placeholders';
+import type { ProductCardFragment } from "storefrontapi.generated";
+import { Text, Link, AddToCartButton, Button } from "~/components";
+import { isDiscounted, isNewArrival } from "~/lib/utils";
+import { getProductPlaceholder } from "~/lib/placeholders";
 
 export function ProductCard({
   product,
@@ -19,7 +19,7 @@ export function ProductCard({
   product: ProductCardFragment;
   label?: string;
   className?: string;
-  loading?: HTMLImageElement['loading'];
+  loading?: HTMLImageElement["loading"];
   onClick?: () => void;
   quickAdd?: boolean;
 }) {
@@ -33,14 +33,14 @@ export function ProductCard({
   const firstVariant = flattenConnection(cardProduct.variants)[0];
 
   if (!firstVariant) return null;
-  const {image, price, compareAtPrice} = firstVariant;
+  const { image, price, compareAtPrice } = firstVariant;
 
   if (label) {
     cardLabel = label;
   } else if (isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2)) {
-    cardLabel = 'Sale';
+    cardLabel = "Sale";
   } else if (isNewArrival(product.publishedAt)) {
-    cardLabel = 'New';
+    cardLabel = "New";
   }
 
   const productAnalytics: ShopifyAnalyticsProduct = {
@@ -59,11 +59,11 @@ export function ProductCard({
         onClick={onClick}
         to={`/products/${product.handle}`}
         prefetch="intent"
-        className={({isTransitioning}) => {
-          return isTransitioning ? 'vt-product-image' : '';
+        className={({ isTransitioning }) => {
+          return isTransitioning ? "vt-product-image" : "";
         }}
       >
-        <div className={clsx('grid gap-4', className)}>
+        <div className={clsx("grid gap-4", className)}>
           <div className="card-image aspect-[4/5] bg-primary/5">
             {image && (
               <Image
@@ -96,7 +96,7 @@ export function ProductCard({
                 <Money withoutTrailingZeros data={price!} />
                 {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
                   <CompareAtPrice
-                    className={'opacity-50'}
+                    className={"opacity-50"}
                     data={compareAtPrice as MoneyV2}
                   />
                 )}
@@ -143,10 +143,10 @@ function CompareAtPrice({
   data: MoneyV2;
   className?: string;
 }) {
-  const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
+  const { currencyNarrowSymbol, withoutTrailingZerosAndCurrency } =
     useMoney(data);
 
-  const styles = clsx('strike', className);
+  const styles = clsx("strike", className);
 
   return (
     <span className={styles}>

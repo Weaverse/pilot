@@ -1,23 +1,25 @@
-import type {SeoConfig} from '@shopify/hydrogen';
-import {getPaginationVariables, getSeoMeta} from '@shopify/hydrogen';
-import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {json} from '@shopify/remix-oxygen';
-import invariant from 'tiny-invariant';
-import type {MetaFunction} from '@remix-run/react';
+import type { SeoConfig } from "@shopify/hydrogen";
+import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
+import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { json } from "@shopify/remix-oxygen";
+import invariant from "tiny-invariant";
+import type { MetaFunction } from "@remix-run/react";
 
-import {routeHeaders} from '~/data/cache';
-import {ALL_PRODUCTS_QUERY} from '~/data/queries';
-import {PAGINATION_SIZE} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
-import {WeaverseContent} from '~/weaverse';
+import { routeHeaders } from "~/data/cache";
+import { ALL_PRODUCTS_QUERY } from "~/data/queries";
+import { PAGINATION_SIZE } from "~/lib/const";
+import { seoPayload } from "~/lib/seo.server";
+import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
 
 export async function loader({
   request,
-  context: {storefront, weaverse},
+  context: { storefront, weaverse },
 }: LoaderFunctionArgs) {
-  const variables = getPaginationVariables(request, {pageBy: PAGINATION_SIZE});
+  const variables = getPaginationVariables(request, {
+    pageBy: PAGINATION_SIZE,
+  });
 
   const data = await storefront.query(ALL_PRODUCTS_QUERY, {
     variables: {
@@ -27,23 +29,23 @@ export async function loader({
     },
   });
 
-  invariant(data, 'No data returned from Shopify API');
+  invariant(data, "No data returned from Shopify API");
 
   const seo = seoPayload.collection({
     url: request.url,
     collection: {
-      id: 'all-products',
-      title: 'All Products',
-      handle: 'products',
-      descriptionHtml: 'All the store products',
-      description: 'All the store products',
+      id: "all-products",
+      title: "All Products",
+      handle: "products",
+      descriptionHtml: "All the store products",
+      description: "All the store products",
       seo: {
-        title: 'All Products',
-        description: 'All the store products',
+        title: "All Products",
+        description: "All the store products",
       },
       metafields: [],
       products: data.products,
-      updatedAt: '',
+      updatedAt: "",
     },
   });
 
@@ -51,12 +53,12 @@ export async function loader({
     products: data.products,
     seo,
     weaverseData: await weaverse.loadPage({
-      type: 'ALL_PRODUCTS',
+      type: "ALL_PRODUCTS",
     }),
   });
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return getSeoMeta(data!.seo as SeoConfig);
 };
 export default function AllProducts() {

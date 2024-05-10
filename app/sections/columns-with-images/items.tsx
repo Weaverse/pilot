@@ -2,8 +2,8 @@ import {
   IMAGES_PLACEHOLDERS,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 
 interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
   gap: number;
@@ -30,41 +30,41 @@ let ColumnsWithImagesItems = forwardRef<
 export default ColumnsWithImagesItems;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'columns-with-images--items',
-  title: 'Items',
+  type: "columns-with-images--items",
+  title: "Items",
   inspector: [
     {
-      group: 'Items',
+      group: "Items",
       inputs: [
         {
-          type: 'range',
-          label: 'Items gap',
-          name: 'gap',
+          type: "range",
+          label: "Items gap",
+          name: "gap",
           configs: {
             min: 16,
             max: 80,
             step: 4,
-            unit: 'px',
+            unit: "px",
           },
           defaultValue: 40,
         },
       ],
     },
   ],
-  childTypes: ['column-with-image--item'],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  childTypes: ["column-with-image--item"],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     children: [
       {
-        type: 'column-with-image--item',
+        type: "column-with-image--item",
         imageSrc: IMAGES_PLACEHOLDERS.product_1,
       },
       {
-        type: 'column-with-image--item',
+        type: "column-with-image--item",
         imageSrc: IMAGES_PLACEHOLDERS.product_2,
       },
       {
-        type: 'column-with-image--item',
+        type: "column-with-image--item",
         imageSrc: IMAGES_PLACEHOLDERS.product_3,
       },
     ],

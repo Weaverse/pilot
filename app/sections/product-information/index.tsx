@@ -1,19 +1,19 @@
-import { useLoaderData } from '@remix-run/react';
-import { Money, ShopPayButton } from '@shopify/hydrogen';
+import { useLoaderData } from "@remix-run/react";
+import { Money, ShopPayButton } from "@shopify/hydrogen";
 import {
   useThemeSettings,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import { forwardRef, useEffect, useState } from 'react';
-import type { ProductQuery, VariantsQuery } from 'storefrontapi.generated';
-import { AddToCartButton, Text } from '~/components';
-import { getExcerpt } from '~/lib/utils';
-import { ProductPlaceholder } from '../../components/product-form/placeholder';
-import { ProductMedia } from '../../components/product-form/product-media';
-import { Quantity } from '../../components/product-form/quantity';
-import { ProductVariants } from '../../components/product-form/variants';
-import { ProductDetail } from './product-detail';
+} from "@weaverse/hydrogen";
+import { forwardRef, useEffect, useState } from "react";
+import type { ProductQuery, VariantsQuery } from "storefrontapi.generated";
+import { AddToCartButton, Text } from "~/components";
+import { getExcerpt } from "~/lib/utils";
+import { ProductPlaceholder } from "../../components/product-form/placeholder";
+import { ProductMedia } from "../../components/product-form/product-media";
+import { Quantity } from "../../components/product-form/quantity";
+import { ProductVariants } from "../../components/product-form/variants";
+import { ProductDetail } from "./product-detail";
 interface ProductInformationProps extends HydrogenComponentProps {
   addToCartText: string;
   soldOutText: string;
@@ -87,7 +87,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         searchParams.set(option.name, option.value);
       }
       let url = `${window.location.pathname}?${searchParams.toString()}`;
-      window.history.replaceState({}, '', url);
+      window.history.replaceState({}, "", url);
     };
 
     if (!product || !selectedVariant)
@@ -117,7 +117,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       {title}
                     </h2>
                     {showVendor && vendor && (
-                      <Text className={'opacity-50 font-medium'}>{vendor}</Text>
+                      <Text className={"opacity-50 font-medium"}>{vendor}</Text>
                     )}
                   </div>
                   <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
@@ -203,89 +203,89 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
 export default ProductInformation;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'product-information',
-  title: 'Product information',
-  childTypes: ['judgeme'],
+  type: "product-information",
+  title: "Product information",
+  childTypes: ["judgeme"],
   limit: 1,
   enabledOn: {
-    pages: ['PRODUCT'],
+    pages: ["PRODUCT"],
   },
   inspector: [
     {
-      group: 'Product form',
+      group: "Product form",
       inputs: [
         {
-          type: 'text',
-          label: 'Add to cart text',
-          name: 'addToCartText',
-          defaultValue: 'Add to cart',
-          placeholder: 'Add to cart',
+          type: "text",
+          label: "Add to cart text",
+          name: "addToCartText",
+          defaultValue: "Add to cart",
+          placeholder: "Add to cart",
         },
         {
-          type: 'text',
-          label: 'Sold out text',
-          name: 'soldOutText',
-          defaultValue: 'Sold out',
-          placeholder: 'Sold out',
+          type: "text",
+          label: "Sold out text",
+          name: "soldOutText",
+          defaultValue: "Sold out",
+          placeholder: "Sold out",
         },
         {
-          type: 'text',
-          label: 'Unavailable text',
-          name: 'unavailableText',
-          defaultValue: 'Unavailable',
-          placeholder: 'Unavailable',
+          type: "text",
+          label: "Unavailable text",
+          name: "unavailableText",
+          defaultValue: "Unavailable",
+          placeholder: "Unavailable",
         },
         {
-          type: 'switch',
-          label: 'Show vendor',
-          name: 'showVendor',
+          type: "switch",
+          label: "Show vendor",
+          name: "showVendor",
           defaultValue: true,
         },
         {
-          type: 'switch',
-          label: 'Show sale price',
-          name: 'showSalePrice',
+          type: "switch",
+          label: "Show sale price",
+          name: "showSalePrice",
           defaultValue: true,
         },
         {
-          type: 'switch',
-          label: 'Show details',
-          name: 'showDetails',
+          type: "switch",
+          label: "Show details",
+          name: "showDetails",
           defaultValue: true,
         },
         {
-          type: 'switch',
-          label: 'Show shipping policy',
-          name: 'showShippingPolicy',
+          type: "switch",
+          label: "Show shipping policy",
+          name: "showShippingPolicy",
           defaultValue: true,
         },
         {
-          type: 'switch',
-          label: 'Show refund policy',
-          name: 'showRefundPolicy',
+          type: "switch",
+          label: "Show refund policy",
+          name: "showRefundPolicy",
           defaultValue: true,
         },
         {
-          label: 'Hide unavailable options',
-          type: 'switch',
-          name: 'hideUnavailableOptions',
+          label: "Hide unavailable options",
+          type: "switch",
+          name: "hideUnavailableOptions",
         },
       ],
     },
     {
-      group: 'Product Media',
+      group: "Product Media",
       inputs: [
         {
-          label: 'Show thumbnails',
-          name: 'showThumbnails',
-          type: 'switch',
+          label: "Show thumbnails",
+          name: "showThumbnails",
+          type: "switch",
           defaultValue: true,
         },
         {
-          label: 'Number of thumbnails',
-          name: 'numberOfThumbnails',
-          type: 'range',
-          condition: 'showThumbnails.eq.true',
+          label: "Number of thumbnails",
+          name: "numberOfThumbnails",
+          type: "range",
+          condition: "showThumbnails.eq.true",
           configs: {
             min: 1,
             max: 10,
@@ -293,9 +293,9 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 4,
         },
         {
-          label: 'Gap between images',
-          name: 'spacing',
-          type: 'range',
+          label: "Gap between images",
+          name: "spacing",
+          type: "range",
           configs: {
             min: 0,
             step: 2,
@@ -306,5 +306,5 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

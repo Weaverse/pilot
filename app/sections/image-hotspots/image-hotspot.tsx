@@ -2,12 +2,12 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   WeaverseImage,
-} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {forwardRef} from 'react';
-import {Image} from '@shopify/hydrogen';
+} from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { forwardRef } from "react";
+import { Image } from "@shopify/hydrogen";
 
-import {IconImageBlank} from '~/components';
+import { IconImageBlank } from "~/components";
 
 interface ImageHotspotProps extends HydrogenComponentProps {
   imageHostpots: WeaverseImage;
@@ -28,7 +28,7 @@ let ImageHotspot = forwardRef<HTMLElement, ImageHotspotProps>((props, ref) => {
     ...rest
   } = props;
   let sectionStyles: CSSProperties = {
-    '--section-height': `${sectionHeight}px`,
+    "--section-height": `${sectionHeight}px`,
     paddingTop: `${topPadding}px`,
     paddingBottom: `${bottomPadding}px`,
   } as CSSProperties;
@@ -64,68 +64,68 @@ let ImageHotspot = forwardRef<HTMLElement, ImageHotspotProps>((props, ref) => {
 export default ImageHotspot;
 
 export let schema: HydrogenComponentSchema = {
-  type: 'image-hotspot',
-  title: 'Image hotspot',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "image-hotspot",
+  title: "Image hotspot",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Image',
+      group: "Image",
       inputs: [
         {
-          type: 'image',
-          name: 'imageHostpots',
-          label: 'Image hotspots',
+          type: "image",
+          name: "imageHostpots",
+          label: "Image hotspots",
         },
         {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Shop the look',
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "Shop the look",
         },
         {
-          type: 'range',
-          name: 'sectionHeight',
-          label: 'Section height',
+          type: "range",
+          name: "sectionHeight",
+          label: "Section height",
           defaultValue: 400,
           configs: {
             min: 400,
             max: 700,
             step: 10,
-            unit: 'px',
+            unit: "px",
           },
         },
         {
-          type: 'range',
-          name: 'topPadding',
-          label: 'Top padding',
+          type: "range",
+          name: "topPadding",
+          label: "Top padding",
           defaultValue: 10,
           configs: {
             min: 5,
             max: 70,
             step: 5,
-            unit: 'px',
+            unit: "px",
           },
         },
         {
-          type: 'range',
-          name: 'bottomPadding',
-          label: 'Bottom padding',
+          type: "range",
+          name: "bottomPadding",
+          label: "Bottom padding",
           defaultValue: 10,
           configs: {
             min: 5,
             max: 70,
             step: 5,
-            unit: 'px',
+            unit: "px",
           },
         },
       ],
     },
   ],
-  childTypes: ['product-hotspot--items'],
+  childTypes: ["product-hotspot--items"],
   presets: {
     children: [
       {
-        type: 'product-hotspot--items',
+        type: "product-hotspot--items",
       },
     ],
   },

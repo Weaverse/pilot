@@ -1,14 +1,14 @@
-import {Disclosure} from '@headlessui/react';
-import {Await, Form, useParams} from '@remix-run/react';
+import { Disclosure } from "@headlessui/react";
+import { Await, Form, useParams } from "@remix-run/react";
 import {
   CartForm,
   unstable_useAnalytics as useAnalytics,
-} from '@shopify/hydrogen';
-import {Suspense, useEffect, useMemo} from 'react';
-import useWindowScroll from 'react-use/esm/useWindowScroll';
-import clsx from 'clsx';
+} from "@shopify/hydrogen";
+import { Suspense, useEffect, useMemo } from "react";
+import useWindowScroll from "react-use/esm/useWindowScroll";
+import clsx from "clsx";
 
-import {type LayoutQuery} from 'storefrontapi.generated';
+import { type LayoutQuery } from "storefrontapi.generated";
 import {
   Cart,
   CartLoading,
@@ -25,17 +25,17 @@ import {
   Section,
   Text,
   useDrawer,
-} from '~/components';
-import {useCartFetchers} from '~/hooks/useCartFetchers';
-import {useIsHydrated} from '~/hooks/useIsHydrated';
+} from "~/components";
+import { useCartFetchers } from "~/hooks/useCartFetchers";
+import { useIsHydrated } from "~/hooks/useIsHydrated";
 import {
   type ChildEnhancedMenuItem,
   type EnhancedMenu,
   useIsHomePath,
-} from '~/lib/utils';
-import {useRootLoaderData} from '~/root';
+} from "~/lib/utils";
+import { useRootLoaderData } from "~/root";
 
-import {Logo} from './Logo';
+import { Logo } from "./Logo";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -45,8 +45,8 @@ type LayoutProps = {
   };
 };
 
-export function Layout({children, layout}: LayoutProps) {
-  const {headerMenu, footerMenu} = layout || {};
+export function Layout({ children, layout }: LayoutProps) {
+  const { headerMenu, footerMenu } = layout || {};
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -67,7 +67,7 @@ export function Layout({children, layout}: LayoutProps) {
   );
 }
 
-function Header({title, menu}: {title: string; menu?: EnhancedMenu}) {
+function Header({ title, menu }: { title: string; menu?: EnhancedMenu }) {
   const isHome = useIsHomePath();
 
   const {
@@ -112,7 +112,13 @@ function Header({title, menu}: {title: string; menu?: EnhancedMenu}) {
   );
 }
 
-function CartDrawer({isOpen, onClose}: {isOpen: boolean; onClose: () => void}) {
+function CartDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const rootData = useRootLoaderData();
 
   return (
@@ -162,8 +168,8 @@ function MenuMobileNav({
             to={item.to}
             target={item.target}
             onClick={onClose}
-            className={({isActive}) =>
-              isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
+            className={({ isActive }) =>
+              isActive ? "pb-1 border-b -mb-px" : "pb-1"
             }
           >
             <Text as="span" size="copy">
@@ -196,8 +202,8 @@ function MobileHeader({
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary text-body shadow-darkHeader'
-          : 'bg-primary text-body'
+          ? "bg-primary text-body shadow-darkHeader"
+          : "bg-primary text-body"
       } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
     >
       <div className="flex items-center justify-start w-full gap-4">
@@ -209,7 +215,7 @@ function MobileHeader({
         </button>
         <Form
           method="get"
-          action={params.locale ? `/${params.locale}/search` : '/search'}
+          action={params.locale ? `/${params.locale}/search` : "/search"}
           className="items-center gap-2 sm:flex"
         >
           <button
@@ -243,15 +249,15 @@ function DesktopHeader({
   title: string;
 }) {
   const params = useParams();
-  const {y} = useWindowScroll();
+  const { y } = useWindowScroll();
   return (
     <header
       role="banner"
       className={clsx(
-        'bg-primary text-body',
-        y > 50 && ' shadow-header',
-        'hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between leading-none gap-8',
-        'w-full px-6 md:px-8 lg:px-12 py-4',
+        "bg-primary text-body",
+        y > 50 && " shadow-header",
+        "hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between leading-none gap-8",
+        "w-full px-6 md:px-8 lg:px-12 py-4",
       )}
     >
       <div className="flex gap-12">
@@ -264,10 +270,10 @@ function DesktopHeader({
               to={item.to}
               target={item.target}
               prefetch="intent"
-              className={({isActive}) =>
+              className={({ isActive }) =>
                 isActive
-                  ? 'pb-1 border-b -mb-px font-medium'
-                  : 'pb-1 font-medium'
+                  ? "pb-1 border-b -mb-px font-medium"
+                  : "pb-1 font-medium"
               }
             >
               {item.title}
@@ -278,7 +284,7 @@ function DesktopHeader({
       <div className="flex items-center gap-1">
         <Form
           method="get"
-          action={params.locale ? `/${params.locale}/search` : '/search'}
+          action={params.locale ? `/${params.locale}/search` : "/search"}
           className="flex items-center gap-2"
         >
           {/* <Input
@@ -301,7 +307,7 @@ function DesktopHeader({
   );
 }
 
-function AccountLink({className}: {className?: string}) {
+function AccountLink({ className }: { className?: string }) {
   const rootData = useRootLoaderData();
   const isLoggedIn = rootData?.isLoggedIn;
 
@@ -367,10 +373,10 @@ function Badge({
     [count, dark],
   );
 
-  const {publish} = useAnalytics();
+  const { publish } = useAnalytics();
 
   function handleOpenCart() {
-    publish('custom_sidecart_viewed', {cart});
+    publish("custom_sidecart_viewed", { cart });
     openCart();
   }
 
@@ -391,7 +397,7 @@ function Badge({
   );
 }
 
-function Footer({menu}: {menu?: EnhancedMenu}) {
+function Footer({ menu }: { menu?: EnhancedMenu }) {
   const isHome = useIsHomePath();
   const itemsCount = menu
     ? menu?.items?.length + 1 > 4
@@ -401,7 +407,7 @@ function Footer({menu}: {menu?: EnhancedMenu}) {
 
   return (
     <Section
-      divider={isHome ? 'none' : 'top'}
+      divider={isHome ? "none" : "top"}
       as="footer"
       role="contentinfo"
       className={`grid min-h-[25rem] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount}
@@ -419,8 +425,8 @@ function Footer({menu}: {menu?: EnhancedMenu}) {
   );
 }
 
-function FooterLink({item}: {item: ChildEnhancedMenuItem}) {
-  if (item.to.startsWith('http')) {
+function FooterLink({ item }: { item: ChildEnhancedMenuItem }) {
+  if (item.to.startsWith("http")) {
     return (
       <a href={item.to} target={item.target} rel="noopener noreferrer">
         {item.title}
@@ -435,10 +441,10 @@ function FooterLink({item}: {item: ChildEnhancedMenuItem}) {
   );
 }
 
-function FooterMenu({menu}: {menu?: EnhancedMenu}) {
+function FooterMenu({ menu }: { menu?: EnhancedMenu }) {
   const styles = {
-    section: 'grid gap-4',
-    nav: 'grid gap-2 pb-6',
+    section: "grid gap-4",
+    nav: "grid gap-2 pb-6",
   };
 
   return (
@@ -446,14 +452,14 @@ function FooterMenu({menu}: {menu?: EnhancedMenu}) {
       {(menu?.items || []).map((item) => (
         <section key={item.id} className={styles.section}>
           <Disclosure>
-            {({open}) => (
+            {({ open }) => (
               <>
                 <Disclosure.Button className="text-left md:cursor-default">
                   <Heading className="flex justify-between" size="copy" as="h3">
                     {item.title}
                     {item?.items?.length > 0 && (
                       <span className="md:hidden">
-                        <IconCaret direction={open ? 'up' : 'down'} />
+                        <IconCaret direction={open ? "up" : "down"} />
                       </span>
                     )}
                   </Heading>

@@ -2,12 +2,12 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
   ComponentLoaderArgs,
-} from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 
-import type {HomepageFeaturedCollectionsQuery} from 'storefrontapi.generated';
-import {FeaturedCollections as HomeFeaturedCollections} from '~/components';
-import {FEATURED_COLLECTIONS_QUERY} from '~/data/queries';
+import type { HomepageFeaturedCollectionsQuery } from "storefrontapi.generated";
+import { FeaturedCollections as HomeFeaturedCollections } from "~/components";
+import { FEATURED_COLLECTIONS_QUERY } from "~/data/queries";
 
 interface FeaturedCollectionsProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
@@ -17,7 +17,7 @@ interface FeaturedCollectionsProps
 
 let FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
   (props, ref) => {
-    let {loaderData, heading, collectionsCount, ...rest} = props;
+    let { loaderData, heading, collectionsCount, ...rest } = props;
     return (
       <section ref={ref} {...rest}>
         {loaderData?.collections?.nodes ? (
@@ -34,8 +34,8 @@ let FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
 
 export default FeaturedCollections;
 
-export let loader = async ({weaverse}: ComponentLoaderArgs) => {
-  let {language, country} = weaverse.storefront.i18n;
+export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
+  let { language, country } = weaverse.storefront.i18n;
   return await weaverse.storefront.query<HomepageFeaturedCollectionsQuery>(
     FEATURED_COLLECTIONS_QUERY,
     {
@@ -48,27 +48,27 @@ export let loader = async ({weaverse}: ComponentLoaderArgs) => {
 };
 
 export let schema: HydrogenComponentSchema = {
-  type: 'featured-collections',
-  title: 'Featured collections',
+  type: "featured-collections",
+  title: "Featured collections",
   limit: 1,
   enabledOn: {
-    pages: ['INDEX'],
+    pages: ["INDEX"],
   },
   inspector: [
     {
-      group: 'Featured collections',
+      group: "Featured collections",
       inputs: [
         {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Featured Collections',
-          placeholder: 'Featured Collections',
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "Featured Collections",
+          placeholder: "Featured Collections",
         },
         {
-          type: 'range',
-          name: 'collectionsCount',
-          label: 'Number of collections',
+          type: "range",
+          name: "collectionsCount",
+          label: "Number of collections",
           defaultValue: 4,
           configs: {
             min: 1,
@@ -79,5 +79,5 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
 };
