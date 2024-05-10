@@ -1,9 +1,9 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 
-let hexToPercent = (hex: string) => {
+function hexToPercent(hex: string) {
   let num = parseInt(hex, 16);
   return Math.floor((num / 255) * 100);
-};
+}
 
 function hexToRgbString(hexColor: string = ""): string {
   if (!hexColor) return "";
@@ -55,6 +55,7 @@ export function GlobalStyle() {
       buttonSecondaryBorderHover,
       buttonLinkColor,
       buttonLinkColorHover,
+      pageWidth,
     } = settings;
 
     colorBackground = hexToRgbString(colorBackground);
@@ -97,6 +98,7 @@ export function GlobalStyle() {
               --heading-base-line-height: ${headingBaseLineHeight};
 
               --height-nav: ${settings.navHeightMobile}rem;
+              --page-width: ${pageWidth}px;
             }
 
             body, button, input, select, textarea {
