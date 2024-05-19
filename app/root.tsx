@@ -1,9 +1,9 @@
-import {
+import { defer } from "@shopify/remix-oxygen";
+import type {
+  MetaArgs,
   type AppLoadContext,
-  defer,
   type LinksFunction,
   type LoaderFunctionArgs,
-  MetaArgs,
   type SerializeFrom,
 } from "@shopify/remix-oxygen";
 import type { ShouldRevalidateFunction } from "@remix-run/react";
@@ -25,22 +25,22 @@ import {
   UNSTABLE_Analytics as Analytics,
   useNonce,
 } from "@shopify/hydrogen";
-import { CustomAnalytics } from "~/components/CustomAnalytics";
 import invariant from "tiny-invariant";
 import { withWeaverse } from "@weaverse/hydrogen";
 import roboto400 from "@fontsource/roboto/400.css?url";
 import roboto500 from "@fontsource/roboto/500.css?url";
 import roboto700 from "@fontsource/roboto/700.css?url";
 
+import { CustomAnalytics } from "~/components/CustomAnalytics";
 import { Layout } from "~/components";
 import { seoPayload } from "~/lib/seo.server";
+import { GlobalLoading } from "~/components/global-loading";
 
 import { GenericError } from "./components/GenericError";
 import { NotFound } from "./components/NotFound";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import { GlobalStyle } from "./weaverse/style";
-import { GlobalLoading } from "~/components/global-loading";
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -106,7 +106,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
         publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
       }),
       consent: {
-        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN || env.PUBLIC_STORE_DOMAIN,
         storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
       },
       isLoggedIn: isLoggedInPromise,
