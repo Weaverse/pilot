@@ -2,7 +2,7 @@
   "name": "@weaverse/pilot",
   "private": true,
   "sideEffects": false,
-  "version": "2.6.5",
+  "version": "2.6.6",
   "type": "module",
   "author": "Weaverse",
   "scripts": {
@@ -18,8 +18,7 @@
     "format:check": "prettier --check --ignore-unknown .",
     "hydrogen": "shopify hydrogen",
     "e2e": "npx playwright test",
-    "e2e:ui": "npx playwright test --ui",
-    "prepare": "npm install --package-lock-only"
+    "e2e:ui": "npx playwright test --ui"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.13",
@@ -31,7 +30,7 @@
     "@shopify/cli-hydrogen": "^8.0.4",
     "@shopify/hydrogen": "2024.4.2",
     "@shopify/remix-oxygen": "^2.0.4",
-    "@weaverse/hydrogen": "3.1.6",
+    "@weaverse/hydrogen": "3.1.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "2.1.0",
     "cross-env": "7.0.3",
