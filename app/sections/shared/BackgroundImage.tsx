@@ -17,7 +17,7 @@ export function BackgroundImage(props: BackgroundImageProps) {
   if (backgroundImage) {
     return (
       <Image
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full z-[-1]"
         data={backgroundImage}
         sizes="auto"
         style={{
@@ -36,15 +36,9 @@ export let backgroundInputs: InspectorGroup["inputs"] = [
     label: "Background",
   },
   {
-    type: "color",
-    name: "backgroundColor",
-    label: "Background color",
-    defaultValue: "",
-  },
-  {
     type: "select",
-    name: "bgColorFor",
-    label: "Background color for",
+    name: "backgroundFor",
+    label: "Background for",
     configs: {
       options: [
         { value: "section", label: "Section" },
@@ -52,7 +46,12 @@ export let backgroundInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "section",
-    condition: "backgroundColor.ne.nil",
+  },
+  {
+    type: "color",
+    name: "backgroundColor",
+    label: "Background color",
+    defaultValue: "",
   },
   {
     type: "image",

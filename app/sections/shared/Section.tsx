@@ -12,6 +12,7 @@ import { Overlay, overlayInputs } from "./Overlay";
 export type SectionWidth = "full" | "stretch" | "fixed";
 export type VerticalPadding = "none" | "small" | "medium" | "large";
 export type DividerType = "none" | "top" | "bottom" | "both";
+export type SectionAlignment = "unset" | "left" | "center" | "right";
 
 export type SectionProps = HydrogenComponentProps &
   HTMLAttributes<HTMLElement> &
@@ -20,6 +21,7 @@ export type SectionProps = HydrogenComponentProps &
     as: React.ElementType;
     width: SectionWidth;
     gap: number;
+    contentAlignment: SectionAlignment;
     className: string;
     verticalPadding: VerticalPadding;
     divider: DividerType;
@@ -28,7 +30,7 @@ export type SectionProps = HydrogenComponentProps &
     overlayColor: string;
     overlayOpacity: number;
     backgroundColor: string;
-    bgColorFor: "section" | "content";
+    backgroundFor: "section" | "content";
     children: React.ReactNode;
   }>;
 
@@ -70,7 +72,7 @@ export let widthClasses: Record<SectionWidth, string> = {
   fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
 };
 
-export let alignmentClasses = {
+export let alignmentClasses: Record<SectionAlignment, string> = {
   unset: "",
   left: "text-left",
   center: "text-center",
@@ -82,11 +84,12 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     as: Component = "section",
     width,
     gap,
+    contentAlignment,
     divider,
     verticalPadding,
     borderRadius,
     backgroundColor,
-    bgColorFor,
+    backgroundFor,
     backgroundImage,
     backgroundFit,
     backgroundPosition,
@@ -107,38 +110,56 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         {...rest}
         className={clsx(
           "relative overflow-hidden",
-          // bgColorFor === "section" && verticalPaddingClasses[verticalPadding!],
           paddingClasses[width!],
           className,
         )}
         style={{
           ...style,
-          backgroundColor: bgColorFor === "section" ? backgroundColor : "",
-          borderRadius,
+          backgroundColor: backgroundFor === "section" ? backgroundColor : "",
+          borderRadius: backgroundFor === "section" ? borderRadius : "",
         }}
       >
-        <BackgroundImage
-          backgroundImage={backgroundImage}
-          backgroundFit={backgroundFit}
-          backgroundPosition={backgroundPosition}
-        />
-        <Overlay
-          enable={enableOverlay}
-          color={overlayColor}
-          opacity={overlayOpacity}
-        />
+        {backgroundFor === "section" && (
+          <>
+            <BackgroundImage
+              backgroundImage={backgroundImage}
+              backgroundFit={backgroundFit}
+              backgroundPosition={backgroundPosition}
+            />
+            <Overlay
+              enable={enableOverlay}
+              color={overlayColor}
+              opacity={overlayOpacity}
+            />
+          </>
+        )}
         <div
           className={clsx(
-            "relative",
+            "relative overflow-hidden",
             widthClasses[width!],
             gapClasses[gap!],
-            // bgColorFor === "content" &&
             verticalPaddingClasses[verticalPadding!],
+            alignmentClasses[contentAlignment!],
           )}
           style={{
-            backgroundColor: bgColorFor === "content" ? backgroundColor : "",
+            backgroundColor: backgroundFor === "content" ? backgroundColor : "",
+            borderRadius: backgroundFor === "content" ? borderRadius : "",
           }}
         >
+          {backgroundFor === "content" && (
+            <>
+              <BackgroundImage
+                backgroundImage={backgroundImage}
+                backgroundFit={backgroundFit}
+                backgroundPosition={backgroundPosition}
+              />
+              <Overlay
+                enable={enableOverlay}
+                color={overlayColor}
+                opacity={overlayOpacity}
+              />
+            </>
+          )}
           {children}
         </div>
       </Component>
@@ -168,6 +189,20 @@ export let layoutInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "fixed",
+  },
+  {
+    type: "select",
+    name: "contentAlignment",
+    label: "Items alignment",
+    configs: {
+      options: [
+        { value: "unset", label: "Unset" },
+        { value: "left", label: "Left" },
+        { value: "center", label: "Center" },
+        { value: "right", label: "Right" },
+      ],
+    },
+    defaultValue: "center",
   },
   {
     type: "range",
