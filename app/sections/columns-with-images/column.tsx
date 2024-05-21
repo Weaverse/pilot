@@ -7,8 +7,8 @@ import {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
-import type { ButtonProps} from "../shared/Button";
-import Button, { buttonInputs } from "../shared/Button";
+import type { ButtonProps } from "~/components/Button";
+import Button, { buttonInputs } from "~/components/Button";
 
 interface ColumnWithImageItemProps extends ButtonProps, HydrogenComponentProps {
   imageSrc: WeaverseImage;

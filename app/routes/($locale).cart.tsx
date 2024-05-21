@@ -12,7 +12,7 @@ import {
 } from "@shopify/hydrogen";
 
 import { isLocalPath } from "~/lib/utils";
-import { Cart } from "~/components/Cart";
+import { Cart } from "~/modules/Cart";
 import { useRootLoaderData } from "~/root";
 
 export async function action({ request, context }: ActionFunctionArgs) {

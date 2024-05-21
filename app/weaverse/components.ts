@@ -13,7 +13,7 @@ import * as Countdown from "~/sections/countdown";
 import * as CountDownTimer from "~/sections/countdown/timer";
 import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedProducts from "~/sections/featured-products";
-import * as ImageBanner from "~/sections/image-banner";
+import * as HeroImage from "~/sections/hero-image";
 import * as ImageGallery from "~/sections/image-gallery";
 import * as ImageGalleryItem from "~/sections/image-gallery/image";
 import * as ImageGalleryItems from "~/sections/image-gallery/items";
@@ -28,9 +28,9 @@ import * as PromotionGridButtons from "~/sections/promotion-grid/buttons";
 import * as PromotionGridItem from "~/sections/promotion-grid/item";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
-import { commonComponents } from "~/sections/shared/atoms";
+import { sharedComponents } from "~/components";
 import * as SingleProduct from "~/sections/single-product";
-import * as Judgeme from "~/components/product-form/judgeme-review";
+import * as Judgeme from "~/modules/product-form/judgeme-review";
 import * as Testimonial from "~/sections/testimonials";
 import * as TestimonialItem from "~/sections/testimonials/item";
 import * as TestimonialItems from "~/sections/testimonials/items";
@@ -48,7 +48,7 @@ import * as ContactForm from "~/sections/contact-form";
 import * as UserProfiles from "~/sections/user-profiles";
 
 export let components: HydrogenComponent[] = [
-  ...commonComponents,
+  ...sharedComponents,
   AllProducts,
   BlogPost,
   Blogs,
@@ -56,7 +56,7 @@ export let components: HydrogenComponent[] = [
   Page,
   VideoEmbed,
   VideoEmbedItem,
-  ImageBanner,
+  HeroImage,
   ImageWithText,
   ImageWithTextContent,
   ImageWithTextImage,

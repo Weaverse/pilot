@@ -24,7 +24,7 @@ import {
   Text,
   Link,
   FeaturedProducts,
-} from "~/components";
+} from "~/modules";
 import { getInputStyleClasses } from "~/lib/utils";
 
 type Layouts = "page" | "drawer";

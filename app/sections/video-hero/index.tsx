@@ -3,8 +3,8 @@ import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef, lazy, Suspense } from "react";
 
-import { overlayInputs } from "~/sections/shared/Overlay";
-import { gapClasses } from "~/sections/shared/Section";
+import { overlayInputs } from "~/components/Overlay";
+import { gapClasses } from "~/components/Section";
 
 type VideoHeroProps = {
   videoURL: string;

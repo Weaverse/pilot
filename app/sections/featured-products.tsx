@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 
 import type { HomepageFeaturedProductsQuery } from "storefrontapi.generated";
-import { ProductSwimlane } from "~/components";
+import { ProductSwimlane } from "~/modules";
 import { HOMEPAGE_FEATURED_PRODUCTS_QUERY } from "~/data/queries";
 
 interface FeaturedProductsProps

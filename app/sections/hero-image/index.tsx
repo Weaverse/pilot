@@ -8,9 +8,9 @@ import { forwardRef } from "react";
 import clsx from "clsx";
 import { Image } from "@shopify/hydrogen";
 
-import { IconImageBlank } from "~/components";
+import { IconImageBlank } from "~/modules";
 
-interface HeaderImageProps extends HydrogenComponentProps {
+type HeroImageProps = HydrogenComponentProps & {
   backgroundImage: WeaverseImage;
   contentAlignment: string;
   enableOverlay: boolean;
@@ -18,9 +18,9 @@ interface HeaderImageProps extends HydrogenComponentProps {
   overlayOpacity: number;
   sectionHeightDesktop: number;
   sectionHeightMobile: number;
-}
+};
 
-let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
+let HeroImage = forwardRef<HTMLElement, HeroImageProps>((props, ref) => {
   let {
     backgroundImage,
     contentAlignment,
@@ -76,11 +76,11 @@ let HeaderImage = forwardRef<HTMLElement, HeaderImageProps>((props, ref) => {
   );
 });
 
-export default HeaderImage;
+export default HeroImage;
 
 export let schema: HydrogenComponentSchema = {
-  type: "image-banner",
-  title: "Image banner",
+  type: "hero-image",
+  title: "Hero image",
   toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {

@@ -12,7 +12,7 @@ import clsx from "clsx";
 
 import type { ProductQuery } from "storefrontapi.generated";
 import { PRODUCT_QUERY } from "~/data/queries";
-import { IconImageBlank, Link } from "~/components";
+import { IconImageBlank, Link } from "~/modules";
 
 type ProductData = {
   verticalPosition: number;

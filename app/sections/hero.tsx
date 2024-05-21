@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 
 import type { SeoCollectionContentQuery } from "storefrontapi.generated";
-import { Hero } from "~/components/Hero";
+import { Hero } from "~/modules/Hero";
 import { HOMEPAGE_SEO_QUERY } from "~/data/queries";
 
 type HeroSectionData = {

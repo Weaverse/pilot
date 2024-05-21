@@ -32,13 +32,13 @@ import { defer } from "@shopify/remix-oxygen";
 import { withWeaverse } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 
-import { Layout } from "~/components";
-import { CustomAnalytics } from "~/components/CustomAnalytics";
-import { GlobalLoading } from "~/components/global-loading";
+import { Layout } from "~/modules";
+import { CustomAnalytics } from "~/modules/CustomAnalytics";
+import { GlobalLoading } from "~/modules/global-loading";
 import { seoPayload } from "~/lib/seo.server";
 
-import { GenericError } from "./components/GenericError";
-import { NotFound } from "./components/NotFound";
+import { GenericError } from "./modules/GenericError";
+import { NotFound } from "./modules/NotFound";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import styles from "./styles/app.css?url";
 import { GlobalStyle } from "./weaverse/style";
