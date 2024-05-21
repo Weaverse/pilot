@@ -25,11 +25,12 @@ export let schema: HydrogenComponentSchema = {
     children: [
       {
         type: "heading",
-        content: "Countdown heading",
+        content: "Sale ends in",
       },
       {
         type: "subheading",
-        content: "Countdown to our upcoming event",
+        content:
+          "Insert the time limit or an encouraging message of your marketing campaign to create a sense of urgency for your customers.",
       },
       {
         type: "countdown--timer",
