@@ -6,9 +6,10 @@ import {
   UNSTABLE_Analytics as Analytics,
 } from "@shopify/hydrogen";
 import {
-  defer,
-  type LoaderFunctionArgs,
+  defer} from "@shopify/remix-oxygen";
+import type {
   MetaArgs,
+  type LoaderFunctionArgs
 } from "@shopify/remix-oxygen";
 import { Suspense } from "react";
 

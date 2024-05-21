@@ -52,6 +52,7 @@ export function CountrySelector() {
       ref={observerRef}
       className="grid w-full gap-4"
       onMouseLeave={closeDropdown}
+      role="listbox"
     >
       <Heading size="lead" className="cursor-default" as="h3">
         Country

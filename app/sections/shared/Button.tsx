@@ -1,9 +1,10 @@
-import {
+import type {
   InspectorGroup,
-  type HydrogenComponentProps,
-  type HydrogenComponentSchema,
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import { VariantProps, cva } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
 import { forwardRef } from "react";
 import { Link } from "~/components";
@@ -48,10 +49,10 @@ interface Props extends ButtonProps, Partial<HydrogenComponentProps> {}
 
 let Button = forwardRef<HTMLElement, Props>((props, ref) => {
   let {
-    as = "button",
+    // as = "button",
     variant,
-    shape = "rounded",
-    weight = "medium",
+    // shape = "rounded",
+    // weight = "medium",
     text,
     link,
     openInNewTab,

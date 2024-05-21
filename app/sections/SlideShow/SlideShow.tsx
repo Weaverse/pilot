@@ -2,10 +2,10 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
-import { forwardRef, useState, useCallback, useEffect } from "react";
-import { useKeenSlider } from "keen-slider/react.es";
 import clsx from "clsx";
+import { useKeenSlider } from "keen-slider/react.es";
+import type { CSSProperties } from "react";
+import { forwardRef, useCallback, useEffect, useState } from "react";
 
 interface SlideShowProps extends HydrogenComponentProps {
   sectionHeight: number;
@@ -46,7 +46,8 @@ let SlideShow = forwardRef<HTMLElement, SlideShowProps>((props, ref) => {
             index === activeIndex ? "bg-gray-700" : "bg-gray-300",
           )}
           onClick={() => handleClickNavigation(index)}
-        ></span>
+          role="listitem"
+        />
       ));
     }
     return null;

@@ -65,7 +65,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  const cartId = result.cart.id;
+  // const cartId = result.cart.id;
   const headers = cart.setCartId(result.cart.id);
 
   const redirectTo = formData.get("redirectTo") ?? null;

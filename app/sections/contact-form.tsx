@@ -15,7 +15,9 @@ let ContactForm = forwardRef<HTMLDivElement>((props, ref) => {
         className="w-80 mx-auto p-4 text-center"
       >
         <div className="space-y-2">
-          <label className="text-2xl font-medium">Contact us</label>
+          <label htmlFor="contact-us" className="text-2xl font-medium">
+            Contact us
+          </label>
           <p className="">Let us know if you have any question</p>
         </div>
         <div className="space-y-2 mt-8 mb-5">

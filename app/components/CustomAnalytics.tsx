@@ -4,7 +4,7 @@ import {
 } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
-import { loader } from "~/root";
+import type { loader } from "~/root";
 
 export function CustomAnalytics() {
   const { subscribe, canTrack } = useAnalytics();
@@ -36,6 +36,7 @@ export function CustomAnalytics() {
     subscribe("custom_sidecart_viewed", (data) => {
       console.log("CustomAnalytics - Custom sidecart opened:", data);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let id = data.googleGtmID;

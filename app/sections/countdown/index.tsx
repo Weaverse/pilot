@@ -1,6 +1,7 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import { Section, SectionProps, sectionInspector } from "../shared/Section";
+import type { SectionProps} from "../shared/Section";
+import { Section, sectionInspector } from "../shared/Section";
 
 type CountdownProps = SectionProps;
 
