@@ -71,7 +71,7 @@ let CountdownTimer = forwardRef<
           <div className="px-6">{remainingTime?.days || 0}</div>
           <div className="h-6 border-r border-[var(--timer-color)]" />
         </div>
-        <div className="text-sm sm:text-base capitalize">DAYS</div>
+        <div className="text-sm sm:text-base capitalize">Days</div>
       </div>
       <div className="space-y-1">
         <div className="text-4xl sm:text-5xl font-medium flex items-center">
