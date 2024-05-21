@@ -78,7 +78,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: "select",
           name: "as",
-          label: "Tag name",
+          label: "HTML tag",
           configs: {
             options: [
               { value: "p", label: "Paragraph" },

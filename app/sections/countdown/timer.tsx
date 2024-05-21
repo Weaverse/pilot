@@ -5,104 +5,103 @@ import type {
 import type { CSSProperties } from "react";
 import { useState, useEffect, forwardRef } from "react";
 
-interface CountDownTimerProps extends HydrogenComponentProps {
-  textColor: string;
-  startDate: number;
-}
-function calculateTimeRemaining(startTime: number) {
-  let now = new Date().getTime();
-  let difference = startTime - now;
-  if (difference <= 0) {
-    return {
-      days: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-    };
-  }
+const ONE_SEC = 1000;
+const ONE_MIN = ONE_SEC * 60;
+const ONE_HOUR = ONE_MIN * 60;
+const ONE_DAY = ONE_HOUR * 24;
 
-  let days = Math.floor(difference / (1000 * 60 * 60 * 24));
-  let hours = Math.floor(
-    (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-  );
-  let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-  let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+function calculateRemainingTime(endTime: number) {
+  let now = new Date().getTime();
+  let diff = endTime - now;
+  if (diff <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
   return {
-    days,
-    hours,
-    minutes,
-    seconds,
+    days: Math.floor(diff / ONE_DAY),
+    hours: Math.floor((diff % ONE_DAY) / ONE_HOUR),
+    minutes: Math.floor((diff % ONE_HOUR) / ONE_MIN),
+    seconds: Math.floor((diff % ONE_MIN) / ONE_SEC),
   };
 }
-let CountdownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
-  (props, ref) => {
-    let { textColor, startDate, ...rest } = props;
-    const [timeRemaining, setTimeRemaining] = useState(
-      calculateTimeRemaining(startDate),
-    );
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        const updatedTimeRemaining = calculateTimeRemaining(startDate);
-        setTimeRemaining(updatedTimeRemaining);
-        if (
-          updatedTimeRemaining.days <= 0 &&
-          updatedTimeRemaining.hours <= 0 &&
-          updatedTimeRemaining.minutes <= 0 &&
-          updatedTimeRemaining.seconds <= 0
-        ) {
-          clearInterval(intervalId);
-        }
-      }, 1000);
-      return () => clearInterval(intervalId);
-    }, [startDate]);
 
-    let timerStyle: CSSProperties = {
-      "--timer-text-color": textColor,
-    } as CSSProperties;
+type CountDownTimerData = {
+  textColor: string;
+  endTime: number;
+};
 
-    return (
-      <div
-        ref={ref}
-        {...rest}
-        className="flex justify-center gap-5 text-[var(--timer-text-color)] sm-max:gap-2"
-        style={timerStyle}
-      >
-        <div className="">
-          <p className="text-5xl font-medium leading-tight sm-max:text-4xl">
-            {timeRemaining?.days || 0}
-          </p>
-          <p className="text-base font-normal sm-max:text-sm">DAYS</p>
+let CountdownTimer = forwardRef<
+  HTMLDivElement,
+  CountDownTimerData & HydrogenComponentProps
+>((props, ref) => {
+  let { textColor, endTime, ...rest } = props;
+  let [remainingTime, setRemainingTime] = useState(
+    calculateRemainingTime(endTime),
+  );
+
+  useEffect(() => {
+    let intervalId = setInterval(() => {
+      let updatedTimeRemaining = calculateRemainingTime(endTime);
+      setRemainingTime(updatedTimeRemaining);
+      if (
+        updatedTimeRemaining.days <= 0 &&
+        updatedTimeRemaining.hours <= 0 &&
+        updatedTimeRemaining.minutes <= 0 &&
+        updatedTimeRemaining.seconds <= 0
+      ) {
+        clearInterval(intervalId);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [endTime]);
+
+  let timerStyle: CSSProperties = {
+    "--timer-color": textColor,
+  } as CSSProperties;
+
+  return (
+    <div
+      ref={ref}
+      {...rest}
+      className="flex justify-center text-[var(--timer-color)]"
+      style={timerStyle}
+    >
+      <div className="space-y-1">
+        <div className="text-4xl sm:text-5xl font-medium flex items-center">
+          <div className="px-6">{remainingTime?.days || 0}</div>
+          <div className="h-6 border-r border-[var(--timer-color)]" />
         </div>
-        <div className="bg-black w-px h-7 mt-4 sm-max:mt-2" />
-        <div className="">
-          <p className="text-5xl font-medium leading-tight sm-max:text-4xl">
-            {timeRemaining?.hours || 0}
-          </p>
-          <p className="text-base font-normal sm-max:text-sm">HOURS</p>
-        </div>
-        <div className="bg-black w-px h-7 mt-4 sm-max:mt-2" />
-        <div className="">
-          <p className="text-5xl font-medium leading-tight sm-max:text-4xl">
-            {timeRemaining?.minutes || 0}
-          </p>
-          <p className="text-base font-normal sm-max:text-sm">MINUTES</p>
-        </div>
-        <div className="bg-black w-px h-7 mt-4 sm-max:mt-2" />
-        <div className="">
-          <p className="text-5xl font-medium leading-tight sm-max:text-4xl">
-            {timeRemaining?.seconds || 0}
-          </p>
-          <p className="text-base font-normal sm-max:text-sm">SECONDS</p>
-        </div>
+        <div className="text-sm sm:text-base capitalize">Days</div>
       </div>
-    );
-  },
-);
+      <div className="space-y-1">
+        <div className="text-4xl sm:text-5xl font-medium flex items-center">
+          <div className="px-6">{remainingTime?.hours || 0}</div>
+          <div className="h-6 border-r border-[var(--timer-color)]" />
+        </div>
+        <div className="text-sm sm:text-base capitalize">hours</div>
+      </div>
+      <div className="space-y-1">
+        <div className="text-4xl sm:text-5xl font-medium flex items-center">
+          <div className="px-6">{remainingTime?.minutes || 0}</div>
+          <div className="h-6 border-r border-[var(--timer-color)]" />
+        </div>
+        <div className="text-sm sm:text-base capitalize">minutes</div>
+      </div>
+      <div className="space-y-1">
+        <div className="text-4xl sm:text-5xl font-medium flex items-center">
+          <div className="px-6">{remainingTime?.seconds || 0}</div>
+        </div>
+        <div className="text-sm sm:text-base capitalize">seconds</div>
+      </div>
+    </div>
+  );
+});
 
 export default CountdownTimer;
 
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
+
 export let schema: HydrogenComponentSchema = {
   type: "countdown--timer",
   title: "Timer",
@@ -112,16 +111,15 @@ export let schema: HydrogenComponentSchema = {
       group: "Timer",
       inputs: [
         {
-          type: "color",
-          name: "textColor",
-          label: "Color",
-          defaultValue: "#000000",
+          type: "datepicker",
+          label: "End time",
+          name: "endTime",
+          defaultValue: tomorrow.getTime(),
         },
         {
-          type: "datepicker",
-          label: "Start date",
-          name: "startDate",
-          defaultValue: tomorrow.getTime(),
+          type: "color",
+          name: "textColor",
+          label: "Text color",
         },
       ],
     },

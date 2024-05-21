@@ -1,48 +1,48 @@
-import { defer } from "@shopify/remix-oxygen";
-import type {
-  MetaArgs,
-  type AppLoadContext,
-  type LinksFunction,
-  type LoaderFunctionArgs,
-  type SerializeFrom,
-} from "@shopify/remix-oxygen";
+import poppins400 from "@fontsource/poppins/400.css?url";
+import poppins500 from "@fontsource/poppins/500.css?url";
+import poppins600 from "@fontsource/poppins/600.css?url";
+import poppins700 from "@fontsource/poppins/700.css?url";
 import type { ShouldRevalidateFunction } from "@remix-run/react";
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
   useLoaderData,
   useMatches,
   useRouteError,
 } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import {
+  UNSTABLE_Analytics as Analytics,
   getSeoMeta,
   getShopAnalytics,
-  UNSTABLE_Analytics as Analytics,
   useNonce,
 } from "@shopify/hydrogen";
-import invariant from "tiny-invariant";
+import type {
+  AppLoadContext,
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaArgs,
+  SerializeFrom,
+} from "@shopify/remix-oxygen";
+import { defer } from "@shopify/remix-oxygen";
 import { withWeaverse } from "@weaverse/hydrogen";
-import roboto400 from "@fontsource/roboto/400.css?url";
-import roboto500 from "@fontsource/roboto/500.css?url";
-import roboto700 from "@fontsource/roboto/700.css?url";
+import invariant from "tiny-invariant";
 
-import { CustomAnalytics } from "~/components/CustomAnalytics";
 import { Layout } from "~/components";
-import { seoPayload } from "~/lib/seo.server";
+import { CustomAnalytics } from "~/components/CustomAnalytics";
 import { GlobalLoading } from "~/components/global-loading";
+import { seoPayload } from "~/lib/seo.server";
 
 import { GenericError } from "./components/GenericError";
 import { NotFound } from "./components/NotFound";
-import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
+import styles from "./styles/app.css?url";
 import { GlobalStyle } from "./weaverse/style";
 
-// This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   formMethod,
   currentUrl,
@@ -65,15 +65,19 @@ export const links: LinksFunction = () => {
   return [
     {
       rel: "stylesheet",
-      href: roboto400,
+      href: poppins400,
     },
     {
       rel: "stylesheet",
-      href: roboto500,
+      href: poppins500,
     },
     {
       rel: "stylesheet",
-      href: roboto700,
+      href: poppins600,
+    },
+    {
+      rel: "stylesheet",
+      href: poppins700,
     },
     { rel: "stylesheet", href: styles },
     {
@@ -168,7 +172,6 @@ function App() {
 export default withWeaverse(App);
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  const nonce = useNonce();
   const routeError = useRouteError();
   const rootData = useRootLoaderData();
   const locale = rootData?.selectedLocale ?? DEFAULT_LOCALE;

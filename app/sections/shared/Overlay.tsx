@@ -10,10 +10,11 @@ export function Overlay({ enable, color, opacity }: OverlayProps) {
   if (enable && color) {
     return (
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 z-[-1]"
         style={{
           backgroundColor: color,
           opacity: (opacity || 100) / 100,
+          margin: 0,
         }}
       />
     );

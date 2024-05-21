@@ -49,8 +49,8 @@ export default {
         mobileGallery: "calc(100vw - 3rem)",
       },
       fontFamily: {
-        sans: ["Roboto", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ['"IBMPlexSerif"', "Palatino", "ui-serif"],
+        sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["Arial", '"IBMPlexSerif"', "Palatino", "ui-serif"],
       },
       fontSize: {
         scale: [
