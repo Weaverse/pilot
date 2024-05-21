@@ -2,9 +2,7 @@
  * @type {import("@types/eslint").Linter.BaseConfig}
  */
 module.exports = {
-  extends: [
-    "@remix-run/eslint-config",
-  ],
+  extends: ["@remix-run/eslint-config"],
   rules: {
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/naming-convention": "off",
