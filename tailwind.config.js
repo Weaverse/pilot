@@ -50,7 +50,7 @@ export default {
       },
       fontFamily: {
         sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ['"IBMPlexSerif"', "Palatino", "ui-serif"],
+        serif: ["Arial", '"IBMPlexSerif"', "Palatino", "ui-serif"],
       },
       fontSize: {
         scale: [

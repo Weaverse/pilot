@@ -38,7 +38,12 @@
   }
 
   html {
+    @apply font-serif;
     scroll-padding-top: 10rem;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans;
   }
 
   model-viewer::part(default-progress-mask) {
