@@ -21,7 +21,7 @@
     "e2e:ui": "npx playwright test --ui"
   },
   "dependencies": {
-    "@fontsource/roboto": "^5.0.13",
+    "@fontsource/poppins": "^5.0.14",
     "@graphql-codegen/cli": "^5.0.2",
     "@headlessui/react": "1.7.18",
     "@remix-run/react": "2.8.1",
