@@ -64,11 +64,11 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: "eager",
           configs: {
             options: [
-              { label: "Eager", value: "eager", icon: "Lightning" },
+              { label: "Eager", value: "eager", icon: "zap" },
               {
                 label: "Lazy",
                 value: "lazy",
-                icon: "SpinnerGap",
+                icon: "loader",
                 weight: "light",
               },
             ],

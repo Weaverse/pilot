@@ -2,7 +2,7 @@
   "name": "@weaverse/pilot",
   "private": true,
   "sideEffects": false,
-  "version": "2.6.6",
+  "version": "2.6.8",
   "type": "module",
   "author": "Weaverse",
   "scripts": {
@@ -30,7 +30,7 @@
     "@shopify/cli-hydrogen": "^8.0.4",
     "@shopify/hydrogen": "2024.4.2",
     "@shopify/remix-oxygen": "^2.0.4",
-    "@weaverse/hydrogen": "3.1.7",
+    "@weaverse/hydrogen": "^3.1.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "2.1.1",
     "cross-env": "7.0.3",
