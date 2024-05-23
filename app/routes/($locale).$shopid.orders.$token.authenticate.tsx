@@ -1,7 +1,7 @@
 import { redirect, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 
-import { Button, PageHeader } from "~/components";
+import { Button, PageHeader } from "~/modules";
 
 /*
  If your online store had active orders before you launched your Hydrogen storefront,

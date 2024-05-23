@@ -5,7 +5,7 @@ import clsx from "clsx";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
 import { CartForm } from "@shopify/hydrogen";
 
-import { Heading, Button, IconCheck } from "~/components";
+import { Heading, Button, IconCheck } from "~/modules";
 import type { Localizations, Locale } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
 import { useRootLoaderData } from "~/root";
@@ -52,6 +52,7 @@ export function CountrySelector() {
       ref={observerRef}
       className="grid w-full gap-4"
       onMouseLeave={closeDropdown}
+      role="listbox"
     >
       <Heading size="lead" className="cursor-default" as="h3">
         Country

@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 
 import type { SeoCollectionContentQuery } from "storefrontapi.generated";
-import { Hero } from "~/components/Hero";
+import { Hero } from "~/modules/Hero";
 import { HOMEPAGE_SEO_QUERY } from "~/data/queries";
 
 type HeroSectionData = {
@@ -64,11 +64,11 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: "eager",
           configs: {
             options: [
-              { label: "Eager", value: "eager", icon: "Lightning" },
+              { label: "Eager", value: "eager", icon: "zap" },
               {
                 label: "Lazy",
                 value: "lazy",
-                icon: "SpinnerGap",
+                icon: "loader",
                 weight: "light",
               },
             ],

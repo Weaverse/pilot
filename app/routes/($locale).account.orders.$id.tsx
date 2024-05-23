@@ -6,7 +6,7 @@ import { Money, Image, flattenConnection } from "@shopify/hydrogen";
 
 import type { OrderFragment } from "customer-accountapi.generated";
 import { statusMessage } from "~/lib/utils";
-import { Link, Heading, PageHeader, Text } from "~/components";
+import { Link, Heading, PageHeader, Text } from "~/modules";
 import { CUSTOMER_ORDER_QUERY } from "~/graphql/customer-account/CustomerOrderQuery";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

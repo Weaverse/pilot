@@ -209,6 +209,7 @@ export function VariantOption(props: VariantOptionProps) {
                 !value.isAvailable && "opacity-50",
               )}
               onClick={() => onSelectOptionValue(value.value)}
+              role="listitem"
             >
               {value.value}
             </div>

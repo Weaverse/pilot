@@ -65,8 +65,8 @@ export let schema: HydrogenComponentSchema = {
           name: "imageAlignment",
           configs: {
             options: [
-              { label: "Left", value: "left", icon: "AlignLeft" },
-              { label: "Right", value: "right", icon: "AlignRight" },
+              { label: "Left", value: "left", icon: "align-left" },
+              { label: "Right", value: "right", icon: "align-right" },
             ],
           },
           defaultValue: "left",

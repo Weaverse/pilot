@@ -8,12 +8,13 @@ import type {
   ProductCollectionSortKeys,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
-import { json, type LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
+import { json } from "@shopify/remix-oxygen";
+import type { MetaArgs, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { useLoaderData } from "@remix-run/react";
 
-import type { SortParam } from "~/components/SortFilter";
-import { FILTER_URL_PREFIX } from "~/components/SortFilter";
+import type { SortParam } from "~/modules/SortFilter";
+import { FILTER_URL_PREFIX } from "~/modules/SortFilter";
 import { routeHeaders } from "~/data/cache";
 import { COLLECTION_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";

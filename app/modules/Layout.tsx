@@ -25,7 +25,7 @@ import {
   Section,
   Text,
   useDrawer,
-} from "~/components";
+} from "~/modules";
 import { useCartFetchers } from "~/hooks/useCartFetchers";
 import { useIsHydrated } from "~/hooks/useIsHydrated";
 import {

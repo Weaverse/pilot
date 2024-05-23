@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 import { Image } from "@shopify/hydrogen";
 
-import { IconImageBlank } from "~/components";
+import { IconImageBlank } from "~/modules";
 
 interface ImageItemsProps extends HydrogenComponentProps {
   image: WeaverseImage;

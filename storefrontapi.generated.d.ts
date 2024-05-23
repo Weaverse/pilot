@@ -3,24 +3,6 @@
 /* eslint-disable */
 import type * as StorefrontAPI from '@shopify/hydrogen/storefront-api-types';
 
-export type OrderCardFragment = Pick<
-  StorefrontAPI.Order,
-  'id' | 'orderNumber' | 'processedAt' | 'financialStatus' | 'fulfillmentStatus'
-> & {
-  currentTotalPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
-  lineItems: {
-    edges: Array<{
-      node: Pick<StorefrontAPI.OrderLineItem, 'title'> & {
-        variant?: StorefrontAPI.Maybe<{
-          image?: StorefrontAPI.Maybe<
-            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'height' | 'width'>
-          >;
-        }>;
-      };
-    }>;
-  };
-};
-
 type Media_ExternalVideo_Fragment = {__typename: 'ExternalVideo'} & Pick<
   StorefrontAPI.ExternalVideo,
   'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
@@ -974,6 +956,24 @@ export type MetaObjectsQuery = {
         >;
       }
     >;
+  };
+};
+
+export type OrderCardFragment = Pick<
+  StorefrontAPI.Order,
+  'id' | 'orderNumber' | 'processedAt' | 'financialStatus' | 'fulfillmentStatus'
+> & {
+  currentTotalPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+  lineItems: {
+    edges: Array<{
+      node: Pick<StorefrontAPI.OrderLineItem, 'title'> & {
+        variant?: StorefrontAPI.Maybe<{
+          image?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'height' | 'width'>
+          >;
+        }>;
+      };
+    }>;
   };
 };
 

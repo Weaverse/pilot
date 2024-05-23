@@ -1,61 +1,138 @@
+import type {
+  InspectorGroup,
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+} from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import { clsx } from "clsx";
 import { forwardRef } from "react";
-import { Link } from "@remix-run/react";
-import clsx from "clsx";
+import { Link } from "~/modules";
 
-import { missingClass } from "~/lib/utils";
+export interface ButtonProps extends VariantProps<typeof variants> {
+  as?: keyof HTMLElementTagNameMap;
+  className?: string;
+  text: string;
+  link?: string;
+  openInNewTab?: boolean;
+}
 
-export const Button = forwardRef(
-  (
-    {
-      as = "button",
-      className = "",
-      variant = "primary",
-      width = "auto",
-      ...props
-    }: {
-      as?: React.ElementType;
-      className?: string;
-      variant?: "primary" | "secondary" | "inline" | "secondary-white";
-      width?: "auto" | "full";
-      [key: string]: any;
+let variants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap text-base font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        primary: "btn-primary border-2 px-5 py-3",
+        secondary: "btn-secondary border-2 px-5 py-3",
+        link: "btn-link bg-transparent py-2 border-b-2",
+      },
+      shape: {
+        square: "",
+        rounded: "rounded-md",
+        pill: "rounded-full",
+      },
+      weight: {
+        medium: "font-medium",
+        semibold: "font-semibold",
+        bold: "font-bold",
+      },
     },
-    ref,
-  ) => {
-    const Component = props?.to ? Link : as;
-
-    const baseButtonClasses =
-      "inline-block rounded font-medium text-center py-3 px-4 text-sm font-medium";
-
-    const disabledClasses =
-      "disabled:opacity-50 disabled:cursor-not-allowed disabled:select-none disabled:hover:bg-btn disabled:hover:text-btn-content";
-
-    const variants = {
-      primary: `${baseButtonClasses} border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content`,
-      secondary: `${baseButtonClasses} border-2 border-btn text-btnTextInverse hover:bg-btn hover:text-btn-content`,
-      "secondary-white": `${baseButtonClasses} border-2 border-inv-btn text-btn hover:bg-inv-btn hover:text-inv-btn-content`,
-      inline: "border-b border-bar/10 leading-none pb-1",
-    };
-
-    const widths = {
-      auto: "w-auto",
-      full: "w-full",
-    };
-
-    const styles = clsx(
-      missingClass(className, "bg-") && variants[variant],
-      missingClass(className, "w-") && widths[width],
-      disabledClasses,
-      className,
-    );
-
-    return (
-      <Component
-        // @todo: not supported until react-router makes it into Remix.
-        // preventScrollReset={true}
-        className={styles}
-        {...props}
-        ref={ref}
-      />
-    );
+    defaultVariants: {
+      variant: "primary",
+      shape: "rounded",
+      weight: "medium",
+    },
   },
 );
+
+interface Props extends ButtonProps, Partial<HydrogenComponentProps> {}
+
+let Button = forwardRef<HTMLElement, Props>((props, ref) => {
+  let {
+    // as = "button",
+    variant,
+    // shape = "rounded",
+    // weight = "medium",
+    text,
+    link,
+    openInNewTab,
+    className,
+    ...rest
+  } = props;
+
+  if (link) {
+    return (
+      <Link
+        ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+        {...rest}
+        className={clsx(variants({ variant: variant, className }))}
+        to={link || "/"}
+        target={openInNewTab ? "_blank" : "_self"}
+        rel="noreferrer"
+      >
+        {text}
+      </Link>
+    );
+  }
+  return (
+    <button
+      ref={ref as React.ForwardedRef<HTMLButtonElement>}
+      {...rest}
+      type="button"
+      className={clsx(variants({ variant: variant, className }))}
+    >
+      {text}
+    </button>
+  );
+});
+
+export default Button;
+
+export let buttonInputs: InspectorGroup["inputs"] = [
+  {
+    type: "text",
+    name: "text",
+    label: "Text content",
+    defaultValue: "Shop now",
+    placeholder: "Shop now",
+  },
+  {
+    type: "url",
+    name: "link",
+    label: "Link to",
+    defaultValue: "/products",
+    placeholder: "/products",
+  },
+  {
+    type: "switch",
+    name: "openInNewTab",
+    label: "Open in new tab",
+    defaultValue: false,
+    condition: "buttonLink.ne.nil",
+  },
+  {
+    type: "select",
+    name: "variant",
+    label: "Variant",
+    configs: {
+      options: [
+        { label: "Primary", value: "primary" },
+        { label: "Secondary", value: "secondary" },
+        { label: "Link", value: "link" },
+      ],
+    },
+    defaultValue: "primary",
+  },
+];
+
+export let schema: HydrogenComponentSchema = {
+  type: "button",
+  title: "Button",
+  inspector: [
+    {
+      group: "Button",
+      inputs: buttonInputs,
+    },
+  ],
+  toolbar: ["general-settings", ["duplicate", "delete"]],
+};

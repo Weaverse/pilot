@@ -119,6 +119,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     i === activeInd ? "border-bar/70" : "",
                   )}
                   onClick={() => handleClickThumbnail(i)}
+                  role="listitem"
                 >
                   <Image
                     data={image}

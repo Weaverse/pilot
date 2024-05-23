@@ -10,7 +10,7 @@ import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
 import invariant from "tiny-invariant";
 
-import { Button, Text } from "~/components";
+import { Button, Text } from "~/modules";
 import { getInputStyleClasses } from "~/lib/utils";
 import {
   CREATE_ADDRESS_MUTATION,

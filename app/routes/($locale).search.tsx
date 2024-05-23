@@ -5,11 +5,8 @@ import {
   Pagination,
   UNSTABLE_Analytics as Analytics,
 } from "@shopify/hydrogen";
-import {
-  defer,
-  type LoaderFunctionArgs,
-  MetaArgs,
-} from "@shopify/remix-oxygen";
+import { defer } from "@shopify/remix-oxygen";
+import type { MetaArgs, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import { Suspense } from "react";
 
 import {
@@ -22,7 +19,7 @@ import {
   ProductSwimlane,
   Section,
   Text,
-} from "~/components";
+} from "~/modules";
 import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
 import { getImageLoadingPriority, PAGINATION_SIZE } from "~/lib/const";
 import { seoPayload } from "~/lib/seo.server";

@@ -7,7 +7,7 @@ import type {
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 
-import { IconFacebook, IconPinterest, Section } from "~/components";
+import { IconFacebook, IconPinterest, Section } from "~/modules";
 
 interface BlogPostProps extends HydrogenComponentProps {
   paddingTop: number;

@@ -1,7 +1,7 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import type { SectionProps } from "~/sections/shared/Section";
-import { Section, sectionInspector } from "~/sections/shared/Section";
+import type { SectionProps } from "~/components/Section";
+import { Section, sectionInspector } from "~/components/Section";
 
 type ColumnsWithImagesProps = SectionProps;
 

@@ -6,7 +6,7 @@ import type { CSSProperties } from "react";
 import React, { forwardRef, useState } from "react";
 import clsx from "clsx";
 
-import { IconArrowInput } from "~/components";
+import { IconArrowInput } from "~/modules";
 
 type NewsLetterData = {
   contentAlignment: string;
