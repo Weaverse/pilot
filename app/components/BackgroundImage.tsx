@@ -7,7 +7,7 @@ import type {
 import type { CSSProperties } from "react";
 
 export type BackgroundImageProps = {
-  backgroundImage?: WeaverseImage;
+  backgroundImage?: WeaverseImage | string;
   backgroundFit?: CSSProperties["objectFit"];
   backgroundPosition?: PositionInputValue;
 };
@@ -15,10 +15,14 @@ export type BackgroundImageProps = {
 export function BackgroundImage(props: BackgroundImageProps) {
   let { backgroundImage, backgroundFit, backgroundPosition } = props;
   if (backgroundImage) {
+    let data =
+      typeof backgroundImage === "string"
+        ? { url: backgroundImage, altText: "Section background" }
+        : backgroundImage;
     return (
       <Image
         className="absolute inset-0 w-full h-full z-[-1]"
-        data={backgroundImage}
+        data={data}
         sizes="auto"
         style={{
           objectFit: backgroundFit,
