@@ -12,7 +12,6 @@ import { Overlay, overlayInputs } from "./Overlay";
 export type SectionWidth = "full" | "stretch" | "fixed";
 export type VerticalPadding = "none" | "small" | "medium" | "large";
 export type DividerType = "none" | "top" | "bottom" | "both";
-export type SectionAlignment = "unset" | "left" | "center" | "right";
 
 export type SectionProps = HydrogenComponentProps &
   HTMLAttributes<HTMLElement> &
@@ -21,7 +20,6 @@ export type SectionProps = HydrogenComponentProps &
     as: React.ElementType;
     width: SectionWidth;
     gap: number;
-    contentAlignment: SectionAlignment;
     className: string;
     verticalPadding: VerticalPadding;
     divider: DividerType;
@@ -32,6 +30,7 @@ export type SectionProps = HydrogenComponentProps &
     backgroundColor: string;
     backgroundFor: "section" | "content";
     children: React.ReactNode;
+    containerClassName: string;
   }>;
 
 export let gapClasses: Record<number, string> = {
@@ -72,19 +71,11 @@ export let widthClasses: Record<SectionWidth, string> = {
   fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
 };
 
-export let alignmentClasses: Record<SectionAlignment, string> = {
-  unset: "",
-  left: "text-left",
-  center: "text-center",
-  right: "text-right",
-};
-
 export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   let {
     as: Component = "section",
     width,
     gap,
-    contentAlignment,
     divider,
     verticalPadding,
     borderRadius,
@@ -98,6 +89,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     overlayOpacity,
     className,
     children,
+    containerClassName,
     style = {},
     ...rest
   } = props;
@@ -139,7 +131,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
             widthClasses[width!],
             gapClasses[gap!],
             verticalPaddingClasses[verticalPadding!],
-            alignmentClasses[contentAlignment!],
+            containerClassName,
           )}
           style={{
             backgroundColor: backgroundFor === "content" ? backgroundColor : "",
@@ -189,20 +181,6 @@ export let layoutInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "fixed",
-  },
-  {
-    type: "select",
-    name: "contentAlignment",
-    label: "Items alignment",
-    configs: {
-      options: [
-        { value: "unset", label: "Unset" },
-        { value: "left", label: "Left" },
-        { value: "center", label: "Center" },
-        { value: "right", label: "Right" },
-      ],
-    },
-    defaultValue: "center",
   },
   {
     type: "range",

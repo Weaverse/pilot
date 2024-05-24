@@ -8,7 +8,7 @@ type CountdownProps = SectionProps;
 let Countdown = forwardRef<HTMLElement, CountdownProps>((props, ref) => {
   let { children, ...rest } = props;
   return (
-    <Section ref={ref} {...rest}>
+    <Section ref={ref} {...rest} containerClassName="text-center">
       {children}
     </Section>
   );
