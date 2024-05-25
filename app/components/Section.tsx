@@ -94,6 +94,8 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     ...rest
   } = props;
 
+  let isBackgroundForContent = backgroundFor === "content";
+
   return (
     <>
       {(divider === "top" || divider === "both") && <Divider />}
@@ -107,11 +109,11 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         )}
         style={{
           ...style,
-          backgroundColor: backgroundFor === "section" ? backgroundColor : "",
-          borderRadius: backgroundFor === "section" ? borderRadius : "",
+          backgroundColor: !isBackgroundForContent ? backgroundColor : "",
+          borderRadius: !isBackgroundForContent ? borderRadius : "",
         }}
       >
-        {backgroundFor === "section" && (
+        {!isBackgroundForContent && (
           <>
             <BackgroundImage
               backgroundImage={backgroundImage}
@@ -134,11 +136,11 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
             containerClassName,
           )}
           style={{
-            backgroundColor: backgroundFor === "content" ? backgroundColor : "",
-            borderRadius: backgroundFor === "content" ? borderRadius : "",
+            backgroundColor: isBackgroundForContent ? backgroundColor : "",
+            borderRadius: isBackgroundForContent ? borderRadius : "",
           }}
         >
-          {backgroundFor === "content" && (
+          {isBackgroundForContent && (
             <>
               <BackgroundImage
                 backgroundImage={backgroundImage}
@@ -165,10 +167,6 @@ function Divider() {
 }
 
 export let layoutInputs: InspectorGroup["inputs"] = [
-  {
-    type: "heading",
-    label: "Layout",
-  },
   {
     type: "select",
     name: "width",
@@ -236,7 +234,8 @@ export let layoutInputs: InspectorGroup["inputs"] = [
   },
 ];
 
-export let sectionInspector: InspectorGroup = {
-  group: "General",
-  inputs: [...layoutInputs, ...backgroundInputs, ...overlayInputs],
-};
+export let sectionInspector: InspectorGroup[] = [
+  { group: "Layout", inputs: [...layoutInputs] },
+  { group: "Background", inputs: [...backgroundInputs] },
+  { group: "Overlay", inputs: [...overlayInputs] },
+];
