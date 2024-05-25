@@ -75,7 +75,7 @@ type SelectedVariantRequiredFields = Pick<ProductVariant, "sku"> & {
 
 type ProductRequiredFields = Pick<
   Product,
-  "title" | "description" | "vendor" | "seo"
+  "title" | "paragraph" | "vendor" | "seo"
 > & {
   variants: {
     nodes: Array<

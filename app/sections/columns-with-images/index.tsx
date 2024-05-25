@@ -22,12 +22,12 @@ export let schema: HydrogenComponentSchema = {
   type: "columns-with-images",
   title: "Columns with images",
   toolbar: ["general-settings", ["duplicate", "delete"]],
-  inspector: [sectionInspector],
+  inspector: sectionInspector,
   childTypes: [
     "columns-with-images--items",
     "subheading",
     "heading",
-    "description",
+    "paragraph",
   ],
   presets: {
     gap: 48,

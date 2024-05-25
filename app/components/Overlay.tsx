@@ -24,10 +24,6 @@ export function Overlay({ enable, color, opacity }: OverlayProps) {
 
 export let overlayInputs: InspectorGroup["inputs"] = [
   {
-    type: "heading",
-    label: "Overlay",
-  },
-  {
     type: "switch",
     name: "enableOverlay",
     label: "Enable overlay",

@@ -24,8 +24,8 @@ export default Testimonials;
 export let schema: HydrogenComponentSchema = {
   type: "testimonials",
   title: "Testimonials",
-  childTypes: ["subheading", "heading", "description", "testimonials-items"],
-  inspector: [sectionInspector],
+  childTypes: ["subheading", "heading", "paragraph", "testimonials-items"],
+  inspector: sectionInspector,
   toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     children: [
@@ -34,7 +34,7 @@ export let schema: HydrogenComponentSchema = {
         content: "See what our customers are saying",
       },
       {
-        type: "description",
+        type: "paragraph",
         content:
           "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.",
       },

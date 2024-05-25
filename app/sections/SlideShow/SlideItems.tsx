@@ -121,7 +121,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ["subheading", "heading", "description", "button"],
+  childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
     children: [
       {
@@ -133,7 +133,7 @@ export let schema: HydrogenComponentSchema = {
         content: "Slide Heading",
       },
       {
-        type: "description",
+        type: "paragraph",
         content:
           "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown.",
       },

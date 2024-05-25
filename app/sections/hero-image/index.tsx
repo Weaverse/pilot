@@ -1,80 +1,67 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseImage,
+import {
+  IMAGES_PLACEHOLDERS,
+  type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
-import { forwardRef } from "react";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { Image } from "@shopify/hydrogen";
+import { forwardRef } from "react";
+import { backgroundInputs } from "~/components/BackgroundImage";
+import { overlayInputs } from "~/components/Overlay";
+import type { SectionProps } from "~/components/Section";
+import { Section, layoutInputs } from "~/components/Section";
 
-import { IconImageBlank } from "~/modules";
+export interface HeroImageProps extends VariantProps<typeof variants> {}
 
-type HeroImageProps = HydrogenComponentProps & {
-  backgroundImage: WeaverseImage;
-  contentAlignment: string;
-  enableOverlay: boolean;
-  overlayColor: string;
-  overlayOpacity: number;
-  sectionHeightDesktop: number;
-  sectionHeightMobile: number;
-};
-
-let HeroImage = forwardRef<HTMLElement, HeroImageProps>((props, ref) => {
-  let {
-    backgroundImage,
-    contentAlignment,
-    enableOverlay,
-    overlayColor,
-    overlayOpacity,
-    sectionHeightDesktop,
-    sectionHeightMobile,
-    children,
-    ...rest
-  } = props;
-  let sectionStyle: CSSProperties = {
-    justifyContent: `${contentAlignment}`,
-    "--section-height-desktop": `${sectionHeightDesktop}px`,
-    "--section-height-mobile": `${sectionHeightMobile}px`,
-    "--overlay-opacity": `${overlayOpacity}%`,
-    "--overlay-color": `${overlayColor}`,
-    "--max-width-content": "600px",
-  } as CSSProperties;
-
-  return (
-    <section
-      ref={ref}
-      {...rest}
-      className={clsx(
-        "flex relative gap-3 items-center h-[var(--section-height-mobile)] sm:h-[var(--section-height-desktop)]",
-      )}
-      style={sectionStyle}
-    >
-      <div className="absolute inset-0">
-        {backgroundImage ? (
-          <Image
-            data={backgroundImage}
-            className="w-full h-full object-cover"
-            sizes="auto"
-          />
-        ) : (
-          <div className="w-full h-full flex justify-center items-center bg-gray-200">
-            <IconImageBlank
-              className="!w-24 !h-24 opacity-30"
-              viewBox="0 0 100 100"
-            />
-          </div>
-        )}
-        {enableOverlay && (
-          <div className="absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]"></div>
-        )}
-      </div>
-      <div className="z-10 w-[var(--max-width-content)] sm-max:w-5/6 h-fit flex flex-col text-center gap-5">
-        {children}
-      </div>
-    </section>
-  );
+let variants = cva("", {
+  variants: {
+    height: {
+      small: "min-h-[375px] sm:min-h-[400px] lg:min-h-[440px]",
+      medium: "min-h-[480px] sm:min-h-[460px] lg:min-h-[500px]",
+      large: "min-h-[560px] sm:min-h-[560px] lg:min-h-[640px]",
+      full: "h-screen-no-nav",
+    },
+    contentPosition: {
+      "top left": "justify-start items-start [&_.paragraph]:[text-align:left]",
+      "top center":
+        "justify-start items-center [&_.paragraph]:[text-align:center]",
+      "top right": "justify-start items-end [&_.paragraph]:[text-align:right]",
+      "center left":
+        "justify-center items-start [&_.paragraph]:[text-align:left]",
+      "center center":
+        "justify-center items-center [&_.paragraph]:[text-align:center]",
+      "center right":
+        "justify-center items-end [&_.paragraph]:[text-align:right]",
+      "bottom left": "justify-end items-start [&_.paragraph]:[text-align:left]",
+      "bottom center":
+        "justify-end items-center [&_.paragraph]:[text-align:center]",
+      "bottom right": "justify-end items-end [&_.paragraph]:[text-align:right]",
+    },
+  },
+  defaultVariants: {
+    height: "large",
+    contentPosition: "center center",
+  },
 });
+
+let HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
+  (props, ref) => {
+    let { children, height, contentPosition, ...rest } = props;
+    return (
+      <Section
+        ref={ref}
+        {...rest}
+        containerClassName={clsx(
+          "flex flex-col",
+          "[&_.paragraph]:mx-[unset]",
+          variants({ contentPosition, height }),
+        )}
+      >
+        {children}
+      </Section>
+    );
+  },
+);
 
 export default HeroImage;
 
@@ -84,97 +71,70 @@ export let schema: HydrogenComponentSchema = {
   toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: "Image",
+      group: "Layout",
       inputs: [
         {
-          type: "image",
-          name: "backgroundImage",
-          label: "Background image",
-        },
-        {
-          type: "toggle-group",
-          label: "Content alignment",
-          name: "contentAlignment",
+          type: "select",
+          name: "height",
+          label: "Section height",
           configs: {
             options: [
-              { label: "Left", value: "flex-start" },
-              { label: "Center", value: "center" },
-              { label: "Right", value: "flex-end" },
+              { value: "small", label: "Small" },
+              { value: "medium", label: "Medium" },
+              { value: "large", label: "Large" },
+              { value: "full", label: "Fullscreen" },
             ],
           },
-          defaultValue: "center",
         },
         {
-          type: "switch",
-          name: "enableOverlay",
-          label: "Enable overlay",
-          defaultValue: true,
+          type: "position",
+          name: "contentPosition",
+          label: "Content position",
+          defaultValue: "center center",
         },
-        {
-          type: "color",
-          name: "overlayColor",
-          label: "Overlay color",
-          defaultValue: "#333333",
-          condition: `enableOverlay.eq.true`,
-        },
-        {
-          type: "range",
-          name: "overlayOpacity",
-          label: "Overlay opacity",
-          defaultValue: 50,
-          configs: {
-            min: 10,
-            max: 100,
-            step: 10,
-            unit: "%",
-          },
-          condition: `enableOverlay.eq.true`,
-        },
-        {
-          type: "range",
-          name: "sectionHeightDesktop",
-          label: "Section height desktop",
-          defaultValue: 450,
-          configs: {
-            min: 400,
-            max: 700,
-            step: 10,
-            unit: "px",
-          },
-        },
-        {
-          type: "range",
-          name: "sectionHeightMobile",
-          label: "Section height mobile",
-          defaultValue: 350,
-          configs: {
-            min: 300,
-            max: 600,
-            step: 10,
-            unit: "px",
-          },
-        },
+        ...layoutInputs.filter(
+          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
+        ),
       ],
     },
+    {
+      group: "Background",
+      inputs: [
+        ...backgroundInputs.filter(
+          (inp) =>
+            inp.name !== "backgroundFor" && inp.name !== "backgroundColor",
+        ),
+      ],
+    },
+    { group: "Overlay", inputs: [...overlayInputs] },
   ],
-  childTypes: ["subheading", "heading", "description", "button"],
+  childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
+    height: "large",
+    contentPosition: "bottom left",
+    backgroundImage: IMAGES_PLACEHOLDERS.backgroundImage,
+    backgroundFit: "cover",
+    enableOverlay: true,
+    overlayOpacity: 35,
     children: [
       {
         type: "subheading",
         content: "Subheading",
+        color: "#ffffff",
       },
       {
         type: "heading",
-        content: "Heading for Image",
+        content: "Hero image with text overlay",
+        color: "#ffffff",
+        size: "scale",
+        minSize: 16,
+        maxSize: 56,
       },
       {
-        type: "description",
-        content: "Pair large text with an image to tell a story.",
-      },
-      {
-        type: "button",
-        content: "Button section",
+        type: "paragraph",
+        content:
+          "Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.",
+        color: "#ffffff",
       },
     ],
   },
