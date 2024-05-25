@@ -36,10 +36,6 @@ export function BackgroundImage(props: BackgroundImageProps) {
 
 export let backgroundInputs: InspectorGroup["inputs"] = [
   {
-    type: "heading",
-    label: "Background",
-  },
-  {
     type: "select",
     name: "backgroundFor",
     label: "Background for",
