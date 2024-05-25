@@ -2,11 +2,10 @@ import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef, lazy, Suspense } from "react";
-
 import { overlayInputs } from "~/components/Overlay";
 import { gapClasses } from "~/components/Section";
 
-type VideoHeroProps = {
+type HeroVideoProps = {
   videoURL: string;
   gap: number;
   enableOverlay: boolean;
@@ -16,6 +15,7 @@ type VideoHeroProps = {
   sectionHeightMobile: number;
   children: React.ReactNode;
 };
+
 let RP = lazy(() => import("react-player/lazy"));
 let ReactPlayer = (props: any) => (
   <Suspense fallback={null}>
@@ -24,7 +24,7 @@ let ReactPlayer = (props: any) => (
 );
 let FALLBACK_VIDEO = "https://www.youtube.com/watch?v=Su-x4Mo5xmU";
 
-let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {
+let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   let {
     videoURL,
     gap,
@@ -88,11 +88,11 @@ let VideoHero = forwardRef<HTMLElement, VideoHeroProps>((props, ref) => {
   );
 });
 
-export default VideoHero;
+export default HeroVideo;
 
 export let schema: HydrogenComponentSchema = {
-  type: "video-hero",
-  title: "Video hero",
+  type: "hero-video",
+  title: "Hero video",
   toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {

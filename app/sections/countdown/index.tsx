@@ -20,7 +20,7 @@ export let schema: HydrogenComponentSchema = {
   type: "countdown",
   title: "Countdown",
   toolbar: ["general-settings", ["duplicate", "delete"]],
-  inspector: [sectionInspector],
+  inspector: sectionInspector,
   childTypes: ["heading", "subheading", "countdown--timer", "button"],
   presets: {
     children: [

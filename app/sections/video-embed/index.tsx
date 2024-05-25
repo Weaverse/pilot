@@ -24,7 +24,7 @@ export let schema: HydrogenComponentSchema = {
   type: "video",
   title: "Video embed",
   toolbar: ["general-settings", ["duplicate", "delete"]],
-  inspector: [sectionInspector],
+  inspector: sectionInspector,
   childTypes: ["heading", "description", "video-embed--item"],
   presets: {
     children: [
