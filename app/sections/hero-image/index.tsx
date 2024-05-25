@@ -108,7 +108,7 @@ export let schema: HydrogenComponentSchema = {
     },
     { group: "Overlay", inputs: [...overlayInputs] },
   ],
-  childTypes: ["subheading", "heading", "description", "button"],
+  childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
     height: "large",
     contentPosition: "bottom left",
@@ -131,7 +131,7 @@ export let schema: HydrogenComponentSchema = {
         maxSize: 56,
       },
       {
-        type: "description",
+        type: "paragraph",
         content:
           "Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.",
         color: "#ffffff",

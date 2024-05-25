@@ -55,7 +55,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ["subheading", "heading", "description", "button"],
+  childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
     children: [
       {
@@ -67,7 +67,7 @@ export let schema: HydrogenComponentSchema = {
         content: "Heading for image",
       },
       {
-        type: "description",
+        type: "paragraph",
         content: "Pair large text with an image to tell a story.",
       },
       {

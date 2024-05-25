@@ -2,36 +2,38 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
 import { forwardRef } from "react";
 
-import type { Alignment } from "~/lib/type";
-
-type DescriptionProps = HydrogenComponentProps & {
-  content: string;
+export interface ParagraphProps extends VariantProps<typeof variants> {
   as?: "p" | "div";
+  content: string;
   color?: string;
-  width?: Width;
-  alignment?: Alignment;
   className?: string;
-};
+}
 
-type Width = "full" | "narrow";
+let variants = cva("paragraph", {
+  variants: {
+    width: {
+      full: "w-full mx-auto",
+      narrow: "w-full md:w-1/2 lg:w-3/4 max-w-4xl mx-auto",
+    },
+    alignment: {
+      left: "text-left",
+      center: "text-center",
+      right: "text-right",
+    },
+  },
+  defaultVariants: {
+    width: "full",
+  },
+});
 
-let widthClasses: Record<Width, string> = {
-  full: "w-full mx-auto",
-  narrow: "w-full md:w-1/2 lg:w-3/4 max-w-4xl mx-auto",
-};
-
-let alignmentClasses: Record<Alignment, string> = {
-  left: "text-left",
-  center: "text-center",
-  right: "text-right",
-};
-
-let Description = forwardRef<
+let Paragraph = forwardRef<
   HTMLParagraphElement | HTMLDivElement,
-  DescriptionProps
+  ParagraphProps & HydrogenComponentProps
 >((props, ref) => {
   let {
     as: Tag = "p",
@@ -47,33 +49,21 @@ let Description = forwardRef<
       ref={ref}
       {...rest}
       style={{ color }}
-      className={clsx(
-        widthClasses[width!],
-        alignmentClasses[alignment!],
-        className,
-      )}
+      className={clsx(variants({ width, alignment, className }))}
       suppressHydrationWarning
       dangerouslySetInnerHTML={{ __html: content }}
     />
   );
 });
 
-Description.defaultProps = {
-  as: "p",
-  width: "narrow",
-  content:
-    "Pair large text with an image or full-width video to showcase your brand's lifestyle to describe and showcase an important detail of your products that you can tag on your image.",
-  alignment: "center",
-};
-
-export default Description;
+export default Paragraph;
 
 export let schema: HydrogenComponentSchema = {
-  type: "description",
-  title: "Description",
+  type: "paragraph",
+  title: "Paragraph",
   inspector: [
     {
-      group: "Description",
+      group: "Paragraph",
       inputs: [
         {
           type: "select",

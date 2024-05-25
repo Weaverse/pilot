@@ -150,7 +150,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  childTypes: ["subheading", "heading", "description", "button"],
+  childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
     enableOverlay: true,
     children: [
@@ -163,7 +163,7 @@ export let schema: HydrogenComponentSchema = {
         content: "Bring your brand to life.",
       },
       {
-        type: "description",
+        type: "paragraph",
         content:
           "Pair large video with a compelling message to captivate your audience.",
       },

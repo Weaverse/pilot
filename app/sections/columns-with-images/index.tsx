@@ -27,7 +27,7 @@ export let schema: HydrogenComponentSchema = {
     "columns-with-images--items",
     "subheading",
     "heading",
-    "description",
+    "paragraph",
   ],
   presets: {
     gap: 48,

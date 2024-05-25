@@ -25,7 +25,7 @@ export let schema: HydrogenComponentSchema = {
   title: "Video embed",
   toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: sectionInspector,
-  childTypes: ["heading", "description", "video-embed--item"],
+  childTypes: ["heading", "paragraph", "video-embed--item"],
   presets: {
     children: [
       {
@@ -33,7 +33,7 @@ export let schema: HydrogenComponentSchema = {
         content: "Video embed",
       },
       {
-        type: "description",
+        type: "paragraph",
         content:
           "A picture is worth a thousand words, and a video is worth even more. Utilize this space to engage, inform, and convince your customers.",
       },
