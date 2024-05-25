@@ -14,11 +14,11 @@ export default {
         secondary: "rgb(var(--color-inverse-background) / <alpha-value>)", // background inverse color
         body: "rgb(var(--color-text) / <alpha-value>)", // body text color
         "inv-body": "rgb(var(--color-inverse-text) / <alpha-value>)", // body text inverse color
-        btn: "rgb(var(--color-button) / <alpha-value>)", // button background color
-        "btn-content": "rgb(var(--color-button-text) / <alpha-value>)", // button text color
-        "inv-btn": "rgb(var(--color-inverse-button) / <alpha-value>)", // button inverse background color
-        "inv-btn-content":
-          "rgb(var(--color-inverse-button-text) / <alpha-value>)", // button inverse text color
+        // btn: "rgb(var(--color-button) / <alpha-value>)", // button background color
+        // "btn-content": "rgb(var(--color-button-text) / <alpha-value>)", // button text color
+        // "inv-btn": "rgb(var(--color-inverse-button) / <alpha-value>)", // button inverse background color
+        // "inv-btn-content":
+        //   "rgb(var(--color-inverse-button-text) / <alpha-value>)", // button inverse text color
         sale: "rgb(var(--color-sale) / <alpha-value>)", // sale background color
         bar: "rgb(var(--color-border) / <alpha-value>)", // border color
       },
