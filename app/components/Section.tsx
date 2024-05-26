@@ -8,6 +8,7 @@ import React, { forwardRef } from "react";
 import { removeFalsy } from "~/lib/utils";
 import type { BackgroundImageProps } from "./BackgroundImage";
 import { BackgroundImage, backgroundInputs } from "./BackgroundImage";
+import type { OverlayProps } from "./Overlay";
 import { Overlay, overlayInputs } from "./Overlay";
 
 export type SectionWidth = "full" | "stretch" | "fixed";
@@ -16,6 +17,7 @@ export type VerticalPadding = "none" | "small" | "medium" | "large";
 export type SectionProps = HydrogenComponentProps &
   HTMLAttributes<HTMLElement> &
   BackgroundImageProps &
+  OverlayProps &
   Partial<{
     as: React.ElementType;
     width: SectionWidth;
@@ -23,9 +25,6 @@ export type SectionProps = HydrogenComponentProps &
     className: string;
     verticalPadding: VerticalPadding;
     borderRadius: number;
-    enableOverlay: boolean;
-    overlayColor: string;
-    overlayOpacity: number;
     backgroundColor: string;
     backgroundFor: "section" | "content";
     children: React.ReactNode;
@@ -147,9 +146,9 @@ function OverlayAndBackground(props: SectionProps) {
         backgroundPosition={backgroundPosition}
       />
       <Overlay
-        enable={enableOverlay}
-        color={overlayColor}
-        opacity={overlayOpacity}
+        enableOverlay={enableOverlay}
+        overlayColor={overlayColor}
+        overlayOpacity={overlayOpacity}
       />
     </>
   );
