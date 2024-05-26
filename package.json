@@ -2,7 +2,7 @@
   "name": "@weaverse/pilot",
   "private": true,
   "sideEffects": false,
-  "version": "2.6.9",
+  "version": "2.6.10",
   "type": "module",
   "author": "Weaverse",
   "scripts": {
