@@ -109,20 +109,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         borderRadius: !isBackgroundForContent ? borderRadius : "",
       })}
     >
-      {!isBackgroundForContent && (
-        <>
-          <BackgroundImage
-            backgroundImage={backgroundImage}
-            backgroundFit={backgroundFit}
-            backgroundPosition={backgroundPosition}
-          />
-          <Overlay
-            enable={enableOverlay}
-            color={overlayColor}
-            opacity={overlayOpacity}
-          />
-        </>
-      )}
+      {!isBackgroundForContent && <OverlayAndBackground {...props} />}
       <div
         className={clsx(
           "relative overflow-hidden",
@@ -136,25 +123,37 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           borderRadius: isBackgroundForContent ? borderRadius : "",
         })}
       >
-        {isBackgroundForContent && (
-          <>
-            <BackgroundImage
-              backgroundImage={backgroundImage}
-              backgroundFit={backgroundFit}
-              backgroundPosition={backgroundPosition}
-            />
-            <Overlay
-              enable={enableOverlay}
-              color={overlayColor}
-              opacity={overlayOpacity}
-            />
-          </>
-        )}
+        {isBackgroundForContent && <OverlayAndBackground {...props} />}
         {children}
       </div>
     </Component>
   );
 });
+
+function OverlayAndBackground(props: SectionProps) {
+  let {
+    backgroundImage,
+    backgroundFit,
+    backgroundPosition,
+    enableOverlay,
+    overlayColor,
+    overlayOpacity,
+  } = props;
+  return (
+    <>
+      <BackgroundImage
+        backgroundImage={backgroundImage}
+        backgroundFit={backgroundFit}
+        backgroundPosition={backgroundPosition}
+      />
+      <Overlay
+        enable={enableOverlay}
+        color={overlayColor}
+        opacity={overlayOpacity}
+      />
+    </>
+  );
+}
 
 export let layoutInputs: InspectorGroup["inputs"] = [
   {
