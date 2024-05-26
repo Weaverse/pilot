@@ -1,17 +1,19 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
+import { cn } from "~/lib/cn";
 
 export type OverlayProps = {
   enableOverlay: boolean;
   overlayColor: string;
   overlayOpacity: number;
+  className?: string;
 };
 
 export function Overlay(props: OverlayProps) {
-  let { enableOverlay, overlayColor, overlayOpacity } = props;
+  let { enableOverlay, overlayColor, overlayOpacity, className } = props;
   if (enableOverlay && overlayColor) {
     return (
       <div
-        className="absolute inset-0 z-[-1]"
+        className={cn("absolute inset-0 z-[-1]", className)}
         style={{
           backgroundColor: overlayColor,
           opacity: (overlayOpacity || 100) / 100,
