@@ -28,7 +28,7 @@ let Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
       className="w-full flex items-center justify-center h-[var(--mobile-height)] md:h-[var(--desktop-height)]"
       style={
         {
-          backgroundColor: backgroundColor,
+          backgroundColor,
           "--mobile-height": mobileHeight + "px",
           "--desktop-height": desktopHeight + "px",
           "--separator-color": separatorColor,
@@ -36,7 +36,7 @@ let Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
       }
     >
       {addSeparator && (
-        <div className="w-3/4 md:w-2/3 mx-auto border-t border-b h-px border-[var(--color-border,var(--separator-color))]" />
+        <div className="w-3/4 md:w-2/3 mx-auto border-t h-px border-[var(--separator-color,var(--color-border))]" />
       )}
     </div>
   );
@@ -62,7 +62,7 @@ export let schema: HydrogenComponentSchema = {
             unit: "px",
           },
           defaultValue: 50,
-          helpText: "Set to 0 to hide the spacer on mobile devices",
+          helpText: "Set to 0 to hide the Spacer on mobile devices",
         },
         {
           type: "range",
@@ -79,7 +79,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: "color",
           label: "Background color",
-          name: "color",
+          name: "backgroundColor",
           defaultValue: "#00000000",
         },
         {
