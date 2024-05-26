@@ -173,7 +173,7 @@ export let buttonStylesInputs: InspectorGroup["inputs"] = [
     },
     defaultValue: "inherit",
     helpText:
-      "Select 'Inherit' to use the default button styles from global theme settings, or 'Custom' to customize the button styles.",
+      "Use 'Inherit' for theme-based styles, or 'Custom' to modify button appearance.",
   },
   {
     type: "color",
