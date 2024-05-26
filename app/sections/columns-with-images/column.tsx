@@ -8,7 +8,7 @@ import {
 import clsx from "clsx";
 import { forwardRef } from "react";
 import type { ButtonProps } from "~/components/Button";
-import Button, { buttonInputs } from "~/components/Button";
+import Button, { buttonContentInputs } from "~/components/Button";
 
 interface ColumnWithImageItemProps extends ButtonProps, HydrogenComponentProps {
   imageSrc: WeaverseImage;
@@ -129,7 +129,7 @@ export let schema: HydrogenComponentSchema = {
           type: "heading",
           label: "Button (optional)",
         },
-        ...buttonInputs,
+        ...buttonContentInputs,
       ],
     },
   ],
