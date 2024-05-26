@@ -312,3 +312,24 @@ export function isLocalPath(url: string) {
 
   return false;
 }
+
+export function removeFalsy<T = any>(
+  obj: {},
+  falsyValues: any[] = ["", null, undefined],
+): T {
+  if (!obj || typeof obj !== "object") return obj as any;
+
+  return Object.entries(obj).reduce((a: any, c) => {
+    let [k, v]: [string, any] = c;
+    if (
+      falsyValues.indexOf(v) === -1 &&
+      JSON.stringify(removeFalsy(v, falsyValues)) !== "{}"
+    ) {
+      a[k] =
+        typeof v === "object" && !Array.isArray(v)
+          ? removeFalsy(v, falsyValues)
+          : v;
+    }
+    return a;
+  }, {}) as T;
+}
