@@ -152,7 +152,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "color",
           label: "Border",
           name: "colorBorder",
-          defaultValue: "#0F0F0F",
+          defaultValue: "#ffbaba7d",
         },
       ],
     },
