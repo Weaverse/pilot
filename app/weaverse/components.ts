@@ -46,6 +46,7 @@ import * as TestimonialItems from "~/sections/testimonials/items";
 import * as UserProfiles from "~/sections/user-profiles";
 import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
+import * as Spacer from "~/sections/spacer";
 
 export let components: HydrogenComponent[] = [
   ...sharedComponents,
@@ -97,4 +98,5 @@ export let components: HydrogenComponent[] = [
   SlideShowItem,
   ProductList,
   ContactForm,
+  Spacer,
 ];

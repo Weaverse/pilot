@@ -5,13 +5,13 @@ import {
 import clsx from "clsx";
 import type { HTMLAttributes } from "react";
 import React, { forwardRef } from "react";
+import { removeFalsy } from "~/lib/utils";
 import type { BackgroundImageProps } from "./BackgroundImage";
 import { BackgroundImage, backgroundInputs } from "./BackgroundImage";
 import { Overlay, overlayInputs } from "./Overlay";
 
 export type SectionWidth = "full" | "stretch" | "fixed";
 export type VerticalPadding = "none" | "small" | "medium" | "large";
-export type DividerType = "none" | "top" | "bottom" | "both";
 
 export type SectionProps = HydrogenComponentProps &
   HTMLAttributes<HTMLElement> &
@@ -22,7 +22,6 @@ export type SectionProps = HydrogenComponentProps &
     gap: number;
     className: string;
     verticalPadding: VerticalPadding;
-    divider: DividerType;
     borderRadius: number;
     enableOverlay: boolean;
     overlayColor: string;
@@ -76,7 +75,6 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     as: Component = "section",
     width,
     gap,
-    divider,
     verticalPadding,
     borderRadius,
     backgroundColor,
@@ -97,23 +95,48 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   let isBackgroundForContent = backgroundFor === "content";
 
   return (
-    <>
-      {(divider === "top" || divider === "both") && <Divider />}
-      <Component
-        ref={ref}
-        {...rest}
+    <Component
+      ref={ref}
+      {...rest}
+      className={clsx(
+        "relative overflow-hidden",
+        paddingClasses[width!],
+        className,
+      )}
+      style={removeFalsy({
+        ...style,
+        backgroundColor: !isBackgroundForContent ? backgroundColor : "",
+        borderRadius: !isBackgroundForContent ? borderRadius : "",
+      })}
+    >
+      {!isBackgroundForContent && (
+        <>
+          <BackgroundImage
+            backgroundImage={backgroundImage}
+            backgroundFit={backgroundFit}
+            backgroundPosition={backgroundPosition}
+          />
+          <Overlay
+            enable={enableOverlay}
+            color={overlayColor}
+            opacity={overlayOpacity}
+          />
+        </>
+      )}
+      <div
         className={clsx(
           "relative overflow-hidden",
-          paddingClasses[width!],
-          className,
+          widthClasses[width!],
+          gapClasses[gap!],
+          verticalPaddingClasses[verticalPadding!],
+          containerClassName,
         )}
-        style={{
-          ...style,
-          backgroundColor: !isBackgroundForContent ? backgroundColor : "",
-          borderRadius: !isBackgroundForContent ? borderRadius : "",
-        }}
+        style={removeFalsy({
+          backgroundColor: isBackgroundForContent ? backgroundColor : "",
+          borderRadius: isBackgroundForContent ? borderRadius : "",
+        })}
       >
-        {!isBackgroundForContent && (
+        {isBackgroundForContent && (
           <>
             <BackgroundImage
               backgroundImage={backgroundImage}
@@ -127,44 +150,11 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
             />
           </>
         )}
-        <div
-          className={clsx(
-            "relative overflow-hidden",
-            widthClasses[width!],
-            gapClasses[gap!],
-            verticalPaddingClasses[verticalPadding!],
-            containerClassName,
-          )}
-          style={{
-            backgroundColor: isBackgroundForContent ? backgroundColor : "",
-            borderRadius: isBackgroundForContent ? borderRadius : "",
-          }}
-        >
-          {isBackgroundForContent && (
-            <>
-              <BackgroundImage
-                backgroundImage={backgroundImage}
-                backgroundFit={backgroundFit}
-                backgroundPosition={backgroundPosition}
-              />
-              <Overlay
-                enable={enableOverlay}
-                color={overlayColor}
-                opacity={overlayOpacity}
-              />
-            </>
-          )}
-          {children}
-        </div>
-      </Component>
-      {(divider === "bottom" || divider === "both") && <Divider />}
-    </>
+        {children}
+      </div>
+    </Component>
   );
 });
-
-function Divider() {
-  return <div className="border-t w-2/3 lg:w-1/2 mx-auto" />;
-}
 
 export let layoutInputs: InspectorGroup["inputs"] = [
   {
@@ -205,20 +195,6 @@ export let layoutInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "medium",
-  },
-  {
-    type: "select",
-    name: "divider",
-    label: "Divider",
-    configs: {
-      options: [
-        { value: "none", label: "None" },
-        { value: "top", label: "Top" },
-        { value: "bottom", label: "Bottom" },
-        { value: "both", label: "Both" },
-      ],
-    },
-    defaultValue: "none",
   },
   {
     type: "range",

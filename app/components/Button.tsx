@@ -1,7 +1,7 @@
 import type {
-  InspectorGroup,
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  InspectorGroup,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -16,7 +16,7 @@ export interface ButtonProps extends VariantProps<typeof variants> {
   text: string;
   link?: string;
   openInNewTab?: boolean;
-  buttonStyle: "inherit" | "custom";
+  buttonStyle?: "inherit" | "custom";
   backgroundColor?: string;
   textColor?: string;
   borderColor?: string;
@@ -120,7 +120,7 @@ let Button = forwardRef<HTMLElement, Props>((props, ref) => {
 
 export default Button;
 
-export let buttonInputs: InspectorGroup["inputs"] = [
+export let buttonContentInputs: InspectorGroup["inputs"] = [
   {
     type: "text",
     name: "text",
@@ -155,9 +155,11 @@ export let buttonInputs: InspectorGroup["inputs"] = [
     },
     defaultValue: "primary",
   },
+];
+export let buttonStylesInputs: InspectorGroup["inputs"] = [
   {
     type: "heading",
-    label: "Styles",
+    label: "Button styles",
   },
   {
     type: "select",
@@ -170,6 +172,8 @@ export let buttonInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "inherit",
+    helpText:
+      "Select 'Inherit' to use the default button styles from global theme settings, or 'Custom' to customize the button styles.",
   },
   {
     type: "color",
@@ -213,6 +217,11 @@ export let buttonInputs: InspectorGroup["inputs"] = [
     defaultValue: "#000",
     condition: "buttonStyle.eq.custom",
   },
+];
+
+export let buttonInputs: InspectorGroup["inputs"] = [
+  ...buttonContentInputs,
+  ...buttonStylesInputs,
 ];
 
 export let schema: HydrogenComponentSchema = {
