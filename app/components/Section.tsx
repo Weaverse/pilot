@@ -5,6 +5,7 @@ import {
 import clsx from "clsx";
 import type { HTMLAttributes } from "react";
 import React, { forwardRef } from "react";
+import { removeFalsy } from "~/lib/utils";
 import type { BackgroundImageProps } from "./BackgroundImage";
 import { BackgroundImage, backgroundInputs } from "./BackgroundImage";
 import { Overlay, overlayInputs } from "./Overlay";
@@ -107,11 +108,11 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           paddingClasses[width!],
           className,
         )}
-        style={{
+        style={removeFalsy({
           ...style,
           backgroundColor: !isBackgroundForContent ? backgroundColor : "",
           borderRadius: !isBackgroundForContent ? borderRadius : "",
-        }}
+        })}
       >
         {!isBackgroundForContent && (
           <>
@@ -135,10 +136,10 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
             verticalPaddingClasses[verticalPadding!],
             containerClassName,
           )}
-          style={{
+          style={removeFalsy({
             backgroundColor: isBackgroundForContent ? backgroundColor : "",
             borderRadius: isBackgroundForContent ? borderRadius : "",
-          }}
+          })}
         >
           {isBackgroundForContent && (
             <>
