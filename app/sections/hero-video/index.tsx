@@ -1,39 +1,36 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import type {
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+} from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { forwardRef, lazy, Suspense } from "react";
-import { overlayInputs } from "~/components/Overlay";
+import { Suspense, forwardRef, lazy } from "react";
+import type { OverlayProps } from "~/components/Overlay";
+import { Overlay, overlayInputs } from "~/components/Overlay";
 import { gapClasses } from "~/components/Section";
 
-type HeroVideoProps = {
+type HeroVideoProps = OverlayProps & {
   videoURL: string;
-  gap: number;
-  enableOverlay: boolean;
-  overlayColor: string;
-  overlayOpacity: number;
   sectionHeightDesktop: number;
   sectionHeightMobile: number;
-  children: React.ReactNode;
+  gap: number;
 };
 
-let RP = lazy(() => import("react-player/lazy"));
-let ReactPlayer = (props: any) => (
-  <Suspense fallback={null}>
-    <RP {...props} />
-  </Suspense>
-);
-let FALLBACK_VIDEO = "https://www.youtube.com/watch?v=Su-x4Mo5xmU";
+let ReactPlayer = lazy(() => import("react-player/lazy"));
 
-let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
+let HeroVideo = forwardRef<
+  HTMLElement,
+  HeroVideoProps & HydrogenComponentProps
+>((props, ref) => {
   let {
     videoURL,
     gap,
     sectionHeightDesktop,
     sectionHeightMobile,
-    children,
     enableOverlay,
     overlayColor,
     overlayOpacity,
+    children,
     ...rest
   } = props;
   let sectionStyle: CSSProperties = {
@@ -56,28 +53,27 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
-        <ReactPlayer
-          url={videoURL || FALLBACK_VIDEO}
-          playing
-          muted
-          loop
-          width="100%"
-          height="auto"
-          controls={false}
-          className="aspect-video"
-        />
-        {enableOverlay ? (
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: overlayColor,
-              opacity: (overlayOpacity || 50) / 100,
-            }}
+        <Suspense fallback={null}>
+          <ReactPlayer
+            url={videoURL}
+            playing
+            muted
+            loop={true}
+            width="100%"
+            height="auto"
+            controls={false}
+            className="aspect-video"
           />
-        ) : null}
+        </Suspense>
+        <Overlay
+          enableOverlay={enableOverlay}
+          overlayColor={overlayColor}
+          overlayOpacity={overlayOpacity}
+          className="z-0"
+        />
         <div
           className={clsx(
-            "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center z-10",
+            "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
             gapClasses[gap],
           )}
         >
@@ -96,7 +92,7 @@ export let schema: HydrogenComponentSchema = {
   toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: "Video hero",
+      group: "Video",
       inputs: [
         {
           type: "text",
@@ -137,7 +133,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: "range",
           name: "gap",
-          label: "Content spacing",
+          label: "Items spacing",
           configs: {
             min: 0,
             max: 40,
@@ -146,26 +142,36 @@ export let schema: HydrogenComponentSchema = {
           },
           defaultValue: 20,
         },
-        ...overlayInputs,
       ],
+    },
+    {
+      group: "Overlay",
+      inputs: overlayInputs,
     },
   ],
   childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
     enableOverlay: true,
+    overlayColor: "#000000",
+    overlayOpacity: 40,
+    videoURL: "https://www.youtube.com/watch?v=gbLmku5QACM",
     children: [
       {
         type: "subheading",
         content: "Seamless hero videos",
+        color: "#fff",
       },
       {
         type: "heading",
         content: "Bring your brand to life.",
+        size: "jumbo",
+        color: "#fff",
       },
       {
         type: "paragraph",
         content:
           "Pair large video with a compelling message to captivate your audience.",
+        color: "#fff",
       },
     ],
   },
