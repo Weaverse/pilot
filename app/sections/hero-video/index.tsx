@@ -9,12 +9,33 @@ import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
 import { gapClasses } from "~/components/Section";
 
-type HeroVideoProps = OverlayProps & {
-  videoURL: string;
-  sectionHeightDesktop: number;
-  sectionHeightMobile: number;
-  gap: number;
+const HEIGHTS = {
+  small: {
+    desktop: "40vh",
+    mobile: "50vh",
+  },
+  medium: {
+    desktop: "50vh",
+    mobile: "60vh",
+  },
+  large: {
+    desktop: "70vh",
+    mobile: "80vh",
+  },
+  full: {
+    desktop: "calc(var(--screen-height, 100vh) - var(--height-nav))",
+    mobile: "calc(var(--screen-height, 100vh) - var(--height-nav))",
+  },
+  custom: null,
 };
+
+export interface HeroVideoProps extends OverlayProps {
+  videoURL: string;
+  height: "small" | "medium" | "large" | "full" | "custom";
+  heightOnDesktop: number;
+  heightOnMobile: number;
+  gap: number;
+}
 
 let ReactPlayer = lazy(() => import("react-player/lazy"));
 
@@ -25,17 +46,22 @@ let HeroVideo = forwardRef<
   let {
     videoURL,
     gap,
-    sectionHeightDesktop,
-    sectionHeightMobile,
+    height,
+    heightOnDesktop,
+    heightOnMobile,
     enableOverlay,
     overlayColor,
     overlayOpacity,
     children,
     ...rest
   } = props;
+
+  let desktopHeight = HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
+  let mobileHeight = HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
+
   let sectionStyle: CSSProperties = {
-    "--desktop-height": `${sectionHeightDesktop}px`,
-    "--mobile-height": `${sectionHeightMobile}px`,
+    "--desktop-height": desktopHeight,
+    "--mobile-height": mobileHeight,
   } as CSSProperties;
 
   return (
@@ -107,8 +133,23 @@ export let schema: HydrogenComponentSchema = {
           label: "Layout",
         },
         {
+          type: "select",
+          name: "height",
+          label: "Section height",
+          configs: {
+            options: [
+              { value: "small", label: "Small" },
+              { value: "medium", label: "Medium" },
+              { value: "large", label: "Large" },
+              { value: "full", label: "Fullscreen" },
+              { value: "custom", label: "Custom" },
+            ],
+          },
+          defaultValue: "medium",
+        },
+        {
           type: "range",
-          name: "sectionHeightDesktop",
+          name: "heightOnDesktop",
           label: "Height on desktop",
           defaultValue: 650,
           configs: {
@@ -117,10 +158,11 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
+          condition: "height.eq.custom",
         },
         {
           type: "range",
-          name: "sectionHeightMobile",
+          name: "heightOnMobile",
           label: "Height on mobile",
           defaultValue: 300,
           configs: {
@@ -129,6 +171,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
+          condition: "height.eq.custom",
         },
         {
           type: "range",
@@ -155,6 +198,7 @@ export let schema: HydrogenComponentSchema = {
     overlayColor: "#000000",
     overlayOpacity: 40,
     videoURL: "https://www.youtube.com/watch?v=gbLmku5QACM",
+    height: "medium",
     children: [
       {
         type: "subheading",
