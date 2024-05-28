@@ -111,7 +111,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
       {!isBackgroundForContent && <OverlayAndBackground {...props} />}
       <div
         className={clsx(
-          "relative overflow-hidden",
+          "relative overflow-hidden px-4",
           widthClasses[width!],
           gapClasses[gap!],
           verticalPaddingClasses[verticalPadding!],
