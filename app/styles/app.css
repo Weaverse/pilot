@@ -182,3 +182,8 @@
 .vt-product-image {
   view-transition-name: product-image;
 }
+
+.has-background {
+  background-color: var(--section-background-color);
+  border-radius: var(--section-border-radius);
+}

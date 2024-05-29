@@ -2,72 +2,71 @@ import {
   type HydrogenComponentProps,
   type InspectorGroup,
 } from "@weaverse/hydrogen";
-import clsx from "clsx";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import React, { forwardRef } from "react";
-import { removeFalsy } from "~/lib/utils";
+import { cn } from "~/lib/cn";
 import type { BackgroundImageProps } from "./BackgroundImage";
 import { BackgroundImage, backgroundInputs } from "./BackgroundImage";
 import type { OverlayProps } from "./Overlay";
 import { Overlay, overlayInputs } from "./Overlay";
 
-export type SectionWidth = "full" | "stretch" | "fixed";
-export type VerticalPadding = "none" | "small" | "medium" | "large";
-
-export type SectionProps = HydrogenComponentProps &
-  HTMLAttributes<HTMLElement> &
-  BackgroundImageProps &
-  OverlayProps &
-  Partial<{
-    as: React.ElementType;
-    width: SectionWidth;
-    gap: number;
-    className: string;
-    verticalPadding: VerticalPadding;
-    borderRadius: number;
-    backgroundColor: string;
-    backgroundFor: "section" | "content";
-    children: React.ReactNode;
-    containerClassName: string;
-  }>;
-
-export let gapClasses: Record<number, string> = {
-  0: "",
-  4: "space-y-1",
-  8: "space-y-2",
-  12: "space-y-3",
-  16: "space-y-4",
-  20: "space-y-5",
-  24: "space-y-3 lg:space-y-6",
-  28: "space-y-3.5 lg:space-y-7",
-  32: "space-y-4 lg:space-y-8",
-  36: "space-y-4 lg:space-y-9",
-  40: "space-y-5 lg:space-y-10",
-  44: "space-y-5 lg:space-y-11",
-  48: "space-y-6 lg:space-y-12",
-  52: "space-y-6 lg:space-y-[52px]",
-  56: "space-y-7 lg:space-y-14",
-  60: "space-y-7 lg:space-y-[60px]",
+export type BackgroundProps = BackgroundImageProps & {
+  backgroundFor: "section" | "content";
+  backgroundColor: string;
 };
 
-export let verticalPaddingClasses: Record<VerticalPadding, string> = {
-  none: "",
-  small: "py-4 md:py-6 lg:py-8",
-  medium: "py-8 md:py-12 lg:py-16",
-  large: "py-12 md:py-24 lg:py-32",
-};
+export interface SectionProps
+  extends Omit<VariantProps<typeof variants>, "padding">,
+    HydrogenComponentProps,
+    Omit<HTMLAttributes<HTMLElement>, "children">,
+    BackgroundProps,
+    OverlayProps {
+  as: React.ElementType;
+  borderRadius: number;
+  className: string;
+  containerClassName: string;
+}
 
-let paddingClasses = {
-  full: "",
-  stretch: "px-3 md:px-10 lg:px-16",
-  fixed: "px-3 md:px-4 lg:px-6 mx-auto",
-};
-
-export let widthClasses: Record<SectionWidth, string> = {
-  full: "w-full h-full",
-  stretch: "w-full h-full",
-  fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
-};
+let variants = cva("relative overflow-hidden", {
+  variants: {
+    width: {
+      full: "w-full h-full",
+      stretch: "w-full h-full",
+      fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
+    },
+    padding: {
+      full: "",
+      stretch: "px-3 md:px-10 lg:px-16",
+      fixed: "px-3 md:px-4 lg:px-6 mx-auto",
+    },
+    verticalPadding: {
+      none: "",
+      small: "py-4 md:py-6 lg:py-8",
+      medium: "py-8 md:py-12 lg:py-16",
+      large: "py-12 md:py-24 lg:py-32",
+    },
+    gap: {
+      0: "",
+      4: "space-y-1",
+      8: "space-y-2",
+      12: "space-y-3",
+      16: "space-y-4",
+      20: "space-y-5",
+      24: "space-y-3 lg:space-y-6",
+      28: "space-y-3.5 lg:space-y-7",
+      32: "space-y-4 lg:space-y-8",
+      36: "space-y-4 lg:space-y-9",
+      40: "space-y-5 lg:space-y-10",
+      44: "space-y-5 lg:space-y-11",
+      48: "space-y-6 lg:space-y-12",
+      52: "space-y-6 lg:space-y-[52px]",
+      56: "space-y-7 lg:space-y-14",
+      60: "space-y-7 lg:space-y-[60px]",
+    },
+  },
+});
 
 export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   let {
@@ -90,39 +89,37 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
-
-  let isBackgroundForContent = backgroundFor === "content";
+  style = {
+    ...style,
+    "--section-background-color": backgroundColor,
+    "--section-border-radius": `${borderRadius}px`,
+  } as React.CSSProperties;
+  let isBgForContent = backgroundFor === "content";
 
   return (
     <Component
       ref={ref}
       {...rest}
-      className={clsx(
-        "relative overflow-hidden",
-        paddingClasses[width!],
-        className,
-      )}
-      style={removeFalsy({
-        ...style,
-        backgroundColor: !isBackgroundForContent ? backgroundColor : "",
-        borderRadius: !isBackgroundForContent ? borderRadius : "",
+      style={style}
+      className={cn(variants({ padding: width, className }), {
+        "has-background": !isBgForContent,
       })}
     >
-      {!isBackgroundForContent && <OverlayAndBackground {...props} />}
+      {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
-        className={clsx(
-          "relative overflow-hidden",
-          widthClasses[width!],
-          gapClasses[gap!],
-          verticalPaddingClasses[verticalPadding!],
-          containerClassName,
+        className={cn(
+          variants({
+            gap,
+            width,
+            verticalPadding,
+            className: containerClassName,
+          }),
+          {
+            "has-background": isBgForContent,
+          },
         )}
-        style={removeFalsy({
-          backgroundColor: isBackgroundForContent ? backgroundColor : "",
-          borderRadius: isBackgroundForContent ? borderRadius : "",
-        })}
       >
-        {isBackgroundForContent && <OverlayAndBackground {...props} />}
+        {isBgForContent && <OverlayAndBackground {...props} />}
         {children}
       </div>
     </Component>

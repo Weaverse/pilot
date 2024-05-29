@@ -7,9 +7,9 @@ import type {
 import type { CSSProperties } from "react";
 
 export type BackgroundImageProps = {
-  backgroundImage?: WeaverseImage | string;
-  backgroundFit?: CSSProperties["objectFit"];
-  backgroundPosition?: PositionInputValue;
+  backgroundImage: WeaverseImage | string;
+  backgroundFit: CSSProperties["objectFit"];
+  backgroundPosition: PositionInputValue;
 };
 
 export function BackgroundImage(props: BackgroundImageProps) {

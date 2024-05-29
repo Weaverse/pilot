@@ -16,9 +16,9 @@ export interface HeroImageProps extends VariantProps<typeof variants> {}
 let variants = cva("", {
   variants: {
     height: {
-      small: "min-h-[375px] sm:min-h-[400px] lg:min-h-[440px]",
-      medium: "min-h-[480px] sm:min-h-[460px] lg:min-h-[500px]",
-      large: "min-h-[560px] sm:min-h-[560px] lg:min-h-[640px]",
+      small: "min-h-[40vh] lg:min-h-[50vh]",
+      medium: "min-h-[50vh] lg:min-h-[60vh]",
+      large: "min-h-[70vh] lg:min-h-[80vh]",
       full: "h-screen-no-nav",
     },
     contentPosition: {
