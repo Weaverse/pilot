@@ -2,12 +2,13 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { Suspense, forwardRef, lazy } from "react";
 import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
-import { gapClasses } from "~/components/Section";
 
 const HEIGHTS = {
   small: {
@@ -29,20 +30,48 @@ const HEIGHTS = {
   custom: null,
 };
 
-export interface HeroVideoProps extends OverlayProps {
+export interface HeroVideoProps
+  extends Omit<VariantProps<typeof variants>, "padding">,
+    HydrogenComponentProps,
+    OverlayProps {
   videoURL: string;
   height: "small" | "medium" | "large" | "full" | "custom";
   heightOnDesktop: number;
   heightOnMobile: number;
-  gap: number;
 }
+
+let variants = cva(
+  "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
+  {
+    variants: {
+      gap: {
+        0: "",
+        4: "space-y-1",
+        8: "space-y-2",
+        12: "space-y-3",
+        16: "space-y-4",
+        20: "space-y-5",
+        24: "space-y-3 lg:space-y-6",
+        28: "space-y-3.5 lg:space-y-7",
+        32: "space-y-4 lg:space-y-8",
+        36: "space-y-4 lg:space-y-9",
+        40: "space-y-5 lg:space-y-10",
+        44: "space-y-5 lg:space-y-11",
+        48: "space-y-6 lg:space-y-12",
+        52: "space-y-6 lg:space-y-[52px]",
+        56: "space-y-7 lg:space-y-14",
+        60: "space-y-7 lg:space-y-[60px]",
+      },
+    },
+    defaultVariants: {
+      gap: 20,
+    },
+  },
+);
 
 let ReactPlayer = lazy(() => import("react-player/lazy"));
 
-let HeroVideo = forwardRef<
-  HTMLElement,
-  HeroVideoProps & HydrogenComponentProps
->((props, ref) => {
+let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   let {
     videoURL,
     gap,
@@ -97,14 +126,7 @@ let HeroVideo = forwardRef<
           overlayOpacity={overlayOpacity}
           className="z-0"
         />
-        <div
-          className={clsx(
-            "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
-            gapClasses[gap],
-          )}
-        >
-          {children}
-        </div>
+        <div className={clsx(variants({ gap }))}>{children}</div>
       </div>
     </section>
   );
@@ -199,6 +221,7 @@ export let schema: HydrogenComponentSchema = {
     overlayOpacity: 40,
     videoURL: "https://www.youtube.com/watch?v=gbLmku5QACM",
     height: "medium",
+    gap: 20,
     children: [
       {
         type: "subheading",
