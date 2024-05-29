@@ -36,6 +36,7 @@ import {
 import { useRootLoaderData } from "~/root";
 
 import { Logo } from "./Logo";
+import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -282,24 +283,7 @@ function DesktopHeader({
         </nav>
       </div>
       <div className="flex items-center gap-1">
-        <Form
-          method="get"
-          action={params.locale ? `/${params.locale}/search` : "/search"}
-          className="flex items-center gap-2"
-        >
-          {/* <Input
-            type="search"
-            variant="minisearch"
-            placeholder="Search"
-            name="q"
-          /> */}
-          <button
-            type="submit"
-            className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
-          >
-            <IconSearch />
-          </button>
-        </Form>
+        <SearchToggle />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
@@ -319,6 +303,23 @@ function AccountLink({ className }: { className?: string }) {
         </Await>
       </Suspense>
     </Link>
+  );
+}
+
+function SearchToggle() {
+  const {isOpen, closeDrawer, openDrawer} = useDrawer();
+  return (
+    <>
+      <button
+        onClick={openDrawer}
+        className="relative flex h-8 w-8 items-center justify-center focus:ring-primary/5"
+      >
+        <IconSearch className="h-6 w-6 !font-extralight" />
+      </button>
+      <Drawer open={isOpen} onClose={closeDrawer} openFrom="top" heading="">
+        <PredictiveSearch isOpen={isOpen} />
+      </Drawer>
+    </>
   );
 }
 
