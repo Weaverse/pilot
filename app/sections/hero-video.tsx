@@ -2,40 +2,95 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { Suspense, forwardRef, lazy } from "react";
 import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
-import { gapClasses } from "~/components/Section";
 
-type HeroVideoProps = OverlayProps & {
-  videoURL: string;
-  sectionHeightDesktop: number;
-  sectionHeightMobile: number;
-  gap: number;
+const HEIGHTS = {
+  small: {
+    desktop: "40vh",
+    mobile: "50vh",
+  },
+  medium: {
+    desktop: "50vh",
+    mobile: "60vh",
+  },
+  large: {
+    desktop: "70vh",
+    mobile: "80vh",
+  },
+  full: {
+    desktop: "calc(var(--screen-height, 100vh) - var(--height-nav))",
+    mobile: "calc(var(--screen-height, 100vh) - var(--height-nav))",
+  },
+  custom: null,
 };
+
+export interface HeroVideoProps
+  extends Omit<VariantProps<typeof variants>, "padding">,
+    HydrogenComponentProps,
+    OverlayProps {
+  videoURL: string;
+  height: "small" | "medium" | "large" | "full" | "custom";
+  heightOnDesktop: number;
+  heightOnMobile: number;
+}
+
+let variants = cva(
+  "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
+  {
+    variants: {
+      gap: {
+        0: "",
+        4: "space-y-1",
+        8: "space-y-2",
+        12: "space-y-3",
+        16: "space-y-4",
+        20: "space-y-5",
+        24: "space-y-3 lg:space-y-6",
+        28: "space-y-3.5 lg:space-y-7",
+        32: "space-y-4 lg:space-y-8",
+        36: "space-y-4 lg:space-y-9",
+        40: "space-y-5 lg:space-y-10",
+        44: "space-y-5 lg:space-y-11",
+        48: "space-y-6 lg:space-y-12",
+        52: "space-y-6 lg:space-y-[52px]",
+        56: "space-y-7 lg:space-y-14",
+        60: "space-y-7 lg:space-y-[60px]",
+      },
+    },
+    defaultVariants: {
+      gap: 20,
+    },
+  },
+);
 
 let ReactPlayer = lazy(() => import("react-player/lazy"));
 
-let HeroVideo = forwardRef<
-  HTMLElement,
-  HeroVideoProps & HydrogenComponentProps
->((props, ref) => {
+let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   let {
     videoURL,
     gap,
-    sectionHeightDesktop,
-    sectionHeightMobile,
+    height,
+    heightOnDesktop,
+    heightOnMobile,
     enableOverlay,
     overlayColor,
     overlayOpacity,
     children,
     ...rest
   } = props;
+
+  let desktopHeight = HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
+  let mobileHeight = HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
+
   let sectionStyle: CSSProperties = {
-    "--desktop-height": `${sectionHeightDesktop}px`,
-    "--mobile-height": `${sectionHeightMobile}px`,
+    "--desktop-height": desktopHeight,
+    "--mobile-height": mobileHeight,
   } as CSSProperties;
 
   return (
@@ -71,14 +126,7 @@ let HeroVideo = forwardRef<
           overlayOpacity={overlayOpacity}
           className="z-0"
         />
-        <div
-          className={clsx(
-            "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
-            gapClasses[gap],
-          )}
-        >
-          {children}
-        </div>
+        <div className={clsx(variants({ gap }))}>{children}</div>
       </div>
     </section>
   );
@@ -107,8 +155,23 @@ export let schema: HydrogenComponentSchema = {
           label: "Layout",
         },
         {
+          type: "select",
+          name: "height",
+          label: "Section height",
+          configs: {
+            options: [
+              { value: "small", label: "Small" },
+              { value: "medium", label: "Medium" },
+              { value: "large", label: "Large" },
+              { value: "full", label: "Fullscreen" },
+              { value: "custom", label: "Custom" },
+            ],
+          },
+          defaultValue: "medium",
+        },
+        {
           type: "range",
-          name: "sectionHeightDesktop",
+          name: "heightOnDesktop",
           label: "Height on desktop",
           defaultValue: 650,
           configs: {
@@ -117,10 +180,11 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
+          condition: "height.eq.custom",
         },
         {
           type: "range",
-          name: "sectionHeightMobile",
+          name: "heightOnMobile",
           label: "Height on mobile",
           defaultValue: 300,
           configs: {
@@ -129,6 +193,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
+          condition: "height.eq.custom",
         },
         {
           type: "range",
@@ -155,6 +220,8 @@ export let schema: HydrogenComponentSchema = {
     overlayColor: "#000000",
     overlayOpacity: 40,
     videoURL: "https://www.youtube.com/watch?v=gbLmku5QACM",
+    height: "medium",
+    gap: 20,
     children: [
       {
         type: "subheading",
