@@ -5,9 +5,9 @@ import type {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { clsx } from "clsx";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
+import { cn } from "~/lib/cn";
 import { Link } from "~/modules";
 
 export interface ButtonProps extends VariantProps<typeof variants> {
@@ -96,7 +96,7 @@ let Button = forwardRef<HTMLElement, Props>((props, ref) => {
         ref={ref as React.ForwardedRef<HTMLAnchorElement>}
         style={style}
         {...rest}
-        className={clsx(variants({ variant, className }))}
+        className={cn(variants({ variant, className }))}
         to={link || "/"}
         target={openInNewTab ? "_blank" : "_self"}
         rel="noreferrer"
@@ -111,7 +111,7 @@ let Button = forwardRef<HTMLElement, Props>((props, ref) => {
       style={style}
       {...rest}
       type="button"
-      className={clsx(variants({ variant, className }))}
+      className={cn(variants({ variant, className }))}
     >
       {text}
     </button>
