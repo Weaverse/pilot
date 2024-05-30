@@ -89,34 +89,32 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
+
   style = {
     ...style,
     "--section-background-color": backgroundColor,
     "--section-border-radius": `${borderRadius}px`,
   } as React.CSSProperties;
+
   let isBgForContent = backgroundFor === "content";
+  let hasBackground = backgroundColor || backgroundImage;
 
   return (
     <Component
       ref={ref}
       {...rest}
       style={style}
-      className={cn(variants({ padding: width, className }), {
-        "has-background": !isBgForContent,
-      })}
+      className={cn(
+        variants({ padding: width, className }),
+        hasBackground && !isBgForContent && "has-background",
+      )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
         className={cn(
-          variants({
-            gap,
-            width,
-            verticalPadding,
-            className: containerClassName,
-          }),
-          {
-            "has-background": isBgForContent,
-          },
+          variants({ gap, width, verticalPadding }),
+          containerClassName,
+          hasBackground && isBgForContent && "has-background px-2 sm:px-4",
         )}
       >
         {isBgForContent && <OverlayAndBackground {...props} />}
