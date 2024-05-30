@@ -97,7 +97,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   } as React.CSSProperties;
 
   let isBgForContent = backgroundFor === "content";
-  let hasBackground = backgroundColor || backgroundImage;
+  let hasBackground = backgroundColor || backgroundImage || borderRadius > 0;
 
   return (
     <Component
