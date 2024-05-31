@@ -16,7 +16,6 @@ type SubHeadingProps = HydrogenComponentProps & {
   size?: Size;
   weight?: Weight;
   alignment: Alignment;
-  className?: string;
 };
 
 let sizes: Record<Size, string> = {

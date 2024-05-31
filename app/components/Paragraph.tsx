@@ -11,7 +11,6 @@ export interface ParagraphProps extends VariantProps<typeof variants> {
   as?: "p" | "div";
   content: string;
   color?: string;
-  className?: string;
 }
 
 let variants = cva("paragraph", {

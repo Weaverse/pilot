@@ -25,7 +25,6 @@ export interface SectionProps
     OverlayProps {
   as: React.ElementType;
   borderRadius: number;
-  className: string;
   containerClassName: string;
 }
 
@@ -89,34 +88,32 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
+
   style = {
     ...style,
     "--section-background-color": backgroundColor,
     "--section-border-radius": `${borderRadius}px`,
   } as React.CSSProperties;
+
   let isBgForContent = backgroundFor === "content";
+  let hasBackground = backgroundColor || backgroundImage || borderRadius > 0;
 
   return (
     <Component
       ref={ref}
       {...rest}
       style={style}
-      className={cn(variants({ padding: width, className }), {
-        "has-background": !isBgForContent,
-      })}
+      className={cn(
+        variants({ padding: width, className }),
+        hasBackground && !isBgForContent && "has-background",
+      )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
         className={cn(
-          variants({
-            gap,
-            width,
-            verticalPadding,
-            className: containerClassName,
-          }),
-          {
-            "has-background": isBgForContent,
-          },
+          variants({ gap, width, verticalPadding }),
+          containerClassName,
+          hasBackground && isBgForContent && "has-background px-2 sm:px-4",
         )}
       >
         {isBgForContent && <OverlayAndBackground {...props} />}
@@ -206,7 +203,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
 ];
 
 export let sectionInspector: InspectorGroup[] = [
-  { group: "Layout", inputs: [...layoutInputs] },
-  { group: "Background", inputs: [...backgroundInputs] },
-  { group: "Overlay", inputs: [...overlayInputs] },
+  { group: "Layout", inputs: layoutInputs },
+  { group: "Background", inputs: backgroundInputs },
+  { group: "Overlay", inputs: overlayInputs },
 ];
