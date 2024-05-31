@@ -19,7 +19,6 @@ type HeadingProps = HydrogenComponentProps & {
   weight?: Weight;
   tracking?: Tracking;
   alignment?: Alignment;
-  className?: string;
   minSize?: number;
   maxSize?: number;
 };

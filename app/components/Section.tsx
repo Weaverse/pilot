@@ -25,7 +25,6 @@ export interface SectionProps
     OverlayProps {
   as: React.ElementType;
   borderRadius: number;
-  className: string;
   containerClassName: string;
 }
 
@@ -204,7 +203,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
 ];
 
 export let sectionInspector: InspectorGroup[] = [
-  { group: "Layout", inputs: [...layoutInputs] },
-  { group: "Background", inputs: [...backgroundInputs] },
-  { group: "Overlay", inputs: [...overlayInputs] },
+  { group: "Layout", inputs: layoutInputs },
+  { group: "Background", inputs: backgroundInputs },
+  { group: "Overlay", inputs: overlayInputs },
 ];
