@@ -1,50 +1,24 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import { clsx } from "clsx";
+import { backgroundInputs } from "~/components/BackgroundImage";
+import { overlayInputs } from "~/components/Overlay";
+import type { SectionProps } from "~/components/Section";
+import { Section, layoutInputs } from "~/components/Section";
 
-type AlignImage = "left" | "right";
-interface ImageWithTextProps extends HydrogenComponentProps {
-  sectionHeight: number;
-  backgroundColor: string;
-  imageAlignment?: AlignImage;
-}
-
-let AlignImageClasses: Record<AlignImage, string> = {
-  left: "flex-row-reverse",
-  right: "flex-row",
-};
+type ImageWithTextProps = SectionProps;
 
 let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
   (props, ref) => {
-    let { imageAlignment, sectionHeight, backgroundColor, children, ...rest } =
-      props;
-    let styleSection: CSSProperties = {
-      "--section-height": `${sectionHeight}px`,
-      backgroundColor,
-    } as CSSProperties;
+    let { children, ...rest } = props;
 
     return (
-      <section
+      <Section
         ref={ref}
         {...rest}
-        style={styleSection}
-        className="h-[var(--section-height)] sm-max:h-auto sm-max:overflow-hidden"
+        containerClassName="flex flex-col md:flex-row"
       >
-        <div className="h-full px-10 sm-max:px-6 sm-max:w-full">
-          <div
-            className={clsx(
-              "flex justify-center items-center gap-5 h-full w-full sm-max:flex-col",
-              AlignImageClasses[imageAlignment!],
-            )}
-          >
-            {children}
-          </div>
-        </div>
-      </section>
+        {children}
+      </Section>
     );
   },
 );
@@ -57,50 +31,17 @@ export let schema: HydrogenComponentSchema = {
   toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: "Image",
-      inputs: [
-        {
-          type: "toggle-group",
-          label: "Image alignment",
-          name: "imageAlignment",
-          configs: {
-            options: [
-              { label: "Left", value: "left", icon: "align-left" },
-              { label: "Right", value: "right", icon: "align-right" },
-            ],
-          },
-          defaultValue: "left",
-        },
-        {
-          type: "range",
-          name: "sectionHeight",
-          label: "Section height",
-          defaultValue: 450,
-          configs: {
-            min: 400,
-            max: 700,
-            step: 10,
-            unit: "px",
-          },
-        },
-        {
-          type: "color",
-          name: "backgroundColor",
-          label: "Background color",
-          defaultValue: "#f4f4f4",
-        },
-      ],
+      group: "Layout",
+      inputs: layoutInputs.filter(({ name }) => name !== "gap"),
     },
+    { group: "Background", inputs: backgroundInputs },
+    { group: "Overlay", inputs: overlayInputs },
   ],
   childTypes: ["image-with-text--content", "image-with-text--image"],
   presets: {
     children: [
-      {
-        type: "image-with-text--content",
-      },
-      {
-        type: "image-with-text--image",
-      },
+      { type: "image-with-text--image" },
+      { type: "image-with-text--content" },
     ],
   },
 };
