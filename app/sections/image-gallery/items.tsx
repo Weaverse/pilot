@@ -16,7 +16,7 @@ let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
       <div
         ref={ref}
         {...rest}
-        className="flex flex-col sm:grid sm:grid-cols-4 px-4"
+        className="flex flex-col sm:grid sm:grid-cols-4"
         style={{ gap: `${gap}px` }}
       >
         {children}
