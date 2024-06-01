@@ -2,6 +2,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { Heading, IconClose } from "~/modules";
+import { cn } from "~/lib/cn";
 
 /**
  * Drawer component that opens on user click.
@@ -21,12 +22,14 @@ export function Drawer({
   heading?: string;
   open: boolean;
   onClose: () => void;
-  openFrom: "right" | "left";
+  openFrom: "right" | "left" | "top";
   children: React.ReactNode;
 }) {
   const offScreen = {
     right: "translate-x-full",
     left: "-translate-x-full",
+    top: '-translate-y-full'
+
   };
 
   return (
@@ -60,7 +63,10 @@ export function Drawer({
                 leaveFrom="translate-x-0"
                 leaveTo={offScreen[openFrom]}
               >
-                <Dialog.Panel className="w-screen max-w-lg text-left align-middle transition-all transform shadow-xl h-screen-dynamic bg-primary">
+                <Dialog.Panel className={cn("w-screen text-left align-middle transition-all transform shadow-xl  bg-primary",
+                  openFrom === 'top' ? 'h-fit' : "max-w-lg h-screen-dynamic"
+                
+                )}>
                   <header
                     className={`sticky top-0 flex items-center px-6 h-nav sm:px-8 md:px-12 ${
                       heading ? "justify-between" : "justify-end"
