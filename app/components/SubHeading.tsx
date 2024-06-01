@@ -2,37 +2,41 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import { clsx } from "clsx";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
+import { cn } from "~/lib/cn";
 
-import type { Alignment } from "~/lib/type";
+let variants = cva("subheading", {
+  variants: {
+    size: {
+      base: "text-base",
+      large: "text-lg",
+    },
+    weight: {
+      normal: "font-normal",
+      medium: "font-medium",
+    },
+    alignment: {
+      left: "text-left",
+      center: "text-center",
+      right: "text-right",
+    },
+  },
+  defaultVariants: {
+    size: "base",
+    weight: "normal",
+    alignment: "center",
+  },
+});
 
-type Size = "base" | "large";
-type Weight = "normal" | "medium";
-type SubHeadingProps = HydrogenComponentProps & {
-  content: string;
+interface SubHeadingProps
+  extends VariantProps<typeof variants>,
+    HydrogenComponentProps {
   as?: "h4" | "h5" | "h6" | "div" | "p";
   color?: string;
-  size?: Size;
-  weight?: Weight;
-  alignment: Alignment;
-};
-
-let sizes: Record<Size, string> = {
-  base: "text-base",
-  large: "text-lg",
-};
-
-let weightClasses: Record<Weight, string> = {
-  normal: "font-normal",
-  medium: "font-medium",
-};
-
-let alignmentClasses: Record<Alignment, string> = {
-  left: "text-left",
-  center: "text-center",
-  right: "text-right",
-};
+  content: string;
+}
 
 let SubHeading = forwardRef<
   HTMLHeadingElement | HTMLParagraphElement | HTMLDivElement,
@@ -53,12 +57,7 @@ let SubHeading = forwardRef<
       ref={ref}
       {...rest}
       style={{ color }}
-      className={clsx(
-        sizes[size!],
-        weightClasses[weight!],
-        alignmentClasses[alignment!],
-        className,
-      )}
+      className={cn(variants({ size, weight, alignment, className }))}
     >
       {content}
     </Tag>

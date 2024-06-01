@@ -2,54 +2,56 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import { clsx } from "clsx";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
+import { cn } from "~/lib/cn";
 
-import type { Alignment } from "~/lib/type";
+let variants = cva("heading", {
+  variants: {
+    size: {
+      default: "",
+      lead: "text-lg leading-snug",
+      heading: "text-lg sm:text-2xl",
+      display: "text-xl sm:text-4xl sm:leading-normal",
+      jumbo: "text-2xl sm:text-5xl tracking-tight",
+      scale: "text-scale",
+    },
+    weight: {
+      medium: "font-medium",
+      semibold: "font-semibold",
+      bold: "font-bold",
+      extrabold: "font-extrabold",
+    },
+    tracking: {
+      tight: "tracking-tight",
+      inherit: "",
+      wide: "tracking-wider",
+    },
+    alignment: {
+      left: "text-left",
+      center: "text-center",
+      right: "text-right",
+    },
+  },
+  defaultVariants: {
+    size: "default",
+    weight: "medium",
+    tracking: "inherit",
+    alignment: "center",
+  },
+});
 
-type Size = "default" | "lead" | "heading" | "display" | "jumbo" | "scale";
-type Weight = "medium" | "semibold" | "bold" | "extrabold";
-type Tracking = "tight" | "inherit" | "wide";
-type HeadingProps = HydrogenComponentProps & {
+interface HeadingProps
+  extends VariantProps<typeof variants>,
+    HydrogenComponentProps {
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   content: string;
-  as?: "h1" | "h2" | "h3" | "h4";
-  size?: Size;
   color?: string;
-  weight?: Weight;
-  tracking?: Tracking;
-  alignment?: Alignment;
   minSize?: number;
   maxSize?: number;
-};
-
-let alignmentClasses: Record<Alignment, string> = {
-  left: "text-left",
-  center: "text-center",
-  right: "text-right",
-};
-
-let sizes: Record<Size, string> = {
-  default: "",
-  lead: "text-lg leading-snug",
-  heading: "text-lg sm:text-2xl",
-  display: "text-xl sm:text-4xl sm:leading-normal",
-  jumbo: "text-2xl sm:text-5xl tracking-tight",
-  scale: "text-scale",
-};
-
-let weightClasses: Record<Weight, string> = {
-  medium: "font-medium",
-  semibold: "font-semibold",
-  bold: "font-bold",
-  extrabold: "font-extrabold",
-};
-
-let trackingClasses: Record<Tracking, string> = {
-  tight: "tracking-tight",
-  inherit: "",
-  wide: "tracking-wider",
-};
+}
 
 let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
   let {
@@ -79,13 +81,7 @@ let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
       ref={ref}
       {...rest}
       style={style}
-      className={clsx(
-        sizes[size!],
-        weightClasses[weight!],
-        trackingClasses[tracking!],
-        alignmentClasses[alignment!],
-        className,
-      )}
+      className={cn(variants({ size, weight, tracking, alignment, className }))}
     >
       {content}
     </Tag>
