@@ -5,7 +5,7 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
@@ -13,6 +13,7 @@ import { Button, PageHeader, Section, SortFilter, Text } from "~/modules";
 import type { AppliedFilter } from "~/modules/SortFilter";
 
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
+import { DrawerFilter } from "~/modules/DrawerFilter";
 
 interface CollectionFiltersProps extends HydrogenComponentProps {
   showCollectionDescription: boolean;
@@ -26,12 +27,18 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       props;
 
     let { ref, inView } = useInView();
+    let [numberInRow, setNumberInRow] = useState(4);
+    let onLayoutChange = (number: number) => {
+      setNumberInRow(number);
+    }
     let { collection, collections, appliedFilters } = useLoaderData<
       CollectionDetailsQuery & {
         collections: Array<{ handle: string; title: string }>;
         appliedFilters: AppliedFilter[];
       }
     >();
+    let productNumber = collection?.products.nodes.length;
+
 
     if (collection?.products && collections) {
       return (
@@ -47,12 +54,15 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
               </div>
             )}
           </PageHeader>
+          <DrawerFilter
+            numberInRow={numberInRow}
+            onLayoutChange={onLayoutChange}
+            productNumber={productNumber}
+            filters={collection.products.filters as Filter[]}
+            appliedFilters={appliedFilters}
+            collections={collections}
+          />
           <Section as="div">
-            <SortFilter
-              filters={collection.products.filters as Filter[]}
-              appliedFilters={appliedFilters}
-              collections={collections}
-            >
               <Pagination connection={collection.products}>
                 {({
                   nodes,
@@ -64,7 +74,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                   state,
                 }) => (
                   <>
-                    <div className="flex items-center justify-center mb-6">
+                    <div className="flex items-center justify-center mb-6 empty:hidden">
                       <Button
                         as={PreviousLink}
                         variant="secondary"
@@ -74,6 +84,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                       </Button>
                     </div>
                     <ProductsLoadedOnScroll
+                      numberInRow={numberInRow}
                       nodes={nodes}
                       inView={inView}
                       nextPageUrl={nextPageUrl}
@@ -93,7 +104,6 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                   </>
                 )}
               </Pagination>
-            </SortFilter>
           </Section>
         </section>
       );

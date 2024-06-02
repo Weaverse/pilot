@@ -24,6 +24,7 @@
     "@fontsource/poppins": "^5.0.14",
     "@graphql-codegen/cli": "^5.0.2",
     "@headlessui/react": "2.0.3",
+    "@radix-ui/react-checkbox": "^1.0.4",
     "@remix-run/react": "2.9.2",
     "@remix-run/server-runtime": "2.9.2",
     "@shopify/cli": "3.60.1",
