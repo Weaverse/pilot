@@ -37,6 +37,7 @@ import { useRootLoaderData } from "~/root";
 
 import { Logo } from "./Logo";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
+import { MegaMenu } from "./MegaMenu";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -261,27 +262,8 @@ function DesktopHeader({
         "w-full px-6 md:px-8 lg:px-12 py-4",
       )}
     >
-      <div className="flex gap-12">
         <Logo />
-        <nav className="flex gap-8 items-center">
-          {/* Top level menu items */}
-          {(menu?.items || []).map((item) => (
-            <Link
-              key={item.id}
-              to={item.to}
-              target={item.target}
-              prefetch="intent"
-              className={({ isActive }) =>
-                isActive
-                  ? "pb-1 border-b -mb-px font-medium"
-                  : "pb-1 font-medium"
-              }
-            >
-              {item.title}
-            </Link>
-          ))}
-        </nav>
-      </div>
+        <MegaMenu />
       <div className="flex items-center gap-1">
         <SearchToggle />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
