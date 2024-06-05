@@ -3,13 +3,10 @@ import { forwardRef } from "react";
 import type { SectionProps } from "~/components/Section";
 import { Section, sectionInspector } from "~/components/Section";
 
-type TestimonialsProps = SectionProps & {
-  heading: string;
-  description: string;
-};
+type TestimonialsProps = SectionProps;
 
 let Testimonials = forwardRef<HTMLElement, TestimonialsProps>((props, ref) => {
-  let { heading, description, children, ...rest } = props;
+  let { children, ...rest } = props;
 
   return (
     <Section ref={ref} {...rest}>
