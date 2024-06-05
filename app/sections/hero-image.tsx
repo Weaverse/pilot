@@ -106,7 +106,7 @@ export let schema: HydrogenComponentSchema = {
         ),
       ],
     },
-    { group: "Overlay", inputs: [...overlayInputs] },
+    { group: "Overlay", inputs: overlayInputs },
   ],
   childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {

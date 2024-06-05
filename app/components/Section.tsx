@@ -17,19 +17,19 @@ export type BackgroundProps = BackgroundImageProps & {
   backgroundColor: string;
 };
 
-export interface SectionProps
+export interface SectionProps<T = any>
   extends Omit<VariantProps<typeof variants>, "padding">,
-    HydrogenComponentProps,
+    Omit<HydrogenComponentProps<T>, "children">,
     Omit<HTMLAttributes<HTMLElement>, "children">,
     BackgroundProps,
     OverlayProps {
   as: React.ElementType;
   borderRadius: number;
-  className: string;
   containerClassName: string;
+  children: React.ReactNode;
 }
 
-let variants = cva("relative overflow-hidden", {
+let variants = cva("relative", {
   variants: {
     width: {
       full: "w-full h-full",
@@ -65,6 +65,13 @@ let variants = cva("relative overflow-hidden", {
       56: "space-y-7 lg:space-y-14",
       60: "space-y-7 lg:space-y-[60px]",
     },
+    overflow: {
+      unset: "",
+      hidden: "overflow-hidden",
+    },
+  },
+  defaultVariants: {
+    overflow: "hidden",
   },
 });
 
@@ -73,6 +80,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     as: Component = "section",
     width,
     gap,
+    overflow,
     verticalPadding,
     borderRadius,
     backgroundColor,
@@ -89,34 +97,32 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
+
   style = {
     ...style,
     "--section-background-color": backgroundColor,
-    "--section-border-radius": `${borderRadius}px`,
+    "--section-border-radius": `${borderRadius || 0}px`,
   } as React.CSSProperties;
+
   let isBgForContent = backgroundFor === "content";
+  let hasBackground = backgroundColor || backgroundImage || borderRadius > 0;
 
   return (
     <Component
       ref={ref}
       {...rest}
       style={style}
-      className={cn(variants({ padding: width, className }), {
-        "has-background": !isBgForContent,
-      })}
+      className={cn(
+        variants({ padding: width, overflow, className }),
+        hasBackground && !isBgForContent && "has-background",
+      )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
         className={cn(
-          variants({
-            gap,
-            width,
-            verticalPadding,
-            className: containerClassName,
-          }),
-          {
-            "has-background": isBgForContent,
-          },
+          variants({ gap, width, verticalPadding, overflow }),
+          containerClassName,
+          hasBackground && isBgForContent && "has-background px-2 sm:px-4",
         )}
       >
         {isBgForContent && <OverlayAndBackground {...props} />}
@@ -206,7 +212,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
 ];
 
 export let sectionInspector: InspectorGroup[] = [
-  { group: "Layout", inputs: [...layoutInputs] },
-  { group: "Background", inputs: [...backgroundInputs] },
-  { group: "Overlay", inputs: [...overlayInputs] },
+  { group: "Layout", inputs: layoutInputs },
+  { group: "Background", inputs: backgroundInputs },
+  { group: "Overlay", inputs: overlayInputs },
 ];

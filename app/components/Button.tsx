@@ -10,21 +10,6 @@ import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
 import { Link } from "~/modules";
 
-export interface ButtonProps extends VariantProps<typeof variants> {
-  as?: keyof HTMLElementTagNameMap;
-  className?: string;
-  text: string;
-  link?: string;
-  openInNewTab?: boolean;
-  buttonStyle?: "inherit" | "custom";
-  backgroundColor?: string;
-  textColor?: string;
-  borderColor?: string;
-  backgroundColorHover?: string;
-  textColorHover?: string;
-  borderColorHover?: string;
-}
-
 let variants = cva(
   "inline-flex items-center justify-center whitespace-nowrap text-base font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
   {
@@ -53,12 +38,25 @@ let variants = cva(
   },
 );
 
-interface Props
-  extends ButtonProps,
+export interface ButtonProps
+  extends VariantProps<typeof variants>,
     Omit<HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, "children">,
-    Partial<HydrogenComponentProps> {}
+    Partial<HydrogenComponentProps> {
+  as?: keyof HTMLElementTagNameMap;
+  className?: string;
+  text: string;
+  link?: string;
+  openInNewTab?: boolean;
+  buttonStyle?: "inherit" | "custom";
+  backgroundColor?: string;
+  textColor?: string;
+  borderColor?: string;
+  backgroundColorHover?: string;
+  textColorHover?: string;
+  borderColorHover?: string;
+}
 
-let Button = forwardRef<HTMLElement, Props>((props, ref) => {
+let Button = forwardRef<HTMLElement, ButtonProps>((props, ref) => {
   let {
     // as = "button",
     variant,

@@ -4,30 +4,51 @@ import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { forwardRef } from "react";
 
-interface ImageGalleryItemProps extends HydrogenComponentProps {
+let variants = cva("h-72 object-cover object-center w-full", {
+  variants: {
+    columnSpan: {
+      1: "col-span-1",
+      2: "col-span-2",
+      3: "col-span-3",
+      4: "col-span-4",
+    },
+    borderRadius: {
+      0: "",
+      2: "rounded-sm",
+      4: "rounded",
+      6: "rounded-md",
+      8: "rounded-lg",
+      10: "rounded-[10px]",
+      12: "rounded-xl",
+      14: "rounded-[14px]",
+      16: "rounded-2xl",
+      18: "rounded-[18px]",
+      20: "rounded-[20px]",
+      22: "rounded-[22px]",
+      24: "rounded-3xl",
+    },
+    hideOnMobile: {
+      true: "hidden sm:block",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    columnSpan: 1,
+    borderRadius: 8,
+    hideOnMobile: false,
+  },
+});
+
+interface ImageGalleryItemProps
+  extends VariantProps<typeof variants>,
+    HydrogenComponentProps {
   src: WeaverseImage;
-  columnSpan: number;
-  borderRadius: number;
-  hideOnMobile: boolean;
 }
-
-let columnSpanClasses: { [span: number]: string } = {
-  1: "col-span-1",
-  2: "col-span-2",
-  3: "col-span-3",
-  4: "col-span-4",
-};
-
-let radiusClasses: { [radius: string]: string } = {
-  0: "",
-  2: "rounded-sm",
-  4: "rounded",
-  6: "rounded-md",
-  8: "rounded-lg",
-};
 
 let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
   (props, ref) => {
@@ -37,12 +58,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
       <Image
         ref={ref}
         {...rest}
-        className={clsx(
-          "h-72 object-cover object-center w-full",
-          columnSpanClasses[columnSpan],
-          radiusClasses[borderRadius],
-          hideOnMobile && "hidden sm:block",
-        )}
+        className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
         data={data}
         sizes={`(min-width: 45em) 50vw, 100vw`}
       />
@@ -83,7 +99,7 @@ export let schema: HydrogenComponentSchema = {
           name: "borderRadius",
           configs: {
             min: 0,
-            max: 8,
+            max: 24,
             step: 2,
             unit: "px",
           },
