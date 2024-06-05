@@ -1,21 +1,20 @@
-import {useFetcher} from '@remix-run/react';
-import {Jsonify} from '@remix-run/server-runtime/dist/jsonify';
-import {Money, ShopPayButton} from '@shopify/hydrogen';
-import {useThemeSettings} from '@weaverse/hydrogen';
-import {useEffect, useState} from 'react';
-import {getExcerpt} from '~/lib/utils';
-import {ProductDetail} from '~/sections/product-information/product-detail';
-import {AddToCartButton} from './AddToCartButton';
-import {ProductMedia} from './product-form/product-media';
-import {Quantity} from './product-form/quantity';
-import {ProductVariants} from './product-form/variants';
-import { ProductData } from '~/lib/products';
-import { Button } from './Button';
-import { Modal } from './Modal';
+import { useFetcher } from "@remix-run/react";
+import type { Jsonify } from "@remix-run/server-runtime/dist/jsonify";
+import { Money, ShopPayButton } from "@shopify/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
+import { useEffect, useState } from "react";
+import { getExcerpt } from "~/lib/utils";
+import { ProductDetail } from "~/sections/product-information/product-detail";
+import { AddToCartButton } from "./AddToCartButton";
+import { ProductMedia } from "./product-form/product-media";
+import { Quantity } from "./product-form/quantity";
+import { ProductVariants } from "./product-form/variants";
+import type { ProductData } from "~/lib/products";
+import { Button } from "./Button";
+import { Modal } from "./Modal";
 
-
-export function QuickView(props: {data: Jsonify<ProductData>}) {
-  const {data} = props;
+export function QuickView(props: { data: Jsonify<ProductData> }) {
+  const { data } = props;
 
   let themeSettings = useThemeSettings();
   let swatches = themeSettings?.swatches || {
@@ -25,7 +24,7 @@ export function QuickView(props: {data: Jsonify<ProductData>}) {
       colorSwatches: [],
     },
   };
-  let {product, variants: _variants, storeDomain, shop} = data || {};
+  let { product, variants: _variants, storeDomain, shop } = data || {};
 
   let [selectedVariant, setSelectedVariant] = useState<any>(
     product?.selectedVariant,
@@ -47,7 +46,7 @@ export function QuickView(props: {data: Jsonify<ProductData>}) {
   let handleSelectedVariantChange = (variant: any) => {
     setSelectedVariant(variant);
   };
-  console.log("🚀 ~ QuickView ~ selectedVariant:", selectedVariant)
+  console.log("🚀 ~ QuickView ~ selectedVariant:", selectedVariant);
   useEffect(() => {
     if (variants?.nodes?.length) {
       if (!selectedVariant) {
@@ -59,9 +58,9 @@ export function QuickView(props: {data: Jsonify<ProductData>}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.id]);
 
-  const {shippingPolicy, refundPolicy} = shop;
+  const { shippingPolicy, refundPolicy } = shop;
 
-  const {title, vendor, descriptionHtml} = product;
+  const { title, vendor, descriptionHtml } = product;
   let atcText = selectedVariant?.availableForSale
     ? addToCartText
     : selectedVariant?.quantityAvailable === -1
@@ -167,13 +166,12 @@ export function QuickView(props: {data: Jsonify<ProductData>}) {
   );
 }
 
-export function QuickViewTrigger(props: {productHandle: string}) {
+export function QuickViewTrigger(props: { productHandle: string }) {
   let [quickAddOpen, setQuickAddOpen] = useState(false);
-  const {productHandle} = props;
-  let {load, data, state} = useFetcher<ProductData>();
-  console.log("🚀 ~ QuickViewTrigger ~ data:", data, productHandle)
+  const { productHandle } = props;
+  let { load, data, state } = useFetcher<ProductData>();
   useEffect(() => {
-    if (quickAddOpen && !data && state !== 'loading') {
+    if (quickAddOpen && !data && state !== "loading") {
       load(`/api/query/products?handle=${productHandle}`);
     }
   }, [quickAddOpen, data, load, state]);
@@ -186,14 +184,14 @@ export function QuickViewTrigger(props: {productHandle: string}) {
             e.stopPropagation();
             setQuickAddOpen(true);
           }}
-          loading={state === 'loading'}
+          loading={state === "loading"}
           className="w-full"
         >
           Select options
         </Button>
       </div>
       {quickAddOpen && data && (
-        <Modal cancelLink='' onClose={() => setQuickAddOpen(false)}>
+        <Modal cancelLink="" onClose={() => setQuickAddOpen(false)}>
           <QuickView data={data} />
         </Modal>
       )}
