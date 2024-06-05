@@ -2,7 +2,7 @@
   "name": "@weaverse/pilot",
   "private": true,
   "sideEffects": false,
-  "version": "2.6.11",
+  "version": "2.6.12",
   "type": "module",
   "author": "Weaverse",
   "scripts": {
@@ -40,6 +40,7 @@
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.378.0",
     "react": "18.3.1",
+    "react-country-flag": "^3.1.0",
     "react-dom": "18.3.1",
     "react-intersection-observer": "9.10.2",
     "react-player": "^2.16.0",
