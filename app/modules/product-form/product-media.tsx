@@ -74,7 +74,7 @@ export function ProductMedia(props: ProductMediaProps) {
     // thumbnailInstance.current?.update(thumbnailOptions);
     let selectedInd = media.findIndex((med) => {
       if (med.__typename !== "MediaImage") return false;
-      return med.image?.url === selectedVariant.image.url;
+      return med.image?.url === selectedVariant?.image.url;
     });
     moveToIdx(selectedInd);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,6 +3,7 @@ import { Link } from "@remix-run/react";
 import clsx from "clsx";
 
 import { missingClass } from "~/lib/utils";
+import { cn } from "~/lib/cn";
 
 export const Button = forwardRef(
   (
@@ -41,7 +42,7 @@ export const Button = forwardRef(
       full: "w-full",
     };
 
-    const styles = clsx(
+    const styles = cn(
       missingClass(className, "bg-") && variants[variant],
       missingClass(className, "w-") && widths[width],
       disabledClasses,
