@@ -70,6 +70,9 @@ let variants = cva("relative", {
       hidden: "overflow-hidden",
     },
   },
+  defaultVariants: {
+    overflow: "hidden",
+  },
 });
 
 export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
@@ -77,7 +80,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     as: Component = "section",
     width,
     gap,
-    overflow = "hidden",
+    overflow,
     verticalPadding,
     borderRadius,
     backgroundColor,
@@ -98,7 +101,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   style = {
     ...style,
     "--section-background-color": backgroundColor,
-    "--section-border-radius": `${borderRadius}px`,
+    "--section-border-radius": `${borderRadius || 0}px`,
   } as React.CSSProperties;
 
   let isBgForContent = backgroundFor === "content";
