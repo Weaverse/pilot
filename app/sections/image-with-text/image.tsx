@@ -21,6 +21,29 @@ let variants = cva("w-full h-auto", {
       cover: "object-cover",
       contain: "object-contain",
     },
+    borderRadius: {
+      0: "",
+      2: "rounded-sm",
+      4: "rounded",
+      6: "rounded-md",
+      8: "rounded-lg",
+      10: "rounded-[10px]",
+      12: "rounded-xl",
+      14: "rounded-[14px]",
+      16: "rounded-2xl",
+      18: "rounded-[18px]",
+      20: "rounded-[20px]",
+      22: "rounded-[22px]",
+      24: "rounded-3xl",
+      26: "rounded-[26px]",
+      28: "rounded-[28px]",
+      30: "rounded-[30px]",
+      32: "rounded-[32px]",
+      34: "rounded-[34px]",
+      36: "rounded-[36px]",
+      38: "rounded-[38px]",
+      40: "rounded-[40px]",
+    },
   },
 });
 
@@ -29,7 +52,6 @@ interface ImageWithTextImageProps
     HydrogenComponentProps {
   image: WeaverseImage | string;
   aspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
-  borderRadius: number;
 }
 
 let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
@@ -62,8 +84,7 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
           data={imageData}
           sizes="auto"
           aspectRatio={aspRt}
-          className={cn("w-full h-auto", variants({ objectFit }))}
-          style={{ borderRadius: borderRadius }}
+          className={cn("w-full h-auto", variants({ objectFit, borderRadius }))}
         />
       </div>
     );

@@ -17,18 +17,19 @@ export type BackgroundProps = BackgroundImageProps & {
   backgroundColor: string;
 };
 
-export interface SectionProps
+export interface SectionProps<T = any>
   extends Omit<VariantProps<typeof variants>, "padding">,
-    HydrogenComponentProps,
+    Omit<HydrogenComponentProps<T>, "children">,
     Omit<HTMLAttributes<HTMLElement>, "children">,
     BackgroundProps,
     OverlayProps {
   as: React.ElementType;
   borderRadius: number;
   containerClassName: string;
+  children: React.ReactNode;
 }
 
-let variants = cva("relative overflow-hidden", {
+let variants = cva("relative", {
   variants: {
     width: {
       full: "w-full h-full",
@@ -64,6 +65,13 @@ let variants = cva("relative overflow-hidden", {
       56: "space-y-7 lg:space-y-14",
       60: "space-y-7 lg:space-y-[60px]",
     },
+    overflow: {
+      unset: "",
+      hidden: "overflow-hidden",
+    },
+  },
+  defaultVariants: {
+    overflow: "hidden",
   },
 });
 
@@ -72,6 +80,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     as: Component = "section",
     width,
     gap,
+    overflow,
     verticalPadding,
     borderRadius,
     backgroundColor,
@@ -92,7 +101,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   style = {
     ...style,
     "--section-background-color": backgroundColor,
-    "--section-border-radius": `${borderRadius}px`,
+    "--section-border-radius": `${borderRadius || 0}px`,
   } as React.CSSProperties;
 
   let isBgForContent = backgroundFor === "content";
@@ -104,14 +113,14 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
       {...rest}
       style={style}
       className={cn(
-        variants({ padding: width, className }),
+        variants({ padding: width, overflow, className }),
         hasBackground && !isBgForContent && "has-background",
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
         className={cn(
-          variants({ gap, width, verticalPadding }),
+          variants({ gap, width, verticalPadding, overflow }),
           containerClassName,
           hasBackground && isBgForContent && "has-background px-2 sm:px-4",
         )}

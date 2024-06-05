@@ -2,7 +2,7 @@
   "name": "@weaverse/pilot",
   "private": true,
   "sideEffects": false,
-  "version": "2.6.11",
+  "version": "2.6.12",
   "type": "module",
   "author": "Weaverse",
   "scripts": {
@@ -36,10 +36,11 @@
     "cross-env": "7.0.3",
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
-    "isbot": "^5.1.6",
+    "isbot": "^5.1.8",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.378.0",
     "react": "18.3.1",
+    "react-country-flag": "^3.1.0",
     "react-dom": "18.3.1",
     "react-intersection-observer": "9.10.2",
     "react-player": "^2.16.0",
@@ -50,7 +51,7 @@
     "typographic-base": "1.0.4"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.0",
+    "@playwright/test": "^1.44.1",
     "@remix-run/dev": "2.9.2",
     "@remix-run/eslint-config": "2.9.2",
     "@shopify/hydrogen-codegen": "^0.3.1",
@@ -74,11 +75,11 @@
     "tailwindcss": "3.4.3",
     "ts-node": "^10.9.2",
     "typescript": "5.4.5",
-    "vite": "^5.2.11",
+    "vite": "^5.2.12",
     "vite-tsconfig-paths": "^4.3.2"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "^0.21.1"
+    "@esbuild/linux-x64": "^0.21.4"
   },
   "engines": {
     "node": ">=18.0.0"

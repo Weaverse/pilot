@@ -1,4 +1,5 @@
 import {
+  IMAGES_PLACEHOLDERS,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
@@ -16,7 +17,7 @@ let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
       <div
         ref={ref}
         {...rest}
-        className="flex flex-col sm:grid sm:grid-cols-4 px-4"
+        className="flex flex-col sm:grid sm:grid-cols-4"
         style={{ gap: `${gap}px` }}
       >
         {children}
@@ -56,32 +57,32 @@ export let schema: HydrogenComponentSchema = {
       {
         type: "image-gallery--item",
         columnSpan: 2,
-        src: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        src: IMAGES_PLACEHOLDERS.image,
       },
       {
         type: "image-gallery--item",
         hideOnMobile: true,
-        src: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        src: IMAGES_PLACEHOLDERS.image,
       },
       {
         type: "image-gallery--item",
         hideOnMobile: true,
-        src: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        src: IMAGES_PLACEHOLDERS.image,
       },
       {
         type: "image-gallery--item",
         hideOnMobile: true,
-        src: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        src: IMAGES_PLACEHOLDERS.image,
       },
       {
         type: "image-gallery--item",
         hideOnMobile: true,
-        src: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        src: IMAGES_PLACEHOLDERS.image,
       },
       {
         type: "image-gallery--item",
         columnSpan: 2,
-        src: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        src: IMAGES_PLACEHOLDERS.image,
       },
     ],
   },

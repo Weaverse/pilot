@@ -2,30 +2,35 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
 import { forwardRef } from "react";
 
-type TestimonialsItemsProps = HydrogenComponentProps & {
-  gap?: number;
-};
+let variants = cva("grid lg:grid-cols-3", {
+  variants: {
+    gap: {
+      16: "gap-4",
+      24: "gap-6",
+      32: "gap-8",
+      40: "gap-10",
+    },
+  },
+  defaultVariants: {
+    gap: 32,
+  },
+});
 
-let gapClasses: Record<number, string> = {
-  16: "gap-4",
-  24: "gap-6",
-  32: "gap-8",
-  40: "gap-10",
-};
+interface TestimonialsItemsProps
+  extends VariantProps<typeof variants>,
+    HydrogenComponentProps {}
 
-let Testimonials = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
+let TestimonialsItems = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
   (props, ref) => {
     let { gap, children, ...rest } = props;
 
     return (
-      <div
-        ref={ref}
-        {...rest}
-        className={clsx(gapClasses[gap!], "grid lg:grid-cols-3")}
-      >
+      <div ref={ref} {...rest} className={clsx(variants({ gap }))}>
         <div className="space-y-6">
           {children?.filter((_, i) => i % 3 === 0)}
         </div>
@@ -40,11 +45,7 @@ let Testimonials = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
   },
 );
 
-Testimonials.defaultProps = {
-  gap: 32,
-};
-
-export default Testimonials;
+export default TestimonialsItems;
 
 export let schema: HydrogenComponentSchema = {
   type: "testimonials-items",

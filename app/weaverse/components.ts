@@ -31,6 +31,8 @@ import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as Map from "~/sections/map";
 import * as MetaDemo from "~/sections/meta-demo";
 import * as NewsLetter from "~/sections/newsletter";
+import * as AliReview from "~/sections/ali-reviews";
+import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as Page from "~/sections/page";
 import * as ProductInformation from "~/sections/product-information";
 import * as ProductList from "~/sections/product-list";
@@ -50,6 +52,8 @@ import * as Spacer from "~/sections/spacer";
 
 export let components: HydrogenComponent[] = [
   ...sharedComponents,
+  AliReview,
+  AliReviewList,
   AllProducts,
   BlogPost,
   Blogs,

@@ -1,8 +1,8 @@
-import { IconFilledStar, IconHalfFilledStar, IconStar } from ".";
+import { IconFilledStar, IconStarHalf, IconStar } from ".";
 
 export function StarRating({ rating }: { rating: number }) {
   let filledStar = <IconFilledStar className="w-4 h-4" />;
-  let halfFilledStar = <IconHalfFilledStar className="w-4 h-4" />;
+  let halfFilledStar = <IconStarHalf className="w-4 h-4" />;
   let star = <IconStar className="w-4 h-4" />;
   return (
     <div className="inline-flex gap-0.5">
