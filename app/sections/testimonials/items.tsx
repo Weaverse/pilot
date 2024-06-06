@@ -71,30 +71,4 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   toolbar: ["general-settings", ["duplicate", "delete"]],
-  presets: {
-    children: [
-      {
-        type: "testimonial--item",
-      },
-      {
-        type: "testimonial--item",
-        hideOnMobile: true,
-      },
-      {
-        type: "testimonial--item",
-        hideOnMobile: true,
-      },
-      {
-        type: "testimonial--item",
-      },
-      {
-        type: "testimonial--item",
-        hideOnMobile: true,
-      },
-      {
-        type: "testimonial--item",
-        hideOnMobile: true,
-      },
-    ],
-  },
 };
