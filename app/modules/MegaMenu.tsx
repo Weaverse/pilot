@@ -126,12 +126,12 @@ function MenuItem(props: MenuItemProps) {
       <div className="w-screen top-full left-0 h-0 overflow-hidden group-hover:h-72 group-hover:border-t bg-white shadow-md transition-all duration-75 absolute">
         <div className="container mx-auto py-8 flex gap-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 grow">
-            {items.map((item) => (
-              <div>
+            {items.map((item, index) => (
+              <div key={index}>
                 <h5 className="mb-4 uppercase font-medium">{item.title}</h5>
                 <ul className="space-y-1.5">
                   {item.items.map((subItem, ind) => (
-                    <li className="leading-6">
+                    <li className="leading-6" key={ind}>
                       <Link key={ind} to={subItem.to} prefetch="intent">
                         {subItem.title}
                       </Link>
@@ -202,7 +202,7 @@ function PopupItem({ title }: { title: string }) {
             <h5 className="mb-4 uppercase font-medium">Pilot</h5>
             <ul className="space-y-1.5">
               {items.items.map((subItem, ind) => (
-                <li className="leading-6">
+                <li className="leading-6" key={ind}>
                   <Link key={ind} to={subItem.to} prefetch="intent">
                     {subItem.title}
                   </Link>
