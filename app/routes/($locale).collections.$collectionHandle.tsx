@@ -1,15 +1,15 @@
 import {
-  Analytics,
   flattenConnection,
   getPaginationVariables,
   getSeoMeta,
+  Analytics,
 } from "@shopify/hydrogen";
 import type {
   ProductCollectionSortKeys,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
-import type { type LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { json } from "@shopify/remix-oxygen";
+import type { MetaArgs, LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { useLoaderData } from "@remix-run/react";
 
