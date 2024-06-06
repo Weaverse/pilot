@@ -380,5 +380,94 @@ export let themeSchema: HydrogenThemeSchema = {
         },
       ],
     },
+    {
+      group: 'Quick view',
+      inputs: [
+        {
+          type: 'text',
+          label: 'Add to cart text',
+          name: 'addToCartText',
+          defaultValue: 'Add to cart',
+          placeholder: 'Add to cart',
+        },
+        {
+          type: 'text',
+          label: 'Sold out text',
+          name: 'soldOutText',
+          defaultValue: 'Sold out',
+          placeholder: 'Sold out',
+        },
+        {
+          type: 'text',
+          label: 'Unavailable text',
+          name: 'unavailableText',
+          defaultValue: 'Unavailable',
+          placeholder: 'Unavailable',
+        },
+        {
+          type: 'switch',
+          label: 'Show vendor',
+          name: 'showVendor',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show sale price',
+          name: 'showSalePrice',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show details',
+          name: 'showDetails',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show shipping policy',
+          name: 'showShippingPolicy',
+          defaultValue: true,
+        },
+        {
+          type: 'switch',
+          label: 'Show refund policy',
+          name: 'showRefundPolicy',
+          defaultValue: true,
+        },
+        {
+          label: 'Hide unavailable options',
+          type: 'switch',
+          name: 'hideUnavailableOptions',
+        },
+        {
+          label: 'Show thumbnails',
+          name: 'showThumbnails',
+          type: 'switch',
+          defaultValue: true,
+        },
+        {
+          label: 'Number of thumbnails',
+          name: 'numberOfThumbnails',
+          type: 'range',
+          condition: 'showThumbnails.eq.true',
+          configs: {
+            min: 1,
+            max: 10,
+          },
+          defaultValue: 4,
+        },
+        {
+          label: 'Gap between images',
+          name: 'spacing',
+          type: 'range',
+          configs: {
+            min: 0,
+            step: 2,
+            max: 100,
+          },
+          defaultValue: 10,
+        },
+      ],
+    }
   ],
 };

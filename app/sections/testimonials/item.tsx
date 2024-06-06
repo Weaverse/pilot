@@ -34,11 +34,11 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
         {...rest}
         className={clsx(hideOnMobile && "hidden sm:block")}
       >
-        <figure className="p-6 bg-gray-100 rounded">
-          <blockquote className="text-gray-600">
+        <figure className="p-6 bg-gray-50 rounded">
+          <blockquote>
             <h4 className="font-semibold">{heading}</h4>
             <p
-              className="my-4"
+              className="my-4 text-gray-500"
               suppressHydrationWarning
               dangerouslySetInnerHTML={{ __html: content }}
             />
@@ -55,11 +55,9 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
               width={36}
               sizes="auto"
             />
-            <div className="space-y-0.5 font-medium">
-              <div>{authorName}</div>
-              <div className="text-sm font-light text-gray-500">
-                {authorTitle}
-              </div>
+            <div className="space-y-0.5">
+              <div className="font-medium">{authorName}</div>
+              <div className="text-sm text-gray-500">{authorTitle}</div>
             </div>
           </figcaption>
         </figure>

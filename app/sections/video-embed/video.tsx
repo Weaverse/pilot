@@ -8,23 +8,25 @@ interface VideoItemProps extends HydrogenComponentProps {
   videoUrl: string;
 }
 
-let VideoItem = forwardRef<HTMLIFrameElement, VideoItemProps>((props, ref) => {
-  let { videoUrl, ...rest } = props;
-  return (
-    <iframe
-      ref={ref}
-      {...rest}
-      className="mx-auto mt-8 w-full max-w-2xl h-64 rounded-lg lg:mt-12 sm:h-96"
-      src={videoUrl}
-      allowFullScreen
-      title="YouTube video player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      sandbox="allow-presentation allow-same-origin allow-scripts"
-    />
-  );
-});
+let VideoEmbedItem = forwardRef<HTMLIFrameElement, VideoItemProps>(
+  (props, ref) => {
+    let { videoUrl, ...rest } = props;
+    return (
+      <iframe
+        ref={ref}
+        {...rest}
+        className="mx-auto mt-8 w-full max-w-2xl h-64 rounded-lg lg:mt-12 sm:h-96"
+        src={videoUrl}
+        allowFullScreen
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        sandbox="allow-presentation allow-same-origin allow-scripts"
+      />
+    );
+  },
+);
 
-export default VideoItem;
+export default VideoEmbedItem;
 
 export let schema: HydrogenComponentSchema = {
   type: "video-embed--item",

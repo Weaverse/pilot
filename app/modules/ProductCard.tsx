@@ -2,11 +2,11 @@ import clsx from "clsx";
 import type { ShopifyAnalyticsProduct } from "@shopify/hydrogen";
 import { flattenConnection, Image, Money, useMoney } from "@shopify/hydrogen";
 import type { MoneyV2, Product } from "@shopify/hydrogen/storefront-api-types";
-
 import type { ProductCardFragment } from "storefrontapi.generated";
 import { Text, Link, AddToCartButton, Button } from "~/modules";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
 import { getProductPlaceholder } from "~/lib/placeholders";
+import { QuickViewTrigger } from "./QuickView";
 
 export function ProductCard({
   product,
@@ -30,7 +30,8 @@ export function ProductCard({
     : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
 
-  const firstVariant = flattenConnection(cardProduct.variants)[0];
+  const variants = flattenConnection(cardProduct.variants);
+  const firstVariant = variants[0];
 
   if (!firstVariant) return null;
   const { image, price, compareAtPrice } = firstVariant;
@@ -55,17 +56,17 @@ export function ProductCard({
 
   return (
     <div className="flex flex-col gap-2">
-      <Link
-        onClick={onClick}
-        to={`/products/${product.handle}`}
-        prefetch="intent"
-        className={({ isTransitioning }) => {
-          return isTransitioning ? "vt-product-image" : "";
-        }}
-      >
-        <div className={clsx("grid gap-4", className)}>
-          <div className="card-image aspect-[4/5] bg-primary/5">
-            {image && (
+      <div className={clsx("grid gap-4", className)}>
+        <div className="relative aspect-[4/5] bg-primary/5 group">
+          {image && (
+            <Link
+              onClick={onClick}
+              to={`/products/${product.handle}`}
+              prefetch="intent"
+              className={({ isTransitioning }) => {
+                return isTransitioning ? "vt-product-image" : "";
+              }}
+            >
               <Image
                 className="object-cover w-full fadeIn"
                 sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
@@ -74,37 +75,76 @@ export function ProductCard({
                 alt={image.altText || `Picture of ${product.title}`}
                 loading={loading}
               />
+            </Link>
+          )}
+          <Text
+            as="label"
+            size="fine"
+            className="absolute top-0 right-0 m-4 text-right text-notice"
+          >
+            {cardLabel}
+          </Text>
+          {quickAdd && variants.length > 1 && (
+            <QuickViewTrigger productHandle={product.handle} />
+          )}
+          {quickAdd &&
+            variants.length === 1 &&
+            firstVariant.availableForSale && (
+              <div className="absolute bottom-0 hidden w-full bg-[rgba(238,239,234,0.10)] px-3 py-5 opacity-100 backdrop-blur-2xl lg:group-hover:block">
+                <AddToCartButton
+                  lines={[
+                    {
+                      quantity: 1,
+                      merchandiseId: firstVariant.id,
+                    },
+                  ]}
+                  variant="secondary"
+                  className="mt-2"
+                  analytics={{
+                    products: [productAnalytics],
+                    totalValue: parseFloat(productAnalytics.price),
+                  }}
+                >
+                  <Text
+                    as="span"
+                    className="flex items-center justify-center gap-2"
+                  >
+                    Add to Cart
+                  </Text>
+                </AddToCartButton>
+              </div>
             )}
-            <Text
-              as="label"
-              size="fine"
-              className="absolute top-0 right-0 m-4 text-right text-notice"
-            >
-              {cardLabel}
-            </Text>
-          </div>
-          <div className="grid gap-1">
-            <Text
-              className="w-full overflow-hidden whitespace-nowrap text-ellipsis space-x-1"
-              as="h4"
+        </div>
+        <div className="grid gap-1">
+          <Text
+            className="w-full overflow-hidden whitespace-nowrap text-ellipsis space-x-1"
+            as="h4"
+          >
+            <Link
+              onClick={onClick}
+              to={`/products/${product.handle}`}
+              prefetch="intent"
+              className={({ isTransitioning }) => {
+                return isTransitioning ? "vt-product-image" : "";
+              }}
             >
               <span>{product.title}</span>
               {firstVariant.sku && <span>({firstVariant.sku})</span>}
+            </Link>
+          </Text>
+          <div className="flex">
+            <Text className="flex gap-2">
+              <Money withoutTrailingZeros data={price!} />
+              {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
+                <CompareAtPrice
+                  className={"opacity-50"}
+                  data={compareAtPrice as MoneyV2}
+                />
+              )}
             </Text>
-            <div className="flex">
-              <Text className="flex gap-2">
-                <Money withoutTrailingZeros data={price!} />
-                {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
-                  <CompareAtPrice
-                    className={"opacity-50"}
-                    data={compareAtPrice as MoneyV2}
-                  />
-                )}
-              </Text>
-            </div>
           </div>
         </div>
-      </Link>
+      </div>
       {quickAdd && firstVariant.availableForSale && (
         <AddToCartButton
           lines={[
@@ -114,7 +154,7 @@ export function ProductCard({
             },
           ]}
           variant="secondary"
-          className="mt-2"
+          className="mt-2 lg:hidden"
           analytics={{
             products: [productAnalytics],
             totalValue: parseFloat(productAnalytics.price),
@@ -126,8 +166,8 @@ export function ProductCard({
         </AddToCartButton>
       )}
       {quickAdd && !firstVariant.availableForSale && (
-        <Button variant="secondary" className="mt-2" disabled>
-          <Text as="span" className="flex items-center justify-center gap-2">
+        <Button variant="secondary" className="mt-2 lg:hidden" disabled>
+          <Text as="span" className="flex items-center justify-center gap-2 ">
             Sold out
           </Text>
         </Button>

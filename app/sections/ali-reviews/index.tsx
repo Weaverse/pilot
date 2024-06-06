@@ -69,7 +69,11 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     children: [
       { type: "heading", content: "Reviews" },
-      { type: "paragraph", content: "Ali Reviews" },
+      {
+        type: "paragraph",
+        content:
+          "This section demonstrates how to integrate with third-party apps using their public APIs. Reviews are fetched from Ali Reviews API.",
+      },
       {
         type: "ali-reviews--list",
         showAvgRating: true,
