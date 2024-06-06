@@ -1,12 +1,12 @@
 import { Await, Form, useLoaderData } from "@remix-run/react";
 import {
+  Analytics,
   getPaginationVariables,
   getSeoMeta,
   Pagination,
-  UNSTABLE_Analytics as Analytics,
 } from "@shopify/hydrogen";
+import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
-import type { MetaArgs, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import { Suspense } from "react";
 
 import {

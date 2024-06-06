@@ -1,14 +1,14 @@
 import { Await } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
-  type LoaderFunctionArgs,
   type ActionFunctionArgs,
   json,
+  type LoaderFunctionArgs,
 } from "@shopify/remix-oxygen";
 import {
+  Analytics,
   CartForm,
   type CartQueryDataReturn,
-  UNSTABLE_Analytics as Analytics,
 } from "@shopify/hydrogen";
 
 import { isLocalPath } from "~/lib/utils";

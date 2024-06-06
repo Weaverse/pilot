@@ -4,19 +4,19 @@ import poppins600 from "@fontsource/poppins/600.css?url";
 import poppins700 from "@fontsource/poppins/700.css?url";
 import type { ShouldRevalidateFunction } from "@remix-run/react";
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
   useLoaderData,
   useMatches,
   useRouteError,
 } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import {
-  UNSTABLE_Analytics as Analytics,
+  Analytics,
   getSeoMeta,
   getShopAnalytics,
   useNonce,
