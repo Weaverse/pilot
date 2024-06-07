@@ -1,7 +1,4 @@
-import {
-  Script,
-  unstable_useAnalytics as useAnalytics,
-} from "@shopify/hydrogen";
+import { Script, useAnalytics } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import type { loader } from "~/root";
