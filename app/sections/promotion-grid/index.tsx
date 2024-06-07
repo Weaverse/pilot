@@ -1,4 +1,7 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import {
+  IMAGES_PLACEHOLDERS,
+  type HydrogenComponentSchema,
+} from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
@@ -9,12 +12,12 @@ import { Section, layoutInputs } from "~/components/Section";
 
 type PromotionGridProps = VariantProps<typeof variants> & SectionProps;
 
-let variants = cva("flex sm:grid", {
+let variants = cva("flex flex-col sm:grid", {
   variants: {
     gridSize: {
-      2: "sm:grid-cols-2",
-      3: "sm:grid-cols-3",
-      4: "sm:grid-cols-4",
+      "2x2": "sm:grid-cols-2 sm:[&_.promotion-grid-item]:p-16",
+      "3x3": "sm:grid-cols-3 sm:[&_.promotion-grid-item]:p-12",
+      "4x4": "sm:grid-cols-4 sm:[&_.promotion-grid-item]:p-8",
     },
     gap: {
       0: "",
@@ -36,7 +39,7 @@ let variants = cva("flex sm:grid", {
     },
   },
   defaultVariants: {
-    gridSize: 2,
+    gridSize: "2x2",
     gap: 20,
   },
 });
@@ -72,12 +75,24 @@ export let schema: HydrogenComponentSchema = {
           label: "Grid size",
           configs: {
             options: [
-              { value: "2", label: "2x2" },
-              { value: "3", label: "3x3" },
-              { value: "4", label: "4x4" },
+              { value: "2x2", label: "2x2" },
+              { value: "3x3", label: "3x3" },
+              { value: "4x4", label: "4x4" },
             ],
           },
-          defaultValue: "2",
+          defaultValue: "2x2",
+        },
+        {
+          type: "range",
+          name: "gap",
+          label: "Items gap",
+          configs: {
+            min: 0,
+            max: 60,
+            step: 4,
+            unit: "px",
+          },
+          defaultValue: 20,
         },
       ],
     },
@@ -85,14 +100,68 @@ export let schema: HydrogenComponentSchema = {
     { group: "Background", inputs: backgroundInputs },
     { group: "Overlay", inputs: overlayInputs },
   ],
-  childTypes: ["heading", "paragraph", "promotion-grid-item"],
+  childTypes: ["promotion-grid-item"],
   presets: {
+    gridSize: "2x2",
+    gap: 20,
     children: [
       {
         type: "promotion-grid-item",
+        contentPosition: "top left",
+        backgroundImage: IMAGES_PLACEHOLDERS.collection_1,
+        borderRadius: 16,
+        enableOverlay: true,
+        overlayColor: "#0c0c0c",
+        overlayOpacity: 20,
+        children: [
+          {
+            type: "heading",
+            content: "Announce your promotion",
+          },
+          {
+            type: "paragraph",
+            content:
+              "Include the smaller details of your promotion in text below the title.",
+          },
+          {
+            type: "promotion-item--buttons",
+            children: [
+              {
+                type: "button",
+                content: "Shop now",
+              },
+            ],
+          },
+        ],
       },
       {
         type: "promotion-grid-item",
+        contentPosition: "bottom right",
+        backgroundImage: IMAGES_PLACEHOLDERS.collection_2,
+        borderRadius: 16,
+        enableOverlay: true,
+        overlayColor: "#0c0c0c",
+        overlayOpacity: 20,
+        children: [
+          {
+            type: "heading",
+            content: "Announce your promotion",
+          },
+          {
+            type: "paragraph",
+            content:
+              "Include the smaller details of your promotion in text below the title.",
+          },
+          {
+            type: "promotion-item--buttons",
+            children: [
+              {
+                type: "button",
+                content: "Shop now",
+              },
+            ],
+          },
+        ],
       },
     ],
   },
