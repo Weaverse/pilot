@@ -49,16 +49,4 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   childTypes: ["button"],
-  presets: {
-    children: [
-      {
-        type: "button",
-        content: "Button",
-      },
-      {
-        type: "button",
-        content: "Button",
-      },
-    ],
-  },
 };

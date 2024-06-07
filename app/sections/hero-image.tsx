@@ -4,7 +4,6 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/BackgroundImage";
 import { overlayInputs } from "~/components/Overlay";
@@ -13,7 +12,7 @@ import { Section, layoutInputs } from "~/components/Section";
 
 export interface HeroImageProps extends VariantProps<typeof variants> {}
 
-let variants = cva("", {
+let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
     height: {
       small: "min-h-[40vh] lg:min-h-[50vh]",
@@ -51,11 +50,7 @@ let HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
       <Section
         ref={ref}
         {...rest}
-        containerClassName={clsx(
-          "flex flex-col",
-          "[&_.paragraph]:mx-[unset]",
-          variants({ contentPosition, height }),
-        )}
+        containerClassName={variants({ contentPosition, height })}
       >
         {children}
       </Section>
