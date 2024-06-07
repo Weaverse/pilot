@@ -63,7 +63,7 @@ let CountdownTimer = forwardRef<
     <div
       ref={ref}
       {...rest}
-      className="flex justify-center text-[var(--timer-color)] py-3 sm:py-0"
+      className="countdown--timer flex text-[var(--timer-color)] py-3 sm:py-0"
       style={timerStyle}
     >
       <div className="space-y-1">
@@ -71,27 +71,31 @@ let CountdownTimer = forwardRef<
           <div className="px-6">{remainingTime?.days || 0}</div>
           <div className="h-6 border-r border-[var(--timer-color)]" />
         </div>
-        <div className="text-sm md:text-base capitalize">Days</div>
+        <div className="text-sm text-center md:text-base capitalize">Days</div>
       </div>
       <div className="space-y-1">
         <div className="text-4xl leading-tight md:text-5xl font-medium flex items-center">
           <div className="px-6">{remainingTime?.hours || 0}</div>
           <div className="h-6 border-r border-[var(--timer-color)]" />
         </div>
-        <div className="text-sm md:text-base capitalize">hours</div>
+        <div className="text-sm text-center md:text-base capitalize">hours</div>
       </div>
       <div className="space-y-1">
         <div className="text-4xl leading-tight md:text-5xl font-medium flex items-center">
           <div className="px-6">{remainingTime?.minutes || 0}</div>
           <div className="h-6 border-r border-[var(--timer-color)]" />
         </div>
-        <div className="text-sm md:text-base capitalize">minutes</div>
+        <div className="text-sm text-center md:text-base capitalize">
+          minutes
+        </div>
       </div>
       <div className="space-y-1">
         <div className="text-4xl leading-tight md:text-5xl font-medium flex items-center">
           <div className="px-6">{remainingTime?.seconds || 0}</div>
         </div>
-        <div className="text-sm md:text-base capitalize">seconds</div>
+        <div className="text-sm text-center md:text-base capitalize">
+          seconds
+        </div>
       </div>
     </div>
   );
