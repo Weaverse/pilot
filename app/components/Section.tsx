@@ -121,8 +121,8 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
       <div
         className={cn(
           variants({ gap, width, verticalPadding, overflow }),
+          hasBackground && isBgForContent && "has-background px-4 sm:px-8",
           containerClassName,
-          hasBackground && isBgForContent && "has-background px-2 sm:px-4",
         )}
       >
         {isBgForContent && <OverlayAndBackground {...props} />}
