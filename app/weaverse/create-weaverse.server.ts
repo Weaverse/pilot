@@ -40,6 +40,7 @@ export function getWeaverseCsp(request: Request, context: AppLoadContext) {
       ...weaverseHosts,
     ],
     connectSrc: ["vimeo.com", "*.google-analytics.com", ...weaverseHosts],
+    styleSrc: weaverseHosts,
   };
   if (isDesignMode) {
     updatedCsp.frameAncestors = ["*"];
