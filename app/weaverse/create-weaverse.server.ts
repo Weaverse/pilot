@@ -1,6 +1,5 @@
 import type { CreateWeaverseClientArgs } from "@weaverse/hydrogen";
 import { WeaverseClient } from "@weaverse/hydrogen";
-
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
 import type { AppLoadContext } from "@shopify/remix-oxygen";
