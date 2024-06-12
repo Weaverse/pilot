@@ -1,16 +1,15 @@
 import { useLocation } from "@remix-run/react";
-import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
-import typographicBase from "typographic-base/index";
-
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
+import type { WeaverseImage } from "@weaverse/hydrogen";
 import type {
   ChildMenuItemFragment,
   MenuFragment,
   ParentMenuItemFragment,
 } from "storefrontapi.generated";
-import { useRootLoaderData } from "~/root";
+import typographicBase from "typographic-base/index";
 import { countries } from "~/data/countries";
-
+import { useRootLoaderData } from "~/root";
 import type { I18nLocale } from "./type";
 
 type EnhancedMenuItemProps = {
@@ -332,4 +331,19 @@ export function removeFalsy<T = any>(
     }
     return a;
   }, {}) as T;
+}
+
+export function getImageAspectRatio(
+  image: Partial<WeaverseImage>,
+  aspectRatio: string,
+) {
+  let aspRt: string | undefined;
+  if (aspectRatio === "adapt") {
+    if (image?.width && image?.height) {
+      aspRt = `${image.width}/${image.height}`;
+    }
+  } else {
+    aspRt = aspectRatio;
+  }
+  return aspRt;
 }

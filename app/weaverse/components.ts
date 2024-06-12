@@ -4,6 +4,8 @@ import { sharedComponents } from "~/components";
 import * as Judgeme from "~/modules/product-form/judgeme-review";
 import * as SlideShowItem from "~/sections/SlideShow/SlideItems";
 import * as SlideShow from "~/sections/SlideShow/SlideShow";
+import * as AliReview from "~/sections/ali-reviews";
+import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as AllProducts from "~/sections/all-products";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
@@ -20,19 +22,17 @@ import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedProducts from "~/sections/featured-products";
 import * as HeroImage from "~/sections/hero-image";
 import * as HeroVideo from "~/sections/hero-video";
+import * as Hotspots from "~/sections/hotspots";
+import * as HotspotsItem from "~/sections/hotspots/item";
 import * as ImageGallery from "~/sections/image-gallery";
 import * as ImageGalleryItem from "~/sections/image-gallery/image";
 import * as ImageGalleryItems from "~/sections/image-gallery/items";
-import * as ImageHotspot from "~/sections/image-hotspots/image-hotspot";
-import * as ImageHotspotItem from "~/sections/image-hotspots/items";
 import * as ImageWithText from "~/sections/image-with-text";
 import * as ImageWithTextContent from "~/sections/image-with-text/content";
 import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as Map from "~/sections/map";
 import * as MetaDemo from "~/sections/meta-demo";
 import * as NewsLetter from "~/sections/newsletter";
-import * as AliReview from "~/sections/ali-reviews";
-import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as Page from "~/sections/page";
 import * as ProductInformation from "~/sections/product-information";
 import * as ProductList from "~/sections/product-list";
@@ -42,13 +42,13 @@ import * as PromotionGridItem from "~/sections/promotion-grid/item";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as SingleProduct from "~/sections/single-product";
+import * as Spacer from "~/sections/spacer";
 import * as Testimonial from "~/sections/testimonials";
 import * as TestimonialItem from "~/sections/testimonials/item";
 import * as TestimonialItems from "~/sections/testimonials/items";
 import * as UserProfiles from "~/sections/user-profiles";
 import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
-import * as Spacer from "~/sections/spacer";
 
 export let components: HydrogenComponent[] = [
   ...sharedComponents,
@@ -73,8 +73,8 @@ export let components: HydrogenComponent[] = [
   PromotionGrid,
   PromotionGridItem,
   PromotionGridButtons,
-  ImageHotspot,
-  ImageHotspotItem,
+  Hotspots,
+  HotspotsItem,
   Countdown,
   CountDownTimer,
   NewsLetter,
