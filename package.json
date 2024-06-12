@@ -28,7 +28,7 @@
     "@remix-run/react": "2.9.2",
     "@remix-run/server-runtime": "2.9.2",
     "@shopify/cli": "3.60.1",
-    "@shopify/cli-hydrogen": "8.1.0",
+    "@shopify/cli-hydrogen": "8.0.4",
     "@shopify/hydrogen": "2024.4.1",
     "@shopify/remix-oxygen": "2.0.4",
     "@weaverse/hydrogen": "3.1.12",
