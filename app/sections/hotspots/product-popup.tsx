@@ -5,14 +5,61 @@ import type { CSSProperties } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
 import { Link } from "~/modules";
 import type { HotspotsItemData } from "./item";
+import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 
 interface ProductPopupProps
   extends Omit<HotspotsItemData, "icon" | "iconSize" | "product"> {
-  product?: ProductQuery["product"];
+  product: ProductQuery["product"];
 }
 
+const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
+  id: "gid://shopify/Product/123",
+  title: "Example Product Title",
+  handle: "#",
+  media: {
+    nodes: [
+      {
+        id: "1",
+        __typename: "MediaImage",
+        mediaContentType: "IMAGE",
+        image: {
+          id: "1",
+          url: IMAGES_PLACEHOLDERS.gs_product_6,
+          width: 500,
+          height: 500,
+        },
+      },
+    ],
+  },
+  variants: {
+    nodes: [
+      {
+        id: "1",
+        availableForSale: true,
+        quantityAvailable: 0,
+        selectedOptions: [],
+        price: {
+          amount: "99.0",
+          currencyCode: "USD",
+        },
+        compareAtPrice: {
+          amount: "129.0",
+          currencyCode: "USD",
+        },
+        title: "Default Title",
+        unitPrice: null,
+        product: {
+          title: "Example Product",
+          handle: "#",
+        },
+      },
+    ],
+  },
+};
+
 export function ProductPopup({
-  product,
+  // @ts-ignore
+  product = PRODUCT_PLACEHOLDER,
   popupWidth,
   offsetX,
   offsetY,

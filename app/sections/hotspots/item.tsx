@@ -205,7 +205,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
-          defaultValue: 400,
+          defaultValue: 350,
           helpText: "For desktop devices only",
         },
         {
