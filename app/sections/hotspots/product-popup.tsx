@@ -24,7 +24,7 @@ const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
         mediaContentType: "IMAGE",
         image: {
           id: "1",
-          url: IMAGES_PLACEHOLDERS.gs_product_6,
+          url: IMAGES_PLACEHOLDERS.gs_product_4,
           width: 500,
           height: 500,
         },

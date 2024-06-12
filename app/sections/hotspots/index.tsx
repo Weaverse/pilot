@@ -140,11 +140,19 @@ export let schema: HydrogenComponentSchema = {
   toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     heading: "Shop the look",
-    image: IMAGES_PLACEHOLDERS.gs_banner_1,
-    aspectRatio: "adapt",
+    image: IMAGES_PLACEHOLDERS.gs_collection_4,
+    aspectRatio: "16/9",
+    gap: 40,
     children: [
       {
         type: "hotspots--item",
+        offsetX: 25,
+        offsetY: 30,
+      },
+      {
+        type: "hotspots--item",
+        offsetX: 55,
+        offsetY: 65,
       },
     ],
   },
