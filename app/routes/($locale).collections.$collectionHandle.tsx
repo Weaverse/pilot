@@ -2,7 +2,7 @@ import {
   flattenConnection,
   getPaginationVariables,
   getSeoMeta,
-  Analytics,
+  UNSTABLE_Analytics as Analytics,
 } from "@shopify/hydrogen";
 import type {
   ProductCollectionSortKeys,
