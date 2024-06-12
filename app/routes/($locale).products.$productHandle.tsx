@@ -1,4 +1,4 @@
-import { getSeoMeta, Analytics } from "@shopify/hydrogen";
+import { getSeoMeta, UNSTABLE_Analytics as Analytics } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";

@@ -6,7 +6,7 @@ import {
   type LoaderFunctionArgs,
 } from "@shopify/remix-oxygen";
 import {
-  Analytics,
+  UNSTABLE_Analytics as Analytics,
   CartForm,
   type CartQueryDataReturn,
 } from "@shopify/hydrogen";

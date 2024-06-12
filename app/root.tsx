@@ -16,7 +16,7 @@ import {
 } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import {
-  Analytics,
+  UNSTABLE_Analytics as Analytics,
   getSeoMeta,
   getShopAnalytics,
   useNonce,

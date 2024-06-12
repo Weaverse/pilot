@@ -1,6 +1,6 @@
 import { Await, Form, useLoaderData } from "@remix-run/react";
 import {
-  Analytics,
+  UNSTABLE_Analytics as Analytics,
   getPaginationVariables,
   getSeoMeta,
   Pagination,

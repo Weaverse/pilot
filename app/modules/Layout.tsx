@@ -1,6 +1,9 @@
 import { Disclosure } from "@headlessui/react";
 import { Await, Form, useParams } from "@remix-run/react";
-import { CartForm, useAnalytics } from "@shopify/hydrogen";
+import {
+  CartForm,
+  unstable_useAnalytics as useAnalytics,
+} from "@shopify/hydrogen";
 import { Suspense, useEffect, useMemo } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import clsx from "clsx";
