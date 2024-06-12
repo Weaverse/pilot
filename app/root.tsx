@@ -36,7 +36,6 @@ import { Layout } from "~/modules";
 import { CustomAnalytics } from "~/modules/CustomAnalytics";
 import { GlobalLoading } from "~/modules/global-loading";
 import { seoPayload } from "~/lib/seo.server";
-import { GlobalLoading } from "~/components/global-loading";
 
 import { GenericError } from "./modules/GenericError";
 import { NotFound } from "./modules/NotFound";
