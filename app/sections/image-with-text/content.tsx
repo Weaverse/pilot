@@ -2,34 +2,44 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import clsx from "clsx";
 import { forwardRef } from "react";
 
-interface ContentItemsProps extends HydrogenComponentProps {
-  gap: number;
-}
-
-let ContentItems = forwardRef<HTMLDivElement, ContentItemsProps>(
-  (props, ref) => {
-    let { children, gap, ...rest } = props;
-    let style = {
-      gap: `${gap}px`,
-      textAlign: "left",
-    } as CSSProperties;
-    return (
-      <div
-        ref={ref}
-        {...rest}
-        className="w-1/2 flex flex-col justify-center gap-5 p-16 sm-max:w-full sm-max:pt-0 sm-max:px-0 sm-max:pb-10"
-        style={style}
-      >
-        {children}
-      </div>
-    );
+let variants = cva(
+  "grow flex flex-col justify-center gap-5 py-6 px-4 md:px-8 md:py-8 [&_.paragraph]:mx-[unset] [&_.paragraph]:w-auto",
+  {
+    variants: {
+      alignment: {
+        left: "items-start",
+        center: "items-center",
+        right: "items-end",
+      },
+    },
+    defaultVariants: {
+      alignment: "center",
+    },
   },
 );
 
-export default ContentItems;
+interface ImageWithTextContentProps
+  extends VariantProps<typeof variants>,
+    HydrogenComponentProps {}
+
+let ImageWithTextContent = forwardRef<
+  HTMLDivElement,
+  ImageWithTextContentProps
+>((props, ref) => {
+  let { alignment, children, ...rest } = props;
+  return (
+    <div ref={ref} {...rest} className={clsx(variants({ alignment }))}>
+      {children}
+    </div>
+  );
+});
+
+export default ImageWithTextContent;
 
 export let schema: HydrogenComponentSchema = {
   type: "image-with-text--content",
@@ -41,22 +51,25 @@ export let schema: HydrogenComponentSchema = {
       group: "Content",
       inputs: [
         {
-          type: "range",
-          name: "gap",
-          label: "Items gap",
+          type: "select",
+          name: "alignment",
+          label: "Alignment",
           configs: {
-            min: 0,
-            max: 40,
-            step: 4,
-            unit: "px",
+            options: [
+              { value: "left", label: "Left" },
+              { value: "center", label: "Center" },
+              { value: "right", label: "Right" },
+            ],
           },
-          defaultValue: 20,
+          helpText:
+            "This will override the default alignment setting of all children components.",
         },
       ],
     },
   ],
-  childTypes: ["subheading", "heading", "description", "button"],
+  childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
+    alignment: "center",
     children: [
       {
         type: "subheading",
@@ -67,7 +80,7 @@ export let schema: HydrogenComponentSchema = {
         content: "Heading for image",
       },
       {
-        type: "description",
+        type: "paragraph",
         content: "Pair large text with an image to tell a story.",
       },
       {

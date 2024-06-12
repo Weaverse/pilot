@@ -1,18 +1,18 @@
 import { Await } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
-  type LoaderFunctionArgs,
   type ActionFunctionArgs,
   json,
+  type LoaderFunctionArgs,
 } from "@shopify/remix-oxygen";
 import {
+  Analytics,
   CartForm,
   type CartQueryDataReturn,
-  UNSTABLE_Analytics as Analytics,
 } from "@shopify/hydrogen";
 
 import { isLocalPath } from "~/lib/utils";
-import { Cart } from "~/components/Cart";
+import { Cart } from "~/modules/Cart";
 import { useRootLoaderData } from "~/root";
 
 export async function action({ request, context }: ActionFunctionArgs) {
@@ -65,7 +65,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  const cartId = result.cart.id;
+  // const cartId = result.cart.id;
   const headers = cart.setCartId(result.cart.id);
 
   const redirectTo = formData.get("redirectTo") ?? null;

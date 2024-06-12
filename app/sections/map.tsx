@@ -6,7 +6,7 @@ import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import clsx from "clsx";
 
-import { IconMapBlank } from "~/components";
+import { IconMapBlank } from "~/modules";
 
 interface MapProps extends HydrogenComponentProps {
   heading: string;

@@ -38,7 +38,19 @@
   }
 
   html {
+    @apply font-serif;
     scroll-padding-top: 10rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  a,
+  button {
+    @apply font-sans;
   }
 
   model-viewer::part(default-progress-mask) {
@@ -169,4 +181,9 @@
 
 .vt-product-image {
   view-transition-name: product-image;
+}
+
+.has-background {
+  background-color: var(--section-background-color);
+  border-radius: var(--section-border-radius);
 }

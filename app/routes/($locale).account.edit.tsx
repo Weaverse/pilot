@@ -11,7 +11,7 @@ import type {
 } from "@shopify/hydrogen/customer-account-api-types";
 import invariant from "tiny-invariant";
 
-import { Button, Text } from "~/components";
+import { Button, Text } from "~/modules";
 import { getInputStyleClasses } from "~/lib/utils";
 import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/CustomerUpdateMutation";
 

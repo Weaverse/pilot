@@ -1,3 +1,26 @@
+import poppins400 from "@fontsource/poppins/400.css?url";
+import poppins500 from "@fontsource/poppins/500.css?url";
+import poppins600 from "@fontsource/poppins/600.css?url";
+import poppins700 from "@fontsource/poppins/700.css?url";
+import type { ShouldRevalidateFunction } from "@remix-run/react";
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  isRouteErrorResponse,
+  useLoaderData,
+  useMatches,
+  useRouteError,
+} from "@remix-run/react";
+import type { SeoConfig } from "@shopify/hydrogen";
+import {
+  Analytics,
+  getSeoMeta,
+  getShopAnalytics,
+  useNonce,
+} from "@shopify/hydrogen";
 import type {
   AppLoadContext,
   LinksFunction,
@@ -6,43 +29,21 @@ import type {
   SerializeFrom,
 } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
-import type { ShouldRevalidateFunction } from "@remix-run/react";
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-  useMatches,
-  useRouteError,
-} from "@remix-run/react";
-import type { SeoConfig } from "@shopify/hydrogen";
-import {
-  getSeoMeta,
-  getShopAnalytics,
-  UNSTABLE_Analytics as Analytics,
-  useNonce,
-} from "@shopify/hydrogen";
-import invariant from "tiny-invariant";
 import { withWeaverse } from "@weaverse/hydrogen";
-import roboto400 from "@fontsource/roboto/400.css?url";
-import roboto500 from "@fontsource/roboto/500.css?url";
-import roboto700 from "@fontsource/roboto/700.css?url";
+import invariant from "tiny-invariant";
 
-import { CustomAnalytics } from "~/components/CustomAnalytics";
-import { Layout } from "~/components";
+import { Layout } from "~/modules";
+import { CustomAnalytics } from "~/modules/CustomAnalytics";
+import { GlobalLoading } from "~/modules/global-loading";
 import { seoPayload } from "~/lib/seo.server";
 import { GlobalLoading } from "~/components/global-loading";
 
-import { GenericError } from "./components/GenericError";
-import { NotFound } from "./components/NotFound";
-import styles from "./styles/app.css?url";
+import { GenericError } from "./modules/GenericError";
+import { NotFound } from "./modules/NotFound";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
-import { GlobalStyle } from "./weaverse/style"; // This is important to avoid re-fetching root queries on sub-navigations
+import styles from "./styles/app.css?url";
+import { GlobalStyle } from "./weaverse/style";
 
-// This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   formMethod,
   currentUrl,
@@ -65,15 +66,19 @@ export const links: LinksFunction = () => {
   return [
     {
       rel: "stylesheet",
-      href: roboto400,
+      href: poppins400,
     },
     {
       rel: "stylesheet",
-      href: roboto500,
+      href: poppins500,
     },
     {
       rel: "stylesheet",
-      href: roboto700,
+      href: poppins600,
+    },
+    {
+      rel: "stylesheet",
+      href: poppins700,
     },
     { rel: "stylesheet", href: styles },
     {
@@ -106,7 +111,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
         publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
       }),
       consent: {
-        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN || env.PUBLIC_STORE_DOMAIN,
         storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
       },
       isLoggedIn: isLoggedInPromise,

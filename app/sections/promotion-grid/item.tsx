@@ -1,43 +1,103 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseImage,
+import {
+  IMAGES_PLACEHOLDERS,
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
+  type WeaverseImage,
 } from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { Image } from "@shopify/hydrogen";
+import { BackgroundImage } from "~/components/BackgroundImage";
+import type { OverlayProps } from "~/components/Overlay";
+import { Overlay, overlayInputs } from "~/components/Overlay";
 
-import { IconImageBlank } from "~/components";
+let variants = cva(
+  [
+    "promotion-grid-item",
+    "relative aspect-square overflow-hidden flex flex-col gap-4 p-4",
+    "[&_.paragraph]:mx-[unset]",
+  ],
+  {
+    variants: {
+      contentPosition: {
+        "top left":
+          "justify-start items-start [&_.paragraph]:[text-align:left]",
+        "top center":
+          "justify-start items-center [&_.paragraph]:[text-align:center]",
+        "top right":
+          "justify-start items-end [&_.paragraph]:[text-align:right]",
+        "center left":
+          "justify-center items-start [&_.paragraph]:[text-align:left]",
+        "center center":
+          "justify-center items-center [&_.paragraph]:[text-align:center]",
+        "center right":
+          "justify-center items-end [&_.paragraph]:[text-align:right]",
+        "bottom left":
+          "justify-end items-start [&_.paragraph]:[text-align:left]",
+        "bottom center":
+          "justify-end items-center [&_.paragraph]:[text-align:center]",
+        "bottom right":
+          "justify-end items-end [&_.paragraph]:[text-align:right]",
+      },
+      borderRadius: {
+        0: "",
+        2: "rounded-sm",
+        4: "rounded",
+        6: "rounded-md",
+        8: "rounded-lg",
+        10: "rounded-[10px]",
+        12: "rounded-xl",
+        14: "rounded-[14px]",
+        16: "rounded-2xl",
+        18: "rounded-[18px]",
+        20: "rounded-[20px]",
+        22: "rounded-[22px]",
+        24: "rounded-3xl",
+        26: "rounded-[26px]",
+        28: "rounded-[28px]",
+        30: "rounded-[30px]",
+        32: "rounded-[32px]",
+        34: "rounded-[34px]",
+        36: "rounded-[36px]",
+        38: "rounded-[38px]",
+        40: "rounded-[40px]",
+      },
+    },
+  },
+);
 
-interface PromotionItemProps extends HydrogenComponentProps {
-  backgroundImage: WeaverseImage;
+interface PromotionItemProps
+  extends VariantProps<typeof variants>,
+    HydrogenComponentProps,
+    OverlayProps {
+  backgroundImage: WeaverseImage | string;
 }
 
 let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
   (props, ref) => {
-    let { backgroundImage, children, ...rest } = props;
+    let {
+      contentPosition,
+      backgroundImage,
+      borderRadius,
+      children,
+      enableOverlay,
+      overlayColor,
+      overlayOpacity,
+      ...rest
+    } = props;
     return (
-      <div ref={ref} {...rest} className="relative w-96 aspect-video">
-        <div className="absolute inset-0">
-          {backgroundImage ? (
-            <Image
-              data={backgroundImage}
-              sizes="auto"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          ) : (
-            <div className="w-full h-full flex justify-center items-center rounded-2xl bg-black bg-opacity-5">
-              <IconImageBlank
-                viewBox="0 0 100 101"
-                className="!w-24 !h-24 opacity-20"
-              />
-            </div>
-          )}
-        </div>
-        <div className="relative flex flex-col items-center z-10 w-full py-10">
-          <div className="w-5/6 flex flex-col text-center items-center gap-5">
-            {children}
-          </div>
-        </div>
+      <div
+        ref={ref}
+        {...rest}
+        className={variants({ contentPosition, borderRadius })}
+      >
+        <BackgroundImage backgroundImage={backgroundImage} />
+        <Overlay
+          enableOverlay={enableOverlay}
+          overlayColor={overlayColor}
+          overlayOpacity={overlayOpacity}
+        />
+        {children}
       </div>
     );
   },
@@ -46,44 +106,75 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
 export default PromotionGridItem;
 
 export let schema: HydrogenComponentSchema = {
-  type: "promotion-item",
+  type: "promotion-grid-item",
   title: "Promotion",
   toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: "Promotion",
+      group: "Layout",
+      inputs: [
+        {
+          type: "position",
+          label: "Content position",
+          name: "contentPosition",
+          defaultValue: "center center",
+        },
+        {
+          type: "range",
+          name: "borderRadius",
+          label: "Corner radius",
+          configs: {
+            min: 0,
+            max: 40,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
+        },
+      ],
+    },
+    {
+      group: "Background",
       inputs: [
         {
           type: "image",
           name: "backgroundImage",
           label: "Background image",
         },
+        {
+          type: "heading",
+          label: "Overlay",
+        },
+        ...overlayInputs,
       ],
     },
   ],
-  childTypes: [
-    "subheading",
-    "heading",
-    "description",
-    "promotion-item--buttons",
-  ],
+  childTypes: ["subheading", "heading", "paragraph", "promotion-item--buttons"],
   presets: {
+    contentPosition: "bottom right",
+    backgroundImage: IMAGES_PLACEHOLDERS.collection_3,
+    borderRadius: 16,
+    enableOverlay: true,
+    overlayColor: "#0c0c0c",
+    overlayOpacity: 20,
     children: [
       {
-        type: "subheading",
-        content: "Subheading",
-      },
-      {
         type: "heading",
-        content: "Heading for Image",
+        content: "Announce your promotion",
       },
       {
-        type: "description",
+        type: "paragraph",
         content:
           "Include the smaller details of your promotion in text below the title.",
       },
       {
         type: "promotion-item--buttons",
+        children: [
+          {
+            type: "button",
+            content: "Shop now",
+          },
+        ],
       },
     ],
   },

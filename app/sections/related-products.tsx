@@ -6,7 +6,7 @@ import type {
 import { Suspense, forwardRef } from "react";
 
 import type { ProductCardFragment } from "storefrontapi.generated";
-import { ProductSwimlane, Skeleton } from "~/components";
+import { ProductSwimlane, Skeleton } from "~/modules";
 
 interface RelatedProductsProps extends HydrogenComponentProps {
   heading: string;

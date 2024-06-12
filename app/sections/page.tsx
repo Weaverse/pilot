@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 
 import type { PageDetailsQuery } from "storefrontapi.generated";
-import { PageHeader } from "~/components";
+import { PageHeader } from "~/modules";
 
 interface PageProps extends HydrogenComponentProps {
   paddingTop: number;

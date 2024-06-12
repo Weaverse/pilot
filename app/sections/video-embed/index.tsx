@@ -1,13 +1,9 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import type { SectionProps } from "~/components/Section";
+import { Section, sectionInspector } from "~/components/Section";
 
-import type { SectionProps } from "~/sections/shared/Section";
-import { Section, sectionInspector } from "~/sections/shared/Section";
-
-type VideoEmbedProps = SectionProps & {
-  heading: string;
-  description: string;
-};
+type VideoEmbedProps = SectionProps;
 
 let VideoEmbed = forwardRef<HTMLElement, VideoEmbedProps>((props, ref) => {
   let { children, ...rest } = props;
@@ -24,8 +20,8 @@ export let schema: HydrogenComponentSchema = {
   type: "video",
   title: "Video embed",
   toolbar: ["general-settings", ["duplicate", "delete"]],
-  inspector: [sectionInspector],
-  childTypes: ["heading", "description", "video-embed--item"],
+  inspector: sectionInspector,
+  childTypes: ["heading", "paragraph", "video-embed--item"],
   presets: {
     children: [
       {
@@ -33,7 +29,7 @@ export let schema: HydrogenComponentSchema = {
         content: "Video embed",
       },
       {
-        type: "description",
+        type: "paragraph",
         content:
           "A picture is worth a thousand words, and a video is worth even more. Utilize this space to engage, inform, and convince your customers.",
       },

@@ -1,8 +1,9 @@
 import { Image } from "@shopify/hydrogen";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseImage,
+import {
+  IMAGES_PLACEHOLDERS,
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
+  type WeaverseImage,
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
@@ -34,10 +35,10 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
         className={clsx(hideOnMobile && "hidden sm:block")}
       >
         <figure className="p-6 bg-gray-50 rounded">
-          <blockquote className="text-gray-500">
-            <h4 className="font-medium text-gray-900">{heading}</h4>
+          <blockquote>
+            <h4 className="font-semibold">{heading}</h4>
             <p
-              className="my-4"
+              className="my-4 text-gray-500"
               suppressHydrationWarning
               dangerouslySetInnerHTML={{ __html: content }}
             />
@@ -48,17 +49,15 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
               data={
                 typeof authorImage === "object"
                   ? authorImage
-                  : { url: authorImage }
+                  : { url: authorImage, altText: authorName }
               }
               alt={authorName}
               width={36}
               sizes="auto"
             />
-            <div className="space-y-0.5 font-medium">
-              <div>{authorName}</div>
-              <div className="text-sm font-light text-gray-500">
-                {authorTitle}
-              </div>
+            <div className="space-y-0.5">
+              <div className="font-medium">{authorName}</div>
+              <div className="text-sm text-gray-500">{authorTitle}</div>
             </div>
           </figcaption>
         </figure>
@@ -94,8 +93,7 @@ export let schema: HydrogenComponentSchema = {
           type: "image",
           name: "authorImage",
           label: "Author image",
-          defaultValue:
-            "https://cdn.shopify.com/s/files/1/0728/0410/6547/files/wv-fashion-model-in-fur.jpg?v=1694236467",
+          defaultValue: IMAGES_PLACEHOLDERS.image,
         },
         {
           type: "text",

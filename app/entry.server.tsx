@@ -14,9 +14,10 @@ export default async function handleRequest(
   context: AppLoadContext,
 ) {
   const { nonce, header, NonceProvider } = createContentSecurityPolicy({
-    ...getWeaverseCsp(request),
+    ...getWeaverseCsp(request, context),
     shop: {
-      checkoutDomain: context.env?.PUBLIC_CHECKOUT_DOMAIN,
+      checkoutDomain:
+        context.env?.PUBLIC_CHECKOUT_DOMAIN || context.env?.PUBLIC_STORE_DOMAIN,
       storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
     },
   });

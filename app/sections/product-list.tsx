@@ -6,9 +6,9 @@ import type {
 import { getPaginationVariables } from "@shopify/hydrogen";
 import { forwardRef } from "react";
 
-import { ProductSwimlane } from "~/components";
+import { ProductSwimlane } from "~/modules";
 import { COLLECTION_QUERY } from "~/data/queries";
-import type { SortParam } from "~/components/SortFilter";
+import type { SortParam } from "~/modules/SortFilter";
 import { getSortValuesFromParam } from "~/routes/($locale).collections.$collectionHandle";
 import { PAGINATION_SIZE } from "~/lib/const";
 

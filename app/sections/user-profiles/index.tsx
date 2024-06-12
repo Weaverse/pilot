@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { Image } from "@shopify/hydrogen";
 
 import { METAOBJECTS_QUERY } from "~/data/queries";
-import { Button } from "~/components";
+import { Button } from "~/modules";
 
 const UserCard = ({ user }: { user: any }) => {
   let { fields } = user;
@@ -17,7 +17,7 @@ const UserCard = ({ user }: { user: any }) => {
   let name = fields.find((field: any) => field.key === "name")?.value;
   let role = fields.find((field: any) => field.key === "role")?.value;
   let description = fields.find(
-    (field: any) => field.key === "description",
+    (field: any) => field.key === "paragraph",
   )?.value;
   return (
     <div

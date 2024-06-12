@@ -24,13 +24,13 @@ export function GlobalStyle() {
   if (settings) {
     let {
       colorBackground,
-      colorInverseBackground,
       colorText,
-      colorInverseText,
-      colorButton,
-      colorButtonText,
-      colorInverseButton,
-      colorInverseButtonText,
+      // colorInverseBackground,
+      // colorInverseText,
+      // colorButton,
+      // colorButtonText,
+      // colorInverseButton,
+      // colorInverseButtonText,
       colorSale,
       colorBorder,
       bodyBaseSize,
@@ -59,13 +59,13 @@ export function GlobalStyle() {
     } = settings;
 
     colorBackground = hexToRgbString(colorBackground);
-    colorInverseBackground = hexToRgbString(colorInverseBackground);
+    // colorInverseBackground = hexToRgbString(colorInverseBackground);
     colorText = hexToRgbString(colorText);
-    colorInverseText = hexToRgbString(colorInverseText);
-    colorButton = hexToRgbString(colorButton);
-    colorButtonText = hexToRgbString(colorButtonText);
-    colorInverseButton = hexToRgbString(colorInverseButton);
-    colorInverseButtonText = hexToRgbString(colorInverseButtonText);
+    // colorInverseText = hexToRgbString(colorInverseText);
+    // colorButton = hexToRgbString(colorButton);
+    // colorButtonText = hexToRgbString(colorButtonText);
+    // colorInverseButton = hexToRgbString(colorInverseButton);
+    // colorInverseButtonText = hexToRgbString(colorInverseButtonText);
     colorSale = hexToRgbString(colorSale);
     colorBorder = hexToRgbString(colorBorder);
 
@@ -79,13 +79,7 @@ export function GlobalStyle() {
             :root {
               /* Colors */
               --color-background: ${colorBackground};
-              --color-inverse-background: ${colorInverseBackground};
               --color-text: ${colorText};
-              --color-inverse-text: ${colorInverseText};
-              --color-button: ${colorButton};
-              --color-button-text: ${colorButtonText};
-              --color-inverse-button: ${colorInverseButton};
-              --color-inverse-button-text: ${colorInverseButtonText};
               --color-sale: ${colorSale};
               --color-border: ${colorBorder};
 
@@ -153,33 +147,33 @@ export function GlobalStyle() {
               }
             }
             .btn-primary {
-              background-color: ${buttonPrimaryBg};
-              color: ${buttonPrimaryColor};
-              border-color: ${buttonPrimaryBorder};
+              background-color: var(--color-button-bg, ${buttonPrimaryBg});
+              color: var(--color-button-text, ${buttonPrimaryColor});
+              border-color: var(--color-button-border, ${buttonPrimaryBorder});
             }
             .btn-primary:hover {
-              background-color: ${buttonPrimaryBgHover};
-              color: ${buttonPrimaryColorHover};
-              border-color: ${buttonPrimaryBorderHover};
+              background-color: var(--color-button-bg-hover, ${buttonPrimaryBgHover});
+              color: var(--color-button-text-hover, ${buttonPrimaryColorHover});
+              border-color: var(--color-button-border-hover, ${buttonPrimaryBorderHover});
             }
             .btn-secondary {
-              background-color: ${buttonSecondaryBg};
-              color: ${buttonSecondaryColor};
-              border-color: ${buttonSecondaryBorder};
+              background-color: var(--color-button-bg, ${buttonSecondaryBg});
+              color: var(--color-button-text, ${buttonSecondaryColor});
+              border-color: var(--color-button-border, ${buttonSecondaryBorder});
             }
             .btn-secondary:hover {
-              background-color: ${buttonSecondaryBgHover};
-              color: ${buttonSecondaryColorHover};
-              border-color: ${buttonSecondaryBorderHover};
+              background-color: var(--color-button-bg-hover, ${buttonSecondaryBgHover});
+              color: var(--color-button-text-hover, ${buttonSecondaryColorHover});
+              border-color: var(--color-button-border-hover, ${buttonSecondaryBorderHover});
             }
             .btn-link {
-              color: ${buttonLinkColor};
-              border-bottom-color: ${buttonLinkColor};
+              color: var(--color-button-text, ${buttonLinkColor});
+              border-bottom-color: var(--color-button-border, ${buttonLinkColor});
               border-radius: 0;
             }
             .btn-link:hover {
-              color: ${buttonLinkColorHover};
-              border-bottom-color: ${buttonLinkColorHover};
+              color: var(--color-button-text-hover, ${buttonLinkColorHover});
+              border-bottom-color: var(--color-button-border-hover, ${buttonLinkColorHover});
             }
           `,
         }}

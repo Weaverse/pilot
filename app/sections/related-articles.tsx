@@ -7,7 +7,7 @@ import type {
 import { Suspense, forwardRef } from "react";
 
 import type { ArticleFragment } from "storefrontapi.generated";
-import { Skeleton } from "~/components";
+import { Skeleton } from "~/modules";
 import { getImageLoadingPriority } from "~/lib/const";
 
 interface RelatedArticlesProps extends HydrogenComponentProps {

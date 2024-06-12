@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 
 import type { HomepageFeaturedCollectionsQuery } from "storefrontapi.generated";
-import { FeaturedCollections as HomeFeaturedCollections } from "~/components";
+import { FeaturedCollections as HomeFeaturedCollections } from "~/modules";
 import { FEATURED_COLLECTIONS_QUERY } from "~/data/queries";
 
 interface FeaturedCollectionsProps

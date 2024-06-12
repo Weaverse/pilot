@@ -1,21 +1,19 @@
 import { Money, ShopPayButton } from "@shopify/hydrogen";
 import {
+  useThemeSettings,
   type ComponentLoaderArgs,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
-  useThemeSettings,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
-
 import type { ProductQuery } from "storefrontapi.generated";
-import { AddToCartButton } from "~/components";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/data/queries";
-
-import { Quantity } from "../../components/product-form/quantity";
-import { ProductVariants } from "../../components/product-form/variants";
-import { ProductPlaceholder } from "../../components/product-form/placeholder";
-import { ProductMedia } from "../../components/product-form/product-media";
+import { AddToCartButton } from "~/modules";
+import { ProductPlaceholder } from "~/modules/product-form/placeholder";
+import { ProductMedia } from "~/modules/product-form/product-media";
+import { Quantity } from "~/modules/product-form/quantity";
+import { ProductVariants } from "~/modules/product-form/variants";
 
 type SingleProductData = {
   productsCount: number;
