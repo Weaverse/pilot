@@ -1,8 +1,8 @@
 diff --git a/node_modules/@shopify/cli-hydrogen/dist/lib/mini-oxygen/workerd.js b/node_modules/@shopify/cli-hydrogen/dist/lib/mini-oxygen/workerd.js
-index e486dac..3154b9c 100644
+index da14730..5969840 100644
 --- a/node_modules/@shopify/cli-hydrogen/dist/lib/mini-oxygen/workerd.js
 +++ b/node_modules/@shopify/cli-hydrogen/dist/lib/mini-oxygen/workerd.js
-@@ -35,7 +35,7 @@ async function startWorkerdServer({
+@@ -48,7 +48,7 @@ async function startWorkerdServer({
    const miniOxygen = createMiniOxygen({
      debug,
      port: appPort,

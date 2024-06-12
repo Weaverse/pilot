@@ -9,9 +9,9 @@ FROM base as build
 
 WORKDIR /myapp
 ADD . .
-RUN npm install
+RUN npm install --package-lock=false
 
-RUN npx patch-package
+RUN npx --yes patch-package
 
 # Finally, build the production image with minimal footprint
 RUN npm run build
