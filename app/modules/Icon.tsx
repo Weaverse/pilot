@@ -115,10 +115,10 @@ export function IconCaret({
     case "up":
       rotate = "rotate-180";
       break;
-    case "left":
+    case "right":
       rotate = "-rotate-90";
       break;
-    case "right":
+    case "left":
       rotate = "rotate-90";
       break;
     default:

@@ -46,7 +46,7 @@ export type NormalizedPredictiveSearchResultItem = {
 
 export type SearchResultTypeProps = {
   goToSearchResult: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-  items: NormalizedPredictiveSearchResultItem[];
+  items?: NormalizedPredictiveSearchResultItem[];
   searchTerm: UseSearchReturn['searchTerm'];
   type: NormalizedPredictiveSearchResults[number]['type'];
 };

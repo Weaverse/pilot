@@ -16,6 +16,7 @@ export function PredictiveSearch(props: PredictiveSearchProps) {
           <div className="mx-auto w-full max-w-[560px] p-6">
             <Input
               name="q"
+              type='search'
               onChange={fetchResults}
               onFocus={fetchResults}
               onClear={fetchResults}

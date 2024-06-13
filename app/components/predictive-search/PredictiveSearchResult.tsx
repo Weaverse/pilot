@@ -1,6 +1,6 @@
 import {Link} from '@remix-run/react';
 import {SearchResultItem} from './ResultItem';
-import {
+import type {
   NormalizedPredictiveSearchResultItem,
   NormalizedPredictiveSearchResults,
   SearchResultTypeProps,
@@ -26,7 +26,7 @@ export function PredictiveSearchResult({
       <Link prefetch="intent" to={categoryUrl} onClick={goToSearchResult}>
         <h5 className="uppercase font-semibold">{isSuggestions ? 'Suggestions' : type}</h5>
       </Link>
-      <ul className={clsx("pt-5", type === "products" ? 'space-y-4' : 'space-y-1')}>
+      {items?.length && <ul className={clsx("pt-5", type === "products" ? 'space-y-4' : 'space-y-1')}>
         {items.map((item: NormalizedPredictiveSearchResultItem) => (
           <SearchResultItem
             goToSearchResult={goToSearchResult}
@@ -34,7 +34,7 @@ export function PredictiveSearchResult({
             key={item.id}
           />
         ))}
-      </ul>
+      </ul>}
     </div>
   );
 }
