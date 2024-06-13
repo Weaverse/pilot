@@ -119,7 +119,7 @@ export function ReviewItem(props: ReviewItemProps) {
             </div>
           ))}
         </div>
-        <PreviewMedia
+        <ReviewMediaPreview
           media={previewMedia}
           closePreview={() => setPreviewMedia(null)}
         />
@@ -128,13 +128,11 @@ export function ReviewItem(props: ReviewItemProps) {
   );
 }
 
-function PreviewMedia({
-  media,
-  closePreview,
-}: {
+function ReviewMediaPreview(props: {
   media: ReviewMedia | null;
   closePreview: () => void;
 }) {
+  let { media, closePreview } = props;
   if (media) {
     return (
       <div className="flex gap-2 items-start">

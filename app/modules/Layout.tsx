@@ -1,9 +1,6 @@
 import { Disclosure } from "@headlessui/react";
 import { Await, Form, useLocation, useParams } from "@remix-run/react";
-import {
-  CartForm,
-  unstable_useAnalytics as useAnalytics,
-} from "@shopify/hydrogen";
+import { CartForm, useAnalytics } from "@shopify/hydrogen";
 import { Suspense, useEffect, useMemo } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import clsx from "clsx";
@@ -261,8 +258,8 @@ function DesktopHeader({
         "w-full px-6 md:px-8 lg:px-12",
       )}
     >
-        <Logo />
-        <MegaMenu />
+      <Logo />
+      <MegaMenu />
       <div className="flex items-center gap-1">
         <SearchToggle />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />

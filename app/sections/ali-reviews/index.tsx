@@ -23,13 +23,12 @@ let AliReviewSection = forwardRef<HTMLElement, AliReviewsProps>(
 
 export type AliReviewsLoaderData = Awaited<ReturnType<typeof loader>>;
 
-export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
+export let loader = async ({ weaverse }: ComponentLoaderArgs<{}, Env>) => {
   let res = await fetch(
     "https://widget-hub-api.alireviews.io/api/public/reviews",
     {
       method: "GET",
       headers: {
-        // @ts-ignore
         Authorization: `Bearer ${weaverse.env.ALI_REVIEWS_API_KEY}`,
         "Content-Type": "application/json",
       },
@@ -69,7 +68,11 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     children: [
       { type: "heading", content: "Reviews" },
-      { type: "paragraph", content: "Ali Reviews" },
+      {
+        type: "paragraph",
+        content:
+          "This section demonstrates how to integrate with third-party apps using their public APIs. Reviews are fetched from Ali Reviews API.",
+      },
       {
         type: "ali-reviews--list",
         showAvgRating: true,

@@ -1,8 +1,8 @@
-import { WeaverseClient } from "@weaverse/hydrogen";
 import type { CreateWeaverseClientArgs } from "@weaverse/hydrogen";
-
+import { WeaverseClient } from "@weaverse/hydrogen";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
+import type { AppLoadContext } from "@shopify/remix-oxygen";
 
 export function createWeaverseClient(args: CreateWeaverseClientArgs) {
   return new WeaverseClient({
@@ -12,10 +12,11 @@ export function createWeaverseClient(args: CreateWeaverseClientArgs) {
   });
 }
 
-export function getWeaverseCsp(request: Request) {
+export function getWeaverseCsp(request: Request, context: AppLoadContext) {
   let url = new URL(request.url);
   // Get weaverse host from query params
-  let weaverseHost = url.searchParams.get("weaverseHost");
+  let weaverseHost =
+    url.searchParams.get("weaverseHost") || context.env.WEAVERSE_HOST;
   let isDesignMode = url.searchParams.get("weaverseHost");
   let weaverseHosts = ["*.weaverse.io", "*.shopify.com", "*.myshopify.com"];
   if (weaverseHost) {
@@ -32,14 +33,13 @@ export function getWeaverseCsp(request: Request) {
       "*.google.com",
       "*.google-analytics.com",
       "*.googletagmanager.com",
-      "fonts.gstatic.com",
       "cdn.alireviews.io",
       "cdn.jsdelivr.net",
       "*.alicdn.com",
       ...weaverseHosts,
     ],
-    styleSrc: ["fonts.googleapis.com", ...weaverseHosts],
     connectSrc: ["vimeo.com", "*.google-analytics.com", ...weaverseHosts],
+    styleSrc: weaverseHosts,
   };
   if (isDesignMode) {
     updatedCsp.frameAncestors = ["*"];

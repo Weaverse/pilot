@@ -3,10 +3,7 @@ import { forwardRef } from "react";
 import type { SectionProps } from "~/components/Section";
 import { Section, sectionInspector } from "~/components/Section";
 
-type VideoEmbedProps = SectionProps & {
-  heading: string;
-  description: string;
-};
+type VideoEmbedProps = SectionProps;
 
 let VideoEmbed = forwardRef<HTMLElement, VideoEmbedProps>((props, ref) => {
   let { children, ...rest } = props;

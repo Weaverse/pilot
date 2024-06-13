@@ -24,7 +24,7 @@ interface ImageItem {
 interface MenuItemProps {
   title: string;
   items: SingleMenuItem[];
-  imageItems: ImageItem[];c
+  imageItems: ImageItem[];
 }
 
 export function MegaMenu() {
@@ -180,8 +180,8 @@ export function MegaMenu() {
         height: 1500,
       },
       to: "/collections/jackets",
-    }
-  ]
+    },
+  ];
   return (
     <nav className="flex items-stretch h-full">
       <MenuItem title="Woman" items={items} imageItems={imageItems} />
@@ -296,13 +296,7 @@ function PopupItem({ title }: { title: string }) {
   );
 }
 
-function ImageItem({
-  title,
-  items,
-}: {
-  title: string;
-  items: ImageItem[];
-}) {
+function ImageItem({ title, items }: { title: string; items: ImageItem[] }) {
   return (
     <div className="group">
       <ItemHeader title={title} />

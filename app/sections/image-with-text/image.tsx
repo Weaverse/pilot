@@ -62,7 +62,6 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
       aspectRatio,
       borderRadius,
       objectFit,
-      className,
       ...rest
     } = props;
     let imageData: Partial<WeaverseImage> =
@@ -79,7 +78,7 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
     }
 
     return (
-      <div ref={ref} {...rest} className={cn(variants({ width, className }))}>
+      <div ref={ref} {...rest} className={cn(variants({ width }))}>
         <Image
           data={imageData}
           sizes="auto"
