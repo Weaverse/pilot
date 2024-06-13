@@ -1,5 +1,5 @@
 import { Disclosure } from "@headlessui/react";
-import { Await, Form, useParams } from "@remix-run/react";
+import { Await, Form, useLocation, useParams } from "@remix-run/react";
 import {
   CartForm,
   unstable_useAnalytics as useAnalytics,
@@ -38,6 +38,7 @@ import { useRootLoaderData } from "~/root";
 import { Logo } from "./Logo";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
 import { MegaMenu } from "./MegaMenu";
+import { MobileMenu } from "./MobileMenu";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -146,43 +147,41 @@ export function MenuDrawer({
   menu: EnhancedMenu;
 }) {
   return (
-    <Drawer open={isOpen} onClose={onClose} openFrom="left" heading="Menu">
-      <div className="grid">
-        <MenuMobileNav menu={menu} onClose={onClose} />
-      </div>
+    <Drawer bordered open={isOpen} onClose={onClose} openFrom="left" heading="Menu">
+      <MobileMenu onClose={onClose} />
     </Drawer>
   );
 }
 
-function MenuMobileNav({
-  menu,
-  onClose,
-}: {
-  menu: EnhancedMenu;
-  onClose: () => void;
-}) {
-  return (
-    <nav className="grid gap-4 p-6 sm:gap-6 sm:px-12 sm:py-8">
-      {/* Top level menu items */}
-      {(menu?.items || []).map((item) => (
-        <span key={item.id} className="block">
-          <Link
-            to={item.to}
-            target={item.target}
-            onClick={onClose}
-            className={({ isActive }) =>
-              isActive ? "pb-1 border-b -mb-px" : "pb-1"
-            }
-          >
-            <Text as="span" size="copy">
-              {item.title}
-            </Text>
-          </Link>
-        </span>
-      ))}
-    </nav>
-  );
-}
+// function MenuMobileNav({
+//   menu,
+//   onClose,
+// }: {
+//   menu: EnhancedMenu;
+//   onClose: () => void;
+// }) {
+//   return (
+//     <nav className="grid gap-4 p-6 sm:gap-6 sm:px-12 sm:py-8">
+//       {/* Top level menu items */}
+//       {(menu?.items || []).map((item) => (
+//         <span key={item.id} className="block">
+//           <Link
+//             to={item.to}
+//             target={item.target}
+//             onClick={onClose}
+//             className={({ isActive }) =>
+//               isActive ? "pb-1 border-b -mb-px" : "pb-1"
+//             }
+//           >
+//             <Text as="span" size="copy">
+//               {item.title}
+//             </Text>
+//           </Link>
+//         </span>
+//       ))}
+//     </nav>
+//   );
+// }
 
 function MobileHeader({
   title,
@@ -259,7 +258,7 @@ function DesktopHeader({
         "bg-primary text-body",
         y > 50 && " shadow-header",
         "hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between leading-none gap-8",
-        "w-full px-6 md:px-8 lg:px-12 py-4",
+        "w-full px-6 md:px-8 lg:px-12",
       )}
     >
         <Logo />
@@ -280,8 +279,8 @@ function AccountLink({ className }: { className?: string }) {
   return (
     <Link to="/account" className={className}>
       <Suspense fallback={<IconLogin />}>
-        <Await resolve={isLoggedIn} errorElement={<IconLogin />}>
-          {(isLoggedIn) => (isLoggedIn ? <IconAccount /> : <IconLogin />)}
+        <Await resolve={isLoggedIn} errorElement={<IconAccount />}>
+          {(isLoggedIn) => (isLoggedIn ? <IconAccount /> : <IconAccount />)}
         </Await>
       </Suspense>
     </Link>
@@ -290,6 +289,12 @@ function AccountLink({ className }: { className?: string }) {
 
 function SearchToggle() {
   const {isOpen, closeDrawer, openDrawer} = useDrawer();
+  let {pathname} = useLocation();
+  useEffect(() => {
+    if (isOpen) {
+      closeDrawer()
+    }
+  }, [pathname])
   return (
     <>
       <button

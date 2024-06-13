@@ -187,3 +187,19 @@
   background-color: var(--section-background-color);
   border-radius: var(--section-border-radius);
 }
+
+.animate-hover {
+  @apply relative;
+  overflow: hidden;
+} 
+
+.animate-hover::before {
+  content: '';
+  /* transform-origin: right; */
+  @apply absolute bottom-0 left-0 w-full border-b-2 origin-right duration-300 transition-transform scale-x-0;
+}
+
+.animate-hover:hover::before {
+  @apply origin-left scale-x-100;
+  
+}

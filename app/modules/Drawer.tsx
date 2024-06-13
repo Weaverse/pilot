@@ -1,8 +1,9 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
-import { Heading, IconClose } from "~/modules";
+import { Heading, IconCaret, IconClose } from "~/modules";
 import { cn } from "~/lib/cn";
+import clsx from "clsx";
 
 /**
  * Drawer component that opens on user click.
@@ -18,18 +19,21 @@ export function Drawer({
   onClose,
   openFrom = "right",
   children,
+  isBackMenu = false,
+  bordered = false
 }: {
   heading?: string;
   open: boolean;
   onClose: () => void;
   openFrom: "right" | "left" | "top";
+  isBackMenu?: boolean;
+  bordered?: boolean;
   children: React.ReactNode;
 }) {
   const offScreen = {
     right: "translate-x-full",
     left: "-translate-x-full",
-    top: '-translate-y-full'
-
+    top: "-translate-y-full",
   };
 
   return (
@@ -63,15 +67,29 @@ export function Drawer({
                 leaveFrom="translate-x-0"
                 leaveTo={offScreen[openFrom]}
               >
-                <Dialog.Panel className={cn("w-screen text-left align-middle transition-all transform shadow-xl  bg-primary",
-                  openFrom === 'top' ? 'h-fit' : "max-w-lg h-screen-dynamic"
-                
-                )}>
+                <Dialog.Panel
+                  className={cn(
+                    "w-screen text-left align-middle transition-all transform shadow-xl  bg-primary",
+                    openFrom === "top" ? "h-fit" : "max-w-lg h-screen-dynamic",
+                  )}
+                >
                   <header
-                    className={`sticky top-0 flex items-center px-6 h-nav sm:px-8 md:px-12 ${
-                      heading ? "justify-between" : "justify-end"
-                    }`}
+                    className={clsx(
+                      "sticky top-0 flex items-center px-6 h-nav sm:px-8 md:px-12",
+                      isBackMenu ? "justify-start gap-4" : heading ? "justify-between" : "justify-end",
+                      bordered && "border-b"
+                    )}
                   >
+                    {isBackMenu && (
+                      <button
+                        type="button"
+                        className="p-2 -m-4 transition text-body hover:text-body/50"
+                        onClick={onClose}
+                        data-test="close-cart"
+                      >
+                        <IconCaret className="w-6 h-6" direction="left" aria-label="Close panel" />
+                      </button>
+                    )}
                     {heading !== null && (
                       <Dialog.Title>
                         <Heading as="span" size="lead" id="cart-contents">
@@ -79,14 +97,16 @@ export function Drawer({
                         </Heading>
                       </Dialog.Title>
                     )}
-                    <button
-                      type="button"
-                      className="p-4 -m-4 transition text-body hover:text-body/50"
-                      onClick={onClose}
-                      data-test="close-cart"
-                    >
-                      <IconClose aria-label="Close panel" />
-                    </button>
+                    {!isBackMenu && (
+                      <button
+                        type="button"
+                        className="p-4 -m-4 transition text-body hover:text-body/50"
+                        onClick={onClose}
+                        data-test="close-cart"
+                      >
+                        <IconClose aria-label="Close panel" />
+                      </button>
+                    )}
                   </header>
                   {children}
                 </Dialog.Panel>
