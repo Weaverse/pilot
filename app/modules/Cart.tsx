@@ -6,14 +6,13 @@ import {
   type CartReturn,
   Image,
   Money,
+  OptimisticCart,
   OptimisticInput,
   useOptimisticCart,
   useOptimisticData,
 } from "@shopify/hydrogen";
 import type {
   Cart as CartType,
-  CartCost,
-  CartLine,
   CartLineUpdateInput,
 } from "@shopify/hydrogen/storefront-api-types";
 
@@ -26,6 +25,8 @@ import {
   Text,
 } from "~/modules";
 import { getInputStyleClasses } from "~/lib/utils";
+import { CartApiQueryFragment } from "storefrontapi.generated";
+type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
 type Layouts = "page" | "drawer";
 
@@ -39,7 +40,6 @@ export function Cart({
   cart: CartReturn | null;
 }) {
   let optimisticCart = useOptimisticCart(cart);
-  if (!optimisticCart?.lines?.nodes?.length) return <p>Nothing in cart</p>;
 
   const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
 
@@ -56,9 +56,8 @@ export function CartDetails({
   cart,
 }: {
   layout: Layouts;
-  cart: CartType | null;
+  cart: OptimisticCart<CartApiQueryFragment>;
 }) {
-  // @todo: get optimistic cart cost
   const cartHasItems = !!cart && cart.totalQuantity > 0;
   const container = {
     drawer: "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]",
@@ -67,7 +66,7 @@ export function CartDetails({
 
   return (
     <div className={container[layout]}>
-      <CartLines lines={cart?.lines?.nodes as CartLine[]} layout={layout} />
+      <CartLines lines={cart?.lines?.nodes} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
           <CartDiscounts discountCodes={cart.discountCodes} />
@@ -210,7 +209,7 @@ function CartSummary({
   children = null,
 }: {
   children?: React.ReactNode;
-  cost: CartCost;
+  cost: CartApiQueryFragment["cost"];
   layout: Layouts;
 }) {
   const summary = {
@@ -341,7 +340,6 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
 
   const optimisticQuantity = optimisticData?.quantity || line.quantity;
 
-  // @ts-expect-error - isOptimistic is not defined yet, will be available in the future
   const { id: lineId, isOptimistic } = line;
   const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
   const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
