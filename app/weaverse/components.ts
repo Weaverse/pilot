@@ -2,8 +2,8 @@ import type { HydrogenComponent } from "@weaverse/hydrogen";
 
 import { sharedComponents } from "~/components";
 import * as Judgeme from "~/modules/product-form/judgeme-review";
-import * as SlideShowItem from "~/sections/SlideShow/SlideItems";
-import * as SlideShow from "~/sections/SlideShow/SlideShow";
+import * as SlideShowItem from "~/sections/SlideShow2/SlideItems";
+import * as SlideShow from "~/sections/SlideShow2/SlideShow";
 import * as AliReview from "~/sections/ali-reviews";
 import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as AllProducts from "~/sections/all-products";
