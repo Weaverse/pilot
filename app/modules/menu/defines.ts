@@ -5,6 +5,7 @@ interface Item {
 interface SingleMenuItem {
   title: string;
   items: Item[];
+  to: string;
 }
 
 export interface ImageItem {
@@ -22,16 +23,24 @@ export interface MultiMenuProps {
   title: string;
   items: SingleMenuItem[];
   imageItems: ImageItem[];
+  to: string;
 }
 
 export interface SingleMenuProps {
     title: string;
     items: Item[];
+    to: string;
+}
+export interface ImageMenuProps {
+  title: string; 
+  imageItems: ImageItem[]
+  to: string;
 }
 
 let items = [
   {
     title: "Best Sellers",
+    to: "/best-sellers",
     items: [
       {
         title: "Black Friday",
@@ -49,6 +58,7 @@ let items = [
   },
   {
     title: "SHIRTS & TEES",
+    to: "/shirts-tees",
     items: [
       {
         title: "New Arrivals",
@@ -74,6 +84,7 @@ let items = [
   },
   {
     title: "PANTS & JEANS",
+    to: "/pants-jeans",
     items: [
       {
         title: "New Arrivals",
@@ -95,6 +106,7 @@ let items = [
   },
   {
     title: "Accessories",
+    to: "/accessories",
     items: [
       {
         title: "Bags",
@@ -204,6 +216,7 @@ interface NavItem {
   type: "multi" | "image" | "single";
   items?: SingleMenuItem[] | Item[];
   imageItems?: ImageItem[];
+  to: string;
 }
 
 export let Nav_Items: NavItem[] = [
@@ -212,21 +225,25 @@ export let Nav_Items: NavItem[] = [
     type: "multi",
     items: items,
     imageItems: imageItems,
+    to: "/women",
   },
   {
     title: "Men",
     type: "multi",
     items: items,
     imageItems: [],
+    to: "/men",
   },
   {
     title: "Accesories",
     type: "image",
     imageItems: imageMenuItems,
+    to: "/accessories",
   },
   {
     title: "Pilot",
     type: "single",
     items: popupItems,
+    to: "/pilot",
   },
 ];
