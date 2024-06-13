@@ -2,30 +2,31 @@ import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
 import {
-  flattenConnection,
   CartForm,
+  type CartReturn,
   Image,
   Money,
-  useOptimisticData,
+  OptimisticCart,
   OptimisticInput,
-  type CartReturn,
+  useOptimisticCart,
+  useOptimisticData,
 } from "@shopify/hydrogen";
 import type {
   Cart as CartType,
-  CartCost,
-  CartLine,
   CartLineUpdateInput,
 } from "@shopify/hydrogen/storefront-api-types";
 
 import {
   Button,
+  FeaturedProducts,
   Heading,
   IconRemove,
-  Text,
   Link,
-  FeaturedProducts,
+  Text,
 } from "~/modules";
 import { getInputStyleClasses } from "~/lib/utils";
+import { CartApiQueryFragment } from "storefrontapi.generated";
+type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
 type Layouts = "page" | "drawer";
 
@@ -38,12 +39,14 @@ export function Cart({
   onClose?: () => void;
   cart: CartReturn | null;
 }) {
-  const linesCount = Boolean(cart?.lines?.edges?.length || 0);
+  let optimisticCart = useOptimisticCart(cart);
+
+  const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
 
   return (
     <>
       <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
-      <CartDetails cart={cart} layout={layout} />
+      <CartDetails cart={optimisticCart} layout={layout} />
     </>
   );
 }
@@ -53,9 +56,8 @@ export function CartDetails({
   cart,
 }: {
   layout: Layouts;
-  cart: CartType | null;
+  cart: OptimisticCart<CartApiQueryFragment>;
 }) {
-  // @todo: get optimistic cart cost
   const cartHasItems = !!cart && cart.totalQuantity > 0;
   const container = {
     drawer: "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]",
@@ -64,7 +66,7 @@ export function CartDetails({
 
   return (
     <div className={container[layout]}>
-      <CartLines lines={cart?.lines} layout={layout} />
+      <CartLines lines={cart?.lines?.nodes} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
           <CartDiscounts discountCodes={cart.discountCodes} />
@@ -158,9 +160,9 @@ function CartLines({
   lines: cartLines,
 }: {
   layout: Layouts;
-  lines: CartType["lines"] | undefined;
+  lines: CartLine[];
 }) {
-  const currentLines = cartLines ? flattenConnection(cartLines) : [];
+  let currentLines = cartLines;
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
 
@@ -179,7 +181,7 @@ function CartLines({
     >
       <ul className="grid gap-6 md:gap-10">
         {currentLines.map((line) => (
-          <CartLineItem key={line.id} line={line as CartLine} />
+          <CartLineItem key={line.id} line={line} />
         ))}
       </ul>
     </section>
@@ -207,7 +209,7 @@ function CartSummary({
   children = null,
 }: {
   children?: React.ReactNode;
-  cost: CartCost;
+  cost: CartApiQueryFragment["cost"];
   layout: Layouts;
 }) {
   const summary = {
@@ -248,7 +250,6 @@ function CartLineItem({ line }: { line: CartLine }) {
   if (!line?.id) return null;
 
   const { id, quantity, merchandise } = line;
-
   if (typeof quantity === "undefined" || !merchandise?.product) return null;
 
   return (
@@ -339,7 +340,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
 
   const optimisticQuantity = optimisticData?.quantity || line.quantity;
 
-  const { id: lineId } = line;
+  const { id: lineId, isOptimistic } = line;
   const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
   const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
 
@@ -355,7 +356,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
             aria-label="Decrease quantity"
             className="w-10 h-10 transition text-primary/50 hover:text-primary disabled:text-primary/10"
             value={prevQuantity}
-            disabled={optimisticQuantity <= 1}
+            disabled={optimisticQuantity <= 1 || isOptimistic}
           >
             <span>&#8722;</span>
             <OptimisticInput
@@ -375,6 +376,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"
+            disabled={isOptimistic}
           >
             <span>&#43;</span>
             <OptimisticInput

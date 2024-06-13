@@ -96,6 +96,7 @@ export function ProductCard({
                     {
                       quantity: 1,
                       merchandiseId: firstVariant.id,
+                      selectedVariant: firstVariant,
                     },
                   ]}
                   variant="secondary"
@@ -151,6 +152,7 @@ export function ProductCard({
             {
               quantity: 1,
               merchandiseId: firstVariant.id,
+              selectedVariant: firstVariant,
             },
           ]}
           variant="secondary"

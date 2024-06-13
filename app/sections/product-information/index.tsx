@@ -155,6 +155,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     {
                       merchandiseId: selectedVariant?.id,
                       quantity,
+                      selectedVariant,
                     },
                   ]}
                   variant="primary"
