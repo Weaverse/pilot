@@ -34,8 +34,8 @@ import { useRootLoaderData } from "~/root";
 
 import { Logo } from "./Logo";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
-import { MegaMenu } from "./MegaMenu";
-import { MobileMenu } from "./MobileMenu";
+import { DesktopMenu } from "./menu/DesktopMenu";
+import { MobileMenu } from "./menu/MobileMenu";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -145,7 +145,7 @@ export function MenuDrawer({
 }) {
   return (
     <Drawer bordered open={isOpen} onClose={onClose} openFrom="left" heading="Menu">
-      <MobileMenu onClose={onClose} />
+      <MobileMenu />
     </Drawer>
   );
 }
@@ -259,7 +259,7 @@ function DesktopHeader({
       )}
     >
       <Logo />
-      <MegaMenu />
+      <DesktopMenu />
       <div className="flex items-center gap-1">
         <SearchToggle />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
