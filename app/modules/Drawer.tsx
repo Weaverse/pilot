@@ -10,7 +10,7 @@ import clsx from "clsx";
  * @param heading - string. Shown at the top of the drawer.
  * @param open - boolean state. if true opens the drawer.
  * @param onClose - function should set the open state.
- * @param openFrom - right, left
+ * @param openFrom - right, left, top
  * @param children - react children node.
  */
 export function Drawer({
@@ -38,7 +38,12 @@ export function Drawer({
 
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+      <Dialog as="div" className={
+        clsx(
+          "relative",
+          openFrom === "top" ? "z-10" : "z-50", 
+        )
+      } onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -48,14 +53,14 @@ export function Drawer({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-primary bg-opacity-25 text-body" />
+          <div className="fixed inset-0 top-nav bg-primary bg-opacity-25 text-body" />
         </Transition.Child>
 
-        <div className="fixed inset-0">
-          <div className="absolute inset-0 overflow-hidden">
+        <div className="fixed inset-0 top-nav">
+          <div className="absolute inset-0 top-nav overflow-hidden">
             <div
               className={`fixed inset-y-0 flex max-w-full ${
-                openFrom === "right" ? "right-0" : ""
+                openFrom === "right" ? "right-0" : openFrom === "top" ? "top-nav" : ""
               }`}
             >
               <Transition.Child
@@ -73,9 +78,9 @@ export function Drawer({
                     openFrom === "top" ? "h-fit" : "max-w-lg h-screen-dynamic",
                   )}
                 >
-                  <header
+                  {openFrom !== 'top' && <header
                     className={clsx(
-                      "sticky top-0 flex items-center px-6 h-nav sm:px-8 md:px-12",
+                      "sticky top-0 flex items-center px-6 sm:px-8 md:px-12 h-nav",
                       isBackMenu ? "justify-start gap-4" : heading ? "justify-between" : "justify-end",
                       bordered && "border-b"
                     )}
@@ -107,7 +112,7 @@ export function Drawer({
                         <IconClose aria-label="Close panel" />
                       </button>
                     )}
-                  </header>
+                  </header>}
                   {children}
                 </Dialog.Panel>
               </Transition.Child>

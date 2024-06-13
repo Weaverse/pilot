@@ -300,7 +300,7 @@ function SearchToggle() {
       >
         <IconSearch className="h-6 w-6 !font-extralight" />
       </button>
-      <Drawer open={isOpen} onClose={closeDrawer} openFrom="top" heading="">
+      <Drawer open={isOpen} onClose={closeDrawer} openFrom="top">
         <PredictiveSearch isOpen={isOpen} />
       </Drawer>
     </>
