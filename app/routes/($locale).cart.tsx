@@ -1,4 +1,4 @@
-import { Await } from "@remix-run/react";
+import { Await, useRouteLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
   type ActionFunctionArgs,
@@ -13,15 +13,12 @@ import {
 
 import { isLocalPath } from "~/lib/utils";
 import { Cart } from "~/modules/Cart";
-import { useRootLoaderData } from "~/root";
+import type { RootLoader } from "~/root";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart } = context;
 
-  const [formData, customerAccessToken] = await Promise.all([
-    request.formData(),
-    context.customerAccount.getAccessToken(),
-  ]);
+  const formData = await request.formData();
 
   const { action, inputs } = CartForm.getFormInput(formData);
   invariant(action, "No cartAction defined");
@@ -55,7 +52,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
     case CartForm.ACTIONS.BuyerIdentityUpdate:
       result = await cart.updateBuyerIdentity({
         ...inputs.buyerIdentity,
-        customerAccessToken,
       });
       break;
     default:
@@ -65,7 +61,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  // const cartId = result.cart.id;
+  const cartId = result.cart.id;
   const headers = cart.setCartId(result.cart.id);
 
   const redirectTo = formData.get("redirectTo") ?? null;
@@ -94,7 +90,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function CartRoute() {
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  if (!rootData) return null;
+
   // @todo: finish on a separate PR
   return (
     <>

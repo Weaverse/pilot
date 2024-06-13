@@ -1,5 +1,7 @@
-import type { CartLineInput } from "@shopify/hydrogen/storefront-api-types";
-import type { ShopifyAddToCartPayload } from "@shopify/hydrogen";
+import type {
+  OptimisticCartLine,
+  ShopifyAddToCartPayload,
+} from "@shopify/hydrogen";
 import {
   AnalyticsEventName,
   CartForm,
@@ -23,7 +25,7 @@ export function AddToCartButton({
   ...props
 }: {
   children: React.ReactNode;
-  lines: CartLineInput[];
+  lines: OptimisticCartLine[];
   className?: string;
   variant?: "primary" | "secondary" | "inline";
   width?: "auto" | "full";

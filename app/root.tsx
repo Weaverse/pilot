@@ -95,6 +95,7 @@ export const useRootLoaderData = () => {
   const [root] = useMatches();
   return root?.data as SerializeFrom<typeof loader>;
 };
+export type RootLoader = typeof loader;
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const { storefront, cart, env } = context;
