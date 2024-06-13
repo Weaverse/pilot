@@ -1,6 +1,5 @@
 import type {
   ComponentLoaderArgs,
-  HydrogenComponentLoaderFunction,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
