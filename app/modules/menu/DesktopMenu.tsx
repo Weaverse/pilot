@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
-import{
+import {
   Nav_Items,
   type ImageMenuProps,
   type MultiMenuProps,
@@ -103,11 +103,7 @@ function SingleMenu(props: SingleMenuProps) {
         <div className="p-8">
           <div>
             <h5 className="mb-4 uppercase font-medium">
-              <Link
-                to={to}
-                prefetch="intent"
-                className="animate-hover"
-              >
+              <Link to={to} prefetch="intent" className="animate-hover">
                 {title}
               </Link>
             </h5>

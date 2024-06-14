@@ -27,13 +27,13 @@ export interface MultiMenuProps {
 }
 
 export interface SingleMenuProps {
-    title: string;
-    items: Item[];
-    to: string;
+  title: string;
+  items: Item[];
+  to: string;
 }
 export interface ImageMenuProps {
-  title: string; 
-  imageItems: ImageItem[]
+  title: string;
+  imageItems: ImageItem[];
   to: string;
 }
 

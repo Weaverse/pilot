@@ -18,23 +18,28 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-  ssr: {
-    optimizeDeps: {
-      include: ["typographic-base/index", "textr"],
-    },
-  },
-  server: {
-    warmup: {
-      clientFiles: [
-        "./app/entry.client.tsx",
-        "./app/root.tsx",
-        "./app/routes/**/*",
-      ],
-    },
-  },
   build: {
     // Allow a strict Content-Security-Policy
     // withtout inlining assets as base64:
     assetsInlineLimit: 0,
+  },
+  ssr: {
+    optimizeDeps: {
+      include: [
+        "typographic-trademark",
+        "typographic-single-spaces",
+        "typographic-registered-trademark",
+        "typographic-math-symbols",
+        "typographic-en-dashes",
+        "typographic-em-dashes",
+        "typographic-ellipses",
+        "typographic-currency",
+        "typographic-copyright",
+        "typographic-apostrophes-for-possessive-plurals",
+        "typographic-quotes",
+        "typographic-apostrophes",
+        "textr",
+      ],
+    },
   },
 });

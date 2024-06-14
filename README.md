@@ -17,6 +17,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
   ![demo](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Home.png?v=1695816170)
 
 ## What's included
+
 - Remix
 - Hydrogen
 - Oxygen

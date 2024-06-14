@@ -14,7 +14,14 @@ type ProductsLoadedOnScrollProps = {
 };
 
 export function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
-  let { nodes, inView, nextPageUrl, hasNextPage, state, numberInRow = 4 } = props;
+  let {
+    nodes,
+    inView,
+    nextPageUrl,
+    hasNextPage,
+    state,
+    numberInRow = 4,
+  } = props;
   let navigate = useNavigate();
 
   useEffect(() => {
