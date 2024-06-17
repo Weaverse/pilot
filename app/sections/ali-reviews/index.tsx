@@ -3,10 +3,10 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import { backgroundInputs } from "~/components/BackgroundImage";
 import type { SectionProps } from "~/components/Section";
 import { Section, layoutInputs } from "~/components/Section";
 import { type AliReview } from "./review-item";
-import { backgroundInputs } from "~/components/BackgroundImage";
 
 type AliReviewsProps = SectionProps<Awaited<ReturnType<typeof loader>>>;
 

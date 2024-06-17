@@ -1,6 +1,6 @@
-import { IconSearch, Input } from '~/modules';
-import {PredictiveSearchResults} from './PredictiveSearchResults';
-import {PredictiveSearchForm} from './SearchForm';
+import { IconSearch, Input } from "~/modules";
+import { PredictiveSearchResults } from "./PredictiveSearchResults";
+import { PredictiveSearchForm } from "./SearchForm";
 
 interface PredictiveSearchProps {
   // Predictive search props
@@ -8,14 +8,15 @@ interface PredictiveSearchProps {
 }
 
 export function PredictiveSearch(props: PredictiveSearchProps) {
-  let {isOpen} = props;
+  let { isOpen } = props;
   return (
     <div className="relative border-t border-bar-subtle">
       <PredictiveSearchForm>
-        {({fetchResults, inputRef}) => (
+        {({ fetchResults, inputRef }) => (
           <div className="mx-auto w-full max-w-[560px] p-6">
             <Input
               name="q"
+              type="search"
               onChange={fetchResults}
               onFocus={fetchResults}
               onClear={fetchResults}

@@ -1,5 +1,5 @@
 import { Disclosure } from "@headlessui/react";
-import { Await, Form, useParams } from "@remix-run/react";
+import { Await, Form, useLocation, useParams } from "@remix-run/react";
 import { CartForm, useAnalytics } from "@shopify/hydrogen";
 import { Suspense, useEffect, useMemo } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
@@ -34,7 +34,8 @@ import { useRootLoaderData } from "~/root";
 
 import { Logo } from "./Logo";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
-import { MegaMenu } from "./MegaMenu";
+import { DesktopMenu } from "./menu/DesktopMenu";
+import { MobileMenu } from "./menu/MobileMenu";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -143,41 +144,15 @@ export function MenuDrawer({
   menu: EnhancedMenu;
 }) {
   return (
-    <Drawer open={isOpen} onClose={onClose} openFrom="left" heading="Menu">
-      <div className="grid">
-        <MenuMobileNav menu={menu} onClose={onClose} />
-      </div>
+    <Drawer
+      bordered
+      open={isOpen}
+      onClose={onClose}
+      openFrom="left"
+      heading="Menu"
+    >
+      <MobileMenu />
     </Drawer>
-  );
-}
-
-function MenuMobileNav({
-  menu,
-  onClose,
-}: {
-  menu: EnhancedMenu;
-  onClose: () => void;
-}) {
-  return (
-    <nav className="grid gap-4 p-6 sm:gap-6 sm:px-12 sm:py-8">
-      {/* Top level menu items */}
-      {(menu?.items || []).map((item) => (
-        <span key={item.id} className="block">
-          <Link
-            to={item.to}
-            target={item.target}
-            onClick={onClose}
-            className={({ isActive }) =>
-              isActive ? "pb-1 border-b -mb-px" : "pb-1"
-            }
-          >
-            <Text as="span" size="copy">
-              {item.title}
-            </Text>
-          </Link>
-        </span>
-      ))}
-    </nav>
   );
 }
 
@@ -256,11 +231,11 @@ function DesktopHeader({
         "bg-primary text-body",
         y > 50 && " shadow-header",
         "hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between leading-none gap-8",
-        "w-full px-6 md:px-8 lg:px-12 py-4",
+        "w-full px-6 md:px-8 lg:px-12",
       )}
     >
       <Logo />
-      <MegaMenu />
+      <DesktopMenu />
       <div className="flex items-center gap-1">
         <SearchToggle />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
@@ -277,8 +252,8 @@ function AccountLink({ className }: { className?: string }) {
   return (
     <Link to="/account" className={className}>
       <Suspense fallback={<IconLogin />}>
-        <Await resolve={isLoggedIn} errorElement={<IconLogin />}>
-          {(isLoggedIn) => (isLoggedIn ? <IconAccount /> : <IconLogin />)}
+        <Await resolve={isLoggedIn} errorElement={<IconAccount />}>
+          {(isLoggedIn) => (isLoggedIn ? <IconAccount /> : <IconAccount />)}
         </Await>
       </Suspense>
     </Link>
@@ -287,6 +262,12 @@ function AccountLink({ className }: { className?: string }) {
 
 function SearchToggle() {
   const { isOpen, closeDrawer, openDrawer } = useDrawer();
+  let { pathname } = useLocation();
+  useEffect(() => {
+    if (isOpen) {
+      closeDrawer();
+    }
+  }, [pathname]);
   return (
     <>
       <button
@@ -295,7 +276,7 @@ function SearchToggle() {
       >
         <IconSearch className="h-6 w-6 !font-extralight" />
       </button>
-      <Drawer open={isOpen} onClose={closeDrawer} openFrom="top" heading="">
+      <Drawer open={isOpen} onClose={closeDrawer} openFrom="top">
         <PredictiveSearch isOpen={isOpen} />
       </Drawer>
     </>

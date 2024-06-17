@@ -1,7 +1,14 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 
 import { IconClose } from ".";
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  variant?: "default" | "search" | "minisearch" | "error";
+  suffix?: React.ReactNode;
+  prefixElement?: React.ReactNode;
+  onClear?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 const variants = {
   default: "",
@@ -12,70 +19,69 @@ const variants = {
   error: "border-red-500",
 };
 
-export function Input({
-  className = "",
-  type,
-  variant = "default",
-  prefix,
-  suffix,
-  onFocus,
-  onBlur,
-  ...rest
-}: {
-  className?: string;
-  type?: string;
-  variant?: "default" | "search" | "minisearch" | "error";
-  [key: string]: any;
-}) {
-  let [focused, setFocused] = useState(false);
-  let commonClasses = clsx(
-    "w-full rounded-sm border px-3 py-2.5",
-    focused ? "border-bar/50" : "border-bar/10",
-    className,
-  );
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({
+    className = "",
+    type,
+    variant = "default",
+    prefixElement,
+    prefix,
+    suffix,
+    onFocus,
+    onBlur,
+    onClear,
+    ...rest
+  }: InputProps) => {
+    let [focused, setFocused] = useState(false);
+    let commonClasses = clsx(
+      "w-full rounded-sm border px-3 py-2.5",
+      focused ? "border-bar/50" : "border-bar/10",
+      className,
+    );
 
-  let handleClear = (e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.currentTarget.previousSibling.value = "";
-  };
-  if (type === "search") {
-    suffix = <IconClose onClick={handleClear} />;
-  }
-  let hasChild = Boolean(prefix || suffix);
+    let handleClear = (e: any) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.currentTarget.previousSibling.value = "";
+      if (onClear) onClear(e);
+    };
+    if (type === "search") {
+      suffix = <IconClose className="cursor-pointer" onClick={handleClear} />;
+    }
+    let hasChild = Boolean(prefixElement || suffix);
 
-  let rawInput = (
-    <input
-      type={type}
-      className={clsx(
-        "w-full focus-visible:outline-none !shadow-none focus:ring-0",
-        hasChild ? "grow border-none bg-transparent p-0" : commonClasses,
-        variants[variant],
-      )}
-      onFocus={(e) => {
-        setFocused(true);
-        if (onFocus) onFocus(e);
-      }}
-      onBlur={(e) => {
-        setFocused(false);
-        if (onBlur) onBlur(e);
-      }}
-      {...rest}
-    />
-  );
+    let rawInput = (
+      <input
+        className={clsx(
+          "w-full focus-visible:outline-none !shadow-none focus:ring-0",
+          hasChild ? "grow border-none bg-transparent p-0" : commonClasses,
+          variants[variant],
+        )}
+        onFocus={(e) => {
+          setFocused(true);
+          if (onFocus) onFocus(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          if (onBlur) onBlur(e);
+        }}
+        {...rest}
+      />
+    );
 
-  return hasChild ? (
-    <div
-      className={clsx(
-        commonClasses,
-        "flex gap-2 overflow-hidden items-center bg-primary p-2.5 border rounded-sm",
-      )}
-    >
-      {prefix}
-      {rawInput}
-      {suffix}
-    </div>
-  ) : (
-    rawInput
-  );
-}
+    return hasChild ? (
+      <div
+        className={clsx(
+          commonClasses,
+          "flex gap-2 overflow-hidden items-center bg-primary p-2.5 border rounded-sm",
+        )}
+      >
+        {prefixElement}
+        {rawInput}
+        {suffix}
+      </div>
+    ) : (
+      rawInput
+    );
+  },
+);

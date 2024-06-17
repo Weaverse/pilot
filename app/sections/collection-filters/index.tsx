@@ -30,7 +30,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
     let [numberInRow, setNumberInRow] = useState(4);
     let onLayoutChange = (number: number) => {
       setNumberInRow(number);
-    }
+    };
     let { collection, collections, appliedFilters } = useLoaderData<
       CollectionDetailsQuery & {
         collections: Array<{ handle: string; title: string }>;
@@ -38,7 +38,6 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       }
     >();
     let productNumber = collection?.products.nodes.length;
-
 
     if (collection?.products && collections) {
       return (
@@ -63,47 +62,43 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             collections={collections}
           />
           <Section as="div">
-              <Pagination connection={collection.products}>
-                {({
-                  nodes,
-                  isLoading,
-                  PreviousLink,
-                  NextLink,
-                  nextPageUrl,
-                  hasNextPage,
-                  state,
-                }) => (
-                  <>
-                    <div className="flex items-center justify-center mb-6 empty:hidden">
-                      <Button
-                        as={PreviousLink}
-                        variant="secondary"
-                        width="full"
-                      >
-                        {isLoading ? "Loading..." : loadPrevText}
-                      </Button>
-                    </div>
-                    <ProductsLoadedOnScroll
-                      numberInRow={numberInRow}
-                      nodes={nodes}
-                      inView={inView}
-                      nextPageUrl={nextPageUrl}
-                      hasNextPage={hasNextPage}
-                      state={state}
-                    />
-                    <div className="flex items-center justify-center mt-6">
-                      <Button
-                        ref={ref}
-                        as={NextLink}
-                        variant="secondary"
-                        width="full"
-                      >
-                        {isLoading ? "Loading..." : loadMoreText}
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </Pagination>
+            <Pagination connection={collection.products}>
+              {({
+                nodes,
+                isLoading,
+                PreviousLink,
+                NextLink,
+                nextPageUrl,
+                hasNextPage,
+                state,
+              }) => (
+                <>
+                  <div className="flex items-center justify-center mb-6 empty:hidden">
+                    <Button as={PreviousLink} variant="secondary" width="full">
+                      {isLoading ? "Loading..." : loadPrevText}
+                    </Button>
+                  </div>
+                  <ProductsLoadedOnScroll
+                    numberInRow={numberInRow}
+                    nodes={nodes}
+                    inView={inView}
+                    nextPageUrl={nextPageUrl}
+                    hasNextPage={hasNextPage}
+                    state={state}
+                  />
+                  <div className="flex items-center justify-center mt-6">
+                    <Button
+                      ref={ref}
+                      as={NextLink}
+                      variant="secondary"
+                      width="full"
+                    >
+                      {isLoading ? "Loading..." : loadMoreText}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </Pagination>
           </Section>
         </section>
       );

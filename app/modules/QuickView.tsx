@@ -119,6 +119,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
               {
                 merchandiseId: selectedVariant?.id,
                 quantity,
+                selectedVariant,
               },
             ]}
             data-test="add-to-cart"
