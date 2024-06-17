@@ -1,17 +1,21 @@
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
-import{
+import {
   Nav_Items,
   type ImageMenuProps,
   type MultiMenuProps,
   type SingleMenuProps,
 } from "./defines";
+import clsx from "clsx";
 
 const MenuByType = {
   multi: MultiMenu,
   image: ImageMenu,
   single: SingleMenu,
 };
+
+const commonAnimatedClass =
+  "absolute h-0 opacity-0 overflow-hidden bg-white shadow-md transition-all ease-out group-hover:opacity-100 group-hover:border-t duration-500 group-hover:duration-300 group-hover:z-50 "; 
 
 export function DesktopMenu() {
   return (
@@ -42,7 +46,12 @@ function MultiMenu(props: MultiMenuProps) {
   return (
     <div className="group">
       <ItemHeader title={title} to={to} />
-      <div className="w-screen top-full left-0 h-0 overflow-hidden group-hover:h-96 group-hover:border-t bg-white shadow-md transition-all duration-75 absolute">
+      <div
+        className={clsx(
+          "w-screen top-full left-0 group-hover:h-96",
+          commonAnimatedClass,
+        )}
+      >
         <div className="container mx-auto py-8">
           <div className="grid grid-cols-6 gap-4 w-full">
             {items.map((item, id) => (
@@ -99,15 +108,16 @@ function SingleMenu(props: SingleMenuProps) {
   return (
     <div className="group">
       <ItemHeader title={title} to={to} />
-      <div className="top-full left-1/2 translate-x-1/2 h-0 bg-white shadow-md overflow-hidden group-hover:h-40 group-hover:border-t transition-all duration-75 absolute">
+      <div
+        className={clsx(
+          "top-full left-1/2 translate-x-1/2 group-hover:h-40",
+          commonAnimatedClass,
+        )}
+      >
         <div className="p-8">
           <div>
             <h5 className="mb-4 uppercase font-medium">
-              <Link
-                to={to}
-                prefetch="intent"
-                className="animate-hover"
-              >
+              <Link to={to} prefetch="intent" className="animate-hover">
                 {title}
               </Link>
             </h5>
@@ -135,7 +145,12 @@ function ImageMenu({ title, imageItems, to }: ImageMenuProps) {
   return (
     <div className="group">
       <ItemHeader title={title} to={to} />
-      <div className="w-screen top-full left-0 h-0 overflow-hidden group-hover:h-96 group-hover:border-t bg-white shadow-md transition-all duration-75 absolute">
+      <div
+        className={clsx(
+          "w-screen top-full left-0 group-hover:h-96",
+          commonAnimatedClass,
+        )}
+      >
         <div className="py-8">
           <div className="grid grid-cols-4 gap-6 w-fit container mx-auto">
             {imageItems.map((item, id) => (

@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 type IconProps = JSX.IntrinsicElements["svg"];
 
 // Using icons from https://phosphoricons.com/
@@ -58,6 +60,41 @@ export function IconTag(props: IconProps) {
       {...props}
     >
       <path d="M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63Zm-96,96L48,132.69V48h84.69L232,147.31ZM96,84A12,12,0,1,1,84,72,12,12,0,0,1,96,84Z"></path>
+    </svg>
+  );
+}
+
+export function IconCaret(props: IconProps) {
+  let { className, direction = "right", ...rest } = props;
+  let rotate;
+
+  switch (direction) {
+    case "down":
+      rotate = "rotate-0";
+      break;
+    case "up":
+      rotate = "rotate-180";
+      break;
+    case "right":
+      rotate = "-rotate-90";
+      break;
+    case "left":
+      rotate = "rotate-90";
+      break;
+    default:
+      rotate = "rotate-0";
+  }
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      className={clsx(className, rotate)}
+      {...rest}
+    >
+      <path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"></path>
     </svg>
   );
 }

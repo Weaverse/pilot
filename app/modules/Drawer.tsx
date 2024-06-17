@@ -1,9 +1,10 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
-import { Heading, IconCaret, IconClose } from "~/modules";
+import { Heading, IconClose } from "~/modules"; 
 import { cn } from "~/lib/cn";
 import clsx from "clsx";
+import { IconCaret } from "~/components/Icons";
 
 /**
  * Drawer component that opens on user click.
@@ -88,11 +89,11 @@ export function Drawer({
                     {isBackMenu && (
                       <button
                         type="button"
-                        className="p-2 -m-4 transition text-body hover:text-body/50"
+                        className="p-2 -ml-4 transition text-body hover:text-body/50"
                         onClick={onClose}
                         data-test="close-cart"
                       >
-                        <IconCaret className="w-6 h-6" direction="left" aria-label="Close panel" />
+                        <IconCaret className="w-4 h-4" direction="left" aria-label="Close panel" />
                       </button>
                     )}
                     {heading !== null && (
