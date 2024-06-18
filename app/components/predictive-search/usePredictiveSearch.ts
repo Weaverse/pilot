@@ -1,10 +1,6 @@
 import { useFetchers } from "@remix-run/react";
-import { useEffect, useRef } from "react";
-import {
-  NormalizedPredictiveSearch,
-  NormalizedPredictiveSearchResults,
-  UseSearchReturn,
-} from "./types";
+import { useEffect, useRef, useState } from "react";
+import type { NormalizedPredictiveSearch, NormalizedPredictiveSearchResults, UseSearchReturn } from "./types";
 
 export const NO_PREDICTIVE_SEARCH_RESULTS: NormalizedPredictiveSearchResults = [
   { type: "queries", items: [] },
@@ -19,12 +15,18 @@ export function usePredictiveSearch(): UseSearchReturn {
   const searchTerm = useRef<string>("");
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const searchFetcher = fetchers.find((fetcher) => fetcher.data?.searchResults);
+  let [results, setResults] = useState<NormalizedPredictiveSearchResults>();
+  useEffect(() => {
+    if (searchFetcher) {
+      setResults(searchFetcher.data?.searchResults);
+    }
+  }, [searchFetcher]);
 
-  if (searchFetcher?.state === "loading") {
-    searchTerm.current = (searchFetcher.formData?.get("q") || "") as string;
+  if (searchFetcher?.state === 'loading') {
+    searchTerm.current = (searchFetcher.formData?.get('q') || '') as string;
   }
 
-  const search = (searchFetcher?.data?.searchResults || {
+  const search = (results || {
     results: NO_PREDICTIVE_SEARCH_RESULTS,
     totalResults: 0,
   }) as NormalizedPredictiveSearch;

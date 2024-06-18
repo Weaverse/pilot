@@ -1,6 +1,5 @@
 import { Link } from "@remix-run/react";
 import { Drawer, useDrawer } from "../Drawer";
-import { IconCaret } from "../Icon";
 import { Disclosure } from "@headlessui/react";
 import { Image } from "@shopify/hydrogen";
 import {
@@ -9,6 +8,7 @@ import {
   type ImageItem,
   type MultiMenuProps,
 } from "./defines";
+import { IconCaret } from "~/components/Icons";
 
 const MenuByType = {
   multi: MultiMenu,
@@ -54,7 +54,10 @@ function MultiMenu(props: MultiMenuProps) {
                     <h5 className="flex justify-between py-3 w-full uppercase font-medium">
                       {item.title}
                       <span className="md:hidden">
-                        <IconCaret direction={open ? "down" : "right"} />
+                        <IconCaret
+                          className="w-4 h-4"
+                          direction={open ? "down" : "right"}
+                        />
                       </span>
                     </h5>
                   </Disclosure.Button>
@@ -98,7 +101,8 @@ function MultiMenu(props: MultiMenuProps) {
         onClick={openMenu}
       >
         <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret direction="right" />
+        <IconCaret className="w-4 h-4" />
+        
       </div>
       {content}
     </div>
@@ -130,7 +134,7 @@ function ImageMenu({
         {imageItems.map((item, id) => (
           <Link to={item.to} prefetch="intent" key={id}>
             <div className="w-full aspect-square relative">
-              <Image data={item.data} className="w-full h-full object-cover" />
+              <Image data={item.data} className="w-full h-full object-cover" sizes="auto"/>
               <div className="absolute w-full top-1/2 left-0 text-center -translate-y-1/2 text-white font-medium pointer-events-none">
                 {item.title}
               </div>
@@ -148,7 +152,7 @@ function ImageMenu({
         onClick={openMenu}
       >
         <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret direction="right" />
+        <IconCaret className="w-4 h-4" />
       </div>
       {content}
     </div>
@@ -197,7 +201,7 @@ function SingleMenu(props: SingleMenuProps) {
         onClick={openMenu}
       >
         <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret direction="right" />
+        <IconCaret className="w-4 h-4" />
       </div>
       {content}
     </div>
