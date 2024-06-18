@@ -134,7 +134,7 @@ function ImageMenu({
         {imageItems.map((item, id) => (
           <Link to={item.to} prefetch="intent" key={id}>
             <div className="w-full aspect-square relative">
-              <Image data={item.data} className="w-full h-full object-cover" />
+              <Image data={item.data} className="w-full h-full object-cover" sizes="auto"/>
               <div className="absolute w-full top-1/2 left-0 text-center -translate-y-1/2 text-white font-medium pointer-events-none">
                 {item.title}
               </div>

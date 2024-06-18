@@ -159,6 +159,7 @@ function ImageMenu({ title, imageItems, to }: ImageMenuProps) {
                   <Image
                     data={item.data}
                     className="w-full h-full object-cover"
+                    sizes="auto"
                   />
                   <div className="absolute w-full top-1/2 left-0 text-center -translate-y-1/2 text-white font-medium pointer-events-none">
                     {item.title}
