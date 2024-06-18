@@ -1,32 +1,46 @@
-import {Disclosure, Menu} from '@headlessui/react';
+import { Disclosure, Menu } from "@headlessui/react";
 import {
   Link,
   useLocation,
   useNavigate,
   useSearchParams,
-} from '@remix-run/react';
+} from "@remix-run/react";
 import type {
   Filter,
   ProductFilter,
-} from '@shopify/hydrogen/storefront-api-types';
-import type {SyntheticEvent} from 'react';
-import {useMemo, useState} from 'react';
-import {useDebounce} from 'react-use';
-import {Drawer, useDrawer} from './Drawer';
-import { AppliedFilter, SortParam, filterInputToParams, getAppliedFilterLink, getFilterLink, getSortLink } from '~/lib/filter';
-import { Button } from './Button';
-import { Checkbox } from '~/components/Checkbox';
-import { FILTER_URL_PREFIX } from '~/lib/const';
-import { IconCaret, IconFilters, IconFourGrid, IconOneGrid, IconSliders, IconThreeGrid, IconTwoGrid } from './Icon';
-import { Input } from '.';
-import clsx from 'clsx';
-
+} from "@shopify/hydrogen/storefront-api-types";
+import type { SyntheticEvent } from "react";
+import { useMemo, useState } from "react";
+import { useDebounce } from "react-use";
+import { Drawer, useDrawer } from "./Drawer";
+import {
+  AppliedFilter,
+  SortParam,
+  filterInputToParams,
+  getAppliedFilterLink,
+  getFilterLink,
+  getSortLink,
+} from "~/lib/filter";
+import { Button } from "./Button";
+import { Checkbox } from "~/components/Checkbox";
+import { FILTER_URL_PREFIX } from "~/lib/const";
+import {
+  IconCaret,
+  IconFilters,
+  IconFourGrid,
+  IconOneGrid,
+  IconSliders,
+  IconThreeGrid,
+  IconTwoGrid,
+} from "./Icon";
+import { Input } from ".";
+import clsx from "clsx";
 
 type DrawerFilterProps = {
   productNumber?: number;
   filters: Filter[];
   appliedFilters?: AppliedFilter[];
-  collections?: Array<{handle: string; title: string}>;
+  collections?: Array<{ handle: string; title: string }>;
   showSearchSort?: boolean;
   numberInRow?: number;
   onLayoutChange: (number: number) => void;
@@ -40,43 +54,49 @@ export function DrawerFilter({
   productNumber = 0,
   showSearchSort = false,
 }: DrawerFilterProps) {
-  const {openDrawer, isOpen, closeDrawer} = useDrawer();
+  const { openDrawer, isOpen, closeDrawer } = useDrawer();
   return (
     <div className="border-y border-bar-subtle py-4 ">
       <div className="gap-4 md:gap-8 px-6 md:px-8 lg:px-12 flex w-full items-center justify-between">
-        <div className='flex flex-1'>
-          <div className={clsx(
-            'border cursor-pointer hidden lg:block',
-            numberInRow === 4 && ' border-[#88847F]')
-          } onClick={() => onLayoutChange(4)}
+        <div className="flex flex-1">
+          <div
+            className={clsx(
+              "border cursor-pointer hidden lg:block",
+              numberInRow === 4 && " border-[#88847F]",
+            )}
+            onClick={() => onLayoutChange(4)}
           >
-            <IconFourGrid className='w-12 h-12 text-[#88847F]'/>
+            <IconFourGrid className="w-12 h-12 text-[#88847F]" />
           </div>
-          <div className={clsx(
-            'border cursor-pointer hidden lg:block',
-            numberInRow === 3 && ' border-[#88847F]')
-        } onClick={() => onLayoutChange(3)}
+          <div
+            className={clsx(
+              "border cursor-pointer hidden lg:block",
+              numberInRow === 3 && " border-[#88847F]",
+            )}
+            onClick={() => onLayoutChange(3)}
           >
-            <IconThreeGrid className='w-12 h-12 text-[#88847F]'/>
+            <IconThreeGrid className="w-12 h-12 text-[#88847F]" />
           </div>
-          <div className={clsx(
-            'border cursor-pointer lg:hidden',
-            numberInRow === 4 && 'border-[#88847F]')
-        } onClick={() => onLayoutChange(4)}
+          <div
+            className={clsx(
+              "border cursor-pointer lg:hidden",
+              numberInRow === 4 && "border-[#88847F]",
+            )}
+            onClick={() => onLayoutChange(4)}
           >
-            <IconTwoGrid className='w-12 h-12 text-[#88847F]'/>
+            <IconTwoGrid className="w-12 h-12 text-[#88847F]" />
           </div>
-          <div className={clsx(
-            'border cursor-pointer lg:hidden',
-            numberInRow === 3 && 'border-[#88847F]')
-        } onClick={() => onLayoutChange(3)}
+          <div
+            className={clsx(
+              "border cursor-pointer lg:hidden",
+              numberInRow === 3 && "border-[#88847F]",
+            )}
+            onClick={() => onLayoutChange(3)}
           >
-            <IconOneGrid className='w-12 h-12 text-[#88847F]'/>
+            <IconOneGrid className="w-12 h-12 text-[#88847F]" />
           </div>
         </div>
-        <span className="flex-1 text-center">
-          {productNumber} Products
-        </span>
+        <span className="flex-1 text-center">{productNumber} Products</span>
         <div className="flex gap-2 flex-1 justify-end">
           <SortMenu showSearchSort={showSearchSort} />
           <Button
@@ -110,7 +130,7 @@ function ListItemFilter({
   option,
   appliedFilters,
 }: {
-  option: Filter['values'][0];
+  option: Filter["values"][0];
   appliedFilters: AppliedFilter[];
 }) {
   const navigate = useNavigate();
@@ -145,14 +165,14 @@ function ListItemFilter({
 export function FiltersDrawer({
   filters = [],
   appliedFilters = [],
-}: Omit<DrawerFilterProps, 'children'>) {
+}: Omit<DrawerFilterProps, "children">) {
   const [params] = useSearchParams();
-  const filterMarkup = (filter: Filter, option: Filter['values'][0]) => {
+  const filterMarkup = (filter: Filter, option: Filter["values"][0]) => {
     switch (filter.type) {
-      case 'PRICE_RANGE':
+      case "PRICE_RANGE":
         const priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
         const price = priceFilter
-          ? (JSON.parse(priceFilter) as ProductFilter['price'])
+          ? (JSON.parse(priceFilter) as ProductFilter["price"])
           : undefined;
         const min = isNaN(Number(price?.min)) ? undefined : Number(price?.min);
         const max = isNaN(Number(price?.max)) ? undefined : Number(price?.max);
@@ -170,11 +190,11 @@ export function FiltersDrawer({
       <div className="divide-y divide-bar-subtle">
         {filters.map((filter: Filter) => (
           <Disclosure as="div" key={filter.id} className="w-full pb-6 pt-5">
-            {({open}) => (
+            {({ open }) => (
               <>
                 <Disclosure.Button className="flex w-full justify-between items-center">
                   <span className="font-medium">{filter.label}</span>
-                  <IconCaret direction={open ? 'down' : 'right'}/>
+                  <IconCaret direction={open ? "down" : "right"} />
                 </Disclosure.Button>
                 <Disclosure.Panel key={filter.id}>
                   <ul key={filter.id} className="space-y-4 pt-4">
@@ -194,10 +214,9 @@ export function FiltersDrawer({
   );
 }
 
-
 const PRICE_RANGE_FILTER_DEBOUNCE = 500;
 
-function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
+function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
   const location = useLocation();
   const params = useMemo(
     () => new URLSearchParams(location.search),
@@ -250,7 +269,7 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
         <Input
           name="minPrice"
           type="number"
-          value={minPrice ?? ''}
+          value={minPrice ?? ""}
           placeholder="From"
           onChange={onChangeMin}
         />
@@ -260,7 +279,7 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
         <Input
           name="maxPrice"
           type="number"
-          value={maxPrice ?? ''}
+          value={maxPrice ?? ""}
           placeholder="To"
           onChange={onChangeMax}
         />
@@ -274,45 +293,45 @@ export default function SortMenu({
 }: {
   showSearchSort?: boolean;
 }) {
-  const productShortItems: {label: string; key: SortParam}[] = [
-    {label: 'Featured', key: 'featured'},
+  const productShortItems: { label: string; key: SortParam }[] = [
+    { label: "Featured", key: "featured" },
     {
-      label: 'Price: Low - High',
-      key: 'price-low-high',
+      label: "Price: Low - High",
+      key: "price-low-high",
     },
     {
-      label: 'Price: High - Low',
-      key: 'price-high-low',
+      label: "Price: High - Low",
+      key: "price-high-low",
     },
     {
-      label: 'Best Selling',
-      key: 'best-selling',
+      label: "Best Selling",
+      key: "best-selling",
     },
     {
-      label: 'Newest',
-      key: 'newest',
+      label: "Newest",
+      key: "newest",
     },
   ];
 
-  const searchSortItems: {label: string; key: SortParam}[] = [
+  const searchSortItems: { label: string; key: SortParam }[] = [
     {
-      label: 'Price: Low - High',
-      key: 'price-low-high',
+      label: "Price: Low - High",
+      key: "price-low-high",
     },
     {
-      label: 'Price: High - Low',
-      key: 'price-high-low',
+      label: "Price: High - Low",
+      key: "price-high-low",
     },
     {
-      label: 'Relevance',
-      key: 'relevance',
+      label: "Relevance",
+      key: "relevance",
     },
   ];
   const items = showSearchSort ? searchSortItems : productShortItems;
   const [params] = useSearchParams();
   const location = useLocation();
   const activeItem =
-    items.find((item) => item.key === params.get('sort')) || items[0];
+    items.find((item) => item.key === params.get("sort")) || items[0];
 
   return (
     <Menu as="div" className="relative z-40">
@@ -330,7 +349,7 @@ export default function SortMenu({
               <Link to={getSortLink(item.key, params, location)}>
                 <p
                   className={`block text-base ${
-                    activeItem?.key === item.key ? 'font-bold' : 'font-normal'
+                    activeItem?.key === item.key ? "font-bold" : "font-normal"
                   }`}
                 >
                   {item.label}

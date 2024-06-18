@@ -144,7 +144,13 @@ export function MenuDrawer({
   menu: EnhancedMenu;
 }) {
   return (
-    <Drawer bordered open={isOpen} onClose={onClose} openFrom="left" heading="Menu">
+    <Drawer
+      bordered
+      open={isOpen}
+      onClose={onClose}
+      openFrom="left"
+      heading="Menu"
+    >
       <MobileMenu />
     </Drawer>
   );
@@ -255,13 +261,13 @@ function AccountLink({ className }: { className?: string }) {
 }
 
 function SearchToggle() {
-  const {isOpen, closeDrawer, openDrawer} = useDrawer();
-  let {pathname} = useLocation();
+  const { isOpen, closeDrawer, openDrawer } = useDrawer();
+  let { pathname } = useLocation();
   useEffect(() => {
     if (isOpen) {
-      closeDrawer()
+      closeDrawer();
     }
-  }, [pathname])
+  }, [pathname]);
   return (
     <>
       <button

@@ -3,7 +3,7 @@ import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,
   PredictiveProductFragment,
-} from 'storefrontapi.generated';
+} from "storefrontapi.generated";
 
 export type UseSearchReturn = NormalizedPredictiveSearch & {
   searchInputRef: React.MutableRefObject<HTMLInputElement | null>;
@@ -11,12 +11,12 @@ export type UseSearchReturn = NormalizedPredictiveSearch & {
 };
 
 type PredicticeSearchResultItemImage =
-  | PredictiveCollectionFragment['image']
-  | PredictiveArticleFragment['image']
-  | PredictiveProductFragment['featuredImage'];
+  | PredictiveCollectionFragment["image"]
+  | PredictiveArticleFragment["image"]
+  | PredictiveProductFragment["featuredImage"];
 
 type PredictiveSearchResultItemPrice =
-  PredictiveProductFragment['variants']['nodes'][0]['price'];
+  PredictiveProductFragment["variants"]["nodes"][0]["price"];
 
 export type NormalizedPredictiveSearch = {
   results: NormalizedPredictiveSearchResults;
@@ -24,11 +24,11 @@ export type NormalizedPredictiveSearch = {
 };
 
 export type NormalizedPredictiveSearchResults = Array<
-  | {type: 'queries'; items: Array<NormalizedPredictiveSearchResultItem>}
-  | {type: 'products'; items: Array<NormalizedPredictiveSearchResultItem>}
-  | {type: 'collections'; items: Array<NormalizedPredictiveSearchResultItem>}
-  | {type: 'pages'; items: Array<NormalizedPredictiveSearchResultItem>}
-  | {type: 'articles'; items: Array<NormalizedPredictiveSearchResultItem>}
+  | { type: "queries"; items: Array<NormalizedPredictiveSearchResultItem> }
+  | { type: "products"; items: Array<NormalizedPredictiveSearchResultItem> }
+  | { type: "collections"; items: Array<NormalizedPredictiveSearchResultItem> }
+  | { type: "pages"; items: Array<NormalizedPredictiveSearchResultItem> }
+  | { type: "articles"; items: Array<NormalizedPredictiveSearchResultItem> }
 >;
 
 export type NormalizedPredictiveSearchResultItem = {
@@ -47,11 +47,14 @@ export type NormalizedPredictiveSearchResultItem = {
 export type SearchResultTypeProps = {
   goToSearchResult: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   items?: NormalizedPredictiveSearchResultItem[];
-  searchTerm: UseSearchReturn['searchTerm'];
-  type: NormalizedPredictiveSearchResults[number]['type'];
+  searchTerm: UseSearchReturn["searchTerm"];
+  type: NormalizedPredictiveSearchResults[number]["type"];
 };
 
-export type SearchResultItemProps = Pick<SearchResultTypeProps, 'goToSearchResult'> & {
+export type SearchResultItemProps = Pick<
+  SearchResultTypeProps,
+  "goToSearchResult"
+> & {
   item: NormalizedPredictiveSearchResultItem;
 };
 
@@ -62,8 +65,8 @@ type ChildrenRenderProps = {
 };
 
 export type SearchFromProps = {
-  action?: FormProps['action'];
-  method?: FormProps['method'];
+  action?: FormProps["action"];
+  method?: FormProps["method"];
   className?: string;
   children: (passedProps: ChildrenRenderProps) => React.ReactNode;
   [key: string]: unknown;

@@ -54,7 +54,7 @@ export function PredictiveSearchResults() {
         <div>
           <PredictiveSearchResult
             goToSearchResult={goToSearchResult}
-            items={products?.items?.slice(0,5)}
+            items={products?.items?.slice(0, 5)}
             searchTerm={searchTerm}
             type="products"
           />

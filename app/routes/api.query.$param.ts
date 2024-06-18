@@ -1,4 +1,4 @@
-import { LoaderFunction, json } from '@remix-run/server-runtime';
+import { LoaderFunction, json } from "@remix-run/server-runtime";
 import { getProductData } from "~/lib/products";
 
 function getRequestQueries<T = Record<string, string>>(request: Request) {
@@ -9,13 +9,13 @@ function getRequestQueries<T = Record<string, string>>(request: Request) {
   }, {}) as T;
 }
 
-export let loader: LoaderFunction = async ({request, params, context}) => {
+export let loader: LoaderFunction = async ({ request, params, context }) => {
   try {
     let queries = getRequestQueries(request);
     switch (params.param) {
-      case 'products': {
+      case "products": {
         let handle = queries.handle;
-        if (!handle) return json(null, {status: 404});
+        if (!handle) return json(null, { status: 404 });
         let productData = await getProductData(
           context.storefront,
           String(handle),
@@ -23,10 +23,10 @@ export let loader: LoaderFunction = async ({request, params, context}) => {
         return json(productData);
       }
       default:
-        return json(null, {status: 404});
+        return json(null, { status: 404 });
     }
   } catch (error) {
     console.error(error);
-    return json({error: 'An error occurred'}, {status: 500});
+    return json({ error: "An error occurred" }, { status: 500 });
   }
 };

@@ -1,6 +1,6 @@
-import {Link} from '@remix-run/react';
-import {Image, Money, Pagination} from '@shopify/hydrogen';
-import {SearchResultItemProps} from './types';
+import { Link } from "@remix-run/react";
+import { Image, Money, Pagination } from "@shopify/hydrogen";
+import { SearchResultItemProps } from "./types";
 
 export function SearchResultItem({
   goToSearchResult,
@@ -8,12 +8,17 @@ export function SearchResultItem({
 }: SearchResultItemProps) {
   return (
     <li key={item.id}>
-      <Link className="flex gap-4" onClick={goToSearchResult} to={item.url} data-type={item.__typename}>
-        {item.__typename === 'Product' && (
+      <Link
+        className="flex gap-4"
+        onClick={goToSearchResult}
+        to={item.url}
+        data-type={item.__typename}
+      >
+        {item.__typename === "Product" && (
           <div className="h-20 w-20 shrink-0">
             {item.image?.url && (
               <Image
-                alt={item.image.altText ?? ''}
+                alt={item.image.altText ?? ""}
                 src={item.image.url}
                 width={80}
                 height={80}
@@ -37,7 +42,7 @@ export function SearchResultItem({
           ) : (
             <div
               className={
-                item.__typename === 'Product' ? 'line-clamp-1' : 'line-clamp-2'
+                item.__typename === "Product" ? "line-clamp-1" : "line-clamp-2"
               }
             >
               {item.title}
