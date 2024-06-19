@@ -1,11 +1,17 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Image } from "@shopify/hydrogen";
+import useWindowScroll from "react-use/esm/useWindowScroll";
 
 import { Link } from "./Link";
 
 export function Logo() {
   let settings = useThemeSettings();
+  let enableTransparent = settings?.enableTransparentHeader;
   let logoData = settings?.logoData;
+  let transparentLogoData = settings?.transparentLogoData;
+  const { y } = useWindowScroll();
+  let isTransparent = enableTransparent && y < 50;
+
   if (!logoData) {
     return null;
   }
@@ -17,7 +23,7 @@ export function Logo() {
     >
       <div className="max-w-[120px]">
         <Image
-          data={logoData}
+          data={isTransparent ? transparentLogoData : logoData}
           sizes="auto"
           className="w-full h-full object-cover"
         />

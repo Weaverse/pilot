@@ -75,8 +75,14 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Logo",
+      group: "Header",
       inputs: [
+        {
+          type: "switch",
+          label: "Enable transparent header",
+          name: "enableTransparentHeader",
+          defaultValue: true,
+        },
         {
           type: "image",
           name: "logoData",
@@ -89,8 +95,21 @@ export let themeSchema: HydrogenThemeSchema = {
             height: 116,
           },
         },
+        {
+          type: "image",
+          name: "transparentLogoData",
+          label: "Transparent Logo",
+          defaultValue: {
+            id: "gid://shopify/MediaImage/34144817938616",
+            altText: "Logo",
+            url: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/transparent_Pilot_logo.png?v=1718763594",
+            width: 320,
+            height: 116,
+          },
+        },
       ],
     },
+    
     {
       group: "Colors",
       inputs: [

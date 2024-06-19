@@ -36,6 +36,7 @@ import { Logo } from "./Logo";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
 import { DesktopMenu } from "./menu/DesktopMenu";
 import { MobileMenu } from "./menu/MobileMenu";
+import { useThemeSettings } from "@weaverse/hydrogen";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -224,16 +225,29 @@ function DesktopHeader({
 }) {
   const params = useParams();
   const { y } = useWindowScroll();
+  let settings = useThemeSettings();
+  let enableTransparent = settings?.enableTransparentHeader;
+  let isTransparent = enableTransparent && y < 50;
   return (
     <header
       role="banner"
       className={clsx(
-        "bg-primary text-body",
-        y > 50 && " shadow-header",
-        "hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between leading-none gap-8",
+        enableTransparent ? "fixed" : "sticky",
+        isTransparent
+          ? "backdrop-blur-lg text-primary"
+          : "shadow-header text-body",
+        "hidden h-nav lg:flex items-center duration-300 transition-all z-40 top-0 justify-between leading-none gap-8 origin-top ease-in-out",
         "w-full px-6 md:px-8 lg:px-12",
       )}
     >
+      <div
+        className={clsx(
+          "absolute inset-0 bg-primary -z-10",
+          "transition-all duration-300 ease-in-out",
+          "opacity-0 transform -translate-y-1/2",
+          isTransparent ? "opacity-0" : "opacity-100 translate-y-0",
+        )}
+      ></div>
       <Logo />
       <DesktopMenu />
       <div className="flex items-center gap-1">
