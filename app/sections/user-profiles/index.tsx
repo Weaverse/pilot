@@ -55,11 +55,13 @@ interface UserProfilesProps extends HydrogenComponentProps {
     type: string;
   };
   itemsPerRow: number;
+  gap: number;
 }
 
 const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
   (props, ref) => {
-    let { loaderData, metaObjectData, itemsPerRow, className, ...rest } = props;
+    let { loaderData, metaObjectData, itemsPerRow, gap, className, ...rest } =
+      props;
     if (!metaObjectData) {
       return (
         <section
@@ -75,16 +77,12 @@ const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
       );
     }
     return (
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
-        ref={ref}
-        {...rest}
-      >
+      <div ref={ref} {...rest}>
         <div
           className="grid w-fit mx-auto"
           style={{
             gridTemplateColumns: `repeat(${itemsPerRow}, minmax(0, 1fr))`,
-            gap: "16rem",
+            gap: gap + "rem",
           }}
         >
           {loaderData?.userProfiles.map((user: any) => {
@@ -108,7 +106,6 @@ export let schema: HydrogenComponentSchema = {
           label: "Select metaobject definition",
           type: "metaobject",
           name: "metaObjectData",
-          shouldRevalidate: true,
         },
         {
           label: "Items per row",
@@ -119,6 +116,17 @@ export let schema: HydrogenComponentSchema = {
             max: 10,
           },
           defaultValue: 3,
+        },
+        {
+          label: "Gap between items",
+          name: "gap",
+          type: "range",
+          configs: {
+            min: 0,
+            step: 2,
+            max: 100,
+          },
+          defaultValue: 4,
         },
       ],
     },
