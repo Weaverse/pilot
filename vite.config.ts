@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   ssr: {
     optimizeDeps: {
-      include: ["typographic-base/index", "textr"],
+      include: ["keen-slider/react", "typographic-base/index", "textr"],
     },
   },
   server: {
@@ -34,7 +34,7 @@ export default defineConfig({
   },
   build: {
     // Allow a strict Content-Security-Policy
-    // withtout inlining assets as base64:
+    // without inlining assets as base64:
     assetsInlineLimit: 0,
   },
 });
