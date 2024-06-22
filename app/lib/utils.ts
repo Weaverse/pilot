@@ -2,6 +2,7 @@ import { useLocation } from "@remix-run/react";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { WeaverseImage } from "@weaverse/hydrogen";
+import type { LinkHTMLAttributes } from "react";
 import type {
   ChildMenuItemFragment,
   MenuFragment,
@@ -346,4 +347,18 @@ export function getImageAspectRatio(
     aspRt = aspectRatio;
   }
   return aspRt;
+}
+
+export function loadCSS(attrs: LinkHTMLAttributes<HTMLLinkElement>) {
+  return new Promise((resolve, reject) => {
+    let found = document.querySelector(`link[href="${attrs.href}"]`);
+    if (found) {
+      return resolve(true);
+    }
+    let link = document.createElement("link");
+    Object.assign(link, attrs);
+    link.addEventListener("load", () => resolve(true));
+    link.onerror = reject;
+    document.head.appendChild(link);
+  });
 }
