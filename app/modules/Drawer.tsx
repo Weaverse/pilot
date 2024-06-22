@@ -1,9 +1,10 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
-import { Heading, IconCaret, IconClose } from "~/modules";
+import { Heading, IconClose } from "~/modules";
 import { cn } from "~/lib/cn";
 import clsx from "clsx";
+import { IconCaret } from "~/components/Icons";
 
 /**
  * Drawer component that opens on user click.
@@ -20,7 +21,7 @@ export function Drawer({
   openFrom = "right",
   children,
   isBackMenu = false,
-  bordered = false
+  bordered = false,
 }: {
   heading?: string;
   open: boolean;
@@ -38,12 +39,11 @@ export function Drawer({
 
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className={
-        clsx(
-          "relative",
-          openFrom === "top" ? "z-10" : "z-50", 
-        )
-      } onClose={onClose}>
+      <Dialog
+        as="div"
+        className={clsx("relative", openFrom === "top" ? "z-10" : "z-50")}
+        onClose={onClose}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -60,7 +60,11 @@ export function Drawer({
           <div className="absolute inset-0 top-nav overflow-hidden">
             <div
               className={`fixed inset-y-0 flex max-w-full ${
-                openFrom === "right" ? "right-0" : openFrom === "top" ? "top-nav" : ""
+                openFrom === "right"
+                  ? "right-0"
+                  : openFrom === "top"
+                    ? "top-nav"
+                    : ""
               }`}
             >
               <Transition.Child
@@ -78,41 +82,51 @@ export function Drawer({
                     openFrom === "top" ? "h-fit" : "max-w-lg h-screen-dynamic",
                   )}
                 >
-                  {openFrom !== 'top' && <header
-                    className={clsx(
-                      "sticky top-0 flex items-center px-6 sm:px-8 md:px-12 h-nav",
-                      isBackMenu ? "justify-start gap-4" : heading ? "justify-between" : "justify-end",
-                      bordered && "border-b"
-                    )}
-                  >
-                    {isBackMenu && (
-                      <button
-                        type="button"
-                        className="p-2 -m-4 transition text-body hover:text-body/50"
-                        onClick={onClose}
-                        data-test="close-cart"
-                      >
-                        <IconCaret className="w-6 h-6" direction="left" aria-label="Close panel" />
-                      </button>
-                    )}
-                    {heading !== null && (
-                      <Dialog.Title>
-                        <Heading as="span" size="lead" id="cart-contents">
-                          {heading}
-                        </Heading>
-                      </Dialog.Title>
-                    )}
-                    {!isBackMenu && (
-                      <button
-                        type="button"
-                        className="p-4 -m-4 transition text-body hover:text-body/50"
-                        onClick={onClose}
-                        data-test="close-cart"
-                      >
-                        <IconClose aria-label="Close panel" />
-                      </button>
-                    )}
-                  </header>}
+                  {openFrom !== "top" && (
+                    <header
+                      className={clsx(
+                        "sticky top-0 flex items-center px-6 sm:px-8 md:px-12 h-nav",
+                        isBackMenu
+                          ? "justify-start gap-4"
+                          : heading
+                            ? "justify-between"
+                            : "justify-end",
+                        bordered && "border-b",
+                      )}
+                    >
+                      {isBackMenu && (
+                        <button
+                          type="button"
+                          className="p-2 -m-4 transition text-body hover:text-body/50"
+                          onClick={onClose}
+                          data-test="close-cart"
+                        >
+                          <IconCaret
+                            className="w-4 h-4"
+                            direction="left"
+                            aria-label="Close panel"
+                          />
+                        </button>
+                      )}
+                      {heading !== null && (
+                        <Dialog.Title>
+                          <Heading as="span" size="lead" id="cart-contents">
+                            {heading}
+                          </Heading>
+                        </Dialog.Title>
+                      )}
+                      {!isBackMenu && (
+                        <button
+                          type="button"
+                          className="p-4 -m-4 transition text-body hover:text-body/50"
+                          onClick={onClose}
+                          data-test="close-cart"
+                        >
+                          <IconClose aria-label="Close panel" />
+                        </button>
+                      )}
+                    </header>
+                  )}
                   {children}
                 </Dialog.Panel>
               </Transition.Child>

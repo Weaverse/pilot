@@ -5,21 +5,19 @@ export function Modal({
   children,
   cancelLink,
   onClose,
-
 }: {
   children: React.ReactNode;
   cancelLink: string;
   onClose?: () => void;
-
 }) {
   useEffect(() => {
     if (!document.body.classList.contains("overflow-hidden")) {
-      document.body.classList.add("overflow-hidden")
+      document.body.classList.add("overflow-hidden");
     }
     return () => {
-      document.body.classList.remove("overflow-hidden")      
-    }
-  },[])
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, []);
   return (
     <div
       className="relative z-50"
@@ -43,18 +41,18 @@ export function Modal({
             tabIndex={0}
           >
             <div className="absolute top-0 right-0 hidden pr-4 sm:block">
-            {cancelLink ? (
-              <Link
-                to={cancelLink}
-                className="-m-4 transition text-body hover:text-body/50"
-              >
-                <IconClose aria-label="Close panel" />
-              </Link>
-            ) : (
-              <Button variant='link' onClick={onClose}>
-                <IconClose aria-label="Close panel" />
-              </Button>
-            ) }
+              {cancelLink ? (
+                <Link
+                  to={cancelLink}
+                  className="-m-4 transition text-body hover:text-body/50"
+                >
+                  <IconClose aria-label="Close panel" />
+                </Link>
+              ) : (
+                <Button variant="link" onClick={onClose}>
+                  <IconClose aria-label="Close panel" />
+                </Button>
+              )}
             </div>
             {children}
           </div>
