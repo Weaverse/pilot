@@ -1,7 +1,7 @@
 import { Disclosure } from "@headlessui/react";
 import { Await, Form, useLocation, useParams } from "@remix-run/react";
 import { CartForm, useAnalytics } from "@shopify/hydrogen";
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import clsx from "clsx";
 
@@ -223,11 +223,16 @@ function DesktopHeader({
   menu?: EnhancedMenu;
   title: string;
 }) {
-  const params = useParams();
   const { y } = useWindowScroll();
   let settings = useThemeSettings();
+  let [hovered, setHovered] = useState(false);
+  let { isOpen, openDrawer, closeDrawer } = useDrawer();
+
+  let onHover = () => setHovered(true);
+  let onLeave = () => setHovered(false);
+
   let enableTransparent = settings?.enableTransparentHeader;
-  let isTransparent = enableTransparent && y < 50;
+  let isTransparent = enableTransparent && y < 50 && !isOpen && !hovered;
   return (
     <header
       role="banner"
@@ -239,19 +244,22 @@ function DesktopHeader({
         "hidden h-nav lg:flex items-center duration-300 transition-all z-40 top-0 justify-between leading-none gap-8 origin-top ease-in-out",
         "w-full px-6 md:px-8 lg:px-12",
       )}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
     >
       <div
         className={clsx(
           "absolute inset-0 bg-primary -z-10",
           "transition-all duration-300 ease-in-out",
-          "opacity-0 transform -translate-y-1/2",
-          isTransparent ? "opacity-0" : "opacity-100 translate-y-0",
+          isTransparent
+            ? "opacity-0 -translate-y-1/2"
+            : "opacity-100 translate-y-0",
         )}
       ></div>
-      <Logo />
+      <Logo showTransparent={isTransparent} />
       <DesktopMenu />
       <div className="flex items-center gap-1">
-        <SearchToggle />
+        <SearchToggle isOpen={isOpen} openDrawer={openDrawer} closeDrawer={closeDrawer} />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
@@ -274,8 +282,7 @@ function AccountLink({ className }: { className?: string }) {
   );
 }
 
-function SearchToggle() {
-  const { isOpen, closeDrawer, openDrawer } = useDrawer();
+function SearchToggle({ isOpen, openDrawer, closeDrawer }: any) {
   let { pathname } = useLocation();
   useEffect(() => {
     if (isOpen) {
