@@ -1,7 +1,7 @@
 import { Disclosure } from "@headlessui/react";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
-import { IconCaret, IconCaretDown, IconCaretRight } from "~/components/Icons";
+import { IconCaretDown, IconCaretRight } from "~/components/Icons";
 import { Drawer, useDrawer } from "../Drawer";
 import {
   Nav_Items,
@@ -102,7 +102,7 @@ function MultiMenu(props: MultiMenuProps) {
         onClick={openMenu}
       >
         <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret className="w-4 h-4" />
+        <IconCaretRight className="w-4 h-4" />
       </div>
       {content}
     </div>
