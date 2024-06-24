@@ -40,7 +40,10 @@ let variants = cva(
 
 export interface ButtonProps
   extends VariantProps<typeof variants>,
-    Omit<HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, "children">,
+    Omit<
+      HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>,
+      "children" | "type"
+    >,
     Partial<HydrogenComponentProps> {
   as?: keyof HTMLElementTagNameMap;
   className?: string;

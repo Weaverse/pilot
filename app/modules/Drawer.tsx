@@ -1,10 +1,9 @@
-import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-
-import { Heading, IconClose } from "~/modules";
-import { cn } from "~/lib/cn";
 import clsx from "clsx";
-import { IconCaret } from "~/components/Icons";
+import { Fragment, useState } from "react";
+import { IconCaretLeft } from "~/components/Icons";
+import { cn } from "~/lib/cn";
+import { Heading, IconClose } from "~/modules";
 
 /**
  * Drawer component that opens on user click.
@@ -101,9 +100,8 @@ export function Drawer({
                           onClick={onClose}
                           data-test="close-cart"
                         >
-                          <IconCaret
+                          <IconCaretLeft
                             className="w-4 h-4"
-                            direction="left"
                             aria-label="Close panel"
                           />
                         </button>

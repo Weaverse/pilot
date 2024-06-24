@@ -10,7 +10,9 @@ import { forwardRef } from "react";
 import type { ButtonProps } from "~/components/Button";
 import Button, { buttonContentInputs } from "~/components/Button";
 
-interface ColumnWithImageItemProps extends ButtonProps, HydrogenComponentProps {
+interface ColumnWithImageItemProps
+  extends Pick<ButtonProps, "variant" | "text" | "link" | "openInNewTab">,
+    HydrogenComponentProps {
   imageSrc: WeaverseImage;
   heading: string;
   content: string;
@@ -134,6 +136,6 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   presets: {
-    imageSrc: IMAGES_PLACEHOLDERS.image,
+    imageSrc: IMAGES_PLACEHOLDERS.product_1,
   },
 };

@@ -22,6 +22,9 @@ export default {
         sale: "rgb(var(--color-sale) / <alpha-value>)", // sale background color
         bar: "rgb(var(--color-border) / <alpha-value>)", // border color
       },
+      outlineOffset: {
+        3: "3px",
+      },
       screens: {
         sm: "32em",
         md: "48em",
@@ -85,6 +88,9 @@ export default {
         border: "inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)",
         header: "inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05)",
       },
+      zIndex: {
+        1: "1",
+      }
     },
   },
   plugins: [

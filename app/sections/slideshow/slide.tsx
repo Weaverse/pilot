@@ -1,145 +1,174 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseImage,
+import {
+  IMAGES_PLACEHOLDERS,
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { Image } from "@shopify/hydrogen";
-import clsx from "clsx";
+import { backgroundInputs } from "~/components/BackgroundImage";
+import { overlayInputs } from "~/components/Overlay";
+import type { OverlayAndBackgroundProps } from "~/components/OverlayAndBackground";
+import { OverlayAndBackground } from "~/components/OverlayAndBackground";
+import { layoutInputs } from "~/components/Section";
 
-import { IconImageBlank } from "~/modules";
+let variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
+  variants: {
+    width: {
+      full: "",
+      stretch: "px-3 md:px-10 lg:px-16",
+      fixed: "max-w-[var(--page-width,1280px)] mx-auto px-3 md:px-10 lg:px-16",
+    },
+    verticalPadding: {
+      none: "",
+      small: "py-4 md:py-6 lg:py-8",
+      medium: "py-8 md:py-12 lg:py-16",
+      large: "py-12 md:py-24 lg:py-32",
+    },
+    gap: {
+      0: "",
+      4: "space-y-1",
+      8: "space-y-2",
+      12: "space-y-3",
+      16: "space-y-4",
+      20: "space-y-5",
+      24: "space-y-3 lg:space-y-6",
+      28: "space-y-3.5 lg:space-y-7",
+      32: "space-y-4 lg:space-y-8",
+      36: "space-y-4 lg:space-y-9",
+      40: "space-y-5 lg:space-y-10",
+      44: "space-y-5 lg:space-y-11",
+      48: "space-y-6 lg:space-y-12",
+      52: "space-y-6 lg:space-y-[52px]",
+      56: "space-y-7 lg:space-y-14",
+      60: "space-y-7 lg:space-y-[60px]",
+    },
+    contentPosition: {
+      "top left": "justify-start items-start [&_.paragraph]:[text-align:left]",
+      "top center":
+        "justify-start items-center [&_.paragraph]:[text-align:center]",
+      "top right": "justify-start items-end [&_.paragraph]:[text-align:right]",
+      "center left":
+        "justify-center items-start [&_.paragraph]:[text-align:left]",
+      "center center":
+        "justify-center items-center [&_.paragraph]:[text-align:center]",
+      "center right":
+        "justify-center items-end [&_.paragraph]:[text-align:right]",
+      "bottom left": "justify-end items-start [&_.paragraph]:[text-align:left]",
+      "bottom center":
+        "justify-end items-center [&_.paragraph]:[text-align:center]",
+      "bottom right": "justify-end items-end [&_.paragraph]:[text-align:right]",
+    },
+  },
+  defaultVariants: {
+    contentPosition: "bottom left",
+  },
+});
 
-interface CountDownProps extends HydrogenComponentProps {
-  backgroundImage: WeaverseImage;
-  overlayColor: string;
-  overlayOpacity: number;
-  contentPosition: string;
+export interface SlideProps
+  extends VariantProps<typeof variants>,
+    HydrogenComponentProps,
+    OverlayAndBackgroundProps {
+  backgroundColor: string;
 }
 
-let SlideShowItem = forwardRef<HTMLDivElement, CountDownProps>((props, ref) => {
+let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
   let {
-    backgroundImage,
-    overlayColor,
-    overlayOpacity,
     contentPosition,
+    width,
+    gap,
+    verticalPadding,
+    backgroundColor,
+    backgroundImage,
+    enableOverlay,
+    overlayOpacity,
+    overlayColor,
+    backgroundFit,
+    backgroundPosition,
     children,
     ...rest
   } = props;
 
-  let positionClass: { [key: string]: string } = {
-    "top left": "items-start justify-start",
-    "top right": "items-start justify-end",
-    "top center": "items-start justify-center",
-    "center left": "items-center justify-start",
-    "center center": "items-center justify-center",
-    "center right": "items-center justify-end",
-    "bottom left": "items-end justify-start",
-    "bottom center": "items-end justify-center",
-    "bottom right": "items-end justify-end",
-  };
-
-  let slideStyle: CSSProperties = {
-    "--overlay-color": overlayColor,
-    "--overlay-opacity": `${overlayOpacity}%`,
-  } as CSSProperties;
-
   return (
-    <div
-      ref={ref}
-      {...rest}
-      className={clsx(
-        "flex relative h-full px-10 py-16 w-full sm-max:px-4",
-        positionClass[contentPosition],
-      )}
-      style={slideStyle}
-    >
-      <div className="absolute inset-0">
-        {backgroundImage ? (
-          <Image
-            data={backgroundImage}
-            sizes="auto"
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex justify-center items-center bg-gray-200">
-            <IconImageBlank
-              className="!w-24 !h-24 opacity-30"
-              viewBox="0 0 100 100"
-            />
-          </div>
-        )}
-        {backgroundImage && (
-          <div className="absolute inset-0 bg-[var(--overlay-color)] opacity-[var(--overlay-opacity)]"></div>
-        )}
-      </div>
-      <div className="flex flex-col gap-3 items-center w-5/6 sm-max:w-full z-10">
+    <div ref={ref} {...rest} className="w-full h-full">
+      <OverlayAndBackground {...props} />
+      <div
+        className={variants({ contentPosition, width, gap, verticalPadding })}
+      >
         {children}
       </div>
     </div>
   );
 });
 
-export default SlideShowItem;
+export default Slide;
 
 export let schema: HydrogenComponentSchema = {
-  type: "slide-show--item",
   title: "Slide",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
+  type: "slideshow-slide",
+  childTypes: ["subheading", "heading", "paragraph", "button"],
   inspector: [
     {
       group: "Slide",
       inputs: [
         {
-          type: "image",
-          name: "backgroundImage",
-          label: "Background image",
-        },
-        {
           type: "position",
-          name: "contentPosition",
           label: "Content position",
+          name: "contentPosition",
           defaultValue: "center center",
         },
-        {
-          type: "color",
-          name: "overlayColor",
-          label: "Overlay color",
-        },
-        {
-          type: "range",
-          name: "overlayOpacity",
-          label: "Overlay opacity",
-          defaultValue: 50,
-          configs: {
-            min: 10,
-            max: 100,
-            step: 10,
-            unit: "%",
-          },
-        },
+        ...layoutInputs.filter(
+          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
+        ),
       ],
     },
+    {
+      group: "Background",
+      inputs: backgroundInputs.filter((inp) =>
+        ["backgroundImage", "backgroundFit", "backgroundPosition"].includes(
+          inp.name,
+        ),
+      ),
+    },
+    { group: "Overlay", inputs: overlayInputs },
   ],
-  childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
+    verticalPadding: "large",
+    contentPosition: "bottom left",
+    backgroundImage: IMAGES_PLACEHOLDERS.banner_1,
+    backgroundFit: "cover",
+    enableOverlay: true,
+    overlayOpacity: 50,
     children: [
       {
         type: "subheading",
         content: "Subheading",
+        color: "#fff",
       },
       {
         type: "heading",
-        content: "Slide Heading",
+        content: "Slide with text overlay",
+        color: "#fff",
+        size: "scale",
+        minSize: 16,
+        maxSize: 56,
       },
       {
         type: "paragraph",
         content:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown.",
+          "Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.",
+        color: "#fff",
       },
       {
         type: "button",
-        content: "Button section",
+        content: "Shop all",
+        buttonStyle: "custom",
+        backgroundColor: "#00000000",
+        textColor: "#fff",
+        borderColor: "#fff",
+        backgroundColorHover: "#fff",
+        textColorHover: "#000",
+        borderColorHover: "#fff",
       },
     ],
   },

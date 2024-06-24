@@ -1,7 +1,7 @@
 import type { HydrogenComponent } from "@weaverse/hydrogen";
 import { sharedComponents } from "~/components";
 import * as Judgeme from "~/modules/product-form/judgeme-review";
-import * as SlideShowItem from "~/sections/slideshow/slide";
+import * as SlideShowSlide from "~/sections/slideshow/slide";
 import * as SlideShow from "~/sections/slideshow";
 import * as AliReview from "~/sections/ali-reviews";
 import * as AliReviewList from "~/sections/ali-reviews/review-list";
@@ -98,7 +98,7 @@ export let components: HydrogenComponent[] = [
   Judgeme,
   MetaDemo,
   SlideShow,
-  SlideShowItem,
+  SlideShowSlide,
   ProductList,
   ContactForm,
   Spacer,

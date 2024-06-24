@@ -20,18 +20,21 @@ const variants = {
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({
-    className = "",
-    type,
-    variant = "default",
-    prefixElement,
-    prefix,
-    suffix,
-    onFocus,
-    onBlur,
-    onClear,
-    ...rest
-  }: InputProps) => {
+  (
+    {
+      className = "",
+      type,
+      variant = "default",
+      prefixElement,
+      prefix,
+      suffix,
+      onFocus,
+      onBlur,
+      onClear,
+      ...rest
+    },
+    ref,
+  ) => {
     let [focused, setFocused] = useState(false);
     let commonClasses = clsx(
       "w-full rounded-sm border px-3 py-2.5",
@@ -52,6 +55,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     let rawInput = (
       <input
+        ref={ref}
         className={clsx(
           "w-full focus-visible:outline-none !shadow-none focus:ring-0",
           hasChild ? "grow border-none bg-transparent p-0" : commonClasses,
