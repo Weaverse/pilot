@@ -1,14 +1,14 @@
-import { Link } from "@remix-run/react";
-import { Drawer, useDrawer } from "../Drawer";
 import { Disclosure } from "@headlessui/react";
+import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
+import { IconCaretDown, IconCaretRight } from "~/components/Icons";
+import { Drawer, useDrawer } from "../Drawer";
 import {
   Nav_Items,
-  type SingleMenuProps,
   type ImageItem,
   type MultiMenuProps,
+  type SingleMenuProps,
 } from "./defines";
-import { IconCaret } from "~/components/Icons";
 
 const MenuByType = {
   multi: MultiMenu,
@@ -54,10 +54,11 @@ function MultiMenu(props: MultiMenuProps) {
                     <h5 className="flex justify-between py-3 w-full uppercase font-medium">
                       {item.title}
                       <span className="md:hidden">
-                        <IconCaret
-                          className="w-4 h-4"
-                          direction={open ? "down" : "right"}
-                        />
+                        {open ? (
+                          <IconCaretDown className="w-4 h-4" />
+                        ) : (
+                          <IconCaretRight className="w-4 h-4" />
+                        )}
                       </span>
                     </h5>
                   </Disclosure.Button>
@@ -101,8 +102,7 @@ function MultiMenu(props: MultiMenuProps) {
         onClick={openMenu}
       >
         <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret className="w-4 h-4" />
-        
+        <IconCaretRight className="w-4 h-4" />
       </div>
       {content}
     </div>
@@ -134,7 +134,11 @@ function ImageMenu({
         {imageItems.map((item, id) => (
           <Link to={item.to} prefetch="intent" key={id}>
             <div className="w-full aspect-square relative">
-              <Image data={item.data} className="w-full h-full object-cover" sizes="auto"/>
+              <Image
+                data={item.data}
+                className="w-full h-full object-cover"
+                sizes="auto"
+              />
               <div className="absolute w-full top-1/2 left-0 text-center -translate-y-1/2 text-white font-medium pointer-events-none">
                 {item.title}
               </div>

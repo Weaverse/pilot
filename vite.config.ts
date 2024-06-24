@@ -20,12 +20,13 @@ export default defineConfig({
   ],
   build: {
     // Allow a strict Content-Security-Policy
-    // withtout inlining assets as base64:
+    // without inlining assets as base64:
     assetsInlineLimit: 0,
   },
   ssr: {
     optimizeDeps: {
       include: [
+        "keen-slider/react", // removing this soon
         "typographic-trademark",
         "typographic-single-spaces",
         "typographic-registered-trademark",

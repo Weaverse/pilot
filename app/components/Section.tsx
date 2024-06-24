@@ -8,9 +8,10 @@ import type { HTMLAttributes } from "react";
 import React, { forwardRef } from "react";
 import { cn } from "~/lib/cn";
 import type { BackgroundImageProps } from "./BackgroundImage";
-import { BackgroundImage, backgroundInputs } from "./BackgroundImage";
+import { backgroundInputs } from "./BackgroundImage";
 import type { OverlayProps } from "./Overlay";
-import { Overlay, overlayInputs } from "./Overlay";
+import { overlayInputs } from "./Overlay";
+import { OverlayAndBackground } from "./OverlayAndBackground";
 
 export type BackgroundProps = BackgroundImageProps & {
   backgroundFor: "section" | "content";
@@ -131,31 +132,6 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     </Component>
   );
 });
-
-function OverlayAndBackground(props: SectionProps) {
-  let {
-    backgroundImage,
-    backgroundFit,
-    backgroundPosition,
-    enableOverlay,
-    overlayColor,
-    overlayOpacity,
-  } = props;
-  return (
-    <>
-      <BackgroundImage
-        backgroundImage={backgroundImage}
-        backgroundFit={backgroundFit}
-        backgroundPosition={backgroundPosition}
-      />
-      <Overlay
-        enableOverlay={enableOverlay}
-        overlayColor={overlayColor}
-        overlayOpacity={overlayOpacity}
-      />
-    </>
-  );
-}
 
 export let layoutInputs: InspectorGroup["inputs"] = [
   {

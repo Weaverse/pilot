@@ -1,119 +1,358 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
+import {
+  IMAGES_PLACEHOLDERS,
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { useKeenSlider } from "keen-slider/react.es";
-import type { CSSProperties } from "react";
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import { forwardRef } from "react";
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { SlideshowArrowsProps } from "./arrows";
+import { Arrows } from "./arrows";
+import type { SlideshowDotsProps } from "./dots";
+import { Dots } from "./dots";
 
-interface SlideShowProps extends HydrogenComponentProps {
-  sectionHeight: number;
+let variants = cva("group", {
+  variants: {
+    height: {
+      small: "h-[40vh] lg:h-[50vh]",
+      medium: "h-[50vh] lg:h-[60vh]",
+      large: "h-[70vh] lg:h-[80vh]",
+      full: "h-screen-no-nav",
+    },
+  },
+  defaultVariants: {
+    height: "large",
+  },
+});
+
+export interface SlideshowProps
+  extends VariantProps<typeof variants>,
+    SlideshowArrowsProps,
+    SlideshowDotsProps,
+    HydrogenComponentProps {
+  showArrows: boolean;
+  showDots: boolean;
+  dotsPosition: "top" | "bottom" | "left" | "right";
+  dotsColor: "light" | "dark";
+  loop: boolean;
+  autoRotate: boolean;
+  changeSlidesEvery: number;
 }
 
-let SlideShow = forwardRef<HTMLElement, SlideShowProps>((props, ref) => {
-  let { sectionHeight, children, ...rest } = props;
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [sliderRef, instanceRef] = useKeenSlider({
-    loop: true,
-    slideChanged(slider) {
-      let pos = slider.track.details.rel;
-      setActiveIndex(pos);
-    },
-  });
-
-  let moveToIdx = useCallback(
-    (idx: number) => {
-      setActiveIndex(idx);
-      if (instanceRef.current) {
-        instanceRef.current.moveToIdx(idx);
-      }
-    },
-    [instanceRef],
-  );
-
-  let handleClickNavigation = (idx: number) => {
-    moveToIdx(idx);
-  };
-
-  let renderNavigation = () => {
-    if (children && children?.length > 1) {
-      return children?.map((child, index) => (
-        <span
-          key={index}
-          className={clsx(
-            "h-1 w-full cursor-pointer rounded-sm",
-            index === activeIndex ? "bg-gray-700" : "bg-gray-300",
-          )}
-          onClick={() => handleClickNavigation(index)}
-          role="listitem"
-        />
-      ));
-    }
-    return null;
-  };
-
-  useEffect(() => {
-    if (instanceRef) {
-      instanceRef.current?.update();
-    }
-  }, [children, instanceRef]);
-
-  let sectionStyle: CSSProperties = {
-    "--section-height": `${sectionHeight}px`,
-  } as CSSProperties;
+let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
+  let {
+    height,
+    showArrows,
+    arrowsIcon,
+    iconSize,
+    showArrowsOnHover,
+    arrowsColor,
+    arrowsShape,
+    showDots = true,
+    dotsPosition,
+    dotsColor,
+    loop,
+    autoRotate,
+    changeSlidesEvery,
+    children = [],
+    ...rest
+  } = props;
 
   return (
-    <section
-      ref={ref}
-      {...rest}
-      className="h-[var(--section-height)] relative"
-      style={sectionStyle}
-    >
-      <div ref={sliderRef} className="keen-slider h-full">
-        {children?.map((child, index) => (
-          <div key={index} className={clsx("keen-slider__slide")}>
-            {child}
-          </div>
+    <section ref={ref} {...rest} className={variants({ height })}>
+      <Swiper
+        effect="fade"
+        loop={loop}
+        autoplay={autoRotate ? { delay: changeSlidesEvery * 1000 } : false}
+        navigation={
+          showArrows && {
+            nextEl: ".slideshow-arrow-next",
+            prevEl: ".slideshow-arrow-prev",
+          }
+        }
+        pagination={
+          showDots && {
+            el: ".slideshow-dots",
+            clickable: true,
+            bulletClass: clsx(
+              "dot rounded-full cursor-pointer",
+              "w-2.5 h-2.5 p-0",
+              "outline outline-offset-3 outline-2 outline-transparent",
+              "transition-all duration-200",
+            ),
+            bulletActiveClass: "active",
+          }
+        }
+        modules={[
+          EffectFade,
+          autoRotate ? Autoplay : null,
+          showArrows ? Navigation : null,
+          showDots ? Pagination : null,
+        ].filter(Boolean)}
+      >
+        {children.map((child, idx) => (
+          <SwiperSlide key={idx}>{child}</SwiperSlide>
         ))}
-      </div>
-      <div className="absolute bottom-7 left-1/2 w-1/3 transform -translate-x-1/2 flex gap-1">
-        {renderNavigation()}
-      </div>
+        {showArrows && <Arrows {...props} />}
+        {showDots && <Dots {...props} />}
+      </Swiper>
     </section>
   );
 });
 
-export default SlideShow;
+export default Slideshow;
 
 export let schema: HydrogenComponentSchema = {
-  type: "slide-show",
-  title: "Slide show",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
+  title: "Slideshow",
+  type: "slideshow",
+  childTypes: ["slideshow-slide"],
   inspector: [
     {
-      group: "SLideshow",
+      group: "Slideshow",
       inputs: [
         {
-          type: "range",
-          name: "sectionHeight",
+          type: "select",
+          name: "height",
           label: "Section height",
-          defaultValue: 500,
           configs: {
-            min: 400,
-            max: 700,
-            step: 10,
-            unit: "px",
+            options: [
+              { value: "small", label: "Small" },
+              { value: "medium", label: "Medium" },
+              { value: "large", label: "Large" },
+              { value: "full", label: "Fullscreen" },
+            ],
           },
+          defaultValue: "large",
+        },
+        {
+          type: "switch",
+          label: "Loop",
+          name: "loop",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Auto-rotate slides",
+          name: "autoRotate",
+          defaultValue: true,
+        },
+        {
+          type: "range",
+          label: "Change slides every",
+          name: "changeSlidesEvery",
+          configs: {
+            min: 3,
+            max: 9,
+            step: 1,
+            unit: "s",
+          },
+          defaultValue: 5,
+          condition: "autoRotate.eq.true",
+          helpText: "Auto-rotate is disabled inside Weaverse Studio.",
+        },
+      ],
+    },
+    {
+      group: "Navigation & Controls",
+      inputs: [
+        {
+          type: "heading",
+          label: "Arrows",
+        },
+        {
+          type: "switch",
+          label: "Show arrows",
+          name: "showArrows",
+          defaultValue: false,
+        },
+        {
+          type: "select",
+          label: "Arrow icon",
+          name: "arrowsIcon",
+          configs: {
+            options: [
+              { value: "caret", label: "Caret" },
+              { value: "arrow", label: "Arrow" },
+            ],
+          },
+          defaultValue: "arrow",
+          condition: "showArrows.eq.true",
+        },
+        {
+          type: "range",
+          label: "Icon size",
+          name: "iconSize",
+          configs: {
+            min: 16,
+            max: 40,
+            step: 2,
+          },
+          defaultValue: 20,
+          condition: "showArrows.eq.true",
+        },
+        {
+          type: "switch",
+          label: "Show arrows on hover",
+          name: "showArrowsOnHover",
+          defaultValue: true,
+          condition: "showArrows.eq.true",
+        },
+        {
+          type: "select",
+          label: "Arrows color",
+          name: "arrowsColor",
+          configs: {
+            options: [
+              { value: "light", label: "Light" },
+              { value: "dark", label: "Dark" },
+            ],
+          },
+          defaultValue: "light",
+          condition: "showArrows.eq.true",
+        },
+        {
+          type: "toggle-group",
+          label: "Arrows shape",
+          name: "arrowsShape",
+          configs: {
+            options: [
+              { value: "rounded", label: "Rounded", icon: "squircle" },
+              { value: "circle", label: "Circle", icon: "circle" },
+              { value: "square", label: "Square", icon: "square" },
+            ],
+          },
+          defaultValue: "rounded",
+          condition: "showArrows.eq.true",
+        },
+
+        {
+          type: "heading",
+          label: "Dots",
+        },
+        {
+          type: "switch",
+          label: "Show dots",
+          name: "showDots",
+          defaultValue: true,
+        },
+        {
+          type: "select",
+          label: "Dots position",
+          name: "dotsPosition",
+          configs: {
+            options: [
+              { value: "top", label: "Top" },
+              { value: "bottom", label: "Bottom" },
+              { value: "left", label: "Left" },
+              { value: "right", label: "Right" },
+            ],
+          },
+          defaultValue: "bottom",
+          condition: "showDots.eq.true",
+        },
+        {
+          type: "select",
+          label: "Dots color",
+          name: "dotsColor",
+          configs: {
+            options: [
+              { value: "light", label: "Light" },
+              { value: "dark", label: "Dark" },
+            ],
+          },
+          defaultValue: "light",
+          condition: "showDots.eq.true",
         },
       ],
     },
   ],
-  childTypes: ["slide-show--item"],
   presets: {
     children: [
       {
-        type: "slide-show--item",
+        type: "slideshow-slide",
+        verticalPadding: "large",
+        contentPosition: "center center",
+        backgroundImage: IMAGES_PLACEHOLDERS.banner_1,
+        backgroundFit: "cover",
+        enableOverlay: true,
+        overlayOpacity: 50,
+        children: [
+          {
+            type: "subheading",
+            content: "Limited time offer",
+            color: "#fff",
+          },
+          {
+            type: "heading",
+            content: "Spring / Summer 2024 Sale",
+            color: "#fff",
+            size: "scale",
+            minSize: 16,
+            maxSize: 56,
+          },
+          {
+            type: "paragraph",
+            content:
+              "It's hard to be nice if you don't feel comfortable. All the ready-to-wear and accessories you need for your next summer vacation is now up to 50% off.",
+            color: "#fff",
+          },
+          {
+            type: "button",
+            content: "Shop collection",
+            variant: "primary",
+            buttonStyle: "custom",
+            backgroundColor: "#00000000",
+            textColor: "#fff",
+            borderColor: "#fff",
+            backgroundColorHover: "#fff",
+            textColorHover: "#000",
+            borderColorHover: "#fff",
+          },
+        ],
+      },
+      {
+        type: "slideshow-slide",
+        verticalPadding: "large",
+        contentPosition: "bottom left",
+        backgroundImage: IMAGES_PLACEHOLDERS.banner_2,
+        backgroundFit: "cover",
+        enableOverlay: true,
+        overlayOpacity: 50,
+        children: [
+          {
+            type: "subheading",
+            content: "Exclusive offer",
+            color: "#fff",
+          },
+          {
+            type: "heading",
+            content: "Autumn / Winter 2024 Sale",
+            color: "#fff",
+            size: "scale",
+            minSize: 16,
+            maxSize: 56,
+          },
+          {
+            type: "paragraph",
+            content:
+              "Stay warm and stylish with our winter collection. All the ready-to-wear and accessories you need for your next winter vacation is now up to 60% off.",
+            color: "#fff",
+          },
+          {
+            type: "button",
+            content: "Shop collection",
+            buttonStyle: "custom",
+            backgroundColor: "#00000000",
+            textColor: "#fff",
+            borderColor: "#fff",
+            backgroundColorHover: "#fff",
+            textColorHover: "#000",
+            borderColorHover: "#fff",
+          },
+        ],
       },
     ],
   },
