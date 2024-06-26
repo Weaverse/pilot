@@ -3,7 +3,7 @@ import { Image } from "@shopify/hydrogen";
 
 import { Link } from "./Link";
 
-export function Logo({ showTransparent }: { showTransparent: boolean }) {
+export function Logo({ showTransparent }: { showTransparent?: boolean }) {
   let settings = useThemeSettings();
   let logoData = settings?.logoData;
   let transparentLogoData = settings?.transparentLogoData;
