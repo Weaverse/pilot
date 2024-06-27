@@ -24,21 +24,25 @@ let AliReviewSection = forwardRef<HTMLElement, AliReviewsProps>(
 export type AliReviewsLoaderData = Awaited<ReturnType<typeof loader>>;
 
 export let loader = async ({ weaverse }: ComponentLoaderArgs<{}, Env>) => {
-  let res = await fetch(
-    "https://widget-hub-api.alireviews.io/api/public/reviews",
-    {
+  let res = await weaverse
+    .fetchWithCache<{
+      data: { reviews: AliReview[]; cursor: string };
+      message: string;
+      status: number;
+    }>("https://widget-hub-api.alireviews.io/api/public/reviews", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${weaverse.env.ALI_REVIEWS_API_KEY}`,
+        // https://support.fireapps.io/en/article/ali-reviews-learn-more-about-integration-using-api-key-hklfr0/
+        Authorization: `Bearer ${weaverse.env.ALI_REVIEWS_API_KEY ?? ""}`,
         "Content-Type": "application/json",
       },
-    },
-  );
-  let { data } = await res.json<{
-    data: { reviews: AliReview[]; cursor: string };
-    message: string;
-    status: number;
-  }>();
+    })
+    .catch((err) => {
+      console.log("🚀 ~ loader ~ err", err);
+      return { data: { reviews: [], cursor: "" }, message: "", status: 0 };
+    });
+  let { data } = res;
+
   return data.reviews;
 };
 

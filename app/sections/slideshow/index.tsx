@@ -14,7 +14,7 @@ import { Arrows } from "./arrows";
 import type { SlideshowDotsProps } from "./dots";
 import { Dots } from "./dots";
 
-let variants = cva("group", {
+let variants = cva("group [&_.swiper]:h-full", {
   variants: {
     height: {
       small: "h-[40vh] lg:h-[50vh]",
@@ -94,7 +94,9 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
         ].filter(Boolean)}
       >
         {children.map((child, idx) => (
-          <SwiperSlide key={idx}>{child}</SwiperSlide>
+          <SwiperSlide key={idx} className="bg-white">
+            {child}
+          </SwiperSlide>
         ))}
         {showArrows && <Arrows {...props} />}
         {showDots && <Dots {...props} />}
