@@ -27,6 +27,7 @@ export default defineConfig({
     optimizeDeps: {
       include: [
         "keen-slider/react", // removing this soon
+        "react-player/lazy",
         "typographic-trademark",
         "typographic-single-spaces",
         "typographic-registered-trademark",
