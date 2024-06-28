@@ -6,9 +6,10 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { Suspense, forwardRef, lazy } from "react";
+import { Suspense, forwardRef, lazy, useCallback } from "react";
 import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
+import { useInView } from "react-intersection-observer";
 
 const HEIGHTS = {
   small: {
@@ -92,10 +93,22 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     "--desktop-height": desktopHeight,
     "--mobile-height": mobileHeight,
   } as CSSProperties;
+  const { ref: inViewRef, inView } = useInView();
+
+  // Use `useCallback` so we don't recreate the function on each render
+  const setRefs = useCallback(
+    (node: HTMLElement) => {
+      // Ref's from useRef needs to have the node assigned to `current`
+      ref && Object.assign(ref, { current: node });
+      // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
+      inViewRef(node);
+    },
+    [inViewRef],
+  );
 
   return (
     <section
-      ref={ref}
+      ref={setRefs}
       {...rest}
       className="overflow-hidden w-full h-full"
       style={sectionStyle}
@@ -108,18 +121,20 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
-        <Suspense fallback={null}>
-          <ReactPlayer
-            url={videoURL}
-            playing
-            muted
-            loop={true}
-            width="100%"
-            height="auto"
-            controls={false}
-            className="aspect-video"
-          />
-        </Suspense>
+        {inView && (
+          <Suspense fallback={null}>
+            <ReactPlayer
+              url={videoURL}
+              playing
+              muted
+              loop={true}
+              width="100%"
+              height="auto"
+              controls={false}
+              className="aspect-video"
+            />
+          </Suspense>
+        )}
         <Overlay
           enableOverlay={enableOverlay}
           overlayColor={overlayColor}
