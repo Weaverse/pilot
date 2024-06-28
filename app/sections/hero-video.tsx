@@ -93,7 +93,10 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     "--desktop-height": desktopHeight,
     "--mobile-height": mobileHeight,
   } as CSSProperties;
-  const { ref: inViewRef, inView } = useInView();
+  const { ref: inViewRef, inView } = useInView({
+    threshold: 0,
+    triggerOnce: true,
+  });
 
   // Use `useCallback` so we don't recreate the function on each render
   const setRefs = useCallback(
