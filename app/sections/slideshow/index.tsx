@@ -318,7 +318,7 @@ export let schema: HydrogenComponentSchema = {
       {
         type: "slideshow-slide",
         verticalPadding: "large",
-        contentPosition: "bottom left",
+        contentPosition: "center center",
         backgroundImage: IMAGES_PLACEHOLDERS.banner_2,
         backgroundFit: "cover",
         enableOverlay: true,

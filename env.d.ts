@@ -34,7 +34,7 @@ declare global {
     WEAVERSE_PROJECT_ID: string;
     WEAVERSE_HOST: string;
     WEAVERSE_API_KEY: string;
-    JUDGEME_PUBLIC_TOKEN: string;
+    JUDGEME_PRIVATE_API_TOKEN: string;
     PUBLIC_GOOGLE_GTM_ID: string;
   }
 }
