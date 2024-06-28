@@ -94,7 +94,6 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     "--mobile-height": mobileHeight,
   } as CSSProperties;
   const { ref: inViewRef, inView } = useInView({
-    threshold: 0,
     triggerOnce: true,
   });
 
