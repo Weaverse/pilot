@@ -72,7 +72,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     url: request.url,
   });
 
-  let judgeme_API_TOKEN = context.env.JUDGEME_PUBLIC_TOKEN;
+  let judgeme_API_TOKEN = context.env.JUDGEME_PRIVATE_API_TOKEN;
   let judgemeReviews = null;
   if (judgeme_API_TOKEN) {
     let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
