@@ -50,10 +50,6 @@ export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: "featured-collections",
   title: "Featured collections",
-  limit: 1,
-  enabledOn: {
-    pages: ["INDEX"],
-  },
   inspector: [
     {
       group: "Featured collections",
