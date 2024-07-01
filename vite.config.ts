@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
-import { hydrogen } from "@shopify/hydrogen/vite";
-import { oxygen } from "@shopify/mini-oxygen/vite";
-import { vitePlugin as remix } from "@remix-run/dev";
-import tsconfigPaths from "vite-tsconfig-paths";
+import {defineConfig} from 'vite';
+import {hydrogen} from '@shopify/hydrogen/vite';
+import {oxygen} from '@shopify/mini-oxygen/vite';
+import {vitePlugin as remix} from '@remix-run/dev';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
@@ -26,21 +26,20 @@ export default defineConfig({
   ssr: {
     optimizeDeps: {
       include: [
-        "keen-slider/react", // removing this soon
-        "react-player/lazy",
-        "typographic-trademark",
-        "typographic-single-spaces",
-        "typographic-registered-trademark",
-        "typographic-math-symbols",
-        "typographic-en-dashes",
-        "typographic-em-dashes",
-        "typographic-ellipses",
-        "typographic-currency",
-        "typographic-copyright",
-        "typographic-apostrophes-for-possessive-plurals",
-        "typographic-quotes",
-        "typographic-apostrophes",
-        "textr",
+        'keen-slider/react',
+        'typographic-trademark',
+        'typographic-single-spaces',
+        'typographic-registered-trademark',
+        'typographic-math-symbols',
+        'typographic-en-dashes',
+        'typographic-em-dashes',
+        'typographic-ellipses',
+        'typographic-currency',
+        'typographic-copyright',
+        'typographic-apostrophes-for-possessive-plurals',
+        'typographic-quotes',
+        'typographic-apostrophes',
+        'textr',
       ],
     },
   },

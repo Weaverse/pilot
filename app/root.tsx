@@ -255,18 +255,45 @@ const LAYOUT_QUERY = `#graphql
   fragment MenuItem on MenuItem {
     id
     resourceId
+    resource {
+      ... on Collection {
+        image {
+          altText
+          height
+          id
+          url
+          width
+        }
+      }
+      ... on Product {
+        image: featuredImage {
+          altText
+          height
+          id
+          url
+          width
+        }
+      }
+    }
     tags
     title
     type
     url
   }
+  
   fragment ChildMenuItem on MenuItem {
     ...MenuItem
+  }
+  fragment ParentMenuItem2 on MenuItem {
+    ...MenuItem
+    items {
+      ...ChildMenuItem
+    }
   }
   fragment ParentMenuItem on MenuItem {
     ...MenuItem
     items {
-      ...ChildMenuItem
+      ...ParentMenuItem2
     }
   }
   fragment Menu on Menu {
