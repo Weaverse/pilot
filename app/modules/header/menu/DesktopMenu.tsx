@@ -18,10 +18,10 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
       {items.map((item, id) => {
         let { title, ...rest } = item;
         let level = getMaxDepth(item);
-        let isResourceType =
+        let isAllResourceType =
           item.items.length &&
-          item.items.every((item) => item?.resource !== null);
-        let Comp: React.FC<SingleMenuItem> = isResourceType
+          item.items.every((item) => item?.resource !== null && item.items.length === 0);
+        let Comp: React.FC<SingleMenuItem> = isAllResourceType
           ? ImageMenu
           : level > 2
             ? MultiMenu
@@ -51,7 +51,7 @@ function MultiMenu(props: SingleMenuItem) {
 
   let renderList = (item: SingleMenuItem, idx: number) => (
     <div
-      className="flex-1 fly-in"
+      className="flex-1 fly-in max-w-60"
       key={idx}
       style={{ "--item-index": idx } as { [key: string]: any }}
     >
@@ -79,7 +79,7 @@ function MultiMenu(props: SingleMenuItem) {
 
   let renderImageItem = (item: SingleMenuItem, idx: number) => (
     <div
-      className="flex-1 w-full aspect-[4/5] relative group/item overflow-hidden fly-in"
+      className="flex-1 w-full aspect-[4/5] relative group/item overflow-hidden fly-in max-w-60"
       key={idx}
       style={{ "--item-index": idx } as { [key: string]: any }}
     >
