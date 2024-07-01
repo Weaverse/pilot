@@ -18,10 +18,10 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
       {items.map((item, id) => {
         let { title, ...rest } = item;
         let level = getMaxDepth(item);
-        let isResourceType =
+        let isAllResourceType =
           item.items.length &&
-          item.items.every((item) => item?.resource !== null);
-        let Comp: React.FC<SingleMenuItem> = isResourceType
+          item.items.every((item) => item?.resource !== null && item.items.length === 0);
+        let Comp: React.FC<SingleMenuItem> = isAllResourceType
           ? ImageMenu
           : level > 2
             ? MultiMenu
