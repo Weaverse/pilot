@@ -134,7 +134,7 @@ export let schema: HydrogenComponentSchema = {
   ],
   presets: {
     verticalPadding: "large",
-    contentPosition: "bottom left",
+    contentPosition: "center center",
     backgroundImage: IMAGES_PLACEHOLDERS.banner_1,
     backgroundFit: "cover",
     enableOverlay: true,

@@ -48,9 +48,6 @@ export let schema: HydrogenComponentSchema = {
   type: "contact-form",
   title: "Contact form",
   limit: 1,
-  enabledOn: {
-    pages: ["INDEX"],
-  },
   inspector: [
     // {
     //   group: 'Contact form',
