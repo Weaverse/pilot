@@ -13,7 +13,7 @@ export function Logo({ showTransparent }: { showTransparent?: boolean }) {
   }
   return (
     <Link
-      className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit"
+      className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit z-30"
       to="/"
       prefetch="intent"
     >

@@ -1,4 +1,4 @@
-import { Await, Link, useLoaderData, useLocation } from "@remix-run/react";
+import { Await, Link, useLocation } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Suspense, useEffect, useState } from "react";
@@ -49,7 +49,7 @@ export function DesktopHeader({
     >
       <div
         className={clsx(
-          "absolute inset-0 bg-primary -z-10",
+          "absolute inset-0 bg-primary z-20",
           "transition-all duration-300 ease-in-out",
           isTransparent
             ? "opacity-0 -translate-y-1/2"
@@ -57,8 +57,8 @@ export function DesktopHeader({
         )}
       ></div>
       <Logo showTransparent={isTransparent} />
-      <DesktopMenu />
-      <div className="flex items-center gap-1">
+      {menu && <DesktopMenu menu={menu} />}
+      <div className="flex items-center gap-1 z-30">
         <SearchToggle
           isOpen={isOpen}
           openDrawer={openDrawer}

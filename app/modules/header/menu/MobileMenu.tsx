@@ -2,40 +2,42 @@ import { Disclosure } from "@headlessui/react";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { IconCaretDown, IconCaretRight } from "~/components/Icons";
-import {
-  Nav_Items,
-  type ImageItem,
-  type MultiMenuProps,
-  type SingleMenuProps,
-} from "./defines";
+import { getMaxDepth } from "~/lib/menu";
+import type { EnhancedMenu } from "~/lib/utils";
 import { Drawer, useDrawer } from "~/modules/Drawer";
-import { IconCaret } from "~/modules/Icon";
+import type { SingleMenuItem } from "~/lib/type";
 
-const MenuByType = {
-  multi: MultiMenu,
-  image: ImageMenu,
-  single: SingleMenu,
-};
-
-export function MobileMenu() {
+export function MobileMenu({ menu }: { menu: EnhancedMenu }) {
+  let items = menu.items as unknown as SingleMenuItem[];
+  console.log("🚀 ~ items:", items);
   return (
     <nav className="grid px-4 py-2">
-      {Nav_Items.map((item, id) => {
-        let { title, type, ...rest } = item;
-        let Comp = MenuByType[type];
+      {items.map((item, id) => {
+        let { title, ...rest } = item;
+        let level = getMaxDepth(item);
+        let isResourceType =
+          item.items.length &&
+          item.items.every((item) => item?.resource !== null);
+        let Comp: React.FC<SingleMenuItem> = isResourceType
+          ? ImageMenu
+          : level > 2
+            ? MultiMenu
+            : level === 2
+              ? SingleMenu
+              : ItemHeader;
         return <Comp key={id} title={title} {...rest} />;
       })}
     </nav>
   );
 }
 
-function MultiMenu(props: MultiMenuProps) {
+function MultiMenu(props: SingleMenuItem) {
   const {
     isOpen: isMenuOpen,
     openDrawer: openMenu,
     closeDrawer: closeMenu,
   } = useDrawer();
-  let { title, items } = props;
+  let { title, to, items } = props;
   let content = (
     <Drawer
       open={isMenuOpen}
@@ -53,14 +55,18 @@ function MultiMenu(props: MultiMenuProps) {
                 <>
                   <Disclosure.Button className="text-left w-full">
                     <h5 className="flex justify-between py-3 w-full uppercase font-medium">
-                      {item.title}
-                      <span className="md:hidden">
-                        {open ? (
-                          <IconCaretDown className="w-4 h-4" />
-                        ) : (
-                          <IconCaretRight className="w-4 h-4" />
-                        )}
-                      </span>
+                      <Link to={item.to} prefetch="intent">
+                        {item.title}
+                      </Link>
+                      {item?.items?.length > 0 && (
+                        <span className="md:hidden">
+                          {open ? (
+                            <IconCaretDown className="w-4 h-4" />
+                          ) : (
+                            <IconCaretRight className="w-4 h-4" />
+                          )}
+                        </span>
+                      )}
                     </h5>
                   </Disclosure.Button>
                   {item?.items?.length > 0 ? (
@@ -102,21 +108,17 @@ function MultiMenu(props: MultiMenuProps) {
         role="button"
         onClick={openMenu}
       >
-        <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret className="w-4 h-4" />
+        <Link to={to} prefetch="intent">
+          <span className="uppercase font-medium">{title}</span>
+        </Link>
+        <IconCaretRight className="w-4 h-4" />
       </div>
       {content}
     </div>
   );
 }
 
-function ImageMenu({
-  title,
-  imageItems,
-}: {
-  title: string;
-  imageItems: ImageItem[];
-}) {
+function ImageMenu({ title, items, to }: SingleMenuItem) {
   const {
     isOpen: isMenuOpen,
     openDrawer: openMenu,
@@ -132,15 +134,15 @@ function ImageMenu({
       bordered
     >
       <div className="grid px-4 py-5 gap-3 grid-cols-2">
-        {imageItems.map((item, id) => (
+        {items.map((item, id) => (
           <Link to={item.to} prefetch="intent" key={id}>
             <div className="w-full aspect-square relative">
               <Image
-                data={item.data}
+                data={item.resource?.image}
                 className="w-full h-full object-cover"
                 sizes="auto"
               />
-              <div className="absolute w-full top-1/2 left-0 text-center -translate-y-1/2 text-white font-medium pointer-events-none">
+              <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center">
                 {item.title}
               </div>
             </div>
@@ -156,21 +158,23 @@ function ImageMenu({
         role="button"
         onClick={openMenu}
       >
-        <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret className="w-4 h-4" />
+        <Link to={to} prefetch="intent">
+          <span className="uppercase font-medium">{title}</span>
+        </Link>
+        <IconCaretRight className="w-4 h-4" />
       </div>
       {content}
     </div>
   );
 }
 
-function SingleMenu(props: SingleMenuProps) {
+function SingleMenu(props: SingleMenuItem) {
   const {
     isOpen: isMenuOpen,
     openDrawer: openMenu,
     closeDrawer: closeMenu,
   } = useDrawer();
-  let { title, items } = props;
+  let { title, items, to } = props;
   let content = (
     <Drawer
       open={isMenuOpen}
@@ -205,10 +209,22 @@ function SingleMenu(props: SingleMenuProps) {
         role="button"
         onClick={openMenu}
       >
-        <span className="uppercase font-medium">{title}</span>{" "}
-        <IconCaret className="w-4 h-4" />
+        <Link to={to} prefetch="intent">
+          <span className="uppercase font-medium">{title}</span>
+        </Link>
+        <IconCaretRight className="w-4 h-4" />
       </div>
       {content}
+    </div>
+  );
+}
+
+function ItemHeader({ title, to }: { title: string; to: string }) {
+  return (
+    <div className="flex justify-between items-center py-3">
+      <Link to={to} prefetch="intent">
+        <span className="uppercase font-medium">{title}</span>
+      </Link>
     </div>
   );
 }

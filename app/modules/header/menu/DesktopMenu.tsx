@@ -1,46 +1,27 @@
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
-import {
-  type ImageMenuProps,
-  type MultiMenuProps,
-  type SingleMenuProps,
-} from "./defines";
 import clsx from "clsx";
-import type { loader } from "~/root";
+import React from "react";
+import { getMaxDepth } from "~/lib/menu";
+import type { SingleMenuItem } from "~/lib/type";
+import type { EnhancedMenu } from "~/lib/utils";
 
-function getMaxDepth(item) {
-  if (item.items?.length > 0) {
-    return Math.max(...item.items.map(getMaxDepth)) + 1;
-  }
-  return 1;
-}
+const dropdownContentClass =
+  "absolute overflow-hidden bg-white shadow-md z-10 dropdown-transition border-t";
 
-const commonAnimatedClass =
-  "absolute h-0 opacity-0 overflow-hidden bg-white shadow-md transition-all ease-out group-hover:opacity-100 group-hover:border-t duration-500 group-hover:duration-300 group-hover:z-50 ";
-
-// function addPrefixForEachClass(prefix: string, className: string,) {
-//   return className.split(" ").map((className) => `${prefix}${className}`).join(" ");
-// }
-
-// const commonAnimatedClass = clsx(
-//   "absolute -translate-y-full overflow-hidden bg-white shadow-md transition-all ease-out duration-300",
-//  addPrefixForEachClass("group-hover:", "opacity-100 border-t z-50 translate-y-0"),
-// )
-
-export function DesktopMenu() {
-  const data = useLoaderData<typeof loader>();
-  let menu = data?.layout?.headerMenu;
-  let items = menu?.items;
+export function DesktopMenu(props: { menu: EnhancedMenu }) {
+  let { menu } = props;
+  let items = menu.items as unknown as SingleMenuItem[];
   if (!items) return null;
   return (
     <nav className="flex items-stretch h-full">
       {items.map((item, id) => {
-        let { title, type, ...rest } = item;
+        let { title, ...rest } = item;
         let level = getMaxDepth(item);
         let isResourceType =
           item.items.length &&
           item.items.every((item) => item?.resource !== null);
-        let Comp = isResourceType
+        let Comp: React.FC<SingleMenuItem> = isResourceType
           ? ImageMenu
           : level > 2
             ? MultiMenu
@@ -49,19 +30,13 @@ export function DesktopMenu() {
               : ItemHeader;
         return <Comp key={id} title={title} {...rest} />;
       })}
-      {/* 
-      {Nav_Items.map((item, id) => {
-        let { title, type, ...rest } = item;
-        let Comp = MenuByType[type];
-        return <Comp key={id} title={title} {...rest} />;
-      })} */}
     </nav>
   );
 }
 
 function ItemHeader({ title, to }: { title: string; to: string }) {
   return (
-    <div className="h-full flex items-center pl-6 cursor-pointer">
+    <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
       <button className="py-2 group-hover:border-b hover:border-b">
         <Link to={to}>
           <span className="uppercase">{title}</span>
@@ -71,11 +46,15 @@ function ItemHeader({ title, to }: { title: string; to: string }) {
   );
 }
 
-function MultiMenu(props: MultiMenuProps) {
-  let { title, items, to, imageItems } = props;
+function MultiMenu(props: SingleMenuItem) {
+  let { title, items, to } = props;
 
-  let renderList = (item, id) => (
-    <div key={id}>
+  let renderList = (item: SingleMenuItem, idx: number) => (
+    <div
+      className="flex-1 fly-in"
+      key={idx}
+      style={{ "--item-index": idx } as { [key: string]: any }}
+    >
       <h5 className="mb-4 uppercase font-medium">
         <Link to={item.to} prefetch="intent" className="animate-hover">
           {item.title}
@@ -98,10 +77,11 @@ function MultiMenu(props: MultiMenuProps) {
     </div>
   );
 
-  let renderImageItem = (item, id) => (
+  let renderImageItem = (item: SingleMenuItem, idx: number) => (
     <div
-      className="w-full aspect-[4/5] relative group/item overflow-hidden"
-      key={id}
+      className="flex-1 w-full aspect-[4/5] relative group/item overflow-hidden fly-in"
+      key={idx}
+      style={{ "--item-index": idx } as { [key: string]: any }}
     >
       <Link to={item.to} prefetch="intent">
         <Image
@@ -110,7 +90,7 @@ function MultiMenu(props: MultiMenuProps) {
           className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-300"
         />
       </Link>
-      <div className="absolute w-full top-1/2 left-0 text-center -translate-y-1/2 text-white font-medium pointer-events-none p-2 bg-black/50 group-hover/item:bg-black/70">
+      <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center">
         {item.title}
       </div>
     </div>
@@ -118,33 +98,14 @@ function MultiMenu(props: MultiMenuProps) {
   return (
     <div className="group">
       <ItemHeader title={title} to={to} />
-      <div
-        className={clsx(
-          "w-screen top-full left-0 group-hover:h-96",
-          commonAnimatedClass,
-        )}
-      >
+      <div className={clsx("w-screen top-full left-0", dropdownContentClass)}>
         <div className="container mx-auto py-8">
-          <div className="grid grid-cols-6 gap-4 w-full">
+          <div className="flex gap-4 w-full">
             {items.map((item, id) =>
               item.resource && item.items.length === 0
                 ? renderImageItem(item, id)
                 : renderList(item, id),
             )}
-            {imageItems?.map((item, id) => (
-              <div key={id} className="w-full aspect-[4/5] relative">
-                <Link to={item.to} prefetch="intent">
-                  <Image
-                    sizes="auto"
-                    data={item.data}
-                    className="w-full h-full object-cover"
-                  />
-                </Link>
-                <div className="absolute w-full top-1/2 left-0 text-center -translate-y-1/2 text-white font-medium pointer-events-none">
-                  {item.title}
-                </div>
-              </div>
-            ))}
           </div>
           <div className="flex gap-6"></div>
         </div>
@@ -153,15 +114,15 @@ function MultiMenu(props: MultiMenuProps) {
   );
 }
 
-function SingleMenu(props: SingleMenuProps) {
+function SingleMenu(props: SingleMenuItem) {
   let { title, items, to } = props;
   return (
     <div className="group relative">
       <ItemHeader title={title} to={to} />
       <div
         className={clsx(
-          "top-full left-0 group-hover:h-auto",
-          commonAnimatedClass,
+          "top-full -left-3 group-hover:h-auto",
+          dropdownContentClass,
         )}
       >
         <div className="p-6 min-w-48">
@@ -191,23 +152,24 @@ function SingleMenu(props: SingleMenuProps) {
   );
 }
 
-function ImageMenu({ title, items, to }: ImageMenuProps) {
+function ImageMenu({ title, items, to }: SingleMenuItem) {
   return (
     <div className="group">
       <ItemHeader title={title} to={to} />
-      <div
-        className={clsx(
-          "w-screen top-full left-0 group-hover:h-96",
-          commonAnimatedClass,
-        )}
-      >
+      <div className={clsx("w-screen top-full left-0", dropdownContentClass)}>
         <div className="py-8">
-          <div className="grid grid-cols-4 gap-6 w-fit container mx-auto">
+          <div className="flex gap-6 w-fit container mx-auto">
             {items.map((item, id) => (
-              <Link to={item.to} prefetch="intent" key={id}>
-                <div className="h-80 aspect-square relative group/item overflow-hidden">
+              <Link
+                to={item.to}
+                prefetch="intent"
+                key={id}
+                className="flex-1 fly-in"
+                style={{ "--item-index": id } as { [key: string]: any }}
+              >
+                <div className="aspect-square relative group/item overflow-hidden">
                   <Image
-                    data={item.resource.image}
+                    data={item?.resource?.image}
                     className="w-full h-full object-contain group-hover/item:scale-110 transition-transform duration-300"
                     sizes="auto"
                   />

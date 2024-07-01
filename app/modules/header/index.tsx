@@ -103,7 +103,7 @@ export function MenuDrawer({
       openFrom="left"
       heading="Menu"
     >
-      <MobileMenu />
+      {<MobileMenu menu={menu} />}
     </Drawer>
   );
 }
