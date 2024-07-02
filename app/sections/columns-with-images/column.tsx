@@ -33,8 +33,6 @@ interface ColumnWithImageItemProps
   imageBorderRadius: number;
   heading: string;
   content: string;
-  hideOnMobile: boolean;
-  size: "large" | "medium";
 }
 
 let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
@@ -67,7 +65,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
           sizes="auto"
           className="aspect-square object-cover object-center w-full rounded-[var(--image-border-radius)]"
         />
-        <div className="text-center w-full space-y-3 mt-6">
+        <div className="text-center w-full space-y-3.5 mt-6">
           {heading && <h3 className="font-medium">{heading}</h3>}
           {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
           {text && (
@@ -152,7 +150,7 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "richtext",
-          label: "Content",
+          label: "Description",
           name: "content",
           placeholder:
             "Use this section to promote content throughout every page of your site. Add images for further impact.",
