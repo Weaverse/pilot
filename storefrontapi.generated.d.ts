@@ -1003,8 +1003,40 @@ export type LayoutQuery = {
             Pick<
               StorefrontAPI.MenuItem,
               'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
-            >
+            > & {
+              items: Array<
+                Pick<
+                  StorefrontAPI.MenuItem,
+                  'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+                > & {
+                  resource?: StorefrontAPI.Maybe<{
+                    image?: StorefrontAPI.Maybe<
+                      Pick<
+                        StorefrontAPI.Image,
+                        'altText' | 'height' | 'id' | 'url' | 'width'
+                      >
+                    >;
+                  }>;
+                }
+              >;
+              resource?: StorefrontAPI.Maybe<{
+                image?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'altText' | 'height' | 'id' | 'url' | 'width'
+                  >
+                >;
+              }>;
+            }
           >;
+          resource?: StorefrontAPI.Maybe<{
+            image?: StorefrontAPI.Maybe<
+              Pick<
+                StorefrontAPI.Image,
+                'altText' | 'height' | 'id' | 'url' | 'width'
+              >
+            >;
+          }>;
         }
       >;
     }
@@ -1020,8 +1052,40 @@ export type LayoutQuery = {
             Pick<
               StorefrontAPI.MenuItem,
               'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
-            >
+            > & {
+              items: Array<
+                Pick<
+                  StorefrontAPI.MenuItem,
+                  'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+                > & {
+                  resource?: StorefrontAPI.Maybe<{
+                    image?: StorefrontAPI.Maybe<
+                      Pick<
+                        StorefrontAPI.Image,
+                        'altText' | 'height' | 'id' | 'url' | 'width'
+                      >
+                    >;
+                  }>;
+                }
+              >;
+              resource?: StorefrontAPI.Maybe<{
+                image?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'altText' | 'height' | 'id' | 'url' | 'width'
+                  >
+                >;
+              }>;
+            }
           >;
+          resource?: StorefrontAPI.Maybe<{
+            image?: StorefrontAPI.Maybe<
+              Pick<
+                StorefrontAPI.Image,
+                'altText' | 'height' | 'id' | 'url' | 'width'
+              >
+            >;
+          }>;
         }
       >;
     }
@@ -1043,12 +1107,50 @@ export type ShopFragment = Pick<
 export type MenuItemFragment = Pick<
   StorefrontAPI.MenuItem,
   'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
->;
+> & {
+  resource?: StorefrontAPI.Maybe<{
+    image?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Image, 'altText' | 'height' | 'id' | 'url' | 'width'>
+    >;
+  }>;
+};
 
 export type ChildMenuItemFragment = Pick<
   StorefrontAPI.MenuItem,
   'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
->;
+> & {
+  resource?: StorefrontAPI.Maybe<{
+    image?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Image, 'altText' | 'height' | 'id' | 'url' | 'width'>
+    >;
+  }>;
+};
+
+export type ParentMenuItem2Fragment = Pick<
+  StorefrontAPI.MenuItem,
+  'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+> & {
+  items: Array<
+    Pick<
+      StorefrontAPI.MenuItem,
+      'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+    > & {
+      resource?: StorefrontAPI.Maybe<{
+        image?: StorefrontAPI.Maybe<
+          Pick<
+            StorefrontAPI.Image,
+            'altText' | 'height' | 'id' | 'url' | 'width'
+          >
+        >;
+      }>;
+    }
+  >;
+  resource?: StorefrontAPI.Maybe<{
+    image?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Image, 'altText' | 'height' | 'id' | 'url' | 'width'>
+    >;
+  }>;
+};
 
 export type ParentMenuItemFragment = Pick<
   StorefrontAPI.MenuItem,
@@ -1058,8 +1160,37 @@ export type ParentMenuItemFragment = Pick<
     Pick<
       StorefrontAPI.MenuItem,
       'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
-    >
+    > & {
+      items: Array<
+        Pick<
+          StorefrontAPI.MenuItem,
+          'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+        > & {
+          resource?: StorefrontAPI.Maybe<{
+            image?: StorefrontAPI.Maybe<
+              Pick<
+                StorefrontAPI.Image,
+                'altText' | 'height' | 'id' | 'url' | 'width'
+              >
+            >;
+          }>;
+        }
+      >;
+      resource?: StorefrontAPI.Maybe<{
+        image?: StorefrontAPI.Maybe<
+          Pick<
+            StorefrontAPI.Image,
+            'altText' | 'height' | 'id' | 'url' | 'width'
+          >
+        >;
+      }>;
+    }
   >;
+  resource?: StorefrontAPI.Maybe<{
+    image?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Image, 'altText' | 'height' | 'id' | 'url' | 'width'>
+    >;
+  }>;
 };
 
 export type MenuFragment = Pick<StorefrontAPI.Menu, 'id'> & {
@@ -1072,8 +1203,40 @@ export type MenuFragment = Pick<StorefrontAPI.Menu, 'id'> & {
         Pick<
           StorefrontAPI.MenuItem,
           'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
-        >
+        > & {
+          items: Array<
+            Pick<
+              StorefrontAPI.MenuItem,
+              'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+            > & {
+              resource?: StorefrontAPI.Maybe<{
+                image?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'altText' | 'height' | 'id' | 'url' | 'width'
+                  >
+                >;
+              }>;
+            }
+          >;
+          resource?: StorefrontAPI.Maybe<{
+            image?: StorefrontAPI.Maybe<
+              Pick<
+                StorefrontAPI.Image,
+                'altText' | 'height' | 'id' | 'url' | 'width'
+              >
+            >;
+          }>;
+        }
       >;
+      resource?: StorefrontAPI.Maybe<{
+        image?: StorefrontAPI.Maybe<
+          Pick<
+            StorefrontAPI.Image,
+            'altText' | 'height' | 'id' | 'url' | 'width'
+          >
+        >;
+      }>;
     }
   >;
 };
@@ -1084,6 +1247,24 @@ export type GetShopPrimaryDomainQueryVariables = StorefrontAPI.Exact<{
 
 export type GetShopPrimaryDomainQuery = {
   shop: {primaryDomain: Pick<StorefrontAPI.Domain, 'url'>};
+};
+
+export type CustomerCreateMutationVariables = StorefrontAPI.Exact<{
+  input: StorefrontAPI.CustomerCreateInput;
+}>;
+
+export type CustomerCreateMutation = {
+  customerCreate?: StorefrontAPI.Maybe<{
+    customer?: StorefrontAPI.Maybe<
+      Pick<
+        StorefrontAPI.Customer,
+        'firstName' | 'lastName' | 'email' | 'phone' | 'acceptsMarketing'
+      >
+    >;
+    customerUserErrors: Array<
+      Pick<StorefrontAPI.CustomerUserError, 'field' | 'message' | 'code'>
+    >;
+  }>;
 };
 
 export type PredictiveArticleFragment = {__typename: 'Article'} & Pick<
@@ -1574,7 +1755,7 @@ interface GeneratedQueryTypes {
     return: MetaObjectsQuery;
     variables: MetaObjectsQueryVariables;
   };
-  '#graphql\n  query layout(\n    $language: LanguageCode\n    $headerMenuHandle: String!\n    $footerMenuHandle: String!\n  ) @inContext(language: $language) {\n    shop {\n      ...Shop\n    }\n    headerMenu: menu(handle: $headerMenuHandle) {\n      ...Menu\n    }\n    footerMenu: menu(handle: $footerMenuHandle) {\n      ...Menu\n    }\n  }\n  fragment Shop on Shop {\n    id\n    name\n    description\n    primaryDomain {\n      url\n    }\n    brand {\n      logo {\n        image {\n          url\n        }\n      }\n    }\n  }\n  fragment MenuItem on MenuItem {\n    id\n    resourceId\n    tags\n    title\n    type\n    url\n  }\n  fragment ChildMenuItem on MenuItem {\n    ...MenuItem\n  }\n  fragment ParentMenuItem on MenuItem {\n    ...MenuItem\n    items {\n      ...ChildMenuItem\n    }\n  }\n  fragment Menu on Menu {\n    id\n    items {\n      ...ParentMenuItem\n    }\n  }\n': {
+  '#graphql\n  query layout(\n    $language: LanguageCode\n    $headerMenuHandle: String!\n    $footerMenuHandle: String!\n  ) @inContext(language: $language) {\n    shop {\n      ...Shop\n    }\n    headerMenu: menu(handle: $headerMenuHandle) {\n      ...Menu\n    }\n    footerMenu: menu(handle: $footerMenuHandle) {\n      ...Menu\n    }\n  }\n  fragment Shop on Shop {\n    id\n    name\n    description\n    primaryDomain {\n      url\n    }\n    brand {\n      logo {\n        image {\n          url\n        }\n      }\n    }\n  }\n  fragment MenuItem on MenuItem {\n    id\n    resourceId\n    resource {\n      ... on Collection {\n        image {\n          altText\n          height\n          id\n          url\n          width\n        }\n      }\n      ... on Product {\n        image: featuredImage {\n          altText\n          height\n          id\n          url\n          width\n        }\n      }\n    }\n    tags\n    title\n    type\n    url\n  }\n  \n  fragment ChildMenuItem on MenuItem {\n    ...MenuItem\n  }\n  fragment ParentMenuItem2 on MenuItem {\n    ...MenuItem\n    items {\n      ...ChildMenuItem\n    }\n  }\n  fragment ParentMenuItem on MenuItem {\n    ...MenuItem\n    items {\n      ...ParentMenuItem2\n    }\n  }\n  fragment Menu on Menu {\n    id\n    items {\n      ...ParentMenuItem\n    }\n  }\n': {
     return: LayoutQuery;
     variables: LayoutQueryVariables;
   };
@@ -1612,7 +1793,12 @@ interface GeneratedQueryTypes {
   };
 }
 
-interface GeneratedMutationTypes {}
+interface GeneratedMutationTypes {
+  '#graphql\n  mutation customerCreate($input: CustomerCreateInput!) {\n    customerCreate(input: $input) {\n      customer {\n        firstName\n        lastName\n        email\n        phone\n        acceptsMarketing\n      }\n      customerUserErrors {\n        field\n        message\n        code\n      }\n    }\n  }\n': {
+    return: CustomerCreateMutation;
+    variables: CustomerCreateMutationVariables;
+  };
+}
 
 declare module '@shopify/hydrogen' {
   interface StorefrontQueries extends GeneratedQueryTypes {}

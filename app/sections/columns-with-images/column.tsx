@@ -5,30 +5,41 @@ import {
   type HydrogenComponentSchema,
   type WeaverseImage,
 } from "@weaverse/hydrogen";
-import clsx from "clsx";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import type { ButtonProps } from "~/components/Button";
 import Button, { buttonContentInputs } from "~/components/Button";
 
+let variants = cva("", {
+  variants: {
+    size: {
+      large: "col-span-6",
+      medium: "col-span-4",
+    },
+    hideOnMobile: {
+      true: "hidden sm:block",
+      false: "",
+    },
+  },
+});
+
 interface ColumnWithImageItemProps
-  extends Pick<ButtonProps, "variant" | "text" | "link" | "openInNewTab">,
+  extends VariantProps<typeof variants>,
+    Pick<ButtonProps, "variant" | "text" | "link" | "openInNewTab">,
     HydrogenComponentProps {
   imageSrc: WeaverseImage;
+  imageBorderRadius: number;
   heading: string;
   content: string;
-  hideOnMobile: boolean;
-  size: "large" | "medium";
 }
-
-let sizeMap = {
-  large: "col-span-6",
-  medium: "col-span-4",
-};
 
 let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
   (props, ref) => {
     let {
       imageSrc,
+      imageBorderRadius,
       heading,
       content,
       text,
@@ -40,24 +51,23 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
       ...rest
     } = props;
 
-    let imageData =
-      typeof imageSrc === "object"
-        ? imageSrc
-        : { url: imageSrc || IMAGES_PLACEHOLDERS.image, altText: imageSrc };
     return (
       <div
         ref={ref}
         {...rest}
-        className={clsx(hideOnMobile && "hidden sm:block", sizeMap[size])}
+        className={variants({ size, hideOnMobile })}
+        style={
+          { "--image-border-radius": `${imageBorderRadius}px` } as CSSProperties
+        }
       >
         <Image
-          data={imageData}
+          data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}
           sizes="auto"
-          className="aspect-square object-cover object-center w-full rounded-lg"
+          className="aspect-square object-cover object-center w-full rounded-[var(--image-border-radius)]"
         />
-        <div className="text-center w-full space-y-3 mt-6">
+        <div className="text-center w-full space-y-3.5 mt-6">
           {heading && <h3 className="font-medium">{heading}</h3>}
-          {content && <p>{content}</p>}
+          {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
           {text && (
             <Button
               variant={variant}
@@ -83,30 +93,9 @@ export let schema: HydrogenComponentSchema = {
       group: "Column",
       inputs: [
         {
-          type: "image",
-          name: "imageSrc",
-          label: "Image",
-        },
-        {
-          type: "text",
-          name: "heading",
-          label: "Heading",
-          placeholder: "Example heading",
-          defaultValue: "Example heading",
-        },
-        {
-          type: "richtext",
-          label: "Text",
-          name: "content",
-          placeholder:
-            "Use this section to promote content throughout every page of your site. Add images for further impact.",
-          defaultValue:
-            "Use this section to promote content throughout every page of your site. Add images for further impact.",
-        },
-        {
           type: "select",
           name: "size",
-          label: "Size",
+          label: "Column size",
           configs: {
             options: [
               {
@@ -129,6 +118,48 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "heading",
+          label: "Image",
+        },
+        {
+          type: "image",
+          name: "imageSrc",
+          label: "Image",
+        },
+        {
+          type: "range",
+          name: "imageBorderRadius",
+          label: "Image border radius",
+          configs: {
+            min: 0,
+            max: 40,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
+        },
+        {
+          type: "heading",
+          label: "Content",
+        },
+        {
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          placeholder: "Example heading",
+          defaultValue: "Example heading",
+        },
+        {
+          type: "richtext",
+          label: "Description",
+          name: "content",
+          placeholder:
+            "Use this section to promote content throughout every page of your site. Add images for further impact.",
+          defaultValue:
+            "Use this section to promote content throughout every page of your site. Add images for further impact.",
+        },
+
+        {
+          type: "heading",
           label: "Button (optional)",
         },
         ...buttonContentInputs,
@@ -136,6 +167,6 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   presets: {
-    imageSrc: IMAGES_PLACEHOLDERS.product_1,
+    imageSrc: IMAGES_PLACEHOLDERS.product_4,
   },
 };
