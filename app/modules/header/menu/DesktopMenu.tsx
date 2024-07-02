@@ -20,7 +20,7 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
         let level = getMaxDepth(item);
         let isAllResourceType =
           item.items.length &&
-          item.items.every((item) => item?.resource !== null && item.items.length === 0);
+          item.items.every((item) => item?.resource?.image && item.items.length === 0);
         let Comp: React.FC<SingleMenuItem> = isAllResourceType
           ? ImageMenu
           : level > 2
@@ -37,7 +37,7 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
 function ItemHeader({ title, to }: { title: string; to: string }) {
   return (
     <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
-      <button className="py-2 group-hover:border-b hover:border-b">
+      <button className="py-2 border-b border-b-transparent group-hover:border-b-bar hover:border-b-bar">
         <Link to={to}>
           <span className="uppercase">{title}</span>
         </Link>
