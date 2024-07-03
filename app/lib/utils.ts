@@ -186,6 +186,7 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
       return {
         ...parsedItem,
         items: item.items
+          // @ts-ignore
           .map(parseItem(primaryDomain, env, customPrefixes))
           .filter(Boolean),
       } as EnhancedMenu["items"][number];

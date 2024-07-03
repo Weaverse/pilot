@@ -8,7 +8,7 @@ import type {
   PredictiveQueryFragment,
   PredictiveSearchQuery,
 } from "storefrontapi.generated";
-import {
+import type {
   NormalizedPredictiveSearch,
   NormalizedPredictiveSearchResults,
 } from "~/components/predictive-search/types";
@@ -137,11 +137,12 @@ export function normalizePredictiveSearchResults(
   if (predictiveSearch.queries.length) {
     results.push({
       type: "queries",
+      // @ts-expect-error
       items: predictiveSearch.queries.map((query: PredictiveQueryFragment) => {
-        const trackingParams = applyTrackingParams(
-          query,
-          `q=${encodeURIComponent(query.text)}`,
-        );
+        // const trackingParams = applyTrackingParams(
+        //   query,
+        //   `q=${encodeURIComponent(query.text)}`,
+        // );
 
         totalResults++;
         return {
@@ -160,6 +161,7 @@ export function normalizePredictiveSearchResults(
   if (predictiveSearch.products.length) {
     results.push({
       type: "products",
+      // @ts-expect-error
       items: predictiveSearch.products.map(
         (product: PredictiveProductFragment) => {
           totalResults++;
@@ -183,6 +185,7 @@ export function normalizePredictiveSearchResults(
   if (predictiveSearch.collections.length) {
     results.push({
       type: "collections",
+      // @ts-expect-error
       items: predictiveSearch.collections.map(
         (collection: PredictiveCollectionFragment) => {
           totalResults++;
@@ -203,6 +206,7 @@ export function normalizePredictiveSearchResults(
   if (predictiveSearch.pages.length) {
     results.push({
       type: "pages",
+      // @ts-expect-error
       items: predictiveSearch.pages.map((page: PredictivePageFragment) => {
         totalResults++;
         const trackingParams = applyTrackingParams(page);
@@ -221,6 +225,7 @@ export function normalizePredictiveSearchResults(
   if (predictiveSearch.articles.length) {
     results.push({
       type: "articles",
+      // @ts-expect-error
       items: predictiveSearch.articles.map(
         (article: PredictiveArticleFragment) => {
           totalResults++;

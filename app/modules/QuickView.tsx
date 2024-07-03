@@ -46,7 +46,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
   let handleSelectedVariantChange = (variant: any) => {
     setSelectedVariant(variant);
   };
-  console.log("🚀 ~ QuickView ~ selectedVariant:", selectedVariant);
+
   useEffect(() => {
     if (variants?.nodes?.length) {
       if (!selectedVariant) {
@@ -59,8 +59,8 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
   }, [product?.id]);
 
   const { shippingPolicy, refundPolicy } = shop;
-
-  const { title, vendor, descriptionHtml } = product;
+  // @ts-expect-error
+  const { title, descriptionHtml } = product;
   let atcText = selectedVariant?.availableForSale
     ? addToCartText
     : selectedVariant?.quantityAvailable === -1
@@ -70,6 +70,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
     <div className="p-10 rounded-md bg-background w-[80vw] max-w-[1200px]">
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
         <ProductMedia
+          // @ts-expect-error
           media={product?.media.nodes}
           selectedVariant={selectedVariant}
           showThumbnails={showThumbnails}
@@ -102,13 +103,16 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
               ) : null}
             </p>
             <ProductVariants
+              // @ts-expect-error
               product={product}
+              // @ts-expect-error
+              options={product?.options}
+              // @ts-expect-error
+              handle={product?.handle}
               selectedVariant={selectedVariant}
               onSelectedVariantChange={handleSelectedVariantChange}
               swatch={swatches}
               variants={variants}
-              options={product?.options}
-              handle={product?.handle}
               hideUnavailableOptions={hideUnavailableOptions}
             />
           </div>
@@ -171,16 +175,19 @@ export function QuickViewTrigger(props: { productHandle: string }) {
   let [quickAddOpen, setQuickAddOpen] = useState(false);
   const { productHandle } = props;
   let { load, data, state } = useFetcher<ProductData>();
+
   useEffect(() => {
     if (quickAddOpen && !data && state !== "loading") {
       load(`/api/query/products?handle=${productHandle}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quickAddOpen, data, load, state]);
+
   return (
     <>
       <div className="mt-2 absolute bottom-4 hidden lg:group-hover:block py-5 px-3 w-full opacity-100 bg-[rgba(238,239,234,0.10)] backdrop-blur-2xl">
         <Button
-          onClick={(e) => {
+          onClick={(e: Event) => {
             e.preventDefault();
             e.stopPropagation();
             setQuickAddOpen(true);

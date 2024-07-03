@@ -9,11 +9,13 @@ import {
 import { flattenConnection } from "@shopify/hydrogen";
 import { defer, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import { Suspense } from "react";
-
 import type {
   CustomerDetailsFragment,
   OrderCardFragment,
 } from "customer-accountapi.generated";
+import { CACHE_NONE, routeHeaders } from "~/data/cache";
+import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/CustomerDetailsQuery";
+import { usePrefixPathWithLocale } from "~/lib/utils";
 import {
   AccountAddressBook,
   AccountDetails,
@@ -24,11 +26,6 @@ import {
   ProductSwimlane,
   Text,
 } from "~/modules";
-import { FeaturedCollections } from "~/modules/FeaturedCollections";
-import { CACHE_NONE, routeHeaders } from "~/data/cache";
-import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/CustomerDetailsQuery";
-import { usePrefixPathWithLocale } from "~/lib/utils";
-
 import { doLogout } from "./($locale).account_.logout";
 import {
   getFeaturedData,
@@ -131,10 +128,6 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
           >
             {(data) => (
               <>
-                <FeaturedCollections
-                  title="Popular Collections"
-                  collections={data.featuredCollections}
-                />
                 <ProductSwimlane products={data.featuredProducts} />
               </>
             )}
