@@ -238,5 +238,4 @@ export let schema: HydrogenComponentSchema = {
       inputs: buttonInputs,
     },
   ],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

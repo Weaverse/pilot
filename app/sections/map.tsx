@@ -104,7 +104,6 @@ export default Map;
 export let schema: HydrogenComponentSchema = {
   type: "map",
   title: "Map",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Map",

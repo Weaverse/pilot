@@ -178,7 +178,6 @@ export let schema: HydrogenComponentSchema = {
   type: "single-product",
   title: "Single product",
   childTypes: ["judgeme"],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Single product",

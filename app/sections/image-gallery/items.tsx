@@ -51,7 +51,6 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   childTypes: ["image-gallery--item"],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     children: [
       {

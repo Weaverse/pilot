@@ -114,7 +114,6 @@ export let loader = async (args: ComponentLoaderArgs<HotspotsItemData>) => {
 export let schema: HydrogenComponentSchema = {
   type: "hotspots--item",
   title: "Hotspots item",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Icon",

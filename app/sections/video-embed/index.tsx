@@ -19,7 +19,6 @@ export default VideoEmbed;
 export let schema: HydrogenComponentSchema = {
   type: "video",
   title: "Video embed",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: sectionInspector,
   childTypes: ["heading", "paragraph", "video-embed--item"],
   presets: {

@@ -21,7 +21,6 @@ export let schema: HydrogenComponentSchema = {
   title: "Image gallery",
   childTypes: ["subheading", "heading", "paragraph", "image-gallery--items"],
   inspector: sectionInspector,
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     children: [
       {

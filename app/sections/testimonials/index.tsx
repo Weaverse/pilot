@@ -22,7 +22,6 @@ export let schema: HydrogenComponentSchema = {
   title: "Testimonials",
   childTypes: ["subheading", "heading", "paragraph", "testimonials-items"],
   inspector: sectionInspector,
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     children: [
       {
