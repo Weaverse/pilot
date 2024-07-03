@@ -129,7 +129,7 @@
     animation: fadeInAnimation ease 500ms forwards;
   }
 
-  .hiddenScroll {
+  .hidden-scroll {
     scrollbar-width: none;
     &::-webkit-scrollbar {
       display: none;
@@ -208,12 +208,12 @@
 }
 
 .text-animation {
-  background-image: linear-gradient(to right, rgb(15,15,15),rgb(15,15,15));
+  background-image: linear-gradient(to right, rgb(15, 15, 15), rgb(15, 15, 15));
   background-size: 0% 1px;
   background-repeat: no-repeat;
   display: inline;
   padding-bottom: 3px;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   background-position: left calc(1em + 4px);
 }
 .text-animation:hover {
@@ -227,14 +227,16 @@
 }
 .dropdown-transition {
   @apply opacity-0 -translate-y-full transform-gpu;
-  transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out;
+  transition:
+    opacity 0.2s ease-in-out,
+    transform 0.3s ease-in-out;
 }
 
 .group:hover .dropdown-transition {
   @apply opacity-100 translate-y-0;
 }
 
-.fly-in{
+.fly-in {
   opacity: 0;
   transform: translateX(80px);
 }
@@ -242,7 +244,9 @@
 .group:hover .fly-in {
   transform: translateX(0);
   opacity: 1;
-  transition: transform 1s cubic-bezier(.14,.8,.6,1), opacity .5s ease;
+  transition:
+    transform 1s cubic-bezier(0.14, 0.8, 0.6, 1),
+    opacity 0.5s ease;
   transition-delay: calc(var(--item-index) * 0.1s + 0.2s);
   /* transition-delay: 0.3s; */
 }

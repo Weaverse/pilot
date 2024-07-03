@@ -48,7 +48,7 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
                 <h2 className="text-3xl font-bold max-w-prose text-center mx-auto">
                   {heading}
                 </h2>
-                <ol className="md:grid grid-cols-3 hiddenScroll md:gap-6">
+                <ol className="md:grid grid-cols-3 hidden-scroll md:gap-6">
                   {relatedArticles.slice(0, articlesCount).map((article, i) => (
                     <ArticleCard
                       key={article.id}
