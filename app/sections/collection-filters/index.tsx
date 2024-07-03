@@ -116,7 +116,6 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["COLLECTION"],
   },
-  toolbar: ["general-settings"],
   inspector: [
     {
       group: "Collection filters",

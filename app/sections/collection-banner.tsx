@@ -98,7 +98,6 @@ export default CollectionBanner;
 export let schema: HydrogenComponentSchema = {
   type: "collection-banner",
   title: "Collection banner",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   enabledOn: {
     pages: ["COLLECTION"],
   },

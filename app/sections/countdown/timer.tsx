@@ -109,7 +109,6 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 export let schema: HydrogenComponentSchema = {
   type: "countdown--timer",
   title: "Timer",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Timer",

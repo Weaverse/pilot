@@ -154,7 +154,6 @@ export default HeroVideo;
 export let schema: HydrogenComponentSchema = {
   type: "hero-video",
   title: "Hero video",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Video",

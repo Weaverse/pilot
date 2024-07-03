@@ -213,7 +213,6 @@ Export a `schema` object from the file to define the component's schema with def
 export let schema: HydrogenComponentSchema = {
   type: 'video',
   title: 'Video',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
   inspector: [
     {
       group: 'Video',

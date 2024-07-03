@@ -8,6 +8,8 @@ import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as AllProducts from "~/sections/all-products";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
+import * as FeaturedCollections from "~/sections/featured-collections";
+import * as FeaturedCollectionItems from "~/sections/featured-collections/collection-items";
 import * as CollectionBanner from "~/sections/collection-banner";
 import * as CollectionFilters from "~/sections/collection-filters";
 import * as CollectionList from "~/sections/collection-list";
@@ -16,7 +18,6 @@ import * as ColumnWithImageItem from "~/sections/columns-with-images/column";
 import * as ColumnsWithImagesItems from "~/sections/columns-with-images/items";
 import * as Countdown from "~/sections/countdown";
 import * as CountDownTimer from "~/sections/countdown/timer";
-import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedProducts from "~/sections/featured-products";
 import * as HeroImage from "~/sections/hero-image";
 import * as HeroVideo from "~/sections/hero-video";
@@ -53,6 +54,8 @@ export let components: HydrogenComponent[] = [
   AliReview,
   AliReviewList,
   AllProducts,
+  FeaturedCollections,
+  FeaturedCollectionItems,
   BlogPost,
   Blogs,
   CollectionBanner,
@@ -81,7 +84,6 @@ export let components: HydrogenComponent[] = [
   BlogPost,
   AllProducts,
   FeaturedProducts,
-  FeaturedCollections,
   Testimonial,
   TestimonialItems,
   TestimonialItem,

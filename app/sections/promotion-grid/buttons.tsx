@@ -28,7 +28,6 @@ export default PromotionItemButtons;
 export let schema: HydrogenComponentSchema = {
   type: "promotion-item--buttons",
   title: "Buttons",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Buttons",

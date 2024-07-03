@@ -63,7 +63,6 @@ export default HeroImage;
 export let schema: HydrogenComponentSchema = {
   type: "hero-image",
   title: "Hero image",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Layout",
