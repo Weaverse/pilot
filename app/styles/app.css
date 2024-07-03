@@ -207,6 +207,18 @@
   @apply origin-left scale-x-100;
 }
 
+.text-animation {
+  background-image: linear-gradient(to right, black, black);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  display: inline;
+  padding-bottom: 3px;
+  transition: all .3s ease;
+  background-position: left calc(1em + 4px);
+}
+.text-animation:hover {
+  background-size: 100% 1px;
+}
 .dropdown-transition {
   @apply opacity-0 -translate-y-full transform-gpu;
   transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out;

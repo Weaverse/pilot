@@ -83,7 +83,6 @@ function MultiMenu(props: SingleMenuItem) {
                                 key={ind}
                                 to={subItem.to}
                                 prefetch="intent"
-                                className="animate-hover"
                               >
                                 {subItem.title}
                               </Link>
@@ -192,7 +191,6 @@ function SingleMenu(props: SingleMenuItem) {
                 key={ind}
                 to={subItem.to}
                 prefetch="intent"
-                className="animate-hover"
               >
                 {subItem.title}
               </Link>
