@@ -15,6 +15,7 @@ import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
 import { getImageAspectRatio } from "~/lib/utils";
 import type { FeaturedCollectionsLoaderData } from ".";
+import { Link } from "~/modules";
 
 let variants = cva("", {
   variants: {
@@ -32,6 +33,21 @@ let variants = cva("", {
       24: "md:gap-6",
       28: "md:gap-7",
       32: "md:gap-8",
+    },
+    borderRadius: {
+      0: "",
+      2: "rounded-sm",
+      4: "rounded",
+      6: "rounded-md",
+      8: "rounded-lg",
+      10: "rounded-[10px]",
+      12: "rounded-xl",
+      14: "rounded-[14px]",
+      16: "rounded-2xl",
+      18: "rounded-[18px]",
+      20: "rounded-[20px]",
+      22: "rounded-[22px]",
+      24: "rounded-3xl",
     },
     alignment: {
       top: "items-start",
@@ -60,6 +76,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
       gridSize,
       gap,
       aspectRatio,
+      borderRadius,
       contentPosition,
       collectionNameColor,
       alignment,
@@ -86,31 +103,41 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
         {...rest}
         className={clsx(
           [
-            "overflow-x-scroll md:overflow-x-hidden hidden-scroll",
-            "grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col md:grid-flow-row justify-start gap-2",
+            "snap-x snap-mandatory",
+            "overflow-x-scroll md:overflow-x-hidden hidden-scroll scroll-px-6",
+            "grid w-full grid-flow-col md:grid-flow-row justify-start gap-2",
           ],
           variants({ gridSize, gap }),
         )}
       >
         {collections.map((collection, ind) => (
-          <div
+          <Link
             key={collection.id + ind}
-            className="relative w-[67vw] md:w-auto"
-            style={{
-              aspectRatio: getImageAspectRatio(
-                collection?.image || {},
-                aspectRatio,
-              ),
-            }}
+            to={`/collections/${collection.handle}`}
+            className="relative w-[67vw] md:w-auto group"
           >
             {collection?.image && (
-              <Image
-                data={collection.image}
-                width={collection.image.width || 600}
-                height={collection.image.height || 400}
-                sizes="(max-width: 32em) 100vw, 45vw"
-                className="w-full h-full object-cover"
-              />
+              <div
+                className={clsx("overflow-hidden", variants({ borderRadius }))}
+                style={{
+                  aspectRatio: getImageAspectRatio(
+                    collection?.image || {},
+                    aspectRatio,
+                  ),
+                }}
+              >
+                <Image
+                  data={collection.image}
+                  width={collection.image.width || 600}
+                  height={collection.image.height || 400}
+                  sizes="(max-width: 32em) 100vw, 45vw"
+                  className={clsx([
+                    "w-full h-full object-cover",
+                    "transition-all duration-300",
+                    "will-change-transform scale-100 group-hover:scale-[1.05]",
+                  ])}
+                />
+              </div>
             )}
             {contentPosition === "over" && (
               <>
@@ -118,7 +145,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                   enableOverlay={enableOverlay}
                   overlayColor={overlayColor}
                   overlayOpacity={overlayOpacity}
-                  className="z-0"
+                  className={clsx("z-0", variants({ borderRadius }))}
                 />
               </>
             )}
@@ -129,7 +156,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 }
                 className={clsx(
                   contentPosition === "over"
-                    ? "text-center space-y-4 md:space-y-7 px-4 py-16 text-[var(--col-name-color)]"
+                    ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-[var(--col-name-color)]"
                     : "py-4",
                 )}
               >
@@ -159,7 +186,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 )}
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     );
@@ -239,6 +266,18 @@ export let schema: HydrogenComponentSchema = {
           },
           helpText:
             'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
+        },
+        {
+          type: "range",
+          label: "Border radius",
+          name: "borderRadius",
+          configs: {
+            min: 0,
+            max: 24,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
         },
         {
           type: "heading",
