@@ -20,29 +20,19 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
         let level = getMaxDepth(item);
         let isAllResourceType =
           item.items.length &&
-          item.items.every((item) => item?.resource?.image && item.items.length === 0);
+          item.items.every(
+            (item) => item?.resource?.image && item.items.length === 0,
+          );
         let Comp: React.FC<SingleMenuItem> = isAllResourceType
           ? ImageMenu
           : level > 2
             ? MultiMenu
             : level === 2
               ? SingleMenu
-              : ItemHeader;
+              : GroupWrapper;
         return <Comp key={id} title={title} {...rest} />;
       })}
     </nav>
-  );
-}
-
-function ItemHeader({ title, to }: { title: string; to: string }) {
-  return (
-    <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
-      <button className="py-2 border-b border-b-transparent group-hover:border-b-bar hover:border-b-bar">
-        <Link to={to}>
-          <span className="uppercase">{title}</span>
-        </Link>
-      </button>
-    </div>
   );
 }
 
@@ -56,8 +46,8 @@ function MultiMenu(props: SingleMenuItem) {
       style={{ "--item-index": idx } as { [key: string]: any }}
     >
       <h5 className="mb-4 uppercase font-medium">
-        <Link to={item.to} prefetch="intent" className="animate-hover">
-          {item.title}
+        <Link to={item.to} prefetch="intent">
+          <span className="text-animation">{item.title}</span>
         </Link>
       </h5>
       <ul className="space-y-1.5">
@@ -67,9 +57,9 @@ function MultiMenu(props: SingleMenuItem) {
               key={ind}
               to={subItem.to}
               prefetch="intent"
-              className="animate-hover"
+              className="relative"
             >
-              {subItem.title}
+              <span className="text-animation">{subItem.title}</span>
             </Link>
           </li>
         ))}
@@ -96,8 +86,7 @@ function MultiMenu(props: SingleMenuItem) {
     </div>
   );
   return (
-    <div className="group">
-      <ItemHeader title={title} to={to} />
+    <GroupWrapper title={title} to={to}>
       <div className={clsx("w-screen top-full left-0", dropdownContentClass)}>
         <div className="container mx-auto py-8">
           <div className="flex gap-4 w-full">
@@ -110,15 +99,14 @@ function MultiMenu(props: SingleMenuItem) {
           <div className="flex gap-6"></div>
         </div>
       </div>
-    </div>
+    </GroupWrapper>
   );
 }
 
 function SingleMenu(props: SingleMenuItem) {
   let { title, items, to } = props;
   return (
-    <div className="group relative">
-      <ItemHeader title={title} to={to} />
+    <GroupWrapper title={title} to={to} className="relative">
       <div
         className={clsx(
           "top-full -left-3 group-hover:h-auto",
@@ -128,19 +116,15 @@ function SingleMenu(props: SingleMenuItem) {
         <div className="p-6 min-w-48">
           <div>
             <h5 className="mb-4 uppercase font-medium">
-              <Link to={to} prefetch="intent" className="animate-hover">
-                {title}
+              <Link to={to} prefetch="intent">
+                <span className="text-animation">{title}</span>
               </Link>
             </h5>
             <ul className="space-y-1.5">
               {items.map((subItem, ind) => (
                 <li key={ind} className="leading-6">
-                  <Link
-                    to={subItem.to}
-                    prefetch="intent"
-                    className="animate-hover"
-                  >
-                    {subItem.title}
+                  <Link to={subItem.to} prefetch="intent">
+                    <span className="text-animation">{subItem.title}</span>
                   </Link>
                 </li>
               ))}
@@ -148,14 +132,13 @@ function SingleMenu(props: SingleMenuItem) {
           </div>
         </div>
       </div>
-    </div>
+    </GroupWrapper>
   );
 }
 
 function ImageMenu({ title, items, to }: SingleMenuItem) {
   return (
-    <div className="group">
-      <ItemHeader title={title} to={to} />
+    <GroupWrapper title={title} to={to}>
       <div className={clsx("w-screen top-full left-0", dropdownContentClass)}>
         <div className="py-8">
           <div className="flex gap-6 w-fit container mx-auto">
@@ -182,6 +165,31 @@ function ImageMenu({ title, items, to }: SingleMenuItem) {
           </div>
         </div>
       </div>
+    </GroupWrapper>
+  );
+}
+
+function GroupHeader({ title, to }: { title: string; to: string }) {
+  return (
+    <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
+      <Link to={to} className="py-2">
+        <span className="uppercase text-animation group/header">{title}</span>
+      </Link>
+    </div>
+  );
+}
+
+function GroupWrapper(props: {
+  children?: React.ReactNode;
+  className?: string;
+  title: string;
+  to: string;
+}) {
+  let { children, className, title, to } = props;
+  return (
+    <div className={clsx("group", className)}>
+      <GroupHeader title={title} to={to} />
+      {children}
     </div>
   );
 }
