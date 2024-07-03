@@ -16,22 +16,22 @@ import { Overlay, overlayInputs } from "~/components/Overlay";
 import { getImageAspectRatio } from "~/lib/utils";
 import type { FeaturedCollectionsLoaderData } from ".";
 
-let variants = cva("md:grid", {
+let variants = cva("", {
   variants: {
     gridSize: {
       3: "md:grid-cols-3",
-      4: "md:grid-cols-4",
-      5: "md:grid-cols-5",
-      6: "md:grid-cols-6",
+      4: "md:grid-cols-3 lg:grid-cols-4",
+      5: "md:grid-cols-3 xl:grid-cols-5",
+      6: "md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6",
     },
     gap: {
-      8: "gap-2",
-      12: "gap-3",
-      16: "gap-4",
-      20: "gap-5",
-      24: "gap-6",
-      28: "gap-7",
-      32: "gap-8",
+      8: "md:gap-2",
+      12: "md:gap-3",
+      16: "md:gap-4",
+      20: "md:gap-5",
+      24: "md:gap-6",
+      28: "md:gap-7",
+      32: "md:gap-8",
     },
     alignment: {
       top: "items-start",
@@ -81,11 +81,21 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
       collections = Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
     }
     return (
-      <div ref={ref} {...rest} className={variants({ gridSize, gap })}>
+      <div
+        ref={ref}
+        {...rest}
+        className={clsx(
+          [
+            "overflow-x-scroll md:overflow-x-hidden hidden-scroll",
+            "grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col md:grid-flow-row justify-start gap-2",
+          ],
+          variants({ gridSize, gap }),
+        )}
+      >
         {collections.map((collection, ind) => (
           <div
             key={collection.id + ind}
-            className="relative"
+            className="relative w-[67vw] md:w-auto"
             style={{
               aspectRatio: getImageAspectRatio(
                 collection?.image || {},
@@ -119,14 +129,14 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 }
                 className={clsx(
                   contentPosition === "over"
-                    ? "text-center space-y-7 px-4 py-16 text-[var(--col-name-color)]"
+                    ? "text-center space-y-4 md:space-y-7 px-4 py-16 text-[var(--col-name-color)]"
                     : "py-4",
                 )}
               >
                 <h3
                   className={clsx(
                     contentPosition === "over"
-                      ? "text-3xl leading-none"
+                      ? "text-2xl md:text-3xl leading-none"
                       : "text-xl",
                   )}
                 >
@@ -144,7 +154,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                     backgroundColorHover={backgroundColorHover}
                     textColorHover={textColorHover}
                     borderColorHover={borderColorHover}
-                    className="min-w-48"
+                    className="md:min-w-48 md:max-w-[80%]"
                   />
                 )}
               </div>
@@ -182,7 +192,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: "toggle-group",
           name: "gridSize",
-          label: "Grid size (Desktop)",
+          label: "Grid size (desktop)",
           configs: {
             options: [
               { value: "3", label: "3" },
@@ -232,11 +242,6 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "heading",
-          label: "Overlay",
-        },
-        ...overlayInputs,
-        {
-          type: "heading",
           label: "Content",
         },
         {
@@ -272,6 +277,15 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: "#fff",
           condition: "contentPosition.eq.over",
         },
+        {
+          type: "heading",
+          label: "Overlay",
+          condition: "contentPosition.eq.over",
+        },
+        ...overlayInputs.map((inp) => ({
+          ...inp,
+          condition: "contentPosition.eq.over",
+        })),
         {
           type: "heading",
           label: "Button (optional)",
