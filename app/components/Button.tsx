@@ -38,25 +38,29 @@ let variants = cva(
   },
 );
 
+export interface ButtonStyleProps {
+  buttonStyle: "inherit" | "custom";
+  backgroundColor: string;
+  textColor: string;
+  borderColor: string;
+  backgroundColorHover: string;
+  textColorHover: string;
+  borderColorHover: string;
+}
+
 export interface ButtonProps
   extends VariantProps<typeof variants>,
     Omit<
       HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>,
       "children" | "type"
     >,
-    Partial<HydrogenComponentProps> {
+    Partial<HydrogenComponentProps>,
+    Partial<ButtonStyleProps> {
   as?: keyof HTMLElementTagNameMap;
   className?: string;
   text: string;
   link?: string;
   openInNewTab?: boolean;
-  buttonStyle?: "inherit" | "custom";
-  backgroundColor?: string;
-  textColor?: string;
-  borderColor?: string;
-  backgroundColorHover?: string;
-  textColorHover?: string;
-  borderColorHover?: string;
 }
 
 let Button = forwardRef<HTMLElement, ButtonProps>((props, ref) => {
@@ -159,10 +163,6 @@ export let buttonContentInputs: InspectorGroup["inputs"] = [
 ];
 export let buttonStylesInputs: InspectorGroup["inputs"] = [
   {
-    type: "heading",
-    label: "Button styles",
-  },
-  {
     type: "select",
     name: "buttonStyle",
     label: "Button style",
@@ -222,6 +222,10 @@ export let buttonStylesInputs: InspectorGroup["inputs"] = [
 
 export let buttonInputs: InspectorGroup["inputs"] = [
   ...buttonContentInputs,
+  {
+    type: "heading",
+    label: "Button styles",
+  },
   ...buttonStylesInputs,
 ];
 
