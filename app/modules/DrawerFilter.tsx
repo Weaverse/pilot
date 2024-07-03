@@ -9,32 +9,24 @@ import type {
   Filter,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
+import clsx from "clsx";
 import type { SyntheticEvent } from "react";
-import { useMemo, useState } from "react";
-import { useDebounce } from "react-use";
-import { Drawer, useDrawer } from "./Drawer";
-import {
-  AppliedFilter,
-  SortParam,
-  filterInputToParams,
-  getAppliedFilterLink,
-  getFilterLink,
-  getSortLink,
-} from "~/lib/filter";
-import { Button } from "./Button";
+import { useState } from "react";
 import { Checkbox } from "~/components/Checkbox";
 import { FILTER_URL_PREFIX } from "~/lib/const";
+import type { AppliedFilter, SortParam } from "~/lib/filter";
+import { getAppliedFilterLink, getFilterLink, getSortLink } from "~/lib/filter";
+import { Input } from ".";
+import { Button } from "./Button";
+import { Drawer, useDrawer } from "./Drawer";
 import {
   IconCaret,
-  IconFilters,
   IconFourGrid,
   IconOneGrid,
   IconSliders,
   IconThreeGrid,
   IconTwoGrid,
 } from "./Icon";
-import { Input } from ".";
-import clsx from "clsx";
 
 type DrawerFilterProps = {
   productNumber?: number;
@@ -65,6 +57,7 @@ export function DrawerFilter({
               numberInRow === 4 && " border-[#88847F]",
             )}
             onClick={() => onLayoutChange(4)}
+            role="button"
           >
             <IconFourGrid className="w-12 h-12 text-[#88847F]" />
           </div>
@@ -74,6 +67,7 @@ export function DrawerFilter({
               numberInRow === 3 && " border-[#88847F]",
             )}
             onClick={() => onLayoutChange(3)}
+            role="button"
           >
             <IconThreeGrid className="w-12 h-12 text-[#88847F]" />
           </div>
@@ -83,6 +77,7 @@ export function DrawerFilter({
               numberInRow === 4 && "border-[#88847F]",
             )}
             onClick={() => onLayoutChange(4)}
+            role="button"
           >
             <IconTwoGrid className="w-12 h-12 text-[#88847F]" />
           </div>
@@ -92,6 +87,7 @@ export function DrawerFilter({
               numberInRow === 3 && "border-[#88847F]",
             )}
             onClick={() => onLayoutChange(3)}
+            role="button"
           >
             <IconOneGrid className="w-12 h-12 text-[#88847F]" />
           </div>
@@ -114,6 +110,7 @@ export function DrawerFilter({
             heading="Filter"
           >
             <div className="px-6">
+              {/* @ts-expect-error */}
               <FiltersDrawer
                 filters={filters}
                 appliedFilters={appliedFilters}
@@ -214,15 +211,15 @@ export function FiltersDrawer({
   );
 }
 
-const PRICE_RANGE_FILTER_DEBOUNCE = 500;
+// const PRICE_RANGE_FILTER_DEBOUNCE = 500;
 
 function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
-  const location = useLocation();
-  const params = useMemo(
-    () => new URLSearchParams(location.search),
-    [location.search],
-  );
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const params = useMemo(
+  //   () => new URLSearchParams(location.search),
+  //   [location.search],
+  // );
+  // const navigate = useNavigate();
 
   const [minPrice, setMinPrice] = useState(min);
   const [maxPrice, setMaxPrice] = useState(max);
@@ -264,7 +261,7 @@ function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
 
   return (
     <div className="flex gap-6">
-      <label className="flex items-center gap-1">
+      <label className="flex items-center gap-1" htmlFor="minPrice">
         <span>$</span>
         <Input
           name="minPrice"
@@ -274,7 +271,7 @@ function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
           onChange={onChangeMin}
         />
       </label>
-      <label className="flex items-center gap-1">
+      <label className="flex items-center gap-1" htmlFor="maxPrice">
         <span>$</span>
         <Input
           name="maxPrice"

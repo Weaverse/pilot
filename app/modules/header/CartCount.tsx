@@ -5,7 +5,6 @@ import { useIsHydrated } from "~/hooks/useIsHydrated";
 import { useRootLoaderData } from "~/root";
 import { IconBag } from "../Icon";
 
-
 export function CartCount({
   isHome,
   openCart,
@@ -40,7 +39,7 @@ function Badge({
   count: number;
   dark: boolean;
   openCart: () => void;
-  cart: any;
+  cart?: any;
 }) {
   const isHydrated = useIsHydrated();
 

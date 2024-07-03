@@ -1,10 +1,7 @@
 import { useEffect } from "react";
 import { useFetcher } from "@remix-run/react";
-
 import { usePrefixPathWithLocale } from "~/lib/utils";
 import type { FeaturedData } from "~/routes/($locale).featured-products";
-
-import { FeaturedCollections } from "./FeaturedCollections";
 import { ProductSwimlane } from "./ProductSwimlane";
 
 export function FeaturedSection() {
@@ -18,17 +15,7 @@ export function FeaturedSection() {
 
   if (!data) return null;
 
-  const { featuredCollections, featuredProducts } = data;
+  const { featuredProducts } = data;
 
-  return (
-    <>
-      {featuredCollections.nodes.length < 2 && (
-        <FeaturedCollections
-          title="Popular Collections"
-          collections={featuredCollections}
-        />
-      )}
-      <ProductSwimlane products={featuredProducts} />
-    </>
-  );
+  return <ProductSwimlane products={featuredProducts} />;
 }
