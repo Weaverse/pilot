@@ -119,7 +119,6 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     backgroundImage: IMAGES_PLACEHOLDERS.banner_2,
     width: "stretch",
-    backgroundFor: "content",
     enableOverlay: true,
     overlayOpacity: 50,
     children: [
