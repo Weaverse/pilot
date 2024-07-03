@@ -91,7 +91,6 @@ export let schema: HydrogenComponentSchema = {
     "paragraph",
     "button",
   ],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     children: [
       { type: "heading", content: "Reviews" },
