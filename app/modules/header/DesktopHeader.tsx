@@ -39,7 +39,7 @@ export function DesktopHeader({
       className={clsx(
         enableTransparent ? "fixed" : "sticky",
         isTransparent
-          ? "backdrop-blur-lg text-primary"
+          ? "text-primary"
           : "shadow-header text-body",
         "hidden h-nav lg:flex items-center duration-300 transition-all z-40 top-0 justify-between leading-none gap-8 origin-top ease-in-out",
         "w-full px-6 md:px-8 lg:px-12",
