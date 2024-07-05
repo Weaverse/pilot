@@ -24,6 +24,7 @@ export function DesktopHeader({
   title: string;
 }) {
   const { y } = useWindowScroll();
+  // get theme settings
   let settings = useThemeSettings();
   let [hovered, setHovered] = useState(false);
   let { isOpen, openDrawer, closeDrawer } = useDrawer();
@@ -31,31 +32,23 @@ export function DesktopHeader({
   let onHover = () => setHovered(true);
   let onLeave = () => setHovered(false);
 
-  let enableTransparent = settings?.enableTransparentHeader;
+  let enableTransparent = settings?.enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50 && !isOpen && !hovered;
   return (
     <header
       role="banner"
       className={clsx(
-        enableTransparent ? "fixed" : "sticky",
+        enableTransparent ? "fixed w-screen" : "sticky",
         isTransparent
-          ? "backdrop-blur-lg text-primary"
-          : "shadow-header text-body",
-        "hidden h-nav lg:flex items-center duration-300 transition-all z-40 top-0 justify-between leading-none gap-8 origin-top ease-in-out",
-        "w-full px-6 md:px-8 lg:px-12",
+          ? "text-primary bg-transparent"
+          : "shadow-header text-body bg-primary",
+        " transition-all duration-300 ease-in",
+        "h-nav lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
+        "px-6 md:px-8 lg:px-12",
       )}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
     >
-      <div
-        className={clsx(
-          "absolute inset-0 bg-primary z-20",
-          "transition-all duration-300 ease-in-out",
-          isTransparent
-            ? "opacity-0 -translate-y-1/2"
-            : "opacity-100 translate-y-0",
-        )}
-      ></div>
       <Logo showTransparent={isTransparent} />
       {menu && <DesktopMenu menu={menu} />}
       <div className="flex items-center gap-1 z-30">

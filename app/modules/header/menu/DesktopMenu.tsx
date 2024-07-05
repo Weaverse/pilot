@@ -153,7 +153,7 @@ function ImageMenu({ title, items, to }: SingleMenuItem) {
                 <div className="aspect-square relative group/item overflow-hidden">
                   <Image
                     data={item?.resource?.image}
-                    className="w-full h-full object-contain group-hover/item:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-300"
                     sizes="auto"
                   />
                   <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center">
