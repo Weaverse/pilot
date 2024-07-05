@@ -29,8 +29,14 @@ export function DesktopHeader({
   let [hovered, setHovered] = useState(false);
   let { isOpen, openDrawer, closeDrawer } = useDrawer();
 
-  let onHover = () => setHovered(true);
+  let onHover = () => !hovered && setHovered(true);
   let onLeave = () => setHovered(false);
+  let handleCloseDrawer = () => {
+    closeDrawer();
+    setTimeout(() => {
+      onLeave();
+    }, 200);
+  };
 
   let enableTransparent = settings?.enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50 && !isOpen && !hovered;
@@ -46,7 +52,8 @@ export function DesktopHeader({
         "h-nav lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
         "px-6 md:px-8 lg:px-12",
       )}
-      onMouseEnter={onHover}
+      onMouseOver={onHover}
+      onMouseMove={onHover}
       onMouseLeave={onLeave}
     >
       <Logo showTransparent={isTransparent} />
@@ -55,7 +62,7 @@ export function DesktopHeader({
         <SearchToggle
           isOpen={isOpen}
           openDrawer={openDrawer}
-          closeDrawer={closeDrawer}
+          closeDrawer={handleCloseDrawer}
         />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
         <CartCount isHome={isHome} openCart={openCart} />
