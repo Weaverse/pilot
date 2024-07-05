@@ -46,7 +46,7 @@ export function Drawer({
       >
         <Transition.Child
           as={Fragment}
-          enter="ease-out duration-300 opacity-0"
+          enter="ease-out duration-300"
           enterFrom="opacity-0 left-0"
           enterTo="opacity-100"
           leave="ease-in duration-200"
