@@ -48,8 +48,8 @@ export function DesktopHeader({
         isTransparent
           ? "text-primary bg-transparent"
           : "shadow-header text-body bg-primary",
-        " transition-all duration-300 ease-in",
-        "h-nav lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
+        "transition-all duration-300 ease-in-out",
+        "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
         "px-6 md:px-8 lg:px-12",
       )}
       onMouseOver={onHover}

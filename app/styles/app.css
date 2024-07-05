@@ -230,16 +230,13 @@
   z-index: 0;
   visibility: hidden;
   opacity: 0;
-  max-height: 0;
   transition:
-    opacity 0.3s ease-in,
-    visibility 0.3s ease-in,
-    max-height 375ms ease-in;
+    opacity 0.25s ease-in-out,
+    visibility 0.25s;
 }
 
 .group:hover .dropdown-transition {
   opacity: 1;
-  max-height: 400px;
   z-index: 30;
   visibility: visible;
 }
@@ -253,8 +250,7 @@
   transform: translateX(0);
   opacity: 1;
   transition:
-    transform 1s cubic-bezier(0.14, 0.8, 0.6, 1),
+    transform 0.5s cubic-bezier(0.14, 0.8, 0.6, 1),
     opacity 0.5s ease;
   transition-delay: calc(var(--item-index) * 0.1s + 0.2s);
-  /* transition-delay: 0.3s; */
 }
