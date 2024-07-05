@@ -52,7 +52,8 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       setSelectedVariant(variants?.nodes?.[0]);
       setQuantity(1);
     }, [variants?.nodes]);
-    if (!product || !selectedVariant)
+
+    if (!product)
       return (
         <section className="w-full py-12 md:py-24 lg:py-32" ref={ref} {...rest}>
           <ProductPlaceholder />
@@ -177,7 +178,6 @@ export let schema: HydrogenComponentSchema = {
   type: "single-product",
   title: "Single product",
   childTypes: ["judgeme"],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Single product",

@@ -42,29 +42,6 @@ export let HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
   ${PRODUCT_CARD_FRAGMENT}
 `;
 
-// @see: https://shopify.dev/api/storefront/current/queries/collections
-export let FEATURED_COLLECTIONS_QUERY = `#graphql
-  query homepageFeaturedCollections($country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    collections(
-      first: 4,
-      sortKey: UPDATED_AT
-    ) {
-      nodes {
-        id
-        title
-        handle
-        image {
-          altText
-          width
-          height
-          url
-        }
-      }
-    }
-  }
-` as const;
-
 export let PRODUCT_INFO_QUERY = `#graphql
   query ProductInfo(
     $country: CountryCode
@@ -462,20 +439,6 @@ export let VARIANTS_QUERY = `#graphql
   }
   ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
-export let CUSTOMER_CREATE =
-  `#graphql mutation customerCreate($input: CustomerCreateInput!) {
-  customerCreate(input: $input) {
-    customer {
-      id
-      email
-    }
-    customerUserErrors {
-      field
-      message
-      code
-    }
-  }
-}` as const;
 
 export const METAOBJECTS_QUERY = `#graphql
   query MetaObjects ($type: String!, $first: Int)

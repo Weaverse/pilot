@@ -1,12 +1,15 @@
-import { LoaderFunction, json } from "@remix-run/server-runtime";
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 import { getProductData } from "~/lib/products";
 
-function getRequestQueries<T = Record<string, string>>(request: Request) {
+function getRequestQueries(request: Request) {
   let url = new URL(request.url);
-  return Array.from(url.searchParams.entries()).reduce((q, [k, v]) => {
+  return Array.from(url.searchParams.entries()).reduce<{
+    [key: string]: string;
+  }>((q, [k, v]) => {
     q[k] = v;
     return q;
-  }, {}) as T;
+  }, {});
 }
 
 export let loader: LoaderFunction = async ({ request, params, context }) => {

@@ -70,5 +70,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
 };

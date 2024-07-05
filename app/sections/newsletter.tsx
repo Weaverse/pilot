@@ -105,7 +105,6 @@ export default NewsLetter;
 export let schema: HydrogenComponentSchema = {
   type: "news-letter",
   title: "News letter",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Text",

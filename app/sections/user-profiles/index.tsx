@@ -97,7 +97,6 @@ const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
 export let schema: HydrogenComponentSchema = {
   type: "meta-demo",
   title: "Metaobject Demo",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Metaobject Demo",

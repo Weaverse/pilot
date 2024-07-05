@@ -50,7 +50,6 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["PAGE"],
   },
-  toolbar: ["general-settings"],
   inspector: [
     {
       group: "Page",

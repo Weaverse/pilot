@@ -1,7 +1,6 @@
 import { useLocation } from "@remix-run/react";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import type { WeaverseImage } from "@weaverse/hydrogen";
 import type { LinkHTMLAttributes } from "react";
 import type {
   ChildMenuItemFragment,
@@ -187,6 +186,7 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
       return {
         ...parsedItem,
         items: item.items
+          // @ts-ignore
           .map(parseItem(primaryDomain, env, customPrefixes))
           .filter(Boolean),
       } as EnhancedMenu["items"][number];
@@ -335,7 +335,11 @@ export function removeFalsy<T = any>(
 }
 
 export function getImageAspectRatio(
-  image: Partial<WeaverseImage>,
+  image: {
+    width?: number | null;
+    height?: number | null;
+    [key: string]: any;
+  },
   aspectRatio: string,
 ) {
   let aspRt: string | undefined;

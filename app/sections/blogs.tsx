@@ -135,7 +135,6 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["BLOG"],
   },
-  toolbar: ["general-settings", ["delete"]],
   inspector: [
     {
       group: "Blogs",

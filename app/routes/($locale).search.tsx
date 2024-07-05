@@ -8,9 +8,7 @@ import {
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
 import { Suspense } from "react";
-
 import {
-  FeaturedCollections,
   Grid,
   Heading,
   Input,
@@ -23,7 +21,6 @@ import {
 import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
 import { getImageLoadingPriority, PAGINATION_SIZE } from "~/lib/const";
 import { seoPayload } from "~/lib/seo.server";
-
 import {
   type FeaturedData,
   getFeaturedData,
@@ -170,14 +167,10 @@ function NoResults({
         >
           {(result) => {
             if (!result) return null;
-            const { featuredCollections, featuredProducts } = result;
+            const { featuredProducts } = result;
 
             return (
               <>
-                <FeaturedCollections
-                  title="Trending Collections"
-                  collections={featuredCollections}
-                />
                 <ProductSwimlane
                   title="Trending Products"
                   products={featuredProducts}

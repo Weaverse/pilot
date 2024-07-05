@@ -49,7 +49,7 @@ export let loader = async ({
       },
     )
     .catch((err) => {
-      console.error(err);
+      console.log(err?.message);
       return { data: { reviews: [], cursor: "" }, message: "", status: 0 };
     });
   return res?.data?.reviews;
@@ -91,7 +91,6 @@ export let schema: HydrogenComponentSchema = {
     "paragraph",
     "button",
   ],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   presets: {
     children: [
       { type: "heading", content: "Reviews" },

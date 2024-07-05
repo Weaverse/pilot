@@ -37,7 +37,6 @@ export default Countdown;
 export let schema: HydrogenComponentSchema = {
   type: "countdown",
   title: "Countdown",
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Layout",
@@ -117,27 +116,36 @@ export let schema: HydrogenComponentSchema = {
   ],
   childTypes: ["heading", "subheading", "countdown--timer", "button"],
   presets: {
-    backgroundImage: IMAGES_PLACEHOLDERS.banner,
+    backgroundImage: IMAGES_PLACEHOLDERS.banner_2,
     width: "stretch",
-    backgroundFor: "content",
-    borderRadius: 30,
-    alignment: "left",
+    enableOverlay: true,
+    overlayOpacity: 50,
     children: [
       {
         type: "heading",
         content: "Sale ends in",
+        color: "white",
       },
       {
         type: "paragraph",
         content: "Use this timer to create urgency and boost sales.",
         width: "full",
+        color: "white",
       },
       {
         type: "countdown--timer",
+        textColor: "white",
       },
       {
         type: "button",
         content: "Shop now",
+        buttonStyle: "custom",
+        backgroundColor: "#00000000",
+        textColor: "#fff",
+        borderColor: "#fff",
+        backgroundColorHover: "#fff",
+        textColorHover: "#000",
+        borderColorHover: "#fff",
       },
     ],
   },

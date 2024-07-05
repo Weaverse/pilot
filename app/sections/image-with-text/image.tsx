@@ -96,7 +96,6 @@ export let schema: HydrogenComponentSchema = {
   type: "image-with-text--image",
   title: "Image",
   limit: 1,
-  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
       group: "Image",
