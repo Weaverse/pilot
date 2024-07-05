@@ -59,11 +59,11 @@ export function Drawer({
         <div className="fixed inset-0 top-nav">
           <div className="absolute inset-0 top-nav overflow-hidden">
             <div
-              className={`fixed inset-y-0 flex max-w-full ${
+              className={`fixed inset-y-0 flex ${
                 openFrom === "right"
-                  ? "right-0"
+                  ? "right-0 max-w-full"
                   : openFrom === "top"
-                    ? "top-nav"
+                    ? "top-nav overflow-hidden w-screen"
                     : ""
               }`}
             >
