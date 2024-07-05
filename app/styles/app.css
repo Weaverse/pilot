@@ -213,7 +213,7 @@
   background-repeat: no-repeat;
   display: inline;
   padding-bottom: 3px;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease-in;
   background-position: left calc(1em + 4px);
 }
 .text-animation:hover {
@@ -226,14 +226,22 @@
   background-size: 100% 1px;
 }
 .dropdown-transition {
-  @apply opacity-0 -translate-y-full transform-gpu;
+  @apply transform-gpu;
+  z-index: 0;
+  visibility: hidden;
+  opacity: 0;
+  max-height: 0;
   transition:
-    opacity 0.2s ease-in-out,
-    transform 0.3s ease-in-out;
+    opacity 0.3s ease-in,
+    visibility 0.3s ease-in,
+    max-height 175ms ease-in;
 }
 
 .group:hover .dropdown-transition {
-  @apply opacity-100 translate-y-0;
+  opacity: 1;
+  max-height: 400px;
+  z-index: 30;
+  visibility: visible;
 }
 
 .fly-in {
