@@ -1,24 +1,40 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
 import { cn } from "~/lib/cn";
 
 export type OverlayProps = {
   enableOverlay: boolean;
   overlayColor: string;
+  overlayColorHover: string;
   overlayOpacity: number;
   className?: string;
 };
 
 export function Overlay(props: OverlayProps) {
-  let { enableOverlay, overlayColor, overlayOpacity, className } = props;
-  if (enableOverlay && overlayColor) {
+  let {
+    enableOverlay,
+    overlayColor,
+    overlayColorHover,
+    overlayOpacity,
+    className,
+  } = props;
+  if (enableOverlay) {
     return (
       <div
-        className={cn("absolute inset-0 z-[-1]", className)}
-        style={{
-          backgroundColor: overlayColor,
-          opacity: (overlayOpacity || 100) / 100,
-          margin: 0,
-        }}
+        className={cn(
+          "absolute inset-0 z-[-1] transition-colors",
+          "bg-[var(--overlay-color)]",
+          "group-hover/overlay:bg-[var(--overlay-color-hover,var(--overlay-color))]",
+          className,
+        )}
+        style={
+          {
+            "--overlay-color": overlayColor,
+            "--overlay-color-hover": overlayColorHover,
+            opacity: (overlayOpacity || 100) / 100,
+            margin: 0,
+          } as CSSProperties
+        }
       />
     );
   }
@@ -37,6 +53,12 @@ export let overlayInputs: InspectorGroup["inputs"] = [
     name: "overlayColor",
     label: "Overlay color",
     defaultValue: "#000000",
+    condition: "enableOverlay.eq.true",
+  },
+  {
+    type: "color",
+    name: "overlayColorHover",
+    label: "Overlay color (hover)",
     condition: "enableOverlay.eq.true",
   },
   {
