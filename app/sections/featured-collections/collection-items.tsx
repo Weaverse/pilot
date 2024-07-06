@@ -82,6 +82,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
       alignment,
       enableOverlay,
       overlayColor,
+      overlayColorHover,
       overlayOpacity,
       buttonText,
       backgroundColor,
@@ -114,7 +115,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
           <Link
             key={collection.id + ind}
             to={`/collections/${collection.handle}`}
-            className="relative w-[67vw] md:w-auto group"
+            className="relative w-[67vw] md:w-auto group group/overlay"
           >
             {collection?.image && (
               <div
@@ -144,6 +145,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 <Overlay
                   enableOverlay={enableOverlay}
                   overlayColor={overlayColor}
+                  overlayColorHover={overlayColorHover}
                   overlayOpacity={overlayOpacity}
                   className={clsx("z-0", variants({ borderRadius }))}
                 />
@@ -181,7 +183,6 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                     backgroundColorHover={backgroundColorHover}
                     textColorHover={textColorHover}
                     borderColorHover={borderColorHover}
-                    className="md:min-w-48 md:max-w-[80%]"
                   />
                 )}
               </div>

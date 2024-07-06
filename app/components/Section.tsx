@@ -91,6 +91,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     backgroundPosition,
     enableOverlay,
     overlayColor,
+    overlayColorHover,
     overlayOpacity,
     className,
     children,
