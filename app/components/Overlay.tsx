@@ -31,7 +31,7 @@ export function Overlay(props: OverlayProps) {
           {
             "--overlay-color": overlayColor,
             "--overlay-color-hover": overlayColorHover,
-            opacity: (overlayOpacity || 100) / 100,
+            opacity: overlayOpacity / 100,
             margin: 0,
           } as CSSProperties
         }

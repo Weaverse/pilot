@@ -155,7 +155,7 @@ export let headingInputs: InspectorGroup["inputs"] = [
     name: "maxSize",
     label: "Maximum scale size",
     configs: {
-      min: 48,
+      min: 40,
       max: 96,
       step: 1,
       unit: "px",
