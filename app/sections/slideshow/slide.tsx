@@ -83,6 +83,7 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
     enableOverlay,
     overlayOpacity,
     overlayColor,
+    overlayColorHover,
     backgroundFit,
     backgroundPosition,
     children,
