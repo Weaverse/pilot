@@ -119,7 +119,8 @@ export let schema: HydrogenComponentSchema = {
     backgroundImage: IMAGES_PLACEHOLDERS.banner_2,
     width: "stretch",
     enableOverlay: true,
-    overlayOpacity: 50,
+    overlayOpacity: 40,
+    verticalPadding: "large",
     children: [
       {
         type: "heading",
@@ -138,7 +139,7 @@ export let schema: HydrogenComponentSchema = {
       },
       {
         type: "button",
-        content: "Shop now",
+        text: "Shop now",
         buttonStyle: "custom",
         backgroundColor: "#00000000",
         textColor: "#fff",

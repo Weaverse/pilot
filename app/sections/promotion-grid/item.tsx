@@ -82,6 +82,7 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
       children,
       enableOverlay,
       overlayColor,
+      overlayColorHover,
       overlayOpacity,
       ...rest
     } = props;
@@ -95,6 +96,7 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
         <Overlay
           enableOverlay={enableOverlay}
           overlayColor={overlayColor}
+          overlayColorHover={overlayColorHover}
           overlayOpacity={overlayOpacity}
         />
         {children}

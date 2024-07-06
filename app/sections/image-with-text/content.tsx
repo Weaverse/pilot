@@ -84,7 +84,7 @@ export let schema: HydrogenComponentSchema = {
       },
       {
         type: "button",
-        content: "Button section",
+        text: "Shop now",
       },
     ],
   },

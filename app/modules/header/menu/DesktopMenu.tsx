@@ -7,7 +7,7 @@ import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
 
 const dropdownContentClass =
-  "absolute overflow-hidden bg-white shadow-md z-10 dropdown-transition border-t";
+  "absolute overflow-hidden bg-white z-10 dropdown-transition border-t";
 
 export function DesktopMenu(props: { menu: EnhancedMenu }) {
   let { menu } = props;

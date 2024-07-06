@@ -18,7 +18,7 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
       small: "min-h-[40vh] lg:min-h-[50vh]",
       medium: "min-h-[50vh] lg:min-h-[60vh]",
       large: "min-h-[70vh] lg:min-h-[80vh]",
-      full: "h-screen-no-nav",
+      full: "h-screen",
     },
     contentPosition: {
       "top left": "justify-start items-start [&_.paragraph]:[text-align:left]",
@@ -105,7 +105,7 @@ export let schema: HydrogenComponentSchema = {
   childTypes: ["subheading", "heading", "paragraph", "button"],
   presets: {
     height: "large",
-    contentPosition: "bottom left",
+    contentPosition: "center center",
     backgroundImage: IMAGES_PLACEHOLDERS.banner_1,
     backgroundFit: "cover",
     enableOverlay: true,

@@ -165,8 +165,8 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     image: IMAGES_PLACEHOLDERS.image,
     width: "medium",
-    aspectRatio: "adapt",
+    aspectRatio: "1/1",
     objectFit: "cover",
-    borderRadius: 10,
+    borderRadius: 0,
   },
 };

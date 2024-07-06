@@ -15,7 +15,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
       <Section
         ref={ref}
         {...rest}
-        containerClassName="flex flex-col md:flex-row"
+        containerClassName="flex flex-col md:flex-row px-0 sm:px-0"
       >
         {children}
       </Section>
@@ -38,6 +38,7 @@ export let schema: HydrogenComponentSchema = {
   ],
   childTypes: ["image-with-text--content", "image-with-text--image"],
   presets: {
+    verticalPadding: "none",
     children: [
       { type: "image-with-text--image" },
       { type: "image-with-text--content" },

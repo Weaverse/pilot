@@ -130,7 +130,6 @@ export let buttonContentInputs: InspectorGroup["inputs"] = [
     type: "text",
     name: "text",
     label: "Text content",
-    defaultValue: "Shop now",
     placeholder: "Shop now",
   },
   {
