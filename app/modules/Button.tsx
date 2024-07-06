@@ -1,9 +1,8 @@
-import { forwardRef } from "react";
 import { Link } from "@remix-run/react";
-import clsx from "clsx";
+import { forwardRef } from "react";
 
-import { missingClass } from "~/lib/utils";
 import { cn } from "~/lib/cn";
+import { missingClass } from "~/lib/utils";
 
 export const Button = forwardRef(
   (
