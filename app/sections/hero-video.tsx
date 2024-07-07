@@ -6,10 +6,17 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { Suspense, forwardRef, lazy, useCallback } from "react";
+import {
+  Suspense,
+  forwardRef,
+  lazy,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
-import { useInView } from "react-intersection-observer";
 
 const SECTION_HEIGHTS = {
   small: {
@@ -72,6 +79,18 @@ let variants = cva(
 
 let ReactPlayer = lazy(() => import("react-player/lazy"));
 
+function getPlayerSize(id: string) {
+  let section = document.querySelector(`[data-wv-id="${id}"]`);
+  if (section) {
+    let rect = section.getBoundingClientRect();
+    let aspectRatio = rect.width / rect.height;
+    if (aspectRatio < 16 / 9) {
+      return { width: "auto", height: "100%" };
+    }
+  }
+  return { width: "100%", height: "auto" };
+}
+
 let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   let {
     videoURL,
@@ -87,6 +106,9 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     ...rest
   } = props;
 
+  let id = rest["data-wv-id"];
+  let [size, setSize] = useState(() => getPlayerSize(id));
+
   let desktopHeight =
     SECTION_HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
   let mobileHeight = SECTION_HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
@@ -95,7 +117,9 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     "--mobile-height": mobileHeight,
   } as CSSProperties;
 
-  let { ref: inViewRef, inView } = useInView({ triggerOnce: true });
+  let { ref: inViewRef, inView } = useInView({
+    triggerOnce: true,
+  });
   // Use `useCallback` so we don't recreate the function on each render
   let setRefs = useCallback(
     (node: HTMLElement) => {
@@ -107,6 +131,19 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [inViewRef],
   );
+
+  function handleResize() {
+    setSize(getPlayerSize(id));
+  }
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, height, heightOnDesktop, heightOnMobile]);
 
   return (
     <section
@@ -130,8 +167,8 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
               playing
               muted
               loop={true}
-              width={height === "full" ? "auto" : "100%"}
-              height={height === "full" ? "100%" : "auto"}
+              width={size.width}
+              height={size.height}
               controls={false}
               className="aspect-video"
             />

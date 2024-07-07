@@ -40,7 +40,6 @@ export interface SlideshowProps
   loop: boolean;
   autoRotate: boolean;
   changeSlidesEvery: number;
-  "data-wv-id": string;
 }
 
 let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
@@ -62,14 +61,11 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     ...rest
   } = props;
 
+  let id = rest["data-wv-id"];
+  let key = `slideshow-${id}-${loop}-${autoRotate}-${changeSlidesEvery}`;
+
   return (
-    <section
-      // this is a hack to force the component to re-render when the props change
-      key={`Swiper-${rest["data-wv-id"]}-${loop}-${autoRotate}-${changeSlidesEvery}`}
-      ref={ref}
-      {...rest}
-      className={variants({ height })}
-    >
+    <section key={key} ref={ref} {...rest} className={variants({ height })}>
       <Swiper
         effect="fade"
         loop={loop}
