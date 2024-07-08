@@ -1,4 +1,9 @@
-import { Disclosure, Menu } from "@headlessui/react";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+} from "@headlessui/react";
 import {
   Link,
   useLocation,
@@ -13,6 +18,7 @@ import clsx from "clsx";
 import type { SyntheticEvent } from "react";
 import { useState } from "react";
 import { Checkbox } from "~/components/Checkbox";
+import { IconCaretDown, IconCaretRight } from "~/components/Icons";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter, SortParam } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink, getSortLink } from "~/lib/filter";
@@ -109,7 +115,7 @@ export function DrawerFilter({
             openFrom="left"
             heading="Filter"
           >
-            <div className="px-6">
+            <div className="px-5 w-96">
               {/* @ts-expect-error */}
               <FiltersDrawer
                 filters={filters}
@@ -184,24 +190,24 @@ export function FiltersDrawer({
 
   return (
     <nav className="">
-      <div className="divide-y divide-bar-subtle">
+      <div className="divide-y divide-bar-subtle text-sm">
         {filters.map((filter: Filter) => (
-          <Disclosure as="div" key={filter.id} className="w-full pb-6 pt-5">
+          <Disclosure as="div" key={filter.id} className="w-full pb-6 pt-7">
             {({ open }) => (
               <>
-                <Disclosure.Button className="flex w-full justify-between items-center">
-                  <span className="font-medium">{filter.label}</span>
-                  <IconCaret direction={open ? "down" : "right"} />
-                </Disclosure.Button>
-                <Disclosure.Panel key={filter.id}>
-                  <ul key={filter.id} className="space-y-4 pt-4">
+                <DisclosureButton className="flex w-full justify-between items-center">
+                  <span className="text-sm">{filter.label}</span>
+                  {open ? <IconCaretDown className="w-4 h-4"/> : <IconCaretRight className="w-4 h-4"/>}
+                </DisclosureButton>
+                <DisclosurePanel key={filter.id}>
+                  <ul key={filter.id} className="space-y-5 pt-8">
                     {filter.values?.map((option) => {
                       return (
                         <li key={option.id}>{filterMarkup(filter, option)}</li>
                       );
                     })}
                   </ul>
-                </Disclosure.Panel>
+                </DisclosurePanel>
               </>
             )}
           </Disclosure>
@@ -331,7 +337,7 @@ export default function SortMenu({
     items.find((item) => item.key === params.get("sort")) || items[0];
 
   return (
-    <Menu as="div" className="relative z-40">
+    <Menu as="div" className="relative z-10">
       <Menu.Button className="flex items-center gap-1.5 rounded border px-4 py-3 h-[50px]">
         <span className="font-medium text-sm">Sort by</span>
         <IconCaret />
