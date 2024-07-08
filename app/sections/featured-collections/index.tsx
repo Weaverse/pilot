@@ -105,7 +105,7 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     gap: 32,
     children: [
-      { type: "heading", content: "Featured collections" },
+      { type: "heading", content: "Shop our collections" },
       {
         type: "featured-collections-items",
         aspectRatio: "3/4",

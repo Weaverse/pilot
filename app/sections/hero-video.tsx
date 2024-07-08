@@ -6,12 +6,19 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { Suspense, forwardRef, lazy, useCallback } from "react";
+import {
+  Suspense,
+  forwardRef,
+  lazy,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
-import { useInView } from "react-intersection-observer";
 
-const HEIGHTS = {
+const SECTION_HEIGHTS = {
   small: {
     desktop: "40vh",
     mobile: "50vh",
@@ -25,8 +32,8 @@ const HEIGHTS = {
     mobile: "80vh",
   },
   full: {
-    desktop: "calc(var(--screen-height, 100vh) - var(--height-nav))",
-    mobile: "calc(var(--screen-height, 100vh) - var(--height-nav))",
+    desktop: "calc(var(--screen-height, 100vh)",
+    mobile: "calc(var(--screen-height, 100vh)",
   },
   custom: null,
 };
@@ -72,6 +79,18 @@ let variants = cva(
 
 let ReactPlayer = lazy(() => import("react-player/lazy"));
 
+function getPlayerSize(id: string) {
+  let section = document.querySelector(`[data-wv-id="${id}"]`);
+  if (section) {
+    let rect = section.getBoundingClientRect();
+    let aspectRatio = rect.width / rect.height;
+    if (aspectRatio < 16 / 9) {
+      return { width: "auto", height: "100%" };
+    }
+  }
+  return { width: "100%", height: "auto" };
+}
+
 let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   let {
     videoURL,
@@ -81,32 +100,50 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     heightOnMobile,
     enableOverlay,
     overlayColor,
+    overlayColorHover,
     overlayOpacity,
     children,
     ...rest
   } = props;
 
-  let desktopHeight = HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
-  let mobileHeight = HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
+  let id = rest["data-wv-id"];
+  let [size, setSize] = useState(() => getPlayerSize(id));
 
+  let desktopHeight =
+    SECTION_HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
+  let mobileHeight = SECTION_HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
   let sectionStyle: CSSProperties = {
     "--desktop-height": desktopHeight,
     "--mobile-height": mobileHeight,
   } as CSSProperties;
-  const { ref: inViewRef, inView } = useInView({
+
+  let { ref: inViewRef, inView } = useInView({
     triggerOnce: true,
   });
-
   // Use `useCallback` so we don't recreate the function on each render
-  const setRefs = useCallback(
+  let setRefs = useCallback(
     (node: HTMLElement) => {
       // Ref's from useRef needs to have the node assigned to `current`
       ref && Object.assign(ref, { current: node });
       // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
       inViewRef(node);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [inViewRef],
   );
+
+  function handleResize() {
+    setSize(getPlayerSize(id));
+  }
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, height, heightOnDesktop, heightOnMobile]);
 
   return (
     <section
@@ -130,8 +167,8 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
               playing
               muted
               loop={true}
-              width="100%"
-              height="auto"
+              width={size.width}
+              height={size.height}
               controls={false}
               className="aspect-video"
             />
@@ -140,6 +177,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
         <Overlay
           enableOverlay={enableOverlay}
           overlayColor={overlayColor}
+          overlayColorHover={overlayColorHover}
           overlayOpacity={overlayOpacity}
           className="z-0"
         />

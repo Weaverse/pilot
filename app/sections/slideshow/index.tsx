@@ -61,8 +61,11 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     ...rest
   } = props;
 
+  let id = rest["data-wv-id"];
+  let key = `slideshow-${id}-${loop}-${autoRotate}-${changeSlidesEvery}`;
+
   return (
-    <section ref={ref} {...rest} className={variants({ height })}>
+    <section key={key} ref={ref} {...rest} className={variants({ height })}>
       <Swiper
         effect="fade"
         loop={loop}
@@ -131,12 +134,6 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "switch",
-          label: "Loop",
-          name: "loop",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
           label: "Auto-rotate slides",
           name: "autoRotate",
           defaultValue: true,
@@ -154,6 +151,12 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: 5,
           condition: "autoRotate.eq.true",
           helpText: "Auto-rotate is disabled inside Weaverse Studio.",
+        },
+        {
+          type: "switch",
+          label: "Loop",
+          name: "loop",
+          defaultValue: true,
         },
       ],
     },
