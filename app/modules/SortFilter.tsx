@@ -332,7 +332,7 @@ export default function SortMenu() {
   const activeItem = items.find((item) => item.key === params.get("sort"));
 
   return (
-    <Menu as="div" className="relative z-40">
+    <Menu as="div" className="relative z-10">
       <Menu.Button className="flex items-center">
         <span className="px-2">
           <span className="px-2 font-medium">Sort by:</span>
