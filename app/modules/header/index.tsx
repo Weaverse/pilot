@@ -101,7 +101,8 @@ export function MenuDrawer({
       open={isOpen}
       onClose={onClose}
       openFrom="left"
-      heading="Menu"
+      heading="MENU"
+      spacing="sm"
     >
       {<MobileMenu menu={menu} />}
     </Drawer>

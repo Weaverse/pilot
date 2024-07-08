@@ -44,10 +44,10 @@ export function Cart({
   const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
 
   return (
-    <>
+    <div className="w-[430px] max-w-screen">
       <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
       <CartDetails cart={optimisticCart} layout={layout} />
-    </>
+    </div>
   );
 }
 
