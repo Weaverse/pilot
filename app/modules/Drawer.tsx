@@ -78,8 +78,8 @@ export function Drawer({
               >
                 <Dialog.Panel
                   className={cn(
-                    "w-screen text-left align-middle transition-all transform shadow-xl  bg-primary",
-                    openFrom === "top" ? "h-fit" : "max-w-lg h-screen-dynamic",
+                    "text-left align-middle transition-all transform shadow-xl  bg-primary",
+                    openFrom === "top" ? "h-fit w-screen" : "max-w-lg h-screen-dynamic",
                   )}
                 >
                   {openFrom !== "top" && (
