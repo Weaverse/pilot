@@ -1,6 +1,7 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
+import {
+  isBrowser,
+  type HydrogenComponentProps,
+  type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -80,12 +81,14 @@ let variants = cva(
 let ReactPlayer = lazy(() => import("react-player/lazy"));
 
 function getPlayerSize(id: string) {
-  let section = document.querySelector(`[data-wv-id="${id}"]`);
-  if (section) {
-    let rect = section.getBoundingClientRect();
-    let aspectRatio = rect.width / rect.height;
-    if (aspectRatio < 16 / 9) {
-      return { width: "auto", height: "100%" };
+  if (isBrowser) {
+    let section = document.querySelector(`[data-wv-id="${id}"]`);
+    if (section) {
+      let rect = section.getBoundingClientRect();
+      let aspectRatio = rect.width / rect.height;
+      if (aspectRatio < 16 / 9) {
+        return { width: "auto", height: "100%" };
+      }
     }
   }
   return { width: "100%", height: "auto" };
