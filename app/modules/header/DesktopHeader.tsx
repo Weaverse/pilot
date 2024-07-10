@@ -26,35 +26,33 @@ export function DesktopHeader({
   const { y } = useWindowScroll();
   // get theme settings
   let settings = useThemeSettings();
-  let [hovered, setHovered] = useState(false);
+  let [hovered, setHovered] = useState(false); // use state to delay disappearing header when drawer closes
   let { isOpen, openDrawer, closeDrawer } = useDrawer();
-
-  let onHover = () => !hovered && setHovered(true);
-  let onLeave = () => setHovered(false);
-  let handleCloseDrawer = () => {
-    closeDrawer();
-    setTimeout(() => {
-      onLeave();
-    }, 200);
-  };
+  useEffect(() => {
+    if (isOpen) {
+      setHovered(true);
+    } else {
+      setTimeout(() => {
+        setHovered(false);
+      }, 200);
+    }
+  }, [isOpen]);
 
   let enableTransparent = settings?.enableTransparentHeader && isHome;
-  let isTransparent = enableTransparent && y < 50 && !isOpen && !hovered;
+  let isTransparent = enableTransparent && y < 50 && !hovered;
   return (
     <header
       role="banner"
       className={clsx(
-        enableTransparent ? "fixed w-screen" : "sticky",
+        enableTransparent ? "fixed w-screen group/header" : "sticky",
         isTransparent
           ? "text-primary bg-transparent"
           : "shadow-header text-body bg-primary",
+        "hover:text-body hover:bg-primary",
         "transition-all duration-300 ease-in-out",
         "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
         "px-6 md:px-8 lg:px-12",
       )}
-      onMouseOver={onHover}
-      onMouseMove={onHover}
-      onMouseLeave={onLeave}
     >
       <Logo showTransparent={isTransparent} />
       {menu && <DesktopMenu menu={menu} />}
@@ -62,7 +60,7 @@ export function DesktopHeader({
         <SearchToggle
           isOpen={isOpen}
           openDrawer={openDrawer}
-          closeDrawer={handleCloseDrawer}
+          closeDrawer={closeDrawer}
         />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
         <CartCount isHome={isHome} openCart={openCart} />
