@@ -1,0 +1,14 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "extends": ["./node_modules/@weaverse/biome/biome.json"],
+  "files": {
+    "ignore": ["public/**", "node_modules/**", "build/**", "dist/**"]
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {},
+      "style": {},
+      "a11y": {}
+    }
+  }
+}
