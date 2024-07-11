@@ -80,7 +80,7 @@ function MultiMenu(props: SingleMenuItem) {
           className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-300"
         />
       </Link>
-      <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center">
+      <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center transition-all duration-300">
         {item.title}
       </div>
     </div>
@@ -156,7 +156,7 @@ function ImageMenu({ title, items, to }: SingleMenuItem) {
                     className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-300"
                     sizes="auto"
                   />
-                  <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center">
+                  <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center transition-all duration-300">
                     {item.title}
                   </div>
                 </div>
