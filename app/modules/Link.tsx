@@ -1,7 +1,7 @@
 import {
   Link as RemixLink,
-  NavLink as RemixNavLink,
   type LinkProps as RemixLinkProps,
+  NavLink as RemixNavLink,
   type NavLinkProps as RemixNavLinkProps,
 } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
@@ -9,9 +9,7 @@ import { forwardRef } from "react";
 
 import { useRootLoaderData } from "~/root";
 
-type LinkProps = Omit<RemixLinkProps, "className"> & {
-  className?: RemixNavLinkProps["className"] | RemixLinkProps["className"];
-};
+type LinkProps = RemixLinkProps | RemixNavLinkProps;
 
 /**
  * In our app, we've chosen to wrap Remix's `Link` component to add
@@ -29,7 +27,7 @@ type LinkProps = Omit<RemixLinkProps, "className"> & {
  * Ultimately, it is up to you to decide how to implement this behavior.
  */
 export let Link = forwardRef(
-  (props: LinkProps, ref: React.Ref<HTMLAnchorElement>) => {
+  (props: LinkProps | RemixNavLinkProps, ref: React.Ref<HTMLAnchorElement>) => {
     let { to, className, ...resOfProps } = props;
     let rootData = useRootLoaderData();
     let { enableViewTransition } = useThemeSettings();
@@ -43,7 +41,10 @@ export let Link = forwardRef(
       }
     }
 
-    if (typeof className === "function") {
+    if (
+      typeof className === "function" ||
+      typeof resOfProps.children === "function"
+    ) {
       return (
         <RemixNavLink
           ref={ref}
@@ -56,6 +57,7 @@ export let Link = forwardRef(
     }
 
     return (
+      // @ts-ignore
       <RemixLink
         ref={ref}
         unstable_viewTransition={enableViewTransition}

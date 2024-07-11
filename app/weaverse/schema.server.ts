@@ -109,7 +109,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
       ],
     },
-    
+
     {
       group: "Colors",
       inputs: [

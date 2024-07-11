@@ -1,10 +1,15 @@
-import { Dialog, Transition } from "@headlessui/react";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+} from "@headlessui/react";
 import { useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
 import { IconCaretLeft } from "~/components/Icons";
 import { cn } from "~/lib/cn";
-import { Heading, IconClose } from "~/modules";
+import { IconClose } from "~/modules";
 
 /**
  * Drawer component that opens on user click.
@@ -14,6 +19,12 @@ import { Heading, IconClose } from "~/modules";
  * @param openFrom - right, left, top
  * @param children - react children node.
  */
+const DRAWER_HEADER_SPACING = {
+  sm: "px-4",
+  md: "px-5",
+  lg: "px-6",
+};
+
 export function Drawer({
   heading,
   open,
@@ -22,6 +33,7 @@ export function Drawer({
   children,
   isBackMenu = false,
   bordered = false,
+  spacing = "md",
 }: {
   heading?: string;
   open: boolean;
@@ -29,6 +41,7 @@ export function Drawer({
   openFrom: "right" | "left" | "top";
   isBackMenu?: boolean;
   bordered?: boolean;
+  spacing?: "sm" | "md" | "lg";
   children: React.ReactNode;
 }) {
   const offScreen = {
@@ -76,16 +89,19 @@ export function Drawer({
                 leaveFrom="translate-x-0"
                 leaveTo={offScreen[openFrom]}
               >
-                <Dialog.Panel
+                <DialogPanel
                   className={cn(
                     "text-left align-middle transition-all transform shadow-xl  bg-primary",
-                    openFrom === "top" ? "h-fit w-screen" : "max-w-lg h-screen-dynamic",
+                    openFrom === "top"
+                      ? "h-fit w-screen"
+                      : "max-w-lg h-screen-dynamic",
                   )}
                 >
                   {openFrom !== "top" && (
                     <header
                       className={clsx(
-                        "sticky top-0 flex items-center px-6 sm:px-8 md:px-12 h-nav",
+                        "sticky top-0 flex items-center h-nav",
+                        DRAWER_HEADER_SPACING[spacing],
                         isBackMenu
                           ? "justify-start gap-4"
                           : heading
@@ -108,11 +124,9 @@ export function Drawer({
                         </button>
                       )}
                       {heading !== null && (
-                        <Dialog.Title>
-                          <Heading as="span" size="lead" id="cart-contents">
-                            {heading}
-                          </Heading>
-                        </Dialog.Title>
+                        <DialogTitle>
+                          <h4 className="font-medium text-base">{heading}</h4>
+                        </DialogTitle>
                       )}
                       {!isBackMenu && (
                         <button
@@ -127,7 +141,7 @@ export function Drawer({
                     </header>
                   )}
                   {children}
-                </Dialog.Panel>
+                </DialogPanel>
               </Transition.Child>
             </div>
           </div>

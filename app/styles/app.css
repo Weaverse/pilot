@@ -254,3 +254,8 @@
     opacity 0.5s ease;
   transition-delay: calc(var(--item-index) * 0.1s + 0.2s);
 }
+
+mark {
+  background-color: none;
+  font-weight: 500;
+}

@@ -20,7 +20,7 @@ let variants = cva("group [&_.swiper]:h-full", {
       small: "h-[40vh] lg:h-[50vh]",
       medium: "h-[50vh] lg:h-[60vh]",
       large: "h-[70vh] lg:h-[80vh]",
-      full: "h-screen-no-nav",
+      full: "h-screen",
     },
   },
   defaultVariants: {

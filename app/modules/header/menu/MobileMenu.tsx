@@ -9,9 +9,8 @@ import type { SingleMenuItem } from "~/lib/type";
 
 export function MobileMenu({ menu }: { menu: EnhancedMenu }) {
   let items = menu.items as unknown as SingleMenuItem[];
-  console.log("🚀 ~ items:", items);
   return (
-    <nav className="grid px-4 py-2">
+    <nav className="grid px-4 py-2 w-[360px]">
       {items.map((item, id) => {
         let { title, ...rest } = item;
         let level = getMaxDepth(item);
@@ -46,8 +45,9 @@ function MultiMenu(props: SingleMenuItem) {
       heading={title}
       isBackMenu
       bordered
+      spacing="sm"
     >
-      <div className="grid px-4 py-2 overflow-auto">
+      <div className="grid px-4 py-2 overflow-auto w-[360px]">
         {items.map((item, id) => (
           <div key={id}>
             <Disclosure>
@@ -79,11 +79,7 @@ function MultiMenu(props: SingleMenuItem) {
                         <ul className="space-y-3 pb-3 pt-2">
                           {item.items.map((subItem, ind) => (
                             <li key={ind} className="leading-6">
-                              <Link
-                                key={ind}
-                                to={subItem.to}
-                                prefetch="intent"
-                              >
+                              <Link key={ind} to={subItem.to} prefetch="intent">
                                 {subItem.title}
                               </Link>
                             </li>
@@ -131,8 +127,9 @@ function ImageMenu({ title, items, to }: SingleMenuItem) {
       heading={title}
       isBackMenu
       bordered
+      spacing="sm"
     >
-      <div className="grid px-4 py-5 gap-3 grid-cols-2">
+      <div className="grid px-4 py-5 gap-3 grid-cols-2 w-[360px]">
         {items.map((item, id) => (
           <Link to={item.to} prefetch="intent" key={id}>
             <div className="w-full aspect-square relative">
@@ -182,16 +179,13 @@ function SingleMenu(props: SingleMenuItem) {
       heading={title}
       isBackMenu
       bordered
+      spacing="sm"
     >
-      <div className="grid px-4 py-2 overflow-auto">
+      <div className="grid px-4 py-2 overflow-auto w-[360px]">
         <ul className="space-y-3 pb-3 pt-2">
           {items.map((subItem, ind) => (
             <li key={ind} className="leading-6">
-              <Link
-                key={ind}
-                to={subItem.to}
-                prefetch="intent"
-              >
+              <Link key={ind} to={subItem.to} prefetch="intent">
                 {subItem.title}
               </Link>
             </li>

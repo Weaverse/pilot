@@ -115,7 +115,7 @@ export function DrawerFilter({
             openFrom="left"
             heading="Filter"
           >
-            <div className="px-5 w-96">
+            <div className="px-5 w-[360px]">
               {/* @ts-expect-error */}
               <FiltersDrawer
                 filters={filters}
@@ -189,31 +189,37 @@ export function FiltersDrawer({
   };
 
   return (
-    <nav className="">
-      <div className="divide-y divide-bar-subtle text-sm">
-        {filters.map((filter: Filter) => (
-          <Disclosure as="div" key={filter.id} className="w-full pb-6 pt-7">
-            {({ open }) => (
-              <>
-                <DisclosureButton className="flex w-full justify-between items-center">
-                  <span className="text-sm">{filter.label}</span>
-                  {open ? <IconCaretDown className="w-4 h-4"/> : <IconCaretRight className="w-4 h-4"/>}
-                </DisclosureButton>
-                <DisclosurePanel key={filter.id}>
-                  <ul key={filter.id} className="space-y-5 pt-8">
-                    {filter.values?.map((option) => {
-                      return (
-                        <li key={option.id}>{filterMarkup(filter, option)}</li>
-                      );
-                    })}
-                  </ul>
-                </DisclosurePanel>
-              </>
-            )}
-          </Disclosure>
-        ))}
-      </div>
-    </nav>
+    <div className="text-sm">
+      {filters.map((filter: Filter) => (
+        <Disclosure
+          as="div"
+          key={filter.id}
+          className="w-full pb-6 pt-7 border-b"
+        >
+          {({ open }) => (
+            <>
+              <DisclosureButton className="flex w-full justify-between items-center">
+                <span className="text-sm">{filter.label}</span>
+                {open ? (
+                  <IconCaretDown className="w-4 h-4" />
+                ) : (
+                  <IconCaretRight className="w-4 h-4" />
+                )}
+              </DisclosureButton>
+              <DisclosurePanel key={filter.id}>
+                <ul key={filter.id} className="space-y-5 pt-8">
+                  {filter.values?.map((option) => {
+                    return (
+                      <li key={option.id}>{filterMarkup(filter, option)}</li>
+                    );
+                  })}
+                </ul>
+              </DisclosurePanel>
+            </>
+          )}
+        </Disclosure>
+      ))}
+    </div>
   );
 }
 

@@ -69,13 +69,15 @@ export function ProductMedia(props: ProductMediaProps) {
   }
 
   useEffect(() => {
-    // instanceRef.current?.update(slideOptions);
-    // thumbnailInstance.current?.update(thumbnailOptions);
     let selectedInd = media.findIndex((med) => {
       if (med.__typename !== "MediaImage") return false;
       return med.image?.url === selectedVariant?.image.url;
     });
     moveToIdx(selectedInd);
+    setTimeout(() => {
+      instanceRef.current?.update(slideOptions);
+      thumbnailInstance.current?.update(thumbnailOptions);
+    }, 100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariant?.id]);
 

@@ -22,7 +22,8 @@ export function PredictiveSearch(props: PredictiveSearchProps) {
               onClear={fetchResults}
               placeholder="Enter a keyword"
               ref={inputRef}
-              className="rounded border-2"
+              className="rounded"
+              autoComplete="off"
               prefixElement={
                 <button type="submit" className="cursor-pointer">
                   <IconSearch
