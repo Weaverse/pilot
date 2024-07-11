@@ -1,11 +1,11 @@
-import clsx from "clsx";
 import type { ShopifyAnalyticsProduct } from "@shopify/hydrogen";
-import { flattenConnection, Image, Money, useMoney } from "@shopify/hydrogen";
+import { Image, Money, flattenConnection, useMoney } from "@shopify/hydrogen";
 import type { MoneyV2, Product } from "@shopify/hydrogen/storefront-api-types";
+import clsx from "clsx";
 import type { ProductCardFragment } from "storefrontapi.generated";
-import { Text, Link, AddToCartButton, Button } from "~/modules";
-import { isDiscounted, isNewArrival } from "~/lib/utils";
 import { getProductPlaceholder } from "~/lib/placeholders";
+import { isDiscounted, isNewArrival } from "~/lib/utils";
+import { AddToCartButton, Button, Link, Text } from "~/modules";
 import { QuickViewTrigger } from "./QuickView";
 
 export function ProductCard({
@@ -63,9 +63,6 @@ export function ProductCard({
               onClick={onClick}
               to={`/products/${product.handle}`}
               prefetch="intent"
-              className={({ isTransitioning }) => {
-                return isTransitioning ? "vt-product-image" : "";
-              }}
             >
               <Image
                 className="object-cover w-full fadeIn"
@@ -103,7 +100,7 @@ export function ProductCard({
                   className="mt-2"
                   analytics={{
                     products: [productAnalytics],
-                    totalValue: parseFloat(productAnalytics.price),
+                    totalValue: Number.parseFloat(productAnalytics.price),
                   }}
                 >
                   <Text
@@ -159,7 +156,7 @@ export function ProductCard({
           className="mt-2 lg:hidden"
           analytics={{
             products: [productAnalytics],
-            totalValue: parseFloat(productAnalytics.price),
+            totalValue: Number.parseFloat(productAnalytics.price),
           }}
         >
           <Text as="span" className="flex items-center justify-center gap-2">
