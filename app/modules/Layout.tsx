@@ -7,15 +7,8 @@ import {
   type ChildEnhancedMenuItem,
   type EnhancedMenu,
 } from "~/lib/utils";
-import {
-  CountrySelector,
-  Heading,
-  IconCaret,
-  Link,
-  Section
-} from "~/modules";
+import { CountrySelector, Heading, IconCaret, Link, Section } from "~/modules";
 import { Header } from "./header";
-
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -46,7 +39,6 @@ export function Layout({ children, layout }: LayoutProps) {
     </>
   );
 }
-
 
 function Footer({ menu }: { menu?: EnhancedMenu }) {
   const isHome = useIsHomePath();

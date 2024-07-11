@@ -2,13 +2,27 @@
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
   "extends": ["./node_modules/@weaverse/biome/biome.json"],
   "files": {
-    "ignore": ["public/**", "node_modules/**", "build/**", "dist/**"]
+    "ignore": [
+      "public/**",
+      "node_modules/**",
+      "build/**",
+      "dist/**",
+      "customer-accountapi.generated.d.ts",
+      "storefrontapi.generated.d.ts",
+      ".shopify/**"
+    ]
   },
   "linter": {
     "rules": {
       "suspicious": {},
       "style": {},
       "a11y": {}
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
     }
   }
 }
