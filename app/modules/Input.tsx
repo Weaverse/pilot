@@ -1,6 +1,6 @@
 import clsx from "clsx";
+import type React from "react";
 import { forwardRef, useState } from "react";
-
 import { IconClose } from ".";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -45,7 +45,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     let handleClear = (e: any) => {
       e.preventDefault();
       e.stopPropagation();
-      e.currentTarget.previousSibling.value = "";
+      if (e.currentTarget?.previousSibling) {
+        e.currentTarget.previousSibling.value = "";
+      }
       if (onClear) onClear(e);
     };
     if (type === "search") {
