@@ -22,8 +22,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 - Hydrogen
 - Oxygen
 - Shopify CLI
-- ESLint
-- Prettier
+- Biome (Eslint, Prettier alternative)
 - GraphQL generator
 - TypeScript and JavaScript flavors
 - Tailwind CSS (via PostCSS)
