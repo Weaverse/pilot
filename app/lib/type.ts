@@ -39,5 +39,5 @@ export interface SingleMenuItem {
       url: string;
       width: number;
     };
-  }
+  };
 }

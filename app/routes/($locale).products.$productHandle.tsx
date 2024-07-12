@@ -1,11 +1,10 @@
-import { getSeoMeta, Analytics } from "@shopify/hydrogen";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { Analytics, getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
-import invariant from "tiny-invariant";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
-import type { SelectedOptionInput } from "@shopify/hydrogen/storefront-api-types";
-import { useEffect } from "react";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
+import { useEffect } from "react";
+import invariant from "tiny-invariant";
 
 import type { ProductRecommendationsQuery } from "storefrontapi.generated";
 import { routeHeaders } from "~/data/cache";
@@ -14,10 +13,10 @@ import {
   RECOMMENDED_PRODUCTS_QUERY,
   VARIANTS_QUERY,
 } from "~/data/queries";
+import { getJudgemeReviews } from "~/lib/judgeme";
 import { seoPayload } from "~/lib/seo.server";
 import type { Storefront } from "~/lib/type";
 import { WeaverseContent } from "~/weaverse";
-import { getJudgemeReviews } from "~/lib/judgeme";
 
 export const headers = routeHeaders;
 
@@ -101,24 +100,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
-// function redirectToFirstVariant({
-//   product,
-//   request,
-// }: {
-//   product: ProductQuery['product'];
-//   request: Request;
-// }) {
-//   const searchParams = new URLSearchParams(new URL(request.url).search);
-//   const firstVariant = product!.variants.nodes[0];
-//   for (const option of firstVariant.selectedOptions) {
-//     searchParams.set(option.name, option.value);
-//   }
-//
-//   return redirect(
-//     `/products/${product!.handle}?${searchParams.toString()}`,
-//     302,
-//   );
-// }
 
 /**
  * We need to handle the route change from client to keep the view transition persistent
@@ -127,24 +108,23 @@ let useApplyFirstVariant = () => {
   let { product } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!product.selectedVariant) {
       let selectedOptions = product.variants?.nodes?.[0]?.selectedOptions;
-      selectedOptions?.forEach((option: SelectedOptionInput) => {
-        searchParams.set(option.name, option.value);
-      });
+      for (let variant of selectedOptions) {
+        searchParams.set(variant.name, variant.value);
+      }
       setSearchParams(searchParams, {
         replace: true, // prevent adding a new entry to the history stack
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product]);
+  }, [product?.id]);
 };
 
 export default function Product() {
   useApplyFirstVariant();
   const { product } = useLoaderData<typeof loader>();
-
   return (
     <>
       <WeaverseContent />

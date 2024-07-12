@@ -28,7 +28,7 @@ export function Logo({ showTransparent }: { showTransparent?: boolean }) {
           )}
         />
         <Image
-          data={transparentLogoData} 
+          data={transparentLogoData}
           sizes="auto"
           className={
             clsx(

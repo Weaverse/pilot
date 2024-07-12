@@ -191,7 +191,11 @@ export function FiltersDrawer({
   return (
     <div className="text-sm">
       {filters.map((filter: Filter) => (
-        <Disclosure as="div" key={filter.id} className="w-full pb-6 pt-7 border-b">
+        <Disclosure
+          as="div"
+          key={filter.id}
+          className="w-full pb-6 pt-7 border-b"
+        >
           {({ open }) => (
             <>
               <DisclosureButton className="flex w-full justify-between items-center">

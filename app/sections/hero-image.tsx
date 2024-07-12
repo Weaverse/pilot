@@ -109,7 +109,7 @@ export let schema: HydrogenComponentSchema = {
     backgroundImage: IMAGES_PLACEHOLDERS.banner_1,
     backgroundFit: "cover",
     enableOverlay: true,
-    overlayOpacity: 35,
+    overlayOpacity: 40,
     children: [
       {
         type: "subheading",

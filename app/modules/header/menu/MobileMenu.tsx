@@ -46,7 +46,6 @@ function MultiMenu(props: SingleMenuItem) {
       isBackMenu
       bordered
       spacing="sm"
-
     >
       <div className="grid px-4 py-2 overflow-auto w-[360px]">
         {items.map((item, id) => (
@@ -80,11 +79,7 @@ function MultiMenu(props: SingleMenuItem) {
                         <ul className="space-y-3 pb-3 pt-2">
                           {item.items.map((subItem, ind) => (
                             <li key={ind} className="leading-6">
-                              <Link
-                                key={ind}
-                                to={subItem.to}
-                                prefetch="intent"
-                              >
+                              <Link key={ind} to={subItem.to} prefetch="intent">
                                 {subItem.title}
                               </Link>
                             </li>
@@ -190,11 +185,7 @@ function SingleMenu(props: SingleMenuItem) {
         <ul className="space-y-3 pb-3 pt-2">
           {items.map((subItem, ind) => (
             <li key={ind} className="leading-6">
-              <Link
-                key={ind}
-                to={subItem.to}
-                prefetch="intent"
-              >
+              <Link key={ind} to={subItem.to} prefetch="intent">
                 {subItem.title}
               </Link>
             </li>

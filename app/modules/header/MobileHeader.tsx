@@ -24,7 +24,6 @@ export function MobileHeader({
   const { y } = useWindowScroll();
   let enableTransparent = settings?.enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50;
-  console.log("🚀 ~ isTransparent:", isTransparent);
   const params = useParams();
   return (
     <header

@@ -1,209 +1,208 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
-import { forwardRef } from "react";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
+import { forwardRef } from "react";
+import type { ButtonStyleProps } from "~/components/Button";
+import Button, { buttonStylesInputs } from "~/components/Button";
+import Heading from "~/components/Heading";
+import Paragraph from "~/components/Paragraph";
+import type { SectionProps } from "~/components/Section";
+import { Section } from "~/components/Section";
 
-import { IconMapBlank } from "~/modules";
-
-interface MapProps extends HydrogenComponentProps {
-  heading: string;
-  textColor: string;
-  contentAlignment: string;
-  descriptionText: string;
-  address: string;
-  buttonLabel: string;
-  buttonLink: string;
-  openInNewTab: boolean;
-  sectionHeight: string;
-  buttonStyle: string;
-}
-
-let Map = forwardRef<HTMLElement, MapProps>((props, ref) => {
-  let {
-    heading,
-    textColor,
-    contentAlignment,
-    descriptionText,
-    address,
-    buttonLabel,
-    buttonLink,
-    openInNewTab,
-    sectionHeight,
-    buttonStyle,
-    ...rest
-  } = props;
-  let sectionStyle: CSSProperties = {
-    "--section-height": `${sectionHeight}px`,
-    justifyContent: `${contentAlignment}`,
-  } as CSSProperties;
-
-  return (
-    <section
-      ref={ref}
-      {...rest}
-      className="flex relative p-10 overflow-hidden h-[var(--section-height)]"
-      style={sectionStyle}
-    >
-      <div className="absolute inset-0">
-        {address ? (
-          <iframe
-            className="w-full h-full object-cover"
-            title="map"
-            src={`https://maps.google.com/maps?t=m&q=${address}&ie=UTF8&&output=embed`}
-          ></iframe>
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-            <IconMapBlank
-              viewBox="0 0 230 230"
-              className="!w-56 !h-56 opacity-20"
-            />
-          </div>
-        )}
-      </div>
-      <div className="relative bg-white rounded-3xl p-8 border-2 border-solid border-gray-200 h-fit w-80">
-        <div className="z-10 flex flex-col gap-6">
-          {heading && (
-            <p className="text-2xl font-bold" style={{ color: textColor }}>
-              {heading}
-            </p>
-          )}
-          {address && (
-            <p className="text-sm font-normal" style={{ color: textColor }}>
-              {address}
-            </p>
-          )}
-          {descriptionText && (
-            <p className="text-sm font-normal" style={{ color: textColor }}>
-              {descriptionText}
-            </p>
-          )}
-          {buttonLabel && (
-            <a
-              href={buttonLink}
-              target={openInNewTab ? "_blank" : ""}
-              className={clsx(
-                "px-4 py-3 w-fit cursor-pointer rounded inline-block",
-                buttonStyle,
-              )}
-              rel="noreferrer"
-            >
-              {buttonLabel}
-            </a>
-          )}
-        </div>
-      </div>
-    </section>
-  );
+let variants = cva("", {
+	variants: {
+		alignment: {
+			left: "justify-start",
+			center: "justify-center",
+			right: "justify-end",
+		},
+		height: {
+			small: "min-h-[40vh]",
+			medium: "min-h-[50vh]",
+			large: "min-h-[60vh]",
+		},
+	},
 });
 
-export default Map;
+interface MapSectionProps
+	extends Omit<SectionProps, "backgroundColor">,
+		VariantProps<typeof variants>,
+		ButtonStyleProps {
+	address: string;
+	heading: string;
+	description: string;
+	alignment: "left" | "center" | "right";
+	buttonText: string;
+	boxBgColor: string;
+	boxTextColor: string;
+	boxBorderRadius: number;
+}
+
+let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
+	let {
+		height,
+		alignment,
+		heading,
+		description,
+		address,
+		boxBgColor,
+		boxTextColor,
+		boxBorderRadius,
+		buttonText,
+		buttonStyle,
+		backgroundColor,
+		textColor,
+		borderColor,
+		backgroundColorHover,
+		textColorHover,
+		borderColorHover,
+		...rest
+	} = props;
+
+	return (
+		<Section
+			ref={ref}
+			{...rest}
+			containerClassName={clsx(
+				"flex items-start p-6 md:p-12",
+				variants({ height, alignment }),
+			)}
+		>
+			<iframe
+				className="w-full h-full object-cover absolute inset-0 z-[-1]"
+				title="Google map embedded frame"
+				src={`https://maps.google.com/maps?t=m&q=${address}&ie=UTF8&&output=embed`}
+			/>
+			<div
+				className="w-80 max-w-full shadow-2xl p-8 space-y-3 md:space-y-6"
+				style={{
+					backgroundColor: boxBgColor,
+					color: boxTextColor,
+					borderRadius: `${boxBorderRadius}px`,
+				}}
+			>
+				{heading && <Heading content={heading} as="h3" alignment="left" />}
+				{address && <Paragraph content={address} />}
+				{description && <Paragraph content={description} />}
+				{buttonText && (
+					<Button
+						text={buttonText}
+						link={`https://www.google.com/maps/search/${address}`}
+						openInNewTab
+						variant="secondary"
+						buttonStyle={buttonStyle}
+						backgroundColor={backgroundColor}
+						textColor={textColor}
+						borderColor={borderColor}
+						backgroundColorHover={backgroundColorHover}
+						textColorHover={textColorHover}
+						borderColorHover={borderColorHover}
+					/>
+				)}
+			</div>
+		</Section>
+	);
+});
+
+export default MapSection;
 
 export let schema: HydrogenComponentSchema = {
-  type: "map",
-  title: "Map",
-  inspector: [
-    {
-      group: "Map",
-      inputs: [
-        {
-          type: "text",
-          name: "heading",
-          label: "Heading",
-          defaultValue: "Our store address",
-        },
-        {
-          type: "color",
-          name: "textColor",
-          label: "Text color",
-          defaultValue: "#333333",
-        },
-        {
-          type: "toggle-group",
-          label: "Content alignment",
-          name: "contentAlignment",
-          configs: {
-            options: [
-              { label: "Left", value: "flex-start" },
-              { label: "Center", value: "center" },
-              { label: "Right", value: "flex-end" },
-            ],
-          },
-          defaultValue: "center",
-        },
-        {
-          type: "map-autocomplete",
-          name: "address",
-          label: "Map address",
-          defaultValue: "San Francisco, CA",
-        },
-        {
-          type: "textarea",
-          label: "Description text",
-          name: "descriptionText",
-          defaultValue:
-            "Pair large text with an image to tell a story, explain a detail about your product, or describe a new promotion.",
-        },
-        {
-          type: "text",
-          label: "Button label",
-          name: "buttonLabel",
-          placeholder: "Button label",
-          defaultValue: "Optional button",
-        },
-        {
-          type: "text",
-          label: "Button link",
-          name: "buttonLink",
-          placeholder: "Button link",
-        },
-        {
-          type: "switch",
-          name: "openInNewTab",
-          label: "Open in new tab",
-          defaultValue: true,
-        },
-        {
-          type: "toggle-group",
-          label: "Button style",
-          name: "buttonStyle",
-          configs: {
-            options: [
-              {
-                label: "1",
-                value:
-                  "transition hover:bg-white border-2 border-solid hover:border-gray-900 hover:text-black bg-black text-white",
-              },
-              {
-                label: "2",
-                value:
-                  "transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white",
-              },
-              {
-                label: "3",
-                value:
-                  "transition hover:bg-white border-2 border-solid border-white hover:text-black bg-gray-200 text-white",
-              },
-            ],
-          },
-          defaultValue:
-            "transition bg-white border-2 border-solid border-gray-900 text-black hover:bg-black hover:text-white",
-        },
-        {
-          type: "range",
-          name: "sectionHeight",
-          label: "Section height",
-          defaultValue: 500,
-          configs: {
-            min: 400,
-            max: 900,
-            step: 10,
-            unit: "px",
-          },
-        },
-      ],
-    },
-  ],
+	type: "map",
+	title: "Map",
+	inspector: [
+		{
+			group: "Layout",
+			inputs: [
+				{
+					type: "select",
+					name: "height",
+					label: "Section height",
+					configs: {
+						options: [
+							{ value: "small", label: "Small" },
+							{ value: "medium", label: "Medium" },
+							{ value: "large", label: "Large" },
+						],
+					},
+					defaultValue: "small",
+				},
+				{
+					type: "toggle-group",
+					name: "alignment",
+					label: "Content alignment",
+					configs: {
+						options: [
+							{ value: "left", label: "Left", icon: "align-start-vertical" },
+							{
+								value: "center",
+								label: "Center",
+								icon: "align-center-vertical",
+							},
+							{ value: "right", label: "Right", icon: "align-end-vertical" },
+						],
+					},
+					defaultValue: "center",
+				},
+			],
+		},
+		{
+			group: "Address box",
+			inputs: [
+				{
+					type: "text",
+					name: "address",
+					label: "Address",
+					defaultValue: "301 Front St W, Toronto, ON M5V 2T6, Canada",
+				},
+				{
+					type: "text",
+					name: "heading",
+					label: "Heading",
+					defaultValue: "Our store address",
+				},
+				{
+					type: "richtext",
+					label: "Description",
+					name: "description",
+					defaultValue:
+						"<p>Mon - Fri, 8:30am - 10:30pm</p><p>Saturday, 8:30am - 10:30pm</p><p>Sunday, 8:30am - 10:30pm</p>",
+				},
+				{
+					type: "color",
+					name: "boxBgColor",
+					label: "Background color",
+					defaultValue: "#fff",
+				},
+				{
+					type: "color",
+					name: "boxTextColor",
+					label: "Text color",
+				},
+				{
+					type: "range",
+					name: "boxBorderRadius",
+					label: "Border radius",
+					configs: {
+						min: 0,
+						max: 40,
+						step: 2,
+						unit: "px",
+					},
+					defaultValue: 0,
+				},
+				{
+					type: "heading",
+					label: "Direction button (optional)",
+				},
+				{
+					type: "text",
+					name: "buttonText",
+					label: "Button text",
+					defaultValue: "Get directions",
+					placeholder: "Get directions",
+				},
+				...buttonStylesInputs,
+			],
+		},
+	],
 };

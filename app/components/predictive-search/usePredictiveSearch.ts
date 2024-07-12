@@ -1,6 +1,10 @@
 import { useFetchers } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
-import type { NormalizedPredictiveSearch, NormalizedPredictiveSearchResults, UseSearchReturn } from "./types";
+import type {
+  NormalizedPredictiveSearch,
+  NormalizedPredictiveSearchResults,
+  UseSearchReturn,
+} from "./types";
 
 export const NO_PREDICTIVE_SEARCH_RESULTS: NormalizedPredictiveSearchResults = [
   { type: "queries", items: [] },
@@ -22,8 +26,8 @@ export function usePredictiveSearch(): UseSearchReturn {
     }
   }, [searchFetcher]);
 
-  if (searchFetcher?.state === 'loading') {
-    searchTerm.current = (searchFetcher.formData?.get('q') || '') as string;
+  if (searchFetcher?.state === "loading") {
+    searchTerm.current = (searchFetcher.formData?.get("q") || "") as string;
   }
 
   const search = (results || {

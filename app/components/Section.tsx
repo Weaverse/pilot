@@ -22,8 +22,8 @@ export interface SectionProps<T = any>
   extends Omit<VariantProps<typeof variants>, "padding">,
     Omit<HydrogenComponentProps<T>, "children">,
     Omit<HTMLAttributes<HTMLElement>, "children">,
-    BackgroundProps,
-    OverlayProps {
+    Partial<BackgroundProps>,
+    Partial<OverlayProps> {
   as: React.ElementType;
   borderRadius: number;
   containerClassName: string;

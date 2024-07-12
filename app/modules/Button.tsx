@@ -1,9 +1,12 @@
 import { Link } from "@remix-run/react";
 import { forwardRef } from "react";
-
 import { cn } from "~/lib/cn";
 import { missingClass } from "~/lib/utils";
 
+/**
+ * @deprecated
+ * Use `Button` from components directory instead
+ */
 export const Button = forwardRef(
   (
     {
