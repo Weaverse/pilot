@@ -11,12 +11,17 @@ import { cn } from "~/lib/cn";
 import { Link } from "~/modules";
 
 let variants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap text-base font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  [
+    "inline-flex items-center justify-center",
+    "text-base leading-tight font-medium whitespace-nowrap",
+    "focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+    "transition-colors",
+  ],
   {
     variants: {
       variant: {
-        primary: "btn-primary border-2 px-5 py-3",
-        secondary: "btn-secondary border-2 px-5 py-3",
+        primary: "btn-primary border px-4 py-3",
+        secondary: "btn-secondary border px-4 py-3",
         link: "btn-link bg-transparent py-2 border-b-2",
       },
       shape: {
@@ -25,6 +30,7 @@ let variants = cva(
         pill: "rounded-full",
       },
       weight: {
+        normal: "font-normal",
         medium: "font-medium",
         semibold: "font-semibold",
         bold: "font-bold",
@@ -32,8 +38,8 @@ let variants = cva(
     },
     defaultVariants: {
       variant: "primary",
-      shape: "rounded",
-      weight: "medium",
+      shape: "square",
+      weight: "normal",
     },
   },
 );

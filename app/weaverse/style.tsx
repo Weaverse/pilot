@@ -1,20 +1,20 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 
 function hexToPercent(hex: string) {
-  let num = parseInt(hex, 16);
+  let num = Number.parseInt(hex, 16);
   return Math.floor((num / 255) * 100);
 }
 
-function hexToRgbString(hexColor: string = ""): string {
+function hexToRgbString(hexColor = ""): string {
   if (!hexColor) return "";
-  hexColor = hexColor.replace("#", "");
-  if (hexColor.length === 3) {
-    hexColor = hexColor.replace(/(.)/g, "$1$1");
+  let hex = hexColor.replace("#", "");
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, "$1$1");
   }
-  let r = parseInt(hexColor.substring(0, 2), 16) || 0;
-  let g = parseInt(hexColor.substring(2, 4), 16) || 0;
-  let b = parseInt(hexColor.substring(4, 6), 16) || 0;
-  let a = hexToPercent(hexColor.substring(6, 8)) || 0;
+  let r = Number.parseInt(hex.substring(0, 2), 16) || 0;
+  let g = Number.parseInt(hex.substring(2, 4), 16) || 0;
+  let b = Number.parseInt(hex.substring(4, 6), 16) || 0;
+  let a = hexToPercent(hex.substring(6, 8)) || 0;
   let val = `${r} ${g} ${b}`;
   return `${val}${a ? ` / ${a}%` : ""}`.trim();
 }
@@ -98,7 +98,7 @@ export function GlobalStyle() {
             body, button, input, select, textarea {
               -webkit-font-smoothing: antialiased;
               -webkit-text-size-adjust: 100%;
-              font-size: calc(var(--body-base-size) * 0.92);
+              font-size: var(--body-base-size);
               letter-spacing: var(--body-base-spacing);
               line-height: var(--body-base-line-height);
               text-rendering: optimizeSpeed;

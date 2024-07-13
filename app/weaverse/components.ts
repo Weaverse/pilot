@@ -29,9 +29,10 @@ import * as ImageGalleryItems from "~/sections/image-gallery/items";
 import * as ImageWithText from "~/sections/image-with-text";
 import * as ImageWithTextContent from "~/sections/image-with-text/content";
 import * as ImageWithTextImage from "~/sections/image-with-text/image";
-import * as Map from "~/sections/map";
+import * as MapSection from "~/sections/map";
 import * as MetaDemo from "~/sections/meta-demo";
 import * as NewsLetter from "~/sections/newsletter";
+import * as NewsLetterInput from "~/sections/newsletter/newsletter-input";
 import * as Page from "~/sections/page";
 import * as ProductInformation from "~/sections/product-information";
 import * as ProductList from "~/sections/product-list";
@@ -70,7 +71,7 @@ export let components: HydrogenComponent[] = [
   ColumnsWithImagesItems,
   ColumnWithImageItem,
   HeroVideo,
-  Map,
+  MapSection,
   PromotionGrid,
   PromotionGridItem,
   PromotionGridButtons,
@@ -79,6 +80,7 @@ export let components: HydrogenComponent[] = [
   Countdown,
   CountDownTimer,
   NewsLetter,
+  NewsLetterInput,
   UserProfiles,
   Blogs,
   BlogPost,
