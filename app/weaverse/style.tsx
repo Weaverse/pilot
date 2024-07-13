@@ -7,14 +7,14 @@ function hexToPercent(hex: string) {
 
 function hexToRgbString(hexColor = ""): string {
   if (!hexColor) return "";
-  hexColor = hexColor.replace("#", "");
-  if (hexColor.length === 3) {
-    hexColor = hexColor.replace(/(.)/g, "$1$1");
+  let hex = hexColor.replace("#", "");
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, "$1$1");
   }
-  let r = Number.parseInt(hexColor.substring(0, 2), 16) || 0;
-  let g = Number.parseInt(hexColor.substring(2, 4), 16) || 0;
-  let b = Number.parseInt(hexColor.substring(4, 6), 16) || 0;
-  let a = hexToPercent(hexColor.substring(6, 8)) || 0;
+  let r = Number.parseInt(hex.substring(0, 2), 16) || 0;
+  let g = Number.parseInt(hex.substring(2, 4), 16) || 0;
+  let b = Number.parseInt(hex.substring(4, 6), 16) || 0;
+  let a = hexToPercent(hex.substring(6, 8)) || 0;
   let val = `${r} ${g} ${b}`;
   return `${val}${a ? ` / ${a}%` : ""}`.trim();
 }
