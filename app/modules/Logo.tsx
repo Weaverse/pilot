@@ -23,17 +23,19 @@ export function Logo({ showTransparent }: { showTransparent?: boolean }) {
           data={logoData}
           sizes="auto"
           className={clsx(
-            "w-full h-full object-cover transition-opacity duration-300 ease-in",
+            "w-full h-full object-cover transition-opacity duration-300 ease-in group-hover/header:opacity-100",
             showTransparent ? "opacity-0" : "opacity-100",
           )}
         />
         <Image
           data={transparentLogoData}
           sizes="auto"
-          className={clsx(
-            "absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ease-in",
-            showTransparent ? "opacity-100" : "opacity-0",
-          )}
+          className={
+            clsx(
+              "absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ease-in group-hover/header:opacity-0",
+              showTransparent ? "opacity-100" : "opacity-0",
+            )
+          }
         />
       </div>
     </Link>
