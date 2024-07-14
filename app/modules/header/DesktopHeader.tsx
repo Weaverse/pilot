@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
-import { type EnhancedMenu } from "~/lib/utils";
+import type { EnhancedMenu } from "~/lib/utils";
 import { useRootLoaderData } from "~/root";
 import { Drawer, useDrawer } from "../Drawer";
 import { IconAccount, IconLogin, IconSearch } from "../Icon";
@@ -42,7 +42,6 @@ export function DesktopHeader({
   let isTransparent = enableTransparent && y < 50 && !hovered;
   return (
     <header
-      role="banner"
       className={clsx(
         enableTransparent ? "fixed w-screen group/header" : "sticky",
         isTransparent
@@ -86,14 +85,17 @@ function AccountLink({ className }: { className?: string }) {
 
 function SearchToggle({ isOpen, openDrawer, closeDrawer }: any) {
   let { pathname } = useLocation();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isOpen) {
       closeDrawer();
     }
   }, [pathname]);
+
   return (
     <>
       <button
+        type="button"
         onClick={openDrawer}
         className="relative flex h-8 w-8 items-center justify-center focus:ring-primary/5"
       >
