@@ -86,8 +86,7 @@ let variants = cva("heading", {
 
 export interface HeadingProps
   extends VariantProps<typeof variants>,
-    VariantProps<typeof fontSizeVariants>,
-    Partial<HydrogenComponentProps> {
+    VariantProps<typeof fontSizeVariants> {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   content: string;
   color?: string;
@@ -95,7 +94,10 @@ export interface HeadingProps
   maxSize?: number;
 }
 
-let Heading = forwardRef<HTMLHeadingElement, HeadingProps>((props, ref) => {
+let Heading = forwardRef<
+  HTMLHeadingElement,
+  HeadingProps & Partial<HydrogenComponentProps>
+>((props, ref) => {
   let {
     as: Tag = "h4",
     content,
