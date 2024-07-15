@@ -66,7 +66,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
           className="aspect-square object-cover object-center w-full rounded-[var(--image-border-radius)]"
         />
         <div className="text-center w-full space-y-3.5 mt-6">
-          {heading && <h3 className="font-medium">{heading}</h3>}
+          {heading && <h6>{heading}</h6>}
           {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
           {text && (
             <Button

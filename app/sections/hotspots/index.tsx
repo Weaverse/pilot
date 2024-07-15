@@ -5,21 +5,43 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import Heading from "~/components/Heading";
+import Heading, {
+  headingInputs,
+  type HeadingProps,
+} from "~/components/Heading";
 import Paragraph from "~/components/Paragraph";
 import type { SectionProps } from "~/components/Section";
 import { Section } from "~/components/Section";
 import { getImageAspectRatio } from "~/lib/utils";
 
-type HotspotsProps = SectionProps & {
-  heading?: string;
+interface HotspotsProps
+  extends Omit<SectionProps, "content">,
+    Omit<HeadingProps, "as"> {
   description?: string;
+  headingTagName?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   image: string;
   aspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
-};
+}
 
 let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
-  let { heading, description, image, aspectRatio, children, ...rest } = props;
+  let {
+    headingTagName,
+    content,
+    size,
+    mobileSize,
+    desktopSize,
+    color,
+    weight,
+    letterSpacing,
+    alignment,
+    minSize,
+    maxSize,
+    description,
+    image,
+    aspectRatio,
+    children,
+    ...rest
+  } = props;
   let imageData: Partial<WeaverseImage> =
     typeof image === "string"
       ? { url: image, altText: "Hotspots image" }
@@ -27,7 +49,21 @@ let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
 
   return (
     <Section ref={ref} {...rest} overflow="unset">
-      {heading && <Heading as="h2" content={heading} />}
+      {content && (
+        <Heading
+          content={content}
+          as={headingTagName}
+          color={color}
+          size={size}
+          mobileSize={mobileSize}
+          desktopSize={desktopSize}
+          minSize={minSize}
+          maxSize={maxSize}
+          weight={weight}
+          letterSpacing={letterSpacing}
+          alignment={alignment}
+        />
+      )}
       {description && (
         <Paragraph as="p" content={description} alignment="center" />
       )}
@@ -121,24 +157,19 @@ export let schema: HydrogenComponentSchema = {
     },
     {
       group: "Heading (optional)",
-      inputs: [
-        {
-          type: "text",
-          name: "heading",
-          label: "Heading",
-          defaultValue: "Shop the look",
-          placeholder: "Shop the look",
-        },
-        {
-          type: "richtext",
-          name: "description",
-          label: "Description",
-        },
-      ],
+      inputs: headingInputs.map((input) => {
+        if (input.name === "as") {
+          return {
+            ...input,
+            name: "headingTagName",
+          };
+        }
+        return input;
+      }),
     },
   ],
   presets: {
-    heading: "Shop the look",
+    content: "Shop the look",
     image: IMAGES_PLACEHOLDERS.collection_1,
     aspectRatio: "16/9",
     gap: 40,

@@ -162,15 +162,11 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                     : "py-4",
                 )}
               >
-                <h3
-                  className={clsx(
-                    contentPosition === "over"
-                      ? "text-2xl md:text-3xl leading-none"
-                      : "text-xl",
-                  )}
-                >
-                  {collection.title}
-                </h3>
+                {contentPosition === "over" ? (
+                  <h5>{collection.title}</h5>
+                ) : (
+                  <h6>{collection.title}</h6>
+                )}
                 {contentPosition === "over" && buttonText && (
                   <Button
                     text={buttonText}
