@@ -119,10 +119,9 @@ export let schema: HydrogenComponentSchema = {
       {
         type: "heading",
         content: "Hero image with text overlay",
+        as: "h2",
         color: "#ffffff",
-        size: "scale",
-        minSize: 16,
-        maxSize: 56,
+        size: "default",
       },
       {
         type: "paragraph",
