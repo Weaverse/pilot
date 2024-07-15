@@ -1,8 +1,8 @@
-import ReactCountryFlag from "react-country-flag";
-import { IconBadgeCheck, IconX } from "~/modules";
-import { Rating } from "./rating";
-import { useState } from "react";
 import clsx from "clsx";
+import { useState } from "react";
+import ReactCountryFlag from "react-country-flag";
+import { IconSealCheck, IconX } from "~/components/Icons";
+import { Rating } from "./rating";
 
 export type AliReview = {
   id: number;
@@ -79,7 +79,7 @@ export function ReviewItem(props: ReviewItemProps) {
         <div className="flex items-center gap-6">
           {showVerifiedBadge && (
             <div className="inline-flex items-center gap-1">
-              <IconBadgeCheck className="h-4 w-4 text-white" fill="black" />
+              <IconSealCheck className="h-4 w-4 text-white" fill="black" />
               <p className="text-xs">{verifiedBadgeText}</p>
             </div>
           )}
@@ -98,7 +98,7 @@ export function ReviewItem(props: ReviewItemProps) {
               key={media.id}
               role="button"
               className={clsx(
-                "flex items-center justify-center bg-gray-800 w-20 h-20 rounded-lg overflow-hidden cursor-pointer",
+                "flex items-center justify-center bg-gray-800 w-20 h-20 overflow-hidden cursor-pointer",
                 "outline-offset-2 hover:outline hover:outline-2 hover:outline-gray-500",
                 previewMedia?.id === media.id &&
                   "outline outline-2 outline-gray-500",
@@ -136,7 +136,7 @@ function ReviewMediaPreview(props: {
   if (media) {
     return (
       <div className="flex gap-2 items-start">
-        <div className="w-96 h-96 flex items-center justify-center rounded-lg overflow-hidden bg-gray-800">
+        <div className="w-96 h-96 flex items-center justify-center overflow-hidden bg-gray-800">
           <img
             className="max-w-full max-h-full object-cover"
             src={media.url}
