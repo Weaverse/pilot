@@ -46,7 +46,7 @@ function MultiMenu(props: SingleMenuItem) {
       key={idx}
       style={{ "--item-index": idx } as { [key: string]: any }}
     >
-      <Link to={item.to} prefetch="intent" className="uppercase text-lg">
+      <Link to={item.to} prefetch="intent" className="uppercase">
         <span className="text-animation">{item.title}</span>
       </Link>
       <ul className="space-y-1.5">
@@ -108,7 +108,7 @@ function SingleMenu(props: SingleMenuItem) {
         )}
       >
         <div className="p-6 space-y-4 min-w-48">
-          <Link to={to} prefetch="intent" className="uppercase text-lg">
+          <Link to={to} prefetch="intent" className="uppercase">
             <span className="text-animation">{title}</span>
           </Link>
           <ul className="space-y-1.5">
