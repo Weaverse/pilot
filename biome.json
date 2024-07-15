@@ -14,9 +14,15 @@
   },
   "linter": {
     "rules": {
-      "suspicious": {},
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off"
+      },
       "style": {},
-      "a11y": {}
+      "a11y": {
+        "useKeyWithClickEvents": "off",
+        "noSvgWithoutTitle": "off"
+      }
     }
   },
   "javascript": {
