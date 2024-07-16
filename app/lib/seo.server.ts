@@ -1,4 +1,4 @@
-import { type SeoConfig } from "@shopify/hydrogen";
+import type { SeoConfig } from "@shopify/hydrogen";
 import type {
   Article,
   Blog,
@@ -9,14 +9,7 @@ import type {
   ProductVariant,
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
-import type {
-  BreadcrumbList,
-  CollectionPage,
-  Offer,
-  Organization,
-  WebPage,
-} from "schema-dts";
-
+import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
 import type { ShopFragment } from "storefrontapi.generated";
 
 function root({
@@ -119,7 +112,7 @@ function productJsonLd({
     return {
       "@type": "Offer",
       availability,
-      price: parseFloat(variant.price.amount),
+      price: Number.parseFloat(variant.price.amount),
       priceCurrency: variant.price.currencyCode,
       sku: variant?.sku ?? "",
       url: variantUrl.toString(),
@@ -438,7 +431,7 @@ function policies({
   return {
     title: "Policies",
     titleTemplate: "%s | Policies",
-    description: "Hydroge store policies",
+    description: "Hydrogen store policies",
     jsonLd: [
       {
         "@context": "https://schema.org",
@@ -484,5 +477,5 @@ function truncate(str: string, num = 155): string {
   if (str.length <= num) {
     return str;
   }
-  return str.slice(0, num - 3) + "...";
+  return `${str.slice(0, num - 3)}...`;
 }

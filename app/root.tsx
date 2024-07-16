@@ -41,7 +41,7 @@ import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import styles from "./styles/app.css?url";
 import { GlobalStyle } from "./weaverse/style";
 
-export const shouldRevalidate: ShouldRevalidateFunction = ({
+export let shouldRevalidate: ShouldRevalidateFunction = ({
   formMethod,
   currentUrl,
   nextUrl,
@@ -59,7 +59,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   return false;
 };
 
-export const links: LinksFunction = () => {
+export let links: LinksFunction = () => {
   return [
     {
       rel: "stylesheet",
@@ -89,19 +89,20 @@ export const links: LinksFunction = () => {
     { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
   ];
 };
-export const useRootLoaderData = () => {
-  const [root] = useMatches();
+export let useRootLoaderData = () => {
+  let [root] = useMatches();
   return root?.data as SerializeFrom<typeof loader>;
 };
+
 export type RootLoader = typeof loader;
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
-  const { storefront, cart, env } = context;
-  const layout = await getLayoutData(context);
-  const isLoggedInPromise = context.customerAccount.isLoggedIn();
+  let { storefront, cart, env } = context;
+  let layout = await getLayoutData(context);
+  let isLoggedInPromise = context.customerAccount.isLoggedIn();
+  let seo = seoPayload.root({ shop: layout.shop, url: request.url });
+  let googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
 
-  const seo = seoPayload.root({ shop: layout.shop, url: request.url });
-  const googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
   return defer(
     {
       shop: getShopAnalytics({
@@ -128,14 +129,14 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   );
 }
 
-export const meta = ({ data }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+export let meta: MetaFunction = ({ data }: MetaArgs<typeof loader>) => {
+  return getSeoMeta(data.seo as SeoConfig);
 };
 
 function App() {
-  const nonce = useNonce();
-  const data = useLoaderData<typeof loader>();
-  const locale = data.selectedLocale ?? DEFAULT_LOCALE;
+  let nonce = useNonce();
+  let data = useLoaderData<typeof loader>();
+  let locale = data.selectedLocale ?? DEFAULT_LOCALE;
 
   return (
     <html lang={locale.language}>
@@ -171,10 +172,10 @@ function App() {
 export default withWeaverse(App);
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  const routeError = useRouteError();
-  const rootData = useRootLoaderData();
-  const locale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const isRouteError = isRouteErrorResponse(routeError);
+  let routeError = useRouteError();
+  let rootData = useRootLoaderData();
+  let locale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  let isRouteError = isRouteErrorResponse(routeError);
 
   let title = "Error";
   let pageType = "page";
@@ -219,7 +220,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-const LAYOUT_QUERY = `#graphql
+let LAYOUT_QUERY = `#graphql
   query layout(
     $language: LanguageCode
     $headerMenuHandle: String!
@@ -303,7 +304,7 @@ const LAYOUT_QUERY = `#graphql
 ` as const;
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  const data = await storefront.query(LAYOUT_QUERY, {
+  let data = await storefront.query(LAYOUT_QUERY, {
     variables: {
       headerMenuHandle: "main-menu",
       footerMenuHandle: "footer",
@@ -321,9 +322,9 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
       - /blog/news/blog-post -> /news/blog-post
       - /collections/all -> /products
   */
-  const customPrefixes = { CATALOG: "products" };
+  let customPrefixes = { CATALOG: "products" };
 
-  const headerMenu = data?.headerMenu
+  let headerMenu = data?.headerMenu
     ? parseMenu(
         data.headerMenu,
         data.shop.primaryDomain.url,
@@ -332,7 +333,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
       )
     : undefined;
 
-  const footerMenu = data?.footerMenu
+  let footerMenu = data?.footerMenu
     ? parseMenu(
         data.footerMenu,
         data.shop.primaryDomain.url,
