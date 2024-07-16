@@ -2,7 +2,11 @@ import poppins400 from "@fontsource/poppins/400.css?url";
 import poppins500 from "@fontsource/poppins/500.css?url";
 import poppins600 from "@fontsource/poppins/600.css?url";
 import poppins700 from "@fontsource/poppins/700.css?url";
-import type { ShouldRevalidateFunction } from "@remix-run/react";
+import {
+  MetaFunction,
+  type ShouldRevalidateFunction,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import {
   Links,
   Meta,
@@ -31,15 +35,16 @@ import type {
 import { defer } from "@shopify/remix-oxygen";
 import { withWeaverse } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
-import { Layout } from "~/modules";
+import { seoPayload } from "~/lib/seo.server";
+import { Layout as PageLayout } from "~/modules";
 import { CustomAnalytics } from "~/modules/CustomAnalytics";
 import { GlobalLoading } from "~/modules/global-loading";
-import { seoPayload } from "~/lib/seo.server";
+import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import { GenericError } from "./modules/GenericError";
 import { NotFound } from "./modules/NotFound";
-import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import styles from "./styles/app.css?url";
 import { GlobalStyle } from "./weaverse/style";
+export type RootLoader = typeof loader;
 
 export let shouldRevalidate: ShouldRevalidateFunction = ({
   formMethod,
@@ -89,54 +94,73 @@ export let links: LinksFunction = () => {
     { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
   ];
 };
-export let useRootLoaderData = () => {
-  let [root] = useMatches();
-  return root?.data as SerializeFrom<typeof loader>;
-};
 
-export type RootLoader = typeof loader;
+export async function loader(args: LoaderFunctionArgs) {
+  // Start fetching non-critical data without blocking time to first byte
+  const deferredData = loadDeferredData(args);
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
-  let { storefront, cart, env } = context;
-  let layout = await getLayoutData(context);
-  let isLoggedInPromise = context.customerAccount.isLoggedIn();
-  let seo = seoPayload.root({ shop: layout.shop, url: request.url });
-  let googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
+  // Await the critical data required to render initial state of the page
+  const criticalData = await loadCriticalData(args);
 
-  return defer(
-    {
-      shop: getShopAnalytics({
-        storefront: context.storefront,
-        publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-      }),
-      consent: {
-        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN || env.PUBLIC_STORE_DOMAIN,
-        storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      },
-      isLoggedIn: isLoggedInPromise,
-      layout,
-      selectedLocale: storefront.i18n,
-      cart: cart.get(),
-      seo,
-      weaverseTheme: await context.weaverse.loadThemeSettings(),
-      googleGtmID,
-    },
-    {
-      headers: {
-        "Set-Cookie": await context.session.commit(),
-      },
-    },
-  );
+  return defer({
+    ...deferredData,
+    ...criticalData,
+  });
 }
 
-export let meta: MetaFunction = ({ data }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(data.seo as SeoConfig);
+/**
+ * Load data necessary for rendering content above the fold. This is the critical data
+ * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
+ */
+async function loadCriticalData({ request, context }: LoaderFunctionArgs) {
+  const [layout] = await Promise.all([
+    getLayoutData(context),
+    // Add other queries here, so that they are loaded in parallel
+  ]);
+
+  const seo = seoPayload.root({ shop: layout.shop, url: request.url });
+
+  const { storefront, env } = context;
+
+  return {
+    layout,
+    seo,
+    shop: getShopAnalytics({
+      storefront,
+      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
+    }),
+    consent: {
+      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+      storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
+    },
+    selectedLocale: storefront.i18n,
+    weaverseTheme: await context.weaverse.loadThemeSettings(),
+    googleGtmID: context.env.PUBLIC_GOOGLE_GTM_ID,
+  };
+}
+
+/**
+ * Load data for rendering content below the fold. This data is deferred and will be
+ * fetched after the initial page load. If it's unavailable, the page should still 200.
+ * Make sure to not throw any errors here, as it will cause the page to 500.
+ */
+function loadDeferredData({ context }: LoaderFunctionArgs) {
+  const { cart, customerAccount } = context;
+
+  return {
+    isLoggedIn: customerAccount.isLoggedIn(),
+    cart: cart.get(),
+  };
+}
+
+export const meta = ({ data }: MetaArgs<typeof loader>) => {
+  return getSeoMeta(data!.seo as SeoConfig);
 };
 
-function App() {
-  let nonce = useNonce();
-  let data = useLoaderData<typeof loader>();
-  let locale = data.selectedLocale ?? DEFAULT_LOCALE;
+function Layout({ children }: { children?: React.ReactNode }) {
+  const nonce = useNonce();
+  const data = useRouteLoaderData<RootLoader>("root");
+  const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
 
   return (
     <html lang={locale.language}>
@@ -148,19 +172,23 @@ function App() {
         <GlobalStyle />
       </head>
       <body>
-        <Analytics.Provider
-          cart={data.cart}
-          shop={data.shop}
-          consent={data.consent}
-        >
-          <Layout
-            key={`${locale.language}-${locale.country}`}
-            layout={data.layout}
+        {data ? (
+          <Analytics.Provider
+            cart={data.cart}
+            shop={data.shop}
+            consent={data.consent}
           >
-            <Outlet />
-          </Layout>
-          <CustomAnalytics />
-        </Analytics.Provider>
+            <PageLayout
+              key={`${locale.language}-${locale.country}`}
+              layout={data.layout}
+            >
+              {children}
+            </PageLayout>
+            <CustomAnalytics />
+          </Analytics.Provider>
+        ) : (
+          children
+        )}
         <GlobalLoading />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
@@ -169,13 +197,18 @@ function App() {
   );
 }
 
+function App() {
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
+  );
+}
 export default withWeaverse(App);
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  let routeError = useRouteError();
-  let rootData = useRootLoaderData();
-  let locale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  let isRouteError = isRouteErrorResponse(routeError);
+  const routeError = useRouteError();
+  const isRouteError = isRouteErrorResponse(routeError);
 
   let title = "Error";
   let pageType = "page";
@@ -186,41 +219,25 @@ export function ErrorBoundary({ error }: { error: Error }) {
   }
 
   return (
-    <html lang={locale.language}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <title>{title}</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Layout
-          layout={rootData?.layout}
-          key={`${locale.language}-${locale.country}`}
-        >
-          {isRouteError ? (
-            <>
-              {routeError.status === 404 ? (
-                <NotFound type={pageType} />
-              ) : (
-                <GenericError
-                  error={{ message: `${routeError.status} ${routeError.data}` }}
-                />
-              )}
-            </>
+    <Layout>
+      {isRouteError ? (
+        <>
+          {routeError.status === 404 ? (
+            <NotFound type={pageType} />
           ) : (
-            <GenericError error={error instanceof Error ? error : undefined} />
+            <GenericError
+              error={{ message: `${routeError.status} ${routeError.data}` }}
+            />
           )}
-        </Layout>
-        {/*<ScrollRestoration nonce={nonce} />*/}
-        {/*<Scripts nonce={nonce} />*/}
-      </body>
-    </html>
+        </>
+      ) : (
+        <GenericError error={error instanceof Error ? error : undefined} />
+      )}
+    </Layout>
   );
 }
 
-let LAYOUT_QUERY = `#graphql
+const LAYOUT_QUERY = `#graphql
   query layout(
     $language: LanguageCode
     $headerMenuHandle: String!
@@ -304,7 +321,7 @@ let LAYOUT_QUERY = `#graphql
 ` as const;
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  let data = await storefront.query(LAYOUT_QUERY, {
+  const data = await storefront.query(LAYOUT_QUERY, {
     variables: {
       headerMenuHandle: "main-menu",
       footerMenuHandle: "footer",
@@ -324,7 +341,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
   */
   let customPrefixes = { CATALOG: "products" };
 
-  let headerMenu = data?.headerMenu
+  const headerMenu = data?.headerMenu
     ? parseMenu(
         data.headerMenu,
         data.shop.primaryDomain.url,
@@ -333,7 +350,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
       )
     : undefined;
 
-  let footerMenu = data?.footerMenu
+  const footerMenu = data?.footerMenu
     ? parseMenu(
         data.footerMenu,
         data.shop.primaryDomain.url,

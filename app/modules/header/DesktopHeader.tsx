@@ -1,11 +1,11 @@
-import { Await, Link, useLocation } from "@remix-run/react";
+import { Await, Link, useLocation, useRouteLoaderData } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
 import type { EnhancedMenu } from "~/lib/utils";
-import { useRootLoaderData } from "~/root";
+import type { RootLoader } from "~/root";
 import { Drawer, useDrawer } from "../Drawer";
 import { IconAccount, IconLogin, IconSearch } from "../Icon";
 import { Logo } from "../Logo";
@@ -69,7 +69,7 @@ export function DesktopHeader({
 }
 
 function AccountLink({ className }: { className?: string }) {
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
   const isLoggedIn = rootData?.isLoggedIn;
 
   return (

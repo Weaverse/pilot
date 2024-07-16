@@ -67,13 +67,17 @@ export function ProductVariants(props: ProductVariantsProps) {
   };
 
   let selectedOptionMap = new Map();
-  selectedOptions?.forEach((opt) => {
+  for (const opt of selectedOptions) {
     selectedOptionMap.set(opt.name, opt.value);
-  });
+  }
 
   return (
     <div className="space-y-6">
-      <VariantSelector handle={handle} variants={nodes} options={options}>
+      <VariantSelector
+        handle={handle}
+        variants={nodes}
+        options={options.filter((option) => option.values.length > 1)}
+      >
         {({ option }) => {
           let optionName = option.name;
           let clonedSelectedOptionMap = new Map(selectedOptionMap);
@@ -102,14 +106,14 @@ export function ProductVariants(props: ProductVariantsProps) {
           });
           let selectedValue = selectedOptions?.find(
             (opt) => opt.name === optionName,
-          )?.value!;
+          )?.value;
 
           return (
             <VariantOption
               name={optionName}
               config={config}
               values={values}
-              selectedOptionValue={selectedValue}
+              selectedOptionValue={selectedValue || ""}
               onSelectOptionValue={handleSelectOptionValue}
               swatches={swatch.swatches}
             />

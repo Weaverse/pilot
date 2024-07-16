@@ -3,15 +3,15 @@ import type { Jsonify } from "@remix-run/server-runtime/dist/jsonify";
 import { Money, ShopPayButton } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
+import type { ProductData } from "~/lib/products";
 import { getExcerpt } from "~/lib/utils";
 import { ProductDetail } from "~/sections/product-information/product-detail";
 import { AddToCartButton } from "./AddToCartButton";
+import { Button } from "./Button";
+import { Modal } from "./Modal";
 import { ProductMedia } from "./product-form/product-media";
 import { Quantity } from "./product-form/quantity";
 import { ProductVariants } from "./product-form/variants";
-import type { ProductData } from "~/lib/products";
-import { Button } from "./Button";
-import { Modal } from "./Modal";
 
 export function QuickView(props: { data: Jsonify<ProductData> }) {
   const { data } = props;
@@ -85,7 +85,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
               </h2>
             </div>
             <p className="text-xl md:text-2xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed flex gap-3">
-              {selectedVariant && selectedVariant.compareAtPrice && (
+              {selectedVariant?.compareAtPrice && (
                 <Money
                   withoutTrailingZeros
                   data={selectedVariant.compareAtPrice}
