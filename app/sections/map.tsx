@@ -33,6 +33,7 @@ interface MapSectionProps
   description: string;
   alignment: "left" | "center" | "right";
   buttonText: string;
+  buttonVariant: "primary" | "secondary" | "outline" | "link";
   boxBgColor: string;
   boxTextColor: string;
   boxBorderRadius: number;
@@ -49,6 +50,7 @@ let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
     boxTextColor,
     boxBorderRadius,
     buttonText,
+    buttonVariant,
     buttonStyle,
     backgroundColor,
     textColor,
@@ -89,7 +91,7 @@ let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
             text={buttonText}
             link={`https://www.google.com/maps/search/${address}`}
             openInNewTab
-            variant="primary"
+            variant={buttonVariant}
             buttonStyle={buttonStyle}
             backgroundColor={backgroundColor}
             textColor={textColor}
@@ -200,6 +202,20 @@ export let schema: HydrogenComponentSchema = {
           label: "Button text",
           defaultValue: "Get directions",
           placeholder: "Get directions",
+        },
+        {
+          type: "select",
+          name: "buttonVariant",
+          label: "Button variant",
+          configs: {
+            options: [
+              { label: "Primary", value: "primary" },
+              { label: "Secondary", value: "secondary" },
+              { label: "Outline", value: "outline" },
+              { label: "Link", value: "link" },
+            ],
+          },
+          defaultValue: "primary",
         },
         ...buttonStylesInputs,
       ],
