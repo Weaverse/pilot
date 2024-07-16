@@ -12,34 +12,52 @@ import { Link } from "~/modules";
 
 let variants = cva(
   [
-    "inline-flex items-center justify-center",
-    "text-base leading-tight font-medium whitespace-nowrap",
+    "inline-flex items-center justify-center rounded-none",
+    "text-base leading-tight font-normal whitespace-nowrap",
     "focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
     "transition-colors",
   ],
   {
     variants: {
       variant: {
-        primary: "btn-primary border px-4 py-3",
-        secondary: "btn-secondary border px-4 py-3",
-        link: "btn-link bg-transparent py-2 border-b-2",
-      },
-      shape: {
-        square: "",
-        rounded: "rounded-md",
-        pill: "rounded-full",
-      },
-      weight: {
-        normal: "font-normal",
-        medium: "font-medium",
-        semibold: "font-semibold",
-        bold: "font-bold",
+        primary: [
+          "border px-4 py-3",
+          "text-[var(--color-button-text,var(--button-primary-color))]",
+          "bg-[var(--color-button-bg,var(--button-primary-bg))]",
+          "border-[var(--color-button-border,var(--button-primary-border))]",
+          "hover:bg-[var(--color-button-bg-hover,var(--button-primary-bg-hover))]",
+          "hover:text-[var(--color-button-text-hover,var(--button-primary-color-hover))]",
+          "hover:border-[var(--color-button-border-hover,var(--button-primary-border-hover))]",
+        ],
+        secondary: [
+          "border px-4 py-3",
+          "text-[var(--color-button-text,var(--button-secondary-color))]",
+          "bg-[var(--color-button-bg,var(--button-secondary-bg))]",
+          "border-[var(--color-button-border,var(--button-secondary-border))]",
+          "hover:bg-[var(--color-button-bg-hover,var(--button-secondary-bg-hover))]",
+          "hover:text-[var(--color-button-text-hover,var(--button-secondary-color-hover))]",
+          "hover:border-[var(--color-button-border-hover,var(--button-secondary-border-hover))]",
+        ],
+        outline: [
+          "border px-4 py-3",
+          "text-[var(--color-button-text,var(--button-outline-color))]",
+          "bg-[var(--color-button-bg,var(--button-outline-bg))]",
+          "border-[var(--color-button-border,var(--button-outline-border))]",
+          "hover:bg-[var(--color-button-bg-hover,var(--button-outline-bg-hover))]",
+          "hover:text-[var(--color-button-text-hover,var(--button-outline-color-hover))]",
+          "hover:border-[var(--color-button-border-hover,var(--button-outline-border-hover))]",
+        ],
+        link: [
+          "bg-transparent py-2 border-b",
+          "text-[var(--color-button-text,var(--button-link-color))]",
+          "border-b-[var(--color-button-border,var(--button-link-color))]",
+          "hover:text-[var(--color-button-text-hover,var(--button-link-color-hover))]",
+          "hover:border-[var(--color-button-border-hover,var(--button-link-color-hover))]",
+        ],
       },
     },
     defaultVariants: {
       variant: "primary",
-      shape: "square",
-      weight: "normal",
     },
   },
 );
@@ -62,7 +80,6 @@ export interface ButtonProps
     >,
     Partial<HydrogenComponentProps>,
     Partial<ButtonStyleProps> {
-  as?: keyof HTMLElementTagNameMap;
   className?: string;
   text: string;
   link?: string;
@@ -71,10 +88,7 @@ export interface ButtonProps
 
 let Button = forwardRef<HTMLElement, ButtonProps>((props, ref) => {
   let {
-    // as = "button",
     variant,
-    // shape = "rounded",
-    // weight = "medium",
     text,
     link,
     openInNewTab,
@@ -160,6 +174,7 @@ export let buttonContentInputs: InspectorGroup["inputs"] = [
       options: [
         { label: "Primary", value: "primary" },
         { label: "Secondary", value: "secondary" },
+        { label: "Outline", value: "outline" },
         { label: "Link", value: "link" },
       ],
     },
