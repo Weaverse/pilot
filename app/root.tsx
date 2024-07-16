@@ -31,12 +31,10 @@ import type {
 import { defer } from "@shopify/remix-oxygen";
 import { withWeaverse } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
-
 import { Layout } from "~/modules";
 import { CustomAnalytics } from "~/modules/CustomAnalytics";
 import { GlobalLoading } from "~/modules/global-loading";
 import { seoPayload } from "~/lib/seo.server";
-
 import { GenericError } from "./modules/GenericError";
 import { NotFound } from "./modules/NotFound";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
@@ -280,7 +278,7 @@ const LAYOUT_QUERY = `#graphql
     type
     url
   }
-  
+
   fragment ChildMenuItem on MenuItem {
     ...MenuItem
   }

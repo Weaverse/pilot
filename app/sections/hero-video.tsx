@@ -123,7 +123,9 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   let { ref: inViewRef, inView } = useInView({
     triggerOnce: true,
   });
+
   // Use `useCallback` so we don't recreate the function on each render
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   let setRefs = useCallback(
     (node: HTMLElement) => {
       // Ref's from useRef needs to have the node assigned to `current`
@@ -131,7 +133,6 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
       // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
       inViewRef(node);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [inViewRef],
   );
 
@@ -139,13 +140,13 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     setSize(getPlayerSize(id));
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
   return (
@@ -277,7 +278,7 @@ export let schema: HydrogenComponentSchema = {
     overlayColor: "#000000",
     overlayOpacity: 40,
     videoURL: "https://www.youtube.com/watch?v=gbLmku5QACM",
-    height: "medium",
+    height: "large",
     gap: 20,
     children: [
       {
@@ -288,7 +289,7 @@ export let schema: HydrogenComponentSchema = {
       {
         type: "heading",
         content: "Bring your brand to life.",
-        size: "jumbo",
+        as: "h2",
         color: "#fff",
       },
       {

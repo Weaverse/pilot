@@ -29,7 +29,7 @@ let variants = cva("absolute inset-0 w-full h-full z-[-1]", {
 });
 
 export type BackgroundImageProps = VariantProps<typeof variants> & {
-  backgroundImage: WeaverseImage | string;
+  backgroundImage?: WeaverseImage | string;
 };
 
 export function BackgroundImage(props: BackgroundImageProps) {

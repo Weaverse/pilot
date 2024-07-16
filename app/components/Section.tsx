@@ -1,11 +1,12 @@
-import {
-  type HydrogenComponentProps,
-  type InspectorGroup,
+import type {
+  HydrogenComponentProps,
+  InspectorGroup,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
-import React, { forwardRef } from "react";
+import type React from "react";
+import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
 import type { BackgroundImageProps } from "./BackgroundImage";
 import { backgroundInputs } from "./BackgroundImage";
@@ -23,7 +24,7 @@ export interface SectionProps<T = any>
     Omit<HydrogenComponentProps<T>, "children">,
     Omit<HTMLAttributes<HTMLElement>, "children">,
     Partial<BackgroundProps>,
-    Partial<OverlayProps> {
+    OverlayProps {
   as: React.ElementType;
   borderRadius: number;
   containerClassName: string;

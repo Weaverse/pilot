@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import clsx from "clsx";
-import React from "react";
+import type React from "react";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
@@ -15,7 +15,7 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
   if (!items) return null;
   return (
     <nav className="flex items-stretch h-full">
-      {items.map((item, id) => {
+      {items.map((item) => {
         let { title, ...rest } = item;
         let level = getMaxDepth(item);
         let isAllResourceType =
@@ -30,7 +30,8 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
             : level === 2
               ? SingleMenu
               : GroupWrapper;
-        return <Comp key={id} title={title} {...rest} />;
+
+        return <Comp key={item.id} title={title} {...rest} />;
       })}
     </nav>
   );
@@ -41,24 +42,17 @@ function MultiMenu(props: SingleMenuItem) {
 
   let renderList = (item: SingleMenuItem, idx: number) => (
     <div
-      className="flex-1 fly-in max-w-60"
+      className="flex-1 fly-in max-w-60 space-y-4"
       key={idx}
       style={{ "--item-index": idx } as { [key: string]: any }}
     >
-      <h5 className="mb-4 uppercase font-medium">
-        <Link to={item.to} prefetch="intent">
-          <span className="text-animation">{item.title}</span>
-        </Link>
-      </h5>
+      <Link to={item.to} prefetch="intent" className="uppercase">
+        <span className="text-animation">{item.title}</span>
+      </Link>
       <ul className="space-y-1.5">
-        {item.items.map((subItem, ind) => (
-          <li key={ind} className="leading-6">
-            <Link
-              key={ind}
-              to={subItem.to}
-              prefetch="intent"
-              className="relative"
-            >
+        {item.items.map((subItem) => (
+          <li key={subItem.id} className="leading-6">
+            <Link to={subItem.to} prefetch="intent" className="relative">
               <span className="text-animation">{subItem.title}</span>
             </Link>
           </li>
@@ -96,7 +90,7 @@ function MultiMenu(props: SingleMenuItem) {
                 : renderList(item, id),
             )}
           </div>
-          <div className="flex gap-6"></div>
+          <div className="flex gap-6" />
         </div>
       </div>
     </GroupWrapper>
@@ -113,23 +107,19 @@ function SingleMenu(props: SingleMenuItem) {
           dropdownContentClass,
         )}
       >
-        <div className="p-6 min-w-48">
-          <div>
-            <h5 className="mb-4 uppercase font-medium">
-              <Link to={to} prefetch="intent">
-                <span className="text-animation">{title}</span>
-              </Link>
-            </h5>
-            <ul className="space-y-1.5">
-              {items.map((subItem, ind) => (
-                <li key={ind} className="leading-6">
-                  <Link to={subItem.to} prefetch="intent">
-                    <span className="text-animation">{subItem.title}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="p-6 space-y-4 min-w-48">
+          <Link to={to} prefetch="intent" className="uppercase">
+            <span className="text-animation">{title}</span>
+          </Link>
+          <ul className="space-y-1.5">
+            {items.map((subItem) => (
+              <li key={subItem.id} className="leading-6">
+                <Link to={subItem.to} prefetch="intent">
+                  <span className="text-animation">{subItem.title}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </GroupWrapper>
@@ -146,7 +136,7 @@ function ImageMenu({ title, items, to }: SingleMenuItem) {
               <Link
                 to={item.to}
                 prefetch="intent"
-                key={id}
+                key={item.id}
                 className="flex-1 fly-in"
                 style={{ "--item-index": id } as { [key: string]: any }}
               >

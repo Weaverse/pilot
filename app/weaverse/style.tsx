@@ -36,7 +36,7 @@ export function GlobalStyle() {
       bodyBaseSize,
       bodyBaseSpacing,
       bodyBaseLineHeight,
-      headingBaseSize,
+      h1BaseSize,
       headingBaseSpacing,
       headingBaseLineHeight,
       navHeightDesktop,
@@ -77,6 +77,10 @@ export function GlobalStyle() {
         dangerouslySetInnerHTML={{
           __html: `
             :root {
+							/* Layout */
+              --height-nav: ${settings.navHeightMobile}rem;
+              --page-width: ${pageWidth}px;
+
               /* Colors */
               --color-background: ${colorBackground};
               --color-text: ${colorText};
@@ -87,12 +91,27 @@ export function GlobalStyle() {
               --body-base-size: ${bodyBaseSize}px;
               --body-base-spacing: ${bodyBaseSpacing};
               --body-base-line-height: ${bodyBaseLineHeight};
-              --heading-base-size: ${headingBaseSize}px;
+
+							--heading-scale-ratio: 1.2;
+							--heading-mobile-scale-ratio: 1.1;
+
+              --h1-base-size: ${h1BaseSize}px;
+							--h2-base-size: round(calc(var(--h1-base-size) / var(--heading-scale-ratio)), 1px);
+							--h3-base-size: round(calc(var(--h2-base-size) / var(--heading-scale-ratio)), 1px);
+							--h4-base-size: round(calc(var(--h3-base-size) / var(--heading-scale-ratio)), 1px);
+							--h5-base-size: round(calc(var(--h4-base-size) / var(--heading-scale-ratio)), 1px);
+							--h6-base-size: round(calc(var(--h5-base-size) / var(--heading-scale-ratio)), 1px);
+
+							--h1-mobile-size: round(calc(var(--h1-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+							--h2-mobile-size: round(calc(var(--h2-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+							--h3-mobile-size: round(calc(var(--h3-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+							--h4-mobile-size: round(calc(var(--h4-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+							--h5-mobile-size: round(calc(var(--h5-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+							--h6-mobile-size: round(calc(var(--h6-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+
               --heading-base-spacing: ${headingBaseSpacing};
               --heading-base-line-height: ${headingBaseLineHeight};
 
-              --height-nav: ${settings.navHeightMobile}rem;
-              --page-width: ${pageWidth}px;
             }
 
             body, button, input, select, textarea {
@@ -111,29 +130,44 @@ export function GlobalStyle() {
 
             /* Mobile sizes */
             h1, .h1 {
-              font-size: calc(var(--heading-base-size) * 0.85);
-            }
-            h2, .h2 {
-              font-size: calc(var(--heading-base-size) * 0.63);
-            }
-            h3, .h3 {
-              font-size: calc(var(--heading-base-size) * 0.57);
-            }
-            h4, .h4 {
-              font-size: calc(var(--heading-base-size) * 0.55);
-            }
+							font-size: var(--h1-mobile-size);
+						}
+						h2, .h2 {
+							font-size: var(--h2-mobile-size);
+						}
+						h3, .h3 {
+							font-size: var(--h3-mobile-size);
+						}
+						h4, .h4 {
+							font-size: var(--h4-mobile-size);
+						}
+						h5, .h5 {
+							font-size: var(--h5-mobile-size);
+						}
+						h6, .h6 {
+							font-size: var(--h6-mobile-size);
+						}
 
             /* Desktop sizes */
             @media (min-width: 32em) {
               h1, .h1 {
-                font-size: var(--heading-base-size);
-              }
-              h2, .h2 {
-                font-size: calc(var(--heading-base-size) * 0.85);
-              }
-              h3, .h3 {
-                font-size: calc(var(--heading-base-size) * 0.7);
-              }
+								font-size: var(--h1-base-size);
+							}
+							h2, .h2 {
+								font-size: var(--h2-base-size);
+							}
+							h3, .h3 {
+								font-size: var(--h3-base-size);
+							}
+							h4, .h4 {
+								font-size: var(--h4-base-size);
+							}
+							h5, .h5 {
+								font-size: var(--h5-base-size);
+							}
+							h6, .h6 {
+								font-size: var(--h6-base-size);
+							}
             }
 
             @media (min-width: 32em) {

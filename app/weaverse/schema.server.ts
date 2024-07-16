@@ -1,5 +1,4 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-
 import pkg from "../../package.json";
 
 let variantSwatch = {
@@ -98,7 +97,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "image",
           name: "transparentLogoData",
-          label: "Transparent Logo",
+          label: "Logo on transparent header",
           defaultValue: {
             id: "gid://shopify/MediaImage/34144817938616",
             altText: "Logo",
@@ -206,14 +205,14 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "range",
           label: "Font size",
-          name: "headingBaseSize",
+          name: "h1BaseSize",
           configs: {
-            min: 22,
-            max: 60,
+            min: 48,
+            max: 92,
             step: 1,
             unit: "px",
           },
-          defaultValue: 38,
+          defaultValue: 60,
         },
         {
           type: "range",
@@ -389,7 +388,7 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Effect",
+      group: "Animations and effects",
       inputs: [
         {
           type: "switch",
@@ -400,7 +399,7 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Quick view",
+      group: "Product quick view modal",
       inputs: [
         {
           type: "text",
