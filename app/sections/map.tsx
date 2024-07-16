@@ -89,7 +89,7 @@ let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
             text={buttonText}
             link={`https://www.google.com/maps/search/${address}`}
             openInNewTab
-            variant="secondary"
+            variant="primary"
             buttonStyle={buttonStyle}
             backgroundColor={backgroundColor}
             textColor={textColor}
