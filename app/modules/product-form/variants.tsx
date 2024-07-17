@@ -67,7 +67,8 @@ export function ProductVariants(props: ProductVariantsProps) {
   };
 
   let selectedOptionMap = new Map();
-  for (const opt of selectedOptions) {
+
+  for (const opt of selectedOptions || []) {
     selectedOptionMap.set(opt.name, opt.value);
   }
 

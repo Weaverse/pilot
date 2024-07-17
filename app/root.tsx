@@ -3,20 +3,15 @@ import poppins500 from "@fontsource/poppins/500.css?url";
 import poppins600 from "@fontsource/poppins/600.css?url";
 import poppins700 from "@fontsource/poppins/700.css?url";
 import {
-  MetaFunction,
-  type ShouldRevalidateFunction,
-  useRouteLoaderData,
-} from "@remix-run/react";
-import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  type ShouldRevalidateFunction,
   isRouteErrorResponse,
-  useLoaderData,
-  useMatches,
   useRouteError,
+  useRouteLoaderData,
 } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import {
@@ -30,7 +25,6 @@ import type {
   LinksFunction,
   LoaderFunctionArgs,
   MetaArgs,
-  SerializeFrom,
 } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
 import { withWeaverse } from "@weaverse/hydrogen";
@@ -44,6 +38,7 @@ import { GenericError } from "./modules/GenericError";
 import { NotFound } from "./modules/NotFound";
 import styles from "./styles/app.css?url";
 import { GlobalStyle } from "./weaverse/style";
+
 export type RootLoader = typeof loader;
 
 export let shouldRevalidate: ShouldRevalidateFunction = ({
@@ -210,11 +205,9 @@ export function ErrorBoundary({ error }: { error: Error }) {
   const routeError = useRouteError();
   const isRouteError = isRouteErrorResponse(routeError);
 
-  let title = "Error";
   let pageType = "page";
 
   if (isRouteError) {
-    title = "Not found";
     if (routeError.status === 404) pageType = routeError.data || pageType;
   }
 
