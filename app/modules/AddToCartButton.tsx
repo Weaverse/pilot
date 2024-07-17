@@ -1,5 +1,6 @@
+import type { FetcherWithComponents } from "@remix-run/react";
 import type {
-  OptimisticCartLine,
+  OptimisticCartLineInput,
   ShopifyAddToCartPayload,
 } from "@shopify/hydrogen";
 import {
@@ -8,11 +9,10 @@ import {
   getClientBrowserParameters,
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
-import type { FetcherWithComponents } from "@remix-run/react";
 import { useEffect } from "react";
 
-import { Button } from "~/modules";
 import { usePageAnalytics } from "~/hooks/usePageAnalytics";
+import { Button } from "~/modules";
 
 export function AddToCartButton({
   children,
@@ -25,7 +25,7 @@ export function AddToCartButton({
   ...props
 }: {
   children: React.ReactNode;
-  lines: OptimisticCartLine[];
+  lines: OptimisticCartLineInput[];
   className?: string;
   variant?: "primary" | "secondary" | "inline";
   width?: "auto" | "full";

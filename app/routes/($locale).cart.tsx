@@ -1,15 +1,15 @@
 import { Await, useRouteLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
-import {
-  type ActionFunctionArgs,
-  json,
-  type LoaderFunctionArgs,
-} from "@shopify/remix-oxygen";
 import {
   Analytics,
   CartForm,
   type CartQueryDataReturn,
 } from "@shopify/hydrogen";
+import {
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  json,
+} from "@shopify/remix-oxygen";
+import invariant from "tiny-invariant";
 
 import { isLocalPath } from "~/lib/utils";
 import { Cart } from "~/modules/Cart";
@@ -71,8 +71,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
   }
 
   const { cart: cartResult, errors, userErrors } = result;
-
-  headers.append("Set-Cookie", await context.session.commit());
 
   return json(
     {

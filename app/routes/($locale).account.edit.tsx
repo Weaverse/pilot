@@ -1,19 +1,19 @@
-import { json, redirect, type ActionFunction } from "@shopify/remix-oxygen";
 import {
-  useActionData,
   Form,
-  useOutletContext,
+  useActionData,
   useNavigation,
+  useOutletContext,
 } from "@remix-run/react";
 import type {
   Customer,
   CustomerUpdateInput,
 } from "@shopify/hydrogen/customer-account-api-types";
+import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 
-import { Button, Text } from "~/modules";
-import { getInputStyleClasses } from "~/lib/utils";
 import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/CustomerUpdateMutation";
+import { getInputStyleClasses } from "~/lib/utils";
+import { Button, Text } from "~/modules";
 
 import { doLogout } from "./($locale).account_.logout";
 
@@ -79,19 +79,12 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       data?.customerUpdate?.userErrors?.[0]?.message,
     );
 
-    return redirect(params?.locale ? `${params.locale}/account` : "/account", {
-      headers: {
-        "Set-Cookie": await context.session.commit(),
-      },
-    });
+    return redirect(params?.locale ? `${params.locale}/account` : "/account");
   } catch (error: any) {
     return json(
       { formError: error?.message },
       {
         status: 400,
-        headers: {
-          "Set-Cookie": await context.session.commit(),
-        },
       },
     );
   }

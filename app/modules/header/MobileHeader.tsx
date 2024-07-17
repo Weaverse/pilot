@@ -1,12 +1,18 @@
-import { Await, Form, Link, useParams } from "@remix-run/react";
+import {
+  Await,
+  Form,
+  Link,
+  useParams,
+  useRouteLoaderData,
+} from "@remix-run/react";
+import { useThemeSettings } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import { Suspense } from "react";
-import { useRootLoaderData } from "~/root";
+import useWindowScroll from "react-use/esm/useWindowScroll";
+import type { RootLoader } from "~/root";
 import { IconAccount, IconLogin, IconMenu, IconSearch } from "../Icon";
 import { Logo } from "../Logo";
 import { CartCount } from "./CartCount";
-import useWindowScroll from "react-use/esm/useWindowScroll";
-import { useThemeSettings } from "@weaverse/hydrogen";
-import clsx from "clsx";
 
 export function MobileHeader({
   title,
@@ -69,7 +75,7 @@ export function MobileHeader({
 }
 
 function AccountLink({ className }: { className?: string }) {
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
   const isLoggedIn = rootData?.isLoggedIn;
 
   return (

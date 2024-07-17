@@ -5,19 +5,18 @@ import {
   cartGetIdDefault,
   cartSetIdDefault,
   createCartHandler,
+  createCustomerAccountClient,
   createStorefrontClient,
   storefrontRedirect,
-  createCustomerAccountClient,
 } from "@shopify/hydrogen";
 import {
   createRequestHandler,
   getStorefrontHeaders,
-  type AppLoadContext,
 } from "@shopify/remix-oxygen";
 
 import { AppSession } from "~/lib/session";
-import { createWeaverseClient } from "~/weaverse/create-weaverse.server";
 import { getLocaleFromRequest } from "~/lib/utils";
+import { createWeaverseClient } from "~/weaverse/create-weaverse.server";
 
 /**
  * Export a fetch handler in module format.
@@ -70,10 +69,6 @@ export default {
         customerAccountUrl: env.PUBLIC_CUSTOMER_ACCOUNT_API_URL,
       });
 
-      /*
-       * Create a cart handler that will be used to
-       * create and update the cart in the session.
-       */
       const cart = createCartHandler({
         storefront,
         customerAccount,
@@ -89,13 +84,13 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: (): AppLoadContext => ({
+        getLoadContext: () => ({
           session,
+          waitUntil,
           storefront,
           customerAccount,
           cart,
           env,
-          waitUntil,
           weaverse: createWeaverseClient({
             storefront,
             request,
@@ -107,6 +102,10 @@ export default {
       });
 
       const response = await handleRequest(request);
+
+      if (session.isPending) {
+        response.headers.set("Set-Cookie", await session.commit());
+      }
 
       if (response.status === 404) {
         /**

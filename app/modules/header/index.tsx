@@ -1,15 +1,15 @@
-import { Await } from "@remix-run/react";
-import { CartForm } from "@shopify/hydrogen";
+import { Await, useRouteLoaderData } from "@remix-run/react";
+import { CartForm, type CartReturn } from "@shopify/hydrogen";
 import { Suspense, useEffect } from "react";
 import { useCartFetchers } from "~/hooks/useCartFetchers";
-import { useIsHomePath, type EnhancedMenu } from "~/lib/utils";
-import { useRootLoaderData } from "~/root";
+import { type EnhancedMenu, useIsHomePath } from "~/lib/utils";
+import type { RootLoader } from "~/root";
 import { Cart } from "../Cart";
 import { CartLoading } from "../CartLoading";
 import { Drawer, useDrawer } from "../Drawer";
 import { DesktopHeader } from "./DesktopHeader";
-import { MobileMenu } from "./menu/MobileMenu";
 import { MobileHeader } from "./MobileHeader";
+import { MobileMenu } from "./menu/MobileMenu";
 
 export function Header({
   title,
@@ -69,14 +69,20 @@ function CartDrawer({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
 
   return (
     <Drawer open={isOpen} onClose={onClose} heading="Cart" openFrom="right">
       <div className="grid">
         <Suspense fallback={<CartLoading />}>
           <Await resolve={rootData?.cart}>
-            {(cart) => <Cart layout="drawer" onClose={onClose} cart={cart} />}
+            {(cart) => (
+              <Cart
+                layout="drawer"
+                onClose={onClose}
+                cart={cart as CartReturn}
+              />
+            )}
           </Await>
         </Suspense>
       </div>
