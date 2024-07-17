@@ -1,21 +1,23 @@
-import clsx from "clsx";
-import { useRef } from "react";
-import useScroll from "react-use/esm/useScroll";
 import {
   CartForm,
   type CartReturn,
   Image,
   Money,
-  OptimisticCart,
+  type OptimisticCart,
   OptimisticInput,
   useOptimisticCart,
   useOptimisticData,
 } from "@shopify/hydrogen";
 import type {
-  Cart as CartType,
   CartLineUpdateInput,
+  Cart as CartType,
 } from "@shopify/hydrogen/storefront-api-types";
+import clsx from "clsx";
+import { useRef } from "react";
+import useScroll from "react-use/esm/useScroll";
 
+import type { CartApiQueryFragment } from "storefrontapi.generated";
+import { getInputStyleClasses } from "~/lib/utils";
 import {
   Button,
   FeaturedProducts,
@@ -24,8 +26,7 @@ import {
   Link,
   Text,
 } from "~/modules";
-import { getInputStyleClasses } from "~/lib/utils";
-import { CartApiQueryFragment } from "storefrontapi.generated";
+
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
 type Layouts = "page" | "drawer";

@@ -1,12 +1,13 @@
+import { useRouteLoaderData } from "@remix-run/react";
 import { Script, useAnalytics } from "@shopify/hydrogen";
 import { useEffect } from "react";
-import { useLoaderData } from "@remix-run/react";
-import type { loader } from "~/root";
+import type { RootLoader } from "~/root";
 
 export function CustomAnalytics() {
   const { subscribe, canTrack } = useAnalytics();
-  const data = useLoaderData<typeof loader>();
+  const data = useRouteLoaderData<RootLoader>("root");
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setTimeout(() => {
       let isTrackingAllowed = canTrack();
@@ -33,10 +34,9 @@ export function CustomAnalytics() {
     subscribe("custom_sidecart_viewed", (data) => {
       console.log("CustomAnalytics - Custom sidecart opened:", data);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  let id = data.googleGtmID;
+  let id = data?.googleGtmID;
   if (!id) {
     return null;
   }

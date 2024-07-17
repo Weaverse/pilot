@@ -1,8 +1,8 @@
-import { Await, Link } from "@remix-run/react";
+import { Await, Link, useRouteLoaderData } from "@remix-run/react";
 import { useAnalytics } from "@shopify/hydrogen";
 import { Suspense, useMemo } from "react";
 import { useIsHydrated } from "~/hooks/useIsHydrated";
-import { useRootLoaderData } from "~/root";
+import type { RootLoader } from "~/root";
 import { IconBag } from "../Icon";
 
 export function CartCount({
@@ -12,7 +12,7 @@ export function CartCount({
   isHome: boolean;
   openCart: () => void;
 }) {
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
 
   return (
     <Suspense fallback={<Badge count={0} dark={isHome} openCart={openCart} />}>

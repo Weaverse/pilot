@@ -24,8 +24,6 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
     const { cart: cartResult, errors, userErrors } = result;
 
-    headers.append("Set-Cookie", await context.session.commit());
-
     return json(
       {
         cart: cartResult,
