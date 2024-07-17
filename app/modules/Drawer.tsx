@@ -155,8 +155,9 @@ export function Drawer({
 Drawer.Title = Dialog.Title;
 
 export function useDrawer(openDefault = false) {
-  const [isOpen, setIsOpen] = useState(openDefault);
+  let [isOpen, setIsOpen] = useState(openDefault);
   let { pathname } = useLocation();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isOpen) {
       closeDrawer();

@@ -1,11 +1,11 @@
 import { Disclosure } from "@headlessui/react";
+import clsx from "clsx";
 import { Suspense } from "react";
-
-import { type LayoutQuery } from "storefrontapi.generated";
+import type { LayoutQuery } from "storefrontapi.generated";
 import {
-  useIsHomePath,
   type ChildEnhancedMenuItem,
   type EnhancedMenu,
+  useIsHomePath,
 } from "~/lib/utils";
 import { CountrySelector, Heading, IconCaret, Link, Section } from "~/modules";
 import { Header } from "./header";
@@ -19,7 +19,7 @@ type LayoutProps = {
 };
 
 export function Layout({ children, layout }: LayoutProps) {
-  const { headerMenu, footerMenu } = layout || {};
+  let { headerMenu, footerMenu } = layout || {};
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -31,7 +31,7 @@ export function Layout({ children, layout }: LayoutProps) {
         {headerMenu && layout?.shop.name && (
           <Header title={layout.shop.name} menu={headerMenu} />
         )}
-        <main role="main" id="mainContent" className="flex-grow">
+        <main id="mainContent" className="flex-grow">
           {children}
         </main>
       </div>
@@ -41,8 +41,8 @@ export function Layout({ children, layout }: LayoutProps) {
 }
 
 function Footer({ menu }: { menu?: EnhancedMenu }) {
-  const isHome = useIsHomePath();
-  const itemsCount = menu
+  let isHome = useIsHomePath();
+  let itemsCount = menu
     ? menu?.items?.length + 1 > 4
       ? 4
       : menu?.items?.length + 1
@@ -85,7 +85,7 @@ function FooterLink({ item }: { item: ChildEnhancedMenuItem }) {
 }
 
 function FooterMenu({ menu }: { menu?: EnhancedMenu }) {
-  const styles = {
+  let styles = {
     section: "grid gap-4",
     nav: "grid gap-2 pb-6",
   };
@@ -109,9 +109,10 @@ function FooterMenu({ menu }: { menu?: EnhancedMenu }) {
                 </Disclosure.Button>
                 {item?.items?.length > 0 ? (
                   <div
-                    className={`${
-                      open ? `max-h-48 h-fit` : `max-h-0 md:max-h-fit`
-                    } overflow-hidden transition-all duration-300`}
+                    className={clsx(
+                      "overflow-hidden transition-all duration-300",
+                      open ? "max-h-48 h-fit" : "max-h-0 md:max-h-fit",
+                    )}
                   >
                     <Suspense data-comment="This suspense fixes a hydration bug in Disclosure.Panel with static prop">
                       <Disclosure.Panel static>

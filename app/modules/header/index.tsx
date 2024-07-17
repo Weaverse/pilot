@@ -18,21 +18,19 @@ export function Header({
   title: string;
   menu?: EnhancedMenu;
 }) {
-  const isHome = useIsHomePath();
-
-  const {
+  let isHome = useIsHomePath();
+  let {
     isOpen: isCartOpen,
     openDrawer: openCart,
     closeDrawer: closeCart,
   } = useDrawer();
-
-  const {
+  let {
     isOpen: isMenuOpen,
     openDrawer: openMenu,
     closeDrawer: closeMenu,
   } = useDrawer();
 
-  const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
+  let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
 
   // toggle cart drawer when adding to cart
   useEffect(() => {
@@ -69,7 +67,7 @@ function CartDrawer({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const rootData = useRootLoaderData();
+  let rootData = useRootLoaderData();
 
   return (
     <Drawer open={isOpen} onClose={onClose} heading="Cart" openFrom="right">
