@@ -1,9 +1,10 @@
 import { Await, Link, useRouteLoaderData } from "@remix-run/react";
 import { useAnalytics } from "@shopify/hydrogen";
+import clsx from "clsx";
 import { Suspense, useMemo } from "react";
+import { IconHandBag } from "~/components/Icons";
 import { useIsHydrated } from "~/hooks/useIsHydrated";
 import type { RootLoader } from "~/root";
-import { IconBag } from "../Icon";
 
 export function CartCount({
   isHome,
@@ -12,8 +13,7 @@ export function CartCount({
   isHome: boolean;
   openCart: () => void;
 }) {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-
+  let rootData = useRouteLoaderData<RootLoader>("root");
   return (
     <Suspense fallback={<Badge count={0} dark={isHome} openCart={openCart} />}>
       <Await resolve={rootData?.cart}>
@@ -41,22 +41,31 @@ function Badge({
   openCart: () => void;
   cart?: any;
 }) {
-  const isHydrated = useIsHydrated();
+  let isHydrated = useIsHydrated();
 
-  const BadgeCounter = useMemo(
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  let BadgeCounter = useMemo(
     () => (
       <>
-        <IconBag />
-        <div className="bg-secondary text-inv-body absolute top-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px">
-          <span>{count || 0}</span>
-        </div>
+        <IconHandBag className="w-5 h-5" />
+        {count > 0 && (
+          <div
+            className={clsx(
+              "bg-gray-800 text-white",
+              "text-[12px] leading-none text-center font-medium subpixel-antialiased",
+              "flex items-center justify-center min-w-4 rounded-full p-0.5",
+              "absolute top-0 right-0",
+            )}
+          >
+            <span>{count}</span>
+          </div>
+        )}
       </>
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [count, dark],
   );
 
-  const { publish } = useAnalytics();
+  let { publish } = useAnalytics();
 
   function handleOpenCart() {
     publish("custom_sidecart_viewed", { cart });
@@ -65,6 +74,7 @@ function Badge({
 
   return isHydrated ? (
     <button
+      type="button"
       onClick={handleOpenCart}
       className="relative flex items-center justify-center w-8 h-8 focus:ring-border"
     >
