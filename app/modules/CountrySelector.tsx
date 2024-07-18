@@ -1,19 +1,19 @@
-import { useFetcher, useLocation } from "@remix-run/react";
+import { useFetcher, useLocation, useRouteLoaderData } from "@remix-run/react";
+import { CartForm } from "@shopify/hydrogen";
+import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
+import clsx from "clsx";
 import { useCallback, useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
-import clsx from "clsx";
-import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import { CartForm } from "@shopify/hydrogen";
 
-import { Heading, Button, IconCheck } from "~/modules";
-import type { Localizations, Locale } from "~/lib/type";
+import type { Locale, Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
-import { useRootLoaderData } from "~/root";
+import { Button, Heading, IconCheck } from "~/modules";
+import type { RootLoader } from "~/root";
 
 export function CountrySelector() {
   const fetcher = useFetcher();
   const closeRef = useRef<HTMLDetailsElement>(null);
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
@@ -52,7 +52,6 @@ export function CountrySelector() {
       ref={observerRef}
       className="grid w-full gap-4"
       onMouseLeave={closeDropdown}
-      role="listbox"
     >
       <Heading size="lead" className="cursor-default" as="h3">
         Country

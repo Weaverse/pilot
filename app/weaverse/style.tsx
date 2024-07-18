@@ -53,6 +53,12 @@ export function GlobalStyle() {
       buttonSecondaryColorHover,
       buttonSecondaryBorder,
       buttonSecondaryBorderHover,
+      buttonOutlineBg,
+      buttonOutlineBgHover,
+      buttonOutlineColor,
+      buttonOutlineColorHover,
+      buttonOutlineBorder,
+      buttonOutlineBorderHover,
       buttonLinkColor,
       buttonLinkColorHover,
       pageWidth,
@@ -112,6 +118,27 @@ export function GlobalStyle() {
               --heading-base-spacing: ${headingBaseSpacing};
               --heading-base-line-height: ${headingBaseLineHeight};
 
+							/* Buttons */
+							--button-primary-bg: ${buttonPrimaryBg};
+							--button-primary-color: ${buttonPrimaryColor};
+							--button-primary-border: ${buttonPrimaryBorder};
+							--button-primary-bg-hover: ${buttonPrimaryBgHover};
+							--button-primary-color-hover: ${buttonPrimaryColorHover};
+							--button-primary-border-hover: ${buttonPrimaryBorderHover};
+							--button-secondary-bg: ${buttonSecondaryBg};
+							--button-secondary-color: ${buttonSecondaryColor};
+							--button-secondary-border: ${buttonSecondaryBorder};
+							--button-secondary-bg-hover: ${buttonSecondaryBgHover};
+							--button-secondary-color-hover: ${buttonSecondaryColorHover};
+							--button-secondary-border-hover: ${buttonSecondaryBorderHover};
+							--button-outline-bg: ${buttonOutlineBg};
+							--button-outline-color: ${buttonOutlineColor};
+							--button-outline-border: ${buttonOutlineBorder};
+							--button-outline-bg-hover: ${buttonOutlineBgHover};
+							--button-outline-color-hover: ${buttonOutlineColorHover};
+							--button-outline-border-hover: ${buttonOutlineBorderHover};
+							--button-link-color: ${buttonLinkColor};
+							--button-link-color-hover: ${buttonLinkColorHover};
             }
 
             body, button, input, select, textarea {
@@ -179,35 +206,6 @@ export function GlobalStyle() {
               body {
                 --height-nav: ${navHeightDesktop}rem;
               }
-            }
-            .btn-primary {
-              background-color: var(--color-button-bg, ${buttonPrimaryBg});
-              color: var(--color-button-text, ${buttonPrimaryColor});
-              border-color: var(--color-button-border, ${buttonPrimaryBorder});
-            }
-            .btn-primary:hover {
-              background-color: var(--color-button-bg-hover, ${buttonPrimaryBgHover});
-              color: var(--color-button-text-hover, ${buttonPrimaryColorHover});
-              border-color: var(--color-button-border-hover, ${buttonPrimaryBorderHover});
-            }
-            .btn-secondary {
-              background-color: var(--color-button-bg, ${buttonSecondaryBg});
-              color: var(--color-button-text, ${buttonSecondaryColor});
-              border-color: var(--color-button-border, ${buttonSecondaryBorder});
-            }
-            .btn-secondary:hover {
-              background-color: var(--color-button-bg-hover, ${buttonSecondaryBgHover});
-              color: var(--color-button-text-hover, ${buttonSecondaryColorHover});
-              border-color: var(--color-button-border-hover, ${buttonSecondaryBorderHover});
-            }
-            .btn-link {
-              color: var(--color-button-text, ${buttonLinkColor});
-              border-bottom-color: var(--color-button-border, ${buttonLinkColor});
-              border-radius: 0;
-            }
-            .btn-link:hover {
-              color: var(--color-button-text-hover, ${buttonLinkColorHover});
-              border-bottom-color: var(--color-button-border-hover, ${buttonLinkColorHover});
             }
           `,
         }}

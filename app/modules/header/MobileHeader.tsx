@@ -1,33 +1,43 @@
-import { Await, Form, Link, useParams } from "@remix-run/react";
-import { Suspense } from "react";
-import { useRootLoaderData } from "~/root";
-import { IconAccount, IconLogin, IconMenu, IconSearch } from "../Icon";
-import { Logo } from "../Logo";
-import { CartCount } from "./CartCount";
-import useWindowScroll from "react-use/esm/useWindowScroll";
+import {
+  Await,
+  Form,
+  Link,
+  useParams,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import { Suspense } from "react";
+import useWindowScroll from "react-use/esm/useWindowScroll";
+import {
+  IconList,
+  IconMagnifyingGlass,
+  IconSignIn,
+  IconUser,
+} from "~/components/Icons";
+import { useIsHomePath } from "~/lib/utils";
+import type { RootLoader } from "~/root";
+import { Logo } from "../Logo";
+import { CartCount } from "./CartCount";
 
 export function MobileHeader({
   title,
-  isHome,
   openCart,
   openMenu,
 }: {
   title: string;
-  isHome: boolean;
   openCart: () => void;
   openMenu: () => void;
 }) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
+  let isHome = useIsHomePath();
   let settings = useThemeSettings();
-  const { y } = useWindowScroll();
+  let { y } = useWindowScroll();
   let enableTransparent = settings?.enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50;
-  const params = useParams();
+  let params = useParams();
   return (
     <header
-      role="banner"
       className={clsx(
         enableTransparent ? "fixed w-screen" : "sticky",
         isTransparent
@@ -37,12 +47,13 @@ export function MobileHeader({
         "flex lg:hidden items-center h-nav z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8",
       )}
     >
-      <div className="flex items-center justify-start w-full gap-4">
+      <div className="flex items-center justify-start w-full">
         <button
+          type="button"
           onClick={openMenu}
           className="relative flex items-center justify-center w-8 h-8"
         >
-          <IconMenu />
+          <IconList className="w-5 h-5" />
         </button>
         <Form
           method="get"
@@ -53,14 +64,14 @@ export function MobileHeader({
             type="submit"
             className="relative flex items-center justify-center w-8 h-8"
           >
-            <IconSearch />
+            <IconMagnifyingGlass className="w-5 h-5" />
           </button>
         </Form>
       </div>
 
       <Logo showTransparent={isTransparent} />
 
-      <div className="flex items-center justify-end w-full gap-4">
+      <div className="flex items-center justify-end w-full">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
@@ -69,14 +80,23 @@ export function MobileHeader({
 }
 
 function AccountLink({ className }: { className?: string }) {
-  const rootData = useRootLoaderData();
-  const isLoggedIn = rootData?.isLoggedIn;
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let isLoggedIn = rootData?.isLoggedIn;
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconLogin />}>
-        <Await resolve={isLoggedIn} errorElement={<IconAccount />}>
-          {(isLoggedIn) => (isLoggedIn ? <IconAccount /> : <IconAccount />)}
+      <Suspense fallback={<IconSignIn className="w-5 h-5" />}>
+        <Await
+          resolve={isLoggedIn}
+          errorElement={<IconUser className="w-5 h-5" />}
+        >
+          {(isLoggedIn) =>
+            isLoggedIn ? (
+              <IconUser className="w-5 h-5" />
+            ) : (
+              <IconUser className="w-5 h-5" />
+            )
+          }
         </Await>
       </Suspense>
     </Link>

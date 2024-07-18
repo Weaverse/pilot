@@ -1,4 +1,4 @@
-import { useLocation } from "@remix-run/react";
+import { useLocation, useRouteLoaderData } from "@remix-run/react";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { LinkHTMLAttributes } from "react";
@@ -9,7 +9,7 @@ import type {
 } from "storefrontapi.generated";
 import typographicBase from "typographic-base/index";
 import { countries } from "~/data/countries";
-import { useRootLoaderData } from "~/root";
+import type { RootLoader } from "~/root";
 import type { I18nLocale } from "./type";
 
 type EnhancedMenuItemProps = {
@@ -146,14 +146,14 @@ function resolveToFromType(
   Parse each menu link and adding, isExternal, to and target
 */
 function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
-  return function (
+  return (
     item:
       | MenuFragment["items"][number]
       | MenuFragment["items"][number]["items"][number],
   ):
     | EnhancedMenu["items"][0]
     | EnhancedMenu["items"][number]["items"][0]
-    | null {
+    | null => {
     if (!item?.url || !item?.type) {
       // eslint-disable-next-line no-console
       console.warn("Invalid menu item.  Must include a url and type.");
@@ -190,9 +190,8 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
           .map(parseItem(primaryDomain, env, customPrefixes))
           .filter(Boolean),
       } as EnhancedMenu["items"][number];
-    } else {
-      return parsedItem as EnhancedMenu["items"][number]["items"][number];
     }
+    return parsedItem as EnhancedMenu["items"][number]["items"][number];
   };
 }
 
@@ -255,8 +254,7 @@ export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
 
 export function getLocaleFromRequest(request: Request): I18nLocale {
   const url = new URL(request.url);
-  const firstPathPart =
-    "/" + url.pathname.substring(1).split("/")[0].toLowerCase();
+  const firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
 
   return countries[firstPathPart]
     ? {
@@ -264,30 +262,30 @@ export function getLocaleFromRequest(request: Request): I18nLocale {
         pathPrefix: firstPathPart,
       }
     : {
-        ...countries["default"],
+        ...countries.default,
         pathPrefix: "",
       };
 }
 
 export function usePrefixPathWithLocale(path: string) {
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
 
   return `${selectedLocale.pathPrefix}${
-    path.startsWith("/") ? path : "/" + path
+    path.startsWith("/") ? path : `/${path}`
   }`;
 }
 
 export function useIsHomePath() {
-  const { pathname } = useLocation();
-  const rootData = useRootLoaderData();
-  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const strippedPathname = pathname.replace(selectedLocale.pathPrefix, "");
+  let { pathname } = useLocation();
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  let strippedPathname = pathname.replace(selectedLocale.pathPrefix, "");
   return strippedPathname === "/";
 }
 
 export function parseAsCurrency(value: number, locale: I18nLocale) {
-  return new Intl.NumberFormat(locale.language + "-" + locale.country, {
+  return new Intl.NumberFormat(`${locale.language}-${locale.country}`, {
     style: "currency",
     currency: locale.currency,
   }).format(value);
@@ -314,6 +312,7 @@ export function isLocalPath(url: string) {
 }
 
 export function removeFalsy<T = any>(
+  // biome-ignore lint/complexity/noBannedTypes: <explanation>
   obj: {},
   falsyValues: any[] = ["", null, undefined],
 ): T {

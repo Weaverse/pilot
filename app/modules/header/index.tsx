@@ -1,38 +1,32 @@
-import { Await } from "@remix-run/react";
-import { CartForm } from "@shopify/hydrogen";
+import { Await, useRouteLoaderData } from "@remix-run/react";
+import { CartForm, type CartReturn } from "@shopify/hydrogen";
 import { Suspense, useEffect } from "react";
 import { useCartFetchers } from "~/hooks/useCartFetchers";
-import { useIsHomePath, type EnhancedMenu } from "~/lib/utils";
-import { useRootLoaderData } from "~/root";
+import type { EnhancedMenu } from "~/lib/utils";
+import type { RootLoader } from "~/root";
 import { Cart } from "../Cart";
 import { CartLoading } from "../CartLoading";
 import { Drawer, useDrawer } from "../Drawer";
 import { DesktopHeader } from "./DesktopHeader";
-import { MobileMenu } from "./menu/MobileMenu";
 import { MobileHeader } from "./MobileHeader";
+import { MobileMenu } from "./menu/MobileMenu";
 
 export function Header({
   title,
   menu,
-}: {
-  title: string;
-  menu?: EnhancedMenu;
-}) {
-  const isHome = useIsHomePath();
-
-  const {
+}: { title: string; menu?: EnhancedMenu }) {
+  let {
     isOpen: isCartOpen,
     openDrawer: openCart,
     closeDrawer: closeCart,
   } = useDrawer();
-
-  const {
+  let {
     isOpen: isMenuOpen,
     openDrawer: openMenu,
     closeDrawer: closeMenu,
   } = useDrawer();
 
-  const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
+  let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
 
   // toggle cart drawer when adding to cart
   useEffect(() => {
@@ -46,18 +40,8 @@ export function Header({
       {menu && (
         <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />
       )}
-      <DesktopHeader
-        isHome={isHome}
-        title={title}
-        menu={menu}
-        openCart={openCart}
-      />
-      <MobileHeader
-        isHome={isHome}
-        title={title}
-        openCart={openCart}
-        openMenu={openMenu}
-      />
+      <DesktopHeader title={title} menu={menu} openCart={openCart} />
+      <MobileHeader title={title} openCart={openCart} openMenu={openMenu} />
     </>
   );
 }
@@ -69,14 +53,20 @@ function CartDrawer({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const rootData = useRootLoaderData();
+  const rootData = useRouteLoaderData<RootLoader>("root");
 
   return (
     <Drawer open={isOpen} onClose={onClose} heading="Cart" openFrom="right">
       <div className="grid">
         <Suspense fallback={<CartLoading />}>
           <Await resolve={rootData?.cart}>
-            {(cart) => <Cart layout="drawer" onClose={onClose} cart={cart} />}
+            {(cart) => (
+              <Cart
+                layout="drawer"
+                onClose={onClose}
+                cart={cart as CartReturn}
+              />
+            )}
           </Await>
         </Suspense>
       </div>
@@ -102,7 +92,7 @@ export function MenuDrawer({
       heading="MENU"
       spacing="sm"
     >
-      {<MobileMenu menu={menu} />}
+      <MobileMenu menu={menu} />
     </Drawer>
   );
 }

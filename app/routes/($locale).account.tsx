@@ -7,12 +7,12 @@ import {
   useOutlet,
 } from "@remix-run/react";
 import { flattenConnection } from "@shopify/hydrogen";
-import { defer, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import { Suspense } from "react";
+import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type {
   CustomerDetailsFragment,
   OrderCardFragment,
 } from "customer-accountapi.generated";
+import { Suspense } from "react";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/CustomerDetailsQuery";
 import { usePrefixPathWithLocale } from "~/lib/utils";
@@ -28,8 +28,8 @@ import {
 } from "~/modules";
 import { doLogout } from "./($locale).account_.logout";
 import {
-  getFeaturedData,
   type FeaturedData,
+  getFeaturedData,
 } from "./($locale).featured-products";
 
 export const headers = routeHeaders;
@@ -63,7 +63,6 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
     {
       headers: {
         "Cache-Control": CACHE_NONE,
-        "Set-Cookie": await context.session.commit(),
       },
     },
   );
