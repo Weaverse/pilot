@@ -254,8 +254,7 @@ export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
 
 export function getLocaleFromRequest(request: Request): I18nLocale {
   const url = new URL(request.url);
-  const firstPathPart =
-    "/" + url.pathname.substring(1).split("/")[0].toLowerCase();
+  const firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
 
   return countries[firstPathPart]
     ? {
@@ -263,7 +262,7 @@ export function getLocaleFromRequest(request: Request): I18nLocale {
         pathPrefix: firstPathPart,
       }
     : {
-        ...countries["default"],
+        ...countries.default,
         pathPrefix: "",
       };
 }
@@ -273,20 +272,20 @@ export function usePrefixPathWithLocale(path: string) {
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
 
   return `${selectedLocale.pathPrefix}${
-    path.startsWith("/") ? path : "/" + path
+    path.startsWith("/") ? path : `/${path}`
   }`;
 }
 
 export function useIsHomePath() {
-  const { pathname } = useLocation();
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const strippedPathname = pathname.replace(selectedLocale.pathPrefix, "");
+  let { pathname } = useLocation();
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  let strippedPathname = pathname.replace(selectedLocale.pathPrefix, "");
   return strippedPathname === "/";
 }
 
 export function parseAsCurrency(value: number, locale: I18nLocale) {
-  return new Intl.NumberFormat(locale.language + "-" + locale.country, {
+  return new Intl.NumberFormat(`${locale.language}-${locale.country}`, {
     style: "currency",
     currency: locale.currency,
   }).format(value);
