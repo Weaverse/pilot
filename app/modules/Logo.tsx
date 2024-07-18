@@ -12,6 +12,7 @@ export function Logo({ showTransparent }: { showTransparent?: boolean }) {
   if (!logoData) {
     return null;
   }
+
   return (
     <Link
       className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit z-30"
@@ -30,12 +31,10 @@ export function Logo({ showTransparent }: { showTransparent?: boolean }) {
         <Image
           data={transparentLogoData}
           sizes="auto"
-          className={
-            clsx(
-              "absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ease-in group-hover/header:opacity-0",
-              showTransparent ? "opacity-100" : "opacity-0",
-            )
-          }
+          className={clsx(
+            "absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ease-in group-hover/header:opacity-0",
+            showTransparent ? "opacity-100" : "opacity-0",
+          )}
         />
       </div>
     </Link>
