@@ -3,31 +3,30 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
+import { IconMagnifyingGlass, IconSignIn, IconUser } from "~/components/Icons";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
-import type { EnhancedMenu } from "~/lib/utils";
+import { useIsHomePath, type EnhancedMenu } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { Drawer, useDrawer } from "../Drawer";
-import { IconAccount, IconLogin, IconSearch } from "../Icon";
 import { Logo } from "../Logo";
 import { CartCount } from "./CartCount";
 import { DesktopMenu } from "./menu/DesktopMenu";
 
 export function DesktopHeader({
-  isHome,
   menu,
   openCart,
   title,
 }: {
-  isHome: boolean;
   openCart: () => void;
   menu?: EnhancedMenu;
   title: string;
 }) {
-  const { y } = useWindowScroll();
-  // get theme settings
   let settings = useThemeSettings();
+  let isHome = useIsHomePath();
+  let { y } = useWindowScroll();
   let [hovered, setHovered] = useState(false); // use state to delay disappearing header when drawer closes
   let { isOpen, openDrawer, closeDrawer } = useDrawer();
+
   useEffect(() => {
     if (isOpen) {
       setHovered(true);
@@ -40,6 +39,7 @@ export function DesktopHeader({
 
   let enableTransparent = settings?.enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50 && !hovered;
+
   return (
     <header
       className={clsx(
@@ -69,21 +69,38 @@ export function DesktopHeader({
 }
 
 function AccountLink({ className }: { className?: string }) {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const isLoggedIn = rootData?.isLoggedIn;
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let isLoggedIn = rootData?.isLoggedIn;
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconLogin />}>
-        <Await resolve={isLoggedIn} errorElement={<IconAccount />}>
-          {(isLoggedIn) => (isLoggedIn ? <IconAccount /> : <IconAccount />)}
+      <Suspense fallback={<IconSignIn className="w-5 h-5" />}>
+        <Await
+          resolve={isLoggedIn}
+          errorElement={<IconUser className="w-5 h-5" />}
+        >
+          {(isLoggedIn) =>
+            isLoggedIn ? (
+              <IconUser className="w-5 h-5" />
+            ) : (
+              <IconUser className="w-5 h-5" />
+            )
+          }
         </Await>
       </Suspense>
     </Link>
   );
 }
 
-function SearchToggle({ isOpen, openDrawer, closeDrawer }: any) {
+function SearchToggle({
+  isOpen,
+  openDrawer,
+  closeDrawer,
+}: {
+  isOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+}) {
   let { pathname } = useLocation();
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -99,7 +116,7 @@ function SearchToggle({ isOpen, openDrawer, closeDrawer }: any) {
         onClick={openDrawer}
         className="relative flex h-8 w-8 items-center justify-center focus:ring-primary/5"
       >
-        <IconSearch className="h-6 w-6 !font-extralight" />
+        <IconMagnifyingGlass className="w-5 h-5" />
       </button>
       <Drawer open={isOpen} onClose={closeDrawer} openFrom="top">
         <PredictiveSearch isOpen={isOpen} />

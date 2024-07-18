@@ -2,7 +2,7 @@ import { Await, useRouteLoaderData } from "@remix-run/react";
 import { CartForm, type CartReturn } from "@shopify/hydrogen";
 import { Suspense, useEffect } from "react";
 import { useCartFetchers } from "~/hooks/useCartFetchers";
-import { type EnhancedMenu, useIsHomePath } from "~/lib/utils";
+import type { EnhancedMenu } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { Cart } from "../Cart";
 import { CartLoading } from "../CartLoading";
@@ -14,11 +14,7 @@ import { MobileMenu } from "./menu/MobileMenu";
 export function Header({
   title,
   menu,
-}: {
-  title: string;
-  menu?: EnhancedMenu;
-}) {
-  let isHome = useIsHomePath();
+}: { title: string; menu?: EnhancedMenu }) {
   let {
     isOpen: isCartOpen,
     openDrawer: openCart,
@@ -44,18 +40,8 @@ export function Header({
       {menu && (
         <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />
       )}
-      <DesktopHeader
-        isHome={isHome}
-        title={title}
-        menu={menu}
-        openCart={openCart}
-      />
-      <MobileHeader
-        isHome={isHome}
-        title={title}
-        openCart={openCart}
-        openMenu={openMenu}
-      />
+      <DesktopHeader title={title} menu={menu} openCart={openCart} />
+      <MobileHeader title={title} openCart={openCart} openMenu={openMenu} />
     </>
   );
 }
@@ -106,7 +92,7 @@ export function MenuDrawer({
       heading="MENU"
       spacing="sm"
     >
-      {<MobileMenu menu={menu} />}
+      <MobileMenu menu={menu} />
     </Drawer>
   );
 }
