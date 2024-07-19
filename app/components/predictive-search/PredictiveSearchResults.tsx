@@ -3,11 +3,12 @@ import { PredictiveSearchResult } from "./PredictiveSearchResult";
 import { usePredictiveSearch } from "./usePredictiveSearch";
 
 export function PredictiveSearchResults() {
-  const { results, totalResults, searchTerm, searchInputRef } =
+  let { results, totalResults, searchTerm, searchInputRef } =
     usePredictiveSearch();
   let queries = results?.find((result) => result.type === "queries");
   let articles = results?.find((result) => result.type === "articles");
   let products = results?.find((result) => result.type === "products");
+
   function goToSearchResult(event: React.MouseEvent<HTMLAnchorElement>) {
     let type = event.currentTarget.dataset.type;
     if (!searchInputRef.current) return;

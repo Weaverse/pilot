@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
-import { Image, Money, Pagination } from "@shopify/hydrogen";
-import { SearchResultItemProps } from "./types";
+import { Image, Money } from "@shopify/hydrogen";
+import type { SearchResultItemProps } from "./types";
 
 export function SearchResultItem({
   goToSearchResult,
@@ -27,12 +27,8 @@ export function SearchResultItem({
             )}
           </div>
         )}
-        <div className="space-y-2">
-          {item.vendor && (
-            <div>
-              <small className="text-foreground-subtle">By {item.vendor}</small>
-            </div>
-          )}
+        <div className="space-y-1">
+          {item.vendor && <div className="text-gray-500">By {item.vendor}</div>}
           {item.styledTitle ? (
             <div
               dangerouslySetInnerHTML={{

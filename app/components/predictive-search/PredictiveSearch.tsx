@@ -1,13 +1,9 @@
-import { IconSearch, Input } from "~/modules";
+import { Input } from "~/modules";
+import { IconMagnifyingGlass } from "~/components/Icons";
 import { PredictiveSearchResults } from "./PredictiveSearchResults";
 import { PredictiveSearchForm } from "./SearchForm";
 
-interface PredictiveSearchProps {
-  // Predictive search props
-  isOpen?: boolean;
-}
-
-export function PredictiveSearch(props: PredictiveSearchProps) {
+export function PredictiveSearch(props: { isOpen?: boolean }) {
   let { isOpen } = props;
   return (
     <div className="relative border-t border-bar-subtle">
@@ -25,12 +21,7 @@ export function PredictiveSearch(props: PredictiveSearchProps) {
               className="rounded"
               autoComplete="off"
               prefixElement={
-                <button type="submit" className="cursor-pointer">
-                  <IconSearch
-                    className="h-6 w-6 opacity-55"
-                    viewBox="0 0 24 24"
-                  />
-                </button>
+                <IconMagnifyingGlass className="h-5 w-5 shrink-0 text-gray-500" />
               }
               autoFocus={true}
             />
