@@ -13,8 +13,8 @@ export function PredictiveSearchResult({
   searchTerm,
   type,
 }: SearchResultTypeProps) {
-  const isSuggestions = type === "queries";
-  const categoryUrl = `/search?q=${
+  let isSuggestions = type === "queries";
+  let categoryUrl = `/search?q=${
     searchTerm.current
   }&type=${pluralToSingularSearchType(type)}`;
 
@@ -23,10 +23,13 @@ export function PredictiveSearchResult({
       className="predictive-search-result flex flex-col gap-4 divide-y divide-bar-subtle"
       key={type}
     >
-      <Link prefetch="intent" to={categoryUrl} onClick={goToSearchResult}>
-        <h5 className="uppercase font-semibold">
-          {isSuggestions ? "Suggestions" : type}
-        </h5>
+      <Link
+        prefetch="intent"
+        className="uppercase font-bold"
+        to={categoryUrl}
+        onClick={goToSearchResult}
+      >
+        {isSuggestions ? "Suggestions" : type}
       </Link>
       {items?.length && (
         <ul
@@ -62,7 +65,7 @@ function pluralToSingularSearchType(
     | NormalizedPredictiveSearchResults[number]["type"]
     | Array<NormalizedPredictiveSearchResults[number]["type"]>,
 ) {
-  const plural = {
+  let plural = {
     articles: "ARTICLE",
     collections: "COLLECTION",
     pages: "PAGE",

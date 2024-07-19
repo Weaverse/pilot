@@ -12,9 +12,9 @@ import { MobileHeader } from "./MobileHeader";
 import { MobileMenu } from "./menu/MobileMenu";
 
 export function Header({
-  title,
+  shopName,
   menu,
-}: { title: string; menu?: EnhancedMenu }) {
+}: { shopName: string; menu?: EnhancedMenu }) {
   let {
     isOpen: isCartOpen,
     openDrawer: openCart,
@@ -40,8 +40,12 @@ export function Header({
       {menu && (
         <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />
       )}
-      <DesktopHeader title={title} menu={menu} openCart={openCart} />
-      <MobileHeader title={title} openCart={openCart} openMenu={openMenu} />
+      <DesktopHeader shopName={shopName} menu={menu} openCart={openCart} />
+      <MobileHeader
+        shopName={shopName}
+        openCart={openCart}
+        openMenu={openMenu}
+      />
     </>
   );
 }

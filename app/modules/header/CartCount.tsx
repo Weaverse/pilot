@@ -9,13 +9,24 @@ import type { RootLoader } from "~/root";
 export function CartCount({
   isHome,
   openCart,
+  isTransparent,
 }: {
   isHome: boolean;
   openCart: () => void;
+  isTransparent: boolean;
 }) {
   let rootData = useRouteLoaderData<RootLoader>("root");
   return (
-    <Suspense fallback={<Badge count={0} dark={isHome} openCart={openCart} />}>
+    <Suspense
+      fallback={
+        <Badge
+          count={0}
+          dark={isHome}
+          openCart={openCart}
+          isTransparent={isTransparent}
+        />
+      }
+    >
       <Await resolve={rootData?.cart}>
         {(cart) => (
           <Badge
@@ -23,6 +34,7 @@ export function CartCount({
             openCart={openCart}
             count={cart?.totalQuantity || 0}
             cart={cart}
+            isTransparent={isTransparent}
           />
         )}
       </Await>
@@ -35,15 +47,15 @@ function Badge({
   dark,
   count,
   cart,
+  isTransparent,
 }: {
   count: number;
   dark: boolean;
   openCart: () => void;
   cart?: any;
+  isTransparent: boolean;
 }) {
   let isHydrated = useIsHydrated();
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   let BadgeCounter = useMemo(
     () => (
       <>
@@ -51,10 +63,13 @@ function Badge({
         {count > 0 && (
           <div
             className={clsx(
-              "bg-gray-800 text-white",
               "text-[12px] leading-none text-center font-medium subpixel-antialiased",
               "flex items-center justify-center min-w-4 rounded-full p-0.5",
-              "absolute top-0 right-0",
+              "absolute top-0 -right-1",
+              "transition-colors duration-300",
+              isTransparent
+                ? "bg-white text-gray-800"
+                : "bg-gray-800 text-white",
             )}
           >
             <span>{count}</span>
@@ -62,7 +77,7 @@ function Badge({
         )}
       </>
     ),
-    [count, dark],
+    [count, isTransparent],
   );
 
   let { publish } = useAnalytics();

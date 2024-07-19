@@ -149,7 +149,7 @@ function loadDeferredData({ context }: LoaderFunctionArgs) {
 }
 
 export const meta = ({ data }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+  return getSeoMeta(data.seo as SeoConfig);
 };
 
 function Layout({ children }: { children?: React.ReactNode }) {

@@ -3,11 +3,12 @@ import { PredictiveSearchResult } from "./PredictiveSearchResult";
 import { usePredictiveSearch } from "./usePredictiveSearch";
 
 export function PredictiveSearchResults() {
-  const { results, totalResults, searchTerm, searchInputRef } =
+  let { results, totalResults, searchTerm, searchInputRef } =
     usePredictiveSearch();
   let queries = results?.find((result) => result.type === "queries");
   let articles = results?.find((result) => result.type === "articles");
   let products = results?.find((result) => result.type === "products");
+
   function goToSearchResult(event: React.MouseEvent<HTMLAnchorElement>) {
     let type = event.currentTarget.dataset.type;
     if (!searchInputRef.current) return;
@@ -32,7 +33,7 @@ export function PredictiveSearchResults() {
   }
   return (
     <div className="absolute left-1/2 top-20 z-10 flex w-fit -translate-x-1/2 items-center justify-center">
-      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 border bg-white p-6 lg:grid-cols-[1fr_2fr]  max-h-[80vh] overflow-y-auto">
+      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 border bg-white p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-bar-subtle">
             <PredictiveSearchResult
@@ -58,7 +59,6 @@ export function PredictiveSearchResults() {
             searchTerm={searchTerm}
             type="products"
           />
-          {/* view all results /search?q=term */}
           {searchTerm.current && (
             <Link
               onClick={goToSearchResult}
