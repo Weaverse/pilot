@@ -29,7 +29,7 @@ export function Layout({ children, layout }: LayoutProps) {
           </a>
         </div>
         {headerMenu && layout?.shop.name && (
-          <Header title={layout.shop.name} menu={headerMenu} />
+          <Header shopName={layout.shop.name} menu={headerMenu} />
         )}
         <main id="mainContent" className="flex-grow">
           {children}

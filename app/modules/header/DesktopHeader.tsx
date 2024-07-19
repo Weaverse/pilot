@@ -15,11 +15,11 @@ import { DesktopMenu } from "./menu/DesktopMenu";
 export function DesktopHeader({
   menu,
   openCart,
-  title,
+  shopName,
 }: {
   openCart: () => void;
   menu?: EnhancedMenu;
-  title: string;
+  shopName: string;
 }) {
   let settings = useThemeSettings();
   let isHome = useIsHomePath();
@@ -53,7 +53,7 @@ export function DesktopHeader({
         "px-6 md:px-8 lg:px-12",
       )}
     >
-      <Logo isTransparent={isTransparent} />
+      <Logo isTransparent={isTransparent} shopName={shopName} />
       {menu && <DesktopMenu menu={menu} />}
       <div className="flex items-center gap-1 z-30">
         <SearchToggle
@@ -62,7 +62,11 @@ export function DesktopHeader({
           closeDrawer={closeDrawer}
         />
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
-        <CartCount isHome={isHome} openCart={openCart} />
+        <CartCount
+          isHome={isHome}
+          openCart={openCart}
+          isTransparent={isTransparent}
+        />
       </div>
     </header>
   );
