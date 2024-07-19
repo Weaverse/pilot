@@ -53,7 +53,7 @@ export function DesktopHeader({
         "px-6 md:px-8 lg:px-12",
       )}
     >
-      <Logo showTransparent={isTransparent} />
+      <Logo isTransparent={isTransparent} />
       {menu && <DesktopMenu menu={menu} />}
       <div className="flex items-center gap-1 z-30">
         <SearchToggle

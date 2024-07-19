@@ -68,9 +68,7 @@ export function MobileHeader({
           </button>
         </Form>
       </div>
-
-      <Logo showTransparent={isTransparent} />
-
+      <Logo isTransparent={isTransparent} />
       <div className="flex items-center justify-end w-full">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
         <CartCount isHome={isHome} openCart={openCart} />
