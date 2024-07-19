@@ -22,7 +22,7 @@ export function CountrySelector() {
   )}${search}`;
 
   const countries = (fetcher.data ?? {}) as Localizations;
-  const defaultLocale = countries?.["default"];
+  const defaultLocale = countries?.default;
   const defaultLocalePrefix = defaultLocale
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : "";
@@ -33,6 +33,7 @@ export function CountrySelector() {
   });
 
   const observerRef = useRef(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     ref(observerRef.current);
   }, [ref, observerRef]);
