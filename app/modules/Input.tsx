@@ -1,23 +1,33 @@
+import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import type React from "react";
 import { forwardRef, useState } from "react";
-import { IconClose } from ".";
+import { IconX } from "~/components/Icons";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps
+  extends VariantProps<typeof variants>,
+    React.InputHTMLAttributes<HTMLInputElement> {
   variant?: "default" | "search" | "minisearch" | "error";
   suffix?: React.ReactNode;
   prefixElement?: React.ReactNode;
   onClear?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const variants = {
-  default: "",
-  search:
-    "px-0 py-2 text-2xl w-full focus:ring-0 border-x-0 border-t-0 transition border-b-2 border-bar/10 focus:border-bar/50",
-  minisearch:
-    "hidden md:inline-block text-left lg:text-right border-b transition border-transparent -mb-px border-x-0 border-t-0 appearance-none px-0 py-1 focus:ring-transparent placeholder:opacity-20 placeholder:text-inherit focus:border-bar/50",
-  error: "border-red-500",
-};
+let variants = cva(
+  "w-full focus-visible:outline-none !shadow-none focus:ring-0",
+  {
+    variants: {
+      variant: {
+        default: "",
+        search:
+          "px-0 py-2 text-2xl w-full focus:ring-0 border-x-0 border-t-0 transition border-b-2 border-bar/10 focus:border-bar/50",
+        minisearch:
+          "hidden md:inline-block text-left lg:text-right border-b transition border-transparent -mb-px border-x-0 border-t-0 appearance-none px-0 py-1 focus:ring-transparent placeholder:opacity-20 placeholder:text-inherit focus:border-bar/50",
+        error: "border-red-500",
+      },
+    },
+  },
+);
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
@@ -51,7 +61,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       if (onClear) onClear(e);
     };
     if (type === "search") {
-      suffix = <IconClose className="cursor-pointer" onClick={handleClear} />;
+      suffix = (
+        <IconX className="cursor-pointer w-5 h-5" onClick={handleClear} />
+      );
     }
     let hasChild = Boolean(prefixElement || suffix);
 
@@ -59,9 +71,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <input
         ref={ref}
         className={clsx(
-          "w-full focus-visible:outline-none !shadow-none focus:ring-0",
+          variants({ variant }),
           hasChild ? "grow border-none bg-transparent p-0" : commonClasses,
-          variants[variant],
         )}
         onFocus={(e) => {
           setFocused(true);
