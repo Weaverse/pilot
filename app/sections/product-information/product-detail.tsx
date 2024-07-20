@@ -1,6 +1,5 @@
 import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
-
 import { IconClose, Link, Text } from "~/modules";
 
 export function ProductDetail({

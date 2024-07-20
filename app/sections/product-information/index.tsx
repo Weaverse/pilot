@@ -44,7 +44,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let [selectedVariant, setSelectedVariant] = useState<any>(
       product?.selectedVariant || variants?.nodes?.[0],
     );
-    // const selectedVariantOptimistic = useOptimisticVariant(
+    // let selectedVariantOptimistic = useOptimisticVariant(
     //   product.selectedVariant,
     //   variants,
     // );
@@ -67,7 +67,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       ...rest
     } = props;
     let [quantity, setQuantity] = useState<number>(1);
-    const [searchParams] = useSearchParams();
+    let [searchParams] = useSearchParams();
 
     let atcText = selectedVariant?.availableForSale
       ? addToCartText
@@ -88,7 +88,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       setSelectedVariant(variant);
       if (!variant?.selectedOptions) return;
       // update the url
-      for (const option of variant.selectedOptions) {
+      for (let option of variant.selectedOptions) {
         searchParams.set(option.name, option.value);
       }
       window.history.replaceState(
@@ -105,8 +105,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         </section>
       );
     if (product && variants) {
-      const { title, vendor, descriptionHtml } = product;
-      const { shippingPolicy, refundPolicy } = shop;
+      let { title, vendor, descriptionHtml } = product;
+      let { shippingPolicy, refundPolicy } = shop;
       return (
         <section ref={ref} {...rest}>
           <div className="container p-6 md:p-8 lg:p-12  lg:px-12 px-4 md:px-6 mx-auto">
@@ -140,7 +140,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   {children}
                   <p
                     suppressHydrationWarning
-                    className="max-w-[600px] leading-relaxed"
+                    className="max-w-[600px] leading-relaxed prose"
                     dangerouslySetInnerHTML={{
                       __html: descriptionHtml,
                     }}
@@ -168,8 +168,9 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   ]}
                   variant="primary"
                   data-test="add-to-cart"
+                  className="w-full hover:border-black"
                 >
-                  <span> {atcText}</span>
+                  <span>{atcText}</span>
                 </AddToCartButton>
                 {selectedVariant?.availableForSale && (
                   <ShopPayButton
