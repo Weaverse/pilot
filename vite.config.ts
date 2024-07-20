@@ -26,7 +26,6 @@ export default defineConfig({
   ssr: {
     optimizeDeps: {
       include: [
-        "keen-slider/react",
         "typographic-trademark",
         "typographic-single-spaces",
         "typographic-registered-trademark",
