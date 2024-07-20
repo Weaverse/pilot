@@ -111,7 +111,7 @@ export let schema: HydrogenComponentSchema = {
         borderRadius: 16,
         enableOverlay: true,
         overlayColor: "#0c0c0c",
-        overlayOpacity: 20,
+        overlayOpacity: 10,
         children: [
           {
             type: "heading",
@@ -127,7 +127,7 @@ export let schema: HydrogenComponentSchema = {
             children: [
               {
                 type: "button",
-                content: "Shop now",
+                text: "Shop now",
               },
             ],
           },
@@ -140,7 +140,7 @@ export let schema: HydrogenComponentSchema = {
         borderRadius: 16,
         enableOverlay: true,
         overlayColor: "#0c0c0c",
-        overlayOpacity: 20,
+        overlayOpacity: 10,
         children: [
           {
             type: "heading",
@@ -156,7 +156,7 @@ export let schema: HydrogenComponentSchema = {
             children: [
               {
                 type: "button",
-                content: "Shop now",
+                text: "Shop promotion",
               },
             ],
           },
