@@ -2,7 +2,7 @@ import { Image } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import type { MediaFragment } from "storefrontapi.generated";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { FreeMode, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 
 interface ProductMediaProps {
@@ -55,7 +55,8 @@ export function ProductMedia(props: ProductMediaProps) {
         })}
       </Swiper>
       <Swiper
-        modules={[FreeMode, Thumbs]}
+        modules={[FreeMode, Thumbs, Pagination]}
+        pagination={{ type: "fraction" }}
         spaceBetween={10}
         thumbs={
           thumbsSwiper
@@ -68,7 +69,12 @@ export function ProductMedia(props: ProductMediaProps) {
         onSlideChange={(swiper) => {
           setActiveIndex(swiper.activeIndex);
         }}
-        className="max-w-full"
+        className="max-w-full pb-14 md:pb-0 md:[&_.swiper-pagination-fraction]:hidden"
+        style={
+          {
+            "--swiper-pagination-bottom": "20px",
+          } as React.CSSProperties
+        }
       >
         {media.map((med, i) => {
           let image = { ...med.image, altText: med.alt || "Product image" };
