@@ -23,7 +23,7 @@ export function ProductCard({
   onClick?: () => void;
   quickAdd?: boolean;
 }) {
-  let cardLabel;
+  let cardLabel: string;
 
   const cardProduct: Product = product?.variants
     ? (product as Product)
@@ -115,8 +115,8 @@ export function ProductCard({
         </div>
         <div className="grid gap-1">
           <Text
-            className="w-full overflow-hidden whitespace-nowrap text-ellipsis space-x-1"
-            as="h4"
+            className="w-full overflow-hidden whitespace-nowrap text-ellipsis space-x-1 text-lg"
+            as="p"
           >
             <Link
               onClick={onClick}

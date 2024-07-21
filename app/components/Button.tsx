@@ -78,16 +78,19 @@ export interface ButtonProps
       HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>,
       "children" | "type"
     >,
-    Partial<HydrogenComponentProps>,
+    Partial<Omit<HydrogenComponentProps, "children">>,
     Partial<ButtonStyleProps> {
+  type?: "button" | "reset" | "submit";
   className?: string;
   text: string;
   link?: string;
   openInNewTab?: boolean;
+  children?: React.ReactNode;
 }
 
-let Button = forwardRef<HTMLElement, ButtonProps>((props, ref) => {
+let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   let {
+    type = "button",
     variant,
     text,
     link,
@@ -101,6 +104,7 @@ let Button = forwardRef<HTMLElement, ButtonProps>((props, ref) => {
     textColorHover,
     borderColorHover,
     style = {},
+    children,
     ...rest
   } = props;
   if (buttonStyle === "custom") {
@@ -134,11 +138,11 @@ let Button = forwardRef<HTMLElement, ButtonProps>((props, ref) => {
     <button
       ref={ref as React.ForwardedRef<HTMLButtonElement>}
       style={style}
+      type={type}
       {...rest}
-      type="button"
       className={cn(variants({ variant, className }))}
     >
-      {text}
+      {text || children}
     </button>
   );
 });

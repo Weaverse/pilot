@@ -8,6 +8,9 @@ export default {
 			opacity: {
 				15: "0.15",
 			},
+			borderColor: {
+				header: "rgb(230,230,230)",
+			},
 			colors: {
 				primary: "rgb(var(--color-background) / <alpha-value>)", // background color
 				contrast: "rgb(var(--color-background) / <alpha-value>)", // temporary background color - replace primary after
@@ -86,7 +89,7 @@ export default {
 			},
 			boxShadow: {
 				border: "inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)",
-				header: "inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05)",
+				header: "0 4px 18px rgba(0,0,0,.1)",
 			},
 			zIndex: {
 				1: "1",

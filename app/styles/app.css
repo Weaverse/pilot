@@ -1,7 +1,4 @@
-@import "keen-slider/keen-slider.min.css";
-@import "swiper/css";
-@import "swiper/css/navigation";
-@import "swiper/css/effect-fade";
+@import "swiper/css/bundle";
 
 @tailwind base;
 @tailwind components;
