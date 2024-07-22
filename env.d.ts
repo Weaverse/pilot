@@ -3,13 +3,9 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type { HydrogenCart, HydrogenSessionData } from "@shopify/hydrogen";
-import type {
-  LanguageCode,
-  CountryCode,
-} from "@shopify/hydrogen/storefront-api-types";
-import type { AppSession } from "~/lib/session";
 import type { WeaverseClient } from "@weaverse/hydrogen";
-import type { Storefront, CustomerAccount } from "~/lib/type";
+import type { AppSession } from "~/lib/session";
+import type { CustomerAccount, Storefront } from "~/lib/type";
 
 declare global {
   /**
@@ -57,6 +53,3 @@ declare module "@shopify/remix-oxygen" {
    */
   interface SessionData extends HydrogenSessionData {}
 }
-
-// Needed to make this file a module.
-export {};

@@ -69,7 +69,7 @@ export function ProductMedia(props: ProductMediaProps) {
         onSlideChange={(swiper) => {
           setActiveIndex(swiper.activeIndex);
         }}
-        className="max-w-full pb-14 md:pb-0 md:[&_.swiper-pagination-fraction]:hidden"
+        className="vt-product-image max-w-full pb-14 md:pb-0 md:[&_.swiper-pagination-fraction]:hidden"
         style={
           {
             "--swiper-pagination-bottom": "20px",
