@@ -119,6 +119,10 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     } as React.CSSProperties;
   }
 
+  if (!text && !children) {
+    return null;
+  }
+
   if (link) {
     return (
       <Link
