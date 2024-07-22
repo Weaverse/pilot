@@ -124,7 +124,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: "range",
           name: "borderRadius",
-          label: "Corner radius",
+          label: "Border radius",
           configs: {
             min: 0,
             max: 40,
@@ -155,7 +155,6 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     contentPosition: "bottom right",
     backgroundImage: IMAGES_PLACEHOLDERS.collection_3,
-    borderRadius: 16,
     enableOverlay: true,
     overlayColor: "#0c0c0c",
     overlayOpacity: 20,
