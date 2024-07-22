@@ -119,6 +119,10 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     } as React.CSSProperties;
   }
 
+  if (!text && !children) {
+    return null;
+  }
+
   if (link) {
     return (
       <Link
@@ -154,6 +158,7 @@ export let buttonContentInputs: InspectorGroup["inputs"] = [
     type: "text",
     name: "text",
     label: "Text content",
+    defaultValue: "Shop now",
     placeholder: "Shop now",
   },
   {

@@ -33,6 +33,7 @@ export interface SlideshowProps
     SlideshowArrowsProps,
     SlideshowDotsProps,
     HydrogenComponentProps {
+  effect?: "fade" | "slide";
   showArrows: boolean;
   showDots: boolean;
   dotsPosition: "top" | "bottom" | "left" | "right";
@@ -45,6 +46,7 @@ export interface SlideshowProps
 let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let {
     height,
+    effect,
     showArrows,
     arrowsIcon,
     iconSize,
@@ -61,13 +63,17 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     ...rest
   } = props;
 
-  let id = rest["data-wv-id"];
-  let key = `slideshow-${id}-${loop}-${autoRotate}-${changeSlidesEvery}`;
-
   return (
-    <section key={key} ref={ref} {...rest} className={variants({ height })}>
+    <section
+      key={Object.values(props)
+        .filter((v) => typeof v !== "object")
+        .join("-")}
+      ref={ref}
+      {...rest}
+      className={variants({ height })}
+    >
       <Swiper
-        effect="fade"
+        effect={effect}
         loop={loop}
         autoplay={autoRotate ? { delay: changeSlidesEvery * 1000 } : false}
         navigation={
@@ -131,6 +137,18 @@ export let schema: HydrogenComponentSchema = {
             ],
           },
           defaultValue: "large",
+        },
+        {
+          type: "toggle-group",
+          label: "Slide effect",
+          name: "effect",
+          configs: {
+            options: [
+              { value: "fade", label: "Fade" },
+              { value: "slide", label: "Slide" },
+            ],
+          },
+          defaultValue: "fade",
         },
         {
           type: "switch",
@@ -306,7 +324,7 @@ export let schema: HydrogenComponentSchema = {
           },
           {
             type: "button",
-            content: "Shop collection",
+            text: "Shop collection",
             variant: "primary",
             buttonStyle: "custom",
             backgroundColor: "#00000000",
@@ -348,7 +366,7 @@ export let schema: HydrogenComponentSchema = {
           },
           {
             type: "button",
-            content: "Shop collection",
+            text: "Shop collection",
             buttonStyle: "custom",
             backgroundColor: "#00000000",
             textColor: "#fff",

@@ -108,10 +108,9 @@ export let schema: HydrogenComponentSchema = {
         type: "promotion-grid-item",
         contentPosition: "top left",
         backgroundImage: IMAGES_PLACEHOLDERS.collection_1,
-        borderRadius: 16,
         enableOverlay: true,
         overlayColor: "#0c0c0c",
-        overlayOpacity: 10,
+        overlayOpacity: 20,
         children: [
           {
             type: "heading",
@@ -137,10 +136,9 @@ export let schema: HydrogenComponentSchema = {
         type: "promotion-grid-item",
         contentPosition: "bottom right",
         backgroundImage: IMAGES_PLACEHOLDERS.collection_2,
-        borderRadius: 16,
         enableOverlay: true,
         overlayColor: "#0c0c0c",
-        overlayOpacity: 10,
+        overlayOpacity: 20,
         children: [
           {
             type: "heading",

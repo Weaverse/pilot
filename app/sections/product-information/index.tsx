@@ -1,5 +1,5 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { Money, ShopPayButton } from "@shopify/hydrogen";
+import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
@@ -41,14 +41,15 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       storeDomain,
     } = useLoaderData<typeof productLoader>();
     let variants = _variants?.product?.variants;
-    let [selectedVariant, setSelectedVariant] = useState<any>(
+
+    let selectedVariantOptimistic = useOptimisticVariant(
       product?.selectedVariant || variants?.nodes?.[0],
+      variants,
     );
-    // let selectedVariantOptimistic = useOptimisticVariant(
-    //   product.selectedVariant,
-    //   variants,
-    // );
-    // console.log("selectedVariantOptimistic", selectedVariantOptimistic);
+    let [selectedVariant, setSelectedVariant] = useState<any>(
+      selectedVariantOptimistic,
+    );
+
     let {
       addToCartText,
       soldOutText,
@@ -76,12 +77,15 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         : soldOutText;
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-      if (!selectedVariant) {
+      if (!selectedVariant && variants?.nodes?.[0]) {
         setSelectedVariant(variants?.nodes?.[0]);
-      } else if (selectedVariant?.id !== product?.selectedVariant?.id) {
-        setSelectedVariant(product?.selectedVariant);
+      } else if (
+        selectedVariantOptimistic?.id &&
+        selectedVariantOptimistic.id !== selectedVariant?.id
+      ) {
+        setSelectedVariant(selectedVariantOptimistic);
       }
-    }, [product?.selectedVariant?.id]);
+    }, [selectedVariantOptimistic?.id]);
     let { swatches } = useThemeSettings();
 
     let handleSelectedVariantChange = (variant: any) => {

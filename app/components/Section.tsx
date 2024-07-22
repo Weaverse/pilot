@@ -178,7 +178,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
   {
     type: "range",
     name: "borderRadius",
-    label: "Corner radius",
+    label: "Border radius",
     configs: {
       min: 0,
       max: 40,
