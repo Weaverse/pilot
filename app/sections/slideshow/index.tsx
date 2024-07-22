@@ -61,11 +61,15 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     ...rest
   } = props;
 
-  let id = rest["data-wv-id"];
-  let key = `slideshow-${id}-${loop}-${autoRotate}-${changeSlidesEvery}`;
-
   return (
-    <section key={key} ref={ref} {...rest} className={variants({ height })}>
+    <section
+      key={Object.values(props)
+        .filter((v) => typeof v !== "object")
+        .join("-")}
+      ref={ref}
+      {...rest}
+      className={variants({ height })}
+    >
       <Swiper
         effect="fade"
         loop={loop}
@@ -306,7 +310,7 @@ export let schema: HydrogenComponentSchema = {
           },
           {
             type: "button",
-            content: "Shop collection",
+            text: "Shop collection",
             variant: "primary",
             buttonStyle: "custom",
             backgroundColor: "#00000000",
@@ -348,7 +352,7 @@ export let schema: HydrogenComponentSchema = {
           },
           {
             type: "button",
-            content: "Shop collection",
+            text: "Shop collection",
             buttonStyle: "custom",
             backgroundColor: "#00000000",
             textColor: "#fff",
