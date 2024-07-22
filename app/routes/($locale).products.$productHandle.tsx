@@ -79,6 +79,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       judgeme_API_TOKEN,
       shop_domain,
       productHandle,
+      context.weaverse,
     );
   }
 
