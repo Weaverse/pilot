@@ -36,7 +36,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
       >
         <figure className="p-6 bg-gray-50 rounded">
           <blockquote>
-            <h4 className="font-semibold">{heading}</h4>
+            <div className="text-xl md:text-2xl">{heading}</div>
             <p
               className="my-4 text-gray-500"
               suppressHydrationWarning
