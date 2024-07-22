@@ -100,7 +100,7 @@ export let schema: HydrogenComponentSchema = {
         {
           type: "range",
           name: "borderRadius",
-          label: "Corner radius",
+          label: "Border radius",
           configs: {
             min: 0,
             max: 40,
