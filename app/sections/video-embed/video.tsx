@@ -39,7 +39,7 @@ let variants = cva("mx-auto w-full aspect-video", {
   },
   defaultVariants: {
     size: "medium",
-    borderRadius: 8,
+    borderRadius: 0,
   },
 });
 
@@ -109,7 +109,7 @@ export let schema: HydrogenComponentSchema = {
             step: 2,
             unit: "px",
           },
-          defaultValue: 8,
+          defaultValue: 0,
         },
       ],
     },
