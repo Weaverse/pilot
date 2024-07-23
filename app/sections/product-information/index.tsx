@@ -174,7 +174,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   data-test="add-to-cart"
                   className="w-full hover:border-black"
                 >
-                  <span>{atcText}</span>
+                  {atcText}
                 </AddToCartButton>
                 {selectedVariant?.availableForSale && (
                   <ShopPayButton

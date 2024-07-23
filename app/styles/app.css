@@ -161,6 +161,10 @@
       @apply aspect-[inherit] w-full object-cover;
     }
   }
+
+  .button-spinner ~ * {
+    visibility: hidden;
+  }
 }
 
 .diagonal {

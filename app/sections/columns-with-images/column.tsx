@@ -69,12 +69,9 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
           {heading && <h6>{heading}</h6>}
           {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
           {text && (
-            <Button
-              variant={variant}
-              text={text}
-              link={link}
-              openInNewTab={openInNewTab}
-            />
+            <Button variant={variant} link={link} openInNewTab={openInNewTab}>
+              {text}
+            </Button>
           )}
         </div>
       </div>

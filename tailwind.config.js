@@ -5,6 +5,9 @@ export default {
 	content: ["./app/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		extend: {
+			animation: {
+				spin: 'spin .5s linear infinite',
+			},
 			opacity: {
 				15: "0.15",
 			},

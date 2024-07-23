@@ -16,7 +16,7 @@ interface NewsLetterInputProps
   placeholder: string;
   gap: number;
   buttonText: string;
-  buttonVariant: "link" | "primary" | "secondary";
+  buttonVariant: "link" | "primary" | "secondary" | "outline";
 }
 
 let NewsLetterInput = forwardRef<HTMLDivElement, NewsLetterInputProps>(
@@ -51,7 +51,6 @@ let NewsLetterInput = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           style={{ width }}
         />
         <Button
-          text={buttonText}
           variant={buttonVariant}
           buttonStyle={buttonStyle}
           backgroundColor={backgroundColor}
@@ -60,7 +59,9 @@ let NewsLetterInput = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           backgroundColorHover={backgroundColorHover}
           textColorHover={textColorHover}
           borderColorHover={borderColorHover}
-        />
+        >
+          {buttonText}
+        </Button>
       </div>
     );
   },
@@ -125,10 +126,11 @@ export let schema: HydrogenComponentSchema = {
             options: [
               { label: "Primary", value: "primary" },
               { label: "Secondary", value: "secondary" },
+              { label: "Outline", value: "outline" },
               { label: "Link", value: "link" },
             ],
           },
-          defaultValue: "primary",
+          defaultValue: "outline",
         },
         ...buttonStylesInputs,
       ],

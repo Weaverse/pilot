@@ -329,7 +329,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "color",
           label: "Border color (hover)",
           name: "buttonPrimaryBorderHover",
-          defaultValue: "#ffffff",
+          defaultValue: "#000000",
         },
         {
           type: "heading",

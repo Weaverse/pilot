@@ -18,7 +18,7 @@ let variants = cva(
   {
     variants: {
       variant: {
-        default: "",
+        default: "leading-tight",
         search:
           "px-0 py-2 text-2xl w-full focus:ring-0 border-x-0 border-t-0 transition border-b-2 border-bar/10 focus:border-bar/50",
         minisearch:
@@ -29,7 +29,7 @@ let variants = cva(
   },
 );
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+export let Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       className = "",
@@ -47,8 +47,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     let [focused, setFocused] = useState(false);
     let commonClasses = clsx(
-      "w-full rounded-sm border px-3 py-2.5",
-      focused ? "border-bar/50" : "border-bar/10",
+      "w-full rounded-sm border px-3 py-3",
+      focused ? "border-bar/50" : "border-bar/30",
       className,
     );
 

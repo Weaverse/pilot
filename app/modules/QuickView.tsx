@@ -47,6 +47,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
     setSelectedVariant(variant);
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (variants?.nodes?.length) {
       if (!selectedVariant) {
@@ -55,7 +56,6 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
         setSelectedVariant(product?.selectedVariant);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.id]);
 
   const { shippingPolicy, refundPolicy } = shop;
@@ -129,7 +129,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
             data-test="add-to-cart"
             className="w-[360px]"
           >
-            <span> {atcText}</span>
+            {atcText}
           </AddToCartButton>
           {selectedVariant?.availableForSale && (
             <ShopPayButton
@@ -176,11 +176,11 @@ export function QuickViewTrigger(props: { productHandle: string }) {
   const { productHandle } = props;
   let { load, data, state } = useFetcher<ProductData>();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (quickAddOpen && !data && state !== "loading") {
       load(`/api/query/products?handle=${productHandle}`);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quickAddOpen, data, load, state]);
 
   return (
