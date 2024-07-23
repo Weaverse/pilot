@@ -52,7 +52,6 @@ export function AddToCartButton({
               type="submit"
               variant={variant}
               className={className}
-              // @ts-expect-error
               disabled={disabled ?? fetcher.state !== "idle"}
               {...props}
             >

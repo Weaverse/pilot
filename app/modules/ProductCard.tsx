@@ -103,12 +103,7 @@ export function ProductCard({
                     totalValue: Number.parseFloat(productAnalytics.price),
                   }}
                 >
-                  <Text
-                    as="span"
-                    className="flex items-center justify-center gap-2"
-                  >
-                    Add to Cart
-                  </Text>
+                  Add to Cart
                 </AddToCartButton>
               </div>
             )}
@@ -132,7 +127,7 @@ export function ProductCard({
           </Text>
           <div className="flex">
             <Text className="flex gap-2">
-              <Money withoutTrailingZeros data={price!} />
+              <Money withoutTrailingZeros data={price} />
               {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
                 <CompareAtPrice
                   className={"opacity-50"}
@@ -159,9 +154,7 @@ export function ProductCard({
             totalValue: Number.parseFloat(productAnalytics.price),
           }}
         >
-          <Text as="span" className="flex items-center justify-center gap-2">
-            Add to Cart
-          </Text>
+          Add to Cart
         </AddToCartButton>
       )}
       {quickAdd && !firstVariant.availableForSale && (
