@@ -9,10 +9,11 @@ import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
 import { Link } from "~/modules";
+import { IconCircleNotch } from "./Icons";
 
 let variants = cva(
   [
-    "inline-flex items-center justify-center rounded-none",
+    "inline-flex items-center justify-center rounded-none relative",
     "text-base leading-tight font-normal whitespace-nowrap",
     "focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
     "transition-colors",
@@ -74,17 +75,16 @@ export interface ButtonStyleProps {
 
 export interface ButtonProps
   extends VariantProps<typeof variants>,
-    Omit<
-      HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>,
-      "children" | "type"
-    >,
+    Omit<HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, "type">,
     Partial<Omit<HydrogenComponentProps, "children">>,
     Partial<ButtonStyleProps> {
   type?: "button" | "reset" | "submit";
   className?: string;
-  text: string;
+  text?: string;
   link?: string;
   openInNewTab?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
   children?: React.ReactNode;
 }
 
@@ -94,6 +94,7 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     variant,
     text,
     link,
+    loading,
     openInNewTab,
     className,
     buttonStyle,
@@ -134,7 +135,8 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
         target={openInNewTab ? "_blank" : "_self"}
         rel="noreferrer"
       >
-        {text}
+        {loading && <Spinner />}
+        <span>{text || children}</span>
       </Link>
     );
   }
@@ -146,10 +148,23 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
       {...rest}
       className={cn(variants({ variant, className }))}
     >
-      {text || children}
+      {loading && <Spinner />}
+      <span>{text || children}</span>
     </button>
   );
 });
+
+function Spinner() {
+  let style = { "--duration": "500ms" } as React.CSSProperties;
+  return (
+    <span
+      className="button-spinner absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      style={style}
+    >
+      <IconCircleNotch className="animate-spin w-5 h-5" />
+    </span>
+  );
+}
 
 export default Button;
 
