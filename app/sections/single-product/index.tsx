@@ -122,7 +122,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 variant="primary"
                 data-test="add-to-cart"
               >
-                <span> {atcText}</span>
+                {atcText}
               </AddToCartButton>
               {selectedVariant?.availableForSale && (
                 <ShopPayButton
