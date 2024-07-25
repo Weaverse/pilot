@@ -15,24 +15,16 @@ interface NewsLetterInputProps extends HydrogenComponentProps {
   buttonText: string;
   helpText: string;
   successText?: string;
-  errorText?: string;
 }
 
 let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
   (props, ref) => {
-    let {
-      buttonText,
-      width,
-      placeholder,
-      helpText,
-      successText,
-      errorText,
-      ...rest
-    } = props;
+    let { buttonText, width, placeholder, helpText, successText, ...rest } =
+      props;
     let fetcher = useFetcher();
     let { state, Form } = fetcher;
     let data = fetcher.data as CustomerApiPlayLoad;
-    let { ok, errorMessage, customer } = data || {};
+    let { ok, errorMessage } = data || {};
 
     return (
       <div ref={ref} {...rest} className="mx-auto max-w-full" style={{ width }}>
@@ -98,13 +90,6 @@ export let schema: HydrogenComponentSchema = {
           label: "Success message",
           placeholder: "🎉 Thank you for subscribing!",
           defaultValue: "🎉 Thank you for subscribing!",
-        },
-        {
-          type: "text",
-          name: "errorText",
-          label: "Error message",
-          placeholder: "😔 Some things went wrong!",
-          defaultValue: "😔 Some things went wrong!",
         },
         {
           type: "richtext",
