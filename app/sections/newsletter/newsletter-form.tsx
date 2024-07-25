@@ -3,6 +3,7 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import { forwardRef } from "react";
 import Button from "~/components/Button";
 import { IconEnvelopeSimple } from "~/components/Icons";
@@ -13,43 +14,35 @@ interface NewsLetterInputProps extends HydrogenComponentProps {
   placeholder: string;
   buttonText: string;
   helpText: string;
+  successText?: string;
+  errorText?: string;
 }
 
 let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
   (props, ref) => {
-    let { buttonText, width, placeholder, helpText, ...rest } = props;
-    let { data, state, Form } = useFetcher<CustomerApiPlayLoad>();
-    // let isError = fetcher.state === "idle" && fetcher.data?.errors;
-    // let isSuccess = fetcher.state === "idle" && fetcher.data?.customer;
-    // let alertMessage = "";
-    // let alertMessageClass = "";
-    // if (isError && fetcher.data?.errors) {
-    //   const firstError = fetcher.data?.errors[0];
-    //   alertMessage =
-    //     firstError.code === "TAKEN"
-    //       ? firstError.message
-    //       : "Some things went wrong!";
-    //   alertMessageClass = "text-red-700";
-    // } else if (isSuccess && fetcher.data?.customer && emailInputRef.current) {
-    //   alertMessage = "Subscribe successfully!";
-    //   // emailInputRef.current.value = "";
-    //   alertMessageClass = "text-green-700";
-    // }
+    let {
+      buttonText,
+      width,
+      placeholder,
+      helpText,
+      successText,
+      errorText,
+      ...rest
+    } = props;
+    let fetcher = useFetcher();
+    let { state, Form } = fetcher;
+    let data = fetcher.data as CustomerApiPlayLoad;
+    let { ok, errorMessage, customer } = data || {};
 
     return (
-      <div
-        ref={ref}
-        {...rest}
-        className="space-y-2 mx-auto max-w-full"
-        style={{ width }}
-      >
+      <div ref={ref} {...rest} className="mx-auto max-w-full" style={{ width }}>
         <Form
           method="POST"
           action="/api/customer"
           className="flex items-center w-full"
         >
           <div className="flex items-center border-r-0 border-y border-l grow">
-            <IconEnvelopeSimple className="w-5 h-5 text-gray-600 ml-2.5 shrink-0" />
+            <IconEnvelopeSimple className="w-5 h-5 text-body/80 ml-2.5 shrink-0" />
             <input
               name="email"
               type="email"
@@ -66,10 +59,21 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
             {buttonText}
           </Button>
         </Form>
+        {helpText && (
+          <div
+            className="text-body/60 mt-2"
+            dangerouslySetInnerHTML={{ __html: helpText }}
+          />
+        )}
         <div
-          className="text-gray-600"
-          dangerouslySetInnerHTML={{ __html: helpText }}
-        />
+          className={clsx(
+            "mx-auto mt-4 font-medium text-center",
+            state === "idle" && data ? "visible" : "invisible",
+            ok ? "text-green-700" : "text-red-700",
+          )}
+        >
+          {ok ? successText : errorMessage || "Something went wrong"}
+        </div>
       </div>
     );
   },
@@ -79,11 +83,40 @@ export default NewsLetterForm;
 
 export let schema: HydrogenComponentSchema = {
   type: "newsletter-form",
-  title: "Input",
+  title: "Form",
   inspector: [
     {
-      group: "Input",
+      group: "Form",
       inputs: [
+        {
+          type: "heading",
+          label: "Messages",
+        },
+        {
+          type: "text",
+          name: "successText",
+          label: "Success message",
+          placeholder: "🎉 Thank you for subscribing!",
+          defaultValue: "🎉 Thank you for subscribing!",
+        },
+        {
+          type: "text",
+          name: "errorText",
+          label: "Error message",
+          placeholder: "😔 Some things went wrong!",
+          defaultValue: "😔 Some things went wrong!",
+        },
+        {
+          type: "richtext",
+          name: "helpText",
+          label: "Help text",
+          defaultValue:
+            '<div>We care about the protection of your data. Read our <a href="/policies/privacy-policy" style="color: #007AFF; text-decoration: underline;">Privacy Policy</a>.</div>',
+        },
+        {
+          type: "heading",
+          label: "Input",
+        },
         {
           type: "range",
           name: "width",
@@ -113,13 +146,6 @@ export let schema: HydrogenComponentSchema = {
           label: "Button text",
           placeholder: "Subscribe",
           defaultValue: "Subscribe",
-        },
-        {
-          type: "richtext",
-          name: "helpText",
-          label: "Help text",
-          defaultValue:
-            '<div>We care about the protection of your data. Read our <a href="/policies/privacy-policy" style="color: #007AFF; text-decoration: underline;">Privacy Policy</a>.</div>',
         },
       ],
     },
