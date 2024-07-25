@@ -20,7 +20,7 @@ export let schema: HydrogenComponentSchema = {
   type: "newsletter",
   title: "Newsletter",
   inspector: sectionInspector,
-  childTypes: ["subheading", "heading", "paragraph", "newsletter-input"],
+  childTypes: ["subheading", "heading", "paragraph", "newsletter-form"],
   presets: {
     gap: 20,
     children: [
@@ -33,7 +33,7 @@ export let schema: HydrogenComponentSchema = {
         content:
           "Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.",
       },
-      { type: "newsletter-input" },
+      { type: "newsletter-form" },
     ],
   },
 };

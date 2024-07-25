@@ -124,6 +124,15 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     return null;
   }
 
+  let content: React.ReactNode;
+  if (text) {
+    content = <span>{text}</span>;
+  } else if (typeof children === "string") {
+    content = <span>{children}</span>;
+  } else {
+    content = children;
+  }
+
   if (link) {
     return (
       <Link
@@ -136,7 +145,7 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
         rel="noreferrer"
       >
         {loading && <Spinner />}
-        <span>{text || children}</span>
+        {content}
       </Link>
     );
   }
@@ -149,7 +158,7 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
       className={cn(variants({ variant, className }))}
     >
       {loading && <Spinner />}
-      <span>{text || children}</span>
+      {content}
     </button>
   );
 });

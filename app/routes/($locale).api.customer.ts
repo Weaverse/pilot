@@ -30,18 +30,53 @@ export let action: ActionFunction = async ({
 }: ActionFunctionArgs) => {
   let formData = await request.formData();
   let email = formData.get("email") as string;
-  let { storefront } = context;
-
-  let { customerCreate, errors: queryError } =
-    await storefront.mutate<CustomerCreateMutation>(CUSTOMER_CREATE, {
+  let { customerCreate, errors: queryErrors } =
+    await context.storefront.mutate<CustomerCreateMutation>(CUSTOMER_CREATE, {
       variables: {
         input: { email, password: "5hopify" },
       },
     });
+
   let customer = customerCreate?.customer;
-  let errors = customerCreate?.customerUserErrors || queryError;
-  if (errors && errors.length) {
-    return json({ errors }, { status: 200 });
+  let customerUserErrors = customerCreate?.customerUserErrors;
+
+  if (queryErrors?.length) {
+    return json(
+      {
+        errors: queryErrors,
+        errorMessage: "Internal server error!",
+        ok: false,
+      },
+      { status: 500 },
+    );
   }
-  return json({ customer }, { status: 201 });
+  if (customerUserErrors?.length) {
+    return json(
+      {
+        errors: customerUserErrors,
+        errorMessage: customerUserErrors?.[0]?.message,
+        ok: false,
+      },
+      { status: 500 },
+    );
+  }
+  if (customer) {
+    return json({ customer, ok: true }, { status: 201 });
+  }
+  return json(
+    {
+      errorMessage: "Something went wrong! Please try again later.",
+      ok: false,
+    },
+    { status: 500 },
+  );
+};
+
+export type CustomerApiPlayLoad = {
+  ok: boolean;
+  customer?:
+    | NonNullable<CustomerCreateMutation["customerCreate"]>["customer"]
+    | null;
+  errors?: any[];
+  errorMessage?: string;
 };

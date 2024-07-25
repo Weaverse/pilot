@@ -29,6 +29,11 @@ let variants = cva(
   },
 );
 
+/**
+ * @deprecated
+ * No need an `Input` component since we only have a few inputs in the theme.
+ * Just implement where needed.
+ */
 export let Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
@@ -47,7 +52,7 @@ export let Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     let [focused, setFocused] = useState(false);
     let commonClasses = clsx(
-      "w-full rounded-sm border px-3 py-3",
+      "w-full border px-3 py-3",
       focused ? "border-bar/50" : "border-bar/30",
       className,
     );
@@ -90,7 +95,7 @@ export let Input = forwardRef<HTMLInputElement, InputProps>(
       <div
         className={clsx(
           commonClasses,
-          "flex gap-2 overflow-hidden items-center bg-primary p-2.5 border rounded-sm",
+          "flex gap-2.5 overflow-hidden items-center bg-primary p-2.5 border",
         )}
       >
         {prefixElement}
