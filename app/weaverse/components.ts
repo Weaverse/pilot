@@ -32,7 +32,7 @@ import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as MapSection from "~/sections/map";
 import * as MetaDemo from "~/sections/meta-demo";
 import * as NewsLetter from "~/sections/newsletter";
-import * as NewsLetterInput from "~/sections/newsletter/newsletter-input";
+import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
 import * as Page from "~/sections/page";
 import * as ProductInformation from "~/sections/product-information";
 import * as ProductList from "~/sections/product-list";
@@ -80,7 +80,7 @@ export let components: HydrogenComponent[] = [
   Countdown,
   CountDownTimer,
   NewsLetter,
-  NewsLetterInput,
+  NewsLetterForm,
   UserProfiles,
   Blogs,
   BlogPost,
