@@ -34,13 +34,13 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           className="flex items-center w-full"
         >
           <div className="flex items-center border-r-0 border-y border-l grow">
-            <IconEnvelopeSimple className="w-5 h-5 text-body/80 ml-2.5 shrink-0" />
+            <IconEnvelopeSimple className="w-5 h-5 text-body/80 ml-3 mr-1.5 shrink-0" />
             <input
               name="email"
               type="email"
               required
               placeholder={placeholder}
-              className="p-3 focus:outline-none leading-tight"
+              className="py-3 pr-3 pl-1.5 focus:outline-none leading-tight w-full bg-transparent"
             />
           </div>
           <Button
@@ -81,28 +81,6 @@ export let schema: HydrogenComponentSchema = {
       group: "Form",
       inputs: [
         {
-          type: "heading",
-          label: "Messages",
-        },
-        {
-          type: "text",
-          name: "successText",
-          label: "Success message",
-          placeholder: "🎉 Thank you for subscribing!",
-          defaultValue: "🎉 Thank you for subscribing!",
-        },
-        {
-          type: "richtext",
-          name: "helpText",
-          label: "Help text",
-          defaultValue:
-            '<div>We care about the protection of your data. Read our <a href="/policies/privacy-policy" style="color: #007AFF; text-decoration: underline;">Privacy Policy</a>.</div>',
-        },
-        {
-          type: "heading",
-          label: "Input",
-        },
-        {
           type: "range",
           name: "width",
           label: "Input width",
@@ -112,7 +90,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
-          defaultValue: 400,
+          defaultValue: 500,
         },
         {
           type: "text",
@@ -122,8 +100,18 @@ export let schema: HydrogenComponentSchema = {
           placeholder: "Enter your email",
         },
         {
-          type: "heading",
-          label: "Subscribe button",
+          type: "richtext",
+          name: "helpText",
+          label: "Help text",
+          defaultValue:
+            '<div>We care about the protection of your data. Read our <a href="/policies/privacy-policy" style="color: #007AFF; text-decoration: underline;">Privacy Policy</a>.</div>',
+        },
+        {
+          type: "text",
+          name: "successText",
+          label: "Success message",
+          placeholder: "🎉 Thank you for subscribing!",
+          defaultValue: "🎉 Thank you for subscribing!",
         },
         {
           type: "text",
