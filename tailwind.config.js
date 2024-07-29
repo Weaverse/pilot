@@ -4,6 +4,12 @@ import typographyPlugin from "@tailwindcss/typography";
 export default {
 	content: ["./app/**/*.{js,ts,jsx,tsx}"],
 	theme: {
+		container: {
+			padding: {
+				DEFAULT: "20px",
+				lg: "2rem",
+			}
+		},
 		extend: {
 			animation: {
 				spin: 'spin .5s linear infinite',
