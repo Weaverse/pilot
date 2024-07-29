@@ -337,10 +337,10 @@ export function IconPinterest(props: IconProps) {
     </Icon>
   );
 
-  /**
-   * @deprecated Use icon from `@/components/Icons` instead
-   */
 }
+/**
+ * @deprecated Use icon from `@/components/Icons` instead
+ */
 export function IconFacebook(props: IconProps) {
   return (
     <Icon {...props} fill="transparent" stroke={props.stroke || "currentColor"}>

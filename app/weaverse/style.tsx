@@ -25,7 +25,7 @@ export function GlobalStyle() {
     let {
       colorBackground,
       colorText,
-      // colorInverseBackground,
+      colorInverseBackground,
       // colorInverseText,
       // colorButton,
       // colorButtonText,
@@ -65,7 +65,7 @@ export function GlobalStyle() {
     } = settings;
 
     colorBackground = hexToRgbString(colorBackground);
-    // colorInverseBackground = hexToRgbString(colorInverseBackground);
+    colorInverseBackground = hexToRgbString(colorInverseBackground);
     colorText = hexToRgbString(colorText);
     // colorInverseText = hexToRgbString(colorInverseText);
     // colorButton = hexToRgbString(colorButton);
@@ -89,6 +89,7 @@ export function GlobalStyle() {
 
               /* Colors */
               --color-background: ${colorBackground};
+              --color-inverse-background: ${colorInverseBackground};
               --color-text: ${colorText};
               --color-sale: ${colorSale};
               --color-border: ${colorBorder};

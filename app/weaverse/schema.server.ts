@@ -131,12 +131,12 @@ export let themeSchema: HydrogenThemeSchema = {
           name: "colorBackground",
           defaultValue: "#ffffff",
         },
-        // {
-        //   type: "color",
-        //   label: "Inverse background",
-        //   name: "colorInverseBackground",
-        //   defaultValue: "#0f0f0f",
-        // },
+        {
+          type: "color",
+          label: "Inverse background",
+          name: "colorInverseBackground",
+          defaultValue: "#0f0f0f",
+        },
         {
           type: "color",
           label: "Text",
@@ -538,6 +538,123 @@ export let themeSchema: HydrogenThemeSchema = {
           },
           defaultValue: 10,
         },
+      ],
+    },
+    {
+      group: "Footer settings",
+      inputs: [
+        {
+          type: "image",
+          name: "footerLogoData",
+          label: "Logo",
+          defaultValue: {
+            id: "gid://shopify/MediaImage/34144817938616",
+            altText: "Logo",
+            url: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/transparent_Pilot_logo.png?v=1718763594",
+            width: 320,
+            height: 116,
+          },
+        },
+        {
+          type: "richtext",
+          name: "bio",
+          label: "Store Bio",
+          defaultValue:
+            "<p>We are a team of designers, developers, and creatives who are passionate about creating beautiful and functional products.</p>",
+        },
+        {
+          type: "richtext",
+          name: "copyright",
+          label: "Copyright",
+          defaultValue: "© 2024 Weaverse. All rights reserved.",
+        },
+      ],
+    },
+    {
+      group: "Store Info",
+      inputs: [
+        {
+          type: "text",
+          name: "addressTitle",
+          label: "Title",
+          defaultValue: "OUR SHOP",
+          placeholder: "Our shop",
+        },
+        {
+          type: "text",
+          name: "storeAddress",
+          label: "Address",
+          defaultValue: "131 Iroquois Street Southgate, MI 48195",
+          placeholder: "123 Main Street",
+        },
+        {
+          type: "text",
+          name: "storeEmail",
+          label: "Email",
+          defaultValue: "info@weaverse.io",
+          placeholder: "info@weaverse.io",
+        },
+      ],
+    },
+    {
+      group: "Social links",
+      inputs: [
+        {
+          type: "url",
+          name: "socialFacebook",
+          label: "Facebook",
+          defaultValue: "https://www.facebook.com/weaverse",
+        },
+        {
+          type: "url",
+          name: "socialInstagram",
+          label: "Instagram",
+          defaultValue: "https://www.instagram.com/",
+        },
+        {
+          type: "url",
+          name: "socialLinkedIn",
+          label: "LinkedIn",
+          defaultValue: "https://www.linkedin.com/company/weaverseio",
+        },
+        {
+          type: "url",
+          name: "socialX",
+          label: "X",
+          defaultValue: "https://x.com/i/communities/1636383560197373952",
+        },
+      ],
+    },
+    {
+      group: "Newsletter",
+      inputs: [
+        {
+          type: "text",
+          name: "newsletterTitle",
+          label: "Title",
+          defaultValue: "STAY IN TOUCH",
+          placeholder: "Stay in touch",
+        },
+        {
+          type: "text",
+          name: "newsletterDescription",
+          label: "Description",
+          defaultValue: "News and inspiration in your inbox, every week.",
+        },
+        {
+          type: "text",
+          name: "newsletterPlaceholder",
+          label: "Input placeholder",
+          defaultValue: "Please enter your email",
+          placeholder: "Please enter your email",
+        },
+        {
+          type: "text",
+          name: "newsletterButtonText",
+          label: "Button text",
+          defaultValue: "Send",
+          placeholder: "Send",
+        }
       ],
     },
   ],
