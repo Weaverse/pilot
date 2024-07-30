@@ -1,28 +1,42 @@
-import { useFetcher, useLocation, useRouteLoaderData } from "@remix-run/react";
+import {
+  useFetcher,
+  useLocation,
+  useRouteLoaderData,
+  useSubmit,
+} from "@remix-run/react";
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import clsx from "clsx";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 
-import type { Locale, Localizations } from "~/lib/type";
+import {
+  CloseButton,
+  Popover,
+  PopoverBackdrop,
+  PopoverButton,
+  PopoverPanel,
+} from "@headlessui/react";
+import { IconCaretDown } from "~/components/Icons";
+import { getCountryUrlPath } from "~/lib/locale";
+import type { Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
-import { Button, Heading, IconCheck } from "~/modules";
 import type { RootLoader } from "~/root";
+import { IconCheck } from "./Icon";
 
 export function CountrySelector() {
   const fetcher = useFetcher();
-  const closeRef = useRef<HTMLDetailsElement>(null);
+  const submit = useSubmit();
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
-    "",
+    ""
   )}${search}`;
 
   const countries = (fetcher.data ?? {}) as Localizations;
-  const defaultLocale = countries?.default;
+  // biome-ignore lint/complexity/useLiteralKeys: <explanation>
+  const defaultLocale = countries?.["default"];
   const defaultLocalePrefix = defaultLocale
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : "";
@@ -44,28 +58,38 @@ export function CountrySelector() {
     fetcher.load("/api/countries");
   }, [inView, fetcher]);
 
-  const closeDropdown = useCallback(() => {
-    closeRef.current?.removeAttribute("open");
-  }, []);
+  const handleLocaleChange = ({
+    redirectTo,
+    buyerIdentity,
+  }: {
+    redirectTo: string;
+    buyerIdentity: CartBuyerIdentityInput;
+  }) => {
+    console.log("🚀 ~ CountrySelector:", buyerIdentity, redirectTo);
+    const cartFormInput = {
+      action: CartForm.ACTIONS.BuyerIdentityUpdate,
+      inputs: { buyerIdentity },
+    };
+    const formData = {
+      redirectTo,
+      cartFormInput: JSON.stringify(cartFormInput),
+    };
+    submit(formData, {
+      method: "POST",
+      action: "/cart",
+    });
+  };
 
   return (
-    <section
-      ref={observerRef}
-      className="grid w-full gap-4"
-      onMouseLeave={closeDropdown}
-    >
-      <Heading size="lead" className="cursor-default" as="h3">
-        Country
-      </Heading>
-      <div className="relative">
-        <details
-          className="absolute w-full border rounded border-contrast/30 dark:border-white open:round-b-none overflow-clip"
-          ref={closeRef}
-        >
-          <summary className="flex items-center justify-between w-full px-4 py-3 cursor-pointer">
-            {selectedLocale.label}
-          </summary>
-          <div className="w-full overflow-auto border-t border-contrast/30 dark:border-white bg-contrast/30 max-h-36">
+    <div ref={observerRef} className="grid gap-4 w-80">
+      <Popover>
+        <PopoverButton className="w-full border rounded border-contrast/30 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
+          {selectedLocale.label}
+          <IconCaretDown className="w-5 h-5" />
+        </PopoverButton>
+        <PopoverBackdrop className="bg-black/30" />
+        <PopoverPanel anchor="top">
+          <div className="w-80 max-h-40 overflow-auto py-2 rounded bg-black my-2">
             {countries &&
               Object.keys(countries).map((countryPath) => {
                 const countryLocale = countries[countryPath];
@@ -78,103 +102,33 @@ export function CountrySelector() {
                   defaultLocalePrefix,
                   pathWithoutLocale,
                 });
-
+                const onChangeLocale = () =>
+                  handleLocaleChange({
+                    redirectTo: countryUrlPath,
+                    buyerIdentity: {
+                      countryCode: countryLocale.country,
+                    },
+                  });
                 return (
-                  <Country
+                  <CloseButton
+                    as="button"
                     key={countryPath}
-                    closeDropdown={closeDropdown}
-                    countryUrlPath={countryUrlPath}
-                    isSelected={isSelected}
-                    countryLocale={countryLocale}
-                  />
+                    type="button"
+                    onClick={onChangeLocale}
+                    className="text-white bg-black hover:bg-primary/30 w-full p-2 transition flex justify-start items-center text-left cursor-pointer py-2 px-4 text-sm"
+                  >
+                    {countryLocale.label}
+                    {isSelected ? (
+                      <span className="ml-2">
+                        <IconCheck />
+                      </span>
+                    ) : null}
+                  </CloseButton>
                 );
               })}
           </div>
-        </details>
-      </div>
-    </section>
+        </PopoverPanel>
+      </Popover>
+    </div>
   );
-}
-
-function Country({
-  closeDropdown,
-  countryLocale,
-  countryUrlPath,
-  isSelected,
-}: {
-  closeDropdown: () => void;
-  countryLocale: Locale;
-  countryUrlPath: string;
-  isSelected: boolean;
-}) {
-  return (
-    <ChangeLocaleForm
-      key={countryLocale.country}
-      redirectTo={countryUrlPath}
-      buyerIdentity={{
-        countryCode: countryLocale.country,
-      }}
-    >
-      <Button
-        className={clsx([
-          "text-contrast dark:text-body",
-          "bg-primary dark:bg-contrast w-full p-2 transition rounded flex justify-start",
-          "items-center text-left cursor-pointer py-2 px-4",
-        ])}
-        type="submit"
-        variant="primary"
-        onClick={closeDropdown}
-      >
-        {countryLocale.label}
-        {isSelected ? (
-          <span className="ml-2">
-            <IconCheck />
-          </span>
-        ) : null}
-      </Button>
-    </ChangeLocaleForm>
-  );
-}
-
-function ChangeLocaleForm({
-  children,
-  buyerIdentity,
-  redirectTo,
-}: {
-  children: React.ReactNode;
-  buyerIdentity: CartBuyerIdentityInput;
-  redirectTo: string;
-}) {
-  return (
-    <CartForm
-      route="/cart"
-      action={CartForm.ACTIONS.BuyerIdentityUpdate}
-      inputs={{
-        buyerIdentity,
-      }}
-    >
-      <>
-        <input type="hidden" name="redirectTo" value={redirectTo} />
-        {children}
-      </>
-    </CartForm>
-  );
-}
-
-function getCountryUrlPath({
-  countryLocale,
-  defaultLocalePrefix,
-  pathWithoutLocale,
-}: {
-  countryLocale: Locale;
-  pathWithoutLocale: string;
-  defaultLocalePrefix: string;
-}) {
-  let countryPrefixPath = "";
-  const countryLocalePrefix = `${countryLocale.language}-${countryLocale.country}`;
-
-  if (countryLocalePrefix !== defaultLocalePrefix) {
-    countryPrefixPath = `/${countryLocalePrefix.toLowerCase()}`;
-  }
-  return `${countryPrefixPath}${pathWithoutLocale}`;
 }
