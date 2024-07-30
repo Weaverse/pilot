@@ -439,32 +439,3 @@ export let VARIANTS_QUERY = `#graphql
   }
   ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
-
-export const METAOBJECTS_QUERY = `#graphql
-  query MetaObjects ($type: String!, $first: Int)
-  {
-    metaobjects(type: $type, first: $first) {
-      nodes {
-        fields {
-          key
-          type
-          value
-          reference {
-            ... on MediaImage {
-              alt
-              image {
-                altText
-                url
-                width
-                height
-              }
-            }
-          }
-        }
-        handle
-        id
-        type
-      }
-    }
-  }
-  `;

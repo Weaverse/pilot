@@ -3,11 +3,10 @@ import type {
   ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  WeaverseMetaObject,
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
-
-import { METAOBJECTS_QUERY } from "~/data/queries";
 
 type MetaObjectField = {
   key: string;
@@ -24,29 +23,35 @@ type MetaobjectData = {
 };
 
 type MetaDemoProps = HydrogenComponentProps & {
-  metaDemo: {
-    id: string;
-    type: string;
-  };
   title: string;
+  metaobject: WeaverseMetaObject;
+  itemsCount: number;
   itemsPerRow: number;
   gap: number;
 };
 
 let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
-  let { loaderData, metaDemo, title, itemsPerRow, gap, className, ...rest } =
-    props;
-  if (!metaDemo) {
+  let {
+    loaderData,
+    metaobject,
+    itemsCount,
+    title,
+    itemsPerRow,
+    gap,
+    className,
+    ...rest
+  } = props;
+  if (!metaobject) {
     return (
       <section
         className={clsx(
-          "w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto",
+          "w-full px-6 py-12 md:py-24 lg:py-32 mx-auto",
           className,
         )}
         ref={ref}
         {...rest}
       >
-        <p className="text-center">Please select a metaobject definition</p>
+        skeleton goes here
       </section>
     );
   }
@@ -99,19 +104,48 @@ let MetaDemo = forwardRef<HTMLDivElement, MetaDemoProps>((props, ref) => {
 export let loader = async (args: ComponentLoaderArgs<MetaDemoProps>) => {
   let { weaverse, data } = args;
   let { storefront } = weaverse;
-  if (!data?.metaDemo) {
-    return null;
+  let { metaobject, itemsCount } = data;
+  if (metaobject) {
+    let { metaobjects } = await storefront.query(METAOBJECTS_QUERY, {
+      variables: {
+        type: metaobject.handle,
+        first: itemsCount,
+      },
+    });
+    return {
+      metaobjects: metaobjects.nodes,
+    };
   }
-  let { metaobjects } = await storefront.query(METAOBJECTS_QUERY, {
-    variables: {
-      type: data.metaDemo.type,
-      first: 10,
-    },
-  });
-  return {
-    metaobjects: metaobjects.nodes,
-  };
+  return null;
 };
+
+let METAOBJECTS_QUERY = `#graphql
+  query MetaObjects ($type: String!, $first: Int) {
+    metaobjects(type: $type, first: $first) {
+      nodes {
+        fields {
+          key
+          type
+          value
+          reference {
+            ... on MediaImage {
+              alt
+              image {
+                altText
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+        handle
+        id
+        type
+      }
+    }
+  }
+`;
 
 export let schema: HydrogenComponentSchema = {
   type: "meta-demo",
