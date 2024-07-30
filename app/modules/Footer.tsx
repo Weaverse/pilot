@@ -9,10 +9,10 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import Button from "~/components/Button";
 import {
-  IconFacebook,
-  IconInstagram,
-  IconLinkedIn,
-  IconTwitter,
+  IconFacebookLogo,
+  IconInstagramLogo,
+  IconLinkedinLogo,
+  IconXLogo,
 } from "~/components/Icons";
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { CountrySelector, Input } from "~/modules";
@@ -42,22 +42,22 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
     {
       name: "Facebook",
       to: socialFacebook,
-      icon: <IconFacebook className="w-5 h-5" />,
+      icon: <IconFacebookLogo className="w-5 h-5" />,
     },
     {
       name: "Instagram",
       to: socialInstagram,
-      icon: <IconInstagram className="w-5 h-5" />,
+      icon: <IconInstagramLogo className="w-5 h-5" />,
     },
     {
       name: "LinkedIn",
       to: socialLinkedIn,
-      icon: <IconLinkedIn className="w-5 h-5" />,
+      icon: <IconLinkedinLogo className="w-5 h-5" />,
     },
     {
       name: "X",
       to: socialX,
-      icon: <IconTwitter className="w-5 h-5" />,
+      icon: <IconXLogo className="w-5 h-5" />,
     },
   ];
 
@@ -78,7 +78,7 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                   {shopName}
                 </div>
               )}
-              {bio ? <div dangerouslySetInnerHTML={{__html: bio}}/> : null}
+              {bio ? <div dangerouslySetInnerHTML={{ __html: bio }} /> : null}
               <div className="flex gap-4">
                 {socials.map((social) =>
                   social.to ? (
@@ -91,7 +91,7 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                     >
                       {social.icon}
                     </Link>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             </div>
@@ -108,7 +108,9 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                 <p>{newsletterDescription}</p>
                 <div className="flex gap-2">
                   <Input placeholder={newsletterPlaceholder} />
-                  <Button className="border-primary">{newsletterButtonText}</Button>
+                  <Button className="border-primary">
+                    {newsletterButtonText}
+                  </Button>
                 </div>
               </div>
             </div>
@@ -116,7 +118,11 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
           <div className="w-full grid lg:grid-cols-4 gap-8">
             {items.map((item, ind) => (
               <div key={ind} className="flex flex-col gap-6">
-                <FooterMenu title={item.title} to={item.to} items={item.items} />
+                <FooterMenu
+                  title={item.title}
+                  to={item.to}
+                  items={item.items}
+                />
               </div>
             ))}
           </div>
