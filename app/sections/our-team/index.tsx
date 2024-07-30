@@ -5,11 +5,12 @@ import type {
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { OurTeamQuery } from "storefrontapi.generated";
-import { Section, type SectionProps } from "~/components/Section";
+import { backgroundInputs } from "~/components/BackgroundImage";
+import { Section, type SectionProps, layoutInputs } from "~/components/Section";
 
 type OurTeamData = {
   metaobject: WeaverseMetaObject;
-  itemsCount: number;
+  membersCount: number;
 };
 
 interface OurTeamProps
@@ -17,35 +18,7 @@ interface OurTeamProps
     OurTeamData {}
 
 let OurTeam = forwardRef<HTMLDivElement, OurTeamProps>((props, ref) => {
-  let { loaderData, metaobject, itemsCount, children, ...rest } = props;
-  if (!loaderData) {
-    return (
-      <Section ref={ref} {...rest}>
-        skeleton goes here
-      </Section>
-    );
-  }
-  // let items = loaderData?.metaobjects.map((metaObject, ind: number) => {
-  //   let { fields } = metaObject;
-  //   let avatar = fields.find((field) => field.key === "avatar");
-  //   let name = fields.find((field) => field.key === "name")?.value;
-  //   let title = fields.find((field) => field.key === "title")?.value;
-  //   return (
-  //     <div key={ind} className="flex flex-col gap-2 items-center">
-  //       <div className="rounded-md overflow-hidden w-44">
-  //         <Image
-  //           // @ts-ignore
-  //           data={avatar?.reference?.image}
-  //           sizes="auto"
-  //           className="h-auto"
-  //           aspectRatio="1/1"
-  //         />
-  //       </div>
-  //       <h3 className="font-semibold text-xl">{name}</h3>
-  //       <p>{title}</p>
-  //     </div>
-  //   );
-  // });
+  let { loaderData, metaobject, membersCount, children, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
@@ -56,12 +29,12 @@ let OurTeam = forwardRef<HTMLDivElement, OurTeamProps>((props, ref) => {
 export let loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
   let { weaverse, data } = args;
   let { storefront } = weaverse;
-  let { metaobject, itemsCount } = data;
+  let { metaobject, membersCount } = data;
   if (metaobject) {
     return await storefront.query<OurTeamQuery>(OUR_TEAM_QUERY, {
       variables: {
         type: metaobject.handle,
-        first: itemsCount,
+        first: membersCount,
       },
     });
   }
@@ -102,40 +75,50 @@ export let schema: HydrogenComponentSchema = {
   childTypes: ["heading", "paragraph", "our-team-members"],
   inspector: [
     {
-      group: "Our team",
+      group: "Data source",
       inputs: [
         {
-          label: "Select metaobject definition",
           type: "metaobject",
+          name: "metaobject",
+          label: "Select metaobject definition",
           helpText:
-            '<a href="https://weaverse.io/docs/marketplace/the-pilot-theme#metaobjects" target="_blank">How to display this demo section</a>',
-          name: "metaDemo",
-          shouldRevalidate: true,
+            'See how to set up a metaobject definition for this section <a href="https://weaverse.io/docs/marketplace/the-pilot-theme#metaobjects" target="_blank">here</a>.',
         },
         {
-          label: "Member limit",
-          name: "itemsPerRow",
+          label: "Members count",
+          name: "membersCount",
           type: "range",
           configs: {
-            min: 1,
-            max: 10,
+            min: 2,
+            max: 12,
+            step: 1,
           },
-          defaultValue: 3,
+          defaultValue: 4,
         },
       ],
     },
-  ],
-  presets: [
-    { type: "heading", content: "Our team" },
     {
-      type: "paragraph",
-      content:
-        "This section get data from storefront metaobjects using Shopify Storefront API powered by Weaverse Metaobject Picker.",
+      group: "Layout",
+      inputs: layoutInputs.filter((inp) => inp.name !== "borderRadius"),
     },
     {
-      type: "our-team-members",
+      group: "Background",
+      inputs: backgroundInputs.filter((inp) => inp.name === "backgroundColor"),
     },
   ],
+  presets: {
+    children: [
+      { type: "heading", content: "Meet our team" },
+      {
+        type: "paragraph",
+        content:
+          "This section get data from storefront metaobjects using Shopify Storefront API powered by Weaverse Metaobject Picker.",
+      },
+      {
+        type: "our-team-members",
+      },
+    ],
+  },
 };
 
 export default OurTeam;
