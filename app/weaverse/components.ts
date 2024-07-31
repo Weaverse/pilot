@@ -30,7 +30,8 @@ import * as ImageWithText from "~/sections/image-with-text";
 import * as ImageWithTextContent from "~/sections/image-with-text/content";
 import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as MapSection from "~/sections/map";
-import * as MetaDemo from "~/sections/our-team";
+import * as OurTeam from "~/sections/our-team";
+import * as OurTeamMembers from "~/sections/our-team/team-members";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
 import * as Page from "~/sections/page";
@@ -97,7 +98,8 @@ export let components: HydrogenComponent[] = [
   CollectionList,
   SingleProduct,
   Judgeme,
-  MetaDemo,
+  OurTeam,
+  OurTeamMembers,
   SlideShow,
   SlideShowSlide,
   ProductList,
