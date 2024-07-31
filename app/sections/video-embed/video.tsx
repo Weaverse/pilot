@@ -1,6 +1,7 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  WeaverseVideo,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -46,18 +47,19 @@ let variants = cva("mx-auto w-full aspect-video", {
 interface VideoItemProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
+  video: WeaverseVideo;
   videoUrl: string;
 }
 
 let VideoEmbedItem = forwardRef<HTMLIFrameElement, VideoItemProps>(
   (props, ref) => {
-    let { videoUrl, size, borderRadius, ...rest } = props;
+    let { video, videoUrl, size, borderRadius, ...rest } = props;
     return (
       <iframe
         ref={ref}
         {...rest}
         className={variants({ size, borderRadius })}
-        src={videoUrl}
+        src={video?.url || videoUrl}
         allowFullScreen
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -76,6 +78,13 @@ export let schema: HydrogenComponentSchema = {
     {
       group: "Video",
       inputs: [
+        {
+          type: "video",
+          name: "video",
+          label: "Video",
+          helpText:
+            "If no video is selected, the component will fallback to use the Embed URL below.",
+        },
         {
           type: "text",
           name: "videoUrl",
