@@ -634,6 +634,19 @@ export let themeSchema: HydrogenThemeSchema = {
       group: "Footer settings",
       inputs: [
         {
+          type: "select",
+          name: "footerWidth",
+          label: "Footer content width",
+          configs: {
+            options: [
+              { value: "full", label: "Full page" },
+              { value: "stretch", label: "Stretch" },
+              { value: "fixed", label: "Fixed" },
+            ],
+          },
+          defaultValue: "fixed",
+        },
+        {
           type: "image",
           name: "footerLogoData",
           label: "Logo",

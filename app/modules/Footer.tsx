@@ -7,6 +7,7 @@ import {
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import Button from "~/components/Button";
 import {
   IconFacebook,
@@ -17,8 +18,16 @@ import {
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { CountrySelector, Input } from "~/modules";
 
+
+const footerWidthVariants = {
+  full: "w-full h-full",
+  stretch: "w-full h-full",
+  fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
+};
+
 export function Footer({ menu }: { menu?: EnhancedMenu }) {
   let {
+    footerWidth,
     socialFacebook,
     socialInstagram,
     socialLinkedIn,
@@ -63,7 +72,12 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
 
   return (
     <footer className="bg-secondary text-primary pt-16 pb-4 text-sm">
-      <div className="container mx-auto divide-y divide-primary/30 space-y-9">
+      <div
+        className={clsx(
+          footerWidthVariants[footerWidth as keyof typeof footerWidthVariants],
+          "divide-y divide-primary/30 space-y-9"
+        )}
+      >
         <div className="space-y-9">
           <div className="w-full grid lg:grid-cols-4 gap-8">
             <div className="flex flex-col gap-6">
@@ -78,7 +92,7 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                   {shopName}
                 </div>
               )}
-              {bio ? <div dangerouslySetInnerHTML={{__html: bio}}/> : null}
+              {bio ? <div dangerouslySetInnerHTML={{ __html: bio }} /> : null}
               <div className="flex gap-4">
                 {socials.map((social) =>
                   social.to ? (
@@ -108,7 +122,9 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                 <p>{newsletterDescription}</p>
                 <div className="flex gap-2">
                   <Input placeholder={newsletterPlaceholder} />
-                  <Button className="border-primary">{newsletterButtonText}</Button>
+                  <Button className="border-primary">
+                    {newsletterButtonText}
+                  </Button>
                 </div>
               </div>
             </div>
@@ -116,7 +132,11 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
           <div className="w-full grid lg:grid-cols-4 gap-8">
             {items.map((item, ind) => (
               <div key={ind} className="flex flex-col gap-6">
-                <FooterMenu title={item.title} to={item.to} items={item.items} />
+                <FooterMenu
+                  title={item.title}
+                  to={item.to}
+                  items={item.items}
+                />
               </div>
             ))}
           </div>
