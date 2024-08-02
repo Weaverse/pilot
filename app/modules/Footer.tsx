@@ -10,10 +10,10 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import Button from "~/components/Button";
 import {
-  IconFacebook,
-  IconInstagram,
-  IconLinkedIn,
-  IconTwitter,
+  IconFacebookLogo,
+  IconInstagramLogo,
+  IconLinkedinLogo,
+  IconXLogo,
 } from "~/components/Icons";
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { CountrySelector, Input } from "~/modules";
@@ -51,22 +51,22 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
     {
       name: "Facebook",
       to: socialFacebook,
-      icon: <IconFacebook className="w-5 h-5" />,
+      icon: <IconFacebookLogo className="w-5 h-5" />,
     },
     {
       name: "Instagram",
       to: socialInstagram,
-      icon: <IconInstagram className="w-5 h-5" />,
+      icon: <IconInstagramLogo className="w-5 h-5" />,
     },
     {
       name: "LinkedIn",
       to: socialLinkedIn,
-      icon: <IconLinkedIn className="w-5 h-5" />,
+      icon: <IconLinkedinLogo className="w-5 h-5" />,
     },
     {
       name: "X",
       to: socialX,
-      icon: <IconTwitter className="w-5 h-5" />,
+      icon: <IconXLogo className="w-5 h-5" />,
     },
   ];
 
@@ -105,7 +105,7 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                     >
                       {social.icon}
                     </Link>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             </div>
