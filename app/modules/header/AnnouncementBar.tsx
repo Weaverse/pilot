@@ -13,8 +13,14 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 const storageKey = "hide-announcement-bar";
 
 function standardizeContent(content: string) {
-    // remove br, p, div and \n 
-  return content.replace(/<br\/?>/g, "").replace(/<p>/g, "").replace(/<\/p>/g, "").replace(/<div>/g, "").replace(/<\/div>/g, "").replace(/\n/g, "");
+  // remove br, p, div and \n
+  return content
+    .replace(/<br\/?>/g, "")
+    .replace(/<p>/g, "")
+    .replace(/<\/p>/g, "")
+    .replace(/<div>/g, "")
+    .replace(/<\/div>/g, "")
+    .replace(/\n/g, "");
 }
 
 const announcementContext = createContext({
@@ -107,7 +113,7 @@ export function AnnouncementBar() {
   return (
     <announcementContext.Provider value={settings}>
       <div
-      id="announcement-bar"
+        id="announcement-bar"
         className={clsx(
           "text-center z-40 flex items-center justify-center relative overflow-x-hidden",
           sticky && "sticky top-0"
@@ -132,34 +138,22 @@ export function AnnouncementBar() {
           />
         </div>
         {contentWidth > 0 && <RunningLine />}
-        {dismisable && <IconClose
-          className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-          onClick={dismiss}
-        />}
+        {dismisable && (
+          <IconClose
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+            onClick={dismiss}
+          />
+        )}
       </div>
     </announcementContext.Provider>
   );
 }
 
 function RunningLine() {
-  return (
-    <div className="flex items-center">
-      <div className="shrink-0 animate-marquee">
-        <OneView />
-      </div>
-      <div className="shrink-0 animate-marquee">
-        <OneView />
-      </div>
-    </div>
-  );
-}
-
-function OneView() {
   const { content, contentWidth, scrollingGap } = useAnnouncement();
   const [contentRepeat, setContentRepeat] = useState(0);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    // check if the text is longer than the screen width
+
+  const calculateRepeat = useCallback(() => {
     if (contentWidth < window.innerWidth) {
       // if it is, set the contentRepeat to the number of times the text can fit on the screen
       const repeat = Math.ceil(
@@ -167,13 +161,22 @@ function OneView() {
       );
       setContentRepeat(repeat);
     }
+  }, [contentWidth, scrollingGap]);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    // check if the text is longer than the screen width
+    calculateRepeat();
+    window.addEventListener("resize", calculateRepeat);
+    return () => {
+      window.removeEventListener("resize", calculateRepeat);
+    };
   }, []);
-  return (
+  let oneView = (
     <div
       className={clsx("flex")}
       style={{ paddingRight: scrollingGap, gap: scrollingGap }}
     >
-      {Array(contentRepeat + 1)
+      {Array(contentRepeat || 1)
         .fill(0)
         .map((_, index) => (
           <div
@@ -182,6 +185,12 @@ function OneView() {
             dangerouslySetInnerHTML={{ __html: content }}
           />
         ))}
+    </div>
+  );
+  return (
+    <div className="flex items-center">
+      <div className="shrink-0 animate-marquee">{oneView}</div>
+      <div className="shrink-0 animate-marquee">{oneView}</div>
     </div>
   );
 }
