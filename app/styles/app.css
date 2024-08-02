@@ -260,7 +260,6 @@ mark {
 }
 
 .animate-marquee {
-  /* color: red; */
   animation-name: marquee;
   animation-duration: var(--animation-speed, 15s);
   animation-timing-function: linear;
