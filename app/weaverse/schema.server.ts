@@ -541,6 +541,96 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
+      group: "Announcement bar",
+      inputs: [
+        {
+          type: "richtext",
+          name: "announcementBarText",
+          label: "Text",
+          defaultValue: "FREE SHIPPING FOR ORDERS OVER $200USD",
+        },
+        {
+          type: "range",
+          label: "Height",
+          name: "announcementBarHeight",
+          configs: {
+            min: 10,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 48,
+        },
+        {
+          type: "range",
+          label: "Font size",
+          name: "announcementBarFontSize",
+          configs: {
+            min: 6,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 16,
+        },
+        {
+          type: "color",
+          label: "Text color",
+          name: "announcementBarTextColor",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "color",
+          label: "Background color",
+          name: "announcementBarBgColor",
+          defaultValue: "#000000",
+        },
+        {
+          type: "switch",
+          label: "Dismissable",
+          name: "dismisableAnnouncementBar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Sticky",
+          name: "stickyAnnouncementBar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Enable scrolling",
+          name: "enableScrolling",
+          defaultValue: false,
+        },
+        {
+          type: "range",
+          label: "Gap between content",
+          name: "scrollingGap",
+          configs: {
+            min: 0,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 44,
+          condition: "enableScrolling.eq.true",
+        },
+        {
+          type: "range",
+          label: "Scrolling speed",
+          name: "scrollingSpeed",
+          configs: {
+            min: 0,
+            max: 100,
+            step: 1,
+          },
+          defaultValue: 10,
+          condition: "enableScrolling.eq.true",
+        }
+      ]
+    },
+    {
       group: "Footer settings",
       inputs: [
         {
@@ -568,37 +658,10 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Copyright",
           defaultValue: "© 2024 Weaverse. All rights reserved.",
         },
-      ],
-    },
-    {
-      group: "Store Info",
-      inputs: [
         {
-          type: "text",
-          name: "addressTitle",
-          label: "Title",
-          defaultValue: "OUR SHOP",
-          placeholder: "Our shop",
+          type: "heading",
+          label: "Social links",
         },
-        {
-          type: "text",
-          name: "storeAddress",
-          label: "Address",
-          defaultValue: "131 Iroquois Street Southgate, MI 48195",
-          placeholder: "123 Main Street",
-        },
-        {
-          type: "text",
-          name: "storeEmail",
-          label: "Email",
-          defaultValue: "info@weaverse.io",
-          placeholder: "info@weaverse.io",
-        },
-      ],
-    },
-    {
-      group: "Social links",
-      inputs: [
         {
           type: "url",
           name: "socialFacebook",
@@ -623,11 +686,35 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "X",
           defaultValue: "https://x.com/i/communities/1636383560197373952",
         },
-      ],
-    },
-    {
-      group: "Newsletter",
-      inputs: [
+        {
+          type: "heading",
+          label: "Store Info",
+        },
+        {
+          type: "text",
+          name: "addressTitle",
+          label: "Title",
+          defaultValue: "OUR SHOP",
+          placeholder: "Our shop",
+        },
+        {
+          type: "text",
+          name: "storeAddress",
+          label: "Address",
+          defaultValue: "131 Iroquois Street Southgate, MI 48195",
+          placeholder: "123 Main Street",
+        },
+        {
+          type: "text",
+          name: "storeEmail",
+          label: "Email",
+          defaultValue: "info@weaverse.io",
+          placeholder: "info@weaverse.io",
+        },
+        {
+          type: "heading",
+          label: "Newsletter",
+        },
         {
           type: "text",
           name: "newsletterTitle",
@@ -654,8 +741,8 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Button text",
           defaultValue: "Send",
           placeholder: "Send",
-        }
+        },
       ],
-    },
+    }
   ],
 };

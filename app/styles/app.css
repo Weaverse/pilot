@@ -83,6 +83,10 @@
       }
     }
   }
+
+  .transition-colors {
+    transition-property: color, background-color, border-color;
+  }
 }
 
 @layer components {
@@ -253,4 +257,25 @@
 mark {
   background-color: none;
   font-weight: 500;
+}
+
+.animate-marquee {
+  /* color: red; */
+  animation-name: marquee;
+  animation-duration: var(--animation-speed, 15s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+#announcement-bar ~ header {
+  top: var(--announcement-bar-height, 0px);
 }

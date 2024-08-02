@@ -31,9 +31,16 @@ export function MobileHeader({
 }) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
   let isHome = useIsHomePath();
-  let settings = useThemeSettings();
+  let {
+    enableTransparentHeader,
+    stickyAnnouncementBar,
+    announcementBarHeight,
+  } = useThemeSettings();
   let { y } = useWindowScroll();
-  let enableTransparent = settings?.enableTransparentHeader && isHome;
+  let top = stickyAnnouncementBar
+  ? announcementBarHeight
+  : Math.max(announcementBarHeight - y, 0);
+  let enableTransparent = enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50;
   let params = useParams();
   return (
@@ -43,9 +50,10 @@ export function MobileHeader({
         isTransparent
           ? "bg-transparent text-primary"
           : "shadow-header text-body bg-primary",
-        "transition-all duration-300 ease-in-out",
+        "transition-colors duration-300 ease-in-out",
         "flex lg:hidden items-center h-nav z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8",
       )}
+      style={{ ["--announcement-bar-height" as string]: `${top}px` }}
     >
       <div className="flex items-center justify-start w-full">
         <button
