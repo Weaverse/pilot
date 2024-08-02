@@ -10,11 +10,15 @@ import { Drawer, useDrawer } from "../Drawer";
 import { DesktopHeader } from "./DesktopHeader";
 import { MobileHeader } from "./MobileHeader";
 import { MobileMenu } from "./menu/MobileMenu";
+import { AnnouncementBar } from "./AnnouncementBar";
 
 export function Header({
   shopName,
   menu,
-}: { shopName: string; menu?: EnhancedMenu }) {
+}: {
+  shopName: string;
+  menu?: EnhancedMenu;
+}) {
   let {
     isOpen: isCartOpen,
     openDrawer: openCart,
@@ -40,6 +44,7 @@ export function Header({
       {menu && (
         <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />
       )}
+      <AnnouncementBar />
       <DesktopHeader shopName={shopName} menu={menu} openCart={openCart} />
       <MobileHeader
         shopName={shopName}
