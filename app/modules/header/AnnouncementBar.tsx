@@ -137,7 +137,7 @@ export function AnnouncementBar() {
             dangerouslySetInnerHTML={{ __html: content }}
           />
         </div>
-        {contentWidth > 0 && <RunningLine />}
+        {contentWidth > 0 && <Marquee />}
         {dismisable && (
           <IconClose
             className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
@@ -149,7 +149,7 @@ export function AnnouncementBar() {
   );
 }
 
-function RunningLine() {
+function Marquee() {
   const { content, contentWidth, scrollingGap } = useAnnouncement();
   const [contentRepeat, setContentRepeat] = useState(0);
 
@@ -173,7 +173,7 @@ function RunningLine() {
   }, []);
   let oneView = (
     <div
-      className={clsx("flex")}
+      className="flex"
       style={{ paddingRight: scrollingGap, gap: scrollingGap }}
     >
       {Array(contentRepeat || 1)

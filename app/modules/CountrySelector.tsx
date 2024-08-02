@@ -65,7 +65,6 @@ export function CountrySelector() {
     redirectTo: string;
     buyerIdentity: CartBuyerIdentityInput;
   }) => {
-    console.log("🚀 ~ CountrySelector:", buyerIdentity, redirectTo);
     const cartFormInput = {
       action: CartForm.ACTIONS.BuyerIdentityUpdate,
       inputs: { buyerIdentity },
@@ -83,7 +82,7 @@ export function CountrySelector() {
   return (
     <div ref={observerRef} className="grid gap-4 w-80">
       <Popover>
-        <PopoverButton className="w-full border rounded border-contrast/30 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
+        <PopoverButton className="w-full border border-contrast/30 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
           {selectedLocale.label}
           <IconCaretDown className="w-5 h-5" />
         </PopoverButton>

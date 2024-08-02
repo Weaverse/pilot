@@ -18,14 +18,14 @@ import {
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { CountrySelector, Input } from "~/modules";
 
-
 const footerWidthVariants = {
   full: "w-full h-full",
-  stretch: "w-full h-full",
-  fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
+  stretch: "w-full h-full px-3 md:px-10 lg:px-16",
+  fixed:
+    "w-full h-full max-w-[var(--page-width,1280px)] px-3 md:px-4 lg:px-6 mx-auto",
 };
 
-export function Footer({ menu }: { menu?: EnhancedMenu }) {
+export function Footer({ menu, shopName }: { menu?: EnhancedMenu; shopName: string }) {
   let {
     footerWidth,
     socialFacebook,
@@ -33,6 +33,7 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
     socialLinkedIn,
     socialX,
     footerLogoData,
+    footerLogoWidth,
     bio,
     copyright,
     addressTitle,
@@ -45,7 +46,6 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
   } = useThemeSettings();
 
   const { items = [] } = menu || {};
-  const shopName = "Shopify";
 
   const socials = [
     {
@@ -70,25 +70,29 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
     },
   ];
 
+  const footerContainerClassName = clsx(
+    footerWidthVariants[footerWidth as keyof typeof footerWidthVariants],
+    "divide-y divide-primary/30 space-y-9"
+  );
+
   return (
-    <footer className="bg-secondary text-primary pt-16 pb-4 text-sm">
-      <div
-        className={clsx(
-          footerWidthVariants[footerWidth as keyof typeof footerWidthVariants],
-          "divide-y divide-primary/30 space-y-9"
-        )}
-      >
+    <footer className="bg-secondary text-primary pt-16 text-sm">
+      <div className={footerContainerClassName}>
         <div className="space-y-9">
           <div className="w-full grid lg:grid-cols-4 gap-8">
             <div className="flex flex-col gap-6">
               {footerLogoData ? (
-                <Image
-                  data={footerLogoData}
-                  sizes="auto"
-                  className="w-10 h-10 object-contain object-left"
-                />
+                <div className="relative"
+                  style={{ width: footerLogoWidth }}
+                >
+                  <Image
+                    data={footerLogoData}
+                    sizes="auto"
+                    className="w-full h-full object-contain object-left"
+                  />
+                </div>
               ) : (
-                <div className="text-lg sm:text-2xl font-medium line-clamp-1">
+                <div className="font-medium text-base uppercase">
                   {shopName}
                 </div>
               )}
@@ -105,7 +109,7 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                     >
                       {social.icon}
                     </Link>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             </div>
@@ -116,12 +120,15 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
                 <p>Email: {storeEmail}</p>
               </div>
             </div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 col-span-2">
               <h4 className="text-base">{newsletterTitle}</h4>
               <div className="space-y-2">
                 <p>{newsletterDescription}</p>
                 <div className="flex gap-2">
-                  <Input placeholder={newsletterPlaceholder} />
+                  <Input
+                    placeholder={newsletterPlaceholder}
+                    className="max-w-80"
+                  />
                   <Button className="border-primary">
                     {newsletterButtonText}
                   </Button>
@@ -141,17 +148,9 @@ export function Footer({ menu }: { menu?: EnhancedMenu }) {
             ))}
           </div>
         </div>
-        <div className="pt-9 flex gap-4 flex-col lg:flex-row justify-between items-center">
+        <div className="py-9 flex gap-4 flex-col lg:flex-row justify-between items-center">
           <div className="flex gap-2 ">
             <CountrySelector />
-            <Select
-              name="language"
-              defaultValue="en"
-              className=" text-primary bg-transparent px-4 py-3 rounded border border-contrast/30"
-            >
-              <option value="en">English</option>
-              <option value="vi">Tiếng Việt</option>
-            </Select>
           </div>
           <p>{copyright}</p>
         </div>

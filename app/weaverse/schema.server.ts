@@ -547,7 +547,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "richtext",
           name: "announcementBarText",
           label: "Text",
-          defaultValue: "FREE SHIPPING FOR ORDERS OVER $200USD",
+          defaultValue: "",
         },
         {
           type: "range",
@@ -631,7 +631,7 @@ export let themeSchema: HydrogenThemeSchema = {
       ]
     },
     {
-      group: "Footer settings",
+      group: "Footer",
       inputs: [
         {
           type: "select",
@@ -650,13 +650,19 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "image",
           name: "footerLogoData",
           label: "Logo",
-          defaultValue: {
-            id: "gid://shopify/MediaImage/34144817938616",
-            altText: "Logo",
-            url: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/transparent_Pilot_logo.png?v=1718763594",
-            width: 320,
-            height: 116,
+          defaultValue: ""
+        },
+        {
+          type: "range",
+          name: "footerLogoWidth",
+          label: "Logo width",
+          configs: {
+            min: 20,
+            max: 200,
+            step: 1,
+            unit: "px",
           },
+          defaultValue: 80,
         },
         {
           type: "richtext",
