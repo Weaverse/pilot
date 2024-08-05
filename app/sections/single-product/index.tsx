@@ -146,7 +146,6 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
 
 export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   let { weaverse, data } = args;
-  console.log("single product loader", data);
   let { storefront } = weaverse;
   if (!data.product) {
     return null;

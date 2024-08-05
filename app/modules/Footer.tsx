@@ -2,7 +2,6 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  Select,
 } from "@headlessui/react";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
