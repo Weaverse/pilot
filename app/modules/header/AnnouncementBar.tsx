@@ -1,10 +1,6 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import {
-  useCallback,
-  useEffect,
-  useState
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Marquee } from "~/components/Marquee";
 import { IconClose } from "../Icon";
 
@@ -91,9 +87,13 @@ export function AnnouncementBar() {
         ["--animation-speed" as string]: `${animationTime}ms`,
       }}
     >
-      <Marquee speed={10} gap={scrollingGap}>
+      {enableScrolling ? (
+        <Marquee speed={10} gap={scrollingGap}>
+          <span dangerouslySetInnerHTML={{ __html: content }} />
+        </Marquee>
+      ) : (
         <span dangerouslySetInnerHTML={{ __html: content }} />
-      </Marquee>
+      )}
       {dismisable && (
         <IconClose
           className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
