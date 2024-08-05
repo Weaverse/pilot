@@ -65,8 +65,7 @@ function OneView({
   }, []);
   let oneView = (
     <div className="flex" style={{ paddingRight: gap, gap }}>
-      {Array(contentRepeat || 1)
-        .fill(0)
+      {Array.from({ length: contentRepeat || 1 })
         .map((_, index) => (
           <div key={index} className="shrink-0">
             {children}
