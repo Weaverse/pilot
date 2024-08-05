@@ -10,7 +10,6 @@ import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
 import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedCollectionItems from "~/sections/featured-collections/collection-items";
-import * as CollectionBanner from "~/sections/collection-banner";
 import * as CollectionFilters from "~/sections/collection-filters";
 import * as CollectionList from "~/sections/collection-list";
 import * as ColumnsWithImages from "~/sections/columns-with-images";
@@ -59,7 +58,6 @@ export let components: HydrogenComponent[] = [
   FeaturedCollectionItems,
   BlogPost,
   Blogs,
-  CollectionBanner,
   Page,
   VideoEmbed,
   VideoEmbedItem,
