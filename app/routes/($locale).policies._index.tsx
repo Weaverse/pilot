@@ -1,14 +1,14 @@
-import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type { MetaFunction } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
+import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
+import invariant from "tiny-invariant";
 
-import { PageHeader, Section, Heading, Link } from "~/modules";
 import { routeHeaders } from "~/data/cache";
 import { seoPayload } from "~/lib/seo.server";
 import type { NonNullableFields } from "~/lib/type";
+import { Heading, Link, PageHeader, Section } from "~/modules";
 
 export const headers = routeHeaders;
 

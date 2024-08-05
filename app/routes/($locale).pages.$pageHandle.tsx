@@ -1,9 +1,9 @@
-import { json } from "@shopify/remix-oxygen";
-import { type RouteLoaderArgs } from "@weaverse/hydrogen";
-import invariant from "tiny-invariant";
 import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
+import { json } from "@shopify/remix-oxygen";
+import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import invariant from "tiny-invariant";
 
 import { routeHeaders } from "~/data/cache";
 import { seoPayload } from "~/lib/seo.server";

@@ -1,25 +1,25 @@
+import { useLoaderData } from "@remix-run/react";
 import {
+  Analytics,
   flattenConnection,
   getPaginationVariables,
   getSeoMeta,
-  Analytics,
 } from "@shopify/hydrogen";
 import type {
   ProductCollectionSortKeys,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
 import { json } from "@shopify/remix-oxygen";
-import type { MetaArgs, LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import { useLoaderData } from "@remix-run/react";
 
-import type { SortParam } from "~/modules/SortFilter";
-import { FILTER_URL_PREFIX } from "~/modules/SortFilter";
 import { routeHeaders } from "~/data/cache";
 import { COLLECTION_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";
 import { seoPayload } from "~/lib/seo.server";
 import { parseAsCurrency } from "~/lib/utils";
+import type { SortParam } from "~/modules/SortFilter";
+import { FILTER_URL_PREFIX } from "~/modules/SortFilter";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;

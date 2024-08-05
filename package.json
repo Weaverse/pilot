@@ -16,7 +16,7 @@
     "e2e": "npx playwright test",
     "e2e:ui": "npx playwright test --ui",
     "biome": "biome check --diagnostic-level=error",
-    "biome:fix": "biome check --write",
+    "biome:fix": "biome check --write --diagnostic-level=error",
     "format": "biome format --write",
     "format:check": "biome format"
   },

@@ -1,9 +1,9 @@
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { useParentInstance } from "@weaverse/hydrogen";
-import { useFetcher, useLoaderData } from "@remix-run/react";
 import { forwardRef, useEffect } from "react";
 
 import { usePrefixPathWithLocale } from "~/lib/utils";

@@ -1,20 +1,20 @@
-import type { SyntheticEvent } from "react";
-import { useMemo, useState } from "react";
-import { Menu, Disclosure } from "@headlessui/react";
+import { Disclosure, Menu } from "@headlessui/react";
 import type { Location } from "@remix-run/react";
 import {
   Link,
   useLocation,
-  useSearchParams,
   useNavigate,
+  useSearchParams,
 } from "@remix-run/react";
-import useDebounce from "react-use/esm/useDebounce";
 import type {
   Filter,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
+import type { SyntheticEvent } from "react";
+import { useMemo, useState } from "react";
+import useDebounce from "react-use/esm/useDebounce";
 
-import { Heading, IconFilters, IconCaret, IconXMark, Text } from "~/modules";
+import { Heading, IconCaret, IconFilters, IconXMark, Text } from "~/modules";
 
 export type AppliedFilter = {
   label: string;
@@ -46,6 +46,7 @@ export function SortFilter({
   return (
     <>
       <div className="flex items-center justify-between w-full">
+        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={
@@ -241,17 +242,17 @@ function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
 
   const onChangeMax = (event: SyntheticEvent) => {
     const value = (event.target as HTMLInputElement).value;
-    const newMaxPrice = Number.isNaN(parseFloat(value))
+    const newMaxPrice = Number.isNaN(Number.parseFloat(value))
       ? undefined
-      : parseFloat(value);
+      : Number.parseFloat(value);
     setMaxPrice(newMaxPrice);
   };
 
   const onChangeMin = (event: SyntheticEvent) => {
     const value = (event.target as HTMLInputElement).value;
-    const newMinPrice = Number.isNaN(parseFloat(value))
+    const newMinPrice = Number.isNaN(Number.parseFloat(value))
       ? undefined
-      : parseFloat(value);
+      : Number.parseFloat(value);
     setMinPrice(newMinPrice);
   };
 

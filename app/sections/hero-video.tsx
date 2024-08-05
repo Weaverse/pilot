@@ -1,7 +1,7 @@
 import {
-  isBrowser,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
+  isBrowser,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";

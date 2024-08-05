@@ -1,8 +1,8 @@
 import { Image } from "@shopify/hydrogen";
 import {
+  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   useParentInstance,
-  type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -14,8 +14,8 @@ import Button, { buttonStylesInputs } from "~/components/Button";
 import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
 import { getImageAspectRatio } from "~/lib/utils";
-import type { FeaturedCollectionsLoaderData } from ".";
 import { Link } from "~/modules";
+import type { FeaturedCollectionsLoaderData } from ".";
 
 let variants = cva("", {
   variants: {

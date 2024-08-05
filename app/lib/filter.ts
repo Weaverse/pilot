@@ -1,5 +1,5 @@
-import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import type { Location, useLocation } from "@remix-run/react";
+import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import { FILTER_URL_PREFIX } from "./const";
 
 export type AppliedFilter = {

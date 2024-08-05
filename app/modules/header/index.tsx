@@ -7,10 +7,10 @@ import type { RootLoader } from "~/root";
 import { Cart } from "../Cart";
 import { CartLoading } from "../CartLoading";
 import { Drawer, useDrawer } from "../Drawer";
+import { AnnouncementBar } from "./AnnouncementBar";
 import { DesktopHeader } from "./DesktopHeader";
 import { MobileHeader } from "./MobileHeader";
 import { MobileMenu } from "./menu/MobileMenu";
-import { AnnouncementBar } from "./AnnouncementBar";
 
 export function Header({
   shopName,

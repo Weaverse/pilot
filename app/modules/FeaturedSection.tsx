@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useFetcher } from "@remix-run/react";
+import { useEffect } from "react";
 import { usePrefixPathWithLocale } from "~/lib/utils";
 import type { FeaturedData } from "~/routes/($locale).featured-products";
 import { ProductSwimlane } from "./ProductSwimlane";

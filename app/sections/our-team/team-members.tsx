@@ -3,8 +3,8 @@ import { Image } from "@shopify/hydrogen";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
-  useParentInstance,
   type WeaverseImage,
+  useParentInstance,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { OurTeamQuery } from "storefrontapi.generated";

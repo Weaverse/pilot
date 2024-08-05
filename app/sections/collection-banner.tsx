@@ -1,11 +1,11 @@
+import { useLoaderData } from "@remix-run/react";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
-import { useLoaderData } from "@remix-run/react";
-import clsx from "clsx";
 
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 

@@ -1,7 +1,7 @@
 import type {
-  InspectorGroup,
   HydrogenComponentProps,
   HydrogenComponentSchema,
+  InspectorGroup,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";

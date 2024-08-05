@@ -1,14 +1,14 @@
 import {
-  useParentInstance,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
+  useParentInstance,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { AliReviewsLoaderData } from ".";
+import { Rating } from "./rating";
+import { ReviewBar } from "./review-bar";
 import type { AliReview, ReviewItemData } from "./review-item";
 import { ReviewItem } from "./review-item";
-import { ReviewBar } from "./review-bar";
-import { Rating } from "./rating";
 
 type AliReviewsProps = ReviewItemData & {
   showAvgRating: boolean;

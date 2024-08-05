@@ -65,7 +65,7 @@ export function DesktopHeader({
                 !hovered &&
                 "text-primary bg-transparent border-transparent",
             ]
-          : "sticky"
+          : "sticky",
       )}
       style={{ ["--announcement-bar-height" as string]: `${top}px` }}
     >

@@ -7,8 +7,8 @@ import type {
 import { forwardRef } from "react";
 
 import type { AllProductsQuery } from "storefrontapi.generated";
-import { Grid, PageHeader, ProductCard, Section } from "~/modules";
 import { getImageLoadingPriority } from "~/lib/const";
+import { Grid, PageHeader, ProductCard, Section } from "~/modules";
 
 interface AllProductsProps extends HydrogenComponentProps {
   heading: string;

@@ -1,6 +1,6 @@
-import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
 import { flattenConnection } from "@shopify/hydrogen";
+import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
+import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 
 import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
@@ -39,7 +39,7 @@ export async function loader({
   try {
     const _count = searchParams.get("count");
     if (typeof _count === "string") {
-      count = parseInt(_count);
+      count = Number.parseInt(_count);
     }
   } catch (_) {
     // noop

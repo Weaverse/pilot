@@ -1,9 +1,9 @@
 import {
-  redirect,
   type ActionFunction,
+  type ActionFunctionArgs,
   type AppLoadContext,
   type LoaderFunctionArgs,
-  type ActionFunctionArgs,
+  redirect,
 } from "@shopify/remix-oxygen";
 
 export async function doLogout(context: AppLoadContext) {

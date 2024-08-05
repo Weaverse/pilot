@@ -3,7 +3,7 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
-import { useState, useEffect, forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 
 const ONE_SEC = 1000;
 const ONE_MIN = ONE_SEC * 60;

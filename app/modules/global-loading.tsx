@@ -26,6 +26,7 @@ export function GlobalLoading() {
 
   return (
     <div
+      // biome-ignore lint/a11y/useAriaPropsForRole: <explanation>
       role="progressbar"
       aria-hidden={!active}
       aria-valuetext={active ? "Loading" : undefined}
