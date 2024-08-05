@@ -627,8 +627,8 @@ export let themeSchema: HydrogenThemeSchema = {
           },
           defaultValue: 10,
           condition: "enableScrolling.eq.true",
-        }
-      ]
+        },
+      ],
     },
     {
       group: "Footer",
@@ -650,7 +650,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "image",
           name: "footerLogoData",
           label: "Logo",
-          defaultValue: ""
+          defaultValue: "",
         },
         {
           type: "range",
@@ -762,6 +762,6 @@ export let themeSchema: HydrogenThemeSchema = {
           placeholder: "Send",
         },
       ],
-    }
+    },
   ],
 };

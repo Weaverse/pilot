@@ -2,7 +2,6 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  Select,
 } from "@headlessui/react";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
@@ -25,7 +24,10 @@ const footerWidthVariants = {
     "w-full h-full max-w-[var(--page-width,1280px)] px-3 md:px-4 lg:px-6 mx-auto",
 };
 
-export function Footer({ menu, shopName }: { menu?: EnhancedMenu; shopName: string }) {
+export function Footer({
+  menu,
+  shopName,
+}: { menu?: EnhancedMenu; shopName: string }) {
   let {
     footerWidth,
     socialFacebook,
@@ -72,7 +74,7 @@ export function Footer({ menu, shopName }: { menu?: EnhancedMenu; shopName: stri
 
   const footerContainerClassName = clsx(
     footerWidthVariants[footerWidth as keyof typeof footerWidthVariants],
-    "divide-y divide-primary/30 space-y-9"
+    "divide-y divide-primary/30 space-y-9",
   );
 
   return (
@@ -82,9 +84,7 @@ export function Footer({ menu, shopName }: { menu?: EnhancedMenu; shopName: stri
           <div className="w-full grid lg:grid-cols-4 gap-8">
             <div className="flex flex-col gap-6">
               {footerLogoData ? (
-                <div className="relative"
-                  style={{ width: footerLogoWidth }}
-                >
+                <div className="relative" style={{ width: footerLogoWidth }}>
                   <Image
                     data={footerLogoData}
                     sizes="auto"
@@ -109,7 +109,7 @@ export function Footer({ menu, shopName }: { menu?: EnhancedMenu; shopName: stri
                     >
                       {social.icon}
                     </Link>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             </div>

@@ -149,7 +149,7 @@ function loadDeferredData({ context }: LoaderFunctionArgs) {
 }
 
 export const meta = ({ data }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(data.seo as SeoConfig);
+  return getSeoMeta(data?.seo as SeoConfig);
 };
 
 function Layout({ children }: { children?: React.ReactNode }) {
@@ -199,6 +199,7 @@ function App() {
     </Layout>
   );
 }
+
 export default withWeaverse(App);
 
 export function ErrorBoundary({ error }: { error: Error }) {
@@ -325,13 +326,13 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
   invariant(data, "No data returned from Shopify API");
 
   /*
-    Modify specific links/routes (optional)
-    @see: https://shopify.dev/api/storefront/unstable/enums/MenuItemType
-    e.g here we map:
-      - /blogs/news -> /news
-      - /blog/news/blog-post -> /news/blog-post
-      - /collections/all -> /products
-  */
+      Modify specific links/routes (optional)
+      @see: https://shopify.dev/api/storefront/unstable/enums/MenuItemType
+      e.g here we map:
+        - /blogs/news -> /news
+        - /blog/news/blog-post -> /news/blog-post
+        - /collections/all -> /products
+    */
   let customPrefixes = { CATALOG: "products" };
 
   const headerMenu = data?.headerMenu

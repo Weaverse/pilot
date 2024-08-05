@@ -1,10 +1,6 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import {
-  useCallback,
-  useEffect,
-  useState
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Marquee } from "~/components/Marquee";
 import { IconClose } from "../Icon";
 
@@ -81,7 +77,7 @@ export function AnnouncementBar() {
       id="announcement-bar"
       className={clsx(
         "text-center z-40 flex items-center justify-center relative overflow-x-hidden",
-        sticky && "sticky top-0"
+        sticky && "sticky top-0",
       )}
       style={{
         height: `${announcementBarHeight}px`,

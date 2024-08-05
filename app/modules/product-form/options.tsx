@@ -1,6 +1,6 @@
-import clsx from "clsx";
 import { Image } from "@shopify/hydrogen";
 import type { WeaverseImage } from "@weaverse/hydrogen";
+import clsx from "clsx";
 
 interface VariantOptionProps {
   selectedOptionValue: string;

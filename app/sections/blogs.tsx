@@ -7,8 +7,8 @@ import type {
 import { forwardRef } from "react";
 
 import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
-import { Grid, Link, PageHeader, Section } from "~/modules";
 import { getImageLoadingPriority } from "~/lib/const";
+import { Grid, Link, PageHeader, Section } from "~/modules";
 
 interface BlogsProps extends HydrogenComponentProps {
   layout: "blog" | "default";

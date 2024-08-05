@@ -1,13 +1,13 @@
 import type {
+  ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  ComponentLoaderArgs,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 
 import type { HomepageFeaturedProductsQuery } from "storefrontapi.generated";
-import { ProductSwimlane } from "~/modules";
 import { HOMEPAGE_FEATURED_PRODUCTS_QUERY } from "~/data/queries";
+import { ProductSwimlane } from "~/modules";
 
 interface FeaturedProductsProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {

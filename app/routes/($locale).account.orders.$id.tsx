@@ -179,6 +179,7 @@ export default function OrderRoute() {
                 ))}
               </tbody>
               <tfoot>
+                {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
                 {((discountValue && discountValue.amount) ||
                   discountPercentage) && (
                   <tr>

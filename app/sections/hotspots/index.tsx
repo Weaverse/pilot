@@ -1,8 +1,8 @@
 import { Image } from "@shopify/hydrogen";
 import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import type {
-  WeaverseImage,
   HydrogenComponentSchema,
+  WeaverseImage,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import Heading, {

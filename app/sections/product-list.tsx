@@ -1,16 +1,16 @@
+import { getPaginationVariables } from "@shopify/hydrogen";
 import type {
+  ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
-  ComponentLoaderArgs,
 } from "@weaverse/hydrogen";
-import { getPaginationVariables } from "@shopify/hydrogen";
 import { forwardRef } from "react";
 
-import { ProductSwimlane } from "~/modules";
 import { COLLECTION_QUERY } from "~/data/queries";
+import { PAGINATION_SIZE } from "~/lib/const";
+import { ProductSwimlane } from "~/modules";
 import type { SortParam } from "~/modules/SortFilter";
 import { getSortValuesFromParam } from "~/routes/($locale).collections.$collectionHandle";
-import { PAGINATION_SIZE } from "~/lib/const";
 
 interface ProductListProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {

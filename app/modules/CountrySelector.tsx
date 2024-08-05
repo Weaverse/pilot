@@ -31,7 +31,7 @@ export function CountrySelector() {
   const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
-    ""
+    "",
   )}${search}`;
 
   const countries = (fetcher.data ?? {}) as Localizations;

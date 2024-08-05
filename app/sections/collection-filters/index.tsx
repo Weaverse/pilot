@@ -12,8 +12,8 @@ import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Button, PageHeader, Section, SortFilter, Text } from "~/modules";
 import type { AppliedFilter } from "~/modules/SortFilter";
 
-import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 import { DrawerFilter } from "~/modules/DrawerFilter";
+import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 
 interface CollectionFiltersProps extends HydrogenComponentProps {
   showCollectionDescription: boolean;

@@ -72,8 +72,9 @@ function Address({
               address?.lastName}
           </li>
         )}
-        {address.formatted &&
-          address.formatted.map((line: string) => <li key={line}>{line}</li>)}
+        {address.formatted?.map((line: string) => (
+          <li key={line}>{line}</li>
+        ))}
       </ul>
 
       <div className="flex flex-row font-medium mt-6 items-baseline">

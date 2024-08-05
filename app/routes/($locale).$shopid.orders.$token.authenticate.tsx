@@ -1,4 +1,4 @@
-import { redirect, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 
 import { Button, PageHeader } from "~/modules";

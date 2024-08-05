@@ -1,7 +1,7 @@
 import {
-  IMAGES_PLACEHOLDERS,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
+  IMAGES_PLACEHOLDERS,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
