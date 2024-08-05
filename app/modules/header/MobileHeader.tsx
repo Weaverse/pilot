@@ -38,8 +38,8 @@ export function MobileHeader({
   } = useThemeSettings();
   let { y } = useWindowScroll();
   let top = stickyAnnouncementBar
-  ? announcementBarHeight
-  : Math.max(announcementBarHeight - y, 0);
+    ? announcementBarHeight
+    : Math.max(announcementBarHeight - y, 0);
   let enableTransparent = enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50;
   let params = useParams();
@@ -79,7 +79,11 @@ export function MobileHeader({
       <Logo isTransparent={isTransparent} shopName={shopName} />
       <div className="flex items-center justify-end w-full">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
-        <CartCount isHome={isHome} openCart={openCart} />
+        <CartCount
+          isHome={isHome}
+          openCart={openCart}
+          isTransparent={isTransparent}
+        />
       </div>
     </header>
   );

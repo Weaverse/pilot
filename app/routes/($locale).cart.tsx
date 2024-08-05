@@ -9,6 +9,7 @@ import {
   type LoaderFunctionArgs,
   json,
 } from "@shopify/remix-oxygen";
+import type { CartApiQueryFragment } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 
 import { isLocalPath } from "~/lib/utils";
@@ -96,7 +97,7 @@ export default function CartRoute() {
     <>
       <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
         <Await resolve={rootData?.cart}>
-          {(cart) => <Cart layout="page" cart={cart} />}
+          {(cart) => <Cart layout="page" cart={cart as CartApiQueryFragment} />}
         </Await>
       </div>
       <Analytics.CartView />

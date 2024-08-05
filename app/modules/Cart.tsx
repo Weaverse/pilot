@@ -1,6 +1,5 @@
 import {
   CartForm,
-  type CartReturn,
   Image,
   Money,
   type OptimisticCart,
@@ -38,9 +37,9 @@ export function Cart({
 }: {
   layout: Layouts;
   onClose?: () => void;
-  cart: CartReturn | null;
+  cart: CartApiQueryFragment;
 }) {
-  let optimisticCart = useOptimisticCart(cart);
+  let optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
 
   const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
 
@@ -101,7 +100,7 @@ function CartDiscounts({
           <Text as="dt">Discount(s)</Text>
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
-              <button>
+              <button type="button">
                 <IconRemove
                   aria-hidden="true"
                   style={{ height: 18, marginRight: 4 }}
@@ -127,7 +126,10 @@ function CartDiscounts({
             name="discountCode"
             placeholder="Discount code"
           />
-          <button className="flex justify-end font-medium whitespace-nowrap">
+          <button
+            type="button"
+            className="flex justify-end font-medium whitespace-nowrap"
+          >
             Apply Discount
           </button>
         </div>
@@ -353,6 +355,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
       <div className="flex items-center border rounded">
         <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
+            type="button"
             name="decrease-quantity"
             aria-label="Decrease quantity"
             className="w-10 h-10 transition text-secondary/50 hover:text-secondary disabled:text-secondary/10"
@@ -373,6 +376,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
 
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
+            type="button"
             className="w-10 h-10 transition text-secondary/50 hover:text-secondary disabled:text-secondary/10"
             name="increase-quantity"
             value={nextQuantity}
