@@ -1,11 +1,11 @@
 import { Image, Money } from "@shopify/hydrogen";
 import type { MediaImage } from "@shopify/hydrogen/storefront-api-types";
+import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
 import { Link } from "~/modules";
 import type { HotspotsItemData } from "./item";
-import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 
 interface ProductPopupProps
   extends Omit<HotspotsItemData, "icon" | "iconSize" | "product"> {

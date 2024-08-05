@@ -51,7 +51,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
   const heading = customer
     ? customer.firstName
       ? `Welcome, ${customer.firstName}.`
-      : `Welcome to your account.`
+      : "Welcome to your account."
     : "Account Details";
 
   return defer(
@@ -86,15 +86,14 @@ export default function Authenticated() {
           <Modal cancelLink="/account">
             <Outlet context={{ customer: data.customer }} />
           </Modal>
-          <Account {...data} />
+          <Account {...data} customer={data.customer} />
         </>
       );
-    } else {
-      return <Outlet context={{ customer: data.customer }} />;
     }
+    return <Outlet context={{ customer: data.customer }} />;
   }
 
-  return <Account {...data} />;
+  return <Account {...data} customer={data.customer} />;
 }
 
 interface AccountType {

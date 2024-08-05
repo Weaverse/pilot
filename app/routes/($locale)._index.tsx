@@ -1,8 +1,8 @@
+import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
-import { defer, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type { PageType } from "@weaverse/hydrogen";
-import type { MetaFunction } from "@remix-run/react";
 
 import { routeHeaders } from "~/data/cache";
 import { SHOP_QUERY } from "~/data/queries";
@@ -40,7 +40,7 @@ export async function loader(args: LoaderFunctionArgs) {
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+  return getSeoMeta(data?.seo as SeoConfig);
 };
 export default function Homepage() {
   return <WeaverseContent />;

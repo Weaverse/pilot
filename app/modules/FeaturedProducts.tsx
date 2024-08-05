@@ -1,13 +1,13 @@
-import clsx from "clsx";
-import { useEffect, useId, useMemo } from "react";
 import { useFetcher } from "@remix-run/react";
 import type {
   Product,
   ProductSortKeys,
 } from "@shopify/hydrogen/storefront-api-types";
+import clsx from "clsx";
+import { useEffect, useId, useMemo } from "react";
 
-import { Heading, ProductCard, Skeleton, Text } from "~/modules";
 import { usePrefixPathWithLocale } from "~/lib/utils";
+import { Heading, ProductCard, Skeleton, Text } from "~/modules";
 
 interface FeaturedProductsProps {
   count: number;

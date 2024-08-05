@@ -1,11 +1,11 @@
 import { Link } from "@remix-run/react";
+import clsx from "clsx";
 import { SearchResultItem } from "./ResultItem";
 import type {
   NormalizedPredictiveSearchResultItem,
   NormalizedPredictiveSearchResults,
   SearchResultTypeProps,
 } from "./types";
-import clsx from "clsx";
 
 export function PredictiveSearchResult({
   goToSearchResult,

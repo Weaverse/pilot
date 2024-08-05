@@ -1,13 +1,13 @@
-import clsx from "clsx";
 import { MediaFile } from "@shopify/hydrogen";
 import type {
-  MediaImage,
   Media,
+  MediaImage,
   Video as MediaVideo,
 } from "@shopify/hydrogen/storefront-api-types";
+import clsx from "clsx";
 
 import type { CollectionContentFragment } from "storefrontapi.generated";
-import { Heading, Text, Link } from "~/modules";
+import { Heading, Link, Text } from "~/modules";
 
 type HeroProps = CollectionContentFragment & {
   height?: "full";

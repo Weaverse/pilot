@@ -1,6 +1,9 @@
 import { useFetcher, useParams } from "@remix-run/react";
-import { NormalizedPredictiveSearchResults, SearchFromProps } from "./types";
 import { useEffect, useRef } from "react";
+import type {
+  NormalizedPredictiveSearchResults,
+  SearchFromProps,
+} from "./types";
 
 /**
  *  Search form component that posts search requests to the `/search` route

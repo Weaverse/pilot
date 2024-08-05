@@ -1,9 +1,9 @@
 import type { HydrogenComponent } from "@weaverse/hydrogen";
 
-import * as Heading from "./Heading";
-import * as SubHeading from "./SubHeading";
-import * as Paragraph from "./Paragraph";
 import * as Button from "./Button";
+import * as Heading from "./Heading";
+import * as Paragraph from "./Paragraph";
+import * as SubHeading from "./SubHeading";
 
 export let sharedComponents: HydrogenComponent[] = [
   SubHeading,

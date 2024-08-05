@@ -336,7 +336,6 @@ export function IconPinterest(props: IconProps) {
       />
     </Icon>
   );
-
 }
 /**
  * @deprecated Use icon from `@/components/Icons` instead

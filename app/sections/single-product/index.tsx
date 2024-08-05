@@ -1,10 +1,10 @@
 import { Money, ShopPayButton } from "@shopify/hydrogen";
 import {
-  useThemeSettings,
   type ComponentLoaderArgs,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
   type WeaverseProduct,
+  useThemeSettings,
 } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
@@ -147,7 +147,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
 export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   let { weaverse, data } = args;
   let { storefront } = weaverse;
-  if (!data?.product) {
+  if (!data.product) {
     return null;
   }
   let productHandle = data.product.handle;

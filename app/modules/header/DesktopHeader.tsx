@@ -21,7 +21,11 @@ export function DesktopHeader({
   menu?: EnhancedMenu;
   shopName: string;
 }) {
-  let { enableTransparentHeader } = useThemeSettings();
+  let {
+    enableTransparentHeader,
+    stickyAnnouncementBar,
+    announcementBarHeight,
+  } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
   let [hovered, setHovered] = useState(false); // use state to delay disappearing header when drawer closes
@@ -41,11 +45,14 @@ export function DesktopHeader({
   let isTransparent =
     enableTransparentHeader && isHome && !scrolled && !hovered;
 
+  let top = stickyAnnouncementBar
+    ? announcementBarHeight
+    : Math.max(announcementBarHeight - y, 0);
   return (
     <header
       className={cn(
         "hover:text-body hover:bg-primary",
-        "transition-all duration-300 ease-in-out",
+        "transition-colors duration-300 ease-in-out",
         "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
         "px-6 md:px-8 lg:px-12",
         "text-body bg-primary",
@@ -60,6 +67,7 @@ export function DesktopHeader({
             ]
           : "sticky",
       )}
+      style={{ ["--announcement-bar-height" as string]: `${top}px` }}
     >
       <Logo isTransparent={isTransparent} shopName={shopName} />
       {menu && <DesktopMenu menu={menu} />}

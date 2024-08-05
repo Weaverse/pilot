@@ -23,7 +23,7 @@ export function ProductCard({
   onClick?: () => void;
   quickAdd?: boolean;
 }) {
-  let cardLabel: string;
+  let cardLabel = "";
 
   const cardProduct: Product = product?.variants
     ? (product as Product)

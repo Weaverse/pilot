@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // @feedback - This hook could be replaced by remix-utils's ow hook should we want to go down this route.
 export function useIsHydrated() {

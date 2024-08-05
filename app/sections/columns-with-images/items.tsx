@@ -1,7 +1,7 @@
 import {
-  IMAGES_PLACEHOLDERS,
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
+  IMAGES_PLACEHOLDERS,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 

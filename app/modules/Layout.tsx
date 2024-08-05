@@ -28,7 +28,9 @@ export function Layout({ children, layout }: LayoutProps) {
           {children}
         </main>
       </div>
-      {footerMenu && <Footer menu={footerMenu} />}
+      {footerMenu && layout?.shop.name && (
+        <Footer shopName={layout.shop.name} menu={footerMenu} />
+      )}
     </>
   );
 }

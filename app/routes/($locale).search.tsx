@@ -1,13 +1,16 @@
 import { Await, Form, useLoaderData } from "@remix-run/react";
 import {
   Analytics,
+  Pagination,
   getPaginationVariables,
   getSeoMeta,
-  Pagination,
 } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
 import { Suspense } from "react";
+import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
+import { PAGINATION_SIZE, getImageLoadingPriority } from "~/lib/const";
+import { seoPayload } from "~/lib/seo.server";
 import {
   Grid,
   Heading,
@@ -18,9 +21,6 @@ import {
   Section,
   Text,
 } from "~/modules";
-import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
-import { getImageLoadingPriority, PAGINATION_SIZE } from "~/lib/const";
-import { seoPayload } from "~/lib/seo.server";
 import {
   type FeaturedData,
   getFeaturedData,
@@ -31,7 +31,7 @@ export async function loader({
   context: { storefront },
 }: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
-  const searchTerm = searchParams.get("q")!;
+  const searchTerm = searchParams.get("q");
   const variables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
@@ -92,7 +92,7 @@ export default function Search() {
         </Heading>
         <Form method="get" className="relative flex w-full text-heading">
           <Input
-            defaultValue={searchTerm}
+            defaultValue={searchTerm || ""}
             name="q"
             placeholder="Search…"
             type="search"
@@ -139,7 +139,9 @@ export default function Search() {
           </Pagination>
         </Section>
       )}
-      <Analytics.SearchView data={{ searchTerm, searchResults: products }} />
+      <Analytics.SearchView
+        data={{ searchTerm: searchTerm || "", searchResults: products }}
+      />
     </>
   );
 }

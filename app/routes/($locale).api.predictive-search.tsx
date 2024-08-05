@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 
 import type {
   PredictiveArticleFragment,

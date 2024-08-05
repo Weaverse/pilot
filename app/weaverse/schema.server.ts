@@ -541,19 +541,128 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Footer settings",
+      group: "Announcement bar",
       inputs: [
+        {
+          type: "richtext",
+          name: "announcementBarText",
+          label: "Text",
+          defaultValue: "",
+        },
+        {
+          type: "range",
+          label: "Height",
+          name: "announcementBarHeight",
+          configs: {
+            min: 10,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 48,
+        },
+        {
+          type: "range",
+          label: "Font size",
+          name: "announcementBarFontSize",
+          configs: {
+            min: 6,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 16,
+        },
+        {
+          type: "color",
+          label: "Text color",
+          name: "announcementBarTextColor",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "color",
+          label: "Background color",
+          name: "announcementBarBgColor",
+          defaultValue: "#000000",
+        },
+        {
+          type: "switch",
+          label: "Dismissable",
+          name: "dismisableAnnouncementBar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Sticky",
+          name: "stickyAnnouncementBar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Enable scrolling",
+          name: "enableScrolling",
+          defaultValue: false,
+        },
+        {
+          type: "range",
+          label: "Gap between content",
+          name: "scrollingGap",
+          configs: {
+            min: 0,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 44,
+          condition: "enableScrolling.eq.true",
+        },
+        {
+          type: "range",
+          label: "Scrolling speed",
+          name: "scrollingSpeed",
+          configs: {
+            min: 0,
+            max: 100,
+            step: 1,
+          },
+          defaultValue: 10,
+          condition: "enableScrolling.eq.true",
+        },
+      ],
+    },
+    {
+      group: "Footer",
+      inputs: [
+        {
+          type: "select",
+          name: "footerWidth",
+          label: "Footer content width",
+          configs: {
+            options: [
+              { value: "full", label: "Full page" },
+              { value: "stretch", label: "Stretch" },
+              { value: "fixed", label: "Fixed" },
+            ],
+          },
+          defaultValue: "fixed",
+        },
         {
           type: "image",
           name: "footerLogoData",
           label: "Logo",
-          defaultValue: {
-            id: "gid://shopify/MediaImage/34144817938616",
-            altText: "Logo",
-            url: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/transparent_Pilot_logo.png?v=1718763594",
-            width: 320,
-            height: 116,
+          defaultValue: "",
+        },
+        {
+          type: "range",
+          name: "footerLogoWidth",
+          label: "Logo width",
+          configs: {
+            min: 20,
+            max: 200,
+            step: 1,
+            unit: "px",
           },
+          defaultValue: 80,
         },
         {
           type: "richtext",
@@ -568,37 +677,10 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Copyright",
           defaultValue: "© 2024 Weaverse. All rights reserved.",
         },
-      ],
-    },
-    {
-      group: "Store Info",
-      inputs: [
         {
-          type: "text",
-          name: "addressTitle",
-          label: "Title",
-          defaultValue: "OUR SHOP",
-          placeholder: "Our shop",
+          type: "heading",
+          label: "Social links",
         },
-        {
-          type: "text",
-          name: "storeAddress",
-          label: "Address",
-          defaultValue: "131 Iroquois Street Southgate, MI 48195",
-          placeholder: "123 Main Street",
-        },
-        {
-          type: "text",
-          name: "storeEmail",
-          label: "Email",
-          defaultValue: "info@weaverse.io",
-          placeholder: "info@weaverse.io",
-        },
-      ],
-    },
-    {
-      group: "Social links",
-      inputs: [
         {
           type: "url",
           name: "socialFacebook",
@@ -623,11 +705,35 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "X",
           defaultValue: "https://x.com/i/communities/1636383560197373952",
         },
-      ],
-    },
-    {
-      group: "Newsletter",
-      inputs: [
+        {
+          type: "heading",
+          label: "Store Info",
+        },
+        {
+          type: "text",
+          name: "addressTitle",
+          label: "Title",
+          defaultValue: "OUR SHOP",
+          placeholder: "Our shop",
+        },
+        {
+          type: "text",
+          name: "storeAddress",
+          label: "Address",
+          defaultValue: "131 Iroquois Street Southgate, MI 48195",
+          placeholder: "123 Main Street",
+        },
+        {
+          type: "text",
+          name: "storeEmail",
+          label: "Email",
+          defaultValue: "info@weaverse.io",
+          placeholder: "info@weaverse.io",
+        },
+        {
+          type: "heading",
+          label: "Newsletter",
+        },
         {
           type: "text",
           name: "newsletterTitle",
@@ -654,7 +760,7 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Button text",
           defaultValue: "Send",
           placeholder: "Send",
-        }
+        },
       ],
     },
   ],

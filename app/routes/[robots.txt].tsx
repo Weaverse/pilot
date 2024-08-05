@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 
 export const loader = ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);

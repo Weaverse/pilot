@@ -3,9 +3,9 @@ import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { IconCaretDown, IconCaretRight } from "~/components/Icons";
 import { getMaxDepth } from "~/lib/menu";
+import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
 import { Drawer, useDrawer } from "~/modules/Drawer";
-import type { SingleMenuItem } from "~/lib/type";
 
 export function MobileMenu({ menu }: { menu: EnhancedMenu }) {
   let items = menu.items as unknown as SingleMenuItem[];

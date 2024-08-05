@@ -1,4 +1,4 @@
-import { FormProps, useFetcher } from "@remix-run/react";
+import type { FormProps, useFetcher } from "@remix-run/react";
 import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,
