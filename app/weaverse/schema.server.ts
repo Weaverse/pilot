@@ -2,6 +2,67 @@ import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
 import pkg from "../../package.json";
 import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
 
+let swatchesConfigs: SwatchesConfigs = {
+  options: [
+    {
+      id: "1",
+      name: "Color",
+      displayName: "Select color",
+      type: "color",
+      size: "md",
+      shape: "circle",
+    },
+    {
+      id: "2",
+      name: "Size",
+      displayName: "Select size",
+      type: "button",
+      size: "md",
+      shape: "round",
+    },
+  ],
+  swatches: {
+    colors: [
+      { id: crypto.randomUUID(), name: "red", value: "#ff0000" },
+      { id: crypto.randomUUID(), name: "yellow", value: "#ffff00" },
+      { id: crypto.randomUUID(), name: "black", value: "#000000" },
+      { id: crypto.randomUUID(), name: "blue", value: "#0000FF" },
+      { id: crypto.randomUUID(), name: "green", value: "#00ff00" },
+      { id: crypto.randomUUID(), name: "purple", value: "#800080" },
+      { id: crypto.randomUUID(), name: "silver", value: "#c0c0c0" },
+      { id: crypto.randomUUID(), name: "white", value: "#ffffff" },
+      { id: crypto.randomUUID(), name: "brown", value: "#7B3F00" },
+      { id: crypto.randomUUID(), name: "light-brown", value: "#feb035" },
+      { id: crypto.randomUUID(), name: "dark-turquoise", value: "#23cddc" },
+      { id: crypto.randomUUID(), name: "orange", value: "#fe9001" },
+      { id: crypto.randomUUID(), name: "tan", value: "#eacea7" },
+      { id: crypto.randomUUID(), name: "violet", value: "#EE82EE" },
+      { id: crypto.randomUUID(), name: "pink", value: "#FFC0CB" },
+      { id: crypto.randomUUID(), name: "grey", value: "#808080" },
+    ],
+    images: [
+      {
+        id: crypto.randomUUID(),
+        name: "image1",
+        value:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      },
+      {
+        id: crypto.randomUUID(),
+        name: "image2",
+        value:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      },
+      {
+        id: crypto.randomUUID(),
+        name: "image3",
+        value:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      },
+    ],
+  },
+};
+
 export let themeSchema: HydrogenThemeSchema = {
   info: {
     version: pkg.version,
@@ -63,6 +124,84 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: "rem",
           },
           defaultValue: 6,
+        },
+      ],
+    },
+    {
+      group: "Announcement bar",
+      inputs: [
+        {
+          type: "richtext",
+          name: "announcementBarText",
+          label: "Content",
+          defaultValue: "",
+        },
+        {
+          type: "range",
+          label: "Height",
+          name: "announcementBarHeight",
+          configs: {
+            min: 10,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 48,
+        },
+        {
+          type: "color",
+          label: "Text color",
+          name: "announcementBarTextColor",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "color",
+          label: "Background color",
+          name: "announcementBarBgColor",
+          defaultValue: "#000000",
+        },
+        {
+          type: "switch",
+          label: "Dismissible",
+          name: "dismissibleAnnouncementBar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Sticky",
+          name: "stickyAnnouncementBar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Enable scrolling",
+          name: "enableScrolling",
+          defaultValue: false,
+        },
+        {
+          type: "range",
+          label: "Gap between content",
+          name: "scrollingGap",
+          configs: {
+            min: 0,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 44,
+          condition: "enableScrolling.eq.true",
+        },
+        {
+          type: "range",
+          label: "Scrolling speed",
+          name: "scrollingSpeed",
+          configs: {
+            min: 0,
+            max: 100,
+            step: 1,
+          },
+          defaultValue: 10,
+          condition: "enableScrolling.eq.true",
         },
       ],
     },
@@ -445,7 +584,7 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Product quick view modal",
+      group: "Product quick view",
       inputs: [
         {
           type: "text",
@@ -533,96 +672,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
       ],
     },
-    {
-      group: "Announcement bar",
-      inputs: [
-        {
-          type: "richtext",
-          name: "announcementBarText",
-          label: "Text",
-          defaultValue: "",
-        },
-        {
-          type: "range",
-          label: "Height",
-          name: "announcementBarHeight",
-          configs: {
-            min: 10,
-            max: 100,
-            step: 1,
-            unit: "px",
-          },
-          defaultValue: 48,
-        },
-        {
-          type: "range",
-          label: "Font size",
-          name: "announcementBarFontSize",
-          configs: {
-            min: 6,
-            max: 100,
-            step: 1,
-            unit: "px",
-          },
-          defaultValue: 16,
-        },
-        {
-          type: "color",
-          label: "Text color",
-          name: "announcementBarTextColor",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
-          label: "Background color",
-          name: "announcementBarBgColor",
-          defaultValue: "#000000",
-        },
-        {
-          type: "switch",
-          label: "Dismissable",
-          name: "dismisableAnnouncementBar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Sticky",
-          name: "stickyAnnouncementBar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Enable scrolling",
-          name: "enableScrolling",
-          defaultValue: false,
-        },
-        {
-          type: "range",
-          label: "Gap between content",
-          name: "scrollingGap",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 1,
-            unit: "px",
-          },
-          defaultValue: 44,
-          condition: "enableScrolling.eq.true",
-        },
-        {
-          type: "range",
-          label: "Scrolling speed",
-          name: "scrollingSpeed",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 1,
-          },
-          defaultValue: 10,
-          condition: "enableScrolling.eq.true",
-        },
-      ],
-    },
+
     {
       group: "Footer",
       inputs: [
@@ -757,65 +807,4 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
   ],
-};
-
-let swatchesConfigs: SwatchesConfigs = {
-  options: [
-    {
-      id: "1",
-      name: "Color",
-      displayName: "Select color",
-      type: "color",
-      size: "md",
-      shape: "circle",
-    },
-    {
-      id: "2",
-      name: "Size",
-      displayName: "Select size",
-      type: "button",
-      size: "md",
-      shape: "round",
-    },
-  ],
-  swatches: {
-    colors: [
-      { id: crypto.randomUUID(), name: "red", value: "#ff0000" },
-      { id: crypto.randomUUID(), name: "yellow", value: "#ffff00" },
-      { id: crypto.randomUUID(), name: "black", value: "#000000" },
-      { id: crypto.randomUUID(), name: "blue", value: "#0000FF" },
-      { id: crypto.randomUUID(), name: "green", value: "#00ff00" },
-      { id: crypto.randomUUID(), name: "purple", value: "#800080" },
-      { id: crypto.randomUUID(), name: "silver", value: "#c0c0c0" },
-      { id: crypto.randomUUID(), name: "white", value: "#ffffff" },
-      { id: crypto.randomUUID(), name: "brown", value: "#7B3F00" },
-      { id: crypto.randomUUID(), name: "light-brown", value: "#feb035" },
-      { id: crypto.randomUUID(), name: "dark-turquoise", value: "#23cddc" },
-      { id: crypto.randomUUID(), name: "orange", value: "#fe9001" },
-      { id: crypto.randomUUID(), name: "tan", value: "#eacea7" },
-      { id: crypto.randomUUID(), name: "violet", value: "#EE82EE" },
-      { id: crypto.randomUUID(), name: "pink", value: "#FFC0CB" },
-      { id: crypto.randomUUID(), name: "grey", value: "#808080" },
-    ],
-    images: [
-      {
-        id: crypto.randomUUID(),
-        name: "image1",
-        value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      },
-      {
-        id: crypto.randomUUID(),
-        name: "image2",
-        value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      },
-      {
-        id: crypto.randomUUID(),
-        name: "image3",
-        value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      },
-    ],
-  },
 };

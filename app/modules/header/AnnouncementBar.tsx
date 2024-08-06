@@ -1,8 +1,8 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
+import { IconX } from "~/components/Icons";
 import { Marquee } from "~/components/Marquee";
-import { IconClose } from "../Icon";
 
 const storageKey = "hide-announcement-bar";
 
@@ -24,10 +24,9 @@ export function AnnouncementBar() {
   const {
     announcementBarText,
     announcementBarHeight,
-    announcementBarFontSize,
     announcementBarTextColor,
     announcementBarBgColor,
-    dismisableAnnouncementBar,
+    dismissibleAnnouncementBar,
     stickyAnnouncementBar,
     enableScrolling,
     scrollingGap,
@@ -37,17 +36,16 @@ export function AnnouncementBar() {
   const settings = {
     content: standardContent,
     announcementBarTextColor,
-    announcementBarFontSize,
     announcementBarBgColor,
     announcementBarHeight,
-    dismisable: dismisableAnnouncementBar,
+    dismissible: dismissibleAnnouncementBar,
     sticky: stickyAnnouncementBar,
     enableScrolling,
     scrollingGap: scrollingGap,
     scrollingSpeed,
     contentWidth,
   };
-  const { content, sticky, dismisable } = settings;
+  const { content, sticky, dismissible } = settings;
   let dismiss = useCallback(() => {
     localStorage.setItem(storageKey, "true");
     setShow(false);
@@ -83,19 +81,24 @@ export function AnnouncementBar() {
         height: `${announcementBarHeight}px`,
         backgroundColor: announcementBarBgColor,
         color: announcementBarTextColor,
-        fontSize: `${announcementBarFontSize}px`,
         ["--animation-speed" as string]: `${animationTime}ms`,
       }}
     >
       {enableScrolling ? (
         <Marquee speed={10} gap={scrollingGap}>
-          <span dangerouslySetInnerHTML={{ __html: content }} />
+          <div
+            className="flex items-center justify-center gap-[var(--gap)]"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </Marquee>
       ) : (
-        <span dangerouslySetInnerHTML={{ __html: content }} />
+        <div
+          className="flex items-center justify-center gap-[var(--gap)]"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
       )}
-      {dismisable && (
-        <IconClose
+      {dismissible && (
+        <IconX
           className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
           onClick={dismiss}
         />
