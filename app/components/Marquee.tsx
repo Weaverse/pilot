@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 interface MarqueeProps {
   children: React.ReactNode;
@@ -24,7 +24,12 @@ export function Marquee({
   return (
     <div
       className="flex items-center"
-      style={{ ["--animation-speed" as string]: `${animationTime}s` }}
+      style={
+        {
+          "--animation-speed": `${animationTime}s`,
+          "--gap": `${gap}s`,
+        } as CSSProperties
+      }
     >
       {contentWidth === 0 ? (
         <div ref={contentRef}>{children}</div>
