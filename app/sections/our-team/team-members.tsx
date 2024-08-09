@@ -46,21 +46,25 @@ let TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
               member;
             return (
               <div key={id} className="items-center bg-gray-50 sm:flex">
-                <Image
-                  data={avatar}
-                  sizes="auto"
-                  className="w-full h-auto sm:w-48 sm:h-48"
-                  aspectRatio="1/1"
-                  width={500}
-                  height={500}
-                />
+                {avatar && (
+                  <Image
+                    data={avatar}
+                    sizes="auto"
+                    className="w-full h-auto sm:w-48 sm:h-48"
+                    aspectRatio="1/1"
+                    width={500}
+                    height={500}
+                  />
+                )}
                 <div className="p-5">
                   <div className="text-xl font-semibold tracking-tight">
                     {name}
                   </div>
                   <span className="text-gray-600">{title}</span>
-                  <p className="mt-3 mb-4 font-light text-gray-600">{bio}</p>
-                  <ul className="flex space-x-3 sm:mt-0">
+                  {bio && (
+                    <p className="mt-3 mb-4 font-light text-gray-600">{bio}</p>
+                  )}
+                  <ul className="flex space-x-3">
                     {linkedin_url && (
                       <li>
                         <Link
