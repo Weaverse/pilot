@@ -2,7 +2,7 @@ import { Await, Link, useLocation, useRouteLoaderData } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconMagnifyingGlass, IconSignIn, IconUser } from "~/components/Icons";
+import { IconMagnifyingGlass, IconUser } from "~/components/Icons";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
 import { cn } from "~/lib/cn";
 import { type EnhancedMenu, useIsHomePath } from "~/lib/utils";
@@ -94,7 +94,7 @@ function AccountLink({ className }: { className?: string }) {
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconSignIn className="w-5 h-5" />}>
+      <Suspense fallback={<IconUser className="w-5 h-5" />}>
         <Await
           resolve={isLoggedIn}
           errorElement={<IconUser className="w-5 h-5" />}
@@ -103,7 +103,7 @@ function AccountLink({ className }: { className?: string }) {
             isLoggedIn ? (
               <IconUser className="w-5 h-5" />
             ) : (
-              <IconSignIn className="w-5 h-5" />
+              <IconUser className="w-5 h-5" />
             )
           }
         </Await>
