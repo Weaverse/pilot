@@ -1,21 +1,12 @@
 import { Image } from "@shopify/hydrogen";
-import type { WeaverseImage } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
 
 interface VariantOptionProps {
   selectedOptionValue: string;
   onSelectOptionValue: (optionValue: string) => void;
   name: string;
-  config?: {
-    type: string;
-    displayName: string;
-    size?: "sm" | "md" | "lg";
-    shape?: string;
-  };
-  swatches: {
-    imageSwatches: any[];
-    colorSwatches: any[];
-  };
   values: {
     isActive: boolean;
     isAvailable: boolean;
@@ -39,21 +30,20 @@ let BUTTON_SIZE_MAP = {
 };
 
 export function VariantOption(props: VariantOptionProps) {
-  let {
-    name,
-    values,
-    selectedOptionValue,
-    onSelectOptionValue,
-    swatches,
-    config,
-  } = props;
+  let { name, values, selectedOptionValue, onSelectOptionValue } = props;
+  let themeSettings = useThemeSettings();
+  let productSwatches: SwatchesConfigs = themeSettings.productSwatches;
+  let { options, swatches } = productSwatches;
+  let optionConf = options.find((opt) => {
+    return opt.name.toLowerCase() === name.toLowerCase();
+  });
 
   let {
     displayName,
     shape = "square",
     size = "md",
     type = "default",
-  } = config || {};
+  } = optionConf || {};
 
   let roundedClassName =
     shape === "circle" ? "rounded-full" : shape === "round" ? "rounded-md" : "";
@@ -83,6 +73,7 @@ export function VariantOption(props: VariantOptionProps) {
         <div className="flex gap-4">
           {values.map((value) => (
             <button
+              type="button"
               key={value.value}
               className={clsx(
                 defaultButtonClassName,
@@ -102,10 +93,11 @@ export function VariantOption(props: VariantOptionProps) {
         <div className="flex gap-4">
           {values.map((value) => {
             let swatchColor: string =
-              swatches.colorSwatches.find((color) => color.name === value.value)
-                ?.value || value.value;
+              swatches.colors.find((c) => c.name === value.value)?.value ||
+              value.value;
             return (
               <button
+                type="button"
                 key={value.value}
                 className={clsx(
                   defaultClassName,
@@ -130,11 +122,11 @@ export function VariantOption(props: VariantOptionProps) {
       {type === "custom-image" && (
         <div className="flex gap-4">
           {values.map((value) => {
-            let swatchImage: WeaverseImage =
-              swatches.imageSwatches.find((image) => image.name === value.value)
-                ?.value || "";
+            let swatchImage =
+              swatches.images.find((i) => i.name === value.value)?.value || "";
             return (
               <button
+                type="button"
                 key={value.value}
                 className={clsx(
                   defaultClassName,
@@ -146,7 +138,14 @@ export function VariantOption(props: VariantOptionProps) {
                 onClick={() => onSelectOptionValue(value.value)}
               >
                 <Image
-                  data={swatchImage}
+                  data={
+                    typeof swatchImage === "object"
+                      ? swatchImage
+                      : {
+                          url: swatchImage,
+                          altText: value.value,
+                        }
+                  }
                   className={clsx(
                     "w-full h-full object-cover",
                     roundedClassName,
@@ -163,6 +162,7 @@ export function VariantOption(props: VariantOptionProps) {
           {values.map((value) => {
             return (
               <button
+                type="button"
                 key={value.value}
                 className={clsx(
                   defaultClassName,
@@ -196,7 +196,6 @@ export function VariantOption(props: VariantOptionProps) {
           </select>
         </div>
       )}
-
       {type === "default" && (
         <div className="flex gap-4">
           {values.map((value) => (
