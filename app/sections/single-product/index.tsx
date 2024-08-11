@@ -1,10 +1,9 @@
 import { Money, ShopPayButton } from "@shopify/hydrogen";
-import {
-  type ComponentLoaderArgs,
-  type HydrogenComponentProps,
-  type HydrogenComponentSchema,
-  type WeaverseProduct,
-  useThemeSettings,
+import type {
+  ComponentLoaderArgs,
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+  WeaverseProduct,
 } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
@@ -42,8 +41,6 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       spacing,
       ...rest
     } = props;
-    let { swatches } = useThemeSettings();
-
     let { storeDomain, product, variants: _variants } = loaderData || {};
     let variants = _variants?.product?.variants;
     let [selectedVariant, setSelectedVariant] = useState<any>(null);
@@ -102,7 +99,6 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   product={product}
                   selectedVariant={selectedVariant}
                   onSelectedVariantChange={setSelectedVariant}
-                  swatch={swatches}
                   variants={variants}
                   options={product?.options}
                   handle={product?.handle}
