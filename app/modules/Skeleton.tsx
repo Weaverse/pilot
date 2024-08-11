@@ -16,9 +16,12 @@ export function Skeleton({
   className?: string;
   [key: string]: any;
 }) {
-  const styles = clsx("rounded bg-primary/10", className);
-
   return (
-    <Component {...props} width={width} height={height} className={styles} />
+    <Component
+      {...props}
+      width={width}
+      height={height}
+      className={clsx("rounded bg-body/10", className)}
+    />
   );
 }
