@@ -18,14 +18,14 @@ import { seoPayload } from "~/lib/seo.server";
 import type { Storefront } from "~/lib/type";
 import { WeaverseContent } from "~/weaverse";
 
-export const headers = routeHeaders;
+export let headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
-  const { productHandle } = params;
+  let { productHandle } = params;
   invariant(productHandle, "Missing productHandle param, check route filename");
 
-  const selectedOptions = getSelectedProductOptions(request);
-  const { shop, product } = await context.storefront.query(PRODUCT_QUERY, {
+  let selectedOptions = getSelectedProductOptions(request);
+  let { shop, product } = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       selectedOptions,
@@ -50,7 +50,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   // into it's own separate query that is deferred. So there's a brief moment
   // where variant options might show as available when they're not, but after
   // this deferred query resolves, the UI will update.
-  const variants = await context.storefront.query(VARIANTS_QUERY, {
+  let variants = await context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
       country: context.storefront.i18n.country,
@@ -58,14 +58,14 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     },
   });
 
-  const recommended = getRecommendedProducts(context.storefront, product.id);
+  let recommended = getRecommendedProducts(context.storefront, product.id);
 
   // TODO: firstVariant is never used because we will always have a selectedVariant due to redirect
   // Investigate if we can avoid the redirect for product pages with no search params for first variant
-  const firstVariant = product.variants.nodes[0];
-  const selectedVariant = product.selectedVariant ?? firstVariant;
+  let firstVariant = product.variants.nodes[0];
+  let selectedVariant = product.selectedVariant ?? firstVariant;
 
-  const seo = seoPayload.product({
+  let seo = seoPayload.product({
     product,
     selectedVariant,
     url: request.url,
@@ -98,7 +98,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   });
 }
 
-export const meta = ({ matches }: MetaArgs<typeof loader>) => {
+export let meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 
@@ -107,7 +107,7 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
  */
 let useApplyFirstVariant = () => {
   let { product } = useLoaderData<typeof loader>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams, setSearchParams] = useSearchParams();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -125,7 +125,7 @@ let useApplyFirstVariant = () => {
 
 export default function Product() {
   useApplyFirstVariant();
-  const { product } = useLoaderData<typeof loader>();
+  let { product } = useLoaderData<typeof loader>();
   return (
     <>
       <WeaverseContent />
@@ -154,7 +154,7 @@ async function getRecommendedProducts(
   storefront: Storefront,
   productId: string,
 ) {
-  const products = await storefront.query<ProductRecommendationsQuery>(
+  let products = await storefront.query<ProductRecommendationsQuery>(
     RECOMMENDED_PRODUCTS_QUERY,
     {
       variables: { productId, count: 12 },
@@ -163,14 +163,13 @@ async function getRecommendedProducts(
 
   invariant(products, "No data returned from Shopify API");
 
-  const mergedProducts = (products.recommended ?? [])
+  let mergedProducts = (products.recommended ?? [])
     .concat(products.additional.nodes)
-    .filter(
-      (value, index, array) =>
-        array.findIndex((value2) => value2.id === value.id) === index,
-    );
+    .filter((prod, idx, arr) => {
+      return arr.findIndex(({ id }) => id === prod.id) === idx;
+    });
 
-  const originalProduct = mergedProducts.findIndex(
+  let originalProduct = mergedProducts.findIndex(
     (item) => item.id === productId,
   );
 
