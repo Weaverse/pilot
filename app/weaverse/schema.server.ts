@@ -23,41 +23,53 @@ let swatchesConfigs: SwatchesConfigs = {
   ],
   swatches: {
     colors: [
-      { id: crypto.randomUUID(), name: "red", value: "#ff0000" },
-      { id: crypto.randomUUID(), name: "yellow", value: "#ffff00" },
-      { id: crypto.randomUUID(), name: "black", value: "#000000" },
-      { id: crypto.randomUUID(), name: "blue", value: "#0000FF" },
-      { id: crypto.randomUUID(), name: "green", value: "#00ff00" },
-      { id: crypto.randomUUID(), name: "purple", value: "#800080" },
-      { id: crypto.randomUUID(), name: "silver", value: "#c0c0c0" },
-      { id: crypto.randomUUID(), name: "white", value: "#ffffff" },
-      { id: crypto.randomUUID(), name: "brown", value: "#7B3F00" },
-      { id: crypto.randomUUID(), name: "light-brown", value: "#feb035" },
-      { id: crypto.randomUUID(), name: "dark-turquoise", value: "#23cddc" },
-      { id: crypto.randomUUID(), name: "orange", value: "#fe9001" },
-      { id: crypto.randomUUID(), name: "tan", value: "#eacea7" },
-      { id: crypto.randomUUID(), name: "violet", value: "#EE82EE" },
-      { id: crypto.randomUUID(), name: "pink", value: "#FFC0CB" },
-      { id: crypto.randomUUID(), name: "grey", value: "#808080" },
+      { id: crypto.randomUUID(), name: "Red", value: "#ff0000" },
+      { id: crypto.randomUUID(), name: "Yellow", value: "#ffff00" },
+      { id: crypto.randomUUID(), name: "Black", value: "#000000" },
+      { id: crypto.randomUUID(), name: "Blue", value: "#0000FF" },
+      { id: crypto.randomUUID(), name: "Green", value: "#00ff00" },
+      { id: crypto.randomUUID(), name: "Purple", value: "#800080" },
+      { id: crypto.randomUUID(), name: "Silver", value: "#c0c0c0" },
+      { id: crypto.randomUUID(), name: "White", value: "#ffffff" },
+      { id: crypto.randomUUID(), name: "Brown", value: "#7B3F00" },
+      { id: crypto.randomUUID(), name: "Light-brown", value: "#feb035" },
+      { id: crypto.randomUUID(), name: "Dark-turquoise", value: "#23cddc" },
+      { id: crypto.randomUUID(), name: "Orange", value: "#fe9001" },
+      { id: crypto.randomUUID(), name: "Tan", value: "#eacea7" },
+      { id: crypto.randomUUID(), name: "Violet", value: "#EE82EE" },
+      { id: crypto.randomUUID(), name: "Pink", value: "#FFC0CB" },
+      { id: crypto.randomUUID(), name: "Grey", value: "#808080" },
     ],
     images: [
       {
         id: crypto.randomUUID(),
-        name: "image1",
+        name: "Dark blue",
         value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_2.png",
       },
       {
         id: crypto.randomUUID(),
-        name: "image2",
+        name: "Light orange",
         value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_3.png",
       },
       {
         id: crypto.randomUUID(),
-        name: "image3",
+        name: "Dark red",
         value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_4.png",
+      },
+      {
+        id: crypto.randomUUID(),
+        name: "Light brown",
+        value:
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_5.png",
+      },
+      {
+        id: crypto.randomUUID(),
+        name: "Dark brown",
+        value:
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_6.png",
       },
     ],
   },
@@ -566,7 +578,7 @@ export let themeSchema: HydrogenThemeSchema = {
       inputs: [
         {
           type: "swatches",
-          name: "swatches",
+          name: "productSwatches",
           label: "Config swatches",
           defaultValue: swatchesConfigs,
         },
