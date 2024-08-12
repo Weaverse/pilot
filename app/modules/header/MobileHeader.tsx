@@ -9,12 +9,7 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import {
-  IconList,
-  IconMagnifyingGlass,
-  IconSignIn,
-  IconUser,
-} from "~/components/Icons";
+import { IconList, IconMagnifyingGlass, IconUser } from "~/components/Icons";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { Logo } from "../Logo";
@@ -95,7 +90,7 @@ function AccountLink({ className }: { className?: string }) {
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconSignIn className="w-5 h-5" />}>
+      <Suspense fallback={<IconUser className="w-5 h-5" />}>
         <Await
           resolve={isLoggedIn}
           errorElement={<IconUser className="w-5 h-5" />}

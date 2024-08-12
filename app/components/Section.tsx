@@ -186,6 +186,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
       unit: "px",
     },
     defaultValue: 0,
+    helpText: "Should be used in combination with background image or color",
   },
 ];
 

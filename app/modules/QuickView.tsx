@@ -111,7 +111,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
               handle={product?.handle}
               selectedVariant={selectedVariant}
               onSelectedVariantChange={handleSelectedVariantChange}
-              swatch={swatches}
+              swatches={swatches}
               variants={variants}
               hideUnavailableOptions={hideUnavailableOptions}
             />

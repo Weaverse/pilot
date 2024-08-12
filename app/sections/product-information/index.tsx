@@ -1,9 +1,8 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
-import {
-  type HydrogenComponentProps,
-  type HydrogenComponentSchema,
-  useThemeSettings,
+import type {
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import { getExcerpt } from "~/lib/utils";
@@ -25,7 +24,6 @@ interface ProductInformationProps extends HydrogenComponentProps {
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
   hideUnavailableOptions: boolean;
-  // product media props
   showThumbnails: boolean;
   numberOfThumbnails: number;
   spacing: number;
@@ -75,6 +73,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       : selectedVariant?.quantityAvailable === -1
         ? unavailableText
         : soldOutText;
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       if (!selectedVariant && variants?.nodes?.[0]) {
@@ -86,9 +85,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         setSelectedVariant(selectedVariantOptimistic);
       }
     }, [selectedVariantOptimistic?.id]);
-    let { swatches } = useThemeSettings();
 
-    let handleSelectedVariantChange = (variant: any) => {
+    function handleSelectedVariantChange(variant: any) {
       setSelectedVariant(variant);
       if (!variant?.selectedOptions) return;
       // update the url
@@ -100,14 +98,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         "",
         `${window.location.pathname}?${searchParams.toString()}`,
       );
-    };
+    }
 
-    if (!product)
-      return (
-        <section className="w-full py-12 md:py-24 lg:py-32" ref={ref} {...rest}>
-          <ProductPlaceholder />
-        </section>
-      );
     if (product && variants) {
       let { title, vendor, descriptionHtml } = product;
       let { shippingPolicy, refundPolicy } = shop;
@@ -122,7 +114,14 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                 numberOfThumbnails={numberOfThumbnails}
                 spacing={spacing}
               />
-              <div className="flex flex-col justify-start space-y-5">
+              <div
+                className="flex flex-col justify-start space-y-5"
+                style={
+                  {
+                    "--shop-pay-button-border-radius": "0",
+                  } as React.CSSProperties
+                }
+              >
                 <div className="space-y-4">
                   <div className="flex flex-col gap-2">
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
@@ -153,7 +152,6 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     product={product}
                     selectedVariant={selectedVariant}
                     onSelectedVariantChange={handleSelectedVariantChange}
-                    swatch={swatches}
                     variants={variants}
                     options={product?.options}
                     handle={product?.handle}

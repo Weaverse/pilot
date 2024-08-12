@@ -14,10 +14,6 @@ interface ProductVariantsProps {
   handle: string;
   product: NonNullable<ProductQuery["product"]>;
   options: NonNullable<ProductQuery["product"]>["options"];
-  swatch: {
-    configs: any[];
-    swatches: any;
-  };
   hideUnavailableOptions?: boolean;
 }
 
@@ -28,7 +24,6 @@ export function ProductVariants(props: ProductVariantsProps) {
     options,
     variants,
     handle,
-    swatch,
     hideUnavailableOptions,
   } = props;
 
@@ -102,9 +97,6 @@ export function ProductVariants(props: ProductVariantsProps) {
             .filter(Boolean);
           let handleSelectOptionValue = (value: string) =>
             handleSelectOption(optionName, value);
-          let config = swatch.configs.find((config) => {
-            return config.name.toLowerCase() === optionName.toLowerCase();
-          });
           let selectedValue = selectedOptions?.find(
             (opt) => opt.name === optionName,
           )?.value;
@@ -112,11 +104,9 @@ export function ProductVariants(props: ProductVariantsProps) {
           return (
             <VariantOption
               name={optionName}
-              config={config}
               values={values}
               selectedOptionValue={selectedValue || ""}
               onSelectOptionValue={handleSelectOptionValue}
-              swatches={swatch.swatches}
             />
           );
         }}

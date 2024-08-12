@@ -1,16 +1,18 @@
 import { Await, useLoaderData } from "@remix-run/react";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
-
 import type { ProductCardFragment } from "storefrontapi.generated";
-import { ProductSwimlane, Skeleton } from "~/modules";
+import Heading, {
+  type HeadingProps,
+  headingInputs,
+} from "~/components/Heading";
+import { Section, type SectionProps, layoutInputs } from "~/components/Section";
+import { ProductCard, ProductSwimlane, Skeleton } from "~/modules";
 
-interface RelatedProductsProps extends HydrogenComponentProps {
-  heading: string;
-  productsCount: number;
+interface RelatedProductsProps
+  extends Omit<SectionProps, "content">,
+    Omit<HeadingProps, "as"> {
+  headingTagName?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
@@ -18,25 +20,59 @@ let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
     let { recommended } = useLoaderData<{
       recommended: { nodes: ProductCardFragment[] };
     }>();
-    let { heading, productsCount, ...rest } = props;
+    let {
+      headingTagName,
+      content,
+      size,
+      mobileSize,
+      desktopSize,
+      color,
+      weight,
+      letterSpacing,
+      alignment,
+      minSize,
+      maxSize,
+      ...rest
+    } = props;
     if (recommended) {
       return (
-        <section ref={ref} {...rest}>
-          <Suspense fallback={<Skeleton className="h-32" />}>
+        <Section ref={ref} {...rest}>
+          {content && (
+            <Heading
+              content={content}
+              as={headingTagName}
+              color={color}
+              size={size}
+              mobileSize={mobileSize}
+              desktopSize={desktopSize}
+              minSize={minSize}
+              maxSize={maxSize}
+              weight={weight}
+              letterSpacing={letterSpacing}
+              alignment={alignment}
+            />
+          )}
+          <Suspense>
             <Await
               errorElement="There was a problem loading related products"
               resolve={recommended}
             >
-              {(products) => (
-                <ProductSwimlane
-                  title={heading}
-                  count={productsCount}
-                  products={products}
-                />
-              )}
+              {(products) => {
+                return (
+                  <div className="swimlane hidden-scroll md:pb-8 md:scroll-px-8 lg:scroll-px-12">
+                    {products.nodes.slice(0, 12).map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        className="snap-start w-80"
+                      />
+                    ))}
+                  </div>
+                );
+              }}
             </Await>
           </Suspense>
-        </section>
+        </Section>
       );
     }
     return <section ref={ref} {...rest} />;
@@ -54,27 +90,25 @@ export let schema: HydrogenComponentSchema = {
   },
   inspector: [
     {
-      group: "Related products",
-      inputs: [
-        {
-          type: "text",
-          name: "heading",
-          label: "Heading",
-          defaultValue: "You may also like",
-          placeholder: "Related products",
-        },
-        {
-          type: "range",
-          name: "productsCount",
-          label: "Number of products",
-          defaultValue: 12,
-          configs: {
-            min: 1,
-            max: 12,
-            step: 1,
-          },
-        },
-      ],
+      group: "Layout",
+      inputs: layoutInputs.filter((i) => i.name !== "borderRadius"),
+    },
+    {
+      group: "Heading",
+      inputs: headingInputs.map((input) => {
+        if (input.name === "as") {
+          return {
+            ...input,
+            name: "headingTagName",
+          };
+        }
+        return input;
+      }),
     },
   ],
+  presets: {
+    gap: 32,
+    width: "full",
+    content: "You may also like",
+  },
 };
