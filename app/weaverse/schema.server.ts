@@ -1,7 +1,41 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-import pkg from "../../package.json";
 import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
+import pkg from "../../package.json";
 
+let uuid = () => {
+  let lut = [];
+  for (let i = 0; i < 256; i++) {
+    lut[i] = (i < 16 ? "0" : "") + i.toString(16);
+  }
+
+  let d0 = (Math.random() * 0xffffffff) | 0;
+  let d1 = (Math.random() * 0xffffffff) | 0;
+  let d2 = (Math.random() * 0xffffffff) | 0;
+  let d3 = (Math.random() * 0xffffffff) | 0;
+
+  return (
+    lut[d0 & 0xff] +
+    lut[(d0 >> 8) & 0xff] +
+    lut[(d0 >> 16) & 0xff] +
+    lut[(d0 >> 24) & 0xff] +
+    "-" +
+    lut[d1 & 0xff] +
+    lut[(d1 >> 8) & 0xff] +
+    "-" +
+    lut[((d1 >> 16) & 0x0f) | 0x40] +
+    lut[(d1 >> 24) & 0xff] +
+    "-" +
+    lut[(d2 & 0x3f) | 0x80] +
+    lut[(d2 >> 8) & 0xff] +
+    "-" +
+    lut[(d2 >> 16) & 0xff] +
+    lut[(d2 >> 24) & 0xff] +
+    lut[d3 & 0xff] +
+    lut[(d3 >> 8) & 0xff] +
+    lut[(d3 >> 16) & 0xff] +
+    lut[(d3 >> 24) & 0xff]
+  );
+};
 let swatchesConfigs: SwatchesConfigs = {
   options: [
     {
@@ -23,50 +57,50 @@ let swatchesConfigs: SwatchesConfigs = {
   ],
   swatches: {
     colors: [
-      { id: crypto.randomUUID(), name: "Red", value: "#ff0000" },
-      { id: crypto.randomUUID(), name: "Yellow", value: "#ffff00" },
-      { id: crypto.randomUUID(), name: "Black", value: "#000000" },
-      { id: crypto.randomUUID(), name: "Blue", value: "#0000FF" },
-      { id: crypto.randomUUID(), name: "Green", value: "#00ff00" },
-      { id: crypto.randomUUID(), name: "Purple", value: "#800080" },
-      { id: crypto.randomUUID(), name: "Silver", value: "#c0c0c0" },
-      { id: crypto.randomUUID(), name: "White", value: "#ffffff" },
-      { id: crypto.randomUUID(), name: "Brown", value: "#7B3F00" },
-      { id: crypto.randomUUID(), name: "Light-brown", value: "#feb035" },
-      { id: crypto.randomUUID(), name: "Dark-turquoise", value: "#23cddc" },
-      { id: crypto.randomUUID(), name: "Orange", value: "#fe9001" },
-      { id: crypto.randomUUID(), name: "Tan", value: "#eacea7" },
-      { id: crypto.randomUUID(), name: "Violet", value: "#EE82EE" },
-      { id: crypto.randomUUID(), name: "Pink", value: "#FFC0CB" },
-      { id: crypto.randomUUID(), name: "Grey", value: "#808080" },
+      { id: uuid(), name: "Red", value: "#ff0000" },
+      { id: uuid(), name: "Yellow", value: "#ffff00" },
+      { id: uuid(), name: "Black", value: "#000000" },
+      { id: uuid(), name: "Blue", value: "#0000FF" },
+      { id: uuid(), name: "Green", value: "#00ff00" },
+      { id: uuid(), name: "Purple", value: "#800080" },
+      { id: uuid(), name: "Silver", value: "#c0c0c0" },
+      { id: uuid(), name: "White", value: "#ffffff" },
+      { id: uuid(), name: "Brown", value: "#7B3F00" },
+      { id: uuid(), name: "Light-brown", value: "#feb035" },
+      { id: uuid(), name: "Dark-turquoise", value: "#23cddc" },
+      { id: uuid(), name: "Orange", value: "#fe9001" },
+      { id: uuid(), name: "Tan", value: "#eacea7" },
+      { id: uuid(), name: "Violet", value: "#EE82EE" },
+      { id: uuid(), name: "Pink", value: "#FFC0CB" },
+      { id: uuid(), name: "Grey", value: "#808080" },
     ],
     images: [
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         name: "Dark blue",
         value:
           "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_2.png",
       },
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         name: "Light orange",
         value:
           "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_3.png",
       },
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         name: "Dark red",
         value:
           "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_4.png",
       },
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         name: "Light brown",
         value:
           "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_5.png",
       },
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         name: "Dark brown",
         value:
           "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_6.png",
