@@ -381,7 +381,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "color",
           label: "Background color",
-          name: "drawerBg",
+          name: "drawersBg",
           defaultValue: "#ffffff",
         },
         {
@@ -391,25 +391,25 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "color",
           label: "Compare price text",
-          name: "comparePriceText",
+          name: "comparePriceTextColor",
           defaultValue: "#737373",
         },
         {
           type: "color",
           label: "Sale tags",
-          name: "saleTag",
+          name: "saleTagColor",
           defaultValue: "#dc2626",
         },
         {
           type: "color",
           label: "New tags",
-          name: "newTag",
+          name: "newTagColor",
           defaultValue: "#818cf8",
         },
         {
           type: "color",
           label: "Other tags",
-          name: "otherTag",
+          name: "otherTagColor",
           defaultValue: "#1e293b",
         },
         {
