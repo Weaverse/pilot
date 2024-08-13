@@ -275,6 +275,6 @@ mark {
   }
 }
 
-#announcement-bar ~ header {
+#announcement-bar ~ header.fixed {
   top: var(--announcement-bar-height, 0px);
 }
