@@ -320,7 +320,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "color",
           label: "Transparent header text",
           name: "transparentHeaderText",
-          defaultValue: "#000000",
+          defaultValue: "#ffffff",
         },
         {
           type: "heading",

@@ -112,14 +112,14 @@ export function Footer({
               </div>
             </div>
             <div className="flex flex-col gap-6">
-              <h4 className="text-base">{addressTitle}</h4>
+              <div className="text-base">{addressTitle}</div>
               <div>
                 <p>{storeAddress}</p>
                 <p>Email: {storeEmail}</p>
               </div>
             </div>
             <div className="flex flex-col gap-6 col-span-2">
-              <h4 className="text-base">{newsletterTitle}</h4>
+              <div className="text-base">{newsletterTitle}</div>
               <div className="space-y-2">
                 <p>{newsletterDescription}</p>
                 <div className="flex gap-2">
@@ -168,13 +168,13 @@ function FooterMenu({
     <div className="flex flex-col gap-4 lg:gap-8">
       <Disclosure defaultOpen>
         <DisclosureButton className="lg:hidden text-left">
-          <h4 className="text-base">
+          <div className="text-base">
             {to === "#" ? title : <Link to={to}>{title}</Link>}
-          </h4>
+          </div>
         </DisclosureButton>
-        <h4 className="text-base hidden lg:block">
+        <div className="text-base hidden lg:block">
           {to === "#" ? title : <Link to={to}>{title}</Link>}
-        </h4>
+        </div>
         <DisclosurePanel>
           <div className="flex flex-col gap-2">
             {items.map((item, ind) => (

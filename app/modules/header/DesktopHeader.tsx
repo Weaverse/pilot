@@ -63,7 +63,7 @@ export function DesktopHeader({
               "fixed w-screen group/header",
               !scrolled &&
                 !hovered &&
-                "text-body bg-transparent border-transparent",
+                "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
             ]
           : "sticky",
       )}
