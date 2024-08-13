@@ -1,6 +1,6 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-import pkg from "../../package.json";
 import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
+import pkg from "../../package.json";
 
 let swatchesConfigs: SwatchesConfigs = {
   options: [
@@ -23,41 +23,53 @@ let swatchesConfigs: SwatchesConfigs = {
   ],
   swatches: {
     colors: [
-      { id: crypto.randomUUID(), name: "red", value: "#ff0000" },
-      { id: crypto.randomUUID(), name: "yellow", value: "#ffff00" },
-      { id: crypto.randomUUID(), name: "black", value: "#000000" },
-      { id: crypto.randomUUID(), name: "blue", value: "#0000FF" },
-      { id: crypto.randomUUID(), name: "green", value: "#00ff00" },
-      { id: crypto.randomUUID(), name: "purple", value: "#800080" },
-      { id: crypto.randomUUID(), name: "silver", value: "#c0c0c0" },
-      { id: crypto.randomUUID(), name: "white", value: "#ffffff" },
-      { id: crypto.randomUUID(), name: "brown", value: "#7B3F00" },
-      { id: crypto.randomUUID(), name: "light-brown", value: "#feb035" },
-      { id: crypto.randomUUID(), name: "dark-turquoise", value: "#23cddc" },
-      { id: crypto.randomUUID(), name: "orange", value: "#fe9001" },
-      { id: crypto.randomUUID(), name: "tan", value: "#eacea7" },
-      { id: crypto.randomUUID(), name: "violet", value: "#EE82EE" },
-      { id: crypto.randomUUID(), name: "pink", value: "#FFC0CB" },
-      { id: crypto.randomUUID(), name: "grey", value: "#808080" },
+      { id: "1", name: "Red", value: "#ff0000" },
+      { id: "2", name: "Yellow", value: "#ffff00" },
+      { id: "3", name: "Black", value: "#000000" },
+      { id: "4", name: "Blue", value: "#0000FF" },
+      { id: "5", name: "Green", value: "#00ff00" },
+      { id: "6", name: "Purple", value: "#800080" },
+      { id: "7", name: "Silver", value: "#c0c0c0" },
+      { id: "8", name: "White", value: "#ffffff" },
+      { id: "9", name: "Brown", value: "#7B3F00" },
+      { id: "10", name: "Light-brown", value: "#feb035" },
+      { id: "11", name: "Dark-turquoise", value: "#23cddc" },
+      { id: "12", name: "Orange", value: "#fe9001" },
+      { id: "13", name: "Tan", value: "#eacea7" },
+      { id: "14", name: "Violet", value: "#EE82EE" },
+      { id: "15", name: "Pink", value: "#FFC0CB" },
+      { id: "16", name: "Grey", value: "#808080" },
     ],
     images: [
       {
-        id: crypto.randomUUID(),
-        name: "image1",
+        id: "1",
+        name: "Dark blue",
         value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_2.png",
       },
       {
-        id: crypto.randomUUID(),
-        name: "image2",
+        id: "2",
+        name: "Light orange",
         value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_3.png",
       },
       {
-        id: crypto.randomUUID(),
-        name: "image3",
+        id: "3",
+        name: "Dark red",
         value:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_4.png",
+      },
+      {
+        id: "4",
+        name: "Light brown",
+        value:
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_5.png",
+      },
+      {
+        id: "5",
+        name: "Dark brown",
+        value:
+          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_6.png",
       },
     ],
   },
@@ -146,19 +158,7 @@ export let themeSchema: HydrogenThemeSchema = {
             step: 1,
             unit: "px",
           },
-          defaultValue: 48,
-        },
-        {
-          type: "color",
-          label: "Text color",
-          name: "announcementBarTextColor",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
-          label: "Background color",
-          name: "announcementBarBgColor",
-          defaultValue: "#000000",
+          defaultValue: 36,
         },
         {
           type: "switch",
@@ -253,10 +253,19 @@ export let themeSchema: HydrogenThemeSchema = {
         },
       ],
     },
-
     {
       group: "Colors",
       inputs: [
+        {
+          type: "heading",
+          label: "General",
+        },
+        {
+          type: "color",
+          label: "Text",
+          name: "colorText",
+          defaultValue: "#0F0F0F",
+        },
         {
           type: "color",
           label: "Background",
@@ -265,57 +274,161 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Inverse background",
-          name: "colorInverseBackground",
-          defaultValue: "#0f0f0f",
+          label: "Foreground",
+          name: "colorForeground",
+          defaultValue: "#e5e7eb",
         },
         {
           type: "color",
-          label: "Text",
-          name: "colorText",
-          defaultValue: "#0F0F0F",
+          label: "Lines and borders",
+          name: "colorLine",
+          defaultValue: "#a8a29e",
         },
-        // {
-        //   type: "color",
-        //   label: "Inverse text",
-        //   name: "colorInverseText",
-        //   defaultValue: "#ffffff",
-        // },
-        // {
-        //   type: "color",
-        //   label: "Button",
-        //   name: "colorButton",
-        //   defaultValue: "#0F0F0F",
-        // },
-        // {
-        //   type: "color",
-        //   label: "Button text",
-        //   name: "colorButtonText",
-        //   defaultValue: "#FFF",
-        // },
-        // {
-        //   type: "color",
-        //   label: "Inverse button",
-        //   name: "colorInverseButton",
-        //   defaultValue: "#FFF",
-        // },
-        // {
-        //   type: "color",
-        //   label: "Inverse button text",
-        //   name: "colorInverseButtonText",
-        //   defaultValue: "#0F0F0F",
-        // },
         {
-          type: "color",
-          label: "Sale",
-          name: "colorSale",
-          defaultValue: "#DE4B4B",
+          type: "heading",
+          label: "Announcement bar",
         },
         {
           type: "color",
-          label: "Border",
-          name: "colorBorder",
-          defaultValue: "#696662",
+          label: "Announcement text",
+          name: "topbarTextColor",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "color",
+          label: "Announcement background",
+          name: "topbarBgColor",
+          defaultValue: "#000000",
+        },
+        {
+          type: "heading",
+          label: "Header",
+        },
+        {
+          type: "color",
+          label: "Header background",
+          name: "headerBgColor",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "color",
+          label: "Header text",
+          name: "headerText",
+          defaultValue: "#000000",
+        },
+        {
+          type: "color",
+          label: "Transparent header text",
+          name: "transparentHeaderText",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "heading",
+          label: "Footer",
+        },
+        {
+          type: "color",
+          label: "Footer background",
+          name: "footerBgColor",
+          defaultValue: "#000000",
+        },
+        {
+          type: "color",
+          label: "Footer text",
+          name: "footerText",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "heading",
+          label: "Primary button",
+        },
+        {
+          type: "color",
+          label: "Background color",
+          name: "buttonPrimaryBg",
+          defaultValue: "#000000",
+        },
+        {
+          type: "color",
+          label: "Text color",
+          name: "buttonPrimaryColor",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "heading",
+          label: "Secondary button",
+        },
+        {
+          type: "color",
+          label: "Background color",
+          name: "buttonSecondaryBg",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "color",
+          label: "Text color",
+          name: "buttonSecondaryColor",
+          defaultValue: "#000000",
+        },
+        {
+          type: "heading",
+          label: "Outline button",
+        },
+        {
+          type: "color",
+          label: "Text and border",
+          name: "buttonOutlineTextAndBorder",
+          defaultValue: "#000000",
+        },
+        {
+          type: "heading",
+          label: "Drawers and popovers",
+        },
+        {
+          type: "color",
+          label: "Background color",
+          name: "drawersBg",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "heading",
+          label: "Product",
+        },
+        {
+          type: "color",
+          label: "Compare price text",
+          name: "comparePriceTextColor",
+          defaultValue: "#737373",
+        },
+        {
+          type: "color",
+          label: "Sale tags",
+          name: "saleTagColor",
+          defaultValue: "#dc2626",
+        },
+        {
+          type: "color",
+          label: "New tags",
+          name: "newTagColor",
+          defaultValue: "#818cf8",
+        },
+        {
+          type: "color",
+          label: "Other tags",
+          name: "otherTagColor",
+          defaultValue: "#1e293b",
+        },
+        {
+          type: "color",
+          label: "Sold out & unavailable",
+          name: "soldOutAndUnavailable",
+          defaultValue: "#d4d4d4",
+        },
+        {
+          type: "color",
+          label: "Star rating",
+          name: "starRating",
+          defaultValue: "#fde047",
         },
       ],
     },
@@ -421,152 +534,11 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Buttons",
-      inputs: [
-        {
-          type: "heading",
-          label: "Primary",
-        },
-        {
-          type: "color",
-          label: "Background color",
-          name: "buttonPrimaryBg",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Text color",
-          name: "buttonPrimaryColor",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
-          label: "Border color",
-          name: "buttonPrimaryBorder",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Background color (hover)",
-          name: "buttonPrimaryBgHover",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
-          label: "Text color (hover)",
-          name: "buttonPrimaryColorHover",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Border color (hover)",
-          name: "buttonPrimaryBorderHover",
-          defaultValue: "#000000",
-        },
-        {
-          type: "heading",
-          label: "Secondary",
-        },
-        {
-          type: "color",
-          label: "Background color",
-          name: "buttonSecondaryBg",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
-          label: "Text color",
-          name: "buttonSecondaryColor",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Border color",
-          name: "buttonSecondaryBorder",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Background color (hover)",
-          name: "buttonSecondaryBgHover",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Text color (hover)",
-          name: "buttonSecondaryColorHover",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
-          label: "Border color (hover)",
-          name: "buttonSecondaryBorderHover",
-          defaultValue: "#000000",
-        },
-        {
-          type: "heading",
-          label: "Outline",
-        },
-        {
-          type: "color",
-          label: "Background color",
-          name: "buttonOutlineBg",
-          defaultValue: "#0000000000",
-        },
-        {
-          type: "color",
-          label: "Text color",
-          name: "buttonOutlineColor",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Border color",
-          name: "buttonOutlineBorder",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Background color (hover)",
-          name: "buttonOutlineBgHover",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Text color (hover)",
-          name: "buttonOutlineColorHover",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
-          label: "Border color (hover)",
-          name: "buttonOutlineBorderHover",
-          defaultValue: "#000000",
-        },
-        {
-          type: "heading",
-          label: "Link",
-        },
-        {
-          type: "color",
-          label: "Text color",
-          name: "buttonLinkColor",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
-          label: "Text color (hover)",
-          name: "buttonLinkColorHover",
-          defaultValue: "#000000",
-        },
-      ],
-    },
-    {
       group: "Product swatches",
       inputs: [
         {
           type: "swatches",
-          name: "swatches",
+          name: "productSwatches",
           label: "Config swatches",
           defaultValue: swatchesConfigs,
         },
@@ -672,7 +644,6 @@ export let themeSchema: HydrogenThemeSchema = {
         },
       ],
     },
-
     {
       group: "Footer",
       inputs: [

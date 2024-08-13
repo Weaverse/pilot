@@ -35,7 +35,7 @@ export function AnnouncementBar() {
     scrollingGap,
     scrollingSpeed,
   } = themeSettings;
-  const standardContent = standardizeContent(announcementBarText);
+  const standardContent = announcementBarText;
   const settings = {
     content: standardContent,
     announcementBarTextColor,

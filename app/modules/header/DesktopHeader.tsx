@@ -2,7 +2,7 @@ import { Await, Link, useLocation, useRouteLoaderData } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconMagnifyingGlass, IconSignIn, IconUser } from "~/components/Icons";
+import { IconMagnifyingGlass, IconUser } from "~/components/Icons";
 import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
 import { cn } from "~/lib/cn";
 import { type EnhancedMenu, useIsHomePath } from "~/lib/utils";
@@ -47,19 +47,19 @@ export function DesktopHeader({
   return (
     <header
       className={cn(
-        "hover:text-body hover:bg-primary",
+        "hover:text-body hover:bg-background",
         "transition-colors duration-300 ease-in-out",
         "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
         "px-6 md:px-8 lg:px-12",
-        "text-body bg-primary",
-        "border-b border-header",
+        "text-body bg-background",
+        "border-b border-[rgb(230,230,230)]",
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
           ? [
               "fixed w-screen group/header",
               !scrolled &&
                 !hovered &&
-                "text-primary bg-transparent border-transparent",
+                "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
             ]
           : "sticky",
       )}
@@ -72,7 +72,7 @@ export function DesktopHeader({
           openDrawer={openDrawer}
           closeDrawer={closeDrawer}
         />
-        <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
+        <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-body/5" />
         <CartCount
           isHome={isHome}
           openCart={openCart}
@@ -89,7 +89,7 @@ function AccountLink({ className }: { className?: string }) {
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconSignIn className="w-5 h-5" />}>
+      <Suspense fallback={<IconUser className="w-5 h-5" />}>
         <Await
           resolve={isLoggedIn}
           errorElement={<IconUser className="w-5 h-5" />}
@@ -98,7 +98,7 @@ function AccountLink({ className }: { className?: string }) {
             isLoggedIn ? (
               <IconUser className="w-5 h-5" />
             ) : (
-              <IconSignIn className="w-5 h-5" />
+              <IconUser className="w-5 h-5" />
             )
           }
         </Await>
@@ -129,7 +129,7 @@ function SearchToggle({
       <button
         type="button"
         onClick={openDrawer}
-        className="relative flex h-8 w-8 items-center justify-center focus:ring-primary/5"
+        className="relative flex h-8 w-8 items-center justify-center"
       >
         <IconMagnifyingGlass className="w-5 h-5" />
       </button>

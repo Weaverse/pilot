@@ -9,12 +9,7 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import {
-  IconList,
-  IconMagnifyingGlass,
-  IconSignIn,
-  IconUser,
-} from "~/components/Icons";
+import { IconList, IconMagnifyingGlass, IconUser } from "~/components/Icons";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { Logo } from "../Logo";
@@ -43,8 +38,8 @@ export function MobileHeader({
       className={clsx(
         enableTransparent ? "fixed w-screen" : "sticky",
         isTransparent
-          ? "bg-transparent text-primary"
-          : "shadow-header text-body bg-primary",
+          ? "bg-transparent text-body"
+          : "shadow-header text-body bg-background",
         "transition-colors duration-300 ease-in-out",
         "flex lg:hidden items-center h-nav z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8",
       )}
@@ -89,7 +84,7 @@ function AccountLink({ className }: { className?: string }) {
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconSignIn className="w-5 h-5" />}>
+      <Suspense fallback={<IconUser className="w-5 h-5" />}>
         <Await
           resolve={isLoggedIn}
           errorElement={<IconUser className="w-5 h-5" />}

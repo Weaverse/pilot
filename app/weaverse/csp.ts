@@ -1,16 +1,4 @@
 import type { AppLoadContext } from "@shopify/remix-oxygen";
-import type { CreateWeaverseClientArgs } from "@weaverse/hydrogen";
-import { WeaverseClient } from "@weaverse/hydrogen";
-import { components } from "~/weaverse/components";
-import { themeSchema } from "~/weaverse/schema.server";
-
-export function createWeaverseClient(args: CreateWeaverseClientArgs) {
-  return new WeaverseClient({
-    ...args,
-    themeSchema,
-    components,
-  });
-}
 
 export function getWeaverseCsp(request: Request, context: AppLoadContext) {
   let url = new URL(request.url);

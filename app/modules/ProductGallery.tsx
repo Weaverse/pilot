@@ -34,7 +34,7 @@ export function ProductGallery({
         const style = [
           isFullWidth ? "md:col-span-2" : "md:col-span-1",
           isFirst || isFourth ? "" : "md:aspect-[4/5]",
-          "aspect-square snap-center card-image bg-white dark:bg-contrast/10 w-mobileGallery md:w-full",
+          "aspect-square snap-center card-image bg-white w-mobileGallery md:w-full",
         ].join(" ");
 
         return (

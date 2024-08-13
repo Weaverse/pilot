@@ -23,37 +23,44 @@ let variants = cva(
       variant: {
         primary: [
           "border px-4 py-3",
-          "text-[var(--color-button-text,var(--button-primary-color))]",
-          "bg-[var(--color-button-bg,var(--button-primary-bg))]",
-          "border-[var(--color-button-border,var(--button-primary-border))]",
-          "hover:bg-[var(--color-button-bg-hover,var(--button-primary-bg-hover))]",
-          "hover:text-[var(--color-button-text-hover,var(--button-primary-color-hover))]",
-          "hover:border-[var(--color-button-border-hover,var(--button-primary-border-hover))]",
+          "text-[var(--color-button-primary-text)]",
+          "bg-[var(--color-button-primary-bg)]",
+          "border-[var(--color-button-primary-bg)]",
+          "hover:bg-[var(--color-button-primary-text)]",
+          "hover:text-[var(--color-button-primary-bg)]",
+          "hover:border-[var(--color-button-primary-text)]",
         ],
         secondary: [
           "border px-4 py-3",
-          "text-[var(--color-button-text,var(--button-secondary-color))]",
-          "bg-[var(--color-button-bg,var(--button-secondary-bg))]",
-          "border-[var(--color-button-border,var(--button-secondary-border))]",
-          "hover:bg-[var(--color-button-bg-hover,var(--button-secondary-bg-hover))]",
-          "hover:text-[var(--color-button-text-hover,var(--button-secondary-color-hover))]",
-          "hover:border-[var(--color-button-border-hover,var(--button-secondary-border-hover))]",
+          "text-[var(--color-button-secondary-text)]",
+          "bg-[var(--color-button-secondary-bg)]",
+          "border-[var(--color-button-secondary-bg)]",
+          "hover:bg-[var(--color-button-secondary-text)]",
+          "hover:text-[var(--color-button-secondary-bg)]",
+          "hover:border-[var(--color-button-secondary-text)]",
         ],
         outline: [
           "border px-4 py-3",
-          "text-[var(--color-button-text,var(--button-outline-color))]",
-          "bg-[var(--color-button-bg,var(--button-outline-bg))]",
-          "border-[var(--color-button-border,var(--button-outline-border))]",
-          "hover:bg-[var(--color-button-bg-hover,var(--button-outline-bg-hover))]",
-          "hover:text-[var(--color-button-text-hover,var(--button-outline-color-hover))]",
-          "hover:border-[var(--color-button-border-hover,var(--button-outline-border-hover))]",
+          "text-[var(--color-button-outline-text-and-border)]",
+          "bg-transparent",
+          "border-[var(--color-button-outline-text-and-border)]",
+          "hover:bg-[var(--color-button-outline-text-and-border)]",
+          "hover:text-[var(--color-text)]",
+          "hover:border-[var(--color-button-outline-text-and-border)]",
+        ],
+        custom: [
+          "border px-4 py-3",
+          "text-[var(--color-button-text)]",
+          "bg-[var(--color-button-bg)]",
+          "border-[var(--color-button-border)]",
+          "hover:bg-[var(--color-button-bg-hover)]",
+          "hover:text-[var(--color-button-text-hover)]",
+          "hover:border-[var(--color-button-border-hover)]",
         ],
         link: [
           "bg-transparent py-2 border-b",
-          "text-[var(--color-button-text,var(--button-link-color))]",
-          "border-b-[var(--color-button-border,var(--button-link-color))]",
-          "hover:text-[var(--color-button-text-hover,var(--button-link-color-hover))]",
-          "hover:border-[var(--color-button-border-hover,var(--button-link-color-hover))]",
+          "text-[var(--color-text)]",
+          "border-b-[var(--color-text)]",
         ],
       },
     },
@@ -64,7 +71,6 @@ let variants = cva(
 );
 
 export interface ButtonStyleProps {
-  buttonStyle: "inherit" | "custom";
   backgroundColor: string;
   textColor: string;
   borderColor: string;
@@ -97,7 +103,6 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     loading,
     openInNewTab,
     className,
-    buttonStyle,
     backgroundColor,
     textColor,
     borderColor,
@@ -108,7 +113,7 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     children,
     ...rest
   } = props;
-  if (buttonStyle === "custom") {
+  if (variant === "custom") {
     style = {
       ...style,
       "--color-button-bg": backgroundColor,
@@ -209,6 +214,7 @@ export let buttonContentInputs: InspectorGroup["inputs"] = [
         { label: "Secondary", value: "secondary" },
         { label: "Outline", value: "outline" },
         { label: "Link", value: "link" },
+        { label: "Custom styles", value: "custom" },
       ],
     },
     defaultValue: "primary",
@@ -216,60 +222,46 @@ export let buttonContentInputs: InspectorGroup["inputs"] = [
 ];
 export let buttonStylesInputs: InspectorGroup["inputs"] = [
   {
-    type: "select",
-    name: "buttonStyle",
-    label: "Button style",
-    configs: {
-      options: [
-        { label: "Inherit", value: "inherit" },
-        { label: "Custom", value: "custom" },
-      ],
-    },
-    defaultValue: "inherit",
-    helpText:
-      "Use 'Inherit' for theme-based styles, or 'Custom' to modify button appearance.",
-  },
-  {
     type: "color",
     label: "Background color",
     name: "backgroundColor",
     defaultValue: "#000",
-    condition: "buttonStyle.eq.custom",
+    condition: "variant.eq.custom",
   },
   {
     type: "color",
     label: "Text color",
     name: "textColor",
     defaultValue: "#fff",
-    condition: "buttonStyle.eq.custom",
+    condition: "variant.eq.custom",
   },
   {
     type: "color",
     label: "Border color",
     name: "borderColor",
     defaultValue: "#00000000",
-    condition: "buttonStyle.eq.custom",
+    condition: "variant.eq.custom",
   },
   {
     type: "color",
     label: "Background color (hover)",
     name: "backgroundColorHover",
     defaultValue: "#00000000",
-    condition: "buttonStyle.eq.custom",
+    condition: "variant.eq.custom",
   },
   {
     type: "color",
     label: "Text color (hover)",
     name: "textColorHover",
     defaultValue: "#000",
-    condition: "buttonStyle.eq.custom",
+    condition: "variant.eq.custom",
   },
   {
     type: "color",
     label: "Border color (hover)",
     name: "borderColorHover",
     defaultValue: "#000",
-    condition: "buttonStyle.eq.custom",
+    condition: "variant.eq.custom",
   },
 ];
 
@@ -277,7 +269,7 @@ export let buttonInputs: InspectorGroup["inputs"] = [
   ...buttonContentInputs,
   {
     type: "heading",
-    label: "Button styles",
+    label: "Button custom styles",
   },
   ...buttonStylesInputs,
 ];

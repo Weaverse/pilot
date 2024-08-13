@@ -35,7 +35,7 @@
   }
 
   body {
-    @apply bg-primary text-body/90 antialiased;
+    @apply bg-background text-body/90 antialiased;
   }
 
   html {
@@ -151,7 +151,7 @@
       top: 50%;
       transform: translateY(-50%);
       background: rgb(var(--color-border));
-      box-shadow: 0.5px 0.5px 0px 0.5px rgb(var(--color-contrast));
+      box-shadow: 0.5px 0.5px 0px 0.5px rgb(var(--color-lines));
     }
   }
 
@@ -176,7 +176,7 @@
   overflow: hidden;
   &::before {
     content: "";
-    @apply absolute -rotate-45 bg-bar/30;
+    @apply absolute -rotate-45 bg-line/30;
     z-index: 1;
     left: -1px;
     bottom: -1px;

@@ -18,7 +18,7 @@ export function OrderCard({ order }: { order: OrderCardFragment }) {
         prefetch="intent"
       >
         {lineItems[0].image && (
-          <div className="card-image aspect-square bg-primary/5">
+          <div className="card-image aspect-square bg-background/5">
             <Image
               width={168}
               height={168}
@@ -59,7 +59,7 @@ export function OrderCard({ order }: { order: OrderCardFragment }) {
                     className={`px-3 py-1 text-xs font-medium rounded-full ${
                       fulfillmentStatus === "SUCCESS"
                         ? "bg-green-100 text-green-800"
-                        : "bg-primary/5 text-primary/50"
+                        : "bg-background/5 text-body/50"
                     }`}
                   >
                     <Text size="fine">{statusMessage(fulfillmentStatus)}</Text>

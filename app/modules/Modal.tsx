@@ -26,11 +26,11 @@ export function Modal({
       aria-modal="true"
       id="modal-bg"
     >
-      <div className="fixed inset-0 transition-opacity bg-opacity-75 bg-primary/40"></div>
+      <div className="fixed inset-0 transition-opacity bg-opacity-75 bg-background/40" />
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
           <div
-            className="relative flex-1 px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform rounded shadow-xl bg-contrast sm:my-12 sm:flex-none sm:p-6"
+            className="relative flex-1 px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform rounded shadow-xl bg-foreground sm:my-12 sm:flex-none sm:p-6"
             role="button"
             onClick={(e) => {
               e.stopPropagation();

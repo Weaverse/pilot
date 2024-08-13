@@ -36,7 +36,7 @@ export const Button = forwardRef(
       primary: `${baseButtonClasses} border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content`,
       secondary: `${baseButtonClasses} border-2 border-btn text-btnTextInverse hover:bg-btn hover:text-btn-content`,
       "secondary-white": `${baseButtonClasses} border-2 border-inv-btn text-btn hover:bg-inv-btn hover:text-inv-btn-content`,
-      inline: "border-b border-bar/10 leading-none pb-1",
+      inline: "border-b border-line/10 leading-none pb-1",
     };
 
     const widths = {

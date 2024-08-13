@@ -15,7 +15,6 @@ export { AccountDetails } from "./AccountDetails";
 export { AccountAddressBook } from "./AccountAddressBook";
 export { Modal } from "./Modal";
 export { Link } from "./Link";
-export { Hero } from "./Hero";
 export { SortFilter } from "./SortFilter";
 export { Grid } from "./Grid";
 export { FeaturedProducts } from "./FeaturedProducts";

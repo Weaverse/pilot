@@ -325,8 +325,7 @@ export let schema: HydrogenComponentSchema = {
           {
             type: "button",
             text: "Shop collection",
-            variant: "primary",
-            buttonStyle: "custom",
+            variant: "custom",
             backgroundColor: "#00000000",
             textColor: "#fff",
             borderColor: "#fff",
@@ -367,7 +366,7 @@ export let schema: HydrogenComponentSchema = {
           {
             type: "button",
             text: "Shop collection",
-            buttonStyle: "custom",
+            variant: "custom",
             backgroundColor: "#00000000",
             textColor: "#fff",
             borderColor: "#fff",

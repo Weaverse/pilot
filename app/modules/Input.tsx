@@ -20,9 +20,9 @@ let variants = cva(
       variant: {
         default: "leading-tight",
         search:
-          "px-0 py-2 text-2xl w-full focus:ring-0 border-x-0 border-t-0 transition border-b-2 border-bar/10 focus:border-bar/50",
+          "px-0 py-2 text-2xl w-full focus:ring-0 border-x-0 border-t-0 transition border-b-2 border-line/10 focus:border-line/50",
         minisearch:
-          "hidden md:inline-block text-left lg:text-right border-b transition border-transparent -mb-px border-x-0 border-t-0 appearance-none px-0 py-1 focus:ring-transparent placeholder:opacity-20 placeholder:text-inherit focus:border-bar/50",
+          "hidden md:inline-block text-left lg:text-right border-b transition border-transparent -mb-px border-x-0 border-t-0 appearance-none px-0 py-1 focus:ring-transparent placeholder:opacity-20 placeholder:text-inherit focus:border-line/50",
         error: "border-red-500",
       },
     },
@@ -53,7 +53,7 @@ export let Input = forwardRef<HTMLInputElement, InputProps>(
     let [focused, setFocused] = useState(false);
     let commonClasses = clsx(
       "w-full border px-3 py-3",
-      focused ? "border-bar/50" : "border-bar/30",
+      focused ? "border-line/50" : "border-line/30",
       className,
     );
 
@@ -95,7 +95,7 @@ export let Input = forwardRef<HTMLInputElement, InputProps>(
       <div
         className={clsx(
           commonClasses,
-          "flex gap-2.5 overflow-hidden items-center bg-primary p-2.5 border",
+          "flex gap-2.5 overflow-hidden items-center bg-background p-2.5 border",
         )}
       >
         {prefixElement}
