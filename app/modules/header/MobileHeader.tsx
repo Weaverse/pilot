@@ -43,8 +43,8 @@ export function MobileHeader({
       className={clsx(
         enableTransparent ? "fixed w-screen" : "sticky",
         isTransparent
-          ? "bg-transparent text-primary"
-          : "shadow-header text-body bg-primary",
+          ? "bg-transparent text-body"
+          : "shadow-header text-body bg-background",
         "transition-colors duration-300 ease-in-out",
         "flex lg:hidden items-center h-nav z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8",
       )}

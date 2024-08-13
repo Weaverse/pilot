@@ -66,7 +66,7 @@ export function Drawer({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 top-nav bg-primary bg-opacity-25 text-body" />
+          <div className="fixed inset-0 top-nav bg-background bg-opacity-25 text-body" />
         </Transition.Child>
 
         <div className="fixed inset-0 top-nav">
@@ -91,7 +91,7 @@ export function Drawer({
               >
                 <DialogPanel
                   className={cn(
-                    "text-left align-middle transition-all transform shadow-xl  bg-primary",
+                    "text-left align-middle transition-all transform shadow-xl  bg-background",
                     openFrom === "top"
                       ? "h-fit w-screen"
                       : "max-w-lg h-screen-dynamic",

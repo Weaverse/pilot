@@ -23,11 +23,12 @@ export function GlobalStyle() {
   let settings = useThemeSettings();
   if (settings) {
     let {
-      colorBackground,
       colorText,
-      colorLines,
-      announcementBarTextColor,
-      announcementBarBgColor,
+      colorBackground,
+      colorForeground,
+      colorLine,
+      topbarTextColor,
+      topbarBgColor,
       headerBgColor,
       headerText,
       transparentHeaderText,
@@ -69,20 +70,21 @@ export function GlobalStyle() {
               --page-width: ${pageWidth}px;
 
               /* Colors */
+              --color-text: ${hexToRgbString(colorText)};
               --color-background: ${hexToRgbString(colorBackground)};
-              --color-text: ${colorText};
-              --color-lines: ${hexToRgbString(colorLines)};
-              --color-announcement-bar-text: ${hexToRgbString(announcementBarTextColor)};
-              --color-announcement-bar-bg: ${hexToRgbString(announcementBarBgColor)};
+              --color-foreground: ${hexToRgbString(colorForeground)};
+              --color-line: ${hexToRgbString(colorLine)};
+              --color-topbar-text: ${hexToRgbString(topbarTextColor)};
+              --color-topbar-bg: ${hexToRgbString(topbarBgColor)};
               --color-header-bg: ${hexToRgbString(headerBgColor)};
               --color-header-text: ${hexToRgbString(headerText)};
               --color-transparent-header-text: ${hexToRgbString(transparentHeaderText)};
               --color-footer-bg: ${hexToRgbString(footerBgColor)};
               --color-footer-text: ${hexToRgbString(footerText)};
               --color-button-primary-bg: ${hexToRgbString(buttonPrimaryBg)};
-              --color-button-primary-color: ${hexToRgbString(buttonPrimaryColor)};
+              --color-button-primary-text: ${hexToRgbString(buttonPrimaryColor)};
               --color-button-secondary-bg: ${hexToRgbString(buttonSecondaryBg)};
-              --color-button-secondary-color: ${hexToRgbString(buttonSecondaryColor)};
+              --color-button-secondary-text: ${hexToRgbString(buttonSecondaryColor)};
               --color-button-outline-text-and-border: ${hexToRgbString(buttonOutlineTextAndBorder)};
               --color-drawers-bg: ${hexToRgbString(drawersBg)};
               --color-compare-price-text: ${hexToRgbString(comparePriceTextColor)};

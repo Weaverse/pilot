@@ -54,10 +54,9 @@ export function DrawerFilter({
 }: DrawerFilterProps) {
   const { openDrawer, isOpen, closeDrawer } = useDrawer();
   return (
-    <div className="border-y border-bar-subtle py-4 ">
+    <div className="border-y border-line py-4 ">
       <div className="gap-4 md:gap-8 px-6 md:px-8 lg:px-12 flex w-full items-center justify-between">
         <div className="flex flex-1">
-          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
             className={clsx(
               "border cursor-pointer hidden lg:block",
@@ -68,7 +67,6 @@ export function DrawerFilter({
           >
             <IconFourGrid className="w-12 h-12 text-[#88847F]" />
           </div>
-          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
             className={clsx(
               "border cursor-pointer hidden lg:block",
@@ -79,7 +77,6 @@ export function DrawerFilter({
           >
             <IconThreeGrid className="w-12 h-12 text-[#88847F]" />
           </div>
-          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
             className={clsx(
               "border cursor-pointer lg:hidden",
@@ -90,7 +87,6 @@ export function DrawerFilter({
           >
             <IconTwoGrid className="w-12 h-12 text-[#88847F]" />
           </div>
-          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
             className={clsx(
               "border cursor-pointer lg:hidden",
@@ -359,7 +355,7 @@ export default function SortMenu({
       </Menu.Button>
       <Menu.Items
         as="nav"
-        className="absolute right-0 top-14 flex h-fit w-56 flex-col gap-2 rounded border bg-primary p-5"
+        className="absolute right-0 top-14 flex h-fit w-56 flex-col gap-2 rounded border bg-background p-5"
       >
         {items.map((item) => (
           <Menu.Item key={item.label}>

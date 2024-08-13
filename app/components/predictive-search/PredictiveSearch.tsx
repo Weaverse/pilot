@@ -6,7 +6,7 @@ import { PredictiveSearchForm } from "./SearchForm";
 export function PredictiveSearch(props: { isOpen?: boolean }) {
   let { isOpen } = props;
   return (
-    <div className="relative border-t border-bar-subtle">
+    <div className="relative border-t border-line">
       <PredictiveSearchForm>
         {({ fetchResults, inputRef }) => (
           <div className="mx-auto w-full max-w-[560px] p-6">

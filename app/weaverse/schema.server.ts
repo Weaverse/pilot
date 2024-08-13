@@ -262,20 +262,26 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Background",
-          name: "colorBackground",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "color",
           label: "Text",
           name: "colorText",
           defaultValue: "#0F0F0F",
         },
         {
           type: "color",
+          label: "Background",
+          name: "colorBackground",
+          defaultValue: "#ffffff",
+        },
+        {
+          type: "color",
+          label: "Foreground",
+          name: "colorForeground",
+          defaultValue: "#e5e7eb",
+        },
+        {
+          type: "color",
           label: "Lines and borders",
-          name: "colorLines",
+          name: "colorLine",
           defaultValue: "#a8a29e",
         },
         {
@@ -285,13 +291,13 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "color",
           label: "Announcement text",
-          name: "announcementBarTextColor",
+          name: "topbarTextColor",
           defaultValue: "#ffffff",
         },
         {
           type: "color",
           label: "Announcement background",
-          name: "announcementBarBgColor",
+          name: "topbarBgColor",
           defaultValue: "#000000",
         },
         {

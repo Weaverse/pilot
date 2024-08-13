@@ -126,9 +126,9 @@ export function Section({
 
   const dividers = {
     none: "border-none",
-    top: "border-t border-bar/05",
-    bottom: "border-b border-bar/05",
-    both: "border-y border-bar/05",
+    top: "border-t border-line/05",
+    bottom: "border-b border-line/05",
+    both: "border-y border-line/05",
   };
 
   const displays = {

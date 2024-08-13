@@ -51,19 +51,19 @@ export function DesktopHeader({
   return (
     <header
       className={cn(
-        "hover:text-body hover:bg-primary",
+        "hover:text-body hover:bg-background",
         "transition-colors duration-300 ease-in-out",
         "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
         "px-6 md:px-8 lg:px-12",
-        "text-body bg-primary",
-        "border-b border-header",
+        "text-body bg-background",
+        "border-b border-[rgb(230,230,230)]",
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
           ? [
               "fixed w-screen group/header",
               !scrolled &&
                 !hovered &&
-                "text-primary bg-transparent border-transparent",
+                "text-body bg-transparent border-transparent",
             ]
           : "sticky",
       )}
@@ -77,7 +77,7 @@ export function DesktopHeader({
           openDrawer={openDrawer}
           closeDrawer={closeDrawer}
         />
-        <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
+        <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-body/5" />
         <CartCount
           isHome={isHome}
           openCart={openCart}
@@ -134,7 +134,7 @@ function SearchToggle({
       <button
         type="button"
         onClick={openDrawer}
-        className="relative flex h-8 w-8 items-center justify-center focus:ring-primary/5"
+        className="relative flex h-8 w-8 items-center justify-center"
       >
         <IconMagnifyingGlass className="w-5 h-5" />
       </button>

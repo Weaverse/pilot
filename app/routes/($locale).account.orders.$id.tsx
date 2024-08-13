@@ -294,7 +294,7 @@ export default function OrderRoute() {
                     `mt-3 px-3 py-1 text-xs font-medium rounded-full inline-block w-auto`,
                     fulfillmentStatus === "SUCCESS"
                       ? "bg-green-100 text-green-800"
-                      : "bg-primary/20 text-primary/50",
+                      : "bg-background/20 text-body/50",
                   )}
                 >
                   <Text size="fine">{statusMessage(fulfillmentStatus!)}</Text>

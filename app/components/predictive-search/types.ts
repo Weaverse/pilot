@@ -10,7 +10,7 @@ export type UseSearchReturn = NormalizedPredictiveSearch & {
   searchTerm: React.MutableRefObject<string>;
 };
 
-type PredicticeSearchResultItemImage =
+type PredictiveSearchResultItemImage =
   | PredictiveCollectionFragment["image"]
   | PredictiveArticleFragment["image"]
   | PredictiveProductFragment["featuredImage"];
@@ -35,7 +35,7 @@ export type NormalizedPredictiveSearchResultItem = {
   __typename: string | undefined;
   handle: string;
   id: string;
-  image?: PredicticeSearchResultItemImage;
+  image?: PredictiveSearchResultItemImage;
   price?: PredictiveSearchResultItemPrice;
   compareAtPrice?: PredictiveSearchResultItemPrice;
   styledTitle?: string;

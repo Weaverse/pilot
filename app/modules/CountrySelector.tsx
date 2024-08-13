@@ -82,7 +82,7 @@ export function CountrySelector() {
   return (
     <div ref={observerRef} className="grid gap-4 w-80">
       <Popover>
-        <PopoverButton className="w-full border border-contrast/30 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
+        <PopoverButton className="w-full border border-line/30 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
           {selectedLocale.label}
           <IconCaretDown className="w-5 h-5" />
         </PopoverButton>
@@ -114,7 +114,7 @@ export function CountrySelector() {
                     key={countryPath}
                     type="button"
                     onClick={onChangeLocale}
-                    className="text-white bg-black hover:bg-primary/30 w-full p-2 transition flex justify-start items-center text-left cursor-pointer py-2 px-4 text-sm"
+                    className="text-white bg-black hover:bg-background/30 w-full p-2 transition flex justify-start items-center text-left cursor-pointer py-2 px-4 text-sm"
                   >
                     {countryLocale.label}
                     {isSelected ? (
