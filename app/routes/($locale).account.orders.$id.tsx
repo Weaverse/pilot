@@ -31,7 +31,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       { variables: { orderId } },
     );
 
-    if (errors?.length || !data?.order || !data?.lineItems) {
+    if (errors?.length || !data?.order?.lineItems) {
       throw new Error("Order not found");
     }
 

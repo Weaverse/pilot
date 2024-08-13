@@ -52,8 +52,8 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       invariant(!errors?.length, errors?.[0]?.message);
 
       invariant(
-        !data?.customerAddressUpdate?.userErrors?.length,
-        data?.customerAddressUpdate?.userErrors?.[0]?.message,
+        !data?.customerAddressDelete?.userErrors?.length,
+        data?.customerAddressDelete?.userErrors?.[0]?.message,
       );
 
       return redirect(
