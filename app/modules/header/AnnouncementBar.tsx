@@ -7,17 +7,6 @@ import { useHeaderStyles } from "~/hooks/useHeaderStyles";
 
 const storageKey = "hide-announcement-bar";
 
-function standardizeContent(content: string) {
-  // remove br, p, div and \n
-  return content
-    .replace(/<br\/?>/g, "")
-    // .replace(/<p>/g, "")
-    // .replace(/<\/p>/g, "")
-    // .replace(/<div>/g, "")
-    // .replace(/<\/div>/g, "")
-    // .replace(/\n/g, "");
-}
-
 export function AnnouncementBar() {
   let [show, setShow] = useState(false);
   useHeaderStyles(show);

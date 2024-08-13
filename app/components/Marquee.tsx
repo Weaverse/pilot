@@ -21,13 +21,11 @@ export function Marquee({
 }: MarqueeProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState(0);
-  // const animationTime = Math.floor(contentWidth / speed);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    console.log('9779 useEffect', rollAsNeeded);
     if (contentRef.current) {
       const { width } = contentRef.current.getBoundingClientRect();
-      if (rollAsNeeded ) {
+      if (rollAsNeeded) {
         if (width < window.innerWidth) {
           setContentWidth(0);
         } else {
@@ -54,7 +52,9 @@ export function Marquee({
       }
     >
       {contentWidth === 0 ? (
-        <div ref={contentRef} className="mx-auto">{children}</div>
+        <div ref={contentRef} className="mx-auto">
+          {children}
+        </div>
       ) : (
         <OneView contentWidth={contentWidth} gap={gap}>
           {children}
