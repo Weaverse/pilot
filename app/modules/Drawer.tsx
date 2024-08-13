@@ -7,9 +7,8 @@ import {
 import { useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
-import { IconCaretLeft } from "~/components/Icons";
+import { IconCaretLeft, IconX } from "~/components/Icons";
 import { cn } from "~/lib/cn";
-import { IconClose } from "~/modules";
 
 /**
  * Drawer component that opens on user click.
@@ -125,7 +124,7 @@ export function Drawer({
                       )}
                       {heading !== null && (
                         <DialogTitle>
-                          <h4 className="font-medium text-base">{heading}</h4>
+                          <div className="font-medium text-base">{heading}</div>
                         </DialogTitle>
                       )}
                       {!isBackMenu && (
@@ -135,7 +134,7 @@ export function Drawer({
                           onClick={onClose}
                           data-test="close-cart"
                         >
-                          <IconClose aria-label="Close panel" />
+                          <IconX aria-label="Close panel" />
                         </button>
                       )}
                     </header>
