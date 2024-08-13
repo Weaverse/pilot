@@ -17,7 +17,7 @@ export function ReviewBar(review: {
           style={{ width: `${review.avg * 100}%` }}
         />
       </div>
-      <div className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 sm:w-auto sm:text-left">
+      <div className="w-8 shrink-0 text-right text-sm font-medium leading-none text-body-700 sm:w-auto sm:text-left">
         {review.count} <span className="hidden sm:inline">reviews</span>
       </div>
     </div>

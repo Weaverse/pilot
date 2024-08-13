@@ -71,21 +71,32 @@ export async function loader(args: RouteLoaderArgs) {
 
 `weaverse` is an `WeaverseClient` instance that has been injected into the app context by Weaverse. It provides a set of methods to interact with the Weaverse API.
 
-```ts:server.ts
-let handleRequest = createRequestHandler({
-  build: remixBuild,
-  mode: process.env.NODE_ENV,
-  getLoadContext: () => ({
-    // App context props
-    weaverse: createWeaverseClient({
-      storefront,
+```ts:app/lib/context.ts
+// app/lib/context.ts
+
+const hydrogenContext = createHydrogenContext({
+    env,
+    request,
+    cache,
+    waitUntil,
+    session,
+    i18n: getLocaleFromRequest(request),
+    cart: {
+      queryFragment: CART_QUERY_FRAGMENT,
+    },
+  });
+
+  return {
+    ...hydrogenContext,
+    // declare additional Remix loader context
+    weaverse: new WeaverseClient({
+      ...hydrogenContext,
       request,
-      env,
       cache,
-      waitUntil,
+      themeSchema,
+      components,
     }),
-  }),
-});
+  };
 ```
 
 ### Rendering page content
@@ -252,11 +263,11 @@ Just export a `loader` function from your component:
 ```tsx:app/weaverse/sections/Video.tsx
 import type {ComponentLoaderArgs} from '@weaverse/hydrogen';
 
-export let loader = async ({context, itemData}: ComponentLoaderArgs) => {
-  let {data} = await context.storefront.query<SeoCollectionContentQuery>(
+export let loader = async ({weaverse, data}: ComponentLoaderArgs) => {
+  let {data} = await weaverse.storefront.query<SeoCollectionContentQuery>(
     HOMEPAGE_SEO_QUERY,
     {
-      variables: {handle: itemData.data.collectionHandle || 'frontpage'},
+      variables: {handle: data.collection.handle || 'frontpage'},
     },
   );
   return data;

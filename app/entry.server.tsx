@@ -4,7 +4,7 @@ import type { AppLoadContext, EntryContext } from "@shopify/remix-oxygen";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 
-import { getWeaverseCsp } from "~/weaverse/create-weaverse.server";
+import { getWeaverseCsp } from "~/weaverse/csp";
 
 export default async function handleRequest(
   request: Request,

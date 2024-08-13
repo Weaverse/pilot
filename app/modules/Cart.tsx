@@ -217,7 +217,7 @@ function CartSummary({
 }) {
   const summary = {
     drawer: "grid gap-4 p-6 border-t md:px-12",
-    page: "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-primary/5 rounded w-full",
+    page: "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full",
   };
 
   return (
@@ -279,7 +279,7 @@ function CartLineItem({ line }: { line: CartLine }) {
 
       <div className="flex justify-between flex-grow">
         <div className="grid gap-2">
-          <Heading as="h3" size="copy">
+          <div>
             {merchandise?.product?.handle ? (
               <Link to={`/products/${merchandise.product.handle}`}>
                 {merchandise?.product?.title || ""}
@@ -287,8 +287,7 @@ function CartLineItem({ line }: { line: CartLine }) {
             ) : (
               <Text>{merchandise?.product?.title || ""}</Text>
             )}
-          </Heading>
-
+          </div>
           <div className="grid pb-2">
             {(merchandise?.selectedOptions || [])
               .filter((option) => option.value !== "Default Title")
@@ -352,13 +351,13 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
       <label htmlFor={`quantity-${lineId}`} className="sr-only">
         Quantity, {optimisticQuantity}
       </label>
-      <div className="flex items-center border rounded">
+      <div className="flex items-center border border-line rounded">
         <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
             type="button"
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-10 h-10 transition text-secondary/50 hover:text-secondary disabled:text-secondary/10"
+            className="w-10 h-10 transition disabled:text-body/50 disabled:cursor-not-allowed"
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
@@ -377,7 +376,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
             type="button"
-            className="w-10 h-10 transition text-secondary/50 hover:text-secondary disabled:text-secondary/10"
+            className="w-10 h-10 transition disabled:text-body/50 disabled:cursor-not-allowed"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"

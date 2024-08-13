@@ -7,9 +7,8 @@ import {
 import { useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
-import { IconCaretLeft } from "~/components/Icons";
+import { IconCaretLeft, IconX } from "~/components/Icons";
 import { cn } from "~/lib/cn";
-import { IconClose } from "~/modules";
 
 /**
  * Drawer component that opens on user click.
@@ -66,7 +65,7 @@ export function Drawer({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 top-nav bg-primary bg-opacity-25 text-body" />
+          <div className="fixed inset-0 top-nav bg-background bg-opacity-25 text-body" />
         </Transition.Child>
 
         <div className="fixed inset-0 top-nav">
@@ -91,7 +90,7 @@ export function Drawer({
               >
                 <DialogPanel
                   className={cn(
-                    "text-left align-middle transition-all transform shadow-xl  bg-primary",
+                    "text-left align-middle transition-all transform shadow-xl  bg-background",
                     openFrom === "top"
                       ? "h-fit w-screen"
                       : "max-w-lg h-screen-dynamic",
@@ -125,7 +124,7 @@ export function Drawer({
                       )}
                       {heading !== null && (
                         <DialogTitle>
-                          <h4 className="font-medium text-base">{heading}</h4>
+                          <div className="font-medium text-base">{heading}</div>
                         </DialogTitle>
                       )}
                       {!isBackMenu && (
@@ -135,7 +134,7 @@ export function Drawer({
                           onClick={onClose}
                           data-test="close-cart"
                         >
-                          <IconClose aria-label="Close panel" />
+                          <IconX aria-label="Close panel" />
                         </button>
                       )}
                     </header>

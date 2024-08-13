@@ -14,25 +14,11 @@ export default {
       animation: {
         spin: "spin .5s linear infinite",
       },
-      opacity: {
-        15: "0.15",
-      },
-      borderColor: {
-        header: "rgb(230,230,230)",
-      },
       colors: {
-        primary: "rgb(var(--color-background) / <alpha-value>)", // background color
-        contrast: "rgb(var(--color-background) / <alpha-value>)", // temporary background color - replace primary after
-        secondary: "rgb(var(--color-inverse-background) / <alpha-value>)", // background inverse color
-        body: "rgb(var(--color-text) / <alpha-value>)", // body text color
-        "inv-body": "rgb(var(--color-inverse-text) / <alpha-value>)", // body text inverse color
-        // btn: "rgb(var(--color-button) / <alpha-value>)", // button background color
-        // "btn-content": "rgb(var(--color-button-text) / <alpha-value>)", // button text color
-        // "inv-btn": "rgb(var(--color-inverse-button) / <alpha-value>)", // button inverse background color
-        // "inv-btn-content":
-        //   "rgb(var(--color-inverse-button-text) / <alpha-value>)", // button inverse text color
-        sale: "rgb(var(--color-sale) / <alpha-value>)", // sale background color
-        bar: "rgb(var(--color-border) / <alpha-value>)", // border color
+        body: "rgb(var(--color-text) / <alpha-value>)",
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
+        line: "rgb(var(--color-line) / <alpha-value>)",
       },
       outlineOffset: {
         3: "3px",
@@ -106,9 +92,7 @@ export default {
     },
   },
   plugins: [
-    require("@tailwindcss/forms")({
-      strategy: "class",
-    }),
+    require("@tailwindcss/forms")({ strategy: "class" }),
     typographyPlugin,
   ],
 };

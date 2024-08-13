@@ -5,7 +5,6 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-
 import type { AllProductsQuery } from "storefrontapi.generated";
 import { getImageLoadingPriority } from "~/lib/const";
 import { Grid, PageHeader, ProductCard, Section } from "~/modules";
@@ -52,13 +51,13 @@ let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
               return (
                 <>
                   <div className="flex items-center justify-center mt-6">
-                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-bar/10 bg-contrast text-body w-full">
+                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-line/10 text-body w-full">
                       {isLoading ? "Loading..." : prevPageText}
                     </PreviousLink>
                   </div>
                   <Grid data-test="product-grid">{itemsMarkup}</Grid>
                   <div className="flex items-center justify-center mt-6">
-                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-bar/10 bg-contrast text-body w-full">
+                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-line/10 text-body w-full">
                       {isLoading ? "Loading..." : nextPageText}
                     </NextLink>
                   </div>

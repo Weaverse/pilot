@@ -20,7 +20,7 @@ export function PredictiveSearchResult({
 
   return (
     <div
-      className="predictive-search-result flex flex-col gap-4 divide-y divide-bar-subtle"
+      className="predictive-search-result flex flex-col gap-4 divide-y divide-line"
       key={type}
     >
       <Link

@@ -171,8 +171,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                   <Button
                     text={buttonText}
                     link={`/collections/${collection.handle}`}
-                    variant="secondary"
-                    buttonStyle="custom"
+                    variant="custom"
                     backgroundColor={backgroundColor}
                     textColor={textColor}
                     borderColor={borderColor}
@@ -335,12 +334,10 @@ export let schema: HydrogenComponentSchema = {
           placeholder: "Shop now",
           condition: "contentPosition.eq.over",
         },
-        ...buttonStylesInputs
-          .filter((inp) => inp.name !== "buttonStyle")
-          .map((inp) => ({
-            ...inp,
-            condition: "contentPosition.eq.over",
-          })),
+        ...buttonStylesInputs.map((inp) => ({
+          ...inp,
+          condition: "contentPosition.eq.over",
+        })),
       ],
     },
   ],

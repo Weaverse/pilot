@@ -1,11 +1,40 @@
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import { cn } from "~/lib/cn";
 import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
+
+let SIZE_MAP = {
+  sm: "w-8 h-8",
+  md: "w-10 h-10",
+  lg: "w-12 h-12",
+};
+
+let BUTTON_SIZE_MAP = {
+  sm: "min-w-8 h-8",
+  md: "min-w-10 h-10",
+  lg: "min-w-12 h-12",
+};
+
+let variants = cva("", {
+  variants: {
+    size: {
+      sm: "min-w-8 h-8",
+      md: "min-w-10 h-10",
+      lg: "min-w-12 h-12",
+    },
+    shape: {
+      square: "",
+      circle: "rounded-full",
+      round: "rounded-md",
+    },
+  },
+});
 
 interface VariantOptionProps {
   selectedOptionValue: string;
-  onSelectOptionValue: (optionValue: string) => void;
+  onSelectOptionValue: (value: string) => void;
   name: string;
   values: {
     isActive: boolean;
@@ -16,18 +45,6 @@ interface VariantOptionProps {
     image?: any;
   }[];
 }
-
-let SIZE_MAP = {
-  sm: "w-8 h-8",
-  md: "w-10 h-10",
-  lg: "w-12 h-12",
-};
-
-let BUTTON_SIZE_MAP = {
-  sm: "min-w-[32px] h-8",
-  md: "min-w-[40px] h-10",
-  lg: "min-w-[48px] h-12",
-};
 
 export function VariantOption(props: VariantOptionProps) {
   let { name, values, selectedOptionValue, onSelectOptionValue } = props;
@@ -53,37 +70,29 @@ export function VariantOption(props: VariantOptionProps) {
     SIZE_MAP[size],
     roundedClassName,
   );
-
-  let defaultButtonClassName = clsx(
-    "border cursor-pointer",
-    BUTTON_SIZE_MAP[size],
-    "p-2 text-sm text-center",
-    roundedClassName,
-  );
-
   let disabledClassName = "diagonal opacity-50";
-  // show value by Type
   return (
     <div className="space-y-4">
       <legend className="whitespace-pre-wrap max-w-prose leading-snug min-w-[4rem]">
         <span className="font-bold">{displayName || name}:</span>
         <span className="ml-2">{selectedOptionValue}</span>
       </legend>
+
       {type === "button" && (
         <div className="flex gap-4">
-          {values.map((value) => (
+          {values.map(({ value, isAvailable }) => (
             <button
+              key={value}
               type="button"
-              key={value.value}
-              className={clsx(
-                defaultButtonClassName,
-                selectedOptionValue === value.value &&
-                  "bg-btn text-btn-content",
-                !value.isAvailable && "opacity-50 bg-btn/30",
+              className={cn(
+                "border cursor-pointer p-2 text-sm text-center",
+                variants({ size, shape }),
+                selectedOptionValue === value && "bg-btn text-btn-content",
+                !isAvailable && "opacity-50",
               )}
-              onClick={() => onSelectOptionValue(value.value)}
+              onClick={() => onSelectOptionValue(value)}
             >
-              {value.value}
+              {value}
             </button>
           ))}
         </div>
@@ -91,22 +100,22 @@ export function VariantOption(props: VariantOptionProps) {
 
       {type === "color" && (
         <div className="flex gap-4">
-          {values.map((value) => {
+          {values.map((optValue) => {
             let swatchColor: string =
-              swatches.colors.find((c) => c.name === value.value)?.value ||
-              value.value;
+              swatches.colors.find((c) => c.name === optValue.value)?.value ||
+              optValue.value;
             return (
               <button
+                key={optValue.value}
                 type="button"
-                key={value.value}
                 className={clsx(
                   defaultClassName,
                   "p-1",
-                  selectedOptionValue === value.value &&
-                    "border-2 border-bar/70",
-                  !value.isAvailable && disabledClassName,
+                  selectedOptionValue === optValue.value &&
+                    "border-2 border-line/70",
+                  !optValue.isAvailable && disabledClassName,
                 )}
-                onClick={() => onSelectOptionValue(value.value)}
+                onClick={() => onSelectOptionValue(optValue.value)}
               >
                 <div
                   className={clsx("w-full h-full", roundedClassName)}
@@ -121,21 +130,22 @@ export function VariantOption(props: VariantOptionProps) {
       )}
       {type === "custom-image" && (
         <div className="flex gap-4">
-          {values.map((value) => {
+          {values.map((optValue) => {
             let swatchImage =
-              swatches.images.find((i) => i.name === value.value)?.value || "";
+              swatches.images.find((i) => i.name === optValue.value)?.value ||
+              "";
             return (
               <button
                 type="button"
-                key={value.value}
+                key={optValue.value}
                 className={clsx(
                   defaultClassName,
                   "p-0.5",
-                  selectedOptionValue === value.value &&
-                    "border-2 border-bar/70",
-                  !value.isAvailable && disabledClassName,
+                  selectedOptionValue === optValue.value &&
+                    "border-2 border-line/70",
+                  !optValue.isAvailable && disabledClassName,
                 )}
-                onClick={() => onSelectOptionValue(value.value)}
+                onClick={() => onSelectOptionValue(optValue.value)}
               >
                 <Image
                   data={
@@ -143,7 +153,7 @@ export function VariantOption(props: VariantOptionProps) {
                       ? swatchImage
                       : {
                           url: swatchImage,
-                          altText: value.value,
+                          altText: optValue.value,
                         }
                   }
                   className={clsx(
@@ -159,20 +169,20 @@ export function VariantOption(props: VariantOptionProps) {
       )}
       {type === "variant-image" && (
         <div className="flex gap-4">
-          {values.map((value) => {
+          {values.map((optValue) => {
             return (
               <button
                 type="button"
-                key={value.value}
+                key={optValue.value}
                 className={clsx(
                   defaultClassName,
-                  selectedOptionValue === value.value &&
-                    "border-2 border-bar/70",
-                  !value.isAvailable && disabledClassName,
+                  selectedOptionValue === optValue.value &&
+                    "border-2 border-line/70",
+                  !optValue.isAvailable && disabledClassName,
                 )}
-                onClick={() => onSelectOptionValue(value.value)}
+                onClick={() => onSelectOptionValue(optValue.value)}
               >
-                <Image data={value.image} sizes="auto" />
+                <Image data={optValue.image} sizes="auto" />
               </button>
             );
           })}
@@ -204,7 +214,7 @@ export function VariantOption(props: VariantOptionProps) {
               className={clsx(
                 "leading-none py-1 cursor-pointer transition-all duration-200",
                 selectedOptionValue === value.value &&
-                  "border-bar/50 border-b-[1.5px]",
+                  "border-line/50 border-b-[1.5px]",
                 !value.isAvailable && "opacity-50",
               )}
               onClick={() => onSelectOptionValue(value.value)}

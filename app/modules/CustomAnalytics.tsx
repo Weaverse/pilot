@@ -1,10 +1,12 @@
 import { useRouteLoaderData } from "@remix-run/react";
-import { Script, useAnalytics } from "@shopify/hydrogen";
+import { Script, useAnalytics, useNonce } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import type { RootLoader } from "~/root";
 
 export function CustomAnalytics() {
   const { subscribe, canTrack } = useAnalytics();
+  const nonce = useNonce();
+
   const data = useRouteLoaderData<RootLoader>("root");
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -44,7 +46,8 @@ export function CustomAnalytics() {
   return (
     <>
       {/* Initialize GTM container */}
-      <Script
+      <script
+        nonce={nonce}
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
           __html: `

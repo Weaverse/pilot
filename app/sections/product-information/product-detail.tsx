@@ -38,7 +38,7 @@ export function ProductDetail({
             {learnMore && (
               <div className="">
                 <Link
-                  className="pb-px border-b border-bar/30 text-body/50"
+                  className="pb-px border-b border-line/30 text-body/50"
                   to={learnMore}
                 >
                   Learn more

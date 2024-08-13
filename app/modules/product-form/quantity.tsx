@@ -11,7 +11,7 @@ export function Quantity(props: QuantityProps) {
       e.key !== "Delete" &&
       e.key !== "ArrowLeft" &&
       e.key !== "ArrowRight" &&
-      isNaN(Number(e.key))
+      Number.isNaN(Number(e.key))
     ) {
       e.preventDefault();
     }

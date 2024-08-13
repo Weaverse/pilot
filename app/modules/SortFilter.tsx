@@ -46,11 +46,10 @@ export function SortFilter({
   return (
     <>
       <div className="flex items-center justify-between w-full">
-        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={
-            "relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+            "relative flex items-center justify-center w-8 h-8 focus:ring-body/5"
           }
         >
           <IconFilters />
@@ -341,10 +340,9 @@ export default function SortMenu() {
         </span>
         <IconCaret />
       </Menu.Button>
-
       <Menu.Items
         as="nav"
-        className="absolute right-0 flex flex-col p-4 text-right rounded-sm bg-contrast"
+        className="absolute right-0 flex flex-col p-4 text-right rounded-sm"
       >
         {items.map((item) => (
           <Menu.Item key={item.label}>

@@ -32,7 +32,7 @@ export function ProductPlaceholder(props: any) {
                 </legend>
                 <div className="flex flex-wrap items-baseline gap-4">
                   <a
-                    className="leading-none py-1 cursor-pointer transition-all duration-200 border-bar/50 border-b-[1.5px] opacity-100"
+                    className="leading-none py-1 cursor-pointer transition-all duration-200 border-line/50 border-b-[1.5px] opacity-100"
                     href="/"
                   >
                     OS
@@ -57,7 +57,7 @@ export function ProductPlaceholder(props: any) {
                 </legend>
                 <div className="flex flex-wrap items-baseline gap-4">
                   <a
-                    className="leading-none py-1 cursor-pointer transition-all duration-200 border-bar/50 border-b-[1.5px] opacity-100"
+                    className="leading-none py-1 cursor-pointer transition-all duration-200 border-line/50 border-b-[1.5px] opacity-100"
                     href="/"
                   >
                     black

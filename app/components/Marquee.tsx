@@ -1,4 +1,10 @@
-import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 interface MarqueeProps {
   children: React.ReactNode;
@@ -27,7 +33,7 @@ export function Marquee({
       style={
         {
           "--animation-speed": `${animationTime}s`,
-          "--gap": `${gap}s`,
+          "--gap": `${gap}px`,
         } as CSSProperties
       }
     >
