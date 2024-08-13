@@ -1,38 +1,60 @@
-import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 interface MarqueeProps {
   children: React.ReactNode;
   gap?: number;
   speed?: number;
+  rollAsNeeded?: boolean;
 }
 const ANIMATION_SPEED = 100;
 export function Marquee({
   children,
   gap = 0,
   speed = ANIMATION_SPEED,
+  rollAsNeeded,
 }: MarqueeProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState(0);
-  const animationTime = Math.floor(contentWidth / speed);
+  // const animationTime = Math.floor(contentWidth / speed);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (contentRef.current && !contentWidth) {
+    console.log('9779 useEffect', rollAsNeeded);
+    if (contentRef.current) {
       const { width } = contentRef.current.getBoundingClientRect();
-      setContentWidth(width);
+      if (rollAsNeeded ) {
+        if (width < window.innerWidth) {
+          setContentWidth(0);
+        } else {
+          setContentWidth(width);
+        }
+      } else {
+        setContentWidth(width);
+      }
     }
   }, []);
+  const maxAnimationTime = 100000; // 100 seconds - slowest speed 0% - 0 speed
+  const minAnimationTime = 1000; // 1 second - fastest speed 100% - 100 speed
+  const animationTime =
+    ((100 - speed) * (maxAnimationTime - minAnimationTime)) / 100 +
+    minAnimationTime;
   return (
     <div
-      className="flex items-center"
+      className="flex items-center w-full"
       style={
         {
-          "--animation-speed": `${animationTime}s`,
-          "--gap": `${gap}s`,
+          "--animation-speed": `${animationTime}ms`,
+          "--gap": `${gap}px`,
         } as CSSProperties
       }
     >
       {contentWidth === 0 ? (
-        <div ref={contentRef}>{children}</div>
+        <div ref={contentRef} className="mx-auto">{children}</div>
       ) : (
         <OneView contentWidth={contentWidth} gap={gap}>
           {children}
@@ -58,6 +80,8 @@ function OneView({
       // if it is, set the contentRepeat to the number of times the text can fit on the screen
       const repeat = Math.ceil(window.innerWidth / (contentWidth + gap));
       setContentRepeat(repeat);
+    } else {
+      // setContentRepeat(3);
     }
   }, [contentWidth, gap]);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
