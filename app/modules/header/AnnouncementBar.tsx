@@ -14,8 +14,8 @@ export function AnnouncementBar() {
   let {
     announcementBarText,
     announcementBarHeight,
-    announcementBarTextColor,
-    announcementBarBgColor,
+    topbarTextColor,
+    topbarBgColor,
     dismissibleAnnouncementBar,
     stickyAnnouncementBar,
     alwaysScrolling,
@@ -46,8 +46,8 @@ export function AnnouncementBar() {
       )}
       style={{
         height: `${announcementBarHeight}px`,
-        backgroundColor: announcementBarBgColor,
-        color: announcementBarTextColor,
+        backgroundColor: topbarBgColor,
+        color: topbarTextColor,
       }}
     >
       <Marquee
