@@ -23,8 +23,6 @@ export function DesktopHeader({
 }) {
   let {
     enableTransparentHeader,
-    stickyAnnouncementBar,
-    announcementBarHeight,
   } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
@@ -44,10 +42,8 @@ export function DesktopHeader({
   let scrolled = y >= 50;
   let isTransparent =
     enableTransparentHeader && isHome && !scrolled && !hovered;
+    
 
-  let top = stickyAnnouncementBar
-    ? announcementBarHeight
-    : Math.max(announcementBarHeight - y, 0);
   return (
     <header
       className={cn(
@@ -67,7 +63,6 @@ export function DesktopHeader({
             ]
           : "sticky",
       )}
-      style={{ ["--announcement-bar-height" as string]: `${top}px` }}
     >
       <Logo isTransparent={isTransparent} shopName={shopName} />
       {menu && <DesktopMenu menu={menu} />}

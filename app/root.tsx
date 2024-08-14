@@ -86,7 +86,7 @@ export let links: LinksFunction = () => {
       rel: "preconnect",
       href: "https://shop.app",
     },
-    { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+    { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
   ];
 };
 

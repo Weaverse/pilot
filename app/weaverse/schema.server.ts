@@ -174,9 +174,10 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
-          label: "Enable scrolling",
-          name: "enableScrolling",
+          label: "Always scrolling",
+          name: "alwaysScrolling",
           defaultValue: false,
+          helpText: "If disabled, the content will only be scrolling when it is longer than the screen.",
         },
         {
           type: "range",
@@ -189,7 +190,6 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: "px",
           },
           defaultValue: 44,
-          condition: "enableScrolling.eq.true",
         },
         {
           type: "range",
@@ -202,13 +202,13 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: "s",
           },
           defaultValue: 10,
-          condition: "enableScrolling.eq.true",
         },
       ],
     },
     {
       group: "Header",
       inputs: [
+
         {
           type: "switch",
           label: "Enable transparent header",
