@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { IconX } from "~/components/Icons";
 import { Marquee } from "~/components/Marquee";
 
-const storageKey = "hide-announcement-bar";
+let storageKey = "hide-announcement-bar";
 
 function standardizeContent(content: string) {
   // remove br, p, div and \n
@@ -22,32 +22,18 @@ function standardizeContent(content: string) {
 export function AnnouncementBar() {
   let [show, setShow] = useState(false);
   let [contentWidth, setContentWidth] = useState(0);
-  const themeSettings = useThemeSettings();
-  const {
+  let themeSettings = useThemeSettings();
+  let {
     announcementBarText,
     announcementBarHeight,
-    announcementBarTextColor,
-    announcementBarBgColor,
+    topbarTextColor,
+    topbarBgColor,
     dismissibleAnnouncementBar,
     stickyAnnouncementBar,
     enableScrolling,
     scrollingGap,
     scrollingSpeed,
   } = themeSettings;
-  const standardContent = announcementBarText;
-  const settings = {
-    content: standardContent,
-    announcementBarTextColor,
-    announcementBarBgColor,
-    announcementBarHeight,
-    dismissible: dismissibleAnnouncementBar,
-    sticky: stickyAnnouncementBar,
-    enableScrolling,
-    scrollingGap: scrollingGap,
-    scrollingSpeed,
-    contentWidth,
-  };
-  const { content, sticky, dismissible } = settings;
   let dismiss = useCallback(() => {
     localStorage.setItem(storageKey, "true");
     setShow(false);
@@ -65,24 +51,25 @@ export function AnnouncementBar() {
     }
   }, []);
 
-  if (!show || !content) return null;
+  if (!show || !announcementBarText) return null;
 
-  const maxAnimationTime = 100000; // 100 seconds - slowest speed 0% - 0 speed
-  const minAnimationTime = 1000; // 1 second - fastest speed 100% - 100 speed
-  const animationTime =
+  let maxAnimationTime = 100000; // 100 seconds - slowest speed 0% - 0 speed
+  let minAnimationTime = 1000; // 1 second - fastest speed 100% - 100 speed
+  let animationTime =
     ((100 - scrollingSpeed) * (maxAnimationTime - minAnimationTime)) / 100 +
     minAnimationTime;
+
   return (
     <div
       id="announcement-bar"
       className={clsx(
         "text-center z-40 flex items-center justify-center relative overflow-x-hidden",
-        sticky && "sticky top-0",
+        stickyAnnouncementBar && "sticky top-0",
       )}
       style={{
         height: `${announcementBarHeight}px`,
-        backgroundColor: announcementBarBgColor,
-        color: announcementBarTextColor,
+        backgroundColor: topbarBgColor,
+        color: topbarTextColor,
         ["--animation-speed" as string]: `${animationTime}ms`,
       }}
     >
@@ -90,16 +77,16 @@ export function AnnouncementBar() {
         <Marquee speed={10} gap={scrollingGap}>
           <div
             className="flex items-center justify-center gap-[var(--gap)]"
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: announcementBarText }}
           />
         </Marquee>
       ) : (
         <div
           className="flex items-center justify-center gap-[var(--gap)]"
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: announcementBarText }}
         />
       )}
-      {dismissible && (
+      {dismissibleAnnouncementBar && (
         <IconX
           className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer w-5 h-5"
           onClick={dismiss}
