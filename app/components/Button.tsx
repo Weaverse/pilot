@@ -28,7 +28,7 @@ let variants = cva(
           "border-[var(--color-button-primary-bg)]",
           "hover:bg-[var(--color-button-primary-text)]",
           "hover:text-[var(--color-button-primary-bg)]",
-          "hover:border-[var(--color-button-primary-text)]",
+          "hover:border-[var(--color-button-primary-bg)]",
         ],
         secondary: [
           "border px-4 py-3",
