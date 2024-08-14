@@ -199,6 +199,7 @@ export let themeSchema: HydrogenThemeSchema = {
             min: 0,
             max: 100,
             step: 1,
+            unit: "s",
           },
           defaultValue: 10,
           condition: "enableScrolling.eq.true",
