@@ -32,8 +32,8 @@ export function PredictiveSearchResults() {
     );
   }
   return (
-    <div className="absolute left-1/2 top-20 z-10 flex w-fit -translate-x-1/2 items-center justify-center">
-      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 border bg-white p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
+    <div className="absolute left-1/2 top-20 z-10 flex w-fit -translate-x-1/2 items-center justify-center shadow-2xl">
+      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-white p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-line">
             <PredictiveSearchResult
@@ -82,7 +82,7 @@ function NoPredictiveSearchResults({
     return null;
   }
   return (
-    <p className="w-[640px] border bg-background p-6">
+    <p className="w-[640px] shadow-2xl bg-background p-6">
       No results found for <q>{searchTerm.current}</q>
     </p>
   );

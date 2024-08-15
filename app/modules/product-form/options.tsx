@@ -1,33 +1,40 @@
-import { Image } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { Image, type VariantOptionValue } from "@shopify/hydrogen";
+import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import type { ProductVariantFragmentFragment } from "storefrontapi.generated";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/Tooltip";
 import { cn } from "~/lib/cn";
-import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
 
-let SIZE_MAP = {
-  sm: "w-8 h-8",
-  md: "w-10 h-10",
-  lg: "w-12 h-12",
-};
-
-let BUTTON_SIZE_MAP = {
-  sm: "min-w-8 h-8",
-  md: "min-w-10 h-10",
-  lg: "min-w-12 h-12",
-};
-
-let variants = cva("", {
+let variants = cva("border border-line/75 hover:border-body cursor-pointer", {
   variants: {
-    size: {
+    colorSize: {
+      sm: "w-8 h-8",
+      md: "w-10 h-10",
+      lg: "w-12 h-12",
+    },
+    buttonSize: {
       sm: "min-w-8 h-8",
       md: "min-w-10 h-10",
       lg: "min-w-12 h-12",
+    },
+    imageSize: {
+      sm: "w-12 h-auto",
+      md: "w-16 h-auto",
+      lg: "w-20 h-auto",
     },
     shape: {
       square: "",
       circle: "rounded-full",
       round: "rounded-md",
+    },
+    selected: {
+      true: "border-body",
+      false: "",
+    },
+    disabled: {
+      true: "diagonal",
+      false: "",
     },
   },
 });
@@ -36,14 +43,9 @@ interface VariantOptionProps {
   selectedOptionValue: string;
   onSelectOptionValue: (value: string) => void;
   name: string;
-  values: {
-    isActive: boolean;
-    isAvailable: boolean;
-    search: string;
-    to: string;
-    value: string;
-    image?: any;
-  }[];
+  values: (VariantOptionValue & {
+    image?: ProductVariantFragmentFragment["image"];
+  })[];
 }
 
 export function VariantOption(props: VariantOptionProps) {
@@ -61,34 +63,28 @@ export function VariantOption(props: VariantOptionProps) {
     size = "md",
     type = "default",
   } = optionConf || {};
-
-  let roundedClassName =
-    shape === "circle" ? "rounded-full" : shape === "round" ? "rounded-md" : "";
-
-  let defaultClassName = clsx(
-    "border cursor-pointer",
-    SIZE_MAP[size],
-    roundedClassName,
-  );
-  let disabledClassName = "diagonal opacity-50";
   return (
-    <div className="space-y-4">
-      <legend className="whitespace-pre-wrap max-w-prose leading-snug min-w-[4rem]">
+    <div className="space-y-1.5">
+      <legend>
         <span className="font-bold">{displayName || name}:</span>
         <span className="ml-2">{selectedOptionValue}</span>
       </legend>
 
       {type === "button" && (
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           {values.map(({ value, isAvailable }) => (
             <button
               key={value}
               type="button"
               className={cn(
-                "border cursor-pointer p-2 text-sm text-center",
-                variants({ size, shape }),
-                selectedOptionValue === value && "bg-btn text-btn-content",
-                !isAvailable && "opacity-50",
+                "px-4 py-2.5 text-center text-body",
+                variants({
+                  buttonSize: size,
+                  shape,
+                  selected: selectedOptionValue === value,
+                  disabled: !isAvailable,
+                }),
+                !isAvailable && "bg-neutral-100",
               )}
               onClick={() => onSelectOptionValue(value)}
             >
@@ -97,131 +93,169 @@ export function VariantOption(props: VariantOptionProps) {
           ))}
         </div>
       )}
-
       {type === "color" && (
-        <div className="flex gap-4">
-          {values.map((optValue) => {
-            let swatchColor: string =
-              swatches.colors.find((c) => c.name === optValue.value)?.value ||
-              optValue.value;
+        <div className="flex gap-3">
+          {values.map(({ value, isAvailable }) => {
+            let swatchColor = swatches.colors.find(
+              ({ name }) => name === value,
+            );
             return (
-              <button
-                key={optValue.value}
-                type="button"
-                className={clsx(
-                  defaultClassName,
-                  "p-1",
-                  selectedOptionValue === optValue.value &&
-                    "border-2 border-line/70",
-                  !optValue.isAvailable && disabledClassName,
-                )}
-                onClick={() => onSelectOptionValue(optValue.value)}
-              >
-                <div
-                  className={clsx("w-full h-full", roundedClassName)}
-                  style={{
-                    backgroundColor: swatchColor,
-                  }}
-                />
-              </button>
+              <Tooltip key={value}>
+                <TooltipTrigger>
+                  <button
+                    type="button"
+                    className={cn(
+                      "p-1",
+                      variants({
+                        colorSize: size,
+                        shape,
+                        selected: selectedOptionValue === value,
+                        disabled: !isAvailable,
+                      }),
+                    )}
+                    onClick={() => onSelectOptionValue(value)}
+                  >
+                    <span
+                      className={cn(
+                        "w-full h-full inline-block border-none hover:border-none",
+                        variants({ shape }),
+                      )}
+                      style={{ backgroundColor: swatchColor?.value || value }}
+                    />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{value}</TooltipContent>
+              </Tooltip>
             );
           })}
         </div>
       )}
       {type === "custom-image" && (
-        <div className="flex gap-4">
-          {values.map((optValue) => {
-            let swatchImage =
-              swatches.images.find((i) => i.name === optValue.value)?.value ||
-              "";
+        <div className="flex gap-3">
+          {values.map(({ value, image, isAvailable }) => {
+            let swatchImage = swatches.images.find(
+              (i) => i.name.toLowerCase() === value.toLowerCase(),
+            );
+            let imageToRender = swatchImage?.value || image;
+            let aspectRatio = "1/1";
+            if (image && shape !== "circle") {
+              aspectRatio = `${image.width}/${image.height}`;
+            }
             return (
-              <button
-                type="button"
-                key={optValue.value}
+              <div
+                key={value}
                 className={clsx(
-                  defaultClassName,
-                  "p-0.5",
-                  selectedOptionValue === optValue.value &&
-                    "border-2 border-line/70",
-                  !optValue.isAvailable && disabledClassName,
+                  variants({
+                    imageSize: size,
+                    shape,
+                    selected: selectedOptionValue === value,
+                    disabled: !isAvailable,
+                  }),
                 )}
-                onClick={() => onSelectOptionValue(optValue.value)}
+                onClick={() => onSelectOptionValue(value)}
+                style={{ aspectRatio }}
               >
-                <Image
-                  data={
-                    typeof swatchImage === "object"
-                      ? swatchImage
-                      : {
-                          url: swatchImage,
-                          altText: optValue.value,
-                        }
-                  }
-                  className={clsx(
-                    "w-full h-full object-cover",
-                    roundedClassName,
-                  )}
-                  sizes="auto"
-                />
-              </button>
+                {imageToRender ? (
+                  <Image
+                    data={
+                      typeof imageToRender === "object"
+                        ? imageToRender
+                        : {
+                            url: imageToRender,
+                            altText: value,
+                          }
+                    }
+                    className={cn(
+                      "w-full h-full object-cover object-center border-none hover:border-none",
+                      variants({ shape }),
+                    )}
+                    sizes="auto"
+                  />
+                ) : (
+                  <span
+                    className={cn(
+                      "w-full h-full inline-block",
+                      variants({ shape }),
+                    )}
+                    style={{ backgroundColor: value }}
+                  />
+                )}
+              </div>
             );
           })}
         </div>
       )}
       {type === "variant-image" && (
-        <div className="flex gap-4">
-          {values.map((optValue) => {
+        <div className="flex gap-3">
+          {values.map(({ value, image, isAvailable }) => {
+            let aspectRatio = "1/1";
+            if (image && shape !== "circle") {
+              aspectRatio = `${image.width}/${image.height}`;
+            }
             return (
               <button
                 type="button"
-                key={optValue.value}
-                className={clsx(
-                  defaultClassName,
-                  selectedOptionValue === optValue.value &&
-                    "border-2 border-line/70",
-                  !optValue.isAvailable && disabledClassName,
+                key={value}
+                className={cn(
+                  variants({
+                    imageSize: size,
+                    shape,
+                    selected: selectedOptionValue === value,
+                    disabled: !isAvailable,
+                  }),
+                  !isAvailable && "opacity-75",
                 )}
-                onClick={() => onSelectOptionValue(optValue.value)}
+                onClick={() => onSelectOptionValue(value)}
+                style={{ aspectRatio }}
               >
-                <Image data={optValue.image} sizes="auto" />
+                {image ? (
+                  <Image
+                    data={image}
+                    sizes="auto"
+                    className={cn(
+                      "w-full h-full object-cover object-center",
+                      variants({ shape }),
+                    )}
+                  />
+                ) : (
+                  <span>{value}</span>
+                )}
               </button>
             );
           })}
         </div>
       )}
       {type === "dropdown" && (
-        <div>
-          <select
-            className="min-w-[120px] w-fit rounded-sm border p-1"
-            onChange={(e) => {
-              onSelectOptionValue(e.target.value);
-            }}
-          >
-            {values.map((value) => {
-              return (
-                <option key={value.value} value={value.value}>
-                  {value.value}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+        <select
+          className="min-w-32 w-fit border px-3 py-2 border-line"
+          onChange={(e) => {
+            onSelectOptionValue(e.target.value);
+          }}
+        >
+          {values.map(({ value }) => {
+            return (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            );
+          })}
+        </select>
       )}
       {type === "default" && (
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           {values.map((value) => (
-            <div
+            <span
               key={value.value}
-              className={clsx(
-                "leading-none py-1 cursor-pointer transition-all duration-200",
-                selectedOptionValue === value.value &&
-                  "border-line/50 border-b-[1.5px]",
+              className={cn(
+                "py-0.5 cursor-pointer border-b border-line/75 hover:border-body",
+                selectedOptionValue === value.value && "border-body",
                 !value.isAvailable && "opacity-50",
               )}
               onClick={() => onSelectOptionValue(value.value)}
               role="listitem"
             >
               {value.value}
-            </div>
+            </span>
           ))}
         </div>
       )}

@@ -1,6 +1,11 @@
-import { Disclosure } from "@headlessui/react";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import clsx from "clsx";
-import { IconClose, Link, Text } from "~/modules";
+import { IconX } from "~/components/Icons";
+import { Link } from "~/modules";
 
 export function ProductDetail({
   title,
@@ -12,24 +17,25 @@ export function ProductDetail({
   learnMore?: string;
 }) {
   return (
-    <Disclosure key={title} as="div" className="grid w-full gap-2">
+    <Disclosure
+      key={title}
+      as="div"
+      className="grid w-full gap-2 py-4 border-b border-line"
+    >
       {({ open }) => (
         <>
-          <Disclosure.Button className="text-left">
+          <DisclosureButton className="text-left">
             <div className="flex justify-between">
-              <Text size="lead" as="h4">
-                {title}
-              </Text>
-              <IconClose
+              <p>{title}</p>
+              <IconX
                 className={clsx(
-                  "transition-transform transform-gpu duration-200",
+                  "transition-transform transform-gpu duration-200 w-4 h-4",
                   !open && "rotate-[45deg]",
                 )}
               />
             </div>
-          </Disclosure.Button>
-
-          <Disclosure.Panel className={"pb-4 pt-2 grid gap-2"}>
+          </DisclosureButton>
+          <DisclosurePanel className={"pb-4 pt-2 grid gap-2"}>
             <div
               suppressHydrationWarning
               className="prose dark:prose-invert"
@@ -45,7 +51,7 @@ export function ProductDetail({
                 </Link>
               </div>
             )}
-          </Disclosure.Panel>
+          </DisclosurePanel>
         </>
       )}
     </Disclosure>

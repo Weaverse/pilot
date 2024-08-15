@@ -186,7 +186,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     storeDomain={storeDomain}
                   />
                 )}
-                <div className="grid gap-4 py-4">
+                <div className="grid py-4">
                   {showShippingPolicy && shippingPolicy?.body && (
                     <ProductDetail
                       title="Shipping"

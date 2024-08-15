@@ -21,7 +21,7 @@ export function Quantity(props: QuantityProps) {
       <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug">
         Quantity
       </legend>
-      <div className="rounded-sm border w-fit">
+      <div className="border border-line w-fit">
         <button
           name="decrease-quantity"
           aria-label="Decrease quantity"

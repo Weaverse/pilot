@@ -1,5 +1,4 @@
-import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
+import type { HydrogenThemeSchema, SwatchesConfigs } from "@weaverse/hydrogen";
 import pkg from "../../package.json";
 
 let swatchesConfigs: SwatchesConfigs = {
@@ -144,14 +143,14 @@ export let themeSchema: HydrogenThemeSchema = {
       inputs: [
         {
           type: "richtext",
-          name: "announcementBarText",
+          name: "topbarText",
           label: "Content",
           defaultValue: "",
         },
         {
           type: "range",
           label: "Height",
-          name: "announcementBarHeight",
+          name: "topbarHeight",
           configs: {
             min: 10,
             max: 100,
@@ -161,26 +160,8 @@ export let themeSchema: HydrogenThemeSchema = {
           defaultValue: 36,
         },
         {
-          type: "switch",
-          label: "Dismissible",
-          name: "dismissibleAnnouncementBar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Sticky",
-          name: "stickyAnnouncementBar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Enable scrolling",
-          name: "enableScrolling",
-          defaultValue: false,
-        },
-        {
           type: "range",
-          label: "Gap between content",
+          label: "Content gap",
           name: "scrollingGap",
           configs: {
             min: 0,
@@ -189,7 +170,26 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: "px",
           },
           defaultValue: 44,
-          condition: "enableScrolling.eq.true",
+        },
+        {
+          type: "switch",
+          label: "Sticky",
+          name: "stickyTopbar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Dismissible",
+          name: "dismissibleTopbar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Enable scrolling",
+          name: "enableScrolling",
+          defaultValue: false,
+          helpText:
+            "Scrolling is automatically detected based on the content length.",
         },
         {
           type: "range",
@@ -199,9 +199,9 @@ export let themeSchema: HydrogenThemeSchema = {
             min: 0,
             max: 100,
             step: 1,
+            unit: "s",
           },
           defaultValue: 10,
-          condition: "enableScrolling.eq.true",
         },
       ],
     },

@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import clsx from "clsx";
 import type React from "react";
+import { IconCaretDown } from "~/components/Icons";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
@@ -162,8 +163,9 @@ function ImageMenu({ title, items, to }: SingleMenuItem) {
 function GroupHeader({ title, to }: { title: string; to: string }) {
   return (
     <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
-      <Link to={to} className="py-2">
+      <Link to={to} className="py-2 flex items-center gap-1.5">
         <span className="uppercase text-animation group/header">{title}</span>
+        <IconCaretDown className="w-3 h-3 mb-[3px] group-hover:rotate-180 transition-transform duration-400" />
       </Link>
     </div>
   );

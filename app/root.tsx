@@ -33,6 +33,7 @@ import { seoPayload } from "~/lib/seo.server";
 import { Layout as PageLayout } from "~/modules";
 import { CustomAnalytics } from "~/modules/CustomAnalytics";
 import { GlobalLoading } from "~/modules/global-loading";
+import { TooltipProvider } from "./components/Tooltip";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import { GenericError } from "./modules/GenericError";
 import { NotFound } from "./modules/NotFound";
@@ -86,7 +87,7 @@ export let links: LinksFunction = () => {
       rel: "preconnect",
       href: "https://shop.app",
     },
-    { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+    { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
   ];
 };
 
@@ -166,19 +167,24 @@ function Layout({ children }: { children?: React.ReactNode }) {
         <Links />
         <GlobalStyle />
       </head>
-      <body>
+      <body
+        style={{ opacity: 0 }}
+        className="transition-opacity !opacity-100 duration-300"
+      >
         {data ? (
           <Analytics.Provider
             cart={data.cart}
             shop={data.shop}
             consent={data.consent}
           >
-            <PageLayout
-              key={`${locale.language}-${locale.country}`}
-              layout={data.layout}
-            >
-              {children}
-            </PageLayout>
+            <TooltipProvider disableHoverableContent>
+              <PageLayout
+                key={`${locale.language}-${locale.country}`}
+                layout={data.layout}
+              >
+                {children}
+              </PageLayout>
+            </TooltipProvider>
             <CustomAnalytics />
           </Analytics.Provider>
         ) : (

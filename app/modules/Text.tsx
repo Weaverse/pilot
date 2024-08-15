@@ -147,7 +147,7 @@ export function Section({
   return (
     <Component {...props} className={styles}>
       {heading && (
-        <Heading size="lead" className={padding === "y" ? paddings["x"] : ""}>
+        <Heading size="lead" className={padding === "y" ? paddings.x : ""}>
           {heading}
         </Heading>
       )}
@@ -161,6 +161,7 @@ export function PageHeader({
   className,
   heading,
   variant = "default",
+  as,
   ...props
 }: {
   children?: React.ReactNode;
@@ -182,7 +183,7 @@ export function PageHeader({
   return (
     <header {...props} className={styles}>
       {heading && (
-        <Heading as="h1" width="narrow" size="heading" className="inline-block">
+        <Heading as={as} width="narrow" size="heading" className="inline-block">
           {heading}
         </Heading>
       )}

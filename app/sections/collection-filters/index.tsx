@@ -2,6 +2,7 @@ import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import type {
+  ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
@@ -9,8 +10,8 @@ import { forwardRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Button, PageHeader, Section, Text } from "~/modules";
-import type { AppliedFilter } from "~/modules/SortFilter";
 import { DrawerFilter } from "~/modules/DrawerFilter";
+import type { AppliedFilter } from "~/modules/SortFilter";
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 
 interface CollectionFiltersProps extends HydrogenComponentProps {
@@ -21,9 +22,15 @@ interface CollectionFiltersProps extends HydrogenComponentProps {
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, sectionRef) => {
-    let { showCollectionDescription, loadPrevText, loadMoreText, ...rest } =
-      props;
+    let {
+      showCollectionDescription,
+      loadPrevText,
+      loadMoreText,
+      loaderData,
+      ...rest
+    } = props;
 
+    console.log(4444, loaderData?.randomNumber);
     let { ref, inView } = useInView();
     let [numberInRow, setNumberInRow] = useState(4);
     let onLayoutChange = (number: number) => {
@@ -104,6 +111,13 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
     return <section ref={sectionRef} {...rest} />;
   },
 );
+
+export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
+  let { storefront } = weaverse;
+  let randomNumber = Math.floor(Math.random() * 1000);
+  console.log(3333, randomNumber);
+  return { randomNumber };
+};
 
 export default CollectionFilters;
 
