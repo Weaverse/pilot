@@ -45,7 +45,7 @@ let variants = cva(
           "bg-transparent",
           "border-[var(--color-button-outline-text-and-border)]",
           "hover:bg-[var(--color-button-outline-text-and-border)]",
-          "hover:text-[var(--color-text)]",
+          "hover:text-background",
           "hover:border-[var(--color-button-outline-text-and-border)]",
         ],
         custom: [
@@ -57,11 +57,7 @@ let variants = cva(
           "hover:text-[var(--color-button-text-hover)]",
           "hover:border-[var(--color-button-border-hover)]",
         ],
-        link: [
-          "bg-transparent py-2 border-b",
-          "text-[var(--color-text)]",
-          "border-b-[var(--color-text)]",
-        ],
+        link: ["bg-transparent py-2 border-b", "text-body", "border-b-body"],
       },
     },
     defaultVariants: {
