@@ -1,4 +1,4 @@
-import { Button } from "./Button";
+import Button from "~/components/Button";
 import { PageHeader, Text } from "./Text";
 
 export function GenericError({
@@ -6,8 +6,8 @@ export function GenericError({
 }: {
   error?: { message: string; stack?: string };
 }) {
-  const heading = `Something’s wrong here.`;
-  let description = `We found an error while loading this page.`;
+  let heading = "Something’s wrong here.";
+  let description = "We found an error while loading this page.";
 
   // TODO hide error in prod?
   if (error) {
@@ -18,7 +18,7 @@ export function GenericError({
 
   return (
     <>
-      <PageHeader heading={heading}>
+      <PageHeader heading={heading} as="div">
         <Text width="narrow" as="p">
           {description}
         </Text>
@@ -37,7 +37,7 @@ export function GenericError({
             }}
           />
         )}
-        <Button width="auto" variant="secondary" to={"/"}>
+        <Button variant="outline" link="/">
           Take me to the home page
         </Button>
       </PageHeader>
