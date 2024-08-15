@@ -12,6 +12,10 @@ export default {
     },
     extend: {
       keyframes: {
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
         slideDownAndFade: {
           from: { opacity: "0", transform: "translateY(-6px)" },
           to: { opacity: "1", transform: "translateY(0)" },
@@ -30,8 +34,9 @@ export default {
         },
       },
       animation: {
+        fadeIn: "fadeIn 500ms ease-in forwards",
         slideDownAndFade:
-          "slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+          "slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
         slideLeftAndFade:
           "slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
