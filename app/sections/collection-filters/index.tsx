@@ -22,15 +22,9 @@ interface CollectionFiltersProps extends HydrogenComponentProps {
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, sectionRef) => {
-    let {
-      showCollectionDescription,
-      loadPrevText,
-      loadMoreText,
-      loaderData,
-      ...rest
-    } = props;
+    let { showCollectionDescription, loadPrevText, loadMoreText, ...rest } =
+      props;
 
-    console.log(4444, loaderData?.randomNumber);
     let { ref, inView } = useInView();
     let [numberInRow, setNumberInRow] = useState(4);
     let onLayoutChange = (number: number) => {
@@ -111,13 +105,6 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
     return <section ref={sectionRef} {...rest} />;
   },
 );
-
-export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
-  let { storefront } = weaverse;
-  let randomNumber = Math.floor(Math.random() * 1000);
-  console.log(3333, randomNumber);
-  return { randomNumber };
-};
 
 export default CollectionFilters;
 
