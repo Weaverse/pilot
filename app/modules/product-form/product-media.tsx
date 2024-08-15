@@ -47,7 +47,7 @@ export function ProductMedia(props: ProductMediaProps) {
                 width={100}
                 height={100}
                 aspectRatio={"3/4"}
-                className="object-cover fadeIn w-full h-full"
+                className="object-cover opacity-0 animate-fadeIn w-full h-full"
                 sizes="auto"
               />
             </SwiperSlide>
@@ -84,7 +84,7 @@ export function ProductMedia(props: ProductMediaProps) {
                 data={image}
                 loading={i === 0 ? "eager" : "lazy"}
                 aspectRatio={"3/4"}
-                className="object-cover w-full h-auto fadeIn"
+                className="object-cover w-full h-auto opacity-0 animate-fadeIn"
                 sizes="auto"
               />
             </SwiperSlide>

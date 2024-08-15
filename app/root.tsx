@@ -167,7 +167,10 @@ function Layout({ children }: { children?: React.ReactNode }) {
         <Links />
         <GlobalStyle />
       </head>
-      <body>
+      <body
+        style={{ opacity: 0 }}
+        className="transition-opacity !opacity-100 duration-300"
+      >
         {data ? (
           <Analytics.Provider
             cart={data.cart}
