@@ -21,9 +21,7 @@ export function DesktopHeader({
   menu?: EnhancedMenu;
   shopName: string;
 }) {
-  let {
-    enableTransparentHeader,
-  } = useThemeSettings();
+  let { enableTransparentHeader } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
   let [hovered, setHovered] = useState(false); // use state to delay disappearing header when drawer closes
@@ -42,16 +40,15 @@ export function DesktopHeader({
   let scrolled = y >= 50;
   let isTransparent =
     enableTransparentHeader && isHome && !scrolled && !hovered;
-    
 
   return (
     <header
       className={cn(
-        "hover:text-body hover:bg-background",
         "transition-colors duration-300 ease-in-out",
         "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
         "px-6 md:px-8 lg:px-12",
-        "text-body bg-background",
+        "text-[var(--color-header-text)] bg-[var(--color-header-bg)]",
+        "hover:text-[var(--color-header-text)] hover:bg-[var(--color-header-bg)]",
         "border-b border-[rgb(230,230,230)]",
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
