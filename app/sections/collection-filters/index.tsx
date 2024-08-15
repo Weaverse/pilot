@@ -2,6 +2,7 @@ import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import type {
+  ComponentLoaderArgs,
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
@@ -9,8 +10,8 @@ import { forwardRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Button, PageHeader, Section, Text } from "~/modules";
-import type { AppliedFilter } from "~/modules/SortFilter";
 import { DrawerFilter } from "~/modules/DrawerFilter";
+import type { AppliedFilter } from "~/modules/SortFilter";
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 
 interface CollectionFiltersProps extends HydrogenComponentProps {

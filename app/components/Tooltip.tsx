@@ -4,10 +4,10 @@ import type {
   TooltipTriggerProps,
 } from "@radix-ui/react-tooltip";
 import {
+  Arrow,
   Content,
   Portal,
   Provider,
-  Arrow,
   Root,
   Trigger,
 } from "@radix-ui/react-tooltip";
