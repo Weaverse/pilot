@@ -11,8 +11,36 @@ export default {
       },
     },
     extend: {
+      keyframes: {
+        slideDownAndFade: {
+          from: { opacity: "0", transform: "translateY(-6px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        slideLeftAndFade: {
+          from: { opacity: "0", transform: "translateX(6px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        slideUpAndFade: {
+          from: { opacity: "0", transform: "translateY(6px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        slideRightAndFade: {
+          from: { opacity: "0", transform: "translateX(-6px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+      },
       animation: {
+        slideDownAndFade:
+          "slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideLeftAndFade:
+          "slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideRightAndFade:
+          "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
         spin: "spin .5s linear infinite",
+      },
+      borderWidth: {
+        6: "6px",
       },
       colors: {
         body: "rgb(var(--color-text) / <alpha-value>)",
@@ -38,7 +66,7 @@ export default {
       },
       spacing: {
         nav: "var(--height-nav)",
-        "full-nav": "var(--announcement-bar-height, 0px)", 
+        "full-nav": "var(--announcement-bar-height, 0px)",
         screen: "var(--screen-height, 100vh)",
       },
       height: {
