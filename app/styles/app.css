@@ -176,7 +176,7 @@
   overflow: hidden;
   &::before {
     content: "";
-    @apply absolute -rotate-45 bg-line/30;
+    @apply absolute -rotate-45 bg-line;
     z-index: 1;
     left: -1px;
     bottom: -1px;
