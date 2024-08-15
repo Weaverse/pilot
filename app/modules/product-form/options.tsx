@@ -1,8 +1,9 @@
-import { Image } from "@shopify/hydrogen";
-import { useThemeSettings, type WeaverseImage } from "@weaverse/hydrogen";
+import { Image, type VariantOptionValue } from "@shopify/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { Tooltip, TooltipTrigger, TooltipContent } from "~/components/Tooltip";
+import type { ProductVariantFragmentFragment } from "storefrontapi.generated";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/Tooltip";
 import { cn } from "~/lib/cn";
 import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
 
@@ -43,14 +44,9 @@ interface VariantOptionProps {
   selectedOptionValue: string;
   onSelectOptionValue: (value: string) => void;
   name: string;
-  values: {
-    isActive: boolean;
-    isAvailable: boolean;
-    search: string;
-    to: string;
-    value: string;
-    image?: WeaverseImage;
-  }[];
+  values: (VariantOptionValue & {
+    image?: ProductVariantFragmentFragment["image"];
+  })[];
 }
 
 export function VariantOption(props: VariantOptionProps) {
