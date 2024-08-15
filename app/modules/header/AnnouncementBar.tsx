@@ -8,7 +8,7 @@ import { useHeaderStyles } from "~/hooks/useHeaderStyles";
 let storageKey = "hide-announcement-bar";
 
 export function AnnouncementBar() {
-  let [show, setShow] = useState(false);
+  let [show, setShow] = useState(true);
   useHeaderStyles(show);
   let themeSettings = useThemeSettings();
   let {
@@ -61,7 +61,6 @@ export function AnnouncementBar() {
           dangerouslySetInnerHTML={{ __html: topbarText }}
         />
       </Marquee>
-
       {dismissibleTopbar && (
         <IconX
           className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer w-5 h-5"
