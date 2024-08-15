@@ -82,7 +82,7 @@ function NoPredictiveSearchResults({
     return null;
   }
   return (
-    <p className="w-[640px] border bg-background p-6">
+    <p className="w-[640px] shadow-2xl bg-background p-6">
       No results found for <q>{searchTerm.current}</q>
     </p>
   );
