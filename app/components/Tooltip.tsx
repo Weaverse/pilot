@@ -31,7 +31,7 @@ export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         ref={ref}
         className={cn(
           "animate-slideDownAndFade",
-          "z-50 px-4 rounded py-1.5 shadow-sm text-background bg-body opacity-0",
+          "z-50 px-4 rounded py-1 shadow-sm text-background bg-body opacity-0",
           className,
         )}
         align="center"
