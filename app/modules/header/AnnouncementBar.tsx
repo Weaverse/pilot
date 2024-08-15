@@ -12,13 +12,13 @@ export function AnnouncementBar() {
   useHeaderStyles(show);
   let themeSettings = useThemeSettings();
   let {
-    announcementBarText,
-    announcementBarHeight,
+    topbarText,
+    topbarHeight,
     topbarTextColor,
     topbarBgColor,
-    dismissibleAnnouncementBar,
-    stickyAnnouncementBar,
-    alwaysScrolling,
+    dismissibleTopbar,
+    stickyTopbar,
+    enableScrolling,
     scrollingGap,
     scrollingSpeed,
   } = themeSettings;
@@ -35,34 +35,34 @@ export function AnnouncementBar() {
     }
   }, []);
 
-  if (!show || !announcementBarText) return null;
+  if (!show || !topbarText) return null;
 
   return (
     <div
       id="announcement-bar"
       className={clsx(
         "text-center z-50 flex items-center relative overflow-x-hidden",
-        stickyAnnouncementBar && "sticky top-0",
+        stickyTopbar && "sticky top-0",
       )}
       style={{
-        height: `${announcementBarHeight}px`,
+        height: `${topbarHeight}px`,
         backgroundColor: topbarBgColor,
         color: topbarTextColor,
       }}
     >
       <Marquee
-        key={`${announcementBarText}${alwaysScrolling}`}
+        key={`${topbarText}${enableScrolling}`}
         speed={scrollingSpeed}
         gap={scrollingGap}
-        rollAsNeeded={!alwaysScrolling}
+        rollAsNeeded={!enableScrolling}
       >
         <div
-          className="flex items-center gap-[var(--gap)] whitespace-nowrap"
-          dangerouslySetInnerHTML={{ __html: announcementBarText }}
+          className="flex items-center gap-[var(--gap)] whitespace-nowrap [&_p]:flex [&_p]:gap-2 [&_p]:items-center"
+          dangerouslySetInnerHTML={{ __html: topbarText }}
         />
       </Marquee>
 
-      {dismissibleAnnouncementBar && (
+      {dismissibleTopbar && (
         <IconX
           className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer w-5 h-5"
           onClick={dismiss}

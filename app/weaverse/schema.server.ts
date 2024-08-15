@@ -144,14 +144,14 @@ export let themeSchema: HydrogenThemeSchema = {
       inputs: [
         {
           type: "richtext",
-          name: "announcementBarText",
+          name: "topbarText",
           label: "Content",
           defaultValue: "",
         },
         {
           type: "range",
           label: "Height",
-          name: "announcementBarHeight",
+          name: "topbarHeight",
           configs: {
             min: 10,
             max: 100,
@@ -161,27 +161,8 @@ export let themeSchema: HydrogenThemeSchema = {
           defaultValue: 36,
         },
         {
-          type: "switch",
-          label: "Dismissible",
-          name: "dismissibleAnnouncementBar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Sticky",
-          name: "stickyAnnouncementBar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Always scrolling",
-          name: "alwaysScrolling",
-          defaultValue: false,
-          helpText: "If disabled, the content will only be scrolling when it is longer than the screen.",
-        },
-        {
           type: "range",
-          label: "Gap between content",
+          label: "Content gap",
           name: "scrollingGap",
           configs: {
             min: 0,
@@ -190,6 +171,26 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: "px",
           },
           defaultValue: 44,
+        },
+        {
+          type: "switch",
+          label: "Sticky",
+          name: "stickyTopbar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Dismissible",
+          name: "dismissibleTopbar",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Enable scrolling",
+          name: "enableScrolling",
+          defaultValue: false,
+          helpText:
+            "Scrolling is automatically detected based on the content length.",
         },
         {
           type: "range",
@@ -208,7 +209,6 @@ export let themeSchema: HydrogenThemeSchema = {
     {
       group: "Header",
       inputs: [
-
         {
           type: "switch",
           label: "Enable transparent header",
