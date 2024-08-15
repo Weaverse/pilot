@@ -26,9 +26,7 @@ export function MobileHeader({
 }) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
   let isHome = useIsHomePath();
-  let {
-    enableTransparentHeader,
-  } = useThemeSettings();
+  let { enableTransparentHeader } = useThemeSettings();
   let { y } = useWindowScroll();
   let enableTransparent = enableTransparentHeader && isHome;
   let isTransparent = enableTransparent && y < 50;
