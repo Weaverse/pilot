@@ -33,6 +33,7 @@ import { seoPayload } from "~/lib/seo.server";
 import { Layout as PageLayout } from "~/modules";
 import { CustomAnalytics } from "~/modules/CustomAnalytics";
 import { GlobalLoading } from "~/modules/global-loading";
+import { TooltipProvider } from "./components/Tooltip";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import { GenericError } from "./modules/GenericError";
 import { NotFound } from "./modules/NotFound";
@@ -173,12 +174,14 @@ function Layout({ children }: { children?: React.ReactNode }) {
             shop={data.shop}
             consent={data.consent}
           >
-            <PageLayout
-              key={`${locale.language}-${locale.country}`}
-              layout={data.layout}
-            >
-              {children}
-            </PageLayout>
+            <TooltipProvider disableHoverableContent>
+              <PageLayout
+                key={`${locale.language}-${locale.country}`}
+                layout={data.layout}
+              >
+                {children}
+              </PageLayout>
+            </TooltipProvider>
             <CustomAnalytics />
           </Analytics.Provider>
         ) : (
