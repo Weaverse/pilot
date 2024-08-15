@@ -1,5 +1,4 @@
-import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
+import type { HydrogenThemeSchema, SwatchesConfigs } from "@weaverse/hydrogen";
 import pkg from "../../package.json";
 
 let swatchesConfigs: SwatchesConfigs = {

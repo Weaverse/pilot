@@ -1,11 +1,10 @@
 import { Image, type VariantOptionValue } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { ProductVariantFragmentFragment } from "storefrontapi.generated";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/Tooltip";
 import { cn } from "~/lib/cn";
-import type { SwatchesConfigs } from "~/types/weaverse-hydrogen";
 
 let variants = cva("border border-line/75 hover:border-body cursor-pointer", {
   variants: {
