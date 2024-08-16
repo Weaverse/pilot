@@ -37,9 +37,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       variants: _variants,
       storeDomain,
     } = useLoaderData<typeof productLoader>();
-    console.log("👉 --------> - product:", product);
     let variants = _variants?.product?.variants;
-
     let selectedVariantOptimistic = useOptimisticVariant(
       product?.selectedVariant || variants?.nodes?.[0],
       variants,
@@ -139,15 +137,24 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     )}
                     <h1 className="h3">{title}</h1>
                   </div>
-                  <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
-                    {selectedVariant ? (
+                  {selectedVariant ? (
+                    <div className="flex items-center gap-2">
                       <Money
                         withoutTrailingZeros
                         data={selectedVariant.price}
                         as="span"
+                        className="font-medium text-2xl"
                       />
-                    ) : null}
-                  </p>
+                      {selectedVariant.compareAtPrice && (
+                        <Money
+                          withoutTrailingZeros
+                          data={selectedVariant.compareAtPrice}
+                          as="span"
+                          className="line-through text-2xl text-[var(--color-compare-price-text)]"
+                        />
+                      )}
+                    </div>
+                  ) : null}
                   {children}
                   <p className="max-w-[600px] leading-relaxed">{summary}</p>
                   <ProductVariants
