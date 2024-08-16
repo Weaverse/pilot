@@ -121,23 +121,19 @@
     }
   }
 
-  .absolute-center {
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
-  }
-
   .strike {
     position: relative;
     &::before {
       content: "";
-      display: block;
       position: absolute;
+      display: block;
       width: 108%;
-      height: 1.5px;
+      height: 1px;
       left: -4%;
       top: 50%;
       transform: translateY(-50%);
-      background: rgb(var(--color-border));
-      box-shadow: 0.5px 0.5px 0px 0.5px rgb(var(--color-lines));
+      background: var(--color-compare-price-text);
+      box-shadow: 0.5px 0.5px 0px 0.5px white;
     }
   }
 
