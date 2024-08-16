@@ -398,7 +398,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "color",
           label: "New tags",
           name: "newTagColor",
-          defaultValue: "#818cf8",
+          defaultValue: "#4d4d4d",
         },
         {
           type: "color",
