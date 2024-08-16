@@ -26,7 +26,6 @@ interface ProductInformationProps
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
   hideUnavailableOptions: boolean;
-  gallerySize?: never;
 }
 
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
@@ -59,7 +58,6 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       mediaLayout,
       showThumbnails,
       children,
-      gallerySize,
       ...rest
     } = props;
     let [quantity, setQuantity] = useState<number>(1);
@@ -112,7 +110,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
             <span>/</span>
             <span>{product.title}</span>
           </div>
-          <div className="grid gap-[clamp(30px,5%,60px)] grid-cols-[1fr_clamp(360px,45%,480px)]">
+          <div className="space-y-5 lg:space-y-0 lg:grid lg:gap-[clamp(30px,5%,60px)] lg:grid-cols-[1fr_clamp(360px,45%,480px)]">
             <ProductMedia
               mediaLayout={mediaLayout}
               media={product?.media.nodes}
