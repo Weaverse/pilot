@@ -686,7 +686,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "text",
           name: "socialX",
-          label: "X",
+          label: "X (formerly Twitter)",
           defaultValue: "https://x.com/i/communities/1636383560197373952",
         },
         {
@@ -760,7 +760,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "richtext",
           name: "copyright",
-          label: "Copyright",
+          label: "Copyright text",
           defaultValue: "© 2024 Weaverse. All rights reserved.",
         },
       ],

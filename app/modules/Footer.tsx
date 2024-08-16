@@ -17,7 +17,7 @@ import {
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { CountrySelector, Input } from "~/modules";
 
-let variants = cva("divide-y divide-line space-y-9", {
+let variants = cva("divide-y divide-line/50 space-y-9", {
   variants: {
     width: {
       full: "w-full h-full",

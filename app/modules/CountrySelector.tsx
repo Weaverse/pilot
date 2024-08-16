@@ -16,12 +16,11 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { IconCaretDown } from "~/components/Icons";
+import { IconCaretDown, IconCheckCircle } from "~/components/Icons";
 import { getCountryUrlPath } from "~/lib/locale";
 import type { Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import { IconCheck } from "./Icon";
 
 export function CountrySelector() {
   const fetcher = useFetcher();
@@ -82,13 +81,13 @@ export function CountrySelector() {
   return (
     <div ref={observerRef} className="grid gap-4 w-80">
       <Popover>
-        <PopoverButton className="w-full border border-line/30 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
+        <PopoverButton className="w-full border border-line overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
           {selectedLocale.label}
           <IconCaretDown className="w-5 h-5" />
         </PopoverButton>
         <PopoverBackdrop className="bg-black/30" />
         <PopoverPanel anchor="top">
-          <div className="w-80 max-h-40 overflow-auto py-2 rounded bg-black my-2">
+          <div className="w-80 max-h-40 overflow-auto py-2 bg-neutral-800 my-2">
             {countries &&
               Object.keys(countries).map((countryPath) => {
                 const countryLocale = countries[countryPath];
@@ -114,12 +113,12 @@ export function CountrySelector() {
                     key={countryPath}
                     type="button"
                     onClick={onChangeLocale}
-                    className="text-white bg-black hover:bg-background/30 w-full p-2 transition flex justify-start items-center text-left cursor-pointer py-2 px-4 text-sm"
+                    className="text-white bg-neutral-800 hover:bg-background/30 w-full p-2 transition flex justify-between items-center text-left cursor-pointer py-2 px-4 text-sm"
                   >
-                    {countryLocale.label}
+                    <span>{countryLocale.label}</span>
                     {isSelected ? (
                       <span className="ml-2">
-                        <IconCheck />
+                        <IconCheckCircle className="w-5 h-5" />
                       </span>
                     ) : null}
                   </CloseButton>
