@@ -5,8 +5,10 @@ import { defer } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import invariant from "tiny-invariant";
-
-import type { ProductRecommendationsQuery } from "storefrontapi.generated";
+import type {
+  ProductQuery,
+  ProductRecommendationsQuery,
+} from "storefrontapi.generated";
 import { routeHeaders } from "~/data/cache";
 import {
   PRODUCT_QUERY,
@@ -25,14 +27,17 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   invariant(productHandle, "Missing productHandle param, check route filename");
 
   let selectedOptions = getSelectedProductOptions(request);
-  let { shop, product } = await context.storefront.query(PRODUCT_QUERY, {
-    variables: {
-      handle: productHandle,
-      selectedOptions,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
+  let { shop, product } = await context.storefront.query<ProductQuery>(
+    PRODUCT_QUERY,
+    {
+      variables: {
+        handle: productHandle,
+        selectedOptions,
+        country: context.storefront.i18n.country,
+        language: context.storefront.i18n.language,
+      },
     },
-  });
+  );
 
   if (!product?.id) {
     throw new Response("product", { status: 404 });

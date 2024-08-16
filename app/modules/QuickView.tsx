@@ -70,6 +70,7 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
     <div className="p-10 rounded-md bg-background w-[80vw] max-w-[1200px]">
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
         <ProductMedia
+          mediaLayout="slider"
           // @ts-expect-error
           media={product?.media.nodes}
           selectedVariant={selectedVariant}

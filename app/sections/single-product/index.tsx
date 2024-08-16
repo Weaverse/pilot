@@ -20,8 +20,6 @@ type SingleProductData = {
   hideUnavailableOptions: boolean;
   // product media props
   showThumbnails: boolean;
-  numberOfThumbnails: number;
-  spacing: number;
 };
 
 type SingleProductProps = HydrogenComponentProps<
@@ -37,8 +35,6 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       product: _product,
       hideUnavailableOptions,
       showThumbnails,
-      numberOfThumbnails,
-      spacing,
       ...rest
     } = props;
     let { storeDomain, product, variants: _variants } = loaderData || {};
@@ -67,11 +63,10 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
             <ProductMedia
+              mediaLayout="slider"
               media={product?.media.nodes}
               selectedVariant={selectedVariant}
               showThumbnails={showThumbnails}
-              numberOfThumbnails={numberOfThumbnails}
-              spacing={spacing}
             />
             <div className="flex flex-col justify-start space-y-5">
               <div className="space-y-4">

@@ -1,20 +1,22 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
+import { Section, type SectionProps, layoutInputs } from "~/components/Section";
 import { getExcerpt } from "~/lib/utils";
-import { AddToCartButton, Text } from "~/modules";
-import { ProductPlaceholder } from "~/modules/product-form/placeholder";
-import { ProductMedia } from "~/modules/product-form/product-media";
+import { AddToCartButton, Link, Text } from "~/modules";
+import {
+  ProductMedia,
+  type ProductMediaProps,
+} from "~/modules/product-form/product-media";
 import { Quantity } from "~/modules/product-form/quantity";
 import { ProductVariants } from "~/modules/product-form/variants";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
 import { ProductDetail } from "./product-detail";
 
-interface ProductInformationProps extends HydrogenComponentProps {
+interface ProductInformationProps
+  extends SectionProps,
+    Omit<ProductMediaProps, "selectedVariant" | "media"> {
   addToCartText: string;
   soldOutText: string;
   unavailableText: string;
@@ -24,9 +26,6 @@ interface ProductInformationProps extends HydrogenComponentProps {
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
   hideUnavailableOptions: boolean;
-  showThumbnails: boolean;
-  numberOfThumbnails: number;
-  spacing: number;
   gallerySize?: never;
 }
 
@@ -38,6 +37,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       variants: _variants,
       storeDomain,
     } = useLoaderData<typeof productLoader>();
+    console.log("👉 --------> - product:", product);
     let variants = _variants?.product?.variants;
 
     let selectedVariantOptimistic = useOptimisticVariant(
@@ -58,9 +58,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       showShippingPolicy,
       showRefundPolicy,
       hideUnavailableOptions,
+      mediaLayout,
       showThumbnails,
-      numberOfThumbnails,
-      spacing,
       children,
       gallerySize,
       ...rest
@@ -101,35 +100,44 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     }
 
     if (product && variants) {
-      let { title, vendor, descriptionHtml } = product;
+      let { title, vendor, summary, description } = product;
       let { shippingPolicy, refundPolicy } = shop;
       return (
-        <section ref={ref} {...rest}>
-          <div className="container p-6 md:p-8 lg:p-12  lg:px-12 px-4 md:px-6 mx-auto">
-            <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-              <ProductMedia
-                media={product?.media.nodes}
-                selectedVariant={selectedVariant}
-                showThumbnails={showThumbnails}
-                numberOfThumbnails={numberOfThumbnails}
-                spacing={spacing}
-              />
+        <Section ref={ref} {...rest} overflow="unset">
+          <div className="flex items-center gap-2">
+            <Link
+              to="/"
+              className="text-body/50 hover:underline underline-offset-4"
+            >
+              Home
+            </Link>
+            <span>/</span>
+            <span>{product.title}</span>
+          </div>
+          <div className="grid gap-[clamp(30px,5%,60px)] grid-cols-[1fr_clamp(360px,45%,480px)]">
+            <ProductMedia
+              mediaLayout={mediaLayout}
+              media={product?.media.nodes}
+              selectedVariant={selectedVariant}
+              showThumbnails={showThumbnails}
+            />
+            <div
+              style={
+                {
+                  "--shop-pay-button-border-radius": "0",
+                } as React.CSSProperties
+              }
+            >
               <div
-                className="flex flex-col justify-start space-y-5"
-                style={
-                  {
-                    "--shop-pay-button-border-radius": "0",
-                  } as React.CSSProperties
-                }
+                className="sticky flex flex-col justify-start space-y-5"
+                style={{ top: "calc(var(--height-nav) + 20px)" }}
               >
                 <div className="space-y-4">
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                      {title}
-                    </h2>
                     {showVendor && vendor && (
                       <Text className={"opacity-50 font-medium"}>{vendor}</Text>
                     )}
+                    <h1 className="h3">{title}</h1>
                   </div>
                   <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
                     {selectedVariant ? (
@@ -141,13 +149,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     ) : null}
                   </p>
                   {children}
-                  <p
-                    suppressHydrationWarning
-                    className="max-w-[600px] leading-relaxed prose"
-                    dangerouslySetInnerHTML={{
-                      __html: descriptionHtml,
-                    }}
-                  />
+                  <p className="max-w-[600px] leading-relaxed">{summary}</p>
                   <ProductVariants
                     product={product}
                     selectedVariant={selectedVariant}
@@ -187,6 +189,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   />
                 )}
                 <div className="grid py-4">
+                  <ProductDetail title="Description" content={description} />
                   {showShippingPolicy && shippingPolicy?.body && (
                     <ProductDetail
                       title="Shipping"
@@ -205,7 +208,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
               </div>
             </div>
           </div>
-        </section>
+        </Section>
       );
     }
     return <div ref={ref} {...rest} />;
@@ -216,15 +219,48 @@ export default ProductInformation;
 
 export let schema: HydrogenComponentSchema = {
   type: "product-information",
-  title: "Product information",
+  title: "Main product",
   childTypes: ["judgeme"],
   limit: 1,
   enabledOn: {
     pages: ["PRODUCT"],
   },
   inspector: [
+    { group: "Layout", inputs: layoutInputs },
     {
-      group: "Product form",
+      group: "Product Media",
+      inputs: [
+        {
+          type: "toggle-group",
+          name: "mediaLayout",
+          label: "Media layout",
+          configs: {
+            options: [
+              {
+                label: "Grid",
+                value: "grid",
+                icon: "grid-2x2",
+              },
+              {
+                label: "Slider",
+                value: "slider",
+                icon: "slideshow-outline",
+              },
+            ],
+          },
+          defaultValue: "grid",
+        },
+        {
+          label: "Show thumbnails",
+          name: "showThumbnails",
+          type: "switch",
+          defaultValue: true,
+          condition: "mediaLayout.eq.slider",
+        },
+      ],
+    },
+    {
+      group: "Product information",
       inputs: [
         {
           type: "text",
@@ -284,38 +320,9 @@ export let schema: HydrogenComponentSchema = {
         },
       ],
     },
-    {
-      group: "Product Media",
-      inputs: [
-        {
-          label: "Show thumbnails",
-          name: "showThumbnails",
-          type: "switch",
-          defaultValue: true,
-        },
-        {
-          label: "Number of thumbnails",
-          name: "numberOfThumbnails",
-          type: "range",
-          condition: "showThumbnails.eq.true",
-          configs: {
-            min: 1,
-            max: 10,
-          },
-          defaultValue: 4,
-        },
-        {
-          label: "Gap between images",
-          name: "spacing",
-          type: "range",
-          configs: {
-            min: 0,
-            step: 2,
-            max: 100,
-          },
-          defaultValue: 10,
-        },
-      ],
-    },
   ],
+  presets: {
+    width: "stretch",
+    mediaLayout: "grid",
+  },
 };
