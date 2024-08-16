@@ -8,7 +8,7 @@ import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
 
 const dropdownContentClass =
-  "absolute shadow overflow-hidden bg-white z-10 dropdown-transition";
+  "absolute shadow-2xl overflow-hidden bg-white z-10 dropdown-transition";
 
 export function DesktopMenu(props: { menu: EnhancedMenu }) {
   let { menu } = props;
@@ -27,10 +27,10 @@ export function DesktopMenu(props: { menu: EnhancedMenu }) {
         let Comp: React.FC<SingleMenuItem> = isAllResourceType
           ? ImageMenu
           : level > 2
-          ? MultiMenu
-          : level === 2
-          ? SingleMenu
-          : GroupWrapper;
+            ? MultiMenu
+            : level === 2
+              ? SingleMenu
+              : GroupWrapper;
 
         return <Comp key={item.id} title={title} {...rest} />;
       })}
@@ -48,13 +48,13 @@ function MultiMenu(props: SingleMenuItem) {
       style={{ "--item-index": idx } as { [key: string]: any }}
     >
       <Link to={item.to} prefetch="intent" className="uppercase">
-        <span className="text-animation">{item.title}</span>
+        <span className="underline-animation">{item.title}</span>
       </Link>
       <ul className="space-y-1.5">
         {item.items.map((subItem) => (
           <li key={subItem.id} className="leading-6">
             <Link to={subItem.to} prefetch="intent" className="relative">
-              <span className="text-animation">{subItem.title}</span>
+              <span className="underline-animation">{subItem.title}</span>
             </Link>
           </li>
         ))}
@@ -110,13 +110,13 @@ function SingleMenu(props: SingleMenuItem) {
       >
         <div className="p-6 space-y-4 min-w-48">
           <Link to={to} prefetch="intent" className="uppercase">
-            <span className="text-animation">{title}</span>
+            <span className="underline-animation">{title}</span>
           </Link>
           <ul className="space-y-1.5">
             {items.map((subItem) => (
               <li key={subItem.id} className="leading-6">
                 <Link to={subItem.to} prefetch="intent">
-                  <span className="text-animation">{subItem.title}</span>
+                  <span className="underline-animation">{subItem.title}</span>
                 </Link>
               </li>
             ))}
@@ -172,7 +172,9 @@ function GroupHeader({
   return (
     <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
       <Link to={to} className="py-2 flex items-center gap-1.5">
-        <span className="uppercase text-animation group/header">{title}</span>
+        <span className="uppercase underline-animation group/header">
+          {title}
+        </span>
         {showCaret && (
           <IconCaretDown className="w-3 h-3 mb-[3px] group-hover:rotate-180 transition-transform duration-400" />
         )}

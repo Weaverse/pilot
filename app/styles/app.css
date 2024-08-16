@@ -197,7 +197,7 @@
   @apply origin-left scale-x-100;
 }
 
-.text-animation {
+.underline-animation {
   background-image: linear-gradient(
     to right,
     var(--underline-color, rgb(15, 15, 15)),
@@ -210,13 +210,13 @@
   transition: background 200ms ease-in-out;
   background-position: left calc(1em + 4px);
 }
-.text-animation:hover {
+.underline-animation:hover {
   background-size: 100% 1px;
 }
-.group\/header.text-animation {
+.group\/header.underline-animation {
   background-position: left calc(1em + 8px);
 }
-.group:hover .group\/header.text-animation {
+.group:hover .group\/header.underline-animation {
   background-size: 100% 1px;
 }
 .dropdown-transition {
