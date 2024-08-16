@@ -24,7 +24,7 @@ interface ProductInformationProps
   unavailableText: string;
   showVendor: boolean;
   showSalePrice: boolean;
-  showDetails: boolean;
+  showShortDescription: boolean;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
   hideUnavailableOptions: boolean;
@@ -53,7 +53,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       unavailableText,
       showVendor,
       showSalePrice,
-      showDetails,
+      showShortDescription,
       showShippingPolicy,
       showRefundPolicy,
       hideUnavailableOptions,
@@ -170,16 +170,19 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       {isDiscounted(
                         selectedVariant.price as MoneyV2,
                         selectedVariant.compareAtPrice as MoneyV2,
-                      ) && (
-                        <CompareAtPrice
-                          data={selectedVariant.compareAtPrice as MoneyV2}
-                          className="text-2xl/none"
-                        />
-                      )}
+                      ) &&
+                        showSalePrice && (
+                          <CompareAtPrice
+                            data={selectedVariant.compareAtPrice as MoneyV2}
+                            className="text-2xl/none"
+                          />
+                        )}
                     </div>
                   ) : null}
                   {children}
-                  <p className="leading-relaxed">{summary}</p>
+                  {showShortDescription && (
+                    <p className="leading-relaxed">{summary}</p>
+                  )}
                   <ProductVariants
                     product={product}
                     selectedVariant={selectedVariant}
@@ -346,7 +349,7 @@ export let schema: HydrogenComponentSchema = {
           type: "switch",
           label: "Show vendor",
           name: "showVendor",
-          defaultValue: true,
+          defaultValue: false,
         },
         {
           type: "switch",
@@ -356,8 +359,8 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "switch",
-          label: "Show details",
-          name: "showDetails",
+          label: "Show short description",
+          name: "showShortDescription",
           defaultValue: true,
         },
         {
@@ -376,6 +379,7 @@ export let schema: HydrogenComponentSchema = {
           label: "Hide unavailable options",
           type: "switch",
           name: "hideUnavailableOptions",
+          defaultValue: false,
         },
       ],
     },
