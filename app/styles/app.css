@@ -182,21 +182,6 @@
   border-radius: var(--section-border-radius);
 }
 
-.animate-hover {
-  @apply relative;
-  overflow: hidden;
-}
-
-.animate-hover::before {
-  content: "";
-  /* transform-origin: right; */
-  @apply absolute bottom-0 left-0 w-full border-b-2 origin-right duration-300 transition-transform scale-x-0;
-}
-
-.animate-hover:hover::before {
-  @apply origin-left scale-x-100;
-}
-
 .underline-animation {
   background-image: linear-gradient(
     to right,
@@ -248,20 +233,4 @@
 mark {
   background-color: none;
   font-weight: 500;
-}
-
-.animate-marquee {
-  animation-name: marquee;
-  animation-duration: var(--animation-speed, 15s);
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
 }

@@ -22,7 +22,7 @@ export function OrderCard({ order }: { order: OrderCardFragment }) {
             <Image
               width={168}
               height={168}
-              className="w-full opacity-0 animate-fadeIn cover"
+              className="w-full opacity-0 animate-fade-in cover"
               alt={lineItems[0].image?.altText ?? "Order image"}
               src={lineItems[0].image.url}
             />

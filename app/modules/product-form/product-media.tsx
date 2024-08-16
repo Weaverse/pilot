@@ -60,7 +60,7 @@ export function ProductMedia(props: ProductMediaProps) {
               height={1660}
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
-                "object-cover opacity-0 animate-fadeIn w-[80vw] max-w-none lg:w-full lg:h-full",
+                "object-cover opacity-0 animate-fade-in w-[80vw] max-w-none lg:w-full lg:h-full",
                 gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
               )}
               sizes="auto"
@@ -99,7 +99,7 @@ export function ProductMedia(props: ProductMediaProps) {
                 width={100}
                 height={100}
                 aspectRatio={"3/4"}
-                className="object-cover opacity-0 animate-fadeIn w-full h-full"
+                className="object-cover opacity-0 animate-fade-in w-full h-full"
                 sizes="auto"
               />
             </SwiperSlide>
@@ -136,7 +136,7 @@ export function ProductMedia(props: ProductMediaProps) {
                 data={image}
                 loading={i === 0 ? "eager" : "lazy"}
                 aspectRatio={"3/4"}
-                className="object-cover w-full h-auto opacity-0 animate-fadeIn"
+                className="object-cover w-full h-auto opacity-0 animate-fade-in"
                 sizes="auto"
               />
             </SwiperSlide>

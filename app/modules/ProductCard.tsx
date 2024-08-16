@@ -65,7 +65,7 @@ export function ProductCard({
               prefetch="intent"
             >
               <Image
-                className="object-cover w-full opacity-0 animate-fadeIn"
+                className="object-cover w-full opacity-0 animate-fade-in"
                 sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
                 aspectRatio="4/5"
                 data={image}

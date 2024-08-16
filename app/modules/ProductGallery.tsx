@@ -50,7 +50,7 @@ export function ProductGallery({
                     : "(min-width: 48em) 30vw, 90vw"
                 }
                 className={clsx(
-                  "object-cover w-full h-full aspect-square opacity-0 animate-fadeIn",
+                  "object-cover w-full h-full aspect-square opacity-0 animate-fade-in",
                   i === 0 ? "vt-product-image" : "",
                 )}
               />
