@@ -6,7 +6,6 @@ import type {
 import {
   Arrow,
   Content,
-  Portal,
   Provider,
   Root,
   Trigger,

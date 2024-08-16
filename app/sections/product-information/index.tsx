@@ -1,10 +1,12 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
+import { CompareAtPrice } from "~/components/CompareAtPrice";
 import { Section, type SectionProps, layoutInputs } from "~/components/Section";
-import { getExcerpt } from "~/lib/utils";
-import { AddToCartButton, Link, Text } from "~/modules";
+import { getExcerpt, isDiscounted } from "~/lib/utils";
+import { AddToCartButton, Link } from "~/modules";
 import {
   ProductMedia,
   type ProductMediaProps,
@@ -147,12 +149,13 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                         as="span"
                         className="font-medium text-2xl"
                       />
-                      {selectedVariant.compareAtPrice && (
-                        <Money
-                          withoutTrailingZeros
-                          data={selectedVariant.compareAtPrice}
-                          as="span"
-                          className="line-through text-2xl text-[var(--color-compare-price-text)]"
+                      {isDiscounted(
+                        selectedVariant.price as MoneyV2,
+                        selectedVariant.compareAtPrice as MoneyV2,
+                      ) && (
+                        <CompareAtPrice
+                          data={selectedVariant.compareAtPrice as MoneyV2}
+                          className="text-2xl"
                         />
                       )}
                     </div>
