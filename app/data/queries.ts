@@ -69,9 +69,10 @@ export let PRODUCT_QUERY = `#graphql
       title
       vendor
       handle
+      publishedAt
       descriptionHtml
       description
-			summary: description(truncateAt: 200)
+      summary: description(truncateAt: 200)
       options {
         name
         values

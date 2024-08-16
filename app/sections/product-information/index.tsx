@@ -5,7 +5,7 @@ import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import { CompareAtPrice } from "~/components/CompareAtPrice";
 import { Section, type SectionProps, layoutInputs } from "~/components/Section";
-import { getExcerpt, isDiscounted } from "~/lib/utils";
+import { getExcerpt, isDiscounted, isNewArrival } from "~/lib/utils";
 import { AddToCartButton, Link } from "~/modules";
 import {
   ProductMedia,
@@ -102,6 +102,12 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     if (product && variants) {
       let { title, vendor, summary, description } = product;
       let { shippingPolicy, refundPolicy } = shop;
+      let discountedAmount =
+        (selectedVariant?.compareAtPrice?.amount || 0) /
+          selectedVariant?.price?.amount -
+        1;
+      let isNew = isNewArrival(product.publishedAt);
+
       return (
         <Section ref={ref} {...rest} overflow="unset">
           <div className="flex items-center gap-2">
@@ -135,6 +141,18 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                 style={{ top: "calc(var(--height-nav) + 20px)" }}
               >
                 <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    {discountedAmount > 0 && discountedAmount < 1 && (
+                      <span className="py-1.5 px-2 text-background bg-[var(--color-sale-tag)] rounded">
+                        -{Math.round(discountedAmount * 100)}%
+                      </span>
+                    )}
+                    {isNew && (
+                      <span className="py-1.5 px-2 text-background bg-[var(--color-new-tag)] rounded">
+                        NEW ARRIVAL
+                      </span>
+                    )}
+                  </div>
                   <div className="flex flex-col gap-2">
                     {showVendor && vendor && (
                       <span className="text-body/50">{vendor}</span>
@@ -147,7 +165,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                         withoutTrailingZeros
                         data={selectedVariant.price}
                         as="span"
-                        className="font-medium text-2xl"
+                        className="font-medium text-2xl/none"
                       />
                       {isDiscounted(
                         selectedVariant.price as MoneyV2,
@@ -155,7 +173,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       ) && (
                         <CompareAtPrice
                           data={selectedVariant.compareAtPrice as MoneyV2}
-                          className="text-2xl"
+                          className="text-2xl/none"
                         />
                       )}
                     </div>
