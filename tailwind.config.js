@@ -71,7 +71,6 @@ export default {
       },
       spacing: {
         nav: "var(--height-nav)",
-        "full-nav": "var(--announcement-bar-height, 0px)",
         screen: "var(--screen-height, 100vh)",
       },
       height: {

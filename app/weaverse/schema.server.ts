@@ -173,18 +173,6 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
-          label: "Sticky",
-          name: "stickyTopbar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Dismissible",
-          name: "dismissibleTopbar",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
           label: "Enable scrolling",
           name: "enableScrolling",
           defaultValue: false,
