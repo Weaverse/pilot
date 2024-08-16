@@ -71,7 +71,6 @@ export default {
       },
       spacing: {
         nav: "var(--height-nav)",
-        "full-nav": "var(--announcement-bar-height, 0px)",
         screen: "var(--screen-height, 100vh)",
       },
       height: {
@@ -118,7 +117,7 @@ export default {
       },
       boxShadow: {
         border: "inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)",
-        header: "0 4px 18px rgba(0,0,0,.1)",
+        header: "0 2px 5px #0000000f",
       },
       zIndex: {
         1: "1",

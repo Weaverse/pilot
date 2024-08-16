@@ -1,14 +1,14 @@
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import clsx from "clsx";
-import type React from "react";
+import React from "react";
 import { IconCaretDown } from "~/components/Icons";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
 
 const dropdownContentClass =
-  "absolute shadow overflow-hidden bg-white z-10 dropdown-transition";
+  "absolute shadow-2xl overflow-hidden bg-white z-10 dropdown-transition";
 
 export function DesktopMenu(props: { menu: EnhancedMenu }) {
   let { menu } = props;
@@ -48,13 +48,13 @@ function MultiMenu(props: SingleMenuItem) {
       style={{ "--item-index": idx } as { [key: string]: any }}
     >
       <Link to={item.to} prefetch="intent" className="uppercase">
-        <span className="text-animation">{item.title}</span>
+        <span className="underline-animation">{item.title}</span>
       </Link>
       <ul className="space-y-1.5">
         {item.items.map((subItem) => (
           <li key={subItem.id} className="leading-6">
             <Link to={subItem.to} prefetch="intent" className="relative">
-              <span className="text-animation">{subItem.title}</span>
+              <span className="underline-animation">{subItem.title}</span>
             </Link>
           </li>
         ))}
@@ -110,13 +110,13 @@ function SingleMenu(props: SingleMenuItem) {
       >
         <div className="p-6 space-y-4 min-w-48">
           <Link to={to} prefetch="intent" className="uppercase">
-            <span className="text-animation">{title}</span>
+            <span className="underline-animation">{title}</span>
           </Link>
           <ul className="space-y-1.5">
             {items.map((subItem) => (
               <li key={subItem.id} className="leading-6">
                 <Link to={subItem.to} prefetch="intent">
-                  <span className="text-animation">{subItem.title}</span>
+                  <span className="underline-animation">{subItem.title}</span>
                 </Link>
               </li>
             ))}
@@ -160,12 +160,24 @@ function ImageMenu({ title, items, to }: SingleMenuItem) {
   );
 }
 
-function GroupHeader({ title, to }: { title: string; to: string }) {
+function GroupHeader({
+  title,
+  to,
+  showCaret,
+}: {
+  title: string;
+  to: string;
+  showCaret?: boolean;
+}) {
   return (
     <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
       <Link to={to} className="py-2 flex items-center gap-1.5">
-        <span className="uppercase text-animation group/header">{title}</span>
-        <IconCaretDown className="w-3 h-3 mb-[3px] group-hover:rotate-180 transition-transform duration-400" />
+        <span className="uppercase underline-animation group/header">
+          {title}
+        </span>
+        {showCaret && (
+          <IconCaretDown className="w-3 h-3 mb-[3px] group-hover:rotate-180 transition-transform duration-400" />
+        )}
       </Link>
     </div>
   );
@@ -178,9 +190,10 @@ function GroupWrapper(props: {
   to: string;
 }) {
   let { children, className, title, to } = props;
+  let showCaret = React.Children.count(children) > 0;
   return (
     <div className={clsx("group", className)}>
-      <GroupHeader title={title} to={to} />
+      <GroupHeader title={title} to={to} showCaret={showCaret} />
       {children}
     </div>
   );

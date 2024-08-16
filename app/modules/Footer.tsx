@@ -17,7 +17,7 @@ import {
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { CountrySelector, Input } from "~/modules";
 
-let variants = cva("divide-y divide-line space-y-9", {
+let variants = cva("divide-y divide-line/50 space-y-9", {
   variants: {
     width: {
       full: "w-full h-full",
@@ -54,14 +54,14 @@ export function Footer({
   let { items = [] } = menu || {};
   let socialItems = [
     {
-      name: "Facebook",
-      to: socialFacebook,
-      icon: <IconFacebookLogo className="w-5 h-5" />,
-    },
-    {
       name: "Instagram",
       to: socialInstagram,
       icon: <IconInstagramLogo className="w-5 h-5" />,
+    },
+    {
+      name: "X",
+      to: socialX,
+      icon: <IconXLogo className="w-5 h-5" />,
     },
     {
       name: "LinkedIn",
@@ -69,14 +69,21 @@ export function Footer({
       icon: <IconLinkedinLogo className="w-5 h-5" />,
     },
     {
-      name: "X",
-      to: socialX,
-      icon: <IconXLogo className="w-5 h-5" />,
+      name: "Facebook",
+      to: socialFacebook,
+      icon: <IconFacebookLogo className="w-5 h-5" />,
     },
   ];
 
   return (
-    <footer className="bg-[var(--color-footer-bg)] text-[var(--color-footer-text)] pt-16 text-sm">
+    <footer
+      className="bg-[var(--color-footer-bg)] text-[var(--color-footer-text)] pt-16"
+      style={
+        {
+          "--underline-color": "var(--color-footer-text)",
+        } as React.CSSProperties
+      }
+    >
       <div className={variants({ width: footerWidth })}>
         <div className="space-y-9">
           <div className="w-full grid lg:grid-cols-4 gap-8">
@@ -113,7 +120,7 @@ export function Footer({
             </div>
             <div className="flex flex-col gap-6">
               <div className="text-base">{addressTitle}</div>
-              <div>
+              <div className="space-y-2">
                 <p>{storeAddress}</p>
                 <p>Email: {storeEmail}</p>
               </div>
@@ -122,12 +129,12 @@ export function Footer({
               <div className="text-base">{newsletterTitle}</div>
               <div className="space-y-2">
                 <p>{newsletterDescription}</p>
-                <div className="flex gap-2">
+                <div className="flex">
                   <Input
                     placeholder={newsletterPlaceholder}
-                    className="max-w-96"
+                    className="max-w-96 text-body"
                   />
-                  <Button variant="secondary">{newsletterButtonText}</Button>
+                  <Button variant="custom">{newsletterButtonText}</Button>
                 </div>
               </div>
             </div>
@@ -165,21 +172,21 @@ function FooterMenu({
   items: ChildEnhancedMenuItem[];
 }) {
   return (
-    <div className="flex flex-col gap-4 lg:gap-8">
+    <div className="flex flex-col gap-4">
       <Disclosure defaultOpen>
         <DisclosureButton className="lg:hidden text-left">
-          <div className="text-base">
+          <div className="text-base font-medium">
             {to === "#" ? title : <Link to={to}>{title}</Link>}
           </div>
         </DisclosureButton>
-        <div className="text-base hidden lg:block">
+        <div className="text-lg font-medium hidden lg:block">
           {to === "#" ? title : <Link to={to}>{title}</Link>}
         </div>
         <DisclosurePanel>
           <div className="flex flex-col gap-2">
             {items.map((item, ind) => (
-              <Link to={item.to} key={ind}>
-                {item.title}
+              <Link to={item.to} key={ind} className="relative">
+                <span className="underline-animation">{item.title}</span>
               </Link>
             ))}
           </div>

@@ -7,7 +7,7 @@ import Heading, {
   headingInputs,
 } from "~/components/Heading";
 import { Section, type SectionProps, layoutInputs } from "~/components/Section";
-import { ProductCard, ProductSwimlane, Skeleton } from "~/modules";
+import { ProductCard } from "~/modules";
 
 interface RelatedProductsProps
   extends Omit<SectionProps, "content">,

@@ -77,7 +77,7 @@ export function VariantOption(props: VariantOptionProps) {
               key={value}
               type="button"
               className={cn(
-                "px-4 py-2.5 text-center text-body",
+                "px-4 py-2.5 text-center text-body !leading-none",
                 variants({
                   buttonSize: size,
                   shape,

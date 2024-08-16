@@ -46,7 +46,7 @@ export function DesktopHeader({
       className={cn(
         "transition-colors duration-300 ease-in-out",
         "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
-        "px-6 md:px-8 lg:px-12",
+        "px-3 md:px-10 lg:px-16",
         "text-[var(--color-header-text)] bg-[var(--color-header-bg)]",
         "hover:text-[var(--color-header-text)] hover:bg-[var(--color-header-bg)]",
         "border-b border-[rgb(230,230,230)]",

@@ -71,6 +71,7 @@ export let PRODUCT_QUERY = `#graphql
       handle
       descriptionHtml
       description
+			summary: description(truncateAt: 200)
       options {
         name
         values

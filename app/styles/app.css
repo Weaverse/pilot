@@ -197,22 +197,26 @@
   @apply origin-left scale-x-100;
 }
 
-.text-animation {
-  background-image: linear-gradient(to right, rgb(15, 15, 15), rgb(15, 15, 15));
+.underline-animation {
+  background-image: linear-gradient(
+    to right,
+    var(--underline-color, rgb(15, 15, 15)),
+    var(--underline-color, rgb(15, 15, 15))
+  );
   background-size: 0% 1px;
   background-repeat: no-repeat;
   display: inline;
   padding-bottom: 3px;
-  transition: background 0.2s ease-in;
+  transition: background 200ms ease-in-out;
   background-position: left calc(1em + 4px);
 }
-.text-animation:hover {
+.underline-animation:hover {
   background-size: 100% 1px;
 }
-.group\/header.text-animation {
+.group\/header.underline-animation {
   background-position: left calc(1em + 8px);
 }
-.group:hover .group\/header.text-animation {
+.group:hover .group\/header.underline-animation {
   background-size: 100% 1px;
 }
 .dropdown-transition {
