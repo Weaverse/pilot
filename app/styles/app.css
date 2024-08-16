@@ -265,7 +265,3 @@ mark {
     transform: translateX(-100%);
   }
 }
-
-#announcement-bar ~ header.fixed {
-  top: var(--announcement-bar-height, 0px);
-}
