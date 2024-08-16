@@ -64,6 +64,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
             <ProductMedia
               mediaLayout="slider"
+              imageAspectRatio="adapt"
               media={product?.media.nodes}
               selectedVariant={selectedVariant}
               showThumbnails={showThumbnails}

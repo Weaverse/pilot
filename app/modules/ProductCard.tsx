@@ -7,6 +7,7 @@ import { getProductPlaceholder } from "~/lib/placeholders";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
 import { AddToCartButton, Button, Link, Text } from "~/modules";
 import { QuickViewTrigger } from "./QuickView";
+import { CompareAtPrice } from "~/components/CompareAtPrice";
 
 export function ProductCard({
   product,
@@ -65,7 +66,7 @@ export function ProductCard({
               prefetch="intent"
             >
               <Image
-                className="object-cover w-full opacity-0 animate-fadeIn"
+                className="object-cover w-full opacity-0 animate-fade-in"
                 sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
                 aspectRatio="4/5"
                 data={image}
@@ -129,10 +130,7 @@ export function ProductCard({
             <Text className="flex gap-2">
               <Money withoutTrailingZeros data={price} />
               {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
-                <CompareAtPrice
-                  className={"opacity-50"}
-                  data={compareAtPrice as MoneyV2}
-                />
+                <CompareAtPrice data={compareAtPrice as MoneyV2} />
               )}
             </Text>
           </div>
@@ -165,25 +163,5 @@ export function ProductCard({
         </Button>
       )}
     </div>
-  );
-}
-
-function CompareAtPrice({
-  data,
-  className,
-}: {
-  data: MoneyV2;
-  className?: string;
-}) {
-  const { currencyNarrowSymbol, withoutTrailingZerosAndCurrency } =
-    useMoney(data);
-
-  const styles = clsx("strike", className);
-
-  return (
-    <span className={styles}>
-      {currencyNarrowSymbol}
-      {withoutTrailingZerosAndCurrency}
-    </span>
   );
 }

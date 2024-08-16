@@ -341,15 +341,13 @@ export function getImageAspectRatio(
   },
   aspectRatio: string,
 ) {
-  let aspRt: string | undefined;
   if (aspectRatio === "adapt") {
     if (image?.width && image?.height) {
-      aspRt = `${image.width}/${image.height}`;
+      return `${image.width}/${image.height}`;
     }
-  } else {
-    aspRt = aspectRatio;
+    return "1/1";
   }
-  return aspRt;
+  return aspectRatio;
 }
 
 export function loadCSS(attrs: LinkHTMLAttributes<HTMLLinkElement>) {

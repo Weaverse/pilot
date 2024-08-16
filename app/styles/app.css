@@ -121,23 +121,19 @@
     }
   }
 
-  .absolute-center {
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
-  }
-
   .strike {
     position: relative;
     &::before {
       content: "";
-      display: block;
       position: absolute;
+      display: block;
       width: 108%;
-      height: 1.5px;
+      height: 1px;
       left: -4%;
       top: 50%;
       transform: translateY(-50%);
-      background: rgb(var(--color-border));
-      box-shadow: 0.5px 0.5px 0px 0.5px rgb(var(--color-lines));
+      background: var(--color-compare-price-text);
+      box-shadow: 0.5px 0.5px 0px 0.5px white;
     }
   }
 
@@ -180,21 +176,6 @@
 .has-background {
   background-color: var(--section-background-color);
   border-radius: var(--section-border-radius);
-}
-
-.animate-hover {
-  @apply relative;
-  overflow: hidden;
-}
-
-.animate-hover::before {
-  content: "";
-  /* transform-origin: right; */
-  @apply absolute bottom-0 left-0 w-full border-b-2 origin-right duration-300 transition-transform scale-x-0;
-}
-
-.animate-hover:hover::before {
-  @apply origin-left scale-x-100;
 }
 
 .underline-animation {
@@ -248,24 +229,4 @@
 mark {
   background-color: none;
   font-weight: 500;
-}
-
-.animate-marquee {
-  animation-name: marquee;
-  animation-duration: var(--animation-speed, 15s);
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-#announcement-bar ~ header.fixed {
-  top: var(--announcement-bar-height, 0px);
 }

@@ -40,8 +40,6 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
     showRefundPolicy,
     hideUnavailableOptions,
     showThumbnails,
-    numberOfThumbnails,
-    spacing,
   } = themeSettings;
   let handleSelectedVariantChange = (variant: any) => {
     setSelectedVariant(variant);
@@ -75,8 +73,6 @@ export function QuickView(props: { data: Jsonify<ProductData> }) {
           media={product?.media.nodes}
           selectedVariant={selectedVariant}
           showThumbnails={showThumbnails}
-          numberOfThumbnails={numberOfThumbnails}
-          spacing={spacing}
         />
         <div className="flex flex-col justify-start space-y-5">
           <div className="space-y-4">

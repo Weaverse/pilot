@@ -1,10 +1,12 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
+import { CompareAtPrice } from "~/components/CompareAtPrice";
 import { Section, type SectionProps, layoutInputs } from "~/components/Section";
-import { getExcerpt } from "~/lib/utils";
-import { AddToCartButton, Link, Text } from "~/modules";
+import { getExcerpt, isDiscounted } from "~/lib/utils";
+import { AddToCartButton, Link } from "~/modules";
 import {
   ProductMedia,
   type ProductMediaProps,
@@ -56,6 +58,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       showRefundPolicy,
       hideUnavailableOptions,
       mediaLayout,
+      gridSize,
+      imageAspectRatio,
       showThumbnails,
       children,
       ...rest
@@ -113,6 +117,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
           <div className="space-y-5 lg:space-y-0 lg:grid lg:gap-[clamp(30px,5%,60px)] lg:grid-cols-[1fr_clamp(360px,45%,480px)]">
             <ProductMedia
               mediaLayout={mediaLayout}
+              gridSize={gridSize}
+              imageAspectRatio={imageAspectRatio}
               media={product?.media.nodes}
               selectedVariant={selectedVariant}
               showThumbnails={showThumbnails}
@@ -131,9 +137,9 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                 <div className="space-y-4">
                   <div className="flex flex-col gap-2">
                     {showVendor && vendor && (
-                      <Text className={"opacity-50 font-medium"}>{vendor}</Text>
+                      <span className="text-body/50">{vendor}</span>
                     )}
-                    <h1 className="h3">{title}</h1>
+                    <h1 className="h3 !tracking-tight">{title}</h1>
                   </div>
                   {selectedVariant ? (
                     <div className="flex items-center gap-2">
@@ -143,18 +149,19 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                         as="span"
                         className="font-medium text-2xl"
                       />
-                      {selectedVariant.compareAtPrice && (
-                        <Money
-                          withoutTrailingZeros
-                          data={selectedVariant.compareAtPrice}
-                          as="span"
-                          className="line-through text-2xl text-[var(--color-compare-price-text)]"
+                      {isDiscounted(
+                        selectedVariant.price as MoneyV2,
+                        selectedVariant.compareAtPrice as MoneyV2,
+                      ) && (
+                        <CompareAtPrice
+                          data={selectedVariant.compareAtPrice as MoneyV2}
+                          className="text-2xl"
                         />
                       )}
                     </div>
                   ) : null}
                   {children}
-                  <p className="max-w-[600px] leading-relaxed">{summary}</p>
+                  <p className="leading-relaxed">{summary}</p>
                   <ProductVariants
                     product={product}
                     selectedVariant={selectedVariant}
@@ -256,11 +263,40 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: "grid",
         },
         {
+          type: "select",
+          name: "gridSize",
+          label: "Grid size",
+          defaultValue: "2x2",
+          configs: {
+            options: [
+              { label: "1x1", value: "1x1" },
+              { label: "2x2", value: "2x2" },
+              { label: "Mix", value: "mix" },
+            ],
+          },
+          condition: "mediaLayout.eq.grid",
+        },
+        {
           label: "Show thumbnails",
           name: "showThumbnails",
           type: "switch",
           defaultValue: true,
           condition: "mediaLayout.eq.slider",
+        },
+        {
+          type: "select",
+          name: "imageAspectRatio",
+          label: "Aspect ratio",
+          defaultValue: "adapt",
+          configs: {
+            options: [
+              { value: "adapt", label: "Adapt to image" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
+            ],
+          },
         },
       ],
     },
@@ -329,5 +365,6 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     width: "stretch",
     mediaLayout: "grid",
+    gridSize: "2x2",
   },
 };

@@ -6,7 +6,6 @@ import type {
 import {
   Arrow,
   Content,
-  Portal,
   Provider,
   Root,
   Trigger,
@@ -30,7 +29,7 @@ export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
       <Content
         ref={ref}
         className={cn(
-          "animate-slideDownAndFade",
+          "animate-slide-down-and-fade",
           "z-50 px-4 rounded py-1 shadow-sm text-background bg-body opacity-0",
           className,
         )}

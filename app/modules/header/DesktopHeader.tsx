@@ -45,7 +45,7 @@ export function DesktopHeader({
     <header
       className={cn(
         "transition-colors duration-300 ease-in-out",
-        "h-nav hidden lg:flex items-center z-40 top-0 justify-between leading-none gap-8",
+        "h-nav hidden lg:flex items-center z-40 justify-between leading-none gap-8",
         "px-3 md:px-10 lg:px-16",
         "text-[var(--color-header-text)] bg-[var(--color-header-bg)]",
         "hover:text-[var(--color-header-text)] hover:bg-[var(--color-header-bg)]",
@@ -53,12 +53,12 @@ export function DesktopHeader({
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
           ? [
-              "fixed w-screen group/header",
+              "fixed top-[var(--topbar-height,0px)] w-screen group/header",
               !scrolled &&
                 !hovered &&
                 "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
             ]
-          : "sticky",
+          : "sticky top-0",
       )}
     >
       <Logo isTransparent={isTransparent} shopName={shopName} />
