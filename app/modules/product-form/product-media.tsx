@@ -20,9 +20,13 @@ export function ProductMedia(props: ProductMediaProps) {
 
   if (mediaLayout === "grid") {
     return (
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col justify-start gap-2 overflow-x-scroll lg:grid-flow-row lg:grid-cols-2 lg:gap-1">
         {media.map((med, i) => {
           let image = { ...med.image, altText: med.alt || "Product image" };
+          let aspectRatio = "3/4";
+          if (image.width && image.height) {
+            aspectRatio = `${image.width}/${image.height}`;
+          }
           return (
             <Image
               key={med.id}
@@ -30,8 +34,8 @@ export function ProductMedia(props: ProductMediaProps) {
               loading={i === 0 ? "eager" : "lazy"}
               width={1660}
               height={1660}
-              aspectRatio={"3/4"}
-              className="object-cover opacity-0 animate-fadeIn w-full h-full"
+              aspectRatio={aspectRatio}
+              className="object-cover opacity-0 animate-fadeIn w-[80vw] max-w-none scroll lg:w-full lg:h-full"
               sizes="auto"
             />
           );
