@@ -5,26 +5,47 @@ import type { MediaFragment } from "storefrontapi.generated";
 import { FreeMode, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 
-interface ProductMediaProps {
+export interface ProductMediaProps {
+  mediaLayout: "grid" | "slider";
+  showThumbnails: boolean;
   selectedVariant: any;
   media: MediaFragment[];
-  showThumbnails: boolean;
-  numberOfThumbnails: number;
-  spacing: number;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
-  let { selectedVariant, media: _media, numberOfThumbnails, spacing } = props;
+  let { mediaLayout, selectedVariant, media: _media } = props;
   let media = _media.filter((med) => med.__typename === "MediaImage");
   let [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   let [activeIndex, setActiveIndex] = useState(0);
+
+  if (mediaLayout === "grid") {
+    return (
+      <div className="grid grid-cols-2 gap-1">
+        {media.map((med, i) => {
+          let image = { ...med.image, altText: med.alt || "Product image" };
+          return (
+            <Image
+              key={med.id}
+              data={image}
+              loading={i === 0 ? "eager" : "lazy"}
+              width={1660}
+              height={1660}
+              aspectRatio={"3/4"}
+              className="object-cover opacity-0 animate-fadeIn w-full h-full"
+              sizes="auto"
+            />
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col-reverse md:flex-row gap-4 overflow-hidden">
       <Swiper
         onSwiper={setThumbsSwiper}
         direction="vertical"
-        spaceBetween={spacing}
+        spaceBetween={10}
         freeMode
         slidesPerView={5}
         threshold={2}
