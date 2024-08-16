@@ -20,7 +20,7 @@ export function ProductMedia(props: ProductMediaProps) {
 
   if (mediaLayout === "grid") {
     return (
-      <div className="grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col justify-start gap-2 overflow-x-scroll lg:grid-flow-row lg:grid-cols-2 lg:gap-1">
+      <div className="grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col justify-start gap-2 overflow-x-scroll lg:grid-flow-row lg:grid-cols-1 2xl:grid-cols-2 lg:gap-1">
         {media.map((med, i) => {
           let image = { ...med.image, altText: med.alt || "Product image" };
           let aspectRatio = "3/4";
