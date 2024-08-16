@@ -61,7 +61,7 @@ export function Drawer({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 top-nav bg-background bg-opacity-25 text-body" />
+          <div className="fixed inset-0 bg-body bg-opacity-50 text-body" />
         </Transition.Child>
 
         <div className="fixed inset-0 top-nav">
