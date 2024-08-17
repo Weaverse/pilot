@@ -5,9 +5,9 @@ import { usePredictiveSearch } from "./usePredictiveSearch";
 export function PredictiveSearchResults() {
   let { results, totalResults, searchTerm, searchInputRef } =
     usePredictiveSearch();
-  let queries = results?.find((result) => result.type === "queries");
-  let articles = results?.find((result) => result.type === "articles");
-  let products = results?.find((result) => result.type === "products");
+  let queries = results?.find(({ type }) => type === "queries");
+  let articles = results?.find(({ type }) => type === "articles");
+  let products = results?.find(({ type }) => type === "products");
 
   function goToSearchResult(event: React.MouseEvent<HTMLAnchorElement>) {
     let type = event.currentTarget.dataset.type;
@@ -32,7 +32,7 @@ export function PredictiveSearchResults() {
     );
   }
   return (
-    <div className="absolute left-1/2 top-20 z-10 flex w-fit -translate-x-1/2 items-center justify-center shadow-header">
+    <div className="absolute left-1/2 top-full z-10 flex w-fit -translate-x-1/2 items-center justify-center shadow-mega-menu">
       <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-white p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-line">
@@ -52,7 +52,7 @@ export function PredictiveSearchResults() {
             />
           </div>
         </div>
-        <div>
+        <div className="space-y-6">
           <PredictiveSearchResult
             goToSearchResult={goToSearchResult}
             items={products?.items?.slice(0, 5)}
@@ -60,12 +60,14 @@ export function PredictiveSearchResults() {
             type="products"
           />
           {searchTerm.current && (
-            <Link
-              onClick={goToSearchResult}
-              to={`/search?q=${searchTerm.current}`}
-            >
-              <p className="mt-6 underline">View all products</p>
-            </Link>
+            <div>
+              <Link
+                onClick={goToSearchResult}
+                to={`/search?q=${searchTerm.current}`}
+              >
+                <span className="underline-animation">View all products</span>
+              </Link>
+            </div>
           )}
         </div>
       </div>

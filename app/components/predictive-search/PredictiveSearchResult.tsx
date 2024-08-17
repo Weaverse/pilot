@@ -20,8 +20,8 @@ export function PredictiveSearchResult({
 
   return (
     <div
-      className="predictive-search-result flex flex-col gap-4 divide-y divide-line"
       key={type}
+      className="predictive-search-result flex flex-col gap-4 divide-y divide-line/50"
     >
       <Link
         prefetch="intent"

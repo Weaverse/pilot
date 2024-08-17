@@ -21,7 +21,7 @@ export function DesktopHeader({
   menu?: EnhancedMenu;
   shopName: string;
 }) {
-  let { enableTransparentHeader } = useThemeSettings();
+  let { enableTransparentHeader, topbarHeight } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
   let [hovered, setHovered] = useState(false); // use state to delay disappearing header when drawer closes
@@ -43,6 +43,11 @@ export function DesktopHeader({
 
   return (
     <header
+      style={
+        {
+          "--initial-topbar-height": `${topbarHeight}px`,
+        } as React.CSSProperties
+      }
       className={cn(
         "transition-colors duration-300 ease-in-out",
         "h-nav hidden lg:flex items-center z-40 justify-between leading-none gap-8",
@@ -53,7 +58,7 @@ export function DesktopHeader({
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
           ? [
-              "fixed top-[var(--topbar-height,0px)] w-screen group/header",
+              "fixed top-[var(--topbar-height,var(--initial-topbar-height))] w-screen group/header",
               !scrolled &&
                 !hovered &&
                 "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
