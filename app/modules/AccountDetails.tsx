@@ -1,5 +1,5 @@
 import type { CustomerDetailsFragment } from "customer-accountapi.generated";
-import { Link } from "~/modules";
+import { Link } from "~/components/Link";
 
 export function AccountDetails({
   customer,
@@ -26,7 +26,7 @@ export function AccountDetails({
           <div className="mt-4 text-sm text-body/50">Name</div>
           <p className="mt-1">
             {firstName || lastName
-              ? (firstName ? firstName + " " : "") + lastName
+              ? (firstName ? `${firstName} ` : "") + lastName
               : "Add name"}{" "}
           </p>
 

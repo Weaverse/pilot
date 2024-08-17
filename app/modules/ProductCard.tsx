@@ -1,11 +1,12 @@
 import type { ShopifyAnalyticsProduct } from "@shopify/hydrogen";
-import { Image, Money, flattenConnection, useMoney } from "@shopify/hydrogen";
+import { Image, Money, flattenConnection } from "@shopify/hydrogen";
 import type { MoneyV2, Product } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import type { ProductCardFragment } from "storefrontapi.generated";
 import { getProductPlaceholder } from "~/lib/placeholders";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton, Button, Link, Text } from "~/modules";
+import { AddToCartButton, Button, Text } from "~/modules";
+import { Link } from "~/components/Link";
 import { QuickViewTrigger } from "./QuickView";
 import { CompareAtPrice } from "~/components/CompareAtPrice";
 

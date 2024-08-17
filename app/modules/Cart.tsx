@@ -18,7 +18,8 @@ import type { CartApiQueryFragment } from "storefrontapi.generated";
 import Button from "~/components/Button";
 import { IconTrash } from "~/components/Icons";
 import { getInputStyleClasses } from "~/lib/utils";
-import { Link, Text } from "~/modules";
+import { Text } from "~/modules";
+import { Link } from "~/components/Link";
 import { CartBestSellers } from "./CartBestSellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];

@@ -5,10 +5,10 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-
 import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
 import { getImageLoadingPriority } from "~/lib/const";
-import { Grid, Link, PageHeader, Section } from "~/modules";
+import { Grid, PageHeader, Section } from "~/modules";
+import { Link } from "~/components/Link";
 
 interface BlogsProps extends HydrogenComponentProps {
   layout: "blog" | "default";

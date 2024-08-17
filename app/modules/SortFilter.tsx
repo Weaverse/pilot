@@ -1,4 +1,10 @@
-import { Disclosure, Menu } from "@headlessui/react";
+import {
+  Disclosure,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from "@headlessui/react";
 import type { Location } from "@remix-run/react";
 import {
   Link,
@@ -13,7 +19,6 @@ import type {
 import type { SyntheticEvent } from "react";
 import { useMemo, useState } from "react";
 import useDebounce from "react-use/esm/useDebounce";
-
 import { Heading, IconCaret, IconFilters, IconXMark, Text } from "~/modules";
 
 export type AppliedFilter = {
@@ -81,17 +86,22 @@ export function FiltersDrawer({
 
   const filterMarkup = (filter: Filter, option: Filter["values"][0]) => {
     switch (filter.type) {
-      case "PRICE_RANGE":
+      case "PRICE_RANGE": {
         const priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
         const price = priceFilter
           ? (JSON.parse(priceFilter) as ProductFilter["price"])
           : undefined;
-        const min = isNaN(Number(price?.min)) ? undefined : Number(price?.min);
-        const max = isNaN(Number(price?.max)) ? undefined : Number(price?.max);
+        const min = Number.isNaN(Number(price?.min))
+          ? undefined
+          : Number(price?.min);
+        const max = Number.isNaN(Number(price?.max))
+          ? undefined
+          : Number(price?.max);
 
         return <PriceRangeFilter min={min} max={max} />;
+      }
 
-      default:
+      default: {
         const to = getFilterLink(option.input as string, params, location);
         return (
           <Link
@@ -102,6 +112,7 @@ export function FiltersDrawer({
             {option.label}
           </Link>
         );
+      }
     }
   };
 
@@ -180,11 +191,11 @@ function getAppliedFilterLink(
   params: URLSearchParams,
   location: Location,
 ) {
-  const paramsClone = new URLSearchParams(params);
-  Object.entries(filter.filter).forEach(([key, value]) => {
-    const fullKey = FILTER_URL_PREFIX + key;
+  let paramsClone = new URLSearchParams(params);
+  for (let [key, value] of Object.entries(filter.filter)) {
+    let fullKey = FILTER_URL_PREFIX + key;
     paramsClone.delete(fullKey, JSON.stringify(value));
-  });
+  }
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
@@ -287,14 +298,14 @@ function filterInputToParams(
   rawInput: string | ProductFilter,
   params: URLSearchParams,
 ) {
-  const input =
+  let input =
     typeof rawInput === "string"
       ? (JSON.parse(rawInput) as ProductFilter)
       : rawInput;
 
-  Object.entries(input).forEach(([key, value]) => {
+  for (let [key, value] of Object.entries(input)) {
     if (params.has(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value))) {
-      return;
+      continue;
     }
     if (key === "price") {
       // For price, we want to overwrite
@@ -302,7 +313,7 @@ function filterInputToParams(
     } else {
       params.append(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
     }
-  });
+  }
 
   return params;
 }
@@ -333,19 +344,19 @@ export default function SortMenu() {
 
   return (
     <Menu as="div" className="relative z-10">
-      <Menu.Button className="flex items-center">
+      <MenuButton className="flex items-center">
         <span className="px-2">
           <span className="px-2 font-medium">Sort by:</span>
           <span>{(activeItem || items[0]).label}</span>
         </span>
         <IconCaret />
-      </Menu.Button>
-      <Menu.Items
+      </MenuButton>
+      <MenuItems
         as="nav"
         className="absolute right-0 flex flex-col p-4 text-right rounded-sm"
       >
         {items.map((item) => (
-          <Menu.Item key={item.label}>
+          <MenuItem key={item.label}>
             {() => (
               <Link
                 className={`block text-sm pb-2 px-3 ${
@@ -356,9 +367,9 @@ export default function SortMenu() {
                 {item.label}
               </Link>
             )}
-          </Menu.Item>
+          </MenuItem>
         ))}
-      </Menu.Items>
+      </MenuItems>
     </Menu>
   );
 }

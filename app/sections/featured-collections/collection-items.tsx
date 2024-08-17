@@ -14,7 +14,7 @@ import Button, { buttonStylesInputs } from "~/components/Button";
 import type { OverlayProps } from "~/components/Overlay";
 import { Overlay, overlayInputs } from "~/components/Overlay";
 import { getImageAspectRatio } from "~/lib/utils";
-import { Link } from "~/modules";
+import { Link } from "~/components/Link";
 import type { FeaturedCollectionsLoaderData } from ".";
 
 let variants = cva("", {

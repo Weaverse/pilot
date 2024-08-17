@@ -8,8 +8,8 @@ import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
-import { Link } from "~/modules";
 import { IconCircleNotch } from "./Icons";
+import { Link } from "./Link";
 
 let variants = cva(
   [

@@ -4,11 +4,11 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-
 import { routeHeaders } from "~/data/cache";
 import { seoPayload } from "~/lib/seo.server";
 import type { NonNullableFields } from "~/lib/type";
-import { Heading, Link, PageHeader, Section } from "~/modules";
+import { Heading, PageHeader, Section } from "~/modules";
+import { Link } from "~/components/Link";
 
 export const headers = routeHeaders;
 

@@ -13,7 +13,6 @@ export { OrderCard } from "./OrderCard";
 export { AccountDetails } from "./AccountDetails";
 export { AccountAddressBook } from "./AccountAddressBook";
 export { Modal } from "./Modal";
-export { Link } from "./Link";
 export { SortFilter } from "./SortFilter";
 export { Grid } from "./Grid";
 export { AddToCartButton } from "./AddToCartButton";

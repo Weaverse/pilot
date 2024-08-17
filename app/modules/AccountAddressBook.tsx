@@ -1,8 +1,8 @@
 import { Form } from "@remix-run/react";
 import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
-
 import type { CustomerDetailsFragment } from "customer-accountapi.generated";
-import { Button, Link, Text } from "~/modules";
+import { Button, Text } from "~/modules";
+import { Link } from "~/components/Link";
 
 export function AccountAddressBook({
   customer,
@@ -67,9 +67,7 @@ function Address({
       <ul className="flex-1 flex-row">
         {(address.firstName || address.lastName) && (
           <li>
-            {"" +
-              (address.firstName && address.firstName + " ") +
-              address?.lastName}
+            {`${address.firstName && `${address.firstName} `}${address?.lastName}`}
           </li>
         )}
         {address.formatted?.map((line: string) => (

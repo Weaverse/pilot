@@ -1,6 +1,6 @@
 import { Image, Money } from "@shopify/hydrogen";
 import type { SearchResultItemProps } from "./types";
-import { Link } from "~/modules/Link";
+import { Link } from "~/components/Link";
 import clsx from "clsx";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { CompareAtPrice } from "../../components/CompareAtPrice";
