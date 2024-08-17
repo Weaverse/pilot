@@ -53,7 +53,7 @@ export function DesktopHeader({
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
           ? [
-              "fixed top-[var(--topbar-height,0px)] w-screen group/header",
+              "fixed top-[var(--topbar-height,0px)] w-screen",
               !scrolled &&
                 !hovered &&
                 "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
