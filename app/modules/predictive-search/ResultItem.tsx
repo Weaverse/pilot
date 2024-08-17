@@ -3,7 +3,7 @@ import type { SearchResultItemProps } from "./types";
 import { Link } from "~/modules/Link";
 import clsx from "clsx";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { CompareAtPrice } from "../CompareAtPrice";
+import { CompareAtPrice } from "../../components/CompareAtPrice";
 import { getImageAspectRatio, isDiscounted } from "~/lib/utils";
 
 export function SearchResultItem({

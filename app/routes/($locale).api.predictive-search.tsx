@@ -11,8 +11,8 @@ import type {
 import type {
   NormalizedPredictiveSearch,
   NormalizedPredictiveSearchResults,
-} from "~/components/predictive-search/types";
-import { NO_PREDICTIVE_SEARCH_RESULTS } from "~/components/predictive-search/usePredictiveSearch";
+} from "~/modules/predictive-search/types";
+import { NO_PREDICTIVE_SEARCH_RESULTS } from "~/modules/predictive-search/usePredictiveSearch";
 
 type PredictiveSearchResultItem =
   | PredictiveArticleFragment
