@@ -4,7 +4,7 @@ import { Suspense, useEffect } from "react";
 import { useCartFetchers } from "~/hooks/useCartFetchers";
 import type { EnhancedMenu } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import { Cart } from "../Cart";
+import { Cart } from "~/modules/Cart";
 import { CartLoading } from "../CartLoading";
 import { Drawer, useDrawer } from "../Drawer";
 import { AnnouncementBar } from "./AnnouncementBar";

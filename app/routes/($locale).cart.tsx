@@ -18,9 +18,7 @@ import type { RootLoader } from "~/root";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart } = context;
-
   const formData = await request.formData();
-
   const { action, inputs } = CartForm.getFormInput(formData);
   invariant(action, "No cartAction defined");
 
@@ -95,7 +93,8 @@ export default function CartRoute() {
 
   return (
     <>
-      <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
+      <div className="px-3 md:px-10 lg:px-16 py-6 md:py-20 space-y-6 md:space-y-12">
+        <h3 className="text-center">Cart</h3>
         <Await resolve={rootData?.cart}>
           {(cart) => <Cart layout="page" cart={cart as CartApiQueryFragment} />}
         </Await>
