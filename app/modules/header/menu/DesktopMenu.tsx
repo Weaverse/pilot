@@ -179,9 +179,7 @@ function GroupHeader({
   return (
     <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
       <Link to={to} className="py-2 flex items-center gap-1.5">
-        <span className="uppercase underline-animation group/header">
-          {title}
-        </span>
+        <span className="uppercase underline-animation !pb-[5px]">{title}</span>
         {showCaret && (
           <IconCaretDown className="w-3 h-3 mb-[3px] group-hover:rotate-180 transition-transform duration-400" />
         )}

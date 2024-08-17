@@ -194,12 +194,6 @@
 .underline-animation:hover {
   background-size: 100% 1px;
 }
-.group\/header.underline-animation {
-  background-position: left calc(1em + 8px);
-}
-.group:hover .group\/header.underline-animation {
-  background-size: 100% 1px;
-}
 .dropdown-transition {
   @apply transform-gpu;
   z-index: 0;
