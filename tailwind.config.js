@@ -129,6 +129,9 @@ export default {
       zIndex: {
         1: "1",
       },
+      transitionDuration: {
+        400: "400ms",
+      },
     },
   },
   plugins: [
