@@ -44,7 +44,7 @@ export function Drawer({
   spacing?: "sm" | "md" | "lg";
   children: React.ReactNode;
 }) {
-  const offScreen = {
+  let offScreen = {
     right: "translate-x-full",
     left: "-translate-x-full",
     top: "-translate-y-full",
@@ -117,18 +117,16 @@ export function Drawer({
                         </button>
                       )}
                       {heading !== null && (
-                        <DialogTitle>
-                          <div className="font-medium text-base">{heading}</div>
-                        </DialogTitle>
+                        <DialogTitle as="h5">{heading}</DialogTitle>
                       )}
                       {!isBackMenu && (
                         <button
                           type="button"
-                          className="p-4 -m-4 transition text-body hover:text-body/50"
+                          className="transition text-body hover:text-body/50"
                           onClick={onClose}
                           data-test="close-cart"
                         >
-                          <IconX aria-label="Close panel" />
+                          <IconX aria-label="Close panel" className="w-5 h-5" />
                         </button>
                       )}
                     </header>

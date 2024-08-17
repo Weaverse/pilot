@@ -25,17 +25,16 @@ export function ProductCard({
   quickAdd?: boolean;
 }) {
   let cardLabel = "";
-
-  const cardProduct: Product = product?.variants
+  let cardProduct: Product = product?.variants
     ? (product as Product)
     : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
 
-  const variants = flattenConnection(cardProduct.variants);
-  const firstVariant = variants[0];
+  let variants = flattenConnection(cardProduct.variants);
+  let firstVariant = variants[0];
 
   if (!firstVariant) return null;
-  const { image, price, compareAtPrice } = firstVariant;
+  let { image, price, compareAtPrice } = firstVariant;
 
   if (label) {
     cardLabel = label;
@@ -45,7 +44,7 @@ export function ProductCard({
     cardLabel = "New";
   }
 
-  const productAnalytics: ShopifyAnalyticsProduct = {
+  let productAnalytics: ShopifyAnalyticsProduct = {
     productGid: product.id,
     variantGid: firstVariant.id,
     name: product.title,

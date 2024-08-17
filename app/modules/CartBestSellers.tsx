@@ -5,11 +5,11 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useEffect, useId, useMemo } from "react";
-
+import { Skeleton } from "~/components/Skeleton";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import { Heading, ProductCard, Skeleton, Text } from "~/modules";
+import { ProductCard } from "~/modules";
 
-interface FeaturedProductsProps {
+interface CartBestSellersProps {
   count: number;
   heading: string;
   layout?: "drawer" | "page";
@@ -29,7 +29,7 @@ interface FeaturedProductsProps {
  * @see query https://shopify.dev/api/storefront/current/queries/products
  * @see filters https://shopify.dev/api/storefront/current/queries/products#argument-products-query
  */
-export function FeaturedProducts({
+export function CartBestSellers({
   count = 4,
   heading = "Shop Best Sellers",
   layout = "drawer",
@@ -37,9 +37,9 @@ export function FeaturedProducts({
   query,
   reverse,
   sortKey = "BEST_SELLING",
-}: FeaturedProductsProps) {
-  const { load, data } = useFetcher<{ products: Product[] }>();
-  const queryString = useMemo(
+}: CartBestSellersProps) {
+  let { load, data } = useFetcher<{ products: Product[] }>();
+  let queryString = useMemo(
     () =>
       Object.entries({ count, sortKey, query, reverse })
         .map(([key, val]) => (val ? `${key}=${val}` : null))
@@ -47,9 +47,7 @@ export function FeaturedProducts({
         .join("&"),
     [count, sortKey, query, reverse],
   );
-  const productsApiPath = usePrefixPathWithLocale(
-    `/api/products?${queryString}`,
-  );
+  let productsApiPath = usePrefixPathWithLocale(`/api/products?${queryString}`);
 
   useEffect(() => {
     load(productsApiPath);
@@ -57,16 +55,14 @@ export function FeaturedProducts({
 
   return (
     <>
-      <Heading format size="copy" className="t-4">
-        {heading}
-      </Heading>
+      <h6>{heading}</h6>
       <div
         className={clsx([
-          `grid grid-cols-2 gap-x-6 gap-y-8`,
+          "grid grid-cols-2 gap-x-6 gap-y-8",
           layout === "page" ? "md:grid-cols-4 sm:grid-col-4" : "",
         ])}
       >
-        <FeatureProductsContent
+        <CartBestSellersContent
           count={count}
           onClick={onClose}
           products={data?.products}
@@ -77,18 +73,18 @@ export function FeaturedProducts({
 }
 
 /**
- * Render the FeaturedProducts content based on the fetcher's state. "loading", "empty" or "products"
+ * Render the CartBestSellers content based on the fetcher's state. "loading", "empty" or "products"
  */
-function FeatureProductsContent({
+function CartBestSellersContent({
   count = 4,
   onClick,
   products,
 }: {
-  count: FeaturedProductsProps["count"];
+  count: CartBestSellersProps["count"];
   products: Product[] | undefined;
   onClick?: () => void;
 }) {
-  const id = useId();
+  let id = useId();
 
   if (!products) {
     return (
@@ -104,7 +100,7 @@ function FeatureProductsContent({
   }
 
   if (products?.length === 0) {
-    return <Text format>No products found.</Text>;
+    return <div>No products found.</div>;
   }
 
   return (
