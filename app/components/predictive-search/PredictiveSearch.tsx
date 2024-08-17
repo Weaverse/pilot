@@ -3,10 +3,9 @@ import { Input } from "~/modules";
 import { PredictiveSearchResults } from "./PredictiveSearchResults";
 import { PredictiveSearchForm } from "./SearchForm";
 
-export function PredictiveSearch(props: { isOpen?: boolean }) {
-  let { isOpen } = props;
+export function PredictiveSearch({ isOpen }: { isOpen?: boolean }) {
   return (
-    <div className="relative border-t border-line">
+    <div className="relative pt-[var(--topbar-height)] transition-all">
       <PredictiveSearchForm>
         {({ fetchResults, inputRef }) => (
           <div className="mx-auto w-full max-w-[560px] p-6">

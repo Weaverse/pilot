@@ -1,61 +1,71 @@
-import { Link } from "@remix-run/react";
 import { Image, Money } from "@shopify/hydrogen";
 import type { SearchResultItemProps } from "./types";
+import { Link } from "~/modules/Link";
+import clsx from "clsx";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
+import { CompareAtPrice } from "../CompareAtPrice";
+import { getImageAspectRatio, isDiscounted } from "~/lib/utils";
 
 export function SearchResultItem({
   goToSearchResult,
-  item,
+  item: {
+    id,
+    __typename,
+    image,
+    compareAtPrice,
+    price,
+    title,
+    url,
+    vendor,
+    styledTitle,
+  },
 }: SearchResultItemProps) {
   return (
-    <li key={item.id}>
+    <li key={id}>
       <Link
         className="flex gap-4"
         onClick={goToSearchResult}
-        to={item.url}
-        data-type={item.__typename}
+        to={url}
+        data-type={__typename}
       >
-        {item.__typename === "Product" && (
+        {__typename === "Product" && (
           <div className="h-20 w-20 shrink-0">
-            {item.image?.url && (
+            {image?.url && (
               <Image
-                alt={item.image.altText ?? ""}
-                src={item.image.url}
-                width={80}
-                height={80}
-                className="h-full w-full object-cover"
+                alt={image.altText ?? ""}
+                src={image.url}
+                width={200}
+                height={200}
+                aspectRatio={getImageAspectRatio(image, "adapt")}
+                className="h-full w-full object-cover object-center"
               />
             )}
           </div>
         )}
         <div className="space-y-1">
-          {item.vendor && <div className="text-gray-500">By {item.vendor}</div>}
-          {item.styledTitle ? (
+          {vendor && <div className="text-body/50 text-sm">By {vendor}</div>}
+          {styledTitle ? (
             <div
-              dangerouslySetInnerHTML={{
-                __html: item.styledTitle,
-              }}
+              className="underline-animation"
+              dangerouslySetInnerHTML={{ __html: styledTitle }}
             />
           ) : (
             <div
-              className={
-                item.__typename === "Product" ? "line-clamp-1" : "line-clamp-2"
-              }
+              className={clsx(
+                __typename === "Product" ? "line-clamp-1" : "line-clamp-2",
+              )}
             >
-              {item.title}
+              <span className="underline-animation">{title}</span>
             </div>
           )}
-          <div className="flex gap-2">
-            {item?.compareAtPrice && (
-              <span className="text-label-sale line-through">
-                <Money data={item.compareAtPrice} />
-              </span>
-            )}
-            {item?.price && (
-              <span>
-                <Money data={item.price} />
-              </span>
-            )}
-          </div>
+          {price && (
+            <div className="flex gap-2 text-sm">
+              <Money withoutTrailingZeros data={price as MoneyV2} />
+              {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
+                <CompareAtPrice data={compareAtPrice as MoneyV2} />
+              )}
+            </div>
+          )}
         </div>
       </Link>
     </li>
