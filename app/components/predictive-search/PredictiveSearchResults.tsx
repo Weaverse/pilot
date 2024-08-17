@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 import { PredictiveSearchResult } from "./PredictiveSearchResult";
 import { usePredictiveSearch } from "./usePredictiveSearch";
+import { IconArrowRight } from "../Icons";
 
 export function PredictiveSearchResults() {
   let { results, totalResults, searchTerm, searchInputRef } =
@@ -64,8 +65,10 @@ export function PredictiveSearchResults() {
               <Link
                 onClick={goToSearchResult}
                 to={`/search?q=${searchTerm.current}`}
+                className="flex items-center gap-2"
               >
                 <span className="underline-animation">View all products</span>
+                <IconArrowRight className="w-4 h-4 mb-[3px]" />
               </Link>
             </div>
           )}
