@@ -7,9 +7,6 @@ import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
 
-const dropdownContentClass =
-  "absolute shadow-2xl overflow-hidden bg-white z-10 dropdown-transition";
-
 export function DesktopMenu(props: { menu: EnhancedMenu }) {
   let { menu } = props;
   let items = menu.items as unknown as SingleMenuItem[];
@@ -82,7 +79,12 @@ function MultiMenu(props: SingleMenuItem) {
   );
   return (
     <GroupWrapper title={title} to={to}>
-      <div className={clsx("w-screen top-full left-0", dropdownContentClass)}>
+      <div
+        className={clsx(
+          "absolute shadow-mega-menu overflow-hidden bg-white z-10 dropdown-transition",
+          "w-screen top-full left-0",
+        )}
+      >
         <div className="container mx-auto py-8">
           <div className="flex gap-4 w-full">
             {items.map((item, id) =>
@@ -105,7 +107,7 @@ function SingleMenu(props: SingleMenuItem) {
       <div
         className={clsx(
           "top-full -left-3 group-hover:h-auto",
-          dropdownContentClass,
+          "absolute shadow-mega-menu overflow-hidden bg-white z-10 dropdown-transition",
         )}
       >
         <div className="p-6 space-y-4 min-w-48">
@@ -130,7 +132,12 @@ function SingleMenu(props: SingleMenuItem) {
 function ImageMenu({ title, items, to }: SingleMenuItem) {
   return (
     <GroupWrapper title={title} to={to}>
-      <div className={clsx("w-screen top-full left-0", dropdownContentClass)}>
+      <div
+        className={clsx(
+          "w-screen top-full left-0",
+          "absolute shadow-mega-menu overflow-hidden bg-white z-10 dropdown-transition",
+        )}
+      >
         <div className="py-8">
           <div className="flex gap-6 w-fit container mx-auto">
             {items.map((item, id) => (

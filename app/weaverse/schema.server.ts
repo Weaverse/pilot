@@ -149,18 +149,6 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "range",
-          label: "Height",
-          name: "topbarHeight",
-          configs: {
-            min: 10,
-            max: 100,
-            step: 1,
-            unit: "px",
-          },
-          defaultValue: 36,
-        },
-        {
-          type: "range",
           label: "Content gap",
           name: "scrollingGap",
           configs: {
@@ -170,6 +158,18 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: "px",
           },
           defaultValue: 44,
+        },
+        {
+          type: "range",
+          label: "Height",
+          name: "topbarHeight",
+          configs: {
+            min: 10,
+            max: 100,
+            step: 1,
+            unit: "px",
+          },
+          defaultValue: 36,
         },
         {
           type: "switch",
