@@ -3,12 +3,12 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { IconMagnifyingGlass, IconUser } from "~/components/Icons";
-import { PredictiveSearch } from "~/components/predictive-search/PredictiveSearch";
+import { Logo } from "~/components/Logo";
 import { cn } from "~/lib/cn";
 import { type EnhancedMenu, useIsHomePath } from "~/lib/utils";
+import { PredictiveSearch } from "~/modules/predictive-search/PredictiveSearch";
 import type { RootLoader } from "~/root";
 import { Drawer, useDrawer } from "../Drawer";
-import { Logo } from "../Logo";
 import { CartCount } from "./CartCount";
 import { DesktopMenu } from "./menu/DesktopMenu";
 

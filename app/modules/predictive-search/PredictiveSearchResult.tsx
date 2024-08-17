@@ -35,7 +35,9 @@ export function PredictiveSearchResult({
         <ul
           className={clsx(
             "pt-5",
-            type === "products" ? "space-y-4" : "space-y-1",
+            type === "queries" && "space-y-1",
+            type === "articles" && "space-y-3",
+            type === "products" && "space-y-4",
           )}
         >
           {items.map((item: NormalizedPredictiveSearchResultItem) => (

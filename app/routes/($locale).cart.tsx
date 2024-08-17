@@ -37,7 +37,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     case CartForm.ACTIONS.LinesRemove:
       result = await cart.removeLines(inputs.lineIds);
       break;
-    case CartForm.ACTIONS.DiscountCodesUpdate:
+    case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
 
       // User inputted discount code
@@ -50,6 +50,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
       result = await cart.updateDiscountCodes(discountCodes);
       break;
+    }
     case CartForm.ACTIONS.BuyerIdentityUpdate:
       result = await cart.updateBuyerIdentity({
         ...inputs.buyerIdentity,
@@ -92,7 +93,6 @@ export default function CartRoute() {
   const rootData = useRouteLoaderData<RootLoader>("root");
   if (!rootData) return null;
 
-  // @todo: finish on a separate PR
   return (
     <>
       <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">

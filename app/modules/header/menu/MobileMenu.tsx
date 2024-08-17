@@ -1,6 +1,11 @@
-import { Disclosure } from "@headlessui/react";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
+import clsx from "clsx";
 import { IconCaretDown, IconCaretRight } from "~/components/Icons";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
@@ -53,7 +58,7 @@ function MultiMenu(props: SingleMenuItem) {
             <Disclosure>
               {({ open }) => (
                 <>
-                  <Disclosure.Button className="text-left w-full">
+                  <DisclosureButton className="text-left w-full">
                     <h5 className="flex justify-between py-3 w-full uppercase font-medium">
                       <Link to={item.to} prefetch="intent">
                         {item.title}
@@ -68,14 +73,15 @@ function MultiMenu(props: SingleMenuItem) {
                         </span>
                       )}
                     </h5>
-                  </Disclosure.Button>
+                  </DisclosureButton>
                   {item?.items?.length > 0 ? (
                     <div
-                      className={`${
-                        open ? `max-h-48 h-fit` : `max-h-0 md:max-h-fit`
-                      } overflow-hidden transition-all duration-300`}
+                      className={clsx(
+                        "overflow-hidden transition-all duration-300",
+                        open ? "max-h-48 h-fit" : "max-h-0 md:max-h-fit",
+                      )}
                     >
-                      <Disclosure.Panel static>
+                      <DisclosurePanel static>
                         <ul className="space-y-3 pb-3 pt-2">
                           {item.items.map((subItem, ind) => (
                             <li key={ind} className="leading-6">
@@ -85,7 +91,7 @@ function MultiMenu(props: SingleMenuItem) {
                             </li>
                           ))}
                         </ul>
-                      </Disclosure.Panel>
+                      </DisclosurePanel>
                     </div>
                   ) : null}
                 </>

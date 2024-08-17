@@ -1,11 +1,12 @@
 import type { ShopifyAnalyticsProduct } from "@shopify/hydrogen";
-import { Image, Money, flattenConnection, useMoney } from "@shopify/hydrogen";
+import { Image, Money, flattenConnection } from "@shopify/hydrogen";
 import type { MoneyV2, Product } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import type { ProductCardFragment } from "storefrontapi.generated";
 import { getProductPlaceholder } from "~/lib/placeholders";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton, Button, Link, Text } from "~/modules";
+import { AddToCartButton, Button, Text } from "~/modules";
+import { Link } from "~/components/Link";
 import { QuickViewTrigger } from "./QuickView";
 import { CompareAtPrice } from "~/components/CompareAtPrice";
 
@@ -25,17 +26,16 @@ export function ProductCard({
   quickAdd?: boolean;
 }) {
   let cardLabel = "";
-
-  const cardProduct: Product = product?.variants
+  let cardProduct: Product = product?.variants
     ? (product as Product)
     : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
 
-  const variants = flattenConnection(cardProduct.variants);
-  const firstVariant = variants[0];
+  let variants = flattenConnection(cardProduct.variants);
+  let firstVariant = variants[0];
 
   if (!firstVariant) return null;
-  const { image, price, compareAtPrice } = firstVariant;
+  let { image, price, compareAtPrice } = firstVariant;
 
   if (label) {
     cardLabel = label;
@@ -45,7 +45,7 @@ export function ProductCard({
     cardLabel = "New";
   }
 
-  const productAnalytics: ShopifyAnalyticsProduct = {
+  let productAnalytics: ShopifyAnalyticsProduct = {
     productGid: product.id,
     variantGid: firstVariant.id,
     name: product.title,

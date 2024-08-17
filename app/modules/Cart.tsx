@@ -14,20 +14,15 @@ import type {
 import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
-
 import type { CartApiQueryFragment } from "storefrontapi.generated";
+import Button from "~/components/Button";
+import { IconTrash } from "~/components/Icons";
 import { getInputStyleClasses } from "~/lib/utils";
-import {
-  Button,
-  FeaturedProducts,
-  Heading,
-  IconRemove,
-  Link,
-  Text,
-} from "~/modules";
+import { Text } from "~/modules";
+import { Link } from "~/components/Link";
+import { CartBestSellers } from "./CartBestSellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
-
 type Layouts = "page" | "drawer";
 
 export function Cart({
@@ -40,14 +35,13 @@ export function Cart({
   cart: CartApiQueryFragment;
 }) {
   let optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
-
-  const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
+  let linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
 
   return (
-    <div className="w-[430px] max-w-screen">
+    <>
       <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
       <CartDetails cart={optimisticCart} layout={layout} />
-    </div>
+    </>
   );
 }
 
@@ -58,8 +52,8 @@ export function CartDetails({
   layout: Layouts;
   cart: OptimisticCart<CartApiQueryFragment>;
 }) {
-  const cartHasItems = !!cart && cart.totalQuantity > 0;
-  const container = {
+  let cartHasItems = !!cart && cart.totalQuantity > 0;
+  let container = {
     drawer: "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]",
     page: "w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12",
   };
@@ -87,7 +81,7 @@ function CartDiscounts({
 }: {
   discountCodes: CartType["discountCodes"];
 }) {
-  const codes: string[] =
+  let codes: string[] =
     discountCodes
       ?.filter((discount) => discount.applicable)
       ?.map(({ code }) => code) || [];
@@ -101,9 +95,9 @@ function CartDiscounts({
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
               <button type="button">
-                <IconRemove
+                <IconTrash
                   aria-hidden="true"
-                  style={{ height: 18, marginRight: 4 }}
+                  className="h-[18px] w-[18px] mr-1"
                 />
               </button>
             </UpdateDiscountForm>
@@ -166,21 +160,19 @@ function CartLines({
   lines: CartLine[];
 }) {
   let currentLines = cartLines;
-  const scrollRef = useRef(null);
-  const { y } = useScroll(scrollRef);
-
-  const className = clsx([
-    y > 0 ? "border-t" : "",
-    layout === "page"
-      ? "flex-grow md:translate-y-4"
-      : "px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12",
-  ]);
+  let scrollRef = useRef(null);
+  let { y } = useScroll(scrollRef);
 
   return (
     <section
       ref={scrollRef}
       aria-labelledby="cart-contents"
-      className={className}
+      className={clsx([
+        y > 0 ? "border-t" : "",
+        layout === "page"
+          ? "flex-grow md:translate-y-4"
+          : "px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12",
+      ])}
     >
       <ul className="grid gap-6 md:gap-10">
         {currentLines.map((line) => (
@@ -197,9 +189,7 @@ function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
   return (
     <div className="flex flex-col mt-2">
       <a href={checkoutUrl} target="_self">
-        <Button as="span" width="full">
-          Continue to Checkout
-        </Button>
+        <Button className="w-full">Continue to Checkout</Button>
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
     </div>
@@ -215,7 +205,7 @@ function CartSummary({
   cost: CartApiQueryFragment["cost"];
   layout: Layouts;
 }) {
-  const summary = {
+  let summary = {
     drawer: "grid gap-4 p-6 border-t md:px-12",
     page: "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full",
   };
@@ -248,11 +238,11 @@ type OptimisticData = {
 };
 
 function CartLineItem({ line }: { line: CartLine }) {
-  const optimisticData = useOptimisticData<OptimisticData>(line?.id);
+  let optimisticData = useOptimisticData<OptimisticData>(line?.id);
 
   if (!line?.id) return null;
 
-  const { id, quantity, merchandise } = line;
+  let { id, quantity, merchandise } = line;
   if (typeof quantity === "undefined" || !merchandise?.product) return null;
 
   return (
@@ -327,7 +317,7 @@ function ItemRemoveButton({ lineId }: { lineId: CartLine["id"] }) {
         type="submit"
       >
         <span className="sr-only">Remove</span>
-        <IconRemove aria-hidden="true" />
+        <IconTrash aria-hidden="true" className="h-5 w-5" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>
@@ -335,16 +325,16 @@ function ItemRemoveButton({ lineId }: { lineId: CartLine["id"] }) {
 }
 
 function CartLineQuantityAdjust({ line }: { line: CartLine }) {
-  const optimisticId = line?.id;
-  const optimisticData = useOptimisticData<OptimisticData>(optimisticId);
+  let optimisticId = line?.id;
+  let optimisticData = useOptimisticData<OptimisticData>(optimisticId);
 
   if (!line || typeof line?.quantity === "undefined") return null;
 
-  const optimisticQuantity = optimisticData?.quantity || line.quantity;
+  let optimisticQuantity = optimisticData?.quantity || line.quantity;
 
-  const { id: lineId, isOptimistic } = line;
-  const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
-  const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
+  let { id: lineId, isOptimistic } = line;
+  let prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
+  let nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
 
   return (
     <>
@@ -425,7 +415,7 @@ function CartLinePrice({
 }) {
   if (!line?.cost?.amountPerQuantity || !line?.cost?.totalAmount) return null;
 
-  const moneyV2 =
+  let moneyV2 =
     priceType === "regular"
       ? line.cost.totalAmount
       : line.cost.compareAtAmountPerQuantity;
@@ -446,40 +436,44 @@ export function CartEmpty({
   layout?: Layouts;
   onClose?: () => void;
 }) {
-  const scrollRef = useRef(null);
-  const { y } = useScroll(scrollRef);
+  let scrollRef = useRef(null);
+  let { y } = useScroll(scrollRef);
 
-  const container = {
+  let container = {
     drawer: clsx([
-      "content-start gap-4 px-6 pb-8 transition overflow-y-scroll md:gap-12 md:px-12 h-screen-no-nav md:pb-12",
+      "content-start space-y-12 px-5 pb-5 transition overflow-y-scroll h-screen-no-nav",
       y > 0 ? "border-t" : "",
     ]),
     page: clsx([
       hidden ? "" : "grid",
-      `pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12`,
+      "pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12",
     ]),
   };
 
   return (
     <div ref={scrollRef} className={container[layout]} hidden={hidden}>
-      <section className="grid gap-6">
-        <Text format>
+      <div>
+        <p className="mb-4">
           Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
           started!
-        </Text>
-        <div>
-          <Button onClick={onClose}>Continue shopping</Button>
-        </div>
-      </section>
-      <section className="grid gap-8 pt-16">
-        <FeaturedProducts
+        </p>
+        <Button
+          className={clsx(layout === "drawer" ? "w-full" : "")}
+          link={layout === "page" ? "/products" : ""}
+          onClick={onClose}
+        >
+          Continue shopping
+        </Button>
+      </div>
+      <div className="grid gap-4">
+        <CartBestSellers
           count={4}
           heading="Shop Best Sellers"
           layout={layout}
           onClose={onClose}
           sortKey="BEST_SELLING"
         />
-      </section>
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { IconCaretDown } from "~/components/Icons";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
-import { Link } from "~/modules/Link";
+import { Link } from "~/components/Link";
 
 export function DesktopMenu({ menu }: { menu: EnhancedMenu }) {
   let items = menu.items as unknown as SingleMenuItem[];

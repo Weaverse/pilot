@@ -2,7 +2,6 @@ import { flattenConnection } from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-
 import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
 
 /**
@@ -18,16 +17,16 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const searchParams = new URLSearchParams(url.search);
+  let url = new URL(request.url);
+  let searchParams = new URLSearchParams(url.search);
 
-  const query = searchParams.get("query") ?? "";
-  const sortKey =
+  let query = searchParams.get("query") ?? "";
+  let sortKey =
     (searchParams.get("sortKey") as null | ProductSortKeys) ?? "BEST_SELLING";
 
   let reverse = false;
   try {
-    const _reverse = searchParams.get("reverse");
+    let _reverse = searchParams.get("reverse");
     if (_reverse === "true") {
       reverse = true;
     }
@@ -37,7 +36,7 @@ export async function loader({
 
   let count = 4;
   try {
-    const _count = searchParams.get("count");
+    let _count = searchParams.get("count");
     if (typeof _count === "string") {
       count = Number.parseInt(_count);
     }
@@ -45,7 +44,7 @@ export async function loader({
     // noop
   }
 
-  const { products } = await storefront.query(API_ALL_PRODUCTS_QUERY, {
+  let { products } = await storefront.query(API_ALL_PRODUCTS_QUERY, {
     variables: {
       count,
       query,
@@ -64,7 +63,7 @@ export async function loader({
   });
 }
 
-const API_ALL_PRODUCTS_QUERY = `#graphql
+let API_ALL_PRODUCTS_QUERY = `#graphql
   query ApiAllProducts(
     $query: String
     $count: Int

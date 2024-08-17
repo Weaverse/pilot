@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Button, IconClose, Link } from "~/modules";
+import { Button, IconClose } from "~/modules";
+import { Link } from "~/components/Link";
 
 export function Modal({
   children,

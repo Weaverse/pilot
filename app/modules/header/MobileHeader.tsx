@@ -10,9 +10,9 @@ import clsx from "clsx";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { IconList, IconMagnifyingGlass, IconUser } from "~/components/Icons";
+import { Logo } from "~/components/Logo";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import { Logo } from "../Logo";
 import { CartCount } from "./CartCount";
 
 export function MobileHeader({

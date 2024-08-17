@@ -21,31 +21,32 @@ import { getCountryUrlPath } from "~/lib/locale";
 import type { Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
 import type { RootLoader } from "~/root";
+import ReactCountryFlag from "react-country-flag";
 
 export function CountrySelector() {
-  const fetcher = useFetcher();
-  const submit = useSubmit();
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const { pathname, search } = useLocation();
-  const pathWithoutLocale = `${pathname.replace(
+  let fetcher = useFetcher();
+  let submit = useSubmit();
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  let { pathname, search } = useLocation();
+  let pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
     "",
   )}${search}`;
 
-  const countries = (fetcher.data ?? {}) as Localizations;
+  let countries = (fetcher.data ?? {}) as Localizations;
   // biome-ignore lint/complexity/useLiteralKeys: <explanation>
-  const defaultLocale = countries?.["default"];
-  const defaultLocalePrefix = defaultLocale
+  let defaultLocale = countries?.["default"];
+  let defaultLocalePrefix = defaultLocale
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : "";
 
-  const { ref, inView } = useInView({
+  let { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });
 
-  const observerRef = useRef(null);
+  let observerRef = useRef(null);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     ref(observerRef.current);
@@ -57,18 +58,18 @@ export function CountrySelector() {
     fetcher.load("/api/countries");
   }, [inView, fetcher]);
 
-  const handleLocaleChange = ({
+  let handleLocaleChange = ({
     redirectTo,
     buyerIdentity,
   }: {
     redirectTo: string;
     buyerIdentity: CartBuyerIdentityInput;
   }) => {
-    const cartFormInput = {
+    let cartFormInput = {
       action: CartForm.ACTIONS.BuyerIdentityUpdate,
       inputs: { buyerIdentity },
     };
-    const formData = {
+    let formData = {
       redirectTo,
       cartFormInput: JSON.stringify(cartFormInput),
     };
@@ -81,26 +82,31 @@ export function CountrySelector() {
   return (
     <div ref={observerRef} className="grid gap-4 w-80">
       <Popover>
-        <PopoverButton className="w-full border border-line overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center justify-between gap-2">
-          {selectedLocale.label}
-          <IconCaretDown className="w-5 h-5" />
+        <PopoverButton className="w-full border border-line/75 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center gap-2">
+          <ReactCountryFlag
+            svg
+            countryCode={selectedLocale.country}
+            style={{ width: "24px", height: "14px" }}
+          />
+          <span>{selectedLocale.label}</span>
+          <IconCaretDown className="ml-auto w-4 h-4" />
         </PopoverButton>
         <PopoverBackdrop className="bg-black/30" />
         <PopoverPanel anchor="top">
           <div className="w-80 max-h-40 overflow-auto py-2 bg-neutral-800 my-2">
             {countries &&
               Object.keys(countries).map((countryPath) => {
-                const countryLocale = countries[countryPath];
-                const isSelected =
+                let countryLocale = countries[countryPath];
+                let isSelected =
                   countryLocale.language === selectedLocale.language &&
                   countryLocale.country === selectedLocale.country;
 
-                const countryUrlPath = getCountryUrlPath({
+                let countryUrlPath = getCountryUrlPath({
                   countryLocale,
                   defaultLocalePrefix,
                   pathWithoutLocale,
                 });
-                const onChangeLocale = () =>
+                let onChangeLocale = () =>
                   handleLocaleChange({
                     redirectTo: countryUrlPath,
                     buyerIdentity: {
@@ -113,11 +119,16 @@ export function CountrySelector() {
                     key={countryPath}
                     type="button"
                     onClick={onChangeLocale}
-                    className="text-white bg-neutral-800 hover:bg-background/30 w-full p-2 transition flex justify-between items-center text-left cursor-pointer py-2 px-4 text-sm"
+                    className="text-white bg-neutral-800 hover:bg-background/30 w-full p-2 transition flex gap-2 items-center text-left cursor-pointer py-2 px-4 text-sm"
                   >
+                    <ReactCountryFlag
+                      svg
+                      countryCode={countryLocale.country}
+                      style={{ width: "24px", height: "14px" }}
+                    />
                     <span>{countryLocale.label}</span>
                     {isSelected ? (
-                      <span className="ml-2">
+                      <span className="ml-auto">
                         <IconCheckCircle className="w-5 h-5" />
                       </span>
                     ) : null}

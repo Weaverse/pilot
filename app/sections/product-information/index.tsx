@@ -6,7 +6,8 @@ import { forwardRef, useEffect, useState } from "react";
 import { CompareAtPrice } from "~/components/CompareAtPrice";
 import { Section, type SectionProps, layoutInputs } from "~/components/Section";
 import { getExcerpt, isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton, Link } from "~/modules";
+import { AddToCartButton } from "~/modules";
+import { Link } from "~/components/Link";
 import {
   ProductMedia,
   type ProductMediaProps,

@@ -5,7 +5,7 @@ import {
 } from "@headlessui/react";
 import clsx from "clsx";
 import { IconX } from "~/components/Icons";
-import { Link } from "~/modules";
+import { Link } from "~/components/Link";
 
 export function ProductDetail({
   title,
