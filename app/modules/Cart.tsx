@@ -17,9 +17,8 @@ import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefrontapi.generated";
 import Button from "~/components/Button";
 import { IconTrash } from "~/components/Icons";
-import { getInputStyleClasses } from "~/lib/utils";
-import { Text } from "~/modules";
 import { Link } from "~/components/Link";
+import { Text } from "~/modules";
 import { CartBestSellers } from "./CartBestSellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
@@ -53,13 +52,15 @@ export function CartDetails({
   cart: OptimisticCart<CartApiQueryFragment>;
 }) {
   let cartHasItems = !!cart && cart.totalQuantity > 0;
-  let container = {
-    drawer: "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]",
-    page: "w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12",
-  };
-
   return (
-    <div className={container[layout]}>
+    <div
+      className={clsx(
+        layout === "drawer" &&
+          "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto] w-[400px]",
+        layout === "page" &&
+          "w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12",
+      )}
+    >
       <CartLines lines={cart?.lines?.nodes} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -108,24 +109,16 @@ function CartDiscounts({
 
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div
-          className={clsx(
-            "flex",
-            "items-center gap-4 justify-between text-copy",
-          )}
-        >
+        <div className="flex items-center gap-3">
           <input
-            className={getInputStyleClasses()}
+            className="p-3 border border-line rounded-none !leading-tight grow"
             type="text"
             name="discountCode"
             placeholder="Discount code"
           />
-          <button
-            type="button"
-            className="flex justify-end font-medium whitespace-nowrap"
-          >
-            Apply Discount
-          </button>
+          <Button variant="outline" className="!leading-tight">
+            Apply
+          </Button>
         </div>
       </UpdateDiscountForm>
     </>
@@ -171,7 +164,7 @@ function CartLines({
         y > 0 ? "border-t" : "",
         layout === "page"
           ? "flex-grow md:translate-y-4"
-          : "px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12",
+          : "px-5 pb-6 overflow-auto transition",
       ])}
     >
       <ul className="grid gap-6 md:gap-10">
@@ -187,11 +180,14 @@ function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
   if (!checkoutUrl) return null;
 
   return (
-    <div className="flex flex-col mt-2">
+    <div className="flex flex-col gap-2">
       <a href={checkoutUrl} target="_self">
         <Button className="w-full">Continue to Checkout</Button>
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
+      <Button variant="link" link="/cart" className="w-fit mx-auto pb-1">
+        View cart
+      </Button>
     </div>
   );
 }
@@ -205,26 +201,28 @@ function CartSummary({
   cost: CartApiQueryFragment["cost"];
   layout: Layouts;
 }) {
-  let summary = {
-    drawer: "grid gap-4 p-6 border-t md:px-12",
-    page: "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full",
-  };
-
   return (
-    <section aria-labelledby="summary-heading" className={summary[layout]}>
+    <section
+      aria-labelledby="summary-heading"
+      className={clsx(
+        layout === "drawer" && "grid gap-4 p-5 border-t border-line/50",
+        layout === "page" &&
+          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full",
+      )}
+    >
       <h2 id="summary-heading" className="sr-only">
         Order summary
       </h2>
       <dl className="grid">
         <div className="flex items-center justify-between font-medium">
-          <Text as="dt">Subtotal</Text>
-          <Text as="dd" data-test="subtotal">
+          <dt>Subtotal</dt>
+          <dd>
             {cost?.subtotalAmount?.amount ? (
               <Money data={cost?.subtotalAmount} />
             ) : (
               "-"
             )}
-          </Text>
+          </dd>
         </div>
       </dl>
       {children}
@@ -438,20 +436,21 @@ export function CartEmpty({
 }) {
   let scrollRef = useRef(null);
   let { y } = useScroll(scrollRef);
-
-  let container = {
-    drawer: clsx([
-      "content-start space-y-12 px-5 pb-5 transition overflow-y-scroll h-screen-no-nav",
-      y > 0 ? "border-t" : "",
-    ]),
-    page: clsx([
-      hidden ? "" : "grid",
-      "pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12",
-    ]),
-  };
-
   return (
-    <div ref={scrollRef} className={container[layout]} hidden={hidden}>
+    <div
+      ref={scrollRef}
+      className={clsx(
+        layout === "drawer" && [
+          "content-start space-y-12 px-5 pb-5 transition overflow-y-scroll h-screen-no-nav w-[400px]",
+          y > 0 ? "border-t" : "",
+        ],
+        layout === "page" && [
+          hidden ? "" : "grid",
+          "pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12",
+        ],
+      )}
+      hidden={hidden}
+    >
       <div>
         <p className="mb-4">
           Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
