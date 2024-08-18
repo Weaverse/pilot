@@ -1,4 +1,4 @@
-import { IconFilledStar, IconStar, IconStarHalf } from ".";
+import { IconFilledStar, IconStar, IconStarHalf } from "./icon";
 
 export function StarRating({ rating }: { rating: number }) {
   let filledStar = <IconFilledStar className="w-4 h-4" />;

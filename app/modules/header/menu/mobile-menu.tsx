@@ -6,11 +6,11 @@ import {
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { IconCaretDown, IconCaretRight } from "~/components/Icons";
+import { IconCaretDown, IconCaretRight } from "~/components/icons";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
-import { Drawer, useDrawer } from "~/modules/Drawer";
+import { Drawer, useDrawer } from "~/modules/drawer";
 
 export function MobileMenu({ menu }: { menu: EnhancedMenu }) {
   let items = menu.items as unknown as SingleMenuItem[];

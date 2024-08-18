@@ -7,16 +7,17 @@ import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import Button from "~/components/Button";
+import Button from "~/components/button";
 import {
   IconFacebookLogo,
   IconInstagramLogo,
   IconLinkedinLogo,
   IconXLogo,
-} from "~/components/Icons";
+} from "~/components/icons";
 import { cn } from "~/lib/cn";
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
-import { CountrySelector, Input } from "~/modules";
+import { Input } from "~/modules";
+import { CountrySelector } from "./country-selector";
 
 let variants = cva("divide-y divide-line/50 space-y-9", {
   variants: {

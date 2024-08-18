@@ -17,14 +17,14 @@ import type {
 import clsx from "clsx";
 import type { SyntheticEvent } from "react";
 import { useState } from "react";
-import { Checkbox } from "~/components/Checkbox";
-import { IconCaretDown, IconCaretRight } from "~/components/Icons";
+import { Checkbox } from "~/components/checkbox";
+import { IconCaretDown, IconCaretRight } from "~/components/icons";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter, SortParam } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink, getSortLink } from "~/lib/filter";
-import { Input } from ".";
+import { Input } from "./input";
 import { Button } from "./Button";
-import { Drawer, useDrawer } from "./Drawer";
+import { Drawer, useDrawer } from "./drawer";
 import {
   IconCaret,
   IconFourGrid,
@@ -32,7 +32,7 @@ import {
   IconSliders,
   IconThreeGrid,
   IconTwoGrid,
-} from "./Icon";
+} from "./icon";
 
 type DrawerFilterProps = {
   productNumber?: number;

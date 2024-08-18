@@ -5,9 +5,9 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useEffect, useId, useMemo } from "react";
-import { Skeleton } from "~/components/Skeleton";
+import { Skeleton } from "~/components/skeleton";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import { ProductCard } from "~/modules";
+import { ProductCard } from "./product-card";
 
 interface CartBestSellersProps {
   count: number;

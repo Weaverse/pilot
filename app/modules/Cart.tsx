@@ -15,12 +15,12 @@ import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefrontapi.generated";
-import Button from "~/components/Button";
-import { IconTrash } from "~/components/Icons";
-import { Link } from "~/components/Link";
+import { Link } from "~/components/link";
+import Button from "~/components/button";
+import { IconTrash } from "~/components/icons";
 import { getImageAspectRatio } from "~/lib/utils";
 import { Text } from "~/modules";
-import { CartBestSellers } from "./CartBestSellers";
+import { CartBestSellers } from "./cart-best-sellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 type Layouts = "page" | "drawer";

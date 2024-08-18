@@ -11,7 +11,7 @@ import type {
 import type {
   NormalizedPredictiveSearch,
   NormalizedPredictiveSearchResults,
-} from "~/modules/predictive-search/types";
+} from "~/types/types";
 import { NO_PREDICTIVE_SEARCH_RESULTS } from "~/modules/predictive-search/usePredictiveSearch";
 
 type PredictiveSearchResultItem =

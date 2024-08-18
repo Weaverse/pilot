@@ -8,12 +8,12 @@ import {
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconList, IconMagnifyingGlass, IconUser } from "~/components/Icons";
-import { Logo } from "~/components/Logo";
+import { IconList, IconMagnifyingGlass, IconUser } from "~/components/icons";
+import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import { CartCount } from "./CartCount";
+import { CartCount } from "./cart-count";
 
 export function MobileHeader({
   shopName,

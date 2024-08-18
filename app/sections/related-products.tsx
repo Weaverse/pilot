@@ -5,9 +5,9 @@ import type { ProductCardFragment } from "storefrontapi.generated";
 import Heading, {
   type HeadingProps,
   headingInputs,
-} from "~/components/Heading";
-import { Section, type SectionProps, layoutInputs } from "~/components/Section";
-import { ProductCard } from "~/modules";
+} from "~/components/heading";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { ProductCard } from "~/modules/product-card";
 
 interface RelatedProductsProps
   extends Omit<SectionProps, "content">,

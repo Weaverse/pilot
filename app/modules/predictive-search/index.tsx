@@ -1,7 +1,7 @@
-import { IconMagnifyingGlass } from "~/components/Icons";
+import { IconMagnifyingGlass } from "~/components/icons";
 import { Input } from "~/modules";
-import { PredictiveSearchResults } from "./PredictiveSearchResults";
-import { PredictiveSearchForm } from "./SearchForm";
+import { PredictiveSearchResults } from "./predictive-search-results";
+import { PredictiveSearchForm } from "./search-form";
 
 export function PredictiveSearch({ isOpen }: { isOpen?: boolean }) {
   return (

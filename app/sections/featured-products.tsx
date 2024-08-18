@@ -4,10 +4,9 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-
 import type { HomepageFeaturedProductsQuery } from "storefrontapi.generated";
 import { HOMEPAGE_FEATURED_PRODUCTS_QUERY } from "~/data/queries";
-import { ProductSwimlane } from "~/modules";
+import { ProductSwimlane } from "~/modules/product-swimlane";
 
 interface FeaturedProductsProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {

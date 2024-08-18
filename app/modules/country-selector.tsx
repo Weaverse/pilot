@@ -16,7 +16,7 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { IconCaretDown, IconCheckCircle } from "~/components/Icons";
+import { IconCaretDown, IconCheckCircle } from "~/components/icons";
 import { getCountryUrlPath } from "~/lib/locale";
 import type { Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";

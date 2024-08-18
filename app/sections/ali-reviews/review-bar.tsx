@@ -1,4 +1,4 @@
-import { IconStar } from "~/modules/Icon";
+import { IconStar } from "~/modules/icon";
 
 export function ReviewBar(review: {
   rating: number;

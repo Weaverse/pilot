@@ -2,7 +2,7 @@ import { Form } from "@remix-run/react";
 import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
 import type { CustomerDetailsFragment } from "customer-accountapi.generated";
 import { Button, Text } from "~/modules";
-import { Link } from "~/components/Link";
+import { Link } from "~/components/link";
 
 export function AccountAddressBook({
   customer,

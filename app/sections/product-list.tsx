@@ -5,11 +5,10 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-
 import { COLLECTION_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";
-import { ProductSwimlane } from "~/modules";
-import type { SortParam } from "~/modules/SortFilter";
+import type { SortParam } from "~/modules/sort-filter";
+import { ProductSwimlane } from "~/modules/product-swimlane";
 import { getSortValuesFromParam } from "~/routes/($locale).collections.$collectionHandle";
 
 interface ProductListProps

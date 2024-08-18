@@ -1,7 +1,7 @@
-import type { BackgroundImageProps } from "./BackgroundImage";
-import { BackgroundImage } from "./BackgroundImage";
-import type { OverlayProps } from "./Overlay";
-import { Overlay } from "./Overlay";
+import type { BackgroundImageProps } from "./background-image";
+import { BackgroundImage } from "./background-image";
+import type { OverlayProps } from "./overlay";
+import { Overlay } from "./overlay";
 
 export interface OverlayAndBackgroundProps
   extends BackgroundImageProps,

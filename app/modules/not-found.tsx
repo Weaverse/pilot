@@ -1,6 +1,6 @@
 import { Button } from "./Button";
-import { FeaturedSection } from "./FeaturedSection";
-import { PageHeader, Text } from "./Text";
+import { FeaturedSection } from "./featured-section";
+import { PageHeader, Text } from "./text";
 
 export function NotFound({ type = "page" }: { type?: string }) {
   const heading = `We’ve lost this ${type}`;

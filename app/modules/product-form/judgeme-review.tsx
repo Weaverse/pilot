@@ -5,10 +5,9 @@ import type {
 } from "@weaverse/hydrogen";
 import { useParentInstance } from "@weaverse/hydrogen";
 import { forwardRef, useEffect } from "react";
-
 import { usePrefixPathWithLocale } from "~/lib/utils";
+import { StarRating } from "../star-rating";
 
-import { StarRating } from "../StarRating";
 type JudgemeReviewsData = {
   rating: number;
   reviewNumber: number;

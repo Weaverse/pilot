@@ -7,8 +7,7 @@ import {
   useShopifyCookies,
 } from "@shopify/hydrogen";
 import { useEffect, useRef } from "react";
-
-import { usePageAnalytics } from "./usePageAnalytics";
+import { usePageAnalytics } from "./use-page-analytics";
 
 export function useAnalytics(hasUserConsent: boolean) {
   useShopifyCookies({ hasUserConsent });

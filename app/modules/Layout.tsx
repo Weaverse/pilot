@@ -1,6 +1,6 @@
 import type { LayoutQuery } from "storefrontapi.generated";
 import type { EnhancedMenu } from "~/lib/utils";
-import { Footer } from "./Footer";
+import { Footer } from "./footer";
 import { Header } from "./header";
 
 type LayoutProps = {

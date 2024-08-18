@@ -5,10 +5,11 @@ import clsx from "clsx";
 import type { ProductCardFragment } from "storefrontapi.generated";
 import { getProductPlaceholder } from "~/lib/placeholders";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton, Button, Text } from "~/modules";
-import { Link } from "~/components/Link";
-import { QuickViewTrigger } from "./QuickView";
-import { CompareAtPrice } from "~/components/CompareAtPrice";
+import { Button, Text } from "~/modules";
+import { Link } from "~/components/link";
+import { QuickViewTrigger } from "./quick-view";
+import { CompareAtPrice } from "~/components/compare-at-price";
+import { AddToCartButton } from "./add-to-cart-button";
 
 export function ProductCard({
   product,

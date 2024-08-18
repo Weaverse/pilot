@@ -8,7 +8,7 @@ import { forwardRef } from "react";
 import Heading, {
   headingInputs,
   type HeadingProps,
-} from "~/components/Heading";
+} from "~/components/heading2";
 import Paragraph from "~/components/Paragraph";
 import type { SectionProps } from "~/components/Section";
 import { Section } from "~/components/Section";

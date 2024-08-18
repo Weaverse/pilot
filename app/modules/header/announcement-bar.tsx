@@ -1,6 +1,6 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect } from "react";
-import { Marquee } from "~/components/Marquee";
+import { Marquee } from "~/components/marquee";
 
 export function AnnouncementBar() {
   let themeSettings = useThemeSettings();

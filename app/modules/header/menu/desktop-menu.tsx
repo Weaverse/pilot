@@ -1,11 +1,11 @@
 import { Image } from "@shopify/hydrogen";
 import clsx from "clsx";
 import React from "react";
-import { IconCaretDown } from "~/components/Icons";
+import { IconCaretDown } from "~/components/icons";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
-import { Link } from "~/components/Link";
+import { Link } from "~/components/link";
 
 export function DesktopMenu({ menu }: { menu: EnhancedMenu }) {
   let items = menu.items as unknown as SingleMenuItem[];

@@ -10,7 +10,7 @@ import {
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
 import { useEffect } from "react";
-import Button from "~/components/Button";
+import Button from "~/components/button";
 import { usePageAnalytics } from "~/hooks/usePageAnalytics";
 
 export function AddToCartButton({

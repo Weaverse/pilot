@@ -2,7 +2,7 @@ import { Await, Link, useRouteLoaderData } from "@remix-run/react";
 import { useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { Suspense, useMemo } from "react";
-import { IconHandBag } from "~/components/Icons";
+import { IconHandBag } from "~/components/icons";
 import { useIsHydrated } from "~/hooks/useIsHydrated";
 import type { RootLoader } from "~/root";
 

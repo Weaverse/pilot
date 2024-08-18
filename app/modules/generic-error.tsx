@@ -1,5 +1,5 @@
-import Button from "~/components/Button";
-import { PageHeader, Text } from "./Text";
+import Button from "~/components/button";
+import { PageHeader, Text } from "./text";
 
 export function GenericError({
   error,

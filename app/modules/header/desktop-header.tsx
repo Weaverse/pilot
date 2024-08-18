@@ -2,15 +2,15 @@ import { Await, Link, useLocation, useRouteLoaderData } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconMagnifyingGlass, IconUser } from "~/components/Icons";
-import { Logo } from "~/components/Logo";
+import { IconMagnifyingGlass, IconUser } from "~/components/icons";
+import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { type EnhancedMenu, useIsHomePath } from "~/lib/utils";
-import { PredictiveSearch } from "~/modules/predictive-search/PredictiveSearch";
+import { PredictiveSearch } from "~/modules/predictive-search";
 import type { RootLoader } from "~/root";
-import { Drawer, useDrawer } from "../Drawer";
-import { CartCount } from "./CartCount";
-import { DesktopMenu } from "./menu/DesktopMenu";
+import { Drawer, useDrawer } from "../drawer";
+import { CartCount } from "./cart-count";
+import { DesktopMenu } from "./menu/desktop-menu";
 
 export function DesktopHeader({
   menu,

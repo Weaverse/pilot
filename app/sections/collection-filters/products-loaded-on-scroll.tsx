@@ -1,8 +1,8 @@
 import { useNavigate } from "@remix-run/react";
 import { useEffect } from "react";
-
 import { getImageLoadingPriority } from "~/lib/const";
-import { Grid, ProductCard } from "~/modules";
+import { Grid } from "~/modules/grid";
+import { ProductCard } from "~/modules/product-card";
 
 type ProductsLoadedOnScrollProps = {
   nodes: any;

@@ -7,7 +7,7 @@ import type { OrderFragment } from "customer-accountapi.generated";
 import { CUSTOMER_ORDER_QUERY } from "~/graphql/customer-account/CustomerOrderQuery";
 import { statusMessage } from "~/lib/utils";
 import { Heading, PageHeader, Text } from "~/modules";
-import { Link } from "~/components/Link";
+import { Link } from "~/components/link";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Order ${data?.order?.name}` }];

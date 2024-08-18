@@ -12,7 +12,7 @@ import {
   IconGithubLogo,
   IconLinkedinLogo,
   IconXLogo,
-} from "~/components/Icons";
+} from "~/components/icons";
 
 type MemberType = {
   name: string;

@@ -1,10 +1,10 @@
 import { Image, Money } from "@shopify/hydrogen";
-import type { SearchResultItemProps } from "./types";
-import { Link } from "~/components/Link";
-import clsx from "clsx";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { CompareAtPrice } from "../../components/CompareAtPrice";
+import clsx from "clsx";
+import { Link } from "~/components/link";
+import { CompareAtPrice } from "~/components/compare-at-price";
 import { getImageAspectRatio, isDiscounted } from "~/lib/utils";
+import type { SearchResultItemProps } from "../../types/predictive-search";
 
 export function SearchResultItem({
   goToSearchResult,

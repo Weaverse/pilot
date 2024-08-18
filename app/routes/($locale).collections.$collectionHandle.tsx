@@ -9,8 +9,8 @@ import type {
   ProductCollectionSortKeys,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
-import { json } from "@shopify/remix-oxygen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
+import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 
 import { routeHeaders } from "~/data/cache";
@@ -18,8 +18,8 @@ import { COLLECTION_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";
 import { seoPayload } from "~/lib/seo.server";
 import { parseAsCurrency } from "~/lib/utils";
-import type { SortParam } from "~/modules/SortFilter";
-import { FILTER_URL_PREFIX } from "~/modules/SortFilter";
+import type { SortParam } from "~/modules/sort-filter";
+import { FILTER_URL_PREFIX } from "~/modules/sort-filter";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
