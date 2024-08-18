@@ -178,7 +178,7 @@ function CartLines({
         )}
       >
         {currentLines.map((line) => (
-          <CartLineItem key={line.id} line={line} />
+          <CartLineItem key={line.id} line={line} layout={layout} />
         ))}
       </ul>
     </section>
@@ -249,7 +249,7 @@ type OptimisticData = {
   quantity?: number;
 };
 
-function CartLineItem({ line }: { line: CartLine }) {
+function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
   let optimisticData = useOptimisticData<OptimisticData>(line?.id);
 
   if (!line?.id) return null;
@@ -306,10 +306,18 @@ function CartLineItem({ line }: { line: CartLine }) {
                 ))}
             </div>
           </div>
-          <ItemRemoveButton lineId={id} />
+          {layout === "drawer" && (
+            <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
+          )}
         </div>
-        <div className="flex items-center justify-between gap-2">
+        <div
+          className={clsx(
+            "flex items-center gap-2",
+            layout === "drawer" && "justify-between",
+          )}
+        >
           <CartLineQuantityAdjust line={line} />
+          {layout === "page" && <ItemRemoveButton lineId={id} />}
           <CartLinePrice line={line} as="span" />
         </div>
       </div>
@@ -317,7 +325,10 @@ function CartLineItem({ line }: { line: CartLine }) {
   );
 }
 
-function ItemRemoveButton({ lineId }: { lineId: CartLine["id"] }) {
+function ItemRemoveButton({
+  lineId,
+  className,
+}: { lineId: CartLine["id"]; className?: string }) {
   return (
     <CartForm
       route="/cart"
@@ -325,7 +336,10 @@ function ItemRemoveButton({ lineId }: { lineId: CartLine["id"] }) {
       inputs={{ lineIds: [lineId] }}
     >
       <button
-        className="flex items-center justify-center w-8 h-8 -mt-1.5 -mr-2 border-none"
+        className={clsx(
+          "flex items-center justify-center w-8 h-8 border-none",
+          className,
+        )}
         type="submit"
       >
         <span className="sr-only">Remove</span>
@@ -441,7 +455,7 @@ function CartLinePrice({
       withoutTrailingZeros
       {...passthroughProps}
       data={moneyV2}
-      className="text-sm"
+      className="text-sm ml-auto"
     />
   );
 }
