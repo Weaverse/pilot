@@ -77,7 +77,7 @@ function MegaMenu({ title, items, to }: SingleMenuItem) {
   );
   return (
     <FirstLevelMenu title={title} to={to}>
-      <div className="w-screen top-full left-0 absolute shadow-mega-menu overflow-hidden bg-white z-10 dropdown-transition">
+      <div className="w-screen top-full left-0 absolute shadow-lg overflow-hidden bg-white z-10 dropdown-transition">
         <div className="container mx-auto py-8">
           <div className="flex gap-4 w-full">
             {items.map((item, id) =>
@@ -97,7 +97,7 @@ function DropdownMenu(props: SingleMenuItem) {
   let { title, items, to } = props;
   return (
     <FirstLevelMenu title={title} to={to} className="relative">
-      <div className="top-full -left-3 group-hover:h-auto absolute shadow-mega-menu overflow-hidden bg-white z-10 dropdown-transition">
+      <div className="top-full -left-3 group-hover:h-auto absolute shadow-lg overflow-hidden bg-white z-10 dropdown-transition">
         <div className="p-6 min-w-48">
           <ul className="space-y-1.5">
             {items.map((childItem) => (
@@ -117,7 +117,7 @@ function DropdownMenu(props: SingleMenuItem) {
 function ImagesMenu({ title, items, to }: SingleMenuItem) {
   return (
     <FirstLevelMenu title={title} to={to}>
-      <div className="w-screen top-full left-0 absolute shadow-mega-menu overflow-hidden bg-white z-10 dropdown-transition">
+      <div className="w-screen top-full left-0 absolute shadow-lg overflow-hidden bg-white z-10 dropdown-transition">
         <div className="py-8">
           <div className="flex gap-6 w-fit container mx-auto">
             {items.map((item, id) => (

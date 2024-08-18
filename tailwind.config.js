@@ -143,7 +143,6 @@ export default {
       boxShadow: {
         border: "inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)",
         header: "0 2px 5px #0000000f",
-        "mega-menu": "0px 25px 25px 0px #00000024",
       },
       zIndex: {
         1: "1",

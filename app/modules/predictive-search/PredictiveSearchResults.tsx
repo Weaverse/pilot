@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 import { PredictiveSearchResult } from "./PredictiveSearchResult";
 import { usePredictiveSearch } from "./usePredictiveSearch";
 import { IconArrowRight } from "~/components/Icons";
+import Button from "~/components/Button";
 
 export function PredictiveSearchResults() {
   let { results, totalResults, searchTerm, searchInputRef } =
@@ -33,7 +34,7 @@ export function PredictiveSearchResults() {
     );
   }
   return (
-    <div className="absolute left-1/2 top-full z-10 flex w-fit -translate-x-1/2 items-center justify-center shadow-mega-menu">
+    <div className="absolute left-1/2 top-full z-10 flex w-fit -translate-x-1/2 items-center justify-center">
       <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-white p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-line">
@@ -62,14 +63,23 @@ export function PredictiveSearchResults() {
           />
           {searchTerm.current && (
             <div>
-              <Link
+              <Button
+                variant="link"
+                onClick={goToSearchResult}
+                link={`/search?q=${searchTerm.current}`}
+                className="flex items-center gap-2 w-fit"
+              >
+                <span>View all products</span>
+                <IconArrowRight className="w-4 h-4" />
+              </Button>
+              {/* <Link
                 onClick={goToSearchResult}
                 to={`/search?q=${searchTerm.current}`}
                 className="flex items-center gap-2"
               >
                 <span className="underline-animation">View all products</span>
                 <IconArrowRight className="w-4 h-4 mb-[3px]" />
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>
