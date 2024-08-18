@@ -18,6 +18,7 @@ import type { CartApiQueryFragment } from "storefrontapi.generated";
 import Button from "~/components/Button";
 import { IconTrash } from "~/components/Icons";
 import { Link } from "~/components/Link";
+import { getImageAspectRatio } from "~/lib/utils";
 import { Text } from "~/modules";
 import { CartBestSellers } from "./CartBestSellers";
 
@@ -161,13 +162,18 @@ function CartLines({
       ref={scrollRef}
       aria-labelledby="cart-contents"
       className={clsx([
-        y > 0 ? "border-t" : "",
-        layout === "page"
-          ? "flex-grow md:translate-y-4"
-          : "px-5 pb-6 overflow-auto transition",
+        y > 0 ? "border-t border-line/50" : "",
+        layout === "page" && "flex-grow md:translate-y-4",
+        layout === "drawer" && "px-5 pb-5 overflow-auto transition",
       ])}
     >
-      <ul className="grid gap-6 md:gap-10">
+      <ul
+        className={clsx(
+          "grid",
+          layout === "page" && "gap-9",
+          layout === "drawer" && "gap-5",
+        )}
+      >
         {currentLines.map((line) => (
           <CartLineItem key={line.id} line={line} />
         ))}
@@ -253,49 +259,51 @@ function CartLineItem({ line }: { line: CartLine }) {
         display: optimisticData?.action === "remove" ? "none" : "flex",
       }}
     >
-      <div className="flex-shrink">
+      <div className="shrink-0">
         {merchandise.image && (
           <Image
-            width={110}
-            height={110}
+            width={250}
+            height={250}
             data={merchandise.image}
-            className="object-cover object-center w-24 h-24 border rounded md:w-28 md:h-28"
+            className="object-cover object-center w-24 h-auto"
             alt={merchandise.title}
+            aspectRatio={getImageAspectRatio(merchandise.image, "adapt")}
           />
         )}
       </div>
-
-      <div className="flex justify-between flex-grow">
-        <div className="grid gap-2">
-          <div>
-            {merchandise?.product?.handle ? (
-              <Link to={`/products/${merchandise.product.handle}`}>
-                {merchandise?.product?.title || ""}
-              </Link>
-            ) : (
-              <Text>{merchandise?.product?.title || ""}</Text>
-            )}
-          </div>
-          <div className="grid pb-2">
-            {(merchandise?.selectedOptions || [])
-              .filter((option) => option.value !== "Default Title")
-              .map((option) => (
-                <Text color="subtle" key={option.name}>
-                  {option.name}: {option.value}
-                </Text>
-              ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex justify-start text-copy">
-              <CartLineQuantityAdjust line={line} />
+      <div className="flex flex-col justify-between grow">
+        <div className="flex justify-between gap-4">
+          <div className="space-y-2">
+            <div>
+              {merchandise?.product?.handle ? (
+                <Link to={`/products/${merchandise.product.handle}`}>
+                  <span className="underline-animation">
+                    {merchandise?.product?.title || ""}
+                  </span>
+                </Link>
+              ) : (
+                <p>{merchandise?.product?.title || ""}</p>
+              )}
             </div>
-            <ItemRemoveButton lineId={id} />
+            <div className="text-sm space-y-0.5">
+              {(merchandise?.selectedOptions || [])
+                .filter((option) => option.value !== "Default Title")
+                .map((option) => (
+                  <div
+                    key={option.name}
+                    className="text-[var(--color-compare-price-text)]"
+                  >
+                    {option.name}: {option.value}
+                  </div>
+                ))}
+            </div>
           </div>
+          <ItemRemoveButton lineId={id} />
         </div>
-        <Text>
+        <div className="flex items-center justify-between gap-2">
+          <CartLineQuantityAdjust line={line} />
           <CartLinePrice line={line} as="span" />
-        </Text>
+        </div>
       </div>
     </li>
   );
@@ -306,16 +314,14 @@ function ItemRemoveButton({ lineId }: { lineId: CartLine["id"] }) {
     <CartForm
       route="/cart"
       action={CartForm.ACTIONS.LinesRemove}
-      inputs={{
-        lineIds: [lineId],
-      }}
+      inputs={{ lineIds: [lineId] }}
     >
       <button
-        className="flex items-center justify-center w-10 h-10 border rounded"
+        className="flex items-center justify-center w-8 h-8 -mt-1.5 -mr-2 border-none"
         type="submit"
       >
         <span className="sr-only">Remove</span>
-        <IconTrash aria-hidden="true" className="h-5 w-5" />
+        <IconTrash aria-hidden="true" className="h-4 w-4" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>
@@ -339,13 +345,13 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
       <label htmlFor={`quantity-${lineId}`} className="sr-only">
         Quantity, {optimisticQuantity}
       </label>
-      <div className="flex items-center border border-line rounded">
+      <div className="flex items-center border border-line/50">
         <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
             type="button"
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-10 h-10 transition disabled:text-body/50 disabled:cursor-not-allowed"
+            className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
@@ -364,7 +370,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
             type="button"
-            className="w-10 h-10 transition disabled:text-body/50 disabled:cursor-not-allowed"
+            className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"
@@ -422,7 +428,14 @@ function CartLinePrice({
     return null;
   }
 
-  return <Money withoutTrailingZeros {...passthroughProps} data={moneyV2} />;
+  return (
+    <Money
+      withoutTrailingZeros
+      {...passthroughProps}
+      data={moneyV2}
+      className="text-sm"
+    />
+  );
 }
 
 export function CartEmpty({
