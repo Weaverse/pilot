@@ -11,7 +11,7 @@ import { Suspense } from "react";
 import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
 import { PAGINATION_SIZE, getImageLoadingPriority } from "~/lib/const";
 import { seoPayload } from "~/lib/seo.server";
-import { Heading, PageHeader, Section, Text } from "~/modules";
+import { Heading, PageHeader, Section, Text } from "~/modules/text";
 import { Grid } from "~/modules/grid";
 import { Input } from "~/modules/input";
 import { ProductCard } from "~/modules/product-card";

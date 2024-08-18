@@ -7,7 +7,7 @@ import type { ProductData } from "~/lib/products";
 import { getExcerpt } from "~/lib/utils";
 import { ProductDetail } from "~/sections/product-information/product-detail";
 import { AddToCartButton } from "./add-to-cart-button";
-import { Button } from "./Button";
+import { Button } from "./button";
 import { Modal } from "./modal";
 import { ProductMedia } from "./product-form/product-media";
 import { Quantity } from "./product-form/quantity";

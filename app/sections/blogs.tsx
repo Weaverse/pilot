@@ -7,7 +7,7 @@ import type {
 import { forwardRef } from "react";
 import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
 import { getImageLoadingPriority } from "~/lib/const";
-import { PageHeader, Section } from "~/modules";
+import { PageHeader, Section } from "~/modules/text";
 import { Link } from "~/components/link";
 import { Grid } from "~/modules/grid";
 

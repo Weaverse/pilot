@@ -7,9 +7,9 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { BackgroundImage } from "~/components/BackgroundImage";
-import type { OverlayProps } from "~/components/Overlay";
-import { Overlay, overlayInputs } from "~/components/Overlay";
+import { BackgroundImage } from "~/components/background-image";
+import type { OverlayProps } from "~/components/overlay";
+import { Overlay, overlayInputs } from "~/components/overlay";
 
 let variants = cva(
   [

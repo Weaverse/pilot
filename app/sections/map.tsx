@@ -4,10 +4,10 @@ import clsx from "clsx";
 import { forwardRef } from "react";
 import type { ButtonStyleProps } from "~/components/button";
 import Button, { buttonStylesInputs } from "~/components/button";
-import Heading from "~/components/heading2";
-import Paragraph from "~/components/Paragraph";
-import type { SectionProps } from "~/components/Section";
-import { Section } from "~/components/Section";
+import Heading from "~/components/heading";
+import Paragraph from "~/components/paragraph";
+import type { SectionProps } from "~/components/section";
+import { Section } from "~/components/section";
 
 let variants = cva("", {
   variants: {

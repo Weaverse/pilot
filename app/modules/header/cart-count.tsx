@@ -3,7 +3,7 @@ import { useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { Suspense, useMemo } from "react";
 import { IconHandBag } from "~/components/icons";
-import { useIsHydrated } from "~/hooks/useIsHydrated";
+import { useIsHydrated } from "~/hooks/use-is-hydrated";
 import type { RootLoader } from "~/root";
 
 export function CartCount({

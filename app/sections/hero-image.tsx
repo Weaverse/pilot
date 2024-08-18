@@ -5,10 +5,10 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { backgroundInputs } from "~/components/BackgroundImage";
-import { overlayInputs } from "~/components/Overlay";
-import type { SectionProps } from "~/components/Section";
-import { Section, layoutInputs } from "~/components/Section";
+import { backgroundInputs } from "~/components/background-image";
+import { overlayInputs } from "~/components/overlay";
+import type { SectionProps } from "~/components/section";
+import { Section, layoutInputs } from "~/components/section";
 
 export interface HeroImageProps extends VariantProps<typeof variants> {}
 

@@ -16,7 +16,7 @@ import {
 } from "~/components/icons";
 import { cn } from "~/lib/cn";
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
-import { Input } from "~/modules";
+import { Input } from "~/modules/input";
 import { CountrySelector } from "./country-selector";
 
 let variants = cva("divide-y divide-line/50 space-y-9", {

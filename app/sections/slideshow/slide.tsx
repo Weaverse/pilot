@@ -6,11 +6,11 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { backgroundInputs } from "~/components/BackgroundImage";
-import { overlayInputs } from "~/components/Overlay";
-import type { OverlayAndBackgroundProps } from "~/components/OverlayAndBackground";
-import { OverlayAndBackground } from "~/components/OverlayAndBackground";
-import { layoutInputs } from "~/components/Section";
+import { backgroundInputs } from "~/components/background-image";
+import { overlayInputs } from "~/components/overlay";
+import type { OverlayAndBackgroundProps } from "~/components/overlay-and-background";
+import { OverlayAndBackground } from "~/components/overlay-and-background";
+import { layoutInputs } from "~/components/section";
 
 let variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
   variants: {

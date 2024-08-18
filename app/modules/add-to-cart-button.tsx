@@ -11,7 +11,7 @@ import {
 } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import Button from "~/components/button";
-import { usePageAnalytics } from "~/hooks/usePageAnalytics";
+import { usePageAnalytics } from "~/hooks/use-page-analytics";
 
 export function AddToCartButton({
   children,

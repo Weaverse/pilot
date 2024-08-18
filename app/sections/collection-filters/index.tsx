@@ -8,7 +8,8 @@ import type {
 import { forwardRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
-import { Button, PageHeader, Section, Text } from "~/modules";
+import { PageHeader, Section, Text } from "~/modules/text";
+import { Button } from "~/modules/button";
 import { DrawerFilter } from "~/modules/drawer-filter";
 import type { AppliedFilter } from "~/modules/sort-filter";
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";

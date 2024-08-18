@@ -1,4 +1,4 @@
-import { Button } from "./Button";
+import { Button } from "./button";
 import { FeaturedSection } from "./featured-section";
 import { PageHeader, Text } from "./text";
 

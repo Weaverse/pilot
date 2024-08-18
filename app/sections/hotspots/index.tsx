@@ -8,10 +8,10 @@ import { forwardRef } from "react";
 import Heading, {
   headingInputs,
   type HeadingProps,
-} from "~/components/heading2";
-import Paragraph from "~/components/Paragraph";
-import type { SectionProps } from "~/components/Section";
-import { Section } from "~/components/Section";
+} from "~/components/heading";
+import Paragraph from "~/components/paragraph";
+import type { SectionProps } from "~/components/section";
+import { Section } from "~/components/section";
 import { getImageAspectRatio } from "~/lib/utils";
 
 interface HotspotsProps

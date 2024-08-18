@@ -6,8 +6,8 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-
-import { IconFacebook, IconPinterest, Section } from "~/modules";
+import { IconFacebook, IconPinterest } from "~/modules/icon";
+import { Section } from "~/modules/text";
 
 interface BlogPostProps extends HydrogenComponentProps {
   paddingTop: number;

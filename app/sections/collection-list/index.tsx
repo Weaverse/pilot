@@ -8,8 +8,8 @@ import type {
 import { forwardRef } from "react";
 import type { CollectionsQuery } from "storefrontapi.generated";
 import { getImageLoadingPriority } from "~/lib/const";
-import { Button, PageHeader, Section } from "~/modules";
-
+import { PageHeader, Section } from "~/modules/text";
+import { Button } from "~/modules/button";
 import { CollectionCard } from "./collection-card";
 import { Grid } from "~/modules/grid";
 

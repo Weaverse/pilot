@@ -1,5 +1,4 @@
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
-
 import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,
@@ -8,11 +7,11 @@ import type {
   PredictiveQueryFragment,
   PredictiveSearchQuery,
 } from "storefrontapi.generated";
+import { NO_PREDICTIVE_SEARCH_RESULTS } from "~/hooks/use-predictive-search";
 import type {
   NormalizedPredictiveSearch,
   NormalizedPredictiveSearchResults,
-} from "~/types/types";
-import { NO_PREDICTIVE_SEARCH_RESULTS } from "~/modules/predictive-search/usePredictiveSearch";
+} from "~/types/predictive-search";
 
 type PredictiveSearchResultItem =
   | PredictiveArticleFragment

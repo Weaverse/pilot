@@ -7,8 +7,8 @@ import type {
 import { forwardRef } from "react";
 import { COLLECTION_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";
-import type { SortParam } from "~/modules/sort-filter";
 import { ProductSwimlane } from "~/modules/product-swimlane";
+import type { SortParam } from "~/modules/sort-filter";
 import { getSortValuesFromParam } from "~/routes/($locale).collections.$collectionHandle";
 
 interface ProductListProps

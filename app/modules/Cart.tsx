@@ -19,7 +19,7 @@ import { Link } from "~/components/link";
 import Button from "~/components/button";
 import { IconTrash } from "~/components/icons";
 import { getImageAspectRatio } from "~/lib/utils";
-import { Text } from "~/modules";
+import { Text } from "~/modules/text";
 import { CartBestSellers } from "./cart-best-sellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];

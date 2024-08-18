@@ -1,5 +1,5 @@
 import type { HomepageFeaturedProductsQuery } from "storefrontapi.generated";
-import { Section } from "~/modules";
+import { Section } from "~/modules/text";
 import { ProductCard } from "./product-card";
 
 const mockProducts = {

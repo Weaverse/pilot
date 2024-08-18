@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button } from "~/modules";
+import { Button } from "~/modules/button";
 import { Link } from "~/components/link";
 import { IconX } from "~/components/icons";
 

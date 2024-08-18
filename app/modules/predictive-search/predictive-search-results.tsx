@@ -1,8 +1,7 @@
-import { Link } from "@remix-run/react";
-import { PredictiveSearchResult } from "./predictive-search-result";
-import { usePredictiveSearch } from "./usePredictiveSearch";
-import { IconArrowRight } from "~/components/icons";
 import Button from "~/components/button";
+import { IconArrowRight } from "~/components/icons";
+import { usePredictiveSearch } from "~/hooks/use-predictive-search";
+import { PredictiveSearchResult } from "./predictive-search-result";
 
 export function PredictiveSearchResults() {
   let { results, totalResults, searchTerm, searchInputRef } =

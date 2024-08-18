@@ -11,10 +11,10 @@ import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import type { ButtonStyleProps } from "~/components/button";
 import Button, { buttonStylesInputs } from "~/components/button";
-import type { OverlayProps } from "~/components/Overlay";
-import { Overlay, overlayInputs } from "~/components/Overlay";
-import { getImageAspectRatio } from "~/lib/utils";
 import { Link } from "~/components/link";
+import type { OverlayProps } from "~/components/overlay";
+import { Overlay, overlayInputs } from "~/components/overlay";
+import { getImageAspectRatio } from "~/lib/utils";
 import type { FeaturedCollectionsLoaderData } from ".";
 
 let variants = cva("", {

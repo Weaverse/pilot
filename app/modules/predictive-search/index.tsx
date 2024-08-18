@@ -1,5 +1,5 @@
 import { IconMagnifyingGlass } from "~/components/icons";
-import { Input } from "~/modules";
+import { Input } from "~/modules/input";
 import { PredictiveSearchResults } from "./predictive-search-results";
 import { PredictiveSearchForm } from "./search-form";
 

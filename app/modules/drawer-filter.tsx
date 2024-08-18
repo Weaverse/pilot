@@ -23,7 +23,7 @@ import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter, SortParam } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink, getSortLink } from "~/lib/filter";
 import { Input } from "./input";
-import { Button } from "./Button";
+import { Button } from "./button";
 import { Drawer, useDrawer } from "./drawer";
 import {
   IconCaret,

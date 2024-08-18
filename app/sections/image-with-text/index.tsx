@@ -1,8 +1,8 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import { backgroundInputs } from "~/components/BackgroundImage";
-import type { SectionProps } from "~/components/Section";
-import { Section, layoutInputs } from "~/components/Section";
+import { backgroundInputs } from "~/components/background-image";
+import type { SectionProps } from "~/components/section";
+import { Section, layoutInputs } from "~/components/section";
 
 type ImageWithTextProps = SectionProps;
 
