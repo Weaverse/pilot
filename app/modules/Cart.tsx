@@ -370,7 +370,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
       <div className="flex items-center border border-line/50">
         <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
-            type="button"
+            type="submit"
             name="decrease-quantity"
             aria-label="Decrease quantity"
             className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
@@ -391,7 +391,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
 
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
-            type="button"
+            type="submit"
             className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
             name="increase-quantity"
             value={nextQuantity}
