@@ -58,15 +58,18 @@ export function CartDetails({
       className={clsx(
         layout === "drawer" &&
           "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto] w-[400px]",
-        layout === "page" &&
-          "w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12",
+        layout === "page" && [
+          "pb-12 w-full max-w-page mx-auto",
+          "grid md:grid-cols-2 lg:grid-cols-3 md:items-start",
+          "gap-8 md:gap-8 lg:gap-12",
+        ],
       )}
     >
       <CartLines lines={cart?.lines?.nodes} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
           <CartDiscounts discountCodes={cart.discountCodes} />
-          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
+          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} layout={layout} />
         </CartSummary>
       )}
     </div>
@@ -163,7 +166,7 @@ function CartLines({
       aria-labelledby="cart-contents"
       className={clsx([
         y > 0 ? "border-t border-line/50" : "",
-        layout === "page" && "flex-grow md:translate-y-4",
+        layout === "page" && "flex-grow md:translate-y-4 lg:col-span-2",
         layout === "drawer" && "px-5 pb-5 overflow-auto transition",
       ])}
     >
@@ -182,18 +185,23 @@ function CartLines({
   );
 }
 
-function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
+function CartCheckoutActions({
+  checkoutUrl,
+  layout,
+}: { checkoutUrl: string; layout: Layouts }) {
   if (!checkoutUrl) return null;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <a href={checkoutUrl} target="_self">
         <Button className="w-full">Continue to Checkout</Button>
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
-      <Button variant="link" link="/cart" className="w-fit mx-auto pb-1">
-        View cart
-      </Button>
+      {layout === "drawer" && (
+        <Button variant="link" link="/cart" className="w-fit mx-auto">
+          View cart
+        </Button>
+      )}
     </div>
   );
 }

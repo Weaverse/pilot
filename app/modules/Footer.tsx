@@ -23,7 +23,7 @@ let variants = cva("divide-y divide-line/50 space-y-9", {
     width: {
       full: "w-full h-full",
       stretch: "w-full h-full",
-      fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
+      fixed: "w-full h-full max-w-page mx-auto",
     },
     padding: {
       full: "",

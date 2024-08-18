@@ -17,7 +17,7 @@ let variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
     width: {
       full: "",
       stretch: "px-3 md:px-10 lg:px-16",
-      fixed: "max-w-[var(--page-width,1280px)] mx-auto px-3 md:px-10 lg:px-16",
+      fixed: "max-w-page mx-auto px-3 md:px-10 lg:px-16",
     },
     verticalPadding: {
       none: "",

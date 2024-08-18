@@ -104,6 +104,12 @@ export default {
       },
       width: {
         mobileGallery: "calc(100vw - 3rem)",
+        page: "var(--page-width, 1280px)",
+      },
+      maxWidth: {
+        page: "var(--page-width, 1280px)",
+        "prose-narrow": "45ch",
+        "prose-wide": "80ch",
       },
       fontFamily: {
         sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
@@ -133,10 +139,6 @@ export default {
       },
       letterSpacing: {
         normal: "var(--body-base-letter-spacing)",
-      },
-      maxWidth: {
-        "prose-narrow": "45ch",
-        "prose-wide": "80ch",
       },
       boxShadow: {
         border: "inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)",
