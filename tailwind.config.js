@@ -36,10 +36,27 @@ export default {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-100%)" },
         },
+        underline: {
+          "0%": {
+            transform: "scaleX(1)",
+            transformOrigin: "right",
+          },
+          "50%": {
+            transform: "scaleX(0)",
+            transformOrigin: "right",
+          },
+          "51%": {
+            transformOrigin: "left",
+          },
+          "100%": {
+            transform: "scaleX(1)",
+          },
+        },
       },
       animation: {
         spin: "spin .5s linear infinite",
         marquee: "marquee var(--animation-speed, 150ms) linear infinite",
+        underline: "underline 400ms linear",
         "fade-in": "fade-in 500ms ease-in forwards",
         "slide-down-and-fade":
           "slide-down-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
