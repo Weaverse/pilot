@@ -6,11 +6,11 @@ import {
   useRouteLoaderData,
 } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { IconList, IconMagnifyingGlass, IconUser } from "~/components/Icons";
 import { Logo } from "~/components/Logo";
+import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { CartCount } from "./CartCount";
@@ -28,18 +28,27 @@ export function MobileHeader({
   let isHome = useIsHomePath();
   let { enableTransparentHeader } = useThemeSettings();
   let { y } = useWindowScroll();
-  let enableTransparent = enableTransparentHeader && isHome;
-  let isTransparent = enableTransparent && y < 50;
   let params = useParams();
+  let scrolled = y >= 50;
+  let isTransparent = enableTransparentHeader && isHome && !scrolled;
+
   return (
     <header
-      className={clsx(
-        enableTransparent ? "fixed w-screen" : "sticky",
-        isTransparent
-          ? "bg-transparent text-body"
-          : "shadow-header text-body bg-background",
+      className={cn(
         "transition-colors duration-300 ease-in-out",
-        "flex lg:hidden items-center h-nav z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8",
+        "h-nav z-40 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
+        "flex lg:hidden justify-between items-center gap-4",
+        "px-3 md:px-10",
+        "text-[var(--color-header-text)] bg-[var(--color-header-bg)]",
+        "hover:text-[var(--color-header-text)] hover:bg-[var(--color-header-bg)]",
+        scrolled && "shadow-header",
+        enableTransparentHeader && isHome
+          ? [
+              "fixed top-[var(--topbar-height,var(--initial-topbar-height))] w-screen group/header",
+              !scrolled &&
+                "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
+            ]
+          : "sticky top-0",
       )}
     >
       <div className="flex items-center justify-start w-full">
