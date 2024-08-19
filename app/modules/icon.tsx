@@ -5,7 +5,7 @@ type IconProps = JSX.IntrinsicElements["svg"] & {
 };
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 function Icon({
   children,
@@ -29,7 +29,7 @@ function Icon({
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconMenu(props: IconProps) {
   return (
@@ -43,7 +43,7 @@ export function IconMenu(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconClose(props: IconProps) {
   return (
@@ -68,7 +68,7 @@ export function IconClose(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconArrow({ direction = "right" }: IconProps) {
   let rotate;
@@ -99,7 +99,7 @@ export function IconArrow({ direction = "right" }: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconCaret({
   direction = "down",
@@ -139,7 +139,7 @@ export function IconCaret({
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconSelect(props: IconProps) {
   return (
@@ -152,7 +152,7 @@ export function IconSelect(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconBag(props: IconProps) {
   return (
@@ -167,7 +167,7 @@ export function IconBag(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconLogin(props: IconProps) {
   return (
@@ -189,7 +189,7 @@ export function IconLogin(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconAccount(props: IconProps) {
   return (
@@ -204,7 +204,7 @@ export function IconAccount(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconHelp(props: IconProps) {
   return (
@@ -216,7 +216,7 @@ export function IconHelp(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconSearch(props: IconProps) {
   return (
@@ -231,7 +231,7 @@ export function IconSearch(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconCheck({
   stroke = "currentColor",
@@ -252,7 +252,7 @@ export function IconCheck({
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconXMark({
   stroke = "currentColor",
@@ -271,7 +271,7 @@ export function IconXMark({
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconRemove(props: IconProps) {
   return (
@@ -300,7 +300,7 @@ export function IconRemove(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconFilters(props: IconProps) {
   return (
@@ -317,7 +317,7 @@ export function IconFilters(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconPinterest(props: IconProps) {
   return (
@@ -338,7 +338,7 @@ export function IconPinterest(props: IconProps) {
   );
 }
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconFacebook(props: IconProps) {
   return (
@@ -365,7 +365,7 @@ export function IconFacebook(props: IconProps) {
   );
 
   /**
-   * @deprecated Use icon from `@/components/Icons` instead
+   * @deprecated Use icon from `@/components/icons` instead
    */
 }
 export function IconMapBlank(props: IconProps) {
@@ -383,7 +383,7 @@ export function IconMapBlank(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconImageBlank(props: IconProps) {
   return (
@@ -406,7 +406,7 @@ export function IconImageBlank(props: IconProps) {
   );
 
   /**
-   * @deprecated Use icon from `@/components/Icons` instead
+   * @deprecated Use icon from `@/components/icons` instead
    */
 }
 export function IconVideoBlank(props: IconProps) {
@@ -430,7 +430,7 @@ export function IconVideoBlank(props: IconProps) {
   );
 
   /**
-   * @deprecated Use icon from `@/components/Icons` instead
+   * @deprecated Use icon from `@/components/icons` instead
    */
 }
 export function IconArrowInput(props: IconProps) {
@@ -457,7 +457,7 @@ export function IconArrowInput(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconFilledStar(props: IconProps) {
   return (
@@ -478,7 +478,7 @@ export function IconFilledStar(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */ // Lucide icons
 export function IconStar(props: IconProps) {
   return (
@@ -500,7 +500,7 @@ export function IconStar(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconStarHalf(props: IconProps) {
   return (
@@ -522,7 +522,7 @@ export function IconStarHalf(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconBadgeCheck(props: IconProps) {
   return (
@@ -545,7 +545,7 @@ export function IconBadgeCheck(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconX(props: IconProps) {
   return (
@@ -568,7 +568,7 @@ export function IconX(props: IconProps) {
 }
 
 /**
- * @deprecated Use icon from `@/components/Icons` instead
+ * @deprecated Use icon from `@/components/icons` instead
  */
 export function IconSliders(props: IconProps) {
   return (
@@ -581,7 +581,7 @@ export function IconSliders(props: IconProps) {
   );
 
   /**
-   * @deprecated Use icon from `@/components/Icons` instead
+   * @deprecated Use icon from `@/components/icons` instead
    */
 }
 export function IconFourGrid(props: IconProps) {
@@ -607,7 +607,7 @@ export function IconFourGrid(props: IconProps) {
   );
 
   /**
-   * @deprecated Use icon from `@/components/Icons` instead
+   * @deprecated Use icon from `@/components/icons` instead
    */
 }
 export function IconThreeGrid(props: IconProps) {
@@ -626,7 +626,7 @@ export function IconThreeGrid(props: IconProps) {
   );
 
   /**
-   * @deprecated Use icon from `@/components/Icons` instead
+   * @deprecated Use icon from `@/components/icons` instead
    */
 }
 export function IconTwoGrid(props: IconProps) {
@@ -640,7 +640,7 @@ export function IconTwoGrid(props: IconProps) {
   );
 
   /**
-   * @deprecated Use icon from `@/components/Icons` instead
+   * @deprecated Use icon from `@/components/icons` instead
    */
 }
 export function IconOneGrid(props: IconProps) {

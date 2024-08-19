@@ -3,7 +3,7 @@ import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { ProductVariantFragmentFragment } from "storefrontapi.generated";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/Tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/lib/cn";
 
 let variants = cva("border border-line/75 hover:border-body cursor-pointer", {
