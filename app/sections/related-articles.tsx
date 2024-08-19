@@ -51,7 +51,7 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
                   {relatedArticles.slice(0, articlesCount).map((article, i) => (
                     <ArticleCard
                       key={article.id}
-                      blogHandle={blog!.handle}
+                      blogHandle={blog.handle}
                       article={article}
                       loading={getImageLoadingPriority(i, 2)}
                       showAuthor={showAuthor}
