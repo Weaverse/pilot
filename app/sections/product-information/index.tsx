@@ -3,11 +3,11 @@ import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
-import { CompareAtPrice } from "~/components/CompareAtPrice";
-import { Section, type SectionProps, layoutInputs } from "~/components/Section";
+import { CompareAtPrice } from "~/components/compare-at-price";
+import { Link } from "~/components/link";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { getExcerpt, isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton } from "~/modules";
-import { Link } from "~/components/Link";
+import { AddToCartButton } from "~/modules/add-to-cart-button";
 import {
   ProductMedia,
   type ProductMediaProps,

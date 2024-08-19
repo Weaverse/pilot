@@ -1,5 +1,8 @@
 import type { HydrogenComponent } from "@weaverse/hydrogen";
-import { sharedComponents } from "~/components";
+import * as Button from "~/components/button";
+import * as Heading from "~/components/heading";
+import * as Paragraph from "~/components/paragraph";
+import * as SubHeading from "~/components/subheading";
 import * as Judgeme from "~/modules/product-form/judgeme-review";
 import * as AliReview from "~/sections/ali-reviews";
 import * as AliReviewList from "~/sections/ali-reviews/review-list";
@@ -50,7 +53,10 @@ import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
 
 export let components: HydrogenComponent[] = [
-  ...sharedComponents,
+  SubHeading,
+  Heading,
+  Paragraph,
+  Button,
   AliReview,
   AliReviewList,
   AllProducts,

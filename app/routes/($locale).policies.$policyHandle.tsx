@@ -1,10 +1,10 @@
 import { useLoaderData } from "@remix-run/react";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-
 import { routeHeaders } from "~/data/cache";
 import { seoPayload } from "~/lib/seo.server";
-import { Button, PageHeader, Section } from "~/modules";
+import { PageHeader, Section } from "~/modules/text";
+import { Button } from "~/modules/button";
 
 export const headers = routeHeaders;
 

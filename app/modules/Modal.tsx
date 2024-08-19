@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { Button, IconClose } from "~/modules";
-import { Link } from "~/components/Link";
+import { Button } from "~/modules/button";
+import { Link } from "~/components/link";
+import { IconX } from "~/components/icons";
 
 export function Modal({
   children,
@@ -47,11 +48,11 @@ export function Modal({
                   to={cancelLink}
                   className="-m-4 transition text-body hover:text-body/50"
                 >
-                  <IconClose aria-label="Close panel" />
+                  <IconX aria-label="Close panel" className="w-4 h-4" />
                 </Link>
               ) : (
                 <Button variant="link" onClick={onClose}>
-                  <IconClose aria-label="Close panel" />
+                  <IconX aria-label="Close panel" className="w-4 h-4" />
                 </Button>
               )}
             </div>

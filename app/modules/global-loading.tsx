@@ -1,5 +1,5 @@
 import { useNavigation } from "@remix-run/react";
-import cx from "clsx";
+import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 
 export function GlobalLoading() {
@@ -34,7 +34,7 @@ export function GlobalLoading() {
     >
       <div
         ref={ref}
-        className={cx(
+        className={clsx(
           "h-full bg-gradient-to-r from-background to-body transition-all duration-500 ease-in-out",
           transition.state === "idle" &&
             (animating ? "w-full" : "w-0 opacity-0 transition-none"),

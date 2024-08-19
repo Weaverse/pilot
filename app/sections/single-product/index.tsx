@@ -8,7 +8,7 @@ import type {
 import { forwardRef, useEffect, useState } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/data/queries";
-import { AddToCartButton } from "~/modules";
+import { AddToCartButton } from "~/modules/add-to-cart-button";
 import { ProductPlaceholder } from "~/modules/product-form/placeholder";
 import { ProductMedia } from "~/modules/product-form/product-media";
 import { Quantity } from "~/modules/product-form/quantity";

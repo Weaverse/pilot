@@ -30,13 +30,13 @@ import { defer } from "@shopify/remix-oxygen";
 import { withWeaverse } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/lib/seo.server";
-import { Layout as PageLayout } from "~/modules";
-import { CustomAnalytics } from "~/modules/CustomAnalytics";
+import { Layout as PageLayout } from "~/modules/layout";
+import { CustomAnalytics } from "~/modules/custom-analytics";
 import { GlobalLoading } from "~/modules/global-loading";
-import { TooltipProvider } from "./components/Tooltip";
+import { TooltipProvider } from "./components/tooltip";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
-import { GenericError } from "./modules/GenericError";
-import { NotFound } from "./modules/NotFound";
+import { GenericError } from "./modules/generic-error";
+import { NotFound } from "./modules/not-found";
 import styles from "./styles/app.css?url";
 import { GlobalStyle } from "./weaverse/style";
 

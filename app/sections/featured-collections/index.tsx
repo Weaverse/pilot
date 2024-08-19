@@ -5,8 +5,8 @@ import type {
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { CollectionsByIdsQuery } from "storefrontapi.generated";
-import type { SectionProps } from "~/components/Section";
-import { Section, layoutInputs } from "~/components/Section";
+import type { SectionProps } from "~/components/section";
+import { Section, layoutInputs } from "~/components/section";
 
 interface FeaturedCollectionsData {
   collections: WeaverseCollection[];

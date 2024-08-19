@@ -8,7 +8,7 @@ import {
 import { useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
-import { IconCaretLeft, IconX } from "~/components/Icons";
+import { IconCaretLeft, IconX } from "~/components/icons";
 import { cn } from "~/lib/cn";
 
 /**

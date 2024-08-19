@@ -36,10 +36,27 @@ export default {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-100%)" },
         },
+        underline: {
+          "0%": {
+            transform: "scaleX(1)",
+            transformOrigin: "right",
+          },
+          "50%": {
+            transform: "scaleX(0)",
+            transformOrigin: "right",
+          },
+          "51%": {
+            transformOrigin: "left",
+          },
+          "100%": {
+            transform: "scaleX(1)",
+          },
+        },
       },
       animation: {
         spin: "spin .5s linear infinite",
         marquee: "marquee var(--animation-speed, 150ms) linear infinite",
+        underline: "underline 400ms linear",
         "fade-in": "fade-in 500ms ease-in forwards",
         "slide-down-and-fade":
           "slide-down-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
@@ -87,6 +104,12 @@ export default {
       },
       width: {
         mobileGallery: "calc(100vw - 3rem)",
+        page: "var(--page-width, 1280px)",
+      },
+      maxWidth: {
+        page: "var(--page-width, 1280px)",
+        "prose-narrow": "45ch",
+        "prose-wide": "80ch",
       },
       fontFamily: {
         sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
@@ -117,14 +140,9 @@ export default {
       letterSpacing: {
         normal: "var(--body-base-letter-spacing)",
       },
-      maxWidth: {
-        "prose-narrow": "45ch",
-        "prose-wide": "80ch",
-      },
       boxShadow: {
         border: "inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)",
         header: "0 2px 5px #0000000f",
-        "mega-menu": "0px 25px 25px 0px #00000024",
       },
       zIndex: {
         1: "1",

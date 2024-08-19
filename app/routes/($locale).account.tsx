@@ -16,16 +16,13 @@ import { Suspense } from "react";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/CustomerDetailsQuery";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import {
-  AccountAddressBook,
-  AccountDetails,
-  Button,
-  Modal,
-  OrderCard,
-  PageHeader,
-  ProductSwimlane,
-  Text,
-} from "~/modules";
+import { PageHeader, Text } from "~/modules/text";
+import { Button } from "~/modules/button";
+import { AccountAddressBook } from "~/modules/account-address-book";
+import { AccountDetails } from "~/modules/account-details";
+import { Modal } from "~/modules/modal";
+import { OrderCard } from "~/modules/order-card";
+import { ProductSwimlane } from "~/modules/product-swimlane";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,

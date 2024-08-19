@@ -5,10 +5,10 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { backgroundInputs } from "~/components/BackgroundImage";
-import { overlayInputs } from "~/components/Overlay";
-import type { SectionProps } from "~/components/Section";
-import { Section } from "~/components/Section";
+import { backgroundInputs } from "~/components/background-image";
+import { overlayInputs } from "~/components/overlay";
+import type { SectionProps } from "~/components/section";
+import { Section } from "~/components/section";
 
 let variants = cva("flex flex-col [&_.paragraph]:mx-[unset] px-4 sm:px-16", {
   variants: {

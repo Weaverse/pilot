@@ -1,7 +1,7 @@
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { Link } from "~/components/Link";
+import { Link } from "~/components/link";
 
 export function Logo({
   isTransparent,

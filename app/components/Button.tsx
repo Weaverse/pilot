@@ -8,8 +8,8 @@ import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
-import { IconCircleNotch } from "./Icons";
-import { Link } from "./Link";
+import { IconCircleNotch } from "./icons";
+import { Link } from "./link";
 
 let variants = cva(
   [
@@ -57,7 +57,12 @@ let variants = cva(
           "hover:text-[var(--color-button-text-hover)]",
           "hover:border-[var(--color-button-border-hover)]",
         ],
-        link: ["bg-transparent py-2 border-b", "text-body", "border-b-body"],
+        link: [
+          "bg-transparent pb-1 text-body",
+          "after:bg-body after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px",
+          "after:scale-x-100 after:transition-transform after:origin-right",
+          "hover:after:origin-left hover:after:animate-underline",
+        ],
       },
     },
     defaultVariants: {

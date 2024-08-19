@@ -1,5 +1,4 @@
 import clsx from "clsx";
-
 import { formatText, missingClass } from "~/lib/utils";
 
 export function Text({

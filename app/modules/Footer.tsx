@@ -7,23 +7,24 @@ import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import Button from "~/components/Button";
+import Button from "~/components/button";
 import {
   IconFacebookLogo,
   IconInstagramLogo,
   IconLinkedinLogo,
   IconXLogo,
-} from "~/components/Icons";
+} from "~/components/icons";
 import { cn } from "~/lib/cn";
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
-import { CountrySelector, Input } from "~/modules";
+import { Input } from "~/modules/input";
+import { CountrySelector } from "./country-selector";
 
 let variants = cva("divide-y divide-line/50 space-y-9", {
   variants: {
     width: {
       full: "w-full h-full",
       stretch: "w-full h-full",
-      fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
+      fixed: "w-full h-full max-w-page mx-auto",
     },
     padding: {
       full: "",

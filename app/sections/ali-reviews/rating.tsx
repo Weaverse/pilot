@@ -2,7 +2,7 @@ import {
   IconStar,
   IconStarFilled,
   IconStarHalfFilled,
-} from "~/components/Icons";
+} from "~/components/icons";
 
 export function Rating({ rating }: { rating: number }) {
   return (

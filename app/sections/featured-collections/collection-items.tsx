@@ -9,12 +9,12 @@ import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
-import type { ButtonStyleProps } from "~/components/Button";
-import Button, { buttonStylesInputs } from "~/components/Button";
-import type { OverlayProps } from "~/components/Overlay";
-import { Overlay, overlayInputs } from "~/components/Overlay";
+import type { ButtonStyleProps } from "~/components/button";
+import Button, { buttonStylesInputs } from "~/components/button";
+import { Link } from "~/components/link";
+import type { OverlayProps } from "~/components/overlay";
+import { Overlay, overlayInputs } from "~/components/overlay";
 import { getImageAspectRatio } from "~/lib/utils";
-import { Link } from "~/components/Link";
 import type { FeaturedCollectionsLoaderData } from ".";
 
 let variants = cva("", {

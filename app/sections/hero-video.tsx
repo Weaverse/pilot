@@ -16,8 +16,8 @@ import {
   useState,
 } from "react";
 import { useInView } from "react-intersection-observer";
-import type { OverlayProps } from "~/components/Overlay";
-import { Overlay, overlayInputs } from "~/components/Overlay";
+import type { OverlayProps } from "~/components/overlay";
+import { Overlay, overlayInputs } from "~/components/overlay";
 
 const SECTION_HEIGHTS = {
   small: {

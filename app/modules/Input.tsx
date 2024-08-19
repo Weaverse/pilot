@@ -2,7 +2,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import type React from "react";
 import { forwardRef, useState } from "react";
-import { IconX } from "~/components/Icons";
+import { IconX } from "~/components/icons";
 
 interface InputProps
   extends VariantProps<typeof variants>,

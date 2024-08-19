@@ -4,7 +4,7 @@ import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
-import { Link } from "~/components/Link";
+import { Link } from "~/components/link";
 import type { HotspotsItemData } from "./item";
 
 interface ProductPopupProps

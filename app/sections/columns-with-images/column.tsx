@@ -9,8 +9,8 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
-import type { ButtonProps } from "~/components/Button";
-import Button, { buttonContentInputs } from "~/components/Button";
+import type { ButtonProps } from "~/components/button";
+import Button, { buttonContentInputs } from "~/components/button";
 
 let variants = cva("", {
   variants: {

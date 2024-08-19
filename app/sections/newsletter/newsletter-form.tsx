@@ -5,8 +5,8 @@ import type {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
-import Button from "~/components/Button";
-import { IconEnvelopeSimple } from "~/components/Icons";
+import Button from "~/components/button";
+import { IconEnvelopeSimple } from "~/components/icons";
 import type { CustomerApiPlayLoad } from "~/routes/($locale).api.customer";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {

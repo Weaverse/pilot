@@ -7,8 +7,8 @@ import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
 import { seoPayload } from "~/lib/seo.server";
 import type { NonNullableFields } from "~/lib/type";
-import { Heading, PageHeader, Section } from "~/modules";
-import { Link } from "~/components/Link";
+import { Heading, PageHeader, Section } from "~/modules/text";
+import { Link } from "~/components/link";
 
 export const headers = routeHeaders;
 

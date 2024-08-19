@@ -8,7 +8,7 @@ import {
   IconArrowRight,
   IconCaretLeft,
   IconCaretRight,
-} from "~/components/Icons";
+} from "~/components/icons";
 
 let variants = cva(
   [

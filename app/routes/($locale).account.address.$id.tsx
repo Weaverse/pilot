@@ -9,15 +9,14 @@ import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-
 import {
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
   UPDATE_ADDRESS_MUTATION,
 } from "~/graphql/customer-account/CustomerAddressMutations";
 import { getInputStyleClasses } from "~/lib/utils";
-import { Button, Text } from "~/modules";
-
+import { Button } from "~/modules/button";
+import { Text } from "~/modules/text";
 import type { AccountOutletContext } from "./($locale).account.edit";
 import { doLogout } from "./($locale).account_.logout";
 

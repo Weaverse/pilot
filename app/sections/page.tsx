@@ -4,9 +4,8 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-
 import type { PageDetailsQuery } from "storefrontapi.generated";
-import { PageHeader } from "~/modules";
+import { PageHeader } from "~/modules/text";
 
 interface PageProps extends HydrogenComponentProps {
   paddingTop: number;

@@ -4,8 +4,8 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import clsx from "clsx";
-import { IconX } from "~/components/Icons";
-import { Link } from "~/components/Link";
+import { IconX } from "~/components/icons";
+import { Link } from "~/components/link";
 
 export function ProductDetail({
   title,

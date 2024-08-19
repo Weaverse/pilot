@@ -1,16 +1,16 @@
 import { Await, useRouteLoaderData } from "@remix-run/react";
 import { CartForm, type CartReturn } from "@shopify/hydrogen";
 import { Suspense, useEffect } from "react";
-import { useCartFetchers } from "~/hooks/useCartFetchers";
+import { useCartFetchers } from "~/hooks/use-cart-fetchers";
 import type { EnhancedMenu } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import { Cart } from "../Cart";
-import { CartLoading } from "../CartLoading";
-import { Drawer, useDrawer } from "../Drawer";
-import { AnnouncementBar } from "./AnnouncementBar";
-import { DesktopHeader } from "./DesktopHeader";
-import { MobileHeader } from "./MobileHeader";
-import { MobileMenu } from "./menu/MobileMenu";
+import { Cart } from "~/modules/cart";
+import { CartLoading } from "../cart-loading";
+import { Drawer, useDrawer } from "../drawer";
+import { AnnouncementBar } from "./announcement-bar";
+import { DesktopHeader } from "./desktop-header";
+import { MobileHeader } from "./mobile-header";
+import { MobileMenu } from "./menu/mobile-menu";
 
 export function Header({
   shopName,

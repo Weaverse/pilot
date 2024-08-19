@@ -4,15 +4,15 @@ import type {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
 import type React from "react";
+import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
-import type { BackgroundImageProps } from "./BackgroundImage";
-import { backgroundInputs } from "./BackgroundImage";
-import type { OverlayProps } from "./Overlay";
-import { overlayInputs } from "./Overlay";
-import { OverlayAndBackground } from "./OverlayAndBackground";
+import type { BackgroundImageProps } from "./background-image";
+import { backgroundInputs } from "./background-image";
+import type { OverlayProps } from "./overlay";
+import { overlayInputs } from "./overlay";
+import { OverlayAndBackground } from "./overlay-and-background";
 
 export type BackgroundProps = BackgroundImageProps & {
   backgroundFor: "section" | "content";
@@ -36,7 +36,7 @@ let variants = cva("relative", {
     width: {
       full: "w-full h-full",
       stretch: "w-full h-full",
-      fixed: "w-full h-full max-w-[var(--page-width,1280px)] mx-auto",
+      fixed: "w-full h-full max-w-page mx-auto",
     },
     padding: {
       full: "",

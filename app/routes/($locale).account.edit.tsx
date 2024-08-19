@@ -10,11 +10,10 @@ import type {
 } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-
 import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/CustomerUpdateMutation";
 import { getInputStyleClasses } from "~/lib/utils";
-import { Button, Text } from "~/modules";
-
+import { Button } from "~/modules/button";
+import { Text } from "~/modules/text";
 import { doLogout } from "./($locale).account_.logout";
 
 export interface AccountOutletContext {

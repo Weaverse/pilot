@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { IconSealCheck, IconX } from "~/components/Icons";
+import { IconSealCheck, IconX } from "~/components/icons";
 import { Rating } from "./rating";
 
 export type AliReview = {
