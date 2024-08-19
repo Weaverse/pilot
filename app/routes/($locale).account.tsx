@@ -14,7 +14,7 @@ import type {
 } from "customer-accountapi.generated";
 import { Suspense } from "react";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
-import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/CustomerDetailsQuery";
+import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
 import { PageHeader, Text } from "~/modules/text";
 import { Button } from "~/modules/button";
