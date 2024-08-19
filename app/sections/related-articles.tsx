@@ -6,7 +6,7 @@ import type {
 } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
 import type { ArticleFragment } from "storefrontapi.generated";
-import { Skeleton } from "~/components/Skeleton";
+import { Skeleton } from "~/components/skeleton";
 import { getImageLoadingPriority } from "~/lib/const";
 
 interface RelatedArticlesProps extends HydrogenComponentProps {
