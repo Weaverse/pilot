@@ -13,7 +13,7 @@ import {
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
   UPDATE_ADDRESS_MUTATION,
-} from "~/graphql/customer-account/CustomerAddressMutations";
+} from "~/graphql/customer-account/customer-address-mutations";
 import { getInputStyleClasses } from "~/lib/utils";
 import { Button } from "~/modules/button";
 import { Text } from "~/modules/text";

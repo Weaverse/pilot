@@ -10,7 +10,7 @@ import type {
 } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/CustomerUpdateMutation";
+import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/customer-update-mutation";
 import { getInputStyleClasses } from "~/lib/utils";
 import { Button } from "~/modules/button";
 import { Text } from "~/modules/text";
