@@ -56,8 +56,8 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 Fetching page data inside route's loader is a common pattern in **Hydrogen**. **Weaverse** provides a convenient way to do that by using `context.weaverse.loadPage` function.
 
 ```ts:routes/($locale)/_index.tsx
-import {defer} from '@shopify/remix-oxygen';
-import {type RouteLoaderArgs} from '@weaverse/hydrogen';
+import { defer } from '@shopify/remix-oxygen';
+import { type RouteLoaderArgs } from '@weaverse/hydrogen';
 
 export async function loader(args: RouteLoaderArgs) {
   let {params, context} = args;
@@ -104,9 +104,9 @@ const hydrogenContext = createHydrogenContext({
 Weaverse pages is rendered using `<WeaverseContent />` component.
 
 ```tsx:app/weaverse/index.tsx
-import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import {GenericError} from '~/components/GenericError';
-import {components} from './components';
+import { WeaverseHydrogenRoot } from '@weaverse/hydrogen';
+import { GenericError } from '~/components/generic-error';
+import { components } from './components';
 
 export function WeaverseContent() {
   return (
@@ -144,8 +144,8 @@ export async function loader({request, context}: RouteLoaderArgs) {
 
 And then you can use it in your components with `useThemeSettings` hook.
 
-```tsx:app/weaverse/components/Logo.tsx
-import {useThemeSettings} from '@weaverse/hydrogen';
+```tsx:app/weaverse/components/logo.tsx
+import { useThemeSettings } from '@weaverse/hydrogen';
 
 function Logo() {
   let {logo} = useThemeSettings();
@@ -161,7 +161,7 @@ function Logo() {
 The `App` component is wrapped with `withWeaverse` HoC in order to SSR the theme settings.
 
 ```tsx:root.tsx
-import {withWeaverse} from '@weaverse/hydrogen';
+import { withWeaverse } from '@weaverse/hydrogen';
 
 function App() {
   return (
@@ -183,7 +183,7 @@ import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
-import {forwardRef} from 'react';
+import { forwardRef } from 'react';
 
 interface VideoProps extends HydrogenComponentProps {
   heading: string;
@@ -261,7 +261,7 @@ What if your component needs to fetch data from Shopify API or any third-party A
 Just export a `loader` function from your component:
 
 ```tsx:app/weaverse/sections/Video.tsx
-import type {ComponentLoaderArgs} from '@weaverse/hydrogen';
+import type { ComponentLoaderArgs } from '@weaverse/hydrogen';
 
 export let loader = async ({weaverse, data}: ComponentLoaderArgs) => {
   let {data} = await weaverse.storefront.query<SeoCollectionContentQuery>(
