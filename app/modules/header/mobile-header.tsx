@@ -26,7 +26,7 @@ export function MobileHeader({
 }) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
   let isHome = useIsHomePath();
-  let { enableTransparentHeader } = useThemeSettings();
+  let { enableTransparentHeader, topbarHeight } = useThemeSettings();
   let { y } = useWindowScroll();
   let params = useParams();
   let scrolled = y >= 50;
@@ -34,6 +34,11 @@ export function MobileHeader({
 
   return (
     <header
+      style={
+        {
+          "--initial-topbar-height": `${topbarHeight}px`,
+        } as React.CSSProperties
+      }
       className={cn(
         "transition-colors duration-300 ease-in-out",
         "h-nav z-40 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
