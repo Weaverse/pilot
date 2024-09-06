@@ -36,13 +36,12 @@ export function Cart({
 }) {
   let optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
   let linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
+  let cartHasItems = !!cart && cart.totalQuantity > 0;
 
-  return (
-    <>
-      <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
-      <CartDetails cart={optimisticCart} layout={layout} />
-    </>
-  );
+  if (cartHasItems) {
+    return <CartDetails cart={optimisticCart} layout={layout} />;
+  }
+  return <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />;
 }
 
 export function CartDetails({
@@ -52,7 +51,6 @@ export function CartDetails({
   layout: Layouts;
   cart: OptimisticCart<CartApiQueryFragment>;
 }) {
-  let cartHasItems = !!cart && cart.totalQuantity > 0;
   return (
     <div
       className={clsx(
@@ -66,12 +64,10 @@ export function CartDetails({
       )}
     >
       <CartLines lines={cart?.lines?.nodes} layout={layout} />
-      {cartHasItems && (
-        <CartSummary cost={cart.cost} layout={layout}>
-          <CartDiscounts discountCodes={cart.discountCodes} />
-          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} layout={layout} />
-        </CartSummary>
-      )}
+      <CartSummary cost={cart.cost} layout={layout}>
+        <CartDiscounts discountCodes={cart.discountCodes} />
+        <CartCheckoutActions checkoutUrl={cart.checkoutUrl} layout={layout} />
+      </CartSummary>
     </div>
   );
 }
@@ -486,17 +482,17 @@ export function CartEmpty({
       )}
       hidden={hidden}
     >
-      <div>
+      <div className={clsx(layout === "page" && "text-center")}>
         <p className="mb-4">
           Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
           started!
         </p>
         <Button
-          className={clsx(layout === "drawer" ? "w-full" : "")}
+          className={clsx(layout === "drawer" ? "w-full" : "min-w-48")}
           link={layout === "page" ? "/products" : ""}
           onClick={onClose}
         >
-          Continue shopping
+          Start Shopping
         </Button>
       </div>
       <div className="grid gap-4">
