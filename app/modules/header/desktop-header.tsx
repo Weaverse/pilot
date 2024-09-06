@@ -1,4 +1,10 @@
-import { Await, Link, useLocation, useRouteLoaderData } from "@remix-run/react";
+import {
+  Await,
+  Link,
+  useLocation,
+  useRouteError,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense, useEffect, useState } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
@@ -24,22 +30,12 @@ export function DesktopHeader({
   let { enableTransparentHeader, topbarHeight } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
-  let [hovered, setHovered] = useState(false); // use state to delay disappearing header when drawer closes
   let { isOpen, openDrawer, closeDrawer } = useDrawer();
-
-  useEffect(() => {
-    if (isOpen) {
-      setHovered(true);
-    } else {
-      setTimeout(() => {
-        setHovered(false);
-      }, 200);
-    }
-  }, [isOpen]);
+  let routeError = useRouteError();
 
   let scrolled = y >= 50;
-  let isTransparent =
-    enableTransparentHeader && isHome && !scrolled && !hovered;
+  let enableTransparent = enableTransparentHeader && isHome && !routeError;
+  let isTransparent = enableTransparent && !scrolled;
 
   return (
     <header
@@ -56,11 +52,10 @@ export function DesktopHeader({
         "hover:text-[var(--color-header-text)] hover:bg-[var(--color-header-bg)]",
         "border-b border-[rgb(230,230,230)]",
         scrolled && "shadow-header",
-        enableTransparentHeader && isHome
+        enableTransparent
           ? [
               "fixed top-[var(--topbar-height,var(--initial-topbar-height))] w-screen group/header",
               !scrolled &&
-                !hovered &&
                 "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
             ]
           : "sticky top-0",

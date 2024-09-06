@@ -160,7 +160,7 @@ export function PageHeader({
   className,
   heading,
   variant = "default",
-  as,
+  as: Component,
   ...props
 }: {
   children?: React.ReactNode;
@@ -180,13 +180,13 @@ export function PageHeader({
   const styles = clsx(variants[variant], className);
 
   return (
-    <header {...props} className={styles}>
+    <Component {...props} className={styles}>
       {heading && (
-        <Heading as={as} width="narrow" size="heading" className="inline-block">
+        <Heading as="h6" width="narrow" size="heading" className="inline-block">
           {heading}
         </Heading>
       )}
       {children}
-    </header>
+    </Component>
   );
 }
