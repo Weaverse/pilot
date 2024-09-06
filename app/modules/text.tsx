@@ -160,7 +160,7 @@ export function PageHeader({
   className,
   heading,
   variant = "default",
-  as: Component,
+  as: Component = "div",
   ...props
 }: {
   children?: React.ReactNode;
