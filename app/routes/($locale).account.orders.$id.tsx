@@ -2,12 +2,12 @@ import { type MetaFunction, useLoaderData } from "@remix-run/react";
 import { Image, Money, flattenConnection } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, json, redirect } from "@shopify/remix-oxygen";
 import clsx from "clsx";
-import invariant from "tiny-invariant";
 import type { OrderFragment } from "customer-accountapi.generated";
+import invariant from "tiny-invariant";
+import { Link } from "~/components/link";
 import { CUSTOMER_ORDER_QUERY } from "~/graphql/customer-account/customer-order-query";
 import { statusMessage } from "~/lib/utils";
 import { Heading, PageHeader, Text } from "~/modules/text";
-import { Link } from "~/components/link";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Order ${data?.order?.name}` }];
