@@ -140,7 +140,6 @@ type OrderCardsProps = {
 };
 
 function AccountOrderHistory({ orders }: OrderCardsProps) {
-  console.log("🚀 ~ AccountOrderHistory ~ orders:", orders);
   return (
     <div className="space-y-4">
       <div className="font-bold">Orders</div>

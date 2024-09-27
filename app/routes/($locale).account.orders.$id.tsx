@@ -79,7 +79,6 @@ export default function OrderRoute() {
     discountPercentage,
     fulfillmentStatus,
   } = useLoaderData<typeof loader>();
-  console.log("🚀 ~ OrderRoute ~ order:", order);
   let totalDiscount = 0;
   lineItems.forEach((lineItem) => {
     const itemDiscount = lineItem.discountAllocations.reduce(
@@ -94,7 +93,6 @@ export default function OrderRoute() {
     amount: totalDiscount.toString(),
     currencyCode: order.totalPrice?.currencyCode,
   };
-  console.log("🚀 ~ OrderRoute ~ totalDiscount:", totalDiscount);
   return (
     <div className="max-w-screen-xl mx-auto px-4">
       <div className="w-full p-4 sm:grid-cols-1 md:p-8 lg:p-12 lg:py-6">
