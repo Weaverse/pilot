@@ -9,7 +9,11 @@ import type {
   ProductCollectionSortKeys,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
-import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
+import {
+  type LoaderFunctionArgs,
+  type MetaArgs,
+  redirect,
+} from "@shopify/remix-oxygen";
 import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 
@@ -51,9 +55,8 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     [] as ProductFilter[],
   );
 
-  const { collection, collections } = await context.storefront.query(
-    COLLECTION_QUERY,
-    {
+  const { collection, collections } = await context.storefront
+    .query(COLLECTION_QUERY, {
       variables: {
         ...paginationVariables,
         handle: collectionHandle,
@@ -63,10 +66,21 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         country: context.storefront.i18n.country,
         language: context.storefront.i18n.language,
       },
-    },
-  );
+    })
+    .catch((e) => {
+      console.error(e);
+      return { collection: null, collections: [] };
+    });
 
   if (!collection) {
+    // @ts-expect-error
+    if (paginationVariables.startCursor || paginationVariables.endCursor) {
+      // remove the cursor from the url
+      const url = new URL(request.url);
+      url.searchParams.delete("cursor");
+      url.searchParams.delete("direction");
+      throw redirect(url.toString());
+    }
     throw new Response("collection", { status: 404 });
   }
 
