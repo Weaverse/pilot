@@ -13,16 +13,17 @@ import type {
   OrderCardFragment,
 } from "customer-accountapi.generated";
 import { Suspense } from "react";
+import { IconSignOut } from "~/components/icons";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import { PageHeader, Text } from "~/modules/text";
-import { Button } from "~/modules/button";
 import { AccountAddressBook } from "~/modules/account-address-book";
 import { AccountDetails } from "~/modules/account-details";
+import { Button } from "~/modules/button";
 import { Modal } from "~/modules/modal";
 import { OrderCard } from "~/modules/order-card";
 import { ProductSwimlane } from "~/modules/product-swimlane";
+import { Text } from "~/modules/text";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
@@ -45,11 +46,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
 
   const customer = data?.customer;
 
-  const heading = customer
-    ? customer.firstName
-      ? `Welcome, ${customer.firstName}.`
-      : "Welcome to your account."
-    : "Account Details";
+  const heading = customer ? "My Account" : "Account Details";
 
   return defer(
     {
@@ -104,18 +101,23 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
   const addresses = flattenConnection(customer.addresses);
 
   return (
-    <>
-      <PageHeader heading={heading}>
+    <div className="max-w-5xl px-4 mx-auto py-10 space-y-10">
+      <div className="space-y-8">
+        <h2 className="h4">{heading}</h2>
         <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
-          <button type="submit" className="text-body/50">
-            Sign out
+          <button
+            type="submit"
+            className="text-body/50 group flex gap-2 items-center"
+          >
+            <IconSignOut className="w-4 h-4" />
+            <span className="group-hover:underline">Sign out</span>
           </button>
         </Form>
-      </PageHeader>
+      </div>
       {orders && <AccountOrderHistory orders={orders} />}
       <AccountDetails customer={customer} />
       <AccountAddressBook addresses={addresses} customer={customer} />
-      {!orders.length && (
+      {/* {!orders.length && (
         <Suspense>
           <Await
             resolve={featuredDataPromise}
@@ -123,13 +125,13 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
           >
             {(data) => (
               <>
-                <ProductSwimlane products={data.featuredProducts} />
+                <ProductSwimlane products={data.featuredProducts}  clasName="p-0"/>
               </>
             )}
           </Await>
         </Suspense>
-      )}
-    </>
+      )} */}
+    </div>
   );
 }
 
@@ -138,12 +140,11 @@ type OrderCardsProps = {
 };
 
 function AccountOrderHistory({ orders }: OrderCardsProps) {
+  console.log("🚀 ~ AccountOrderHistory ~ orders:", orders);
   return (
-    <div className="mt-6">
-      <div className="grid w-full gap-4 p-4 py-6 md:gap-8 md:p-8 lg:p-12">
-        <h2 className="font-bold text-lead">Order History</h2>
-        {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />}
-      </div>
+    <div className="space-y-4">
+      <div className="font-bold">Orders</div>
+      {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />}
     </div>
   );
 }
@@ -169,7 +170,7 @@ function EmptyOrders() {
 
 function Orders({ orders }: OrderCardsProps) {
   return (
-    <ul className="grid grid-flow-row grid-cols-1 gap-2 gap-y-6 md:gap-4 lg:gap-6 false sm:grid-cols-3">
+    <ul className="grid grid-flow-row grid-cols-1 gap-5 false sm:grid-cols-2">
       {orders.map((order) => (
         <OrderCard order={order} key={order.id} />
       ))}

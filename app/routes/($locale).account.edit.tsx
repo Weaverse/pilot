@@ -10,9 +10,9 @@ import type {
 } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
+import Button from "~/components/button";
 import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/customer-update-mutation";
 import { getInputStyleClasses } from "~/lib/utils";
-import { Button } from "~/modules/button";
 import { Text } from "~/modules/text";
 import { doLogout } from "./($locale).account_.logout";
 
@@ -106,13 +106,11 @@ export default function AccountDetailsEdit() {
 
   return (
     <>
-      <Text className="mt-4 mb-6" as="h3" size="lead">
-        Update your profile
-      </Text>
+      <div className="mt-4 mb-6 text-xl">Edit account</div>
       <Form method="post">
         {actionData?.formError && (
           <div className="flex items-center justify-center mb-6 bg-red-100 rounded">
-            <p className="m-4 text-sm text-red-900">{actionData.formError}</p>
+            <p className="m-4 text-red-900">{actionData.formError}</p>
           </div>
         )}
         <div className="mt-3">
@@ -139,20 +137,17 @@ export default function AccountDetailsEdit() {
             defaultValue={customer.lastName ?? ""}
           />
         </div>
-        <div className="mt-6">
+        <div className="mt-6 flex gap-3 items-center justify-end">
+          <Button link=".." className="mb-2 px-4" variant="secondary">
+            Cancel
+          </Button>
           <Button
-            className="text-sm mb-2"
-            variant="primary"
-            width="full"
+            className="mb-2"
             type="submit"
+            variant="primary"
             disabled={state !== "idle"}
           >
             {state !== "idle" ? "Saving" : "Save"}
-          </Button>
-        </div>
-        <div className="mb-4">
-          <Button to=".." className="text-sm" variant="secondary" width="full">
-            Cancel
           </Button>
         </div>
       </Form>

@@ -9,14 +9,13 @@ import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
+import Button from "~/components/button";
 import {
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
   UPDATE_ADDRESS_MUTATION,
 } from "~/graphql/customer-account/customer-address-mutations";
 import { getInputStyleClasses } from "~/lib/utils";
-import { Button } from "~/modules/button";
-import { Text } from "~/modules/text";
 import type { AccountOutletContext } from "./($locale).account.edit";
 import { doLogout } from "./($locale).account_.logout";
 
@@ -175,14 +174,14 @@ export default function EditAddress() {
    */
   const normalizedAddress = decodeURIComponent(addressId ?? "").split("?")[0];
   const address = addresses.find((address) =>
-    address.id!.startsWith(normalizedAddress),
+    address.id?.startsWith(normalizedAddress),
   );
 
   return (
     <>
-      <Text className="mt-4 mb-6" as="h3" size="lead">
-        {isNewAddress ? "Add address" : "Edit address"}
-      </Text>
+      <div className="mt-4 mb-6 text-xl">
+        {isNewAddress ? "Add new address" : "Edit address"}
+      </div>
       <div className="max-w-lg">
         <Form method="post">
           <input
@@ -192,7 +191,7 @@ export default function EditAddress() {
           />
           {actionData?.formError && (
             <div className="flex items-center justify-center mb-6 bg-red-100 rounded">
-              <p className="m-4 text-sm text-red-900">{actionData.formError}</p>
+              <p className="m-4 text-red-900">{actionData.formError}</p>
             </div>
           )}
           <div className="mt-3">
@@ -331,29 +330,23 @@ export default function EditAddress() {
               className="border-gray-500 rounded-sm cursor-pointer border-1"
             />
             <label
-              className="inline-block ml-2 text-sm cursor-pointer"
+              className="inline-block ml-2 cursor-pointer"
               htmlFor="defaultAddress"
             >
               Set as default address
             </label>
           </div>
-          <div className="mt-8">
+          <div className="mt-6 flex gap-3 items-center justify-end">
+            <Button link=".." className="mb-2 px-4" variant="secondary">
+              Cancel
+            </Button>
             <Button
-              className="w-full rounded focus:shadow-outline"
+              className="mb-2"
               type="submit"
               variant="primary"
               disabled={state !== "idle"}
             >
               {state !== "idle" ? "Saving" : "Save"}
-            </Button>
-          </div>
-          <div>
-            <Button
-              to=".."
-              className="w-full mt-2 rounded focus:shadow-outline"
-              variant="secondary"
-            >
-              Cancel
             </Button>
           </div>
         </Form>
