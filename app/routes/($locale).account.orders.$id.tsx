@@ -4,12 +4,11 @@ import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-t
 import { type LoaderFunctionArgs, json, redirect } from "@shopify/remix-oxygen";
 import clsx from "clsx";
 import type { OrderFragment } from "customer-accountapi.generated";
-import invariant from "tiny-invariant";
 import { IconTag } from "~/components/icons";
 import { Link } from "~/components/link";
 import { CUSTOMER_ORDER_QUERY } from "~/graphql/customer-account/customer-order-query";
 import { statusMessage } from "~/lib/utils";
-import { Heading, PageHeader, Text } from "~/modules/text";
+import { Text } from "~/modules/text";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Order ${data?.order?.name}` }];
@@ -30,7 +29,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
 
     const { data, errors } = await context.customerAccount.query(
       CUSTOMER_ORDER_QUERY,
-      { variables: { orderId } },
+      { variables: { orderId } }
     );
 
     if (errors?.length || !data?.order?.lineItems) {
@@ -85,7 +84,7 @@ export default function OrderRoute() {
       (acc: number, curr) => {
         return (acc += Number.parseFloat(curr.allocatedAmount.amount));
       },
-      0,
+      0
     );
     totalDiscount += itemDiscount;
   });
@@ -137,7 +136,7 @@ export default function OrderRoute() {
                         x{lineItem.quantity}
                       </dd>
                       <dt className="sr-only">Discount</dt>
-                      <dd className="truncate flex gap-2">
+                      <dd className="truncate flex gap-2 flex-wrap">
                         {lineItem.discountAllocations.map((discount, index) => {
                           const discountApp =
                             discount.discountApplication as any;
@@ -180,12 +179,6 @@ export default function OrderRoute() {
                   </span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span>Saved</span>
-                  <span>
-                    <Money data={totalDiscountMoney} />
-                  </span>
-                </div>
-                <div className="flex justify-between gap-4">
                   <span>Tax</span>
                   <span>
                     <Money data={order.totalTax!} />
@@ -202,6 +195,17 @@ export default function OrderRoute() {
                   <span className="font-bold">Total</span>
                   <span className="text-xl">
                     <Money data={order.totalPrice!} />
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <div className="flex gap-1 items-center">
+                    <IconTag className="w-4 h-4" />
+                    <span className="uppercase font-bold text-sm">
+                      Total savings
+                    </span>
+                  </div>
+                  <span>
+                    <Money data={totalDiscountMoney} />
                   </span>
                 </div>
               </div>
@@ -231,7 +235,7 @@ export default function OrderRoute() {
                 <div
                   className={clsx(
                     `mt-3 px-2.5 py-1 text-sm inline-block w-auto`,
-                    "border text-[#696662] border-[#696662]",
+                    "border text-[#696662] border-[#696662]"
                   )}
                 >
                   <Text size="fine">{statusMessage(fulfillmentStatus!)}</Text>
