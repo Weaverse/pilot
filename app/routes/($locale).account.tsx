@@ -27,13 +27,13 @@ import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
   getFeaturedData,
-} from "./($locale).featured-products";
+} from "./($locale).api.featured-items";
 
 export const headers = routeHeaders;
 
 export async function loader({ request, context, params }: LoaderFunctionArgs) {
   const { data, errors } = await context.customerAccount.query(
-    CUSTOMER_DETAILS_QUERY,
+    CUSTOMER_DETAILS_QUERY
   );
 
   /**
@@ -61,7 +61,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       headers: {
         "Cache-Control": CACHE_NONE,
       },
-    },
+    }
   );
 }
 
