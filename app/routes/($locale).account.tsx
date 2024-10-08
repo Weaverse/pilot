@@ -19,7 +19,6 @@ import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-deta
 import { usePrefixPathWithLocale } from "~/lib/utils";
 import { AccountAddressBook } from "~/modules/account-address-book";
 import { AccountDetails } from "~/modules/account-details";
-import { Button } from "~/modules/button";
 import { Modal } from "~/modules/modal";
 import { OrderCard } from "~/modules/order-card";
 import { ProductSwimlane } from "~/modules/product-swimlane";
@@ -29,12 +28,13 @@ import {
   type FeaturedData,
   getFeaturedData,
 } from "./($locale).featured-products";
+import Button from "~/components/button";
 
 export const headers = routeHeaders;
 
 export async function loader({ request, context, params }: LoaderFunctionArgs) {
   const { data, errors } = await context.customerAccount.query(
-    CUSTOMER_DETAILS_QUERY,
+    CUSTOMER_DETAILS_QUERY
   );
 
   /**
@@ -58,7 +58,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       headers: {
         "Cache-Control": CACHE_NONE,
       },
-    },
+    }
   );
 }
 
@@ -117,7 +117,7 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
       {orders && <AccountOrderHistory orders={orders} />}
       <AccountDetails customer={customer} />
       <AccountAddressBook addresses={addresses} customer={customer} />
-      {/* {!orders.length && (
+      {!orders.length && (
         <Suspense>
           <Await
             resolve={featuredDataPromise}
@@ -125,12 +125,12 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
           >
             {(data) => (
               <>
-                <ProductSwimlane products={data.featuredProducts}  clasName="p-0"/>
+                <ProductSwimlane products={data.featuredProducts} />
               </>
             )}
           </Await>
         </Suspense>
-      )} */}
+      )}
     </div>
   );
 }
@@ -143,7 +143,8 @@ function AccountOrderHistory({ orders }: OrderCardsProps) {
   return (
     <div className="space-y-4">
       <div className="font-bold">Orders</div>
-      {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />}
+      {/* {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />} */}
+      <EmptyOrders />
     </div>
   );
 }
@@ -157,8 +158,7 @@ function EmptyOrders() {
       <div className="w-48">
         <Button
           className="w-full mt-2 text-sm"
-          variant="secondary"
-          to={usePrefixPathWithLocale("/")}
+          link={usePrefixPathWithLocale("/")}
         >
           Start Shopping
         </Button>

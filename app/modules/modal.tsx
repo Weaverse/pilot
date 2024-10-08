@@ -1,7 +1,7 @@
 import { useEffect } from "react";
+import Button from "~/components/button";
 import { IconX } from "~/components/icons";
 import { Link } from "~/components/link";
-import { Button } from "~/modules/button";
 
 export function Modal({
   children,
