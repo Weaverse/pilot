@@ -29,19 +29,6 @@ export let HOMEPAGE_SEO_QUERY = `#graphql
   ${COLLECTION_CONTENT_FRAGMENT}
 ` as const;
 
-// @see: https://shopify.dev/api/storefront/current/queries/products
-export let HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
-  query homepageFeaturedProducts($country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    products(first: 8) {
-      nodes {
-        ...ProductCard
-      }
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-`;
-
 export let PRODUCT_INFO_QUERY = `#graphql
   query ProductInfo(
     $country: CountryCode

@@ -27,7 +27,7 @@ import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
   getFeaturedData,
-} from "./($locale).featured-products";
+} from "./($locale).api.featured-items";
 import Button from "~/components/button";
 
 export const headers = routeHeaders;

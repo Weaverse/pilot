@@ -19,7 +19,7 @@ import { ProductSwimlane } from "~/modules/product-swimlane";
 import {
   type FeaturedData,
   getFeaturedData,
-} from "./($locale).featured-products";
+} from "./($locale).api.featured-items";
 
 export async function loader({
   request,
@@ -182,7 +182,7 @@ function NoResults({
 }
 
 export function getNoResultRecommendations(
-  storefront: LoaderFunctionArgs["context"]["storefront"],
+  storefront: LoaderFunctionArgs["context"]["storefront"]
 ) {
   return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }

@@ -1,12 +1,12 @@
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import type { FeaturedData } from "~/routes/($locale).featured-products";
+import type { FeaturedData } from "~/routes/($locale).api.featured-items";
 import { ProductSwimlane } from "./product-swimlane";
 
-export function FeaturedSection() {
-  const { load, data } = useFetcher<FeaturedData>();
-  const path = usePrefixPathWithLocale("/featured-products");
+export function FeaturedItemsSection() {
+  let { load, data } = useFetcher<FeaturedData>();
+  let path = usePrefixPathWithLocale("/api/featured-items");
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -15,7 +15,7 @@ export function FeaturedSection() {
 
   if (!data) return null;
 
-  const { featuredProducts } = data;
+  let { featuredProducts } = data;
 
   return <ProductSwimlane products={featuredProducts} />;
 }

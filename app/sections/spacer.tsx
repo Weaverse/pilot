@@ -29,8 +29,8 @@ let Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
       style={
         {
           backgroundColor,
-          "--mobile-height": mobileHeight + "px",
-          "--desktop-height": desktopHeight + "px",
+          "--mobile-height": `${mobileHeight}px`,
+          "--desktop-height": `${desktopHeight}px`,
           "--separator-color": separatorColor,
         } as React.CSSProperties
       }

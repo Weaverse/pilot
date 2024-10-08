@@ -31,7 +31,6 @@ export function Header({
   } = useDrawer();
 
   let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
-  console.log("addToCartFetchers", addToCartFetchers);
   // toggle cart drawer when adding to cart
   useEffect(() => {
     if (isCartOpen || !addToCartFetchers.length) return;

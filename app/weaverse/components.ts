@@ -19,6 +19,7 @@ import * as CountDownTimer from "~/sections/countdown/timer";
 import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedCollectionItems from "~/sections/featured-collections/collection-items";
 import * as FeaturedProducts from "~/sections/featured-products";
+import * as FeaturedProductItems from "~/sections/featured-products/product-items";
 import * as HeroImage from "~/sections/hero-image";
 import * as HeroVideo from "~/sections/hero-video";
 import * as Hotspots from "~/sections/hotspots";
@@ -94,6 +95,7 @@ export let components: HydrogenComponent[] = [
   BlogPost,
   AllProducts,
   FeaturedProducts,
+  FeaturedProductItems,
   Testimonial,
   TestimonialItems,
   TestimonialItem,
