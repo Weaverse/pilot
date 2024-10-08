@@ -1,7 +1,11 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { Analytics, getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
-import { defer } from "@shopify/remix-oxygen";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaArgs,
+} from "@shopify/remix-oxygen";
+import { defer, json } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import invariant from "tiny-invariant";
@@ -15,7 +19,7 @@ import {
   RECOMMENDED_PRODUCTS_QUERY,
   VARIANTS_QUERY,
 } from "~/data/queries";
-import { getJudgemeReviews } from "~/lib/judgeme";
+import { createJudgemeReview, getJudgemeReviews } from "~/lib/judgeme";
 import { seoPayload } from "~/lib/seo.server";
 import type { Storefront } from "~/lib/type";
 import { WeaverseContent } from "~/weaverse";
@@ -36,7 +40,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         country: context.storefront.i18n.country,
         language: context.storefront.i18n.language,
       },
-    },
+    }
   );
 
   if (!product?.id) {
@@ -77,16 +81,13 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   });
 
   let judgeme_API_TOKEN = context.env.JUDGEME_PRIVATE_API_TOKEN;
-  let judgemeReviews = null;
-  if (judgeme_API_TOKEN) {
-    let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
-    judgemeReviews = await getJudgemeReviews(
-      judgeme_API_TOKEN,
-      shop_domain,
-      productHandle,
-      context.weaverse,
-    );
-  }
+  let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
+  let judgemeReviews = await getJudgemeReviews(
+    judgeme_API_TOKEN,
+    shop_domain,
+    productHandle,
+    context.weaverse
+  );
 
   return defer({
     variants,
@@ -101,6 +102,25 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     }),
     judgemeReviews,
   });
+}
+
+export type ProductLoaderType = typeof loader;
+
+export async function action({ request, context }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  let judgeme_API_TOKEN = context.env.JUDGEME_PRIVATE_API_TOKEN;
+  invariant(judgeme_API_TOKEN, "Missing JUDGEME_PRIVATE_API_TOKEN");
+  let response: any = {
+    status: 201,
+  };
+  let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
+  response = await createJudgemeReview(
+    judgeme_API_TOKEN,
+    shop_domain,
+    formData
+  );
+  const { status, ...rest } = response;
+  return json(rest, { status });
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {
@@ -157,13 +177,13 @@ export default function Product() {
 
 async function getRecommendedProducts(
   storefront: Storefront,
-  productId: string,
+  productId: string
 ) {
   let products = await storefront.query<ProductRecommendationsQuery>(
     RECOMMENDED_PRODUCTS_QUERY,
     {
       variables: { productId, count: 12 },
-    },
+    }
   );
 
   invariant(products, "No data returned from Shopify API");
@@ -175,7 +195,7 @@ async function getRecommendedProducts(
     });
 
   let originalProduct = mergedProducts.findIndex(
-    (item) => item.id === productId,
+    (item) => item.id === productId
   );
 
   mergedProducts.splice(originalProduct, 1);
