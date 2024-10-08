@@ -1,5 +1,5 @@
 import { Button } from "./button";
-import { FeaturedSection } from "./featured-section";
+import { FeaturedItemsSection } from "./featured-section";
 import { PageHeader, Text } from "./text";
 
 export function NotFound({ type = "page" }: { type?: string }) {
@@ -16,7 +16,7 @@ export function NotFound({ type = "page" }: { type?: string }) {
           Take me to the home page
         </Button>
       </PageHeader>
-      <FeaturedSection />
+      <FeaturedItemsSection />
     </>
   );
 }
