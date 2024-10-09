@@ -5,6 +5,12 @@ export const CUSTOMER_ORDER_QUERY = `#graphql
     currencyCode
   }
   fragment DiscountApplication on DiscountApplication {
+    ... on AutomaticDiscountApplication {
+      title
+    }
+    ... on DiscountCodeApplication {
+      code
+    }
     value {
       __typename
       ... on MoneyV2 {
@@ -20,6 +26,12 @@ export const CUSTOMER_ORDER_QUERY = `#graphql
     title
     quantity
     price {
+      ...OrderMoney
+    }
+    currentTotalPrice {
+      ...OrderMoney
+    }
+    totalPrice {
       ...OrderMoney
     }
     discountAllocations {
@@ -59,6 +71,9 @@ export const CUSTOMER_ORDER_QUERY = `#graphql
       ...OrderMoney
     }
     subtotal {
+      ...OrderMoney
+    }
+    totalShipping {
       ...OrderMoney
     }
     shippingAddress {

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { Button } from "~/modules/button";
-import { Link } from "~/components/link";
+import Button from "~/components/button";
 import { IconX } from "~/components/icons";
+import { Link } from "~/components/link";
 
 export function Modal({
   children,
@@ -32,7 +32,7 @@ export function Modal({
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
           <div
-            className="relative flex-1 px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform rounded shadow-xl bg-foreground sm:my-12 sm:flex-none sm:p-6"
+            className="relative flex-1 px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform rounded shadow-xl sm:my-12 sm:flex-none sm:p-6 max-w-[446px] w-screen bg-background"
             role="button"
             onClick={(e) => {
               e.stopPropagation();
