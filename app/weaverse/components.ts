@@ -19,6 +19,7 @@ import * as CountDownTimer from "~/sections/countdown/timer";
 import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedCollectionItems from "~/sections/featured-collections/collection-items";
 import * as FeaturedProducts from "~/sections/featured-products";
+import * as FeaturedProductItems from "~/sections/featured-products/product-items";
 import * as HeroImage from "~/sections/hero-image";
 import * as HeroVideo from "~/sections/hero-video";
 import * as Hotspots from "~/sections/hotspots";
@@ -51,6 +52,11 @@ import * as TestimonialItem from "~/sections/testimonials/item";
 import * as TestimonialItems from "~/sections/testimonials/items";
 import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
+import * as JudgemeReview from "~/sections/judgeme-reviews";
+import * as JudgemeReviewForm from "~/sections/judgeme-reviews/review-form";
+import * as JudgemeReviewList from "~/sections/judgeme-reviews/review-list";
+
+
 
 export let components: HydrogenComponent[] = [
   SubHeading,
@@ -89,6 +95,7 @@ export let components: HydrogenComponent[] = [
   BlogPost,
   AllProducts,
   FeaturedProducts,
+  FeaturedProductItems,
   Testimonial,
   TestimonialItems,
   TestimonialItem,
@@ -102,6 +109,9 @@ export let components: HydrogenComponent[] = [
   CollectionList,
   SingleProduct,
   Judgeme,
+  JudgemeReview,
+  JudgemeReviewForm,
+  JudgemeReviewList,
   OurTeam,
   OurTeamMembers,
   SlideShow,

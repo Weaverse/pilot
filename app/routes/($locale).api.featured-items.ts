@@ -1,6 +1,5 @@
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-
 import {
   FEATURED_COLLECTION_FRAGMENT,
   PRODUCT_CARD_FRAGMENT,
@@ -12,7 +11,7 @@ export async function loader({ context: { storefront } }: LoaderFunctionArgs) {
 
 export async function getFeaturedData(
   storefront: LoaderFunctionArgs["context"]["storefront"],
-  variables: { pageBy?: number } = {},
+  variables: { pageBy?: number } = {}
 ) {
   const data = await storefront.query(FEATURED_ITEMS_QUERY, {
     variables: {

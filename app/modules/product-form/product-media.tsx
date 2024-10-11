@@ -1,7 +1,7 @@
 import { Image } from "@shopify/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { MediaFragment } from "storefrontapi.generated";
 import { FreeMode, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
@@ -44,7 +44,24 @@ export function ProductMedia(props: ProductMediaProps) {
   } = props;
   let media = _media.filter((med) => med.__typename === "MediaImage");
   let [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(
+    null
+  );
   let [activeIndex, setActiveIndex] = useState(0);
+  
+  useEffect(() => {
+    if (swiperInstance && thumbsSwiper) {
+      if (swiperInstance.thumbs) {
+        swiperInstance.thumbs.swiper = thumbsSwiper;
+        swiperInstance.thumbs.init();
+      }
+      swiperInstance.on("slideChange", () => {
+        const realIndex = swiperInstance.realIndex;
+        setActiveIndex(realIndex);
+        thumbsSwiper.slideTo(realIndex);
+      });
+    }
+  }, [swiperInstance, thumbsSwiper]);
 
   if (mediaLayout === "grid") {
     return (
@@ -107,6 +124,7 @@ export function ProductMedia(props: ProductMediaProps) {
         })}
       </Swiper>
       <Swiper
+        onSwiper={setSwiperInstance}
         modules={[FreeMode, Thumbs, Pagination]}
         pagination={{ type: "fraction" }}
         spaceBetween={10}
