@@ -1,19 +1,15 @@
 import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { CollectionsQuery } from "storefrontapi.generated";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { getImageLoadingPriority } from "~/lib/const";
-import { PageHeader, Section } from "~/modules/text";
 import { Button } from "~/modules/button";
 import { CollectionCard } from "./collection-card";
-import { Grid } from "~/modules/grid";
 
-interface CollectionListProps extends HydrogenComponentProps {
+interface CollectionListProps extends SectionProps {
   heading: string;
   prevButtonText: string;
   nextButtonText: string;
@@ -26,42 +22,37 @@ let CollectionList = forwardRef<HTMLElement, CollectionListProps>(
     let { heading, prevButtonText, nextButtonText, imageAspectRatio, ...rest } =
       props;
     return (
-      <section ref={ref} {...rest}>
-        <PageHeader heading={heading} />
-        <Section as="div">
-          <Pagination connection={collections}>
-            {({ nodes, isLoading, PreviousLink, NextLink }) => (
-              <>
-                <div className="flex items-center justify-center mb-6">
-                  <Button as={PreviousLink} variant="secondary" width="full">
-                    {isLoading ? "Loading..." : prevButtonText}
-                  </Button>
-                </div>
-                <Grid
-                  items={nodes.length === 3 ? 3 : 2}
-                  data-test="collection-grid"
-                >
-                  {nodes.map((collection, i) => (
-                    <CollectionCard
-                      key={collection.id}
-                      collection={collection as Collection}
-                      imageAspectRatio={imageAspectRatio}
-                      loading={getImageLoadingPriority(i, 2)}
-                    />
-                  ))}
-                </Grid>
-                <div className="flex items-center justify-center mt-6">
-                  <Button as={NextLink} variant="secondary" width="full">
-                    {isLoading ? "Loading..." : nextButtonText}
-                  </Button>
-                </div>
-              </>
-            )}
-          </Pagination>
-        </Section>
-      </section>
+      <Section ref={ref} {...rest}>
+        <h6>{heading}</h6>
+        <Pagination connection={collections}>
+          {({ nodes, isLoading, PreviousLink, NextLink }) => (
+            <>
+              <div className="flex items-center justify-center mb-6">
+                <Button as={PreviousLink} variant="secondary" width="full">
+                  {isLoading ? "Loading..." : prevButtonText}
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-8 lg:gap-y-12">
+                {nodes.map((collection, i) => (
+                  <CollectionCard
+                    key={collection.id}
+                    collection={collection as Collection}
+                    imageAspectRatio={imageAspectRatio}
+                    loading={getImageLoadingPriority(i, 2)}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center justify-center mt-6">
+                <Button as={NextLink} variant="secondary" width="full">
+                  {isLoading ? "Loading..." : nextButtonText}
+                </Button>
+              </div>
+            </>
+          )}
+        </Pagination>
+      </Section>
     );
-  },
+  }
 );
 
 export default CollectionList;
@@ -74,6 +65,7 @@ export let schema: HydrogenComponentSchema = {
     pages: ["COLLECTION_LIST"],
   },
   inspector: [
+    { group: "Layout", inputs: layoutInputs },
     {
       group: "Collection list",
       inputs: [

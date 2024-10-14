@@ -3,24 +3,23 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
-
 import { routeHeaders } from "~/data/cache";
 import { COLLECTIONS_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";
 import { seoPayload } from "~/lib/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
-export const headers = routeHeaders;
+export let headers = routeHeaders;
 
-export const loader = async (args: RouteLoaderArgs) => {
+export let loader = async (args: RouteLoaderArgs) => {
   let {
     request,
     context: { storefront, weaverse },
   } = args;
-  const variables = getPaginationVariables(request, {
+  let variables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
-  const { collections } = await storefront.query(COLLECTIONS_QUERY, {
+  let { collections } = await storefront.query(COLLECTIONS_QUERY, {
     variables: {
       ...variables,
       country: storefront.i18n.country,
@@ -28,7 +27,7 @@ export const loader = async (args: RouteLoaderArgs) => {
     },
   });
 
-  const seo = seoPayload.listCollections({
+  let seo = seoPayload.listCollections({
     collections,
     url: request.url,
   });
@@ -42,8 +41,8 @@ export const loader = async (args: RouteLoaderArgs) => {
   });
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+export let meta: MetaFunction<typeof loader> = ({ data }) => {
+  return getSeoMeta(data?.seo as SeoConfig);
 };
 
 export default function Collections() {
