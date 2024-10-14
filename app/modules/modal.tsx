@@ -20,6 +20,7 @@ export function Modal({
       document.body.classList.remove("overflow-hidden");
     };
   }, []);
+
   return (
     <div
       className="relative z-50"

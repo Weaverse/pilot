@@ -23,7 +23,7 @@ let variants = cva(
         mix: "2xl:grid-cols-2",
       },
     },
-  },
+  }
 );
 
 export interface ProductMediaProps extends VariantProps<typeof variants> {
@@ -38,6 +38,7 @@ export function ProductMedia(props: ProductMediaProps) {
   let {
     mediaLayout,
     gridSize,
+    showThumbnails,
     imageAspectRatio,
     selectedVariant,
     media: _media,
@@ -61,7 +62,7 @@ export function ProductMedia(props: ProductMediaProps) {
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
                 "object-cover opacity-0 animate-fade-in w-[80vw] max-w-none lg:w-full lg:h-full",
-                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
+                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2"
               )}
               sizes="auto"
             />
@@ -90,7 +91,7 @@ export function ProductMedia(props: ProductMediaProps) {
               key={med.id}
               className={clsx(
                 "!h-[100px] p-1 border transition-colors aspect-[3/4] cursor-pointer",
-                activeIndex === i ? "border-black" : "border-transparent",
+                activeIndex === i ? "border-black" : "border-transparent"
               )}
             >
               <Image
