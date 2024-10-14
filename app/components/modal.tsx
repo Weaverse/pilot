@@ -60,7 +60,11 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
   ({ asChild, children, ...rest }, ref) => {
     return (
       <Close asChild {...rest} ref={ref}>
-        <X className="absolute right-3 top-3 cursor-pointer" size={20} />
+        {asChild ? (
+          children
+        ) : (
+          <X className="absolute right-3 top-3 cursor-pointer" size={20} />
+        )}
       </Close>
     );
   }
