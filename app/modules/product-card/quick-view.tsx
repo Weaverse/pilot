@@ -75,7 +75,7 @@ export function QuickView({ data }: { data: QuickViewData }) {
             <div className="flex flex-col gap-2">
               <h5>{title}</h5>
             </div>
-            <VariantPrices variant={selectedVariant} />
+            <VariantPrices variant={selectedVariant as ProductVariant} />
             <ProductVariants
               product={product}
               options={product?.options}
@@ -91,6 +91,7 @@ export function QuickView({ data }: { data: QuickViewData }) {
             />
           </div>
           <Quantity value={quantity} onChange={setQuantity} />
+          {/* TODO: fix quick-shop modal & cart drawer overlap each other */}
           <AddToCartButton
             disabled={!selectedVariant?.availableForSale}
             lines={[
@@ -146,9 +147,19 @@ export function QuickViewTrigger({ productHandle }: { productHandle: string }) {
           Quick shop
         </Button>
       </ModalTrigger>
-      <ModalContent>
+      <ModalContent className="min-h-[700px]">
         {state === "loading" ? (
-          <Skeleton className="h-full w-full" />
+          <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2 min-h-[inherit]">
+            <Skeleton className="min-h-[inherit]" />
+            <div className="space-y-3">
+              <Skeleton className="w-2/3 h-12" />
+              <Skeleton className="w-1/3 h-6" />
+              <Skeleton className="w-1/2 h-10" />
+              <Skeleton className="w-full h-6" />
+              <Skeleton className="w-full h-6" />
+              <Skeleton className="w-full h-6" />
+            </div>
+          </div>
         ) : (
           <QuickView data={data as QuickViewData} />
         )}
