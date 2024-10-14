@@ -1,20 +1,18 @@
 import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
-import { PageHeader, Section, Text } from "~/modules/text";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Button } from "~/modules/button";
 import { DrawerFilter } from "~/modules/drawer-filter";
 import type { AppliedFilter } from "~/modules/sort-filter";
+import { PageHeader, Text } from "~/modules/text";
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 
-interface CollectionFiltersProps extends HydrogenComponentProps {
+interface CollectionFiltersProps extends SectionProps {
   showCollectionDescription: boolean;
   loadPrevText: string;
   loadMoreText: string;
@@ -40,18 +38,13 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
 
     if (collection?.products && collections) {
       return (
-        <section ref={sectionRef} {...rest}>
-          <PageHeader heading={collection.title}>
-            {showCollectionDescription && collection?.description && (
-              <div className="flex items-baseline justify-between w-full">
-                <div>
-                  <Text format width="narrow" as="p" className="inline-block">
-                    {collection.description}
-                  </Text>
-                </div>
-              </div>
-            )}
-          </PageHeader>
+        <Section ref={sectionRef} {...rest}>
+          <h6>{collection.title}</h6>
+          {showCollectionDescription && collection?.description && (
+            <div className="flex items-baseline justify-between w-full">
+              {collection.description}
+            </div>
+          )}
           <DrawerFilter
             numberInRow={numberInRow}
             onLayoutChange={onLayoutChange}
@@ -60,50 +53,48 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             appliedFilters={appliedFilters}
             collections={collections}
           />
-          <Section as="div">
-            <Pagination connection={collection.products}>
-              {({
-                nodes,
-                isLoading,
-                PreviousLink,
-                NextLink,
-                nextPageUrl,
-                hasNextPage,
-                state,
-              }) => (
-                <>
-                  <div className="flex items-center justify-center mb-6 empty:hidden">
-                    <Button as={PreviousLink} variant="secondary" width="full">
-                      {isLoading ? "Loading..." : loadPrevText}
-                    </Button>
-                  </div>
-                  <ProductsLoadedOnScroll
-                    numberInRow={numberInRow}
-                    nodes={nodes}
-                    inView={inView}
-                    nextPageUrl={nextPageUrl}
-                    hasNextPage={hasNextPage}
-                    state={state}
-                  />
-                  <div className="flex items-center justify-center mt-6">
-                    <Button
-                      ref={ref}
-                      as={NextLink}
-                      variant="secondary"
-                      width="full"
-                    >
-                      {isLoading ? "Loading..." : loadMoreText}
-                    </Button>
-                  </div>
-                </>
-              )}
-            </Pagination>
-          </Section>
-        </section>
+          <Pagination connection={collection.products}>
+            {({
+              nodes,
+              isLoading,
+              PreviousLink,
+              NextLink,
+              nextPageUrl,
+              hasNextPage,
+              state,
+            }) => (
+              <>
+                <div className="flex items-center justify-center mb-6 empty:hidden">
+                  <Button as={PreviousLink} variant="secondary" width="full">
+                    {isLoading ? "Loading..." : loadPrevText}
+                  </Button>
+                </div>
+                <ProductsLoadedOnScroll
+                  numberInRow={numberInRow}
+                  nodes={nodes}
+                  inView={inView}
+                  nextPageUrl={nextPageUrl}
+                  hasNextPage={hasNextPage}
+                  state={state}
+                />
+                <div className="flex items-center justify-center mt-6">
+                  <Button
+                    ref={ref}
+                    as={NextLink}
+                    variant="secondary"
+                    width="full"
+                  >
+                    {isLoading ? "Loading..." : loadMoreText}
+                  </Button>
+                </div>
+              </>
+            )}
+          </Pagination>
+        </Section>
       );
     }
-    return <section ref={sectionRef} {...rest} />;
-  },
+    return <Section ref={sectionRef} {...rest} />;
+  }
 );
 
 export default CollectionFilters;
@@ -116,6 +107,7 @@ export let schema: HydrogenComponentSchema = {
     pages: ["COLLECTION"],
   },
   inspector: [
+    { group: "Layout", inputs: layoutInputs },
     {
       group: "Collection filters",
       inputs: [
