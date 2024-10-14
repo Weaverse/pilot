@@ -36,7 +36,7 @@ export function Marquee({
       }
     }
   }, []);
-  const maxAnimationTime = 100000; // 100 seconds - slowest speed 0% - 0 speed
+  const maxAnimationTime = 400000; // 100 seconds - slowest speed 0% - 0 speed
   const minAnimationTime = 1000; // 1 second - fastest speed 100% - 100 speed
   const animationTime =
     ((100 - speed) * (maxAnimationTime - minAnimationTime)) / 100 +
