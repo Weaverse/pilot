@@ -1,13 +1,14 @@
 import { type MetaFunction, useLoaderData } from "@remix-run/react";
 import { Image, Money, flattenConnection } from "@shopify/hydrogen";
+import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import { type LoaderFunctionArgs, json, redirect } from "@shopify/remix-oxygen";
 import clsx from "clsx";
 import type { OrderFragment } from "customer-accountapi.generated";
-import invariant from "tiny-invariant";
+import { IconTag } from "~/components/icons";
 import { Link } from "~/components/link";
 import { CUSTOMER_ORDER_QUERY } from "~/graphql/customer-account/customer-order-query";
 import { statusMessage } from "~/lib/utils";
-import { Heading, PageHeader, Text } from "~/modules/text";
+import { Text } from "~/modules/text";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Order ${data?.order?.name}` }];
@@ -21,14 +22,14 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
   const queryParams = new URL(request.url).searchParams;
   const orderToken = queryParams.get("key");
 
-  invariant(orderToken, "Order token is required");
-
   try {
-    const orderId = `gid://shopify/Order/${params.id}?key=${orderToken}`;
+    const orderId = orderToken
+      ? `gid://shopify/Order/${params.id}?key=${orderToken}`
+      : `gid://shopify/Order/${params.id}`;
 
     const { data, errors } = await context.customerAccount.query(
       CUSTOMER_ORDER_QUERY,
-      { variables: { orderId } },
+      { variables: { orderId } }
     );
 
     if (errors?.length || !data?.order?.lineItems) {
@@ -49,8 +50,11 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
     const discountPercentage =
       firstDiscount?.__typename === "PricingPercentageValue" &&
       firstDiscount?.percentage;
-
-    const fulfillmentStatus = flattenConnection(order.fulfillments)[0].status;
+    const fulfillments = flattenConnection(order.fulfillments);
+    const fulfillmentStatus =
+      fulfillments.length > 0
+        ? fulfillments[0].status
+        : ("OPEN" as FulfillmentStatus);
 
     return json({
       order,
@@ -74,208 +78,149 @@ export default function OrderRoute() {
     discountPercentage,
     fulfillmentStatus,
   } = useLoaderData<typeof loader>();
+  let totalDiscount = 0;
+  lineItems.forEach((lineItem) => {
+    const itemDiscount = lineItem.discountAllocations.reduce(
+      (acc: number, curr) => {
+        return (acc += Number.parseFloat(curr.allocatedAmount.amount));
+      },
+      0
+    );
+    totalDiscount += itemDiscount;
+  });
+  const totalDiscountMoney = {
+    amount: totalDiscount.toString(),
+    currencyCode: order.totalPrice?.currencyCode,
+  };
   return (
-    <div>
-      <PageHeader heading="Order detail">
-        <Link to="/account">
-          <Text color="subtle">Return to Account Overview</Text>
-        </Link>
-      </PageHeader>
-      <div className="w-full p-6 sm:grid-cols-1 md:p-8 lg:p-12 lg:py-6">
+    <div className="max-w-screen-xl mx-auto px-4">
+      <div className="w-full p-4 sm:grid-cols-1 md:p-8 lg:p-12 lg:py-6">
+        <div className="flex flex-col gap-1 mb-8">
+          <div className="h4">Order Detail</div>
+          <Link to="/account">
+            <Text color="subtle">Return to My Account</Text>
+          </Link>
+        </div>
         <div>
-          <Text as="h3" size="lead">
-            Order No. {order.name}
-          </Text>
-          <Text className="mt-2" as="p">
+          <p className="">Order No. {order.name}</p>
+          <p className="mt-2">
             Placed on {new Date(order.processedAt!).toDateString()}
-          </Text>
-          <div className="grid items-start gap-12 sm:grid-cols-1 md:grid-cols-4 md:gap-16 sm:divide-y sm:divide-gray-200">
-            <table className="min-w-full my-8 divide-y divide-gray-300 md:col-span-3">
-              <thead>
-                <tr className="align-baseline ">
-                  <th
-                    scope="col"
-                    className="pb-4 pl-0 pr-3 font-semibold text-left"
-                  >
-                    Product
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-4 pb-4 font-semibold text-right sm:table-cell md:table-cell"
-                  >
-                    Price
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-4 pb-4 font-semibold text-right sm:table-cell md:table-cell"
-                  >
-                    Quantity
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 pb-4 font-semibold text-right"
-                  >
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {lineItems.map((lineItem) => (
-                  <tr key={lineItem.id}>
-                    <td className="w-full py-4 pl-0 pr-3 align-top sm:align-middle max-w-0 sm:w-auto sm:max-w-none">
-                      <div className="flex gap-6">
-                        {lineItem?.image && (
-                          <div className="w-24 card-image aspect-square">
-                            <Image
-                              data={lineItem.image}
-                              width={96}
-                              height={96}
-                            />
-                          </div>
-                        )}
-                        <div className="flex-col justify-center hidden lg:flex">
-                          <Text as="p">{lineItem.title}</Text>
-                          <Text size="fine" className="mt-1" as="p">
-                            {lineItem.variantTitle}
-                          </Text>
-                        </div>
-                        <dl className="grid">
-                          <dt className="sr-only">Product</dt>
-                          <dd className="truncate lg:hidden">
-                            <Heading size="copy" format as="h3">
-                              {lineItem.title}
-                            </Heading>
-                            <Text size="fine" className="mt-1">
-                              {lineItem.variantTitle}
-                            </Text>
-                          </dd>
-                          <dt className="sr-only">Price</dt>
-                          <dd className="truncate sm:hidden">
-                            <Text size="fine" className="mt-4">
-                              <Money data={lineItem.price!} />
-                            </Text>
-                          </dd>
-                          <dt className="sr-only">Quantity</dt>
-                          <dd className="truncate sm:hidden">
-                            <Text className="mt-1" size="fine">
-                              Qty: {lineItem.quantity}
-                            </Text>
-                          </dd>
-                        </dl>
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 mt-6">
+            <div className="space-y-6 col-span-2 md:pr-14">
+              {lineItems.map((lineItem) => {
+                let hasDiscount = false;
+                if (
+                  lineItem.currentTotalPrice?.amount !==
+                  lineItem.totalPrice?.amount
+                ) {
+                  hasDiscount = true;
+                }
+                return (
+                  <div className="flex gap-4" key={lineItem.id}>
+                    {lineItem?.image && (
+                      <div className="w-[120px] aspect-square shrink-0">
+                        <Image data={lineItem.image} width={120} height={120} />
                       </div>
-                    </td>
-                    <td className="hidden px-3 py-4 text-right align-top sm:align-middle sm:table-cell">
-                      <Money data={lineItem.price!} />
-                    </td>
-                    <td className="hidden px-3 py-4 text-right align-top sm:align-middle sm:table-cell">
-                      {lineItem.quantity}
-                    </td>
-                    <td className="px-3 py-4 text-right align-top sm:align-middle sm:table-cell">
-                      <Text>
-                        <Money data={lineItem.totalDiscount!} />
-                      </Text>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
-                {((discountValue && discountValue.amount) ||
-                  discountPercentage) && (
-                  <tr>
-                    <th
-                      scope="row"
-                      colSpan={3}
-                      className="hidden pt-6 pl-6 pr-3 font-normal text-right sm:table-cell md:pl-0"
-                    >
-                      <Text>Discounts</Text>
-                    </th>
-                    <th
-                      scope="row"
-                      className="pt-6 pr-3 font-normal text-left sm:hidden"
-                    >
-                      <Text>Discounts</Text>
-                    </th>
-                    <td className="pt-6 pl-3 pr-4 font-medium text-right text-green-700 md:pr-3">
-                      {discountPercentage ? (
-                        <span className="text-sm">
-                          -{discountPercentage}% OFF
-                        </span>
-                      ) : (
-                        discountValue && <Money data={discountValue!} />
-                      )}
-                    </td>
-                  </tr>
-                )}
-                <tr>
-                  <th
-                    scope="row"
-                    colSpan={3}
-                    className="hidden pt-6 pl-6 pr-3 font-normal text-right sm:table-cell md:pl-0"
-                  >
-                    <Text>Subtotal</Text>
-                  </th>
-                  <th
-                    scope="row"
-                    className="pt-6 pr-3 font-normal text-left sm:hidden"
-                  >
-                    <Text>Subtotal</Text>
-                  </th>
-                  <td className="pt-6 pl-3 pr-4 text-right md:pr-3">
+                    )}
+                    <dl className="flex flex-col">
+                      <dt className="sr-only">Product</dt>
+                      <dd className="truncate">
+                        <div className="">{lineItem.title}</div>
+                        <div className="text-body/50 text-sm">
+                          {lineItem.variantTitle}
+                        </div>
+                      </dd>
+                      <dt className="sr-only">Quantity</dt>
+                      <dd className="truncate mt-1 grow">
+                        x{lineItem.quantity}
+                      </dd>
+                      <dt className="sr-only">Discount</dt>
+                      <dd className="truncate flex gap-2 flex-wrap">
+                        {lineItem.discountAllocations.map((discount, index) => {
+                          const discountApp =
+                            discount.discountApplication as any;
+                          const discountTitle =
+                            discountApp?.title || discountApp?.code;
+                          return (
+                            <div
+                              className="text-body/50 flex items-center gap-1 border border-[#B7B7B7] py-1 px-1.5 rounded-sm text-sm w-fit"
+                              key={index}
+                            >
+                              <IconTag className="w-4 h-4" />
+                              <span>{discountTitle}</span>
+                              <div className="inline-flex">
+                                (<span>-</span>
+                                <Money data={discount.allocatedAmount!} />)
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </dd>
+                      <dt className="sr-only">Current Price</dt>
+                      <dd className="truncate flex gap-2 mt-2">
+                        {hasDiscount && (
+                          <span className="line-through text-body/50">
+                            <Money data={lineItem.totalPrice!} />
+                          </span>
+                        )}
+                        <Money data={lineItem.currentTotalPrice!} />
+                      </dd>
+                    </dl>
+                  </div>
+                );
+              })}
+              <hr className="border-t border-[#B7B7B7]" />
+              <div className="space-y-4 max-w-sm ml-auto">
+                <div className="flex justify-between gap-4 ">
+                  <span className="font-bold">Subtotal</span>
+                  <span>
                     <Money data={order.subtotal!} />
-                  </td>
-                </tr>
-                <tr>
-                  <th
-                    scope="row"
-                    colSpan={3}
-                    className="hidden pt-4 pl-6 pr-3 font-normal text-right sm:table-cell md:pl-0"
-                  >
-                    Tax
-                  </th>
-                  <th
-                    scope="row"
-                    className="pt-4 pr-3 font-normal text-left sm:hidden"
-                  >
-                    <Text>Tax</Text>
-                  </th>
-                  <td className="pt-4 pl-3 pr-4 text-right md:pr-3">
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span>Tax</span>
+                  <span>
                     <Money data={order.totalTax!} />
-                  </td>
-                </tr>
-                <tr>
-                  <th
-                    scope="row"
-                    colSpan={3}
-                    className="hidden pt-4 pl-6 pr-3 font-semibold text-right sm:table-cell md:pl-0"
-                  >
-                    Total
-                  </th>
-                  <th
-                    scope="row"
-                    className="pt-4 pr-3 font-semibold text-left sm:hidden"
-                  >
-                    <Text>Total</Text>
-                  </th>
-                  <td className="pt-4 pl-3 pr-4 font-semibold text-right md:pr-3">
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span>Shipping</span>
+                  <span>
+                    <Money data={order.totalShipping!} />
+                  </span>
+                </div>
+                <hr className="border-t border-[#B7B7B7] pb-2" />
+                <div className="flex justify-between gap-4">
+                  <span className="font-bold">Total</span>
+                  <span className="text-xl">
                     <Money data={order.totalPrice!} />
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-            <div className="sticky border-none top-nav md:my-8">
-              <Heading size="copy" className="font-semibold" as="h3">
-                Shipping Address
-              </Heading>
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <div className="flex gap-1 items-center">
+                    <IconTag className="w-4 h-4" />
+                    <span className="uppercase font-bold text-sm">
+                      Total savings
+                    </span>
+                  </div>
+                  <span>
+                    <Money data={totalDiscountMoney} />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="shrink-0 mt-4 pt-10 md:pt-0 md:m-0 md:border-none">
+              <div className="font-bold">Shipping Address</div>
               {order?.shippingAddress ? (
-                <ul className="mt-6">
+                <ul className="mt-3">
                   <li>
                     <Text>{order.shippingAddress.name}</Text>
                   </li>
                   {order?.shippingAddress?.formatted ? (
                     order.shippingAddress.formatted.map((line: string) => (
                       <li key={line}>
-                        <Text>{line}</Text>
+                        <Text className="text-body/50">{line}</Text>
                       </li>
                     ))
                   ) : (
@@ -285,16 +230,12 @@ export default function OrderRoute() {
               ) : (
                 <p className="mt-3">No shipping address defined</p>
               )}
-              <Heading size="copy" className="mt-8 font-semibold" as="h3">
-                Status
-              </Heading>
+              <div className="font-bold mt-6">Status</div>
               {fulfillmentStatus && (
                 <div
                   className={clsx(
-                    `mt-3 px-3 py-1 text-xs font-medium rounded-full inline-block w-auto`,
-                    fulfillmentStatus === "SUCCESS"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-background/20 text-body/50",
+                    `mt-3 px-2.5 py-1 text-sm inline-block w-auto`,
+                    "border text-[#696662] border-[#696662]"
                   )}
                 >
                   <Text size="fine">{statusMessage(fulfillmentStatus!)}</Text>
