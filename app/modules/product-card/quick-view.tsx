@@ -3,7 +3,11 @@ import { ShopPayButton } from "@shopify/hydrogen";
 import type { ProductVariant } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
-import type { ProductQuery, VariantsQuery } from "storefrontapi.generated";
+import type {
+  ProductQuery,
+  ProductVariantFragmentFragment,
+  VariantsQuery,
+} from "storefrontapi.generated";
 import Button from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
 import { Skeleton } from "~/components/skeleton";
@@ -14,37 +18,26 @@ import { ProductMedia } from "~/modules/product-form/product-media";
 import { Quantity } from "~/modules/product-form/quantity";
 import { ProductVariants } from "~/modules/product-form/variants";
 
-export function QuickView({
-  data,
-}: {
-  data: {
-    product: ProductQuery["product"];
-    variants: VariantsQuery;
-    storeDomain: string;
-  };
-}) {
+interface QuickViewData {
+  product: NonNullable<ProductQuery["product"]>;
+  variants: VariantsQuery;
+  storeDomain: string;
+}
+
+export function QuickView({ data }: { data: QuickViewData }) {
   let themeSettings = useThemeSettings();
-  let swatches = themeSettings?.swatches || {
-    configs: [],
-    swatches: {
-      imageSwatches: [],
-      colorSwatches: [],
-    },
-  };
   let { product, variants: _variants, storeDomain } = data || {};
-
+  let firstVariant = product?.variants?.nodes?.[0];
   let [selectedVariant, setSelectedVariant] = useState(
-    product?.selectedVariant as ProductVariant
+    firstVariant as ProductVariantFragmentFragment
   );
-
-  let variants = _variants?.product?.variants;
   let [quantity, setQuantity] = useState<number>(1);
   let {
     addToCartText,
     soldOutText,
     unavailableText,
     hideUnavailableOptions,
-    showThumbnails,
+    productQuickViewImageAspectRatio,
   } = themeSettings;
   let handleSelectedVariantChange = (variant: any) => {
     setSelectedVariant(variant);
@@ -72,10 +65,10 @@ export function QuickView({
       <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2">
         <ProductMedia
           mediaLayout="slider"
-          // @ts-expect-error
           media={product?.media.nodes}
           selectedVariant={selectedVariant}
           showThumbnails={false}
+          imageAspectRatio={productQuickViewImageAspectRatio}
         />
         <div className="flex flex-col justify-start space-y-5">
           <div className="space-y-4">
@@ -84,16 +77,16 @@ export function QuickView({
             </div>
             <VariantPrices variant={selectedVariant} />
             <ProductVariants
-              // @ts-expect-error
               product={product}
-              // @ts-expect-error
               options={product?.options}
-              // @ts-expect-error
               handle={product?.handle}
               selectedVariant={selectedVariant}
               onSelectedVariantChange={handleSelectedVariantChange}
-              swatches={swatches}
-              variants={variants}
+              variants={
+                _variants.product?.variants as {
+                  nodes: ProductVariantFragmentFragment[];
+                }
+              }
               hideUnavailableOptions={hideUnavailableOptions}
             />
           </div>
@@ -157,7 +150,7 @@ export function QuickViewTrigger({ productHandle }: { productHandle: string }) {
         {state === "loading" ? (
           <Skeleton className="h-full w-full" />
         ) : (
-          <QuickView data={data as ProductData} />
+          <QuickView data={data as QuickViewData} />
         )}
       </ModalContent>
     </Modal>
