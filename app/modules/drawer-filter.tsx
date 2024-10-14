@@ -3,7 +3,11 @@ import {
   DisclosureButton,
   DisclosurePanel,
   Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
 } from "@headlessui/react";
+import { CaretDown, Sliders } from "@phosphor-icons/react";
 import {
   Link,
   useLocation,
@@ -17,22 +21,15 @@ import type {
 import clsx from "clsx";
 import type { SyntheticEvent } from "react";
 import { useState } from "react";
+import Button from "~/components/button";
 import { Checkbox } from "~/components/checkbox";
 import { IconCaretDown, IconCaretRight } from "~/components/icons";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter, SortParam } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink, getSortLink } from "~/lib/filter";
-import { Input } from "./input";
-import { Button } from "./button";
 import { Drawer, useDrawer } from "./drawer";
-import {
-  IconCaret,
-  IconFourGrid,
-  IconOneGrid,
-  IconSliders,
-  IconThreeGrid,
-  IconTwoGrid,
-} from "./icon";
+import { IconFourGrid, IconOneGrid, IconThreeGrid, IconTwoGrid } from "./icon";
+import { Input } from "./input";
 
 type DrawerFilterProps = {
   productNumber?: number;
@@ -54,59 +51,59 @@ export function DrawerFilter({
 }: DrawerFilterProps) {
   const { openDrawer, isOpen, closeDrawer } = useDrawer();
   return (
-    <div className="border-y border-line py-4 ">
-      <div className="gap-4 md:gap-8 px-6 md:px-8 lg:px-12 flex w-full items-center justify-between">
-        <div className="flex flex-1">
-          <div
+    <div className="border-y border-line/30 py-4">
+      <div className="gap-4 md:gap-8 flex w-full items-center justify-between">
+        <div className="flex gap-1 flex-1">
+          <button
+            type="button"
             className={clsx(
               "border cursor-pointer hidden lg:block",
-              numberInRow === 4 && " border-[#88847F]",
+              numberInRow === 4 && " bg-gray-200"
             )}
             onClick={() => onLayoutChange(4)}
-            role="button"
           >
-            <IconFourGrid className="w-12 h-12 text-[#88847F]" />
-          </div>
-          <div
+            <IconFourGrid className="w-10 h-10" />
+          </button>
+          <button
+            type="button"
             className={clsx(
               "border cursor-pointer hidden lg:block",
-              numberInRow === 3 && " border-[#88847F]",
+              numberInRow === 3 && " bg-gray-200"
             )}
             onClick={() => onLayoutChange(3)}
-            role="button"
           >
-            <IconThreeGrid className="w-12 h-12 text-[#88847F]" />
-          </div>
-          <div
+            <IconThreeGrid className="w-10 h-10" />
+          </button>
+          <button
+            type="button"
             className={clsx(
               "border cursor-pointer lg:hidden",
-              numberInRow === 4 && "border-[#88847F]",
+              numberInRow === 4 && "bg-gray-200"
             )}
             onClick={() => onLayoutChange(4)}
-            role="button"
           >
-            <IconTwoGrid className="w-12 h-12 text-[#88847F]" />
-          </div>
-          <div
+            <IconTwoGrid className="w-10 h-10" />
+          </button>
+          <button
+            type="button"
             className={clsx(
               "border cursor-pointer lg:hidden",
-              numberInRow === 3 && "border-[#88847F]",
+              numberInRow === 3 && "bg-gray-200"
             )}
             onClick={() => onLayoutChange(3)}
-            role="button"
           >
-            <IconOneGrid className="w-12 h-12 text-[#88847F]" />
-          </div>
+            <IconOneGrid className="w-10 h-10" />
+          </button>
         </div>
         <span className="flex-1 text-center">{productNumber} Products</span>
         <div className="flex gap-2 flex-1 justify-end">
           <SortMenu showSearchSort={showSearchSort} />
           <Button
             onClick={openDrawer}
-            variant="secondary"
-            className="flex items-center gap-1.5 border"
+            variant="outline"
+            className="flex items-center gap-1.5 border py-2"
           >
-            <IconSliders />
+            <Sliders size={18} />
             <span>Filter</span>
           </Button>
           <Drawer
@@ -116,10 +113,10 @@ export function DrawerFilter({
             heading="Filter"
           >
             <div className="px-5 w-[360px]">
-              {/* @ts-expect-error */}
               <FiltersDrawer
                 filters={filters}
                 appliedFilters={appliedFilters}
+                onLayoutChange={console.log}
               />
             </div>
           </Drawer>
@@ -140,7 +137,7 @@ function ListItemFilter({
   const [params] = useSearchParams();
   const location = useLocation();
   let filter = appliedFilters.find(
-    (filter) => JSON.stringify(filter.filter) === option.input,
+    (filter) => JSON.stringify(filter.filter) === option.input
   );
   let [checked, setChecked] = useState(!!filter);
 
@@ -349,30 +346,31 @@ export default function SortMenu({
 
   return (
     <Menu as="div" className="relative z-10">
-      <Menu.Button className="flex items-center gap-1.5 rounded border px-4 py-3 h-[50px]">
-        <span className="font-medium text-sm">Sort by</span>
-        <IconCaret />
-      </Menu.Button>
-      <Menu.Items
+      <MenuButton className="flex items-center gap-1.5 h-10 border px-4 py-2.5">
+        <span className="font-medium">Sort by</span>
+        <CaretDown />
+      </MenuButton>
+      <MenuItems
         as="nav"
-        className="absolute right-0 top-14 flex h-fit w-56 flex-col gap-2 rounded border bg-background p-5"
+        className="absolute right-0 top-12 flex h-fit w-40 flex-col gap-2 border border-line/75 bg-background p-5"
       >
         {items.map((item) => (
-          <Menu.Item key={item.label}>
+          <MenuItem key={item.label}>
             {() => (
               <Link to={getSortLink(item.key, params, location)}>
                 <p
-                  className={`block text-base ${
+                  className={clsx(
+                    "block text-base hover:underline underline-offset-4",
                     activeItem?.key === item.key ? "font-bold" : "font-normal"
-                  }`}
+                  )}
                 >
                   {item.label}
                 </p>
               </Link>
             )}
-          </Menu.Item>
+          </MenuItem>
         ))}
-      </Menu.Items>
+      </MenuItems>
     </Menu>
   );
 }

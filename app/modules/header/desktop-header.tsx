@@ -46,7 +46,7 @@ export function DesktopHeader({
       }
       className={cn(
         "transition-colors duration-300 ease-in-out",
-        "h-nav hidden lg:flex items-center z-40 justify-between leading-none gap-8",
+        "h-nav hidden lg:flex items-center z-10 justify-between leading-none gap-8",
         "px-3 md:px-10 lg:px-16",
         "text-[var(--color-header-text)] bg-[var(--color-header-bg)]",
         "hover:text-[var(--color-header-text)] hover:bg-[var(--color-header-bg)]",
@@ -58,12 +58,12 @@ export function DesktopHeader({
               !scrolled &&
                 "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
             ]
-          : "sticky top-0",
+          : "sticky top-0"
       )}
     >
       <Logo isTransparent={isTransparent} shopName={shopName} />
       {menu && <DesktopMenu menu={menu} />}
-      <div className="flex items-center gap-1 z-30">
+      <div className="flex items-center gap-1 z-1">
         <SearchToggle
           isOpen={isOpen}
           openDrawer={openDrawer}

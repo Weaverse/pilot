@@ -35,9 +35,7 @@ export function AddToCartButton({
   return (
     <CartForm
       route="/cart"
-      inputs={{
-        lines,
-      }}
+      inputs={{ lines }}
       action={CartForm.ACTIONS.LinesAdd}
     >
       {(fetcher: FetcherWithComponents<any>) => {
@@ -83,7 +81,7 @@ function AddToCartAnalytics({
       try {
         if (cartInputs.inputs.analytics) {
           const dataInForm: unknown = JSON.parse(
-            String(cartInputs.inputs.analytics),
+            String(cartInputs.inputs.analytics)
           );
           Object.assign(cartData, dataInForm);
         }

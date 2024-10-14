@@ -10,13 +10,12 @@ import type {
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
 import {
+  json,
   type LoaderFunctionArgs,
   type MetaArgs,
   redirect,
 } from "@shopify/remix-oxygen";
-import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-
 import { routeHeaders } from "~/data/cache";
 import { COLLECTION_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";
@@ -26,36 +25,33 @@ import type { SortParam } from "~/modules/sort-filter";
 import { FILTER_URL_PREFIX } from "~/modules/sort-filter";
 import { WeaverseContent } from "~/weaverse";
 
-export const headers = routeHeaders;
+export let headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
-  const paginationVariables = getPaginationVariables(request, {
+  let paginationVariables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
-  const { collectionHandle } = params;
-  const locale = context.storefront.i18n;
+  let { collectionHandle } = params;
+  let locale = context.storefront.i18n;
 
   invariant(collectionHandle, "Missing collectionHandle param");
 
-  const searchParams = new URL(request.url).searchParams;
+  let searchParams = new URL(request.url).searchParams;
 
-  const { sortKey, reverse } = getSortValuesFromParam(
-    searchParams.get("sort") as SortParam,
+  let { sortKey, reverse } = getSortValuesFromParam(
+    searchParams.get("sort") as SortParam
   );
-  const filters = [...searchParams.entries()].reduce(
-    (filters, [key, value]) => {
-      if (key.startsWith(FILTER_URL_PREFIX)) {
-        const filterKey = key.substring(FILTER_URL_PREFIX.length);
-        filters.push({
-          [filterKey]: JSON.parse(value),
-        });
-      }
-      return filters;
-    },
-    [] as ProductFilter[],
-  );
+  let filters = [...searchParams.entries()].reduce((filters, [key, value]) => {
+    if (key.startsWith(FILTER_URL_PREFIX)) {
+      let filterKey = key.substring(FILTER_URL_PREFIX.length);
+      filters.push({
+        [filterKey]: JSON.parse(value),
+      });
+    }
+    return filters;
+  }, [] as ProductFilter[]);
 
-  const { collection, collections } = await context.storefront
+  let { collection, collections } = await context.storefront
     .query(COLLECTION_QUERY, {
       variables: {
         ...paginationVariables,
@@ -76,7 +72,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     // @ts-expect-error
     if (paginationVariables.startCursor || paginationVariables.endCursor) {
       // remove the cursor from the url
-      const url = new URL(request.url);
+      let url = new URL(request.url);
       url.searchParams.delete("cursor");
       url.searchParams.delete("direction");
       throw redirect(url.toString());
@@ -84,16 +80,16 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     throw new Response("collection", { status: 404 });
   }
 
-  const seo = seoPayload.collection({ collection, url: request.url });
+  let seo = seoPayload.collection({ collection, url: request.url });
 
-  const allFilterValues = collection.products.filters.flatMap(
-    (filter) => filter.values,
+  let allFilterValues = collection.products.filters.flatMap(
+    (filter) => filter.values
   );
 
-  const appliedFilters = filters
+  let appliedFilters = filters
     .map((filter) => {
-      const foundValue = allFilterValues.find((value) => {
-        const valueInput = JSON.parse(value.input as string) as ProductFilter;
+      let foundValue = allFilterValues.find((value) => {
+        let valueInput = JSON.parse(value.input as string) as ProductFilter;
         // special case for price, the user can enter something freeform (still a number, though)
         // that may not make sense for the locale/currency.
         // Basically just check if the price filter is applied at all.
@@ -114,12 +110,12 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
       if (foundValue.id === "filter.v.price") {
         // Special case for price, we want to show the min and max values as the label.
-        const input = JSON.parse(foundValue.input as string) as ProductFilter;
-        const min = parseAsCurrency(input.price?.min ?? 0, locale);
-        const max = input.price?.max
+        let input = JSON.parse(foundValue.input as string) as ProductFilter;
+        let min = parseAsCurrency(input.price?.min ?? 0, locale);
+        let max = input.price?.max
           ? parseAsCurrency(input.price.max, locale)
           : "";
-        const label = min && max ? `${min} - ${max}` : "Price";
+        let label = min && max ? `${min} - ${max}` : "Price";
 
         return {
           filter,
@@ -145,12 +141,12 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   });
 }
 
-export const meta = ({ matches }: MetaArgs<typeof loader>) => {
+export let meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 
 export default function Collection() {
-  const { collection } = useLoaderData<typeof loader>();
+  let { collection } = useLoaderData<typeof loader>();
   return (
     <>
       <WeaverseContent />

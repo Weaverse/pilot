@@ -21,7 +21,7 @@ export function Skeleton({
       {...props}
       width={width}
       height={height}
-      className={clsx("rounded bg-body/10", className)}
+      className={clsx("rounded animate-pulse bg-body/10", className)}
     />
   );
 }

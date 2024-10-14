@@ -7,6 +7,7 @@
 /* Tokens */
 :root {
   --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
+  --shop-pay-button-border-radius: 0;
   --height-nav: 3rem;
   --screen-height: 100vh;
   --screen-height-dynamic: 100vh;
