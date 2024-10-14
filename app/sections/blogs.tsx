@@ -1,17 +1,13 @@
 import { useLoaderData } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
-import { getImageLoadingPriority } from "~/lib/const";
-import { PageHeader, Section } from "~/modules/text";
 import { Link } from "~/components/link";
-import { Grid } from "~/modules/grid";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { getImageLoadingPriority } from "~/lib/const";
 
-interface BlogsProps extends HydrogenComponentProps {
+interface BlogsProps extends SectionProps {
   layout: "blog" | "default";
   paddingTop: number;
   paddingBottom: number;
@@ -40,36 +36,27 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
 
   if (blog) {
     return (
-      <section ref={ref} {...rest}>
-        <div
-          style={{
-            paddingTop: `${paddingTop}px`,
-            paddingBottom: `${paddingBottom}px`,
-          }}
-        >
-          <PageHeader heading={blog.title} variant="blogPost" />
-          <Section as="div">
-            <Grid as="ol" layout={layout}>
-              {articles.map((article, i) => (
-                <ArticleCard
-                  key={article.id}
-                  blogHandle={blog.handle}
-                  article={article}
-                  loading={getImageLoadingPriority(i, 2)}
-                  showAuthor={showAuthor}
-                  showExcerpt={showExcerpt}
-                  showDate={showDate}
-                  showReadmore={showReadmore}
-                  imageAspectRatio={imageAspectRatio}
-                />
-              ))}
-            </Grid>
-          </Section>
+      <Section ref={ref} {...rest}>
+        <h3 className="text-center pt-2 md:pt-0 pb-4 md:pb-16">{blog.title}</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {articles.map((article, i) => (
+            <ArticleCard
+              key={article.id}
+              blogHandle={blog.handle}
+              article={article}
+              loading={getImageLoadingPriority(i, 2)}
+              showAuthor={showAuthor}
+              showExcerpt={showExcerpt}
+              showDate={showDate}
+              showReadmore={showReadmore}
+              imageAspectRatio={imageAspectRatio}
+            />
+          ))}
         </div>
-      </section>
+      </Section>
     );
   }
-  return <section ref={ref} {...rest} />;
+  return <Section ref={ref} {...rest} />;
 });
 
 function ArticleCard({
@@ -92,38 +79,34 @@ function ArticleCard({
   imageAspectRatio: string;
 }) {
   return (
-    <li key={article.id}>
-      <Link to={`/blogs/${blogHandle}/${article.handle}`}>
-        {article.image && (
-          <div className="card-image aspect-[3/2]">
-            <Image
-              alt={article.image.altText || article.title}
-              className="object-cover w-full"
-              data={article.image}
-              aspectRatio={imageAspectRatio}
-              loading={loading}
-              sizes="(min-width: 768px) 50vw, 100vw"
-            />
+    <Link to={`/blogs/${blogHandle}/${article.handle}`}>
+      {article.image && (
+        <div className="card-image aspect-[3/2]">
+          <Image
+            alt={article.image.altText || article.title}
+            className="object-cover w-full"
+            data={article.image}
+            aspectRatio={imageAspectRatio}
+            loading={loading}
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
+        </div>
+      )}
+      <div className="space-y-2.5">
+        <h6 className="mt-4 font-medium text-2xl">{article.title}</h6>
+        <div className="flex items-center space-x-1">
+          {showDate && <span className="block">{article.publishedAt}</span>}
+          {showDate && showAuthor && <span>•</span>}
+          {showAuthor && <span className="block">{article.author?.name}</span>}
+        </div>
+        {showExcerpt && <div> {article.excerpt}</div>}
+        {showReadmore && (
+          <div>
+            <span className="underline underline-offset-4">Read more</span>
           </div>
         )}
-        <div className="space-y-2.5">
-          <h2 className="mt-4 font-medium text-2xl">{article.title}</h2>
-          <div className="flex items-center space-x-1">
-            {showDate && <span className="block">{article.publishedAt}</span>}
-            {showDate && showAuthor && <span>•</span>}
-            {showAuthor && (
-              <span className="block">{article.author?.name}</span>
-            )}
-          </div>
-          {showExcerpt && <div className="text-sm"> {article.excerpt}</div>}
-          {showReadmore && (
-            <div>
-              <span className="underline">Read more</span>
-            </div>
-          )}
-        </div>
-      </Link>
-    </li>
+      </div>
+    </Link>
   );
 }
 
@@ -137,47 +120,7 @@ export let schema: HydrogenComponentSchema = {
     pages: ["BLOG"],
   },
   inspector: [
-    {
-      group: "Blogs",
-      inputs: [
-        {
-          type: "select",
-          name: "layout",
-          label: "Layout",
-          configs: {
-            options: [
-              { value: "blog", label: "Blog" },
-              { value: "default", label: "Default" },
-            ],
-          },
-          defaultValue: "blog",
-        },
-        {
-          type: "range",
-          label: "Top padding",
-          name: "paddingTop",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 0,
-        },
-        {
-          type: "range",
-          label: "Bottom padding",
-          name: "paddingBottom",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 0,
-        },
-      ],
-    },
+    { group: "Layout", inputs: layoutInputs },
     {
       group: "Article card",
       inputs: [
