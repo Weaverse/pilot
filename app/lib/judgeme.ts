@@ -11,6 +11,7 @@ type JudgemeProductData = {
 type JudgemeReviewType = {
   id: string;
   title: string;
+  created_at: string;
   body: string;
   rating: number;
   reviewer: {
