@@ -4,7 +4,6 @@ import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
-
 import type { BlogQuery } from "storefrontapi.generated";
 import { routeHeaders } from "~/data/cache";
 import { BLOGS_QUERY } from "~/data/queries";
@@ -33,14 +32,14 @@ export const loader = async (args: RouteLoaderArgs) => {
   }
 
   const articles = flattenConnection(blog.articles).map((article) => {
-    const { publishedAt } = article!;
+    const { publishedAt } = article;
     return {
       ...article,
       publishedAt: new Intl.DateTimeFormat(`${language}-${country}`, {
         year: "numeric",
         month: "long",
         day: "numeric",
-      }).format(new Date(publishedAt!)),
+      }).format(new Date(publishedAt)),
     };
   });
 
@@ -58,7 +57,7 @@ export const loader = async (args: RouteLoaderArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+  return getSeoMeta(data?.seo as SeoConfig);
 };
 
 export default function Blogs() {

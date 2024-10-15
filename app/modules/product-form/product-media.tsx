@@ -23,7 +23,7 @@ let variants = cva(
         mix: "2xl:grid-cols-2",
       },
     },
-  },
+  }
 );
 
 export interface ProductMediaProps extends VariantProps<typeof variants> {
@@ -38,6 +38,7 @@ export function ProductMedia(props: ProductMediaProps) {
   let {
     mediaLayout,
     gridSize,
+    showThumbnails,
     imageAspectRatio,
     selectedVariant,
     media: _media,
@@ -48,7 +49,7 @@ export function ProductMedia(props: ProductMediaProps) {
     null
   );
   let [activeIndex, setActiveIndex] = useState(0);
-  
+
   useEffect(() => {
     if (swiperInstance && thumbsSwiper) {
       if (swiperInstance.thumbs) {
@@ -56,7 +57,7 @@ export function ProductMedia(props: ProductMediaProps) {
         swiperInstance.thumbs.init();
       }
       swiperInstance.on("slideChange", () => {
-        const realIndex = swiperInstance.realIndex;
+        let realIndex = swiperInstance.realIndex;
         setActiveIndex(realIndex);
         thumbsSwiper.slideTo(realIndex);
       });
@@ -78,7 +79,7 @@ export function ProductMedia(props: ProductMediaProps) {
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
                 "object-cover opacity-0 animate-fade-in w-[80vw] max-w-none lg:w-full lg:h-full",
-                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
+                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2"
               )}
               sizes="auto"
             />
@@ -90,39 +91,41 @@ export function ProductMedia(props: ProductMediaProps) {
 
   return (
     <div className="flex flex-col-reverse md:flex-row gap-4 overflow-hidden">
-      <Swiper
-        onSwiper={setThumbsSwiper}
-        direction="vertical"
-        spaceBetween={10}
-        freeMode
-        slidesPerView={5}
-        threshold={2}
-        modules={[FreeMode, Thumbs]}
-        className="!w-20 shrink-0 max-h-[450px] overflow-visible hidden md:block"
-      >
-        {media.map((med, i) => {
-          let image = { ...med.image, altText: med.alt || "Product image" };
-          return (
-            <SwiperSlide
-              key={med.id}
-              className={clsx(
-                "!h-[100px] p-1 border transition-colors aspect-[3/4] cursor-pointer",
-                activeIndex === i ? "border-black" : "border-transparent",
-              )}
-            >
-              <Image
-                data={image}
-                loading={i === 0 ? "eager" : "lazy"}
-                width={100}
-                height={100}
-                aspectRatio={"3/4"}
-                className="object-cover opacity-0 animate-fade-in w-full h-full"
-                sizes="auto"
-              />
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+      {showThumbnails && (
+        <Swiper
+          onSwiper={setThumbsSwiper}
+          direction="vertical"
+          spaceBetween={10}
+          freeMode
+          slidesPerView={5}
+          threshold={2}
+          modules={[FreeMode, Thumbs]}
+          className="!w-20 shrink-0 max-h-[450px] overflow-visible hidden md:block"
+        >
+          {media.map((med, i) => {
+            let image = { ...med.image, altText: med.alt || "Product image" };
+            return (
+              <SwiperSlide
+                key={med.id}
+                className={clsx(
+                  "!h-[100px] p-1 border transition-colors aspect-[3/4] cursor-pointer",
+                  activeIndex === i ? "border-black" : "border-transparent"
+                )}
+              >
+                <Image
+                  data={image}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  width={100}
+                  height={100}
+                  aspectRatio={"3/4"}
+                  className="object-cover opacity-0 animate-fade-in w-full h-full"
+                  sizes="auto"
+                />
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      )}
       <Swiper
         onSwiper={setSwiperInstance}
         modules={[FreeMode, Thumbs, Pagination]}

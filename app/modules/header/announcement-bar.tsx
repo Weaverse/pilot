@@ -17,7 +17,7 @@ export function AnnouncementBar() {
   function updateStyles() {
     document.body.style.setProperty(
       "--topbar-height",
-      `${Math.max(topbarHeight - window.scrollY, 0)}px`,
+      `${Math.max(topbarHeight - window.scrollY, 0)}px`
     );
   }
 
@@ -47,8 +47,10 @@ export function AnnouncementBar() {
         rollAsNeeded={!enableScrolling}
       >
         <div
-          className="flex items-center gap-[var(--gap)] whitespace-nowrap [&_p]:flex [&_p]:gap-2 [&_p]:items-center"
-          dangerouslySetInnerHTML={{ __html: topbarText }}
+          className="flex items-center gap-[--gap] whitespace-nowrap [&_p]:flex [&_p]:gap-2 [&_p]:items-center"
+          dangerouslySetInnerHTML={{
+            __html: new Array(10).fill(topbarText).join(""),
+          }}
         />
       </Marquee>
     </div>

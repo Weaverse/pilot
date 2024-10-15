@@ -45,7 +45,7 @@ export function CartBestSellers({
         .map(([key, val]) => (val ? `${key}=${val}` : null))
         .filter(Boolean)
         .join("&"),
-    [count, sortKey, query, reverse],
+    [count, sortKey, query, reverse]
   );
   let productsApiPath = usePrefixPathWithLocale(`/api/products?${queryString}`);
 
@@ -106,7 +106,7 @@ function CartBestSellersContent({
   return (
     <>
       {products.map((product) => (
-        <ProductCard product={product} key={product.id} quickAdd />
+        <ProductCard product={product} key={product.id} />
       ))}
     </>
   );

@@ -53,7 +53,7 @@ export function MobileHeader({
               !scrolled &&
                 "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
             ]
-          : "sticky top-0",
+          : "sticky top-0"
       )}
     >
       <div className="flex items-center justify-start w-full">

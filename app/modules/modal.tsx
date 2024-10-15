@@ -3,6 +3,9 @@ import Button from "~/components/button";
 import { IconX } from "~/components/icons";
 import { Link } from "~/components/link";
 
+/**
+ * @deprecated use `~/components/modal` instead
+ */
 export function Modal({
   children,
   cancelLink,
@@ -20,6 +23,7 @@ export function Modal({
       document.body.classList.remove("overflow-hidden");
     };
   }, []);
+
   return (
     <div
       className="relative z-50"
