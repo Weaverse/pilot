@@ -53,9 +53,7 @@ import * as TestimonialItems from "~/sections/testimonials/items";
 import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
 import * as JudgemeReview from "~/sections/judgeme-reviews";
-import * as JudgemeReviewForm from "~/sections/judgeme-reviews/review-form";
-import * as JudgemeReviewList from "~/sections/judgeme-reviews/review-list";
-
+import * as ReviewIndex from "~/sections/judgeme-reviews/review-index";
 
 
 export let components: HydrogenComponent[] = [
@@ -110,8 +108,7 @@ export let components: HydrogenComponent[] = [
   SingleProduct,
   Judgeme,
   JudgemeReview,
-  JudgemeReviewForm,
-  JudgemeReviewList,
+  ReviewIndex,
   OurTeam,
   OurTeamMembers,
   SlideShow,
