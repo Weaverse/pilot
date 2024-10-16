@@ -1,11 +1,10 @@
 import { Image, flattenConnection } from "@shopify/hydrogen";
-import type { MoneyV2, Product } from "@shopify/hydrogen/storefront-api-types";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import type { ProductCardFragment } from "storefrontapi.generated";
 import { Link } from "~/components/link";
 import { ProductTag } from "~/components/product-tag";
 import { VariantPrices } from "~/components/variant-prices";
-import { getProductPlaceholder } from "~/lib/placeholders";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
 import { QuickViewTrigger } from "./quick-view";
 
@@ -18,18 +17,15 @@ export function ProductCard({
   className?: string;
   loading?: HTMLImageElement["loading"];
 }) {
-  let cardLabel = "";
-  let cardProduct: Product = product?.variants
-    ? (product as Product)
-    : getProductPlaceholder();
-  if (!cardProduct?.variants?.nodes?.length) return null;
+  if (!product?.variants?.nodes?.length) return null;
 
-  let variants = flattenConnection(cardProduct.variants);
+  let variants = flattenConnection(product.variants);
   let firstVariant = variants[0];
 
   if (!firstVariant) return null;
-  let { image, price, compareAtPrice } = firstVariant;
 
+  let { image, price, compareAtPrice } = firstVariant;
+  let cardLabel = "";
   if (isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2)) {
     cardLabel = "Sale";
   } else if (isNewArrival(product.publishedAt)) {
