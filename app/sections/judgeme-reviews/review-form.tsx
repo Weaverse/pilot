@@ -115,7 +115,7 @@ export function ReviewForm() {
                 Your email
               </label>
               <input
-                type="text"
+                type="email"
                 id="email"
                 name="email"
                 required
