@@ -18,6 +18,9 @@ export default JudgemeReviewSection;
 export let schema: HydrogenComponentSchema = {
   type: "judgeme-reviews",
   title: "Judgeme Reviews",
+  enabledOn: {
+    pages: ["PRODUCT"],
+  },
   inspector: [
     {
       group: "Layout",
@@ -26,6 +29,7 @@ export let schema: HydrogenComponentSchema = {
   ],
   childTypes: [
     "heading",
+    "paragraph",
     "judgeme-review--index",
   ],
   presets: {
@@ -33,6 +37,10 @@ export let schema: HydrogenComponentSchema = {
       {
         type: "heading",
         Content: "Reviews",
+      },
+      {
+        type: "paragraph",
+        Content: "Reviews from Judgeme",
       },
       {
         type: "judgeme-review--index",
