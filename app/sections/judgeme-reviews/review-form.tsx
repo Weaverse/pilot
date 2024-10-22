@@ -46,7 +46,9 @@ export function ReviewForm() {
         </p>
         <div className="flex justify-start items-center gap-3">
           <h4 className="font-medium">{judgemeReviews.rating.toFixed(1)}</h4>
-          <StarRating rating={judgemeReviews.rating} />
+          <div className="flex gap-0.5">
+            <StarRating rating={judgemeReviews.rating} />
+          </div>
         </div>
         <Button
           onClick={() => setIsFormVisible(true)} // Show form
@@ -60,7 +62,7 @@ export function ReviewForm() {
         <div className="bg-line/30 p-6 flex flex-col gap-4">
           <div className="flex flex-col gap-3">
             <span className="text-base font-bold">Rating</span>
-            <div className="flex items-center">
+            <div className="flex items-center gap-1">
               {[...Array(5)].map((_, index) => {
                 const ratingValue = index + 1;
                 return (
@@ -80,7 +82,6 @@ export function ReviewForm() {
                   </div>
                 );
               })}
-              <span className="text-gray-600 ml-3">{rating} out of 5</span>
             </div>
           </div>
           {/* Review Form */}
