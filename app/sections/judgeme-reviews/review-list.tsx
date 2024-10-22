@@ -43,11 +43,8 @@ export function ReviewList() {
           <>
             <div key={index} className="flex gap-4 flex-col md:flex-row">
               <div className="flex flex-col gap-4 md:w-1/4 w-full">
-                <div className="flex items-center">
+                <div className="flex items-center gap-0.5">
                   <StarRating rating={review.rating} />
-                  <span className="ml-1 text-sm text-gray-600">
-                    {review.rating.toFixed(1)}
-                  </span>
                 </div>
                 <div className="flex flex-col">
                   <p className="font-semibold">{review.reviewer.name}</p>
