@@ -1,4 +1,5 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
+import clsx from "clsx";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Button from "~/components/button";
 import { IconStar, IconStarFilled } from "~/components/icons";
@@ -45,15 +46,17 @@ export function ReviewForm({
 
   return (
     <div
-      className={`${
-        judgemeReviews.reviews.length === 0 ? "" : "lg:w-1/3 md:w-2/5"
-      } w-full flex flex-col gap-5`}
+      className={clsx(
+        "w-full flex flex-col gap-5",
+        judgemeReviews.reviews.length !== 0 && "lg:w-1/3 md:w-2/5"
+      )}
     >
       {judgemeReviews.reviews.length !== 0 || !isFormVisible ? (
         <div
-          className={`flex flex-col gap-4 bg-line/30 p-6 ${
+          className={clsx(
+            "flex flex-col gap-4 bg-line/30 p-6",
             judgemeReviews.reviews.length === 0 ? "items-center" : "items-start"
-          }`}
+          )}
         >
           <p className="uppercase font-bold text-lg mb-1.5">
             product reviews ({judgemeReviews.reviewNumber})
@@ -85,20 +88,23 @@ export function ReviewForm({
       ) : null}
       {isFormVisible && (
         <div
-          className={`bg-line/30 p-6 w-full ${
-            judgemeReviews.reviews.length === 0 ? "flex justify-center" : ""
-          }`}
+          className={clsx(
+            "bg-line/30 p-6 w-full",
+            judgemeReviews.reviews.length === 0 && "flex justify-center"
+          )}
         >
           <div
-            className={`w-full flex flex-col gap-4 ${
-              judgemeReviews.reviews.length === 0 ? "lg:w-1/3 md:w-2/5" : ""
-            }`}
+            className={clsx(
+              "w-full flex flex-col gap-4",
+              judgemeReviews.reviews.length === 0 && "lg:w-1/3 md:w-2/5"
+            )}
           >
             <div className="flex flex-col gap-6">
               <span
-                className={`${
-                  judgemeReviews.reviews.length === 0 ? "text-center" : ""
-                } font-heading font-semibold text-xl uppercase`}
+                className={clsx(
+                  "font-heading font-semibold text-xl uppercase",
+                  judgemeReviews.reviews.length === 0 && "text-center"
+                )}
               >
                 WRITE YOUR REVIEW
               </span>
@@ -222,12 +228,25 @@ export function ReviewForm({
         </div>
       )}
       {isPopupVisible && (
-        <div className={`flex flex-col gap-6 p-6 bg-line/30 ${judgemeReviews.reviews.length === 0 ? "items-center" : ""}`} role="alert">
+        <div
+          className={clsx(
+            "flex flex-col gap-6 p-6 bg-line/30",
+            judgemeReviews.reviews.length === 0 && "items-center"
+          )}
+          role="alert"
+        >
           <p className="font-bold leading-normal text-lg">REVIEW SUBMITTED</p>
           <p className="font-normal leading-normal text-base">
             Thanks for leaving your review!
           </p>
-          <div className={`flex items-center ${judgemeReviews.reviews.length === 0 ? "justify-center" : "justify-end"}`}> 
+          <div
+            className={clsx(
+              "flex items-center",
+              judgemeReviews.reviews.length === 0
+                ? "justify-center"
+                : "justify-end"
+            )}
+          >
             <Button
               onClick={() => {
                 setIsPopupVisible(false);
