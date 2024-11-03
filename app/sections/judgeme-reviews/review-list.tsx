@@ -1,12 +1,11 @@
-import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import { JudgemeReviewsData } from "~/lib/judgeme";
 import { StarRating } from "~/modules/star-rating";
-import { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
 
 const reviewPerPage = 5;
 
-export function ReviewList() {
-  const { judgemeReviews } = useLoaderData<ProductLoaderType>();
+export function ReviewList({judgemeReviews}: {judgemeReviews: JudgemeReviewsData}) {
+  
   const pageNumber = Math.ceil(judgemeReviews.reviews.length / reviewPerPage);
   const [page, setPage] = useState(0);
 
@@ -19,19 +18,6 @@ export function ReviewList() {
     return date.toLocaleDateString("en-GB");
   };
 
-  if (judgemeReviews.reviews.length === 0) {
-    return (
-      <div className="md:w-2/3 w-full py-6 flex flex-col gap-6">
-        <div className="flex flex-col gap-6">
-          <span className="font-bold text-lg uppercase">
-            Reviews (0)
-          </span>
-          <div>There are no reviews for this product yet</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="lg:w-2/3 md:w-3/5 w-full py-6 flex flex-col gap-6">
       {/* User Reviews */}
@@ -43,11 +29,8 @@ export function ReviewList() {
           <>
             <div key={index} className="flex gap-4 flex-col md:flex-row">
               <div className="flex flex-col gap-4 md:w-1/4 w-full">
-                <div className="flex items-center">
+                <div className="flex items-center gap-0.5">
                   <StarRating rating={review.rating} />
-                  <span className="ml-1 text-sm text-gray-600">
-                    {review.rating.toFixed(1)}
-                  </span>
                 </div>
                 <div className="flex flex-col">
                   <p className="font-semibold">{review.reviewer.name}</p>
