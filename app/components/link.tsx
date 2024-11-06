@@ -48,7 +48,7 @@ export let Link = forwardRef(
       return (
         <RemixNavLink
           ref={ref}
-          unstable_viewTransition={enableViewTransition}
+          viewTransition={enableViewTransition}
           to={toWithLocale}
           className={className}
           {...resOfProps}
@@ -60,7 +60,7 @@ export let Link = forwardRef(
       // @ts-ignore
       <RemixLink
         ref={ref}
-        unstable_viewTransition={enableViewTransition}
+        viewTransition={enableViewTransition}
         to={toWithLocale}
         className={className}
         {...resOfProps}
