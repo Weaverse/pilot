@@ -1,5 +1,12 @@
 # @weaverse/pilot
 
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/hydrogen@4.0.0
+
 ## 2.8.1
 
 ### Patch Changes
