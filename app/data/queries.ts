@@ -62,7 +62,9 @@ export let PRODUCT_QUERY = `#graphql
       summary: description(truncateAt: 200)
       options {
         name
-        values
+        optionValues {
+          name
+        }
       }
       selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
         ...ProductVariantFragment
