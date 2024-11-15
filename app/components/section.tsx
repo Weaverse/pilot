@@ -7,7 +7,7 @@ import { cva } from "class-variance-authority";
 import type React from "react";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
-import { useMotion } from "~/hooks/use-motion";
+import { useAnimation } from "~/hooks/use-animation";
 import { cn } from "~/lib/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
@@ -101,7 +101,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
-  let [scope] = useMotion(ref);
+  let [scope] = useAnimation(ref);
 
   style = {
     ...style,

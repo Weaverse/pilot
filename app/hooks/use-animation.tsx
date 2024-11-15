@@ -10,8 +10,9 @@ const ANIMATIONS: Record<MotionType, any> = {
   "slide-in": { opacity: [0, 1], x: [20, 0] },
 };
 
-export function useMotion(ref?: ForwardedRef<any>) {
-  let { revealSectionsOnScroll } = useThemeSettings();
+// TODO preview already-in-view elements from triggering the animation
+export function useAnimation(ref?: ForwardedRef<any>) {
+  let { revealElementsOnScroll } = useThemeSettings();
   let [scope] = useAnimate();
 
   useEffect(() => {
@@ -21,29 +22,24 @@ export function useMotion(ref?: ForwardedRef<any>) {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (!revealSectionsOnScroll) {
+    if (!revealElementsOnScroll) {
       return;
     }
     if (scope.current) {
       scope.current.classList.add("animated-scope");
       scope.current
         .querySelectorAll("[data-motion]")
-        .forEach((el: HTMLElement, index: number) => {
+        .forEach((elem: HTMLElement, idx: number) => {
           inView(
-            el,
-            (info) => {
-              let dataDelay = Number.parseInt(el.dataset.delay as string);
-              let motionType = (el.dataset.motion || "fade-up") as MotionType;
-              let motionSettings = ANIMATIONS[motionType];
-              let delay = dataDelay || index * 0.15;
-              animate(info.target, motionSettings, {
+            elem,
+            ({ target }) => {
+              let { motion, delay } = elem.dataset;
+              animate(target, ANIMATIONS[motion || "fade-up"], {
+                delay: Number(delay) || idx * 0.15,
                 duration: 0.5,
-                delay,
               });
             },
-            {
-              amount: 0.3,
-            }
+            { amount: 0.3 }
           );
         });
     }

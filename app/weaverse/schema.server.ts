@@ -545,8 +545,8 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
-          label: "Reveal sections on scroll",
-          name: "revealSectionsOnScroll",
+          label: "Reveal elements on scroll",
+          name: "revealElementsOnScroll",
           defaultValue: true,
         },
       ],

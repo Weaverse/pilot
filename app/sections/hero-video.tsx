@@ -18,7 +18,7 @@ import {
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
-import { useMotion } from "~/hooks/use-motion";
+import { useAnimation } from "~/hooks/use-animation";
 
 const SECTION_HEIGHTS = {
   small: {
@@ -76,7 +76,7 @@ let variants = cva(
     defaultVariants: {
       gap: 20,
     },
-  },
+  }
 );
 
 let ReactPlayer = lazy(() => import("react-player/lazy"));
@@ -134,7 +134,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
       // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
       inViewRef(node);
     },
-    [inViewRef],
+    [inViewRef]
   );
 
   function handleResize() {
@@ -150,7 +150,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     };
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
-  const [scope] = useMotion();
+  const [scope] = useAnimation();
 
   return (
     <section
@@ -164,7 +164,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "flex items-center justify-center relative overflow-hidden",
           "h-[var(--mobile-height)] sm:h-[var(--desktop-height)]",
           "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
-          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
+          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]"
         )}
       >
         {inView && (
@@ -188,7 +188,9 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           overlayOpacity={overlayOpacity}
           className="z-0"
         />
-        <div ref={scope} className={clsx(variants({ gap }))}>{children}</div>
+        <div ref={scope} className={clsx(variants({ gap }))}>
+          {children}
+        </div>
       </div>
     </section>
   );
