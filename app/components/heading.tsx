@@ -90,6 +90,7 @@ export interface HeadingProps
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   content: string;
   color?: string;
+  backgroundColor?: string;
   minSize?: number;
   maxSize?: number;
 }
@@ -105,6 +106,7 @@ let Heading = forwardRef<
     mobileSize,
     desktopSize,
     color,
+    backgroundColor,
     weight,
     letterSpacing,
     alignment,
@@ -113,7 +115,7 @@ let Heading = forwardRef<
     className,
     ...rest
   } = props;
-  let style: CSSProperties = { color };
+  let style: CSSProperties = { color, backgroundColor };
   if (size === "scale") {
     style = {
       ...style,

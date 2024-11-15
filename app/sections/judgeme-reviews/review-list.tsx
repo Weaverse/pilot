@@ -1,12 +1,11 @@
-import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import { JudgemeReviewsData } from "~/lib/judgeme";
 import { StarRating } from "~/modules/star-rating";
-import { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
 
 const reviewPerPage = 5;
 
-export function ReviewList() {
-  const { judgemeReviews } = useLoaderData<ProductLoaderType>();
+export function ReviewList({judgemeReviews}: {judgemeReviews: JudgemeReviewsData}) {
+  
   const pageNumber = Math.ceil(judgemeReviews.reviews.length / reviewPerPage);
   const [page, setPage] = useState(0);
 
@@ -18,19 +17,6 @@ export function ReviewList() {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-GB");
   };
-
-  if (judgemeReviews.reviews.length === 0) {
-    return (
-      <div className="md:w-2/3 w-full py-6 flex flex-col gap-6">
-        <div className="flex flex-col gap-6">
-          <span className="font-bold text-lg uppercase">
-            Reviews (0)
-          </span>
-          <div>There are no reviews for this product yet</div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="lg:w-2/3 md:w-3/5 w-full py-6 flex flex-col gap-6">

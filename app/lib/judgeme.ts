@@ -30,7 +30,9 @@ type JudgemeReviewType = {
   }[];
 };
 
-type JudgemeReviewsData = {
+export type JudgemeReviewsData = {
+  rating: number;
+  reviewNumber: number;
   reviews: JudgemeReviewType[];
 };
 
