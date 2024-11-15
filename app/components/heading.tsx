@@ -128,6 +128,7 @@ let Heading = forwardRef<
     <Tag
       ref={ref}
       {...rest}
+      data-motion="fade-up"
       style={style}
       className={cn(
         size === "custom" && fontSizeVariants({ mobileSize, desktopSize }),

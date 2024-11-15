@@ -62,6 +62,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
         ref={ref}
         {...rest}
         className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
+        data-motion="slide-in"
         data={data}
         sizes={`(min-width: 45em) 50vw, 100vw`}
       />

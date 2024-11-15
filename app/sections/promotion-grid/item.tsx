@@ -91,6 +91,7 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
       <div
         ref={ref}
         {...rest}
+        data-motion="slide-in"
         className={variants({ contentPosition, borderRadius })}
       >
         <BackgroundImage backgroundImage={backgroundImage} />

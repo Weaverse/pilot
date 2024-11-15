@@ -65,6 +65,7 @@ let Paragraph = forwardRef<
   return (
     <Tag
       ref={ref}
+      data-motion="fade-up"
       {...rest}
       style={{ color }}
       className={clsx(variants({ textSize, width, alignment, className }))}

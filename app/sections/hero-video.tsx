@@ -18,6 +18,7 @@ import {
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { useMotion } from "~/hooks/use-motion";
 
 const SECTION_HEIGHTS = {
   small: {
@@ -149,6 +150,8 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     };
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
+  const [scope] = useMotion();
+
   return (
     <section
       ref={setRefs}
@@ -185,7 +188,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           overlayOpacity={overlayOpacity}
           className="z-0"
         />
-        <div className={clsx(variants({ gap }))}>{children}</div>
+        <div ref={scope} className={clsx(variants({ gap }))}>{children}</div>
       </div>
     </section>
   );
