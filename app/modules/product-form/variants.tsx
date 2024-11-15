@@ -68,7 +68,7 @@ export function ProductVariants(props: ProductVariantsProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-motion="fade-up">
       <VariantSelector
         handle={handle}
         variants={nodes}

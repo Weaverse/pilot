@@ -13,6 +13,7 @@ import { backgroundInputs } from "./background-image";
 import type { OverlayProps } from "./overlay";
 import { overlayInputs } from "./overlay";
 import { OverlayAndBackground } from "./overlay-and-background";
+import { useMotion } from "~/hooks/use-motion";
 
 export type BackgroundProps = BackgroundImageProps & {
   backgroundFor: "section" | "content";
@@ -78,6 +79,8 @@ let variants = cva("relative", {
 });
 
 export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
+  const [scope] = useMotion(ref);
+  console.log("🚀 ~ Section ~ ref:", ref)
   let {
     as: Component = "section",
     width,
@@ -112,7 +115,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
 
   return (
     <Component
-      ref={ref}
+      ref={scope}
       {...rest}
       style={style}
       className={cn(

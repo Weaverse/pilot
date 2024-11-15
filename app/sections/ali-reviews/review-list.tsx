@@ -53,7 +53,7 @@ let ReviewList = forwardRef<
         {...rest}
         className="md:flex md:gap-16 space-y-8 md:space-y-0"
       >
-        <div className="my-6 space-y-6 md:my-8 shrink-0">
+        <div className="my-6 space-y-6 md:my-8 shrink-0" data-motion="slide-in">
           <div className="shrink-0 flex gap-4">
             {showAvgRating && (
               <div className="text-6xl font-bold leading-none">
@@ -83,7 +83,7 @@ let ReviewList = forwardRef<
             </div>
           )}
         </div>
-        <div className="mt-6 divide-y divide-gray-200 grow">
+        <div className="mt-6 divide-y divide-gray-200 grow" data-motion="slide-in">
           {reviewsToRender.map((review) => (
             <ReviewItem
               key={review.id}
