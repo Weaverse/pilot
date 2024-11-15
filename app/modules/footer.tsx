@@ -37,7 +37,10 @@ let variants = cva("divide-y divide-line/50 space-y-9", {
 export function Footer({
   menu,
   shopName,
-}: { menu?: EnhancedMenu; shopName: string }) {
+}: {
+  menu?: EnhancedMenu;
+  shopName: string;
+}) {
   let {
     footerWidth,
     socialFacebook,
@@ -84,8 +87,8 @@ export function Footer({
   return (
     <footer
       className={cn(
-        "bg-[var(--color-footer-bg)] text-[var(--color-footer-text)] pt-16",
-        variants({ padding: footerWidth }),
+        "bg-[--color-footer-bg] text-[--color-footer-text] pt-16",
+        variants({ padding: footerWidth })
       )}
       style={
         {
@@ -95,7 +98,7 @@ export function Footer({
     >
       <div className={variants({ width: footerWidth })}>
         <div className="space-y-9">
-          <div className="w-full grid lg:grid-cols-4 gap-8">
+          <div className="w-full grid lg:grid-cols-3 gap-8">
             <div className="flex flex-col gap-6">
               {footerLogoData ? (
                 <div className="relative" style={{ width: footerLogoWidth }}>
@@ -123,7 +126,7 @@ export function Footer({
                     >
                       {social.icon}
                     </Link>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             </div>
@@ -134,7 +137,7 @@ export function Footer({
                 <p>Email: {storeEmail}</p>
               </div>
             </div>
-            <div className="flex flex-col gap-6 col-span-2">
+            <div className="flex flex-col gap-6">
               <div className="text-base">{newsletterTitle}</div>
               <div className="space-y-2">
                 <p>{newsletterDescription}</p>
@@ -148,7 +151,7 @@ export function Footer({
               </div>
             </div>
           </div>
-          <div className="w-full grid lg:grid-cols-4 gap-8">
+          <div className="w-full grid lg:grid-cols-3 gap-8">
             {items.map((item, ind) => (
               <div key={ind} className="flex flex-col gap-6">
                 <FooterMenu
