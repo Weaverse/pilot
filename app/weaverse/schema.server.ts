@@ -540,13 +540,15 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Enable view transition",
           name: "enableViewTransition",
           defaultValue: true,
+          helpText:
+            'Learn more about how <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API" target="_blank" rel="noreferrer">View Transitions API</a> work.',
         },
         {
           type: "switch",
-          label: "Enable scroll reveal",
-          name: "enableScrollReveal",
+          label: "Reveal sections on scroll",
+          name: "revealSectionsOnScroll",
           defaultValue: true,
-        }
+        },
       ],
     },
     {
