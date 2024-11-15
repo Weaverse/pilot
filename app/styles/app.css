@@ -225,3 +225,7 @@ mark {
   background-color: none;
   font-weight: 500;
 }
+
+.animated-scope [data-motion] {
+  opacity: 0;
+}

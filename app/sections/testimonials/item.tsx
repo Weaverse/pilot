@@ -32,6 +32,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
       <div
         ref={ref}
         {...rest}
+        data-motion="slide-in"
         className={clsx(hideOnMobile && "hidden sm:block")}
       >
         <figure className="p-6 bg-gray-50 rounded">

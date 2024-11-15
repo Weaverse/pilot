@@ -81,6 +81,7 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
       <div ref={ref} {...rest} className={cn(variants({ width }))}>
         <Image
           data={imageData}
+          data-motion="slide-in"
           sizes="auto"
           aspectRatio={aspRt}
           className={cn("w-full h-auto", variants({ objectFit, borderRadius }))}

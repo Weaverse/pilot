@@ -145,6 +145,7 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
         ref={ref as React.ForwardedRef<HTMLAnchorElement>}
         style={style}
         {...rest}
+        data-motion="fade-up"
         className={cn(variants({ variant, className }))}
         to={link || "/"}
         target={openInNewTab ? "_blank" : "_self"}
@@ -160,6 +161,7 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
       ref={ref as React.ForwardedRef<HTMLButtonElement>}
       style={style}
       type={type}
+      data-motion="fade-up"
       {...rest}
       className={cn(variants({ variant, className }))}
     >

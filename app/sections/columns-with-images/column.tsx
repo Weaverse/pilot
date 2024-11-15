@@ -55,6 +55,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
       <div
         ref={ref}
         {...rest}
+        data-motion="slide-in"
         className={variants({ size, hideOnMobile })}
         style={
           { "--image-border-radius": `${imageBorderRadius}px` } as CSSProperties

@@ -541,6 +541,12 @@ export let themeSchema: HydrogenThemeSchema = {
           name: "enableViewTransition",
           defaultValue: true,
         },
+        {
+          type: "switch",
+          label: "Enable scroll reveal",
+          name: "enableScrollReveal",
+          defaultValue: true,
+        }
       ],
     },
     {

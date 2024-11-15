@@ -16,6 +16,7 @@ import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { getImageAspectRatio } from "~/lib/utils";
 import type { FeaturedCollectionsLoaderData } from ".";
+import { useMotion } from "~/hooks/use-motion";
 
 let variants = cva("", {
   variants: {
@@ -72,6 +73,7 @@ interface CollectionItemsProps
 
 let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
   (props, ref) => {
+    const [scope] = useMotion(ref);
     let {
       gridSize,
       gap,
@@ -100,7 +102,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
     }
     return (
       <div
-        ref={ref}
+        ref={scope}
         {...rest}
         className={clsx(
           [
@@ -116,6 +118,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
             key={collection.id + ind}
             to={`/collections/${collection.handle}`}
             className="relative w-[67vw] md:w-auto group group/overlay"
+            data-motion="slide-in"
           >
             {collection?.image && (
               <div

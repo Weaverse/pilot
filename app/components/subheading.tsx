@@ -56,6 +56,7 @@ let SubHeading = forwardRef<
     <Tag
       ref={ref}
       {...rest}
+      data-motion="fade-up"
       style={{ color }}
       className={cn(variants({ size, weight, alignment, className }))}
     >

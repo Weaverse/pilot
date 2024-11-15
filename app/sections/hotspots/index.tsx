@@ -75,6 +75,7 @@ let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
           data={imageData}
           sizes="auto"
           className="object-cover z-0 w-full h-full"
+          data-motion="zoom-in"
         />
         {children}
       </div>
