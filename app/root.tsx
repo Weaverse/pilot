@@ -325,13 +325,15 @@ const LAYOUT_QUERY = `#graphql
 ` as const;
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  const data = await storefront.query(LAYOUT_QUERY, {
-    variables: {
-      headerMenuHandle: "main-menu",
-      footerMenuHandle: "footer",
-      language: storefront.i18n.language,
-    },
-  });
+  const data = await storefront
+    .query(LAYOUT_QUERY, {
+      variables: {
+        headerMenuHandle: "main-menu",
+        footerMenuHandle: "footer",
+        language: storefront.i18n.language,
+      },
+    })
+    .catch(console.error);
 
   invariant(data, "No data returned from Shopify API");
 
