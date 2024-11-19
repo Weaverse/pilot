@@ -1,17 +1,11 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  InspectorGroup,
-} from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
 import { IconCircleNotch } from "./icons";
-import { Link } from "./link";
 
-let variants = cva(
+export let variants = cva(
   [
     "inline-flex items-center justify-center rounded-none relative",
     "text-base leading-tight font-normal whitespace-nowrap",
@@ -23,41 +17,41 @@ let variants = cva(
       variant: {
         primary: [
           "border px-4 py-3",
-          "text-[var(--color-button-primary-text)]",
-          "bg-[var(--color-button-primary-bg)]",
-          "border-[var(--color-button-primary-bg)]",
-          "hover:bg-[var(--color-button-primary-text)]",
-          "hover:text-[var(--color-button-primary-bg)]",
-          "hover:border-[var(--color-button-primary-bg)]",
+          "text-[--btn-primary-text]",
+          "bg-[--btn-primary-bg]",
+          "border-[--btn-primary-bg]",
+          "hover:text-[--btn-primary-bg]",
+          "hover:bg-[--btn-primary-text]",
+          "hover:border-[--btn-primary-text]",
         ],
         secondary: [
           "border px-4 py-3",
-          "text-[var(--color-button-secondary-text)]",
-          "bg-[var(--color-button-secondary-bg)]",
-          "border-[var(--color-button-secondary-bg)]",
-          "hover:bg-[var(--color-button-secondary-text)]",
-          "hover:text-[var(--color-button-secondary-bg)]",
-          "hover:border-[var(--color-button-secondary-text)]",
+          "text-[--btn-secondary-text]",
+          "bg-[--btn-secondary-bg]",
+          "border-[--btn-secondary-bg]",
+          "hover:bg-[--btn-secondary-text]",
+          "hover:text-[--btn-secondary-bg]",
+          "hover:border-[--btn-secondary-text]",
         ],
         outline: [
           "border px-4 py-3",
-          "text-[var(--color-button-outline-text-and-border)]",
+          "text-[--btn-outline-text]",
           "bg-transparent",
-          "border-[var(--color-button-outline-text-and-border)]",
-          "hover:bg-[var(--color-button-outline-text-and-border)]",
+          "border-[--btn-outline-text]",
+          "hover:bg-[--btn-outline-text]",
           "hover:text-background",
-          "hover:border-[var(--color-button-outline-text-and-border)]",
+          "hover:border-[--btn-outline-text]",
         ],
         custom: [
           "border px-4 py-3",
-          "text-[var(--color-button-text)]",
-          "bg-[var(--color-button-bg)]",
-          "border-[var(--color-button-border)]",
-          "hover:bg-[var(--color-button-bg-hover)]",
-          "hover:text-[var(--color-button-text-hover)]",
-          "hover:border-[var(--color-button-border-hover)]",
+          "text-[--btn-text]",
+          "bg-[--btn-bg]",
+          "border-[--btn-border]",
+          "hover:text-[--btn-text-hover]",
+          "hover:bg-[--btn-bg-hover]",
+          "hover:border-[--btn-border-hover]",
         ],
-        link: [
+        underline: [
           "bg-transparent pb-1 text-body",
           "after:bg-body after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px",
           "after:scale-x-100 after:transition-transform after:origin-right",
@@ -82,33 +76,26 @@ export interface ButtonStyleProps {
 
 export interface ButtonProps
   extends VariantProps<typeof variants>,
-    Omit<HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, "type">,
-    Partial<Omit<HydrogenComponentProps, "children">>,
+    Omit<HTMLAttributes<HTMLButtonElement>, "type">,
     Partial<ButtonStyleProps> {
   type?: "button" | "reset" | "submit";
   className?: string;
-  text?: string;
-  link?: string;
-  openInNewTab?: boolean;
   disabled?: boolean;
   loading?: boolean;
   children?: React.ReactNode;
 }
 
-let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+export let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   let {
     type = "button",
     variant,
-    text,
-    link,
     loading,
-    openInNewTab,
     className,
-    backgroundColor,
     textColor,
+    backgroundColor,
     borderColor,
-    backgroundColorHover,
     textColorHover,
+    backgroundColorHover,
     borderColorHover,
     style = {},
     children,
@@ -117,48 +104,29 @@ let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   if (variant === "custom") {
     style = {
       ...style,
-      "--color-button-bg": backgroundColor,
-      "--color-button-text": textColor,
-      "--color-button-border": borderColor,
-      "--color-button-bg-hover": backgroundColorHover,
-      "--color-button-text-hover": textColorHover,
-      "--color-button-border-hover": borderColorHover,
+      "--btn-text": textColor,
+      "--btn-bg": backgroundColor,
+      "--btn-border": borderColor,
+      "--btn-text-hover": textColorHover,
+      "--btn-bg-hover": backgroundColorHover,
+      "--btn-border-hover": borderColorHover,
     } as React.CSSProperties;
   }
 
-  if (!text && !children) {
+  if (!children) {
     return null;
   }
 
   let content: React.ReactNode;
-  if (text) {
-    content = <span>{text}</span>;
-  } else if (typeof children === "string") {
+  if (typeof children === "string") {
     content = <span>{children}</span>;
   } else {
     content = children;
   }
 
-  if (link) {
-    return (
-      <Link
-        ref={ref as React.ForwardedRef<HTMLAnchorElement>}
-        style={style}
-        {...rest}
-        data-motion="fade-up"
-        className={cn(variants({ variant, className }))}
-        to={link || "/"}
-        target={openInNewTab ? "_blank" : "_self"}
-        rel="noreferrer"
-      >
-        {loading && <Spinner />}
-        {content}
-      </Link>
-    );
-  }
   return (
     <button
-      ref={ref as React.ForwardedRef<HTMLButtonElement>}
+      ref={ref}
       style={style}
       type={type}
       data-motion="fade-up"
@@ -182,108 +150,3 @@ function Spinner() {
     </span>
   );
 }
-
-export default Button;
-
-export let buttonContentInputs: InspectorGroup["inputs"] = [
-  {
-    type: "text",
-    name: "text",
-    label: "Text content",
-    defaultValue: "Shop now",
-    placeholder: "Shop now",
-  },
-  {
-    type: "url",
-    name: "link",
-    label: "Link to",
-    defaultValue: "/products",
-    placeholder: "/products",
-  },
-  {
-    type: "switch",
-    name: "openInNewTab",
-    label: "Open in new tab",
-    defaultValue: false,
-    condition: "buttonLink.ne.nil",
-  },
-  {
-    type: "select",
-    name: "variant",
-    label: "Variant",
-    configs: {
-      options: [
-        { label: "Primary", value: "primary" },
-        { label: "Secondary", value: "secondary" },
-        { label: "Outline", value: "outline" },
-        { label: "Link", value: "link" },
-        { label: "Custom styles", value: "custom" },
-      ],
-    },
-    defaultValue: "primary",
-  },
-];
-export let buttonStylesInputs: InspectorGroup["inputs"] = [
-  {
-    type: "color",
-    label: "Background color",
-    name: "backgroundColor",
-    defaultValue: "#000",
-    condition: "variant.eq.custom",
-  },
-  {
-    type: "color",
-    label: "Text color",
-    name: "textColor",
-    defaultValue: "#fff",
-    condition: "variant.eq.custom",
-  },
-  {
-    type: "color",
-    label: "Border color",
-    name: "borderColor",
-    defaultValue: "#00000000",
-    condition: "variant.eq.custom",
-  },
-  {
-    type: "color",
-    label: "Background color (hover)",
-    name: "backgroundColorHover",
-    defaultValue: "#00000000",
-    condition: "variant.eq.custom",
-  },
-  {
-    type: "color",
-    label: "Text color (hover)",
-    name: "textColorHover",
-    defaultValue: "#000",
-    condition: "variant.eq.custom",
-  },
-  {
-    type: "color",
-    label: "Border color (hover)",
-    name: "borderColorHover",
-    defaultValue: "#000",
-    condition: "variant.eq.custom",
-  },
-];
-
-export let buttonInputs: InspectorGroup["inputs"] = [
-  ...buttonContentInputs,
-  {
-    type: "heading",
-    label: "Button custom styles",
-  },
-  ...buttonStylesInputs,
-];
-
-export let schema: HydrogenComponentSchema = {
-  type: "button",
-  title: "Button",
-  inspector: [
-    {
-      group: "Button",
-      inputs: buttonInputs,
-    },
-  ],
-};
