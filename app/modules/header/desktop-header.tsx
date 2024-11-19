@@ -43,7 +43,7 @@ export function DesktopHeader({
   menu?: EnhancedMenu;
   shopName: string;
 }) {
-  let { enableTransparentHeader, topbarHeight, headerWidth } =
+  let { enableTransparentHeader, topbarHeight, topbarText, headerWidth } =
     useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
@@ -58,13 +58,14 @@ export function DesktopHeader({
     <header
       style={
         {
-          "--initial-topbar-height": `${topbarHeight}px`,
+          "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
         } as React.CSSProperties
       }
       className={cn(
         "transition-colors duration-300 ease-in-out",
         "hidden lg:block lg:w-full z-10",
         "bg-[--color-header-bg] hover:bg-[--color-header-bg]",
+        "text-[--color-header-text] hover:text-[--color-header-text]",
         "border-b border-[rgb(230,230,230)]",
         variants({ padding: headerWidth }),
         scrolled && "shadow-header",
@@ -80,7 +81,6 @@ export function DesktopHeader({
       <div
         className={cn(
           "h-nav flex items-center justify-between leading-none gap-8",
-          "text-[--color-header-text] hover:text-[--color-header-text]",
           variants({ width: headerWidth }),
         )}
       >

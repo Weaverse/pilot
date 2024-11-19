@@ -1,6 +1,6 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect } from "react";
-import { Marquee } from "~/components/marquee";
+import { Marquee } from "./marquee";
 
 export function AnnouncementBar() {
   let themeSettings = useThemeSettings();
@@ -13,12 +13,15 @@ export function AnnouncementBar() {
     scrollingGap,
     scrollingSpeed,
   } = themeSettings;
+  console.log("👉 --------> - topbarText:", topbarText);
 
   function updateStyles() {
-    document.body.style.setProperty(
-      "--topbar-height",
-      `${Math.max(topbarHeight - window.scrollY, 0)}px`
-    );
+    if (topbarText) {
+      document.body.style.setProperty(
+        "--topbar-height",
+        `${Math.max(topbarHeight - window.scrollY, 0)}px`,
+      );
+    }
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
