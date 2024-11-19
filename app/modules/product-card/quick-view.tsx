@@ -8,7 +8,7 @@ import type {
   ProductVariantFragmentFragment,
   VariantsQuery,
 } from "storefrontapi.generated";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
 import { Skeleton } from "~/components/skeleton";
 import { VariantPrices } from "~/components/variant-prices";
@@ -29,7 +29,7 @@ export function QuickView({ data }: { data: QuickViewData }) {
   let { product, variants: _variants, storeDomain } = data || {};
   let firstVariant = product?.variants?.nodes?.[0];
   let [selectedVariant, setSelectedVariant] = useState(
-    firstVariant as ProductVariantFragmentFragment
+    firstVariant as ProductVariantFragmentFragment,
   );
   let [quantity, setQuantity] = useState<number>(1);
   let {
@@ -58,8 +58,8 @@ export function QuickView({ data }: { data: QuickViewData }) {
   let atcText = selectedVariant?.availableForSale
     ? addToCartText
     : selectedVariant?.quantityAvailable === -1
-    ? unavailableText
-    : soldOutText;
+      ? unavailableText
+      : soldOutText;
   return (
     <div className="bg-background">
       <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2">

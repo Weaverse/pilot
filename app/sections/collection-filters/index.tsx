@@ -50,7 +50,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             onLayoutChange={onLayoutChange}
             productNumber={productNumber}
             filters={collection.products.filters as Filter[]}
-            appliedFilters={appliedFilters}
+            appliedFilters={appliedFilters as AppliedFilter[]}
             collections={collections}
           />
           <Pagination connection={collection.products}>
@@ -94,7 +94,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       );
     }
     return <Section ref={sectionRef} {...rest} />;
-  }
+  },
 );
 
 export default CollectionFilters;

@@ -10,14 +10,13 @@ import {
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
 import { useEffect } from "react";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { usePageAnalytics } from "~/hooks/use-page-analytics";
 
 export function AddToCartButton({
   children,
   lines,
   className = "",
-  variant = "primary",
   width = "full",
   disabled,
   analytics,
@@ -26,7 +25,6 @@ export function AddToCartButton({
   children: React.ReactNode;
   lines: OptimisticCartLineInput[];
   className?: string;
-  variant?: "primary" | "secondary" | "outline" | "link";
   width?: "auto" | "full";
   disabled?: boolean;
   analytics?: unknown;
@@ -48,7 +46,6 @@ export function AddToCartButton({
             />
             <Button
               type="submit"
-              variant={variant}
               className={className}
               disabled={disabled ?? fetcher.state !== "idle"}
               {...props}
@@ -81,7 +78,7 @@ function AddToCartAnalytics({
       try {
         if (cartInputs.inputs.analytics) {
           const dataInForm: unknown = JSON.parse(
-            String(cartInputs.inputs.analytics)
+            String(cartInputs.inputs.analytics),
           );
           Object.assign(cartData, dataInForm);
         }

@@ -2,7 +2,7 @@ import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
-import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import type { ArticleDetailsQuery } from "storefrontapi.generated";
 import { routeHeaders } from "~/data/cache";
@@ -14,21 +14,19 @@ export let headers = routeHeaders;
 
 export async function loader(args: RouteLoaderArgs) {
   let { request, params, context } = args;
-  let { language, country } = context.storefront.i18n;
+  let { storefront } = context.weaverse;
+  let { language, country } = storefront.i18n;
 
   invariant(params.blogHandle, "Missing blog handle");
   invariant(params.articleHandle, "Missing article handle");
 
-  let { blog } = await context.storefront.query<ArticleDetailsQuery>(
-    ARTICLE_QUERY,
-    {
-      variables: {
-        blogHandle: params.blogHandle,
-        articleHandle: params.articleHandle,
-        language,
-      },
-    }
-  );
+  let { blog } = await storefront.query<ArticleDetailsQuery>(ARTICLE_QUERY, {
+    variables: {
+      blogHandle: params.blogHandle,
+      articleHandle: params.articleHandle,
+      language,
+    },
+  });
 
   if (!blog?.articleByHandle) {
     throw new Response(null, { status: 404 });
@@ -36,7 +34,7 @@ export async function loader(args: RouteLoaderArgs) {
 
   let article = blog.articleByHandle;
   let relatedArticles = blog.articles.nodes.filter(
-    (art) => art?.handle !== params?.articleHandle
+    (art) => art?.handle !== params?.articleHandle,
   );
 
   let formattedDate = new Intl.DateTimeFormat(`${language}-${country}`, {

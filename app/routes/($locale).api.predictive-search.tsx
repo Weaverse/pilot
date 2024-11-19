@@ -160,7 +160,6 @@ export function normalizePredictiveSearchResults(
   if (predictiveSearch.products.length) {
     results.push({
       type: "products",
-      // @ts-expect-error
       items: predictiveSearch.products.map(
         (product: PredictiveProductFragment) => {
           totalResults++;

@@ -1,4 +1,3 @@
-import type { HomepageFeaturedProductsQuery } from "storefrontapi.generated";
 import { Section } from "~/modules/text";
 import { ProductCard } from "./product-card";
 
@@ -6,9 +5,10 @@ const mockProducts = {
   nodes: new Array(12).fill(""),
 };
 
-type ProductSwimlaneProps = HomepageFeaturedProductsQuery & {
+type ProductSwimlaneProps = {
   title?: string;
   count?: number;
+  products?: any;
 };
 
 export function ProductSwimlane({

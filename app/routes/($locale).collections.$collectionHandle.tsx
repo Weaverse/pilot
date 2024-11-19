@@ -10,11 +10,12 @@ import type {
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
 import {
-  json,
   type LoaderFunctionArgs,
   type MetaArgs,
+  json,
   redirect,
 } from "@shopify/remix-oxygen";
+import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
 import { COLLECTION_QUERY } from "~/data/queries";
@@ -24,7 +25,6 @@ import { parseAsCurrency } from "~/lib/utils";
 import type { SortParam } from "~/modules/sort-filter";
 import { FILTER_URL_PREFIX } from "~/modules/sort-filter";
 import { WeaverseContent } from "~/weaverse";
-
 export let headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
@@ -39,7 +39,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   let searchParams = new URL(request.url).searchParams;
 
   let { sortKey, reverse } = getSortValuesFromParam(
-    searchParams.get("sort") as SortParam
+    searchParams.get("sort") as SortParam,
   );
   let filters = [...searchParams.entries()].reduce((filters, [key, value]) => {
     if (key.startsWith(FILTER_URL_PREFIX)) {
@@ -52,7 +52,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }, [] as ProductFilter[]);
 
   let { collection, collections } = await context.storefront
-    .query(COLLECTION_QUERY, {
+    .query<CollectionDetailsQuery>(COLLECTION_QUERY, {
       variables: {
         ...paginationVariables,
         handle: collectionHandle,
@@ -83,7 +83,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   let seo = seoPayload.collection({ collection, url: request.url });
 
   let allFilterValues = collection.products.filters.flatMap(
-    (filter) => filter.values
+    (filter) => filter.values,
   );
 
   let appliedFilters = filters
@@ -132,6 +132,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   return json({
     collection,
     appliedFilters,
+    // @ts-ignore
     collections: flattenConnection(collections),
     seo,
     weaverseData: await context.weaverse.loadPage({
