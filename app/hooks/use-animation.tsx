@@ -10,7 +10,7 @@ const ANIMATIONS: Record<MotionType, any> = {
   "slide-in": { opacity: [0, 1], x: [20, 0] },
 };
 
-// TODO preview already-in-view elements from triggering the animation
+// TODO prevent already-in-view elements from triggering the animation
 export function useAnimation(ref?: ForwardedRef<any>) {
   let { revealElementsOnScroll } = useThemeSettings();
   let [scope] = useAnimate();
@@ -39,7 +39,7 @@ export function useAnimation(ref?: ForwardedRef<any>) {
                 duration: 0.5,
               });
             },
-            { amount: 0.3 }
+            { amount: 0.3 },
           );
         });
     }

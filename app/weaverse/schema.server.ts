@@ -197,6 +197,19 @@ export let themeSchema: HydrogenThemeSchema = {
       group: "Header",
       inputs: [
         {
+          type: "select",
+          name: "headerWidth",
+          label: "Header width",
+          configs: {
+            options: [
+              { value: "full", label: "Full page" },
+              { value: "stretch", label: "Stretch" },
+              { value: "fixed", label: "Fixed" },
+            ],
+          },
+          defaultValue: "fixed",
+        },
+        {
           type: "switch",
           label: "Enable transparent header",
           name: "enableTransparentHeader",
@@ -646,7 +659,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "select",
           name: "footerWidth",
-          label: "Footer content width",
+          label: "Footer width",
           configs: {
             options: [
               { value: "full", label: "Full page" },

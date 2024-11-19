@@ -11,12 +11,11 @@ import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import type { ButtonStyleProps } from "~/components/button";
 import Button, { buttonStylesInputs } from "~/components/button";
-import { Link } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { useAnimation } from "~/hooks/use-animation";
 import { getImageAspectRatio } from "~/lib/utils";
 import type { FeaturedCollectionsLoaderData } from ".";
-import { useAnimation } from "~/hooks/use-animation";
 
 let variants = cva("", {
   variants: {
@@ -110,13 +109,12 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
             "overflow-x-scroll md:overflow-x-hidden hidden-scroll scroll-px-6",
             "grid w-full grid-flow-col md:grid-flow-row justify-start gap-2",
           ],
-          variants({ gridSize, gap })
+          variants({ gridSize, gap }),
         )}
       >
         {collections.map((collection, ind) => (
-          <Link
+          <div
             key={collection.id + ind}
-            to={`/collections/${collection.handle}`}
             className="relative w-[67vw] md:w-auto group group/overlay"
             data-motion="slide-in"
           >
@@ -126,7 +124,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 style={{
                   aspectRatio: getImageAspectRatio(
                     collection?.image || {},
-                    aspectRatio
+                    aspectRatio,
                   ),
                 }}
               >
@@ -144,15 +142,13 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
               </div>
             )}
             {contentPosition === "over" && (
-              <>
-                <Overlay
-                  enableOverlay={enableOverlay}
-                  overlayColor={overlayColor}
-                  overlayColorHover={overlayColorHover}
-                  overlayOpacity={overlayOpacity}
-                  className={clsx("z-0", variants({ borderRadius }))}
-                />
-              </>
+              <Overlay
+                enableOverlay={enableOverlay}
+                overlayColor={overlayColor}
+                overlayColorHover={overlayColorHover}
+                overlayOpacity={overlayOpacity}
+                className={clsx("z-0", variants({ borderRadius }))}
+              />
             )}
             <div className={clsx(variants({ alignment, contentPosition }))}>
               <div
@@ -162,7 +158,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 className={clsx(
                   contentPosition === "over"
                     ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-[var(--col-name-color)]"
-                    : "py-4"
+                    : "py-4",
                 )}
               >
                 {contentPosition === "over" ? (
@@ -185,11 +181,11 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 )}
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     );
-  }
+  },
 );
 
 let COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
