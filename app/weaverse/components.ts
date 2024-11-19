@@ -1,5 +1,5 @@
 import type { HydrogenComponent } from "@weaverse/hydrogen";
-import * as Button from "~/components/button";
+import * as Link from "~/components/link";
 import * as Heading from "~/components/heading";
 import * as Paragraph from "~/components/paragraph";
 import * as SubHeading from "~/components/subheading";
@@ -55,12 +55,11 @@ import * as VideoEmbedItem from "~/sections/video-embed/video";
 import * as JudgemeReview from "~/sections/judgeme-reviews";
 import * as ReviewIndex from "~/sections/judgeme-reviews/review-index";
 
-
 export let components: HydrogenComponent[] = [
   SubHeading,
   Heading,
   Paragraph,
-  Button,
+  Link,
   AliReview,
   AliReviewList,
   AllProducts,

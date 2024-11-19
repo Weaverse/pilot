@@ -9,7 +9,8 @@ import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
+import Link from "~/components/link";
 import {
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
@@ -337,9 +338,13 @@ export default function EditAddress() {
             </label>
           </div>
           <div className="mt-6 flex gap-3 items-center justify-end">
-            <Button link=".." className="mb-2 px-4" variant="secondary">
+            <Link
+              to="/account/address"
+              className="mb-2 px-4"
+              variant="secondary"
+            >
               Cancel
-            </Button>
+            </Link>
             <Button
               className="mb-2"
               type="submit"

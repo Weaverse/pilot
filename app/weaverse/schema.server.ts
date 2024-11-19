@@ -197,6 +197,19 @@ export let themeSchema: HydrogenThemeSchema = {
       group: "Header",
       inputs: [
         {
+          type: "select",
+          name: "headerWidth",
+          label: "Header width",
+          configs: {
+            options: [
+              { value: "full", label: "Full page" },
+              { value: "stretch", label: "Stretch" },
+              { value: "fixed", label: "Fixed" },
+            ],
+          },
+          defaultValue: "fixed",
+        },
+        {
           type: "switch",
           label: "Enable transparent header",
           name: "enableTransparentHeader",
@@ -328,7 +341,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Primary button",
+          label: "Button (primary)",
         },
         {
           type: "color",
@@ -344,7 +357,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Secondary button",
+          label: "Button (secondary)",
         },
         {
           type: "color",
@@ -360,7 +373,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Outline button",
+          label: "Button (outline)",
         },
         {
           type: "color",
@@ -540,13 +553,15 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Enable view transition",
           name: "enableViewTransition",
           defaultValue: true,
+          helpText:
+            'Learn more about how <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API" target="_blank" rel="noreferrer">View Transitions API</a> work.',
         },
         {
           type: "switch",
-          label: "Enable scroll reveal",
-          name: "enableScrollReveal",
+          label: "Reveal elements on scroll",
+          name: "revealElementsOnScroll",
           defaultValue: true,
-        }
+        },
       ],
     },
     {
@@ -644,7 +659,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "select",
           name: "footerWidth",
-          label: "Footer content width",
+          label: "Footer width",
           configs: {
             options: [
               { value: "full", label: "Full page" },

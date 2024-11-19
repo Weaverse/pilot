@@ -14,8 +14,9 @@ export let headers = routeHeaders;
 export let loader = async (args: RouteLoaderArgs) => {
   let {
     request,
-    context: { storefront, weaverse },
+    context: { weaverse },
   } = args;
+  let storefront = weaverse.storefront;
   let variables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });

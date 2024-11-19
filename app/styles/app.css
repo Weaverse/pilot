@@ -174,11 +174,6 @@
   view-transition-name: product-image;
 }
 
-.has-background {
-  background-color: var(--section-background-color);
-  border-radius: var(--section-border-radius);
-}
-
 .underline-animation {
   background-image: linear-gradient(
     to right,

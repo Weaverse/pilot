@@ -30,9 +30,9 @@ import { defer } from "@shopify/remix-oxygen";
 import { withWeaverse } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/lib/seo.server";
-import { Layout as PageLayout } from "~/modules/layout";
 import { CustomAnalytics } from "~/modules/custom-analytics";
 import { GlobalLoading } from "~/modules/global-loading";
+import { Layout as PageLayout } from "~/modules/layout";
 import { TooltipProvider } from "./components/tooltip";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import { GenericError } from "./modules/generic-error";
@@ -128,6 +128,10 @@ async function loadCriticalData({ request, context }: LoaderFunctionArgs) {
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
+      withPrivacyBanner: true,
+      // localize the privacy banner
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
     },
     selectedLocale: storefront.i18n,
     weaverseTheme: await context.weaverse.loadThemeSettings(),
@@ -321,13 +325,15 @@ const LAYOUT_QUERY = `#graphql
 ` as const;
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  const data = await storefront.query(LAYOUT_QUERY, {
-    variables: {
-      headerMenuHandle: "main-menu",
-      footerMenuHandle: "footer",
-      language: storefront.i18n.language,
-    },
-  });
+  const data = await storefront
+    .query(LAYOUT_QUERY, {
+      variables: {
+        headerMenuHandle: "main-menu",
+        footerMenuHandle: "footer",
+        language: storefront.i18n.language,
+      },
+    })
+    .catch(console.error);
 
   invariant(data, "No data returned from Shopify API");
 

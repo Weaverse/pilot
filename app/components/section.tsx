@@ -7,13 +7,13 @@ import { cva } from "class-variance-authority";
 import type React from "react";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
+import { useAnimation } from "~/hooks/use-animation";
 import { cn } from "~/lib/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
 import type { OverlayProps } from "./overlay";
 import { overlayInputs } from "./overlay";
 import { OverlayAndBackground } from "./overlay-and-background";
-import { useMotion } from "~/hooks/use-motion";
 
 export type BackgroundProps = BackgroundImageProps & {
   backgroundFor: "section" | "content";
@@ -79,8 +79,6 @@ let variants = cva("relative", {
 });
 
 export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
-  const [scope] = useMotion(ref);
-  console.log("🚀 ~ Section ~ ref:", ref)
   let {
     as: Component = "section",
     width,
@@ -103,11 +101,12 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
+  let [scope] = useAnimation(ref);
 
   style = {
     ...style,
-    "--section-background-color": backgroundColor,
-    "--section-border-radius": `${borderRadius || 0}px`,
+    "--section-bg-color": backgroundColor,
+    "--section-radius": `${borderRadius || 0}px`,
   } as React.CSSProperties;
 
   let isBgForContent = backgroundFor === "content";
@@ -120,14 +119,20 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
       style={style}
       className={cn(
         variants({ padding: width, overflow, className }),
-        hasBackground && !isBgForContent && "has-background",
+        hasBackground &&
+          !isBgForContent &&
+          "bg-[--section-bg-color] rounded-[--section-radius]",
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
         className={cn(
           variants({ gap, width, verticalPadding, overflow }),
-          hasBackground && isBgForContent && "has-background px-4 sm:px-8",
+          hasBackground &&
+            isBgForContent && [
+              "bg-[--section-bg-color] rounded-[--section-radius]",
+              "px-4 sm:px-8",
+            ],
           containerClassName,
         )}
       >

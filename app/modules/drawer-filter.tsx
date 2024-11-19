@@ -21,7 +21,7 @@ import type {
 import clsx from "clsx";
 import type { SyntheticEvent } from "react";
 import { useState } from "react";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { Checkbox } from "~/components/checkbox";
 import { IconCaretDown, IconCaretRight } from "~/components/icons";
 import { FILTER_URL_PREFIX } from "~/lib/const";
@@ -58,7 +58,7 @@ export function DrawerFilter({
             type="button"
             className={clsx(
               "border cursor-pointer hidden lg:block",
-              numberInRow === 4 && " bg-gray-200"
+              numberInRow === 4 && " bg-gray-200",
             )}
             onClick={() => onLayoutChange(4)}
           >
@@ -68,7 +68,7 @@ export function DrawerFilter({
             type="button"
             className={clsx(
               "border cursor-pointer hidden lg:block",
-              numberInRow === 3 && " bg-gray-200"
+              numberInRow === 3 && " bg-gray-200",
             )}
             onClick={() => onLayoutChange(3)}
           >
@@ -78,7 +78,7 @@ export function DrawerFilter({
             type="button"
             className={clsx(
               "border cursor-pointer lg:hidden",
-              numberInRow === 4 && "bg-gray-200"
+              numberInRow === 4 && "bg-gray-200",
             )}
             onClick={() => onLayoutChange(4)}
           >
@@ -88,7 +88,7 @@ export function DrawerFilter({
             type="button"
             className={clsx(
               "border cursor-pointer lg:hidden",
-              numberInRow === 3 && "bg-gray-200"
+              numberInRow === 3 && "bg-gray-200",
             )}
             onClick={() => onLayoutChange(3)}
           >
@@ -137,7 +137,7 @@ function ListItemFilter({
   const [params] = useSearchParams();
   const location = useLocation();
   let filter = appliedFilters.find(
-    (filter) => JSON.stringify(filter.filter) === option.input
+    (filter) => JSON.stringify(filter.filter) === option.input,
   );
   let [checked, setChecked] = useState(!!filter);
 
@@ -361,7 +361,7 @@ export default function SortMenu({
                 <p
                   className={clsx(
                     "block text-base hover:underline underline-offset-4",
-                    activeItem?.key === item.key ? "font-bold" : "font-normal"
+                    activeItem?.key === item.key ? "font-bold" : "font-normal",
                   )}
                 >
                   {item.label}

@@ -16,7 +16,7 @@ import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefrontapi.generated";
 import { Link } from "~/components/link";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { IconTrash } from "~/components/icons";
 import { getImageAspectRatio } from "~/lib/utils";
 import { Text } from "~/modules/text";
@@ -194,9 +194,9 @@ function CartCheckoutActions({
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
       {layout === "drawer" && (
-        <Button variant="link" link="/cart" className="w-fit mx-auto">
+        <Link variant="underline" to="/cart" className="w-fit mx-auto">
           View cart
-        </Button>
+        </Link>
       )}
     </div>
   );
@@ -487,13 +487,13 @@ export function CartEmpty({
           Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
           started!
         </p>
-        <Button
+        <Link
+          to={layout === "page" ? "/products" : ""}
           className={clsx(layout === "drawer" ? "w-full" : "min-w-48")}
-          link={layout === "page" ? "/products" : ""}
           onClick={onClose}
         >
           Start Shopping
-        </Button>
+        </Link>
       </div>
       <div className="grid gap-4">
         <CartBestSellers

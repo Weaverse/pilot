@@ -1,11 +1,11 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import Button from "~/components/button";
+import { type FormEvent, useEffect, useRef, useState } from "react";
+import { Button } from "~/components/button";
 import { IconStar, IconStarFilled } from "~/components/icons";
-import { JudgemeReviewsData } from "~/lib/judgeme";
+import type { JudgemeReviewsData } from "~/lib/judgeme";
 import { StarRating } from "~/modules/star-rating";
-import { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
+import type { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
 
 export function ReviewForm({
   judgemeReviews,
@@ -21,7 +21,7 @@ export function ReviewForm({
   const formRef = useRef<HTMLFormElement>(null);
   let [message, setMessage] = useState("");
   const internalId = product.id.split("gid://shopify/Product/")[1];
-  const submitable = rating > 0;
+  const submittable = rating > 0;
 
   useEffect(() => {
     if (fetcher.data) {
@@ -48,21 +48,23 @@ export function ReviewForm({
     <div
       className={clsx(
         "w-full flex flex-col gap-5",
-        judgemeReviews.reviews.length !== 0 && "lg:w-1/3 md:w-2/5"
+        judgemeReviews.reviews.length !== 0 && "lg:w-1/3 md:w-2/5",
       )}
     >
       {judgemeReviews.reviews.length !== 0 || !isFormVisible ? (
         <div
           className={clsx(
             "flex flex-col gap-4 bg-line/30 p-6",
-            judgemeReviews.reviews.length === 0 ? "items-center" : "items-start"
+            judgemeReviews.reviews.length === 0
+              ? "items-center"
+              : "items-start",
           )}
         >
           <p className="uppercase font-bold text-lg mb-1.5">
             product reviews ({judgemeReviews.reviewNumber})
           </p>
           <div className="flex justify-start items-center gap-3">
-            {judgemeReviews && judgemeReviews.rating ? (
+            {judgemeReviews?.rating ? (
               <>
                 <h4 className="font-medium">
                   {judgemeReviews.rating.toFixed(1)}
@@ -78,9 +80,9 @@ export function ReviewForm({
             )}
           </div>
           <Button
+            variant="outline"
             onClick={() => setIsFormVisible(true)} // Show form
             disabled={isFormVisible || isPopupVisible}
-            variant={"outline"}
           >
             WRITE A REVIEW
           </Button>
@@ -90,20 +92,20 @@ export function ReviewForm({
         <div
           className={clsx(
             "bg-line/30 p-6 w-full",
-            judgemeReviews.reviews.length === 0 && "flex justify-center"
+            judgemeReviews.reviews.length === 0 && "flex justify-center",
           )}
         >
           <div
             className={clsx(
               "w-full flex flex-col gap-4",
-              judgemeReviews.reviews.length === 0 && "lg:w-1/3 md:w-2/5"
+              judgemeReviews.reviews.length === 0 && "lg:w-1/3 md:w-2/5",
             )}
           >
             <div className="flex flex-col gap-6">
               <span
                 className={clsx(
                   "font-heading font-semibold text-xl uppercase",
-                  judgemeReviews.reviews.length === 0 && "text-center"
+                  judgemeReviews.reviews.length === 0 && "text-center",
                 )}
               >
                 WRITE YOUR REVIEW
@@ -189,17 +191,17 @@ export function ReviewForm({
               </div>
               <div className="mb-4">
                 <label
-                  htmlFor="body"
+                  htmlFor="review-body"
                   className="block text-gray-700 font-bold mb-2"
                 >
                   Your review
                 </label>
                 <textarea
-                  id="body"
+                  id="review-body"
                   name="body"
                   className="w-full border px-3 py-3 border-line outline-none focus-visible:border-line"
                   rows={4}
-                ></textarea>
+                />
               </div>
               {message && (
                 <div className="bg-red-100 border-l-4 border-red-500 text-red-700 py-1 px-2 mb-6 flex gap-1 w-fit">
@@ -209,8 +211,8 @@ export function ReviewForm({
               )}
               <div className="flex gap-3 justify-end">
                 <Button
+                  variant="outline"
                   onClick={() => setIsFormVisible(false)}
-                  variant={"outline"}
                   className="!border-none bg-background"
                 >
                   Close
@@ -218,7 +220,7 @@ export function ReviewForm({
                 <Button
                   type="submit"
                   loading={fetcher.state === "submitting"}
-                  disabled={!submitable}
+                  disabled={!submittable}
                 >
                   Submit Review
                 </Button>
@@ -231,7 +233,7 @@ export function ReviewForm({
         <div
           className={clsx(
             "flex flex-col gap-6 p-6 bg-line/30",
-            judgemeReviews.reviews.length === 0 && "items-center"
+            judgemeReviews.reviews.length === 0 && "items-center",
           )}
           role="alert"
         >
@@ -244,14 +246,14 @@ export function ReviewForm({
               "flex items-center",
               judgemeReviews.reviews.length === 0
                 ? "justify-center"
-                : "justify-end"
+                : "justify-end",
             )}
           >
             <Button
               onClick={() => {
                 setIsPopupVisible(false);
               }}
-              variant={"outline"}
+              variant="outline"
               className="!border-none bg-background"
             >
               Close

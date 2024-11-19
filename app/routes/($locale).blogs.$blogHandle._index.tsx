@@ -2,7 +2,7 @@ import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
-import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import type { BlogQuery } from "storefrontapi.generated";
 import { routeHeaders } from "~/data/cache";
@@ -15,11 +15,12 @@ export const headers = routeHeaders;
 
 export const loader = async (args: RouteLoaderArgs) => {
   let { params, request, context } = args;
-  const { language, country } = context.storefront.i18n;
+  let storefront = context.storefront as WeaverseClient["storefront"];
+  let { language, country } = storefront.i18n;
 
   invariant(params.blogHandle, "Missing blog handle");
 
-  const { blog } = await context.storefront.query<BlogQuery>(BLOGS_QUERY, {
+  let { blog } = await storefront.query<BlogQuery>(BLOGS_QUERY, {
     variables: {
       blogHandle: params.blogHandle,
       pageBy: PAGINATION_SIZE,
@@ -31,8 +32,8 @@ export const loader = async (args: RouteLoaderArgs) => {
     throw new Response("Not found", { status: 404 });
   }
 
-  const articles = flattenConnection(blog.articles).map((article) => {
-    const { publishedAt } = article;
+  let articles = flattenConnection(blog.articles).map((article) => {
+    let { publishedAt } = article;
     return {
       ...article,
       publishedAt: new Intl.DateTimeFormat(`${language}-${country}`, {
@@ -43,7 +44,7 @@ export const loader = async (args: RouteLoaderArgs) => {
     };
   });
 
-  const seo = seoPayload.blog({ blog, url: request.url });
+  let seo = seoPayload.blog({ blog, url: request.url });
 
   return json({
     blog,
@@ -56,7 +57,7 @@ export const loader = async (args: RouteLoaderArgs) => {
   });
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export let meta: MetaFunction<typeof loader> = ({ data }) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 

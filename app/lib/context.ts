@@ -1,5 +1,5 @@
 import { createHydrogenContext } from "@shopify/hydrogen";
-import { WeaverseClient } from "@weaverse/hydrogen";
+import { WeaverseClient, type WeaverseClientArgs } from "@weaverse/hydrogen";
 import { CART_QUERY_FRAGMENT } from "~/data/fragments";
 import { AppSession } from "~/lib/session";
 import { getLocaleFromRequest } from "~/lib/utils";
@@ -49,6 +49,6 @@ export async function createAppLoadContext(
       cache,
       themeSchema,
       components,
-    }),
+    } as WeaverseClientArgs),
   };
 }

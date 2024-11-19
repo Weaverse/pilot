@@ -6,6 +6,6 @@ export const FILTER_URL_PREFIX = "filter.";
 export function getImageLoadingPriority(
   index: number,
   maxEagerLoadCount = DEFAULT_GRID_IMG_LOAD_EAGER_COUNT,
-) {
+): HTMLImageElement["loading"] {
   return index < maxEagerLoadCount ? ATTR_LOADING_EAGER : undefined;
 }

@@ -3,6 +3,7 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { PageDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 
 import { routeHeaders } from "~/data/cache";
@@ -13,11 +14,11 @@ export const headers = routeHeaders;
 
 export async function loader({ request, params, context }: RouteLoaderArgs) {
   invariant(params.pageHandle, "Missing page handle");
-
-  const { page } = await context.storefront.query(PAGE_QUERY, {
+  let { storefront } = context.weaverse;
+  let { page } = await storefront.query<PageDetailsQuery>(PAGE_QUERY, {
     variables: {
       handle: params.pageHandle,
-      language: context.storefront.i18n.language,
+      language: storefront.i18n.language,
     },
   });
 
@@ -25,7 +26,7 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
     throw new Response(null, { status: 404 });
   }
 
-  const seo = seoPayload.page({ page, url: request.url });
+  let seo = seoPayload.page({ page, url: request.url });
 
   return json({
     page,

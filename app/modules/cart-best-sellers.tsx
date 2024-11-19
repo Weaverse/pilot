@@ -45,7 +45,7 @@ export function CartBestSellers({
         .map(([key, val]) => (val ? `${key}=${val}` : null))
         .filter(Boolean)
         .join("&"),
-    [count, sortKey, query, reverse]
+    [count, sortKey, query, reverse],
   );
   let productsApiPath = usePrefixPathWithLocale(`/api/products?${queryString}`);
 
@@ -65,7 +65,7 @@ export function CartBestSellers({
         <CartBestSellersContent
           count={count}
           onClick={onClose}
-          products={data?.products}
+          products={data?.products as Product[]}
         />
       </div>
     </>

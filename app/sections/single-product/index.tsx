@@ -8,7 +8,7 @@ import type {
 import { forwardRef, useEffect, useState } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/data/queries";
-import { useMotion } from "~/hooks/use-motion";
+import { useAnimation } from "~/hooks/use-animation";
 import { AddToCartButton } from "~/modules/add-to-cart-button";
 import { ProductPlaceholder } from "~/modules/product-form/placeholder";
 import { ProductMedia } from "~/modules/product-form/product-media";
@@ -46,7 +46,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       setSelectedVariant(variants?.nodes?.[0]);
       setQuantity(1);
     }, [variants?.nodes]);
-    const [scope] = useMotion(ref);
+    const [scope] = useAnimation(ref);
 
     if (!product)
       return (
@@ -65,11 +65,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       ? "Unavailable"
       : "Sold Out";
     return (
-      <section
-        ref={ref}
-        {...rest}
-        className="w-full py-12 md:py-24 lg:py-32"
-      >
+      <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto" ref={scope}>
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12 fade-up">
             <ProductMedia
@@ -79,12 +75,21 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               selectedVariant={selectedVariant}
               showThumbnails={showThumbnails}
             />
-            <div className="flex flex-col justify-start space-y-5" data-motion="slide-in">
+            <div
+              className="flex flex-col justify-start space-y-5"
+              data-motion="slide-in"
+            >
               <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" data-motion="fade-up">
+                <h2
+                  className="text-3xl font-bold tracking-tighter sm:text-5xl"
+                  data-motion="fade-up"
+                >
                   {product?.title}
                 </h2>
-                <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed" data-motion="fade-up"> 
+                <p
+                  className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed"
+                  data-motion="fade-up"
+                >
                   {selectedVariant ? (
                     <Money
                       withoutTrailingZeros

@@ -1,5 +1,5 @@
-import Button from "~/components/button";
 import { IconArrowRight } from "~/components/icons";
+import Link from "~/components/link";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { PredictiveSearchResult } from "./predictive-search-result";
 
@@ -62,15 +62,15 @@ export function PredictiveSearchResults() {
           />
           {searchTerm.current && (
             <div>
-              <Button
-                variant="link"
+              <Link
+                to={`/search?q=${searchTerm.current}`}
+                variant="underline"
                 onClick={goToSearchResult}
-                link={`/search?q=${searchTerm.current}`}
                 className="flex items-center gap-2 w-fit"
               >
                 <span>View all products</span>
                 <IconArrowRight className="w-4 h-4" />
-              </Button>
+              </Link>
               {/* <Link
                 onClick={goToSearchResult}
                 to={`/search?q=${searchTerm.current}`}
