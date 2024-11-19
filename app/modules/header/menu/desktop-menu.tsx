@@ -2,10 +2,10 @@ import { Image } from "@shopify/hydrogen";
 import clsx from "clsx";
 import React from "react";
 import { IconCaretDown } from "~/components/icons";
+import { Link } from "~/components/link";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
-import { Link } from "~/components/link";
 
 export function DesktopMenu({ menu }: { menu: EnhancedMenu }) {
   let items = menu.items as unknown as SingleMenuItem[];
@@ -42,13 +42,21 @@ function MegaMenu({ title, items, to }: SingleMenuItem) {
       className="flex-1 fly-in max-w-60 space-y-4"
       style={{ "--item-index": idx } as React.CSSProperties}
     >
-      <Link to={item.to} prefetch="intent" className="uppercase">
+      <Link
+        to={item.to}
+        prefetch="intent"
+        className="uppercase transition-none"
+      >
         <span className="underline-animation">{item.title}</span>
       </Link>
       <ul className="space-y-1.5">
         {item.items.map((subItem) => (
           <li key={subItem.id} className="leading-6">
-            <Link to={subItem.to} prefetch="intent" className="relative">
+            <Link
+              to={subItem.to}
+              prefetch="intent"
+              className="relative transition-none"
+            >
               <span className="underline-animation">{subItem.title}</span>
             </Link>
           </li>
@@ -63,7 +71,7 @@ function MegaMenu({ title, items, to }: SingleMenuItem) {
       key={idx}
       style={{ "--item-index": idx } as React.CSSProperties}
     >
-      <Link to={item.to} prefetch="intent">
+      <Link to={item.to} prefetch="intent" className="transition-none">
         <Image
           sizes="auto"
           data={item.resource?.image}
@@ -102,7 +110,11 @@ function DropdownMenu(props: SingleMenuItem) {
           <ul className="space-y-1.5">
             {items.map((childItem) => (
               <li key={childItem.id} className="leading-6">
-                <Link to={childItem.to} prefetch="intent">
+                <Link
+                  to={childItem.to}
+                  prefetch="intent"
+                  className="transition-none"
+                >
                   <span className="underline-animation">{childItem.title}</span>
                 </Link>
               </li>
@@ -125,7 +137,7 @@ function ImagesMenu({ title, items, to }: SingleMenuItem) {
                 to={item.to}
                 prefetch="intent"
                 key={item.id}
-                className="flex-1 fly-in"
+                className="flex-1 fly-in transition-none"
                 style={{ "--item-index": id } as React.CSSProperties}
               >
                 <div className="aspect-square relative group/item overflow-hidden">
@@ -158,7 +170,10 @@ function FirstLevelMenu(props: {
   return (
     <div className={clsx("group", className)}>
       <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
-        <Link to={to} className="py-2 flex items-center gap-1.5">
+        <Link
+          to={to}
+          className="py-2 flex items-center gap-1.5 transition-none"
+        >
           <span className="uppercase underline-animation !pb-[5px]">
             {title}
           </span>

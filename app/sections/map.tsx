@@ -2,9 +2,12 @@ import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import { forwardRef } from "react";
-import type { ButtonStyleProps } from "~/components/button";
-import Button, { buttonStylesInputs } from "~/components/button";
 import Heading from "~/components/heading";
+import Link, {
+  type LinkProps,
+  type LinkStyleProps,
+  linkStylesInputs,
+} from "~/components/link";
 import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
@@ -27,13 +30,13 @@ let variants = cva("", {
 interface MapSectionProps
   extends Omit<SectionProps, "backgroundColor">,
     VariantProps<typeof variants>,
-    ButtonStyleProps {
+    LinkStyleProps {
   address: string;
   heading: string;
   description: string;
   alignment: "left" | "center" | "right";
-  buttonText: string;
-  buttonVariant: "primary" | "secondary" | "outline" | "link";
+  buttonVariant: LinkProps["variant"];
+  buttonText: LinkProps["children"];
   boxBgColor: string;
   boxTextColor: string;
   boxBorderRadius: number;
@@ -86,9 +89,8 @@ let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
         {address && <Paragraph content={address} />}
         {description && <Paragraph content={description} />}
         {buttonText && (
-          <Button
-            text={buttonText}
-            link={`https://www.google.com/maps/search/${address}`}
+          <Link
+            to={`https://www.google.com/maps/search/${address}`}
             openInNewTab
             variant={buttonVariant}
             backgroundColor={backgroundColor}
@@ -97,7 +99,9 @@ let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
             backgroundColorHover={backgroundColorHover}
             textColorHover={textColorHover}
             borderColorHover={borderColorHover}
-          />
+          >
+            {buttonText}
+          </Link>
         )}
       </div>
     </Section>
@@ -216,7 +220,7 @@ export let schema: HydrogenComponentSchema = {
           },
           defaultValue: "primary",
         },
-        ...buttonStylesInputs,
+        ...linkStylesInputs,
       ],
     },
   ],

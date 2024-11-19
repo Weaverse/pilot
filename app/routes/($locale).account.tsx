@@ -14,13 +14,13 @@ import type {
 } from "customer-accountapi.generated";
 import { Suspense } from "react";
 import { IconSignOut } from "~/components/icons";
+import Link from "~/components/link";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
 import { AccountAddressBook } from "~/modules/account-address-book";
 import { AccountDetails } from "~/modules/account-details";
 import { Modal } from "~/modules/modal";
-import { OrderCard } from "~/modules/order-card";
 import { ProductSwimlane } from "~/modules/product-swimlane";
 import { Text } from "~/modules/text";
 import { doLogout } from "./($locale).account_.logout";
@@ -28,13 +28,12 @@ import {
   type FeaturedData,
   getFeaturedData,
 } from "./($locale).api.featured-items";
-import Button from "~/components/button";
 
 export const headers = routeHeaders;
 
 export async function loader({ request, context, params }: LoaderFunctionArgs) {
   const { data, errors } = await context.customerAccount.query(
-    CUSTOMER_DETAILS_QUERY
+    CUSTOMER_DETAILS_QUERY,
   );
 
   /**
@@ -58,7 +57,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       headers: {
         "Cache-Control": CACHE_NONE,
       },
-    }
+    },
   );
 }
 
@@ -156,23 +155,20 @@ function EmptyOrders() {
         You haven&apos;t placed any orders yet.
       </Text>
       <div className="w-48">
-        <Button
-          className="w-full mt-2 text-sm"
-          link={usePrefixPathWithLocale("/")}
-        >
+        <Link className="w-full mt-2 text-sm" to={usePrefixPathWithLocale("/")}>
           Start Shopping
-        </Button>
+        </Link>
       </div>
     </div>
   );
 }
 
-function Orders({ orders }: OrderCardsProps) {
-  return (
-    <ul className="grid grid-flow-row grid-cols-1 gap-5 false sm:grid-cols-2">
-      {orders.map((order) => (
-        <OrderCard order={order} key={order.id} />
-      ))}
-    </ul>
-  );
-}
+// function Orders({ orders }: OrderCardsProps) {
+//   return (
+//     <ul className="grid grid-flow-row grid-cols-1 gap-5 false sm:grid-cols-2">
+//       {orders.map((order) => (
+//         <OrderCard order={order} key={order.id} />
+//       ))}
+//     </ul>
+//   );
+// }

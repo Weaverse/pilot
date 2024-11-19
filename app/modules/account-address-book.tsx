@@ -1,7 +1,6 @@
 import { Form } from "@remix-run/react";
 import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
 import type { CustomerDetailsFragment } from "customer-accountapi.generated";
-import Button from "~/components/button";
 import { Link } from "~/components/link";
 import { Text } from "./text";
 
@@ -22,9 +21,9 @@ export function AccountAddressBook({
           </Text>
         )}
         <div className="">
-          <Button link="address/add" className="mb-5" variant="primary">
+          <Link to="address/add" className="mb-5" variant="primary">
             Add an Address
-          </Button>
+          </Link>
         </div>
         {Boolean(addresses?.length) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

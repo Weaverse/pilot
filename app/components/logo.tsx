@@ -12,8 +12,8 @@ export function Logo({
 
   return (
     <Link
-      className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit z-30"
       to="/"
+      className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit z-30"
       prefetch="intent"
     >
       <div

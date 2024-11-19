@@ -1,4 +1,4 @@
-import Button from "~/components/button";
+import Link from "~/components/link";
 import { PageHeader, Text } from "./text";
 
 export function GenericError({
@@ -37,9 +37,9 @@ export function GenericError({
             }}
           />
         )}
-        <Button variant="outline" link="/">
+        <Link variant="outline" to="/">
           Take me to the home page
-        </Button>
+        </Link>
       </PageHeader>
     </>
   );

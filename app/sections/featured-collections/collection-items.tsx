@@ -1,16 +1,15 @@
 import { Image } from "@shopify/hydrogen";
 import {
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   useParentInstance,
+  type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
-import type { ButtonStyleProps } from "~/components/button";
-import Button, { buttonStylesInputs } from "~/components/button";
+import Link, { linkStylesInputs, type LinkStyleProps } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
@@ -64,7 +63,7 @@ let variants = cva("", {
 interface CollectionItemsProps
   extends VariantProps<typeof variants>,
     OverlayProps,
-    ButtonStyleProps {
+    LinkStyleProps {
   aspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
   collectionNameColor: string;
   buttonText: string;
@@ -167,9 +166,8 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                   <h6>{collection.title}</h6>
                 )}
                 {contentPosition === "over" && buttonText && (
-                  <Button
-                    text={buttonText}
-                    link={`/collections/${collection.handle}`}
+                  <Link
+                    to={`/collections/${collection.handle}`}
                     variant="custom"
                     backgroundColor={backgroundColor}
                     textColor={textColor}
@@ -177,7 +175,9 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                     backgroundColorHover={backgroundColorHover}
                     textColorHover={textColorHover}
                     borderColorHover={borderColorHover}
-                  />
+                  >
+                    {buttonText}
+                  </Link>
                 )}
               </div>
             </div>
@@ -333,7 +333,7 @@ export let schema: HydrogenComponentSchema = {
           placeholder: "Shop now",
           condition: "contentPosition.eq.over",
         },
-        ...buttonStylesInputs.map((inp) => ({
+        ...linkStylesInputs.map((inp) => ({
           ...inp,
           condition: "contentPosition.eq.over",
         })),

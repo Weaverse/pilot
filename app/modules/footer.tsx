@@ -7,7 +7,7 @@ import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import {
   IconFacebookLogo,
   IconInstagramLogo,
@@ -88,7 +88,7 @@ export function Footer({
     <footer
       className={cn(
         "bg-[--color-footer-bg] text-[--color-footer-text] pt-16",
-        variants({ padding: footerWidth })
+        variants({ padding: footerWidth }),
       )}
       style={
         {
@@ -126,7 +126,7 @@ export function Footer({
                     >
                       {social.icon}
                     </Link>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             </div>

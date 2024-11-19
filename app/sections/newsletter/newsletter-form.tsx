@@ -5,7 +5,7 @@ import type {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { IconEnvelopeSimple } from "~/components/icons";
 import type { CustomerApiPlayLoad } from "~/routes/($locale).api.customer";
 
@@ -46,8 +46,8 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           </div>
           <Button
             type="submit"
-            loading={state === "submitting"}
             className="gap-3"
+            loading={state === "submitting"}
           >
             {buttonText}
           </Button>

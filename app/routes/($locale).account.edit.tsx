@@ -10,10 +10,10 @@ import type {
 } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
+import Link from "~/components/link";
 import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/customer-update-mutation";
 import { getInputStyleClasses } from "~/lib/utils";
-import { Text } from "~/modules/text";
 import { doLogout } from "./($locale).account_.logout";
 
 export interface AccountOutletContext {
@@ -138,9 +138,9 @@ export default function AccountDetailsEdit() {
           />
         </div>
         <div className="mt-6 flex gap-3 items-center justify-end">
-          <Button link=".." className="mb-2 px-4" variant="secondary">
+          <Link to="/account" className="mb-2 px-4" variant="secondary">
             Cancel
-          </Button>
+          </Link>
           <Button
             className="mb-2"
             type="submit"

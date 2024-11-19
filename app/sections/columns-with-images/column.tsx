@@ -9,8 +9,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
-import type { ButtonProps } from "~/components/button";
-import Button, { buttonContentInputs } from "~/components/button";
+import Link, { linkContentInputs, type LinkProps } from "~/components/link";
 
 let variants = cva("", {
   variants: {
@@ -27,7 +26,7 @@ let variants = cva("", {
 
 interface ColumnWithImageItemProps
   extends VariantProps<typeof variants>,
-    Pick<ButtonProps, "variant" | "text" | "link" | "openInNewTab">,
+    Pick<LinkProps, "variant" | "text" | "to" | "openInNewTab">,
     HydrogenComponentProps {
   imageSrc: WeaverseImage;
   imageBorderRadius: number;
@@ -43,7 +42,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
       heading,
       content,
       text,
-      link,
+      to,
       variant,
       openInNewTab,
       hideOnMobile,
@@ -70,9 +69,9 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
           {heading && <h6>{heading}</h6>}
           {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
           {text && (
-            <Button variant={variant} link={link} openInNewTab={openInNewTab}>
+            <Link variant={variant} to={to} openInNewTab={openInNewTab}>
               {text}
-            </Button>
+            </Link>
           )}
         </div>
       </div>
@@ -159,7 +158,7 @@ export let schema: HydrogenComponentSchema = {
           type: "heading",
           label: "Button (optional)",
         },
-        ...buttonContentInputs,
+        ...linkContentInputs,
       ],
     },
   ],

@@ -1,8 +1,12 @@
 import { Image, flattenConnection } from "@shopify/hydrogen";
-import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
+import type {
+  MoneyV2,
+  ProductVariant,
+} from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import type { ProductCardFragment } from "storefrontapi.generated";
 import { Link } from "~/components/link";
+import { NavLink } from "~/components/nav-link";
 import { ProductTag } from "~/components/product-tag";
 import { VariantPrices } from "~/components/variant-prices";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
@@ -56,7 +60,7 @@ export function ProductCard({
           <QuickViewTrigger productHandle={product.handle} />
         </div>
         <div className="flex flex-col gap-1">
-          <Link
+          <NavLink
             to={`/products/${product.handle}`}
             prefetch="intent"
             className={({ isTransitioning }) => {
@@ -65,8 +69,8 @@ export function ProductCard({
           >
             <span>{product.title}</span>
             {firstVariant.sku && <span>({firstVariant.sku})</span>}
-          </Link>
-          <VariantPrices variant={firstVariant} />
+          </NavLink>
+          <VariantPrices variant={firstVariant as ProductVariant} />
         </div>
       </div>
     </div>

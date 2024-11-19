@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { IconX } from "~/components/icons";
 import { Link } from "~/components/link";
 
@@ -55,7 +55,7 @@ export function Modal({
                   <IconX aria-label="Close panel" className="w-4 h-4" />
                 </Link>
               ) : (
-                <Button variant="link" onClick={onClose}>
+                <Button variant="underline" onClick={onClose}>
                   <IconX aria-label="Close panel" className="w-4 h-4" />
                 </Button>
               )}
