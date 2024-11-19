@@ -69,7 +69,7 @@ export function GlobalStyle() {
               --height-nav: ${settings.navHeightMobile}rem;
               --page-width: ${pageWidth}px;
 
-              /* Colors */
+              /* Colors (general) */
               --color-text: ${hexToRgbString(colorText)};
               --color-background: ${hexToRgbString(colorBackground)};
               --color-foreground: ${hexToRgbString(colorForeground)};
@@ -81,11 +81,15 @@ export function GlobalStyle() {
               --color-transparent-header-text: ${transparentHeaderText};
               --color-footer-bg: ${footerBgColor};
               --color-footer-text: ${footerText};
-              --color-button-primary-bg: ${buttonPrimaryBg};
-              --color-button-primary-text: ${buttonPrimaryColor};
-              --color-button-secondary-bg: ${buttonSecondaryBg};
-              --color-button-secondary-text: ${buttonSecondaryColor};
-              --color-button-outline-text-and-border: ${buttonOutlineTextAndBorder};
+
+              /* Colors (buttons & links) */
+              --btn-primary-bg: ${buttonPrimaryBg};
+              --btn-primary-text: ${buttonPrimaryColor};
+              --btn-secondary-bg: ${buttonSecondaryBg};
+              --btn-secondary-text: ${buttonSecondaryColor};
+              --btn-outline-text: ${buttonOutlineTextAndBorder};
+
+              /* Colors (product) */
               --color-drawers-bg: ${drawersBg};
               --color-compare-price-text: ${comparePriceTextColor};
               --color-sale-tag: ${saleTagColor};

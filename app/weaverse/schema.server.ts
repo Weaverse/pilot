@@ -341,7 +341,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Primary button",
+          label: "Button (primary)",
         },
         {
           type: "color",
@@ -357,7 +357,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Secondary button",
+          label: "Button (secondary)",
         },
         {
           type: "color",
@@ -373,7 +373,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Outline button",
+          label: "Button (outline)",
         },
         {
           type: "color",
