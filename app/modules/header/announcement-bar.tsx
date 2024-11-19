@@ -13,7 +13,6 @@ export function AnnouncementBar() {
     scrollingGap,
     scrollingSpeed,
   } = themeSettings;
-  console.log("👉 --------> - topbarText:", topbarText);
 
   function updateStyles() {
     if (topbarText) {

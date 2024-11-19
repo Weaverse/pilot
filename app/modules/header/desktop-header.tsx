@@ -62,13 +62,13 @@ export function DesktopHeader({
         } as React.CSSProperties
       }
       className={cn(
-        "transition-colors duration-300 ease-in-out",
+        "transition-all duration-300 ease-in-out",
         "hidden lg:block lg:w-full z-10",
         "bg-[--color-header-bg] hover:bg-[--color-header-bg]",
         "text-[--color-header-text] hover:text-[--color-header-text]",
         "border-b border-[rgb(230,230,230)]",
         variants({ padding: headerWidth }),
-        scrolled && "shadow-header",
+        scrolled ? "shadow-header" : "shadow-none",
         enableTransparent
           ? [
               "fixed top-[var(--topbar-height,var(--initial-topbar-height))] w-screen group/header",
