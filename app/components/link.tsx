@@ -14,7 +14,7 @@ import { type HTMLAttributes, forwardRef } from "react";
 import { cn } from "~/lib/cn";
 import type { RootLoader } from "~/root";
 
-let variants = cva(["transition-colors"], {
+let variants = cva(["transition-colors inline-flex"], {
   variants: {
     variant: {
       primary: [
