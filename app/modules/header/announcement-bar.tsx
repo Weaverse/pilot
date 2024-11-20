@@ -20,6 +20,8 @@ export function AnnouncementBar() {
         "--topbar-height",
         `${Math.max(topbarHeight - window.scrollY, 0)}px`,
       );
+    } else {
+      document.body.style.setProperty("--topbar-height", "0px");
     }
   }
 
@@ -28,9 +30,11 @@ export function AnnouncementBar() {
     updateStyles();
     window.addEventListener("scroll", updateStyles);
     return () => window.removeEventListener("scroll", updateStyles);
-  }, []);
+  }, [topbarText]);
 
-  if (!topbarText) return null;
+  if (!topbarText) {
+    return null;
+  }
 
   return (
     <div

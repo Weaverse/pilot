@@ -163,9 +163,7 @@ function Layout({ children }: { children?: React.ReactNode }) {
   let nonce = useNonce();
   let data = useRouteLoaderData<RootLoader>("root");
   let locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-  let { enableTransparentHeader, topbarHeight, topbarText, headerWidth } =
-    useThemeSettings();
-  console.log("👉 --------> - topbarHeight:", topbarHeight);
+  let { topbarHeight, topbarText } = useThemeSettings();
 
   return (
     <html lang={locale.language}>

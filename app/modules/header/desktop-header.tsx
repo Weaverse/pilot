@@ -43,8 +43,7 @@ export function DesktopHeader({
   menu?: EnhancedMenu;
   shopName: string;
 }) {
-  let { enableTransparentHeader, topbarHeight, topbarText, headerWidth } =
-    useThemeSettings();
+  let { enableTransparentHeader, headerWidth } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
   let { isOpen, openDrawer, closeDrawer } = useDrawer();
@@ -56,11 +55,6 @@ export function DesktopHeader({
 
   return (
     <header
-      style={
-        {
-          "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
-        } as React.CSSProperties
-      }
       className={cn(
         "transition-all duration-300 ease-in-out",
         "hidden lg:block lg:w-full z-10",
