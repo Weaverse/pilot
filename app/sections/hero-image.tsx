@@ -1,6 +1,7 @@
 import {
   type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
+  useThemeSettings,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -18,7 +19,11 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
       small: "min-h-[40vh] lg:min-h-[50vh]",
       medium: "min-h-[50vh] lg:min-h-[60vh]",
       large: "min-h-[70vh] lg:min-h-[80vh]",
-      full: "h-screen",
+      full: "",
+    },
+    enableTransparentHeader: {
+      true: "",
+      false: "",
     },
     contentPosition: {
       "top left": "justify-start items-start [&_.paragraph]:[text-align:left]",
@@ -37,6 +42,18 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
       "bottom right": "justify-end items-end [&_.paragraph]:[text-align:right]",
     },
   },
+  compoundVariants: [
+    {
+      height: "full",
+      enableTransparentHeader: true,
+      className: "h-screen",
+    },
+    {
+      height: "full",
+      enableTransparentHeader: false,
+      className: "h-screen-no-nav",
+    },
+  ],
   defaultVariants: {
     height: "large",
     contentPosition: "center center",
@@ -46,11 +63,16 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
 let HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
   (props, ref) => {
     let { children, height, contentPosition, ...rest } = props;
+    let { enableTransparentHeader } = useThemeSettings();
     return (
       <Section
         ref={ref}
         {...rest}
-        containerClassName={variants({ contentPosition, height })}
+        containerClassName={variants({
+          contentPosition,
+          height,
+          enableTransparentHeader,
+        })}
       >
         {children}
       </Section>

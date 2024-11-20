@@ -33,10 +33,6 @@ const SECTION_HEIGHTS = {
     desktop: "70vh",
     mobile: "80vh",
   },
-  full: {
-    desktop: "calc(var(--screen-height, 100vh)",
-    mobile: "calc(var(--screen-height, 100vh)",
-  },
   custom: null,
 };
 
@@ -45,7 +41,7 @@ export interface HeroVideoProps
     HydrogenComponentProps,
     OverlayProps {
   videoURL: string;
-  height: "small" | "medium" | "large" | "full" | "custom";
+  height: "small" | "medium" | "large" | "custom";
   heightOnDesktop: number;
   heightOnMobile: number;
 }
@@ -76,7 +72,7 @@ let variants = cva(
     defaultVariants: {
       gap: 20,
     },
-  }
+  },
 );
 
 let ReactPlayer = lazy(() => import("react-player/lazy"));
@@ -134,7 +130,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
       // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
       inViewRef(node);
     },
-    [inViewRef]
+    [inViewRef],
   );
 
   function handleResize() {
@@ -150,7 +146,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     };
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
-  const [scope] = useAnimation();
+  let [scope] = useAnimation();
 
   return (
     <section
@@ -164,7 +160,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "flex items-center justify-center relative overflow-hidden",
           "h-[var(--mobile-height)] sm:h-[var(--desktop-height)]",
           "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
-          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]"
+          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
         {inView && (
@@ -226,7 +222,6 @@ export let schema: HydrogenComponentSchema = {
               { value: "small", label: "Small" },
               { value: "medium", label: "Medium" },
               { value: "large", label: "Large" },
-              { value: "full", label: "Fullscreen" },
               { value: "custom", label: "Custom" },
             ],
           },

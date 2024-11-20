@@ -2,6 +2,7 @@ import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
+  useThemeSettings,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -20,9 +21,25 @@ let variants = cva("group [&_.swiper]:h-full", {
       small: "h-[40vh] lg:h-[50vh]",
       medium: "h-[50vh] lg:h-[60vh]",
       large: "h-[70vh] lg:h-[80vh]",
-      full: "h-screen",
+      full: "",
+    },
+    enableTransparentHeader: {
+      true: "",
+      false: "",
     },
   },
+  compoundVariants: [
+    {
+      height: "full",
+      enableTransparentHeader: true,
+      className: "h-screen",
+    },
+    {
+      height: "full",
+      enableTransparentHeader: false,
+      className: "h-screen-no-nav",
+    },
+  ],
   defaultVariants: {
     height: "large",
   },
@@ -62,6 +79,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     children = [],
     ...rest
   } = props;
+  let { enableTransparentHeader } = useThemeSettings();
 
   return (
     <section
@@ -70,7 +88,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
         .join("-")}
       ref={ref}
       {...rest}
-      className={variants({ height })}
+      className={variants({ height, enableTransparentHeader })}
     >
       <Swiper
         effect={effect}
