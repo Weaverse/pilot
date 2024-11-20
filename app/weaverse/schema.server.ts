@@ -214,6 +214,7 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Enable transparent header",
           name: "enableTransparentHeader",
           defaultValue: true,
+          helpText: "Header is transparent in home page only.",
         },
         {
           type: "image",
