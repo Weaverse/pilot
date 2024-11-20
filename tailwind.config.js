@@ -97,9 +97,10 @@ export default {
         screen: "var(--screen-height, 100vh)",
       },
       height: {
-        screen: "var(--screen-height, 100vh)",
+        screen:
+          "calc(var(--screen-height, 100vh) - var(--initial-topbar-height))",
         "screen-no-nav":
-          "calc(var(--screen-height, 100vh) - var(--height-nav))",
+          "calc(var(--screen-height, 100vh) - var(--height-nav) - var(--initial-topbar-height))",
         "screen-dynamic": "var(--screen-height-dynamic, 100vh)",
       },
       width: {
