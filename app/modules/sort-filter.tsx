@@ -54,9 +54,7 @@ export function SortFilter({
       <div className="flex items-center justify-between w-full">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={
-            "relative flex items-center justify-center w-8 h-8 focus:ring-body/5"
-          }
+          className="relative flex items-center justify-center w-8 h-8 focus:ring-body"
         >
           <IconFilters />
         </button>

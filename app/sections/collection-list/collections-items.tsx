@@ -9,21 +9,18 @@ import { getImageLoadingPriority } from "~/lib/const";
 import { Button } from "~/modules/button";
 import { CollectionCard } from "./collection-card";
 
-interface CollectionListProps extends SectionProps {
-  heading: string;
+interface CollectionsItemsProps {
   prevButtonText: string;
   nextButtonText: string;
   imageAspectRatio: string;
 }
 
-let CollectionList = forwardRef<HTMLElement, CollectionListProps>(
+let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
   (props, ref) => {
     let { collections } = useLoaderData<CollectionsQuery>();
-    let { heading, prevButtonText, nextButtonText, imageAspectRatio, ...rest } =
-      props;
+    let { prevButtonText, nextButtonText, imageAspectRatio, ...rest } = props;
     return (
-      <Section ref={ref} {...rest}>
-        <h6>{heading}</h6>
+      <div ref={ref} {...rest}>
         <Pagination connection={collections}>
           {({ nodes, isLoading, PreviousLink, NextLink }) => (
             <>
@@ -50,33 +47,20 @@ let CollectionList = forwardRef<HTMLElement, CollectionListProps>(
             </>
           )}
         </Pagination>
-      </Section>
+      </div>
     );
   },
 );
 
-export default CollectionList;
+export default CollectionsItems;
 
 export let schema: HydrogenComponentSchema = {
-  type: "collection-list",
-  title: "Collection list",
-  limit: 1,
-  childTypes: ["subheading", "heading", "paragraph", "collections-items"],
-  enabledOn: {
-    pages: ["COLLECTION_LIST"],
-  },
+  type: "collections-items",
+  title: "Collection items",
   inspector: [
-    { group: "Layout", inputs: layoutInputs },
     {
-      group: "Collection list",
+      group: "Collection items",
       inputs: [
-        {
-          type: "text",
-          name: "heading",
-          label: "Heading",
-          defaultValue: "Collections",
-          placeholder: "Collections",
-        },
         {
           type: "text",
           name: "prevButtonText",

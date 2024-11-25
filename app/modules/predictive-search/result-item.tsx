@@ -43,7 +43,9 @@ export function SearchResultItem({
           </div>
         )}
         <div className="space-y-1">
-          {vendor && <div className="text-body/50 text-sm">By {vendor}</div>}
+          {vendor && (
+            <div className="text-body-subtle text-sm">By {vendor}</div>
+          )}
           {styledTitle ? (
             <div
               className="underline-animation"
