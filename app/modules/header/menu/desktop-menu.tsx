@@ -1,38 +1,39 @@
 import { Image } from "@shopify/hydrogen";
-import clsx from "clsx";
 import React from "react";
 import { IconCaretDown } from "~/components/icons";
 import { Link } from "~/components/link";
+import { cn } from "~/lib/cn";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
 
 export function DesktopMenu({ menu }: { menu: EnhancedMenu }) {
   let items = menu.items as unknown as SingleMenuItem[];
-  if (!items) return null;
-  return (
-    <nav className="flex items-stretch h-full">
-      {items.map((item) => {
-        let { id, items = [] } = item;
-        let level = getMaxDepth(item);
-        let isAllImageItems =
-          items.length &&
-          items.every(
-            (childItem) =>
-              childItem?.resource?.image && childItem.items.length === 0,
-          );
-        let MenuComponent: React.FC<SingleMenuItem> = isAllImageItems
-          ? ImagesMenu
-          : level > 2
-            ? MegaMenu
-            : level === 2
-              ? DropdownMenu
-              : FirstLevelMenu;
+  if (items.length) {
+    return (
+      <nav className="flex items-stretch h-full">
+        {items.map((item) => {
+          let { id, items = [] } = item;
+          let level = getMaxDepth(item);
+          let isAllImageItems =
+            items.length &&
+            items.every(
+              (cItem) => cItem?.resource?.image && cItem.items.length === 0,
+            );
+          let MenuComponent: React.FC<SingleMenuItem> = isAllImageItems
+            ? ImagesMenu
+            : level > 2
+              ? MegaMenu
+              : level === 2
+                ? DropdownMenu
+                : FirstLevelMenu;
 
-        return <MenuComponent key={id} {...item} />;
-      })}
-    </nav>
-  );
+          return <MenuComponent key={id} {...item} />;
+        })}
+      </nav>
+    );
+  }
+  return null;
 }
 
 function MegaMenu({ title, items, to }: SingleMenuItem) {
@@ -47,7 +48,7 @@ function MegaMenu({ title, items, to }: SingleMenuItem) {
         prefetch="intent"
         className="uppercase transition-none"
       >
-        <span className="underline-animation">{item.title}</span>
+        <span className="reveal-underline">{item.title}</span>
       </Link>
       <ul className="space-y-1.5">
         {item.items.map((subItem) => (
@@ -57,7 +58,7 @@ function MegaMenu({ title, items, to }: SingleMenuItem) {
               prefetch="intent"
               className="relative transition-none"
             >
-              <span className="underline-animation">{subItem.title}</span>
+              <span className="reveal-underline">{subItem.title}</span>
             </Link>
           </li>
         ))}
@@ -115,7 +116,7 @@ function DropdownMenu(props: SingleMenuItem) {
                   prefetch="intent"
                   className="transition-none"
                 >
-                  <span className="underline-animation">{childItem.title}</span>
+                  <span className="reveal-underline">{childItem.title}</span>
                 </Link>
               </li>
             ))}
@@ -168,15 +169,13 @@ function FirstLevelMenu(props: {
   let { children, className, title, to } = props;
   let hasChild = React.Children.count(children) > 0;
   return (
-    <div className={clsx("group", className)}>
+    <div className={cn("group", className)}>
       <div className="h-full flex items-center px-3 cursor-pointer relative z-30">
         <Link
           to={to}
           className="py-2 flex items-center gap-1.5 transition-none"
         >
-          <span className="uppercase underline-animation !pb-[5px]">
-            {title}
-          </span>
+          <span className="uppercase reveal-underline !pb-[5px]">{title}</span>
           {hasChild && (
             <IconCaretDown className="w-3 h-3 mb-[3px] group-hover:rotate-180 transition-transform duration-400" />
           )}

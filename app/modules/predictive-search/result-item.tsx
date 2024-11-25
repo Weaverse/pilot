@@ -48,7 +48,7 @@ export function SearchResultItem({
           )}
           {styledTitle ? (
             <div
-              className="underline-animation"
+              className="reveal-underline"
               dangerouslySetInnerHTML={{ __html: styledTitle }}
             />
           ) : (
@@ -57,7 +57,7 @@ export function SearchResultItem({
                 __typename === "Product" ? "line-clamp-1" : "line-clamp-2",
               )}
             >
-              <span className="underline-animation">{title}</span>
+              <span className="reveal-underline">{title}</span>
             </div>
           )}
           {price && (

@@ -170,7 +170,7 @@
   view-transition-name: product-image;
 }
 
-.underline-animation {
+.reveal-underline {
   background-image: linear-gradient(
     to right,
     var(--underline-color, rgb(15, 15, 15)),
@@ -183,7 +183,7 @@
   transition: background 200ms ease-in-out;
   background-position: left calc(1em + 4px);
 }
-.underline-animation:hover {
+.reveal-underline:hover {
   background-size: 100% 1px;
 }
 .dropdown-transition {

@@ -281,7 +281,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
             <div>
               {merchandise?.product?.handle ? (
                 <Link to={`/products/${merchandise.product.handle}`}>
-                  <span className="underline-animation">
+                  <span className="reveal-underline">
                     {merchandise?.product?.title || ""}
                   </span>
                 </Link>
