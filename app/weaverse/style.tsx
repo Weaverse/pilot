@@ -1,31 +1,14 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
-
-function hexToPercent(hex: string) {
-  let num = Number.parseInt(hex, 16);
-  return Math.floor((num / 255) * 100);
-}
-
-function hexToRgbString(hexColor = ""): string {
-  if (!hexColor) return "";
-  let hex = hexColor.replace("#", "");
-  if (hex.length === 3) {
-    hex = hex.replace(/(.)/g, "$1$1");
-  }
-  let r = Number.parseInt(hex.substring(0, 2), 16) || 0;
-  let g = Number.parseInt(hex.substring(2, 4), 16) || 0;
-  let b = Number.parseInt(hex.substring(4, 6), 16) || 0;
-  let a = hexToPercent(hex.substring(6, 8)) || 0;
-  let val = `${r} ${g} ${b}`;
-  return `${val}${a ? ` / ${a}%` : ""}`.trim();
-}
+import { colord } from "colord";
 
 export function GlobalStyle() {
   let settings = useThemeSettings();
   if (settings) {
     let {
-      colorText,
       colorBackground,
-      colorForeground,
+      colorText,
+      colorTextSubtle,
+      colorTextInverse,
       colorLine,
       topbarTextColor,
       topbarBgColor,
@@ -39,11 +22,11 @@ export function GlobalStyle() {
       buttonSecondaryBg,
       buttonSecondaryColor,
       buttonOutlineTextAndBorder,
-      drawersBg,
       comparePriceTextColor,
-      saleTagColor,
-      newTagColor,
-      otherTagColor,
+      discountBadge,
+      newBadge,
+      bestSellerBadge,
+      otherBadges,
       soldOutAndUnavailable,
       starRating,
       bodyBaseSize,
@@ -70,10 +53,14 @@ export function GlobalStyle() {
               --page-width: ${pageWidth}px;
 
               /* Colors (general) */
-              --color-text: ${hexToRgbString(colorText)};
-              --color-background: ${hexToRgbString(colorBackground)};
-              --color-foreground: ${hexToRgbString(colorForeground)};
-              --color-line: ${hexToRgbString(colorLine)};
+              --color-background: ${colorBackground};
+              --color-text: ${colorText};
+              --color-text-subtle: ${colorTextSubtle};
+              --color-text-inverse: ${colorTextInverse};
+              --color-line: ${colorLine};
+              --color-line-subtle: ${colord(colorLine).lighten(0.3).toHex()};
+
+              /* Colors (header & footer) */
               --color-topbar-text: ${topbarTextColor};
               --color-topbar-bg: ${topbarBgColor};
               --color-header-bg: ${headerBgColor};
@@ -90,11 +77,11 @@ export function GlobalStyle() {
               --btn-outline-text: ${buttonOutlineTextAndBorder};
 
               /* Colors (product) */
-              --color-drawers-bg: ${drawersBg};
               --color-compare-price-text: ${comparePriceTextColor};
-              --color-sale-tag: ${saleTagColor};
-              --color-new-tag: ${newTagColor};
-              --color-other-tag: ${otherTagColor};
+              --color-discount: ${discountBadge};
+              --color-new-badge: ${newBadge};
+              --color-best-seller: ${bestSellerBadge};
+              --color-other-badges: ${otherBadges};
               --color-sold-out-and-unavailable: ${soldOutAndUnavailable};
               --color-star-rating: ${starRating};
 
