@@ -26,10 +26,6 @@
     border-color: rgb(var(--color-border) / 0.15);
   }
 
-  body {
-    @apply bg-background text-body/90 antialiased;
-  }
-
   html {
     @apply font-serif;
     scroll-padding-top: 10rem;

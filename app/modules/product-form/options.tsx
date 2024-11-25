@@ -6,7 +6,7 @@ import type { ProductVariantFragmentFragment } from "storefrontapi.generated";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/lib/cn";
 
-let variants = cva("border border-line/75 hover:border-body cursor-pointer", {
+let variants = cva("border border-line hover:border-body cursor-pointer", {
   variants: {
     colorSize: {
       sm: "w-8 h-8",
@@ -247,12 +247,11 @@ export function VariantOption(props: VariantOptionProps) {
             <span
               key={value.value}
               className={cn(
-                "py-0.5 cursor-pointer border-b border-line/75 hover:border-body",
+                "py-0.5 cursor-pointer border-b border-line hover:border-body",
                 selectedOptionValue === value.value && "border-body",
                 !value.isAvailable && "opacity-50",
               )}
               onClick={() => onSelectOptionValue(value.value)}
-              role="listitem"
             >
               {value.value}
             </span>

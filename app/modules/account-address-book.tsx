@@ -53,7 +53,7 @@ function Address({
     <div className="p-5 border border-[#B7B7B7] rounded-sm flex flex-col">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="px-3 py-1 text-xs font-medium border text-body/50">
+          <span className="px-3 py-1 text-xs font-medium border text-body-subtle">
             Default
           </span>
         </div>
@@ -74,14 +74,14 @@ function Address({
       <div className="flex flex-row font-medium mt-6 items-baseline">
         <Link
           to={`/account/address/${encodeURIComponent(address.id)}`}
-          className="text-left underline text-body/50"
+          className="text-left underline text-body-subtle"
           prefetch="intent"
         >
           Edit
         </Link>
         <Form action="address/delete" method="delete">
           <input type="hidden" name="addressId" value={address.id} />
-          <button className="text-left text-body/50 ml-6 text-sm">
+          <button className="text-left text-body-subtle ml-6 text-sm">
             Remove
           </button>
         </Form>

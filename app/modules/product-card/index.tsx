@@ -39,7 +39,7 @@ export function ProductCard({
   return (
     <div className="flex flex-col gap-2">
       <div className={clsx("grid gap-4", className)}>
-        <div className="relative aspect-[4/5] bg-background/5 group">
+        <div className="relative aspect-[4/5] group">
           {image && (
             <Link to={`/products/${product.handle}`} prefetch="intent">
               <Image

@@ -38,7 +38,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
           <h1 className="text-center">{title}</h1>
           <span className="uppercase">by {author?.name}</span>
         </div>
-        <div className="border-t border-line/50 w-1/3 mx-auto" />
+        <div className="border-t border-line-subtle w-1/3 mx-auto" />
         <article className="prose max-w-screen-xl mx-auto py-10">
           <div className="px-4 mx-auto space-y-8 md:space-y-16">
             <div

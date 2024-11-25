@@ -86,7 +86,7 @@ export function DesktopHeader({
             openDrawer={openDrawer}
             closeDrawer={closeDrawer}
           />
-          <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-body/5" />
+          <AccountLink className="relative flex items-center justify-center w-8 h-8" />
           <CartCount
             isHome={isHome}
             openCart={openCart}
