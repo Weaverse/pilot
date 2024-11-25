@@ -223,11 +223,11 @@ export function parseMenu(
 }
 
 export const INPUT_STYLE_CLASSES =
-  "appearance-none rounded dark:bg-transparent border focus:border-line/50 focus:ring-0 w-full py-2 px-3 text-body/90 placeholder:text-body/50 leading-tight focus:shadow-outline";
+  "appearance-none rounded dark:bg-transparent border focus:border-line focus:ring-0 w-full py-2 px-3 text-body placeholder:text-body leading-tight focus:shadow-outline";
 
 export const getInputStyleClasses = (isError?: string | null) => {
   return `${INPUT_STYLE_CLASSES} ${
-    isError ? "border-red-500" : "border-line/20"
+    isError ? "border-red-500" : "border-gray-200"
   }`;
 };
 

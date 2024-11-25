@@ -29,7 +29,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
 
     const { data, errors } = await context.customerAccount.query(
       CUSTOMER_ORDER_QUERY,
-      { variables: { orderId } }
+      { variables: { orderId } },
     );
 
     if (errors?.length || !data?.order?.lineItems) {
@@ -84,7 +84,7 @@ export default function OrderRoute() {
       (acc: number, curr) => {
         return (acc += Number.parseFloat(curr.allocatedAmount.amount));
       },
-      0
+      0,
     );
     totalDiscount += itemDiscount;
   });
@@ -104,7 +104,7 @@ export default function OrderRoute() {
         <div>
           <p className="">Order No. {order.name}</p>
           <p className="mt-2">
-            Placed on {new Date(order.processedAt!).toDateString()}
+            Placed on {new Date(order.processedAt).toDateString()}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 mt-6">
             <div className="space-y-6 col-span-2 md:pr-14">
@@ -127,7 +127,7 @@ export default function OrderRoute() {
                       <dt className="sr-only">Product</dt>
                       <dd className="truncate">
                         <div className="">{lineItem.title}</div>
-                        <div className="text-body/50 text-sm">
+                        <div className="text-body-subtle text-sm">
                           {lineItem.variantTitle}
                         </div>
                       </dd>
@@ -144,14 +144,14 @@ export default function OrderRoute() {
                             discountApp?.title || discountApp?.code;
                           return (
                             <div
-                              className="text-body/50 flex items-center gap-1 border border-[#B7B7B7] py-1 px-1.5 rounded-sm text-sm w-fit"
+                              className="text-body-subtle flex items-center gap-1 border border-[#B7B7B7] py-1 px-1.5 rounded-sm text-sm w-fit"
                               key={index}
                             >
                               <IconTag className="w-4 h-4" />
                               <span>{discountTitle}</span>
                               <div className="inline-flex">
                                 (<span>-</span>
-                                <Money data={discount.allocatedAmount!} />)
+                                <Money data={discount.allocatedAmount} />)
                               </div>
                             </div>
                           );
@@ -160,11 +160,11 @@ export default function OrderRoute() {
                       <dt className="sr-only">Current Price</dt>
                       <dd className="truncate flex gap-2 mt-2">
                         {hasDiscount && (
-                          <span className="line-through text-body/50">
-                            <Money data={lineItem.totalPrice!} />
+                          <span className="line-through text-body-subtle">
+                            <Money data={lineItem.totalPrice} />
                           </span>
                         )}
-                        <Money data={lineItem.currentTotalPrice!} />
+                        <Money data={lineItem.currentTotalPrice} />
                       </dd>
                     </dl>
                   </div>
@@ -175,26 +175,26 @@ export default function OrderRoute() {
                 <div className="flex justify-between gap-4 ">
                   <span className="font-bold">Subtotal</span>
                   <span>
-                    <Money data={order.subtotal!} />
+                    <Money data={order.subtotal} />
                   </span>
                 </div>
                 <div className="flex justify-between gap-4">
                   <span>Tax</span>
                   <span>
-                    <Money data={order.totalTax!} />
+                    <Money data={order.totalTax} />
                   </span>
                 </div>
                 <div className="flex justify-between gap-4">
                   <span>Shipping</span>
                   <span>
-                    <Money data={order.totalShipping!} />
+                    <Money data={order.totalShipping} />
                   </span>
                 </div>
                 <hr className="border-t border-[#B7B7B7] pb-2" />
                 <div className="flex justify-between gap-4">
                   <span className="font-bold">Total</span>
                   <span className="text-xl">
-                    <Money data={order.totalPrice!} />
+                    <Money data={order.totalPrice} />
                   </span>
                 </div>
                 <div className="flex justify-between gap-4">
@@ -220,7 +220,7 @@ export default function OrderRoute() {
                   {order?.shippingAddress?.formatted ? (
                     order.shippingAddress.formatted.map((line: string) => (
                       <li key={line}>
-                        <Text className="text-body/50">{line}</Text>
+                        <Text className="text-body-subtle">{line}</Text>
                       </li>
                     ))
                   ) : (
@@ -234,8 +234,8 @@ export default function OrderRoute() {
               {fulfillmentStatus && (
                 <div
                   className={clsx(
-                    `mt-3 px-2.5 py-1 text-sm inline-block w-auto`,
-                    "border text-[#696662] border-[#696662]"
+                    "mt-3 px-2.5 py-1 text-sm inline-block w-auto",
+                    "border text-[#696662] border-[#696662]",
                   )}
                 >
                   <Text size="fine">{statusMessage(fulfillmentStatus!)}</Text>

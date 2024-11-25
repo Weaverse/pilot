@@ -15,7 +15,7 @@ export function OrderCard({ order }: { order: OrderCardFragment }) {
     <li className="flex text-center border border-[#B7B7B7] rounded-sm items-center gap-5 p-5">
       {lineItems[0].image && (
         <Link className="shrink-0" to={orderLink} prefetch="intent">
-          <div className="card-image aspect-square bg-background/5">
+          <div className="card-image aspect-square">
             <Image
               width={140}
               height={140}
@@ -44,11 +44,11 @@ export function OrderCard({ order }: { order: OrderCardFragment }) {
         <dl className="flex flex-col mt-2">
           <dt className="sr-only">Order ID</dt>
           <dd>
-            <p className="text-body/50">Order No. {order.number}</p>
+            <p className="text-body-subtle">Order No. {order.number}</p>
           </dd>
           <dt className="sr-only">Order Date</dt>
           <dd>
-            <p className="text-body/50">
+            <p className="text-body-subtle">
               {new Date(order.processedAt).toDateString()}
             </p>
           </dd>
@@ -56,16 +56,14 @@ export function OrderCard({ order }: { order: OrderCardFragment }) {
             <>
               <dt className="sr-only">Fulfillment Status</dt>
               <dd className="mt-3">
-                <span
-                  className={`px-2.5 py-1 text-xs font-medium border bg-background/5`}
-                >
+                <span className="px-2.5 py-1 text-xs font-medium border bg-gray-100">
                   {statusMessage(fulfillmentStatus)}
                 </span>
               </dd>
             </>
           )}
           <Link
-            className="mt-3 text-body/50 underline"
+            className="mt-3 text-body-subtle underline"
             to={orderLink}
             prefetch="intent"
           >

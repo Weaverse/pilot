@@ -181,7 +181,7 @@ function Layout({ children }: { children?: React.ReactNode }) {
             "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
           } as CSSProperties
         }
-        className="transition-opacity !opacity-100 duration-300"
+        className="transition-opacity !opacity-100 duration-300 antialiased bg-background text-body"
       >
         {data ? (
           <Analytics.Provider
@@ -249,7 +249,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-let LAYOUT_QUERY = `#graphql
+const LAYOUT_QUERY = `#graphql
   query layout(
     $language: LanguageCode
     $headerMenuHandle: String!

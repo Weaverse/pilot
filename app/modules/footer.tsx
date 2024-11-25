@@ -20,7 +20,7 @@ import { Input } from "~/modules/input";
 import { CountrySelector } from "./country-selector";
 import { FormEvent, useEffect, useState } from "react";
 
-let variants = cva("divide-y divide-line/50 space-y-9", {
+let variants = cva("divide-y divide-line-subtle space-y-9", {
   variants: {
     width: {
       full: "w-full h-full",

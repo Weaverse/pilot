@@ -106,7 +106,7 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
         <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
           <button
             type="submit"
-            className="text-body/50 group flex gap-2 items-center"
+            className="text-body-subtle group flex gap-2 items-center"
           >
             <IconSignOut className="w-4 h-4" />
             <span className="group-hover:underline">Sign out</span>

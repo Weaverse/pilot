@@ -139,7 +139,7 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Announcement bar",
+      group: "Scrolling announcements",
       inputs: [
         {
           type: "richtext",
@@ -150,7 +150,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "range",
           label: "Content gap",
-          name: "scrollingGap",
+          name: "topbarScrollingGap",
           configs: {
             min: 0,
             max: 100,
@@ -172,24 +172,16 @@ export let themeSchema: HydrogenThemeSchema = {
           defaultValue: 36,
         },
         {
-          type: "switch",
-          label: "Enable scrolling",
-          name: "enableScrolling",
-          defaultValue: false,
-          helpText:
-            "Scrolling is automatically detected based on the content length.",
-        },
-        {
           type: "range",
           label: "Scrolling speed",
-          name: "scrollingSpeed",
+          name: "topbarScrollingSpeed",
           configs: {
-            min: 0,
-            max: 100,
+            min: 1,
+            max: 20,
             step: 1,
-            unit: "s",
+            unit: "x",
           },
-          defaultValue: 10,
+          defaultValue: 5,
         },
       ],
     },
@@ -264,21 +256,27 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Text",
-          name: "colorText",
-          defaultValue: "#0F0F0F",
-        },
-        {
-          type: "color",
           label: "Background",
           name: "colorBackground",
           defaultValue: "#ffffff",
         },
         {
           type: "color",
-          label: "Foreground",
-          name: "colorForeground",
-          defaultValue: "#e5e7eb",
+          label: "Text",
+          name: "colorText",
+          defaultValue: "#0F0F0F",
+        },
+        {
+          type: "color",
+          label: "Text (subtle)",
+          name: "colorTextSubtle",
+          defaultValue: "#88847F",
+        },
+        {
+          type: "color",
+          label: "Text (inverse)",
+          name: "colorTextInverse",
+          defaultValue: "#fff",
         },
         {
           type: "color",
@@ -384,47 +382,47 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Drawers and popovers",
+          label: "Labels / badges / tags",
         },
         {
           type: "color",
-          label: "Background color",
-          name: "drawersBg",
-          defaultValue: "#ffffff",
-        },
-        {
-          type: "heading",
-          label: "Product",
+          label: "Discounts",
+          name: "discountBadge",
+          defaultValue: "#c6512c",
         },
         {
           type: "color",
-          label: "Compare price text",
-          name: "comparePriceTextColor",
-          defaultValue: "#737373",
+          label: "New",
+          name: "newBadge",
+          defaultValue: "#67785d",
         },
         {
           type: "color",
-          label: "Sale tags",
-          name: "saleTagColor",
-          defaultValue: "#dc2626",
-        },
-        {
-          type: "color",
-          label: "New tags",
-          name: "newTagColor",
-          defaultValue: "#4d4d4d",
+          label: "Hot / Best seller",
+          name: "bestSellerBadge",
+          defaultValue: "#000000",
         },
         {
           type: "color",
           label: "Other tags",
-          name: "otherTagColor",
-          defaultValue: "#1e293b",
+          name: "otherBadges",
+          defaultValue: "#000000",
         },
         {
           type: "color",
           label: "Sold out & unavailable",
           name: "soldOutAndUnavailable",
           defaultValue: "#d4d4d4",
+        },
+        {
+          type: "heading",
+          label: "Others",
+        },
+        {
+          type: "color",
+          label: "Compare price text",
+          name: "comparePriceTextColor",
+          defaultValue: "#84807B",
         },
         {
           type: "color",

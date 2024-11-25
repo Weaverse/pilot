@@ -161,7 +161,7 @@ function CartLines({
       ref={scrollRef}
       aria-labelledby="cart-contents"
       className={clsx([
-        y > 0 ? "border-t border-line/50" : "",
+        y > 0 ? "border-t border-line-subtle" : "",
         layout === "page" && "flex-grow md:translate-y-4 lg:col-span-2",
         layout === "drawer" && "px-5 pb-5 overflow-auto transition",
       ])}
@@ -215,9 +215,9 @@ function CartSummary({
     <section
       aria-labelledby="summary-heading"
       className={clsx(
-        layout === "drawer" && "grid gap-4 p-5 border-t border-line/50",
+        layout === "drawer" && "grid gap-4 p-5 border-t border-line-subtle",
         layout === "page" &&
-          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full",
+          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 rounded w-full",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
@@ -363,13 +363,13 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
       <label htmlFor={`quantity-${lineId}`} className="sr-only">
         Quantity, {optimisticQuantity}
       </label>
-      <div className="flex items-center border border-line/50">
+      <div className="flex items-center border border-line-subtle">
         <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
             type="submit"
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
+            className="w-9 h-9 transition disabled:text-body-subtle disabled:cursor-not-allowed"
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
@@ -388,7 +388,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
             type="submit"
-            className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
+            className="w-9 h-9 transition disabled:text-body-subtle disabled:cursor-not-allowed"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"

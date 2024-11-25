@@ -35,7 +35,7 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           data-motion="fade-up"
         >
           <div className="flex items-center border-r-0 border-y border-l grow">
-            <IconEnvelopeSimple className="w-5 h-5 text-body/80 ml-3 mr-1.5 shrink-0" />
+            <IconEnvelopeSimple className="w-5 h-5 ml-3 mr-1.5 shrink-0" />
             <input
               name="email"
               type="email"
@@ -54,7 +54,7 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
         </Form>
         {helpText && (
           <div
-            className="text-body/60 mt-2"
+            className="text-body-subtle mt-2"
             data-motion="fade-up"
             dangerouslySetInnerHTML={{ __html: helpText }}
           />

@@ -33,8 +33,8 @@ export default {
           to: { opacity: "1", transform: "translateX(0)" },
         },
         marquee: {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(-100%)" },
+          from: { transform: "translateZ(0)" },
+          to: { transform: "translate3d(-100%,0,0)" },
         },
         underline: {
           "0%": {
@@ -55,7 +55,7 @@ export default {
       },
       animation: {
         spin: "spin .5s linear infinite",
-        marquee: "marquee var(--animation-speed, 150ms) linear infinite",
+        marquee: "marquee var(--marquee-duration, 15s) linear infinite",
         underline: "underline 400ms linear",
         "fade-in": "fade-in 500ms ease-in forwards",
         "slide-down-and-fade":
@@ -71,10 +71,12 @@ export default {
         6: "6px",
       },
       colors: {
-        body: "rgb(var(--color-text) / <alpha-value>)",
-        background: "rgb(var(--color-background) / <alpha-value>)",
-        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
-        line: "rgb(var(--color-line) / <alpha-value>)",
+        body: "var(--color-text)",
+        "body-subtle": "var(--color-text-subtle)",
+        "body-inverse": "var(--color-text-inverse)",
+        background: "var(--color-background)",
+        line: "var(--color-line)",
+        "line-subtle": "var(--color-line-subtle)",
       },
       outlineOffset: {
         3: "3px",
