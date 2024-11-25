@@ -32,7 +32,7 @@ export function Modal({
       aria-modal="true"
       id="modal-bg"
     >
-      <div className="fixed inset-0 transition-opacity bg-opacity-75 bg-background/40" />
+      <div className="fixed inset-0 transition-opacity bg-opacity-75 bg-gray-500/40" />
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
           <div
@@ -50,7 +50,7 @@ export function Modal({
               {cancelLink ? (
                 <Link
                   to={cancelLink}
-                  className="-m-4 transition text-body hover:text-body/50"
+                  className="-m-4 transition text-body hover:text-body-subtle"
                 >
                   <IconX aria-label="Close panel" className="w-4 h-4" />
                 </Link>

@@ -54,7 +54,7 @@ export function ReviewForm({
       {judgemeReviews.reviews.length !== 0 || !isFormVisible ? (
         <div
           className={clsx(
-            "flex flex-col gap-4 bg-line/30 p-6",
+            "flex flex-col gap-4 bg-line-subtle p-6",
             judgemeReviews.reviews.length === 0
               ? "items-center"
               : "items-start",
@@ -91,7 +91,7 @@ export function ReviewForm({
       {isFormVisible && (
         <div
           className={clsx(
-            "bg-line/30 p-6 w-full",
+            "bg-line-subtle p-6 w-full",
             judgemeReviews.reviews.length === 0 && "flex justify-center",
           )}
         >
@@ -232,7 +232,7 @@ export function ReviewForm({
       {isPopupVisible && (
         <div
           className={clsx(
-            "flex flex-col gap-6 p-6 bg-line/30",
+            "flex flex-col gap-6 p-6 bg-line-subtle",
             judgemeReviews.reviews.length === 0 && "items-center",
           )}
           role="alert"

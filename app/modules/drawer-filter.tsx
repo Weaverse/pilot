@@ -51,7 +51,7 @@ export function DrawerFilter({
 }: DrawerFilterProps) {
   const { openDrawer, isOpen, closeDrawer } = useDrawer();
   return (
-    <div className="border-y border-line/30 py-4">
+    <div className="border-y border-line-subtle py-4">
       <div className="gap-4 md:gap-8 flex w-full items-center justify-between">
         <div className="flex gap-1 flex-1">
           <button
@@ -352,7 +352,7 @@ export default function SortMenu({
       </MenuButton>
       <MenuItems
         as="nav"
-        className="absolute right-0 top-12 flex h-fit w-40 flex-col gap-2 border border-line/75 bg-background p-5"
+        className="absolute right-0 top-12 flex h-fit w-40 flex-col gap-2 border border-line-subtle bg-background p-5"
       >
         {items.map((item) => (
           <MenuItem key={item.label}>

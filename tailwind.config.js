@@ -71,10 +71,12 @@ export default {
         6: "6px",
       },
       colors: {
-        body: "rgb(var(--color-text) / <alpha-value>)",
-        background: "rgb(var(--color-background) / <alpha-value>)",
-        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
-        line: "rgb(var(--color-line) / <alpha-value>)",
+        body: "var(--color-text)",
+        "body-subtle": "var(--color-text-subtle)",
+        "body-inverse": "var(--color-text-inverse)",
+        background: "var(--color-background)",
+        line: "var(--color-line)",
+        "line-subtle": "var(--color-line-subtle)",
       },
       outlineOffset: {
         3: "3px",

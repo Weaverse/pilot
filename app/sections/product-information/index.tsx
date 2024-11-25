@@ -115,7 +115,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
           <div className="flex items-center gap-2">
             <Link
               to="/"
-              className="text-body/50 hover:underline underline-offset-4"
+              className="text-body-subtle hover:underline underline-offset-4"
             >
               Home
             </Link>
@@ -139,19 +139,19 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-sm">
                     {discountedAmount > 0 && discountedAmount < 1 && (
-                      <span className="py-1.5 px-2 text-background bg-[var(--color-sale-tag)] rounded">
+                      <span className="py-1.5 px-2 text-background bg-[--color-discount] rounded">
                         -{Math.round(discountedAmount * 100)}%
                       </span>
                     )}
                     {isNew && (
-                      <span className="py-1.5 px-2 text-background bg-[var(--color-new-tag)] rounded">
+                      <span className="py-1.5 px-2 text-background bg-[--color-new-badge] rounded">
                         NEW ARRIVAL
                       </span>
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
                     {showVendor && vendor && (
-                      <span className="text-body/50">{vendor}</span>
+                      <span className="text-body-subtle">{vendor}</span>
                     )}
                     <h1 className="h3 !tracking-tight">{title}</h1>
                   </div>

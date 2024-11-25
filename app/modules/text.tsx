@@ -22,10 +22,10 @@ export function Text({
 }) {
   const colors: Record<string, string> = {
     default: "inherit",
-    primary: "text-body/90",
-    subtle: "text-body/50",
+    primary: "text-body",
+    subtle: "text-body",
     notice: "text-sale",
-    contrast: "text-body/90",
+    contrast: "text-body",
   };
 
   const sizes: Record<string, string> = {
@@ -125,9 +125,9 @@ export function Section({
 
   const dividers = {
     none: "border-none",
-    top: "border-t border-line/05",
-    bottom: "border-b border-line/05",
-    both: "border-y border-line/05",
+    top: "border-t border-line-subtle",
+    bottom: "border-b border-line-subtle",
+    both: "border-y border-line-subtle",
   };
 
   const displays = {

@@ -146,7 +146,7 @@ function ImagesMenu({ title, items, to }: SingleMenuItem) {
                     className="w-full h-full object-cover group-hover/item:scale-105 transition-transform duration-400"
                     sizes="auto"
                   />
-                  <h6 className="absolute w-full inset-0 text-center text-background p-2 bg-body/15 group-hover/item:bg-body/40 flex items-center justify-center transition-all duration-300">
+                  <h6 className="absolute w-full inset-0 text-center text-background p-2 bg-gray-100/15 group-hover/item:bg-gray-100/40 flex items-center justify-center transition-all duration-300">
                     {item.title}
                   </h6>
                 </div>

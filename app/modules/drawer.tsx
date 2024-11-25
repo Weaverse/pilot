@@ -106,7 +106,7 @@ export function Drawer({
                       {isBackMenu && (
                         <button
                           type="button"
-                          className="p-2 -m-4 transition text-body hover:text-body/50"
+                          className="p-2 -m-4 transition text-body hover:text-body-subtle"
                           onClick={onClose}
                           data-test="close-cart"
                         >
@@ -122,7 +122,7 @@ export function Drawer({
                       {!isBackMenu && (
                         <button
                           type="button"
-                          className="transition text-body hover:text-body/50"
+                          className="transition text-body hover:text-body-subtle"
                           onClick={onClose}
                           data-test="close-cart"
                         >

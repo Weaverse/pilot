@@ -82,7 +82,7 @@ export function CountrySelector() {
   return (
     <div ref={observerRef} className="grid gap-4 w-80">
       <Popover>
-        <PopoverButton className="w-full border border-line/75 overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center gap-2">
+        <PopoverButton className="w-full border border-line-subtle overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center gap-2">
           <ReactCountryFlag
             svg
             countryCode={selectedLocale.country}
@@ -119,7 +119,7 @@ export function CountrySelector() {
                     key={countryPath}
                     type="button"
                     onClick={onChangeLocale}
-                    className="text-white bg-neutral-800 hover:bg-background/30 w-full p-2 transition flex gap-2 items-center text-left cursor-pointer py-2 px-4 text-sm"
+                    className="text-white bg-neutral-800 hover:bg-gray-100 w-full p-2 transition flex gap-2 items-center text-left cursor-pointer py-2 px-4 text-sm"
                   >
                     <ReactCountryFlag
                       svg

@@ -17,7 +17,7 @@ export function CollectionCard({
       to={`/collections/${collection.handle}`}
       className="flex flex-col gap-2"
     >
-      <div className="bg-background/5 aspect-[3/4]">
+      <div className="aspect-[3/4]">
         {collection?.image && (
           <Image
             data={collection.image}
