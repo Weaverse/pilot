@@ -3,14 +3,14 @@ import { CartForm, type CartReturn } from "@shopify/hydrogen";
 import { Suspense, useEffect } from "react";
 import { useCartFetchers } from "~/hooks/use-cart-fetchers";
 import type { EnhancedMenu } from "~/lib/utils";
-import type { RootLoader } from "~/root";
 import { Cart } from "~/modules/cart";
+import type { RootLoader } from "~/root";
 import { CartLoading } from "../cart-loading";
 import { Drawer, useDrawer } from "../drawer";
-import { AnnouncementBar } from "./announcement-bar";
 import { DesktopHeader } from "./desktop-header";
-import { MobileHeader } from "./mobile-header";
 import { MobileMenu } from "./menu/mobile-menu";
+import { MobileHeader } from "./mobile-header";
+import { ScrollingAnnouncement } from "./scrolling-announcement";
 
 export function Header({
   shopName,
@@ -43,7 +43,7 @@ export function Header({
       {menu && (
         <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />
       )}
-      <AnnouncementBar />
+      <ScrollingAnnouncement />
       <DesktopHeader shopName={shopName} menu={menu} openCart={openCart} />
       <MobileHeader
         shopName={shopName}
