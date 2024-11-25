@@ -11,6 +11,7 @@ export function PredictiveSearchResults() {
   let products = results?.find(({ type }) => type === "products");
 
   function goToSearchResult(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
     let type = event.currentTarget.dataset.type;
     if (!searchInputRef.current) return;
     if (type === "SearchQuerySuggestion") {
