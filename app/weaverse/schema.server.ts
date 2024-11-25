@@ -139,7 +139,7 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Announcement bar",
+      group: "Scrolling announcements",
       inputs: [
         {
           type: "richtext",
@@ -150,7 +150,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "range",
           label: "Content gap",
-          name: "scrollingGap",
+          name: "topbarScrollingGap",
           configs: {
             min: 0,
             max: 100,
@@ -172,24 +172,16 @@ export let themeSchema: HydrogenThemeSchema = {
           defaultValue: 36,
         },
         {
-          type: "switch",
-          label: "Enable scrolling",
-          name: "enableScrolling",
-          defaultValue: false,
-          helpText:
-            "Scrolling is automatically detected based on the content length.",
-        },
-        {
           type: "range",
           label: "Scrolling speed",
-          name: "scrollingSpeed",
+          name: "topbarScrollingSpeed",
           configs: {
-            min: 0,
-            max: 100,
+            min: 1,
+            max: 20,
             step: 1,
-            unit: "s",
+            unit: "x",
           },
-          defaultValue: 10,
+          defaultValue: 5,
         },
       ],
     },
