@@ -3,7 +3,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import { Link } from "@remix-run/react";
+import { Form, Link, useFetcher } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
@@ -18,6 +18,7 @@ import { cn } from "~/lib/cn";
 import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { Input } from "~/modules/input";
 import { CountrySelector } from "./country-selector";
+import { FormEvent, useEffect, useState } from "react";
 
 let variants = cva("divide-y divide-line/50 space-y-9", {
   variants: {
@@ -59,6 +60,27 @@ export function Footer({
     newsletterPlaceholder,
     newsletterButtonText,
   } = useThemeSettings();
+  const fetcher = useFetcher<any>();
+  let [message, setMessage] = useState("");
+  let [error, setError] = useState("");
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    setMessage("");
+    setError("");
+    fetcher.submit(event.currentTarget);
+  };
+
+  useEffect(() => {
+    if (fetcher.data) {
+      let message = (fetcher.data as any)?.message;
+      if (!fetcher.data.success) {
+        const error = message?.errors[0]?.detail;
+        setError(error);
+      } else {
+        setMessage("Thank you for signing up!");
+      }
+    }
+  }, [fetcher.data]);
 
   let { items = [] } = menu || {};
   let socialItems = [
@@ -88,7 +110,7 @@ export function Footer({
     <footer
       className={cn(
         "bg-[--color-footer-bg] text-[--color-footer-text] pt-16",
-        variants({ padding: footerWidth }),
+        variants({ padding: footerWidth })
       )}
       style={
         {
@@ -126,7 +148,7 @@ export function Footer({
                     >
                       {social.icon}
                     </Link>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             </div>
@@ -141,12 +163,41 @@ export function Footer({
               <div className="text-base">{newsletterTitle}</div>
               <div className="space-y-2">
                 <p>{newsletterDescription}</p>
-                <div className="flex">
-                  <Input
-                    placeholder={newsletterPlaceholder}
-                    className="max-w-96 text-body"
-                  />
-                  <Button variant="custom">{newsletterButtonText}</Button>
+                <fetcher.Form
+                  onSubmit={handleSubmit}
+                  action="/api/klaviyo"
+                  method="POST"
+                  encType="multipart/form-data"
+                >
+                  <div className="flex">
+                    <Input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder={newsletterPlaceholder}
+                      className="max-w-96 text-body"
+                    />
+                    <Button
+                      variant="custom"
+                      type="submit"
+                      loading={fetcher.state === "submitting"}
+                    >
+                      {newsletterButtonText}
+                    </Button>
+                  </div>
+                </fetcher.Form>
+                <div className="h-8">
+                  {error && (
+                    <div className="bg-red-100 border-l-4 border-red-500 text-red-700 py-1 px-2 mb-6 flex gap-1 w-fit">
+                      <p className="font-semibold">ERROR:</p>
+                      <p>{error}</p>
+                    </div>
+                  )}
+                  {message && (
+                    <div className="bg-green-100 border-l-4 border-green-500 text-green-700 py-1 px-2 mb-6 flex gap-1 w-fit">
+                      <p>{message}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
