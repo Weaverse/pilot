@@ -39,7 +39,7 @@ export function ScrollingAnnouncement() {
   return (
     <div
       id="announcement-bar"
-      className="text-center z-50 relative flex items-center whitespace-nowrap"
+      className="text-center z-50 relative flex items-center whitespace-nowrap overflow-hidden"
       style={
         {
           height: `${topbarHeight}px`,
