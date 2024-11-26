@@ -13,24 +13,15 @@ export default {
     extend: {
       keyframes: {
         "fade-in": {
-          from: { opacity: "0" },
+          from: { opacity: "0.5" },
           to: { opacity: "1" },
         },
-        "slide-down-and-fade": {
-          from: { opacity: "0", transform: "translateY(-6px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
         "slide-left-and-fade": {
-          from: { opacity: "0", transform: "translateX(6px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
-        },
-        "slide-up-and-fade": {
-          from: { opacity: "0", transform: "translateY(6px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        "slide-right-and-fade": {
-          from: { opacity: "0", transform: "translateX(-6px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
+          from: {
+            opacity: 0,
+            transform: "translateX(var(--left-distance, 6px))",
+          },
+          to: { opacity: 1, transform: "translateX(0)" },
         },
         marquee: {
           from: { transform: "translateZ(0)" },
@@ -57,15 +48,9 @@ export default {
         spin: "spin .5s linear infinite",
         marquee: "marquee var(--marquee-duration, 15s) linear infinite",
         underline: "underline 400ms linear",
-        "fade-in": "fade-in 500ms ease-in forwards",
-        "slide-down-and-fade":
-          "slide-down-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "fade-in": "fade-in var(--fade-in-duration, .5s) ease-in forwards",
         "slide-left-and-fade":
-          "slide-left-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        "slide-up-and-fade":
-          "slide-up-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        "slide-right-and-fade":
-          "slide-right-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+          "slide-left-and-fade var(--slide-left-and-fade-duration, .5s) cubic-bezier(0.14, 0.8, 0.6, 1) forwards",
       },
       borderWidth: {
         6: "6px",

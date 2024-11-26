@@ -38,8 +38,8 @@ export function MobileHeader({
         "h-nav z-40 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
         "flex lg:hidden justify-between items-center gap-4",
         "px-3 md:px-10",
-        "text-[var(--color-header-text)] bg-[var(--color-header-bg)]",
-        "hover:text-[var(--color-header-text)] hover:bg-[var(--color-header-bg)]",
+        "text-[var(--color-header-text)] bg-[--color-header-bg]",
+        "hover:text-[var(--color-header-text)] hover:bg-[--color-header-bg]",
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
           ? [

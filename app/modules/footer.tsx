@@ -198,7 +198,7 @@ function FooterMenu({
           <div className="flex flex-col gap-2">
             {items.map((item, ind) => (
               <Link to={item.to} key={ind} className="relative">
-                <span className="underline-animation">{item.title}</span>
+                <span className="reveal-underline">{item.title}</span>
               </Link>
             ))}
           </div>

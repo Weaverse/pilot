@@ -67,10 +67,10 @@ function Badge({
               "flex items-center justify-center min-w-4 rounded-full p-0.5",
               "absolute top-0 -right-1",
               "transition-colors duration-300",
-              "group-hover/header:bg-[var(--color-header-text)] group-hover/header:text-[var(--color-header-bg)]",
+              "group-hover/header:bg-[var(--color-header-text)] group-hover/header:text-[--color-header-bg]",
               isTransparent
-                ? "text-[var(--color-header-text)] bg-[var(--color-transparent-header-text)]"
-                : "bg-[var(--color-header-text)] text-[var(--color-header-bg)]",
+                ? "text-[--color-header-text] bg-[--color-transparent-header-text]"
+                : "bg-[--color-header-text] text-[--color-header-bg]",
             )}
           >
             <span>{count}</span>

@@ -245,6 +245,22 @@ export let themeSchema: HydrogenThemeSchema = {
           },
           defaultValue: 150,
         },
+        {
+          type: "heading",
+          label: "Menu",
+        },
+        {
+          type: "select",
+          name: "openMenuBy",
+          label: "Open menu by",
+          configs: {
+            options: [
+              { value: "hover", label: "Mouse hover" },
+              { value: "click", label: "Mouse click" },
+            ],
+          },
+          defaultValue: "click",
+        },
       ],
     },
     {
