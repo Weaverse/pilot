@@ -173,8 +173,8 @@ function SlideIn(props: {
       )}
       style={
         {
-          "--left-distance": "60px",
-          "--slide-left-and-fade-duration": "200ms",
+          "--left-distance": "40px",
+          "--slide-left-and-fade-duration": "400ms",
           ...style,
         } as React.CSSProperties
       }
