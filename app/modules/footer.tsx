@@ -14,8 +14,9 @@ import {
   IconLinkedinLogo,
   IconXLogo,
 } from "~/components/icons";
+import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/lib/cn";
-import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
+import type { ChildEnhancedMenuItem } from "~/lib/utils";
 import { Input } from "~/modules/input";
 import { CountrySelector } from "./country-selector";
 
@@ -34,13 +35,8 @@ let variants = cva("divide-y divide-line-subtle space-y-9", {
   },
 });
 
-export function Footer({
-  menu,
-  shopName,
-}: {
-  menu?: EnhancedMenu;
-  shopName: string;
-}) {
+export function Footer() {
+  let { footerMenu, shopName } = useShopMenu();
   let {
     footerWidth,
     socialFacebook,
@@ -60,7 +56,7 @@ export function Footer({
     newsletterButtonText,
   } = useThemeSettings();
 
-  let { items = [] } = menu || {};
+  let { items = [] } = footerMenu || {};
   let socialItems = [
     {
       name: "Instagram",

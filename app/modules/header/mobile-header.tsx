@@ -17,13 +17,9 @@ import { CartCount } from "./cart-count";
 import { MobileMenu } from "./menu/mobile-menu";
 
 export function MobileHeader({
-  shopName,
   openCart,
-  openMenu,
 }: {
-  shopName: string;
   openCart: () => void;
-  openMenu: () => void;
 }) {
   let isHome = useIsHomePath();
   let { enableTransparentHeader } = useThemeSettings();
@@ -66,7 +62,7 @@ export function MobileHeader({
           </button>
         </Form>
       </div>
-      <Logo isTransparent={isTransparent} shopName={shopName} />
+      <Logo isTransparent={isTransparent} />
       <div className="flex items-center justify-end w-full">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
         <CartCount

@@ -5,16 +5,18 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import Link from "~/components/link";
+import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/lib/cn";
 import { getMaxDepth } from "~/lib/menu";
 import type { SingleMenuItem } from "~/lib/type";
-import type { EnhancedMenu } from "~/lib/utils";
 
-export function DesktopMenu({ menu }: { menu: EnhancedMenu }) {
+export function DesktopMenu() {
+  let { headerMenu } = useShopMenu();
   let { openMenuBy } = useThemeSettings();
   let [value, setValue] = useState<string | null>(null);
-  if (menu?.items?.length) {
-    let items = menu.items as unknown as SingleMenuItem[];
+
+  if (headerMenu?.items?.length) {
+    let items = headerMenu.items as unknown as SingleMenuItem[];
     return (
       <Menubar.Root
         asChild

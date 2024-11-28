@@ -2,7 +2,6 @@ import { Await, useRouteLoaderData } from "@remix-run/react";
 import { CartForm, type CartReturn } from "@shopify/hydrogen";
 import { Suspense, useEffect } from "react";
 import { useCartFetchers } from "~/hooks/use-cart-fetchers";
-import type { EnhancedMenu } from "~/lib/utils";
 import { Cart } from "~/modules/cart";
 import type { RootLoader } from "~/root";
 import { CartLoading } from "../cart-loading";
@@ -11,22 +10,11 @@ import { DesktopHeader } from "./desktop-header";
 import { MobileHeader } from "./mobile-header";
 import { ScrollingAnnouncement } from "./scrolling-announcement";
 
-export function Header({
-  shopName,
-  menu,
-}: {
-  shopName: string;
-  menu?: EnhancedMenu;
-}) {
+export function Header() {
   let {
     isOpen: isCartOpen,
     openDrawer: openCart,
     closeDrawer: closeCart,
-  } = useDrawer();
-  let {
-    isOpen: isMenuOpen,
-    openDrawer: openMenu,
-    closeDrawer: closeMenu,
   } = useDrawer();
 
   let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
@@ -40,12 +28,8 @@ export function Header({
     <>
       {/* <CartDrawer isOpen={isCartOpen} onClose={closeCart} /> */}
       <ScrollingAnnouncement />
-      <DesktopHeader shopName={shopName} menu={menu} openCart={openCart} />
-      <MobileHeader
-        shopName={shopName}
-        openCart={openCart}
-        openMenu={openMenu}
-      />
+      <DesktopHeader openCart={openCart} />
+      <MobileHeader openCart={openCart} />
     </>
   );
 }

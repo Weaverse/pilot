@@ -2,20 +2,17 @@ import { CaretRight, List, X } from "@phosphor-icons/react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useRouteLoaderData } from "@remix-run/react";
 import { forwardRef } from "react";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
+import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/lib/cn";
 import type { SingleMenuItem } from "~/lib/type";
-import type { EnhancedMenu } from "~/lib/utils";
-import type { RootLoader } from "~/root";
 
 export function MobileMenu() {
-  let data = useRouteLoaderData<RootLoader>("root");
-  let menu = data?.layout?.headerMenu as EnhancedMenu;
+  let { headerMenu } = useShopMenu();
 
-  if (!menu) return <MenuTrigger />;
+  if (!headerMenu) return <MenuTrigger />;
 
   return (
     <Dialog.Root>
@@ -53,7 +50,7 @@ export function MobileMenu() {
           <div className="py-2">
             <ScrollArea className="h-[calc(100vh-5rem)]">
               <div className="space-y-1 px-4">
-                {menu.items.map((item) => (
+                {headerMenu.items.map((item) => (
                   <CollapsibleMenuItem
                     key={item.id}
                     item={item as unknown as SingleMenuItem}
