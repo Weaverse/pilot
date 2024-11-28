@@ -4,8 +4,8 @@ import { Suspense, useEffect } from "react";
 import { useCartFetchers } from "~/hooks/use-cart-fetchers";
 import { Cart } from "~/modules/cart";
 import type { RootLoader } from "~/root";
-import { CartLoading } from "../cart-loading";
-import { Drawer, useDrawer } from "../drawer";
+import { CartLoading } from "../../modules/cart-loading";
+import { Drawer, useDrawer } from "../../modules/drawer";
 import { DesktopHeader } from "./desktop-header";
 import { MobileHeader } from "./mobile-header";
 import { ScrollingAnnouncement } from "./scrolling-announcement";
@@ -28,7 +28,7 @@ export function Header() {
     <>
       {/* <CartDrawer isOpen={isCartOpen} onClose={closeCart} /> */}
       <ScrollingAnnouncement />
-      <DesktopHeader openCart={openCart} />
+      <DesktopHeader />
       <MobileHeader openCart={openCart} />
     </>
   );

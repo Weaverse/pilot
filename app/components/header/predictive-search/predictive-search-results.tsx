@@ -28,14 +28,14 @@ export function PredictiveSearchResults() {
 
   if (!totalResults) {
     return (
-      <div className="absolute top-20 z-10 flex w-full items-center justify-center">
+      <div className="absolute top-full z-10 flex w-full items-center justify-center">
         <NoPredictiveSearchResults searchTerm={searchTerm} />
       </div>
     );
   }
   return (
     <div className="absolute left-1/2 top-full z-10 flex w-fit -translate-x-1/2 items-center justify-center">
-      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-white p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
+      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-[--color-header-bg] p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-line">
             <PredictiveSearchResult

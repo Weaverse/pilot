@@ -1,23 +1,21 @@
 import {
   Await,
   Link,
-  useLocation,
   useRouteError,
   useRouteLoaderData,
 } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconMagnifyingGlass, IconUser } from "~/components/icons";
+import { DialogDemo } from "~/components/drawer";
+import { IconUser } from "~/components/icons";
 import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
-import { type EnhancedMenu, useIsHomePath } from "~/lib/utils";
-import { PredictiveSearch } from "~/modules/predictive-search";
+import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import { Drawer, useDrawer } from "../drawer";
-import { CartCount } from "./cart-count";
 import { DesktopMenu } from "./menu/desktop-menu";
+import { PredictiveSearchButton } from "./predictive-search";
 
 let variants = cva("", {
   variants: {
@@ -34,19 +32,10 @@ let variants = cva("", {
   },
 });
 
-export function DesktopHeader({
-  menu,
-  openCart,
-  shopName,
-}: {
-  openCart: () => void;
-  menu?: EnhancedMenu;
-  shopName: string;
-}) {
+export function DesktopHeader() {
   let { enableTransparentHeader, headerWidth } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
-  let { isOpen, openDrawer, closeDrawer } = useDrawer();
   let routeError = useRouteError();
 
   let scrolled = y >= 50;
@@ -57,7 +46,7 @@ export function DesktopHeader({
     <header
       className={cn(
         "transition-all duration-300 ease-in-out",
-        "hidden lg:block lg:w-full z-10",
+        "hidden lg:block lg:w-full z-1",
         "bg-[--color-header-bg] hover:bg-[--color-header-bg]",
         "text-[--color-header-text] hover:text-[--color-header-text]",
         "border-b border-[rgb(230,230,230)]",
@@ -78,20 +67,17 @@ export function DesktopHeader({
           variants({ width: headerWidth }),
         )}
       >
-        <Logo isTransparent={isTransparent} shopName={shopName} />
-        <DesktopMenu menu={menu} />
+        <Logo isTransparent={isTransparent} />
+        <DesktopMenu />
         <div className="flex items-center gap-1 z-1">
-          <SearchToggle
-            isOpen={isOpen}
-            openDrawer={openDrawer}
-            closeDrawer={closeDrawer}
-          />
+          <PredictiveSearchButton />
           <AccountLink className="relative flex items-center justify-center w-8 h-8" />
-          <CartCount
+          <DialogDemo openFrom="right" />
+          {/* <CartCount
             isHome={isHome}
             openCart={openCart}
             isTransparent={isTransparent}
-          />
+          /> */}
         </div>
       </div>
     </header>
@@ -119,38 +105,5 @@ function AccountLink({ className }: { className?: string }) {
         </Await>
       </Suspense>
     </Link>
-  );
-}
-
-function SearchToggle({
-  isOpen,
-  openDrawer,
-  closeDrawer,
-}: {
-  isOpen: boolean;
-  openDrawer: () => void;
-  closeDrawer: () => void;
-}) {
-  let { pathname } = useLocation();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (isOpen) {
-      closeDrawer();
-    }
-  }, [pathname]);
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={openDrawer}
-        className="relative flex h-8 w-8 items-center justify-center"
-      >
-        <IconMagnifyingGlass className="w-5 h-5" />
-      </button>
-      <Drawer open={isOpen} onClose={closeDrawer} openFrom="top">
-        <PredictiveSearch isOpen={isOpen} />
-      </Drawer>
-    </>
   );
 }

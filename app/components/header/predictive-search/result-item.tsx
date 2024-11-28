@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Link } from "~/components/link";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { getImageAspectRatio, isDiscounted } from "~/lib/utils";
-import type { SearchResultItemProps } from "../../types/predictive-search";
+import type { SearchResultItemProps } from "../../../types/predictive-search";
 
 export function SearchResultItem({
   goToSearchResult,

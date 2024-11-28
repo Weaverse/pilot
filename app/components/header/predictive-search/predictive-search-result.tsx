@@ -5,7 +5,7 @@ import type {
   NormalizedPredictiveSearchResultItem,
   NormalizedPredictiveSearchResults,
   SearchResultTypeProps,
-} from "../../types/predictive-search";
+} from "../../../types/predictive-search";
 
 export function PredictiveSearchResult({
   goToSearchResult,

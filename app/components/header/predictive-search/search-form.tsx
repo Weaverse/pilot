@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import type {
   NormalizedPredictiveSearchResults,
   SearchFromProps,
-} from "../../types/predictive-search";
+} from "../../../types/predictive-search";
 
 /**
  *  Search form component that posts search requests to the `/search` route

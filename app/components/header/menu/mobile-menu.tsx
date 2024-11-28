@@ -29,7 +29,7 @@ export function MobileMenu() {
         />
         <Dialog.Content
           className={cn([
-            "fixed inset-0 h-screen-dynamic bg-[--color-background] pt-4 pb-2 z-10",
+            "fixed inset-0 h-screen-dynamic bg-[--color-header-bg] pt-4 pb-2 z-10",
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
             "focus-visible:outline-none",
             "uppercase",
