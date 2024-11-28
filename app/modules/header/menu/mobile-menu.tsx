@@ -1,228 +1,99 @@
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
-import { Link } from "@remix-run/react";
-import { Image } from "@shopify/hydrogen";
-import clsx from "clsx";
-import { IconCaretDown, IconCaretRight } from "~/components/icons";
-import { getMaxDepth } from "~/lib/menu";
+import { CaretRight, List, X } from "@phosphor-icons/react";
+import * as Collapsible from "@radix-ui/react-collapsible";
+import * as Dialog from "@radix-ui/react-dialog";
+import { useRouteLoaderData } from "@remix-run/react";
+import { forwardRef } from "react";
+import Link from "~/components/link";
+import { cn } from "~/lib/cn";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
-import { Drawer, useDrawer } from "~/modules/drawer";
+import type { RootLoader } from "~/root";
 
-export function MobileMenu({ menu }: { menu: EnhancedMenu }) {
-  let items = menu.items as unknown as SingleMenuItem[];
-  return (
-    <nav className="grid px-4 py-2 w-[360px]">
-      {items.map((item, id) => {
-        let { title, ...rest } = item;
-        let level = getMaxDepth(item);
-        let isResourceType =
-          item.items.length &&
-          item.items.every((item) => item?.resource !== null);
-        let Comp: React.FC<SingleMenuItem> = isResourceType
-          ? ImageMenu
-          : level > 2
-            ? MultiMenu
-            : level === 2
-              ? SingleMenu
-              : ItemHeader;
-        return <Comp key={id} title={title} {...rest} />;
-      })}
-    </nav>
-  );
-}
+export function MobileMenu() {
+  let data = useRouteLoaderData<RootLoader>("root");
+  let menu = data?.layout?.headerMenu as EnhancedMenu;
 
-function MultiMenu(props: SingleMenuItem) {
-  const {
-    isOpen: isMenuOpen,
-    openDrawer: openMenu,
-    closeDrawer: closeMenu,
-  } = useDrawer();
-  let { title, to, items } = props;
-  let content = (
-    <Drawer
-      open={isMenuOpen}
-      onClose={closeMenu}
-      openFrom="left"
-      heading={title}
-      isBackMenu
-      bordered
-      spacing="sm"
-    >
-      <div className="grid px-4 py-2 overflow-auto w-[360px]">
-        {items.map((item, id) => (
-          <div key={id}>
-            <Disclosure>
-              {({ open }) => (
-                <>
-                  <DisclosureButton className="text-left w-full">
-                    <h5 className="flex justify-between py-3 w-full uppercase font-medium">
-                      <Link to={item.to} prefetch="intent">
-                        {item.title}
-                      </Link>
-                      {item?.items?.length > 0 && (
-                        <span className="md:hidden">
-                          {open ? (
-                            <IconCaretDown className="w-4 h-4" />
-                          ) : (
-                            <IconCaretRight className="w-4 h-4" />
-                          )}
-                        </span>
-                      )}
-                    </h5>
-                  </DisclosureButton>
-                  {item?.items?.length > 0 ? (
-                    <div
-                      className={clsx(
-                        "overflow-hidden transition-all duration-300",
-                        open ? "max-h-48 h-fit" : "max-h-0 md:max-h-fit",
-                      )}
-                    >
-                      <DisclosurePanel static>
-                        <ul className="space-y-3 pb-3 pt-2">
-                          {item.items.map((subItem, ind) => (
-                            <li key={ind} className="leading-6">
-                              <Link key={ind} to={subItem.to} prefetch="intent">
-                                {subItem.title}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </DisclosurePanel>
-                    </div>
-                  ) : null}
-                </>
-              )}
-            </Disclosure>
-          </div>
-        ))}
-      </div>
-    </Drawer>
-  );
+  if (!menu) return <MenuTrigger />;
+
   return (
-    <div className="">
-      <div
-        className="flex justify-between items-center py-3"
-        role="button"
-        onClick={openMenu}
+    <Dialog.Root>
+      <Dialog.Trigger
+        asChild
+        className="relative flex items-center justify-center w-8 h-8 focus-visible:outline-none"
       >
-        <Link to={to} prefetch="intent">
-          <span className="uppercase font-medium">{title}</span>
-        </Link>
-        <IconCaretRight className="w-4 h-4" />
-      </div>
-      {content}
-    </div>
-  );
-}
-
-function ImageMenu({ title, items, to }: SingleMenuItem) {
-  const {
-    isOpen: isMenuOpen,
-    openDrawer: openMenu,
-    closeDrawer: closeMenu,
-  } = useDrawer();
-  let content = (
-    <Drawer
-      open={isMenuOpen}
-      onClose={closeMenu}
-      openFrom="left"
-      heading={title}
-      isBackMenu
-      bordered
-      spacing="sm"
-    >
-      <div className="grid px-4 py-5 gap-3 grid-cols-2 w-[360px]">
-        {items.map((item, id) => (
-          <Link to={item.to} prefetch="intent" key={id}>
-            <div className="w-full aspect-square relative">
-              <Image
-                data={item.resource?.image}
-                className="w-full h-full object-cover"
-                sizes="auto"
+        <MenuTrigger />
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          className="fixed inset-0 bg-black/50 data-[state=open]:animate-fade-in z-10"
+          style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
+        />
+        <Dialog.Content
+          className={cn([
+            "fixed inset-0 bg-[--color-background] p-4 z-10",
+            "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
+            "focus-visible:outline-none",
+            "uppercase",
+          ])}
+          style={
+            { "--enter-from-left-duration": "200ms" } as React.CSSProperties
+          }
+        >
+          <Dialog.Close asChild>
+            <X className="w-5 h-5 fixed top-4 right-4" />
+          </Dialog.Close>
+          <div>Menu</div>
+          <div className="mt-4 mb-2 -mx-4 border-t border-line-subtle" />
+          <div className="space-y-1">
+            {menu.items.map((item) => (
+              <CollapsibleMenuItem
+                key={item.id}
+                item={item as unknown as SingleMenuItem}
               />
-              <div className="absolute w-full inset-0 text-center text-white font-medium pointer-events-none p-2 bg-black/15 group-hover/item:bg-black/30 flex items-center justify-center">
-                {item.title}
-              </div>
-            </div>
-          </Link>
+            ))}
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
+  let { title, to, items } = item;
+
+  if (!items?.length) {
+    return (
+      <Dialog.Close asChild>
+        <Link to={to} className="py-3">
+          {title}
+        </Link>
+      </Dialog.Close>
+    );
+  }
+
+  return (
+    <Collapsible.Root>
+      <Collapsible.Trigger asChild>
+        <button className='py-3 w-full flex items-center gap-4 justify-between [&>svg]:data-[state="open"]:rotate-90'>
+          <span className="uppercase">{title}</span>
+          <CaretRight className="w-4 h-4" />
+        </button>
+      </Collapsible.Trigger>
+      <Collapsible.Content className="pl-4 border-l border-gray-300">
+        {items.map((item) => (
+          <CollapsibleMenuItem key={item.id} item={item} />
         ))}
-      </div>
-    </Drawer>
-  );
-  return (
-    <div className="">
-      <div
-        className="flex justify-between items-center py-3"
-        role="button"
-        onClick={openMenu}
-      >
-        <Link to={to} prefetch="intent">
-          <span className="uppercase font-medium">{title}</span>
-        </Link>
-        <IconCaretRight className="w-4 h-4" />
-      </div>
-      {content}
-    </div>
+      </Collapsible.Content>
+    </Collapsible.Root>
   );
 }
 
-function SingleMenu(props: SingleMenuItem) {
-  const {
-    isOpen: isMenuOpen,
-    openDrawer: openMenu,
-    closeDrawer: closeMenu,
-  } = useDrawer();
-  let { title, items, to } = props;
-  let content = (
-    <Drawer
-      open={isMenuOpen}
-      onClose={closeMenu}
-      openFrom="left"
-      heading={title}
-      isBackMenu
-      bordered
-      spacing="sm"
-    >
-      <div className="grid px-4 py-2 overflow-auto w-[360px]">
-        <ul className="space-y-3 pb-3 pt-2">
-          {items.map((subItem, ind) => (
-            <li key={ind} className="leading-6">
-              <Link key={ind} to={subItem.to} prefetch="intent">
-                {subItem.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </Drawer>
-  );
-  return (
-    <div className="">
-      <div
-        className="flex justify-between items-center py-3"
-        role="button"
-        onClick={openMenu}
-      >
-        <Link to={to} prefetch="intent">
-          <span className="uppercase font-medium">{title}</span>
-        </Link>
-        <IconCaretRight className="w-4 h-4" />
-      </div>
-      {content}
-    </div>
-  );
-}
-
-function ItemHeader({ title, to }: { title: string; to: string }) {
-  return (
-    <div className="flex justify-between items-center py-3">
-      <Link to={to} prefetch="intent">
-        <span className="uppercase font-medium">{title}</span>
-      </Link>
-    </div>
-  );
-}
+let MenuTrigger = forwardRef<HTMLButtonElement, Dialog.DialogTriggerProps>(
+  (props, ref) => {
+    return (
+      <button ref={ref} type="button" {...props}>
+        <List className="w-5 h-5" />
+      </button>
+    );
+  },
+);

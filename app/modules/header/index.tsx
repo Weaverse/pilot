@@ -8,7 +8,6 @@ import type { RootLoader } from "~/root";
 import { CartLoading } from "../cart-loading";
 import { Drawer, useDrawer } from "../drawer";
 import { DesktopHeader } from "./desktop-header";
-import { MobileMenu } from "./menu/mobile-menu";
 import { MobileHeader } from "./mobile-header";
 import { ScrollingAnnouncement } from "./scrolling-announcement";
 
@@ -39,10 +38,7 @@ export function Header({
 
   return (
     <>
-      <CartDrawer isOpen={isCartOpen} onClose={closeCart} />
-      {menu && (
-        <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />
-      )}
+      {/* <CartDrawer isOpen={isCartOpen} onClose={closeCart} /> */}
       <ScrollingAnnouncement />
       <DesktopHeader shopName={shopName} menu={menu} openCart={openCart} />
       <MobileHeader
@@ -78,29 +74,6 @@ function CartDrawer({
           </Await>
         </Suspense>
       </div>
-    </Drawer>
-  );
-}
-
-export function MenuDrawer({
-  isOpen,
-  onClose,
-  menu,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  menu: EnhancedMenu;
-}) {
-  return (
-    <Drawer
-      bordered
-      open={isOpen}
-      onClose={onClose}
-      openFrom="left"
-      heading="MENU"
-      spacing="sm"
-    >
-      <MobileMenu menu={menu} />
     </Drawer>
   );
 }
