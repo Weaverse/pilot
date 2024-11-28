@@ -1,9 +1,11 @@
 import { CaretRight, List, X } from "@phosphor-icons/react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Dialog from "@radix-ui/react-dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useRouteLoaderData } from "@remix-run/react";
 import { forwardRef } from "react";
 import Link from "~/components/link";
+import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/lib/cn";
 import type { SingleMenuItem } from "~/lib/type";
 import type { EnhancedMenu } from "~/lib/utils";
@@ -30,7 +32,7 @@ export function MobileMenu() {
         />
         <Dialog.Content
           className={cn([
-            "fixed inset-0 bg-[--color-background] p-4 z-10",
+            "fixed inset-0 h-screen-dynamic bg-[--color-background] pt-4 pb-2 z-10",
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
             "focus-visible:outline-none",
             "uppercase",
@@ -38,19 +40,27 @@ export function MobileMenu() {
           style={
             { "--enter-from-left-duration": "200ms" } as React.CSSProperties
           }
+          aria-describedby={undefined}
         >
+          <VisuallyHidden.Root asChild>
+            <Dialog.Title>Mobile menu</Dialog.Title>
+          </VisuallyHidden.Root>
           <Dialog.Close asChild>
             <X className="w-5 h-5 fixed top-4 right-4" />
           </Dialog.Close>
-          <div>Menu</div>
-          <div className="mt-4 mb-2 -mx-4 border-t border-line-subtle" />
-          <div className="space-y-1">
-            {menu.items.map((item) => (
-              <CollapsibleMenuItem
-                key={item.id}
-                item={item as unknown as SingleMenuItem}
-              />
-            ))}
+          <div className="px-4">Menu</div>
+          <div className="mt-4 border-t border-line-subtle" />
+          <div className="py-2">
+            <ScrollArea className="h-[calc(100vh-5rem)]">
+              <div className="space-y-1 px-4">
+                {menu.items.map((item) => (
+                  <CollapsibleMenuItem
+                    key={item.id}
+                    item={item as unknown as SingleMenuItem}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
