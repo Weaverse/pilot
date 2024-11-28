@@ -39,6 +39,10 @@ export default {
           from: { transform: "translateX(100%)" },
           to: { transform: "translateX(0)" },
         },
+        "enter-from-top": {
+          from: { transform: "translateY(-100%)" },
+          to: { transform: "translateY(0)" },
+        },
         marquee: {
           from: { transform: "translateZ(0)" },
           to: { transform: "translate3d(-100%,0,0)" },
@@ -74,6 +78,8 @@ export default {
           "enter-from-left var(--enter-from-left-duration, .3s) ease-out forwards",
         "enter-from-right":
           "enter-from-right var(--enter-from-right-duration, .3s) ease-out forwards",
+        "enter-from-top":
+          "enter-from-top var(--enter-from-top-duration, .3s) ease-out forwards",
       },
       borderWidth: {
         6: "6px",

@@ -72,14 +72,6 @@ export function PredictiveSearchResults() {
                 <span>View all products</span>
                 <IconArrowRight className="w-4 h-4" />
               </Link>
-              {/* <Link
-                onClick={goToSearchResult}
-                to={`/search?q=${searchTerm.current}`}
-                className="flex items-center gap-2"
-              >
-                <span className="reveal-underline">View all products</span>
-                <IconArrowRight className="w-4 h-4 mb-[3px]" />
-              </Link> */}
             </div>
           )}
         </div>

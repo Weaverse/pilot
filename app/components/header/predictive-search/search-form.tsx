@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import type {
   NormalizedPredictiveSearchResults,
   SearchFromProps,
-} from "../../../types/predictive-search";
+} from "~/types/predictive-search";
 
 /**
  *  Search form component that posts search requests to the `/search` route
@@ -15,16 +15,16 @@ export function PredictiveSearchForm({
   method = "POST",
   ...props
 }: SearchFromProps) {
-  const params = useParams();
-  const fetcher = useFetcher<NormalizedPredictiveSearchResults>();
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  let params = useParams();
+  let fetcher = useFetcher<NormalizedPredictiveSearchResults>();
+  let inputRef = useRef<HTMLInputElement | null>(null);
 
   function fetchResults(event: React.ChangeEvent<HTMLInputElement>) {
-    const searchAction = action ?? "/api/predictive-search";
-    const localizedAction = params.locale
+    let searchAction = action ?? "/api/predictive-search";
+    let localizedAction = params.locale
       ? `/${params.locale}${searchAction}`
       : searchAction;
-    const newSearchTerm = event.target.value || "";
+    let newSearchTerm = event.target.value || "";
     fetcher.submit(
       { q: newSearchTerm, limit: "6" },
       { method, action: localizedAction },
