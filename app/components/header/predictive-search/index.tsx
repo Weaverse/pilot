@@ -12,7 +12,7 @@ export function PredictiveSearchButton() {
     <Dialog.Root>
       <Dialog.Trigger
         asChild
-        className="flex h-8 w-8 items-center justify-center"
+        className="flex h-8 w-8 items-center justify-center focus-visible:outline-none"
       >
         <button type="button">
           <MagnifyingGlass className="w-5 h-5" />
