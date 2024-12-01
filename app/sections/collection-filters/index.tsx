@@ -7,9 +7,8 @@ import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Button } from "~/modules/button";
-import { DrawerFilter } from "~/modules/drawer-filter";
 import type { AppliedFilter } from "~/modules/sort-filter";
-import { PageHeader, Text } from "~/modules/text";
+import { DrawerFilter } from "./drawer-filter";
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 
 interface CollectionFiltersProps extends SectionProps {
