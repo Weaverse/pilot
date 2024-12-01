@@ -16,15 +16,14 @@ export type SortParam =
   | "relevance";
 
 export function getAppliedFilterLink(
-  filter: AppliedFilter,
+  { filter }: AppliedFilter,
   params: URLSearchParams,
   location: Location,
 ) {
-  const paramsClone = new URLSearchParams(params);
-  Object.entries(filter.filter).forEach(([key, value]) => {
-    const fullKey = FILTER_URL_PREFIX + key;
-    paramsClone.delete(fullKey, JSON.stringify(value));
-  });
+  let paramsClone = new URLSearchParams(params);
+  for (let [k, v] of Object.entries(filter)) {
+    paramsClone.delete(FILTER_URL_PREFIX + k, JSON.stringify(v));
+  }
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
