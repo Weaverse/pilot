@@ -26,8 +26,6 @@ export function GlobalLoading() {
 
   return (
     <div
-      // biome-ignore lint/a11y/useAriaPropsForRole: <explanation>
-      role="progressbar"
       aria-hidden={!active}
       aria-valuetext={active ? "Loading" : undefined}
       className="fixed inset-x-0 left-0 top-0 z-50 h-1 animate-pulse"
@@ -35,7 +33,7 @@ export function GlobalLoading() {
       <div
         ref={ref}
         className={clsx(
-          "h-full bg-gradient-to-r from-background to-body transition-all duration-500 ease-in-out",
+          "h-full bg-gradient-to-r from-neutral-600 to-gray-300 transition-all duration-500 ease-in-out",
           transition.state === "idle" &&
             (animating ? "w-full" : "w-0 opacity-0 transition-none"),
           transition.state === "submitting" && "w-4/12",
