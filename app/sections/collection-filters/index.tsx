@@ -1,56 +1,54 @@
 import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
-import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import Link from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Button } from "~/modules/button";
-import type { AppliedFilter } from "~/modules/sort-filter";
-import { DrawerFilter } from "./drawer-filter";
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
+import { ToolsBar } from "./tools-bar";
 
 interface CollectionFiltersProps extends SectionProps {
-  showCollectionDescription: boolean;
   loadPrevText: string;
   loadMoreText: string;
 }
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, sectionRef) => {
-    let { showCollectionDescription, loadPrevText, loadMoreText, ...rest } =
-      props;
+    let { loadPrevText, loadMoreText, ...rest } = props;
 
     let { ref, inView } = useInView();
     let [numberInRow, setNumberInRow] = useState(4);
     let onLayoutChange = (number: number) => {
       setNumberInRow(number);
     };
-    let { collection, collections, appliedFilters } = useLoaderData<
+    let { collection, collections } = useLoaderData<
       CollectionDetailsQuery & {
         collections: Array<{ handle: string; title: string }>;
-        appliedFilters: AppliedFilter[];
       }
     >();
     let productNumber = collection?.products.nodes.length;
 
     if (collection?.products && collections) {
       return (
-        <Section ref={sectionRef} {...rest}>
-          <h6>{collection.title}</h6>
-          {showCollectionDescription && collection?.description && (
-            <div className="flex items-baseline justify-between w-full">
-              {collection.description}
+        <Section ref={sectionRef} {...rest} overflow="unset">
+          <div className="space-y-2.5 py-10">
+            <div className="flex items-center gap-2 text-body-subtle">
+              <Link to="/" className="hover:underline underline-offset-4">
+                Home
+              </Link>
+              <span>/</span>
+              <span>{collection.title}</span>
             </div>
-          )}
-          <DrawerFilter
+            <h3>{collection.title}</h3>
+          </div>
+          <ToolsBar
+            width={rest.width}
             numberInRow={numberInRow}
             onLayoutChange={onLayoutChange}
-            productNumber={productNumber}
-            filters={collection.products.filters as Filter[]}
-            appliedFilters={appliedFilters as AppliedFilter[]}
-            collections={collections}
+            productsCount={productNumber}
           />
           <Pagination connection={collection.products}>
             {({
@@ -62,7 +60,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
               hasNextPage,
               state,
             }) => (
-              <>
+              <div className="pt-12 pb-20">
                 <div className="flex items-center justify-center mb-6 empty:hidden">
                   <Button as={PreviousLink} variant="secondary" width="full">
                     {isLoading ? "Loading..." : loadPrevText}
@@ -86,7 +84,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                     {isLoading ? "Loading..." : loadMoreText}
                   </Button>
                 </div>
-              </>
+              </div>
             )}
           </Pagination>
         </Section>
@@ -106,16 +104,19 @@ export let schema: HydrogenComponentSchema = {
     pages: ["COLLECTION"],
   },
   inspector: [
-    { group: "Layout", inputs: layoutInputs },
     {
-      group: "Collection filters",
+      group: "Layout",
+      inputs: layoutInputs.filter((inp) => {
+        return inp.name !== "borderRadius" && inp.name !== "gap";
+      }),
+    },
+    {
+      group: "Filtering and sorting",
+      inputs: [],
+    },
+    {
+      group: "Load more buttons",
       inputs: [
-        {
-          type: "switch",
-          name: "showCollectionDescription",
-          label: "Show collection description",
-          defaultValue: true,
-        },
         {
           type: "text",
           name: "loadPrevText",

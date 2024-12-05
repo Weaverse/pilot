@@ -22,7 +22,7 @@ export function LayoutSwitcher({
   return (
     <div
       className={cn(
-        "flex",
+        "flex gap-1",
         "[&>button]:text-[#b7b7b7] [&>button]:border-[#b7b7b7]",
         '[&>button[data-active="true"]]:text-[#696662]',
         '[&>button[data-active="true"]]:border-[#696662]',
