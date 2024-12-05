@@ -296,9 +296,15 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Lines and borders",
+          label: "Borders",
           name: "colorLine",
-          defaultValue: "#a8a29e",
+          defaultValue: "#3B352C",
+        },
+        {
+          type: "color",
+          label: "Borders (subtle)",
+          name: "colorLineSubtle",
+          defaultValue: "#A19B91",
         },
         {
           type: "heading",
@@ -534,7 +540,7 @@ export let themeSchema: HydrogenThemeSchema = {
             step: 1,
             unit: "px",
           },
-          defaultValue: 16,
+          defaultValue: 14,
         },
         {
           type: "range",

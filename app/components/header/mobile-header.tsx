@@ -8,21 +8,18 @@ import {
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconList, IconMagnifyingGlass, IconUser } from "~/components/icons";
+import { IconMagnifyingGlass, IconUser } from "~/components/icons";
 import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { CartCount } from "./cart-count";
+import { MobileMenu } from "./menu/mobile-menu";
 
 export function MobileHeader({
-  shopName,
   openCart,
-  openMenu,
 }: {
-  shopName: string;
   openCart: () => void;
-  openMenu: () => void;
 }) {
   let isHome = useIsHomePath();
   let { enableTransparentHeader } = useThemeSettings();
@@ -35,29 +32,23 @@ export function MobileHeader({
     <header
       className={cn(
         "transition-colors duration-300 ease-in-out",
-        "h-nav z-40 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
+        "h-nav z-1 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
         "flex lg:hidden justify-between items-center gap-4",
         "px-3 md:px-10",
-        "text-[var(--color-header-text)] bg-[--color-header-bg]",
-        "hover:text-[var(--color-header-text)] hover:bg-[--color-header-bg]",
+        "text-[--color-header-text] bg-[--color-header-bg]",
+        "hover:text-[--color-header-text] hover:bg-[--color-header-bg]",
         scrolled && "shadow-header",
         enableTransparentHeader && isHome
           ? [
               "fixed top-[var(--topbar-height,var(--initial-topbar-height))] w-screen group/header",
               !scrolled &&
-                "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
+                "text-[--color-transparent-header-text] bg-transparent border-transparent",
             ]
           : "sticky top-0",
       )}
     >
       <div className="flex items-center justify-start w-full">
-        <button
-          type="button"
-          onClick={openMenu}
-          className="relative flex items-center justify-center w-8 h-8"
-        >
-          <IconList className="w-5 h-5" />
-        </button>
+        <MobileMenu />
         <Form
           method="get"
           action={params.locale ? `/${params.locale}/search` : "/search"}
@@ -71,7 +62,7 @@ export function MobileHeader({
           </button>
         </Form>
       </div>
-      <Logo isTransparent={isTransparent} shopName={shopName} />
+      <Logo isTransparent={isTransparent} />
       <div className="flex items-center justify-end w-full">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
         <CartCount

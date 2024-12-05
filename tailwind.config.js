@@ -13,8 +13,16 @@ export default {
     extend: {
       keyframes: {
         "fade-in": {
-          from: { opacity: "0.5" },
+          from: { opacity: "0" },
           to: { opacity: "1" },
+        },
+        "slide-down": {
+          from: { height: 0 },
+          to: { height: "var(--slide-down-to)" },
+        },
+        "slide-up": {
+          from: { height: "var(--slide-up-from)" },
+          to: { height: 0 },
         },
         "slide-left-and-fade": {
           from: {
@@ -22,6 +30,18 @@ export default {
             transform: "translateX(var(--left-distance, 6px))",
           },
           to: { opacity: 1, transform: "translateX(0)" },
+        },
+        "enter-from-left": {
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "enter-from-right": {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "enter-from-top": {
+          from: { transform: "translateY(-100%)" },
+          to: { transform: "translateY(0)" },
         },
         marquee: {
           from: { transform: "translateZ(0)" },
@@ -49,8 +69,17 @@ export default {
         marquee: "marquee var(--marquee-duration, 15s) linear infinite",
         underline: "underline 400ms linear",
         "fade-in": "fade-in var(--fade-in-duration, .5s) ease-in forwards",
+        "slide-down":
+          "slide-down var(--slide-down-duration, .3s) ease-out forwards",
+        "slide-up": "slide-up var(--slide-up-duration, .3s) ease-out forwards",
         "slide-left-and-fade":
-          "slide-left-and-fade var(--slide-left-and-fade-duration, .5s) cubic-bezier(0.14, 0.8, 0.6, 1) forwards",
+          "slide-left-and-fade var(--slide-left-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
+        "enter-from-left":
+          "enter-from-left var(--enter-from-left-duration, .3s) ease-out forwards",
+        "enter-from-right":
+          "enter-from-right var(--enter-from-right-duration, .3s) ease-out forwards",
+        "enter-from-top":
+          "enter-from-top var(--enter-from-top-duration, .3s) ease-out forwards",
       },
       borderWidth: {
         6: "6px",

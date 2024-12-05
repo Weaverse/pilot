@@ -2,13 +2,11 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Link } from "~/components/link";
+import { useShopMenu } from "~/hooks/use-shop-menu";
 
-export function Logo({
-  isTransparent,
-  shopName,
-}: { isTransparent?: boolean; shopName: string }) {
-  let settings = useThemeSettings();
-  let { logoData, transparentLogoData, logoWidth } = settings;
+export function Logo({ isTransparent }: { isTransparent?: boolean }) {
+  let { shopName } = useShopMenu();
+  let { logoData, transparentLogoData, logoWidth } = useThemeSettings();
 
   return (
     <Link

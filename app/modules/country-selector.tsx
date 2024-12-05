@@ -101,25 +101,24 @@ export function CountrySelector() {
                   countryLocale.language === selectedLocale.language &&
                   countryLocale.country === selectedLocale.country;
 
-                let countryUrlPath = getCountryUrlPath({
-                  countryLocale,
-                  defaultLocalePrefix,
-                  pathWithoutLocale,
-                });
-                let onChangeLocale = () =>
-                  handleLocaleChange({
-                    redirectTo: countryUrlPath,
-                    buyerIdentity: {
-                      countryCode: countryLocale.country,
-                    },
-                  });
                 return (
                   <CloseButton
                     as="button"
                     key={countryPath}
                     type="button"
-                    onClick={onChangeLocale}
-                    className="text-white bg-neutral-800 hover:bg-gray-100 w-full p-2 transition flex gap-2 items-center text-left cursor-pointer py-2 px-4 text-sm"
+                    onClick={() =>
+                      handleLocaleChange({
+                        redirectTo: getCountryUrlPath({
+                          countryLocale,
+                          defaultLocalePrefix,
+                          pathWithoutLocale,
+                        }),
+                        buyerIdentity: {
+                          countryCode: countryLocale.country,
+                        },
+                      })
+                    }
+                    className="text-white bg-neutral-800 hover:bg-neutral-600 w-full p-2 transition flex gap-2 items-center text-left cursor-pointer py-2 px-4 text-sm"
                   >
                     <ReactCountryFlag
                       svg

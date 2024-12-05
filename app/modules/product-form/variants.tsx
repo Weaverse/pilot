@@ -75,7 +75,6 @@ export function ProductVariants(props: ProductVariantsProps) {
         options={options.filter((option) => option.optionValues.length > 1)}
       >
         {({ option }) => {
-          console.log("option", option);
           let optionName = option.name;
           let clonedSelectedOptionMap = new Map(selectedOptionMap);
           let values = option.values
