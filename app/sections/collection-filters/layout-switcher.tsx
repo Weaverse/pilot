@@ -1,5 +1,14 @@
 import type { IconProps } from "@phosphor-icons/react";
+import clsx from "clsx";
 import { cn } from "~/lib/cn";
+
+const LAYOUT_ICONS = {
+  1: LayoutList,
+  2: TwoColumns,
+  3: ThreeColumns,
+  4: FourColumns,
+  5: FiveColumns,
+};
 
 export function LayoutSwitcher({
   value,
@@ -20,38 +29,23 @@ export function LayoutSwitcher({
         className,
       )}
     >
-      <button
-        type="button"
-        data-active={value === 4}
-        onClick={() => onChange(4)}
-        className="border w-10 h-10 items-center justify-center hidden lg:flex"
-      >
-        <FourColumns className="w-5 h-5" />
-      </button>
-      <button
-        type="button"
-        data-active={value === 3}
-        className="border w-10 h-10 items-center justify-center hidden lg:flex"
-        onClick={() => onChange(3)}
-      >
-        <ThreeColumns className="w-5 h-5" />
-      </button>
-      <button
-        type="button"
-        data-active={value === 2}
-        className="border w-10 h-10 items-center justify-center flex lg:hidden"
-        onClick={() => onChange(2)}
-      >
-        <TwoColumns className="w-5 h-5" />
-      </button>
-      <button
-        type="button"
-        data-active={value === 1}
-        className="border w-10 h-10 items-center justify-center flex lg:hidden"
-        onClick={() => onChange(1)}
-      >
-        <LayoutList className="w-5 h-5" />
-      </button>
+      {[1, 2, 3, 4, 5].map((col) => {
+        let Icon = LAYOUT_ICONS[col];
+        return (
+          <button
+            key={col}
+            type="button"
+            data-active={value === col}
+            onClick={() => onChange(col)}
+            className={clsx(
+              "border w-10 h-10 items-center justify-center",
+              col <= 2 ? "flex lg:hidden" : "hidden lg:flex",
+            )}
+          >
+            <Icon className="w-5 h-5" />
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -59,14 +53,14 @@ export function LayoutSwitcher({
 function LayoutList(props: IconProps) {
   return (
     <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 12.5 9.5"
       {...props}
     >
-      <path d="M12.5.75a.76.76 0 01-.75.75h-11A.76.76 0 010 .75.76.76 0 01.75 0h11a.76.76 0 01.75.75z" />
-      <path d="M12.5 4.75a.76.76 0 01-.75.75h-11A.76.76 0 010 4.75.76.76 0 01.75 4h11a.76.76 0 01.75.75z" />
-      <path d="M12.5 8.75a.76.76 0 01-.75.75h-11A.76.76 0 010 8.75.76.76 0 01.75 8h11a.76.76 0 01.75.75z" />
+      <rect width="22" height="22" />
     </svg>
   );
 }
@@ -74,13 +68,15 @@ function LayoutList(props: IconProps) {
 function TwoColumns(props: IconProps) {
   return (
     <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 5.5 12.5"
       {...props}
     >
-      <path d="M.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 01.75 0z" />
-      <path d="M4.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 014.75 0z" />
+      <rect width="10" height="22" />
+      <rect x="12" width="10" height="22" />
     </svg>
   );
 }
@@ -88,14 +84,16 @@ function TwoColumns(props: IconProps) {
 function ThreeColumns(props: IconProps) {
   return (
     <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 9.5 12.5"
       {...props}
     >
-      <path d="M.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 01.75 0z" />
-      <path d="M4.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 014.75 0z" />
-      <path d="M8.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 018.75 0z" />
+      <rect width="6" height="22" />
+      <rect x="8" width="6" height="22" />
+      <rect x="16" width="6" height="22" />
     </svg>
   );
 }
@@ -103,18 +101,36 @@ function ThreeColumns(props: IconProps) {
 function FourColumns(props: IconProps) {
   return (
     <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 13.5 12.5"
       {...props}
     >
-      <path
-        id="Rectangle"
-        d="M.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 01.75 0z"
-      />
-      <path d="M4.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 014.75 0z" />
-      <path d="M8.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11A.76.76 0 018.75 0z" />
-      <path d="M12.75 0a.76.76 0 01.75.75v11a.76.76 0 01-.75.75.76.76 0 01-.75-.75v-11a.76.76 0 01.75-.75z" />
+      <rect width="4" height="22" />
+      <rect x="6" width="4" height="22" />
+      <rect x="12" width="4" height="22" />
+      <rect x="18" width="4" height="22" />
+    </svg>
+  );
+}
+
+function FiveColumns(props: IconProps) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect width="2.8" height="22" />
+      <rect x="4.7998" width="2.8" height="22" />
+      <rect x="9.6001" width="2.8" height="22" />
+      <rect x="14.3999" width="2.8" height="22" />
+      <rect x="19.2002" width="2.8" height="22" />
     </svg>
   );
 }
