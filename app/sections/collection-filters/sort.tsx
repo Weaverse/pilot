@@ -1,9 +1,9 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { CaretDown } from "@phosphor-icons/react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Link, useLocation, useSearchParams } from "@remix-run/react";
 import clsx from "clsx";
+import { cn } from "~/lib/cn";
 import type { SortParam } from "~/lib/filter";
-import { getSortLink } from "~/lib/filter";
 
 const PRODUCT_SORT: { label: string; key: SortParam }[] = [
   { label: "Featured", key: "featured" },
@@ -48,36 +48,41 @@ export function Sort({
   let [params] = useSearchParams();
   let location = useLocation();
   let sortList = show ? SEARCH_SORT : PRODUCT_SORT;
-  let active =
+  let { key: currentSortValue } =
     sortList.find(({ key }) => key === params.get("sort")) || sortList[0];
 
   return (
-    <Menu as="div" className="relative z-10">
-      <MenuButton className="flex items-center gap-1.5 h-10 border px-4 py-2.5">
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger className="flex items-center gap-1.5 h-10 border px-4 py-2.5 focus-visible:outline-none">
         <span className="font-medium">Sort by</span>
         <CaretDown />
-      </MenuButton>
-      <MenuItems
-        as="nav"
-        className="absolute right-0 top-12 flex h-fit w-40 flex-col gap-2 border border-line-subtle bg-background p-5"
-      >
-        {sortList.map((item) => (
-          <MenuItem key={item.label}>
-            {() => (
-              <Link to={getSortLink(item.key, params, location)}>
-                <p
-                  className={clsx(
-                    "block text-base hover:underline underline-offset-4",
-                    active?.key === item.key ? "font-bold" : "font-normal",
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          sideOffset={8}
+          align="end"
+          className="flex h-fit w-44 flex-col gap-2 border border-line-subtle bg-background p-5"
+        >
+          {sortList.map(({ key, label }) => {
+            let pr = new URLSearchParams(params);
+            pr.set("sort", key);
+            let sortUrl = `${location.pathname}?${pr.toString()}`;
+            return (
+              <DropdownMenu.Item key={key} asChild>
+                <Link
+                  to={sortUrl}
+                  className={cn(
+                    "hover:underline underline-offset-[6px] hover:outline-none",
+                    currentSortValue === key && "underline",
                   )}
                 >
-                  {item.label}
-                </p>
-              </Link>
-            )}
-          </MenuItem>
-        ))}
-      </MenuItems>
-    </Menu>
+                  {label}
+                </Link>
+              </DropdownMenu.Item>
+            );
+          })}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }
