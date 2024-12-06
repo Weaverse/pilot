@@ -1,4 +1,5 @@
 import type { HydrogenThemeSchema, SwatchesConfigs } from "@weaverse/hydrogen";
+import { countries } from "~/data/countries";
 import pkg from "../../package.json";
 
 let swatchesConfigs: SwatchesConfigs = {
@@ -84,6 +85,13 @@ export let themeSchema: HydrogenThemeSchema = {
     documentationUrl: "https://weaverse.io/docs",
     supportUrl: "https://weaverse.io/contact",
   },
+  i18n: Object.values(countries).map((i) => {
+    return {
+      language: i.language,
+      country: i.country,
+      label: i.label,
+    };
+  }),
   inspector: [
     {
       group: "Layout",
