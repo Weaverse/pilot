@@ -65,7 +65,7 @@ export function Filters() {
   return (
     <Accordion.Root
       type="multiple"
-      className="filters-list"
+      className="filters-list divide-y divide-line-subtle"
       key={expandFilters.toString() + showFiltersCount}
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
@@ -73,7 +73,7 @@ export function Filters() {
         <Accordion.Item
           key={filter.id}
           value={filter.id}
-          className="w-full pb-6 pt-7 border-b border-[#b7b7b7]"
+          className="w-full pb-6 pt-7"
         >
           <Accordion.Trigger className="flex w-full justify-between items-center [&>svg]:data-[state=open]:rotate-90">
             <span>{filter.label}</span>

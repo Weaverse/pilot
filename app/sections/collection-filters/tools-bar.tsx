@@ -7,7 +7,7 @@ import { LayoutSwitcher, type LayoutSwitcherProps } from "./layout-switcher";
 import { Sort } from "./sort";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "~/components/button";
-import { Sliders } from "@phosphor-icons/react";
+import { Sliders, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 
 let variants = cva("", {
@@ -98,7 +98,17 @@ function FiltersDrawer({
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
           ])}
         >
-          <Filters />
+          <div className="space-y-1">
+            <div className="flex gap-2 items-center justify-between">
+              <span className="py-2.5 font-bold">Filters</span>
+              <Dialog.Close asChild>
+                <button className="p-2 translate-x-2">
+                  <X className="w-4 h-4" />
+                </button>
+              </Dialog.Close>
+            </div>
+            <Filters />
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
