@@ -39,13 +39,16 @@ export function ProductCard({
   return (
     <div className="flex flex-col gap-2">
       <div className={clsx("grid gap-4", className)}>
-        <div className="relative aspect-[4/5] group">
+        <div className="relative group">
           {image && (
-            <Link to={`/products/${product.handle}`} prefetch="intent">
+            <Link
+              to={`/products/${product.handle}`}
+              prefetch="intent"
+              className="block"
+            >
               <Image
-                className="object-cover w-full opacity-0 animate-fade-in"
+                className="w-full h-full opacity-0 animate-fade-in"
                 sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
-                aspectRatio="4/5"
                 data={image}
                 alt={image.altText || `Picture of ${product.title}`}
                 loading={loading}

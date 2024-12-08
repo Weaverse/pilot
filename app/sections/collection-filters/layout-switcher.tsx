@@ -10,15 +10,18 @@ const LAYOUT_ICONS = {
   5: FiveColumns,
 };
 
+export type LayoutSwitcherProps = {
+  gridSizeDesktop: number;
+  gridSizeMobile: number;
+  onGridSizeChange: (number: number) => void;
+};
+
 export function LayoutSwitcher({
-  value,
-  onChange,
+  gridSizeDesktop,
+  gridSizeMobile,
+  onGridSizeChange,
   className,
-}: {
-  value: number;
-  onChange: (number: number) => void;
-  className?: string;
-}) {
+}: LayoutSwitcherProps & { className?: string }) {
   return (
     <div
       className={cn(
@@ -35,14 +38,16 @@ export function LayoutSwitcher({
           <button
             key={col}
             type="button"
-            data-active={value === col}
-            onClick={() => onChange(col)}
+            data-active={
+              col > 2 ? gridSizeDesktop === col : gridSizeMobile === col
+            }
+            onClick={() => onGridSizeChange(col)}
             className={clsx(
-              "border w-10 h-10 items-center justify-center",
-              col <= 2 ? "flex lg:hidden" : "hidden lg:flex",
+              "border w-12 h-12 items-center justify-center",
+              col > 2 ? "hidden lg:flex" : "flex lg:hidden",
             )}
           >
-            <Icon className="w-5 h-5" />
+            <Icon className="w-[22px] h-[22px]" />
           </button>
         );
       })}

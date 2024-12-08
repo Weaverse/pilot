@@ -1,35 +1,63 @@
 import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import Link from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { Button } from "~/modules/button";
+import { Filters } from "./filters";
 import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
 import { ToolsBar } from "./tools-bar";
 
-interface CollectionFiltersProps extends SectionProps {
+export interface CollectionFiltersData {
+  enableSort: boolean;
+  showProductsCount: boolean;
+  enableFilter: boolean;
+  filtersPosition: "sidebar" | "drawer";
+  expandFilters: boolean;
+  showFiltersCount: boolean;
+  productsPerRowDesktop: number;
+  productsPerRowMobile: number;
   loadPrevText: string;
   loadMoreText: string;
 }
 
+interface CollectionFiltersProps extends SectionProps, CollectionFiltersData {}
+
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, sectionRef) => {
-    let { loadPrevText, loadMoreText, ...rest } = props;
-
+    let {
+      enableSort,
+      showFiltersCount,
+      enableFilter,
+      filtersPosition,
+      expandFilters,
+      showProductsCount,
+      productsPerRowDesktop,
+      productsPerRowMobile,
+      loadPrevText,
+      loadMoreText,
+      ...rest
+    } = props;
     let { ref, inView } = useInView();
-    let [numberInRow, setNumberInRow] = useState(4);
-    let onLayoutChange = (number: number) => {
-      setNumberInRow(number);
-    };
     let { collection, collections } = useLoaderData<
       CollectionDetailsQuery & {
         collections: Array<{ handle: string; title: string }>;
       }
     >();
-    let productNumber = collection?.products.nodes.length;
+
+    let [gridSizeDesktop, setGridSizeDesktop] = useState(
+      Number(productsPerRowDesktop) || 3,
+    );
+    let [gridSizeMobile, setGridSizeMobile] = useState(
+      Number(productsPerRowMobile) || 1,
+    );
+
+    useEffect(() => {
+      setGridSizeDesktop(Number(productsPerRowDesktop) || 3);
+      setGridSizeMobile(Number(productsPerRowMobile) || 1);
+    }, [productsPerRowDesktop, productsPerRowMobile]);
 
     if (collection?.products && collections) {
       return (
@@ -46,47 +74,67 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
           </div>
           <ToolsBar
             width={rest.width}
-            numberInRow={numberInRow}
-            onLayoutChange={onLayoutChange}
-            productsCount={productNumber}
+            gridSizeDesktop={gridSizeDesktop}
+            gridSizeMobile={gridSizeMobile}
+            onGridSizeChange={(v) => {
+              if (v > 2) {
+                setGridSizeDesktop(v);
+              } else {
+                setGridSizeMobile(v);
+              }
+            }}
+            {...props}
           />
-          <Pagination connection={collection.products}>
-            {({
-              nodes,
-              isLoading,
-              PreviousLink,
-              NextLink,
-              nextPageUrl,
-              hasNextPage,
-              state,
-            }) => (
-              <div className="pt-12 pb-20">
-                <div className="flex items-center justify-center mb-6 empty:hidden">
-                  <Button as={PreviousLink} variant="secondary" width="full">
-                    {isLoading ? "Loading..." : loadPrevText}
-                  </Button>
-                </div>
-                <ProductsLoadedOnScroll
-                  numberInRow={numberInRow}
-                  nodes={nodes}
-                  inView={inView}
-                  nextPageUrl={nextPageUrl}
-                  hasNextPage={hasNextPage}
-                  state={state}
-                />
-                <div className="flex items-center justify-center mt-6">
-                  <Button
-                    ref={ref}
-                    as={NextLink}
-                    variant="secondary"
-                    width="full"
-                  >
-                    {isLoading ? "Loading..." : loadMoreText}
-                  </Button>
-                </div>
+          <div className="flex gap-8 pt-6 lg:pt-12 pb-8 lg:pb-20">
+            {filtersPosition === "sidebar" && (
+              <div className="hidden lg:block shrink-0 w-72 space-y-4">
+                <div className="font-bold">Filters</div>
+                <Filters />
               </div>
             )}
-          </Pagination>
+            <Pagination connection={collection.products}>
+              {({
+                nodes,
+                isLoading,
+                nextPageUrl,
+                previousPageUrl,
+                hasNextPage,
+                hasPreviousPage,
+                state,
+              }) => (
+                <div className="flex w-full flex-col gap-8 items-center">
+                  {hasPreviousPage && (
+                    <Link
+                      to={previousPageUrl}
+                      variant="outline"
+                      className="mx-auto"
+                    >
+                      {isLoading ? "Loading..." : loadPrevText}
+                    </Link>
+                  )}
+                  <ProductsLoadedOnScroll
+                    gridSizeDesktop={gridSizeDesktop}
+                    gridSizeMobile={gridSizeMobile}
+                    nodes={nodes}
+                    inView={inView}
+                    nextPageUrl={nextPageUrl}
+                    hasNextPage={hasNextPage}
+                    state={state}
+                  />
+                  {hasNextPage && (
+                    <Link
+                      ref={ref}
+                      to={nextPageUrl}
+                      variant="outline"
+                      className="mx-auto"
+                    >
+                      {isLoading ? "Loading..." : loadMoreText}
+                    </Link>
+                  )}
+                </div>
+              )}
+            </Pagination>
+          </div>
         </Section>
       );
     }
@@ -112,11 +160,82 @@ export let schema: HydrogenComponentSchema = {
     },
     {
       group: "Filtering and sorting",
-      inputs: [],
+      inputs: [
+        {
+          type: "switch",
+          name: "enableSort",
+          label: "Enable sorting",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showProductsCount",
+          label: "Show products count",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "enableFilter",
+          label: "Enable filtering",
+          defaultValue: true,
+        },
+        {
+          type: "select",
+          name: "filtersPosition",
+          label: "Filters position",
+          configs: {
+            options: [
+              { value: "sidebar", label: "Sidebar" },
+              { value: "drawer", label: "Drawer" },
+            ],
+          },
+          defaultValue: "sidebar",
+          condition: "enableFilter.eq.true",
+        },
+        {
+          type: "switch",
+          name: "expandFilters",
+          label: "Expand filters",
+          defaultValue: true,
+          condition: "enableFilter.eq.true",
+        },
+        {
+          type: "switch",
+          name: "showFiltersCount",
+          label: "Show filters count",
+          defaultValue: true,
+          condition: "enableFilter.eq.true",
+        },
+      ],
     },
     {
-      group: "Load more buttons",
+      group: "Products",
       inputs: [
+        {
+          type: "select",
+          name: "productsPerRowDesktop",
+          label: "Default products per row (desktop)",
+          configs: {
+            options: [
+              { value: "3", label: "3" },
+              { value: "4", label: "4" },
+              { value: "5", label: "5" },
+            ],
+          },
+          defaultValue: "3",
+        },
+        {
+          type: "select",
+          name: "productsPerRowMobile",
+          label: "Default products per row (mobile)",
+          configs: {
+            options: [
+              { value: "1", label: "1" },
+              { value: "2", label: "2" },
+            ],
+          },
+          defaultValue: "1",
+        },
         {
           type: "text",
           name: "loadPrevText",

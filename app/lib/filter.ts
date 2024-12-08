@@ -27,15 +27,6 @@ export function getAppliedFilterLink(
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
-export function getSortLink(
-  sort: SortParam,
-  params: URLSearchParams,
-  location: Location,
-) {
-  params.set("sort", sort);
-  return `${location.pathname}?${params.toString()}`;
-}
-
 export function getFilterLink(
   rawInput: string | ProductFilter,
   params: URLSearchParams,

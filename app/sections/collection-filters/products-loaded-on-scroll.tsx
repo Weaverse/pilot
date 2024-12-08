@@ -1,26 +1,27 @@
 import { useNavigate } from "@remix-run/react";
 import { useEffect } from "react";
 import { getImageLoadingPriority } from "~/lib/const";
-import { Grid } from "~/modules/grid";
 import { ProductCard } from "~/modules/product-card";
 
-type ProductsLoadedOnScrollProps = {
+interface ProductsLoadedOnScrollProps {
+  gridSizeDesktop: number;
+  gridSizeMobile: number;
   nodes: any;
-  numberInRow: number;
   inView: boolean;
   nextPageUrl: string;
   hasNextPage: boolean;
   state: any;
-};
+}
 
 export function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
   let {
+    gridSizeMobile,
+    gridSizeDesktop,
     nodes,
     inView,
     nextPageUrl,
     hasNextPage,
     state,
-    numberInRow = 4,
   } = props;
   let navigate = useNavigate();
 
@@ -35,7 +36,15 @@ export function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
   }, [inView, navigate, state, nextPageUrl, hasNextPage]);
 
   return (
-    <Grid layout="products" numberInRow={numberInRow}>
+    <div
+      style={
+        {
+          "--cols-mobile": `repeat(${gridSizeMobile || 1}, minmax(0, 1fr))`,
+          "--cols-desktop": `repeat(${gridSizeDesktop || 3}, minmax(0, 1fr))`,
+        } as React.CSSProperties
+      }
+      className="w-full grid grid-cols-[--cols-mobile] lg:grid-cols-[--cols-desktop] gap-x-1.5 gap-y-8 lg:gap-y-10"
+    >
       {nodes.map((product: any, i: number) => (
         <ProductCard
           key={product.id}
@@ -43,6 +52,6 @@ export function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
           loading={getImageLoadingPriority(i)}
         />
       ))}
-    </Grid>
+    </div>
   );
 }

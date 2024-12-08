@@ -70,8 +70,9 @@ export default {
         underline: "underline 400ms linear",
         "fade-in": "fade-in var(--fade-in-duration, .5s) ease-in forwards",
         "slide-down":
-          "slide-down var(--slide-down-duration, .3s) ease-out forwards",
-        "slide-up": "slide-up var(--slide-up-duration, .3s) ease-out forwards",
+          "slide-down var(--slide-down-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
+        "slide-up":
+          "slide-up var(--slide-up-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
         "slide-left-and-fade":
           "slide-left-and-fade var(--slide-left-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
         "enter-from-left":
