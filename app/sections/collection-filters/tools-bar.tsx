@@ -102,7 +102,9 @@ function FiltersDrawer({
             <div className="flex gap-2 items-center justify-between">
               <span className="py-2.5 font-bold">Filters</span>
               <Dialog.Close asChild>
-                <button className="p-2 translate-x-2">
+                <button className="p-2 translate-x-2"
+                   aria-label="Close"
+                >
                   <X className="w-4 h-4" />
                 </button>
               </Dialog.Close>
