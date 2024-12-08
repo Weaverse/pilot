@@ -9,17 +9,18 @@ import type {
   Filter,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
+import clsx from "clsx";
 import type { SyntheticEvent } from "react";
 import { useState } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Checkbox } from "~/components/checkbox";
 import { IconCaretRight } from "~/components/icons";
+import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
-import { Input } from "../../modules/input";
-import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import type { CollectionFiltersData } from ".";
+import { Input } from "../../modules/input";
 
 export function Filters() {
   let parentInstance = useClosestWeaverseItem(".filters-list");
@@ -78,7 +79,21 @@ export function Filters() {
             <span>{filter.label}</span>
             <IconCaretRight className="w-4 h-4 transition-transform rotate-0" />
           </Accordion.Trigger>
-          <Accordion.Content>
+          <Accordion.Content
+            style={
+              {
+                "--slide-up-from": "var(--radix-accordion-content-height)",
+                "--slide-down-to": "var(--radix-accordion-content-height)",
+                "--slide-up-duration": "0.15s",
+                "--slide-down-duration": "0.15s",
+              } as React.CSSProperties
+            }
+            className={clsx([
+              "overflow-hidden",
+              "data-[state=closed]:animate-slide-up",
+              "data-[state=open]:animate-slide-down",
+            ])}
+          >
             <ul key={filter.id} className="space-y-5 pt-8">
               {filter.values?.map((option) => {
                 return <li key={option.id}>{filterMarkup(filter, option)}</li>;
