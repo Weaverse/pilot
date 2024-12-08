@@ -218,7 +218,7 @@ function App() {
 export default withWeaverse(App);
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  let routeError = useRouteError() as any;
+  let routeError: { status?: number; data?: any } = useRouteError();
   let isRouteError = isRouteErrorResponse(routeError);
 
   let pageType = "page";
