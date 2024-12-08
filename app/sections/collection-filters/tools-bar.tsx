@@ -1,14 +1,14 @@
+import { Sliders, X } from "@phosphor-icons/react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { useLoaderData } from "@remix-run/react";
 import { type VariantProps, cva } from "class-variance-authority";
+import clsx from "clsx";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import { Button } from "~/components/button";
 import { cn } from "~/lib/cn";
 import { Filters } from "./filters";
 import { LayoutSwitcher, type LayoutSwitcherProps } from "./layout-switcher";
 import { Sort } from "./sort";
-import * as Dialog from "@radix-ui/react-dialog";
-import { Button } from "~/components/button";
-import { Sliders, X } from "@phosphor-icons/react";
-import clsx from "clsx";
 
 let variants = cva("", {
   variants: {
@@ -57,14 +57,18 @@ export function ToolsBar({
           onGridSizeChange={onGridSizeChange}
         />
         {showProductsCount && (
-          <span className="grow text-center hidden md:inline">
+          <span className="text-center hidden md:inline">
             {collection?.products.nodes.length} Products
           </span>
         )}
-        <div className="flex gap-2">
-          {enableSort && <Sort />}
-          {enableFilter && <FiltersDrawer filtersPosition={filtersPosition} />}
-        </div>
+        {(enableSort || (enableFilter && filtersPosition === "drawer")) && (
+          <div className="flex gap-2">
+            {enableSort && <Sort />}
+            {enableFilter && (
+              <FiltersDrawer filtersPosition={filtersPosition} />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -102,8 +106,9 @@ function FiltersDrawer({
             <div className="flex gap-2 items-center justify-between">
               <span className="py-2.5 font-bold">Filters</span>
               <Dialog.Close asChild>
-                <button className="p-2 translate-x-2"
-                   aria-label="Close"
+                <button
+                  className="p-2 translate-x-2"
+                  aria-label="Close filters drawer"
                 >
                   <X className="w-4 h-4" />
                 </button>

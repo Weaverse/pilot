@@ -86,7 +86,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             {...props}
           />
           <div className="flex gap-8 pt-6 lg:pt-12 pb-8 lg:pb-20">
-            {filtersPosition === "sidebar" && (
+            {enableFilter && filtersPosition === "sidebar" && (
               <div className="hidden lg:block shrink-0 w-72 space-y-4">
                 <div className="font-bold">Filters</div>
                 <Filters />
