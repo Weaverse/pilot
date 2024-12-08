@@ -1,10 +1,4 @@
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
-import { Sliders } from "@phosphor-icons/react";
-import * as Dialog from "@radix-ui/react-dialog";
+import * as Accordion from "@radix-ui/react-accordion";
 import {
   useLoaderData,
   useLocation,
@@ -15,64 +9,96 @@ import type {
   Filter,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
-import clsx from "clsx";
 import type { SyntheticEvent } from "react";
 import { useState } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
-import { Button } from "~/components/button";
 import { Checkbox } from "~/components/checkbox";
-import { IconCaretDown, IconCaretRight } from "~/components/icons";
+import { IconCaretRight } from "~/components/icons";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
 import { Input } from "../../modules/input";
+import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
+import type { CollectionFiltersData } from ".";
 
 export function Filters() {
+  let parentInstance = useClosestWeaverseItem(".filters-list");
+  let parentData = parentInstance.data as unknown as CollectionFiltersData;
+  let { expandFilters, showFiltersCount } = parentData;
+  let [params] = useSearchParams();
   let { collection, appliedFilters } = useLoaderData<
     CollectionDetailsQuery & {
       collections: Array<{ handle: string; title: string }>;
       appliedFilters: AppliedFilter[];
     }
   >();
+  let filters = collection.products.filters as Filter[];
+
+  let filterMarkup = (filter: Filter, option: Filter["values"][0]) => {
+    switch (filter.type) {
+      case "PRICE_RANGE": {
+        let priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
+        let price = priceFilter
+          ? (JSON.parse(priceFilter) as ProductFilter["price"])
+          : undefined;
+        let min = Number.isNaN(Number(price?.min))
+          ? undefined
+          : Number(price?.min);
+        let max = Number.isNaN(Number(price?.max))
+          ? undefined
+          : Number(price?.max);
+        return <PriceRangeFilter min={min} max={max} />;
+      }
+
+      default:
+        return (
+          <ListItemFilter
+            appliedFilters={appliedFilters as AppliedFilter[]}
+            option={option}
+            showFiltersCount={showFiltersCount}
+          />
+        );
+    }
+  };
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <Button
-          variant="outline"
-          className="flex items-center gap-1.5 border py-2"
+    <Accordion.Root
+      type="multiple"
+      className="filters-list"
+      key={expandFilters.toString() + showFiltersCount}
+      defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
+    >
+      {filters.map((filter: Filter) => (
+        <Accordion.Item
+          key={filter.id}
+          value={filter.id}
+          className="w-full pb-6 pt-7 border-b border-[#b7b7b7]"
         >
-          <Sliders size={18} />
-          <span>Filter</span>
-        </Button>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay
-          className="fixed inset-0 bg-black/50 data-[state=open]:animate-fade-in z-10"
-          style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
-        />
-        <Dialog.Content
-          className={clsx([
-            "fixed inset-y-0 w-full md:w-[360px] bg-[--color-background] p-4 z-10",
-            "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
-          ])}
-        >
-          <FiltersList
-            filters={collection.products.filters as Filter[]}
-            appliedFilters={appliedFilters as AppliedFilter[]}
-          />
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+          <Accordion.Trigger className="flex w-full justify-between items-center [&>svg]:data-[state=open]:rotate-90">
+            <span>{filter.label}</span>
+            <IconCaretRight className="w-4 h-4 transition-transform rotate-0" />
+          </Accordion.Trigger>
+          <Accordion.Content>
+            <ul key={filter.id} className="space-y-5 pt-8">
+              {filter.values?.map((option) => {
+                return <li key={option.id}>{filterMarkup(filter, option)}</li>;
+              })}
+            </ul>
+          </Accordion.Content>
+        </Accordion.Item>
+      ))}
+    </Accordion.Root>
   );
 }
 
 function ListItemFilter({
   option,
   appliedFilters,
+  showFiltersCount,
 }: {
   option: Filter["values"][0];
   appliedFilters: AppliedFilter[];
+  showFiltersCount: boolean;
 }) {
   let navigate = useNavigate();
   let [params] = useSearchParams();
@@ -97,68 +123,10 @@ function ListItemFilter({
       <Checkbox
         checked={checked}
         onCheckedChange={handleCheckedChange}
-        label={option.label}
+        label={
+          showFiltersCount ? `${option.label} (${option.count})` : option.label
+        }
       />
-    </div>
-  );
-}
-
-export function FiltersList({ filters = [], appliedFilters = [] }) {
-  let [params] = useSearchParams();
-  let filterMarkup = (filter: Filter, option: Filter["values"][0]) => {
-    switch (filter.type) {
-      case "PRICE_RANGE": {
-        let priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
-        let price = priceFilter
-          ? (JSON.parse(priceFilter) as ProductFilter["price"])
-          : undefined;
-        let min = Number.isNaN(Number(price?.min))
-          ? undefined
-          : Number(price?.min);
-        let max = Number.isNaN(Number(price?.max))
-          ? undefined
-          : Number(price?.max);
-        return <PriceRangeFilter min={min} max={max} />;
-      }
-
-      default:
-        return (
-          <ListItemFilter appliedFilters={appliedFilters} option={option} />
-        );
-    }
-  };
-
-  return (
-    <div className="text-sm">
-      {filters.map((filter: Filter) => (
-        <Disclosure
-          as="div"
-          key={filter.id}
-          className="w-full pb-6 pt-7 border-b"
-        >
-          {({ open }) => (
-            <>
-              <DisclosureButton className="flex w-full justify-between items-center">
-                <span className="text-sm">{filter.label}</span>
-                {open ? (
-                  <IconCaretDown className="w-4 h-4" />
-                ) : (
-                  <IconCaretRight className="w-4 h-4" />
-                )}
-              </DisclosureButton>
-              <DisclosurePanel key={filter.id}>
-                <ul key={filter.id} className="space-y-5 pt-8">
-                  {filter.values?.map((option) => {
-                    return (
-                      <li key={option.id}>{filterMarkup(filter, option)}</li>
-                    );
-                  })}
-                </ul>
-              </DisclosurePanel>
-            </>
-          )}
-        </Disclosure>
-      ))}
     </div>
   );
 }
