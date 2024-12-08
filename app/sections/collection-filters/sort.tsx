@@ -1,7 +1,6 @@
 import { CaretDown } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Link, useLocation, useSearchParams } from "@remix-run/react";
-import clsx from "clsx";
 import { cn } from "~/lib/cn";
 import type { SortParam } from "~/lib/filter";
 
@@ -40,20 +39,16 @@ const SEARCH_SORT: { label: string; key: SortParam }[] = [
   },
 ];
 
-export function Sort({
-  show = false,
-}: {
-  show?: boolean;
-}) {
+export function Sort() {
   let [params] = useSearchParams();
   let location = useLocation();
-  let sortList = show ? SEARCH_SORT : PRODUCT_SORT;
+  let sortList = PRODUCT_SORT;
   let { key: currentSortValue } =
     sortList.find(({ key }) => key === params.get("sort")) || sortList[0];
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger className="flex items-center gap-1.5 h-10 border px-4 py-2.5 focus-visible:outline-none">
+      <DropdownMenu.Trigger className="flex items-center gap-1.5 h-12 border px-4 py-2.5 focus-visible:outline-none">
         <span className="font-medium">Sort by</span>
         <CaretDown />
       </DropdownMenu.Trigger>
