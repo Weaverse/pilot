@@ -55,7 +55,7 @@ export let ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
         </Viewport>
         <Scrollbar
           className={cn(
-            "flex touch-none select-none rounded-lg data-[orientation=horizontal]:flex-col",
+            "flex touch-none select-none data-[orientation=horizontal]:flex-col",
             "bg-black/10 dark:bg-gray-700/50",
             "transition-colors duration-150 ease-out",
             variants({ size }),
@@ -65,7 +65,7 @@ export let ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
         >
           <Thumb
             className={cn(
-              "relative flex-1 rounded-lg shadow-intense",
+              "relative flex-1 shadow-intense",
               "bg-gray-500 dark:bg-gray-500",
               "before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']",
               "before:h-full before:min-h-[20px] before:w-full before:min-w-[20px]",
