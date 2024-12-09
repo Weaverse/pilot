@@ -5,6 +5,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Button } from "~/components/button";
+import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/lib/cn";
 import { Filters } from "./filters";
 import { LayoutSwitcher, type LayoutSwitcherProps } from "./layout-switcher";
@@ -98,12 +99,12 @@ function FiltersDrawer({
         />
         <Dialog.Content
           className={clsx([
-            "fixed inset-y-0 w-full md:w-[360px] bg-[--color-background] p-4 z-10",
+            "fixed inset-y-0 w-full md:w-[360px] bg-[--color-background] py-4 z-10",
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
           ])}
         >
           <div className="space-y-1">
-            <div className="flex gap-2 items-center justify-between">
+            <div className="flex gap-2 items-center justify-between px-4">
               <span className="py-2.5 font-bold">Filters</span>
               <Dialog.Close asChild>
                 <button
@@ -114,7 +115,9 @@ function FiltersDrawer({
                 </button>
               </Dialog.Close>
             </div>
-            <Filters />
+            <ScrollArea className="max-h-[calc(100vh-4.5rem)]" size="sm">
+              <Filters className="px-4" />
+            </ScrollArea>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
