@@ -24,20 +24,20 @@ const PRODUCT_SORT: { label: string; key: SortParam }[] = [
   },
 ];
 
-const SEARCH_SORT: { label: string; key: SortParam }[] = [
-  {
-    label: "Price: Low - High",
-    key: "price-low-high",
-  },
-  {
-    label: "Price: High - Low",
-    key: "price-high-low",
-  },
-  {
-    label: "Relevance",
-    key: "relevance",
-  },
-];
+// const SEARCH_SORT: { label: string; key: SortParam }[] = [
+//   {
+//     label: "Price: Low - High",
+//     key: "price-low-high",
+//   },
+//   {
+//     label: "Price: High - Low",
+//     key: "price-high-low",
+//   },
+//   {
+//     label: "Relevance",
+//     key: "relevance",
+//   },
+// ];
 
 export function Sort() {
   let [params] = useSearchParams();

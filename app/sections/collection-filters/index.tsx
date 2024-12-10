@@ -1,13 +1,11 @@
 import { useLoaderData } from "@remix-run/react";
-import { Pagination } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import Link from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Filters } from "./filters";
-import { ProductsLoadedOnScroll } from "./products-loaded-on-scroll";
+import { ProductsPagination } from "./products-pagination";
 import { ToolsBar } from "./tools-bar";
 
 export interface CollectionFiltersData {
@@ -40,7 +38,6 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       loadMoreText,
       ...rest
     } = props;
-    let { ref, inView } = useInView();
     let { collection, collections } = useLoaderData<
       CollectionDetailsQuery & {
         collections: Array<{ handle: string; title: string }>;
@@ -92,48 +89,12 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                 <Filters />
               </div>
             )}
-            <Pagination connection={collection.products}>
-              {({
-                nodes,
-                isLoading,
-                nextPageUrl,
-                previousPageUrl,
-                hasNextPage,
-                hasPreviousPage,
-                state,
-              }) => (
-                <div className="flex w-full flex-col gap-8 items-center">
-                  {hasPreviousPage && (
-                    <Link
-                      to={previousPageUrl}
-                      variant="outline"
-                      className="mx-auto"
-                    >
-                      {isLoading ? "Loading..." : loadPrevText}
-                    </Link>
-                  )}
-                  <ProductsLoadedOnScroll
-                    gridSizeDesktop={gridSizeDesktop}
-                    gridSizeMobile={gridSizeMobile}
-                    nodes={nodes}
-                    inView={inView}
-                    nextPageUrl={nextPageUrl}
-                    hasNextPage={hasNextPage}
-                    state={state}
-                  />
-                  {hasNextPage && (
-                    <Link
-                      ref={ref}
-                      to={nextPageUrl}
-                      variant="outline"
-                      className="mx-auto"
-                    >
-                      {isLoading ? "Loading..." : loadMoreText}
-                    </Link>
-                  )}
-                </div>
-              )}
-            </Pagination>
+            <ProductsPagination
+              gridSizeDesktop={gridSizeDesktop}
+              gridSizeMobile={gridSizeMobile}
+              loadPrevText={loadPrevText}
+              loadMoreText={loadMoreText}
+            />
           </div>
         </Section>
       );
@@ -204,6 +165,20 @@ export let schema: HydrogenComponentSchema = {
           name: "showFiltersCount",
           label: "Show filters count",
           defaultValue: true,
+          condition: "enableFilter.eq.true",
+        },
+        {
+          type: "switch",
+          name: "enableColorSwatch",
+          label: "Enable color swatches",
+          defaultValue: true,
+          condition: "enableFilter.eq.true",
+        },
+        {
+          type: "text",
+          name: "displayAsButtonFor",
+          label: "Display as button for:",
+          defaultValue: "Size, More filters",
           condition: "enableFilter.eq.true",
         },
       ],
