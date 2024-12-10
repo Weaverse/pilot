@@ -119,28 +119,37 @@ function ListItemFilter({
   let navigate = useNavigate();
   let [params] = useSearchParams();
   let location = useLocation();
+
   let filter = appliedFilters.find(
     (filter) => JSON.stringify(filter.filter) === option.input,
   );
+
   let [checked, setChecked] = useState(!!filter);
 
-  let handleCheckedChange = (checked: boolean) => {
+  function handleCheckedChange(checked: boolean) {
     setChecked(checked);
     if (checked) {
-      const link = getFilterLink(option.input as string, params, location);
+      let link = getFilterLink(option.input as string, params, location);
       navigate(link);
     } else if (filter) {
       let link = getAppliedFilterLink(filter, params, location);
       navigate(link);
     }
-  };
+  }
   return (
     <div className="flex gap-2">
       <Checkbox
         checked={checked}
         onCheckedChange={handleCheckedChange}
         label={
-          showFiltersCount ? `${option.label} (${option.count})` : option.label
+          showFiltersCount ? (
+            <span>
+              {option.label}{" "}
+              <span className="text-gray-700">({option.count})</span>
+            </span>
+          ) : (
+            option.label
+          )
         }
       />
     </div>
