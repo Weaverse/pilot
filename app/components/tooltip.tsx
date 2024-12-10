@@ -24,19 +24,25 @@ export let TooltipTrigger = ({
 }: TooltipTriggerProps) => <Trigger asChild={asChild} {...rest} />;
 
 export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
-  ({ children, className, sideOffset = 4, ...rest }, ref) => {
+  ({ children, className, sideOffset = 4, style, ...rest }, ref) => {
     return (
       <Content
         ref={ref}
         className={cn(
           "animate-slide-down-and-fade",
-          "z-50 px-4 rounded py-1 shadow-sm text-background bg-body opacity-0",
+          "z-50 px-4 rounded py-1 shadow-sm text-background bg-body",
           className,
         )}
         align="center"
         side="top"
         sideOffset={sideOffset}
         collisionPadding={8}
+        style={
+          {
+            "--slide-down-and-fade-duration": "0.3s",
+            ...style,
+          } as React.CSSProperties
+        }
         {...rest}
       >
         <Arrow asChild>
