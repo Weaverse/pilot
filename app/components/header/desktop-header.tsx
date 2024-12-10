@@ -16,6 +16,7 @@ import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { PredictiveSearchButton } from "./predictive-search";
+import { CartCount } from "./cart-count";
 
 let variants = cva("", {
   variants: {
@@ -46,7 +47,7 @@ export function DesktopHeader() {
     <header
       className={cn(
         "transition-all duration-300 ease-in-out",
-        "hidden lg:block lg:w-full z-1",
+        "hidden lg:block lg:w-full z-10",
         "bg-[--color-header-bg] hover:bg-[--color-header-bg]",
         "text-[--color-header-text] hover:text-[--color-header-text]",
         "border-b border-[rgb(230,230,230)]",
@@ -72,12 +73,12 @@ export function DesktopHeader() {
         <div className="flex items-center gap-1 z-1">
           <PredictiveSearchButton />
           <AccountLink className="relative flex items-center justify-center w-8 h-8" />
-          <DialogDemo openFrom="right" />
-          {/* <CartCount
+          {/* <DialogDemo openFrom="right" /> */}
+          <CartCount
             isHome={isHome}
-            openCart={openCart}
+            openCart={() => {}}
             isTransparent={isTransparent}
-          /> */}
+          />
         </div>
       </div>
     </header>
