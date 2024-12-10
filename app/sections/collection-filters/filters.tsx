@@ -217,7 +217,9 @@ function FilterItem({
         className={cn(
           "px-3 py-1.5 border text-center",
           option.count === 0 && "diagonal text-body-subtle",
-          checked ? "border-line" : "border-line-subtle hover:border-line",
+          checked
+            ? "border-line bg-body text-background"
+            : "border-line-subtle hover:border-line",
         )}
         onClick={() => handleCheckedChange(!checked)}
       >
