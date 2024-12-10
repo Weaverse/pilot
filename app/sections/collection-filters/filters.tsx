@@ -21,8 +21,9 @@ import type { AppliedFilter } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
 import type { CollectionFiltersData } from ".";
 import { Input } from "../../modules/input";
+import { cn } from "~/lib/cn";
 
-export function Filters() {
+export function Filters({ className }: { className?: string }) {
   let parentInstance = useClosestWeaverseItem(".filters-list");
   let parentData = parentInstance.data as unknown as CollectionFiltersData;
   let { expandFilters, showFiltersCount } = parentData;
@@ -65,7 +66,7 @@ export function Filters() {
   return (
     <Accordion.Root
       type="multiple"
-      className="filters-list divide-y divide-line-subtle"
+      className={cn("filters-list divide-y divide-line-subtle", className)}
       key={expandFilters.toString() + showFiltersCount}
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
