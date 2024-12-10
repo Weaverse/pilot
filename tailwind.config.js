@@ -31,6 +31,13 @@ export default {
           },
           to: { opacity: 1, transform: "translateX(0)" },
         },
+        "slide-down-and-fade": {
+          from: {
+            opacity: 0,
+            transform: "translateY(var(--bottom-distance, 6px))",
+          },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
         "enter-from-left": {
           from: { transform: "translateX(-100%)" },
           to: { transform: "translateX(0)" },
@@ -75,6 +82,8 @@ export default {
           "slide-up var(--slide-up-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
         "slide-left-and-fade":
           "slide-left-and-fade var(--slide-left-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
+        "slide-down-and-fade":
+          "slide-down-and-fade var(--slide-down-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
         "enter-from-left":
           "enter-from-left var(--enter-from-left-duration, .3s) ease-out forwards",
         "enter-from-right":

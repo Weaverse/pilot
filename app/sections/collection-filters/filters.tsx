@@ -22,11 +22,21 @@ import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
 import type { CollectionFiltersData } from ".";
 import { Input } from "../../modules/input";
 import { cn } from "~/lib/cn";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
+import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
+import { variants as productOptionsVariants } from "~/modules/product-form/options";
+
+const COLORS_FILTERS = ["Color", "Colors", "Colour", "Colours"];
 
 export function Filters({ className }: { className?: string }) {
   let parentInstance = useClosestWeaverseItem(".filters-list");
   let parentData = parentInstance.data as unknown as CollectionFiltersData;
-  let { expandFilters, showFiltersCount } = parentData;
+  let {
+    expandFilters,
+    showFiltersCount,
+    enableColorSwatch,
+    displayAsButtonFor,
+  } = parentData;
   let [params] = useSearchParams();
   let { collection, appliedFilters } = useLoaderData<
     CollectionDetailsQuery & {
@@ -36,33 +46,6 @@ export function Filters({ className }: { className?: string }) {
   >();
   let filters = collection.products.filters as Filter[];
 
-  let filterMarkup = (filter: Filter, option: Filter["values"][0]) => {
-    switch (filter.type) {
-      case "PRICE_RANGE": {
-        let priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
-        let price = priceFilter
-          ? (JSON.parse(priceFilter) as ProductFilter["price"])
-          : undefined;
-        let min = Number.isNaN(Number(price?.min))
-          ? undefined
-          : Number(price?.min);
-        let max = Number.isNaN(Number(price?.max))
-          ? undefined
-          : Number(price?.max);
-        return <PriceRangeFilter min={min} max={max} />;
-      }
-
-      default:
-        return (
-          <ListItemFilter
-            appliedFilters={appliedFilters as AppliedFilter[]}
-            option={option}
-            showFiltersCount={showFiltersCount}
-          />
-        );
-    }
-  };
-
   return (
     <Accordion.Root
       type="multiple"
@@ -70,48 +53,87 @@ export function Filters({ className }: { className?: string }) {
       key={expandFilters.toString() + showFiltersCount}
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
-      {filters.map((filter: Filter) => (
-        <Accordion.Item
-          key={filter.id}
-          value={filter.id}
-          className="w-full pb-6 pt-7"
-        >
-          <Accordion.Trigger className="flex w-full justify-between items-center [&>svg]:data-[state=open]:rotate-90">
-            <span>{filter.label}</span>
-            <IconCaretRight className="w-4 h-4 transition-transform rotate-0" />
-          </Accordion.Trigger>
-          <Accordion.Content
-            style={
-              {
-                "--slide-up-from": "var(--radix-accordion-content-height)",
-                "--slide-down-to": "var(--radix-accordion-content-height)",
-                "--slide-up-duration": "0.15s",
-                "--slide-down-duration": "0.15s",
-              } as React.CSSProperties
-            }
-            className={clsx([
-              "overflow-hidden",
-              "data-[state=closed]:animate-slide-up",
-              "data-[state=open]:animate-slide-down",
-            ])}
+      {filters.map((filter: Filter) => {
+        let asColorSwatch =
+          enableColorSwatch && COLORS_FILTERS.includes(filter.label);
+
+        return (
+          <Accordion.Item
+            key={filter.id}
+            value={filter.id}
+            className="w-full pb-6 pt-7"
           >
-            <ul key={filter.id} className="space-y-5 pt-8">
-              {filter.values?.map((option) => {
-                return <li key={option.id}>{filterMarkup(filter, option)}</li>;
-              })}
-            </ul>
-          </Accordion.Content>
-        </Accordion.Item>
-      ))}
+            <Accordion.Trigger className="flex w-full justify-between items-center [&>svg]:data-[state=open]:rotate-90">
+              <span>{filter.label}</span>
+              <IconCaretRight className="w-4 h-4 transition-transform rotate-0" />
+            </Accordion.Trigger>
+            <Accordion.Content
+              style={
+                {
+                  "--slide-up-from": "var(--radix-accordion-content-height)",
+                  "--slide-down-to": "var(--radix-accordion-content-height)",
+                  "--slide-up-duration": "0.15s",
+                  "--slide-down-duration": "0.15s",
+                } as React.CSSProperties
+              }
+              className={clsx([
+                "overflow-hidden",
+                "data-[state=closed]:animate-slide-up",
+                "data-[state=open]:animate-slide-down",
+              ])}
+            >
+              <div
+                key={filter.id}
+                className={clsx(
+                  "flex pt-8",
+                  asColorSwatch ? "gap-1.5 flex-wrap" : "flex-col gap-5",
+                )}
+              >
+                {filter.values?.map((option) => {
+                  switch (filter.type) {
+                    case "PRICE_RANGE": {
+                      let priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
+                      let price = priceFilter
+                        ? (JSON.parse(priceFilter) as ProductFilter["price"])
+                        : undefined;
+                      let min = Number.isNaN(Number(price?.min))
+                        ? undefined
+                        : Number(price?.min);
+                      let max = Number.isNaN(Number(price?.max))
+                        ? undefined
+                        : Number(price?.max);
+                      return (
+                        <PriceRangeFilter key={option.id} min={min} max={max} />
+                      );
+                    }
+                    default:
+                      return (
+                        <ListItemFilter
+                          key={option.id}
+                          asColorSwatch={asColorSwatch}
+                          appliedFilters={appliedFilters as AppliedFilter[]}
+                          option={option}
+                          showFiltersCount={showFiltersCount}
+                        />
+                      );
+                  }
+                })}
+              </div>
+            </Accordion.Content>
+          </Accordion.Item>
+        );
+      })}
     </Accordion.Root>
   );
 }
 
 function ListItemFilter({
+  asColorSwatch,
   option,
   appliedFilters,
   showFiltersCount,
 }: {
+  asColorSwatch?: boolean;
   option: Filter["values"][0];
   appliedFilters: AppliedFilter[];
   showFiltersCount: boolean;
@@ -119,31 +141,88 @@ function ListItemFilter({
   let navigate = useNavigate();
   let [params] = useSearchParams();
   let location = useLocation();
+  let themeSettings = useThemeSettings();
+  let { options, swatches }: SwatchesConfigs = themeSettings.productSwatches;
+
   let filter = appliedFilters.find(
     (filter) => JSON.stringify(filter.filter) === option.input,
   );
+
   let [checked, setChecked] = useState(!!filter);
 
-  let handleCheckedChange = (checked: boolean) => {
+  function handleCheckedChange(checked: boolean) {
     setChecked(checked);
     if (checked) {
-      const link = getFilterLink(option.input as string, params, location);
-      navigate(link);
+      let link = getFilterLink(option.input as string, params, location);
+      navigate(link, { preventScrollReset: true });
     } else if (filter) {
       let link = getAppliedFilterLink(filter, params, location);
-      navigate(link);
+      navigate(link, { preventScrollReset: true });
     }
-  };
+  }
+
+  if (asColorSwatch) {
+    let swatchColor = swatches.colors.find(({ name }) => name === option.label);
+    let optionConf = options.find(({ name }) => {
+      return name.toLowerCase() === option.label.toLowerCase();
+    });
+
+    let { shape = "square", size = "md" } = optionConf || {};
+    return (
+      <Tooltip>
+        <TooltipTrigger>
+          <button
+            type="button"
+            className={cn(
+              productOptionsVariants({
+                colorSize: size,
+                shape,
+              }),
+              checked ? "p-1 border-line" : "border-line-subtle",
+            )}
+            onClick={() => handleCheckedChange(!checked)}
+          >
+            <span
+              className={cn(
+                "w-full h-full inline-block border-none hover:border-none",
+                productOptionsVariants({ shape }),
+              )}
+              style={{
+                backgroundColor:
+                  swatchColor?.value || option.label.toLowerCase(),
+              }}
+            />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>
+          {showFiltersCount ? (
+            <span>
+              {option.label}{" "}
+              <span className="text-gray-100">({option.count})</span>
+            </span>
+          ) : (
+            option.label
+          )}
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
   return (
-    <div className="flex gap-2">
-      <Checkbox
-        checked={checked}
-        onCheckedChange={handleCheckedChange}
-        label={
-          showFiltersCount ? `${option.label} (${option.count})` : option.label
-        }
-      />
-    </div>
+    <Checkbox
+      checked={checked}
+      onCheckedChange={handleCheckedChange}
+      label={
+        showFiltersCount ? (
+          <span>
+            {option.label}{" "}
+            <span className="text-gray-700">({option.count})</span>
+          </span>
+        ) : (
+          option.label
+        )
+      }
+    />
   );
 }
 

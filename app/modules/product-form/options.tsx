@@ -6,38 +6,41 @@ import type { ProductVariantFragmentFragment } from "storefrontapi.generated";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/lib/cn";
 
-let variants = cva("border border-line hover:border-body cursor-pointer", {
-  variants: {
-    colorSize: {
-      sm: "w-8 h-8",
-      md: "w-10 h-10",
-      lg: "w-12 h-12",
-    },
-    buttonSize: {
-      sm: "min-w-8 h-8",
-      md: "min-w-10 h-10",
-      lg: "min-w-12 h-12",
-    },
-    imageSize: {
-      sm: "w-12 h-auto",
-      md: "w-16 h-auto",
-      lg: "w-20 h-auto",
-    },
-    shape: {
-      square: "",
-      circle: "rounded-full",
-      round: "rounded-md",
-    },
-    selected: {
-      true: "border-body",
-      false: "",
-    },
-    disabled: {
-      true: "diagonal",
-      false: "",
+export let variants = cva(
+  "border border-line hover:border-body cursor-pointer",
+  {
+    variants: {
+      colorSize: {
+        sm: "w-8 h-8",
+        md: "w-10 h-10",
+        lg: "w-12 h-12",
+      },
+      buttonSize: {
+        sm: "min-w-8 h-8",
+        md: "min-w-10 h-10",
+        lg: "min-w-12 h-12",
+      },
+      imageSize: {
+        sm: "w-12 h-auto",
+        md: "w-16 h-auto",
+        lg: "w-20 h-auto",
+      },
+      shape: {
+        square: "",
+        circle: "rounded-full",
+        round: "rounded-md",
+      },
+      selected: {
+        true: "border-body",
+        false: "",
+      },
+      disabled: {
+        true: "diagonal",
+        false: "",
+      },
     },
   },
-});
+);
 
 interface VariantOptionProps {
   selectedOptionValue: string;

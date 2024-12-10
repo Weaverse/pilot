@@ -15,6 +15,8 @@ export interface CollectionFiltersData {
   filtersPosition: "sidebar" | "drawer";
   expandFilters: boolean;
   showFiltersCount: boolean;
+  enableColorSwatch: boolean;
+  displayAsButtonFor: string;
   productsPerRowDesktop: number;
   productsPerRowMobile: number;
   loadPrevText: string;
@@ -32,6 +34,8 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       filtersPosition,
       expandFilters,
       showProductsCount,
+      enableColorSwatch,
+      displayAsButtonFor,
       productsPerRowDesktop,
       productsPerRowMobile,
       loadPrevText,
@@ -180,6 +184,7 @@ export let schema: HydrogenComponentSchema = {
           label: "Display as button for:",
           defaultValue: "Size, More filters",
           condition: "enableFilter.eq.true",
+          helpText: "Comma-separated list of filters to display as buttons",
         },
       ],
     },
