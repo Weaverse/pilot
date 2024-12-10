@@ -15,7 +15,7 @@ import { Arrows } from "./arrows";
 import type { SlideshowDotsProps } from "./dots";
 import { Dots } from "./dots";
 
-let variants = cva("group [&_.swiper]:h-full", {
+let variants = cva("group [&_.swiper]:h-full [&_.swiper]:z-0", {
   variants: {
     height: {
       small: "h-[40vh] lg:h-[50vh]",
