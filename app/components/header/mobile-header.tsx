@@ -32,7 +32,7 @@ export function MobileHeader({
     <header
       className={cn(
         "transition-colors duration-300 ease-in-out",
-        "h-nav z-1 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
+        "h-nav z-10 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
         "flex lg:hidden justify-between items-center gap-4",
         "px-3 md:px-10",
         "text-[--color-header-text] bg-[--color-header-bg]",

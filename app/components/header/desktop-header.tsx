@@ -46,7 +46,7 @@ export function DesktopHeader() {
     <header
       className={cn(
         "transition-all duration-300 ease-in-out",
-        "hidden lg:block lg:w-full z-1",
+        "hidden lg:block lg:w-full z-10",
         "bg-[--color-header-bg] hover:bg-[--color-header-bg]",
         "text-[--color-header-text] hover:text-[--color-header-text]",
         "border-b border-[rgb(230,230,230)]",
