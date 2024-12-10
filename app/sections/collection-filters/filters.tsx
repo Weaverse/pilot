@@ -187,6 +187,7 @@ function FilterItem({
                 shape,
               }),
               checked ? "p-1 border-line" : "border-line-subtle",
+              option.count === 0 && "diagonal",
             )}
             onClick={() => handleCheckedChange(!checked)}
           >
@@ -214,7 +215,8 @@ function FilterItem({
       <button
         type="button"
         className={cn(
-          "px-3 py-1.5 border text-center text-body",
+          "px-3 py-1.5 border text-center",
+          option.count === 0 && "diagonal text-body-subtle",
           checked ? "border-line" : "border-line-subtle hover:border-line",
         )}
         onClick={() => handleCheckedChange(!checked)}
@@ -231,6 +233,7 @@ function FilterItem({
       label={
         <FilterLabel option={option} showFiltersCount={showFiltersCount} />
       }
+      className={clsx(option.count === 0 && "line-through text-body-subtle")}
     />
   );
 }
