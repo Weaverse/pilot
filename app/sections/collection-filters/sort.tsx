@@ -1,6 +1,7 @@
-import { CaretDown } from "@phosphor-icons/react";
+import { CaretDown, CheckCircle } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Link, useLocation, useSearchParams } from "@remix-run/react";
+import { useLocation, useSearchParams } from "@remix-run/react";
+import Link from "~/components/link";
 import { cn } from "~/lib/cn";
 import type { SortParam } from "~/lib/filter";
 
@@ -68,7 +69,7 @@ export function Sort() {
                   to={sortUrl}
                   className={cn(
                     "hover:underline underline-offset-[6px] hover:outline-none",
-                    currentSortValue === key && "underline",
+                    currentSortValue === key && "font-bold",
                   )}
                 >
                   {label}

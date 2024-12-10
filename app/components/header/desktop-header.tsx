@@ -8,7 +8,6 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { DialogDemo } from "~/components/drawer";
 import { IconUser } from "~/components/icons";
 import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
@@ -73,7 +72,6 @@ export function DesktopHeader() {
         <div className="flex items-center gap-1 z-1">
           <PredictiveSearchButton />
           <AccountLink className="relative flex items-center justify-center w-8 h-8" />
-          {/* <DialogDemo openFrom="right" /> */}
           <CartCount
             isHome={isHome}
             openCart={() => {}}

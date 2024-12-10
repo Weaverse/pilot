@@ -44,18 +44,22 @@ export function Filters({ className }: { className?: string }) {
       appliedFilters: AppliedFilter[];
     }
   >();
+  let appliedFiltersKeys = appliedFilters
+    .map((filter) => filter.label)
+    .join("-");
   let filters = collection.products.filters as Filter[];
 
   return (
     <Accordion.Root
       type="multiple"
       className={cn("filters-list divide-y divide-line-subtle", className)}
-      key={expandFilters.toString() + showFiltersCount}
+      key={appliedFiltersKeys + expandFilters.toString() + showFiltersCount}
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
       {filters.map((filter: Filter) => {
         let asColorSwatch =
           enableColorSwatch && COLORS_FILTERS.includes(filter.label);
+        let asButton = displayAsButtonFor.includes(filter.label);
 
         return (
           <Accordion.Item
@@ -83,10 +87,11 @@ export function Filters({ className }: { className?: string }) {
               ])}
             >
               <div
-                key={filter.id}
                 className={clsx(
                   "flex pt-8",
-                  asColorSwatch ? "gap-1.5 flex-wrap" : "flex-col gap-5",
+                  asColorSwatch || asButton
+                    ? "gap-1.5 flex-wrap"
+                    : "flex-col gap-5",
                 )}
               >
                 {filter.values?.map((option) => {
@@ -108,9 +113,15 @@ export function Filters({ className }: { className?: string }) {
                     }
                     default:
                       return (
-                        <ListItemFilter
+                        <FilterItem
                           key={option.id}
-                          asColorSwatch={asColorSwatch}
+                          displayAs={
+                            asColorSwatch
+                              ? "color-swatch"
+                              : asButton
+                                ? "button"
+                                : "list-item"
+                          }
                           appliedFilters={appliedFilters as AppliedFilter[]}
                           option={option}
                           showFiltersCount={showFiltersCount}
@@ -127,13 +138,13 @@ export function Filters({ className }: { className?: string }) {
   );
 }
 
-function ListItemFilter({
-  asColorSwatch,
+function FilterItem({
+  displayAs,
   option,
   appliedFilters,
   showFiltersCount,
 }: {
-  asColorSwatch?: boolean;
+  displayAs: "color-swatch" | "button" | "list-item";
   option: Filter["values"][0];
   appliedFilters: AppliedFilter[];
   showFiltersCount: boolean;
@@ -161,7 +172,7 @@ function ListItemFilter({
     }
   }
 
-  if (asColorSwatch) {
+  if (displayAs === "color-swatch") {
     let swatchColor = swatches.colors.find(({ name }) => name === option.label);
     let optionConf = options.find(({ name }) => {
       return name.toLowerCase() === option.label.toLowerCase();
@@ -179,6 +190,7 @@ function ListItemFilter({
                 shape,
               }),
               checked ? "p-1 border-line" : "border-line-subtle",
+              option.count === 0 && "diagonal",
             )}
             onClick={() => handleCheckedChange(!checked)}
           >
@@ -195,16 +207,27 @@ function ListItemFilter({
           </button>
         </TooltipTrigger>
         <TooltipContent>
-          {showFiltersCount ? (
-            <span>
-              {option.label}{" "}
-              <span className="text-gray-100">({option.count})</span>
-            </span>
-          ) : (
-            option.label
-          )}
+          <FilterLabel option={option} showFiltersCount={showFiltersCount} />
         </TooltipContent>
       </Tooltip>
+    );
+  }
+
+  if (displayAs === "button") {
+    return (
+      <button
+        type="button"
+        className={cn(
+          "px-3 py-1.5 border text-center",
+          option.count === 0 && "diagonal text-body-subtle",
+          checked
+            ? "border-line bg-body text-background"
+            : "border-line-subtle hover:border-line",
+        )}
+        onClick={() => handleCheckedChange(!checked)}
+      >
+        <FilterLabel option={option} showFiltersCount={showFiltersCount} />
+      </button>
     );
   }
 
@@ -213,17 +236,25 @@ function ListItemFilter({
       checked={checked}
       onCheckedChange={handleCheckedChange}
       label={
-        showFiltersCount ? (
-          <span>
-            {option.label}{" "}
-            <span className="text-gray-700">({option.count})</span>
-          </span>
-        ) : (
-          option.label
-        )
+        <FilterLabel option={option} showFiltersCount={showFiltersCount} />
       }
+      className={clsx(option.count === 0 && "line-through text-body-subtle")}
     />
   );
+}
+
+function FilterLabel({
+  option,
+  showFiltersCount,
+}: { option: Filter["values"][0]; showFiltersCount: boolean }) {
+  if (showFiltersCount) {
+    return (
+      <span>
+        {option.label} <span>({option.count})</span>
+      </span>
+    );
+  }
+  return option.label;
 }
 
 // const PRICE_RANGE_FILTER_DEBOUNCE = 500;
