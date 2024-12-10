@@ -44,13 +44,16 @@ export function Filters({ className }: { className?: string }) {
       appliedFilters: AppliedFilter[];
     }
   >();
+  let appliedFiltersKeys = appliedFilters
+    .map((filter) => filter.label)
+    .join("-");
   let filters = collection.products.filters as Filter[];
 
   return (
     <Accordion.Root
       type="multiple"
       className={cn("filters-list divide-y divide-line-subtle", className)}
-      key={expandFilters.toString() + showFiltersCount}
+      key={appliedFiltersKeys + expandFilters.toString() + showFiltersCount}
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
       {filters.map((filter: Filter) => {
