@@ -238,7 +238,7 @@ function FilterItem({
       label={
         <FilterLabel option={option} showFiltersCount={showFiltersCount} />
       }
-      className={clsx(option.count === 0 && "line-through text-body-subtle")}
+      className={clsx(option.count === 0 && "text-body-subtle")}
     />
   );
 }
