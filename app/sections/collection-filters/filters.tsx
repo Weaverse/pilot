@@ -1,35 +1,20 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import {
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import type {
   Filter,
+  MoneyV2,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
-import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import type { SyntheticEvent } from "react";
-import { useMemo, useState } from "react";
-import useDebounce from "react-use/esm/useDebounce";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
-import { Checkbox } from "~/components/checkbox";
 import { IconCaretRight } from "~/components/icons";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import { cn } from "~/lib/cn";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter } from "~/lib/filter";
-import {
-  filterInputToParams,
-  getAppliedFilterLink,
-  getFilterLink,
-} from "~/lib/filter";
-import { variants as productOptionsVariants } from "~/modules/product-form/options";
 import type { CollectionFiltersData } from ".";
-import { Input } from "../../modules/input";
+import { FilterItem } from "./filter-item";
+import { PriceRangeFilter } from "./price-range-filter";
 
 const COLORS_FILTERS = ["Color", "Colors", "Colour", "Colours"];
 
@@ -112,8 +97,35 @@ export function Filters({ className }: { className?: string }) {
                       let max = Number.isNaN(Number(price?.max))
                         ? undefined
                         : Number(price?.max);
+                      let priceRanges = collection.products.nodes.map(
+                        ({ priceRange }) => priceRange,
+                      );
+                      let currencyCode =
+                        priceRanges[0].minVariantPrice.currencyCode;
+                      let minVariantPrice: MoneyV2 = {
+                        amount: Math.min(
+                          ...priceRanges.map(({ minVariantPrice }) =>
+                            Number(minVariantPrice.amount),
+                          ),
+                        ).toFixed(1),
+                        currencyCode,
+                      };
+                      let maxVariantPrice: MoneyV2 = {
+                        amount: Math.max(
+                          ...priceRanges.map(({ maxVariantPrice }) =>
+                            Number(maxVariantPrice.amount),
+                          ),
+                        ).toFixed(1),
+                        currencyCode,
+                      };
                       return (
-                        <PriceRangeFilter key={option.id} min={min} max={max} />
+                        <PriceRangeFilter
+                          key={option.id}
+                          min={min}
+                          max={max}
+                          minVariantPrice={minVariantPrice}
+                          maxVariantPrice={maxVariantPrice}
+                        />
                       );
                     }
                     default:
@@ -140,198 +152,5 @@ export function Filters({ className }: { className?: string }) {
         );
       })}
     </Accordion.Root>
-  );
-}
-
-function FilterItem({
-  displayAs,
-  option,
-  appliedFilters,
-  showFiltersCount,
-}: {
-  displayAs: "color-swatch" | "button" | "list-item";
-  option: Filter["values"][0];
-  appliedFilters: AppliedFilter[];
-  showFiltersCount: boolean;
-}) {
-  let navigate = useNavigate();
-  let [params] = useSearchParams();
-  let location = useLocation();
-  let themeSettings = useThemeSettings();
-  let { options, swatches }: SwatchesConfigs = themeSettings.productSwatches;
-
-  let filter = appliedFilters.find(
-    (filter) => JSON.stringify(filter.filter) === option.input,
-  );
-
-  let [checked, setChecked] = useState(!!filter);
-
-  function handleCheckedChange(checked: boolean) {
-    setChecked(checked);
-    if (checked) {
-      let link = getFilterLink(option.input as string, params, location);
-      navigate(link, { preventScrollReset: true });
-    } else if (filter) {
-      let link = getAppliedFilterLink(filter, params, location);
-      navigate(link, { preventScrollReset: true });
-    }
-  }
-
-  if (displayAs === "color-swatch") {
-    let swatchColor = swatches.colors.find(({ name }) => name === option.label);
-    let optionConf = options.find(({ name }) => {
-      return name.toLowerCase() === option.label.toLowerCase();
-    });
-
-    let { shape = "square", size = "md" } = optionConf || {};
-    return (
-      <Tooltip>
-        <TooltipTrigger>
-          <button
-            type="button"
-            className={cn(
-              productOptionsVariants({
-                colorSize: size,
-                shape,
-              }),
-              checked ? "p-1 border-line" : "border-line-subtle",
-              option.count === 0 && "diagonal",
-            )}
-            onClick={() => handleCheckedChange(!checked)}
-          >
-            <span
-              className={cn(
-                "w-full h-full inline-block border-none hover:border-none",
-                productOptionsVariants({ shape }),
-              )}
-              style={{
-                backgroundColor:
-                  swatchColor?.value || option.label.toLowerCase(),
-              }}
-            />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <FilterLabel option={option} showFiltersCount={showFiltersCount} />
-        </TooltipContent>
-      </Tooltip>
-    );
-  }
-
-  if (displayAs === "button") {
-    return (
-      <button
-        type="button"
-        className={cn(
-          "px-3 py-1.5 border text-center",
-          option.count === 0 && "diagonal text-body-subtle",
-          checked
-            ? "border-line bg-body text-background"
-            : "border-line-subtle hover:border-line",
-        )}
-        onClick={() => handleCheckedChange(!checked)}
-      >
-        <FilterLabel option={option} showFiltersCount={showFiltersCount} />
-      </button>
-    );
-  }
-
-  return (
-    <Checkbox
-      checked={checked}
-      onCheckedChange={handleCheckedChange}
-      label={
-        <FilterLabel option={option} showFiltersCount={showFiltersCount} />
-      }
-      className={clsx(option.count === 0 && "text-body-subtle")}
-    />
-  );
-}
-
-function FilterLabel({
-  option,
-  showFiltersCount,
-}: { option: Filter["values"][0]; showFiltersCount: boolean }) {
-  if (showFiltersCount) {
-    return (
-      <span>
-        {option.label} <span>({option.count})</span>
-      </span>
-    );
-  }
-  return option.label;
-}
-
-const PRICE_RANGE_FILTER_DEBOUNCE = 500;
-
-function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
-  let location = useLocation();
-  let params = useMemo(
-    () => new URLSearchParams(location.search),
-    [location.search],
-  );
-  let navigate = useNavigate();
-
-  let [minPrice, setMinPrice] = useState(min);
-  let [maxPrice, setMaxPrice] = useState(max);
-
-  useDebounce(
-    () => {
-      if (minPrice === undefined && maxPrice === undefined) {
-        params.delete(`${FILTER_URL_PREFIX}price`);
-        navigate(`${location.pathname}?${params.toString()}`);
-        return;
-      }
-
-      let price = {
-        ...(minPrice === undefined ? {} : { min: minPrice }),
-        ...(maxPrice === undefined ? {} : { max: maxPrice }),
-      };
-      let newParams = filterInputToParams({ price }, params);
-      navigate(`${location.pathname}?${newParams.toString()}`);
-    },
-    PRICE_RANGE_FILTER_DEBOUNCE,
-    [minPrice, maxPrice],
-  );
-
-  function onChangeMax(event: SyntheticEvent) {
-    let value = (event.target as HTMLInputElement).value;
-    let newMaxPrice = Number.isNaN(Number.parseFloat(value))
-      ? undefined
-      : Number.parseFloat(value);
-    setMaxPrice(newMaxPrice);
-  }
-
-  function onChangeMin(event: SyntheticEvent) {
-    let value = (event.target as HTMLInputElement).value;
-    let newMinPrice = Number.isNaN(Number.parseFloat(value))
-      ? undefined
-      : Number.parseFloat(value);
-    setMinPrice(newMinPrice);
-  }
-
-  return (
-    <div className="flex gap-6">
-      <label className="flex items-center gap-1" htmlFor="minPrice">
-        <span>$</span>
-        <Input
-          name="minPrice"
-          type="number"
-          value={minPrice ?? ""}
-          placeholder="From"
-          onChange={onChangeMin}
-        />
-      </label>
-      <label className="flex items-center gap-1" htmlFor="maxPrice">
-        <span>$</span>
-        <Input
-          name="maxPrice"
-          type="number"
-          value={maxPrice ?? ""}
-          placeholder="To"
-          onChange={onChangeMax}
-        />
-      </label>
-    </div>
   );
 }
