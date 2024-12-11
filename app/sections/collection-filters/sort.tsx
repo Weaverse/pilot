@@ -1,4 +1,4 @@
-import { CaretDown, CheckCircle } from "@phosphor-icons/react";
+import { CaretDown } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useLocation, useSearchParams } from "@remix-run/react";
 import Link from "~/components/link";
@@ -27,6 +27,10 @@ const PRODUCT_SORT: { label: string; key: SortParam }[] = [
 
 // const SEARCH_SORT: { label: string; key: SortParam }[] = [
 //   {
+//     label: "Relevance",
+//     key: "relevance",
+//   },
+//   {
 //     label: "Price: Low - High",
 //     key: "price-low-high",
 //   },
@@ -34,18 +38,14 @@ const PRODUCT_SORT: { label: string; key: SortParam }[] = [
 //     label: "Price: High - Low",
 //     key: "price-high-low",
 //   },
-//   {
-//     label: "Relevance",
-//     key: "relevance",
-//   },
 // ];
 
 export function Sort() {
-  let [params] = useSearchParams();
+  let [searchParams] = useSearchParams();
   let location = useLocation();
   let sortList = PRODUCT_SORT;
   let { key: currentSortValue } =
-    sortList.find(({ key }) => key === params.get("sort")) || sortList[0];
+    sortList.find(({ key }) => key === searchParams.get("sort")) || sortList[0];
 
   return (
     <DropdownMenu.Root>
@@ -60,13 +60,12 @@ export function Sort() {
           className="flex h-fit w-44 flex-col gap-2 border border-line-subtle bg-background p-5"
         >
           {sortList.map(({ key, label }) => {
-            let pr = new URLSearchParams(params);
-            pr.set("sort", key);
-            let sortUrl = `${location.pathname}?${pr.toString()}`;
+            let params = new URLSearchParams(searchParams);
+            params.set("sort", key);
             return (
               <DropdownMenu.Item key={key} asChild>
                 <Link
-                  to={sortUrl}
+                  to={`${location.pathname}?${params.toString()}`}
                   className={cn(
                     "hover:underline underline-offset-[6px] hover:outline-none",
                     currentSortValue === key && "font-bold",

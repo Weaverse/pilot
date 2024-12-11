@@ -5,7 +5,7 @@ export function useClosestWeaverseItem(selector: string) {
   let [weaverseId, setWeaverseId] = useState<string>("");
   let weaverseItem = useItemInstance(weaverseId);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: assuming `selector` does not change
   useEffect(() => {
     if (!weaverseItem) {
       let target = document.querySelector(selector);
