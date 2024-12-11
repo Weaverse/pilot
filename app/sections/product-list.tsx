@@ -6,10 +6,10 @@ import type {
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { COLLECTION_QUERY } from "~/data/queries";
+import { getSortValuesFromParam } from "~/lib/collections";
 import { PAGINATION_SIZE } from "~/lib/const";
 import { ProductSwimlane } from "~/modules/product-swimlane";
 import type { SortParam } from "~/modules/sort-filter";
-import { getSortValuesFromParam } from "~/routes/($locale).collections.$collectionHandle";
 
 interface ProductListProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> {
