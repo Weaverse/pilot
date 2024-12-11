@@ -9,22 +9,27 @@ import type {
   Filter,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
+import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { SyntheticEvent } from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import useDebounce from "react-use/esm/useDebounce";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Checkbox } from "~/components/checkbox";
 import { IconCaretRight } from "~/components/icons";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
+import { cn } from "~/lib/cn";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter } from "~/lib/filter";
-import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
+import {
+  filterInputToParams,
+  getAppliedFilterLink,
+  getFilterLink,
+} from "~/lib/filter";
+import { variants as productOptionsVariants } from "~/modules/product-form/options";
 import type { CollectionFiltersData } from ".";
 import { Input } from "../../modules/input";
-import { cn } from "~/lib/cn";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
-import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
-import { variants as productOptionsVariants } from "~/modules/product-form/options";
 
 const COLORS_FILTERS = ["Color", "Colors", "Colour", "Colours"];
 
@@ -257,53 +262,53 @@ function FilterLabel({
   return option.label;
 }
 
-// const PRICE_RANGE_FILTER_DEBOUNCE = 500;
+const PRICE_RANGE_FILTER_DEBOUNCE = 500;
 
 function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
-  // const location = useLocation();
-  // const params = useMemo(
-  //   () => new URLSearchParams(location.search),
-  //   [location.search],
-  // );
-  // const navigate = useNavigate();
+  let location = useLocation();
+  let params = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search],
+  );
+  let navigate = useNavigate();
 
-  const [minPrice, setMinPrice] = useState(min);
-  const [maxPrice, setMaxPrice] = useState(max);
+  let [minPrice, setMinPrice] = useState(min);
+  let [maxPrice, setMaxPrice] = useState(max);
 
-  // useDebounce(
-  //   () => {
-  //     if (minPrice === undefined && maxPrice === undefined) {
-  //       params.delete(`${FILTER_URL_PREFIX}price`);
-  //       navigate(`${location.pathname}?${params.toString()}`);
-  //       return;
-  //     }
+  useDebounce(
+    () => {
+      if (minPrice === undefined && maxPrice === undefined) {
+        params.delete(`${FILTER_URL_PREFIX}price`);
+        navigate(`${location.pathname}?${params.toString()}`);
+        return;
+      }
 
-  //     const price = {
-  //       ...(minPrice === undefined ? {} : {min: minPrice}),
-  //       ...(maxPrice === undefined ? {} : {max: maxPrice}),
-  //     };
-  //     const newParams = filterInputToParams({price}, params);
-  //     navigate(`${location.pathname}?${newParams.toString()}`);
-  //   },
-  //   PRICE_RANGE_FILTER_DEBOUNCE,
-  //   [minPrice, maxPrice],
-  // );
+      let price = {
+        ...(minPrice === undefined ? {} : { min: minPrice }),
+        ...(maxPrice === undefined ? {} : { max: maxPrice }),
+      };
+      let newParams = filterInputToParams({ price }, params);
+      navigate(`${location.pathname}?${newParams.toString()}`);
+    },
+    PRICE_RANGE_FILTER_DEBOUNCE,
+    [minPrice, maxPrice],
+  );
 
-  const onChangeMax = (event: SyntheticEvent) => {
-    const value = (event.target as HTMLInputElement).value;
-    const newMaxPrice = Number.isNaN(Number.parseFloat(value))
+  function onChangeMax(event: SyntheticEvent) {
+    let value = (event.target as HTMLInputElement).value;
+    let newMaxPrice = Number.isNaN(Number.parseFloat(value))
       ? undefined
       : Number.parseFloat(value);
     setMaxPrice(newMaxPrice);
-  };
+  }
 
-  const onChangeMin = (event: SyntheticEvent) => {
-    const value = (event.target as HTMLInputElement).value;
-    const newMinPrice = Number.isNaN(Number.parseFloat(value))
+  function onChangeMin(event: SyntheticEvent) {
+    let value = (event.target as HTMLInputElement).value;
+    let newMinPrice = Number.isNaN(Number.parseFloat(value))
       ? undefined
       : Number.parseFloat(value);
     setMinPrice(newMinPrice);
-  };
+  }
 
   return (
     <div className="flex gap-6">
