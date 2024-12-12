@@ -207,6 +207,40 @@ export let COLLECTION_QUERY = `#graphql
           startCursor
         }
       }
+      highestPriceProduct: products(first: 1, sortKey: PRICE, reverse: true) {
+        nodes {
+          id
+          title
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
+      lowestPriceProduct: products(first: 1, sortKey: PRICE) {
+        nodes {
+          id
+          title
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
     }
     collections(first: 100) {
       edges {
