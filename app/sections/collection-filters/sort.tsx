@@ -5,18 +5,22 @@ import Link from "~/components/link";
 import { cn } from "~/lib/cn";
 import type { SortParam } from "~/lib/filter";
 
-const PRODUCT_SORT: { label: string; key: SortParam }[] = [
+const SORT_LIST: { label: string; key: SortParam }[] = [
   { label: "Featured", key: "featured" },
   {
-    label: "Price: Low - High",
+    label: "Relevance",
+    key: "relevance",
+  },
+  {
+    label: "Price, (low to high)",
     key: "price-low-high",
   },
   {
-    label: "Price: High - Low",
+    label: "Price, (high to low)",
     key: "price-high-low",
   },
   {
-    label: "Best Selling",
+    label: "Best selling",
     key: "best-selling",
   },
   {
@@ -25,32 +29,19 @@ const PRODUCT_SORT: { label: string; key: SortParam }[] = [
   },
 ];
 
-// const SEARCH_SORT: { label: string; key: SortParam }[] = [
-//   {
-//     label: "Relevance",
-//     key: "relevance",
-//   },
-//   {
-//     label: "Price: Low - High",
-//     key: "price-low-high",
-//   },
-//   {
-//     label: "Price: High - Low",
-//     key: "price-high-low",
-//   },
-// ];
-
 export function Sort() {
   let [searchParams] = useSearchParams();
   let location = useLocation();
-  let sortList = PRODUCT_SORT;
-  let { key: currentSortValue } =
-    sortList.find(({ key }) => key === searchParams.get("sort")) || sortList[0];
+  let currentSort =
+    SORT_LIST.find(({ key }) => key === searchParams.get("sort")) ||
+    SORT_LIST[0];
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger className="flex items-center gap-1.5 h-12 border px-4 py-2.5 focus-visible:outline-none">
-        <span className="font-medium">Sort by</span>
+        <span>
+          Sort by: <span className="font-semibold">{currentSort.label}</span>
+        </span>
         <CaretDown />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -59,7 +50,7 @@ export function Sort() {
           align="end"
           className="flex h-fit w-44 flex-col gap-2 border border-line-subtle bg-background p-5"
         >
-          {sortList.map(({ key, label }) => {
+          {SORT_LIST.map(({ key, label }) => {
             let params = new URLSearchParams(searchParams);
             params.set("sort", key);
             return (
@@ -68,7 +59,7 @@ export function Sort() {
                   to={`${location.pathname}?${params.toString()}`}
                   className={cn(
                     "hover:underline underline-offset-[6px] hover:outline-none",
-                    currentSortValue === key && "font-bold",
+                    currentSort.key === key && "font-bold",
                   )}
                 >
                   {label}
