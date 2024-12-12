@@ -47,7 +47,7 @@ export function filterInputToParams(
     let key = `${FILTER_URL_PREFIX}${k}`;
     let value = JSON.stringify(v);
     if (params.has(key, value)) {
-      return;
+      return params;
     }
     if (k === "price") {
       // For price, we want to overwrite

@@ -1,16 +1,11 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
-import type {
-  Filter,
-  MoneyV2,
-  ProductFilter,
-} from "@shopify/hydrogen/storefront-api-types";
+import { useLoaderData } from "@remix-run/react";
+import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { IconCaretRight } from "~/components/icons";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import { cn } from "~/lib/cn";
-import { FILTER_URL_PREFIX } from "~/lib/const";
 import type { AppliedFilter } from "~/lib/filter";
 import type { CollectionFiltersData } from ".";
 import { FilterItem } from "./filter-item";
@@ -27,7 +22,6 @@ export function Filters({ className }: { className?: string }) {
     enableColorSwatch,
     displayAsButtonFor,
   } = parentData;
-  let [params] = useSearchParams();
   let { collection, appliedFilters } = useLoaderData<
     CollectionDetailsQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -87,44 +81,12 @@ export function Filters({ className }: { className?: string }) {
                 {filter.values?.map((option) => {
                   switch (filter.type) {
                     case "PRICE_RANGE": {
-                      let priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
-                      let price = priceFilter
-                        ? (JSON.parse(priceFilter) as ProductFilter["price"])
-                        : undefined;
-                      let min = Number.isNaN(Number(price?.min))
-                        ? undefined
-                        : Number(price?.min);
-                      let max = Number.isNaN(Number(price?.max))
-                        ? undefined
-                        : Number(price?.max);
-                      let priceRanges = collection.products.nodes.map(
-                        ({ priceRange }) => priceRange,
-                      );
-                      let currencyCode =
-                        priceRanges[0].minVariantPrice.currencyCode;
-                      let minVariantPrice: MoneyV2 = {
-                        amount: Math.min(
-                          ...priceRanges.map(({ minVariantPrice }) =>
-                            Number(minVariantPrice.amount),
-                          ),
-                        ).toFixed(1),
-                        currencyCode,
-                      };
-                      let maxVariantPrice: MoneyV2 = {
-                        amount: Math.max(
-                          ...priceRanges.map(({ maxVariantPrice }) =>
-                            Number(maxVariantPrice.amount),
-                          ),
-                        ).toFixed(1),
-                        currencyCode,
-                      };
                       return (
                         <PriceRangeFilter
                           key={option.id}
-                          min={min}
-                          max={max}
-                          minVariantPrice={minVariantPrice}
-                          maxVariantPrice={maxVariantPrice}
+                          collection={
+                            collection as CollectionDetailsQuery["collection"]
+                          }
                         />
                       );
                     }
