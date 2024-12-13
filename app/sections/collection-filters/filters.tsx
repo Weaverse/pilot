@@ -80,36 +80,29 @@ export function Filters({ className }: { className?: string }) {
                     : "flex-col gap-5",
                 )}
               >
-                {filter.values?.map((option) => {
-                  switch (filter.type) {
-                    case "PRICE_RANGE": {
-                      return (
-                        <PriceRangeFilter
-                          key={option.id}
-                          collection={
-                            collection as CollectionDetailsQuery["collection"]
-                          }
-                        />
-                      );
+                {filter.type === "PRICE_RANGE" ? (
+                  <PriceRangeFilter
+                    collection={
+                      collection as CollectionDetailsQuery["collection"]
                     }
-                    default:
-                      return (
-                        <FilterItem
-                          key={option.id}
-                          displayAs={
-                            asColorSwatch
-                              ? "color-swatch"
-                              : asButton
-                                ? "button"
-                                : "list-item"
-                          }
-                          appliedFilters={appliedFilters as AppliedFilter[]}
-                          option={option}
-                          showFiltersCount={showFiltersCount}
-                        />
-                      );
-                  }
-                })}
+                  />
+                ) : (
+                  filter.values?.map((option) => (
+                    <FilterItem
+                      key={option.id}
+                      displayAs={
+                        asColorSwatch
+                          ? "color-swatch"
+                          : asButton
+                            ? "button"
+                            : "list-item"
+                      }
+                      appliedFilters={appliedFilters as AppliedFilter[]}
+                      option={option}
+                      showFiltersCount={showFiltersCount}
+                    />
+                  ))
+                )}
               </div>
             </Accordion.Content>
           </Accordion.Item>
