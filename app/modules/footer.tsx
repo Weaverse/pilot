@@ -3,17 +3,17 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
+import {
+  FacebookLogo,
+  InstagramLogo,
+  LinkedinLogo,
+  XLogo,
+} from "@phosphor-icons/react";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { Button } from "~/components/button";
-import {
-  IconFacebookLogo,
-  IconInstagramLogo,
-  IconLinkedinLogo,
-  IconXLogo,
-} from "~/components/icons";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/lib/cn";
 import type { ChildEnhancedMenuItem } from "~/lib/utils";
@@ -61,22 +61,22 @@ export function Footer() {
     {
       name: "Instagram",
       to: socialInstagram,
-      icon: <IconInstagramLogo className="w-5 h-5" />,
+      icon: <InstagramLogo className="w-5 h-5" />,
     },
     {
       name: "X",
       to: socialX,
-      icon: <IconXLogo className="w-5 h-5" />,
+      icon: <XLogo className="w-5 h-5" />,
     },
     {
       name: "LinkedIn",
       to: socialLinkedIn,
-      icon: <IconLinkedinLogo className="w-5 h-5" />,
+      icon: <LinkedinLogo className="w-5 h-5" />,
     },
     {
       name: "Facebook",
       to: socialFacebook,
-      icon: <IconFacebookLogo className="w-5 h-5" />,
+      icon: <FacebookLogo className="w-5 h-5" />,
     },
   ];
 

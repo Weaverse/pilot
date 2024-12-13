@@ -1,3 +1,4 @@
+import { SignOut } from "@phosphor-icons/react";
 import {
   Await,
   Form,
@@ -13,7 +14,6 @@ import type {
   OrderCardFragment,
 } from "customer-accountapi.generated";
 import { Suspense } from "react";
-import { IconSignOut } from "~/components/icons";
 import Link from "~/components/link";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
@@ -108,7 +108,7 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
             type="submit"
             className="text-body-subtle group flex gap-2 items-center"
           >
-            <IconSignOut className="w-4 h-4" />
+            <SignOut className="w-4 h-4" />
             <span className="group-hover:underline">Sign out</span>
           </button>
         </Form>

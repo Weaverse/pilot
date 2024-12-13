@@ -3,15 +3,27 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Await, useRouteLoaderData } from "@remix-run/react";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { Cart } from "~/modules/cart";
 import type { RootLoader } from "~/root";
 
-export function CartDrawer({ isTransparent }: { isTransparent: boolean }) {
+export let openCartDrawer = () => {};
+
+export function CartDrawer() {
   let rootData = useRouteLoaderData<RootLoader>("root");
   let { publish } = useAnalytics();
+  let [open, setOpen] = useState(false);
+  openCartDrawer = () => setOpen(true);
+
+  // Toggle cart drawer when adding to cart
+  // let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
+  // useEffect(() => {
+  //   if (!open && addToCartFetchers.length) {
+  //     setOpen(true);
+  //   }
+  // }, [addToCartFetchers, open]);
 
   return (
     <Suspense
@@ -26,7 +38,7 @@ export function CartDrawer({ isTransparent }: { isTransparent: boolean }) {
     >
       <Await resolve={rootData?.cart}>
         {(cart) => (
-          <Dialog.Root>
+          <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger
               onClick={() => publish("custom_sidecart_viewed", { cart })}
               className="relative flex items-center justify-center w-8 h-8 focus:ring-border"
@@ -35,14 +47,13 @@ export function CartDrawer({ isTransparent }: { isTransparent: boolean }) {
               {cart?.totalQuantity > 0 && (
                 <div
                   className={clsx(
-                    "text-sm leading-none text-center font-medium subpixel-antialiased",
-                    "flex items-center justify-center min-w-4 rounded-full p-0.5",
+                    "cart-count",
                     "absolute top-0 -right-1",
+                    "flex items-center justify-center min-w-4 h-4 rounded-full p-0.5",
+                    "text-sm leading-none text-center font-medium",
                     "transition-colors duration-300",
-                    "group-hover/header:bg-[--color-header-text] group-hover/header:text-[--color-header-bg]",
-                    isTransparent
-                      ? "text-[--color-header-text] bg-[--color-transparent-header-text]"
-                      : "bg-[--color-header-text] text-[--color-header-bg]",
+                    "group-hover/header:bg-[--color-header-text]",
+                    "group-hover/header:text-[--color-header-bg]",
                   )}
                 >
                   <span>{cart?.totalQuantity}</span>

@@ -1,7 +1,6 @@
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { IconMagnifyingGlass } from "~/components/icons";
 import { cn } from "~/lib/cn";
 import { Input } from "~/modules/input";
 import { PredictiveSearchResults } from "./predictive-search-results";
@@ -12,7 +11,7 @@ export function PredictiveSearchButton() {
     <Dialog.Root>
       <Dialog.Trigger
         asChild
-        className="flex h-8 w-8 items-center justify-center focus-visible:outline-none"
+        className="hidden lg:flex h-8 w-8 items-center justify-center focus-visible:outline-none"
       >
         <button type="button">
           <MagnifyingGlass className="w-5 h-5" />
@@ -61,7 +60,7 @@ function PredictiveSearch() {
               className="rounded"
               autoComplete="off"
               prefixElement={
-                <IconMagnifyingGlass className="h-5 w-5 shrink-0 text-gray-500" />
+                <MagnifyingGlass className="h-5 w-5 shrink-0 text-gray-500" />
               }
               autoFocus={true}
             />

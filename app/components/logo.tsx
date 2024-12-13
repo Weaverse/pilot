@@ -4,18 +4,18 @@ import clsx from "clsx";
 import { Link } from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 
-export function Logo({ isTransparent }: { isTransparent?: boolean }) {
+export function Logo() {
   let { shopName } = useShopMenu();
   let { logoData, transparentLogoData, logoWidth } = useThemeSettings();
 
   return (
     <Link
       to="/"
-      className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit z-30"
       prefetch="intent"
+      className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit z-30"
     >
       <div
-        className="relative"
+        className="relative h-full"
         style={{ width: logoData ? logoWidth : "auto" }}
       >
         {logoData ? (
@@ -24,18 +24,24 @@ export function Logo({ isTransparent }: { isTransparent?: boolean }) {
               data={logoData}
               sizes="auto"
               className={clsx(
-                "w-full h-full object-cover transition-opacity duration-300 ease-in group-hover/header:opacity-100",
-                isTransparent ? "opacity-0" : "opacity-100",
+                "main-logo",
+                "max-w-full h-full object-cover mx-auto",
+                "transition-opacity duration-300 ease-in group-hover/header:opacity-100",
               )}
+              style={{ width: "auto" }}
             />
-            <Image
-              data={transparentLogoData}
-              sizes="auto"
-              className={clsx(
-                "absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ease-in group-hover/header:opacity-0",
-                isTransparent ? "opacity-100" : "opacity-0",
-              )}
-            />
+            {transparentLogoData && (
+              <Image
+                data={transparentLogoData}
+                sizes="auto"
+                className={clsx(
+                  "transparent-logo",
+                  "absolute top-0 left-0 max-w-full h-full object-cover mx-auto",
+                  "transition-opacity duration-300 ease-in group-hover/header:opacity-0",
+                )}
+                style={{ width: "auto" }}
+              />
+            )}
           </>
         ) : (
           <div className="text-lg sm:text-2xl font-medium line-clamp-1">

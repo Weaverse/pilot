@@ -24,7 +24,7 @@ export function DesktopMenu() {
         onValueChange={setValue}
         onMouseLeave={() => setValue(null)}
       >
-        <nav className="flex grow justify-center h-full">
+        <nav className="hidden lg:flex grow justify-center h-full">
           {items.map((menuItem) => {
             let { id, items = [], title, to } = menuItem;
             let level = getMaxDepth(menuItem);
