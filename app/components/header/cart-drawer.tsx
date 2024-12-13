@@ -1,17 +1,28 @@
 import { Handbag, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Await, useRouteLoaderData } from "@remix-run/react";
-import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
+import { CartForm, type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
+import { useCartFetchers } from "~/hooks/use-cart-fetchers";
 import { Cart } from "~/modules/cart";
 import type { RootLoader } from "~/root";
 
 export function CartDrawer({ isTransparent }: { isTransparent: boolean }) {
   let rootData = useRouteLoaderData<RootLoader>("root");
   let { publish } = useAnalytics();
+  let [open, setOpen] = useState(false);
+
+  let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
+  // Toggle cart drawer when adding to cart
+  useEffect(() => {
+    if (!open && addToCartFetchers.length) {
+      setOpen(true);
+      console.log("👉 --------> - setOpen:", setOpen);
+    }
+  }, [addToCartFetchers, open]);
 
   return (
     <Suspense
@@ -26,7 +37,7 @@ export function CartDrawer({ isTransparent }: { isTransparent: boolean }) {
     >
       <Await resolve={rootData?.cart}>
         {(cart) => (
-          <Dialog.Root>
+          <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger
               onClick={() => publish("custom_sidecart_viewed", { cart })}
               className="relative flex items-center justify-center w-8 h-8 focus:ring-border"

@@ -1,4 +1,6 @@
-import { Header } from "~/components/header";
+import { DesktopHeader } from "~/components/header/desktop-header";
+import { MobileHeader } from "~/components/header/mobile-header";
+import { ScrollingAnnouncement } from "~/components/header/scrolling-announcement";
 import { Footer } from "./footer";
 
 export function Layout({
@@ -14,7 +16,9 @@ export function Layout({
             Skip to content
           </a>
         </div>
-        <Header />
+        <ScrollingAnnouncement />
+        <DesktopHeader />
+        <MobileHeader />
         <main id="mainContent" className="flex-grow">
           {children}
         </main>

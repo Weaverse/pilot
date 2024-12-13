@@ -1,3 +1,4 @@
+import { EnvelopeSimple } from "@phosphor-icons/react";
 import { useFetcher } from "@remix-run/react";
 import type {
   HydrogenComponentProps,
@@ -6,7 +7,6 @@ import type {
 import clsx from "clsx";
 import { forwardRef } from "react";
 import { Button } from "~/components/button";
-import { IconEnvelopeSimple } from "~/components/icons";
 import type { CustomerApiPlayLoad } from "~/routes/($locale).api.customer";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {
@@ -35,7 +35,7 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           data-motion="fade-up"
         >
           <div className="flex items-center border-r-0 border-y border-l grow">
-            <IconEnvelopeSimple className="w-5 h-5 ml-3 mr-1.5 shrink-0" />
+            <EnvelopeSimple className="w-5 h-5 ml-3 mr-1.5 shrink-0" />
             <input
               name="email"
               type="email"

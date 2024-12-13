@@ -1,3 +1,4 @@
+import { Trash } from "@phosphor-icons/react";
 import {
   CartForm,
   Image,
@@ -15,9 +16,8 @@ import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefrontapi.generated";
-import { Link } from "~/components/link";
 import { Button } from "~/components/button";
-import { IconTrash } from "~/components/icons";
+import { Link } from "~/components/link";
 import { getImageAspectRatio } from "~/lib/utils";
 import { Text } from "~/modules/text";
 import { CartBestSellers } from "./cart-best-sellers";
@@ -96,10 +96,7 @@ function CartDiscounts({
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
               <button type="button">
-                <IconTrash
-                  aria-hidden="true"
-                  className="h-[18px] w-[18px] mr-1"
-                />
+                <Trash aria-hidden="true" className="h-[18px] w-[18px] mr-1" />
               </button>
             </UpdateDiscountForm>
             <Text as="dd">{codes?.join(", ")}</Text>
@@ -339,7 +336,7 @@ function ItemRemoveButton({
         type="submit"
       >
         <span className="sr-only">Remove</span>
-        <IconTrash aria-hidden="true" className="h-4 w-4" />
+        <Trash aria-hidden="true" className="h-4 w-4" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>

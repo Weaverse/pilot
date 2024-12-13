@@ -1,7 +1,8 @@
+import { SealCheck } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { IconSealCheck, IconX } from "~/components/icons";
+import { IconX } from "~/components/icons";
 import { Rating } from "./rating";
 
 export type AliReview = {
@@ -79,7 +80,7 @@ export function ReviewItem(props: ReviewItemProps) {
         <div className="flex items-center gap-6">
           {showVerifiedBadge && (
             <div className="inline-flex items-center gap-1">
-              <IconSealCheck className="h-4 w-4 text-white" fill="black" />
+              <SealCheck className="h-4 w-4 text-white" fill="black" />
               <p className="text-xs">{verifiedBadgeText}</p>
             </div>
           )}

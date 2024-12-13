@@ -1,3 +1,4 @@
+import { GithubLogo, LinkedinLogo, XLogo } from "@phosphor-icons/react";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import {
@@ -8,11 +9,6 @@ import {
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { OurTeamQuery } from "storefrontapi.generated";
-import {
-  IconGithubLogo,
-  IconLinkedinLogo,
-  IconXLogo,
-} from "~/components/icons";
 
 type MemberType = {
   name: string;
@@ -72,7 +68,7 @@ let TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <IconLinkedinLogo className="w-6 h-6" />
+                          <LinkedinLogo className="w-6 h-6" />
                         </Link>
                       </li>
                     )}
@@ -83,7 +79,7 @@ let TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <IconGithubLogo className="w-6 h-6" />
+                          <GithubLogo className="w-6 h-6" />
                         </Link>
                       </li>
                     )}
@@ -94,7 +90,7 @@ let TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <IconXLogo className="w-6 h-6" />
+                          <XLogo className="w-6 h-6" />
                         </Link>
                       </li>
                     )}

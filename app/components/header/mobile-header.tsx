@@ -1,3 +1,4 @@
+import { MagnifyingGlass, User } from "@phosphor-icons/react";
 import {
   Await,
   Form,
@@ -8,7 +9,6 @@ import {
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconMagnifyingGlass, IconUser } from "~/components/icons";
 import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
@@ -54,7 +54,7 @@ export function MobileHeader() {
             type="submit"
             className="relative flex items-center justify-center w-8 h-8"
           >
-            <IconMagnifyingGlass className="w-5 h-5" />
+            <MagnifyingGlass className="w-5 h-5" />
           </button>
         </Form>
       </div>
@@ -73,16 +73,13 @@ function AccountLink({ className }: { className?: string }) {
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconUser className="w-5 h-5" />}>
-        <Await
-          resolve={isLoggedIn}
-          errorElement={<IconUser className="w-5 h-5" />}
-        >
+      <Suspense fallback={<User className="w-5 h-5" />}>
+        <Await resolve={isLoggedIn} errorElement={<User className="w-5 h-5" />}>
           {(isLoggedIn) =>
             isLoggedIn ? (
-              <IconUser className="w-5 h-5" />
+              <User className="w-5 h-5" />
             ) : (
-              <IconUser className="w-5 h-5" />
+              <User className="w-5 h-5" />
             )
           }
         </Await>

@@ -1,9 +1,9 @@
+import { CircleNotch } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
 import { cn } from "~/lib/cn";
-import { IconCircleNotch } from "./icons";
 
 export let variants = cva(
   [
@@ -146,7 +146,7 @@ function Spinner() {
       className="button-spinner absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       style={style}
     >
-      <IconCircleNotch className="animate-spin w-5 h-5" />
+      <CircleNotch className="animate-spin w-5 h-5" />
     </span>
   );
 }

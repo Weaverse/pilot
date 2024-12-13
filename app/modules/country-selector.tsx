@@ -16,12 +16,13 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { IconCaretDown, IconCheckCircle } from "~/components/icons";
+import { CheckCircle } from "@phosphor-icons/react";
+import ReactCountryFlag from "react-country-flag";
+import { IconCaretDown } from "~/components/icons";
 import { getCountryUrlPath } from "~/lib/locale";
 import type { Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import ReactCountryFlag from "react-country-flag";
 
 export function CountrySelector() {
   let fetcher = useFetcher();
@@ -128,7 +129,7 @@ export function CountrySelector() {
                     <span>{countryLocale.label}</span>
                     {isSelected ? (
                       <span className="ml-auto">
-                        <IconCheckCircle className="w-5 h-5" />
+                        <CheckCircle className="w-5 h-5" />
                       </span>
                     ) : null}
                   </CloseButton>

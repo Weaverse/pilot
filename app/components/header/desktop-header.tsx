@@ -1,3 +1,4 @@
+import { User } from "@phosphor-icons/react";
 import {
   Await,
   Link,
@@ -8,7 +9,6 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
-import { IconUser } from "~/components/icons";
 import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
@@ -85,16 +85,13 @@ function AccountLink({ className }: { className?: string }) {
 
   return (
     <Link to="/account" className={className}>
-      <Suspense fallback={<IconUser className="w-5 h-5" />}>
-        <Await
-          resolve={isLoggedIn}
-          errorElement={<IconUser className="w-5 h-5" />}
-        >
+      <Suspense fallback={<User className="w-5 h-5" />}>
+        <Await resolve={isLoggedIn} errorElement={<User className="w-5 h-5" />}>
           {(isLoggedIn) =>
             isLoggedIn ? (
-              <IconUser className="w-5 h-5" />
+              <User className="w-5 h-5" />
             ) : (
-              <IconUser className="w-5 h-5" />
+              <User className="w-5 h-5" />
             )
           }
         </Await>

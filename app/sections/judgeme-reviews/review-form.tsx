@@ -1,8 +1,8 @@
+import { Star } from "@phosphor-icons/react";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Button } from "~/components/button";
-import { IconStar, IconStarFilled } from "~/components/icons";
 import type { JudgemeReviewsData } from "~/lib/judgeme";
 import { StarRating } from "~/modules/star-rating";
 import type { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
@@ -122,12 +122,11 @@ export function ReviewForm({
                         onMouseEnter={() => setHover(ratingValue)}
                         onMouseLeave={() => setHover(0)}
                         aria-label={`Rate ${ratingValue} out of 5 stars`}
-                        role="button"
                       >
                         {ratingValue <= (hover || rating) ? (
-                          <IconStarFilled />
+                          <Star weight="fill" />
                         ) : (
-                          <IconStar />
+                          <Star />
                         )}
                       </div>
                     );
