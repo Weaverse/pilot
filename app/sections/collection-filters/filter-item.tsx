@@ -90,13 +90,14 @@ export function FilterItem({
       <button
         type="button"
         className={cn(
-          "px-3 py-1.5 border text-center",
+          "px-3 py-1.5 border text-center disabled:cursor-not-allowed",
           option.count === 0 && "diagonal text-body-subtle",
           checked
             ? "border-line bg-body text-background"
             : "border-line-subtle hover:border-line",
         )}
         onClick={() => handleCheckedChange(!checked)}
+        disabled={option.count === 0}
       >
         <FilterLabel option={option} showFiltersCount={showFiltersCount} />
       </button>
@@ -110,6 +111,7 @@ export function FilterItem({
       label={
         <FilterLabel option={option} showFiltersCount={showFiltersCount} />
       }
+      disabled={option.count === 0}
       className={clsx(option.count === 0 && "text-body-subtle")}
     />
   );
