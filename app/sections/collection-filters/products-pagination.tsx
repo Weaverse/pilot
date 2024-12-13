@@ -58,7 +58,11 @@ export function ProductsPagination({
             })}
           </div>
           {appliedFilters.length > 1 ? (
-            <Link to={pathname} variant="underline">
+            <Link
+              to={pathname}
+              variant="underline"
+              aria-label="Clear all applied filters"
+            >
               Clear all filters
             </Link>
           ) : null}
