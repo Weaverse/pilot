@@ -1,20 +1,17 @@
-import { User } from "@phosphor-icons/react";
-import {
-  Await,
-  Link,
-  useRouteError,
-  useRouteLoaderData,
-} from "@remix-run/react";
+import { MagnifyingGlass, User } from "@phosphor-icons/react";
+import { Await, useRouteError, useRouteLoaderData } from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
+import Link from "~/components/link";
 import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { CartDrawer } from "./cart-drawer";
 import { DesktopMenu } from "./menu/desktop-menu";
+import { MobileMenu } from "./menu/mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
 
 let variants = cva("", {
@@ -32,7 +29,7 @@ let variants = cva("", {
   },
 });
 
-export function DesktopHeader() {
+export function Header() {
   let { enableTransparentHeader, headerWidth } = useThemeSettings();
   let isHome = useIsHomePath();
   let { y } = useWindowScroll();
@@ -45,34 +42,52 @@ export function DesktopHeader() {
   return (
     <header
       className={cn(
+        "w-full z-10",
         "transition-all duration-300 ease-in-out",
-        "hidden lg:block lg:w-full z-10",
         "bg-[--color-header-bg] hover:bg-[--color-header-bg]",
         "text-[--color-header-text] hover:text-[--color-header-text]",
-        "border-b border-[rgb(230,230,230)]",
+        "border-b border-line-subtle",
         variants({ padding: headerWidth }),
         scrolled ? "shadow-header" : "shadow-none",
         enableTransparent
           ? [
-              "fixed top-[var(--topbar-height,var(--initial-topbar-height))] w-screen group/header",
-              !scrolled &&
-                "text-[--color-transparent-header-text] bg-transparent border-transparent",
+              "fixed w-screen group/header",
+              "top-[var(--topbar-height,var(--initial-topbar-height))]",
             ]
           : "sticky top-0",
+        isTransparent
+          ? [
+              "bg-transparent border-transparent",
+              "text-[--color-transparent-header-text]",
+              "[&_.cart-count]:text-[--color-header-text]",
+              "[&_.cart-count]:bg-[--color-transparent-header-text]",
+              "[&_.main-logo]:opacity-0",
+              "[&_.transparent-logo]:opacity-100",
+            ]
+          : [
+              "[&_.cart-count]:text-[--color-header-bg]",
+              "[&_.cart-count]:bg-[--color-header-text]",
+              "[&_.main-logo]:opacity-100",
+              "[&_.transparent-logo]:opacity-0",
+            ],
       )}
     >
       <div
         className={cn(
-          "h-nav flex items-center justify-between gap-8",
+          "h-nav py-1.5 lg:py-3 flex items-center justify-between gap-2 lg:gap-8",
           variants({ width: headerWidth }),
         )}
       >
-        <Logo isTransparent={isTransparent} />
+        <MobileMenu />
+        <Link to="/search" className="p-1.5 lg:hidden">
+          <MagnifyingGlass className="w-5 h-5" />
+        </Link>
+        <Logo />
         <DesktopMenu />
         <div className="flex items-center gap-1 z-1">
           <PredictiveSearchButton />
           <AccountLink className="relative flex items-center justify-center w-8 h-8" />
-          <CartDrawer isTransparent={isTransparent} />
+          <CartDrawer />
         </div>
       </div>
     </header>
