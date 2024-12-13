@@ -35,6 +35,7 @@ export function Sort() {
   let currentSort =
     SORT_LIST.find(({ key }) => key === searchParams.get("sort")) ||
     SORT_LIST[0];
+  let params = new URLSearchParams(searchParams);
 
   return (
     <DropdownMenu.Root>
@@ -51,7 +52,6 @@ export function Sort() {
           className="flex h-fit w-44 flex-col gap-2 border border-line-subtle bg-background p-5"
         >
           {SORT_LIST.map(({ key, label }) => {
-            let params = new URLSearchParams(searchParams);
             params.set("sort", key);
             return (
               <DropdownMenu.Item key={key} asChild>
