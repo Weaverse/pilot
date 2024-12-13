@@ -1,7 +1,6 @@
 import { CaretRight, List, X } from "@phosphor-icons/react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Dialog from "@radix-ui/react-dialog";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { forwardRef } from "react";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
@@ -39,13 +38,12 @@ export function MobileMenu() {
           }
           aria-describedby={undefined}
         >
-          <VisuallyHidden.Root asChild>
-            <Dialog.Title>Mobile menu</Dialog.Title>
-          </VisuallyHidden.Root>
+          <Dialog.Title asChild>
+            <div className="px-4">Menu</div>
+          </Dialog.Title>
           <Dialog.Close asChild>
             <X className="w-5 h-5 fixed top-4 right-4" />
           </Dialog.Close>
-          <div className="px-4">Menu</div>
           <div className="mt-4 border-t border-line-subtle" />
           <div className="py-2">
             <ScrollArea className="h-[calc(100vh-5rem)]">

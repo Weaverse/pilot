@@ -82,10 +82,13 @@ function FiltersDrawer({
             "fixed inset-y-0 w-full md:w-[360px] bg-[--color-background] py-4 z-10",
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
           ])}
+          aria-describedby={undefined}
         >
           <div className="space-y-1">
             <div className="flex gap-2 items-center justify-between px-4">
-              <span className="py-2.5 font-bold">Filters</span>
+              <Dialog.Title asChild className="py-2.5 font-bold">
+                <span>Filters</span>
+              </Dialog.Title>
               <Dialog.Close asChild>
                 <button
                   className="p-2 translate-x-2"

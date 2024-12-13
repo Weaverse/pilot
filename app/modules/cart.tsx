@@ -55,7 +55,7 @@ export function CartDetails({
     <div
       className={clsx(
         layout === "drawer" &&
-          "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto] w-[400px]",
+          "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto] px-4",
         layout === "page" && [
           "pb-12 w-full max-w-page mx-auto",
           "grid md:grid-cols-2 lg:grid-cols-3 md:items-start",
@@ -157,13 +157,13 @@ function CartLines({
   let { y } = useScroll(scrollRef);
 
   return (
-    <section
+    <div
       ref={scrollRef}
       aria-labelledby="cart-contents"
       className={clsx([
         y > 0 ? "border-t border-line-subtle" : "",
         layout === "page" && "flex-grow md:translate-y-4 lg:col-span-2",
-        layout === "drawer" && "px-5 pb-5 overflow-auto transition",
+        layout === "drawer" && "overflow-auto transition",
       ])}
     >
       <ul
@@ -177,7 +177,7 @@ function CartLines({
           <CartLineItem key={line.id} line={line} layout={layout} />
         ))}
       </ul>
-    </section>
+    </div>
   );
 }
 
@@ -212,10 +212,10 @@ function CartSummary({
   layout: Layouts;
 }) {
   return (
-    <section
+    <div
       aria-labelledby="summary-heading"
       className={clsx(
-        layout === "drawer" && "grid gap-4 p-5 border-t border-line-subtle",
+        layout === "drawer" && "grid gap-4 border-t border-line-subtle pt-4",
         layout === "page" &&
           "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 rounded w-full",
       )}
@@ -236,7 +236,7 @@ function CartSummary({
         </div>
       </dl>
       {children}
-    </section>
+    </div>
   );
 }
 
