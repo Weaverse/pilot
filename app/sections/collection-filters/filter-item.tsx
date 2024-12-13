@@ -57,6 +57,7 @@ export function FilterItem({
           <button
             type="button"
             className={cn(
+              "disabled:cursor-not-allowed",
               productOptionsVariants({
                 colorSize: size,
                 shape,
@@ -65,6 +66,7 @@ export function FilterItem({
               option.count === 0 && "diagonal",
             )}
             onClick={() => handleCheckedChange(!checked)}
+            disabled={option.count === 0}
           >
             <span
               className={cn(

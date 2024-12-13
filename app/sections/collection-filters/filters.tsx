@@ -37,7 +37,9 @@ export function Filters({ className }: { className?: string }) {
     <Accordion.Root
       type="multiple"
       className={cn("filters-list divide-y divide-line-subtle", className)}
-      key={appliedFiltersKeys + expandFilters.toString() + showFiltersCount}
+      key={
+        collection.id + appliedFiltersKeys + expandFilters + showFiltersCount
+      }
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
       {filters.map((filter: Filter) => {
