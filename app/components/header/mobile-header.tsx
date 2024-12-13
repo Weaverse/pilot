@@ -13,14 +13,10 @@ import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
-import { CartCount } from "./cart-count";
+import { CartDrawer } from "./cart-drawer";
 import { MobileMenu } from "./menu/mobile-menu";
 
-export function MobileHeader({
-  openCart,
-}: {
-  openCart: () => void;
-}) {
+export function MobileHeader() {
   let isHome = useIsHomePath();
   let { enableTransparentHeader } = useThemeSettings();
   let { y } = useWindowScroll();
@@ -65,11 +61,7 @@ export function MobileHeader({
       <Logo isTransparent={isTransparent} />
       <div className="flex items-center justify-end w-full">
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
-        <CartCount
-          isHome={isHome}
-          openCart={openCart}
-          isTransparent={isTransparent}
-        />
+        <CartDrawer isTransparent={isTransparent} />
       </div>
     </header>
   );
