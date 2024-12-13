@@ -11,6 +11,7 @@ import {
 } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { Button } from "~/components/button";
+import { openCartDrawer } from "~/components/header/cart-drawer";
 import { usePageAnalytics } from "~/hooks/use-page-analytics";
 
 export function AddToCartButton({
@@ -48,6 +49,7 @@ export function AddToCartButton({
               type="submit"
               className={className}
               disabled={disabled ?? fetcher.state !== "idle"}
+              onClick={openCartDrawer}
               {...props}
             >
               {children}
