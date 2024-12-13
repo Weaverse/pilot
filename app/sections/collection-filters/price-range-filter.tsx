@@ -58,7 +58,7 @@ export function PriceRangeFilter({
         min={Number(minVariantPrice.amount)}
         max={Number(maxVariantPrice.amount)}
         step={1}
-        minStepsBetweenThumbs={10}
+        minStepsBetweenThumbs={1}
         value={[minPrice, maxPrice]}
         onValueChange={([newMin, newMax]) => {
           if (thumbRef.current) {
