@@ -7,11 +7,9 @@ import { useIsHydrated } from "~/hooks/use-is-hydrated";
 import type { RootLoader } from "~/root";
 
 export function CartCount({
-  isHome,
   openCart,
   isTransparent,
 }: {
-  isHome: boolean;
   openCart: () => void;
   isTransparent: boolean;
 }) {
@@ -19,18 +17,12 @@ export function CartCount({
   return (
     <Suspense
       fallback={
-        <Badge
-          count={0}
-          dark={isHome}
-          openCart={openCart}
-          isTransparent={isTransparent}
-        />
+        <Badge count={0} openCart={openCart} isTransparent={isTransparent} />
       }
     >
       <Await resolve={rootData?.cart}>
         {(cart) => (
           <Badge
-            dark={isHome}
             openCart={openCart}
             count={cart?.totalQuantity || 0}
             cart={cart}
@@ -44,13 +36,11 @@ export function CartCount({
 
 function Badge({
   openCart,
-  dark,
   count,
   cart,
   isTransparent,
 }: {
   count: number;
-  dark: boolean;
   openCart: () => void;
   cart?: any;
   isTransparent: boolean;
@@ -63,11 +53,11 @@ function Badge({
         {count > 0 && (
           <div
             className={clsx(
-              "text-[12px] leading-none text-center font-medium subpixel-antialiased",
+              "text-sm leading-none text-center font-medium subpixel-antialiased",
               "flex items-center justify-center min-w-4 rounded-full p-0.5",
               "absolute top-0 -right-1",
               "transition-colors duration-300",
-              "group-hover/header:bg-[var(--color-header-text)] group-hover/header:text-[--color-header-bg]",
+              "group-hover/header:bg-[--color-header-text] group-hover/header:text-[--color-header-bg]",
               isTransparent
                 ? "text-[--color-header-text] bg-[--color-transparent-header-text]"
                 : "bg-[--color-header-text] text-[--color-header-bg]",

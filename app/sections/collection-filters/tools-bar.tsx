@@ -1,7 +1,6 @@
 import { Sliders, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useLoaderData } from "@remix-run/react";
-import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Button } from "~/components/button";
@@ -11,23 +10,7 @@ import { Filters } from "./filters";
 import { LayoutSwitcher, type LayoutSwitcherProps } from "./layout-switcher";
 import { Sort } from "./sort";
 
-let variants = cva("", {
-  variants: {
-    width: {
-      full: "",
-      stretch: "-mx-3 px-3 md:-mx-10 md:px-10 lg:-mx-16 lg:px-16",
-      fixed: [
-        "-mx-3 px-3 md:-mx-10 md:px-10",
-        "lg:-mx-[max(calc((100vw-var(--page-width))/2),1.5rem)]",
-        "lg:px-[max(calc((100vw-var(--page-width))/2),1.5rem)]",
-      ],
-    },
-  },
-});
-
-interface ToolsBarProps
-  extends VariantProps<typeof variants>,
-    LayoutSwitcherProps {
+interface ToolsBarProps extends LayoutSwitcherProps {
   enableSort: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
@@ -41,16 +24,13 @@ export function ToolsBar({
   enableFilter,
   filtersPosition,
   showProductsCount,
-  width,
   gridSizeDesktop,
   gridSizeMobile,
   onGridSizeChange,
 }: ToolsBarProps) {
   let { collection } = useLoaderData<CollectionDetailsQuery>();
   return (
-    <div
-      className={cn("border-y border-line-subtle py-4", variants({ width }))}
-    >
+    <div className="border-y border-line-subtle py-4">
       <div className="gap-4 md:gap-8 flex w-full items-center justify-between">
         <LayoutSwitcher
           gridSizeDesktop={gridSizeDesktop}
@@ -59,7 +39,7 @@ export function ToolsBar({
         />
         {showProductsCount && (
           <span className="text-center hidden md:inline">
-            {collection?.products.nodes.length} Products
+            {collection?.products.nodes.length} products
           </span>
         )}
         {(enableSort || (enableFilter && filtersPosition === "drawer")) && (
@@ -102,10 +82,13 @@ function FiltersDrawer({
             "fixed inset-y-0 w-full md:w-[360px] bg-[--color-background] py-4 z-10",
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
           ])}
+          aria-describedby={undefined}
         >
           <div className="space-y-1">
             <div className="flex gap-2 items-center justify-between px-4">
-              <span className="py-2.5 font-bold">Filters</span>
+              <Dialog.Title asChild className="py-2.5 font-bold">
+                <span>Filters</span>
+              </Dialog.Title>
               <Dialog.Close asChild>
                 <button
                   className="p-2 translate-x-2"

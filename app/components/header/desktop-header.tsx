@@ -13,9 +13,9 @@ import { Logo } from "~/components/logo";
 import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
+import { CartDrawer } from "./cart-drawer";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { PredictiveSearchButton } from "./predictive-search";
-import { CartCount } from "./cart-count";
 
 let variants = cva("", {
   variants: {
@@ -72,11 +72,7 @@ export function DesktopHeader() {
         <div className="flex items-center gap-1 z-1">
           <PredictiveSearchButton />
           <AccountLink className="relative flex items-center justify-center w-8 h-8" />
-          <CartCount
-            isHome={isHome}
-            openCart={() => {}}
-            isTransparent={isTransparent}
-          />
+          <CartDrawer isTransparent={isTransparent} />
         </div>
       </div>
     </header>

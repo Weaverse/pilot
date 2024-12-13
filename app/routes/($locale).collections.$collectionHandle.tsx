@@ -19,12 +19,14 @@ import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
 import { COLLECTION_QUERY } from "~/data/queries";
+import { getSortValuesFromParam } from "~/lib/collections";
 import { PAGINATION_SIZE } from "~/lib/const";
 import { seoPayload } from "~/lib/seo.server";
 import { parseAsCurrency } from "~/lib/utils";
 import type { SortParam } from "~/modules/sort-filter";
 import { FILTER_URL_PREFIX } from "~/modules/sort-filter";
 import { WeaverseContent } from "~/weaverse";
+
 export let headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
@@ -161,42 +163,4 @@ export default function Collection() {
       />
     </>
   );
-}
-
-export function getSortValuesFromParam(sortParam: SortParam | null): {
-  sortKey: ProductCollectionSortKeys;
-  reverse: boolean;
-} {
-  switch (sortParam) {
-    case "price-high-low":
-      return {
-        sortKey: "PRICE",
-        reverse: true,
-      };
-    case "price-low-high":
-      return {
-        sortKey: "PRICE",
-        reverse: false,
-      };
-    case "best-selling":
-      return {
-        sortKey: "BEST_SELLING",
-        reverse: false,
-      };
-    case "newest":
-      return {
-        sortKey: "CREATED",
-        reverse: true,
-      };
-    case "featured":
-      return {
-        sortKey: "MANUAL",
-        reverse: false,
-      };
-    default:
-      return {
-        sortKey: "RELEVANCE",
-        reverse: false,
-      };
-  }
 }
