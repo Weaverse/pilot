@@ -1,4 +1,4 @@
-import { X } from "@phosphor-icons/react";
+import { FunnelX, X } from "@phosphor-icons/react";
 import {
   useLoaderData,
   useLocation,
@@ -38,7 +38,7 @@ export function ProductsPagination({
   let { ref, inView } = useInView();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 grow">
       {appliedFilters.length > 0 ? (
         <div className="flex items-center flex-wrap gap-6">
           <div className="flex items-center gap-2">
@@ -57,55 +57,68 @@ export function ProductsPagination({
               );
             })}
           </div>
-          <Link to={pathname} variant="underline">
-            Clear all filters
-          </Link>
+          {appliedFilters.length > 1 ? (
+            <Link to={pathname} variant="underline">
+              Clear all filters
+            </Link>
+          ) : null}
         </div>
       ) : null}
-      <Pagination connection={collection.products}>
-        {({
-          nodes,
-          isLoading,
-          nextPageUrl,
-          previousPageUrl,
-          hasNextPage,
-          hasPreviousPage,
-          state,
-        }) => (
-          <div
-            className="flex w-full flex-col gap-8 items-center"
-            style={
-              {
-                "--cols-mobile": `repeat(${gridSizeMobile || 1}, minmax(0, 1fr))`,
-                "--cols-desktop": `repeat(${gridSizeDesktop || 3}, minmax(0, 1fr))`,
-              } as React.CSSProperties
-            }
-          >
-            {hasPreviousPage && (
-              <Link to={previousPageUrl} variant="outline" className="mx-auto">
-                {isLoading ? "Loading..." : loadPrevText}
-              </Link>
-            )}
-            <ProductsLoadedOnScroll
-              nodes={nodes}
-              inView={inView}
-              nextPageUrl={nextPageUrl}
-              hasNextPage={hasNextPage}
-              state={state}
-            />
-            {hasNextPage && (
-              <Link
-                ref={ref}
-                to={nextPageUrl}
-                variant="outline"
-                className="mx-auto"
-              >
-                {isLoading ? "Loading..." : loadMoreText}
-              </Link>
-            )}
-          </div>
-        )}
-      </Pagination>
+      {collection.products.nodes.length > 0 ? (
+        <Pagination connection={collection.products}>
+          {({
+            nodes,
+            isLoading,
+            nextPageUrl,
+            previousPageUrl,
+            hasNextPage,
+            hasPreviousPage,
+            state,
+          }) => (
+            <div
+              className="flex w-full flex-col gap-8 items-center"
+              style={
+                {
+                  "--cols-mobile": `repeat(${gridSizeMobile || 1}, minmax(0, 1fr))`,
+                  "--cols-desktop": `repeat(${gridSizeDesktop || 3}, minmax(0, 1fr))`,
+                } as React.CSSProperties
+              }
+            >
+              {hasPreviousPage && (
+                <Link
+                  to={previousPageUrl}
+                  variant="outline"
+                  className="mx-auto"
+                >
+                  {isLoading ? "Loading..." : loadPrevText}
+                </Link>
+              )}
+              <ProductsLoadedOnScroll
+                nodes={nodes}
+                inView={inView}
+                nextPageUrl={nextPageUrl}
+                hasNextPage={hasNextPage}
+                state={state}
+              />
+              {hasNextPage && (
+                <Link
+                  ref={ref}
+                  to={nextPageUrl}
+                  variant="outline"
+                  className="mx-auto"
+                >
+                  {isLoading ? "Loading..." : loadMoreText}
+                </Link>
+              )}
+            </div>
+          )}
+        </Pagination>
+      ) : (
+        <div className="gap-3 pt-20 flex justify-center items-center flex-col">
+          <FunnelX size={50} weight="light" />
+          <div className="text-lg">No products matched your filters.</div>
+        </div>
+      )}
     </div>
   );
 }
