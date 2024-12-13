@@ -3,13 +3,10 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useLocation, useNavigate, useSearchParams } from "@remix-run/react";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
-import { useState } from "react";
-import useDebounce from "react-use/esm/useDebounce";
+import { useRef, useState } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { FILTER_URL_PREFIX } from "~/lib/const";
 import { filterInputToParams } from "~/lib/filter";
-
-const PRICE_RANGE_FILTER_DEBOUNCE = 500;
 
 export function PriceRangeFilter({
   collection,
@@ -19,6 +16,7 @@ export function PriceRangeFilter({
   let [params] = useSearchParams();
   let location = useLocation();
   let navigate = useNavigate();
+  let thumbRef = useRef<"from" | "to" | null>(null);
 
   let { highestPriceProduct, lowestPriceProduct } = collection;
   let minVariantPrice =
@@ -40,23 +38,19 @@ export function PriceRangeFilter({
   let [minPrice, setMinPrice] = useState(min);
   let [maxPrice, setMaxPrice] = useState(max);
 
-  useDebounce(
-    () => {
-      if (minPrice === undefined && maxPrice === undefined) {
-        params.delete(`${FILTER_URL_PREFIX}price`);
-        navigate(`${location.pathname}?${params.toString()}`);
-        return;
-      }
-      let price = {
-        ...(minPrice === undefined ? {} : { min: minPrice }),
-        ...(maxPrice === undefined ? {} : { max: maxPrice }),
-      };
-      let newParams = filterInputToParams({ price }, params);
-      navigate(`${location.pathname}?${newParams.toString()}`);
-    },
-    PRICE_RANGE_FILTER_DEBOUNCE,
-    [minPrice, maxPrice],
-  );
+  function handleFilter() {
+    if (minPrice === undefined && maxPrice === undefined) {
+      params.delete(`${FILTER_URL_PREFIX}price`);
+      navigate(`${location.pathname}?${params.toString()}`);
+      return;
+    }
+    let price = {
+      ...(minPrice === undefined ? {} : { min: minPrice }),
+      ...(maxPrice === undefined ? {} : { max: maxPrice }),
+    };
+    let newParams = filterInputToParams({ price }, params);
+    navigate(`${location.pathname}?${newParams.toString()}`);
+  }
 
   return (
     <div className="space-y-4">
@@ -64,19 +58,35 @@ export function PriceRangeFilter({
         min={Number(minVariantPrice.amount)}
         max={Number(maxVariantPrice.amount)}
         step={1}
+        minStepsBetweenThumbs={10}
         value={[minPrice, maxPrice]}
         onValueChange={([newMin, newMax]) => {
-          setMinPrice(newMin < maxPrice ? newMin : maxPrice - 1);
-          setMaxPrice(newMax > minPrice ? newMax : minPrice + 1);
+          if (thumbRef.current) {
+            if (thumbRef.current === "from") {
+              if (newMin < maxPrice) {
+                setMinPrice(newMin);
+              }
+            } else {
+              if (newMax > minPrice) {
+                setMaxPrice(newMax);
+              }
+            }
+          } else {
+            setMinPrice(newMin);
+            setMaxPrice(newMax);
+          }
         }}
+        onValueCommit={handleFilter}
         className="relative flex h-4 w-full items-center"
       >
         <Slider.Track className="relative h-1 grow rounded-full bg-gray-200">
           <Slider.Range className="absolute h-full rounded-full bg-gray-800" />
         </Slider.Track>
-        {["from", "to"].map((s: string) => (
+        {["from", "to"].map((s: "from" | "to") => (
           <Slider.Thumb
             key={s}
+            onPointerUp={() => (thumbRef.current = null)}
+            onPointerDown={() => (thumbRef.current = s)}
             className={clsx(
               "block h-4 w-4 bg-gray-800 cursor-grab rounded-full shadow-md",
               "focus-visible:outline-none",
@@ -105,6 +115,7 @@ export function PriceRangeFilter({
                 : Number.parseFloat(value);
               setMinPrice(newMinPrice);
             }}
+            onBlur={handleFilter}
             className="text-right focus-visible:outline-none py-3 bg-transparent w-full"
           />
         </div>
@@ -129,6 +140,7 @@ export function PriceRangeFilter({
                 : Number.parseFloat(value);
               setMaxPrice(newMaxPrice);
             }}
+            onBlur={handleFilter}
             className="text-right focus-visible:outline-none py-3 bg-transparent w-full"
           />
         </div>
