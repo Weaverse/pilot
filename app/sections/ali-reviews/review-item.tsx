@@ -1,8 +1,7 @@
-import { SealCheck } from "@phosphor-icons/react";
+import { SealCheck, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { IconX } from "~/components/icons";
 import { Rating } from "./rating";
 
 export type AliReview = {
@@ -144,7 +143,7 @@ function ReviewMediaPreview(props: {
             alt="Review media preview"
           />
         </div>
-        <IconX
+        <X
           className="w-5 h-5 cursor-pointer text-gray-600"
           onClick={closePreview}
         />

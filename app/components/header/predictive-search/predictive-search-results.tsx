@@ -1,4 +1,4 @@
-import { IconArrowRight } from "~/components/icons";
+import { ArrowRight } from "@phosphor-icons/react";
 import Link from "~/components/link";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { PredictiveSearchResult } from "./predictive-search-result";
@@ -70,7 +70,7 @@ export function PredictiveSearchResults() {
                 className="flex items-center gap-2 w-fit"
               >
                 <span>View all products</span>
-                <IconArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           )}

@@ -1,3 +1,5 @@
+import { CaretDown, CheckCircle } from "@phosphor-icons/react";
+import * as Popover from "@radix-ui/react-popover";
 import {
   useFetcher,
   useLocation,
@@ -7,11 +9,8 @@ import {
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect, useRef } from "react";
-import { useInView } from "react-intersection-observer";
-import * as Popover from "@radix-ui/react-popover";
-import { CheckCircle } from "@phosphor-icons/react";
 import ReactCountryFlag from "react-country-flag";
-import { IconCaretDown } from "~/components/icons";
+import { useInView } from "react-intersection-observer";
 import { getCountryUrlPath } from "~/lib/locale";
 import type { Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
@@ -87,7 +86,7 @@ export function CountrySelector() {
               style={{ width: "24px", height: "14px" }}
             />
             <span>{selectedLocale.label}</span>
-            <IconCaretDown className="ml-auto w-4 h-4" />
+            <CaretDown className="ml-auto w-4 h-4" />
           </button>
         </Popover.Trigger>
         <Popover.Portal>

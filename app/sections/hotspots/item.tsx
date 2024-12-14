@@ -1,3 +1,4 @@
+import { Circle, Handbag, Plus, Tag } from "@phosphor-icons/react";
 import type {
   ComponentLoaderArgs,
   HydrogenComponentProps,
@@ -7,7 +8,6 @@ import type {
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
-import { IconCircle, IconHandBag, IconPlus, IconTag } from "~/components/icons";
 import { PRODUCT_QUERY } from "~/data/queries";
 import { ProductPopup } from "./product-popup";
 
@@ -28,10 +28,10 @@ interface HotspotsItemProps
     HotspotsItemData {}
 
 const ICONS = {
-  circle: IconCircle,
-  plus: IconPlus,
-  bag: IconHandBag,
-  tag: IconTag,
+  circle: Circle,
+  plus: Plus,
+  bag: Handbag,
+  tag: Tag,
 };
 
 let HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(
