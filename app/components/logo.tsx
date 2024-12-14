@@ -25,7 +25,7 @@ export function Logo() {
               sizes="auto"
               className={clsx(
                 "main-logo",
-                "max-w-full h-full object-cover mx-auto",
+                "max-w-full h-full object-contain mx-auto",
                 "transition-opacity duration-300 ease-in group-hover/header:opacity-100",
               )}
               style={{ width: "auto" }}
@@ -36,7 +36,7 @@ export function Logo() {
                 sizes="auto"
                 className={clsx(
                   "transparent-logo",
-                  "absolute top-0 left-0 max-w-full h-full object-cover mx-auto",
+                  "absolute top-0 left-0 max-w-full h-full object-contain mx-auto",
                   "transition-opacity duration-300 ease-in group-hover/header:opacity-0",
                 )}
                 style={{ width: "auto" }}
