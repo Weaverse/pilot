@@ -1,6 +1,15 @@
-import { useLocation, useNavigate, useSearchParams } from "@remix-run/react";
+import {
+  useLocation,
+  useNavigate,
+  useRouteLoaderData,
+  useSearchParams,
+} from "@remix-run/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
-import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
+import {
+  type ColorSwatch,
+  type SwatchesConfigs,
+  useThemeSettings,
+} from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import { Checkbox } from "~/components/checkbox";
@@ -9,6 +18,7 @@ import { cn } from "~/lib/cn";
 import type { AppliedFilter } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
 import { variants as productOptionsVariants } from "~/modules/product-form/options";
+import type { RootLoader } from "~/root";
 
 export function FilterItem({
   displayAs,
@@ -25,6 +35,7 @@ export function FilterItem({
   let [params] = useSearchParams();
   let location = useLocation();
   let themeSettings = useThemeSettings();
+  let { colorsConfigs } = useRouteLoaderData<RootLoader>("root");
   let { options, swatches }: SwatchesConfigs = themeSettings.productSwatches;
 
   let filter = appliedFilters.find(
@@ -45,7 +56,10 @@ export function FilterItem({
   }
 
   if (displayAs === "color-swatch") {
-    let swatchColor = swatches.colors.find(({ name }) => name === option.label);
+    let colors: ColorSwatch[] = colorsConfigs?.length
+      ? colorsConfigs
+      : swatches.colors;
+    let swatchColor = colors.find(({ name }) => name === option.label);
     let optionConf = options.find(({ name }) => {
       return name.toLowerCase() === option.label.toLowerCase();
     });

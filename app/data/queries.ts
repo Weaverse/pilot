@@ -5,6 +5,22 @@ import {
   PRODUCT_VARIANT_FRAGMENT,
 } from "~/data/fragments";
 
+export let COLORS_CONFIGS_QUERY = `#graphql
+  query colorsConfigs($type: String!, $nameKey: String!, $valueKey: String!) {
+    metaobjects(first: 100, type: $type) {
+      nodes {
+        id
+        name: field(key: $nameKey) {
+          value
+        }
+        value: field(key: $valueKey) {
+          value
+        }
+      }
+    }
+  }
+`;
+
 export let SHOP_QUERY = `#graphql
   query shopQuery($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {

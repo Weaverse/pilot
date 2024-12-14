@@ -1,10 +1,16 @@
+import { useRouteLoaderData } from "@remix-run/react";
 import { Image, type VariantOptionValue } from "@shopify/hydrogen";
-import { type SwatchesConfigs, useThemeSettings } from "@weaverse/hydrogen";
+import {
+  type ColorSwatch,
+  type SwatchesConfigs,
+  useThemeSettings,
+} from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { ProductVariantFragmentFragment } from "storefrontapi.generated";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/lib/cn";
+import type { RootLoader } from "~/root";
 
 export let variants = cva(
   "border border-line hover:border-body cursor-pointer",
@@ -53,9 +59,13 @@ interface VariantOptionProps {
 
 export function VariantOption(props: VariantOptionProps) {
   let { name, values, selectedOptionValue, onSelectOptionValue } = props;
+  let { colorsConfigs } = useRouteLoaderData<RootLoader>("root");
   let themeSettings = useThemeSettings();
   let productSwatches: SwatchesConfigs = themeSettings.productSwatches;
   let { options, swatches } = productSwatches;
+  let colorsSwatches: ColorSwatch[] = colorsConfigs?.length
+    ? colorsConfigs
+    : swatches.colors;
   let optionConf = options.find((opt) => {
     return opt.name.toLowerCase() === name.toLowerCase();
   });
@@ -99,9 +109,7 @@ export function VariantOption(props: VariantOptionProps) {
       {type === "color" && (
         <div className="flex gap-3">
           {values.map(({ value, isAvailable }) => {
-            let swatchColor = swatches.colors.find(
-              ({ name }) => name === value,
-            );
+            let swatchColor = colorsSwatches.find(({ name }) => name === value);
             return (
               <Tooltip key={value}>
                 <TooltipTrigger>
