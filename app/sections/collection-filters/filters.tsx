@@ -1,9 +1,9 @@
+import { CaretRight } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useLoaderData } from "@remix-run/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
-import { IconCaretRight } from "~/components/icons";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import { cn } from "~/lib/cn";
 import type { AppliedFilter } from "~/lib/filter";
@@ -55,7 +55,7 @@ export function Filters({ className }: { className?: string }) {
           >
             <Accordion.Trigger className="flex w-full justify-between items-center [&>svg]:data-[state=open]:rotate-90">
               <span>{filter.label}</span>
-              <IconCaretRight className="w-4 h-4 transition-transform rotate-0" />
+              <CaretRight className="w-4 h-4 transition-transform rotate-0" />
             </Accordion.Trigger>
             <Accordion.Content
               style={
