@@ -284,6 +284,27 @@ export type CartApiQueryFragment = Pick<
   >;
 };
 
+export type ColorsConfigsQueryVariables = StorefrontAPI.Exact<{
+  type: StorefrontAPI.Scalars['String']['input'];
+  nameKey: StorefrontAPI.Scalars['String']['input'];
+  valueKey: StorefrontAPI.Scalars['String']['input'];
+}>;
+
+export type ColorsConfigsQuery = {
+  metaobjects: {
+    nodes: Array<
+      Pick<StorefrontAPI.Metaobject, 'id'> & {
+        name?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.MetaobjectField, 'value'>
+        >;
+        value?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.MetaobjectField, 'value'>
+        >;
+      }
+    >;
+  };
+};
+
 export type ShopQueryQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
@@ -1816,6 +1837,10 @@ export type OurTeamQuery = {
 };
 
 interface GeneratedQueryTypes {
+  '#graphql\n  query colorsConfigs($type: String!, $nameKey: String!, $valueKey: String!) {\n    metaobjects(first: 100, type: $type) {\n      nodes {\n        id\n        name: field(key: $nameKey) {\n          value\n        }\n        value: field(key: $valueKey) {\n          value\n        }\n      }\n    }\n  }\n': {
+    return: ColorsConfigsQuery;
+    variables: ColorsConfigsQueryVariables;
+  };
   '#graphql\n  query shopQuery($country: CountryCode, $language: LanguageCode)\n  @inContext(country: $country, language: $language) {\n    shop {\n      name\n      description\n    }\n  }\n': {
     return: ShopQueryQuery;
     variables: ShopQueryQueryVariables;
