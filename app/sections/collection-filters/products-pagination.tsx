@@ -50,6 +50,7 @@ export function ProductsPagination({
                   to={getAppliedFilterLink(filter, params, location)}
                   className="px-2 py-1 border border-line-subtle hover:border-line items-center gap-2"
                   variant="custom"
+                  preventScrollReset
                 >
                   <span>{label}</span>
                   <X className="w-4 h-4" />
@@ -62,6 +63,7 @@ export function ProductsPagination({
               to={pathname}
               variant="underline"
               aria-label="Clear all applied filters"
+              preventScrollReset
             >
               Clear all filters
             </Link>
