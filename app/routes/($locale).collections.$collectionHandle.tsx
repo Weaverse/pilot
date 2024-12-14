@@ -59,6 +59,9 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         reverse,
         country: context.storefront.i18n.country,
         language: context.storefront.i18n.language,
+        // Query custom banner stored in Shopify's collection metafields
+        customBannerNamespace: "custom",
+        customBannerKey: "collection_banner",
       },
     })
     .catch((e) => {
