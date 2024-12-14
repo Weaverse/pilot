@@ -7,8 +7,13 @@ import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Filters } from "./filters";
 import { ProductsPagination } from "./products-pagination";
 import { ToolsBar } from "./tools-bar";
+import { Image } from "@shopify/hydrogen";
 
 export interface CollectionFiltersData {
+  showBreadcrumb: boolean;
+  showDescription: boolean;
+  showBanner: boolean;
+  bannerHeightDesktop: number;
   enableSort: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
@@ -28,6 +33,10 @@ interface CollectionFiltersProps extends SectionProps, CollectionFiltersData {}
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, sectionRef) => {
     let {
+      showBreadcrumb,
+      showDescription,
+      showBanner,
+      bannerHeightDesktop,
       enableSort,
       showFiltersCount,
       enableFilter,
@@ -61,17 +70,46 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
     }, [productsPerRowDesktop, productsPerRowMobile]);
 
     if (collection?.products && collections) {
+      let banner = collection.metafield
+        ? collection.metafield.reference.image
+        : collection.image;
       return (
         <Section ref={sectionRef} {...rest} overflow="unset">
-          <div className="space-y-2.5 py-10">
-            <div className="flex items-center gap-2 text-body-subtle">
-              <Link to="/" className="hover:underline underline-offset-4">
-                Home
-              </Link>
-              <span>/</span>
-              <span>{collection.title}</span>
-            </div>
+          <div className="py-10">
+            {showBreadcrumb && (
+              <div className="flex items-center gap-2 text-body-subtle mb-2.5">
+                <Link to="/" className="hover:underline underline-offset-4">
+                  Home
+                </Link>
+                <span>/</span>
+                <span>{collection.title}</span>
+              </div>
+            )}
             <h3>{collection.title}</h3>
+            {showDescription && collection.description && (
+              <p className="text-body-subtle mt-2.5">
+                {collection.description}
+              </p>
+            )}
+            {showBanner && banner && (
+              <div
+                className="relative h-[--banner-height-mobile] lg:h-[--banner-height-desktop] mt-6"
+                style={
+                  {
+                    "--banner-height-desktop": `${bannerHeightDesktop}px`,
+                    "--banner-height-mobile": `${bannerHeightDesktop / 2}px`,
+                  } as React.CSSProperties
+                }
+              >
+                <Image
+                  data={banner}
+                  sizes="auto"
+                  className="w-full h-full object-cover object-center"
+                  width={2000}
+                  height={2000}
+                />
+              </div>
+            )}
           </div>
           <ToolsBar
             width={rest.width}
@@ -119,9 +157,55 @@ export let schema: HydrogenComponentSchema = {
   inspector: [
     {
       group: "Layout",
-      inputs: layoutInputs.filter((inp) => {
-        return inp.name !== "borderRadius" && inp.name !== "gap";
-      }),
+      inputs: [
+        ...layoutInputs.filter((inp) => {
+          return inp.name !== "borderRadius" && inp.name !== "gap";
+        }),
+        {
+          type: "switch",
+          name: "showBreadcrumb",
+          label: "Show breadcrumb",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showDescription",
+          label: "Show description",
+          defaultValue: false,
+        },
+        {
+          type: "switch",
+          name: "showBanner",
+          label: "Show banner",
+          defaultValue: true,
+          helpText:
+            "A custom banner can be stored under `custom.collection_banner` metafield.",
+        },
+        {
+          type: "range",
+          name: "bannerHeightDesktop",
+          label: "Banner height (desktop)",
+          defaultValue: 350,
+          configs: {
+            min: 100,
+            max: 600,
+            step: 1,
+          },
+          condition: "showBanner.eq.true",
+        },
+        {
+          type: "range",
+          name: "bannerHeightMobile",
+          label: "Banner height (mobile)",
+          defaultValue: 200,
+          configs: {
+            min: 50,
+            max: 400,
+            step: 1,
+          },
+          condition: "showBanner.eq.true",
+        },
+      ],
     },
     {
       group: "Filtering and sorting",

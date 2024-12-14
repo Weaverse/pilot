@@ -160,6 +160,8 @@ export let COLLECTION_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
+    $customBannerNamespace: String!
+    $customBannerKey: String!
   ) @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
       id
@@ -169,6 +171,20 @@ export let COLLECTION_QUERY = `#graphql
       seo {
         description
         title
+      }
+      metafield(namespace: $customBannerNamespace, key: $customBannerKey) {
+        id
+        type
+        description
+        value
+        reference {
+          ... on MediaImage {
+            image {
+              id
+              url
+            }
+          }
+        }
       }
       image {
         id
