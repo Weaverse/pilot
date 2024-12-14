@@ -128,15 +128,21 @@ export default {
         "screen-no-nav":
           "calc(var(--screen-height, 100vh) - var(--height-nav) - var(--initial-topbar-height))",
         "screen-dynamic": "var(--screen-height-dynamic, 100vh)",
+        4.5: "1.125rem",
       },
       width: {
         mobileGallery: "calc(100vw - 3rem)",
         page: "var(--page-width, 1280px)",
+        4.5: "1.125rem",
       },
       maxWidth: {
         page: "var(--page-width, 1280px)",
         "prose-narrow": "45ch",
         "prose-wide": "80ch",
+        4.5: "1.125rem",
+      },
+      minWidth: {
+        4.5: "1.125rem",
       },
       fontFamily: {
         sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
