@@ -7,7 +7,7 @@ import type { ProductQuery } from "storefrontapi.generated";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { getExcerpt, isDiscounted, isNewArrival } from "~/lib/utils";
+import { isDiscounted, isNewArrival } from "~/lib/utils";
 import { AddToCartButton } from "~/modules/add-to-cart-button";
 import {
   ProductMedia,
@@ -16,7 +16,7 @@ import {
 import { Quantity } from "~/modules/product-form/quantity";
 import { ProductVariants } from "~/modules/product-form/variants";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
-import { ProductDetail } from "./product-detail";
+import { ProductDetails } from "./product-details";
 
 interface ProductInformationProps
   extends SectionProps,
@@ -36,7 +36,6 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
     let {
       product,
-      shop,
       variants: _variants,
       storeDomain,
     } = useLoaderData<typeof productLoader>();
@@ -102,8 +101,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     }
 
     if (product && variants) {
-      let { title, vendor, summary, description } = product;
-      let { shippingPolicy, refundPolicy } = shop;
+      let { title, vendor, summary } = product;
       let discountedAmount =
         (selectedVariant?.compareAtPrice?.amount || 0) /
           selectedVariant?.price?.amount -
@@ -217,23 +215,10 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     storeDomain={storeDomain}
                   />
                 )}
-                <div className="grid py-4">
-                  <ProductDetail title="Description" content={description} />
-                  {showShippingPolicy && shippingPolicy?.body && (
-                    <ProductDetail
-                      title="Shipping"
-                      content={getExcerpt(shippingPolicy.body)}
-                      learnMore={`/policies/${shippingPolicy.handle}`}
-                    />
-                  )}
-                  {showRefundPolicy && refundPolicy?.body && (
-                    <ProductDetail
-                      title="Returns"
-                      content={getExcerpt(refundPolicy.body)}
-                      learnMore={`/policies/${refundPolicy.handle}`}
-                    />
-                  )}
-                </div>
+                <ProductDetails
+                  showShippingPolicy={showShippingPolicy}
+                  showRefundPolicy={showRefundPolicy}
+                />
               </div>
             </div>
           </div>

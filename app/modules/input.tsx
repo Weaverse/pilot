@@ -1,8 +1,8 @@
+import { X } from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import type React from "react";
 import { forwardRef, useState } from "react";
-import { IconX } from "~/components/icons";
 
 interface InputProps
   extends VariantProps<typeof variants>,
@@ -66,9 +66,7 @@ export let Input = forwardRef<HTMLInputElement, InputProps>(
       if (onClear) onClear(e);
     };
     if (type === "search") {
-      suffix = (
-        <IconX className="cursor-pointer w-5 h-5" onClick={handleClear} />
-      );
+      suffix = <X className="cursor-pointer w-5 h-5" onClick={handleClear} />;
     }
     let hasChild = Boolean(prefixElement || suffix);
 

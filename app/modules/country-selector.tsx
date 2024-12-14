@@ -1,3 +1,5 @@
+import { CaretDown, CheckCircle } from "@phosphor-icons/react";
+import * as Popover from "@radix-ui/react-popover";
 import {
   useFetcher,
   useLocation,
@@ -7,18 +9,8 @@ import {
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect, useRef } from "react";
-import { useInView } from "react-intersection-observer";
-
-import {
-  CloseButton,
-  Popover,
-  PopoverBackdrop,
-  PopoverButton,
-  PopoverPanel,
-} from "@headlessui/react";
-import { CheckCircle } from "@phosphor-icons/react";
 import ReactCountryFlag from "react-country-flag";
-import { IconCaretDown } from "~/components/icons";
+import { useInView } from "react-intersection-observer";
 import { getCountryUrlPath } from "~/lib/locale";
 import type { Localizations } from "~/lib/type";
 import { DEFAULT_LOCALE } from "~/lib/utils";
@@ -82,62 +74,68 @@ export function CountrySelector() {
 
   return (
     <div ref={observerRef} className="grid gap-4 w-80">
-      <Popover>
-        <PopoverButton className="w-full border border-line-subtle overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center gap-2">
-          <ReactCountryFlag
-            svg
-            countryCode={selectedLocale.country}
-            style={{ width: "24px", height: "14px" }}
-          />
-          <span>{selectedLocale.label}</span>
-          <IconCaretDown className="ml-auto w-4 h-4" />
-        </PopoverButton>
-        <PopoverBackdrop className="bg-black/30" />
-        <PopoverPanel anchor="top">
-          <div className="w-80 max-h-40 overflow-auto py-2 bg-neutral-800 my-2">
-            {countries &&
-              Object.keys(countries).map((countryPath) => {
-                let countryLocale = countries[countryPath];
-                let isSelected =
-                  countryLocale.language === selectedLocale.language &&
-                  countryLocale.country === selectedLocale.country;
+      <Popover.Root>
+        <Popover.Trigger asChild>
+          <button
+            className="w-full border border-line-subtle overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center gap-2"
+            aria-label="Select country"
+          >
+            <ReactCountryFlag
+              svg
+              countryCode={selectedLocale.country}
+              style={{ width: "24px", height: "14px" }}
+            />
+            <span>{selectedLocale.label}</span>
+            <CaretDown className="ml-auto w-4 h-4" />
+          </button>
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Content>
+            <div className="w-80 max-h-40 overflow-auto py-2 bg-neutral-800 my-2">
+              {countries &&
+                Object.keys(countries).map((countryPath) => {
+                  let countryLocale = countries[countryPath];
+                  let isSelected =
+                    countryLocale.language === selectedLocale.language &&
+                    countryLocale.country === selectedLocale.country;
 
-                return (
-                  <CloseButton
-                    as="button"
-                    key={countryPath}
-                    type="button"
-                    onClick={() =>
-                      handleLocaleChange({
-                        redirectTo: getCountryUrlPath({
-                          countryLocale,
-                          defaultLocalePrefix,
-                          pathWithoutLocale,
-                        }),
-                        buyerIdentity: {
-                          countryCode: countryLocale.country,
-                        },
-                      })
-                    }
-                    className="text-white bg-neutral-800 hover:bg-neutral-600 w-full p-2 transition flex gap-2 items-center text-left cursor-pointer py-2 px-4 text-sm"
-                  >
-                    <ReactCountryFlag
-                      svg
-                      countryCode={countryLocale.country}
-                      style={{ width: "24px", height: "14px" }}
-                    />
-                    <span>{countryLocale.label}</span>
-                    {isSelected ? (
-                      <span className="ml-auto">
-                        <CheckCircle className="w-5 h-5" />
-                      </span>
-                    ) : null}
-                  </CloseButton>
-                );
-              })}
-          </div>
-        </PopoverPanel>
-      </Popover>
+                  return (
+                    <Popover.Close
+                      aria-label={`Select ${countryLocale.label} country`}
+                      key={countryPath}
+                      type="button"
+                      onClick={() =>
+                        handleLocaleChange({
+                          redirectTo: getCountryUrlPath({
+                            countryLocale,
+                            defaultLocalePrefix,
+                            pathWithoutLocale,
+                          }),
+                          buyerIdentity: {
+                            countryCode: countryLocale.country,
+                          },
+                        })
+                      }
+                      className="text-white bg-neutral-800 hover:bg-neutral-600 w-full p-2 transition flex gap-2 items-center text-left cursor-pointer py-2 px-4 text-sm"
+                    >
+                      <ReactCountryFlag
+                        svg
+                        countryCode={countryLocale.country}
+                        style={{ width: "24px", height: "14px" }}
+                      />
+                      <span>{countryLocale.label}</span>
+                      {isSelected ? (
+                        <span className="ml-auto">
+                          <CheckCircle className="w-5 h-5" />
+                        </span>
+                      ) : null}
+                    </Popover.Close>
+                  );
+                })}
+            </div>
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
     </div>
   );
 }

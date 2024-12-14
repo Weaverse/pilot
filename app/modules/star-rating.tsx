@@ -1,9 +1,9 @@
-import { IconFilledStar, IconStar, IconStarHalf } from "./icon";
+import { Star, StarHalf } from "@phosphor-icons/react";
 
 export function StarRating({ rating }: { rating: number }) {
-  let filledStar = <IconFilledStar className="w-4 h-4" />;
-  let halfFilledStar = <IconStarHalf className="w-4 h-4" />;
-  let star = <IconStar className="w-4 h-4" />;
+  let filledStar = <Star weight="fill" className="w-4 h-4" />;
+  let halfFilledStar = <StarHalf className="w-4 h-4" />;
+  let star = <Star className="w-4 h-4" />;
   return (
     <div className="inline-flex gap-0.5">
       {rating >= 1 ? filledStar : rating >= 0.5 ? halfFilledStar : star}

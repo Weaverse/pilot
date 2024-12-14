@@ -1,10 +1,10 @@
+import { Tag } from "@phosphor-icons/react";
 import { type MetaFunction, useLoaderData } from "@remix-run/react";
 import { Image, Money, flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import { type LoaderFunctionArgs, json, redirect } from "@shopify/remix-oxygen";
 import clsx from "clsx";
 import type { OrderFragment } from "customer-accountapi.generated";
-import { IconTag } from "~/components/icons";
 import { Link } from "~/components/link";
 import { CUSTOMER_ORDER_QUERY } from "~/graphql/customer-account/customer-order-query";
 import { statusMessage } from "~/lib/utils";
@@ -147,7 +147,7 @@ export default function OrderRoute() {
                               className="text-body-subtle flex items-center gap-1 border border-[#B7B7B7] py-1 px-1.5 rounded-sm text-sm w-fit"
                               key={index}
                             >
-                              <IconTag className="w-4 h-4" />
+                              <Tag className="w-4 h-4" />
                               <span>{discountTitle}</span>
                               <div className="inline-flex">
                                 (<span>-</span>
@@ -199,7 +199,7 @@ export default function OrderRoute() {
                 </div>
                 <div className="flex justify-between gap-4">
                   <div className="flex gap-1 items-center">
-                    <IconTag className="w-4 h-4" />
+                    <Tag className="w-4 h-4" />
                     <span className="uppercase font-bold text-sm">
                       Total savings
                     </span>

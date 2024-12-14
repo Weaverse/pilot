@@ -1,22 +1,20 @@
 import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
-import {
+  CaretRight,
   FacebookLogo,
   InstagramLogo,
   LinkedinLogo,
   XLogo,
 } from "@phosphor-icons/react";
+import * as Accordion from "@radix-ui/react-accordion";
 import { Link } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
+import clsx from "clsx";
 import { Button } from "~/components/button";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/lib/cn";
-import type { ChildEnhancedMenuItem } from "~/lib/utils";
+import type { SingleMenuItem } from "~/lib/type";
 import { Input } from "~/modules/input";
 import { CountrySelector } from "./country-selector";
 
@@ -36,7 +34,7 @@ let variants = cva("divide-y divide-line-subtle space-y-9", {
 });
 
 export function Footer() {
-  let { footerMenu, shopName } = useShopMenu();
+  let { shopName } = useShopMenu();
   let {
     footerWidth,
     socialFacebook,
@@ -56,7 +54,6 @@ export function Footer() {
     newsletterButtonText,
   } = useThemeSettings();
 
-  let { items = [] } = footerMenu || {};
   let socialItems = [
     {
       name: "Instagram",
@@ -83,7 +80,7 @@ export function Footer() {
   return (
     <footer
       className={cn(
-        "bg-[--color-footer-bg] text-[--color-footer-text] pt-16",
+        "bg-[--color-footer-bg] text-[--color-footer-text] pt-9 lg:pt-16",
         variants({ padding: footerWidth }),
       )}
       style={
@@ -147,17 +144,7 @@ export function Footer() {
               </div>
             </div>
           </div>
-          <div className="w-full grid lg:grid-cols-3 gap-8">
-            {items.map((item, ind) => (
-              <div key={ind} className="flex flex-col gap-6">
-                <FooterMenu
-                  title={item.title}
-                  to={item.to}
-                  items={item.items}
-                />
-              </div>
-            ))}
-          </div>
+          <FooterMenu />
         </div>
         <div className="py-9 flex gap-4 flex-col lg:flex-row justify-between items-center">
           <div className="flex gap-2 ">
@@ -170,36 +157,53 @@ export function Footer() {
   );
 }
 
-function FooterMenu({
-  title,
-  to,
-  items,
-}: {
-  title: string;
-  to: string;
-  items: ChildEnhancedMenuItem[];
-}) {
+function FooterMenu() {
+  let { footerMenu } = useShopMenu();
+  let items = footerMenu.items as unknown as SingleMenuItem[];
   return (
-    <div className="flex flex-col gap-4">
-      <Disclosure defaultOpen>
-        <DisclosureButton className="lg:hidden text-left">
-          <div className="text-base font-medium">
-            {to === "#" ? title : <Link to={to}>{title}</Link>}
+    <Accordion.Root
+      type="multiple"
+      defaultValue={items.map(({ id }) => id)}
+      className="w-full grid lg:grid-cols-3 lg:gap-8"
+    >
+      {items.map(({ id, to, title, items }) => (
+        <Accordion.Item key={id} value={id} className="flex flex-col">
+          <Accordion.Trigger className="flex py-4 justify-between items-center lg:hidden text-left font-medium [&>svg]:data-[state=open]:rotate-90">
+            {["#", "/"].includes(to) ? (
+              <span>{title}</span>
+            ) : (
+              <Link to={to}>{title}</Link>
+            )}
+            <CaretRight className="w-4 h-4 transition-transform rotate-0" />
+          </Accordion.Trigger>
+          <div className="text-lg font-medium hidden lg:block">
+            {["#", "/"].includes(to) ? title : <Link to={to}>{title}</Link>}
           </div>
-        </DisclosureButton>
-        <div className="text-lg font-medium hidden lg:block">
-          {to === "#" ? title : <Link to={to}>{title}</Link>}
-        </div>
-        <DisclosurePanel>
-          <div className="flex flex-col gap-2">
-            {items.map((item, ind) => (
-              <Link to={item.to} key={ind} className="relative">
-                <span className="reveal-underline">{item.title}</span>
-              </Link>
-            ))}
-          </div>
-        </DisclosurePanel>
-      </Disclosure>
-    </div>
+          <Accordion.Content
+            style={
+              {
+                "--slide-up-from": "var(--radix-accordion-content-height)",
+                "--slide-down-to": "var(--radix-accordion-content-height)",
+                "--slide-up-duration": "0.15s",
+                "--slide-down-duration": "0.15s",
+              } as React.CSSProperties
+            }
+            className={clsx([
+              "overflow-hidden",
+              "data-[state=closed]:animate-slide-up",
+              "data-[state=open]:animate-slide-down",
+            ])}
+          >
+            <div className="pb-4 lg:pt-6 flex flex-col gap-2">
+              {items.map(({ id, to, title }) => (
+                <Link to={to} key={id} className="relative">
+                  <span className="reveal-underline">{title}</span>
+                </Link>
+              ))}
+            </div>
+          </Accordion.Content>
+        </Accordion.Item>
+      ))}
+    </Accordion.Root>
   );
 }
