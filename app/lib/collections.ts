@@ -1,5 +1,5 @@
 import type { ProductCollectionSortKeys } from "@shopify/hydrogen/storefront-api-types";
-import type { SortParam } from "~/modules/sort-filter";
+import type { SortParam } from "./filter";
 
 export let getSortValuesFromParam = (
   sortParam: SortParam | null,
