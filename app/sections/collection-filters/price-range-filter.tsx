@@ -18,22 +18,8 @@ export function PriceRangeFilter({
   let navigate = useNavigate();
   let thumbRef = useRef<"from" | "to" | null>(null);
 
-  let { highestPriceProduct, lowestPriceProduct } = collection;
-  let minVariantPrice =
-    lowestPriceProduct.nodes[0]?.priceRange?.minVariantPrice;
-  let maxVariantPrice =
-    highestPriceProduct.nodes[0]?.priceRange?.maxVariantPrice;
-
-  let priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
-  let price = priceFilter
-    ? (JSON.parse(priceFilter) as ProductFilter["price"])
-    : undefined;
-  let min = Number.isNaN(Number(price?.min))
-    ? Number(minVariantPrice?.amount)
-    : Number(price?.min);
-  let max = Number.isNaN(Number(price?.max))
-    ? Number(maxVariantPrice?.amount)
-    : Number(price?.max);
+  let { minVariantPrice, maxVariantPrice } = getPricesRange(collection);
+  let { min, max } = getPricesFromFilter(params);
 
   let [minPrice, setMinPrice] = useState(min);
   let [maxPrice, setMaxPrice] = useState(max);
@@ -55,19 +41,19 @@ export function PriceRangeFilter({
   return (
     <div className="space-y-4">
       <Slider.Root
-        min={Number(minVariantPrice.amount)}
-        max={Number(maxVariantPrice.amount)}
+        min={minVariantPrice}
+        max={maxVariantPrice}
         step={1}
         minStepsBetweenThumbs={1}
-        value={[minPrice, maxPrice]}
+        value={[minPrice || minVariantPrice, maxPrice || maxVariantPrice]}
         onValueChange={([newMin, newMax]) => {
           if (thumbRef.current) {
             if (thumbRef.current === "from") {
-              if (newMin < maxPrice) {
+              if (maxPrice === undefined || newMin < maxPrice) {
                 setMinPrice(newMin);
               }
             } else {
-              if (newMax > minPrice) {
+              if (minPrice === undefined || newMax > minPrice) {
                 setMaxPrice(newMax);
               }
             }
@@ -106,8 +92,8 @@ export function PriceRangeFilter({
             name="minPrice"
             type="number"
             value={minPrice ?? ""}
-            min={minVariantPrice.amount}
-            placeholder={Number(minVariantPrice.amount).toString()}
+            min={minVariantPrice}
+            placeholder={minVariantPrice.toString()}
             onChange={(e) => {
               let { value } = e.target;
               let newMinPrice = Number.isNaN(Number.parseFloat(value))
@@ -131,8 +117,8 @@ export function PriceRangeFilter({
             name="maxPrice"
             type="number"
             value={maxPrice ?? ""}
-            max={maxVariantPrice.amount}
-            placeholder={Number(maxVariantPrice.amount).toString()}
+            max={maxVariantPrice}
+            placeholder={maxVariantPrice.toString()}
             onChange={(e) => {
               let { value } = e.target;
               let newMaxPrice = Number.isNaN(Number.parseFloat(value))
@@ -147,4 +133,26 @@ export function PriceRangeFilter({
       </div>
     </div>
   );
+}
+
+function getPricesRange(collection: CollectionDetailsQuery["collection"]) {
+  let { highestPriceProduct, lowestPriceProduct } = collection;
+  let minVariantPrice =
+    lowestPriceProduct.nodes[0]?.priceRange?.minVariantPrice;
+  let maxVariantPrice =
+    highestPriceProduct.nodes[0]?.priceRange?.maxVariantPrice;
+  return {
+    minVariantPrice: Number(minVariantPrice?.amount) || 0,
+    maxVariantPrice: Number(maxVariantPrice?.amount) || 1000,
+  };
+}
+
+function getPricesFromFilter(params: URLSearchParams) {
+  let priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
+  let price = priceFilter
+    ? (JSON.parse(priceFilter) as ProductFilter["price"])
+    : undefined;
+  let min = Number.isNaN(Number(price?.min)) ? undefined : Number(price?.min);
+  let max = Number.isNaN(Number(price?.max)) ? undefined : Number(price?.max);
+  return { min, max };
 }
