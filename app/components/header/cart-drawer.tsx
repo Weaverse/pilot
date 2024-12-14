@@ -56,7 +56,7 @@ export function CartDrawer() {
                     "group-hover/header:text-[--color-header-bg]",
                   )}
                 >
-                  <span className="-mr-0.5">{cart?.totalQuantity}</span>
+                  <span className="-mr-px">{cart?.totalQuantity}</span>
                 </div>
               )}
             </Dialog.Trigger>
