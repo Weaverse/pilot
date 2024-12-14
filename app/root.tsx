@@ -27,20 +27,25 @@ import type {
   MetaArgs,
 } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
-import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import {
+  type ColorSwatch,
+  useThemeSettings,
+  withWeaverse,
+} from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
-import type { LayoutQuery } from "storefrontapi.generated";
+import type { ColorsConfigsQuery, LayoutQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/lib/seo.server";
 import { CustomAnalytics } from "~/modules/custom-analytics";
 import { GlobalLoading } from "~/modules/global-loading";
 import { Layout as PageLayout } from "~/modules/layout";
 import { TooltipProvider } from "./components/tooltip";
+import { COLORS_CONFIGS_QUERY } from "./data/queries";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
-import { GenericError } from "./modules/generic-error";
 import { NotFound } from "./modules/not-found";
-import styles from "./styles/app.css?url";
 import { GlobalStyle } from "./weaverse/style";
+import { GenericError } from "./modules/generic-error";
+import styles from "./styles/app.css?url";
 
 export type RootLoader = typeof loader;
 
@@ -111,8 +116,9 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ request, context }: LoaderFunctionArgs) {
-  let [layout] = await Promise.all([
+  let [layout, colorsConfigs] = await Promise.all([
     getLayoutData(context),
+    getColorsConfigs(context),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
@@ -138,6 +144,7 @@ async function loadCriticalData({ request, context }: LoaderFunctionArgs) {
     selectedLocale: storefront.i18n,
     weaverseTheme: await context.weaverse.loadThemeSettings(),
     googleGtmID: context.env.PUBLIC_GOOGLE_GTM_ID,
+    colorsConfigs,
   };
 }
 
@@ -371,4 +378,32 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
     : undefined;
 
   return { shop: data.shop, headerMenu, footerMenu };
+}
+
+async function getColorsConfigs(context: AppLoadContext) {
+  let {
+    METAOBJECT_COLORS_TYPE: type,
+    METAOBJECT_COLOR_NAME_KEY: nameKey,
+    METAOBJECT_COLOR_VALUE_KEY: valueKey,
+  } = context.env;
+  if (!type || !nameKey || !valueKey) {
+    return [];
+  }
+  let { metaobjects } = await context.storefront.query<ColorsConfigsQuery>(
+    COLORS_CONFIGS_QUERY,
+    {
+      variables: {
+        type,
+        nameKey,
+        valueKey,
+      },
+    },
+  );
+  return metaobjects.nodes.map(({ id, name, value }) => {
+    return {
+      id,
+      name: name.value,
+      value: value.value,
+    };
+  }) as ColorSwatch[];
 }
