@@ -14,6 +14,7 @@ export interface CollectionFiltersData {
   showDescription: boolean;
   showBanner: boolean;
   bannerHeightDesktop: number;
+  bannerHeightMobile: number;
   enableSort: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
@@ -37,6 +38,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       showDescription,
       showBanner,
       bannerHeightDesktop,
+      bannerHeightMobile,
       enableSort,
       showFiltersCount,
       enableFilter,
@@ -97,7 +99,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                 style={
                   {
                     "--banner-height-desktop": `${bannerHeightDesktop}px`,
-                    "--banner-height-mobile": `${bannerHeightDesktop / 2}px`,
+                    "--banner-height-mobile": `${bannerHeightMobile}px`,
                   } as React.CSSProperties
                 }
               >
