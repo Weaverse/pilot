@@ -32,7 +32,8 @@ export function getFilterLink(
   params: URLSearchParams,
   location: ReturnType<typeof useLocation>,
 ) {
-  let newParams = filterInputToParams(input, new URLSearchParams(params));
+  let paramsClone = new URLSearchParams(params);
+  let newParams = filterInputToParams(input, paramsClone);
   return `${location.pathname}?${newParams.toString()}`;
 }
 
