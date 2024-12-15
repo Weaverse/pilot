@@ -3,7 +3,7 @@ import * as Heading from "~/components/heading";
 import * as Link from "~/components/link";
 import * as Paragraph from "~/components/paragraph";
 import * as SubHeading from "~/components/subheading";
-import * as Judgeme from "~/modules/product-form/judgeme-review";
+import * as Judgeme from "~/components/product/judgeme-review";
 import * as AliReview from "~/sections/ali-reviews";
 import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as AllProducts from "~/sections/all-products";

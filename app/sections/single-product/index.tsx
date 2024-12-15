@@ -10,10 +10,10 @@ import type { ProductQuery } from "storefrontapi.generated";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/data/queries";
 import { useAnimation } from "~/hooks/use-animation";
 import { AddToCartButton } from "~/modules/add-to-cart-button";
-import { ProductPlaceholder } from "~/modules/product-form/placeholder";
-import { ProductMedia } from "~/modules/product-form/product-media";
-import { Quantity } from "~/modules/product-form/quantity";
-import { ProductVariants } from "~/modules/product-form/variants";
+import { ProductPlaceholder } from "~/components/product/placeholder";
+import { ProductMedia } from "~/components/product/product-media";
+import { Quantity } from "~/components/product/quantity";
+import { ProductVariants } from "~/components/product/variants";
 
 type SingleProductData = {
   productsCount: number;
