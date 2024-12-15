@@ -25,19 +25,23 @@ export function PriceRangeFilter({
   let [maxPrice, setMaxPrice] = useState(max);
 
   function handleFilter() {
-    let pricesFilterParams = params;
+    let currentSearchString = params.toString();
+    let paramsClone = new URLSearchParams(params);
     if (minPrice === undefined && maxPrice === undefined) {
-      pricesFilterParams.delete(`${FILTER_URL_PREFIX}price`);
+      paramsClone.delete(`${FILTER_URL_PREFIX}price`);
     } else {
       let price = {
         ...(minPrice === undefined ? {} : { min: minPrice }),
         ...(maxPrice === undefined ? {} : { max: maxPrice }),
       };
-      pricesFilterParams = filterInputToParams({ price }, params);
+      paramsClone = filterInputToParams({ price }, params);
     }
-    navigate(`${location.pathname}?${pricesFilterParams.toString()}`, {
-      preventScrollReset: true,
-    });
+    let newSearchString = paramsClone.toString();
+    if (currentSearchString !== newSearchString) {
+      navigate(`${location.pathname}?${paramsClone.toString()}`, {
+        preventScrollReset: true,
+      });
+    }
   }
 
   return (
