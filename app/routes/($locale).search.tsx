@@ -25,13 +25,13 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  const searchParams = new URL(request.url).searchParams;
-  const searchTerm = searchParams.get("q");
-  const variables = getPaginationVariables(request, {
+  let searchParams = new URL(request.url).searchParams;
+  let searchTerm = searchParams.get("q");
+  let variables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
 
-  const { products } = await storefront.query(SEARCH_QUERY, {
+  let { products } = await storefront.query(SEARCH_QUERY, {
     variables: {
       searchTerm,
       ...variables,
@@ -40,9 +40,9 @@ export async function loader({
     },
   });
 
-  const shouldGetRecommendations = !searchTerm || products?.nodes?.length === 0;
+  let shouldGetRecommendations = !searchTerm || products?.nodes?.length === 0;
 
-  const seo = seoPayload.collection({
+  let seo = seoPayload.collection({
     url: request.url,
     collection: {
       id: "search",
@@ -70,14 +70,14 @@ export async function loader({
   });
 }
 
-export const meta = ({ matches }: MetaArgs<typeof loader>) => {
+export let meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 
 export default function Search() {
-  const { searchTerm, products, noResultRecommendations } =
+  let { searchTerm, products, noResultRecommendations } =
     useLoaderData<typeof loader>();
-  const noResults = products?.nodes?.length === 0;
+  let noResults = products?.nodes?.length === 0;
 
   return (
     <>
@@ -107,7 +107,7 @@ export default function Search() {
         <Section>
           <Pagination connection={products}>
             {({ nodes, isLoading, NextLink, PreviousLink }) => {
-              const itemsMarkup = nodes.map((product, i) => (
+              let itemsMarkup = nodes.map((product, i) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -164,7 +164,7 @@ function NoResults({
         >
           {(result) => {
             if (!result) return null;
-            const { featuredProducts } = result;
+            let { featuredProducts } = result;
 
             return (
               <>
@@ -187,7 +187,7 @@ export function getNoResultRecommendations(
   return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }
 
-const SEARCH_QUERY = `#graphql
+let SEARCH_QUERY = `#graphql
   query PaginatedProductsSearch(
     $country: CountryCode
     $endCursor: String
@@ -218,4 +218,4 @@ const SEARCH_QUERY = `#graphql
   }
 
   ${PRODUCT_CARD_FRAGMENT}
-` as const;
+` as let;
