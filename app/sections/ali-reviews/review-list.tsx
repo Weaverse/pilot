@@ -4,8 +4,8 @@ import {
   useParentInstance,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import { StarRating } from "~/components/star-rating";
 import type { AliReviewsLoaderData } from ".";
-import { Rating } from "./rating";
 import { ReviewBar } from "./review-bar";
 import type { AliReview, ReviewItemData } from "./review-item";
 import { ReviewItem } from "./review-item";
@@ -61,7 +61,7 @@ let ReviewList = forwardRef<
               </div>
             )}
             <div className="flex flex-col gap-1.5 justify-center">
-              <Rating rating={avgRating} />
+              <StarRating rating={avgRating} />
               {showReviewsCount && (
                 <div className="text-sm font-medium leading-none text-gray-500">
                   {totalReviews} reviews
@@ -83,7 +83,10 @@ let ReviewList = forwardRef<
             </div>
           )}
         </div>
-        <div className="mt-6 divide-y divide-gray-200 grow" data-motion="slide-in">
+        <div
+          className="mt-6 divide-y divide-gray-200 grow"
+          data-motion="slide-in"
+        >
           {reviewsToRender.map((review) => (
             <ReviewItem
               key={review.id}
@@ -221,7 +224,7 @@ function getReviewsSummary(allReviews: AliReview[]) {
         count: number;
         avg: number;
       };
-    },
+    }
   );
   return {
     totalReviews,

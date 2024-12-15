@@ -10,13 +10,13 @@ import type {
 } from "storefrontapi.generated";
 import { Button } from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
+import { ProductMedia } from "~/components/product/product-media";
+import { Quantity } from "~/components/product/quantity";
+import { ProductVariants } from "~/components/product/variants";
 import { Skeleton } from "~/components/skeleton";
 import { VariantPrices } from "~/components/variant-prices";
 import type { ProductData } from "~/lib/products";
-import { AddToCartButton } from "~/modules/add-to-cart-button";
-import { ProductMedia } from "~/modules/product-form/product-media";
-import { Quantity } from "~/modules/product-form/quantity";
-import { ProductVariants } from "~/modules/product-form/variants";
+import { AddToCartButton } from "~/components/product/add-to-cart-button";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -24,12 +24,12 @@ interface QuickViewData {
   storeDomain: string;
 }
 
-export function QuickView({ data }: { data: QuickViewData }) {
+export function QuickShop({ data }: { data: QuickViewData }) {
   let themeSettings = useThemeSettings();
   let { product, variants: _variants, storeDomain } = data || {};
   let firstVariant = product?.variants?.nodes?.[0];
   let [selectedVariant, setSelectedVariant] = useState(
-    firstVariant as ProductVariantFragmentFragment,
+    firstVariant as ProductVariantFragmentFragment
   );
   let [quantity, setQuantity] = useState<number>(1);
   let {
@@ -58,8 +58,8 @@ export function QuickView({ data }: { data: QuickViewData }) {
   let atcText = selectedVariant?.availableForSale
     ? addToCartText
     : selectedVariant?.quantityAvailable === -1
-      ? unavailableText
-      : soldOutText;
+    ? unavailableText
+    : soldOutText;
   return (
     <div className="bg-background">
       <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2">
@@ -125,7 +125,7 @@ export function QuickView({ data }: { data: QuickViewData }) {
   );
 }
 
-export function QuickViewTrigger({ productHandle }: { productHandle: string }) {
+export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
   let [open, setOpen] = useState(false);
   let { load, data, state } = useFetcher<ProductData>();
 
@@ -161,7 +161,7 @@ export function QuickViewTrigger({ productHandle }: { productHandle: string }) {
             </div>
           </div>
         ) : (
-          <QuickView data={data as QuickViewData} />
+          <QuickShop data={data as QuickViewData} />
         )}
       </ModalContent>
     </Modal>

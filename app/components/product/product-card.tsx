@@ -10,7 +10,7 @@ import { NavLink } from "~/components/nav-link";
 import { ProductTag } from "~/components/product-tag";
 import { VariantPrices } from "~/components/variant-prices";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
-import { QuickViewTrigger } from "./quick-view";
+import { QuickShopTrigger } from "./quick-shop";
 
 export function ProductCard({
   product,
@@ -60,7 +60,7 @@ export function ProductCard({
               {cardLabel}
             </ProductTag>
           )}
-          <QuickViewTrigger productHandle={product.handle} />
+          <QuickShopTrigger productHandle={product.handle} />
         </div>
         <div className="flex flex-col gap-1">
           <NavLink

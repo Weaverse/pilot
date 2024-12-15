@@ -5,7 +5,90 @@ import {
   PRODUCT_VARIANT_FRAGMENT,
 } from "~/data/fragments";
 
-export let COLORS_CONFIGS_QUERY = `#graphql
+export const LAYOUT_QUERY = `#graphql
+  query layout(
+    $language: LanguageCode
+    $headerMenuHandle: String!
+    $footerMenuHandle: String!
+  ) @inContext(language: $language) {
+    shop {
+      ...Shop
+    }
+    headerMenu: menu(handle: $headerMenuHandle) {
+      ...Menu
+    }
+    footerMenu: menu(handle: $footerMenuHandle) {
+      ...Menu
+    }
+  }
+  fragment Shop on Shop {
+    id
+    name
+    description
+    primaryDomain {
+      url
+    }
+    brand {
+      logo {
+        image {
+          url
+        }
+      }
+    }
+  }
+  fragment MenuItem on MenuItem {
+    id
+    resourceId
+    resource {
+      ... on Collection {
+        image {
+          altText
+          height
+          id
+          url
+          width
+        }
+      }
+      ... on Product {
+        image: featuredImage {
+          altText
+          height
+          id
+          url
+          width
+        }
+      }
+    }
+    tags
+    title
+    type
+    url
+  }
+
+  fragment ChildMenuItem on MenuItem {
+    ...MenuItem
+  }
+  fragment ParentMenuItem2 on MenuItem {
+    ...MenuItem
+    items {
+      ...ChildMenuItem
+    }
+  }
+  fragment ParentMenuItem on MenuItem {
+    ...MenuItem
+    items {
+      ...ParentMenuItem2
+    }
+  }
+  fragment Menu on Menu {
+    id
+    items {
+      ...ParentMenuItem
+    }
+  }
+` as const;
+
+export const COLORS_CONFIGS_QUERY = `#graphql
   query colorsConfigs($type: String!, $nameKey: String!, $valueKey: String!) {
     metaobjects(first: 100, type: $type) {
       nodes {
@@ -21,7 +104,7 @@ export let COLORS_CONFIGS_QUERY = `#graphql
   }
 `;
 
-export let SHOP_QUERY = `#graphql
+export const SHOP_QUERY = `#graphql
   query shopQuery($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
     shop {
@@ -31,7 +114,7 @@ export let SHOP_QUERY = `#graphql
   }
 `;
 
-export let HOMEPAGE_SEO_QUERY = `#graphql
+export const HOMEPAGE_SEO_QUERY = `#graphql
   query seoCollectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
     hero: collection(handle: $handle) {
@@ -45,7 +128,7 @@ export let HOMEPAGE_SEO_QUERY = `#graphql
   ${COLLECTION_CONTENT_FRAGMENT}
 ` as const;
 
-export let PRODUCT_INFO_QUERY = `#graphql
+export const PRODUCT_INFO_QUERY = `#graphql
   query ProductInfo(
     $country: CountryCode
     $language: LanguageCode
@@ -60,7 +143,7 @@ export let PRODUCT_INFO_QUERY = `#graphql
   }
 ` as const;
 
-export let PRODUCT_QUERY = `#graphql
+export const PRODUCT_QUERY = `#graphql
   query Product(
     $country: CountryCode
     $language: LanguageCode
@@ -119,7 +202,7 @@ export let PRODUCT_QUERY = `#graphql
   ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
 
-export let RECOMMENDED_PRODUCTS_QUERY = `#graphql
+export const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   query productRecommendations(
     $productId: ID!
     $count: Int
@@ -138,7 +221,7 @@ export let RECOMMENDED_PRODUCTS_QUERY = `#graphql
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;
 
-export let COLLECTION_INFO_QUERY = `#graphql
+export const COLLECTION_INFO_QUERY = `#graphql
   query CollectionInfo(
     $handle: String!,
     $country: CountryCode,
@@ -164,7 +247,7 @@ export let COLLECTION_INFO_QUERY = `#graphql
   }
 ` as const;
 
-export let COLLECTION_QUERY = `#graphql
+export const COLLECTION_QUERY = `#graphql
   query CollectionDetails(
     $handle: String!
     $country: CountryCode
@@ -286,7 +369,7 @@ export let COLLECTION_QUERY = `#graphql
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;
 
-export let COLLECTIONS_QUERY = `#graphql
+export const COLLECTIONS_QUERY = `#graphql
   query Collections(
     $country: CountryCode
     $language: LanguageCode
@@ -323,7 +406,7 @@ export let COLLECTIONS_QUERY = `#graphql
   }
 `;
 
-export let SEARCH_QUERY = `#graphql
+export const SEARCH_QUERY = `#graphql
   query PaginatedProductsSearch(
     $country: CountryCode
     $endCursor: String
@@ -356,7 +439,7 @@ export let SEARCH_QUERY = `#graphql
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;
 
-export let BLOGS_QUERY = `#graphql
+export const BLOGS_QUERY = `#graphql
   query Blog(
     $language: LanguageCode
     $blogHandle: String!
@@ -401,7 +484,7 @@ export let BLOGS_QUERY = `#graphql
   }
 `;
 
-export let ARTICLE_QUERY = `#graphql
+export const ARTICLE_QUERY = `#graphql
   query ArticleDetails(
     $language: LanguageCode
     $blogHandle: String!
@@ -456,7 +539,7 @@ export let ARTICLE_QUERY = `#graphql
   }
 `;
 
-export let ALL_PRODUCTS_QUERY = `#graphql
+export const ALL_PRODUCTS_QUERY = `#graphql
   query AllProducts(
     $country: CountryCode
     $language: LanguageCode
@@ -480,7 +563,7 @@ export let ALL_PRODUCTS_QUERY = `#graphql
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;
 
-export let VARIANTS_QUERY = `#graphql
+export const VARIANTS_QUERY = `#graphql
   query variants(
     $country: CountryCode
     $language: LanguageCode

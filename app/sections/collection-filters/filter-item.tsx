@@ -17,7 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/lib/cn";
 import type { AppliedFilter } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
-import { variants as productOptionsVariants } from "~/modules/product-form/options";
+import { variants as productOptionsVariants } from "~/components/product/variant-option";
 import type { RootLoader } from "~/root";
 
 export function FilterItem({
@@ -39,7 +39,7 @@ export function FilterItem({
   let { options, swatches }: SwatchesConfigs = themeSettings.productSwatches;
 
   let filter = appliedFilters.find(
-    (filter) => JSON.stringify(filter.filter) === option.input,
+    (filter) => JSON.stringify(filter.filter) === option.input
   );
 
   let [checked, setChecked] = useState(!!filter);
@@ -77,7 +77,7 @@ export function FilterItem({
                 shape,
               }),
               checked ? "p-1 border-line" : "border-line-subtle",
-              option.count === 0 && "diagonal",
+              option.count === 0 && "diagonal"
             )}
             onClick={() => handleCheckedChange(!checked)}
             disabled={option.count === 0}
@@ -85,7 +85,7 @@ export function FilterItem({
             <span
               className={cn(
                 "w-full h-full inline-block border-none hover:border-none",
-                productOptionsVariants({ shape }),
+                productOptionsVariants({ shape })
               )}
               style={{
                 backgroundColor:
@@ -110,7 +110,7 @@ export function FilterItem({
           option.count === 0 && "diagonal text-body-subtle",
           checked
             ? "border-line bg-body text-background"
-            : "border-line-subtle hover:border-line",
+            : "border-line-subtle hover:border-line"
         )}
         onClick={() => handleCheckedChange(!checked)}
         disabled={option.count === 0}
@@ -135,7 +135,10 @@ export function FilterItem({
 function FilterLabel({
   option,
   showFiltersCount,
-}: { option: Filter["values"][0]; showFiltersCount: boolean }) {
+}: {
+  option: Filter["values"][0];
+  showFiltersCount: boolean;
+}) {
   if (showFiltersCount) {
     return (
       <span>

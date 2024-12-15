@@ -7,7 +7,7 @@ import Heading, {
   headingInputs,
 } from "~/components/heading";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { ProductCard } from "~/modules/product-card";
+import { ProductCard } from "~/components/product/product-card";
 
 interface RelatedProductsProps
   extends Omit<SectionProps, "content">,
@@ -76,7 +76,7 @@ let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
       );
     }
     return <section ref={ref} {...rest} />;
-  },
+  }
 );
 
 export default RelatedProducts;

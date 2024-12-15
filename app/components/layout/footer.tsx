@@ -18,12 +18,12 @@ import type { SingleMenuItem } from "~/lib/type";
 import { Input } from "~/modules/input";
 import { CountrySelector } from "./country-selector";
 
-let variants = cva("divide-y divide-line-subtle space-y-9", {
+let variants = cva("", {
   variants: {
     width: {
-      full: "w-full h-full",
-      stretch: "w-full h-full",
-      fixed: "w-full h-full max-w-page mx-auto",
+      full: "",
+      stretch: "",
+      fixed: "max-w-page mx-auto",
     },
     padding: {
       full: "",
@@ -80,8 +80,8 @@ export function Footer() {
   return (
     <footer
       className={cn(
-        "bg-[--color-footer-bg] text-[--color-footer-text] pt-9 lg:pt-16",
-        variants({ padding: footerWidth }),
+        "w-full bg-[--color-footer-bg] text-[--color-footer-text] pt-9 lg:pt-16",
+        variants({ padding: footerWidth })
       )}
       style={
         {
@@ -89,7 +89,12 @@ export function Footer() {
         } as React.CSSProperties
       }
     >
-      <div className={variants({ width: footerWidth })}>
+      <div
+        className={cn(
+          "divide-y divide-line-subtle space-y-9 w-full h-full",
+          variants({ width: footerWidth })
+        )}
+      >
         <div className="space-y-9">
           <div className="w-full grid lg:grid-cols-3 gap-8">
             <div className="flex flex-col gap-6">
@@ -119,7 +124,7 @@ export function Footer() {
                     >
                       {social.icon}
                     </Link>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             </div>

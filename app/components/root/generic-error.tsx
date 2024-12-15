@@ -1,5 +1,5 @@
 import Link from "~/components/link";
-import { PageHeader, Text } from "./text";
+import { PageHeader, Text } from "~/modules/text";
 
 export function GenericError({
   error,

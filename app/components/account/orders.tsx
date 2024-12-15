@@ -1,16 +1,57 @@
 import { Image, flattenConnection } from "@shopify/hydrogen";
 import type { OrderCardFragment } from "customer-accountapi.generated";
-import { Link } from "~/components/link";
-import { statusMessage } from "~/lib/utils";
+import Link from "~/components/link";
+import { statusMessage, usePrefixPathWithLocale } from "~/lib/utils";
+import { Text } from "~/modules/text";
 
-export function OrderCard({ order }: { order: OrderCardFragment }) {
+type OrderCardsProps = {
+  orders: OrderCardFragment[];
+};
+
+export function AccountOrderHistory({ orders }: OrderCardsProps) {
+  return (
+    <div className="space-y-4">
+      <div className="font-bold">Orders</div>
+      {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />}
+    </div>
+  );
+}
+
+function EmptyOrders() {
+  return (
+    <div>
+      <Text className="mb-1" size="fine" width="narrow" as="p">
+        You haven&apos;t placed any orders yet.
+      </Text>
+      <div className="w-48">
+        <Link className="w-full mt-2 text-sm" to={usePrefixPathWithLocale("/")}>
+          Start Shopping
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function Orders({ orders }: OrderCardsProps) {
+  return (
+    <ul className="grid grid-flow-row grid-cols-1 gap-5 false sm:grid-cols-2">
+      {orders.map((order) => (
+        <OrderCard order={order} key={order.id} />
+      ))}
+    </ul>
+  );
+}
+
+function OrderCard({ order }: { order: OrderCardFragment }) {
   if (!order?.id) return null;
-  const [legacyOrderId, key] = order!.id!.split("/").pop()!.split("?");
-  const lineItems = flattenConnection(order?.lineItems);
-  const fulfillmentStatus = flattenConnection(order?.fulfillments)[0]?.status;
-  const orderLink = key
+
+  let [legacyOrderId, key] = order!.id!.split("/").pop()!.split("?");
+  let lineItems = flattenConnection(order?.lineItems);
+  let fulfillmentStatus = flattenConnection(order?.fulfillments)[0]?.status;
+  let orderLink = key
     ? `/account/orders/${legacyOrderId}?${key}`
     : `/account/orders/${legacyOrderId}`;
+
   return (
     <li className="flex text-center border border-[#B7B7B7] rounded-sm items-center gap-5 p-5">
       {lineItems[0].image && (
@@ -74,32 +115,3 @@ export function OrderCard({ order }: { order: OrderCardFragment }) {
     </li>
   );
 }
-
-export const ORDER_CARD_FRAGMENT = `#graphql
-  fragment OrderCard on Order {
-    id
-    orderNumber
-    processedAt
-    financialStatus
-    fulfillmentStatus
-    currentTotalPrice {
-      amount
-      currencyCode
-    }
-    lineItems(first: 2) {
-      edges {
-        node {
-          variant {
-            image {
-              url
-              altText
-              height
-              width
-            }
-          }
-          title
-        }
-      }
-    }
-  }
-`;

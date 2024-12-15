@@ -1,5 +1,5 @@
 import { Section } from "~/modules/text";
-import { ProductCard } from "./product-card";
+import { ProductCard } from "~/components/product/product-card";
 
 const mockProducts = {
   nodes: new Array(12).fill(""),

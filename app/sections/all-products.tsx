@@ -8,7 +8,7 @@ import { forwardRef } from "react";
 import type { AllProductsQuery } from "storefrontapi.generated";
 import { getImageLoadingPriority } from "~/lib/const";
 import { Grid } from "~/modules/grid";
-import { ProductCard } from "~/modules/product-card";
+import { ProductCard } from "~/components/product/product-card";
 import { PageHeader, Section } from "~/modules/text";
 
 interface AllProductsProps extends HydrogenComponentProps {

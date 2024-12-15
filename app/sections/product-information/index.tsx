@@ -8,13 +8,13 @@ import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton } from "~/modules/add-to-cart-button";
+import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import {
   ProductMedia,
   type ProductMediaProps,
-} from "~/modules/product-form/product-media";
-import { Quantity } from "~/modules/product-form/quantity";
-import { ProductVariants } from "~/modules/product-form/variants";
+} from "~/components/product/product-media";
+import { Quantity } from "~/components/product/quantity";
+import { ProductVariants } from "~/components/product/variants";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
 import { ProductDetails } from "./product-details";
 
@@ -42,10 +42,10 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let variants = _variants?.product?.variants;
     let selectedVariantOptimistic = useOptimisticVariant(
       product?.selectedVariant || variants?.nodes?.[0],
-      variants,
+      variants
     );
     let [selectedVariant, setSelectedVariant] = useState<any>(
-      selectedVariantOptimistic,
+      selectedVariantOptimistic
     );
 
     let {
@@ -71,8 +71,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let atcText = selectedVariant?.availableForSale
       ? addToCartText
       : selectedVariant?.quantityAvailable === -1
-        ? unavailableText
-        : soldOutText;
+      ? unavailableText
+      : soldOutText;
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
@@ -96,7 +96,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       window.history.replaceState(
         {},
         "",
-        `${window.location.pathname}?${searchParams.toString()}`,
+        `${window.location.pathname}?${searchParams.toString()}`
       );
     }
 
@@ -163,7 +163,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       />
                       {isDiscounted(
                         selectedVariant.price as MoneyV2,
-                        selectedVariant.compareAtPrice as MoneyV2,
+                        selectedVariant.compareAtPrice as MoneyV2
                       ) &&
                         showSalePrice && (
                           <CompareAtPrice
@@ -226,7 +226,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       );
     }
     return <div ref={ref} {...rest} />;
-  },
+  }
 );
 
 export default ProductInformation;

@@ -1,6 +1,6 @@
 import { Star, StarHalf } from "@phosphor-icons/react";
 
-export function Rating({ rating }: { rating: number }) {
+export function StarRating({ rating }: { rating: number }) {
   return (
     <div className="inline-flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => {

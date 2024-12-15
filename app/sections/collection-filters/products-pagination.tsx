@@ -13,7 +13,7 @@ import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import Link from "~/components/link";
 import { getImageLoadingPriority } from "~/lib/const";
 import { getAppliedFilterLink, type AppliedFilter } from "~/lib/filter";
-import { ProductCard } from "~/modules/product-card";
+import { ProductCard } from "~/components/product/product-card";
 
 export function ProductsPagination({
   gridSizeDesktop,
@@ -85,8 +85,12 @@ export function ProductsPagination({
               className="flex w-full flex-col gap-8 items-center"
               style={
                 {
-                  "--cols-mobile": `repeat(${gridSizeMobile || 1}, minmax(0, 1fr))`,
-                  "--cols-desktop": `repeat(${gridSizeDesktop || 3}, minmax(0, 1fr))`,
+                  "--cols-mobile": `repeat(${
+                    gridSizeMobile || 1
+                  }, minmax(0, 1fr))`,
+                  "--cols-desktop": `repeat(${
+                    gridSizeDesktop || 3
+                  }, minmax(0, 1fr))`,
                 } as React.CSSProperties
               }
             >
