@@ -25,8 +25,10 @@ import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { CustomAnalytics } from "~/components/root/custom-analytics";
 import { GlobalLoading } from "~/components/root/global-loading";
-import { Layout as PageLayout } from "~/components/root/layout";
 import { TooltipProvider } from "~/components/tooltip";
+import { Footer } from "./components/footer";
+import { Header } from "./components/header";
+import { ScrollingAnnouncement } from "./components/header/scrolling-announcement";
 import { GenericError } from "./components/root/generic-error";
 import { NotFound } from "./components/root/not-found";
 import { loadCriticalData, loadDeferredData } from "./lib/root";
@@ -133,9 +135,22 @@ function Layout({ children }: { children?: React.ReactNode }) {
             consent={data.consent}
           >
             <TooltipProvider disableHoverableContent>
-              <PageLayout key={`${locale.language}-${locale.country}`}>
-                {children}
-              </PageLayout>
+              <div
+                className="flex flex-col min-h-screen"
+                key={`${locale.language}-${locale.country}`}
+              >
+                <div className="">
+                  <a href="#mainContent" className="sr-only">
+                    Skip to content
+                  </a>
+                </div>
+                <ScrollingAnnouncement />
+                <Header />
+                <main id="mainContent" className="flex-grow">
+                  {children}
+                </main>
+                <Footer />
+              </div>
             </TooltipProvider>
             <CustomAnalytics />
           </Analytics.Provider>
