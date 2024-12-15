@@ -11,7 +11,7 @@ import {
 } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { Button } from "~/components/button";
-import { openCartDrawer } from "~/components/header/cart-drawer";
+import { openCartDrawer } from "~/components/layout/cart-drawer";
 import { usePageAnalytics } from "~/hooks/use-page-analytics";
 
 export function AddToCartButton({
@@ -80,7 +80,7 @@ function AddToCartAnalytics({
       try {
         if (cartInputs.inputs.analytics) {
           const dataInForm: unknown = JSON.parse(
-            String(cartInputs.inputs.analytics),
+            String(cartInputs.inputs.analytics)
           );
           Object.assign(cartData, dataInForm);
         }
