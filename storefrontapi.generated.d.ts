@@ -284,6 +284,24 @@ export type CartApiQueryFragment = Pick<
   >;
 };
 
+export type OrderCardFragment = Pick<
+  StorefrontAPI.Order,
+  'id' | 'orderNumber' | 'processedAt' | 'financialStatus' | 'fulfillmentStatus'
+> & {
+  currentTotalPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+  lineItems: {
+    edges: Array<{
+      node: Pick<StorefrontAPI.OrderLineItem, 'title'> & {
+        variant?: StorefrontAPI.Maybe<{
+          image?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'height' | 'width'>
+          >;
+        }>;
+      };
+    }>;
+  };
+};
+
 export type LayoutQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
   headerMenuHandle: StorefrontAPI.Scalars['String']['input'];
@@ -1378,24 +1396,6 @@ export type VariantsQuery = {
       >;
     };
   }>;
-};
-
-export type OrderCardFragment = Pick<
-  StorefrontAPI.Order,
-  'id' | 'orderNumber' | 'processedAt' | 'financialStatus' | 'fulfillmentStatus'
-> & {
-  currentTotalPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
-  lineItems: {
-    edges: Array<{
-      node: Pick<StorefrontAPI.OrderLineItem, 'title'> & {
-        variant?: StorefrontAPI.Maybe<{
-          image?: StorefrontAPI.Maybe<
-            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'height' | 'width'>
-          >;
-        }>;
-      };
-    }>;
-  };
 };
 
 export type GetShopPrimaryDomainQueryVariables = StorefrontAPI.Exact<{

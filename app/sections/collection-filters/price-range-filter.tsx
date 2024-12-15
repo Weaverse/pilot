@@ -33,7 +33,7 @@ export function PriceRangeFilter({
         ...(minPrice === undefined ? {} : { min: minPrice }),
         ...(maxPrice === undefined ? {} : { max: maxPrice }),
       };
-      paramsClone = filterInputToParams({ price }, params);
+      paramsClone = filterInputToParams({ price }, paramsClone);
     }
     if (params.toString() !== paramsClone.toString()) {
       navigate(`${location.pathname}?${paramsClone.toString()}`, {
@@ -79,7 +79,7 @@ export function PriceRangeFilter({
             onPointerDown={() => (thumbRef.current = s)}
             className={clsx(
               "block h-4 w-4 bg-gray-800 cursor-grab rounded-full shadow-md",
-              "focus-visible:outline-none",
+              "focus-visible:outline-none"
             )}
           />
         ))}
