@@ -3,7 +3,7 @@ import type {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from "storefrontapi.generated";
-import { VariantOption } from "./options";
+import { VariantOption } from "./variant-option";
 
 interface ProductVariantsProps {
   selectedVariant: ProductVariantFragmentFragment;
@@ -98,7 +98,7 @@ export function ProductVariants(props: ProductVariantsProps) {
           let handleSelectOptionValue = (value: string) =>
             handleSelectOption(optionName, value);
           let selectedValue = selectedOptions?.find(
-            (opt) => opt.name === optionName,
+            (opt) => opt.name === optionName
           )?.value;
 
           return (

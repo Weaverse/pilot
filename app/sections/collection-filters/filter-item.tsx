@@ -17,7 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/lib/cn";
 import type { AppliedFilter } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
-import { variants as productOptionsVariants } from "~/components/product/options";
+import { variants as productOptionsVariants } from "~/components/product/variant-option";
 import type { RootLoader } from "~/root";
 
 export function FilterItem({
