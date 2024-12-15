@@ -23,12 +23,12 @@ import type {
 import { defer } from "@shopify/remix-oxygen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
+import { Footer } from "~/components/layout/footer";
+import { Header } from "~/components/layout/header";
 import { CustomAnalytics } from "~/components/root/custom-analytics";
 import { GlobalLoading } from "~/components/root/global-loading";
 import { TooltipProvider } from "~/components/tooltip";
-import { Footer } from "./components/footer";
-import { Header } from "./components/header";
-import { ScrollingAnnouncement } from "./components/header/scrolling-announcement";
+import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
 import { GenericError } from "./components/root/generic-error";
 import { NotFound } from "./components/root/not-found";
 import { loadCriticalData, loadDeferredData } from "./lib/root";

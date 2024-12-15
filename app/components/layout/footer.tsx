@@ -81,7 +81,7 @@ export function Footer() {
     <footer
       className={cn(
         "bg-[--color-footer-bg] text-[--color-footer-text] pt-9 lg:pt-16",
-        variants({ padding: footerWidth }),
+        variants({ padding: footerWidth })
       )}
       style={
         {
@@ -119,7 +119,7 @@ export function Footer() {
                     >
                       {social.icon}
                     </Link>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             </div>

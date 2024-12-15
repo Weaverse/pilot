@@ -10,8 +10,8 @@ import { cn } from "~/lib/cn";
 import { useIsHomePath } from "~/lib/utils";
 import type { RootLoader } from "~/root";
 import { CartDrawer } from "./cart-drawer";
-import { DesktopMenu } from "./menu/desktop-menu";
-import { MobileMenu } from "./menu/mobile-menu";
+import { DesktopMenu } from "./desktop-menu";
+import { MobileMenu } from "./mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
 
 let variants = cva("", {
@@ -69,13 +69,13 @@ export function Header() {
               "[&_.cart-count]:bg-[--color-header-text]",
               "[&_.main-logo]:opacity-100",
               "[&_.transparent-logo]:opacity-0",
-            ],
+            ]
       )}
     >
       <div
         className={cn(
           "h-nav py-1.5 lg:py-3 flex items-center justify-between gap-2 lg:gap-8",
-          variants({ width: headerWidth }),
+          variants({ width: headerWidth })
         )}
       >
         <MobileMenu />
