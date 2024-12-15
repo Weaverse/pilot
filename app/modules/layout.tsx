@@ -1,6 +1,6 @@
+import { Footer } from "~/components/footer";
 import { Header } from "~/components/header";
 import { ScrollingAnnouncement } from "~/components/header/scrolling-announcement";
-import { Footer } from "./footer";
 
 export function Layout({
   children,
