@@ -5,8 +5,8 @@ import type {
 } from "@weaverse/hydrogen";
 import { useParentInstance } from "@weaverse/hydrogen";
 import { forwardRef, useEffect } from "react";
+import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import { StarRating } from "../star-rating";
 
 type JudgemeReviewsData = {
   rating: number;
@@ -51,7 +51,7 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
         </div>
       </div>
     );
-  },
+  }
 );
 
 export default JudgemeReview;
