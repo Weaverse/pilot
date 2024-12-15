@@ -16,7 +16,7 @@ import { ProductVariants } from "~/components/product/variants";
 import { Skeleton } from "~/components/skeleton";
 import { VariantPrices } from "~/components/variant-prices";
 import type { ProductData } from "~/lib/products";
-import { AddToCartButton } from "~/modules/add-to-cart-button";
+import { AddToCartButton } from "~/components/product/add-to-cart-button";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;

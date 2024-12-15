@@ -8,7 +8,7 @@ import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton } from "~/modules/add-to-cart-button";
+import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import {
   ProductMedia,
   type ProductMediaProps,
