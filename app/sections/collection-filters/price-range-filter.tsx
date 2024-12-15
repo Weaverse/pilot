@@ -25,7 +25,6 @@ export function PriceRangeFilter({
   let [maxPrice, setMaxPrice] = useState(max);
 
   function handleFilter() {
-    let currentSearchString = params.toString();
     let paramsClone = new URLSearchParams(params);
     if (minPrice === undefined && maxPrice === undefined) {
       paramsClone.delete(`${FILTER_URL_PREFIX}price`);
@@ -36,8 +35,7 @@ export function PriceRangeFilter({
       };
       paramsClone = filterInputToParams({ price }, params);
     }
-    let newSearchString = paramsClone.toString();
-    if (currentSearchString !== newSearchString) {
+    if (params.toString() !== paramsClone.toString()) {
       navigate(`${location.pathname}?${paramsClone.toString()}`, {
         preventScrollReset: true,
       });
