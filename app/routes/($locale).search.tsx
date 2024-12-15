@@ -14,7 +14,7 @@ import { seoPayload } from "~/lib/seo.server";
 import { Heading, PageHeader, Section, Text } from "~/modules/text";
 import { Grid } from "~/modules/grid";
 import { Input } from "~/modules/input";
-import { ProductCard } from "~/modules/product-card";
+import { ProductCard } from "~/components/product/product-card";
 import { ProductSwimlane } from "~/modules/product-swimlane";
 import {
   type FeaturedData,

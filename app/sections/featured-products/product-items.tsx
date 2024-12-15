@@ -5,7 +5,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { ProductCard } from "~/modules/product-card";
+import { ProductCard } from "~/components/product/product-card";
 import { Swimlane } from "~/components/swimlane";
 import type { FeaturedProductsLoaderData } from ".";
 

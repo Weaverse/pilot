@@ -24,7 +24,7 @@ interface QuickViewData {
   storeDomain: string;
 }
 
-export function QuickView({ data }: { data: QuickViewData }) {
+export function QuickShop({ data }: { data: QuickViewData }) {
   let themeSettings = useThemeSettings();
   let { product, variants: _variants, storeDomain } = data || {};
   let firstVariant = product?.variants?.nodes?.[0];
@@ -125,7 +125,7 @@ export function QuickView({ data }: { data: QuickViewData }) {
   );
 }
 
-export function QuickViewTrigger({ productHandle }: { productHandle: string }) {
+export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
   let [open, setOpen] = useState(false);
   let { load, data, state } = useFetcher<ProductData>();
 
@@ -161,7 +161,7 @@ export function QuickViewTrigger({ productHandle }: { productHandle: string }) {
             </div>
           </div>
         ) : (
-          <QuickView data={data as QuickViewData} />
+          <QuickShop data={data as QuickViewData} />
         )}
       </ModalContent>
     </Modal>
