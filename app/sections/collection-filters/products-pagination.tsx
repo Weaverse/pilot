@@ -11,9 +11,9 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import Link from "~/components/link";
-import { getImageLoadingPriority } from "~/lib/const";
-import { getAppliedFilterLink, type AppliedFilter } from "~/lib/filter";
 import { ProductCard } from "~/components/product/product-card";
+import { getImageLoadingPriority } from "~/lib/const";
+import { type AppliedFilter, getAppliedFilterLink } from "~/lib/filter";
 
 export function ProductsPagination({
   gridSizeDesktop,
