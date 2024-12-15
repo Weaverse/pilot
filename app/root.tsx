@@ -35,17 +35,17 @@ import {
 import type { CSSProperties } from "react";
 import type { ColorsConfigsQuery, LayoutQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
+import { CustomAnalytics } from "~/components/custom-analytics";
 import { seoPayload } from "~/lib/seo.server";
-import { CustomAnalytics } from "~/modules/custom-analytics";
 import { GlobalLoading } from "~/modules/global-loading";
 import { Layout as PageLayout } from "~/modules/layout";
 import { TooltipProvider } from "./components/tooltip";
 import { COLORS_CONFIGS_QUERY } from "./data/queries";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
-import { NotFound } from "./modules/not-found";
-import { GlobalStyle } from "./weaverse/style";
 import { GenericError } from "./modules/generic-error";
+import { NotFound } from "./modules/not-found";
 import styles from "./styles/app.css?url";
+import { GlobalStyle } from "./weaverse/style";
 
 export type RootLoader = typeof loader;
 
