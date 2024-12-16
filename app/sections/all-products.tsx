@@ -4,6 +4,7 @@ import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
 import type { AllProductsQuery } from "storefrontapi.generated";
+import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
@@ -21,6 +22,7 @@ let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
 
   return (
     <Section ref={ref} {...rest}>
+      <BreadCrumb page={heading} className="justify-center mb-4" />
       <h4 className="mb-8 lg:mb-20 font-medium text-center">{heading}</h4>
       <Pagination connection={products}>
         {({

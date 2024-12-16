@@ -57,7 +57,6 @@ function PredictiveSearch() {
               onClear={fetchResults}
               placeholder="Enter a keyword"
               ref={inputRef}
-              className="rounded"
               autoComplete="off"
               prefixElement={
                 <MagnifyingGlass className="h-5 w-5 shrink-0 text-gray-500" />
