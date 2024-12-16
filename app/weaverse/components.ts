@@ -39,7 +39,6 @@ import * as OurTeam from "~/sections/our-team";
 import * as OurTeamMembers from "~/sections/our-team/team-members";
 import * as Page from "~/sections/page";
 import * as ProductInformation from "~/sections/product-information";
-import * as ProductList from "~/sections/product-list";
 import * as PromotionGrid from "~/sections/promotion-grid";
 import * as PromotionGridButtons from "~/sections/promotion-grid/buttons";
 import * as PromotionGridItem from "~/sections/promotion-grid/item";
@@ -112,6 +111,5 @@ export let components: HydrogenComponent[] = [
   OurTeamMembers,
   SlideShow,
   SlideShowSlide,
-  ProductList,
   Spacer,
 ];

@@ -1,4 +1,5 @@
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
+import type { FeaturedItemsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import {
   FEATURED_COLLECTION_FRAGMENT,
@@ -11,9 +12,9 @@ export async function loader({ context: { storefront } }: LoaderFunctionArgs) {
 
 export async function getFeaturedData(
   storefront: LoaderFunctionArgs["context"]["storefront"],
-  variables: { pageBy?: number } = {}
+  variables: { pageBy?: number } = {},
 ) {
-  const data = await storefront.query(FEATURED_ITEMS_QUERY, {
+  let data = await storefront.query<FeaturedItemsQuery>(FEATURED_ITEMS_QUERY, {
     variables: {
       pageBy: 12,
       country: storefront.i18n.country,
@@ -29,7 +30,7 @@ export async function getFeaturedData(
 
 export type FeaturedData = Awaited<ReturnType<typeof getFeaturedData>>;
 
-export const FEATURED_ITEMS_QUERY = `#graphql
+const FEATURED_ITEMS_QUERY = `#graphql
   query FeaturedItems(
     $country: CountryCode
     $language: LanguageCode

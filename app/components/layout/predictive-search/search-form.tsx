@@ -1,9 +1,25 @@
-import { useFetcher, useParams } from "@remix-run/react";
-import { useEffect, useRef } from "react";
-import type {
-  NormalizedPredictiveSearchResults,
-  SearchFromProps,
-} from "~/types/predictive-search";
+import { type FormProps, useFetcher, useParams } from "@remix-run/react";
+import {
+  type MutableRefObject,
+  type ReactNode,
+  useEffect,
+  useRef,
+} from "react";
+import type { NormalizedPredictiveSearchResults } from "~/types/predictive-search";
+
+type ChildrenRenderProps = {
+  fetchResults: (event: string) => void;
+  fetcher: ReturnType<typeof useFetcher<NormalizedPredictiveSearchResults>>;
+  inputRef: MutableRefObject<HTMLInputElement | null>;
+};
+
+type SearchFromProps = {
+  action?: FormProps["action"];
+  method?: FormProps["method"];
+  className?: string;
+  children: (passedProps: ChildrenRenderProps) => ReactNode;
+  [key: string]: unknown;
+};
 
 /**
  *  Search form component that posts search requests to the `/search` route
@@ -19,14 +35,13 @@ export function PredictiveSearchForm({
   let fetcher = useFetcher<NormalizedPredictiveSearchResults>();
   let inputRef = useRef<HTMLInputElement | null>(null);
 
-  function fetchResults(event: React.ChangeEvent<HTMLInputElement>) {
+  function fetchResults(searchTerm: string) {
     let searchAction = action ?? "/api/predictive-search";
     let localizedAction = params.locale
       ? `/${params.locale}${searchAction}`
       : searchAction;
-    let newSearchTerm = event.target.value || "";
     fetcher.submit(
-      { q: newSearchTerm, limit: "6" },
+      { q: searchTerm, limit: "6" },
       { method, action: localizedAction },
     );
   }

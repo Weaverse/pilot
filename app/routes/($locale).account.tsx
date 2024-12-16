@@ -14,11 +14,12 @@ import { Suspense } from "react";
 import { AccountDetails } from "~/components/account/account-details";
 import { AccountAddressBook } from "~/components/account/address-book";
 import { AccountOrderHistory } from "~/components/account/orders";
+import { ProductCard } from "~/components/product/product-card";
+import { Swimlane } from "~/components/swimlane";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
 import { Modal } from "~/modules/modal";
-import { ProductSwimlane } from "~/modules/product-swimlane";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
@@ -27,9 +28,9 @@ import {
 
 export let headers = routeHeaders;
 
-export async function loader({ request, context, params }: LoaderFunctionArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   let { data, errors } = await context.customerAccount.query(
-    CUSTOMER_DETAILS_QUERY
+    CUSTOMER_DETAILS_QUERY,
   );
 
   /**
@@ -40,20 +41,12 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
   }
 
   let customer = data?.customer;
-
   let heading = customer ? "My Account" : "Account Details";
+  let featuredData = getFeaturedData(context.storefront);
 
   return defer(
-    {
-      customer,
-      heading,
-      featuredDataPromise: getFeaturedData(context.storefront),
-    },
-    {
-      headers: {
-        "Cache-Control": CACHE_NONE,
-      },
-    }
+    { customer, heading, featuredData },
+    { headers: { "Cache-Control": CACHE_NONE } },
   );
 }
 
@@ -87,11 +80,11 @@ export default function Authenticated() {
 
 interface AccountType {
   customer: CustomerDetailsFragment;
-  featuredDataPromise: Promise<FeaturedData>;
+  featuredData: Promise<FeaturedData>;
   heading: string;
 }
 
-function Account({ customer, heading, featuredDataPromise }: AccountType) {
+function Account({ customer, heading, featuredData }: AccountType) {
   let orders = flattenConnection(customer.orders);
   let addresses = flattenConnection(customer.addresses);
 
@@ -115,10 +108,23 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
       {!orders.length && (
         <Suspense>
           <Await
-            resolve={featuredDataPromise}
+            resolve={featuredData}
             errorElement="There was a problem loading featured products."
           >
-            {(data) => <ProductSwimlane products={data.featuredProducts} />}
+            {({ featuredProducts }) => (
+              <div className="space-y-8 pt-20">
+                <h5>Featured products</h5>
+                <Swimlane>
+                  {featuredProducts.nodes.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      className="snap-start w-80"
+                    />
+                  ))}
+                </Swimlane>
+              </div>
+            )}
           </Await>
         </Suspense>
       )}

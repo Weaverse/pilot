@@ -1,14 +1,8 @@
-import type { FormProps, useFetcher } from "@remix-run/react";
 import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,
   PredictiveProductFragment,
 } from "storefrontapi.generated";
-
-export type UseSearchReturn = NormalizedPredictiveSearch & {
-  searchInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  searchTerm: React.MutableRefObject<string>;
-};
 
 type PredictiveSearchResultItemImage =
   | PredictiveCollectionFragment["image"]
@@ -32,7 +26,7 @@ export type NormalizedPredictiveSearchResults = Array<
 >;
 
 export type NormalizedPredictiveSearchResultItem = {
-  __typename: string | undefined;
+  __typename?: "SearchQuerySuggestion" | "Product" | "Article";
   handle: string;
   id: string;
   image?: PredictiveSearchResultItemImage;
@@ -42,32 +36,4 @@ export type NormalizedPredictiveSearchResultItem = {
   title: string;
   vendor: string;
   url: string;
-};
-
-export type SearchResultTypeProps = {
-  goToSearchResult: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-  items?: NormalizedPredictiveSearchResultItem[];
-  searchTerm: UseSearchReturn["searchTerm"];
-  type: NormalizedPredictiveSearchResults[number]["type"];
-};
-
-export type SearchResultItemProps = Pick<
-  SearchResultTypeProps,
-  "goToSearchResult"
-> & {
-  item: NormalizedPredictiveSearchResultItem;
-};
-
-type ChildrenRenderProps = {
-  fetchResults: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  fetcher: ReturnType<typeof useFetcher<NormalizedPredictiveSearchResults>>;
-  inputRef: React.MutableRefObject<HTMLInputElement | null>;
-};
-
-export type SearchFromProps = {
-  action?: FormProps["action"];
-  method?: FormProps["method"];
-  className?: string;
-  children: (passedProps: ChildrenRenderProps) => React.ReactNode;
-  [key: string]: unknown;
 };
