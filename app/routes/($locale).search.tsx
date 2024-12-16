@@ -9,7 +9,7 @@ import {
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
 import { clsx } from "clsx";
-import { Fragment, Suspense, useRef } from "react";
+import { Fragment, Suspense, useEffect, useState } from "react";
 import type { PaginatedProductsSearchQuery } from "storefrontapi.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
@@ -92,8 +92,12 @@ const POPULAR_SEARCHES = ["French Linen", "Shirt", "Cotton"];
 export default function Search() {
   let { searchTerm, products, noResultRecommendations } =
     useLoaderData<typeof loader>();
-  let inputRef = useRef<HTMLInputElement>(null);
+  let [searchKey, setSearchKey] = useState(searchTerm);
   let noResults = products?.nodes?.length === 0;
+
+  useEffect(() => {
+    setSearchKey(searchTerm);
+  }, [searchTerm]);
 
   return (
     <Section width="fixed" verticalPadding="medium">
@@ -121,9 +125,9 @@ export default function Search() {
       >
         <MagnifyingGlass className="w-5 h-5 shrink-0 text-gray-500" />
         <input
-          ref={inputRef}
           className="focus-visible:outline-none w-full h-full py-4"
-          defaultValue={searchTerm || ""}
+          value={searchKey}
+          onChange={(e) => setSearchKey(e.target.value)}
           name="q"
           placeholder="Search our store..."
           type="search"
@@ -131,11 +135,7 @@ export default function Search() {
         <button
           type="button"
           className="shrink-0 text-gray-500 p-1"
-          onClick={() => {
-            if (inputRef.current) {
-              inputRef.current.value = "";
-            }
-          }}
+          onClick={() => setSearchKey("")}
         >
           <X className="w-5 h-5" />
         </button>
