@@ -4,11 +4,6 @@ import type {
   PredictiveProductFragment,
 } from "storefrontapi.generated";
 
-export type UseSearchReturn = NormalizedPredictiveSearch & {
-  searchInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  searchTerm: React.MutableRefObject<string>;
-};
-
 type PredictiveSearchResultItemImage =
   | PredictiveCollectionFragment["image"]
   | PredictiveArticleFragment["image"]
@@ -31,7 +26,7 @@ export type NormalizedPredictiveSearchResults = Array<
 >;
 
 export type NormalizedPredictiveSearchResultItem = {
-  __typename: string | undefined;
+  __typename?: "SearchQuerySuggestion" | "Product" | "Article";
   handle: string;
   id: string;
   image?: PredictiveSearchResultItemImage;

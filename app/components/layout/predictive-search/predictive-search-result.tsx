@@ -10,16 +10,11 @@ import { CompareAtPrice } from "~/components/compare-at-price";
 import { getImageAspectRatio, isDiscounted } from "~/lib/utils";
 
 type SearchResultTypeProps = {
-  goToSearchResult: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   items?: NormalizedPredictiveSearchResultItem[];
   type: NormalizedPredictiveSearchResults[number]["type"];
 };
 
-export function PredictiveSearchResult({
-  goToSearchResult,
-  items,
-  type,
-}: SearchResultTypeProps) {
+export function PredictiveSearchResult({ items, type }: SearchResultTypeProps) {
   let isSuggestions = type === "queries";
 
   return (
@@ -36,11 +31,7 @@ export function PredictiveSearchResult({
           )}
         >
           {items.map((item: NormalizedPredictiveSearchResultItem) => (
-            <SearchResultItem
-              goToSearchResult={goToSearchResult}
-              item={item}
-              key={item.id}
-            />
+            <SearchResultItem item={item} key={item.id} />
           ))}
         </ul>
       ) : (
@@ -52,12 +43,11 @@ export function PredictiveSearchResult({
   );
 }
 
-type SearchResultItemProps = Pick<SearchResultTypeProps, "goToSearchResult"> & {
+type SearchResultItemProps = {
   item: NormalizedPredictiveSearchResultItem;
 };
 
 function SearchResultItem({
-  goToSearchResult,
   item: {
     id,
     __typename,
@@ -74,8 +64,11 @@ function SearchResultItem({
     <li key={id}>
       <Link
         className="flex gap-4"
-        onClick={goToSearchResult}
-        to={url}
+        to={
+          __typename === "SearchQuerySuggestion" || !url
+            ? `/search?q=${id}`
+            : url
+        }
         data-type={__typename}
       >
         {__typename === "Product" && (
