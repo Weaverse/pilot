@@ -1,8 +1,7 @@
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { cn } from "~/lib/cn";
-import { Input } from "~/modules/input";
 import { PredictiveSearchResults } from "./predictive-search-results";
 import { PredictiveSearchForm } from "./search-form";
 
@@ -36,37 +35,40 @@ export function PredictiveSearchButton() {
           <VisuallyHidden.Root asChild>
             <Dialog.Title>Predictive search</Dialog.Title>
           </VisuallyHidden.Root>
-          <PredictiveSearch />
+          <div className="relative pt-[--topbar-height]">
+            <PredictiveSearchForm>
+              {({ fetchResults, inputRef }) => (
+                <div className="flex items-center gap-3 w-[560px] max-w-[90vw] mx-auto px-3 my-6 border border-line-subtle">
+                  <MagnifyingGlass className="h-5 w-5 shrink-0 text-gray-500" />
+                  <input
+                    name="q"
+                    type="search"
+                    onChange={(e) => fetchResults(e.target.value)}
+                    onFocus={(e) => fetchResults(e.target.value)}
+                    placeholder="Enter a keyword"
+                    ref={inputRef}
+                    autoComplete="off"
+                    className="focus-visible:outline-none w-full h-full py-4"
+                  />
+                  <button
+                    type="button"
+                    className="shrink-0 text-gray-500 p-1"
+                    onClick={() => {
+                      if (inputRef.current) {
+                        inputRef.current.value = "";
+                        fetchResults("");
+                      }
+                    }}
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+            </PredictiveSearchForm>
+            <PredictiveSearchResults />
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
-  );
-}
-
-function PredictiveSearch() {
-  return (
-    <div className="relative pt-[--topbar-height]">
-      <PredictiveSearchForm>
-        {({ fetchResults, inputRef }) => (
-          <div className="mx-auto w-full max-w-[560px] p-6">
-            <Input
-              name="q"
-              type="search"
-              onChange={fetchResults}
-              onFocus={fetchResults}
-              onClear={fetchResults}
-              placeholder="Enter a keyword"
-              ref={inputRef}
-              autoComplete="off"
-              prefixElement={
-                <MagnifyingGlass className="h-5 w-5 shrink-0 text-gray-500" />
-              }
-              autoFocus={true}
-            />
-          </div>
-        )}
-      </PredictiveSearchForm>
-      <PredictiveSearchResults />
-    </div>
   );
 }

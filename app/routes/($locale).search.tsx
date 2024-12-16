@@ -117,7 +117,7 @@ export default function Search() {
       </div>
       <Form
         method="get"
-        className="relative flex items-center gap-3 w-[700px] max-w-[90vw] mx-auto mt-6 border border-line px-3"
+        className="flex items-center gap-3 w-[700px] max-w-[90vw] mx-auto mt-6 border border-line px-3"
       >
         <MagnifyingGlass className="w-5 h-5 shrink-0 text-gray-500" />
         <input

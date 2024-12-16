@@ -57,17 +57,3 @@ export type SearchResultItemProps = Pick<
 > & {
   item: NormalizedPredictiveSearchResultItem;
 };
-
-type ChildrenRenderProps = {
-  fetchResults: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  fetcher: ReturnType<typeof useFetcher<NormalizedPredictiveSearchResults>>;
-  inputRef: React.MutableRefObject<HTMLInputElement | null>;
-};
-
-export type SearchFromProps = {
-  action?: FormProps["action"];
-  method?: FormProps["method"];
-  className?: string;
-  children: (passedProps: ChildrenRenderProps) => React.ReactNode;
-  [key: string]: unknown;
-};
