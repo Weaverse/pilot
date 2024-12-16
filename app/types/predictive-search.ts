@@ -1,4 +1,3 @@
-import type { FormProps, useFetcher } from "@remix-run/react";
 import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,
@@ -42,18 +41,4 @@ export type NormalizedPredictiveSearchResultItem = {
   title: string;
   vendor: string;
   url: string;
-};
-
-export type SearchResultTypeProps = {
-  goToSearchResult: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-  items?: NormalizedPredictiveSearchResultItem[];
-  searchTerm: UseSearchReturn["searchTerm"];
-  type: NormalizedPredictiveSearchResults[number]["type"];
-};
-
-export type SearchResultItemProps = Pick<
-  SearchResultTypeProps,
-  "goToSearchResult"
-> & {
-  item: NormalizedPredictiveSearchResultItem;
 };
