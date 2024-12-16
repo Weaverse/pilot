@@ -1,13 +1,13 @@
 import { useLoaderData } from "@remix-run/react";
+import { Image } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
-import Link from "~/components/link";
+import { BreadCrumb } from "~/components/breadcrumb";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Filters } from "./filters";
 import { ProductsPagination } from "./products-pagination";
 import { ToolsBar } from "./tools-bar";
-import { Image } from "@shopify/hydrogen";
 
 export interface CollectionFiltersData {
   showBreadcrumb: boolean;
@@ -79,13 +79,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
         <Section ref={sectionRef} {...rest} overflow="unset">
           <div className="py-10">
             {showBreadcrumb && (
-              <div className="flex items-center gap-2 text-body-subtle mb-2.5">
-                <Link to="/" className="hover:underline underline-offset-4">
-                  Home
-                </Link>
-                <span>/</span>
-                <span>{collection.title}</span>
-              </div>
+              <BreadCrumb page={collection.title} className="mb-2.5" />
             )}
             <h3>{collection.title}</h3>
             {showDescription && collection.description && (
