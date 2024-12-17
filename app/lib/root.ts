@@ -131,8 +131,8 @@ async function getColorsConfigs(context: AppLoadContext) {
   return metaobjects.nodes.map(({ id, name, value }) => {
     return {
       id,
-      name: name.value,
-      value: value.value,
+      name: name?.value,
+      value: value?.value,
     };
   }) as ColorSwatch[];
 }

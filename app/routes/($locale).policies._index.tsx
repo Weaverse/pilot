@@ -7,19 +7,23 @@ import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
 import { seoPayload } from "~/lib/seo.server";
 import type { NonNullableFields } from "~/lib/type";
-import { Heading, PageHeader, Section } from "~/modules/text";
 import { Link } from "~/components/link";
+import type { PoliciesIndexQuery } from "storefrontapi.generated";
+import { BreadCrumb } from "~/components/breadcrumb";
+import { Section } from "~/components/section";
+import { FileText } from "@phosphor-icons/react";
 
-export const headers = routeHeaders;
+export let headers = routeHeaders;
 
 export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  const data = await storefront.query(POLICIES_QUERY);
+  let data = await storefront.query<PoliciesIndexQuery>(POLICIES_QUERY);
 
   invariant(data, "No data returned from Shopify API");
-  const policies = Object.values(
+
+  let policies = Object.values(
     data.shop as NonNullableFields<typeof data.shop>,
   ).filter(Boolean);
 
@@ -27,7 +31,7 @@ export async function loader({
     throw new Response("Not found", { status: 404 });
   }
 
-  const seo = seoPayload.policies({ policies, url: request.url });
+  let seo = seoPayload.policies({ policies, url: request.url });
 
   return json({
     policies,
@@ -35,28 +39,37 @@ export async function loader({
   });
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+export let meta: MetaFunction<typeof loader> = ({ data }) => {
+  return getSeoMeta(data.seo as SeoConfig);
 };
 
 export default function Policies() {
-  const { policies } = useLoaderData<typeof loader>();
+  let { policies } = useLoaderData<typeof loader>();
 
   return (
-    <>
-      <PageHeader heading="Policies" />
-      <Section padding="x" className="mb-24">
+    <Section width="fixed" verticalPadding="medium">
+      <BreadCrumb page="Policies" className="mb-4" />
+      <h4 className="mb-8 lg:mb-20 font-medium">Policies</h4>
+      <div className="flex flex-col gap-3">
         {policies.map((policy) => {
-          return (
-            policy && (
-              <Heading className="font-normal text-2xl" key={policy.id}>
-                <Link to={`/policies/${policy.handle}`}>{policy.title}</Link>
-              </Heading>
-            )
-          );
+          if (policy) {
+            return (
+              policy && (
+                <Link
+                  variant="underline"
+                  className="w-fit gap-2"
+                  to={`/policies/${policy.handle}`}
+                >
+                  <FileText className="w-5 h-5" />
+                  <span>{policy.title}</span>
+                </Link>
+              )
+            );
+          }
+          return null;
         })}
-      </Section>
-    </>
+      </div>
+    </Section>
   );
 }
 

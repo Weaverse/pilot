@@ -30,7 +30,10 @@ export async function loader({
 }: LoaderFunctionArgs) {
   let { searchParams } = new URL(request.url);
   let searchTerm = searchParams.get("q");
-  let products: PaginatedProductsSearchQuery["products"] = null;
+  let products: PaginatedProductsSearchQuery["products"] = {
+    nodes: [],
+    pageInfo: null,
+  };
 
   if (searchTerm) {
     let variables = getPaginationVariables(request, {
@@ -51,7 +54,7 @@ export async function loader({
     products = data.products;
   }
 
-  let noResults = products?.nodes?.length === 0;
+  let hasResults = products?.nodes?.length > 0;
 
   return defer({
     seo: seoPayload.collection({
@@ -64,11 +67,11 @@ export async function loader({
         description: "Search results",
         seo: {
           title: "Search",
-          description: noResults
-            ? searchTerm
+          description: hasResults
+            ? `Showing ${products.nodes.length} search results for "${searchTerm}"`
+            : searchTerm
               ? `No results found for "${searchTerm}"`
-              : "Search our store"
-            : `Showing ${products.nodes.length} search results for "${searchTerm}"`,
+              : "Search our store",
         },
         metafields: [],
         products,
@@ -77,9 +80,9 @@ export async function loader({
     }),
     searchTerm,
     products,
-    noResultRecommendations: noResults
-      ? getNoResultRecommendations(storefront)
-      : Promise.resolve(null),
+    recommendations: hasResults
+      ? Promise.resolve(null)
+      : getRecommendations(storefront),
   });
 }
 
@@ -90,10 +93,10 @@ export let meta = ({ matches }: MetaArgs<typeof loader>) => {
 const POPULAR_SEARCHES = ["French Linen", "Shirt", "Cotton"];
 
 export default function Search() {
-  let { searchTerm, products, noResultRecommendations } =
+  let { searchTerm, products, recommendations } =
     useLoaderData<typeof loader>();
   let [searchKey, setSearchKey] = useState(searchTerm);
-  let noResults = products?.nodes?.length === 0;
+  let hasResults = products?.nodes?.length > 0;
 
   useEffect(() => {
     setSearchKey(searchTerm);
@@ -140,12 +143,7 @@ export default function Search() {
           <X className="w-5 h-5" />
         </button>
       </Form>
-      {noResults ? (
-        <NoResults
-          searchTerm={searchTerm}
-          recommendations={noResultRecommendations}
-        />
-      ) : (
+      {hasResults ? (
         <Pagination connection={products}>
           {({
             nodes,
@@ -189,6 +187,8 @@ export default function Search() {
             );
           }}
         </Pagination>
+      ) : (
+        <NoResults searchTerm={searchTerm} recommendations={recommendations} />
       )}
       <Analytics.SearchView
         data={{ searchTerm: searchTerm || "", searchResults: products }}
@@ -216,14 +216,14 @@ function NoResults({
           errorElement="There was a problem loading related products"
           resolve={recommendations}
         >
-          {(result) => {
-            if (!result) {
+          {(data) => {
+            if (!data) {
               return null;
             }
-            let { featuredProducts } = result;
+            let { featuredProducts } = data;
             return (
-              <div className="space-y-8 pt-10">
-                <h4>Trending Products</h4>
+              <div className="space-y-6 pt-20">
+                <h5>Trending Products</h5>
                 <Swimlane>
                   {featuredProducts.nodes.map((product) => (
                     <ProductCard
@@ -242,13 +242,13 @@ function NoResults({
   );
 }
 
-export function getNoResultRecommendations(
+function getRecommendations(
   storefront: LoaderFunctionArgs["context"]["storefront"],
 ) {
   return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }
 
-let SEARCH_QUERY = `#graphql
+const SEARCH_QUERY = `#graphql
   query PaginatedProductsSearch(
     $country: CountryCode
     $endCursor: String

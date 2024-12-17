@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 
-export async function loader({ params, request, context }: LoaderFunctionArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   return context.customerAccount.login();
 }

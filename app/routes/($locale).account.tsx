@@ -9,7 +9,10 @@ import {
 } from "@remix-run/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
-import type { CustomerDetailsFragment } from "customer-accountapi.generated";
+import type {
+  CustomerDetailsFragment,
+  CustomerDetailsQuery,
+} from "customer-accountapi.generated";
 import { Suspense } from "react";
 import { AccountDetails } from "~/components/account/account-details";
 import { AccountAddressBook } from "~/components/account/address-book";
@@ -29,9 +32,10 @@ import {
 export let headers = routeHeaders;
 
 export async function loader({ context }: LoaderFunctionArgs) {
-  let { data, errors } = await context.customerAccount.query(
-    CUSTOMER_DETAILS_QUERY,
-  );
+  let { data, errors } =
+    await context.customerAccount.query<CustomerDetailsQuery>(
+      CUSTOMER_DETAILS_QUERY,
+    );
 
   /**
    * If the customer failed to load, we assume their access token is invalid.
