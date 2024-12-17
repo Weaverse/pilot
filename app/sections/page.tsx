@@ -1,43 +1,37 @@
 import { useLoaderData } from "@remix-run/react";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { PageDetailsQuery } from "storefrontapi.generated";
-import { PageHeader } from "~/modules/text";
+import { Link } from "~/components/link";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-interface PageProps extends HydrogenComponentProps {
-  paddingTop: number;
-  paddingBottom: number;
-}
+interface PageProps extends SectionProps {}
 
 let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
   let { page } = useLoaderData<PageDetailsQuery>();
-  let { paddingTop, paddingBottom, ...rest } = props;
 
   if (page) {
     return (
-      <section ref={ref} {...rest}>
-        <div
-          className="grid w-full gap-8 px-6 md:px-8 lg:px-12 justify-items-start"
-          style={{
-            paddingTop: `${paddingTop}px`,
-            paddingBottom: `${paddingBottom}px`,
-          }}
-        >
-          <PageHeader heading={page.title}>
-            <div
-              suppressHydrationWarning
-              dangerouslySetInnerHTML={{ __html: page.body }}
-              className="prose dark:prose-invert"
-            />
-          </PageHeader>
+      <Section ref={ref} {...props}>
+        <div className="flex items-center justify-center gap-2 text-body-subtle mb-4">
+          <Link to="/" className="hover:underline underline-offset-4">
+            Home
+          </Link>
+          <span>/</span>
+          <span>pages</span>
+          <span>/</span>
+          <span>{page.title}</span>
         </div>
-      </section>
+        <h1 className="h2 text-center mb-8 md:mb-16">{page.title}</h1>
+        <div
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: page.body }}
+          className="prose max-w-3xl mx-auto border-t border-line-subtle"
+        />
+      </Section>
     );
   }
-  return <section ref={ref} {...rest} />;
+  return <Section ref={ref} {...props} />;
 });
 
 export default Page;
@@ -51,33 +45,10 @@ export let schema: HydrogenComponentSchema = {
   },
   inspector: [
     {
-      group: "Page",
-      inputs: [
-        {
-          type: "range",
-          label: "Top padding",
-          name: "paddingTop",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 32,
-        },
-        {
-          type: "range",
-          label: "Bottom padding",
-          name: "paddingBottom",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 32,
-        },
-      ],
+      group: "Layout",
+      inputs: layoutInputs.filter(
+        (input) => input.name !== "gap" && input.name !== "borderRadius",
+      ),
     },
   ],
 };
