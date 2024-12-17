@@ -1,5 +1,5 @@
 import Link from "~/components/link";
-import { PageHeader, Text } from "~/modules/text";
+import { Section } from "~/components/section";
 
 export function GenericError({
   error,
@@ -17,31 +17,32 @@ export function GenericError({
   }
 
   return (
-    <>
-      <PageHeader heading={heading} as="div">
-        <Text width="narrow" as="p">
-          {description}
-        </Text>
-        {error?.stack && (
-          <pre
-            style={{
-              padding: "2rem",
-              background: "hsla(10, 50%, 50%, 0.1)",
-              color: "red",
-              overflow: "auto",
-              maxWidth: "100%",
-            }}
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: addLinksToStackTrace(error.stack),
-            }}
-          />
-        )}
-        <Link variant="outline" to="/">
-          Take me to the home page
-        </Link>
-      </PageHeader>
-    </>
+    <Section
+      width="fixed"
+      verticalPadding="large"
+      containerClassName="space-y-4 flex justify-center items-center flex-col"
+    >
+      <h4 className="font-medium">{heading}</h4>
+      <p>{description}</p>
+      {error?.stack && (
+        <pre
+          style={{
+            padding: "2rem",
+            background: "hsla(10, 50%, 50%, 0.1)",
+            color: "red",
+            overflow: "auto",
+            maxWidth: "100%",
+          }}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: addLinksToStackTrace(error.stack),
+          }}
+        />
+      )}
+      <Link variant="outline" to="/" className="w-fit">
+        Take me to the home page
+      </Link>
+    </Section>
   );
 }
 
