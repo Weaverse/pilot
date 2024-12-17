@@ -7,16 +7,16 @@ import type { ProductQuery } from "storefrontapi.generated";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { getExcerpt, isDiscounted, isNewArrival } from "~/lib/utils";
-import { AddToCartButton } from "~/modules/add-to-cart-button";
+import { isDiscounted, isNewArrival } from "~/lib/utils";
+import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import {
   ProductMedia,
   type ProductMediaProps,
-} from "~/modules/product-form/product-media";
-import { Quantity } from "~/modules/product-form/quantity";
-import { ProductVariants } from "~/modules/product-form/variants";
+} from "~/components/product/product-media";
+import { Quantity } from "~/components/product/quantity";
+import { ProductVariants } from "~/components/product/variants";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
-import { ProductDetail } from "./product-detail";
+import { ProductDetails } from "./product-details";
 
 interface ProductInformationProps
   extends SectionProps,
@@ -36,17 +36,16 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
     let {
       product,
-      shop,
       variants: _variants,
       storeDomain,
     } = useLoaderData<typeof productLoader>();
     let variants = _variants?.product?.variants;
     let selectedVariantOptimistic = useOptimisticVariant(
       product?.selectedVariant || variants?.nodes?.[0],
-      variants,
+      variants
     );
     let [selectedVariant, setSelectedVariant] = useState<any>(
-      selectedVariantOptimistic,
+      selectedVariantOptimistic
     );
 
     let {
@@ -72,8 +71,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let atcText = selectedVariant?.availableForSale
       ? addToCartText
       : selectedVariant?.quantityAvailable === -1
-        ? unavailableText
-        : soldOutText;
+      ? unavailableText
+      : soldOutText;
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
@@ -97,13 +96,12 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       window.history.replaceState(
         {},
         "",
-        `${window.location.pathname}?${searchParams.toString()}`,
+        `${window.location.pathname}?${searchParams.toString()}`
       );
     }
 
     if (product && variants) {
-      let { title, vendor, summary, description } = product;
-      let { shippingPolicy, refundPolicy } = shop;
+      let { title, vendor, summary } = product;
       let discountedAmount =
         (selectedVariant?.compareAtPrice?.amount || 0) /
           selectedVariant?.price?.amount -
@@ -165,7 +163,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       />
                       {isDiscounted(
                         selectedVariant.price as MoneyV2,
-                        selectedVariant.compareAtPrice as MoneyV2,
+                        selectedVariant.compareAtPrice as MoneyV2
                       ) &&
                         showSalePrice && (
                           <CompareAtPrice
@@ -217,23 +215,10 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     storeDomain={storeDomain}
                   />
                 )}
-                <div className="grid py-4">
-                  <ProductDetail title="Description" content={description} />
-                  {showShippingPolicy && shippingPolicy?.body && (
-                    <ProductDetail
-                      title="Shipping"
-                      content={getExcerpt(shippingPolicy.body)}
-                      learnMore={`/policies/${shippingPolicy.handle}`}
-                    />
-                  )}
-                  {showRefundPolicy && refundPolicy?.body && (
-                    <ProductDetail
-                      title="Returns"
-                      content={getExcerpt(refundPolicy.body)}
-                      learnMore={`/policies/${refundPolicy.handle}`}
-                    />
-                  )}
-                </div>
+                <ProductDetails
+                  showShippingPolicy={showShippingPolicy}
+                  showRefundPolicy={showRefundPolicy}
+                />
               </div>
             </div>
           </div>
@@ -241,7 +226,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       );
     }
     return <div ref={ref} {...rest} />;
-  },
+  }
 );
 
 export default ProductInformation;

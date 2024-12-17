@@ -1,75 +1,73 @@
 import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import { forwardRef } from "react";
 import type { AllProductsQuery } from "storefrontapi.generated";
+import { BreadCrumb } from "~/components/breadcrumb";
+import Link from "~/components/link";
+import { ProductCard } from "~/components/product/product-card";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { getImageLoadingPriority } from "~/lib/const";
-import { Grid } from "~/modules/grid";
-import { ProductCard } from "~/modules/product-card";
-import { PageHeader, Section } from "~/modules/text";
 
-interface AllProductsProps extends HydrogenComponentProps {
+interface AllProductsProps extends SectionProps {
   heading: string;
   prevPageText: string;
   nextPageText: string;
-  paddingTop: number;
-  paddingBottom: number;
 }
 
 let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
-  let {
-    heading,
-    prevPageText,
-    nextPageText,
-    paddingTop,
-    paddingBottom,
-    ...rest
-  } = props;
+  let { heading, prevPageText, nextPageText, ...rest } = props;
   let { products } = useLoaderData<AllProductsQuery>();
 
   return (
-    <section ref={ref} {...rest}>
-      <div
-        style={{
-          paddingTop: `${paddingTop}px`,
-          paddingBottom: `${paddingBottom}px`,
+    <Section ref={ref} {...rest}>
+      <BreadCrumb page={heading} className="justify-center mb-4" />
+      <h4 className="mb-8 lg:mb-20 font-medium text-center">{heading}</h4>
+      <Pagination connection={products}>
+        {({
+          nodes,
+          isLoading,
+          nextPageUrl,
+          hasNextPage,
+          previousPageUrl,
+          hasPreviousPage,
+        }) => {
+          return (
+            <div className="flex w-full flex-col gap-8 items-center">
+              {hasPreviousPage && (
+                <Link
+                  to={previousPageUrl}
+                  variant="outline"
+                  className="mx-auto"
+                >
+                  {isLoading ? "Loading..." : prevPageText}
+                </Link>
+              )}
+              <div
+                className={clsx([
+                  "w-full gap-x-1.5 gap-y-8 lg:gap-y-10",
+                  "grid grid-cols-1 lg:grid-cols-4",
+                ])}
+              >
+                {nodes.map((product, idx) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    loading={getImageLoadingPriority(idx)}
+                  />
+                ))}
+              </div>
+              {hasNextPage && (
+                <Link to={nextPageUrl} variant="outline" className="mx-auto">
+                  {isLoading ? "Loading..." : nextPageText}
+                </Link>
+              )}
+            </div>
+          );
         }}
-      >
-        <PageHeader heading={heading} variant="allCollections" />
-        <Section>
-          <Pagination connection={products}>
-            {({ nodes, isLoading, NextLink, PreviousLink }) => {
-              let itemsMarkup = nodes.map((product, i) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  loading={getImageLoadingPriority(i)}
-                />
-              ));
-
-              return (
-                <>
-                  <div className="flex items-center justify-center mt-6">
-                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-line-subtle text-body w-full">
-                      {isLoading ? "Loading..." : prevPageText}
-                    </PreviousLink>
-                  </div>
-                  <Grid data-test="product-grid">{itemsMarkup}</Grid>
-                  <div className="flex items-center justify-center mt-6">
-                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-line-subtle text-body w-full">
-                      {isLoading ? "Loading..." : nextPageText}
-                    </NextLink>
-                  </div>
-                </>
-              );
-            }}
-          </Pagination>
-        </Section>
-      </div>
-    </section>
+      </Pagination>
+    </Section>
   );
 });
 
@@ -83,6 +81,17 @@ export let schema: HydrogenComponentSchema = {
     pages: ["ALL_PRODUCTS"],
   },
   inspector: [
+    {
+      group: "Layout",
+      inputs: [
+        ...layoutInputs.filter(
+          (inp) =>
+            inp.name !== "divider" &&
+            inp.name !== "borderRadius" &&
+            inp.name !== "gap",
+        ),
+      ],
+    },
     {
       group: "All products",
       inputs: [
@@ -106,30 +115,6 @@ export let schema: HydrogenComponentSchema = {
           label: "Next page text",
           defaultValue: "Next",
           placeholder: "Next",
-        },
-        {
-          type: "range",
-          label: "Top padding",
-          name: "paddingTop",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 32,
-        },
-        {
-          type: "range",
-          label: "Bottom padding",
-          name: "paddingBottom",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 32,
         },
       ],
     },

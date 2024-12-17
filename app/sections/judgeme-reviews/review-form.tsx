@@ -1,10 +1,10 @@
+import { Star } from "@phosphor-icons/react";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Button } from "~/components/button";
-import { IconStar, IconStarFilled } from "~/components/icons";
+import { StarRating } from "~/components/star-rating";
 import type { JudgemeReviewsData } from "~/lib/judgeme";
-import { StarRating } from "~/modules/star-rating";
 import type { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
 
 export function ReviewForm({
@@ -48,16 +48,14 @@ export function ReviewForm({
     <div
       className={clsx(
         "w-full flex flex-col gap-5",
-        judgemeReviews.reviews.length !== 0 && "lg:w-1/3 md:w-2/5",
+        judgemeReviews.reviews.length !== 0 && "lg:w-1/3 md:w-2/5"
       )}
     >
       {judgemeReviews.reviews.length !== 0 || !isFormVisible ? (
         <div
           className={clsx(
             "flex flex-col gap-4 bg-line-subtle p-6",
-            judgemeReviews.reviews.length === 0
-              ? "items-center"
-              : "items-start",
+            judgemeReviews.reviews.length === 0 ? "items-center" : "items-start"
           )}
         >
           <p className="uppercase font-bold text-lg mb-1.5">
@@ -92,20 +90,20 @@ export function ReviewForm({
         <div
           className={clsx(
             "bg-line-subtle p-6 w-full",
-            judgemeReviews.reviews.length === 0 && "flex justify-center",
+            judgemeReviews.reviews.length === 0 && "flex justify-center"
           )}
         >
           <div
             className={clsx(
               "w-full flex flex-col gap-4",
-              judgemeReviews.reviews.length === 0 && "lg:w-1/3 md:w-2/5",
+              judgemeReviews.reviews.length === 0 && "lg:w-1/3 md:w-2/5"
             )}
           >
             <div className="flex flex-col gap-6">
               <span
                 className={clsx(
                   "font-heading font-semibold text-xl uppercase",
-                  judgemeReviews.reviews.length === 0 && "text-center",
+                  judgemeReviews.reviews.length === 0 && "text-center"
                 )}
               >
                 WRITE YOUR REVIEW
@@ -122,12 +120,11 @@ export function ReviewForm({
                         onMouseEnter={() => setHover(ratingValue)}
                         onMouseLeave={() => setHover(0)}
                         aria-label={`Rate ${ratingValue} out of 5 stars`}
-                        role="button"
                       >
                         {ratingValue <= (hover || rating) ? (
-                          <IconStarFilled />
+                          <Star weight="fill" />
                         ) : (
-                          <IconStar />
+                          <Star />
                         )}
                       </div>
                     );
@@ -233,7 +230,7 @@ export function ReviewForm({
         <div
           className={clsx(
             "flex flex-col gap-6 p-6 bg-line-subtle",
-            judgemeReviews.reviews.length === 0 && "items-center",
+            judgemeReviews.reviews.length === 0 && "items-center"
           )}
           role="alert"
         >
@@ -246,7 +243,7 @@ export function ReviewForm({
               "flex items-center",
               judgemeReviews.reviews.length === 0
                 ? "justify-center"
-                : "justify-end",
+                : "justify-end"
             )}
           >
             <Button

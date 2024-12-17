@@ -44,6 +44,16 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
     publishedAt
     handle
     vendor
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
+    }
     variants(first: 10) {
       nodes {
         id
@@ -266,3 +276,32 @@ export const CART_QUERY_FRAGMENT = `#graphql
     }
   }
 ` as const;
+
+export const ORDER_CARD_FRAGMENT = `#graphql
+  fragment OrderCard on Order {
+    id
+    orderNumber
+    processedAt
+    financialStatus
+    fulfillmentStatus
+    currentTotalPrice {
+      amount
+      currencyCode
+    }
+    lineItems(first: 2) {
+      edges {
+        node {
+          variant {
+            image {
+              url
+              altText
+              height
+              width
+            }
+          }
+          title
+        }
+      }
+    }
+  }
+`;

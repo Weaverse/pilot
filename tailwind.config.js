@@ -16,21 +16,39 @@ export default {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
-        "slide-down-and-fade": {
-          from: { opacity: "0", transform: "translateY(-6px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
+        "slide-down": {
+          from: { height: 0 },
+          to: { height: "var(--slide-down-to)" },
+        },
+        "slide-up": {
+          from: { height: "var(--slide-up-from)" },
+          to: { height: 0 },
         },
         "slide-left-and-fade": {
-          from: { opacity: "0", transform: "translateX(6px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
+          from: {
+            opacity: 0,
+            transform: "translateX(var(--left-distance, 6px))",
+          },
+          to: { opacity: 1, transform: "translateX(0)" },
         },
-        "slide-up-and-fade": {
-          from: { opacity: "0", transform: "translateY(6px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
+        "slide-down-and-fade": {
+          from: {
+            opacity: 0,
+            transform: "translateY(var(--bottom-distance, 6px))",
+          },
+          to: { opacity: 1, transform: "translateY(0)" },
         },
-        "slide-right-and-fade": {
-          from: { opacity: "0", transform: "translateX(-6px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
+        "enter-from-left": {
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "enter-from-right": {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "enter-from-top": {
+          from: { transform: "translateY(-100%)" },
+          to: { transform: "translateY(0)" },
         },
         marquee: {
           from: { transform: "translateZ(0)" },
@@ -57,15 +75,21 @@ export default {
         spin: "spin .5s linear infinite",
         marquee: "marquee var(--marquee-duration, 15s) linear infinite",
         underline: "underline 400ms linear",
-        "fade-in": "fade-in 500ms ease-in forwards",
-        "slide-down-and-fade":
-          "slide-down-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "fade-in": "fade-in var(--fade-in-duration, .5s) ease-in forwards",
+        "slide-down":
+          "slide-down var(--slide-down-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
+        "slide-up":
+          "slide-up var(--slide-up-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
         "slide-left-and-fade":
-          "slide-left-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        "slide-up-and-fade":
-          "slide-up-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        "slide-right-and-fade":
-          "slide-right-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+          "slide-left-and-fade var(--slide-left-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
+        "slide-down-and-fade":
+          "slide-down-and-fade var(--slide-down-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
+        "enter-from-left":
+          "enter-from-left var(--enter-from-left-duration, .3s) ease-out forwards",
+        "enter-from-right":
+          "enter-from-right var(--enter-from-right-duration, .3s) ease-out forwards",
+        "enter-from-top":
+          "enter-from-top var(--enter-from-top-duration, .3s) ease-out forwards",
       },
       borderWidth: {
         6: "6px",
@@ -104,15 +128,21 @@ export default {
         "screen-no-nav":
           "calc(var(--screen-height, 100vh) - var(--height-nav) - var(--initial-topbar-height))",
         "screen-dynamic": "var(--screen-height-dynamic, 100vh)",
+        4.5: "1.125rem",
       },
       width: {
         mobileGallery: "calc(100vw - 3rem)",
         page: "var(--page-width, 1280px)",
+        4.5: "1.125rem",
       },
       maxWidth: {
         page: "var(--page-width, 1280px)",
         "prose-narrow": "45ch",
         "prose-wide": "80ch",
+        4.5: "1.125rem",
+      },
+      minWidth: {
+        4.5: "1.125rem",
       },
       fontFamily: {
         sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],

@@ -1,9 +1,9 @@
 import type { HydrogenComponent } from "@weaverse/hydrogen";
-import * as Link from "~/components/link";
 import * as Heading from "~/components/heading";
+import * as Link from "~/components/link";
 import * as Paragraph from "~/components/paragraph";
 import * as SubHeading from "~/components/subheading";
-import * as Judgeme from "~/modules/product-form/judgeme-review";
+import * as Judgeme from "~/components/product/judgeme-review";
 import * as AliReview from "~/sections/ali-reviews";
 import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as AllProducts from "~/sections/all-products";
@@ -30,6 +30,8 @@ import * as ImageGalleryItems from "~/sections/image-gallery/items";
 import * as ImageWithText from "~/sections/image-with-text";
 import * as ImageWithTextContent from "~/sections/image-with-text/content";
 import * as ImageWithTextImage from "~/sections/image-with-text/image";
+import * as JudgemeReview from "~/sections/judgeme-reviews";
+import * as ReviewIndex from "~/sections/judgeme-reviews/review-index";
 import * as MapSection from "~/sections/map";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
@@ -37,7 +39,6 @@ import * as OurTeam from "~/sections/our-team";
 import * as OurTeamMembers from "~/sections/our-team/team-members";
 import * as Page from "~/sections/page";
 import * as ProductInformation from "~/sections/product-information";
-import * as ProductList from "~/sections/product-list";
 import * as PromotionGrid from "~/sections/promotion-grid";
 import * as PromotionGridButtons from "~/sections/promotion-grid/buttons";
 import * as PromotionGridItem from "~/sections/promotion-grid/item";
@@ -52,8 +53,6 @@ import * as TestimonialItem from "~/sections/testimonials/item";
 import * as TestimonialItems from "~/sections/testimonials/items";
 import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
-import * as JudgemeReview from "~/sections/judgeme-reviews";
-import * as ReviewIndex from "~/sections/judgeme-reviews/review-index";
 
 export let components: HydrogenComponent[] = [
   SubHeading,
@@ -112,6 +111,5 @@ export let components: HydrogenComponent[] = [
   OurTeamMembers,
   SlideShow,
   SlideShowSlide,
-  ProductList,
   Spacer,
 ];

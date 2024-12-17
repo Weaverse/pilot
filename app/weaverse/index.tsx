@@ -1,5 +1,5 @@
 import { WeaverseHydrogenRoot } from "@weaverse/hydrogen";
-import { GenericError } from "~/modules/generic-error";
+import { GenericError } from "~/components/root/generic-error";
 import { components } from "./components";
 
 export function WeaverseContent() {

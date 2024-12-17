@@ -16,57 +16,47 @@ export type SortParam =
   | "relevance";
 
 export function getAppliedFilterLink(
-  filter: AppliedFilter,
+  { filter }: AppliedFilter,
   params: URLSearchParams,
   location: Location,
 ) {
-  const paramsClone = new URLSearchParams(params);
-  Object.entries(filter.filter).forEach(([key, value]) => {
-    const fullKey = FILTER_URL_PREFIX + key;
-    paramsClone.delete(fullKey, JSON.stringify(value));
-  });
+  let paramsClone = new URLSearchParams(params);
+  for (let [k, v] of Object.entries(filter)) {
+    paramsClone.delete(FILTER_URL_PREFIX + k, JSON.stringify(v));
+  }
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
-export function getSortLink(
-  sort: SortParam,
-  params: URLSearchParams,
-  location: Location,
-) {
-  params.set("sort", sort);
-  return `${location.pathname}?${params.toString()}`;
-}
-
 export function getFilterLink(
-  rawInput: string | ProductFilter,
+  input: string | ProductFilter,
   params: URLSearchParams,
   location: ReturnType<typeof useLocation>,
 ) {
-  const paramsClone = new URLSearchParams(params);
-  const newParams = filterInputToParams(rawInput, paramsClone);
+  let paramsClone = new URLSearchParams(params);
+  let newParams = filterInputToParams(input, paramsClone);
   return `${location.pathname}?${newParams.toString()}`;
 }
 
 export function filterInputToParams(
-  rawInput: string | ProductFilter,
+  input: string | ProductFilter,
   params: URLSearchParams,
 ) {
-  const input =
-    typeof rawInput === "string"
-      ? (JSON.parse(rawInput) as ProductFilter)
-      : rawInput;
+  let filter =
+    typeof input === "string" ? (JSON.parse(input) as ProductFilter) : input;
 
-  Object.entries(input).forEach(([key, value]) => {
-    if (params.has(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value))) {
-      return;
+  for (let [k, v] of Object.entries(filter)) {
+    let key = `${FILTER_URL_PREFIX}${k}`;
+    let value = JSON.stringify(v);
+    if (params.has(key, value)) {
+      return params;
     }
-    if (key === "price") {
+    if (k === "price") {
       // For price, we want to overwrite
-      params.set(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
+      params.set(key, value);
     } else {
-      params.append(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
+      params.append(key, value);
     }
-  });
+  }
 
   return params;
 }

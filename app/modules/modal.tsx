@@ -1,6 +1,6 @@
+import { X } from "@phosphor-icons/react";
 import { useEffect } from "react";
 import { Button } from "~/components/button";
-import { IconX } from "~/components/icons";
 import { Link } from "~/components/link";
 
 /**
@@ -52,11 +52,11 @@ export function Modal({
                   to={cancelLink}
                   className="-m-4 transition text-body hover:text-body-subtle"
                 >
-                  <IconX aria-label="Close panel" className="w-4 h-4" />
+                  <X aria-label="Close panel" className="w-4 h-4" />
                 </Link>
               ) : (
                 <Button variant="underline" onClick={onClose}>
-                  <IconX aria-label="Close panel" className="w-4 h-4" />
+                  <X aria-label="Close panel" className="w-4 h-4" />
                 </Button>
               )}
             </div>

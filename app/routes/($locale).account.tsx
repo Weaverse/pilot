@@ -1,3 +1,4 @@
+import { SignOut } from "@phosphor-icons/react";
 import {
   Await,
   Form,
@@ -10,31 +11,31 @@ import { flattenConnection } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type {
   CustomerDetailsFragment,
-  OrderCardFragment,
+  CustomerDetailsQuery,
 } from "customer-accountapi.generated";
 import { Suspense } from "react";
-import { IconSignOut } from "~/components/icons";
-import Link from "~/components/link";
+import { AccountDetails } from "~/components/account/account-details";
+import { AccountAddressBook } from "~/components/account/address-book";
+import { AccountOrderHistory } from "~/components/account/orders";
+import { ProductCard } from "~/components/product/product-card";
+import { Swimlane } from "~/components/swimlane";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import { AccountAddressBook } from "~/modules/account-address-book";
-import { AccountDetails } from "~/modules/account-details";
 import { Modal } from "~/modules/modal";
-import { ProductSwimlane } from "~/modules/product-swimlane";
-import { Text } from "~/modules/text";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
   getFeaturedData,
 } from "./($locale).api.featured-items";
 
-export const headers = routeHeaders;
+export let headers = routeHeaders;
 
-export async function loader({ request, context, params }: LoaderFunctionArgs) {
-  const { data, errors } = await context.customerAccount.query(
-    CUSTOMER_DETAILS_QUERY,
-  );
+export async function loader({ context }: LoaderFunctionArgs) {
+  let { data, errors } =
+    await context.customerAccount.query<CustomerDetailsQuery>(
+      CUSTOMER_DETAILS_QUERY,
+    );
 
   /**
    * If the customer failed to load, we assume their access token is invalid.
@@ -43,32 +44,24 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
     throw await doLogout(context);
   }
 
-  const customer = data?.customer;
-
-  const heading = customer ? "My Account" : "Account Details";
+  let customer = data?.customer;
+  let heading = customer ? "My Account" : "Account Details";
+  let featuredData = getFeaturedData(context.storefront);
 
   return defer(
-    {
-      customer,
-      heading,
-      featuredDataPromise: getFeaturedData(context.storefront),
-    },
-    {
-      headers: {
-        "Cache-Control": CACHE_NONE,
-      },
-    },
+    { customer, heading, featuredData },
+    { headers: { "Cache-Control": CACHE_NONE } },
   );
 }
 
 export default function Authenticated() {
-  const data = useLoaderData<typeof loader>();
-  const outlet = useOutlet();
-  const matches = useMatches();
+  let data = useLoaderData<typeof loader>();
+  let outlet = useOutlet();
+  let matches = useMatches();
 
   // routes that export handle { renderInModal: true }
-  const renderOutletInModal = matches.some((match) => {
-    const handle = match?.handle as { renderInModal?: boolean };
+  let renderOutletInModal = matches.some((match) => {
+    let handle = match?.handle as { renderInModal?: boolean };
     return handle?.renderInModal;
   });
 
@@ -91,13 +84,13 @@ export default function Authenticated() {
 
 interface AccountType {
   customer: CustomerDetailsFragment;
-  featuredDataPromise: Promise<FeaturedData>;
+  featuredData: Promise<FeaturedData>;
   heading: string;
 }
 
-function Account({ customer, heading, featuredDataPromise }: AccountType) {
-  const orders = flattenConnection(customer.orders);
-  const addresses = flattenConnection(customer.addresses);
+function Account({ customer, heading, featuredData }: AccountType) {
+  let orders = flattenConnection(customer.orders);
+  let addresses = flattenConnection(customer.addresses);
 
   return (
     <div className="max-w-5xl px-4 mx-auto py-10 space-y-10">
@@ -108,7 +101,7 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
             type="submit"
             className="text-body-subtle group flex gap-2 items-center"
           >
-            <IconSignOut className="w-4 h-4" />
+            <SignOut className="w-4 h-4" />
             <span className="group-hover:underline">Sign out</span>
           </button>
         </Form>
@@ -119,13 +112,22 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
       {!orders.length && (
         <Suspense>
           <Await
-            resolve={featuredDataPromise}
+            resolve={featuredData}
             errorElement="There was a problem loading featured products."
           >
-            {(data) => (
-              <>
-                <ProductSwimlane products={data.featuredProducts} />
-              </>
+            {({ featuredProducts }) => (
+              <div className="space-y-8 pt-20">
+                <h5>Featured products</h5>
+                <Swimlane>
+                  {featuredProducts.nodes.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      className="snap-start w-80"
+                    />
+                  ))}
+                </Swimlane>
+              </div>
             )}
           </Await>
         </Suspense>
@@ -133,42 +135,3 @@ function Account({ customer, heading, featuredDataPromise }: AccountType) {
     </div>
   );
 }
-
-type OrderCardsProps = {
-  orders: OrderCardFragment[];
-};
-
-function AccountOrderHistory({ orders }: OrderCardsProps) {
-  return (
-    <div className="space-y-4">
-      <div className="font-bold">Orders</div>
-      {/* {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />} */}
-      <EmptyOrders />
-    </div>
-  );
-}
-
-function EmptyOrders() {
-  return (
-    <div>
-      <Text className="mb-1" size="fine" width="narrow" as="p">
-        You haven&apos;t placed any orders yet.
-      </Text>
-      <div className="w-48">
-        <Link className="w-full mt-2 text-sm" to={usePrefixPathWithLocale("/")}>
-          Start Shopping
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// function Orders({ orders }: OrderCardsProps) {
-//   return (
-//     <ul className="grid grid-flow-row grid-cols-1 gap-5 false sm:grid-cols-2">
-//       {orders.map((order) => (
-//         <OrderCard order={order} key={order.id} />
-//       ))}
-//     </ul>
-//   );
-// }

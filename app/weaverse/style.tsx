@@ -1,5 +1,4 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { colord } from "colord";
 
 export function GlobalStyle() {
   let settings = useThemeSettings();
@@ -10,6 +9,7 @@ export function GlobalStyle() {
       colorTextSubtle,
       colorTextInverse,
       colorLine,
+      colorLineSubtle,
       topbarTextColor,
       topbarBgColor,
       headerBgColor,
@@ -58,7 +58,7 @@ export function GlobalStyle() {
               --color-text-subtle: ${colorTextSubtle};
               --color-text-inverse: ${colorTextInverse};
               --color-line: ${colorLine};
-              --color-line-subtle: ${colord(colorLine).lighten(0.3).toHex()};
+              --color-line-subtle: ${colorLineSubtle};
 
               /* Colors (header & footer) */
               --color-topbar-text: ${topbarTextColor};

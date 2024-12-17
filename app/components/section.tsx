@@ -22,14 +22,14 @@ export type BackgroundProps = BackgroundImageProps & {
 
 export interface SectionProps<T = any>
   extends Omit<VariantProps<typeof variants>, "padding">,
-    Omit<HydrogenComponentProps<T>, "children">,
+    Partial<Omit<HydrogenComponentProps<T>, "children">>,
     Omit<HTMLAttributes<HTMLElement>, "children">,
     Partial<BackgroundProps>,
-    OverlayProps {
-  as: React.ElementType;
-  borderRadius: number;
-  containerClassName: string;
-  children: React.ReactNode;
+    Partial<OverlayProps> {
+  as?: React.ElementType;
+  borderRadius?: number;
+  containerClassName?: string;
+  children?: React.ReactNode;
 }
 
 let variants = cva("relative", {
