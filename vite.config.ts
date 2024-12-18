@@ -15,7 +15,6 @@ export default defineConfig({
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
         v3_lazyRouteDiscovery: true,
-        // v3_singleFetch: true,
       },
     }),
     tsconfigPaths(),
@@ -24,6 +23,15 @@ export default defineConfig({
     // Allow a strict Content-Security-Policy
     // without inlining assets as base64:
     assetsInlineLimit: 0,
+  },
+  server: {
+    warmup: {
+      clientFiles: [
+        "./app/routes/**/*",
+        "./app/sections/**/*",
+        "./app/components/**/*",
+      ],
+    },
   },
   ssr: {
     optimizeDeps: {
