@@ -26,6 +26,7 @@ declare global {
     METAOBJECT_COLORS_TYPE: string;
     METAOBJECT_COLOR_NAME_KEY: string;
     METAOBJECT_COLOR_VALUE_KEY: string;
+    KLAVIYO_PRIVATE_API_TOKEN: string;
   }
 }
 

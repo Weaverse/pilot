@@ -27,21 +27,23 @@ export function useAnimation(ref?: ForwardedRef<any>) {
     }
     if (scope.current) {
       scope.current.classList.add("animated-scope");
-      scope.current
-        .querySelectorAll("[data-motion]")
-        .forEach((elem: HTMLElement, idx: number) => {
-          inView(
-            elem,
-            ({ target }) => {
-              let { motion, delay } = elem.dataset;
-              animate(target, ANIMATIONS[motion || "fade-up"], {
-                delay: Number(delay) || idx * 0.15,
-                duration: 0.5,
-              });
-            },
-            { amount: 0.3 },
-          );
-        });
+      const elems = scope.current.querySelectorAll("[data-motion]");
+      elems.forEach((elem: HTMLElement, idx: number) => {
+        inView(
+          elem,
+          ({ target }) => {
+            let { motion, delay } = elem.dataset;
+            animate(target, ANIMATIONS[motion || "fade-up"], {
+              delay: Number(delay) || idx * 0.15,
+              duration: 0.5,
+            });
+            if (idx === elems.length - 1) {
+              scope.current.classList.remove("animated-scope");
+            }
+          },
+          { amount: 0.3 }
+        );
+      });
     }
   }, []);
 
