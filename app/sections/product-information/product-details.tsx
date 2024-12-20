@@ -44,16 +44,16 @@ export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
           <Accordion.Content
             style={
               {
-                "--slide-up-from": "var(--radix-accordion-content-height)",
-                "--slide-down-to": "var(--radix-accordion-content-height)",
-                "--slide-up-duration": "0.15s",
-                "--slide-down-duration": "0.15s",
+                "--expand-to": "var(--radix-accordion-content-height)",
+                "--expand-duration": "0.15s",
+                "--collapse-from": "var(--radix-accordion-content-height)",
+                "--collapse-duration": "0.15s",
               } as React.CSSProperties
             }
             className={clsx([
               "overflow-hidden",
-              "data-[state=closed]:animate-slide-up",
-              "data-[state=open]:animate-slide-down",
+              "data-[state=closed]:animate-collapse",
+              "data-[state=open]:animate-expand",
             ])}
           >
             <div

@@ -170,13 +170,13 @@ function SlideIn(props: {
   return (
     <div
       className={cn(
-        "opacity-0 animate-slide-left-and-fade [animation-delay:calc(var(--idx)*0.1s+0.1s)]",
+        "opacity-0 animate-slide-left [animation-delay:calc(var(--idx)*0.1s+0.1s)]",
         className,
       )}
       style={
         {
-          "--left-distance": "40px",
-          "--slide-left-and-fade-duration": "400ms",
+          "--slide-left-from": "40px",
+          "--slide-left-duration": "400ms",
           ...style,
         } as React.CSSProperties
       }
