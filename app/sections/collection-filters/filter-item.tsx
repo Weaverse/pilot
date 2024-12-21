@@ -1,3 +1,4 @@
+import * as Checkbox from "@radix-ui/react-checkbox";
 import {
   useLocation,
   useNavigate,
@@ -10,14 +11,12 @@ import {
   type SwatchesConfigs,
   useThemeSettings,
 } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { useState } from "react";
-import { Checkbox } from "~/components/checkbox";
+import { variants as productOptionsVariants } from "~/components/product/variant-option";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/lib/cn";
 import type { AppliedFilter } from "~/lib/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/lib/filter";
-import { variants as productOptionsVariants } from "~/components/product/variant-option";
 import type { RootLoader } from "~/root";
 
 export function FilterItem({
@@ -39,7 +38,7 @@ export function FilterItem({
   let { options, swatches }: SwatchesConfigs = themeSettings.productSwatches;
 
   let filter = appliedFilters.find(
-    (filter) => JSON.stringify(filter.filter) === option.input
+    (filter) => JSON.stringify(filter.filter) === option.input,
   );
 
   let [checked, setChecked] = useState(!!filter);
@@ -77,7 +76,7 @@ export function FilterItem({
                 shape,
               }),
               checked ? "p-1 border-line" : "border-line-subtle",
-              option.count === 0 && "diagonal"
+              option.count === 0 && "diagonal",
             )}
             onClick={() => handleCheckedChange(!checked)}
             disabled={option.count === 0}
@@ -85,7 +84,7 @@ export function FilterItem({
             <span
               className={cn(
                 "w-full h-full inline-block border-none hover:border-none",
-                productOptionsVariants({ shape })
+                productOptionsVariants({ shape }),
               )}
               style={{
                 backgroundColor:
@@ -110,7 +109,7 @@ export function FilterItem({
           option.count === 0 && "diagonal text-body-subtle",
           checked
             ? "border-line bg-body text-background"
-            : "border-line-subtle hover:border-line"
+            : "border-line-subtle hover:border-line",
         )}
         onClick={() => handleCheckedChange(!checked)}
         disabled={option.count === 0}
@@ -121,15 +120,28 @@ export function FilterItem({
   }
 
   return (
-    <Checkbox
-      checked={checked}
-      onCheckedChange={handleCheckedChange}
-      label={
-        <FilterLabel option={option} showFiltersCount={showFiltersCount} />
-      }
-      disabled={option.count === 0}
-      className={clsx(option.count === 0 && "text-body-subtle")}
-    />
+    <div
+      className={cn(
+        "flex items-center gap-2.5",
+        option.count === 0 && "text-body-subtle",
+      )}
+    >
+      <Checkbox.Root
+        checked={checked}
+        onCheckedChange={handleCheckedChange}
+        disabled={option.count === 0}
+        className={cn(
+          "w-5 h-5 shrink-0",
+          "border border-line focus-visible:outline-none",
+          "disabled:cursor-not-allowed disabled:opacity-50",
+        )}
+      >
+        <Checkbox.Indicator className="flex items-center justify-center text-current">
+          <span className="inline-block w-3 h-3 bg-body" />
+        </Checkbox.Indicator>
+      </Checkbox.Root>
+      <FilterLabel option={option} showFiltersCount={showFiltersCount} />
+    </div>
   );
 }
 function FilterLabel({

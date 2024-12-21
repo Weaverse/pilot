@@ -20,7 +20,7 @@ export let Modal: React.FC<DialogProps> = Root;
 export let ModalTrigger = forwardRef<HTMLButtonElement, DialogTriggerProps>(
   ({ asChild = true, ...rest }, ref) => {
     return <Trigger asChild={asChild} {...rest} ref={ref} />;
-  }
+  },
 );
 
 interface ModalContentProps extends DialogContentProps {}
@@ -34,15 +34,15 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
           {...rest}
           ref={ref}
           className={cn(
-            "data-[state='open']:animate-slide-down-and-fade",
-            "fixed inset-0 z-10 flex items-center overflow-x-hidden bg-gray-900/50 px-4"
+            "data-[state='open']:animate-slide-up",
+            "fixed inset-0 z-10 flex items-center overflow-x-hidden bg-gray-900/50 px-4",
           )}
         >
           <div
             style={{ maxHeight: "90vh" }}
             className={cn(
-              "animate-slide-down-and-fade relative overflow-hidden",
-              "w-full mx-auto h-auto max-w-screen-xl"
+              "animate-slide-up relative overflow-hidden",
+              "w-full mx-auto h-auto max-w-screen-xl",
             )}
           >
             <ModalClose />
@@ -53,7 +53,7 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
         </Content>
       </Portal>
     );
-  }
+  },
 );
 
 export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
@@ -67,5 +67,5 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         )}
       </Close>
     );
-  }
+  },
 );

@@ -1897,7 +1897,7 @@ interface GeneratedQueryTypes {
     return: VariantsQuery;
     variables: VariantsQueryVariables;
   };
-  '#graphql\n      query getShopPrimaryDomain { shop { primaryDomain { url } } }\n    ': {
+  '#graphql\n  query getShopPrimaryDomain {\n    shop {\n      primaryDomain {\n        url\n      }\n    }\n  }\n': {
     return: GetShopPrimaryDomainQuery;
     variables: GetShopPrimaryDomainQueryVariables;
   };
