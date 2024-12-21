@@ -1,8 +1,7 @@
 import { Image, flattenConnection } from "@shopify/hydrogen";
 import type { OrderCardFragment } from "customer-accountapi.generated";
 import Link from "~/components/link";
-import { statusMessage, usePrefixPathWithLocale } from "~/lib/utils";
-import { Text } from "~/modules/text";
+import { statusMessage } from "~/lib/utils";
 
 type OrderCardsProps = {
   orders: OrderCardFragment[];
@@ -18,18 +17,7 @@ export function AccountOrderHistory({ orders }: OrderCardsProps) {
 }
 
 function EmptyOrders() {
-  return (
-    <div>
-      <Text className="mb-1" size="fine" width="narrow" as="p">
-        You haven&apos;t placed any orders yet.
-      </Text>
-      <div className="w-48">
-        <Link className="w-full mt-2 text-sm" to={usePrefixPathWithLocale("/")}>
-          Start Shopping
-        </Link>
-      </div>
-    </div>
-  );
+  return <div>You haven&apos;t placed any orders yet.</div>;
 }
 
 function Orders({ orders }: OrderCardsProps) {

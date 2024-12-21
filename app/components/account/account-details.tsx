@@ -6,29 +6,37 @@ export function AccountDetails({
 }: {
   customer: CustomerDetailsFragment;
 }) {
-  const { firstName, lastName, emailAddress, phoneNumber } = customer;
-  const fullName = `${firstName || ""} ${lastName || ""}`.trim();
+  let { firstName, lastName, emailAddress, phoneNumber } = customer;
+  let fullName = `${firstName || ""} ${lastName || ""}`.trim();
   return (
     <div className="space-y-4">
       <div className="font-bold">Account</div>
-      <div className="p-5 border border-[#B7B7B7] rounded-sm">
-        <div className="text-body-subtle">Name</div>
-        <p className="mt-1">{fullName || "N/A"}</p>
+      <div className="p-5 border border-line-subtle space-y-4">
+        <div className="space-y-1">
+          <div className="text-body-subtle">Name</div>
+          <div>{fullName || "N/A"}</div>
+        </div>
 
-        <div className="mt-4 text-body-subtle">Phone number</div>
-        <p className="mt-1">{phoneNumber?.phoneNumber ?? "N/A"}</p>
+        <div className="space-y-1">
+          <div className=" text-body-subtle">Phone number</div>
+          <div>{phoneNumber?.phoneNumber ?? "N/A"}</div>
+        </div>
 
-        <div className="mt-4 text-body-subtle">Email address</div>
-        <p className="mt-1">{emailAddress?.emailAddress ?? "N/A"}</p>
-        <p className="mt-3">
+        <div className="space-y-1">
+          <div className=" text-body-subtle">Email address</div>
+          <div>{emailAddress?.emailAddress ?? "N/A"}</div>
+        </div>
+
+        <div>
           <Link
             prefetch="intent"
-            className="underline font-normal text-body-subtle"
+            variant="underline"
+            className="text-body-subtle after:bg-body-subtle"
             to="/account/edit"
           >
-            Edit
+            Edit account details
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
