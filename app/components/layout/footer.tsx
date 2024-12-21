@@ -11,11 +11,12 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import { type FormEvent, useEffect, useState } from "react";
 import { Button } from "~/components/button";
 import { useShopMenu } from "~/hooks/use-shop-menu";
+
 import { cn } from "~/lib/cn";
 import type { SingleMenuItem } from "~/lib/type";
-import type { CustomerApiPlayLoad } from "~/routes/($locale).api.customer";
 import { CountrySelector } from "./country-selector";
 
 let variants = cva("", {
@@ -48,7 +49,32 @@ export function Footer() {
     addressTitle,
     storeAddress,
     storeEmail,
+    newsletterTitle,
+    newsletterDescription,
+    newsletterPlaceholder,
+    newsletterButtonText,
   } = useThemeSettings();
+  let fetcher = useFetcher<any>();
+  let [message, setMessage] = useState("");
+  let [error, setError] = useState("");
+
+  let handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    setMessage("");
+    setError("");
+    fetcher.submit(event.currentTarget);
+  };
+
+  useEffect(() => {
+    if (fetcher.data) {
+      let message = (fetcher.data as any)?.message;
+      if (!fetcher.data.success) {
+        let error = message?.errors[0]?.detail;
+        setError(error);
+      } else {
+        setMessage("Thank you for signing up!");
+      }
+    }
+  }, [fetcher.data]);
 
   let socialItems = [
     {
@@ -84,7 +110,6 @@ export function Footer() {
           "--underline-color": "var(--color-footer-text)",
         } as React.CSSProperties
       }
-      data-motion="fade-up"
     >
       <div
         className={cn(
@@ -132,7 +157,48 @@ export function Footer() {
                 <p>Email: {storeEmail}</p>
               </div>
             </div>
-            <NewsLetter />
+            <div className="flex flex-col gap-6">
+              <div className="text-base">{newsletterTitle}</div>
+              <div className="space-y-2">
+                <p>{newsletterDescription}</p>
+                <fetcher.Form
+                  onSubmit={handleSubmit}
+                  action="/api/klaviyo"
+                  method="POST"
+                  encType="multipart/form-data"
+                >
+                  <div className="flex">
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder={newsletterPlaceholder}
+                      className="grow text-body focus-visible:outline-none px-3"
+                    />
+                    <Button
+                      variant="custom"
+                      type="submit"
+                      loading={fetcher.state === "submitting"}
+                    >
+                      {newsletterButtonText}
+                    </Button>
+                  </div>
+                </fetcher.Form>
+                <div className="h-8">
+                  {error && (
+                    <div className="bg-red-100 border-l-4 border-red-500 text-red-700 py-1 px-2 mb-6 flex gap-1 w-fit">
+                      <p className="font-semibold">ERROR:</p>
+                      <p>{error}</p>
+                    </div>
+                  )}
+                  {message && (
+                    <div className="bg-green-100 border-l-4 border-green-500 text-green-700 py-1 px-2 mb-6 flex gap-1 w-fit">
+                      <p>{message}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           <FooterMenu />
         </div>
@@ -144,56 +210,6 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
-}
-
-function NewsLetter() {
-  let {
-    newsletterTitle,
-    newsletterDescription,
-    newsletterPlaceholder,
-    newsletterButtonText,
-  } = useThemeSettings();
-
-  let fetcher = useFetcher();
-  let { state, Form } = fetcher;
-  let data = fetcher.data as CustomerApiPlayLoad;
-  let { ok, errorMessage } = data || {};
-
-  return (
-    <Form method="POST" action="/api/customer" className="flex flex-col gap-6">
-      <div className="text-base">{newsletterTitle}</div>
-      <div className="space-y-2">
-        <p>{newsletterDescription}</p>
-        <div className="flex">
-          <input
-            name="email"
-            type="email"
-            required
-            placeholder={newsletterPlaceholder}
-            className="grow text-body focus-visible:outline-none px-3"
-          />
-          <Button
-            type="submit"
-            variant="custom"
-            loading={state === "submitting"}
-          >
-            {newsletterButtonText}
-          </Button>
-        </div>
-        <div
-          className={clsx(
-            "mx-auto pt-1 font-medium",
-            state === "idle" && data ? "visible" : "invisible",
-            ok ? "text-green-700" : "text-red-600",
-          )}
-        >
-          {ok
-            ? "🎉 Thank you for subscribing!"
-            : errorMessage || "Something went wrong!"}
-        </div>
-      </div>
-    </Form>
   );
 }
 
@@ -222,16 +238,16 @@ function FooterMenu() {
           <Accordion.Content
             style={
               {
-                "--slide-up-from": "var(--radix-accordion-content-height)",
-                "--slide-down-to": "var(--radix-accordion-content-height)",
-                "--slide-up-duration": "0.15s",
-                "--slide-down-duration": "0.15s",
+                "--expand-duration": "0.15s",
+                "--expand-to": "var(--radix-accordion-content-height)",
+                "--collapse-duration": "0.15s",
+                "--collapse-from": "var(--radix-accordion-content-height)",
               } as React.CSSProperties
             }
             className={clsx([
               "overflow-hidden",
-              "data-[state=closed]:animate-slide-up",
-              "data-[state=open]:animate-slide-down",
+              "data-[state=closed]:animate-collapse",
+              "data-[state=open]:animate-expand",
             ])}
           >
             <div className="pb-4 lg:pt-6 flex flex-col gap-2">

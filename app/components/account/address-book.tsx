@@ -2,7 +2,6 @@ import { Form } from "@remix-run/react";
 import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
 import type { CustomerDetailsFragment } from "customer-accountapi.generated";
 import { Link } from "~/components/link";
-import { Text } from "../../modules/text";
 
 export function AccountAddressBook({
   customer,
@@ -14,18 +13,16 @@ export function AccountAddressBook({
   return (
     <div className="space-y-4">
       <div className="font-bold">Address Book</div>
-      <div>
+      <div className="space-y-3">
         {!addresses?.length && (
-          <Text className="mb-1" size="fine" width="narrow" as="p">
-            You haven&apos;t saved any addresses yet.
-          </Text>
+          <div>You haven&apos;t saved any addresses yet.</div>
         )}
         <div className="">
-          <Link to="address/add" className="mb-5" variant="primary">
+          <Link to="address/add" className="mb-5" variant="outline">
             Add an Address
           </Link>
         </div>
-        {Boolean(addresses?.length) && (
+        {addresses?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {customer.defaultAddress && (
               <Address address={customer.defaultAddress} defaultAddress />
@@ -36,7 +33,7 @@ export function AccountAddressBook({
                 <Address key={address.id} address={address} />
               ))}
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

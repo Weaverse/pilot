@@ -29,7 +29,7 @@ export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
       <Content
         ref={ref}
         className={cn(
-          "animate-slide-down-and-fade",
+          "animate-slide-up",
           "z-50 px-3 py-1 shadow-sm text-background bg-body",
           className,
         )}
@@ -39,7 +39,8 @@ export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         collisionPadding={8}
         style={
           {
-            "--slide-down-and-fade-duration": "0.3s",
+            "--slide-up-from": "6px",
+            "--slide-up-duration": "0.3s",
             ...style,
           } as React.CSSProperties
         }

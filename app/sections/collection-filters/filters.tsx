@@ -3,6 +3,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { useLoaderData } from "@remix-run/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
+import { useRef } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import { cn } from "~/lib/cn";
@@ -14,7 +15,8 @@ import { PriceRangeFilter } from "./price-range-filter";
 const COLORS_FILTERS = ["Color", "Colors", "Colour", "Colours"];
 
 export function Filters({ className }: { className?: string }) {
-  let parentInstance = useClosestWeaverseItem(".filters-list");
+  let ref = useRef<HTMLDivElement>(null);
+  let parentInstance = useClosestWeaverseItem(ref);
   let parentData = parentInstance.data as unknown as CollectionFiltersData;
   let {
     expandFilters,
@@ -36,7 +38,7 @@ export function Filters({ className }: { className?: string }) {
   return (
     <Accordion.Root
       type="multiple"
-      className={cn("filters-list divide-y divide-line-subtle", className)}
+      className={cn("divide-y divide-line-subtle", className)}
       key={
         collection.id + appliedFiltersKeys + expandFilters + showFiltersCount
       }
@@ -50,6 +52,7 @@ export function Filters({ className }: { className?: string }) {
         return (
           <Accordion.Item
             key={filter.id}
+            ref={ref}
             value={filter.id}
             className="w-full pb-6 pt-7"
           >
@@ -60,16 +63,16 @@ export function Filters({ className }: { className?: string }) {
             <Accordion.Content
               style={
                 {
-                  "--slide-up-from": "var(--radix-accordion-content-height)",
-                  "--slide-down-to": "var(--radix-accordion-content-height)",
-                  "--slide-up-duration": "0.15s",
-                  "--slide-down-duration": "0.15s",
+                  "--expand-to": "var(--radix-accordion-content-height)",
+                  "--expand-duration": "0.15s",
+                  "--collapse-from": "var(--radix-accordion-content-height)",
+                  "--collapse-duration": "0.15s",
                 } as React.CSSProperties
               }
               className={clsx([
                 "overflow-hidden",
-                "data-[state=closed]:animate-slide-up",
-                "data-[state=open]:animate-slide-down",
+                "data-[state=closed]:animate-collapse",
+                "data-[state=open]:animate-expand",
               ])}
             >
               <div

@@ -1,4 +1,5 @@
 import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
+import type { GetShopPrimaryDomainQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { Button } from "~/modules/button";
 import { PageHeader } from "~/modules/text";
@@ -14,11 +15,9 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  const { origin } = new URL(request.url);
-  const { shop } = await storefront.query(
-    `#graphql
-      query getShopPrimaryDomain { shop { primaryDomain { url } } }
-    `,
+  let { origin } = new URL(request.url);
+  let { shop } = await storefront.query<GetShopPrimaryDomainQuery>(
+    SHOP_PRIMARY_DOMAIN_QUERY,
     { cache: storefront.CacheLong() },
   );
   invariant(shop, "Error redirecting to the order status URL");
@@ -28,6 +27,7 @@ export async function loader({
 export default function () {
   return null;
 }
+
 export function ErrorBoundary() {
   return (
     <PageHeader
@@ -42,3 +42,13 @@ export function ErrorBoundary() {
     </PageHeader>
   );
 }
+
+const SHOP_PRIMARY_DOMAIN_QUERY = `#graphql
+  query getShopPrimaryDomain {
+    shop {
+      primaryDomain {
+        url
+      }
+    }
+  }
+`;

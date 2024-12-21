@@ -16,25 +16,25 @@ export default {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
-        "slide-down": {
+        expand: {
           from: { height: 0 },
-          to: { height: "var(--slide-down-to)" },
+          to: { height: "var(--expand-to)" },
         },
-        "slide-up": {
-          from: { height: "var(--slide-up-from)" },
+        collapse: {
+          from: { height: "var(--collapse-from)" },
           to: { height: 0 },
         },
-        "slide-left-and-fade": {
+        "slide-left": {
           from: {
             opacity: 0,
-            transform: "translateX(var(--left-distance, 6px))",
+            transform: "translateX(var(--slide-left-from))",
           },
           to: { opacity: 1, transform: "translateX(0)" },
         },
-        "slide-down-and-fade": {
+        "slide-up": {
           from: {
             opacity: 0,
-            transform: "translateY(var(--bottom-distance, 6px))",
+            transform: "translateY(var(--slide-up-from))",
           },
           to: { opacity: 1, transform: "translateY(0)" },
         },
@@ -54,7 +54,7 @@ export default {
           from: { transform: "translateZ(0)" },
           to: { transform: "translate3d(-100%,0,0)" },
         },
-        underline: {
+        "underline-toggle": {
           "0%": {
             transform: "scaleX(1)",
             transformOrigin: "right",
@@ -74,16 +74,16 @@ export default {
       animation: {
         spin: "spin .5s linear infinite",
         marquee: "marquee var(--marquee-duration, 15s) linear infinite",
-        underline: "underline 400ms linear",
+        "underline-toggle": "underline-toggle 400ms linear",
         "fade-in": "fade-in var(--fade-in-duration, .5s) ease-in forwards",
-        "slide-down":
-          "slide-down var(--slide-down-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
+        expand:
+          "expand var(--expand-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
+        collapse:
+          "collapse var(--collapse-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
+        "slide-left":
+          "slide-left var(--slide-left-duration) cubic-bezier(.165,.84,.44,1) forwards",
         "slide-up":
-          "slide-up var(--slide-up-duration, .3s) cubic-bezier(0.87, 0, 0.13, 1) forwards",
-        "slide-left-and-fade":
-          "slide-left-and-fade var(--slide-left-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
-        "slide-down-and-fade":
-          "slide-down-and-fade var(--slide-down-and-fade-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
+          "slide-up var(--slide-up-duration, .5s) cubic-bezier(.165,.84,.44,1) forwards",
         "enter-from-left":
           "enter-from-left var(--enter-from-left-duration, .3s) ease-out forwards",
         "enter-from-right":

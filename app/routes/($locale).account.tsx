@@ -22,12 +22,13 @@ import { Swimlane } from "~/components/swimlane";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import { Modal } from "~/modules/modal";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
   getFeaturedData,
 } from "./($locale).api.featured-items";
+import { Section } from "~/components/section";
+import { OutletModal } from "~/components/account/outlet-modal";
 
 export let headers = routeHeaders;
 
@@ -54,24 +55,30 @@ export async function loader({ context }: LoaderFunctionArgs) {
   );
 }
 
+type OutletInModalMatch = {
+  handle?: { renderInModal?: boolean; title?: string };
+};
+
 export default function Authenticated() {
   let data = useLoaderData<typeof loader>();
   let outlet = useOutlet();
   let matches = useMatches();
 
-  // routes that export handle { renderInModal: true }
-  let renderOutletInModal = matches.some((match) => {
-    let handle = match?.handle as { renderInModal?: boolean };
-    return handle?.renderInModal;
-  });
+  // routes that export handle { renderInModal: true, title: string }
+  let outletInModal: OutletInModalMatch = matches.find(
+    (match: OutletInModalMatch) => {
+      let handle = match?.handle;
+      return handle?.renderInModal;
+    },
+  );
 
   if (outlet) {
-    if (renderOutletInModal) {
+    if (outletInModal) {
       return (
         <>
-          <Modal cancelLink="/account">
+          <OutletModal title={outletInModal.handle.title} cancelLink="/account">
             <Outlet context={{ customer: data.customer }} />
-          </Modal>
+          </OutletModal>
           <Account {...data} customer={data.customer} />
         </>
       );
@@ -93,16 +100,22 @@ function Account({ customer, heading, featuredData }: AccountType) {
   let addresses = flattenConnection(customer.addresses);
 
   return (
-    <div className="max-w-5xl px-4 mx-auto py-10 space-y-10">
+    <Section
+      width="fixed"
+      verticalPadding="medium"
+      containerClassName="space-y-10"
+    >
       <div className="space-y-8">
-        <h2 className="h4">{heading}</h2>
+        <h2 className="h4 font-medium [animation:collapse]">{heading}</h2>
         <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
           <button
             type="submit"
             className="text-body-subtle group flex gap-2 items-center"
           >
             <SignOut className="w-4 h-4" />
-            <span className="group-hover:underline">Sign out</span>
+            <span className="group-hover:underline underline-offset-4">
+              Sign out
+            </span>
           </button>
         </Form>
       </div>
@@ -132,6 +145,6 @@ function Account({ customer, heading, featuredData }: AccountType) {
           </Await>
         </Suspense>
       )}
-    </div>
+    </Section>
   );
 }

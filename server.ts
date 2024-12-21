@@ -15,7 +15,7 @@ export default {
     executionContext: ExecutionContext,
   ): Promise<Response> {
     try {
-      const appLoadContext = await createAppLoadContext(
+      let appLoadContext = await createAppLoadContext(
         request,
         env,
         executionContext,
@@ -25,13 +25,13 @@ export default {
        * Create a Remix request handler and pass
        * Hydrogen's Storefront client to the loader context.
        */
-      const handleRequest = createRequestHandler({
+      let handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
         getLoadContext: () => appLoadContext,
       });
 
-      const response = await handleRequest(request);
+      let response = await handleRequest(request);
 
       if (appLoadContext.session.isPending) {
         response.headers.set(

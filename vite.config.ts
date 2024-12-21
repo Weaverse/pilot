@@ -24,6 +24,15 @@ export default defineConfig({
     // without inlining assets as base64:
     assetsInlineLimit: 0,
   },
+  server: {
+    warmup: {
+      clientFiles: [
+        "./app/routes/**/*",
+        "./app/sections/**/*",
+        "./app/components/**/*",
+      ],
+    },
+  },
   ssr: {
     optimizeDeps: {
       include: [
