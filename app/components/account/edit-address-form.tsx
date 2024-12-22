@@ -1,5 +1,6 @@
 import { Check } from "@phosphor-icons/react";
 import * as Checkbox from "@radix-ui/react-checkbox";
+import * as Dialog from "@radix-ui/react-dialog";
 import {
   Form,
   useActionData,
@@ -174,12 +175,14 @@ export function AccountEditAddressForm() {
           <label htmlFor="defaultAddress">Set as default address</label>
         </div>
         <div className="flex gap-6 items-center justify-end">
-          <Link
-            to="/account/address"
-            className="hover:underline underline-offset-4"
-          >
-            Cancel
-          </Link>
+          <Dialog.Close asChild>
+            <Link
+              to="/account/address"
+              className="hover:underline underline-offset-4"
+            >
+              Cancel
+            </Link>
+          </Dialog.Close>
           <Button
             className="mb-2"
             type="submit"
