@@ -67,6 +67,7 @@ function FiltersDrawer({
             "flex items-center gap-1.5 border py-2 h-12",
             filtersPosition === "sidebar" && "lg:hidden",
           )}
+          animate={false}
         >
           <Sliders size={18} />
           <span>Filter</span>

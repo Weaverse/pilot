@@ -27,7 +27,7 @@ export function useAnimation(ref?: ForwardedRef<any>) {
     }
     if (scope.current) {
       scope.current.classList.add("animated-scope");
-      const elems = scope.current.querySelectorAll("[data-motion]");
+      let elems = scope.current.querySelectorAll("[data-motion]");
       elems.forEach((elem: HTMLElement, idx: number) => {
         inView(
           elem,
@@ -41,7 +41,7 @@ export function useAnimation(ref?: ForwardedRef<any>) {
               scope.current.classList.remove("animated-scope");
             }
           },
-          { amount: 0.3 }
+          { amount: 0.3 },
         );
       });
     }

@@ -17,7 +17,9 @@ import { Suspense } from "react";
 import { AccountDetails } from "~/components/account/account-details";
 import { AccountAddressBook } from "~/components/account/address-book";
 import { AccountOrderHistory } from "~/components/account/orders";
+import { OutletModal } from "~/components/account/outlet-modal";
 import { ProductCard } from "~/components/product/product-card";
+import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
 import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
@@ -27,8 +29,6 @@ import {
   type FeaturedData,
   getFeaturedData,
 } from "./($locale).api.featured-items";
-import { Section } from "~/components/section";
-import { OutletModal } from "~/components/account/outlet-modal";
 
 export let headers = routeHeaders;
 
@@ -55,28 +55,24 @@ export async function loader({ context }: LoaderFunctionArgs) {
   );
 }
 
-type OutletInModalMatch = {
-  handle?: { renderInModal?: boolean; title?: string };
-};
-
 export default function Authenticated() {
   let data = useLoaderData<typeof loader>();
   let outlet = useOutlet();
   let matches = useMatches();
 
-  // routes that export handle { renderInModal: true, title: string }
-  let outletInModal: OutletInModalMatch = matches.find(
-    (match: OutletInModalMatch) => {
+  // routes that export handle { renderInModal: true }
+  let renderInModal = matches.find(
+    (match: { handle?: { renderInModal?: boolean } }) => {
       let handle = match?.handle;
       return handle?.renderInModal;
     },
   );
 
   if (outlet) {
-    if (outletInModal) {
+    if (renderInModal) {
       return (
         <>
-          <OutletModal title={outletInModal.handle.title} cancelLink="/account">
+          <OutletModal cancelLink="/account">
             <Outlet context={{ customer: data.customer }} />
           </OutletModal>
           <Account {...data} customer={data.customer} />
@@ -106,7 +102,7 @@ function Account({ customer, heading, featuredData }: AccountType) {
       containerClassName="space-y-10"
     >
       <div className="space-y-8">
-        <h2 className="h4 font-medium [animation:collapse]">{heading}</h2>
+        <h2 className="h4 font-medium">{heading}</h2>
         <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
           <button
             type="submit"

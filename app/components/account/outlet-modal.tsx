@@ -6,9 +6,8 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 export function OutletModal({
   children,
-  title,
   cancelLink,
-}: { children: React.ReactNode; title: string; cancelLink: string }) {
+}: { children: React.ReactNode; cancelLink: string }) {
   return (
     <Dialog.Root defaultOpen>
       <Dialog.Portal>
