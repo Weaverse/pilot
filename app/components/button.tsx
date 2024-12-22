@@ -83,6 +83,7 @@ export interface ButtonProps
   disabled?: boolean;
   loading?: boolean;
   children?: React.ReactNode;
+  animate?: boolean;
 }
 
 export let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
@@ -98,6 +99,7 @@ export let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     backgroundColorHover,
     borderColorHover,
     style = {},
+    animate = true,
     children,
     ...rest
   } = props;
@@ -124,12 +126,15 @@ export let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     content = children;
   }
 
+  if (animate) {
+    rest["data-motion"] = "fade-up";
+  }
+
   return (
     <button
       ref={ref}
       style={style}
       type={type}
-      data-motion="fade-up"
       {...rest}
       className={cn(variants({ variant, className }))}
     >
