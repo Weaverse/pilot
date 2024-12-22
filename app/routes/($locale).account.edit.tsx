@@ -9,10 +9,10 @@ import type {
   CustomerUpdateInput,
 } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
+import type { CustomerUpdateMutation } from "customer-accountapi.generated";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
-import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/customer-update-mutation";
 import { doLogout } from "./($locale).account_.logout";
 
 export interface AccountOutletContext {
@@ -56,19 +56,22 @@ export let action: ActionFunction = async ({ request, context, params }) => {
   try {
     let customer: CustomerUpdateInput = {};
 
-    formDataHas(formData, "firstName") &&
-      (customer.firstName = formData.get("firstName") as string);
-    formDataHas(formData, "lastName") &&
-      (customer.lastName = formData.get("lastName") as string);
+    if (formDataHas(formData, "firstName")) {
+      customer.firstName = formData.get("firstName") as string;
+    }
+    if (formDataHas(formData, "lastName")) {
+      customer.lastName = formData.get("lastName") as string;
+    }
 
-    let { data, errors } = await context.customerAccount.mutate(
-      CUSTOMER_UPDATE_MUTATION,
-      {
-        variables: {
-          customer,
+    let { data, errors } =
+      await context.customerAccount.mutate<CustomerUpdateMutation>(
+        CUSTOMER_UPDATE_MUTATION,
+        {
+          variables: {
+            customer,
+          },
         },
-      },
-    );
+      );
 
     invariant(!errors?.length, errors?.[0]?.message);
 
@@ -144,3 +147,15 @@ export default function AccountDetailsEdit() {
     </div>
   );
 }
+
+const CUSTOMER_UPDATE_MUTATION = `#graphql
+  mutation customerUpdate($customer: CustomerUpdateInput!) {
+    customerUpdate(input: $customer) {
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
