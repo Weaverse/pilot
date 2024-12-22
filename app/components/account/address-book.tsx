@@ -2,6 +2,7 @@ import { Form } from "@remix-run/react";
 import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
 import type { CustomerDetailsFragment } from "customer-accountapi.generated";
 import { Link } from "~/components/link";
+import { Button } from "~/components/button";
 
 export function AccountAddressBook({
   customer,
@@ -47,10 +48,10 @@ function Address({
   defaultAddress?: boolean;
 }) {
   return (
-    <div className="p-5 border border-[#B7B7B7] rounded-sm flex flex-col">
+    <div className="p-5 border border-line-subtle flex flex-col">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="px-3 py-1 text-xs font-medium border text-body-subtle">
+          <span className="px-3 py-1 text-sm font-medium bg-body-subtle text-body-inverse">
             Default
           </span>
         </div>
@@ -71,16 +72,21 @@ function Address({
       <div className="flex flex-row font-medium mt-6 items-baseline">
         <Link
           to={`/account/address/${encodeURIComponent(address.id)}`}
-          className="text-left underline text-body-subtle"
+          className="text-body-subtle after:bg-body-subtle"
           prefetch="intent"
+          variant="underline"
         >
           Edit
         </Link>
         <Form action="address/delete" method="delete">
           <input type="hidden" name="addressId" value={address.id} />
-          <button className="text-left text-body-subtle ml-6 text-sm">
+          <Button
+            variant="underline"
+            className="after:bg-body-subtle text-body-subtle ml-6"
+            animate={false}
+          >
             Remove
-          </button>
+          </Button>
         </Form>
       </div>
     </div>

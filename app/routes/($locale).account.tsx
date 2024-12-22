@@ -55,28 +55,24 @@ export async function loader({ context }: LoaderFunctionArgs) {
   );
 }
 
-type OutletInModalMatch = {
-  handle?: { renderInModal?: boolean; title?: string };
-};
-
 export default function Authenticated() {
   let data = useLoaderData<typeof loader>();
   let outlet = useOutlet();
   let matches = useMatches();
 
-  // routes that export handle { renderInModal: true, title: string }
-  let outletInModal: OutletInModalMatch = matches.find(
-    (match: OutletInModalMatch) => {
+  // routes that export handle { renderInModal: true }
+  let renderInModal = matches.find(
+    (match: { handle?: { renderInModal?: boolean } }) => {
       let handle = match?.handle;
       return handle?.renderInModal;
     },
   );
 
   if (outlet) {
-    if (outletInModal) {
+    if (renderInModal) {
       return (
         <>
-          <OutletModal title={outletInModal.handle.title} cancelLink="/account">
+          <OutletModal cancelLink="/account">
             <Outlet context={{ customer: data.customer }} />
           </OutletModal>
           <Account {...data} customer={data.customer} />

@@ -28,7 +28,6 @@ interface ActionData {
 
 export let handle = {
   renderInModal: true,
-  title: "Address",
 };
 
 export let action: ActionFunction = async ({ request, context, params }) => {

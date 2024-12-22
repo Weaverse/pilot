@@ -42,7 +42,6 @@ function formDataHas(formData: FormData, key: string) {
 
 export let handle = {
   renderInModal: true,
-  title: "Account",
 };
 
 export let action: ActionFunction = async ({ request, context, params }) => {
@@ -133,7 +132,7 @@ export default function AccountDetailsEdit() {
           aria-label="Last name"
           defaultValue={customer.lastName ?? ""}
         />
-        <div className="mt-6 flex gap-6 items-center justify-end">
+        <div className="py-2.5 flex gap-6 items-center justify-end">
           <Link to="/account" className="hover:underline underline-offset-4">
             Cancel
           </Link>
