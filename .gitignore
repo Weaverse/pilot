@@ -14,3 +14,4 @@ node_modules
 /playwright-report/
 /playwright/.cache/
 pnpm-lock.yaml
+.DS_Store
