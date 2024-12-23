@@ -3,6 +3,7 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { CollectionsQuery } from "storefrontapi.generated";
 import { routeHeaders } from "~/data/cache";
 import { COLLECTIONS_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/lib/const";
@@ -20,13 +21,16 @@ export let loader = async (args: RouteLoaderArgs) => {
   let variables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
-  let { collections } = await storefront.query(COLLECTIONS_QUERY, {
-    variables: {
-      ...variables,
-      country: storefront.i18n.country,
-      language: storefront.i18n.language,
+  let { collections } = await storefront.query<CollectionsQuery>(
+    COLLECTIONS_QUERY,
+    {
+      variables: {
+        ...variables,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      },
     },
-  });
+  );
 
   let seo = seoPayload.listCollections({
     collections,

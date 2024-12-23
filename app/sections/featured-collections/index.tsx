@@ -108,7 +108,7 @@ export let schema: HydrogenComponentSchema = {
       { type: "heading", content: "Shop our collections" },
       {
         type: "featured-collections-items",
-        aspectRatio: "3/4",
+        imageAspectRatio: "3/4",
         gridSize: "3",
         contentPosition: "over",
         collectionNameColor: "#fff",

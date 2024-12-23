@@ -4,47 +4,74 @@ import type { Collection } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { CollectionsQuery } from "storefrontapi.generated";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { Link } from "~/components/link";
 import { getImageLoadingPriority } from "~/lib/const";
-import { Button } from "~/modules/button";
 import { CollectionCard } from "./collection-card";
+import { overlayInputs, type OverlayProps } from "~/components/overlay";
 
-interface CollectionsItemsProps {
+interface CollectionsItemsProps extends OverlayProps {
   prevButtonText: string;
   nextButtonText: string;
-  imageAspectRatio: string;
+  imageAspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
+  collectionNameColor: string;
 }
 
 let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
   (props, ref) => {
     let { collections } = useLoaderData<CollectionsQuery>();
-    let { prevButtonText, nextButtonText, imageAspectRatio, ...rest } = props;
+    let {
+      prevButtonText,
+      nextButtonText,
+      imageAspectRatio,
+      collectionNameColor,
+      enableOverlay,
+      overlayColor,
+      overlayColorHover,
+      overlayOpacity,
+      ...rest
+    } = props;
     return (
       <div ref={ref} {...rest}>
         <Pagination connection={collections}>
-          {({ nodes, isLoading, PreviousLink, NextLink }) => (
-            <>
-              <div className="flex items-center justify-center mb-6">
-                <Button as={PreviousLink} variant="secondary" width="full">
+          {({
+            nodes,
+            isLoading,
+            hasPreviousPage,
+            hasNextPage,
+            nextPageUrl,
+            previousPageUrl,
+          }) => (
+            <div className="flex w-full flex-col gap-8 items-center">
+              {hasPreviousPage && (
+                <Link
+                  to={previousPageUrl}
+                  variant="outline"
+                  className="mx-auto"
+                >
                   {isLoading ? "Loading..." : prevButtonText}
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-8 lg:gap-y-12">
+                </Link>
+              )}
+              <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-8 lg:gap-y-12">
                 {nodes.map((collection, i) => (
                   <CollectionCard
                     key={collection.id}
                     collection={collection as Collection}
                     imageAspectRatio={imageAspectRatio}
+                    collectionNameColor={collectionNameColor}
                     loading={getImageLoadingPriority(i, 2)}
+                    enableOverlay={enableOverlay}
+                    overlayColor={overlayColor}
+                    overlayColorHover={overlayColorHover}
+                    overlayOpacity={overlayOpacity}
                   />
                 ))}
               </div>
-              <div className="flex items-center justify-center mt-6">
-                <Button as={NextLink} variant="secondary" width="full">
+              {hasNextPage && (
+                <Link to={nextPageUrl} variant="outline" className="mx-auto">
                   {isLoading ? "Loading..." : nextButtonText}
-                </Button>
-              </div>
-            </>
+                </Link>
+              )}
+            </div>
           )}
         </Pagination>
       </div>
@@ -59,19 +86,19 @@ export let schema: HydrogenComponentSchema = {
   title: "Collection items",
   inspector: [
     {
-      group: "Collection items",
+      group: "Pagination",
       inputs: [
         {
           type: "text",
           name: "prevButtonText",
-          label: "Previous collections text",
+          label: "Previous button text",
           defaultValue: "Previous collections",
           placeholder: "Previous collections",
         },
         {
           type: "text",
           name: "nextButtonText",
-          label: "Next collections text",
+          label: "Next button text",
           defaultValue: "Next collections",
           placeholder: "Next collections",
         },
@@ -82,18 +109,45 @@ export let schema: HydrogenComponentSchema = {
       inputs: [
         {
           type: "select",
-          label: "Image aspect ratio",
           name: "imageAspectRatio",
+          label: "Image aspect ratio",
+          defaultValue: "adapt",
           configs: {
             options: [
-              { value: "auto", label: "Adapt to image" },
-              { value: "1/1", label: "1/1" },
-              { value: "3/4", label: "3/4" },
-              { value: "4/3", label: "4/3" },
+              { value: "adapt", label: "Adapt to image" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
             ],
           },
-          defaultValue: "auto",
+          helpText:
+            'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
         },
+        {
+          type: "range",
+          label: "Border radius",
+          name: "borderRadius",
+          configs: {
+            min: 0,
+            max: 24,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
+        },
+        {
+          type: "color",
+          name: "collectionNameColor",
+          label: "Collection name color",
+          defaultValue: "#fff",
+          condition: "contentPosition.eq.over",
+        },
+        {
+          type: "heading",
+          label: "Overlay",
+        },
+        ...overlayInputs,
       ],
     },
   ],

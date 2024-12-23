@@ -11,6 +11,7 @@ import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
 import * as CollectionFilters from "~/sections/collection-filters";
 import * as CollectionList from "~/sections/collection-list";
+import * as CollectionListItems from "~/sections/collection-list/collections-items";
 import * as ColumnsWithImages from "~/sections/columns-with-images";
 import * as ColumnWithImageItem from "~/sections/columns-with-images/column";
 import * as ColumnsWithImagesItems from "~/sections/columns-with-images/items";
@@ -103,6 +104,7 @@ export let components: HydrogenComponent[] = [
   RelatedArticles,
   CollectionFilters,
   CollectionList,
+  CollectionListItems,
   SingleProduct,
   Judgeme,
   JudgemeReview,
