@@ -100,8 +100,8 @@ function Account({ customer, heading, featuredData }: AccountType) {
       verticalPadding="medium"
       containerClassName="space-y-10"
     >
-      <div className="space-y-8">
-        <h2 className="h4 font-medium">{heading}</h2>
+      <div className="space-y-4">
+        <h1 className="h4 font-medium">{heading}</h1>
         <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
           <button
             type="submit"

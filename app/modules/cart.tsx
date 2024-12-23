@@ -19,7 +19,6 @@ import type { CartApiQueryFragment } from "storefrontapi.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { getImageAspectRatio } from "~/lib/utils";
-import { Text } from "~/modules/text";
 import { CartBestSellers } from "./cart-best-sellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
@@ -92,14 +91,14 @@ function CartDiscounts({
       {/* Have existing discount, display it with a remove option */}
       <dl className={codes && codes.length !== 0 ? "grid" : "hidden"}>
         <div className="flex items-center justify-between font-medium">
-          <Text as="dt">Discount(s)</Text>
+          <dt>Discount(s)</dt>
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
               <button type="button">
                 <Trash aria-hidden="true" className="h-[18px] w-[18px] mr-1" />
               </button>
             </UpdateDiscountForm>
-            <Text as="dd">{codes?.join(", ")}</Text>
+            <dd>{codes?.join(", ")}</dd>
           </div>
         </div>
       </dl>
