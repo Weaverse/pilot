@@ -125,18 +125,6 @@ export let schema: HydrogenComponentSchema = {
             'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
         },
         {
-          type: "range",
-          label: "Border radius",
-          name: "borderRadius",
-          configs: {
-            min: 0,
-            max: 24,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
-        },
-        {
           type: "color",
           name: "collectionNameColor",
           label: "Collection name color",

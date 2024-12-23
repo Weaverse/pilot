@@ -46,9 +46,9 @@ export function CollectionCard({
             sizes="(max-width: 32em) 100vw, 45vw"
             loading={loading}
             className={clsx(
-              "object-cover absolute z-0 inset-0",
+              "object-cover object-center absolute z-0 inset-0",
               "transition-all duration-300",
-              "will-change-transform scale-100 group-hover:scale-[1.05]",
+              "will-change-transform scale-100 group-hover:scale-[1.03]",
             )}
           />
         ) : null}
