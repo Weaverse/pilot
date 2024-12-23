@@ -22,7 +22,6 @@ import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
-import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
 import { doLogout } from "./($locale).account_.logout";
 import {
@@ -115,7 +114,7 @@ function Account({ customer, heading, featuredData }: AccountType) {
           </button>
         </Form>
       </div>
-      {orders && <AccountOrderHistory orders={orders} />}
+      {orders ? <AccountOrderHistory orders={orders} /> : null}
       <AccountDetails customer={customer} />
       <AccountAddressBook addresses={addresses} customer={customer} />
       {!orders.length && (
@@ -144,3 +143,83 @@ function Account({ customer, heading, featuredData }: AccountType) {
     </Section>
   );
 }
+
+// NOTE: https://shopify.dev/docs/api/customer/latest/queries/customer
+const CUSTOMER_DETAILS_QUERY = `#graphql
+  query CustomerDetails {
+    customer {
+      ...CustomerDetails
+    }
+  }
+  fragment OrderCard on Order {
+    id
+    number
+    processedAt
+    financialStatus
+    fulfillments(first: 1) {
+      nodes {
+        status
+      }
+    }
+    totalPrice {
+      amount
+      currencyCode
+    }
+    lineItems(first: 2) {
+      edges {
+        node {
+          title
+          image {
+            altText
+            height
+            url
+            width
+          }
+        }
+      }
+    }
+  }
+
+  fragment AddressPartial on CustomerAddress {
+    id
+    formatted
+    firstName
+    lastName
+    company
+    address1
+    address2
+    territoryCode
+    zoneCode
+    city
+    zip
+    phoneNumber
+  }
+
+  fragment CustomerDetails on Customer {
+    firstName
+    lastName
+    phoneNumber {
+      phoneNumber
+    }
+    emailAddress {
+      emailAddress
+    }
+    defaultAddress {
+      ...AddressPartial
+    }
+    addresses(first: 6) {
+      edges {
+        node {
+          ...AddressPartial
+        }
+      }
+    }
+    orders(first: 250, sortKey: PROCESSED_AT, reverse: true) {
+      edges {
+        node {
+          ...OrderCard
+        }
+      }
+    }
+  }
+` as const;
