@@ -51,7 +51,7 @@ interface ImageWithTextImageProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
   image: WeaverseImage | string;
-  aspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
+  imageAspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
 }
 
 let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
@@ -59,7 +59,7 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
     let {
       image = IMAGES_PLACEHOLDERS.image,
       width,
-      aspectRatio,
+      imageAspectRatio,
       borderRadius,
       objectFit,
       ...rest
@@ -69,12 +69,12 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
         ? { url: image, altText: "Placeholder" }
         : image;
     let aspRt: string | undefined;
-    if (aspectRatio === "adapt") {
+    if (imageAspectRatio === "adapt") {
       if (imageData.width && imageData.height) {
         aspRt = `${imageData.width}/${imageData.height}`;
       }
     } else {
-      aspRt = aspectRatio;
+      aspRt = imageAspectRatio;
     }
 
     return (
@@ -108,16 +108,16 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "select",
-          name: "aspectRatio",
-          label: "Aspect ratio",
+          name: "imageAspectRatio",
+          label: "Image aspect ratio",
           defaultValue: "adapt",
           configs: {
             options: [
               { value: "adapt", label: "Adapt to image" },
-              { value: "1/1", label: "1/1" },
-              { value: "4/3", label: "4/3" },
-              { value: "3/4", label: "3/4" },
-              { value: "16/9", label: "16/9" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
             ],
           },
           helpText:

@@ -4,8 +4,8 @@ import invariant from "tiny-invariant";
 import { AccountEditAddressForm } from "~/components/account/edit-address-form";
 import { doLogout } from "./($locale).account_.logout";
 import type {
-  CustomerAddressCreateMutation,
   CustomerAddressDeleteMutation,
+  CustomerAddressCreateMutation,
   CustomerAddressUpdateMutation,
 } from "customer-accountapi.generated";
 

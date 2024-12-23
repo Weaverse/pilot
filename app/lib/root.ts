@@ -8,8 +8,8 @@ import type {
 } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/data/queries";
+import type { EnhancedMenu } from "~/hooks/use-shop-menu";
 import { seoPayload } from "~/lib/seo.server";
-import type { EnhancedMenu } from "./utils";
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data

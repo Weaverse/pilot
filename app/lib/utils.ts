@@ -2,57 +2,10 @@ import { useLocation, useRouteLoaderData } from "@remix-run/react";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { LinkHTMLAttributes } from "react";
-import type {
-  ChildMenuItemFragment,
-  MenuFragment,
-  ParentMenuItemFragment,
-} from "storefrontapi.generated";
-import typographicBase from "typographic-base/index";
+
 import { countries } from "~/data/countries";
 import type { RootLoader } from "~/root";
 import type { I18nLocale } from "./type";
-
-type EnhancedMenuItemProps = {
-  to: string;
-  target: string;
-  isExternal?: boolean;
-};
-
-export type ChildEnhancedMenuItem = ChildMenuItemFragment &
-  EnhancedMenuItemProps;
-
-export type ParentEnhancedMenuItem = (ParentMenuItemFragment &
-  EnhancedMenuItemProps) & {
-  items: ChildEnhancedMenuItem[];
-};
-
-export type EnhancedMenu = Pick<MenuFragment, "id"> & {
-  items: ParentEnhancedMenuItem[];
-};
-
-export function missingClass(string?: string, prefix?: string) {
-  if (!string) {
-    return true;
-  }
-
-  const regex = new RegExp(` ?${prefix}`, "g");
-  return string.match(regex) === null;
-}
-
-export function formatText(input?: string | React.ReactNode) {
-  if (!input) {
-    return;
-  }
-
-  if (typeof input !== "string") {
-    return input;
-  }
-
-  return typographicBase(input, { locale: "en-us" }).replace(
-    /\s([^\s<]+)\s*$/g,
-    "\u00A0$1",
-  );
-}
 
 export function getExcerpt(text: string) {
   const regex = /<p.*>(.*?)<\/p>/;
@@ -73,15 +26,6 @@ export function isDiscounted(price: MoneyV2, compareAtPrice: MoneyV2) {
   }
   return false;
 }
-
-export const INPUT_STYLE_CLASSES =
-  "appearance-none rounded dark:bg-transparent border focus:border-line focus:ring-0 w-full py-2 px-3 text-body placeholder:text-body leading-tight focus:shadow-outline";
-
-export const getInputStyleClasses = (isError?: string | null) => {
-  return `${INPUT_STYLE_CLASSES} ${
-    isError ? "border-red-500" : "border-gray-200"
-  }`;
-};
 
 export function statusMessage(status: FulfillmentStatus) {
   const translations: Record<FulfillmentStatus, string> = {
@@ -105,8 +49,8 @@ export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
 });
 
 export function getLocaleFromRequest(request: Request): I18nLocale {
-  const url = new URL(request.url);
-  const firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
+  let url = new URL(request.url);
+  let firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
 
   return countries[firstPathPart]
     ? {
@@ -120,8 +64,8 @@ export function getLocaleFromRequest(request: Request): I18nLocale {
 }
 
 export function usePrefixPathWithLocale(path: string) {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
 
   return `${selectedLocale.pathPrefix}${
     path.startsWith("/") ? path : `/${path}`

@@ -48,11 +48,6 @@ let variants = cva("", {
       22: "rounded-[22px]",
       24: "rounded-3xl",
     },
-    alignment: {
-      top: "items-start",
-      middle: "items-center",
-      bottom: "items-end",
-    },
     contentPosition: {
       over: "absolute inset-0 flex flex-col justify-center z-1",
       below: "",
@@ -79,7 +74,6 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
       borderRadius,
       contentPosition,
       collectionNameColor,
-      alignment,
       enableOverlay,
       overlayColor,
       overlayColorHover,
@@ -149,14 +143,16 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 className={clsx("z-0", variants({ borderRadius }))}
               />
             )}
-            <div className={clsx(variants({ alignment, contentPosition }))}>
+            <div
+              className={clsx("items-center", variants({ contentPosition }))}
+            >
               <div
                 style={
                   { "--col-name-color": collectionNameColor } as CSSProperties
                 }
                 className={clsx(
                   contentPosition === "over"
-                    ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-[var(--col-name-color)]"
+                    ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-[--col-name-color]"
                     : "py-4",
                 )}
               >
@@ -247,16 +243,16 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "select",
-          name: "aspectRatio",
-          label: "Aspect ratio",
-          defaultValue: "3/4",
+          name: "imageAspectRatio",
+          label: "Image aspect ratio",
+          defaultValue: "adapt",
           configs: {
             options: [
               { value: "adapt", label: "Adapt to image" },
-              { value: "1/1", label: "1/1" },
-              { value: "4/3", label: "4/3" },
-              { value: "3/4", label: "3/4" },
-              { value: "16/9", label: "16/9" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
             ],
           },
           helpText:
@@ -289,20 +285,6 @@ export let schema: HydrogenComponentSchema = {
             ],
           },
           defaultValue: "over",
-        },
-        {
-          type: "select",
-          name: "alignment",
-          label: "Vertical alignment",
-          configs: {
-            options: [
-              { value: "top", label: "Top" },
-              { value: "middle", label: "Middle" },
-              { value: "bottom", label: "Bottom" },
-            ],
-          },
-          defaultValue: "middle",
-          condition: "contentPosition.eq.over",
         },
         {
           type: "color",

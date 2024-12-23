@@ -1,8 +1,8 @@
 import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
 import type { GetShopPrimaryDomainQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { Button } from "~/modules/button";
-import { PageHeader } from "~/modules/text";
+import { Button } from "~/components/button";
+import { Section } from "~/components/section";
 
 /*
  If your online store had active orders before you launched your Hydrogen storefront,
@@ -30,16 +30,14 @@ export default function () {
 
 export function ErrorBoundary() {
   return (
-    <PageHeader
-      heading={"Error redirecting to the order status URL"}
-      className="text-red-600"
-    >
-      <div className="flex items-baseline justify-between w-full">
-        <Button as="button" onClick={() => window.location.reload()}>
-          Try Again
-        </Button>
+    <Section width="fixed" verticalPadding="medium">
+      <h4 className="mb-8 lg:mb-20 font-medium text-center text-red-600">
+        Error redirecting to the order status URL
+      </h4>
+      <div className="flex items-baseline justify-between w-full mt-8">
+        <Button onClick={() => window.location.reload()}>Try Again</Button>
       </div>
-    </PageHeader>
+    </Section>
   );
 }
 

@@ -33,7 +33,7 @@ function Orders({ orders }: OrderCardsProps) {
 function OrderCard({ order }: { order: OrderCardFragment }) {
   if (!order?.id) return null;
 
-  let [legacyOrderId, key] = order!.id!.split("/").pop()!.split("?");
+  let [legacyOrderId, key] = order.id.split("/").pop().split("?");
   let lineItems = flattenConnection(order?.lineItems);
   let fulfillmentStatus = flattenConnection(order?.fulfillments)[0]?.status;
   let orderLink = key
@@ -41,18 +41,16 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
     : `/account/orders/${legacyOrderId}`;
 
   return (
-    <li className="flex text-center border border-[#B7B7B7] rounded-sm items-center gap-5 p-5">
+    <li className="flex text-center border border-line-subtle items-center gap-5 p-5">
       {lineItems[0].image && (
         <Link className="shrink-0" to={orderLink} prefetch="intent">
-          <div className="card-image aspect-square">
-            <Image
-              width={140}
-              height={140}
-              className="w-full opacity-0 animate-fade-in cover"
-              alt={lineItems[0].image?.altText ?? "Order image"}
-              src={lineItems[0].image.url}
-            />
-          </div>
+          <Image
+            width={500}
+            height={500}
+            className="max-w-36 h-auto opacity-0 animate-fade-in cover"
+            alt={lineItems[0].image?.altText ?? "Order image"}
+            src={lineItems[0].image.url}
+          />
         </Link>
       )}
       <div
@@ -60,16 +58,11 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
           !lineItems[0].image ? "md:col-span-2" : ""
         }`}
       >
-        {/* <Heading as="h3" format size="copy">
-            {lineItems.length > 1
-              ? `${lineItems[0].title} +${lineItems.length - 1} more`
-              : lineItems[0].title}
-          </Heading> */}
-        <p className="font-medium line-clamp-1">
+        <div className="font-medium line-clamp-1">
           {lineItems.length > 1
             ? `${lineItems[0].title} +${lineItems.length - 1} more`
             : lineItems[0].title}
-        </p>
+        </div>
         <dl className="flex flex-col mt-2">
           <dt className="sr-only">Order ID</dt>
           <dd>
@@ -92,9 +85,10 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
             </>
           )}
           <Link
-            className="mt-3 text-body-subtle underline"
             to={orderLink}
             prefetch="intent"
+            variant="underline"
+            className="mt-3 text-body-subtle w-fit after:bg-body-subtle"
           >
             View details
           </Link>
