@@ -14,7 +14,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 - Live store: https://pilot.weaverse.dev
 - Customizing Pilot on Weaverse Studio: https://studio.weaverse.io/demo
-  ![demo](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Home.png?v=1695816170)
+  ![pilot.weaverse.dev](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pilot.weavverse.dev.png?v=1735017659)
 
 ## What's included
 
@@ -281,7 +281,7 @@ And then you can use the data in your component with `Component.props.loaderData
 
 Weaverse provides a convenient way to customize your theme inside the **Weaverse Studio**. You can add new sections, customize existing ones, and change the theme settings.
 
-![Weaverse Studio](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
+![Weaverse Studio](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_studio.png?v=1735017805)
 
 ### Local development inspects
 
