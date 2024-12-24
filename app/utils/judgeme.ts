@@ -93,51 +93,28 @@ export async function getJudgemeReviews(
 
 const JUDGE_ME_API = "https://judge.me/api/v1/reviews";
 
-export async function createJudgemeReview(
-  api_token: string,
-  shop_domain: string,
-  formData: FormData,
-) {
-  if (!api_token) {
-    return {
-      error: "Missing JUDGEME_PRIVATE_API_TOKEN",
-    };
-  }
-  let body = formDataToObject(formData);
+export async function createJudgeMeReview({
+  formData,
+  shopDomain,
+  apiToken,
+}: {
+  shopDomain: string;
+  apiToken: string;
+  formData: FormData;
+}) {
   let url = new URL(JUDGE_ME_API);
-  url.searchParams.append("api_token", api_token);
-  url.searchParams.append("shop_domain", shop_domain);
-  let payload = JSON.stringify({
-    shop_domain,
-    platform: "shopify",
-    ...body,
-  });
+  url.searchParams.set("api_token", apiToken);
+  url.searchParams.set("shop_domain", shopDomain);
 
-  try {
-    let response = await fetch(JUDGE_ME_API, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: payload,
-    });
-    let status = response.status;
-    if (response.ok) {
-      return { success: true, status };
-    }
-    return {
-      success: false,
-      message: "Something went wrong! Please try again.",
-      status,
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      success: false,
-      message: "Something went wrong! Please try again.",
-      status: 500,
-    };
-  }
+  return await fetch(url.toString(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      shop_domain: shopDomain,
+      platform: "shopify",
+      ...formDataToObject(formData),
+    }),
+  });
 }
 
 function formDataToObject(formData: FormData) {

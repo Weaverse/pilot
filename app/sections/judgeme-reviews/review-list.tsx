@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { StarRating } from "~/components/star-rating";
-import { JudgemeReviewsData } from "~/utils/judgeme";
+import type { JudgemeReviewsData } from "~/utils/judgeme";
 
 const REVIEWS_PER_PAGE = 5;
 
@@ -24,35 +24,32 @@ export function ReviewList({
 
   return (
     <div className="lg:w-2/3 md:w-3/5 w-full py-6 flex flex-col gap-6">
-      {/* User Reviews */}
       <div className="flex flex-col gap-6">
         <span className="font-bold text-lg uppercase">
           Reviews ({judgemeReviews.reviewNumber})
         </span>
-        {reviews.map((review, index) => (
-          <>
-            <div key={index} className="flex gap-4 flex-col md:flex-row">
+        {reviews.map(({ id, rating, reviewer, title, created_at, body }) => (
+          <Fragment key={id}>
+            <div className="flex gap-4 flex-col md:flex-row">
               <div className="flex flex-col gap-4 md:w-1/4 w-full">
                 <div className="flex items-center gap-0.5">
-                  <StarRating rating={review.rating} />
+                  <StarRating rating={rating} />
                 </div>
                 <div className="flex flex-col">
-                  <p className="font-semibold">{review.reviewer.name}</p>
-                  <p>{review.reviewer.email}</p>
+                  <p className="font-semibold">{reviewer.name}</p>
+                  <p>{reviewer.email}</p>
                 </div>
               </div>
               <div className="md:w-3/4 w-full flex flex-col gap-4">
                 <div className="flex justify-between items-center">
-                  <p className="font-bold">{review.title}</p>
-                  <p>{formatDate(review.created_at)}</p>
+                  <p className="font-bold">{title}</p>
+                  <p>{formatDate(created_at)}</p>
                 </div>
-                <p className=" font-normal text-base line-clamp-4">
-                  {review.body}
-                </p>
+                <p className=" font-normal text-base line-clamp-4">{body}</p>
               </div>
             </div>
-            <hr className="border-t border-gray-300" />
-          </>
+            <hr className="border-t border-line-subtle" />
+          </Fragment>
         ))}
       </div>
       {pageNumber > 1 && (
