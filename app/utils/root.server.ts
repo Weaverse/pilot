@@ -8,7 +8,7 @@ import type {
 } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/data/queries";
-import type { EnhancedMenu } from "~/hooks/use-shop-menu";
+import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "~/utils/seo.server";
 
 /**

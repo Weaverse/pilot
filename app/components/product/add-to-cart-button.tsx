@@ -1,4 +1,5 @@
 import type { FetcherWithComponents } from "@remix-run/react";
+import { useMatches } from "@remix-run/react";
 import type {
   OptimisticCartLineInput,
   ShopifyAddToCartPayload,
@@ -9,10 +10,12 @@ import {
   getClientBrowserParameters,
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
+import type { ShopifyPageViewPayload } from "@shopify/hydrogen";
 import { useEffect } from "react";
+import { useMemo } from "react";
 import { Button } from "~/components/button";
 import { openCartDrawer } from "~/components/layout/cart-drawer";
-import { usePageAnalytics } from "~/hooks/use-page-analytics";
+import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function AddToCartButton({
   children,
@@ -61,6 +64,31 @@ export function AddToCartButton({
   );
 }
 
+function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
+  let matches = useMatches();
+
+  return useMemo(() => {
+    let data: Record<string, unknown> = {};
+    for (let match of matches) {
+      let eventData = match?.data as Record<string, unknown>;
+      if (eventData) {
+        eventData.analytics && Object.assign(data, eventData.analytics);
+        let selectedLocale =
+          (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
+        Object.assign(data, {
+          currency: selectedLocale.currency,
+          acceptedLanguage: selectedLocale.language,
+        });
+      }
+    }
+
+    return {
+      ...data,
+      hasUserConsent,
+    } as unknown as ShopifyPageViewPayload;
+  }, [matches, hasUserConsent]);
+}
+
 function AddToCartAnalytics({
   fetcher,
   children,
@@ -68,18 +96,18 @@ function AddToCartAnalytics({
   fetcher: FetcherWithComponents<any>;
   children: React.ReactNode;
 }): JSX.Element {
-  const fetcherData = fetcher.data;
-  const formData = fetcher.formData;
-  const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
+  let fetcherData = fetcher.data;
+  let formData = fetcher.formData;
+  let pageAnalytics = usePageAnalytics({ hasUserConsent: true });
 
   useEffect(() => {
     if (formData) {
-      const cartData: Record<string, unknown> = {};
-      const cartInputs = CartForm.getFormInput(formData);
+      let cartData: Record<string, unknown> = {};
+      let cartInputs = CartForm.getFormInput(formData);
 
       try {
         if (cartInputs.inputs.analytics) {
-          const dataInForm: unknown = JSON.parse(
+          let dataInForm: unknown = JSON.parse(
             String(cartInputs.inputs.analytics)
           );
           Object.assign(cartData, dataInForm);
@@ -89,7 +117,7 @@ function AddToCartAnalytics({
       }
 
       if (Object.keys(cartData).length && fetcherData) {
-        const addToCartPayload: ShopifyAddToCartPayload = {
+        let addToCartPayload: ShopifyAddToCartPayload = {
           ...getClientBrowserParameters(),
           ...pageAnalytics,
           ...cartData,
@@ -103,5 +131,6 @@ function AddToCartAnalytics({
       }
     }
   }, [fetcherData, formData, pageAnalytics]);
+
   return <>{children}</>;
 }

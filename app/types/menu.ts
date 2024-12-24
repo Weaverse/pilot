@@ -1,3 +1,26 @@
+import type {
+  ChildMenuItemFragment,
+  MenuFragment,
+  ParentMenuItemFragment,
+} from "storefrontapi.generated";
+
+type EnhancedMenuItemProps = {
+  to: string;
+  target: string;
+  isExternal?: boolean;
+};
+
+type ChildEnhancedMenuItem = ChildMenuItemFragment & EnhancedMenuItemProps;
+
+type ParentEnhancedMenuItem = (ParentMenuItemFragment &
+  EnhancedMenuItemProps) & {
+  items: ChildEnhancedMenuItem[];
+};
+
+export type EnhancedMenu = Pick<MenuFragment, "id"> & {
+  items: ParentEnhancedMenuItem[];
+};
+
 export interface SingleMenuItem {
   id: string;
   title: string;
