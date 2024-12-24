@@ -7,9 +7,9 @@ import type {
   MenuFragment,
 } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/data/queries";
-import type { EnhancedMenu } from "~/hooks/use-shop-menu";
-import { seoPayload } from "~/lib/seo.server";
+import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/graphql/queries";
+import type { EnhancedMenu } from "~/types/menu";
+import { seoPayload } from "~/utils/seo.server";
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data

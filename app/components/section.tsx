@@ -8,7 +8,7 @@ import type React from "react";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
 import { useAnimation } from "~/hooks/use-animation";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
 import type { OverlayProps } from "./overlay";
@@ -121,7 +121,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         variants({ padding: width, overflow, className }),
         hasBackground &&
           !isBgForContent &&
-          "bg-[--section-bg-color] rounded-[--section-radius]",
+          "bg-[--section-bg-color] rounded-[--section-radius]"
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
@@ -133,7 +133,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
               "bg-[--section-bg-color] rounded-[--section-radius]",
               "px-4 sm:px-8",
             ],
-          containerClassName,
+          containerClassName
         )}
       >
         {isBgForContent && <OverlayAndBackground {...props} />}

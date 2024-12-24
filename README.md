@@ -13,7 +13,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 ## Demo
 
 - Live store: https://pilot.weaverse.dev
-- Try customizing Pilot on Weaverse Playground: https://studio.weaverse.io/demo
+- Customizing Pilot on Weaverse Studio: https://studio.weaverse.io/demo
   ![demo](https://cdn.shopify.com/s/files/1/0693/8201/3220/files/Home.png?v=1695816170)
 
 ## What's included
@@ -26,9 +26,10 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 - GraphQL generator
 - TypeScript and JavaScript flavors
 - Tailwind CSS (via PostCSS)
+- Radix UI
 - New Shopify customer account API
 - Full-featured setup of components and routes
-- Fully customizable inside [Weaverse](https://weaverse.io)
+- Fully customizable inside [Weaverse Studio](https://weaverse.io)
 
 ## Deployment
 
@@ -45,9 +46,9 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, Remix, and Weaverse,
 
 1. Install [Weaverse Hydrogen Customizer](https://apps.shopify.com/weaverse) from Shopify App Store.
 2. Create new Hydrogen storefront inside Weaverse.
-3. Initialize the project and start a local dev server with `@weaverse/cli` tool as instructed in the Weaverse editor.
-   ![Init Weaverse Storefront](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/New_storefront.png?v=1699244454)
-4. Open the Weaverse editor to start customizing and tailoring your storefront according to your preferences.
+3. Initialize the project and start a local dev server with `@weaverse/cli` tool as instructed in the Weaverse Studio.
+   ![Create new Weaverse Shopify Hydrogen project](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/new_hydrogen_project.png?v=1735008500)
+4. Open **Weaverse Studio** to start customizing and tailoring your storefront according to your preferences.
 
 ## Features overview
 
@@ -217,7 +218,7 @@ let Video = forwardRef<HTMLElement, VideoProps>((props, ref) => {
 export default Video;
 ```
 
-Export a `schema` object from the file to define the component's schema with default data and settings to be used in the Weaverse editor.
+Export a `schema` object from the file to define the component's schema with default data and settings to be used in the **Weaverse Studio**.
 
 ```tsx:app/weaverse/sections/Video.tsx
 export let schema: HydrogenComponentSchema = {
@@ -276,11 +277,11 @@ export let loader = async ({weaverse, data}: ComponentLoaderArgs) => {
 
 And then you can use the data in your component with `Component.props.loaderData` 🤗
 
-### Customizing the theme inside Weaverse Editor
+### Manage content and style your pages within Weaverse Studio
 
-Weaverse provides a convenient way to customize your theme inside the **Weaverse editor**. You can add new sections, customize existing ones, and change the theme settings.
+Weaverse provides a convenient way to customize your theme inside the **Weaverse Studio**. You can add new sections, customize existing ones, and change the theme settings.
 
-![Weaverse Editor](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
+![Weaverse Studio](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/playground.jpg?v=1699244445)
 
 ### Local development inspects
 

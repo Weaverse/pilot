@@ -11,7 +11,7 @@ import {
 } from "@weaverse/hydrogen";
 import { type VariantProps, cva } from "class-variance-authority";
 import { type HTMLAttributes, forwardRef } from "react";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 import type { RootLoader } from "~/root";
 
 let variants = cva(["transition-colors inline-flex"], {
@@ -24,7 +24,7 @@ let variants = cva(["transition-colors inline-flex"], {
         "border-[--btn-primary-bg]",
         "hover:text-[--btn-primary-bg]",
         "hover:bg-[--btn-primary-text]",
-        "hover:border-[--btn-primary-text]",
+        "hover:border-[--btn-primary-bg]",
       ],
       secondary: [
         "border px-4 py-3",
@@ -161,7 +161,7 @@ export let Link = forwardRef(
         {children || text}
       </RemixLink>
     );
-  },
+  }
 );
 
 export default Link;

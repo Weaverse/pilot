@@ -18,7 +18,7 @@ import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefrontapi.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
-import { getImageAspectRatio } from "~/lib/utils";
+import { getImageAspectRatio } from "~/utils/image";
 import { CartBestSellers } from "./cart-best-sellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
@@ -43,7 +43,7 @@ export function Cart({
   return <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />;
 }
 
-export function CartDetails({
+function CartDetails({
   layout,
   cart,
 }: {
@@ -59,7 +59,7 @@ export function CartDetails({
           "pb-12 w-full max-w-page mx-auto",
           "grid md:grid-cols-2 lg:grid-cols-3 md:items-start",
           "gap-8 md:gap-8 lg:gap-12",
-        ],
+        ]
       )}
     >
       <CartLines lines={cart?.lines?.nodes} layout={layout} />
@@ -166,7 +166,7 @@ function CartLines({
         className={clsx(
           "grid",
           layout === "page" && "gap-9",
-          layout === "drawer" && "gap-5",
+          layout === "drawer" && "gap-5"
         )}
       >
         {currentLines.map((line) => (
@@ -180,7 +180,10 @@ function CartLines({
 function CartCheckoutActions({
   checkoutUrl,
   layout,
-}: { checkoutUrl: string; layout: Layouts }) {
+}: {
+  checkoutUrl: string;
+  layout: Layouts;
+}) {
   if (!checkoutUrl) return null;
 
   return (
@@ -213,7 +216,7 @@ function CartSummary({
       className={clsx(
         layout === "drawer" && "grid gap-4 border-t border-line-subtle pt-4",
         layout === "page" &&
-          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 rounded w-full",
+          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 rounded w-full"
       )}
     >
       <h2 id="summary-heading" className="sr-only">
@@ -305,7 +308,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
         <div
           className={clsx(
             "flex items-center gap-2",
-            layout === "drawer" && "justify-between",
+            layout === "drawer" && "justify-between"
           )}
         >
           <CartLineQuantityAdjust line={line} />
@@ -320,7 +323,10 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
 function ItemRemoveButton({
   lineId,
   className,
-}: { lineId: CartLine["id"]; className?: string }) {
+}: {
+  lineId: CartLine["id"];
+  className?: string;
+}) {
   return (
     <CartForm
       route="/cart"
@@ -330,7 +336,7 @@ function ItemRemoveButton({
       <button
         className={clsx(
           "flex items-center justify-center w-8 h-8 border-none",
-          className,
+          className
         )}
         type="submit"
       >
@@ -452,7 +458,7 @@ function CartLinePrice({
   );
 }
 
-export function CartEmpty({
+function CartEmpty({
   hidden = false,
   layout = "drawer",
   onClose,
@@ -474,7 +480,7 @@ export function CartEmpty({
         layout === "page" && [
           hidden ? "" : "grid",
           "pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12",
-        ],
+        ]
       )}
       hidden={hidden}
     >

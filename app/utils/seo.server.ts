@@ -95,17 +95,15 @@ function productJsonLd({
   selectedVariant: SelectedVariantRequiredFields;
   url: Request["url"];
 }): SeoConfig["jsonLd"] {
-  const origin = new URL(url).origin;
-  const variants = product.variants.nodes;
-  const description = truncate(
-    product?.seo?.description ?? product?.description,
-  );
-  const offers: Offer[] = (variants || []).map((variant) => {
-    const variantUrl = new URL(url);
-    for (const option of variant.selectedOptions) {
+  let origin = new URL(url).origin;
+  let variants = product.variants.nodes;
+  let description = truncate(product?.seo?.description ?? product?.description);
+  let offers: Offer[] = (variants || []).map((variant) => {
+    let variantUrl = new URL(url);
+    for (let option of variant.selectedOptions) {
       variantUrl.searchParams.set(option.name, option.value);
     }
-    const availability = variant.availableForSale
+    let availability = variant.availableForSale
       ? "https://schema.org/InStock"
       : "https://schema.org/OutOfStock";
 
@@ -162,7 +160,7 @@ function product({
   selectedVariant: SelectedVariantRequiredFields;
   url: Request["url"];
 }): SeoConfig {
-  const description = truncate(
+  let description = truncate(
     product?.seo?.description ?? product?.description ?? "",
   );
   return {
@@ -191,8 +189,8 @@ function collectionJsonLd({
   url: Request["url"];
   collection: CollectionRequiredFields;
 }): SeoConfig["jsonLd"] {
-  const siteUrl = new URL(url);
-  const itemListElement: CollectionPage["mainEntity"] =
+  let siteUrl = new URL(url);
+  let itemListElement: CollectionPage["mainEntity"] =
     collection.products.nodes.map((product, index) => {
       return {
         "@type": "ListItem",
@@ -271,7 +269,7 @@ function collectionsJsonLd({
   url: Request["url"];
   collections: CollectionListRequiredFields;
 }): SeoConfig["jsonLd"] {
-  const itemListElement: CollectionPage["mainEntity"] = collections.nodes.map(
+  let itemListElement: CollectionPage["mainEntity"] = collections.nodes.map(
     (collection, index) => {
       return {
         "@type": "ListItem",
@@ -417,8 +415,8 @@ function policies({
   policies: Array<Pick<ShopPolicy, "title" | "handle">>;
   url: Request["url"];
 }): SeoConfig {
-  const origin = new URL(url).origin;
-  const itemListElement: BreadcrumbList["itemListElement"] = policies
+  let origin = new URL(url).origin;
+  let itemListElement: BreadcrumbList["itemListElement"] = policies
     .filter(Boolean)
     .map((policy, index) => {
       return {
@@ -449,7 +447,7 @@ function policies({
   };
 }
 
-export const seoPayload = {
+export let seoPayload = {
   article,
   blog,
   collection,

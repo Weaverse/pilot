@@ -3,10 +3,9 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type { PageType } from "@weaverse/hydrogen";
-
-import { routeHeaders } from "~/data/cache";
-import { SHOP_QUERY } from "~/data/queries";
-import { seoPayload } from "~/lib/seo.server";
+import { routeHeaders } from "~/utils/cache";
+import { SHOP_QUERY } from "~/graphql/queries";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;

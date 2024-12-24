@@ -1,6 +1,6 @@
-import type { Localizations } from "~/lib/type";
+import type { I18nLocale, Localizations } from "~/types/locale";
 
-export const countries: Localizations = {
+export const COUNTRIES: Localizations = {
   default: {
     label: "United States (USD $)",
     language: "EN",
@@ -230,3 +230,10 @@ export const countries: Localizations = {
     currency: "EUR",
   },
 };
+
+export const PAGINATION_SIZE = 16;
+
+export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
+  ...COUNTRIES.default,
+  pathPrefix: "",
+});

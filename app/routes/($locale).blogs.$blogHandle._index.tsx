@@ -5,10 +5,10 @@ import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import type { BlogQuery } from "storefrontapi.generated";
-import { routeHeaders } from "~/data/cache";
-import { BLOGS_QUERY } from "~/data/queries";
-import { PAGINATION_SIZE } from "~/lib/const";
-import { seoPayload } from "~/lib/seo.server";
+import { routeHeaders } from "~/utils/cache";
+import { BLOGS_QUERY } from "~/graphql/queries";
+import { PAGINATION_SIZE } from "~/utils/const";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;

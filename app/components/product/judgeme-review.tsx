@@ -6,7 +6,7 @@ import type {
 import { useParentInstance } from "@weaverse/hydrogen";
 import { forwardRef, useEffect } from "react";
 import { StarRating } from "~/components/star-rating";
-import { usePrefixPathWithLocale } from "~/lib/utils";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 
 type JudgemeReviewsData = {
   rating: number;
@@ -22,15 +22,18 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
     let judgemeReviews = loaderData?.judgemeReviews;
     let { load, data: fetchData } = useFetcher<JudgemeReviewsData>();
     let context = useParentInstance();
-    let handle = context?.data?.product?.handle!;
+    let handle = context?.data?.product?.handle;
     let api = usePrefixPathWithLocale(`/api/review/${handle}`);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       if (judgemeReviews || !handle) return;
       load(api);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [handle, api]);
+
     let data = judgemeReviews || fetchData;
+
     if (!data) return null;
     if (data.error) {
       return (

@@ -2,7 +2,6 @@ import { Minus, Plus } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { Link, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
-import { getExcerpt } from "~/lib/utils";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
 
 export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
@@ -74,4 +73,10 @@ export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
       ))}
     </Accordion.Root>
   );
+}
+
+function getExcerpt(text: string) {
+  let regex = /<p.*>(.*?)<\/p>/;
+  let match = regex.exec(text);
+  return match?.length ? match[0] : text;
 }

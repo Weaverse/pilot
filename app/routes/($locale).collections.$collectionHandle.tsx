@@ -5,7 +5,10 @@ import {
   getPaginationVariables,
   getSeoMeta,
 } from "@shopify/hydrogen";
-import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
+import type {
+  ProductCollectionSortKeys,
+  ProductFilter,
+} from "@shopify/hydrogen/storefront-api-types";
 import {
   type LoaderFunctionArgs,
   type MetaArgs,
@@ -14,13 +17,12 @@ import {
 } from "@shopify/remix-oxygen";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { routeHeaders } from "~/data/cache";
-import { COLLECTION_QUERY } from "~/data/queries";
-import { getSortValuesFromParam } from "~/lib/collections";
-import { FILTER_URL_PREFIX, PAGINATION_SIZE } from "~/lib/const";
-import type { SortParam } from "~/lib/filter";
-import { seoPayload } from "~/lib/seo.server";
-import { parseAsCurrency } from "~/lib/utils";
+import { COLLECTION_QUERY } from "~/graphql/queries";
+import type { I18nLocale } from "~/types/locale";
+import { routeHeaders } from "~/utils/cache";
+import { PAGINATION_SIZE } from "~/utils/const";
+import { FILTER_URL_PREFIX, type SortParam } from "~/utils/filter";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;
@@ -166,4 +168,49 @@ export default function Collection() {
       />
     </>
   );
+}
+
+function getSortValuesFromParam(sortParam: SortParam | null): {
+  sortKey: ProductCollectionSortKeys;
+  reverse: boolean;
+} {
+  switch (sortParam) {
+    case "price-high-low":
+      return {
+        sortKey: "PRICE",
+        reverse: true,
+      };
+    case "price-low-high":
+      return {
+        sortKey: "PRICE",
+        reverse: false,
+      };
+    case "best-selling":
+      return {
+        sortKey: "BEST_SELLING",
+        reverse: false,
+      };
+    case "newest":
+      return {
+        sortKey: "CREATED",
+        reverse: true,
+      };
+    case "featured":
+      return {
+        sortKey: "MANUAL",
+        reverse: false,
+      };
+    default:
+      return {
+        sortKey: "RELEVANCE",
+        reverse: false,
+      };
+  }
+}
+
+function parseAsCurrency(value: number, locale: I18nLocale) {
+  return new Intl.NumberFormat(`${locale.language}-${locale.country}`, {
+    style: "currency",
+    currency: locale.currency,
+  }).format(value);
 }

@@ -2,7 +2,7 @@ import type { ScrollAreaProps as RadixScrollAreaProps } from "@radix-ui/react-sc
 import { Root, Scrollbar, Thumb, Viewport } from "@radix-ui/react-scroll-area";
 import { type VariantProps, cva } from "class-variance-authority";
 import { forwardRef } from "react";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 
 let variants = cva("", {
   variants: {
@@ -39,7 +39,7 @@ export let ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
       style,
       ...rest
     },
-    ref,
+    ref
   ) => {
     return (
       <Root
@@ -59,7 +59,7 @@ export let ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
             "bg-black/10 dark:bg-gray-700/50",
             "transition-colors duration-150 ease-out",
             variants({ size }),
-            scrollbarClassName,
+            scrollbarClassName
           )}
           orientation="vertical"
         >
@@ -69,11 +69,11 @@ export let ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
               "bg-gray-500 dark:bg-gray-500",
               "before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']",
               "before:h-full before:min-h-[20px] before:w-full before:min-w-[20px]",
-              thumbClassName,
+              thumbClassName
             )}
           />
         </Scrollbar>
       </Root>
     );
-  },
+  }
 );

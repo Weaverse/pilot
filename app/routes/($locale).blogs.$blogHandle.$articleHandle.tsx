@@ -5,9 +5,9 @@ import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import type { ArticleDetailsQuery } from "storefrontapi.generated";
-import { routeHeaders } from "~/data/cache";
-import { ARTICLE_QUERY } from "~/data/queries";
-import { seoPayload } from "~/lib/seo.server";
+import { routeHeaders } from "~/utils/cache";
+import { ARTICLE_QUERY } from "~/graphql/queries";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;
@@ -34,7 +34,7 @@ export async function loader(args: RouteLoaderArgs) {
 
   let article = blog.articleByHandle;
   let relatedArticles = blog.articles.nodes.filter(
-    (art) => art?.handle !== params?.articleHandle,
+    (art) => art?.handle !== params?.articleHandle
   );
 
   let formattedDate = new Intl.DateTimeFormat(`${language}-${country}`, {

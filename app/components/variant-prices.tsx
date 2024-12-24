@@ -1,6 +1,6 @@
 import { Money } from "@shopify/hydrogen";
 import { CompareAtPrice } from "./compare-at-price";
-import { isDiscounted } from "~/lib/utils";
+import { isDiscounted } from "~/utils/product";
 import type {
   MoneyV2,
   ProductVariant,

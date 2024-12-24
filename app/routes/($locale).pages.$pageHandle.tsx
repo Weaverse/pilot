@@ -6,8 +6,8 @@ import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { PageDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 
-import { routeHeaders } from "~/data/cache";
-import { seoPayload } from "~/lib/seo.server";
+import { routeHeaders } from "~/utils/cache";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;

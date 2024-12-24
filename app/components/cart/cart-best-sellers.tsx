@@ -7,7 +7,7 @@ import clsx from "clsx";
 import { useEffect, useId, useMemo } from "react";
 import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";
-import { usePrefixPathWithLocale } from "~/lib/utils";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 
 interface CartBestSellersProps {
   count: number;

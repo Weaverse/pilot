@@ -1,5 +1,5 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { Analytics, getSeoMeta } from "@shopify/hydrogen";
+import { Analytics, type Storefront, getSeoMeta } from "@shopify/hydrogen";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -8,20 +8,20 @@ import type {
 import { defer, json } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
-import invariant from "tiny-invariant";
 import type {
   ProductQuery,
   ProductRecommendationsQuery,
 } from "storefrontapi.generated";
-import { routeHeaders } from "~/data/cache";
+import invariant from "tiny-invariant";
+import { routeHeaders } from "~/utils/cache";
 import {
   PRODUCT_QUERY,
   RECOMMENDED_PRODUCTS_QUERY,
   VARIANTS_QUERY,
-} from "~/data/queries";
-import { createJudgemeReview, getJudgemeReviews } from "~/lib/judgeme";
-import { seoPayload } from "~/lib/seo.server";
-import type { Storefront } from "~/lib/type";
+} from "~/graphql/queries";
+import { createJudgemeReview, getJudgemeReviews } from "~/utils/judgeme";
+import { seoPayload } from "~/utils/seo.server";
+import type { I18nLocale } from "~/types/locale";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;
@@ -176,7 +176,7 @@ export default function Product() {
 }
 
 async function getRecommendedProducts(
-  storefront: Storefront,
+  storefront: Storefront<I18nLocale>,
   productId: string
 ) {
   let products = await storefront.query<ProductRecommendationsQuery>(

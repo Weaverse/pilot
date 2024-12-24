@@ -5,8 +5,7 @@ import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useRef, useState } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
-import { FILTER_URL_PREFIX } from "~/lib/const";
-import { filterInputToParams } from "~/lib/filter";
+import { FILTER_URL_PREFIX, filterInputToParams } from "~/utils/filter";
 
 export function PriceRangeFilter({
   collection,

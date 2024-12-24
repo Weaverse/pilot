@@ -1,13 +1,14 @@
+import { Image, Money } from "@shopify/hydrogen";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
+import { CompareAtPrice } from "~/components/compare-at-price";
+import { Link } from "~/components/link";
 import type {
   NormalizedPredictiveSearchResultItem,
   NormalizedPredictiveSearchResults,
 } from "~/types/predictive-search";
-import { Image, Money } from "@shopify/hydrogen";
-import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { Link } from "~/components/link";
-import { CompareAtPrice } from "~/components/compare-at-price";
-import { getImageAspectRatio, isDiscounted } from "~/lib/utils";
+import { getImageAspectRatio } from "~/utils/image";
+import { isDiscounted } from "~/utils/product";
 
 type SearchResultTypeProps = {
   items?: NormalizedPredictiveSearchResultItem[];
@@ -27,7 +28,7 @@ export function PredictiveSearchResult({ items, type }: SearchResultTypeProps) {
           className={clsx(
             type === "queries" && "space-y-1",
             type === "articles" && "space-y-3",
-            type === "products" && "space-y-4",
+            type === "products" && "space-y-4"
           )}
         >
           {items.map((item: NormalizedPredictiveSearchResultItem) => (
@@ -97,7 +98,7 @@ function SearchResultItem({
           ) : (
             <div
               className={clsx(
-                __typename === "Product" ? "line-clamp-1" : "line-clamp-2",
+                __typename === "Product" ? "line-clamp-1" : "line-clamp-2"
               )}
             >
               <span className="reveal-underline">{title}</span>

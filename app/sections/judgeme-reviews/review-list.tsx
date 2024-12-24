@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StarRating } from "~/components/star-rating";
-import { JudgemeReviewsData } from "~/lib/judgeme";
+import { JudgemeReviewsData } from "~/utils/judgeme";
 
 const REVIEWS_PER_PAGE = 5;
 

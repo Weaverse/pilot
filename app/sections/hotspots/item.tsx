@@ -8,7 +8,7 @@ import type {
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
-import { PRODUCT_QUERY } from "~/data/queries";
+import { PRODUCT_QUERY } from "~/graphql/queries";
 import { ProductPopup } from "./product-popup";
 
 export interface HotspotsItemData {
@@ -87,7 +87,7 @@ let HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(
         </div>
       </div>
     );
-  },
+  }
 );
 
 export default HotspotsItem;

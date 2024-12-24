@@ -1,7 +1,16 @@
 import { Image, flattenConnection } from "@shopify/hydrogen";
+import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import type { OrderCardFragment } from "customer-accountapi.generated";
 import Link from "~/components/link";
-import { statusMessage } from "~/lib/utils";
+
+export const ORDER_STATUS: Record<FulfillmentStatus, string> = {
+  SUCCESS: "Success",
+  PENDING: "Pending",
+  OPEN: "Open",
+  FAILURE: "Failure",
+  ERROR: "Error",
+  CANCELLED: "Cancelled",
+};
 
 type OrderCardsProps = {
   orders: OrderCardFragment[];
@@ -79,7 +88,7 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
               <dt className="sr-only">Fulfillment Status</dt>
               <dd className="mt-3">
                 <span className="px-2.5 py-1 text-xs font-medium border bg-gray-100">
-                  {statusMessage(fulfillmentStatus)}
+                  {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}
                 </span>
               </dd>
             </>

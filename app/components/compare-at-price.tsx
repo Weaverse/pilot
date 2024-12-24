@@ -1,6 +1,6 @@
 import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 
 export function CompareAtPrice({
   data,

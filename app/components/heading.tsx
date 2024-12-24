@@ -7,7 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 
 let fontSizeVariants = cva("", {
   variants: {
@@ -132,7 +132,7 @@ let Heading = forwardRef<
       style={style}
       className={cn(
         size === "custom" && fontSizeVariants({ mobileSize, desktopSize }),
-        variants({ size, weight, letterSpacing, alignment, className }),
+        variants({ size, weight, letterSpacing, alignment, className })
       )}
     >
       {content}

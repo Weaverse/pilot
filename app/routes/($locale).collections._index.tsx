@@ -4,10 +4,10 @@ import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { CollectionsQuery } from "storefrontapi.generated";
-import { routeHeaders } from "~/data/cache";
-import { COLLECTIONS_QUERY } from "~/data/queries";
-import { PAGINATION_SIZE } from "~/lib/const";
-import { seoPayload } from "~/lib/seo.server";
+import { routeHeaders } from "~/utils/cache";
+import { COLLECTIONS_QUERY } from "~/graphql/queries";
+import { PAGINATION_SIZE } from "~/utils/const";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;
@@ -29,7 +29,7 @@ export let loader = async (args: RouteLoaderArgs) => {
         country: storefront.i18n.country,
         language: storefront.i18n.language,
       },
-    },
+    }
   );
 
   let seo = seoPayload.listCollections({

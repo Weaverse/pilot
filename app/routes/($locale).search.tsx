@@ -16,9 +16,10 @@ import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
-import { PAGINATION_SIZE, getImageLoadingPriority } from "~/lib/const";
-import { seoPayload } from "~/lib/seo.server";
+import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { PAGINATION_SIZE } from "~/utils/const";
+import { getImageLoadingPriority } from "~/utils/image";
+import { seoPayload } from "~/utils/seo.server";
 import {
   type FeaturedData,
   getFeaturedData,
@@ -49,7 +50,7 @@ export async function loader({
           country: storefront.i18n.country,
           language: storefront.i18n.language,
         },
-      },
+      }
     );
     products = data.products;
   }
@@ -70,8 +71,8 @@ export async function loader({
           description: hasResults
             ? `Showing ${products.nodes.length} search results for "${searchTerm}"`
             : searchTerm
-              ? `No results found for "${searchTerm}"`
-              : "Search our store",
+            ? `No results found for "${searchTerm}"`
+            : "Search our store",
         },
         metafields: [],
         products,
@@ -243,7 +244,7 @@ function NoResults({
 }
 
 function getRecommendations(
-  storefront: LoaderFunctionArgs["context"]["storefront"],
+  storefront: LoaderFunctionArgs["context"]["storefront"]
 ) {
   return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }

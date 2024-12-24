@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { Suspense, useState } from "react";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
-import { Cart } from "~/modules/cart";
+import { Cart } from "~/components/cart/cart";
 import type { RootLoader } from "~/root";
 
 export let openCartDrawer = () => {};
@@ -53,7 +53,7 @@ export function CartDrawer() {
                     "text-sm leading-none text-center font-medium",
                     "transition-colors duration-300",
                     "group-hover/header:bg-[--color-header-text]",
-                    "group-hover/header:text-[--color-header-bg]",
+                    "group-hover/header:text-[--color-header-bg]"
                   )}
                 >
                   <span className="-mr-px">{cart?.totalQuantity}</span>

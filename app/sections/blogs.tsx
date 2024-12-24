@@ -5,7 +5,7 @@ import { forwardRef } from "react";
 import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { getImageLoadingPriority } from "~/lib/const";
+import { getImageLoadingPriority } from "~/utils/image";
 
 interface BlogsProps extends SectionProps {
   layout: "blog" | "default";

@@ -4,10 +4,10 @@ import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import { routeHeaders } from "~/data/cache";
-import { ALL_PRODUCTS_QUERY } from "~/data/queries";
-import { PAGINATION_SIZE } from "~/lib/const";
-import { seoPayload } from "~/lib/seo.server";
+import { routeHeaders } from "~/utils/cache";
+import { ALL_PRODUCTS_QUERY } from "~/graphql/queries";
+import { PAGINATION_SIZE } from "~/utils/const";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;
