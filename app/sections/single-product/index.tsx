@@ -7,7 +7,7 @@ import type {
 } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import type { ProductQuery } from "storefrontapi.generated";
-import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/data/queries";
+import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductPlaceholder } from "~/components/product/placeholder";

@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 import {
   FEATURED_COLLECTION_FRAGMENT,
   PRODUCT_CARD_FRAGMENT,
-} from "~/data/fragments";
+} from "~/graphql/fragments";
 
 export async function loader({ context: { storefront } }: LoaderFunctionArgs) {
   return json(await getFeaturedData(storefront));

@@ -6,7 +6,7 @@ import { forwardRef } from "react";
 import type { FeaturedProductsQuery } from "storefrontapi.generated";
 import type { SectionProps } from "~/components/section";
 import { Section, layoutInputs } from "~/components/section";
-import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
+import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface FeaturedProductsData {}

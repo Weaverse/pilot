@@ -16,7 +16,7 @@ import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { PRODUCT_CARD_FRAGMENT } from "~/data/fragments";
+import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { getImageLoadingPriority } from "~/utils/image";
 import { seoPayload } from "~/utils/seo.server";

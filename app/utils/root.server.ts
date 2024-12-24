@@ -7,7 +7,7 @@ import type {
   MenuFragment,
 } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/data/queries";
+import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/graphql/queries";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "~/utils/seo.server";
 

@@ -17,12 +17,12 @@ import {
 } from "@shopify/remix-oxygen";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { routeHeaders } from "~/utils/cache";
-import { COLLECTION_QUERY } from "~/data/queries";
-import { FILTER_URL_PREFIX, PAGINATION_SIZE } from "~/utils/const";
-import type { SortParam } from "~/utils/filter";
-import { seoPayload } from "~/utils/seo.server";
+import { COLLECTION_QUERY } from "~/graphql/queries";
 import type { I18nLocale } from "~/types/locale";
+import { routeHeaders } from "~/utils/cache";
+import { PAGINATION_SIZE } from "~/utils/const";
+import { FILTER_URL_PREFIX, type SortParam } from "~/utils/filter";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;

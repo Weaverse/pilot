@@ -3,7 +3,7 @@ import {
   MEDIA_FRAGMENT,
   PRODUCT_CARD_FRAGMENT,
   PRODUCT_VARIANT_FRAGMENT,
-} from "~/data/fragments";
+} from "~/graphql/fragments";
 
 export const LAYOUT_QUERY = `#graphql
   query layout(

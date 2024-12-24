@@ -18,7 +18,7 @@ import {
   PRODUCT_QUERY,
   RECOMMENDED_PRODUCTS_QUERY,
   VARIANTS_QUERY,
-} from "~/data/queries";
+} from "~/graphql/queries";
 import { createJudgemeReview, getJudgemeReviews } from "~/utils/judgeme";
 import { seoPayload } from "~/utils/seo.server";
 import type { I18nLocale } from "~/types/locale";

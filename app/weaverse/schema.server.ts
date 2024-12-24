@@ -1,5 +1,5 @@
 import type { HydrogenThemeSchema, SwatchesConfigs } from "@weaverse/hydrogen";
-import { COUNTRIES } from "~/data/countries";
+import { COUNTRIES } from "~/utils/const";
 import pkg from "../../package.json";
 
 let swatchesConfigs: SwatchesConfigs = {

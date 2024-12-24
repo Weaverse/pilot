@@ -5,7 +5,7 @@ import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
-import { ALL_PRODUCTS_QUERY } from "~/data/queries";
+import { ALL_PRODUCTS_QUERY } from "~/graphql/queries";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";

@@ -6,7 +6,7 @@ import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import type { ArticleDetailsQuery } from "storefrontapi.generated";
 import { routeHeaders } from "~/utils/cache";
-import { ARTICLE_QUERY } from "~/data/queries";
+import { ARTICLE_QUERY } from "~/graphql/queries";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 

@@ -1,6 +1,6 @@
 import { CacheLong, generateCacheControlHeader } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
-import { COUNTRIES } from "~/data/countries";
+import { COUNTRIES } from "~/utils/const";
 
 export async function loader() {
   return json(

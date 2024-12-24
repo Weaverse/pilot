@@ -1,3 +1,5 @@
+// @ts-ignore
+import * as remixBuild from "virtual:remix/server-build"; // Virtual entry point for the app
 import type { HydrogenSession } from "@shopify/hydrogen";
 import { createHydrogenContext, storefrontRedirect } from "@shopify/hydrogen";
 import {
@@ -7,11 +9,9 @@ import {
   createRequestHandler,
 } from "@shopify/remix-oxygen";
 import { WeaverseClient, type WeaverseClientArgs } from "@weaverse/hydrogen";
-// @ts-ignore
-import * as remixBuild from "virtual:remix/server-build"; // Virtual entry point for the app
-import { COUNTRIES } from "~/data/countries";
-import { CART_QUERY_FRAGMENT } from "~/data/fragments";
+import { CART_QUERY_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/locale";
+import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
 

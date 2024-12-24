@@ -5,7 +5,7 @@ import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { CollectionsQuery } from "storefrontapi.generated";
 import { routeHeaders } from "~/utils/cache";
-import { COLLECTIONS_QUERY } from "~/data/queries";
+import { COLLECTIONS_QUERY } from "~/graphql/queries";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
