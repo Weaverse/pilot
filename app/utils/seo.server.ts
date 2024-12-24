@@ -98,6 +98,7 @@ function productJsonLd({
   let origin = new URL(url).origin;
   let variants = product.variants.nodes;
   let description = truncate(product?.seo?.description ?? product?.description);
+  // @ts-ignore
   let offers: Offer[] = (variants || []).map((variant) => {
     let variantUrl = new URL(url);
     for (let option of variant.selectedOptions) {
