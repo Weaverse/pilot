@@ -16,7 +16,7 @@ import {
 } from "@shopify/remix-oxygen";
 import type { CartApiQueryFragment } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { Cart } from "~/modules/cart";
+import { Cart } from "~/components/cart/cart";
 import type { RootLoader } from "~/root";
 
 export async function action({ request, context }: ActionFunctionArgs) {

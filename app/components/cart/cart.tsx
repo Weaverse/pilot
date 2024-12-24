@@ -43,7 +43,7 @@ export function Cart({
   return <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />;
 }
 
-export function CartDetails({
+function CartDetails({
   layout,
   cart,
 }: {
@@ -458,7 +458,7 @@ function CartLinePrice({
   );
 }
 
-export function CartEmpty({
+function CartEmpty({
   hidden = false,
   layout = "drawer",
   onClose,
