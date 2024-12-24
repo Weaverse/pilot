@@ -30,14 +30,15 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     pageBy: PAGINATION_SIZE,
   });
   let { collectionHandle } = params;
-  let locale = context.storefront.i18n;
+  let { storefront, env } = context;
+  let locale = storefront.i18n;
 
   invariant(collectionHandle, "Missing collectionHandle param");
 
   let searchParams = new URL(request.url).searchParams;
 
   let { sortKey, reverse } = getSortValuesFromParam(
-    searchParams.get("sort") as SortParam,
+    searchParams.get("sort") as SortParam
   );
   let filters = [...searchParams.entries()].reduce((filters, [key, value]) => {
     if (key.startsWith(FILTER_URL_PREFIX)) {
@@ -49,7 +50,10 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     return filters;
   }, [] as ProductFilter[]);
 
-  let { collection, collections } = await context.storefront
+  let { CUSTOM_COLLECTION_BANNER_METAFIELD = "" } = env;
+  let [bannerNamespace, bannerKey] =
+    CUSTOM_COLLECTION_BANNER_METAFIELD.split(".");
+  let { collection, collections } = await storefront
     .query<CollectionDetailsQuery>(COLLECTION_QUERY, {
       variables: {
         ...paginationVariables,
@@ -57,11 +61,11 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         filters,
         sortKey,
         reverse,
-        country: context.storefront.i18n.country,
-        language: context.storefront.i18n.language,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
         // Query custom banner stored in Shopify's collection metafields
-        customBannerNamespace: "custom",
-        customBannerKey: "collection_banner",
+        customBannerNamespace: bannerNamespace,
+        customBannerKey: bannerKey,
       },
     })
     .catch((e) => {
@@ -84,7 +88,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   let seo = seoPayload.collection({ collection, url: request.url });
 
   let allFilterValues = collection.products.filters.flatMap(
-    (filter) => filter.values,
+    (filter) => filter.values
   );
 
   let appliedFilters = filters
