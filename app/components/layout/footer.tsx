@@ -14,9 +14,8 @@ import clsx from "clsx";
 import { type FormEvent, useEffect, useState } from "react";
 import { Button } from "~/components/button";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-
-import { cn } from "~/lib/cn";
-import type { SingleMenuItem } from "~/lib/type";
+import { cn } from "~/utils/cn";
+import type { SingleMenuItem } from "~/types/menu";
 import { CountrySelector } from "./country-selector";
 
 let variants = cva("", {
@@ -103,7 +102,7 @@ export function Footer() {
     <footer
       className={cn(
         "w-full bg-[--color-footer-bg] text-[--color-footer-text] pt-9 lg:pt-16",
-        variants({ padding: footerWidth }),
+        variants({ padding: footerWidth })
       )}
       style={
         {
@@ -114,7 +113,7 @@ export function Footer() {
       <div
         className={cn(
           "divide-y divide-line-subtle space-y-9 w-full h-full",
-          variants({ width: footerWidth }),
+          variants({ width: footerWidth })
         )}
       >
         <div className="space-y-9">
@@ -146,7 +145,7 @@ export function Footer() {
                     >
                       {social.icon}
                     </Link>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             </div>

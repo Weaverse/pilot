@@ -6,9 +6,8 @@ import clsx from "clsx";
 import { useState } from "react";
 import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import { cn } from "~/lib/cn";
-import { getMaxDepth } from "~/lib/menu";
-import type { SingleMenuItem } from "~/lib/type";
+import { cn } from "~/utils/cn";
+import type { SingleMenuItem } from "~/types/menu";
 
 export function DesktopMenu() {
   let { headerMenu } = useShopMenu();
@@ -155,7 +154,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
               ))}
             </div>
           </SlideIn>
-        ),
+        )
       )}
     </div>
   );
@@ -171,7 +170,7 @@ function SlideIn(props: {
     <div
       className={cn(
         "opacity-0 animate-slide-left [animation-delay:calc(var(--idx)*0.1s+0.1s)]",
-        className,
+        className
       )}
       style={
         {
@@ -184,4 +183,11 @@ function SlideIn(props: {
       {children}
     </div>
   );
+}
+
+function getMaxDepth(item: { items: any[] }): number {
+  if (item.items?.length > 0) {
+    return Math.max(...item.items.map(getMaxDepth)) + 1;
+  }
+  return 1;
 }

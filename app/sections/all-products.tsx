@@ -8,7 +8,7 @@ import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { getImageLoadingPriority } from "~/lib/const";
+import { getImageLoadingPriority } from "~/utils/image";
 
 interface AllProductsProps extends SectionProps {
   heading: string;
@@ -88,7 +88,7 @@ export let schema: HydrogenComponentSchema = {
           (inp) =>
             inp.name !== "divider" &&
             inp.name !== "borderRadius" &&
-            inp.name !== "gap",
+            inp.name !== "gap"
         ),
       ],
     },

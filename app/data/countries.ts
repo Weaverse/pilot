@@ -1,6 +1,6 @@
-import type { Localizations } from "~/lib/type";
+import type { Localizations } from "~/types/locale";
 
-export const countries: Localizations = {
+export const COUNTRIES: Localizations = {
   default: {
     label: "United States (USD $)",
     language: "EN",

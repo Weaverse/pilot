@@ -3,7 +3,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { forwardRef } from "react";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 
 export let variants = cva(
   [
@@ -62,7 +62,7 @@ export let variants = cva(
     defaultVariants: {
       variant: "primary",
     },
-  },
+  }
 );
 
 export interface ButtonStyleProps {

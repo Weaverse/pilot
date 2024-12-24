@@ -1,7 +1,7 @@
 import { useMatches } from "@remix-run/react";
 import type { ShopifyPageViewPayload } from "@shopify/hydrogen";
 import { useMemo } from "react";
-import { DEFAULT_LOCALE } from "~/lib/utils";
+import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function usePageAnalytics({
   hasUserConsent,

@@ -1,9 +1,19 @@
+import type { HydrogenSession } from "@shopify/hydrogen";
+import { createHydrogenContext, storefrontRedirect } from "@shopify/hydrogen";
+import {
+  type Session,
+  type SessionStorage,
+  createCookieSessionStorage,
+  createRequestHandler,
+} from "@shopify/remix-oxygen";
+import { WeaverseClient, type WeaverseClientArgs } from "@weaverse/hydrogen";
 // @ts-ignore
-// Virtual entry point for the app
-import * as remixBuild from "virtual:remix/server-build";
-import { storefrontRedirect } from "@shopify/hydrogen";
-import { createRequestHandler } from "@shopify/remix-oxygen";
-import { createAppLoadContext } from "~/lib/context";
+import * as remixBuild from "virtual:remix/server-build"; // Virtual entry point for the app
+import { COUNTRIES } from "~/data/countries";
+import { CART_QUERY_FRAGMENT } from "~/data/fragments";
+import type { I18nLocale } from "~/types/locale";
+import { components } from "~/weaverse/components";
+import { themeSchema } from "~/weaverse/schema.server";
 
 /**
  * Export a fetch handler in module format.
@@ -61,3 +71,117 @@ export default {
     }
   },
 };
+
+export async function createAppLoadContext(
+  request: Request,
+  env: Env,
+  executionContext: ExecutionContext,
+) {
+  /**
+   * Open a cache instance in the worker and a custom session instance.
+   */
+  if (!env?.SESSION_SECRET) {
+    throw new Error("SESSION_SECRET environment variable is not set");
+  }
+
+  let waitUntil = executionContext.waitUntil.bind(executionContext);
+  let [cache, session] = await Promise.all([
+    caches.open("hydrogen"),
+    AppSession.init(request, [env.SESSION_SECRET]),
+  ]);
+
+  let hydrogenContext = createHydrogenContext({
+    env,
+    request,
+    cache,
+    waitUntil,
+    session,
+    i18n: getLocaleFromRequest(request),
+    cart: { queryFragment: CART_QUERY_FRAGMENT },
+  });
+
+  return {
+    ...hydrogenContext,
+    weaverse: new WeaverseClient({
+      ...hydrogenContext,
+      request,
+      cache,
+      themeSchema,
+      components,
+    } as WeaverseClientArgs),
+  };
+}
+
+class AppSession implements HydrogenSession {
+  public isPending = false;
+  #sessionStorage;
+  #session;
+
+  constructor(sessionStorage: SessionStorage, session: Session) {
+    this.#sessionStorage = sessionStorage;
+    this.#session = session;
+  }
+
+  static async init(request: Request, secrets: string[]) {
+    let storage = createCookieSessionStorage({
+      cookie: {
+        name: "session",
+        httpOnly: true,
+        path: "/",
+        sameSite: "lax",
+        secrets,
+      },
+    });
+
+    let session = await storage
+      .getSession(request.headers.get("Cookie"))
+      .catch(() => storage.getSession());
+
+    return new AppSession(storage, session);
+  }
+
+  get has() {
+    return this.#session.has;
+  }
+
+  get get() {
+    return this.#session.get;
+  }
+
+  get flash() {
+    return this.#session.flash;
+  }
+
+  get unset() {
+    this.isPending = true;
+    return this.#session.unset;
+  }
+
+  get set() {
+    this.isPending = true;
+    return this.#session.set;
+  }
+
+  destroy() {
+    return this.#sessionStorage.destroySession(this.#session);
+  }
+
+  commit() {
+    this.isPending = false;
+    return this.#sessionStorage.commitSession(this.#session);
+  }
+}
+
+function getLocaleFromRequest(request: Request): I18nLocale {
+  let url = new URL(request.url);
+  let firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
+  return COUNTRIES[firstPathPart]
+    ? {
+        ...COUNTRIES[firstPathPart],
+        pathPrefix: firstPathPart,
+      }
+    : {
+        ...COUNTRIES.default,
+        pathPrefix: "",
+      };
+}

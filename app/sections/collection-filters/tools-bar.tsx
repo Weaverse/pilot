@@ -5,7 +5,7 @@ import clsx from "clsx";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 import { Filters } from "./filters";
 import { LayoutSwitcher, type LayoutSwitcherProps } from "./layout-switcher";
 import { Sort } from "./sort";
@@ -57,7 +57,9 @@ export function ToolsBar({
 
 function FiltersDrawer({
   filtersPosition,
-}: { filtersPosition: ToolsBarProps["filtersPosition"] }) {
+}: {
+  filtersPosition: ToolsBarProps["filtersPosition"];
+}) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -65,7 +67,7 @@ function FiltersDrawer({
           variant="outline"
           className={cn(
             "flex items-center gap-1.5 border py-2 h-12",
-            filtersPosition === "sidebar" && "lg:hidden",
+            filtersPosition === "sidebar" && "lg:hidden"
           )}
           animate={false}
         >

@@ -5,8 +5,7 @@ import { getSeoMeta } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
-import { seoPayload } from "~/lib/seo.server";
-import type { NonNullableFields } from "~/lib/type";
+import { seoPayload } from "~/utils/seo.server";
 import { Link } from "~/components/link";
 import type { PoliciesIndexQuery } from "storefrontapi.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
@@ -14,6 +13,10 @@ import { Section } from "~/components/section";
 import { FileText } from "@phosphor-icons/react";
 
 export let headers = routeHeaders;
+
+type NonNullableFields<T> = {
+  [P in keyof T]: NonNullable<T[P]>;
+};
 
 export async function loader({
   request,
@@ -24,7 +27,7 @@ export async function loader({
   invariant(data, "No data returned from Shopify API");
 
   let policies = Object.values(
-    data.shop as NonNullableFields<typeof data.shop>,
+    data.shop as NonNullableFields<typeof data.shop>
   ).filter(Boolean);
 
   if (policies.length === 0) {

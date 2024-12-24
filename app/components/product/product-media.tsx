@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { MediaFragment } from "storefrontapi.generated";
 import { FreeMode, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
-import { getImageAspectRatio } from "~/lib/utils";
+import { getImageAspectRatio } from "~/utils/image";
 
 let variants = cva(
   [

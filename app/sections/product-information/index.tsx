@@ -7,7 +7,7 @@ import type { ProductQuery } from "storefrontapi.generated";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { isDiscounted, isNewArrival } from "~/lib/utils";
+import { isDiscounted, isNewArrival } from "~/utils/product";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import {
   ProductMedia,

@@ -6,8 +6,8 @@ import clsx from "clsx";
 import { useRef } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
-import { cn } from "~/lib/cn";
-import type { AppliedFilter } from "~/lib/filter";
+import { cn } from "~/utils/cn";
+import type { AppliedFilter } from "~/utils/filter";
 import type { CollectionFiltersData } from ".";
 import { FilterItem } from "./filter-item";
 import { PriceRangeFilter } from "./price-range-filter";
@@ -80,7 +80,7 @@ export function Filters({ className }: { className?: string }) {
                   "flex pt-8",
                   asColorSwatch || asButton
                     ? "gap-1.5 flex-wrap"
-                    : "flex-col gap-5",
+                    : "flex-col gap-5"
                 )}
               >
                 {filter.type === "PRICE_RANGE" ? (
@@ -97,8 +97,8 @@ export function Filters({ className }: { className?: string }) {
                         asColorSwatch
                           ? "color-swatch"
                           : asButton
-                            ? "button"
-                            : "list-item"
+                          ? "button"
+                          : "list-item"
                       }
                       appliedFilters={appliedFilters as AppliedFilter[]}
                       option={option}

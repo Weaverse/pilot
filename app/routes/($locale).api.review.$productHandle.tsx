@@ -1,7 +1,7 @@
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 
-import { getJudgemeReviews } from "~/lib/judgeme";
+import { getJudgemeReviews } from "~/utils/judgeme";
 
 export async function loader(args: RouteLoaderArgs) {
   let { params, context } = args;
@@ -13,6 +13,6 @@ export async function loader(args: RouteLoaderArgs) {
     api_token,
     shop_domain,
     handle,
-    context.weaverse,
+    context.weaverse
   );
 }

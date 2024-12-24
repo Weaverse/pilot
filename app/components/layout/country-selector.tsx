@@ -11,10 +11,9 @@ import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-ty
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useInView } from "react-intersection-observer";
-import { getCountryUrlPath } from "~/lib/locale";
-import type { Localizations } from "~/lib/type";
-import { DEFAULT_LOCALE } from "~/lib/utils";
+import { DEFAULT_LOCALE } from "~/utils/const";
 import type { RootLoader } from "~/root";
+import type { Locale, Localizations } from "~/types/locale";
 
 export function CountrySelector() {
   let fetcher = useFetcher();
@@ -24,7 +23,7 @@ export function CountrySelector() {
   let { pathname, search } = useLocation();
   let pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
-    "",
+    ""
   )}${search}`;
 
   let countries = (fetcher.data ?? {}) as Localizations;
@@ -138,4 +137,21 @@ export function CountrySelector() {
       </Popover.Root>
     </div>
   );
+}
+
+function getCountryUrlPath({
+  countryLocale,
+  defaultLocalePrefix,
+  pathWithoutLocale,
+}: {
+  countryLocale: Locale;
+  pathWithoutLocale: string;
+  defaultLocalePrefix: string;
+}) {
+  let countryPrefixPath = "";
+  let countryLocalePrefix = `${countryLocale.language}-${countryLocale.country}`;
+  if (countryLocalePrefix !== defaultLocalePrefix) {
+    countryPrefixPath = `/${countryLocalePrefix.toLowerCase()}`;
+  }
+  return `${countryPrefixPath}${pathWithoutLocale}`;
 }

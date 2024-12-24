@@ -9,7 +9,7 @@ import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { ProductTag } from "~/components/product-tag";
 import { VariantPrices } from "~/components/variant-prices";
-import { isDiscounted, isNewArrival } from "~/lib/utils";
+import { isDiscounted, isNewArrival } from "~/utils/product";
 import { QuickShopTrigger } from "./quick-shop";
 
 export function ProductCard({

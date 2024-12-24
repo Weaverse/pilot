@@ -2,7 +2,7 @@ import { useLoaderData } from "@remix-run/react";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
-import { seoPayload } from "~/lib/seo.server";
+import { seoPayload } from "~/utils/seo.server";
 import type { PoliciesHandleQuery } from "storefrontapi.generated";
 import { Section } from "~/components/section";
 import { BreadCrumb } from "~/components/breadcrumb";
@@ -15,7 +15,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
 
   let policyName = params.policyHandle.replace(
     /-([a-z])/g,
-    (_: unknown, m1: string) => m1.toUpperCase(),
+    (_: unknown, m1: string) => m1.toUpperCase()
   ) as "privacyPolicy" | "shippingPolicy" | "termsOfService" | "refundPolicy";
 
   let data = await context.storefront.query<PoliciesHandleQuery>(
@@ -29,7 +29,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
         [policyName]: true,
         language: context.storefront.i18n.language,
       },
-    },
+    }
   );
 
   invariant(data, "No data returned from Shopify API");

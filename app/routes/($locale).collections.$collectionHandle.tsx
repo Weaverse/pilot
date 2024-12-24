@@ -5,8 +5,10 @@ import {
   getPaginationVariables,
   getSeoMeta,
 } from "@shopify/hydrogen";
-import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
-import type { ProductCollectionSortKeys } from "@shopify/hydrogen/storefront-api-types";
+import type {
+  ProductCollectionSortKeys,
+  ProductFilter,
+} from "@shopify/hydrogen/storefront-api-types";
 import {
   type LoaderFunctionArgs,
   type MetaArgs,
@@ -17,10 +19,10 @@ import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
 import { COLLECTION_QUERY } from "~/data/queries";
-import { FILTER_URL_PREFIX, PAGINATION_SIZE } from "~/lib/const";
-import type { SortParam } from "~/lib/filter";
-import { seoPayload } from "~/lib/seo.server";
-import { parseAsCurrency } from "~/lib/utils";
+import { FILTER_URL_PREFIX, PAGINATION_SIZE } from "~/utils/const";
+import type { SortParam } from "~/utils/filter";
+import { seoPayload } from "~/utils/seo.server";
+import type { I18nLocale } from "~/types/locale";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;
@@ -204,4 +206,11 @@ function getSortValuesFromParam(sortParam: SortParam | null): {
         reverse: false,
       };
   }
+}
+
+function parseAsCurrency(value: number, locale: I18nLocale) {
+  return new Intl.NumberFormat(`${locale.language}-${locale.country}`, {
+    style: "currency",
+    currency: locale.currency,
+  }).format(value);
 }

@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Button } from "~/components/button";
 import { StarRating } from "~/components/star-rating";
-import type { JudgemeReviewsData } from "~/lib/judgeme";
+import type { JudgemeReviewsData } from "~/utils/judgeme";
 import type { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
 
 export function ReviewForm({

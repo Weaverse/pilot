@@ -11,7 +11,7 @@ import {
   Trigger,
 } from "@radix-ui/react-tooltip";
 import { forwardRef } from "react";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 
 export let TooltipProvider = Provider;
 export let Tooltip = ({ delayDuration = 100, ...rest }: TooltipProps) => (
@@ -31,7 +31,7 @@ export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         className={cn(
           "animate-slide-up",
           "z-50 px-3 py-1 shadow-sm text-background bg-body",
-          className,
+          className
         )}
         align="center"
         side="top"
@@ -52,5 +52,5 @@ export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         {children}
       </Content>
     );
-  },
+  }
 );

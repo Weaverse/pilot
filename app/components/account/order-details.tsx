@@ -4,8 +4,8 @@ import { Image, Money } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
-import { statusMessage } from "~/lib/utils";
 import type { loader as orderDetailsLoader } from "~/routes/($locale).account.orders.$id";
+import { ORDER_STATUS } from "./orders";
 
 export function OrderDetails() {
   let { order, lineItems, fulfillmentStatus } =
@@ -15,7 +15,7 @@ export function OrderDetails() {
   for (let lineItem of lineItems) {
     totalDiscount += lineItem.discountAllocations.reduce(
       (acc, curr) => acc + Number.parseFloat(curr.allocatedAmount.amount),
-      0,
+      0
     );
   }
 
@@ -167,10 +167,10 @@ export function OrderDetails() {
                 <div
                   className={clsx(
                     "mt-3 px-2.5 py-1 text-sm inline-block w-auto",
-                    "text-body-inverse bg-body-subtle",
+                    "text-body-inverse bg-body-subtle"
                   )}
                 >
-                  {statusMessage(fulfillmentStatus)}
+                  {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}
                 </div>
               )}
             </div>

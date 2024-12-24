@@ -22,7 +22,7 @@ import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
-import { usePrefixPathWithLocale } from "~/lib/utils";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
@@ -34,7 +34,7 @@ export let headers = routeHeaders;
 export async function loader({ context }: LoaderFunctionArgs) {
   let { data, errors } =
     await context.customerAccount.query<CustomerDetailsQuery>(
-      CUSTOMER_DETAILS_QUERY,
+      CUSTOMER_DETAILS_QUERY
     );
 
   /**
@@ -50,7 +50,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   return defer(
     { customer, heading, featuredData },
-    { headers: { "Cache-Control": CACHE_NONE } },
+    { headers: { "Cache-Control": CACHE_NONE } }
   );
 }
 
@@ -64,7 +64,7 @@ export default function Authenticated() {
     (match: { handle?: { renderInModal?: boolean } }) => {
       let handle = match?.handle;
       return handle?.renderInModal;
-    },
+    }
   );
 
   if (outlet) {

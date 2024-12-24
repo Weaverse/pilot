@@ -6,8 +6,8 @@ import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/data/cache";
 import { ALL_PRODUCTS_QUERY } from "~/data/queries";
-import { PAGINATION_SIZE } from "~/lib/const";
-import { seoPayload } from "~/lib/seo.server";
+import { PAGINATION_SIZE } from "~/utils/const";
+import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;

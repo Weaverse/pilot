@@ -1,18 +1,23 @@
 import { MagnifyingGlass, User } from "@phosphor-icons/react";
-import { Await, useRouteError, useRouteLoaderData } from "@remix-run/react";
+import {
+  Await,
+  useLocation,
+  useRouteError,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import Link from "~/components/link";
 import { Logo } from "~/components/logo";
-import { cn } from "~/lib/cn";
-import { useIsHomePath } from "~/lib/utils";
+import { cn } from "~/utils/cn";
 import type { RootLoader } from "~/root";
 import { CartDrawer } from "./cart-drawer";
 import { DesktopMenu } from "./desktop-menu";
 import { MobileMenu } from "./mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
+import { DEFAULT_LOCALE } from "~/utils/const";
 
 let variants = cva("", {
   variants: {
@@ -29,9 +34,17 @@ let variants = cva("", {
   },
 });
 
+function useIsHomeCheck() {
+  let { pathname } = useLocation();
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  let strippedPathname = pathname.replace(selectedLocale.pathPrefix, "");
+  return strippedPathname === "/";
+}
+
 export function Header() {
   let { enableTransparentHeader, headerWidth } = useThemeSettings();
-  let isHome = useIsHomePath();
+  let isHome = useIsHomeCheck();
   let { y } = useWindowScroll();
   let routeError = useRouteError();
 

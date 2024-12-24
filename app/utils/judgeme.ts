@@ -1,4 +1,3 @@
-import { json } from "@remix-run/server-runtime";
 import type { WeaverseClient } from "@weaverse/hydrogen";
 
 type JudgemeProductData = {
@@ -40,7 +39,7 @@ async function getInternalIdByHandle(
   api_token: string,
   shop_domain: string,
   handle: string,
-  weaverseClient: WeaverseClient
+  weaverseClient: WeaverseClient,
 ) {
   let api = `https://judge.me/api/v1/products/-1?${new URLSearchParams({
     api_token,
@@ -51,13 +50,13 @@ async function getInternalIdByHandle(
   return data?.product?.id;
 }
 
-export let getJudgemeReviews = async (
+export async function getJudgemeReviews(
   api_token: string,
   shop_domain: string,
   handle: string,
-  weaverse: WeaverseClient
-) => {
-  const defaultData = {
+  weaverse: WeaverseClient,
+) {
+  let defaultData = {
     rating: 0,
     reviewNumber: 0,
     reviews: [],
@@ -69,7 +68,7 @@ export let getJudgemeReviews = async (
     api_token,
     shop_domain,
     handle,
-    weaverse
+    weaverse,
   );
   if (internalId) {
     let data = (await weaverse.fetchWithCache(
@@ -77,7 +76,7 @@ export let getJudgemeReviews = async (
         api_token,
         shop_domain,
         product_id: internalId,
-      })}`
+      })}`,
     )) as JudgemeReviewsData;
     let reviews = data.reviews;
     let rating =
@@ -90,38 +89,39 @@ export let getJudgemeReviews = async (
     };
   }
   return defaultData;
-};
+}
 
-const endpoint = "https://judge.me/api/v1/reviews";
-export let createJudgemeReview = async (
+const JUDGE_ME_API = "https://judge.me/api/v1/reviews";
+
+export async function createJudgemeReview(
   api_token: string,
   shop_domain: string,
-  formData: FormData
-) => {
+  formData: FormData,
+) {
   if (!api_token) {
     return {
       error: "Missing JUDGEME_PRIVATE_API_TOKEN",
     };
   }
-  const body = formDataToObject(formData);
-  const url = new URL(endpoint);
+  let body = formDataToObject(formData);
+  let url = new URL(JUDGE_ME_API);
   url.searchParams.append("api_token", api_token);
   url.searchParams.append("shop_domain", shop_domain);
-  const payload = JSON.stringify({
+  let payload = JSON.stringify({
     shop_domain,
     platform: "shopify",
     ...body,
   });
 
   try {
-    const response = await fetch(endpoint, {
+    let response = await fetch(JUDGE_ME_API, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: payload,
     });
-    const status = response.status;
+    let status = response.status;
     if (response.ok) {
       return { success: true, status };
     }
@@ -138,11 +138,11 @@ export let createJudgemeReview = async (
       status: 500,
     };
   }
-};
+}
 
 function formDataToObject(formData: FormData) {
-  const data: any = {};
-  for (const [key, value] of formData.entries()) {
+  let data = {};
+  for (let [key, value] of formData.entries()) {
     data[key] = value;
   }
   return data;

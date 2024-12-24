@@ -5,7 +5,7 @@ import { useLocation } from "@remix-run/react";
 import { type MutableRefObject, useEffect, useState } from "react";
 import Link from "~/components/link";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 import { PredictiveSearchResult } from "./predictive-search-result";
 import { PredictiveSearchForm } from "./search-form";
 
@@ -132,11 +132,7 @@ function PredictiveSearchResults() {
   );
 }
 
-function NoResults({
-  searchTerm,
-}: {
-  searchTerm: MutableRefObject<string>;
-}) {
+function NoResults({ searchTerm }: { searchTerm: MutableRefObject<string> }) {
   if (!searchTerm.current) {
     return null;
   }

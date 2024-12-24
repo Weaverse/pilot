@@ -5,7 +5,7 @@ import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { CollectionsQuery } from "storefrontapi.generated";
 import { Link } from "~/components/link";
-import { getImageLoadingPriority } from "~/lib/const";
+import { getImageLoadingPriority } from "~/utils/image";
 import { CollectionCard } from "./collection-card";
 import { overlayInputs, type OverlayProps } from "~/components/overlay";
 
@@ -76,7 +76,7 @@ let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
         </Pagination>
       </div>
     );
-  },
+  }
 );
 
 export default CollectionsItems;

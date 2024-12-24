@@ -11,7 +11,7 @@ import {
 } from "@weaverse/hydrogen";
 import { type VariantProps, cva } from "class-variance-authority";
 import { type HTMLAttributes, forwardRef } from "react";
-import { cn } from "~/lib/cn";
+import { cn } from "~/utils/cn";
 import type { RootLoader } from "~/root";
 
 let variants = cva(["transition-colors inline-flex"], {
@@ -161,7 +161,7 @@ export let Link = forwardRef(
         {children || text}
       </RemixLink>
     );
-  },
+  }
 );
 
 export default Link;

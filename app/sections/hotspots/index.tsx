@@ -12,7 +12,7 @@ import Heading, {
 import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
-import { getImageAspectRatio } from "~/lib/utils";
+import { getImageAspectRatio } from "~/utils/image";
 
 interface HotspotsProps
   extends Omit<SectionProps, "content">,
