@@ -88,7 +88,7 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
         />
       </div>
     );
-  },
+  }
 );
 
 export default ImageWithTextImage;
@@ -110,7 +110,6 @@ export let schema: HydrogenComponentSchema = {
           type: "select",
           name: "imageAspectRatio",
           label: "Image aspect ratio",
-          defaultValue: "adapt",
           configs: {
             options: [
               { value: "adapt", label: "Adapt to image" },
@@ -120,6 +119,7 @@ export let schema: HydrogenComponentSchema = {
               { value: "16/9", label: "Widescreen (16/9)" },
             ],
           },
+          defaultValue: "1/1",
           helpText:
             'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
         },
