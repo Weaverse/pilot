@@ -24,7 +24,7 @@ let variants = cva(["transition-colors inline-flex"], {
         "border-[--btn-primary-bg]",
         "hover:text-[--btn-primary-bg]",
         "hover:bg-[--btn-primary-text]",
-        "hover:border-[--btn-primary-text]",
+        "hover:border-[--btn-primary-bg]",
       ],
       secondary: [
         "border px-4 py-3",
