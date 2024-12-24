@@ -38,7 +38,7 @@ export async function action({ request, params, context }: LoaderFunctionArgs) {
     throw new Error("Invalid request method");
   }
 
-  const search = await fetchPredictiveSearchResults({
+  let search = await fetchPredictiveSearchResults({
     params,
     request,
     context,
@@ -52,18 +52,17 @@ async function fetchPredictiveSearchResults({
   request,
   context,
 }: Pick<LoaderFunctionArgs, "params" | "context" | "request">) {
-  const url = new URL(request.url);
-  const searchParams = new URLSearchParams(url.search);
-  let body;
+  let url = new URL(request.url);
+  let searchParams = new URLSearchParams(url.search);
+  let body: FormData | null = null;
   try {
     body = await request.formData();
   } catch (error) {}
-  const searchTerm = String(body?.get("q") || searchParams.get("q") || "");
-  const limit = Number(body?.get("limit") || searchParams.get("limit") || 10);
-  const rawTypes = String(
-    body?.get("type") || searchParams.get("type") || "ANY",
-  );
-  const searchTypes =
+  let searchTerm = String(body?.get("q") || searchParams.get("q") || "");
+  let limit = Number(body?.get("limit") || searchParams.get("limit") || 10);
+  let rawTypes = String(body?.get("type") || searchParams.get("type") || "ANY");
+
+  let searchTypes =
     rawTypes === "ANY"
       ? DEFAULT_SEARCH_TYPES
       : rawTypes
@@ -79,7 +78,7 @@ async function fetchPredictiveSearchResults({
     };
   }
 
-  const data = await context.storefront.query(PREDICTIVE_SEARCH_QUERY, {
+  let data = await context.storefront.query(PREDICTIVE_SEARCH_QUERY, {
     variables: {
       limit,
       limitScope: "EACH",
@@ -92,9 +91,9 @@ async function fetchPredictiveSearchResults({
     throw new Error("No data returned from Shopify API");
   }
 
-  const searchResults = normalizePredictiveSearchResults(
+  let searchResults = normalizePredictiveSearchResults(
     data.predictiveSearch,
-    params.locale,
+    params.locale
   );
 
   return { searchResults, searchTerm, searchTypes };
@@ -105,7 +104,7 @@ async function fetchPredictiveSearchResults({
  */
 export function normalizePredictiveSearchResults(
   predictiveSearch: PredictiveSearchQuery["predictiveSearch"],
-  locale: LoaderFunctionArgs["params"]["locale"],
+  locale: LoaderFunctionArgs["params"]["locale"]
 ): NormalizedPredictiveSearch {
   let totalResults = 0;
   if (!predictiveSearch) {
@@ -117,28 +116,25 @@ export function normalizePredictiveSearchResults(
 
   function applyTrackingParams(
     resource: PredictiveSearchResultItem | PredictiveQueryFragment,
-    params?: string,
+    params?: string
   ) {
     if (params) {
       return resource.trackingParameters
         ? `?${params}&${resource.trackingParameters}`
         : `?${params}`;
-    } else {
-      return resource.trackingParameters
-        ? `?${resource.trackingParameters}`
-        : "";
     }
+    return resource.trackingParameters ? `?${resource.trackingParameters}` : "";
   }
 
-  const localePrefix = locale ? `/${locale}` : "";
-  const results: NormalizedPredictiveSearchResults = [];
+  let localePrefix = locale ? `/${locale}` : "";
+  let results: NormalizedPredictiveSearchResults = [];
 
   if (predictiveSearch.queries.length) {
     results.push({
       type: "queries",
       // @ts-expect-error
       items: predictiveSearch.queries.map((query: PredictiveQueryFragment) => {
-        // const trackingParams = applyTrackingParams(
+        // let trackingParams = applyTrackingParams(
         //   query,
         //   `q=${encodeURIComponent(query.text)}`,
         // );
@@ -163,7 +159,7 @@ export function normalizePredictiveSearchResults(
       items: predictiveSearch.products.map(
         (product: PredictiveProductFragment) => {
           totalResults++;
-          const trackingParams = applyTrackingParams(product);
+          let trackingParams = applyTrackingParams(product);
           return {
             __typename: product.__typename,
             handle: product.handle,
@@ -175,7 +171,7 @@ export function normalizePredictiveSearchResults(
             price: product.variants.nodes[0].price,
             compareAtPrice: product.variants.nodes[0].compareAtPrice,
           };
-        },
+        }
       ),
     });
   }
@@ -187,7 +183,7 @@ export function normalizePredictiveSearchResults(
       items: predictiveSearch.collections.map(
         (collection: PredictiveCollectionFragment) => {
           totalResults++;
-          const trackingParams = applyTrackingParams(collection);
+          let trackingParams = applyTrackingParams(collection);
           return {
             __typename: collection.__typename,
             handle: collection.handle,
@@ -196,7 +192,7 @@ export function normalizePredictiveSearchResults(
             title: collection.title,
             url: `${localePrefix}/collections/${collection.handle}${trackingParams}`,
           };
-        },
+        }
       ),
     });
   }
@@ -207,7 +203,7 @@ export function normalizePredictiveSearchResults(
       // @ts-expect-error
       items: predictiveSearch.pages.map((page: PredictivePageFragment) => {
         totalResults++;
-        const trackingParams = applyTrackingParams(page);
+        let trackingParams = applyTrackingParams(page);
         return {
           __typename: page.__typename,
           handle: page.handle,
@@ -227,7 +223,7 @@ export function normalizePredictiveSearchResults(
       items: predictiveSearch.articles.map(
         (article: PredictiveArticleFragment) => {
           totalResults++;
-          const trackingParams = applyTrackingParams(article);
+          let trackingParams = applyTrackingParams(article);
           return {
             __typename: article.__typename,
             handle: article.handle,
@@ -236,7 +232,7 @@ export function normalizePredictiveSearchResults(
             title: article.title,
             url: `${localePrefix}/blogs/${article.blog.handle}/${article.handle}${trackingParams}`,
           };
-        },
+        }
       ),
     });
   }
