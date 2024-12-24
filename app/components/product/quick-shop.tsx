@@ -10,13 +10,13 @@ import type {
 } from "storefrontapi.generated";
 import { Button } from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
+import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { ProductVariants } from "~/components/product/variants";
 import { Skeleton } from "~/components/skeleton";
 import { VariantPrices } from "~/components/variant-prices";
-import type { ProductData } from "~/lib/products";
-import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import type { ProductData } from "~/routes/($locale).api.product";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -132,7 +132,7 @@ export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (open && !data && state !== "loading") {
-      load(`/api/query/products?handle=${productHandle}`);
+      load(`/api/product?handle=${productHandle}`);
     }
   }, [open]);
 
