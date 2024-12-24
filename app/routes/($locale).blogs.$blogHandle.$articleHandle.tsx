@@ -5,7 +5,7 @@ import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import type { ArticleDetailsQuery } from "storefrontapi.generated";
-import { routeHeaders } from "~/data/cache";
+import { routeHeaders } from "~/utils/cache";
 import { ARTICLE_QUERY } from "~/data/queries";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";

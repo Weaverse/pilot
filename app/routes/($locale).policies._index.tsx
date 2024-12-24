@@ -4,7 +4,7 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import { routeHeaders } from "~/data/cache";
+import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
 import { Link } from "~/components/link";
 import type { PoliciesIndexQuery } from "storefrontapi.generated";

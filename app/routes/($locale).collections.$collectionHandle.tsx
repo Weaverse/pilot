@@ -17,7 +17,7 @@ import {
 } from "@shopify/remix-oxygen";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { routeHeaders } from "~/data/cache";
+import { routeHeaders } from "~/utils/cache";
 import { COLLECTION_QUERY } from "~/data/queries";
 import { FILTER_URL_PREFIX, PAGINATION_SIZE } from "~/utils/const";
 import type { SortParam } from "~/utils/filter";

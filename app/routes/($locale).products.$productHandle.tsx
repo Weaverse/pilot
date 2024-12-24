@@ -13,7 +13,7 @@ import type {
   ProductRecommendationsQuery,
 } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
-import { routeHeaders } from "~/data/cache";
+import { routeHeaders } from "~/utils/cache";
 import {
   PRODUCT_QUERY,
   RECOMMENDED_PRODUCTS_QUERY,

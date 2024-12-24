@@ -7,7 +7,11 @@ import {
   useMatches,
   useOutlet,
 } from "@remix-run/react";
-import { flattenConnection } from "@shopify/hydrogen";
+import {
+  CacheNone,
+  flattenConnection,
+  generateCacheControlHeader,
+} from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type {
   CustomerDetailsFragment,
@@ -21,7 +25,7 @@ import { OutletModal } from "~/components/account/outlet-modal";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { CACHE_NONE, routeHeaders } from "~/data/cache";
+import { routeHeaders } from "~/utils/cache";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { doLogout } from "./($locale).account_.logout";
 import {
@@ -50,7 +54,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   return defer(
     { customer, heading, featuredData },
-    { headers: { "Cache-Control": CACHE_NONE } }
+    { headers: { "Cache-Control": generateCacheControlHeader(CacheNone()) } }
   );
 }
 

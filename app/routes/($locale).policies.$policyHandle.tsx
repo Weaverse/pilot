@@ -1,7 +1,7 @@
 import { useLoaderData } from "@remix-run/react";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import { routeHeaders } from "~/data/cache";
+import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
 import type { PoliciesHandleQuery } from "storefrontapi.generated";
 import { Section } from "~/components/section";

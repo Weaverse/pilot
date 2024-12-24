@@ -4,7 +4,7 @@ import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { CollectionsQuery } from "storefrontapi.generated";
-import { routeHeaders } from "~/data/cache";
+import { routeHeaders } from "~/utils/cache";
 import { COLLECTIONS_QUERY } from "~/data/queries";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
