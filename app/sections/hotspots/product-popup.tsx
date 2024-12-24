@@ -72,7 +72,7 @@ export function ProductPopup({
   }
 
   let featuredMedia = product.media.nodes.find(
-    (node) => node.__typename === "MediaImage",
+    (node) => node.__typename === "MediaImage"
   ) as MediaImage;
   let featuredImage = featuredMedia?.image;
   let price = product.variants.nodes[0].price;
@@ -88,7 +88,7 @@ export function ProductPopup({
         "translate-y-[calc(var(--translate-y-ratio)*-16px)]",
         "group-hover:visible group-hover:opacity-100",
         "group-hover:translate-x-[calc(var(--translate-x-ratio)*var(--spot-size))]",
-        "group-hover:translate-y-0",
+        "group-hover:translate-y-0"
       )}
       style={
         {
@@ -133,7 +133,8 @@ export function ProductPopup({
           {showViewDetailsLink && (
             <Link
               to={`/products/${product.handle}`}
-              className="underline-offset-4 underline text-sm"
+              variant="underline"
+              className="w-fit text-sm"
             >
               {viewDetailsLinkText}
             </Link>
