@@ -19,7 +19,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
         {children}
       </Section>
     );
-  },
+  }
 );
 
 export default ImageWithText;
@@ -37,8 +37,10 @@ export let schema: HydrogenComponentSchema = {
   childTypes: ["image-with-text--content", "image-with-text--image"],
   presets: {
     verticalPadding: "none",
+    backgroundColor: "#dbe3d6",
+    backgroundFor: "content",
     children: [
-      { type: "image-with-text--image" },
+      { type: "image-with-text--image", aspectRatio: "1/1" },
       { type: "image-with-text--content" },
     ],
   },
