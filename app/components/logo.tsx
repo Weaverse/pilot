@@ -26,8 +26,9 @@ export function Logo() {
               className={clsx(
                 "main-logo",
                 "max-w-full h-full object-contain mx-auto",
-                "transition-opacity duration-300 ease-in group-hover/header:opacity-100",
+                "transition-opacity duration-300 ease-in group-hover/header:opacity-100"
               )}
+              width={500}
               style={{ width: "auto" }}
             />
             {transparentLogoData && (
@@ -37,8 +38,9 @@ export function Logo() {
                 className={clsx(
                   "transparent-logo",
                   "absolute top-0 left-0 max-w-full h-full object-contain mx-auto",
-                  "transition-opacity duration-300 ease-in group-hover/header:opacity-0",
+                  "transition-opacity duration-300 ease-in group-hover/header:opacity-0"
                 )}
+                width={500}
                 style={{ width: "auto" }}
               />
             )}
