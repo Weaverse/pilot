@@ -32,7 +32,7 @@ export interface CollectionFiltersData {
 interface CollectionFiltersProps extends SectionProps, CollectionFiltersData {}
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
-  (props, sectionRef) => {
+  (props, ref) => {
     let {
       showBreadcrumb,
       showDescription,
@@ -60,10 +60,10 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
     >();
 
     let [gridSizeDesktop, setGridSizeDesktop] = useState(
-      Number(productsPerRowDesktop) || 3,
+      Number(productsPerRowDesktop) || 3
     );
     let [gridSizeMobile, setGridSizeMobile] = useState(
-      Number(productsPerRowMobile) || 1,
+      Number(productsPerRowMobile) || 1
     );
 
     useEffect(() => {
@@ -76,7 +76,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
         ? collection.metafield.reference.image
         : collection.image;
       return (
-        <Section ref={sectionRef} {...rest} overflow="unset">
+        <Section ref={ref} {...rest} overflow="unset">
           <div className="py-10">
             {showBreadcrumb && (
               <BreadCrumb page={collection.title} className="mb-2.5" />
@@ -89,7 +89,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             )}
             {showBanner && banner && (
               <div
-                className="relative h-[--banner-height-mobile] lg:h-[--banner-height-desktop] mt-6"
+                className="h-[--banner-height-mobile] lg:h-[--banner-height-desktop] mt-6"
                 style={
                   {
                     "--banner-height-desktop": `${bannerHeightDesktop}px`,
@@ -122,9 +122,11 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
           />
           <div className="flex gap-8 pt-6 lg:pt-12 pb-8 lg:pb-20">
             {enableFilter && filtersPosition === "sidebar" && (
-              <div className="hidden lg:block shrink-0 w-72 space-y-4">
-                <div className="font-bold">Filters</div>
-                <Filters />
+              <div className="hidden lg:block shrink-0 w-72">
+                <div className="space-y-4 sticky top-[calc(var(--height-nav)+40px)]">
+                  <div className="font-bold">Filters</div>
+                  <Filters />
+                </div>
               </div>
             )}
             <ProductsPagination
@@ -137,8 +139,8 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
         </Section>
       );
     }
-    return <Section ref={sectionRef} {...rest} />;
-  },
+    return <Section ref={ref} {...rest} />;
+  }
 );
 
 export default CollectionFilters;

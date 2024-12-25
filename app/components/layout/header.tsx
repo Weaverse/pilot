@@ -38,8 +38,7 @@ function useIsHomeCheck() {
   let { pathname } = useLocation();
   let rootData = useRouteLoaderData<RootLoader>("root");
   let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  let strippedPathname = pathname.replace(selectedLocale.pathPrefix, "");
-  return strippedPathname === "/";
+  return pathname.replace(selectedLocale.pathPrefix, "") === "/";
 }
 
 export function Header() {
