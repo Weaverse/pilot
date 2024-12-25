@@ -21,9 +21,9 @@ function root({
 }): SeoConfig {
   return {
     title: shop?.name,
-    titleTemplate: "%s | Hydrogen Demo Store",
+    titleTemplate: "%s | Weaverse Hydrogen Demo Store",
     description: truncate(shop?.description ?? ""),
-    handle: "@shopify",
+    handle: "@weaverse",
     url,
     robots: {
       noIndex: false,
@@ -35,11 +35,10 @@ function root({
       name: shop.name,
       logo: shop.brand?.logo?.image?.url,
       sameAs: [
-        "https://twitter.com/shopify",
-        "https://facebook.com/shopify",
-        "https://instagram.com/shopify",
-        "https://youtube.com/shopify",
-        "https://tiktok.com/@shopify",
+        "https://twitter.com/weaverseio",
+        "https://facebook.com/weaverse",
+        "https://instagram.com/weaverse.io",
+        "https://youtube.com/@weaverse",
       ],
       url,
       potentialAction: {
@@ -54,8 +53,8 @@ function root({
 function home(): SeoConfig {
   return {
     title: "Home",
-    titleTemplate: "%s | Hydrogen Demo Store",
-    description: "The best place to buy snowboarding products",
+    titleTemplate: "%s | Weaverse Hydrogen Demo Store",
+    description: "The best Shopify Hydrogen Theme Customizer",
     robots: {
       noIndex: false,
       noFollow: false,
@@ -98,12 +97,13 @@ function productJsonLd({
   let origin = new URL(url).origin;
   let variants = product.variants.nodes;
   let description = truncate(product?.seo?.description ?? product?.description);
+  // @ts-ignore
   let offers: Offer[] = (variants || []).map((variant) => {
     let variantUrl = new URL(url);
     for (let option of variant.selectedOptions) {
       variantUrl.searchParams.set(option.name, option.value);
     }
-    let availability = variant.availableForSale
+    let availability: any = variant.availableForSale
       ? "https://schema.org/InStock"
       : "https://schema.org/OutOfStock";
 
@@ -429,7 +429,7 @@ function policies({
   return {
     title: "Policies",
     titleTemplate: "%s | Policies",
-    description: "Hydrogen store policies",
+    description: "Weaverse Hydrogen store policies",
     jsonLd: [
       {
         "@context": "https://schema.org",
@@ -439,7 +439,7 @@ function policies({
       {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        description: "Hydrogen store policies",
+        description: "Weaverse Hydrogen store policies",
         name: "Policies",
         url,
       },

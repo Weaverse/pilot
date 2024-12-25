@@ -1,20 +1,22 @@
-import { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { useLoaderData } from "@remix-run/react";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import ReviewForm from "./review-form";
 import { ReviewList } from "./review-list";
-import { useLoaderData } from "@remix-run/react";
-import { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
 
-type ReviewIndexProps = {};
-const ReviewIndex = forwardRef<HTMLDivElement, ReviewIndexProps>((props, ref) => {
-  let { ...rest } = props;
-  const { judgemeReviews } = useLoaderData<ProductLoaderType>();
+let ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
+  let { judgemeReviews } = useLoaderData<typeof productRouteLoader>();
   return (
-    <div ref={ref} {...rest} className="flex flex-col md:flex-row md:gap-10 gap-5">
-      <ReviewForm judgemeReviews={judgemeReviews}/>
-      {judgemeReviews.reviews.length > 0 && (
-        <ReviewList judgemeReviews={judgemeReviews}/>
-      )}
+    <div
+      ref={ref}
+      {...props}
+      className="flex flex-col md:flex-row md:gap-10 gap-5"
+    >
+      <ReviewForm judgemeReviews={judgemeReviews} />
+      {judgemeReviews.reviews.length > 0 ? (
+        <ReviewList judgemeReviews={judgemeReviews} />
+      ) : null}
     </div>
   );
 });

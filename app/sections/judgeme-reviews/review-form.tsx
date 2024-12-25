@@ -4,29 +4,29 @@ import clsx from "clsx";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Button } from "~/components/button";
 import { StarRating } from "~/components/star-rating";
+import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import type { JudgemeReviewsData } from "~/utils/judgeme";
-import type { ProductLoaderType } from "~/routes/($locale).products.$productHandle";
 
 export function ReviewForm({
   judgemeReviews,
 }: {
   judgemeReviews: JudgemeReviewsData;
 }) {
-  const { product } = useLoaderData<ProductLoaderType>();
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const fetcher = useFetcher<any>();
-  const formRef = useRef<HTMLFormElement>(null);
+  let { product } = useLoaderData<typeof productRouteLoader>();
+  let [rating, setRating] = useState(0);
+  let [hover, setHover] = useState(0);
+  let [isFormVisible, setIsFormVisible] = useState(false);
+  let [isPopupVisible, setIsPopupVisible] = useState(false);
+  let fetcher = useFetcher<any>();
+  let formRef = useRef<HTMLFormElement>(null);
   let [message, setMessage] = useState("");
-  const internalId = product.id.split("gid://shopify/Product/")[1];
-  const submittable = rating > 0;
+  let internalId = product.id.split("gid://shopify/Product/")[1];
+  let submittable = rating > 0;
 
   useEffect(() => {
     if (fetcher.data) {
-      setMessage((fetcher.data as any)?.message || "");
-      if (fetcher.data.success) {
+      // setMessage((fetcher.data as Response)?.message || "");
+      if ((fetcher.data as Response).ok) {
         setIsFormVisible(false);
         setIsPopupVisible(true);
         setRating(0);
@@ -35,14 +35,6 @@ export function ReviewForm({
       }
     }
   }, [fetcher.data]);
-
-  const handleRatingClick = (value: number) => {
-    setRating(value);
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    fetcher.submit(event.currentTarget);
-  };
 
   return (
     <div
@@ -116,7 +108,11 @@ export function ReviewForm({
                     return (
                       <div
                         key={index}
-                        onClick={() => handleRatingClick(ratingValue)}
+                        onClick={() =>
+                          ((value: number) => {
+                            setRating(value);
+                          })(ratingValue)
+                        }
                         onMouseEnter={() => setHover(ratingValue)}
                         onMouseLeave={() => setHover(0)}
                         aria-label={`Rate ${ratingValue} out of 5 stars`}
@@ -134,7 +130,9 @@ export function ReviewForm({
             </div>
             {/* Review Form */}
             <fetcher.Form
-              onSubmit={handleSubmit}
+              onSubmit={(event: FormEvent<HTMLFormElement>) => {
+                fetcher.submit(event.currentTarget);
+              }}
               ref={formRef}
               method="POST"
               encType="multipart/form-data"
