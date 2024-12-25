@@ -38,7 +38,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   invariant(collectionHandle, "Missing collectionHandle param");
 
   let searchParams = new URL(request.url).searchParams;
-
   let { sortKey, reverse } = getSortValuesFromParam(
     searchParams.get("sort") as SortParam
   );
@@ -53,8 +52,9 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }, [] as ProductFilter[]);
 
   let { CUSTOM_COLLECTION_BANNER_METAFIELD = "" } = env;
-  let [bannerNamespace, bannerKey] =
+  let [bannerNamespace = "", bannerKey = ""] =
     CUSTOM_COLLECTION_BANNER_METAFIELD.split(".");
+
   let { collection, collections } = await storefront
     .query<CollectionDetailsQuery>(COLLECTION_QUERY, {
       variables: {
