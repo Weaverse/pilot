@@ -20,14 +20,19 @@ export function NotFound({ type = "page" }: { type?: string }) {
           We couldn’t find the {type} you’re looking for. It may have been
           removed, had its name changed, or is temporarily unavailable.
         </p>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
-          <Link variant="outline" to="/">
-            Shop our products
-          </Link>
-          <span>Or</span>
-          <Link variant="underline" to="/">
-            Take me to the home page
-          </Link>
+        <div className="pt-10">
+          <div className="font-medium text-xl text-center">
+            What you can do?
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
+            <Link variant="outline" to="/products">
+              Shop our products
+            </Link>
+            <span>Or</span>
+            <Link variant="underline" to="/">
+              Take me to the home page
+            </Link>
+          </div>
         </div>
       </div>
       <FeaturedItemsSection />
