@@ -84,7 +84,7 @@ export function VariantOption(props: VariantOptionProps) {
       </legend>
 
       {type === "button" && (
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {values.map(({ value, isAvailable }) => (
             <button
               key={value}
@@ -107,7 +107,7 @@ export function VariantOption(props: VariantOptionProps) {
         </div>
       )}
       {type === "color" && (
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {values.map(({ value, isAvailable }) => {
             let swatchColor = colorsSwatches.find(({ name }) => name === value);
             return (
@@ -142,7 +142,7 @@ export function VariantOption(props: VariantOptionProps) {
         </div>
       )}
       {type === "custom-image" && (
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {values.map(({ value, image, isAvailable }) => {
             let swatchImage = swatches.images.find(
               (i) => i.name.toLowerCase() === value.toLowerCase()
@@ -197,7 +197,7 @@ export function VariantOption(props: VariantOptionProps) {
         </div>
       )}
       {type === "variant-image" && (
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {values.map(({ value, image, isAvailable }) => {
             let aspectRatio = "1/1";
             if (image && shape !== "circle") {
@@ -253,7 +253,7 @@ export function VariantOption(props: VariantOptionProps) {
         </select>
       )}
       {type === "default" && (
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {values.map((value) => (
             <span
               key={value.value}
