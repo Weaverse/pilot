@@ -3,7 +3,7 @@ import { flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import { type LoaderFunctionArgs, json, redirect } from "@shopify/remix-oxygen";
 import type { OrderFragment, OrderQuery } from "customer-accountapi.generated";
-import { OrderDetails } from "~/components/account/order-details";
+import { OrderDetails } from "~/components/customer/order-details";
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Order ${data?.order?.name}` }];
@@ -24,7 +24,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
 
     let { data, errors } = await context.customerAccount.query<OrderQuery>(
       CUSTOMER_ORDER_QUERY,
-      { variables: { orderId } },
+      { variables: { orderId } }
     );
 
     if (errors?.length || !data?.order?.lineItems) {

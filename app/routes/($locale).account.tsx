@@ -18,10 +18,10 @@ import type {
   CustomerDetailsQuery,
 } from "customer-accountapi.generated";
 import { Suspense } from "react";
-import { AccountDetails } from "~/components/account/account-details";
-import { AccountAddressBook } from "~/components/account/address-book";
-import { AccountOrderHistory } from "~/components/account/orders";
-import { OutletModal } from "~/components/account/outlet-modal";
+import { AccountDetails } from "~/components/customer/account-details";
+import { AccountAddressBook } from "~/components/customer/address-book";
+import { AccountOrderHistory } from "~/components/customer/orders";
+import { OutletModal } from "~/components/customer/outlet-modal";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";

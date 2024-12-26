@@ -1,7 +1,7 @@
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import { AccountEditAddressForm } from "~/components/account/edit-address-form";
+import { AccountEditAddressForm } from "~/components/customer/edit-address-form";
 import { doLogout } from "./($locale).account_.logout";
 import type {
   CustomerAddressDeleteMutation,
@@ -31,25 +31,25 @@ export let action: ActionFunction = async ({ request, context, params }) => {
       let { data, errors } =
         await customerAccount.mutate<CustomerAddressDeleteMutation>(
           DELETE_ADDRESS_MUTATION,
-          { variables: { addressId } },
+          { variables: { addressId } }
         );
 
       invariant(!errors?.length, errors?.[0]?.message);
 
       invariant(
         !data?.customerAddressDelete?.userErrors?.length,
-        data?.customerAddressDelete?.userErrors?.[0]?.message,
+        data?.customerAddressDelete?.userErrors?.[0]?.message
       );
 
       return redirect(
-        params?.locale ? `${params?.locale}/account` : "/account",
+        params?.locale ? `${params?.locale}/account` : "/account"
       );
     } catch (error: any) {
       return json(
         { formError: error.message },
         {
           status: 400,
-        },
+        }
       );
     }
   }
@@ -85,30 +85,30 @@ export let action: ActionFunction = async ({ request, context, params }) => {
       let { data, errors } =
         await customerAccount.mutate<CustomerAddressCreateMutation>(
           CREATE_ADDRESS_MUTATION,
-          { variables: { address, defaultAddress } },
+          { variables: { address, defaultAddress } }
         );
 
       invariant(!errors?.length, errors?.[0]?.message);
 
       invariant(
         !data?.customerAddressCreate?.userErrors?.length,
-        data?.customerAddressCreate?.userErrors?.[0]?.message,
+        data?.customerAddressCreate?.userErrors?.[0]?.message
       );
 
       invariant(
         data?.customerAddressCreate?.customerAddress?.id,
-        "Expected customer address to be created",
+        "Expected customer address to be created"
       );
 
       return redirect(
-        params?.locale ? `${params?.locale}/account` : "/account",
+        params?.locale ? `${params?.locale}/account` : "/account"
       );
     } catch (error: any) {
       return json(
         { formError: error.message },
         {
           status: 400,
-        },
+        }
       );
     }
   } else {
@@ -122,25 +122,25 @@ export let action: ActionFunction = async ({ request, context, params }) => {
               addressId,
               defaultAddress,
             },
-          },
+          }
         );
 
       invariant(!errors?.length, errors?.[0]?.message);
 
       invariant(
         !data?.customerAddressUpdate?.userErrors?.length,
-        data?.customerAddressUpdate?.userErrors?.[0]?.message,
+        data?.customerAddressUpdate?.userErrors?.[0]?.message
       );
 
       return redirect(
-        params?.locale ? `${params?.locale}/account` : "/account",
+        params?.locale ? `${params?.locale}/account` : "/account"
       );
     } catch (error: any) {
       return json(
         { formError: error.message },
         {
           status: 400,
-        },
+        }
       );
     }
   }
