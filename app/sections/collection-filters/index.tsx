@@ -1,6 +1,7 @@
 import { useLoaderData } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import { forwardRef, useEffect, useState } from "react";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
@@ -15,6 +16,7 @@ export interface CollectionFiltersData {
   showBanner: boolean;
   bannerHeightDesktop: number;
   bannerHeightMobile: number;
+  bannerBorderRadius: number;
   enableSort: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
@@ -39,6 +41,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       showBanner,
       bannerHeightDesktop,
       bannerHeightMobile,
+      bannerBorderRadius,
       enableSort,
       showFiltersCount,
       enableFilter,
@@ -60,10 +63,10 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
     >();
 
     let [gridSizeDesktop, setGridSizeDesktop] = useState(
-      Number(productsPerRowDesktop) || 3
+      Number(productsPerRowDesktop) || 3,
     );
     let [gridSizeMobile, setGridSizeMobile] = useState(
-      Number(productsPerRowMobile) || 1
+      Number(productsPerRowMobile) || 1,
     );
 
     useEffect(() => {
@@ -89,11 +92,16 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             )}
             {showBanner && banner && (
               <div
-                className="h-[--banner-height-mobile] lg:h-[--banner-height-desktop] mt-6"
+                className={clsx([
+                  "mt-6 overflow-hidden",
+                  "rounded-[--banner-border-radius]",
+                  "h-[--banner-height-mobile] lg:h-[--banner-height-desktop]",
+                ])}
                 style={
                   {
                     "--banner-height-desktop": `${bannerHeightDesktop}px`,
                     "--banner-height-mobile": `${bannerHeightMobile}px`,
+                    "--banner-border-radius": `${bannerBorderRadius}px`,
                   } as React.CSSProperties
                 }
               >
@@ -140,7 +148,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       );
     }
     return <Section ref={ref} {...rest} />;
-  }
+  },
 );
 
 export default CollectionFilters;
@@ -172,6 +180,10 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: false,
         },
         {
+          type: "heading",
+          label: "Banner",
+        },
+        {
           type: "switch",
           name: "showBanner",
           label: "Show banner",
@@ -201,6 +213,19 @@ export let schema: HydrogenComponentSchema = {
             max: 400,
             step: 1,
           },
+          condition: "showBanner.eq.true",
+        },
+        {
+          type: "range",
+          name: "bannerBorderRadius",
+          label: "Banner border radius",
+          configs: {
+            min: 0,
+            max: 40,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
           condition: "showBanner.eq.true",
         },
       ],
