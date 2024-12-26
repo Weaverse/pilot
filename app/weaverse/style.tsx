@@ -26,7 +26,6 @@ export function GlobalStyle() {
       discountBadge,
       newBadge,
       bestSellerBadge,
-      otherBadges,
       soldOutAndUnavailable,
       starRating,
       bodyBaseSize,
@@ -81,7 +80,6 @@ export function GlobalStyle() {
               --color-discount: ${discountBadge};
               --color-new-badge: ${newBadge};
               --color-best-seller: ${bestSellerBadge};
-              --color-other-badges: ${otherBadges};
               --color-sold-out-and-unavailable: ${soldOutAndUnavailable};
               --color-star-rating: ${starRating};
 

@@ -434,12 +434,6 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Other tags",
-          name: "otherBadges",
-          defaultValue: "#000000",
-        },
-        {
-          type: "color",
           label: "Sold out & unavailable",
           name: "soldOutAndUnavailable",
           defaultValue: "#d4d4d4",
@@ -564,13 +558,265 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Product swatches",
+      group: "Product swatches & badges",
       inputs: [
         {
           type: "swatches",
           name: "productSwatches",
-          label: "Config swatches",
+          label: "Configs",
           defaultValue: swatchesConfigs,
+          helpText:
+            "Product swatches configs are applied to product page, filters and product cards.",
+        },
+        {
+          type: "heading",
+          label: "Badges",
+        },
+        {
+          type: "text",
+          label: "Hot / Best Seller text",
+          name: "hotBestSellerText",
+          defaultValue: "Hot",
+          placeholder: "Hot",
+        },
+        {
+          type: "text",
+          label: "New / Limited text",
+          name: "newLimitedText",
+          defaultValue: "New",
+          placeholder: "New",
+        },
+        {
+          type: "text",
+          label: "Sold out text",
+          name: "soldOutText",
+          defaultValue: "Sold out",
+          placeholder: "Sold out",
+        },
+        {
+          type: "select",
+          label: "Sale badge content",
+          name: "saleBadgeContent",
+          configs: {
+            options: [
+              { value: "percentage", label: "Percentage" },
+              { value: "text", label: "Text" },
+            ],
+          },
+          defaultValue: "percentage",
+          helpText:
+            "Display as <strong>-20%</strong> or <strong>Sale</strong> text.",
+        },
+        {
+          type: "text",
+          label: "Sale badge text",
+          name: "saleBadgeText",
+          defaultValue: "Sale",
+          placeholder: "Sale",
+          condition: "saleBadgeContent.eq.text",
+        },
+      ],
+    },
+    {
+      group: "Product cards",
+      inputs: [
+        {
+          type: "heading",
+          label: "Layout",
+        },
+        {
+          type: "toggle-group",
+          name: "pcardAlignment",
+          label: "Content alignment",
+          configs: {
+            options: [
+              { value: "left", label: "Left", icon: "align-start-vertical" },
+              {
+                value: "center",
+                label: "Center",
+                icon: "align-center-vertical",
+              },
+              { value: "right", label: "Right", icon: "align-end-vertical" },
+            ],
+          },
+          defaultValue: "center",
+        },
+        {
+          type: "range",
+          name: "pcardBorderRadius",
+          label: "Border radius",
+          configs: {
+            min: 0,
+            max: 40,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
+        },
+        {
+          type: "color",
+          name: "pcardBackgroundColor",
+          label: "Background color",
+          defaultValue: "",
+        },
+        {
+          type: "heading",
+          label: "Image",
+        },
+        {
+          type: "switch",
+          name: "pcardShowImageOnHover",
+          label: "Show second image on hover",
+          defaultValue: true,
+        },
+        {
+          type: "select",
+          name: "pcardImageRatio",
+          label: "Image aspect ratio",
+          defaultValue: "adapt",
+          configs: {
+            options: [
+              { value: "adapt", label: "Adapt to image" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
+            ],
+          },
+          helpText:
+            'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
+        },
+        {
+          type: "heading",
+          label: "Content",
+        },
+        {
+          type: "switch",
+          label: "Show vendor",
+          name: "pcardShowVendor",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show lowest price",
+          name: "pcardShowLowestPrice",
+          defaultValue: false,
+        },
+        {
+          type: "switch",
+          label: "Show sale price",
+          name: "pcardShowSalePrice",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show option swatches",
+          name: "pcardShowOptionSwatches",
+          defaultValue: true,
+        },
+        {
+          type: "text",
+          label: "Option to show",
+          name: "pcardOptionToShow",
+          defaultValue: "Color",
+          placeholder: "Color",
+          condition: "pcardShowOptionSwatches.eq.true",
+        },
+        {
+          type: "range",
+          label: "Max options",
+          name: "pcardMaxOptions",
+          configs: {
+            min: 2,
+            max: 10,
+          },
+          defaultValue: 5,
+          condition: "pcardShowOptionSwatches.eq.true",
+        },
+        {
+          type: "heading",
+          label: "Quick shop",
+        },
+        {
+          type: "switch",
+          label: "Enable quick shop",
+          name: "pcardEnableQuickShop",
+          defaultValue: true,
+        },
+        {
+          type: "select",
+          label: "Quick shop button type",
+          name: "pcardQuickShopButtonType",
+          configs: {
+            options: [
+              { value: "icon", label: "Icon button" },
+              { value: "text", label: "Text button" },
+            ],
+          },
+          defaultValue: "icon",
+          condition: "pcardEnableQuickShop.eq.true",
+        },
+        {
+          type: "text",
+          label: "Quick shop button text",
+          name: "pcardQuickShopButtonText",
+          defaultValue: "Quick shop",
+          placeholder: "Quick shop",
+          condition: "pcardQuickShopButtonType.eq.text",
+        },
+        {
+          type: "select",
+          label: "Quick shop action",
+          name: "pcardQuickShopAction",
+          configs: {
+            options: [
+              { value: "go-to-page", label: "Go to product page" },
+              { value: "open-quick-shop", label: "Open quick shop panel" },
+            ],
+          },
+          defaultValue: "open-quick-shop",
+          condition: "pcardEnableQuickShop.eq.true",
+        },
+        {
+          type: "select",
+          label: "Quick shop panel type",
+          name: "pcardQuickShopPanelType",
+          configs: {
+            options: [
+              { value: "modal", label: "Modal" },
+              { value: "drawer", label: "Drawer" },
+            ],
+          },
+          defaultValue: "modal",
+          condition: "pcardQuickShopAction.eq.open-quick-shop",
+        },
+        {
+          type: "heading",
+          label: "Badges",
+        },
+        {
+          type: "switch",
+          label: "Show sale badges",
+          name: "pcardShowSaleBadges",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show Hot / Best Seller badges",
+          name: "pcardShowHotBadges",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show New / Limited badges",
+          name: "pcardShowNewBadges",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show Out of stock badges",
+          name: "pcardShowOutOfStockBadges",
+          defaultValue: false,
         },
       ],
     },
@@ -590,95 +836,6 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Reveal elements on scroll",
           name: "revealElementsOnScroll",
           defaultValue: true,
-        },
-      ],
-    },
-    {
-      group: "Product quick view",
-      inputs: [
-        {
-          type: "text",
-          label: "Add to cart text",
-          name: "addToCartText",
-          defaultValue: "Add to cart",
-          placeholder: "Add to cart",
-        },
-        {
-          type: "text",
-          label: "Sold out text",
-          name: "soldOutText",
-          defaultValue: "Sold out",
-          placeholder: "Sold out",
-        },
-        {
-          type: "text",
-          label: "Unavailable text",
-          name: "unavailableText",
-          defaultValue: "Unavailable",
-          placeholder: "Unavailable",
-        },
-        {
-          type: "switch",
-          label: "Show vendor",
-          name: "showVendor",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Show sale price",
-          name: "showSalePrice",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Show details",
-          name: "showDetails",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Show shipping policy",
-          name: "showShippingPolicy",
-          defaultValue: true,
-        },
-        {
-          type: "switch",
-          label: "Show refund policy",
-          name: "showRefundPolicy",
-          defaultValue: true,
-        },
-        {
-          label: "Hide unavailable options",
-          type: "switch",
-          name: "hideUnavailableOptions",
-        },
-        {
-          label: "Show thumbnails",
-          name: "showThumbnails",
-          type: "switch",
-          defaultValue: true,
-        },
-        {
-          label: "Number of thumbnails",
-          name: "numberOfThumbnails",
-          type: "range",
-          condition: "showThumbnails.eq.true",
-          configs: {
-            min: 1,
-            max: 10,
-          },
-          defaultValue: 4,
-        },
-        {
-          label: "Gap between images",
-          name: "spacing",
-          type: "range",
-          configs: {
-            min: 0,
-            step: 2,
-            max: 100,
-          },
-          defaultValue: 10,
         },
       ],
     },
