@@ -92,6 +92,7 @@ export let themeSchema: HydrogenThemeSchema = {
       label: i.label,
     };
   }),
+  defaultLocale: "en-us",
   inspector: [
     {
       group: "Layout",
