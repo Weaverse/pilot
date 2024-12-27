@@ -1,13 +1,17 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
 import type { AppLoadContext, LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import type { ColorSwatch, ImageSwatch } from "@weaverse/hydrogen";
+import {
+  type ColorSwatch,
+  type ImageSwatch,
+  resizeShopifyImage,
+} from "@weaverse/hydrogen";
 import type {
-  ColorsConfigsQuery,
   LayoutQuery,
   MenuFragment,
+  SwatchesConfigsQuery,
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/graphql/queries";
+import { LAYOUT_QUERY, SWATCHES_CONFIGS_QUERY } from "~/graphql/queries";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "~/utils/seo.server";
 
@@ -114,18 +118,22 @@ async function getSwatchesConfigs(context: AppLoadContext) {
   if (!type) {
     return { colors: [], images: [] };
   }
-  let { metaobjects } = await context.storefront.query<ColorsConfigsQuery>(
-    COLORS_CONFIGS_QUERY,
+  let { metaobjects } = await context.storefront.query<SwatchesConfigsQuery>(
+    SWATCHES_CONFIGS_QUERY,
     { variables: { type } },
   );
   let colors: ColorSwatch[] = [];
   let images: ImageSwatch[] = [];
   for (let { id, fields } of metaobjects.nodes) {
     let { value: color } = fields.find(({ key }) => key === "color") || {};
-    let { value: image } = fields.find(({ key }) => key === "image") || {};
+    let { reference: imageRef } =
+      fields.find(({ key }) => key === "image") || {};
     let { value: name } = fields.find(({ key }) => key === "label") || {};
-    if (image) {
-      images.push({ id, name, value: image });
+    if (imageRef) {
+      let url = imageRef?.image?.url;
+      if (url) {
+        images.push({ id, name, value: resizeShopifyImage(url, "300x") });
+      }
     } else if (color) {
       colors.push({ id, name, value: color });
     }
