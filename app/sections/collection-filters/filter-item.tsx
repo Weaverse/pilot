@@ -8,16 +8,19 @@ import {
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import {
   type ColorSwatch,
+  type ImageSwatch,
   type SwatchesConfigs,
   useThemeSettings,
 } from "@weaverse/hydrogen";
 import { useState } from "react";
 import { variants as productOptionsVariants } from "~/components/product/variant-option";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
+import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import type { AppliedFilter } from "~/utils/filter";
 import { getAppliedFilterLink, getFilterLink } from "~/utils/filter";
-import type { RootLoader } from "~/root";
+
+type FilterDisplayAs = "swatch" | "button" | "list-item";
 
 export function FilterItem({
   displayAs,
@@ -25,7 +28,7 @@ export function FilterItem({
   appliedFilters,
   showFiltersCount,
 }: {
-  displayAs: "color-swatch" | "button" | "list-item";
+  displayAs: FilterDisplayAs;
   option: Filter["values"][0];
   appliedFilters: AppliedFilter[];
   showFiltersCount: boolean;
@@ -34,11 +37,11 @@ export function FilterItem({
   let [params] = useSearchParams();
   let location = useLocation();
   let themeSettings = useThemeSettings();
-  let { colorsConfigs } = useRouteLoaderData<RootLoader>("root");
+  let { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
   let { options, swatches }: SwatchesConfigs = themeSettings.productSwatches;
 
   let filter = appliedFilters.find(
-    (filter) => JSON.stringify(filter.filter) === option.input
+    (filter) => JSON.stringify(filter.filter) === option.input,
   );
 
   let [checked, setChecked] = useState(!!filter);
@@ -54,11 +57,17 @@ export function FilterItem({
     }
   }
 
-  if (displayAs === "color-swatch") {
-    let colors: ColorSwatch[] = colorsConfigs?.length
-      ? colorsConfigs
+  if (displayAs === "swatch") {
+    let colors: ColorSwatch[] = swatchesConfigs?.colors?.length
+      ? swatchesConfigs.colors
       : swatches.colors;
+    let images: ImageSwatch[] = swatchesConfigs?.images?.length
+      ? swatchesConfigs.images
+      : swatches.images;
+
+    let swatchImage = images.find(({ name }) => name === option.label);
     let swatchColor = colors.find(({ name }) => name === option.label);
+
     let optionConf = options.find(({ name }) => {
       return name.toLowerCase() === option.label.toLowerCase();
     });
@@ -76,7 +85,7 @@ export function FilterItem({
                 shape,
               }),
               checked ? "p-1 border-line" : "border-line-subtle",
-              option.count === 0 && "diagonal"
+              option.count === 0 && "diagonal",
             )}
             onClick={() => handleCheckedChange(!checked)}
             disabled={option.count === 0}
@@ -84,9 +93,13 @@ export function FilterItem({
             <span
               className={cn(
                 "w-full h-full inline-block border-none hover:border-none",
-                productOptionsVariants({ shape })
+                productOptionsVariants({ shape }),
               )}
               style={{
+                backgroundImage: swatchImage?.value
+                  ? `url(${swatchImage?.value})`
+                  : undefined,
+                backgroundSize: "cover",
                 backgroundColor:
                   swatchColor?.value || option.label.toLowerCase(),
               }}
@@ -109,7 +122,7 @@ export function FilterItem({
           option.count === 0 && "diagonal text-body-subtle",
           checked
             ? "border-line bg-body text-background"
-            : "border-line-subtle hover:border-line"
+            : "border-line-subtle hover:border-line",
         )}
         onClick={() => handleCheckedChange(!checked)}
         disabled={option.count === 0}
@@ -123,7 +136,7 @@ export function FilterItem({
     <div
       className={cn(
         "flex items-center gap-2.5",
-        option.count === 0 && "text-body-subtle"
+        option.count === 0 && "text-body-subtle",
       )}
     >
       <Checkbox.Root
@@ -133,7 +146,7 @@ export function FilterItem({
         className={cn(
           "w-5 h-5 shrink-0",
           "border border-line focus-visible:outline-none",
-          "disabled:cursor-not-allowed disabled:opacity-50"
+          "disabled:cursor-not-allowed disabled:opacity-50",
         )}
       >
         <Checkbox.Indicator className="flex items-center justify-center text-current">
