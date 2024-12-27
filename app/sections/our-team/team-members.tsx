@@ -8,7 +8,7 @@ import {
   useParentInstance,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import type { OurTeamQuery } from "storefrontapi.generated";
+import type { OurTeamQuery } from "storefront-api.generated";
 
 type MemberType = {
   name: string;

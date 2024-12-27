@@ -7,8 +7,8 @@
       "node_modules/**",
       "build/**",
       "dist/**",
-      "customer-accountapi.generated.d.ts",
-      "storefrontapi.generated.d.ts",
+      "storefront-api.generated.d.ts",
+      "customer-account-api.generated.d.ts",
       ".shopify/**"
     ]
   },

@@ -1,7 +1,7 @@
 import { flattenConnection } from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
-import type { ApiAllProductsQuery } from "storefrontapi.generated";
+import type { ApiAllProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 

@@ -1,7 +1,7 @@
 import { Await, useLoaderData } from "@remix-run/react";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
-import type { ProductCardFragment } from "storefrontapi.generated";
+import type { ProductCardFragment } from "storefront-api.generated";
 import Heading, {
   type HeadingProps,
   headingInputs,
@@ -76,7 +76,7 @@ let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
       );
     }
     return <section ref={ref} {...rest} />;
-  }
+  },
 );
 
 export default RelatedProducts;

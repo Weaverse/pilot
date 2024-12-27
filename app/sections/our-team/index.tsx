@@ -4,7 +4,7 @@ import type {
   WeaverseMetaObject,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import type { OurTeamQuery } from "storefrontapi.generated";
+import type { OurTeamQuery } from "storefront-api.generated";
 import { backgroundInputs } from "~/components/background-image";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 

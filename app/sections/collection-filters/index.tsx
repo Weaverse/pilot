@@ -1,8 +1,9 @@
 import { useLoaderData } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import { forwardRef, useEffect, useState } from "react";
-import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import type { CollectionDetailsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Filters } from "./filters";
@@ -15,6 +16,7 @@ export interface CollectionFiltersData {
   showBanner: boolean;
   bannerHeightDesktop: number;
   bannerHeightMobile: number;
+  bannerBorderRadius: number;
   enableSort: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
@@ -32,13 +34,14 @@ export interface CollectionFiltersData {
 interface CollectionFiltersProps extends SectionProps, CollectionFiltersData {}
 
 let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
-  (props, sectionRef) => {
+  (props, ref) => {
     let {
       showBreadcrumb,
       showDescription,
       showBanner,
       bannerHeightDesktop,
       bannerHeightMobile,
+      bannerBorderRadius,
       enableSort,
       showFiltersCount,
       enableFilter,
@@ -76,7 +79,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
         ? collection.metafield.reference.image
         : collection.image;
       return (
-        <Section ref={sectionRef} {...rest} overflow="unset">
+        <Section ref={ref} {...rest} overflow="unset">
           <div className="py-10">
             {showBreadcrumb && (
               <BreadCrumb page={collection.title} className="mb-2.5" />
@@ -89,11 +92,16 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             )}
             {showBanner && banner && (
               <div
-                className="relative h-[--banner-height-mobile] lg:h-[--banner-height-desktop] mt-6"
+                className={clsx([
+                  "mt-6 overflow-hidden",
+                  "rounded-[--banner-border-radius]",
+                  "h-[--banner-height-mobile] lg:h-[--banner-height-desktop]",
+                ])}
                 style={
                   {
                     "--banner-height-desktop": `${bannerHeightDesktop}px`,
                     "--banner-height-mobile": `${bannerHeightMobile}px`,
+                    "--banner-border-radius": `${bannerBorderRadius}px`,
                   } as React.CSSProperties
                 }
               >
@@ -122,9 +130,11 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
           />
           <div className="flex gap-8 pt-6 lg:pt-12 pb-8 lg:pb-20">
             {enableFilter && filtersPosition === "sidebar" && (
-              <div className="hidden lg:block shrink-0 w-72 space-y-4">
-                <div className="font-bold">Filters</div>
-                <Filters />
+              <div className="hidden lg:block shrink-0 w-72">
+                <div className="space-y-4 sticky top-[calc(var(--height-nav)+40px)]">
+                  <div className="font-bold">Filters</div>
+                  <Filters />
+                </div>
               </div>
             )}
             <ProductsPagination
@@ -137,7 +147,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
         </Section>
       );
     }
-    return <Section ref={sectionRef} {...rest} />;
+    return <Section ref={ref} {...rest} />;
   },
 );
 
@@ -170,6 +180,10 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: false,
         },
         {
+          type: "heading",
+          label: "Banner",
+        },
+        {
           type: "switch",
           name: "showBanner",
           label: "Show banner",
@@ -199,6 +213,19 @@ export let schema: HydrogenComponentSchema = {
             max: 400,
             step: 1,
           },
+          condition: "showBanner.eq.true",
+        },
+        {
+          type: "range",
+          name: "bannerBorderRadius",
+          label: "Banner border radius",
+          configs: {
+            min: 0,
+            max: 40,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
           condition: "showBanner.eq.true",
         },
       ],

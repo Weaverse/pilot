@@ -3,7 +3,7 @@ import { Pagination } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
-import type { AllProductsQuery } from "storefrontapi.generated";
+import type { AllProductsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
@@ -88,7 +88,7 @@ export let schema: HydrogenComponentSchema = {
           (inp) =>
             inp.name !== "divider" &&
             inp.name !== "borderRadius" &&
-            inp.name !== "gap"
+            inp.name !== "gap",
         ),
       ],
     },

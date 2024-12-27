@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import type { Storefront } from "@shopify/hydrogen";
-import type { VariantsQuery, ProductQuery } from "storefrontapi.generated";
+import type { VariantsQuery, ProductQuery } from "storefront-api.generated";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
 
 export let loader: LoaderFunction = async ({

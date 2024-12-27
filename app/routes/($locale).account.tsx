@@ -16,12 +16,12 @@ import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type {
   CustomerDetailsFragment,
   CustomerDetailsQuery,
-} from "customer-accountapi.generated";
+} from "customer-account-api.generated";
 import { Suspense } from "react";
-import { AccountDetails } from "~/components/account/account-details";
-import { AccountAddressBook } from "~/components/account/address-book";
-import { AccountOrderHistory } from "~/components/account/orders";
-import { OutletModal } from "~/components/account/outlet-modal";
+import { AccountDetails } from "~/components/customer/account-details";
+import { AccountAddressBook } from "~/components/customer/address-book";
+import { AccountOrderHistory } from "~/components/customer/orders";
+import { OutletModal } from "~/components/customer/outlet-modal";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
@@ -38,7 +38,7 @@ export let headers = routeHeaders;
 export async function loader({ context }: LoaderFunctionArgs) {
   let { data, errors } =
     await context.customerAccount.query<CustomerDetailsQuery>(
-      CUSTOMER_DETAILS_QUERY
+      CUSTOMER_DETAILS_QUERY,
     );
 
   /**
@@ -54,7 +54,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   return defer(
     { customer, heading, featuredData },
-    { headers: { "Cache-Control": generateCacheControlHeader(CacheNone()) } }
+    { headers: { "Cache-Control": generateCacheControlHeader(CacheNone()) } },
   );
 }
 
@@ -68,7 +68,7 @@ export default function Authenticated() {
     (match: { handle?: { renderInModal?: boolean } }) => {
       let handle = match?.handle;
       return handle?.renderInModal;
-    }
+    },
   );
 
   if (outlet) {
@@ -149,7 +149,7 @@ function Account({ customer, heading, featuredData }: AccountType) {
 }
 
 // NOTE: https://shopify.dev/docs/api/customer/latest/queries/customer
-const CUSTOMER_DETAILS_QUERY = `#graphql
+export const CUSTOMER_DETAILS_QUERY = `#graphql
   query CustomerDetails {
     customer {
       ...CustomerDetails

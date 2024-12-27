@@ -4,7 +4,7 @@ import type {
   WeaverseCollection,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import type { CollectionsByIdsQuery } from "storefrontapi.generated";
+import type { CollectionsByIdsQuery } from "storefront-api.generated";
 import type { SectionProps } from "~/components/section";
 import { Section, layoutInputs } from "~/components/section";
 

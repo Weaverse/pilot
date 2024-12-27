@@ -7,7 +7,7 @@ import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
 import { Link } from "~/components/link";
-import type { PoliciesIndexQuery } from "storefrontapi.generated";
+import type { PoliciesIndexQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Section } from "~/components/section";
 import { FileText } from "@phosphor-icons/react";
@@ -27,7 +27,7 @@ export async function loader({
   invariant(data, "No data returned from Shopify API");
 
   let policies = Object.values(
-    data.shop as NonNullableFields<typeof data.shop>
+    data.shop as NonNullableFields<typeof data.shop>,
   ).filter(Boolean);
 
   if (policies.length === 0) {

@@ -124,6 +124,7 @@ export function Footer() {
                   <Image
                     data={footerLogoData}
                     sizes="auto"
+                    width={500}
                     className="w-full h-full object-contain object-left"
                   />
                 </div>

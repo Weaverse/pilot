@@ -3,7 +3,7 @@ import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
-import type { ProductQuery } from "storefrontapi.generated";
+import type { ProductQuery } from "storefront-api.generated";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
@@ -42,10 +42,10 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let variants = _variants?.product?.variants;
     let selectedVariantOptimistic = useOptimisticVariant(
       product?.selectedVariant || variants?.nodes?.[0],
-      variants
+      variants,
     );
     let [selectedVariant, setSelectedVariant] = useState<any>(
-      selectedVariantOptimistic
+      selectedVariantOptimistic,
     );
 
     let {
@@ -71,8 +71,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     let atcText = selectedVariant?.availableForSale
       ? addToCartText
       : selectedVariant?.quantityAvailable === -1
-      ? unavailableText
-      : soldOutText;
+        ? unavailableText
+        : soldOutText;
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
@@ -96,7 +96,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       window.history.replaceState(
         {},
         "",
-        `${window.location.pathname}?${searchParams.toString()}`
+        `${window.location.pathname}?${searchParams.toString()}`,
       );
     }
 
@@ -163,7 +163,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                       />
                       {isDiscounted(
                         selectedVariant.price as MoneyV2,
-                        selectedVariant.compareAtPrice as MoneyV2
+                        selectedVariant.compareAtPrice as MoneyV2,
                       ) &&
                         showSalePrice && (
                           <CompareAtPrice
@@ -226,7 +226,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       );
     }
     return <div ref={ref} {...rest} />;
-  }
+  },
 );
 
 export default ProductInformation;

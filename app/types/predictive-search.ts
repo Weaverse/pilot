@@ -2,7 +2,7 @@ import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,
   PredictiveProductFragment,
-} from "storefrontapi.generated";
+} from "storefront-api.generated";
 
 type PredictiveSearchResultItemImage =
   | PredictiveCollectionFragment["image"]

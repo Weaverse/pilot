@@ -2,8 +2,8 @@ import type { MetaFunction } from "@remix-run/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import { type LoaderFunctionArgs, json, redirect } from "@shopify/remix-oxygen";
-import type { OrderFragment, OrderQuery } from "customer-accountapi.generated";
-import { OrderDetails } from "~/components/account/order-details";
+import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
+import { OrderDetails } from "~/components/customer/order-details";
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Order ${data?.order?.name}` }];

@@ -10,7 +10,7 @@ import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
 import { clsx } from "clsx";
 import { Fragment, Suspense, useEffect, useState } from "react";
-import type { PaginatedProductsSearchQuery } from "storefrontapi.generated";
+import type { PaginatedProductsSearchQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
@@ -50,7 +50,7 @@ export async function loader({
           country: storefront.i18n.country,
           language: storefront.i18n.language,
         },
-      }
+      },
     );
     products = data.products;
   }
@@ -71,8 +71,8 @@ export async function loader({
           description: hasResults
             ? `Showing ${products.nodes.length} search results for "${searchTerm}"`
             : searchTerm
-            ? `No results found for "${searchTerm}"`
-            : "Search our store",
+              ? `No results found for "${searchTerm}"`
+              : "Search our store",
         },
         metafields: [],
         products,
@@ -244,7 +244,7 @@ function NoResults({
 }
 
 function getRecommendations(
-  storefront: LoaderFunctionArgs["context"]["storefront"]
+  storefront: LoaderFunctionArgs["context"]["storefront"],
 ) {
   return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }

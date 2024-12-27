@@ -5,7 +5,7 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
-import type { ArticleFragment } from "storefrontapi.generated";
+import type { ArticleFragment } from "storefront-api.generated";
 import { Skeleton } from "~/components/skeleton";
 import { getImageLoadingPriority } from "~/utils/image";
 
@@ -69,7 +69,7 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
       );
     }
     return <section ref={ref} />;
-  }
+  },
 );
 
 function ArticleCard({

@@ -9,7 +9,7 @@ import type {
   CustomerUpdateInput,
 } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
-import type { CustomerUpdateMutation } from "customer-accountapi.generated";
+import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";

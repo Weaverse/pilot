@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useSearchParams } from "@remix-run/react";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useRef, useState } from "react";
-import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import type { CollectionDetailsQuery } from "storefront-api.generated";
 import { FILTER_URL_PREFIX, filterInputToParams } from "~/utils/filter";
 
 export function PriceRangeFilter({
@@ -78,7 +78,7 @@ export function PriceRangeFilter({
             onPointerDown={() => (thumbRef.current = s)}
             className={clsx(
               "block h-4 w-4 bg-gray-800 cursor-grab rounded-full shadow-md",
-              "focus-visible:outline-none"
+              "focus-visible:outline-none",
             )}
           />
         ))}

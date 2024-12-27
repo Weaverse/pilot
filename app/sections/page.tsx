@@ -1,7 +1,7 @@
 import { useLoaderData } from "@remix-run/react";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import type { PageDetailsQuery } from "storefrontapi.generated";
+import type { PageDetailsQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 

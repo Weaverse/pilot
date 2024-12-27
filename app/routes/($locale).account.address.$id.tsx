@@ -1,13 +1,13 @@
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
-import { AccountEditAddressForm } from "~/components/account/edit-address-form";
+import { AccountEditAddressForm } from "~/components/customer/edit-address-form";
 import { doLogout } from "./($locale).account_.logout";
 import type {
   CustomerAddressDeleteMutation,
   CustomerAddressCreateMutation,
   CustomerAddressUpdateMutation,
-} from "customer-accountapi.generated";
+} from "customer-account-api.generated";
 
 export let handle = {
   renderInModal: true,
