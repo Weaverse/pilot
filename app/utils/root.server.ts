@@ -23,7 +23,7 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  let [layout, colorsConfigs] = await Promise.all([
+  let [layout, swatchesConfigs] = await Promise.all([
     getLayoutData(context),
     getSwatchesConfigs(context),
     // Add other queries here, so that they are loaded in parallel
@@ -51,7 +51,7 @@ export async function loadCriticalData({
     selectedLocale: storefront.i18n,
     weaverseTheme: await context.weaverse.loadThemeSettings(),
     googleGtmID: context.env.PUBLIC_GOOGLE_GTM_ID,
-    colorsConfigs,
+    swatchesConfigs,
   };
 }
 
