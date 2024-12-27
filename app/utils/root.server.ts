@@ -112,7 +112,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
 async function getSwatchesConfigs(context: AppLoadContext) {
   let { METAOBJECT_COLORS_TYPE: type } = context.env;
   if (!type) {
-    return [];
+    return { colors: [], images: [] };
   }
   let { metaobjects } = await context.storefront.query<ColorsConfigsQuery>(
     COLORS_CONFIGS_QUERY,
