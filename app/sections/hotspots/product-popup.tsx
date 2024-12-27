@@ -3,7 +3,7 @@ import type { MediaImage } from "@shopify/hydrogen/storefront-api-types";
 import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import type { ProductQuery } from "storefrontapi.generated";
+import type { ProductQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import type { HotspotsItemData } from "./item";
 
@@ -72,7 +72,7 @@ export function ProductPopup({
   }
 
   let featuredMedia = product.media.nodes.find(
-    (node) => node.__typename === "MediaImage"
+    (node) => node.__typename === "MediaImage",
   ) as MediaImage;
   let featuredImage = featuredMedia?.image;
   let price = product.variants.nodes[0].price;
@@ -88,7 +88,7 @@ export function ProductPopup({
         "translate-y-[calc(var(--translate-y-ratio)*-16px)]",
         "group-hover:visible group-hover:opacity-100",
         "group-hover:translate-x-[calc(var(--translate-x-ratio)*var(--spot-size))]",
-        "group-hover:translate-y-0"
+        "group-hover:translate-y-0",
       )}
       style={
         {

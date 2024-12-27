@@ -1,5 +1,5 @@
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
-import type { FeaturedItemsQuery } from "storefrontapi.generated";
+import type { FeaturedItemsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import {
   FEATURED_COLLECTION_FRAGMENT,

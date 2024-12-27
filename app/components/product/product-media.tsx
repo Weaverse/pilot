@@ -2,7 +2,7 @@ import { Image } from "@shopify/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import type { MediaFragment } from "storefrontapi.generated";
+import type { MediaFragment } from "storefront-api.generated";
 import { FreeMode, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import { getImageAspectRatio } from "~/utils/image";
@@ -23,7 +23,7 @@ let variants = cva(
         mix: "2xl:grid-cols-2",
       },
     },
-  }
+  },
 );
 
 export interface ProductMediaProps extends VariantProps<typeof variants> {
@@ -46,7 +46,7 @@ export function ProductMedia(props: ProductMediaProps) {
   let media = _media.filter((med) => med.__typename === "MediaImage");
   let [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(
-    null
+    null,
   );
   let [activeIndex, setActiveIndex] = useState(0);
 
@@ -79,7 +79,7 @@ export function ProductMedia(props: ProductMediaProps) {
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
                 "object-cover opacity-0 animate-fade-in w-[80vw] max-w-none lg:w-full lg:h-full",
-                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2"
+                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
               )}
               sizes="auto"
             />
@@ -109,7 +109,7 @@ export function ProductMedia(props: ProductMediaProps) {
                 key={med.id}
                 className={clsx(
                   "!h-[100px] p-1 border transition-colors aspect-[3/4] cursor-pointer",
-                  activeIndex === i ? "border-black" : "border-transparent"
+                  activeIndex === i ? "border-black" : "border-transparent",
                 )}
               >
                 <Image

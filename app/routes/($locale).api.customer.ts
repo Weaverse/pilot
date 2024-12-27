@@ -3,7 +3,7 @@ import type {
   ActionFunctionArgs,
 } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import type { CustomerCreateMutation } from "storefrontapi.generated";
+import type { CustomerCreateMutation } from "storefront-api.generated";
 
 const CUSTOMER_CREATE = `#graphql
   mutation customerCreate($input: CustomerCreateInput!) {
@@ -47,7 +47,7 @@ export let action: ActionFunction = async ({
         errorMessage: "Internal server error!",
         ok: false,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
   if (customerUserErrors?.length) {
@@ -57,7 +57,7 @@ export let action: ActionFunction = async ({
         errorMessage: customerUserErrors?.[0]?.message,
         ok: false,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
   if (customer) {
@@ -68,7 +68,7 @@ export let action: ActionFunction = async ({
       errorMessage: "Something went wrong! Please try again later.",
       ok: false,
     },
-    { status: 500 }
+    { status: 500 },
   );
 };
 

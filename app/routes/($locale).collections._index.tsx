@@ -3,7 +3,7 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
-import type { CollectionsQuery } from "storefrontapi.generated";
+import type { CollectionsQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
 import { COLLECTIONS_QUERY } from "~/graphql/queries";
 import { PAGINATION_SIZE } from "~/utils/const";
@@ -29,7 +29,7 @@ export let loader = async (args: RouteLoaderArgs) => {
         country: storefront.i18n.country,
         language: storefront.i18n.language,
       },
-    }
+    },
   );
 
   let seo = seoPayload.listCollections({

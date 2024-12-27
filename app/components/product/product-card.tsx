@@ -4,7 +4,7 @@ import type {
   ProductVariant,
 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
-import type { ProductCardFragment } from "storefrontapi.generated";
+import type { ProductCardFragment } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { ProductTag } from "~/components/product-tag";

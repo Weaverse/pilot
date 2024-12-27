@@ -3,7 +3,7 @@ import { Image } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useEffect, useState } from "react";
-import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import type { CollectionDetailsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Filters } from "./filters";

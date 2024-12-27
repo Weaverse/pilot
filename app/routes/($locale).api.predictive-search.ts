@@ -6,7 +6,7 @@ import type {
   PredictiveProductFragment,
   PredictiveQueryFragment,
   PredictiveSearchQuery,
-} from "storefrontapi.generated";
+} from "storefront-api.generated";
 import { NO_PREDICTIVE_SEARCH_RESULTS } from "~/hooks/use-predictive-search";
 import type {
   NormalizedPredictiveSearch,
@@ -93,7 +93,7 @@ async function fetchPredictiveSearchResults({
 
   let searchResults = normalizePredictiveSearchResults(
     data.predictiveSearch,
-    params.locale
+    params.locale,
   );
 
   return { searchResults, searchTerm, searchTypes };
@@ -104,7 +104,7 @@ async function fetchPredictiveSearchResults({
  */
 function normalizePredictiveSearchResults(
   predictiveSearch: PredictiveSearchQuery["predictiveSearch"],
-  locale: LoaderFunctionArgs["params"]["locale"]
+  locale: LoaderFunctionArgs["params"]["locale"],
 ): NormalizedPredictiveSearch {
   let totalResults = 0;
   if (!predictiveSearch) {
@@ -116,7 +116,7 @@ function normalizePredictiveSearchResults(
 
   function applyTrackingParams(
     resource: PredictiveSearchResultItem | PredictiveQueryFragment,
-    params?: string
+    params?: string,
   ) {
     if (params) {
       return resource.trackingParameters
@@ -171,7 +171,7 @@ function normalizePredictiveSearchResults(
             price: product.variants.nodes[0].price,
             compareAtPrice: product.variants.nodes[0].compareAtPrice,
           };
-        }
+        },
       ),
     });
   }
@@ -192,7 +192,7 @@ function normalizePredictiveSearchResults(
             title: collection.title,
             url: `${localePrefix}/collections/${collection.handle}${trackingParams}`,
           };
-        }
+        },
       ),
     });
   }
@@ -232,7 +232,7 @@ function normalizePredictiveSearchResults(
             title: article.title,
             url: `${localePrefix}/blogs/${article.blog.handle}/${article.handle}${trackingParams}`,
           };
-        }
+        },
       ),
     });
   }

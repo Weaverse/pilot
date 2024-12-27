@@ -10,7 +10,7 @@ import type {
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
-import type { ShopFragment } from "storefrontapi.generated";
+import type { ShopFragment } from "storefront-api.generated";
 
 function root({
   shop,

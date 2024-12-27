@@ -9,7 +9,7 @@ import { Pagination } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import type { CollectionDetailsQuery } from "storefront-api.generated";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { getImageLoadingPriority } from "~/utils/image";

@@ -2,7 +2,7 @@ import type {
   ChildMenuItemFragment,
   MenuFragment,
   ParentMenuItemFragment,
-} from "storefrontapi.generated";
+} from "storefront-api.generated";
 
 type EnhancedMenuItemProps = {
   to: string;

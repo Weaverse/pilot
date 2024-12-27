@@ -8,7 +8,7 @@ import type {
 import { defer, json } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
-import type { ProductQuery } from "storefrontapi.generated";
+import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
@@ -33,7 +33,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         country: context.storefront.i18n.country,
         language: context.storefront.i18n.language,
       },
-    }
+    },
   );
 
   if (!product?.id) {
@@ -79,7 +79,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     judgeme_API_TOKEN,
     shop_domain,
     productHandle,
-    context.weaverse
+    context.weaverse,
   );
 
   return defer({
@@ -104,7 +104,7 @@ export async function action({
   try {
     invariant(
       env.JUDGEME_PRIVATE_API_TOKEN,
-      "Missing `JUDGEME_PRIVATE_API_TOKEN`"
+      "Missing `JUDGEME_PRIVATE_API_TOKEN`",
     );
 
     let response = await createJudgeMeReview({

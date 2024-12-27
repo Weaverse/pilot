@@ -1,6 +1,6 @@
 import type { Storefront } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import type { ProductRecommendationsQuery } from "storefrontapi.generated";
+import type { ProductRecommendationsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { RECOMMENDED_PRODUCTS_QUERY } from "~/graphql/queries";
 import type { I18nLocale } from "~/types/locale";

@@ -2,7 +2,7 @@ import { VariantSelector } from "@shopify/hydrogen";
 import type {
   ProductQuery,
   ProductVariantFragmentFragment,
-} from "storefrontapi.generated";
+} from "storefront-api.generated";
 import { VariantOption } from "./variant-option";
 
 interface ProductVariantsProps {
@@ -98,7 +98,7 @@ export function ProductVariants(props: ProductVariantsProps) {
           let handleSelectOptionValue = (value: string) =>
             handleSelectOption(optionName, value);
           let selectedValue = selectedOptions?.find(
-            (opt) => opt.name === optionName
+            (opt) => opt.name === optionName,
           )?.value;
 
           return (

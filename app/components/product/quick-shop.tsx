@@ -7,7 +7,7 @@ import type {
   ProductQuery,
   ProductVariantFragmentFragment,
   VariantsQuery,
-} from "storefrontapi.generated";
+} from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
@@ -29,7 +29,7 @@ export function QuickShop({ data }: { data: QuickViewData }) {
   let { product, variants: _variants, storeDomain } = data || {};
   let firstVariant = product?.variants?.nodes?.[0];
   let [selectedVariant, setSelectedVariant] = useState(
-    firstVariant as ProductVariantFragmentFragment
+    firstVariant as ProductVariantFragmentFragment,
   );
   let [quantity, setQuantity] = useState<number>(1);
   let {
@@ -58,8 +58,8 @@ export function QuickShop({ data }: { data: QuickViewData }) {
   let atcText = selectedVariant?.availableForSale
     ? addToCartText
     : selectedVariant?.quantityAvailable === -1
-    ? unavailableText
-    : soldOutText;
+      ? unavailableText
+      : soldOutText;
   return (
     <div className="bg-background">
       <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2">

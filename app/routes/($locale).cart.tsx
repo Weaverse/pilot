@@ -14,7 +14,7 @@ import {
   type LoaderFunctionArgs,
   json,
 } from "@shopify/remix-oxygen";
-import type { CartApiQueryFragment } from "storefrontapi.generated";
+import type { CartApiQueryFragment } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { Cart } from "~/components/cart/cart";
 import type { RootLoader } from "~/root";
@@ -81,7 +81,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       userErrors,
       errors,
     },
-    { status, headers }
+    { status, headers },
   );
 }
 

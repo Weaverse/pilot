@@ -2,7 +2,7 @@ import { Sliders, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
-import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import type { CollectionDetailsQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/utils/cn";
@@ -67,7 +67,7 @@ function FiltersDrawer({
           variant="outline"
           className={cn(
             "flex items-center gap-1.5 border py-2 h-12",
-            filtersPosition === "sidebar" && "lg:hidden"
+            filtersPosition === "sidebar" && "lg:hidden",
           )}
           animate={false}
         >

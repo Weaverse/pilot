@@ -3,7 +3,7 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import type { FeaturedProductsQuery } from "storefrontapi.generated";
+import type { FeaturedProductsQuery } from "storefront-api.generated";
 import type { SectionProps } from "~/components/section";
 import { Section, layoutInputs } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
@@ -23,7 +23,7 @@ let FeaturedProducts = forwardRef<HTMLElement, FeaturedProductsProps>(
         {children}
       </Section>
     );
-  }
+  },
 );
 
 export default FeaturedProducts;
@@ -52,7 +52,7 @@ export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
         country,
         language,
       },
-    }
+    },
   );
 };
 

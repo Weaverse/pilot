@@ -15,7 +15,7 @@ import {
   json,
   redirect,
 } from "@shopify/remix-oxygen";
-import type { CollectionDetailsQuery } from "storefrontapi.generated";
+import type { CollectionDetailsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { COLLECTION_QUERY } from "~/graphql/queries";
 import type { I18nLocale } from "~/types/locale";
@@ -39,7 +39,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
   let searchParams = new URL(request.url).searchParams;
   let { sortKey, reverse } = getSortValuesFromParam(
-    searchParams.get("sort") as SortParam
+    searchParams.get("sort") as SortParam,
   );
   let filters = [...searchParams.entries()].reduce((filters, [key, value]) => {
     if (key.startsWith(FILTER_URL_PREFIX)) {
@@ -90,7 +90,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   let seo = seoPayload.collection({ collection, url: request.url });
 
   let allFilterValues = collection.products.filters.flatMap(
-    (filter) => filter.values
+    (filter) => filter.values,
   );
 
   let appliedFilters = filters

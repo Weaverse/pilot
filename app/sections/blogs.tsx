@@ -2,7 +2,7 @@ import { useLoaderData } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
+import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { getImageLoadingPriority } from "~/utils/image";

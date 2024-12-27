@@ -7,7 +7,7 @@ import type {
 } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
-import type { ProductQuery } from "storefrontapi.generated";
+import type { ProductQuery } from "storefront-api.generated";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { ProductPopup } from "./product-popup";
 
@@ -87,7 +87,7 @@ let HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default HotspotsItem;

@@ -3,7 +3,7 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
-import type { PageDetailsQuery } from "storefrontapi.generated";
+import type { PageDetailsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 
 import { routeHeaders } from "~/utils/cache";
