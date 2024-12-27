@@ -1,13 +1,17 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
 import type { AppLoadContext, LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import type { ColorSwatch, ImageSwatch } from "@weaverse/hydrogen";
+import {
+  type ColorSwatch,
+  type ImageSwatch,
+  resizeShopifyImage,
+} from "@weaverse/hydrogen";
 import type {
-  ColorsConfigsQuery,
   LayoutQuery,
   MenuFragment,
+  SwatchesConfigsQuery,
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { COLORS_CONFIGS_QUERY, LAYOUT_QUERY } from "~/graphql/queries";
+import { LAYOUT_QUERY, SWATCHES_CONFIGS_QUERY } from "~/graphql/queries";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "~/utils/seo.server";
 
@@ -19,7 +23,7 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  let [layout, colorsConfigs] = await Promise.all([
+  let [layout, swatchesConfigs] = await Promise.all([
     getLayoutData(context),
     getSwatchesConfigs(context),
     // Add other queries here, so that they are loaded in parallel
@@ -47,7 +51,7 @@ export async function loadCriticalData({
     selectedLocale: storefront.i18n,
     weaverseTheme: await context.weaverse.loadThemeSettings(),
     googleGtmID: context.env.PUBLIC_GOOGLE_GTM_ID,
-    colorsConfigs,
+    swatchesConfigs,
   };
 }
 
@@ -112,20 +116,24 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
 async function getSwatchesConfigs(context: AppLoadContext) {
   let { METAOBJECT_COLORS_TYPE: type } = context.env;
   if (!type) {
-    return [];
+    return { colors: [], images: [] };
   }
-  let { metaobjects } = await context.storefront.query<ColorsConfigsQuery>(
-    COLORS_CONFIGS_QUERY,
+  let { metaobjects } = await context.storefront.query<SwatchesConfigsQuery>(
+    SWATCHES_CONFIGS_QUERY,
     { variables: { type } },
   );
   let colors: ColorSwatch[] = [];
   let images: ImageSwatch[] = [];
   for (let { id, fields } of metaobjects.nodes) {
     let { value: color } = fields.find(({ key }) => key === "color") || {};
-    let { value: image } = fields.find(({ key }) => key === "image") || {};
+    let { reference: imageRef } =
+      fields.find(({ key }) => key === "image") || {};
     let { value: name } = fields.find(({ key }) => key === "label") || {};
-    if (image) {
-      images.push({ id, name, value: image });
+    if (imageRef) {
+      let url = imageRef?.image?.url;
+      if (url) {
+        images.push({ id, name, value: resizeShopifyImage(url, "300x") });
+      }
     } else if (color) {
       colors.push({ id, name, value: color });
     }

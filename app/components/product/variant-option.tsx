@@ -2,6 +2,7 @@ import { useRouteLoaderData } from "@remix-run/react";
 import { Image, type VariantOptionValue } from "@shopify/hydrogen";
 import {
   type ColorSwatch,
+  type ImageSwatch,
   type SwatchesConfigs,
   useThemeSettings,
 } from "@weaverse/hydrogen";
@@ -9,8 +10,8 @@ import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { ProductVariantFragmentFragment } from "storefront-api.generated";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
-import { cn } from "~/utils/cn";
 import type { RootLoader } from "~/root";
+import { cn } from "~/utils/cn";
 
 export let variants = cva(
   "border border-line hover:border-body cursor-pointer",
@@ -59,13 +60,16 @@ interface VariantOptionProps {
 
 export function VariantOption(props: VariantOptionProps) {
   let { name, values, selectedOptionValue, onSelectOptionValue } = props;
-  let { colorsConfigs } = useRouteLoaderData<RootLoader>("root");
+  let { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
   let themeSettings = useThemeSettings();
   let productSwatches: SwatchesConfigs = themeSettings.productSwatches;
   let { options, swatches } = productSwatches;
-  let colorsSwatches: ColorSwatch[] = colorsConfigs?.length
-    ? colorsConfigs
+  let colorsSwatches: ColorSwatch[] = swatchesConfigs?.colors?.length
+    ? swatchesConfigs.colors
     : swatches.colors;
+  let imagesSwatches: ImageSwatch[] = swatchesConfigs?.images?.length
+    ? swatchesConfigs.images
+    : swatches.images;
   let optionConf = options.find((opt) => {
     return opt.name.toLowerCase() === name.toLowerCase();
   });
@@ -144,7 +148,7 @@ export function VariantOption(props: VariantOptionProps) {
       {type === "custom-image" && (
         <div className="flex flex-wrap gap-3">
           {values.map(({ value, image, isAvailable }) => {
-            let swatchImage = swatches.images.find(
+            let swatchImage = imagesSwatches.find(
               (i) => i.name.toLowerCase() === value.toLowerCase(),
             );
             let imageToRender = swatchImage?.value || image;

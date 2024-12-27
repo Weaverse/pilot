@@ -18,12 +18,8 @@ export function Filters({ className }: { className?: string }) {
   let ref = useRef<HTMLDivElement>(null);
   let parentInstance = useClosestWeaverseItem(ref);
   let parentData = parentInstance.data as unknown as CollectionFiltersData;
-  let {
-    expandFilters,
-    showFiltersCount,
-    enableColorSwatch,
-    displayAsButtonFor,
-  } = parentData;
+  let { expandFilters, showFiltersCount, enableSwatches, displayAsButtonFor } =
+    parentData;
   let { collection, appliedFilters } = useLoaderData<
     CollectionDetailsQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -45,8 +41,7 @@ export function Filters({ className }: { className?: string }) {
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
       {filters.map((filter: Filter) => {
-        let asColorSwatch =
-          enableColorSwatch && COLORS_FILTERS.includes(filter.label);
+        let asSwatch = enableSwatches && COLORS_FILTERS.includes(filter.label);
         let asButton = displayAsButtonFor.includes(filter.label);
 
         return (
@@ -78,9 +73,7 @@ export function Filters({ className }: { className?: string }) {
               <div
                 className={clsx(
                   "flex pt-8",
-                  asColorSwatch || asButton
-                    ? "gap-1.5 flex-wrap"
-                    : "flex-col gap-5",
+                  asSwatch || asButton ? "gap-1.5 flex-wrap" : "flex-col gap-5",
                 )}
               >
                 {filter.type === "PRICE_RANGE" ? (
@@ -94,11 +87,7 @@ export function Filters({ className }: { className?: string }) {
                     <FilterItem
                       key={option.id}
                       displayAs={
-                        asColorSwatch
-                          ? "color-swatch"
-                          : asButton
-                            ? "button"
-                            : "list-item"
+                        asSwatch ? "swatch" : asButton ? "button" : "list-item"
                       }
                       appliedFilters={appliedFilters as AppliedFilter[]}
                       option={option}
