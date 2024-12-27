@@ -13,6 +13,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 
+const FALLBACK_TO_COLOR_IF_NO_CUSTOM_IMAGE_DEFINED = true;
+
 export let variants = cva(
   "border border-line hover:border-body cursor-pointer",
   {
@@ -151,15 +153,26 @@ export function VariantOption(props: VariantOptionProps) {
             let swatchImage = imagesSwatches.find(
               (i) => i.name.toLowerCase() === value.toLowerCase(),
             );
-            let imageToRender = swatchImage?.value || image;
+            let swatchColor = colorsSwatches.find(
+              (c) => c.name.toLowerCase() === value.toLowerCase(),
+            );
+            let imageToRender = swatchImage?.value;
+            if (
+              !imageToRender &&
+              !FALLBACK_TO_COLOR_IF_NO_CUSTOM_IMAGE_DEFINED
+            ) {
+              // @ts-expect-error
+              imageToRender = image;
+            }
             let aspectRatio = "1/1";
-            if (image && shape !== "circle") {
+            if (imageToRender && shape !== "circle") {
               aspectRatio = `${image.width}/${image.height}`;
             }
             return (
               <div
                 key={value}
                 className={clsx(
+                  "flex",
                   variants({
                     imageSize: size,
                     shape,
@@ -192,7 +205,7 @@ export function VariantOption(props: VariantOptionProps) {
                       "w-full h-full inline-block",
                       variants({ shape }),
                     )}
-                    style={{ backgroundColor: value }}
+                    style={{ backgroundColor: swatchColor?.value || value }}
                   />
                 )}
               </div>
