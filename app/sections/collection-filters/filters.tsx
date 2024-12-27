@@ -18,12 +18,8 @@ export function Filters({ className }: { className?: string }) {
   let ref = useRef<HTMLDivElement>(null);
   let parentInstance = useClosestWeaverseItem(ref);
   let parentData = parentInstance.data as unknown as CollectionFiltersData;
-  let {
-    expandFilters,
-    showFiltersCount,
-    enableColorSwatch,
-    displayAsButtonFor,
-  } = parentData;
+  let { expandFilters, showFiltersCount, enableSwatches, displayAsButtonFor } =
+    parentData;
   let { collection, appliedFilters } = useLoaderData<
     CollectionDetailsQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -46,7 +42,7 @@ export function Filters({ className }: { className?: string }) {
     >
       {filters.map((filter: Filter) => {
         let asColorSwatch =
-          enableColorSwatch && COLORS_FILTERS.includes(filter.label);
+          enableSwatches && COLORS_FILTERS.includes(filter.label);
         let asButton = displayAsButtonFor.includes(filter.label);
 
         return (

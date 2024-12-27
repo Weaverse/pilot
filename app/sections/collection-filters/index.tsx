@@ -23,7 +23,7 @@ export interface CollectionFiltersData {
   filtersPosition: "sidebar" | "drawer";
   expandFilters: boolean;
   showFiltersCount: boolean;
-  enableColorSwatch: boolean;
+  enableSwatches: boolean;
   displayAsButtonFor: string;
   productsPerRowDesktop: number;
   productsPerRowMobile: number;
@@ -48,7 +48,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       filtersPosition,
       expandFilters,
       showProductsCount,
-      enableColorSwatch,
+      enableSwatches,
       displayAsButtonFor,
       productsPerRowDesktop,
       productsPerRowMobile,
@@ -280,8 +280,8 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "switch",
-          name: "enableColorSwatch",
-          label: "Enable color swatches",
+          name: "enableSwatches",
+          label: "Enable color/image swatches",
           defaultValue: true,
           condition: "enableFilter.eq.true",
         },
