@@ -12,13 +12,15 @@ function Badge({
   backgroundColor: string;
   className?: string;
 }) {
-  let { colorText, colorTextInverse, badgeBorderRadius } = useThemeSettings();
+  let { colorText, colorTextInverse, badgeBorderRadius, badgeTextTransform } =
+    useThemeSettings();
   return (
     <span
       style={{
         backgroundColor,
         color: colord(backgroundColor).isDark() ? colorTextInverse : colorText,
         borderRadius: `${badgeBorderRadius}px`,
+        textTransform: badgeTextTransform,
       }}
       className={clsx("px-1.5 py-1 uppercase text-sm", className)}
     >
