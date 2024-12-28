@@ -43,6 +43,7 @@
     "@weaverse/hydrogen": "4.1.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "colord": "^2.9.3",
     "cross-env": "7.0.3",
     "framer-motion": "^11.15.0",
     "graphql": "16.10.0",
