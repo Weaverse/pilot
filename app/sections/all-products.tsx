@@ -8,7 +8,6 @@ import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { getImageLoadingPriority } from "~/utils/image";
 
 interface AllProductsProps extends SectionProps {
   heading: string;
@@ -50,12 +49,8 @@ let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
                   "grid grid-cols-1 lg:grid-cols-4",
                 ])}
               >
-                {nodes.map((product, idx) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    loading={getImageLoadingPriority(idx)}
-                  />
+                {nodes.map((product) => (
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
               {hasNextPage && (

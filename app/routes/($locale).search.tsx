@@ -18,7 +18,6 @@ import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { PAGINATION_SIZE } from "~/utils/const";
-import { getImageLoadingPriority } from "~/utils/image";
 import { seoPayload } from "~/utils/seo.server";
 import {
   type FeaturedData,
@@ -171,12 +170,8 @@ export default function Search() {
                     "grid grid-cols-1 lg:grid-cols-4",
                   ])}
                 >
-                  {nodes.map((product, idx) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      loading={getImageLoadingPriority(idx)}
-                    />
+                  {nodes.map((product) => (
+                    <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
                 {hasNextPage && (
