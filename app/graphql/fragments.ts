@@ -44,12 +44,28 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
     publishedAt
     handle
     vendor
+    images(first: 2) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+    badges: metafields(identifiers: [
+      { namespace: "custom", key: "best_seller" }
+    ]) {
+      key
+      namespace
+      value
+    }
     priceRange {
-      minVariantPrice {
+      maxVariantPrice {
         amount
         currencyCode
       }
-      maxVariantPrice {
+      minVariantPrice {
         amount
         currencyCode
       }
