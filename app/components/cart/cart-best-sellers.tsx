@@ -5,6 +5,7 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useEffect, useId, useMemo } from "react";
+import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
@@ -45,7 +46,7 @@ export function CartBestSellers({
         .map(([key, val]) => (val ? `${key}=${val}` : null))
         .filter(Boolean)
         .join("&"),
-    [count, sortKey, query, reverse]
+    [count, sortKey, query, reverse],
   );
   let productsApiPath = usePrefixPathWithLocale(`/api/products?${queryString}`);
 
@@ -104,6 +105,9 @@ function CartBestSellersContent({
   }
 
   return products.map((product) => (
-    <ProductCard product={product} key={product.id} />
+    <ProductCard
+      product={product as unknown as ProductCardFragment}
+      key={product.id}
+    />
   ));
 }

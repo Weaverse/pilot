@@ -413,30 +413,30 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
-          label: "Labels / badges / tags",
+          label: "Badges / labels / tags",
         },
         {
           type: "color",
           label: "Discounts",
-          name: "discountBadge",
+          name: "saleBadgeColor",
           defaultValue: "#c6512c",
         },
         {
           type: "color",
           label: "New",
-          name: "newBadge",
+          name: "newBadgeColor",
           defaultValue: "#67785d",
         },
         {
           type: "color",
-          label: "Hot / Best seller",
-          name: "bestSellerBadge",
+          label: "Best seller / Hot",
+          name: "bestSellerBadgeColor",
           defaultValue: "#000000",
         },
         {
           type: "color",
           label: "Sold out & unavailable",
-          name: "soldOutAndUnavailable",
+          name: "soldOutBadgeColor",
           defaultValue: "#d4d4d4",
         },
         {
@@ -452,7 +452,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "color",
           label: "Star rating",
-          name: "starRating",
+          name: "starRatingColor",
           defaultValue: "#fde047",
         },
       ],
@@ -574,23 +574,49 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Badges",
         },
         {
+          type: "range",
+          label: "Border radius",
+          name: "badgeBorderRadius",
+          configs: {
+            min: 0,
+            max: 10,
+            step: 2,
+            unit: "px",
+          },
+          defaultValue: 0,
+        },
+        {
+          type: "select",
+          label: "Text transform",
+          name: "badgeTextTransform",
+          configs: {
+            options: [
+              { value: "none", label: "None" },
+              { value: "uppercase", label: "Uppercase" },
+              { value: "lowercase", label: "Lowercase" },
+              { value: "capitalize", label: "Capitalize" },
+            ],
+          },
+          defaultValue: "Uppercase",
+        },
+        {
           type: "text",
-          label: "Hot / Best Seller text",
-          name: "hotBestSellerText",
-          defaultValue: "Hot",
-          placeholder: "Hot",
+          label: "Best Seller / Hot text",
+          name: "bestSellerBadgeText",
+          defaultValue: "Best Seller",
+          placeholder: "Best Seller",
         },
         {
           type: "text",
           label: "New / Limited text",
-          name: "newLimitedText",
+          name: "newBadgeText",
           defaultValue: "New",
           placeholder: "New",
         },
         {
           type: "text",
           label: "Sold out text",
-          name: "soldOutText",
+          name: "soldOutBadgeText",
           defaultValue: "Sold out",
           placeholder: "Sold out",
         },
@@ -631,13 +657,13 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Content alignment",
           configs: {
             options: [
-              { value: "left", label: "Left", icon: "align-start-vertical" },
+              { value: "start", label: "Left", icon: "align-start-vertical" },
               {
                 value: "center",
                 label: "Center",
                 icon: "align-center-vertical",
               },
-              { value: "right", label: "Right", icon: "align-end-vertical" },
+              { value: "end", label: "Right", icon: "align-end-vertical" },
             ],
           },
           defaultValue: "center",
@@ -696,6 +722,12 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Show vendor",
           name: "pcardShowVendor",
           defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show SKU",
+          name: "pcardShowSku",
+          defaultValue: false,
         },
         {
           type: "switch",
@@ -804,7 +836,7 @@ export let themeSchema: HydrogenThemeSchema = {
         {
           type: "switch",
           label: "Show Hot / Best Seller badges",
-          name: "pcardShowHotBadges",
+          name: "pcardShowBestSellerBadges",
           defaultValue: true,
         },
         {

@@ -9,15 +9,17 @@ import { Pagination } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import type { CollectionDetailsQuery } from "storefront-api.generated";
+import type {
+  CollectionDetailsQuery,
+  ProductCardFragment,
+} from "storefront-api.generated";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
-import { getImageLoadingPriority } from "~/utils/image";
 import { type AppliedFilter, getAppliedFilterLink } from "~/utils/filter";
 
 export function ProductsPagination({
-  gridSizeDesktop,
-  gridSizeMobile,
+  gridSizeDesktop: desktopCols = 3,
+  gridSizeMobile: mobileCols = 1,
   loadPrevText,
   loadMoreText,
 }: {
@@ -85,12 +87,8 @@ export function ProductsPagination({
               className="flex w-full flex-col gap-8 items-center"
               style={
                 {
-                  "--cols-mobile": `repeat(${
-                    gridSizeMobile || 1
-                  }, minmax(0, 1fr))`,
-                  "--cols-desktop": `repeat(${
-                    gridSizeDesktop || 3
-                  }, minmax(0, 1fr))`,
+                  "--cols-mobile": `repeat(${mobileCols}, minmax(0, 1fr))`,
+                  "--cols-desktop": `repeat(${desktopCols}, minmax(0, 1fr))`,
                 } as React.CSSProperties
               }
             >
@@ -158,16 +156,12 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
   return (
     <div
       className={clsx([
-        "w-full gap-x-1.5 gap-y-8 lg:gap-y-10",
+        "w-full gap-x-1.5 gap-y-6 lg:gap-y-10",
         "grid grid-cols-[--cols-mobile] lg:grid-cols-[--cols-desktop]",
       ])}
     >
-      {nodes.map((product: any, i: number) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          loading={getImageLoadingPriority(i)}
-        />
+      {nodes.map((product: ProductCardFragment) => (
+        <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );
