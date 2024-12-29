@@ -115,5 +115,5 @@ function calculateDiscount(price: MoneyV2, compareAtPrice: MoneyV2) {
       };
     }
   }
-  return { amount: 0, percentage: 0 };
+  return { amount: "0", percentage: 0 };
 }
