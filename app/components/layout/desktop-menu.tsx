@@ -1,13 +1,13 @@
 import { CaretDown } from "@phosphor-icons/react";
 import * as Menubar from "@radix-ui/react-menubar";
-import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
+import { Image } from "~/components/image";
 import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import { cn } from "~/utils/cn";
 import type { SingleMenuItem } from "~/types/menu";
+import { cn } from "~/utils/cn";
 
 export function DesktopMenu() {
   let { headerMenu } = useShopMenu();
@@ -108,13 +108,14 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
         resource?.image && children.length === 0 ? (
           <SlideIn
             key={id}
-            className="grow max-w-72 aspect-square relative group/item overflow-hidden"
+            className="grow max-w-72 w-72 aspect-square relative group/item overflow-hidden"
             style={{ "--idx": idx } as React.CSSProperties}
           >
             <Image
               sizes="auto"
               data={resource.image}
-              className="w-full h-full object-cover group-hover/item:scale-[1.03] transition-transform duration-300"
+              className="group-hover/item:scale-[1.03] transition-transform duration-300"
+              width={300}
             />
             <Link
               to={to}
@@ -154,7 +155,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
               ))}
             </div>
           </SlideIn>
-        )
+        ),
       )}
     </div>
   );
@@ -170,7 +171,7 @@ function SlideIn(props: {
     <div
       className={cn(
         "opacity-0 animate-slide-left [animation-delay:calc(var(--idx)*0.1s+0.1s)]",
-        className
+        className,
       )}
       style={
         {

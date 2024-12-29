@@ -1,4 +1,4 @@
-import { Image, flattenConnection } from "@shopify/hydrogen";
+import { flattenConnection } from "@shopify/hydrogen";
 import type {
   MoneyV2,
   ProductVariant,
@@ -6,11 +6,12 @@ import type {
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { ProductCardFragment } from "storefront-api.generated";
+import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { VariantPrices } from "~/components/variant-prices";
-import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { getImageAspectRatio } from "~/utils/image";
+import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 
 export function ProductCard({
   product,
@@ -56,6 +57,7 @@ export function ProductCard({
 
   return (
     <div
+      className="overflow-hidden"
       style={
         {
           borderRadius: pcardBorderRadius,
@@ -69,32 +71,29 @@ export function ProductCard({
           <Link
             to={`/products/${product.handle}`}
             prefetch="intent"
-            className="block group relative aspect-[--pcard-image-ratio] overflow-hidden"
+            className="block group relative aspect-[--pcard-image-ratio] overflow-hidden bg-gray-100"
           >
             <Image
               className={clsx([
-                "w-full h-full object-cover object-center",
                 "absolute inset-0",
-                "opacity-0 animate-fade-in",
                 pcardShowImageOnHover &&
                   secondImage &&
                   "transition-opacity duration-300 group-hover:opacity-0",
               ])}
               sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
               data={image}
-              width={1000}
+              width={700}
               alt={image.altText || `Picture of ${product.title}`}
               loading="lazy"
             />
             {pcardShowImageOnHover && secondImage && (
               <Image
                 className={clsx([
-                  "w-full h-full object-cover object-center",
                   "absolute inset-0",
                   "transition-opacity duration-300 opacity-0 group-hover:opacity-100",
                 ])}
                 sizes="auto"
-                width={1000}
+                width={700}
                 data={secondImage}
                 alt={
                   secondImage.altText || `Second picture of ${product.title}`

@@ -1,3 +1,4 @@
+import { useMoney as parseMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { clsx } from "clsx";
@@ -33,8 +34,8 @@ export function NewBadge({
   publishedAt,
   className,
 }: { publishedAt: string; className?: string }) {
-  let { newBadgeText, newBadgeColor } = useThemeSettings();
-  if (isNewArrival(publishedAt)) {
+  let { newBadgeText, newBadgeColor, newBadgeDaysOld } = useThemeSettings();
+  if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
         text={newBadgeText}
@@ -73,16 +74,16 @@ export function SaleBadge({
   compareAtPrice,
   className,
 }: { price: MoneyV2; compareAtPrice: MoneyV2; className?: string }) {
-  let { saleBadgeContent, saleBadgeText, saleBadgeColor } = useThemeSettings();
-  let discount = calculateSalePercentage(price, compareAtPrice);
-  if (discount > 0) {
+  let { saleBadgeText = "Sale", saleBadgeColor } = useThemeSettings();
+  let { amount, percentage } = calculateDiscount(price, compareAtPrice);
+  let text = saleBadgeText
+    .replace("[amount]", amount.toString())
+    .replace("[percentage]", percentage.toString());
+
+  if (percentage > 0) {
     return (
       <Badge
-        text={
-          saleBadgeContent === "percentage"
-            ? `-${discount}% Off`
-            : saleBadgeText
-        }
+        text={text}
         backgroundColor={saleBadgeColor}
         className={className}
       />
@@ -98,15 +99,21 @@ function isNewArrival(date: string, daysOld = 30) {
   );
 }
 
-function calculateSalePercentage(price: MoneyV2, compareAtPrice: MoneyV2) {
+function calculateDiscount(price: MoneyV2, compareAtPrice: MoneyV2) {
   if (price?.amount && compareAtPrice?.amount) {
     let priceNumber = Number(price.amount);
     let compareAtPriceNumber = Number(compareAtPrice.amount);
     if (compareAtPriceNumber > priceNumber) {
-      return Math.round(
-        ((compareAtPriceNumber - priceNumber) / compareAtPriceNumber) * 100,
-      );
+      return {
+        amount: parseMoney({
+          amount: String(compareAtPriceNumber - priceNumber),
+          currencyCode: price.currencyCode,
+        }).withoutTrailingZeros,
+        percentage: Math.round(
+          ((compareAtPriceNumber - priceNumber) / compareAtPriceNumber) * 100,
+        ),
+      };
     }
   }
-  return 0;
+  return { amount: "0", percentage: 0 };
 }

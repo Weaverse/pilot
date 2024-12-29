@@ -1,10 +1,10 @@
 import { useLoaderData } from "@remix-run/react";
-import { Image } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useEffect, useState } from "react";
 import type { CollectionDetailsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
+import { Image } from "~/components/image";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Filters } from "./filters";
 import { ProductsPagination } from "./products-pagination";
@@ -105,13 +105,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
                   } as React.CSSProperties
                 }
               >
-                <Image
-                  data={banner}
-                  sizes="auto"
-                  className="w-full h-full object-cover object-center"
-                  width={2000}
-                  height={2000}
-                />
+                <Image data={banner} sizes="auto" width={2000} />
               </div>
             )}
           </div>
