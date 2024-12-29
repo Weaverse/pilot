@@ -1,4 +1,3 @@
-import { Image } from "@shopify/hydrogen";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
@@ -10,6 +9,7 @@ import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import Link, { linkContentInputs, type LinkProps } from "~/components/link";
+import { Image } from "~/components/primitives/image";
 
 let variants = cva("", {
   variants: {
@@ -56,14 +56,12 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
         {...rest}
         data-motion="slide-in"
         className={variants({ size, hideOnMobile })}
-        style={
-          { "--image-border-radius": `${imageBorderRadius}px` } as CSSProperties
-        }
+        style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
       >
         <Image
           data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}
           sizes="auto"
-          className="aspect-square object-cover object-center w-full rounded-[var(--image-border-radius)]"
+          className="aspect-square h-auto rounded-[--radius]"
         />
         <div className="text-center w-full space-y-3.5 mt-6">
           {heading && <h6>{heading}</h6>}

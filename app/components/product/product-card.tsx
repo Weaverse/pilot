@@ -75,7 +75,6 @@ export function ProductCard({
             <Image
               className={clsx([
                 "absolute inset-0",
-                "opacity-0 animate-fade-in",
                 pcardShowImageOnHover &&
                   secondImage &&
                   "transition-opacity duration-300 group-hover:opacity-0",
