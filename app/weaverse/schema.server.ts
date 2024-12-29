@@ -621,26 +621,16 @@ export let themeSchema: HydrogenThemeSchema = {
           placeholder: "Sold out",
         },
         {
-          type: "select",
-          label: "Sale badge content",
-          name: "saleBadgeContent",
-          configs: {
-            options: [
-              { value: "percentage", label: "Percentage" },
-              { value: "text", label: "Text" },
-            ],
-          },
-          defaultValue: "percentage",
-          helpText:
-            "Display as <strong>-20%</strong> or <strong>Sale</strong> text.",
-        },
-        {
-          type: "text",
+          type: "textarea",
           label: "Sale badge text",
           name: "saleBadgeText",
-          defaultValue: "Sale",
-          placeholder: "Sale",
-          condition: "saleBadgeContent.eq.text",
+          defaultValue: "-[percentage]% Off",
+          placeholder: "-[percentage]% Off, Saved [amount], or Sale",
+          helpText: [
+            "<p class='mb-1'>- Use <strong>[percentage]</strong> to display the discount percentage.</p>",
+            "<p class='mb-1'>- Use <strong>[amount]</strong> to display the discount amount.</p>",
+            "<p>E.g. <strong>-[percentage]% Off</strong>, <strong>Saved [amount]</strong>, or <strong>Sale</strong>.</p>",
+          ].join(""),
         },
       ],
     },
