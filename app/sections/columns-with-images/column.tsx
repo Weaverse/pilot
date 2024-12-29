@@ -10,6 +10,8 @@ import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import { Image } from "~/components/image";
 import Link, { linkContentInputs, type LinkProps } from "~/components/link";
+import type { ImageAspectRatio } from "~/types/image";
+import { getImageAspectRatio } from "~/utils/image";
 
 let variants = cva("", {
   variants: {
@@ -29,6 +31,7 @@ interface ColumnWithImageItemProps
     Pick<LinkProps, "variant" | "text" | "to" | "openInNewTab">,
     HydrogenComponentProps {
   imageSrc: WeaverseImage;
+  imageAspectRatio: ImageAspectRatio;
   imageBorderRadius: number;
   heading: string;
   content: string;
@@ -38,6 +41,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
   (props, ref) => {
     let {
       imageSrc,
+      imageAspectRatio,
       imageBorderRadius,
       heading,
       content,
@@ -61,7 +65,8 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
         <Image
           data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}
           sizes="auto"
-          className="aspect-square h-auto rounded-[--radius]"
+          className="h-auto rounded-[--radius]"
+          aspectRatio={getImageAspectRatio(imageSrc, imageAspectRatio)}
         />
         <div className="text-center w-full space-y-3.5 mt-6">
           {heading && <h6>{heading}</h6>}
@@ -118,6 +123,23 @@ export let schema: HydrogenComponentSchema = {
           type: "image",
           name: "imageSrc",
           label: "Image",
+        },
+        {
+          type: "select",
+          name: "imageAspectRatio",
+          label: "Image aspect ratio",
+          defaultValue: "adapt",
+          configs: {
+            options: [
+              { value: "adapt", label: "Adapt to image" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
+            ],
+          },
+          helpText:
+            'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
         },
         {
           type: "range",
