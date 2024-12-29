@@ -608,10 +608,23 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "text",
-          label: "New / Limited text",
+          label: "New text",
           name: "newBadgeText",
           defaultValue: "New",
           placeholder: "New",
+        },
+        {
+          type: "range",
+          label: "Days old",
+          name: "newBadgeDaysOld",
+          configs: {
+            min: 0,
+            max: 365,
+            step: 1,
+          },
+          defaultValue: 30,
+          helpText:
+            "The <strong>New</strong> badge will be shown if the product is published within the last days.",
         },
         {
           type: "text",
@@ -831,7 +844,7 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
-          label: "Show New / Limited badges",
+          label: "Show New badges",
           name: "pcardShowNewBadges",
           defaultValue: true,
         },

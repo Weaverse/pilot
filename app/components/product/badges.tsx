@@ -34,8 +34,8 @@ export function NewBadge({
   publishedAt,
   className,
 }: { publishedAt: string; className?: string }) {
-  let { newBadgeText, newBadgeColor } = useThemeSettings();
-  if (isNewArrival(publishedAt)) {
+  let { newBadgeText, newBadgeColor, newBadgeDaysOld } = useThemeSettings();
+  if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
         text={newBadgeText}
