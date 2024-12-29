@@ -8,8 +8,8 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
+import { Image } from "~/components/image";
 import Link, { linkContentInputs, type LinkProps } from "~/components/link";
-import { Image } from "~/components/primitives/image";
 
 let variants = cva("", {
   variants: {

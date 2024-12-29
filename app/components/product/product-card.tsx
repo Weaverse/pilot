@@ -6,9 +6,9 @@ import type {
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { ProductCardFragment } from "storefront-api.generated";
+import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
-import { Image } from "~/components/primitives/image";
 import { VariantPrices } from "~/components/variant-prices";
 import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";

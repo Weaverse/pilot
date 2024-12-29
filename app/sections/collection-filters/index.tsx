@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { forwardRef, useEffect, useState } from "react";
 import type { CollectionDetailsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
-import { Image } from "~/components/primitives/image";
+import { Image } from "~/components/image";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Filters } from "./filters";
 import { ProductsPagination } from "./products-pagination";
