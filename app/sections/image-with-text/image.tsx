@@ -8,6 +8,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
+import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
 
 let variants = cva("w-full h-auto", {
@@ -51,7 +52,7 @@ interface ImageWithTextImageProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
   image: WeaverseImage | string;
-  imageAspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
+  imageAspectRatio: ImageAspectRatio;
 }
 
 let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
@@ -88,7 +89,7 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
         />
       </div>
     );
-  }
+  },
 );
 
 export default ImageWithTextImage;

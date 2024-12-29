@@ -12,6 +12,7 @@ import Heading, {
 import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
+import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 
 interface HotspotsProps
@@ -20,7 +21,7 @@ interface HotspotsProps
   description?: string;
   headingTagName?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   image: string;
-  aspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
+  aspectRatio: ImageAspectRatio;
 }
 
 let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {

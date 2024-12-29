@@ -1,10 +1,11 @@
 import { Image } from "@shopify/hydrogen";
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import type { MediaFragment } from "storefront-api.generated";
 import { FreeMode, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
+import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 
 let variants = cva(
@@ -28,7 +29,7 @@ let variants = cva(
 
 export interface ProductMediaProps extends VariantProps<typeof variants> {
   mediaLayout: "grid" | "slider";
-  imageAspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
+  imageAspectRatio: ImageAspectRatio;
   showThumbnails: boolean;
   selectedVariant: any;
   media: MediaFragment[];
