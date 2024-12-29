@@ -1,6 +1,6 @@
 import { Image as HydrogenImage } from "@shopify/hydrogen";
 import type { Image as ImageType } from "@shopify/hydrogen/storefront-api-types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
 
 type Crop = "center" | "top" | "bottom" | "left" | "right";
@@ -29,7 +29,14 @@ export interface ImageProps extends React.ComponentPropsWithRef<"img"> {
 
 export function Image(props: ImageProps) {
   let { className, ...rest } = props;
+  let ref = useRef<HTMLImageElement>(null);
   let [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (ref.current?.complete) {
+      setLoaded(true);
+    }
+  }, []);
 
   return (
     <div
@@ -40,6 +47,7 @@ export function Image(props: ImageProps) {
       )}
     >
       <HydrogenImage
+        ref={ref}
         className={cn(
           "[transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
           "h-full max-h-full w-full object-cover object-center",
