@@ -57,6 +57,7 @@ export function ProductCard({
 
   return (
     <div
+      className="overflow-hidden"
       style={
         {
           borderRadius: pcardBorderRadius,
