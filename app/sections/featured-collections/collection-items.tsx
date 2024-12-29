@@ -1,8 +1,8 @@
 import { Image } from "@shopify/hydrogen";
 import {
+  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   useParentInstance,
-  type HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -13,6 +13,7 @@ import Link, { linkStylesInputs, type LinkStyleProps } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
+import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
 
@@ -59,7 +60,7 @@ interface CollectionItemsProps
   extends VariantProps<typeof variants>,
     OverlayProps,
     LinkStyleProps {
-  imageAspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
+  imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
   buttonText: string;
 }
@@ -102,7 +103,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
             "overflow-x-scroll md:overflow-x-hidden hidden-scroll scroll-px-6",
             "grid w-full grid-flow-col md:grid-flow-row justify-start gap-2",
           ],
-          variants({ gridSize, gap })
+          variants({ gridSize, gap }),
         )}
       >
         {collections.map((collection, ind) => (
@@ -117,7 +118,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 style={{
                   aspectRatio: getImageAspectRatio(
                     collection?.image || {},
-                    imageAspectRatio
+                    imageAspectRatio,
                   ),
                 }}
               >
@@ -153,7 +154,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                 className={clsx(
                   contentPosition === "over"
                     ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-[--col-name-color]"
-                    : "py-4"
+                    : "py-4",
                 )}
               >
                 {contentPosition === "over" ? (
@@ -181,7 +182,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
         ))}
       </div>
     );
-  }
+  },
 );
 
 let COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {

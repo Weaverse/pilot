@@ -78,7 +78,7 @@ export function ProductCard({
                 "absolute inset-0",
                 pcardShowImageOnHover &&
                   secondImage &&
-                  "transition-opacity duration-300 group-hover:opacity-0",
+                  "transition-opacity duration-300 group-hover:opacity-50",
               ])}
               sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
               data={image}
