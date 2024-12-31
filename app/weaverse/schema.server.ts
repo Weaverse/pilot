@@ -651,25 +651,10 @@ export let themeSchema: HydrogenThemeSchema = {
       group: "Product cards",
       inputs: [
         {
-          type: "heading",
-          label: "Layout",
-        },
-        {
-          type: "toggle-group",
-          name: "pcardAlignment",
-          label: "Content alignment",
-          configs: {
-            options: [
-              { value: "start", label: "Left", icon: "align-start-vertical" },
-              {
-                value: "center",
-                label: "Center",
-                icon: "align-center-vertical",
-              },
-              { value: "end", label: "Right", icon: "align-end-vertical" },
-            ],
-          },
-          defaultValue: "center",
+          type: "color",
+          name: "pcardBackgroundColor",
+          label: "Background color",
+          defaultValue: "",
         },
         {
           type: "range",
@@ -682,12 +667,6 @@ export let themeSchema: HydrogenThemeSchema = {
             unit: "px",
           },
           defaultValue: 0,
-        },
-        {
-          type: "color",
-          name: "pcardBackgroundColor",
-          label: "Background color",
-          defaultValue: "",
         },
         {
           type: "heading",
@@ -721,6 +700,36 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Content",
         },
         {
+          type: "select",
+          label: "Title & prices alignment",
+          name: "pcardTitlePricesAlignment",
+          configs: {
+            options: [
+              { value: "horizontal", label: "Horizontal" },
+              { value: "vertical", label: "Vertical" },
+            ],
+          },
+          defaultValue: "horizontal",
+        },
+        {
+          type: "toggle-group",
+          name: "pcardAlignment",
+          label: "Content alignment",
+          configs: {
+            options: [
+              { value: "left", label: "Left", icon: "align-start-vertical" },
+              {
+                value: "center",
+                label: "Center",
+                icon: "align-center-vertical",
+              },
+              { value: "right", label: "Right", icon: "align-end-vertical" },
+            ],
+          },
+          defaultValue: "center",
+          condition: "pcardTitlePricesAlignment.eq.vertical",
+        },
+        {
           type: "switch",
           label: "Show vendor",
           name: "pcardShowVendor",
@@ -743,6 +752,7 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Show sale price",
           name: "pcardShowSalePrice",
           defaultValue: true,
+          condition: "pcardShowLowestPrice.ne.true",
         },
         {
           type: "switch",
