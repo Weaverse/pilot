@@ -77,10 +77,10 @@ export function SaleBadge({
   let { saleBadgeText = "Sale", saleBadgeColor } = useThemeSettings();
   let { amount, percentage } = calculateDiscount(price, compareAtPrice);
   let text = saleBadgeText
-    .replace("[amount]", amount.toString())
-    .replace("[percentage]", percentage.toString());
+    .replace("[amount]", amount)
+    .replace("[percentage]", percentage);
 
-  if (percentage > 0) {
+  if (percentage !== "0") {
     return (
       <Badge
         text={text}
@@ -111,9 +111,9 @@ function calculateDiscount(price: MoneyV2, compareAtPrice: MoneyV2) {
         }).withoutTrailingZeros,
         percentage: Math.round(
           ((compareAtPriceNumber - priceNumber) / compareAtPriceNumber) * 100,
-        ),
+        ).toString(),
       };
     }
   }
-  return { amount: "0", percentage: 0 };
+  return { amount: "0", percentage: "0" };
 }
