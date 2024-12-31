@@ -173,10 +173,11 @@ export let schema: HydrogenComponentSchema = {
           label: "Show description",
           defaultValue: false,
         },
-        {
-          type: "heading",
-          label: "Banner",
-        },
+      ],
+    },
+    {
+      group: "Banner",
+      inputs: [
         {
           type: "switch",
           name: "showBanner",
@@ -290,7 +291,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
     {
-      group: "Products",
+      group: "Products grid",
       inputs: [
         {
           type: "select",
