@@ -1,4 +1,4 @@
-import { flattenConnection } from "@shopify/hydrogen";
+import { flattenConnection, Money } from "@shopify/hydrogen";
 import type {
   MoneyV2,
   ProductVariant,
@@ -12,6 +12,17 @@ import { NavLink } from "~/components/nav-link";
 import { VariantPrices } from "~/components/variant-prices";
 import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
+import { cva } from "class-variance-authority";
+
+let styleVariants = cva("", {
+  variants: {
+    alignment: {
+      left: "",
+      center: "text-center [&_.title-and-price]:items-center",
+      right: "text-right [&_.title-and-price]:items-end",
+    },
+  },
+});
 
 export function ProductCard({
   product,
@@ -21,11 +32,12 @@ export function ProductCard({
   className?: string;
 }) {
   let {
-    pcardAlignment,
     pcardBorderRadius,
     pcardBackgroundColor,
     pcardShowImageOnHover,
     pcardImageRatio,
+    pcardTitlePricesAlignment,
+    pcardAlignment,
     pcardShowVendor,
     pcardShowLowestPrice,
     pcardShowSku,
@@ -45,15 +57,18 @@ export function ProductCard({
   } = useThemeSettings();
 
   let variants = flattenConnection(product.variants);
-  let { images, badges } = product;
-  let [image, secondImage] = images.nodes;
   let selectedVariant = variants[0];
-  let isBestSellerProduct = badges
-    .filter(Boolean)
-    .some(({ key, value }) => key === "best_seller" && value === "true");
+
   if (!selectedVariant) return null;
 
   let { price, compareAtPrice } = selectedVariant;
+  let { images, badges, priceRange } = product;
+  let [image, secondImage] = images.nodes;
+  let isBestSellerProduct = badges
+    .filter(Boolean)
+    .some(({ key, value }) => key === "best_seller" && value === "true");
+  let { minVariantPrice } = priceRange;
+  let isVertical = pcardTitlePricesAlignment === "vertical";
 
   return (
     <div
@@ -119,33 +134,50 @@ export function ProductCard({
         {/* <QuickShopTrigger productHandle={product.handle} /> */}
       </div>
       <div
-        className="flex flex-col py-3"
-        style={{ alignItems: pcardAlignment }}
+        className={clsx(
+          "py-3 text-sm",
+          isVertical && styleVariants({ alignment: pcardAlignment })
+        )}
       >
         {pcardShowVendor && (
-          <div className="text-sm uppercase text-body-subtle mb-2">
+          <div className="uppercase text-body-subtle mb-2">
             {product.vendor}
           </div>
         )}
-        <div className="flex items-center gap-2 mb-1">
-          <NavLink
-            to={`/products/${product.handle}`}
-            prefetch="intent"
-            className={({ isTransitioning }) =>
-              clsx("font-bold", isTransitioning && "vt-product-image")
-            }
-          >
-            <span>{product.title}</span>
-          </NavLink>
-          {pcardShowSku && selectedVariant.sku && (
-            <span className="text-body-subtle">({selectedVariant.sku})</span>
+        <div
+          className={clsx(
+            "flex mb-1",
+            isVertical
+              ? "title-and-price flex-col gap-1"
+              : "justify-between gap-4"
+          )}
+        >
+          <div className="flex items-center gap-1.5">
+            <NavLink
+              to={`/products/${product.handle}`}
+              prefetch="intent"
+              className={({ isTransitioning }) =>
+                clsx("font-bold ", isTransitioning && "vt-product-image")
+              }
+            >
+              {product.title}
+            </NavLink>
+            {pcardShowSku && selectedVariant.sku && (
+              <span className="text-body-subtle">({selectedVariant.sku})</span>
+            )}
+          </div>
+          {pcardShowLowestPrice ? (
+            <div className="flex gap-1">
+              <span>From</span>
+              <Money withoutTrailingZeros data={minVariantPrice} />
+            </div>
+          ) : (
+            <VariantPrices
+              variant={selectedVariant as ProductVariant}
+              showCompareAtPrice={pcardShowSalePrice}
+            />
           )}
         </div>
-        <VariantPrices
-          variant={selectedVariant as ProductVariant}
-          showCompareAtPrice={pcardShowSalePrice}
-          className="mb-2"
-        />
         {/* {pcardShowOptionSwatches && <div>options here</div>} */}
       </div>
     </div>
