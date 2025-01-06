@@ -6,8 +6,9 @@ import Heading, {
   type HeadingProps,
   headingInputs,
 } from "~/components/heading";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { ProductCard } from "~/components/product/product-card";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { Swimlane } from "~/components/swimlane";
 
 interface RelatedProductsProps
   extends Omit<SectionProps, "content">,
@@ -59,7 +60,7 @@ let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
             >
               {(products) => {
                 return (
-                  <div className="swimlane hidden-scroll md:pb-8 md:scroll-px-8 lg:scroll-px-12">
+                  <Swimlane>
                     {products.nodes.slice(0, 12).map((product) => (
                       <ProductCard
                         key={product.id}
@@ -67,7 +68,7 @@ let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
                         className="snap-start w-80"
                       />
                     ))}
-                  </div>
+                  </Swimlane>
                 );
               }}
             </Await>
