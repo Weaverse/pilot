@@ -171,6 +171,18 @@ export const PRODUCT_QUERY = `#graphql
         name
         optionValues {
           name
+          swatch {
+            color
+            image {
+              mediaContentType
+              previewImage {
+                url: url(transform: {maxWidth: 300})
+                altText
+                width
+                height
+              }
+            }
+          }
         }
       }
       selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
