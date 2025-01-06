@@ -1,79 +1,6 @@
-import type { HydrogenThemeSchema, SwatchesConfigs } from "@weaverse/hydrogen";
+import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
 import { COUNTRIES } from "~/utils/const";
 import pkg from "../../package.json";
-
-let swatchesConfigs: SwatchesConfigs = {
-  options: [
-    {
-      id: "1",
-      name: "Color",
-      displayName: "Select color",
-      type: "color",
-      size: "md",
-      shape: "circle",
-    },
-    {
-      id: "2",
-      name: "Size",
-      displayName: "Select size",
-      type: "button",
-      size: "md",
-      shape: "round",
-    },
-  ],
-  swatches: {
-    colors: [
-      { id: "1", name: "Red", value: "#ff0000" },
-      { id: "2", name: "Yellow", value: "#ffff00" },
-      { id: "3", name: "Black", value: "#000000" },
-      { id: "4", name: "Blue", value: "#0000FF" },
-      { id: "5", name: "Green", value: "#00ff00" },
-      { id: "6", name: "Purple", value: "#800080" },
-      { id: "7", name: "Silver", value: "#c0c0c0" },
-      { id: "8", name: "White", value: "#ffffff" },
-      { id: "9", name: "Brown", value: "#7B3F00" },
-      { id: "10", name: "Light-brown", value: "#feb035" },
-      { id: "11", name: "Dark-turquoise", value: "#23cddc" },
-      { id: "12", name: "Orange", value: "#fe9001" },
-      { id: "13", name: "Tan", value: "#eacea7" },
-      { id: "14", name: "Violet", value: "#EE82EE" },
-      { id: "15", name: "Pink", value: "#FFC0CB" },
-      { id: "16", name: "Grey", value: "#808080" },
-    ],
-    images: [
-      {
-        id: "1",
-        name: "Dark blue",
-        value:
-          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_2.png",
-      },
-      {
-        id: "2",
-        name: "Light orange",
-        value:
-          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_3.png",
-      },
-      {
-        id: "3",
-        name: "Dark red",
-        value:
-          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_4.png",
-      },
-      {
-        id: "4",
-        name: "Light brown",
-        value:
-          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_5.png",
-      },
-      {
-        id: "5",
-        name: "Dark brown",
-        value:
-          "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/swatch_pattern_6.png",
-      },
-    ],
-  },
-};
 
 export let themeSchema: HydrogenThemeSchema = {
   info: {
@@ -559,20 +486,8 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
     {
-      group: "Product swatches & badges",
+      group: "Product badges",
       inputs: [
-        {
-          type: "swatches",
-          name: "productSwatches",
-          label: "Configs",
-          defaultValue: swatchesConfigs,
-          helpText:
-            "Product swatches configs are applied to product page, filters and product cards.",
-        },
-        {
-          type: "heading",
-          label: "Badges",
-        },
         {
           type: "range",
           label: "Border radius",
@@ -737,12 +652,6 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
-          label: "Show SKU",
-          name: "pcardShowSku",
-          defaultValue: false,
-        },
-        {
-          type: "switch",
           label: "Show lowest price",
           name: "pcardShowLowestPrice",
           defaultValue: false,
@@ -770,8 +679,8 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "range",
-          label: "Max options",
-          name: "pcardMaxOptions",
+          label: "Max option values to show",
+          name: "pcardMaxOptionValues",
           configs: {
             min: 2,
             max: 10,
