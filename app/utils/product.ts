@@ -2,7 +2,7 @@ import type { Storefront } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { ProductRecommendationsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { RECOMMENDED_PRODUCTS_QUERY } from "~/graphql/queries";
+import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/locale";
 
 export function isNewArrival(date: string, daysOld = 30) {
@@ -46,3 +46,22 @@ export async function getRecommendedProducts(
 
   return { nodes: mergedProducts };
 }
+
+const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+  query productRecommendations(
+    $productId: ID!
+    $count: Int
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    recommended: productRecommendations(productId: $productId) {
+      ...ProductCard
+    }
+    additional: products(first: $count, sortKey: BEST_SELLING) {
+      nodes {
+        ...ProductCard
+      }
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;

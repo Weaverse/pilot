@@ -245,7 +245,7 @@ function getRecommendations(
 }
 
 const SEARCH_QUERY = `#graphql
-  query PaginatedProductsSearch(
+  query search(
     $country: CountryCode
     $endCursor: String
     $first: Int
@@ -273,6 +273,5 @@ const SEARCH_QUERY = `#graphql
       }
     }
   }
-
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;

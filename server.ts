@@ -9,7 +9,6 @@ import {
   createRequestHandler,
 } from "@shopify/remix-oxygen";
 import { WeaverseClient, type WeaverseClientArgs } from "@weaverse/hydrogen";
-import { CART_QUERY_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/locale";
 import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
@@ -185,3 +184,112 @@ function getLocaleFromRequest(request: Request): I18nLocale {
         pathPrefix: "",
       };
 }
+
+const CART_QUERY_FRAGMENT = `#graphql
+  fragment Money on MoneyV2 {
+    currencyCode
+    amount
+  }
+  fragment CartLine on CartLine {
+    id
+    quantity
+    attributes {
+      key
+      value
+    }
+    cost {
+      totalAmount {
+        ...Money
+      }
+      amountPerQuantity {
+        ...Money
+      }
+      compareAtAmountPerQuantity {
+        ...Money
+      }
+    }
+    sellingPlanAllocation {
+      sellingPlan {
+        name
+      }
+    }
+    merchandise {
+      ... on ProductVariant {
+        id
+        availableForSale
+        compareAtPrice {
+          ...Money
+        }
+        price {
+          ...Money
+        }
+        requiresShipping
+        title
+        image {
+          id
+          url
+          altText
+          width
+          height
+
+        }
+        product {
+          handle
+          title
+          id
+          vendor
+        }
+        selectedOptions {
+          name
+          value
+        }
+      }
+    }
+  }
+  fragment CartApiQuery on Cart {
+    updatedAt
+    id
+    checkoutUrl
+    totalQuantity
+    buyerIdentity {
+      countryCode
+      customer {
+        id
+        email
+        firstName
+        lastName
+        displayName
+      }
+      email
+      phone
+    }
+    lines(first: $numCartLines) {
+      nodes {
+        ...CartLine
+      }
+    }
+    cost {
+      subtotalAmount {
+        ...Money
+      }
+      totalAmount {
+        ...Money
+      }
+      totalDutyAmount {
+        ...Money
+      }
+      totalTaxAmount {
+        ...Money
+      }
+    }
+    note
+    attributes {
+      key
+      value
+    }
+    discountCodes {
+      code
+      applicable
+    }
+  }
+` as const;

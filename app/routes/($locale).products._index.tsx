@@ -4,8 +4,8 @@ import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
+import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { routeHeaders } from "~/utils/cache";
-import { ALL_PRODUCTS_QUERY } from "~/graphql/queries";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
@@ -63,3 +63,27 @@ export let meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function AllProducts() {
   return <WeaverseContent />;
 }
+
+const ALL_PRODUCTS_QUERY = `#graphql
+  query allProducts(
+    $country: CountryCode
+    $language: LanguageCode
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
+  ) @inContext(country: $country, language: $language) {
+    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
+      nodes {
+        ...ProductCard
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;

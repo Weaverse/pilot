@@ -5,7 +5,6 @@ import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
-import { COLLECTIONS_QUERY } from "~/graphql/queries";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
@@ -53,3 +52,40 @@ export let meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Collections() {
   return <WeaverseContent />;
 }
+
+const COLLECTIONS_QUERY = `#graphql
+  query collections(
+    $country: CountryCode
+    $language: LanguageCode
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
+  ) @inContext(country: $country, language: $language) {
+    collections(first: $first, last: $last, before: $startCursor, after: $endCursor) {
+      nodes {
+        id
+        title
+        description
+        handle
+        seo {
+          description
+          title
+        }
+        image {
+          id
+          url
+          width
+          height
+          altText
+        }
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+` as const;
