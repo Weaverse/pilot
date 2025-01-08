@@ -31,6 +31,7 @@ const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
       },
     ],
   },
+  // @ts-ignore
   variants: {
     nodes: [
       {

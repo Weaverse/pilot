@@ -51,7 +51,7 @@ export function FeaturedItemsSection() {
 
   if (!data) return null;
 
-  let { featuredCollections, featuredProducts } = data;
+  let { featuredProducts } = data;
 
   return (
     <div className="space-y-8 pt-20">

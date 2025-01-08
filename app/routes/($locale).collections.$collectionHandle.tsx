@@ -15,7 +15,7 @@ import {
   json,
   redirect,
 } from "@shopify/remix-oxygen";
-import type { CollectionDetailsQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/locale";
@@ -56,7 +56,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     CUSTOM_COLLECTION_BANNER_METAFIELD.split(".");
 
   let { collection, collections } = await storefront
-    .query<CollectionDetailsQuery>(COLLECTION_QUERY, {
+    .query<CollectionQuery>(COLLECTION_QUERY, {
       variables: {
         ...paginationVariables,
         handle: collectionHandle,

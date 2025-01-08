@@ -3,10 +3,10 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type { PageType } from "@weaverse/hydrogen";
+import type { ShopQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
-import type { ShopQueryQuery } from "storefront-api.generated";
 
 export const headers = routeHeaders;
 
@@ -25,7 +25,7 @@ export async function loader(args: LoaderFunctionArgs) {
     throw new Response(null, { status: 404 });
   }
 
-  let { shop } = await context.storefront.query<ShopQueryQuery>(SHOP_QUERY);
+  let { shop } = await context.storefront.query<ShopQuery>(SHOP_QUERY);
   let seo = seoPayload.home();
 
   return defer({

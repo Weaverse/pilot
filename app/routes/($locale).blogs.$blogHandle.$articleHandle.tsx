@@ -2,9 +2,9 @@ import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
-import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
+import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { ArticleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import type { ArticleDetailsQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
@@ -19,7 +19,7 @@ export async function loader(args: RouteLoaderArgs) {
   invariant(params.blogHandle, "Missing blog handle");
   invariant(params.articleHandle, "Missing article handle");
 
-  let { blog } = await storefront.query<ArticleDetailsQuery>(ARTICLE_QUERY, {
+  let { blog } = await storefront.query<ArticleQuery>(ARTICLE_QUERY, {
     variables: {
       blogHandle: params.blogHandle,
       articleHandle: params.articleHandle,

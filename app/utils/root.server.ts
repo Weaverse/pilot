@@ -8,7 +8,7 @@ import {
 import type {
   LayoutQuery,
   MenuFragment,
-  SwatchesConfigsQuery,
+  SwatchesQuery,
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import type { EnhancedMenu } from "~/types/menu";
@@ -117,7 +117,7 @@ async function getSwatchesConfigs(context: AppLoadContext) {
   if (!type) {
     return { colors: [], images: [] };
   }
-  let { metaobjects } = await context.storefront.query<SwatchesConfigsQuery>(
+  let { metaobjects } = await context.storefront.query<SwatchesQuery>(
     SWATCHES_QUERY,
     { variables: { type } },
   );
