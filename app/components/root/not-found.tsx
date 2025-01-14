@@ -35,12 +35,12 @@ export function NotFound({ type = "page" }: { type?: string }) {
           </div>
         </div>
       </div>
-      <FeaturedItemsSection />
+      <FeaturedProducts />
     </Section>
   );
 }
 
-export function FeaturedItemsSection() {
+export function FeaturedProducts() {
   let { load, data } = useFetcher<FeaturedData>();
   let api = usePrefixPathWithLocale("/api/featured-items");
 
