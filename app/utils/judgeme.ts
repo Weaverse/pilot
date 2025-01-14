@@ -1,4 +1,5 @@
-import type { WeaverseClient } from "@weaverse/hydrogen";
+import type { AppLoadContext } from "@shopify/remix-oxygen";
+import { constructURL } from "./misc";
 
 type JudgemeProductData = {
   product: {
@@ -7,7 +8,7 @@ type JudgemeProductData = {
   };
 };
 
-type JudgemeReviewType = {
+type JudgeMeReviewType = {
   id: string;
   title: string;
   created_at: string;
@@ -32,66 +33,49 @@ type JudgemeReviewType = {
 export type JudgemeReviewsData = {
   rating: number;
   reviewNumber: number;
-  reviews: JudgemeReviewType[];
+  reviews: JudgeMeReviewType[];
 };
 
-async function getInternalIdByHandle(
-  api_token: string,
-  shop_domain: string,
-  handle: string,
-  weaverseClient: WeaverseClient,
-) {
-  let api = `https://judge.me/api/v1/products/-1?${new URLSearchParams({
-    api_token,
-    shop_domain,
-    handle,
-  })}`;
-  let data = (await weaverseClient.fetchWithCache(api)) as JudgemeProductData;
-  return data?.product?.id;
-}
+const JUDGEME_PRODUCT_API = "https://judge.me/api/v1/products/-1";
+const JUDGEME_REVIEWS_API = "https://judge.me/api/v1/reviews";
 
-export async function getJudgemeReviews(
-  api_token: string,
-  shop_domain: string,
-  handle: string,
-  weaverse: WeaverseClient,
-) {
-  let defaultData = {
-    rating: 0,
-    reviewNumber: 0,
-    reviews: [],
-  };
-  if (!api_token) {
-    return defaultData;
+export async function getJudgeMeProductReviews({
+  context,
+  handle,
+}: {
+  context: AppLoadContext;
+  handle: string;
+}) {
+  try {
+    let { weaverse, env } = context;
+    let { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
+    if (JUDGEME_PRIVATE_API_TOKEN) {
+      let { fetchWithCache } = weaverse;
+      let { product } = await fetchWithCache<JudgemeProductData>(
+        constructURL(JUDGEME_PRODUCT_API, {
+          handle,
+          shop_domain: PUBLIC_STORE_DOMAIN,
+          api_token: JUDGEME_PRIVATE_API_TOKEN,
+        }),
+      );
+      if (product?.id) {
+        let { reviews } = await fetchWithCache<JudgemeReviewsData>(
+          constructURL(JUDGEME_REVIEWS_API, {
+            api_token: JUDGEME_PRIVATE_API_TOKEN,
+            shop_domain: PUBLIC_STORE_DOMAIN,
+            product_id: product?.id,
+          }),
+        );
+        let reviewNumber = reviews.length || 1;
+        let rating = reviews.reduce((a, c) => a + c.rating, 0) / reviewNumber;
+        return { rating, reviewNumber, reviews };
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching Judgeme product reviews", error);
   }
-  let internalId = await getInternalIdByHandle(
-    api_token,
-    shop_domain,
-    handle,
-    weaverse,
-  );
-  if (internalId) {
-    let data = (await weaverse.fetchWithCache(
-      `https://judge.me/api/v1/reviews?${new URLSearchParams({
-        api_token,
-        shop_domain,
-        product_id: internalId,
-      })}`,
-    )) as JudgemeReviewsData;
-    let reviews = data.reviews;
-    let rating =
-      reviews.reduce((acc, review) => acc + review.rating, 0) /
-      (reviews.length || 1);
-    return {
-      rating,
-      reviewNumber: reviews.length,
-      reviews,
-    };
-  }
-  return defaultData;
+  return { rating: 0, reviewNumber: 0, reviews: [] };
 }
-
-const JUDGE_ME_API = "https://judge.me/api/v1/reviews";
 
 export async function createJudgeMeReview({
   formData,
@@ -102,19 +86,21 @@ export async function createJudgeMeReview({
   apiToken: string;
   formData: FormData;
 }) {
-  let url = new URL(JUDGE_ME_API);
-  url.searchParams.set("api_token", apiToken);
-  url.searchParams.set("shop_domain", shopDomain);
-
-  return await fetch(url.toString(), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  return await fetch(
+    constructURL(JUDGEME_REVIEWS_API, {
+      api_token: apiToken,
       shop_domain: shopDomain,
-      platform: "shopify",
-      ...formDataToObject(formData),
     }),
-  });
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        shop_domain: shopDomain,
+        platform: "shopify",
+        ...formDataToObject(formData),
+      }),
+    },
+  );
 }
 
 function formDataToObject(formData: FormData) {
