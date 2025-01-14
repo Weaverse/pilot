@@ -10,7 +10,7 @@ import type {
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
-import type { ShopFragment } from "storefront-api.generated";
+import type { ProductQuery, ShopFragment } from "storefront-api.generated";
 
 function root({
   shop,
@@ -71,31 +71,16 @@ type SelectedVariantRequiredFields = Pick<ProductVariant, "sku"> & {
   image?: null | Partial<Image>;
 };
 
-type ProductRequiredFields = Pick<
-  Product,
-  "title" | "description" | "vendor" | "seo"
-> & {
-  variants: {
-    nodes: Array<
-      Pick<
-        ProductVariant,
-        "sku" | "price" | "selectedOptions" | "availableForSale"
-      >
-    >;
-  };
-};
-
 function productJsonLd({
   product,
-  selectedVariant,
   url,
 }: {
-  product: ProductRequiredFields;
-  selectedVariant: SelectedVariantRequiredFields;
+  product: ProductQuery["product"];
   url: Request["url"];
 }): SeoConfig["jsonLd"] {
   let origin = new URL(url).origin;
   let variants = product.variants.nodes;
+  let selectedVariant = product.selectedVariant ?? product.variants.nodes[0];
   let description = truncate(product?.seo?.description ?? product?.description);
   // @ts-ignore
   let offers: Offer[] = (variants || []).map((variant) => {
@@ -154,20 +139,19 @@ function productJsonLd({
 function product({
   product,
   url,
-  selectedVariant,
 }: {
-  product: ProductRequiredFields;
-  selectedVariant: SelectedVariantRequiredFields;
+  product: ProductQuery["product"];
   url: Request["url"];
 }): SeoConfig {
   let description = truncate(
     product?.seo?.description ?? product?.description ?? "",
   );
+  let selectedVariant = product.selectedVariant ?? product.variants.nodes[0];
   return {
     title: product?.seo?.title ?? product?.title,
     description,
     media: selectedVariant?.image,
-    jsonLd: productJsonLd({ product, selectedVariant, url }),
+    jsonLd: productJsonLd({ product, url }),
   };
 }
 
