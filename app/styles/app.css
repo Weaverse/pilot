@@ -10,8 +10,11 @@
   --shop-pay-button-border-radius: 0;
   --screen-height: 100vh;
   --screen-height-dynamic: 100vh;
+
+  /* Product options */
   --option-swatch-radius: 0;
-  --option-swatch-size: 2rem;
+  --option-swatch-size: 2.25rem;
+  --option-image-width: 4rem;
 
   @supports (height: 100svh) {
     --screen-height: 100svh;
