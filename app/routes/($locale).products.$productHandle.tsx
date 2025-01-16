@@ -1,5 +1,9 @@
-import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { Analytics, getSeoMeta } from "@shopify/hydrogen";
+import { useLoaderData } from "@remix-run/react";
+import {
+  Analytics,
+  getAdjacentAndFirstAvailableVariants,
+  getSeoMeta,
+} from "@shopify/hydrogen";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -7,12 +11,11 @@ import type {
 } from "@shopify/remix-oxygen";
 import { defer, json } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
-import { useEffect } from "react";
-import type { ProductQuery } from "storefront-api.generated";
+import type { ProductQuery, VariantsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
-import { createJudgeMeReview, getJudgemeReviews } from "~/utils/judgeme";
+import { createJudgeMeReview, getJudgeMeProductReviews } from "~/utils/judgeme";
 import { getRecommendedProducts } from "~/utils/product";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
@@ -20,80 +23,53 @@ import { WeaverseContent } from "~/weaverse";
 export let headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
-  let { productHandle } = params;
-  invariant(productHandle, "Missing productHandle param, check route filename");
+  let { productHandle: handle } = params;
 
+  invariant(handle, "Missing productHandle param, check route filename");
+
+  let { storefront, weaverse } = context;
   let selectedOptions = getSelectedProductOptions(request);
-  let { shop, product } = await context.storefront.query<ProductQuery>(
-    PRODUCT_QUERY,
-    {
+  let [{ shop, product }, weaverseData, judgemeReviews] = await Promise.all([
+    storefront.query<ProductQuery>(PRODUCT_QUERY, {
       variables: {
-        handle: productHandle,
+        handle,
         selectedOptions,
-        country: context.storefront.i18n.country,
-        language: context.storefront.i18n.language,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
       },
-    },
-  );
+    }),
+    weaverse.loadPage({ type: "PRODUCT", handle }),
+    getJudgeMeProductReviews({ context, handle }),
+    // Add other queries here, so that they are loaded in parallel
+  ]);
 
   if (!product?.id) {
     throw new Response("product", { status: 404 });
   }
 
-  if (!product.selectedVariant && product.options.length) {
-    // set the selectedVariant to the first variant if there is only one option
-    if (product.options.length < 2) {
-      product.selectedVariant = product.variants.nodes[0];
-    }
-  }
-
-  // In order to show which variants are available in the UI, we need to query
-  // all of them. But there might be a *lot*, so instead separate the variants
-  // into it's own separate query that is deferred. So there's a brief moment
-  // where variant options might show as available when they're not, but after
-  // this deferred query resolves, the UI will update.
-  let variants = await context.storefront.query(VARIANTS_QUERY, {
-    variables: {
-      handle: productHandle,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
-    },
-  });
-
-  let recommended = getRecommendedProducts(context.storefront, product.id);
-
-  // TODO: firstVariant is never used because we will always have a selectedVariant due to redirect
-  // Investigate if we can avoid the redirect for product pages with no search params for first variant
-  let firstVariant = product.variants.nodes[0];
-  let selectedVariant = product.selectedVariant ?? firstVariant;
-
-  let seo = seoPayload.product({
-    product,
-    selectedVariant,
-    url: request.url,
-  });
-
-  let judgeme_API_TOKEN = context.env.JUDGEME_PRIVATE_API_TOKEN;
-  let shop_domain = context.env.PUBLIC_STORE_DOMAIN;
-  let judgemeReviews = await getJudgemeReviews(
-    judgeme_API_TOKEN,
-    shop_domain,
-    productHandle,
-    context.weaverse,
-  );
+  let { product: productWithAllVariants } =
+    await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
+      variables: {
+        handle,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      },
+    });
+  let variants = productWithAllVariants.variants.nodes;
 
   return defer({
-    variants,
-    product,
     shop,
-    storeDomain: shop.primaryDomain.url,
-    recommended,
-    seo,
-    weaverseData: await context.weaverse.loadPage({
-      type: "PRODUCT",
-      handle: productHandle,
-    }),
+    product,
+    variants,
+    weaverseData,
     judgemeReviews,
+    storeDomain: shop.primaryDomain.url,
+    seo: seoPayload.product({
+      product: { ...product, variants },
+      url: request.url,
+    }),
+    recommended: getRecommendedProducts(storefront, product.id),
+    selectedOptions,
   });
 }
 
@@ -123,29 +99,7 @@ export let meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(...matches.map((match) => (match.data as any).seo));
 };
 
-/**
- * We need to handle the route change from client to keep the view transition persistent
- */
-function useApplyFirstVariant() {
-  let { product } = useLoaderData<typeof loader>();
-  let [searchParams, setSearchParams] = useSearchParams();
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!product.selectedVariant) {
-      let selectedOptions = product.variants?.nodes?.[0]?.selectedOptions;
-      for (let variant of selectedOptions) {
-        searchParams.set(variant.name, variant.value);
-      }
-      setSearchParams(searchParams, {
-        replace: true, // prevent adding a new entry to the history stack
-      });
-    }
-  }, [product?.id]);
-}
-
 export default function Product() {
-  useApplyFirstVariant();
   let { product } = useLoaderData<typeof loader>();
   return (
     <>
