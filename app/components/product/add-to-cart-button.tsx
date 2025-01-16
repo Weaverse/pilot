@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { useMemo } from "react";
 import { Button } from "~/components/button";
 import { openCartDrawer } from "~/components/layout/cart-drawer";
+import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function AddToCartButton({
@@ -50,7 +51,10 @@ export function AddToCartButton({
             />
             <Button
               type="submit"
-              className={className}
+              className={cn(
+                "hover:text-[--btn-primary-text] hover:bg-[--btn-primary-bg]",
+                className,
+              )}
               disabled={disabled ?? fetcher.state !== "idle"}
               onClick={openCartDrawer}
               {...props}
@@ -108,7 +112,7 @@ function AddToCartAnalytics({
       try {
         if (cartInputs.inputs.analytics) {
           let dataInForm: unknown = JSON.parse(
-            String(cartInputs.inputs.analytics)
+            String(cartInputs.inputs.analytics),
           );
           Object.assign(cartData, dataInForm);
         }
