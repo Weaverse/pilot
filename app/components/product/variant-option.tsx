@@ -104,7 +104,7 @@ export function VariantOption({ option }: VariantOptionProps) {
                   )}
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>{value}</TooltipContent>
+              <TooltipContent sideOffset={6}>{value}</TooltipContent>
             </Tooltip>
           );
         })}
