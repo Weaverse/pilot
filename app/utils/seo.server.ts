@@ -10,7 +10,11 @@ import type {
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
-import type { ProductQuery, ShopFragment } from "storefront-api.generated";
+import type {
+  ProductQuery,
+  ProductVariantFragment,
+  ShopFragment,
+} from "storefront-api.generated";
 
 function root({
   shop,
@@ -67,23 +71,19 @@ function home(): SeoConfig {
   };
 }
 
-type SelectedVariantRequiredFields = Pick<ProductVariant, "sku"> & {
-  image?: null | Partial<Image>;
-};
-
 function productJsonLd({
   product,
+  selectedVariant,
   url,
 }: {
-  product: ProductQuery["product"];
+  product: ProductQuery["product"] & { variants: ProductVariantFragment[] };
+  selectedVariant: ProductVariantFragment;
   url: Request["url"];
 }): SeoConfig["jsonLd"] {
   let origin = new URL(url).origin;
-  let variants = product.variants.nodes;
-  let selectedVariant = product.selectedVariant ?? product.variants.nodes[0];
   let description = truncate(product?.seo?.description ?? product?.description);
   // @ts-ignore
-  let offers: Offer[] = (variants || []).map((variant) => {
+  let offers: Offer[] = (product.variants || []).map((variant) => {
     let variantUrl = new URL(url);
     for (let option of variant.selectedOptions) {
       variantUrl.searchParams.set(option.name, option.value);
@@ -140,18 +140,18 @@ function product({
   product,
   url,
 }: {
-  product: ProductQuery["product"];
+  product: ProductQuery["product"] & { variants: ProductVariantFragment[] };
   url: Request["url"];
 }): SeoConfig {
   let description = truncate(
     product?.seo?.description ?? product?.description ?? "",
   );
-  let selectedVariant = product.selectedVariant ?? product.variants.nodes[0];
+  let selectedVariant = product.selectedVariant || product.variants[0];
   return {
     title: product?.seo?.title ?? product?.title,
     description,
     media: selectedVariant?.image,
-    jsonLd: productJsonLd({ product, url }),
+    jsonLd: productJsonLd({ product, selectedVariant, url }),
   };
 }
 
