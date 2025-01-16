@@ -1,4 +1,5 @@
 import {
+  MEDIA_FRAGMENT,
   PRODUCT_OPTION_FRAGMENT,
   PRODUCT_VARIANT_FRAGMENT,
 } from "~/graphql/fragments";
@@ -19,10 +20,24 @@ export const PRODUCT_QUERY = `#graphql
       descriptionHtml
       description
       summary: description(truncateAt: 200)
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+        maxVariantPrice {
+          amount
+          currencyCode
+        }
+      }
       options {
         ...ProductOption
       }
-      selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+      selectedVariant: variantBySelectedOptions(
+        selectedOptions: $selectedOptions, 
+        ignoreUnknownOptions: true, 
+        caseInsensitiveMatch: true
+      ) {
         ...ProductVariant
       }
       media(first: 7) {
@@ -50,43 +65,7 @@ export const PRODUCT_QUERY = `#graphql
       }
     }
   }
-  fragment Media on Media {
-    __typename
-    mediaContentType
-    alt
-    previewImage {
-      url
-    }
-    ... on MediaImage {
-      id
-      image {
-        id
-        url
-        width
-        height
-      }
-    }
-    ... on Video {
-      id
-      sources {
-        mimeType
-        url
-      }
-    }
-    ... on Model3d {
-      id
-      sources {
-        mimeType
-        url
-      }
-    }
-    ... on ExternalVideo {
-      id
-      embedUrl
-      host
-    }
-  }
-  ${PRODUCT_VARIANT_FRAGMENT}
+  ${MEDIA_FRAGMENT}
   ${PRODUCT_OPTION_FRAGMENT}
 ` as const;
 
