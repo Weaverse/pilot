@@ -1,31 +1,51 @@
+export const PRODUCT_VARIANT_FRAGMENT = `#graphql
+  fragment ProductVariant on ProductVariant {
+    id
+    availableForSale
+    quantityAvailable
+    selectedOptions {
+      name
+      value
+    }
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    price {
+      amount
+      currencyCode
+    }
+    compareAtPrice {
+      amount
+      currencyCode
+    }
+    sku
+    title
+    unitPrice {
+      amount
+      currencyCode
+    }
+    product {
+      title
+      handle
+    }
+  }
+` as const;
+
 export const PRODUCT_OPTION_FRAGMENT = `#graphql
   fragment ProductOption on ProductOption {
     name
     optionValues {
       name
       firstSelectableVariant {
-        id
-        title
-        availableForSale
-        image {
-          url
-          altText
-          width
-          height
-        }
-        price {
-          amount
-          currencyCode
-        }
-        compareAtPrice {
-          amount
-          currencyCode
-        }
+        ...ProductVariant
       }
       swatch {
         color
         image {
-          mediaContentType
           previewImage {
             url
             altText
@@ -34,6 +54,7 @@ export const PRODUCT_OPTION_FRAGMENT = `#graphql
       }
     }
   }
+  ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
 
 export const PRODUCT_CARD_FRAGMENT = `#graphql
@@ -105,39 +126,41 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
   ${PRODUCT_OPTION_FRAGMENT}
 `;
 
-export let PRODUCT_VARIANT_FRAGMENT = `#graphql
-  fragment ProductVariant on ProductVariant {
-    id
-    availableForSale
-    quantityAvailable
-    selectedOptions {
-      name
-      value
-    }
-    image {
-      id
+export const MEDIA_FRAGMENT = `#graphql
+  fragment Media on Media {
+    __typename
+    mediaContentType
+    alt
+    previewImage {
       url
-      altText
-      width
-      height
     }
-    price {
-      amount
-      currencyCode
+    ... on MediaImage {
+      id
+      image {
+        id
+        url
+        width
+        height
+      }
     }
-    compareAtPrice {
-      amount
-      currencyCode
+    ... on Video {
+      id
+      sources {
+        mimeType
+        url
+      }
     }
-    sku
-    title
-    unitPrice {
-      amount
-      currencyCode
+    ... on Model3d {
+      id
+      sources {
+        mimeType
+        url
+      }
     }
-    product {
-      title
-      handle
+    ... on ExternalVideo {
+      id
+      embedUrl
+      host
     }
   }
-`;
+` as const;
