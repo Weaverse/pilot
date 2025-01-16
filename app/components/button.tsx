@@ -9,7 +9,7 @@ export let variants = cva(
   [
     "inline-flex items-center justify-center rounded-none relative",
     "text-base leading-tight font-normal whitespace-nowrap",
-    "focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+    "focus-visible:outline-none disabled:cursor-not-allowed disabled:!opacity-50",
     "transition-colors",
   ],
   {
