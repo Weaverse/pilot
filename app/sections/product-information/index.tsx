@@ -1,13 +1,15 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
+import {
+  Money,
+  ShopPayButton,
+  useOptimisticVariant,
+  useSelectedOptionInUrlParam,
+} from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
-import { forwardRef, useEffect, useState } from "react";
-import type { ProductQuery } from "storefront-api.generated";
+import { forwardRef, useState } from "react";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { isDiscounted, isNewArrival } from "~/utils/product";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import {
   ProductMedia,
@@ -15,7 +17,9 @@ import {
 } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { ProductVariants } from "~/components/product/variants";
-import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import { isDiscounted, isNewArrival } from "~/utils/product";
 import { ProductDetails } from "./product-details";
 
 interface ProductInformationProps
@@ -24,6 +28,7 @@ interface ProductInformationProps
   addToCartText: string;
   soldOutText: string;
   unavailableText: string;
+  selectVariantText: string;
   showVendor: boolean;
   showSalePrice: boolean;
   showShortDescription: boolean;
@@ -34,24 +39,19 @@ interface ProductInformationProps
 
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
-    let {
-      product,
-      variants: _variants,
-      storeDomain,
-    } = useLoaderData<typeof productLoader>();
-    let variants = _variants?.product?.variants;
-    let selectedVariantOptimistic = useOptimisticVariant(
-      product?.selectedVariant || variants?.nodes?.[0],
+    let { product, variants, storeDomain } =
+      useLoaderData<typeof productRouteLoader>();
+    let [params] = useSearchParams();
+    let selectedVariant = useOptimisticVariant(
+      product.selectedVariant,
       variants,
-    );
-    let [selectedVariant, setSelectedVariant] = useState<any>(
-      selectedVariantOptimistic,
     );
 
     let {
       addToCartText,
       soldOutText,
       unavailableText,
+      selectVariantText,
       showVendor,
       showSalePrice,
       showShortDescription,
@@ -66,46 +66,28 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       ...rest
     } = props;
     let [quantity, setQuantity] = useState<number>(1);
-    let [searchParams] = useSearchParams();
 
-    let atcText = selectedVariant?.availableForSale
-      ? addToCartText
-      : selectedVariant?.quantityAvailable === -1
-        ? unavailableText
-        : soldOutText;
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-      if (!selectedVariant && variants?.nodes?.[0]) {
-        setSelectedVariant(variants?.nodes?.[0]);
-      } else if (
-        selectedVariantOptimistic?.id &&
-        selectedVariantOptimistic.id !== selectedVariant?.id
-      ) {
-        setSelectedVariant(selectedVariantOptimistic);
-      }
-    }, [selectedVariantOptimistic?.id]);
-
-    function handleSelectedVariantChange(variant: any) {
-      setSelectedVariant(variant);
-      if (!variant?.selectedOptions) return;
-      // update the url
-      for (let option of variant.selectedOptions) {
-        searchParams.set(option.name, option.value);
-      }
-      window.history.replaceState(
-        {},
-        "",
-        `${window.location.pathname}?${searchParams.toString()}`,
+    if (product) {
+      let { title, handle, vendor, summary, options, priceRange } = product;
+      let allOptionNames = options.map((option) => option.name);
+      let isAllOptionsSelected = allOptionNames.every((name) =>
+        params.get(name),
       );
-    }
 
-    if (product && variants) {
-      let { title, vendor, summary } = product;
-      let discountedAmount =
-        (selectedVariant?.compareAtPrice?.amount || 0) /
-          selectedVariant?.price?.amount -
-        1;
+      let atcText = isAllOptionsSelected
+        ? selectedVariant
+          ? selectedVariant.availableForSale
+            ? addToCartText
+            : soldOutText
+          : unavailableText
+        : selectVariantText;
+
+      let discountedAmount = 0;
+
+      // let discountedAmount =
+      //   (selectedVariant?.compareAtPrice?.amount || 0) /
+      //     selectedVariant?.price?.amount -
+      //   1;
       let isNew = isNewArrival(product.publishedAt);
 
       return (
@@ -134,7 +116,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                 className="sticky flex flex-col justify-start space-y-5"
                 style={{ top: "calc(var(--height-nav) + 20px)" }}
               >
-                <div className="space-y-4">
+                <div className="space-y-5">
                   <div className="flex items-center gap-2 text-sm">
                     {discountedAmount > 0 && discountedAmount < 1 && (
                       <span className="py-1.5 px-2 text-background bg-[--color-discount] rounded">
@@ -172,49 +154,54 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                           />
                         )}
                     </div>
-                  ) : null}
+                  ) : (
+                    <Money
+                      withoutTrailingZeros
+                      data={priceRange.minVariantPrice}
+                      as="div"
+                      className="font-medium text-2xl/none"
+                    />
+                  )}
                   {children}
                   {showShortDescription && (
                     <p className="leading-relaxed">{summary}</p>
                   )}
                   <ProductVariants
-                    product={product as ProductQuery["product"]}
-                    selectedVariant={selectedVariant}
-                    onSelectedVariantChange={handleSelectedVariantChange}
                     variants={variants}
-                    options={product?.options}
-                    handle={product?.handle}
+                    options={options}
+                    productHandle={handle}
                     hideUnavailableOptions={hideUnavailableOptions}
                   />
                 </div>
                 <Quantity value={quantity} onChange={setQuantity} />
-                <AddToCartButton
-                  disabled={!selectedVariant?.availableForSale}
-                  lines={[
-                    {
-                      merchandiseId: selectedVariant?.id,
-                      quantity,
-                      selectedVariant,
-                    },
-                  ]}
-                  variant="primary"
-                  data-test="add-to-cart"
-                  className="w-full hover:border-black"
-                >
-                  {atcText}
-                </AddToCartButton>
-                {selectedVariant?.availableForSale && (
-                  <ShopPayButton
-                    width="100%"
-                    variantIdsAndQuantities={[
+                <div className="space-y-2">
+                  <AddToCartButton
+                    disabled={!selectedVariant?.availableForSale}
+                    lines={[
                       {
-                        id: selectedVariant?.id,
+                        merchandiseId: selectedVariant?.id,
                         quantity,
+                        selectedVariant,
                       },
                     ]}
-                    storeDomain={storeDomain}
-                  />
-                )}
+                    data-test="add-to-cart"
+                    className="w-full uppercase"
+                  >
+                    {atcText}
+                  </AddToCartButton>
+                  {selectedVariant?.availableForSale && (
+                    <ShopPayButton
+                      width="100%"
+                      variantIdsAndQuantities={[
+                        {
+                          id: selectedVariant?.id,
+                          quantity,
+                        },
+                      ]}
+                      storeDomain={storeDomain}
+                    />
+                  )}
+                </div>
                 <ProductDetails
                   showShippingPolicy={showShippingPolicy}
                   showRefundPolicy={showRefundPolicy}
@@ -225,7 +212,11 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         </Section>
       );
     }
-    return <div ref={ref} {...rest} />;
+    return (
+      <div ref={ref} {...rest}>
+        No product data...
+      </div>
+    );
   },
 );
 
@@ -325,6 +316,13 @@ export let schema: HydrogenComponentSchema = {
           name: "unavailableText",
           defaultValue: "Unavailable",
           placeholder: "Unavailable",
+        },
+        {
+          type: "text",
+          label: "Select variant text",
+          name: "selectVariantText",
+          defaultValue: "Select variant",
+          placeholder: "Select variant",
         },
         {
           type: "switch",
