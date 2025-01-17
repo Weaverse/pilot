@@ -30,6 +30,13 @@ export const PRODUCT_QUERY = `#graphql
           currencyCode
         }
       }
+      badges: metafields(identifiers: [
+        { namespace: "custom", key: "best_seller" }
+      ]) {
+        key
+        namespace
+        value
+      }
       options {
         ...ProductOption
       }
