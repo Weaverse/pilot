@@ -47,7 +47,7 @@ export const PRODUCT_QUERY = `#graphql
       ) {
         ...ProductVariant
       }
-      media(first: 7) {
+      media(first: 50) {
         nodes {
           ...Media
         }
