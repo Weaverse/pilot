@@ -132,7 +132,11 @@ export const MEDIA_FRAGMENT = `#graphql
     mediaContentType
     alt
     previewImage {
+      id
       url
+      altText
+      width
+      height
     }
     ... on MediaImage {
       id
