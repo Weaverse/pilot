@@ -8,9 +8,9 @@ import type { loader as productRouteLoader } from "~/routes/($locale).products.$
 import type { JudgemeReviewsData } from "~/utils/judgeme";
 
 export function ReviewForm({
-  judgemeReviews,
+  reviews,
 }: {
-  judgemeReviews: JudgemeReviewsData;
+  reviews: JudgemeReviewsData;
 }) {
   let { product } = useLoaderData<typeof productRouteLoader>();
   let [rating, setRating] = useState(0);
@@ -40,27 +40,25 @@ export function ReviewForm({
     <div
       className={clsx(
         "w-full flex flex-col gap-5",
-        judgemeReviews.reviews.length !== 0 && "lg:w-1/3 md:w-2/5"
+        reviews.reviews.length !== 0 && "lg:w-1/3 md:w-2/5",
       )}
     >
-      {judgemeReviews.reviews.length !== 0 || !isFormVisible ? (
+      {reviews.reviews.length !== 0 || !isFormVisible ? (
         <div
           className={clsx(
             "flex flex-col gap-4 bg-line-subtle p-6",
-            judgemeReviews.reviews.length === 0 ? "items-center" : "items-start"
+            reviews.reviews.length === 0 ? "items-center" : "items-start",
           )}
         >
           <p className="uppercase font-bold text-lg mb-1.5">
-            product reviews ({judgemeReviews.reviewNumber})
+            product reviews ({reviews.reviewNumber})
           </p>
           <div className="flex justify-start items-center gap-3">
-            {judgemeReviews?.rating ? (
+            {reviews?.rating ? (
               <>
-                <h4 className="font-medium">
-                  {judgemeReviews.rating.toFixed(1)}
-                </h4>
+                <h4 className="font-medium">{reviews.rating.toFixed(1)}</h4>
                 <div className="flex gap-0.5">
-                  <StarRating rating={judgemeReviews.rating} />
+                  <StarRating rating={reviews.rating} />
                 </div>
               </>
             ) : (
@@ -82,20 +80,20 @@ export function ReviewForm({
         <div
           className={clsx(
             "bg-line-subtle p-6 w-full",
-            judgemeReviews.reviews.length === 0 && "flex justify-center"
+            reviews.reviews.length === 0 && "flex justify-center",
           )}
         >
           <div
             className={clsx(
               "w-full flex flex-col gap-4",
-              judgemeReviews.reviews.length === 0 && "lg:w-1/3 md:w-2/5"
+              reviews.reviews.length === 0 && "lg:w-1/3 md:w-2/5",
             )}
           >
             <div className="flex flex-col gap-6">
               <span
                 className={clsx(
                   "font-heading font-semibold text-xl uppercase",
-                  judgemeReviews.reviews.length === 0 && "text-center"
+                  reviews.reviews.length === 0 && "text-center",
                 )}
               >
                 WRITE YOUR REVIEW
@@ -228,7 +226,7 @@ export function ReviewForm({
         <div
           className={clsx(
             "flex flex-col gap-6 p-6 bg-line-subtle",
-            judgemeReviews.reviews.length === 0 && "items-center"
+            reviews.reviews.length === 0 && "items-center",
           )}
           role="alert"
         >
@@ -239,9 +237,7 @@ export function ReviewForm({
           <div
             className={clsx(
               "flex items-center",
-              judgemeReviews.reviews.length === 0
-                ? "justify-center"
-                : "justify-end"
+              reviews.reviews.length === 0 ? "justify-center" : "justify-end",
             )}
           >
             <Button
