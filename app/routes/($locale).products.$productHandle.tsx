@@ -29,7 +29,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
   let { storefront, weaverse } = context;
   let selectedOptions = getSelectedProductOptions(request);
-  let [{ shop, product }, weaverseData, judgemeReviews] = await Promise.all([
+  let [{ shop, product }, weaverseData, productReviews] = await Promise.all([
     storefront.query<ProductQuery>(PRODUCT_QUERY, {
       variables: {
         handle,
@@ -62,7 +62,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     product,
     variants,
     weaverseData,
-    judgemeReviews,
+    productReviews,
     storeDomain: shop.primaryDomain.url,
     seo: seoPayload.product({
       product: { ...product, variants },
