@@ -61,6 +61,8 @@ interface VariantOptionProps {
 }
 
 export function VariantOption({ option }: VariantOptionProps) {
+  if (!option?.name) return null;
+
   let { name, value, values } = option;
   let navigate = useNavigate();
 
@@ -87,9 +89,9 @@ export function VariantOption({ option }: VariantOptionProps) {
                     isUnavailable && "diagonal",
                   )}
                 >
-                  {swatch.image?.previewImage ? (
+                  {swatch?.image?.previewImage ? (
                     <Image
-                      data={swatch.image?.previewImage}
+                      data={swatch.image.previewImage}
                       className="w-full h-full object-cover object-center"
                       width={200}
                       sizes="auto"
@@ -97,7 +99,7 @@ export function VariantOption({ option }: VariantOptionProps) {
                   ) : (
                     <span
                       className="w-full h-full inline-block text-[0px]"
-                      style={{ backgroundColor: swatch.color || value }}
+                      style={{ backgroundColor: swatch?.color || value }}
                     >
                       {value}
                     </span>
