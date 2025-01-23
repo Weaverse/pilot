@@ -24,6 +24,21 @@ export function ProductVariants(props: ProductVariantsProps) {
     })
     .filter(Boolean);
 
+  let hasOnlyDefaultVariant = false;
+  if (options.length === 1) {
+    let { name, optionValues } = options[0];
+    if (name === "Title" && optionValues.length === 1) {
+      let { name: optionValueName } = optionValues[0];
+      if (optionValueName === "Default Title") {
+        hasOnlyDefaultVariant = true;
+      }
+    }
+  }
+
+  if (hasOnlyDefaultVariant) {
+    return null;
+  }
+
   return (
     <div className="space-y-5" data-motion="fade-up">
       <VariantSelector
