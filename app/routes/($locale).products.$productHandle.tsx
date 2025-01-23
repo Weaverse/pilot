@@ -1,9 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import {
-  Analytics,
-  getAdjacentAndFirstAvailableVariants,
-  getSeoMeta,
-} from "@shopify/hydrogen";
+import { Analytics, getSeoMeta } from "@shopify/hydrogen";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
