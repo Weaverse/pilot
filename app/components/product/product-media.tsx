@@ -48,18 +48,6 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
   media: MediaFragment[];
 }
 
-function updateMainSwiperHeight(sw: SwiperClass) {
-  if (sw?.height) {
-    let activeSlide = sw.slides[sw.activeIndex];
-    if (activeSlide) {
-      sw.el.parentElement.style.setProperty(
-        "--swiper-height",
-        `${activeSlide.clientHeight}px`,
-      );
-    }
-  }
-}
-
 export function ProductMedia(props: ProductMediaProps) {
   let {
     mediaLayout,
@@ -109,144 +97,117 @@ export function ProductMedia(props: ProductMediaProps) {
   }
 
   return (
-    <div
-      className="flex flex-col-reverse md:flex-row gap-4 overflow-hidden"
-      style={
-        {
-          "--thumbs-max-height": "550px",
-        } as React.CSSProperties
-      }
-    >
-      {showThumbnails && (
-        <Swiper
-          direction="vertical"
-          spaceBetween={10}
-          freeMode
-          slidesPerView={5}
-          threshold={2}
-          modules={[FreeMode, Thumbs, Navigation]}
-          watchSlidesProgress
-          onSwiper={setThumbsSwiper}
-          className={clsx([
-            "hidden md:block",
-            "!w-28 shrink-0 max-h-[--thumbs-max-height]",
-            "transition-opacity opacity-100",
-          ])}
-        >
-          {media.map(({ id, previewImage, alt, mediaContentType }, i) => {
-            return (
-              <SwiperSlide
-                key={id}
-                className={cn(
-                  "p-1 border transition-colors cursor-pointer border-transparent !h-auto",
-                  "[&.swiper-slide-thumb-active]:border-line",
-                )}
-              >
-                <Image
-                  data={{ ...previewImage, altText: alt || "Product image" }}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  width={200}
-                  aspectRatio={getImageAspectRatio(
-                    previewImage,
-                    imageAspectRatio,
-                  )}
-                  className="object-cover opacity-0 animate-fade-in w-full h-auto"
-                  sizes="auto"
-                />
-                {mediaContentType === "VIDEO" && (
-                  <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
-                    <VideoCamera className="w-4 h-4" />
-                  </div>
-                )}
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      )}
-      <Swiper
-        onSwiper={setSwiper}
-        modules={[FreeMode, Thumbs, Pagination, EffectFade, Navigation]}
-        navigation={{
-          nextEl: ".slideshow-arrow-next",
-          prevEl: ".slideshow-arrow-prev",
-        }}
-        onInit={(sw) => {
-          updateMainSwiperHeight(sw);
-          window.removeEventListener("resize", () => {
-            updateMainSwiperHeight(sw);
-          });
-          window.addEventListener("resize", () => {
-            updateMainSwiperHeight(sw);
-          });
-        }}
-        onDestroy={(sw) => {
-          window.removeEventListener("resize", () => {
-            updateMainSwiperHeight(sw);
-          });
-        }}
-        pagination={{ type: "fraction" }}
-        spaceBetween={10}
-        effect="fade"
-        thumbs={{ swiper: thumbsSwiper }}
-        initialSlide={getSelectedVariantMediaIndex(media, selectedVariant)}
-        onSlideChange={updateMainSwiperHeight}
-        className="vt-product-image max-w-full pb-14 md:pb-0 md:[&_.swiper-pagination-fraction]:hidden"
-        style={
-          {
-            "--swiper-pagination-bottom": "20px",
-          } as React.CSSProperties
-        }
-      >
-        {media.map((media, i) => {
-          if (media.mediaContentType === "IMAGE") {
-            let mediaImage = media as Media_MediaImage_Fragment;
-            return (
-              <SwiperSlide key={mediaImage.id}>
-                <Image
-                  data={{
-                    ...mediaImage.image,
-                    altText: mediaImage.alt || "Product image",
-                  }}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  className="object-cover w-full h-auto opacity-0 animate-fade-in"
-                  width={2048}
-                  aspectRatio={getImageAspectRatio(
-                    mediaImage,
-                    imageAspectRatio,
-                  )}
-                  sizes="auto"
-                />
-              </SwiperSlide>
-            );
-          }
-          if (media.mediaContentType === "VIDEO") {
-            let mediaVideo = media as Media_Video_Fragment;
-            return (
-              <SwiperSlide key={mediaVideo.id}>
-                <video controls className="w-full h-auto">
-                  <track kind="captions" />
-                  <source src={mediaVideo.sources[0].url} type="video/mp4" />
-                </video>
-              </SwiperSlide>
-            );
-          }
-          return null;
-        })}
-        <div className="absolute top-[calc(var(--swiper-height)-3.75rem)] right-6 z-10 flex items-center gap-2">
-          <button
-            type="button"
-            className="slideshow-arrow-prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-full left-6 disabled:cursor-not-allowed"
+    <div className="overflow-hidden product-media-slider">
+      <div className="flex items-start gap-4">
+        <div className="h-[450px] shrink-0 w-28">
+          <Swiper
+            onSwiper={setThumbsSwiper}
+            direction="vertical"
+            spaceBetween={8}
+            slidesPerView={5}
+            watchSlidesProgress
+            rewind
+            className="w-full h-full overflow-visible"
+            modules={[Navigation, Thumbs]}
           >
-            <ArrowLeft className="w-4.5 h-4.5" />
-          </button>
-          <button
-            type="button"
-            className="slideshow-arrow-next p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-full right-6 disabled:cursor-not-allowed"
-          >
-            <ArrowRight className="w-4.5 h-4.5" />
-          </button>
+            {media.map(({ id, previewImage, alt, mediaContentType }) => {
+              return (
+                <SwiperSlide
+                  key={id}
+                  className={cn(
+                    "relative",
+                    "p-1 border transition-colors cursor-pointer border-transparent !h-auto",
+                    "[&.swiper-slide-thumb-active]:border-line",
+                  )}
+                >
+                  <Image
+                    data={{
+                      ...previewImage,
+                      altText: alt || "Product image",
+                    }}
+                    loading="lazy"
+                    width={200}
+                    aspectRatio="1/1"
+                    className="object-cover opacity-0 animate-fade-in w-full h-auto"
+                    sizes="auto"
+                  />
+                  {mediaContentType === "VIDEO" && (
+                    <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
+                      <VideoCamera className="w-4 h-4" />
+                    </div>
+                  )}
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         </div>
-      </Swiper>
+        <div className="relative w-[calc(100%-8rem)]">
+          <Swiper
+            onSwiper={setSwiper}
+            thumbs={{ swiper: thumbsSwiper }}
+            slidesPerView={1}
+            spaceBetween={4}
+            autoHeight
+            loop
+            navigation={{
+              nextEl: ".media_slider__next",
+              prevEl: ".media_slider__prev",
+            }}
+            modules={[Navigation, Thumbs]}
+          >
+            {media.map((media, idx) => {
+              if (media.mediaContentType === "IMAGE") {
+                let { image, alt, id } = media as Media_MediaImage_Fragment;
+                return (
+                  <SwiperSlide key={id}>
+                    <Image
+                      data={{ ...image, altText: alt || "Product image" }}
+                      loading={idx === 0 ? "eager" : "lazy"}
+                      className="object-cover w-full h-auto opacity-0 animate-fade-in"
+                      width={2048}
+                      aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
+                      sizes="auto"
+                    />
+                  </SwiperSlide>
+                );
+              }
+              if (media.mediaContentType === "VIDEO") {
+                let mediaVideo = media as Media_Video_Fragment;
+                return (
+                  <SwiperSlide key={mediaVideo.id}>
+                    <video
+                      controls
+                      className="w-full h-auto object-cover"
+                      style={{ aspectRatio: imageAspectRatio }}
+                    >
+                      <track kind="captions" />
+                      <source
+                        src={mediaVideo.sources[0].url}
+                        type="video/mp4"
+                      />
+                    </video>
+                  </SwiperSlide>
+                );
+              }
+              return null;
+            })}
+          </Swiper>
+          <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2">
+            <button
+              type="button"
+              className="media_slider__prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-full left-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+            >
+              <ArrowLeft className="w-4.5 h-4.5" />
+            </button>
+            <button
+              type="button"
+              className="media_slider__next p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-full right-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+            >
+              <ArrowRight className="w-4.5 h-4.5" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
