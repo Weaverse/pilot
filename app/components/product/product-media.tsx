@@ -9,13 +9,7 @@ import type {
   Media_Video_Fragment,
   ProductVariantFragment,
 } from "storefront-api.generated";
-import {
-  EffectFade,
-  FreeMode,
-  Navigation,
-  Pagination,
-  Thumbs,
-} from "swiper/modules";
+import { Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
@@ -100,12 +94,18 @@ export function ProductMedia(props: ProductMediaProps) {
     <div className="overflow-hidden product-media-slider">
       <div
         className={clsx(
-          "flex items-start gap-4",
-          showThumbnails ? "[--thumbs-width:8rem]" : "[--thumbs-width:0px]",
+          "flex items-start gap-4 [--thumbs-width:0px]",
+          showThumbnails && "md:[--thumbs-width:8rem]",
         )}
       >
         {showThumbnails && (
-          <div className="shrink-0 h-[450px] w-[calc(var(--thumbs-width)-1rem)] opacity-0 transition-opacity duration-300">
+          <div
+            className={clsx(
+              "shrink-0 hidden md:block",
+              "h-[450px] w-[calc(var(--thumbs-width,0px)-1rem)]",
+              "opacity-0 transition-opacity duration-300",
+            )}
+          >
             <Swiper
               onSwiper={setThumbsSwiper}
               direction="vertical"
@@ -151,7 +151,7 @@ export function ProductMedia(props: ProductMediaProps) {
             </Swiper>
           </div>
         )}
-        <div className="relative w-[calc(100%-var(--thumbs-width))]">
+        <div className="relative w-[calc(100%-var(--thumbs-width,0px))]">
           <Swiper
             onSwiper={setSwiper}
             thumbs={{ swiper: thumbsSwiper }}
@@ -163,7 +163,9 @@ export function ProductMedia(props: ProductMediaProps) {
               nextEl: ".media_slider__next",
               prevEl: ".media_slider__prev",
             }}
-            modules={[Navigation, Thumbs]}
+            pagination={{ type: "fraction" }}
+            modules={[Pagination, Navigation, Thumbs]}
+            className="overflow-visible md:overflow-hidden pb-10 md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
             {media.map((media, idx) => {
               if (media.mediaContentType === "IMAGE") {
@@ -202,7 +204,7 @@ export function ProductMedia(props: ProductMediaProps) {
               return null;
             })}
           </Swiper>
-          <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2">
+          <div className="absolute bottom-6 right-6 z-10 hidden md:flex items-center gap-2">
             <button
               type="button"
               className="media_slider__prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-full left-6 disabled:cursor-not-allowed disabled:text-body-subtle"
