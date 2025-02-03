@@ -98,50 +98,60 @@ export function ProductMedia(props: ProductMediaProps) {
 
   return (
     <div className="overflow-hidden product-media-slider">
-      <div className="flex items-start gap-4">
-        <div className="h-[450px] shrink-0 w-28">
-          <Swiper
-            onSwiper={setThumbsSwiper}
-            direction="vertical"
-            spaceBetween={8}
-            slidesPerView={5}
-            watchSlidesProgress
-            rewind
-            className="w-full h-full overflow-visible"
-            modules={[Navigation, Thumbs]}
-          >
-            {media.map(({ id, previewImage, alt, mediaContentType }) => {
-              return (
-                <SwiperSlide
-                  key={id}
-                  className={cn(
-                    "relative",
-                    "p-1 border transition-colors cursor-pointer border-transparent !h-auto",
-                    "[&.swiper-slide-thumb-active]:border-line",
-                  )}
-                >
-                  <Image
-                    data={{
-                      ...previewImage,
-                      altText: alt || "Product image",
-                    }}
-                    loading="lazy"
-                    width={200}
-                    aspectRatio="1/1"
-                    className="object-cover opacity-0 animate-fade-in w-full h-auto"
-                    sizes="auto"
-                  />
-                  {mediaContentType === "VIDEO" && (
-                    <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
-                      <VideoCamera className="w-4 h-4" />
-                    </div>
-                  )}
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
-        <div className="relative w-[calc(100%-8rem)]">
+      <div
+        className={clsx(
+          "flex items-start gap-4",
+          showThumbnails ? "[--thumbs-width:8rem]" : "[--thumbs-width:0px]",
+        )}
+      >
+        {showThumbnails && (
+          <div className="shrink-0 h-[450px] w-[calc(var(--thumbs-width)-1rem)] opacity-0 transition-opacity duration-300">
+            <Swiper
+              onSwiper={setThumbsSwiper}
+              direction="vertical"
+              spaceBetween={8}
+              slidesPerView={5}
+              watchSlidesProgress
+              rewind
+              className="w-full h-full overflow-visible"
+              onInit={(sw) => {
+                sw.el.parentElement.style.opacity = "1";
+              }}
+              modules={[Navigation, Thumbs]}
+            >
+              {media.map(({ id, previewImage, alt, mediaContentType }) => {
+                return (
+                  <SwiperSlide
+                    key={id}
+                    className={cn(
+                      "relative",
+                      "p-1 border transition-colors cursor-pointer border-transparent !h-auto",
+                      "[&.swiper-slide-thumb-active]:border-line",
+                    )}
+                  >
+                    <Image
+                      data={{
+                        ...previewImage,
+                        altText: alt || "Product image",
+                      }}
+                      loading="lazy"
+                      width={200}
+                      aspectRatio="1/1"
+                      className="object-cover opacity-0 animate-fade-in w-full h-auto"
+                      sizes="auto"
+                    />
+                    {mediaContentType === "VIDEO" && (
+                      <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
+                        <VideoCamera className="w-4 h-4" />
+                      </div>
+                    )}
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          </div>
+        )}
+        <div className="relative w-[calc(100%-var(--thumbs-width))]">
           <Swiper
             onSwiper={setSwiper}
             thumbs={{ swiper: thumbsSwiper }}
