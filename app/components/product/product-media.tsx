@@ -1,5 +1,4 @@
 import { ArrowLeft, ArrowRight, VideoCamera } from "@phosphor-icons/react";
-import { Image } from "@shopify/hydrogen";
 import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -9,8 +8,9 @@ import type {
   Media_Video_Fragment,
   ProductVariantFragment,
 } from "storefront-api.generated";
-import { Navigation, Pagination, Thumbs } from "swiper/modules";
+import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
+import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
 import { getImageAspectRatio } from "~/utils/image";
@@ -79,7 +79,7 @@ export function ProductMedia(props: ProductMediaProps) {
               height={1660}
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
-                "object-cover opacity-0 animate-fade-in w-[80vw] max-w-none lg:w-full lg:h-full",
+                "object-cover w-[80vw] max-w-none lg:w-full lg:h-full",
                 gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
               )}
               sizes="auto"
@@ -113,11 +113,12 @@ export function ProductMedia(props: ProductMediaProps) {
               slidesPerView={5}
               watchSlidesProgress
               rewind
+              freeMode
               className="w-full h-full overflow-visible"
               onInit={(sw) => {
                 sw.el.parentElement.style.opacity = "1";
               }}
-              modules={[Navigation, Thumbs]}
+              modules={[Navigation, Thumbs, FreeMode]}
             >
               {media.map(({ id, previewImage, alt, mediaContentType }) => {
                 return (
@@ -137,7 +138,7 @@ export function ProductMedia(props: ProductMediaProps) {
                       loading="lazy"
                       width={200}
                       aspectRatio="1/1"
-                      className="object-cover opacity-0 animate-fade-in w-full h-auto rounded"
+                      className="object-cover w-full h-auto rounded"
                       sizes="auto"
                     />
                     {mediaContentType === "VIDEO" && (
@@ -175,7 +176,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     <Image
                       data={{ ...image, altText: alt || "Product image" }}
                       loading={idx === 0 ? "eager" : "lazy"}
-                      className="object-cover w-full h-auto opacity-0 animate-fade-in rounded"
+                      className="object-cover w-full h-auto rounded"
                       width={2048}
                       aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
                       sizes="auto"
