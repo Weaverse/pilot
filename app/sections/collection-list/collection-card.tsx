@@ -4,11 +4,12 @@ import { clsx } from "clsx";
 import type { CSSProperties } from "react";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
+import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 
 interface CollectionCardProps extends OverlayProps {
   collection: Collection;
-  imageAspectRatio: string;
+  imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
   loading?: HTMLImageElement["loading"];
 }
@@ -31,7 +32,7 @@ export function CollectionCard({
         {
           "--aspect-ratio": getImageAspectRatio(
             collection?.image,
-            imageAspectRatio
+            imageAspectRatio,
           ),
         } as CSSProperties
       }
@@ -48,7 +49,7 @@ export function CollectionCard({
             className={clsx(
               "object-cover object-center absolute z-0 inset-0",
               "transition-all duration-300",
-              "will-change-transform scale-100 group-hover:scale-[1.03]"
+              "will-change-transform scale-100 group-hover:scale-[1.03]",
             )}
           />
         ) : null}

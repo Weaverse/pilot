@@ -5,7 +5,7 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import type {
   ProductQuery,
-  ProductVariantFragmentFragment,
+  ProductVariantFragment,
   VariantsQuery,
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
@@ -27,9 +27,10 @@ interface QuickViewData {
 export function QuickShop({ data }: { data: QuickViewData }) {
   let themeSettings = useThemeSettings();
   let { product, variants: _variants, storeDomain } = data || {};
+  // @ts-expect-error
   let firstVariant = product?.variants?.nodes?.[0];
   let [selectedVariant, setSelectedVariant] = useState(
-    firstVariant as ProductVariantFragmentFragment,
+    firstVariant as ProductVariantFragment,
   );
   let [quantity, setQuantity] = useState<number>(1);
   let {
@@ -76,19 +77,19 @@ export function QuickShop({ data }: { data: QuickViewData }) {
               <h5>{title}</h5>
             </div>
             <VariantPrices variant={selectedVariant as ProductVariant} />
-            <ProductVariants
+            {/* <ProductVariants
               product={product}
               options={product?.options}
-              handle={product?.handle}
+              productHandle={product?.handle}
               selectedVariant={selectedVariant}
               onSelectedVariantChange={handleSelectedVariantChange}
               variants={
                 _variants.product?.variants as {
-                  nodes: ProductVariantFragmentFragment[];
+                  nodes: ProductVariantFragment[];
                 }
               }
               hideUnavailableOptions={hideUnavailableOptions}
-            />
+            /> */}
           </div>
           <Quantity value={quantity} onChange={setQuantity} />
           {/* TODO: fix quick-shop modal & cart drawer overlap each other */}
