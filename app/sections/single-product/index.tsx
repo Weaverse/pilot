@@ -100,21 +100,21 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 </p>
                 {children}
                 <p
-                  className="max-w-[600px] leading-relaxed fade-up"
+                  className="max-w-[600px] leading-relaxed fade-up line-clamp-5"
                   suppressHydrationWarning
                   dangerouslySetInnerHTML={{
-                    __html: product?.descriptionHtml,
+                    __html: product?.summary,
                   }}
                 />
-                <ProductVariants
+                {/* <ProductVariants
                   product={product}
                   selectedVariant={selectedVariant}
                   onSelectedVariantChange={setSelectedVariant}
                   variants={variants}
                   options={product?.options}
-                  handle={product?.handle}
+                  productHandle={product?.handle}
                   hideUnavailableOptions={hideUnavailableOptions}
-                />
+                /> */}
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
               <AddToCartButton
@@ -127,6 +127,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   },
                 ]}
                 variant="primary"
+                className="w-full"
                 data-test="add-to-cart"
               >
                 {atcText}
