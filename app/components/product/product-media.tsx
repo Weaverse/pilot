@@ -46,7 +46,7 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
   showThumbnails: boolean;
   selectedVariant: ProductVariantFragment;
   media: MediaFragment[];
-  enableZoom: boolean;
+  enableZoom?: boolean;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -79,7 +79,10 @@ export function ProductMedia(props: ProductMediaProps) {
     return (
       <div className={variants({ gridSize })}>
         {media.map((med, idx) => {
-          let image = { ...med.image, altText: med.alt || "Product image" };
+          let image = {
+            ...med.previewImage,
+            altText: med.alt || "Product image",
+          };
           return (
             <Image
               key={med.id}
