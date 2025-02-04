@@ -10,7 +10,7 @@ import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
 import { clsx } from "clsx";
 import { Fragment, Suspense, useEffect, useState } from "react";
-import type { PaginatedProductsSearchQuery } from "storefront-api.generated";
+import type { SearchQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
@@ -30,7 +30,7 @@ export async function loader({
 }: LoaderFunctionArgs) {
   let { searchParams } = new URL(request.url);
   let searchTerm = searchParams.get("q");
-  let products: PaginatedProductsSearchQuery["products"] = {
+  let products: SearchQuery["products"] = {
     nodes: [],
     pageInfo: null,
   };
@@ -40,17 +40,14 @@ export async function loader({
       pageBy: PAGINATION_SIZE,
     });
 
-    let data = await storefront.query<PaginatedProductsSearchQuery>(
-      SEARCH_QUERY,
-      {
-        variables: {
-          searchTerm,
-          ...variables,
-          country: storefront.i18n.country,
-          language: storefront.i18n.language,
-        },
+    let data = await storefront.query<SearchQuery>(SEARCH_QUERY, {
+      variables: {
+        searchTerm,
+        ...variables,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
       },
-    );
+    });
     products = data.products;
   }
 
@@ -245,7 +242,7 @@ function getRecommendations(
 }
 
 const SEARCH_QUERY = `#graphql
-  query PaginatedProductsSearch(
+  query search(
     $country: CountryCode
     $endCursor: String
     $first: Int
@@ -273,6 +270,5 @@ const SEARCH_QUERY = `#graphql
       }
     }
   }
-
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;

@@ -31,6 +31,7 @@ const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
       },
     ],
   },
+  // @ts-ignore
   variants: {
     nodes: [
       {
@@ -75,8 +76,10 @@ export function ProductPopup({
     (node) => node.__typename === "MediaImage",
   ) as MediaImage;
   let featuredImage = featuredMedia?.image;
-  let price = product.variants.nodes[0].price;
-  let compareAtPrice = product.variants.nodes[0].compareAtPrice;
+  let price = product.priceRange?.minVariantPrice;
+  let compareAtPrice = product.priceRange?.maxVariantPrice;
+  // let price = product.variants.nodes[0].price;
+  // let compareAtPrice = product.variants.nodes[0].compareAtPrice;
 
   return (
     <div
@@ -121,12 +124,14 @@ export function ProductPopup({
                     className="text-base font-medium line-through text-gray-400"
                   />
                 )}
-                <Money
-                  withoutTrailingZeros
-                  data={price}
-                  as="div"
-                  className="text-base font-medium"
-                />
+                {price && (
+                  <Money
+                    withoutTrailingZeros
+                    data={price}
+                    as="div"
+                    className="text-base font-medium"
+                  />
+                )}
               </div>
             )}
           </div>

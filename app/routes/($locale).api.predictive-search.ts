@@ -1,3 +1,7 @@
+import {
+  flattenConnection,
+  mapSelectedProductOptionToObject,
+} from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import type {
   PredictiveArticleFragment,
@@ -100,7 +104,7 @@ async function fetchPredictiveSearchResults({
 }
 
 /**
- * Normalize results and apply tracking qurery parameters to each result url
+ * Normalize results and apply tracking query parameters to each result url
  */
 function normalizePredictiveSearchResults(
   predictiveSearch: PredictiveSearchQuery["predictiveSearch"],
@@ -158,6 +162,13 @@ function normalizePredictiveSearchResults(
       type: "products",
       items: predictiveSearch.products.map(
         (product: PredictiveProductFragment) => {
+          let variants = flattenConnection(product.variants);
+          let firstVariant = variants[0];
+          let optionsObject = mapSelectedProductOptionToObject(
+            firstVariant.selectedOptions,
+          );
+          let firstVariantParams = new URLSearchParams(optionsObject);
+
           totalResults++;
           let trackingParams = applyTrackingParams(product);
           return {
@@ -167,7 +178,7 @@ function normalizePredictiveSearchResults(
             image: product.featuredImage,
             title: product.title,
             vendor: product.vendor,
-            url: `${localePrefix}/products/${product.handle}${trackingParams}`,
+            url: `${localePrefix}/products/${product.handle}${trackingParams}&${firstVariantParams.toString()}`,
             price: product.variants.nodes[0].price,
             compareAtPrice: product.variants.nodes[0].compareAtPrice,
           };
@@ -300,6 +311,10 @@ const PREDICTIVE_SEARCH_QUERY = `#graphql
         compareAtPrice {
           amount
           currencyCode
+        }
+        selectedOptions {
+          name
+          value
         }
       }
     }

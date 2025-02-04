@@ -1,4 +1,9 @@
-import { flattenConnection, Money } from "@shopify/hydrogen";
+import {
+  flattenConnection,
+  mapSelectedProductOptionToObject,
+  Money,
+  VariantSelector,
+} from "@shopify/hydrogen";
 import type {
   MoneyV2,
   ProductVariant,
@@ -13,6 +18,7 @@ import { VariantPrices } from "~/components/variant-prices";
 import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { cva } from "class-variance-authority";
+import { VariantOption } from "./variant-option";
 
 let styleVariants = cva("", {
   variants: {
@@ -40,11 +46,10 @@ export function ProductCard({
     pcardAlignment,
     pcardShowVendor,
     pcardShowLowestPrice,
-    pcardShowSku,
     pcardShowSalePrice,
     pcardShowOptionSwatches,
     pcardOptionToShow,
-    pcardMaxOptions,
+    pcardMaxOptionValues,
     pcardEnableQuickShop,
     pcardQuickShopButtonType,
     pcardQuickShopButtonText,
@@ -56,23 +61,25 @@ export function ProductCard({
     pcardShowOutOfStockBadges,
   } = useThemeSettings();
 
+  let { images, badges, priceRange, options } = product;
   let variants = flattenConnection(product.variants);
   let selectedVariant = variants[0];
-
-  if (!selectedVariant) return null;
-
-  let { price, compareAtPrice } = selectedVariant;
-  let { images, badges, priceRange } = product;
   let [image, secondImage] = images.nodes;
+  let { minVariantPrice, maxVariantPrice } = priceRange;
+  let isVertical = pcardTitlePricesAlignment === "vertical";
   let isBestSellerProduct = badges
     .filter(Boolean)
     .some(({ key, value }) => key === "best_seller" && value === "true");
-  let { minVariantPrice } = priceRange;
-  let isVertical = pcardTitlePricesAlignment === "vertical";
+
+  let firstVariant = variants[0];
+  let optionsObject = mapSelectedProductOptionToObject(
+    firstVariant.selectedOptions,
+  );
+  let firstVariantParams = new URLSearchParams(optionsObject);
 
   return (
     <div
-      className="overflow-hidden"
+      className={clsx("overflow-hidden", className)}
       style={
         {
           borderRadius: pcardBorderRadius,
@@ -84,7 +91,7 @@ export function ProductCard({
       <div className="relative group">
         {image && (
           <Link
-            to={`/products/${product.handle}`}
+            to={`/products/${product.handle}?${firstVariantParams.toString()}`}
             prefetch="intent"
             className="block group relative aspect-[--pcard-image-ratio] overflow-hidden bg-gray-100"
           >
@@ -121,8 +128,8 @@ export function ProductCard({
         <div className="flex gap-1 absolute top-2.5 right-2.5">
           {pcardShowSaleBadges && (
             <SaleBadge
-              price={price as MoneyV2}
-              compareAtPrice={compareAtPrice as MoneyV2}
+              price={minVariantPrice as MoneyV2}
+              compareAtPrice={maxVariantPrice as MoneyV2}
             />
           )}
           {pcardShowBestSellerBadges && isBestSellerProduct && (
@@ -135,37 +142,30 @@ export function ProductCard({
       </div>
       <div
         className={clsx(
-          "py-3 text-sm",
-          isVertical && styleVariants({ alignment: pcardAlignment })
+          "py-3 text-sm space-y-2",
+          isVertical && styleVariants({ alignment: pcardAlignment }),
         )}
       >
         {pcardShowVendor && (
-          <div className="uppercase text-body-subtle mb-2">
-            {product.vendor}
-          </div>
+          <div className="uppercase text-body-subtle">{product.vendor}</div>
         )}
         <div
           className={clsx(
-            "flex mb-1",
+            "flex",
             isVertical
               ? "title-and-price flex-col gap-1"
-              : "justify-between gap-4"
+              : "justify-between gap-4",
           )}
         >
-          <div className="flex items-center gap-1.5">
-            <NavLink
-              to={`/products/${product.handle}`}
-              prefetch="intent"
-              className={({ isTransitioning }) =>
-                clsx("font-bold ", isTransitioning && "vt-product-image")
-              }
-            >
-              {product.title}
-            </NavLink>
-            {pcardShowSku && selectedVariant.sku && (
-              <span className="text-body-subtle">({selectedVariant.sku})</span>
-            )}
-          </div>
+          <NavLink
+            to={`/products/${product.handle}`}
+            prefetch="intent"
+            className={({ isTransitioning }) =>
+              clsx("font-bold ", isTransitioning && "vt-product-image")
+            }
+          >
+            {product.title}
+          </NavLink>
           {pcardShowLowestPrice ? (
             <div className="flex gap-1">
               <span>From</span>
@@ -178,7 +178,24 @@ export function ProductCard({
             />
           )}
         </div>
-        {/* {pcardShowOptionSwatches && <div>options here</div>} */}
+        {/* {pcardShowOptionSwatches && (
+          <div className="flex flex-wrap gap-2">
+            {options.map((option) => {
+              if (option.name === pcardOptionToShow) {
+                return (
+                  <VariantOption
+                    key={option.id}
+                    name={option.name}
+                    values={option.optionValues.slice(0, pcardMaxOptionValues)}
+                    selectedOptionValue=""
+                    onSelectOptionValue={console.log}
+                  />
+                );
+              }
+              return null;
+            })}
+          </div>
+        )} */}
       </div>
     </div>
   );

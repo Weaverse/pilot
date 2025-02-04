@@ -1,10 +1,7 @@
 import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
 import type { FeaturedItemsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import {
-  FEATURED_COLLECTION_FRAGMENT,
-  PRODUCT_CARD_FRAGMENT,
-} from "~/graphql/fragments";
+import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 
 export async function loader({ context: { storefront } }: LoaderFunctionArgs) {
   return json(await getFeaturedData(storefront));
@@ -31,17 +28,12 @@ export async function getFeaturedData(
 export type FeaturedData = Awaited<ReturnType<typeof getFeaturedData>>;
 
 const FEATURED_ITEMS_QUERY = `#graphql
-  query FeaturedItems(
+  query featuredItems(
     $country: CountryCode
     $language: LanguageCode
     $pageBy: Int = 12
   ) @inContext(country: $country, language: $language) {
-    featuredCollections: collections(first: 3, sortKey: UPDATED_AT) {
-      nodes {
-        ...FeaturedCollectionDetails
-      }
-    }
-    featuredProducts: products(first: $pageBy) {
+    featuredProducts: products(first: $pageBy, sortKey: BEST_SELLING) {
       nodes {
         ...ProductCard
       }
@@ -49,5 +41,4 @@ const FEATURED_ITEMS_QUERY = `#graphql
   }
 
   ${PRODUCT_CARD_FRAGMENT}
-  ${FEATURED_COLLECTION_FRAGMENT}
 ` as const;

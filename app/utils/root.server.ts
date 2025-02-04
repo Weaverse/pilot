@@ -8,10 +8,9 @@ import {
 import type {
   LayoutQuery,
   MenuFragment,
-  SwatchesConfigsQuery,
+  SwatchesQuery,
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { LAYOUT_QUERY, SWATCHES_CONFIGS_QUERY } from "~/graphql/queries";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "~/utils/seo.server";
 
@@ -118,8 +117,8 @@ async function getSwatchesConfigs(context: AppLoadContext) {
   if (!type) {
     return { colors: [], images: [] };
   }
-  let { metaobjects } = await context.storefront.query<SwatchesConfigsQuery>(
-    SWATCHES_CONFIGS_QUERY,
+  let { metaobjects } = await context.storefront.query<SwatchesQuery>(
+    SWATCHES_QUERY,
     { variables: { type } },
   );
   let colors: ColorSwatch[] = [];
@@ -279,3 +278,111 @@ function resolveToFromType(
         : `/${handle}`;
   }
 }
+
+const LAYOUT_QUERY = `#graphql
+  query layout(
+    $language: LanguageCode
+    $headerMenuHandle: String!
+    $footerMenuHandle: String!
+  ) @inContext(language: $language) {
+    shop {
+      ...Shop
+    }
+    headerMenu: menu(handle: $headerMenuHandle) {
+      ...Menu
+    }
+    footerMenu: menu(handle: $footerMenuHandle) {
+      ...Menu
+    }
+  }
+  fragment Shop on Shop {
+    id
+    name
+    description
+    primaryDomain {
+      url
+    }
+    brand {
+      logo {
+        image {
+          url
+        }
+      }
+    }
+  }
+  fragment MenuItem on MenuItem {
+    id
+    resourceId
+    resource {
+      ... on Collection {
+        image {
+          altText
+          height
+          id
+          url
+          width
+        }
+      }
+      ... on Product {
+        image: featuredImage {
+          altText
+          height
+          id
+          url
+          width
+        }
+      }
+    }
+    tags
+    title
+    type
+    url
+  }
+
+  fragment ChildMenuItem on MenuItem {
+    ...MenuItem
+  }
+  fragment ParentMenuItem2 on MenuItem {
+    ...MenuItem
+    items {
+      ...ChildMenuItem
+    }
+  }
+  fragment ParentMenuItem on MenuItem {
+    ...MenuItem
+    items {
+      ...ParentMenuItem2
+    }
+  }
+  fragment Menu on Menu {
+    id
+    items {
+      ...ParentMenuItem
+    }
+  }
+` as const;
+
+const SWATCHES_QUERY = `#graphql
+  query swatches($type: String!) {
+    metaobjects(first: 250, type: $type) {
+      nodes {
+        id
+        fields {
+          key
+          value
+          reference {
+            ... on MediaImage {
+              image {
+                id
+                altText
+                url: url(transform: { maxWidth: 300 })
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+` as const;

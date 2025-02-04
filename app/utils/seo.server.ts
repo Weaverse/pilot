@@ -10,7 +10,11 @@ import type {
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
-import type { ShopFragment } from "storefront-api.generated";
+import type {
+  ProductQuery,
+  ProductVariantFragment,
+  ShopFragment,
+} from "storefront-api.generated";
 
 function root({
   shop,
@@ -67,38 +71,19 @@ function home(): SeoConfig {
   };
 }
 
-type SelectedVariantRequiredFields = Pick<ProductVariant, "sku"> & {
-  image?: null | Partial<Image>;
-};
-
-type ProductRequiredFields = Pick<
-  Product,
-  "title" | "description" | "vendor" | "seo"
-> & {
-  variants: {
-    nodes: Array<
-      Pick<
-        ProductVariant,
-        "sku" | "price" | "selectedOptions" | "availableForSale"
-      >
-    >;
-  };
-};
-
 function productJsonLd({
   product,
   selectedVariant,
   url,
 }: {
-  product: ProductRequiredFields;
-  selectedVariant: SelectedVariantRequiredFields;
+  product: ProductQuery["product"] & { variants: ProductVariantFragment[] };
+  selectedVariant: ProductVariantFragment;
   url: Request["url"];
 }): SeoConfig["jsonLd"] {
   let origin = new URL(url).origin;
-  let variants = product.variants.nodes;
   let description = truncate(product?.seo?.description ?? product?.description);
   // @ts-ignore
-  let offers: Offer[] = (variants || []).map((variant) => {
+  let offers: Offer[] = (product.variants || []).map((variant) => {
     let variantUrl = new URL(url);
     for (let option of variant.selectedOptions) {
       variantUrl.searchParams.set(option.name, option.value);
@@ -154,15 +139,14 @@ function productJsonLd({
 function product({
   product,
   url,
-  selectedVariant,
 }: {
-  product: ProductRequiredFields;
-  selectedVariant: SelectedVariantRequiredFields;
+  product: ProductQuery["product"] & { variants: ProductVariantFragment[] };
   url: Request["url"];
 }): SeoConfig {
   let description = truncate(
     product?.seo?.description ?? product?.description ?? "",
   );
+  let selectedVariant = product.selectedVariant || product.variants[0];
   return {
     title: product?.seo?.title ?? product?.title,
     description,

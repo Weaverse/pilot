@@ -104,7 +104,7 @@ export let meta = ({ data }: MetaArgs<typeof loader>) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 
-function Layout({ children }: { children?: React.ReactNode }) {
+export function Layout({ children }: { children?: React.ReactNode }) {
   let nonce = useNonce();
   let data = useRouteLoaderData<RootLoader>("root");
   let locale = data?.selectedLocale ?? DEFAULT_LOCALE;
@@ -167,9 +167,7 @@ function Layout({ children }: { children?: React.ReactNode }) {
 
 function App() {
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <Outlet />
   );
 }
 
@@ -187,21 +185,17 @@ export function ErrorBoundary({ error }: { error: Error }) {
     }
   }
 
-  return (
-    <Layout>
-      {isRouteError ? (
-        <>
-          {routeError.status === 404 ? (
-            <NotFound type={pageType} />
-          ) : (
-            <GenericError
-              error={{ message: `${routeError.status} ${routeError.data}` }}
-            />
-          )}
-        </>
+  return isRouteError ? (
+    <>
+      {routeError.status === 404 ? (
+        <NotFound type={pageType} />
       ) : (
-        <GenericError error={error instanceof Error ? error : undefined} />
+        <GenericError
+          error={{ message: `${routeError.status} ${routeError.data}` }}
+        />
       )}
-    </Layout>
-  );
+    </>
+  ) : (
+    <GenericError error={error instanceof Error ? error : undefined} />
+  )
 }

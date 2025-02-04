@@ -9,7 +9,7 @@ export let variants = cva(
   [
     "inline-flex items-center justify-center rounded-none relative",
     "text-base leading-tight font-normal whitespace-nowrap",
-    "focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+    "focus-visible:outline-none disabled:cursor-not-allowed disabled:!opacity-50",
     "transition-colors",
   ],
   {
@@ -62,7 +62,7 @@ export let variants = cva(
     defaultVariants: {
       variant: "primary",
     },
-  }
+  },
 );
 
 export interface ButtonStyleProps {
@@ -148,7 +148,7 @@ function Spinner() {
   let style = { "--duration": "500ms" } as React.CSSProperties;
   return (
     <span
-      className="button-spinner absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      className="[&~*]:invisible absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       style={style}
     >
       <CircleNotch className="animate-spin w-5 h-5" />

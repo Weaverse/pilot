@@ -15,9 +15,9 @@ import {
   json,
   redirect,
 } from "@shopify/remix-oxygen";
-import type { CollectionDetailsQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { COLLECTION_QUERY } from "~/graphql/queries";
+import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/locale";
 import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
@@ -56,7 +56,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     CUSTOM_COLLECTION_BANNER_METAFIELD.split(".");
 
   let { collection, collections } = await storefront
-    .query<CollectionDetailsQuery>(COLLECTION_QUERY, {
+    .query<CollectionQuery>(COLLECTION_QUERY, {
       variables: {
         ...paginationVariables,
         handle: collectionHandle,
@@ -214,3 +214,125 @@ function parseAsCurrency(value: number, locale: I18nLocale) {
     currency: locale.currency,
   }).format(value);
 }
+
+const COLLECTION_QUERY = `#graphql
+  query collection(
+    $handle: String!
+    $country: CountryCode
+    $language: LanguageCode
+    $filters: [ProductFilter!]
+    $sortKey: ProductCollectionSortKeys!
+    $reverse: Boolean
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
+    $customBannerNamespace: String!
+    $customBannerKey: String!
+  ) @inContext(country: $country, language: $language) {
+    collection(handle: $handle) {
+      id
+      handle
+      title
+      description
+      seo {
+        description
+        title
+      }
+      metafield(namespace: $customBannerNamespace, key: $customBannerKey) {
+        id
+        type
+        description
+        value
+        reference {
+          ... on MediaImage {
+            image {
+              id
+              url
+            }
+          }
+        }
+      }
+      image {
+        id
+        url
+        width
+        height
+        altText
+      }
+      products(
+        first: $first,
+        last: $last,
+        before: $startCursor,
+        after: $endCursor,
+        filters: $filters,
+        sortKey: $sortKey,
+        reverse: $reverse
+      ) {
+        filters {
+          id
+          label
+          type
+          values {
+            id
+            label
+            count
+            input
+          }
+        }
+        nodes {
+          ...ProductCard
+        }
+        pageInfo {
+          hasPreviousPage
+          hasNextPage
+          endCursor
+          startCursor
+        }
+      }
+      highestPriceProduct: products(first: 1, sortKey: PRICE, reverse: true) {
+        nodes {
+          id
+          title
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
+      lowestPriceProduct: products(first: 1, sortKey: PRICE) {
+        nodes {
+          id
+          title
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
+    }
+    collections(first: 100) {
+      edges {
+        node {
+          title
+          handle
+        }
+      }
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;

@@ -3,8 +3,8 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
 import type { PageType } from "@weaverse/hydrogen";
+import type { ShopQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
-import { SHOP_QUERY } from "~/graphql/queries";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -25,7 +25,7 @@ export async function loader(args: LoaderFunctionArgs) {
     throw new Response(null, { status: 404 });
   }
 
-  let { shop } = await context.storefront.query(SHOP_QUERY);
+  let { shop } = await context.storefront.query<ShopQuery>(SHOP_QUERY);
   let seo = seoPayload.home();
 
   return defer({
@@ -44,3 +44,13 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Homepage() {
   return <WeaverseContent />;
 }
+
+const SHOP_QUERY = `#graphql
+  query shop($country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    shop {
+      name
+      description
+    }
+  }
+` as const;

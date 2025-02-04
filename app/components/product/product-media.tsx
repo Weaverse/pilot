@@ -1,12 +1,25 @@
-import { Image } from "@shopify/hydrogen";
+import {
+  ArrowLeft,
+  ArrowRight,
+  MagnifyingGlassPlus,
+  VideoCamera,
+} from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import type { MediaFragment } from "storefront-api.generated";
-import { FreeMode, Pagination, Thumbs } from "swiper/modules";
+import type {
+  MediaFragment,
+  Media_MediaImage_Fragment,
+  Media_Video_Fragment,
+  ProductVariantFragment,
+} from "storefront-api.generated";
+import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
+import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/image";
+import { cn } from "~/utils/cn";
 import { getImageAspectRatio } from "~/utils/image";
+import { ZoomModal } from "./media-zoom";
 
 let variants = cva(
   [
@@ -31,8 +44,9 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
   mediaLayout: "grid" | "slider";
   imageAspectRatio: ImageAspectRatio;
   showThumbnails: boolean;
-  selectedVariant: any;
+  selectedVariant: ProductVariantFragment;
   media: MediaFragment[];
+  enableZoom?: boolean;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -42,34 +56,33 @@ export function ProductMedia(props: ProductMediaProps) {
     showThumbnails,
     imageAspectRatio,
     selectedVariant,
-    media: _media,
+    media,
+    enableZoom,
   } = props;
-  let media = _media.filter((med) => med.__typename === "MediaImage");
-  let [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
-  const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(
-    null,
-  );
-  let [activeIndex, setActiveIndex] = useState(0);
 
+  let [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  let [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+  let [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
+  let [zoomModalOpen, setZoomModalOpen] = useState(false);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (swiperInstance && thumbsSwiper) {
-      if (swiperInstance.thumbs) {
-        swiperInstance.thumbs.swiper = thumbsSwiper;
-        swiperInstance.thumbs.init();
+    if (selectedVariant && swiper) {
+      let index = getSelectedVariantMediaIndex(media, selectedVariant);
+      if (index !== swiper.activeIndex) {
+        swiper.slideTo(index);
       }
-      swiperInstance.on("slideChange", () => {
-        let realIndex = swiperInstance.realIndex;
-        setActiveIndex(realIndex);
-        thumbsSwiper.slideTo(realIndex);
-      });
     }
-  }, [swiperInstance, thumbsSwiper]);
+  }, [selectedVariant]);
 
   if (mediaLayout === "grid") {
     return (
       <div className={variants({ gridSize })}>
         {media.map((med, idx) => {
-          let image = { ...med.image, altText: med.alt || "Product image" };
+          let image = {
+            ...med.previewImage,
+            altText: med.alt || "Product image",
+          };
           return (
             <Image
               key={med.id}
@@ -79,7 +92,7 @@ export function ProductMedia(props: ProductMediaProps) {
               height={1660}
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
-                "object-cover opacity-0 animate-fade-in w-[80vw] max-w-none lg:w-full lg:h-full",
+                "object-cover w-[80vw] max-w-none lg:w-full lg:h-full",
                 gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
               )}
               sizes="auto"
@@ -91,80 +104,176 @@ export function ProductMedia(props: ProductMediaProps) {
   }
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-4 overflow-hidden">
-      {showThumbnails && (
-        <Swiper
-          onSwiper={setThumbsSwiper}
-          direction="vertical"
-          spaceBetween={10}
-          freeMode
-          slidesPerView={5}
-          threshold={2}
-          modules={[FreeMode, Thumbs]}
-          className="!w-20 shrink-0 max-h-[450px] overflow-visible hidden md:block"
+    <>
+      <div className="overflow-hidden product-media-slider">
+        <div
+          className={clsx(
+            "flex items-start gap-4 [--thumbs-width:0px]",
+            showThumbnails && "md:[--thumbs-width:8rem]",
+          )}
         >
-          {media.map((med, i) => {
-            let image = { ...med.image, altText: med.alt || "Product image" };
-            return (
-              <SwiperSlide
-                key={med.id}
-                className={clsx(
-                  "!h-[100px] p-1 border transition-colors aspect-[3/4] cursor-pointer",
-                  activeIndex === i ? "border-black" : "border-transparent",
-                )}
+          {showThumbnails && (
+            <div
+              className={clsx(
+                "shrink-0 hidden md:block",
+                "h-[450px] w-[calc(var(--thumbs-width,0px)-1rem)]",
+                "opacity-0 transition-opacity duration-300",
+              )}
+            >
+              <Swiper
+                onSwiper={setThumbsSwiper}
+                direction="vertical"
+                spaceBetween={8}
+                slidesPerView={5}
+                watchSlidesProgress
+                rewind
+                freeMode
+                className="w-full h-full overflow-visible"
+                onInit={(sw) => {
+                  sw.el.parentElement.style.opacity = "1";
+                }}
+                modules={[Navigation, Thumbs, FreeMode]}
               >
-                <Image
-                  data={image}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  width={100}
-                  height={100}
-                  aspectRatio={"3/4"}
-                  className="object-cover opacity-0 animate-fade-in w-full h-full"
-                  sizes="auto"
-                />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
+                {media.map(({ id, previewImage, alt, mediaContentType }) => {
+                  return (
+                    <SwiperSlide
+                      key={id}
+                      className={cn(
+                        "relative",
+                        "p-1 border rounded-md transition-colors cursor-pointer border-transparent !h-auto",
+                        "[&.swiper-slide-thumb-active]:border-line",
+                      )}
+                    >
+                      <Image
+                        data={{
+                          ...previewImage,
+                          altText: alt || "Product image",
+                        }}
+                        loading="lazy"
+                        width={200}
+                        aspectRatio="1/1"
+                        className="object-cover w-full h-auto rounded"
+                        sizes="auto"
+                      />
+                      {mediaContentType === "VIDEO" && (
+                        <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
+                          <VideoCamera className="w-4 h-4" />
+                        </div>
+                      )}
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+            </div>
+          )}
+          <div className="relative w-[calc(100%-var(--thumbs-width,0px))]">
+            <Swiper
+              onSwiper={setSwiper}
+              thumbs={{ swiper: thumbsSwiper }}
+              slidesPerView={1}
+              spaceBetween={4}
+              autoHeight
+              loop
+              navigation={{
+                nextEl: ".media_slider__next",
+                prevEl: ".media_slider__prev",
+              }}
+              pagination={{ type: "fraction" }}
+              modules={[Pagination, Navigation, Thumbs]}
+              className="overflow-visible rounded md:overflow-hidden pb-10 md:pb-0 md:[&_.swiper-pagination]:hidden"
+            >
+              {media.map((media, idx) => {
+                if (media.mediaContentType === "IMAGE") {
+                  let { image, alt, id } = media as Media_MediaImage_Fragment;
+                  return (
+                    <SwiperSlide key={id}>
+                      <Image
+                        data={{ ...image, altText: alt || "Product image" }}
+                        loading={idx === 0 ? "eager" : "lazy"}
+                        className="object-cover w-full h-auto rounded"
+                        width={2048}
+                        aspectRatio={getImageAspectRatio(
+                          image,
+                          imageAspectRatio,
+                        )}
+                        sizes="auto"
+                      />
+                      {enableZoom && (
+                        <button
+                          type="button"
+                          className={clsx(
+                            "absolute top-2 right-2 md:right-6 md:top-6",
+                            "p-2 text-center border border-transparent rounded-full",
+                            "transition-all duration-200",
+                            "text-gray-900 bg-white hover:bg-gray-800 hover:text-white",
+                          )}
+                          onClick={() => {
+                            setZoomMediaId(id);
+                            setZoomModalOpen(true);
+                          }}
+                        >
+                          <MagnifyingGlassPlus className="w-5 h-5" />
+                        </button>
+                      )}
+                    </SwiperSlide>
+                  );
+                }
+                if (media.mediaContentType === "VIDEO") {
+                  let mediaVideo = media as Media_Video_Fragment;
+                  return (
+                    <SwiperSlide key={mediaVideo.id}>
+                      <video
+                        controls
+                        className="w-full h-auto object-cover rounded"
+                        style={{ aspectRatio: imageAspectRatio }}
+                      >
+                        <track kind="captions" />
+                        <source
+                          src={mediaVideo.sources[0].url}
+                          type="video/mp4"
+                        />
+                      </video>
+                    </SwiperSlide>
+                  );
+                }
+                return null;
+              })}
+            </Swiper>
+            <div className="absolute bottom-6 right-6 z-10 hidden md:flex items-center gap-2">
+              <button
+                type="button"
+                className="media_slider__prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-lg left-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+              >
+                <ArrowLeft className="w-4.5 h-4.5" />
+              </button>
+              <button
+                type="button"
+                className="media_slider__next p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-lg right-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+              >
+                <ArrowRight className="w-4.5 h-4.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {enableZoom && (
+        <ZoomModal
+          media={media}
+          zoomMediaId={zoomMediaId}
+          setZoomMediaId={setZoomMediaId}
+          open={zoomModalOpen}
+          onOpenChange={setZoomModalOpen}
+        />
       )}
-      <Swiper
-        onSwiper={setSwiperInstance}
-        modules={[FreeMode, Thumbs, Pagination]}
-        pagination={{ type: "fraction" }}
-        spaceBetween={10}
-        thumbs={
-          thumbsSwiper
-            ? {
-                swiper: thumbsSwiper,
-                slideThumbActiveClass: "thumb-active",
-              }
-            : undefined
-        }
-        onSlideChange={(swiper) => {
-          setActiveIndex(swiper.activeIndex);
-        }}
-        className="vt-product-image max-w-full pb-14 md:pb-0 md:[&_.swiper-pagination-fraction]:hidden"
-        style={
-          {
-            "--swiper-pagination-bottom": "20px",
-          } as React.CSSProperties
-        }
-      >
-        {media.map((med, i) => {
-          let image = { ...med.image, altText: med.alt || "Product image" };
-          return (
-            <SwiperSlide key={med.id}>
-              <Image
-                data={image}
-                loading={i === 0 ? "eager" : "lazy"}
-                aspectRatio={"3/4"}
-                className="object-cover w-full h-auto opacity-0 animate-fade-in"
-                sizes="auto"
-              />
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
-    </div>
+    </>
   );
+}
+
+function getSelectedVariantMediaIndex(
+  media: MediaFragment[],
+  selectedVariant: ProductVariantFragment,
+) {
+  if (!selectedVariant) return 0;
+  let mediaUrl = selectedVariant.image?.url;
+  return media.findIndex((med) => med.previewImage?.url === mediaUrl);
 }

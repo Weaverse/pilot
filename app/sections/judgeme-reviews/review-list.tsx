@@ -10,23 +10,23 @@ function formatDate(dateString: string) {
 }
 
 export function ReviewList({
-  judgemeReviews,
+  reviews: reviewsData,
 }: {
-  judgemeReviews: JudgemeReviewsData;
+  reviews: JudgemeReviewsData;
 }) {
   let [page, setPage] = useState(0);
-  let pageNumber = Math.ceil(judgemeReviews.reviews.length / REVIEWS_PER_PAGE);
+  let pageNumber = Math.ceil(reviewsData.reviews.length / REVIEWS_PER_PAGE);
 
-  let reviews = judgemeReviews.reviews.slice(
+  let reviews = reviewsData.reviews.slice(
     page * REVIEWS_PER_PAGE,
-    (page + 1) * REVIEWS_PER_PAGE
+    (page + 1) * REVIEWS_PER_PAGE,
   );
 
   return (
     <div className="lg:w-2/3 md:w-3/5 w-full py-6 flex flex-col gap-6">
       <div className="flex flex-col gap-6">
         <span className="font-bold text-lg uppercase">
-          Reviews ({judgemeReviews.reviewNumber})
+          Reviews ({reviewsData.reviewNumber})
         </span>
         {reviews.map(({ id, rating, reviewer, title, created_at, body }) => (
           <Fragment key={id}>

@@ -4,13 +4,13 @@ import { useLocation, useNavigate, useSearchParams } from "@remix-run/react";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useRef, useState } from "react";
-import type { CollectionDetailsQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "storefront-api.generated";
 import { FILTER_URL_PREFIX, filterInputToParams } from "~/utils/filter";
 
 export function PriceRangeFilter({
   collection,
 }: {
-  collection: CollectionDetailsQuery["collection"];
+  collection: CollectionQuery["collection"];
 }) {
   let [params] = useSearchParams();
   let location = useLocation();
@@ -138,7 +138,7 @@ export function PriceRangeFilter({
   );
 }
 
-function getPricesRange(collection: CollectionDetailsQuery["collection"]) {
+function getPricesRange(collection: CollectionQuery["collection"]) {
   let { highestPriceProduct, lowestPriceProduct } = collection;
   let minVariantPrice =
     lowestPriceProduct.nodes[0]?.priceRange?.minVariantPrice;

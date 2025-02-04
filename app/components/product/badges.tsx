@@ -1,4 +1,4 @@
-import { useMoney as parseMoney } from "@shopify/hydrogen";
+import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { clsx } from "clsx";
@@ -23,7 +23,7 @@ function Badge({
         borderRadius: `${badgeBorderRadius}px`,
         textTransform: badgeTextTransform,
       }}
-      className={clsx("px-1.5 py-1 uppercase text-sm leading-none", className)}
+      className={clsx("px-1.5 py-1 uppercase text-sm", className)}
     >
       {text}
     </span>
@@ -76,8 +76,9 @@ export function SaleBadge({
 }: { price: MoneyV2; compareAtPrice: MoneyV2; className?: string }) {
   let { saleBadgeText = "Sale", saleBadgeColor } = useThemeSettings();
   let { amount, percentage } = calculateDiscount(price, compareAtPrice);
+  let discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
   let text = saleBadgeText
-    .replace("[amount]", amount)
+    .replace("[amount]", discountAmount.withoutTrailingZeros)
     .replace("[percentage]", percentage);
 
   if (percentage !== "0") {
@@ -92,23 +93,13 @@ export function SaleBadge({
   return null;
 }
 
-function isNewArrival(date: string, daysOld = 30) {
-  return (
-    new Date(date).valueOf() >
-    new Date().setDate(new Date().getDate() - daysOld).valueOf()
-  );
-}
-
 function calculateDiscount(price: MoneyV2, compareAtPrice: MoneyV2) {
   if (price?.amount && compareAtPrice?.amount) {
     let priceNumber = Number(price.amount);
     let compareAtPriceNumber = Number(compareAtPrice.amount);
     if (compareAtPriceNumber > priceNumber) {
       return {
-        amount: parseMoney({
-          amount: String(compareAtPriceNumber - priceNumber),
-          currencyCode: price.currencyCode,
-        }).withoutTrailingZeros,
+        amount: String(compareAtPriceNumber - priceNumber),
         percentage: Math.round(
           ((compareAtPriceNumber - priceNumber) / compareAtPriceNumber) * 100,
         ).toString(),
@@ -116,4 +107,11 @@ function calculateDiscount(price: MoneyV2, compareAtPrice: MoneyV2) {
     }
   }
   return { amount: "0", percentage: "0" };
+}
+
+function isNewArrival(date: string, daysOld = 30) {
+  return (
+    new Date(date).valueOf() >
+    new Date().setDate(new Date().getDate() - daysOld).valueOf()
+  );
 }

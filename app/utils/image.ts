@@ -1,3 +1,5 @@
+import type { ImageAspectRatio } from "~/types/image";
+
 const DEFAULT_GRID_IMG_LOAD_EAGER_COUNT = 4;
 const ATTR_LOADING_EAGER = "eager";
 
@@ -14,7 +16,7 @@ export function getImageAspectRatio(
     height?: number | null;
     [key: string]: any;
   },
-  aspectRatio: string,
+  aspectRatio: ImageAspectRatio,
 ) {
   if (aspectRatio === "adapt") {
     if (image?.width && image?.height) {

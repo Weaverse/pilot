@@ -7,6 +7,7 @@ import { useParentInstance } from "@weaverse/hydrogen";
 import { forwardRef, useEffect } from "react";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
 type JudgemeReviewsData = {
   rating: number;
@@ -16,10 +17,7 @@ type JudgemeReviewsData = {
 
 let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
-    let loaderData = useLoaderData<{
-      judgemeReviews: JudgemeReviewsData;
-    }>();
-    let judgemeReviews = loaderData?.judgemeReviews;
+    let { productReviews } = useLoaderData<typeof productRouteLoader>();
     let { load, data: fetchData } = useFetcher<JudgemeReviewsData>();
     let context = useParentInstance();
     let handle = context?.data?.product?.handle;
@@ -27,21 +25,14 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-      if (judgemeReviews || !handle) return;
+      if (productReviews || !handle) return;
       load(api);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [handle, api]);
 
-    let data = judgemeReviews || fetchData;
+    let data = productReviews || fetchData;
 
     if (!data) return null;
-    if (data.error) {
-      return (
-        <div {...props} ref={ref}>
-          {data.error}
-        </div>
-      );
-    }
 
     let rating = Math.round((data.rating || 0) * 100) / 100;
     let reviewNumber = data.reviewNumber || 0;
@@ -54,7 +45,7 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default JudgemeReview;

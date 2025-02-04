@@ -6,7 +6,6 @@ import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
 import invariant from "tiny-invariant";
 import type { BlogQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
-import { BLOGS_QUERY } from "~/graphql/queries";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
@@ -64,3 +63,48 @@ export let meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Blogs() {
   return <WeaverseContent />;
 }
+
+const BLOGS_QUERY = `#graphql
+  query blog(
+    $language: LanguageCode
+    $blogHandle: String!
+    $pageBy: Int!
+    $cursor: String
+  ) @inContext(language: $language) {
+    blog(handle: $blogHandle) {
+      title
+      handle
+      seo {
+        title
+        description
+      }
+      articles(first: $pageBy, after: $cursor) {
+        edges {
+          node {
+            ...Article
+          }
+        }
+      }
+    }
+  }
+
+  fragment Article on Article {
+    author: authorV2 {
+      name
+    }
+    contentHtml
+    excerpt
+    excerptHtml
+    handle
+    id
+    image {
+      id
+      altText
+      url
+      width
+      height
+    }
+    publishedAt
+    title
+  }
+` as const;

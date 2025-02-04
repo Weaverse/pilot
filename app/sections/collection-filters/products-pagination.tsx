@@ -10,7 +10,7 @@ import clsx from "clsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import type {
-  CollectionDetailsQuery,
+  CollectionQuery,
   ProductCardFragment,
 } from "storefront-api.generated";
 import Link from "~/components/link";
@@ -29,7 +29,7 @@ export function ProductsPagination({
   loadMoreText: string;
 }) {
   let { collection, appliedFilters } = useLoaderData<
-    CollectionDetailsQuery & {
+    CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
       appliedFilters: AppliedFilter[];
     }

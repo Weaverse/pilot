@@ -2,11 +2,10 @@ import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { json } from "@shopify/remix-oxygen";
-import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
+import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { ArticleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import type { ArticleDetailsQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
-import { ARTICLE_QUERY } from "~/graphql/queries";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -20,7 +19,7 @@ export async function loader(args: RouteLoaderArgs) {
   invariant(params.blogHandle, "Missing blog handle");
   invariant(params.articleHandle, "Missing article handle");
 
-  let { blog } = await storefront.query<ArticleDetailsQuery>(ARTICLE_QUERY, {
+  let { blog } = await storefront.query<ArticleQuery>(ARTICLE_QUERY, {
     variables: {
       blogHandle: params.blogHandle,
       articleHandle: params.articleHandle,
@@ -67,3 +66,58 @@ export let meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Article() {
   return <WeaverseContent />;
 }
+
+const ARTICLE_QUERY = `#graphql
+  query article(
+    $language: LanguageCode
+    $blogHandle: String!
+    $articleHandle: String!
+  ) @inContext(language: $language) {
+    blog(handle: $blogHandle) {
+      articleByHandle(handle: $articleHandle) {
+        title
+        contentHtml
+        publishedAt
+        tags
+        author: authorV2 {
+          name
+        }
+        image {
+          id
+          altText
+          url
+          width
+          height
+        }
+        seo {
+          description
+          title
+        }
+      }
+      articles (first: 20) {
+        nodes {
+            ...Article
+        }
+      }
+    }
+  }
+  fragment Article on Article {
+    author: authorV2 {
+      name
+    }
+    contentHtml
+    excerpt
+    excerptHtml
+    handle
+    id
+    image {
+      id
+      altText
+      url
+      width
+      height
+    }
+    publishedAt
+    title
+  }
+` as const;

@@ -1,19 +1,16 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { CaretDown, CaretUp, Check } from "@phosphor-icons/react";
+import * as Select from "@radix-ui/react-select";
+import { useNavigate } from "@remix-run/react";
 import { Image, type VariantOptionValue } from "@shopify/hydrogen";
-import {
-  type ColorSwatch,
-  type ImageSwatch,
-  type SwatchesConfigs,
-  useThemeSettings,
-} from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import type { ProductVariantFragmentFragment } from "storefront-api.generated";
+import Link from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
-import type { RootLoader } from "~/root";
-import { cn } from "~/utils/cn";
 
-const FALLBACK_TO_COLOR_IF_NO_CUSTOM_IMAGE_DEFINED = true;
+const OPTIONS_AS_SWATCH = ["Color", "Colors", "Colour", "Colours"];
+const OPTIONS_AS_BUTTON = ["Size"];
+const OPTIONS_AS_IMAGE = [];
+const OPTIONS_AS_DROPDOWN = [];
 
 export let variants = cva(
   "border border-line hover:border-body cursor-pointer",
@@ -52,240 +49,224 @@ export let variants = cva(
 );
 
 interface VariantOptionProps {
-  selectedOptionValue: string;
-  onSelectOptionValue: (value: string) => void;
-  name: string;
-  values: (VariantOptionValue & {
-    image?: ProductVariantFragmentFragment["image"];
-  })[];
+  option: {
+    name: string;
+    value?: string;
+    values: Array<
+      VariantOptionValue & {
+        isUnavailable: boolean;
+      }
+    >;
+  };
 }
 
-export function VariantOption(props: VariantOptionProps) {
-  let { name, values, selectedOptionValue, onSelectOptionValue } = props;
-  let { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
-  let themeSettings = useThemeSettings();
-  let productSwatches: SwatchesConfigs = themeSettings.productSwatches;
-  let { options, swatches } = productSwatches;
-  let colorsSwatches: ColorSwatch[] = swatchesConfigs?.colors?.length
-    ? swatchesConfigs.colors
-    : swatches.colors;
-  let imagesSwatches: ImageSwatch[] = swatchesConfigs?.images?.length
-    ? swatchesConfigs.images
-    : swatches.images;
-  let optionConf = options.find((opt) => {
-    return opt.name.toLowerCase() === name.toLowerCase();
-  });
+export function VariantOption({ option }: VariantOptionProps) {
+  if (!option?.name) return null;
 
-  let {
-    displayName,
-    shape = "square",
-    size = "md",
-    type = "default",
-  } = optionConf || {};
-  return (
-    <div className="space-y-1.5">
-      <legend>
-        <span className="font-bold">{displayName || name}:</span>
-        <span className="ml-2">{selectedOptionValue}</span>
-      </legend>
+  let { name, value, values } = option;
+  let navigate = useNavigate();
 
-      {type === "button" && (
-        <div className="flex flex-wrap gap-3">
-          {values.map(({ value, isAvailable }) => (
-            <button
-              key={value}
-              type="button"
-              className={cn(
-                "px-4 py-2.5 text-center text-body !leading-none",
-                variants({
-                  buttonSize: size,
-                  shape,
-                  selected: selectedOptionValue === value,
-                  disabled: !isAvailable,
-                }),
-                !isAvailable && "bg-neutral-100",
-              )}
-              onClick={() => onSelectOptionValue(value)}
-            >
-              {value}
-            </button>
-          ))}
-        </div>
-      )}
-      {type === "color" && (
-        <div className="flex flex-wrap gap-3">
-          {values.map(({ value, isAvailable }) => {
-            let swatchColor = colorsSwatches.find(({ name }) => name === value);
-            return (
-              <Tooltip key={value}>
-                <TooltipTrigger>
-                  <button
-                    type="button"
-                    className={cn(
-                      "p-1",
-                      variants({
-                        colorSize: size,
-                        shape,
-                        selected: selectedOptionValue === value,
-                        disabled: !isAvailable,
-                      }),
-                    )}
-                    onClick={() => onSelectOptionValue(value)}
-                  >
-                    <span
-                      className={cn(
-                        "w-full h-full inline-block border-none hover:border-none",
-                        variants({ shape }),
-                      )}
-                      style={{ backgroundColor: swatchColor?.value || value }}
+  if (OPTIONS_AS_SWATCH.includes(name)) {
+    return (
+      <div className="flex flex-wrap gap-3">
+        {values.map(({ value, optionValue, isUnavailable, isActive, to }) => {
+          let { swatch } = optionValue;
+          return (
+            <Tooltip key={value}>
+              <TooltipTrigger>
+                <Link
+                  to={to}
+                  preventScrollReset
+                  prefetch="intent"
+                  replace
+                  className={clsx(
+                    "size-[--option-swatch-size] flex aspect-square cursor-pointer",
+                    "rounded-full overflow-hidden",
+                    "transition-[outline-color] outline outline-offset-2 outline-1",
+                    isActive
+                      ? "outline-line"
+                      : "outline-transparent hover:outline-line",
+                    isUnavailable && "diagonal",
+                  )}
+                >
+                  {swatch?.image?.previewImage ? (
+                    <Image
+                      data={swatch.image.previewImage}
+                      className="w-full h-full object-cover object-center"
+                      width={200}
+                      sizes="auto"
                     />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>{value}</TooltipContent>
-              </Tooltip>
-            );
-          })}
-        </div>
-      )}
-      {type === "custom-image" && (
-        <div className="flex flex-wrap gap-3">
-          {values.map(({ value, image, isAvailable }) => {
-            let swatchImage = imagesSwatches.find(
-              (i) => i.name.toLowerCase() === value.toLowerCase(),
-            );
-            let swatchColor = colorsSwatches.find(
-              (c) => c.name.toLowerCase() === value.toLowerCase(),
-            );
-            let imageToRender = swatchImage?.value;
-            if (
-              !imageToRender &&
-              !FALLBACK_TO_COLOR_IF_NO_CUSTOM_IMAGE_DEFINED
-            ) {
-              // @ts-expect-error
-              imageToRender = image;
-            }
-            let aspectRatio = "1/1";
-            if (imageToRender && shape !== "circle") {
-              aspectRatio = `${image.width}/${image.height}`;
-            }
-            return (
-              <div
-                key={value}
-                className={clsx(
-                  "flex",
-                  variants({
-                    imageSize: size,
-                    shape,
-                    selected: selectedOptionValue === value,
-                    disabled: !isAvailable,
-                  }),
-                )}
-                onClick={() => onSelectOptionValue(value)}
-                style={{ aspectRatio }}
-              >
-                {imageToRender ? (
-                  <Image
-                    data={
-                      typeof imageToRender === "object"
-                        ? imageToRender
-                        : {
-                            url: imageToRender,
-                            altText: value,
-                          }
-                    }
-                    className={cn(
-                      "w-full h-full object-cover object-center border-none hover:border-none",
-                      variants({ shape }),
-                    )}
-                    sizes="auto"
-                  />
-                ) : (
-                  <span
-                    className={cn(
-                      "w-full h-full inline-block",
-                      variants({ shape }),
-                    )}
-                    style={{ backgroundColor: swatchColor?.value || value }}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-      {type === "variant-image" && (
-        <div className="flex flex-wrap gap-3">
-          {values.map(({ value, image, isAvailable }) => {
-            let aspectRatio = "1/1";
-            if (image && shape !== "circle") {
-              aspectRatio = `${image.width}/${image.height}`;
-            }
-            return (
-              <button
-                type="button"
-                key={value}
-                className={cn(
-                  variants({
-                    imageSize: size,
-                    shape,
-                    selected: selectedOptionValue === value,
-                    disabled: !isAvailable,
-                  }),
-                  !isAvailable && "opacity-75",
-                )}
-                onClick={() => onSelectOptionValue(value)}
-                style={{ aspectRatio }}
-              >
-                {image ? (
-                  <Image
-                    data={image}
-                    sizes="auto"
-                    className={cn(
-                      "w-full h-full object-cover object-center",
-                      variants({ shape }),
-                    )}
-                  />
-                ) : (
-                  <span>{value}</span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      )}
-      {type === "dropdown" && (
-        <select
-          className="min-w-32 w-fit border px-3 py-2 border-line"
-          onChange={(e) => {
-            onSelectOptionValue(e.target.value);
-          }}
+                  ) : (
+                    <span
+                      className="w-full h-full inline-block text-[0px]"
+                      style={{ backgroundColor: swatch?.color || value }}
+                    >
+                      {value}
+                    </span>
+                  )}
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent sideOffset={6}>{value}</TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (OPTIONS_AS_BUTTON.includes(name)) {
+    return (
+      <div className="flex flex-wrap gap-3">
+        {values.map(({ value, to, isActive, isUnavailable }) => (
+          <Link
+            key={value}
+            to={to}
+            preventScrollReset
+            prefetch="intent"
+            replace
+            className={clsx(
+              "px-4 py-2.5 text-center border border-line-subtle transition-colors",
+              isActive
+                ? [
+                    isUnavailable
+                      ? "text-body-subtle"
+                      : "text-body-inverse bg-body",
+                    "border-body",
+                  ]
+                : "hover:border-line",
+              isUnavailable && "text-body-subtle diagonal bg-gray-100",
+            )}
+          >
+            {value}
+          </Link>
+        ))}
+      </div>
+    );
+  }
+
+  if (OPTIONS_AS_IMAGE.includes(name)) {
+    return (
+      <div className="flex flex-wrap gap-3">
+        {values.map(({ value, optionValue, isUnavailable, isActive, to }) => {
+          let { firstSelectableVariant } = optionValue;
+          return (
+            <Tooltip key={value}>
+              <TooltipTrigger>
+                <Link
+                  to={to}
+                  preventScrollReset
+                  prefetch="intent"
+                  replace
+                  className={clsx(
+                    "flex items-center justify-center p-1 w-[--option-image-width] h-auto",
+                    "text-center border border-line-subtle transition-colors",
+                    isActive
+                      ? [
+                          isUnavailable
+                            ? "text-body-subtle"
+                            : "text-body-inverse",
+                          "border-body",
+                        ]
+                      : "hover:border-line",
+                    isUnavailable && "text-body-subtle diagonal opacity-75",
+                  )}
+                >
+                  {firstSelectableVariant?.image ? (
+                    <Image
+                      data={firstSelectableVariant?.image}
+                      sizes="auto"
+                      width={200}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  ) : (
+                    <span>{value}</span>
+                  )}
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>{value}</TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (OPTIONS_AS_DROPDOWN.includes(name)) {
+    return (
+      <Select.Root
+        value={value}
+        onValueChange={(v) => {
+          let { to } = values.find(({ value }) => value === v);
+          navigate(to);
+        }}
+      >
+        <Select.Trigger
+          className="inline-flex border border-line h-10 items-center justify-center gap-3 bg-white pl-4 pr-3 py-3 outline-none"
+          aria-label={name}
         >
-          {values.map(({ value }) => {
-            return (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            );
-          })}
-        </select>
-      )}
-      {type === "default" && (
-        <div className="flex flex-wrap gap-3">
-          {values.map((value) => (
-            <span
-              key={value.value}
-              className={cn(
-                "py-0.5 cursor-pointer border-b border-line hover:border-body",
-                selectedOptionValue === value.value && "border-body",
-                !value.isAvailable && "opacity-50",
-              )}
-              onClick={() => onSelectOptionValue(value.value)}
-            >
-              {value.value}
-            </span>
-          ))}
-        </div>
-      )}
+          <Select.Value />
+          <Select.Icon className="shrink-0">
+            <CaretDown size={16} />
+          </Select.Icon>
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Content className="overflow-hidden bg-white shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+            <Select.ScrollUpButton className="cursor-pointer flex items-center justify-center hover:bg-gray-100">
+              <CaretUp size={16} />
+            </Select.ScrollUpButton>
+            <Select.Viewport className="p-1.5">
+              {values.map(({ value, isActive, isUnavailable }) => (
+                <Select.Item
+                  key={value}
+                  value={value}
+                  className={clsx(
+                    "flex gap-4 cursor-pointer w-full items-center justify-between hover:bg-gray-100 outline-none h-10 select-none pl-4 pr-2 py-2.5",
+                    isUnavailable && "text-body-subtle line-through",
+                  )}
+                >
+                  <Select.ItemText>{value}</Select.ItemText>
+                  {isActive && (
+                    <Select.ItemIndicator className="inline-flex w-6 shrink-0 items-center justify-center">
+                      <Check size={16} />
+                    </Select.ItemIndicator>
+                  )}
+                </Select.Item>
+              ))}
+            </Select.Viewport>
+            <Select.ScrollDownButton className="cursor-pointer flex items-center justify-center rounded-lg hover:bg-info-100 dark:hover:bg-info-700">
+              <CaretDown size={16} />
+            </Select.ScrollDownButton>
+          </Select.Content>
+        </Select.Portal>
+      </Select.Root>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap gap-3">
+      {values.map(({ value, to, isActive, isUnavailable }) => (
+        <Link
+          key={value}
+          to={to}
+          preventScrollReset
+          prefetch="intent"
+          replace
+          className={clsx(
+            "py-0.5 cursor-pointer border-b",
+            isActive
+              ? [isUnavailable ? "border-line-subtle" : "border-line"]
+              : [
+                  "border-transparent",
+                  isUnavailable
+                    ? "hover:border-line-subtle"
+                    : "hover:border-line",
+                ],
+            isUnavailable && "text-body-subtle line-through",
+          )}
+        >
+          {value}
+        </Link>
+      ))}
     </div>
   );
 }

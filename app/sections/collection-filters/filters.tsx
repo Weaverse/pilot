@@ -4,7 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useRef } from "react";
-import type { CollectionDetailsQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "storefront-api.generated";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import { cn } from "~/utils/cn";
 import type { AppliedFilter } from "~/utils/filter";
@@ -12,7 +12,7 @@ import type { CollectionFiltersData } from ".";
 import { FilterItem } from "./filter-item";
 import { PriceRangeFilter } from "./price-range-filter";
 
-const COLORS_FILTERS = ["Color", "Colors", "Colour", "Colours"];
+const COLORS_OPTION_NAME = ["Color", "Colors", "Colour", "Colours"];
 
 export function Filters({ className }: { className?: string }) {
   let ref = useRef<HTMLDivElement>(null);
@@ -21,7 +21,7 @@ export function Filters({ className }: { className?: string }) {
   let { expandFilters, showFiltersCount, enableSwatches, displayAsButtonFor } =
     parentData;
   let { collection, appliedFilters } = useLoaderData<
-    CollectionDetailsQuery & {
+    CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
       appliedFilters: AppliedFilter[];
     }
@@ -41,7 +41,8 @@ export function Filters({ className }: { className?: string }) {
       defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
     >
       {filters.map((filter: Filter) => {
-        let asSwatch = enableSwatches && COLORS_FILTERS.includes(filter.label);
+        let asSwatch =
+          enableSwatches && COLORS_OPTION_NAME.includes(filter.label);
         let asButton = displayAsButtonFor.includes(filter.label);
 
         return (
@@ -78,9 +79,7 @@ export function Filters({ className }: { className?: string }) {
               >
                 {filter.type === "PRICE_RANGE" ? (
                   <PriceRangeFilter
-                    collection={
-                      collection as CollectionDetailsQuery["collection"]
-                    }
+                    collection={collection as CollectionQuery["collection"]}
                   />
                 ) : (
                   filter.values?.map((option) => (

@@ -2,7 +2,7 @@ import { Sliders, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
-import type { CollectionDetailsQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/utils/cn";
@@ -28,7 +28,7 @@ export function ToolsBar({
   gridSizeMobile,
   onGridSizeChange,
 }: ToolsBarProps) {
-  let { collection } = useLoaderData<CollectionDetailsQuery>();
+  let { collection } = useLoaderData<CollectionQuery>();
   return (
     <div className="border-y border-line-subtle py-4">
       <div className="gap-4 md:gap-8 flex w-full items-center justify-between">
