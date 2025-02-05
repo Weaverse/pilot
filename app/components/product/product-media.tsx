@@ -263,10 +263,18 @@ function Media({
     return (
       <video
         controls
+        aria-label={mediaVideo.alt || "Product video"}
         className="w-full h-auto object-cover rounded"
         style={{ aspectRatio: imageAspectRatio }}
+        onError={console.error}
       >
-        <track kind="captions" />
+        <track
+          kind="captions"
+          src={mediaVideo.sources[0].url}
+          label="English"
+          srcLang="en"
+          default
+        />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
     );
