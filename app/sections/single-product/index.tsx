@@ -14,14 +14,15 @@ import { ProductPlaceholder } from "~/components/product/placeholder";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { ProductVariants } from "~/components/product/variants";
+import { layoutInputs, Section } from "~/components/section";
 
-type SingleProductData = {
+interface SingleProductData {
   productsCount: number;
   product: WeaverseProduct;
   hideUnavailableOptions: boolean;
   // product media props
   showThumbnails: boolean;
-};
+}
 
 type SingleProductProps = HydrogenComponentProps<
   Awaited<ReturnType<typeof loader>>
@@ -65,8 +66,8 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
         ? "Unavailable"
         : "Sold Out";
     return (
-      <section ref={ref} {...rest} className="w-full py-12 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6 mx-auto" ref={scope}>
+      <Section ref={ref} {...rest}>
+        <div ref={scope}>
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12 fade-up">
             <ProductMedia
               mediaLayout="slider"
@@ -80,16 +81,8 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               data-motion="slide-in"
             >
               <div className="space-y-4">
-                <h2
-                  className="text-3xl font-bold tracking-tighter sm:text-5xl"
-                  data-motion="fade-up"
-                >
-                  {product?.title}
-                </h2>
-                <p
-                  className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed"
-                  data-motion="fade-up"
-                >
+                <h3 data-motion="fade-up">{product?.title}</h3>
+                <p className="text-lg" data-motion="fade-up">
                   {selectedVariant ? (
                     <Money
                       withoutTrailingZeros
@@ -100,7 +93,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 </p>
                 {children}
                 <p
-                  className="max-w-[600px] leading-relaxed fade-up line-clamp-5"
+                  className="leading-relaxed fade-up line-clamp-5"
                   suppressHydrationWarning
                   dangerouslySetInnerHTML={{
                     __html: product?.summary,
@@ -147,7 +140,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
             </div>
           </div>
         </div>
-      </section>
+      </Section>
     );
   },
 );
@@ -188,10 +181,14 @@ export let schema: HydrogenComponentSchema = {
   childTypes: ["judgeme"],
   inspector: [
     {
-      group: "Single product",
+      group: "Layout",
+      inputs: layoutInputs,
+    },
+    {
+      group: "Product",
       inputs: [
         {
-          label: "Choose product",
+          label: "Select product",
           type: "product",
           name: "product",
           shouldRevalidate: true,
