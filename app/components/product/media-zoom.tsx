@@ -173,7 +173,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
       <Image
         data={{ ...image, altText: alt || "Product image zoom" }}
         loading="lazy"
-        className="object-cover max-w-[95vw] w-auto h-auto md:h-full max-h-screen rounded"
+        className="object-cover max-w-[95vw] w-auto h-auto md:h-full max-h-screen"
         width={4096}
         aspectRatio={getImageAspectRatio(image, "adapt")}
         sizes="auto"
@@ -183,7 +183,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
   if (media.mediaContentType === "VIDEO") {
     let mediaVideo = media as Media_Video_Fragment;
     return (
-      <video controls className="h-auto md:h-full object-cover rounded">
+      <video controls className="h-auto md:h-full object-cover">
         <track kind="captions" />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
