@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowRight, VideoCamera, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import clsx from "clsx";
+import { useEffect } from "react";
 import type {
   MediaFragment,
   Media_MediaImage_Fragment,
@@ -30,6 +31,24 @@ export function ZoomModal({
   let zoomMediaIndex = media.findIndex((med) => med.id === zoomMediaId);
   let nextMedia = media[zoomMediaIndex + 1] ?? media[0];
   let prevMedia = media[zoomMediaIndex - 1] ?? media[media.length - 1];
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        setZoomMediaId(nextMedia.id);
+      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        setZoomMediaId(prevMedia.id);
+      }
+    }
+    if (open) {
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      window.removeEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, setZoomMediaId, nextMedia, prevMedia]);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
