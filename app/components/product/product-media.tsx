@@ -89,7 +89,6 @@ export function ProductMedia(props: ProductMediaProps) {
               data={image}
               loading={idx === 0 ? "eager" : "lazy"}
               width={1660}
-              height={1660}
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
                 "object-cover w-[80vw] max-w-none lg:w-full lg:h-full",
@@ -182,62 +181,32 @@ export function ProductMedia(props: ProductMediaProps) {
               modules={[Pagination, Navigation, Thumbs]}
               className="overflow-visible rounded md:overflow-hidden pb-10 md:pb-0 md:[&_.swiper-pagination]:hidden"
             >
-              {media.map((media, idx) => {
-                if (media.mediaContentType === "IMAGE") {
-                  let { image, alt, id } = media as Media_MediaImage_Fragment;
-                  return (
-                    <SwiperSlide key={id}>
-                      <Image
-                        data={{ ...image, altText: alt || "Product image" }}
-                        loading={idx === 0 ? "eager" : "lazy"}
-                        className="object-cover w-full h-auto rounded"
-                        width={2048}
-                        aspectRatio={getImageAspectRatio(
-                          image,
-                          imageAspectRatio,
-                        )}
-                        sizes="auto"
-                      />
-                      {enableZoom && (
-                        <button
-                          type="button"
-                          className={clsx(
-                            "absolute top-2 right-2 md:right-6 md:top-6",
-                            "p-2 text-center border border-transparent rounded-full",
-                            "transition-all duration-200",
-                            "text-gray-900 bg-white hover:bg-gray-800 hover:text-white",
-                          )}
-                          onClick={() => {
-                            setZoomMediaId(id);
-                            setZoomModalOpen(true);
-                          }}
-                        >
-                          <MagnifyingGlassPlus className="w-5 h-5" />
-                        </button>
+              {media.map((media, idx) => (
+                <SwiperSlide key={media.id}>
+                  <Media
+                    media={media}
+                    imageAspectRatio={imageAspectRatio}
+                    index={idx}
+                  />
+                  {enableZoom && (
+                    <button
+                      type="button"
+                      className={clsx(
+                        "absolute top-2 right-2 md:right-6 md:top-6",
+                        "p-2 text-center border border-transparent rounded-full",
+                        "transition-all duration-200",
+                        "text-gray-900 bg-white hover:bg-gray-800 hover:text-white",
                       )}
-                    </SwiperSlide>
-                  );
-                }
-                if (media.mediaContentType === "VIDEO") {
-                  let mediaVideo = media as Media_Video_Fragment;
-                  return (
-                    <SwiperSlide key={mediaVideo.id}>
-                      <video
-                        controls
-                        className="w-full h-auto object-cover rounded"
-                        style={{ aspectRatio: imageAspectRatio }}
-                      >
-                        <track kind="captions" />
-                        <source
-                          src={mediaVideo.sources[0].url}
-                          type="video/mp4"
-                        />
-                      </video>
-                    </SwiperSlide>
-                  );
-                }
-                return null;
-              })}
+                      onClick={() => {
+                        setZoomMediaId(media.id);
+                        setZoomModalOpen(true);
+                      }}
+                    >
+                      <MagnifyingGlassPlus className="w-5 h-5" />
+                    </button>
+                  )}
+                </SwiperSlide>
+              ))}
             </Swiper>
             <div className="absolute bottom-6 right-6 z-10 hidden md:flex items-center gap-2">
               <button
@@ -267,6 +236,44 @@ export function ProductMedia(props: ProductMediaProps) {
       )}
     </>
   );
+}
+
+function Media({
+  media,
+  imageAspectRatio,
+  index,
+}: {
+  media: MediaFragment;
+  imageAspectRatio: ImageAspectRatio;
+  index: number;
+}) {
+  if (media.mediaContentType === "IMAGE") {
+    let { image, alt } = media as Media_MediaImage_Fragment;
+    return (
+      <Image
+        data={{ ...image, altText: alt || "Product image" }}
+        loading={index === 0 ? "eager" : "lazy"}
+        className="object-cover w-full h-auto rounded"
+        width={2048}
+        aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
+        sizes="auto"
+      />
+    );
+  }
+  if (media.mediaContentType === "VIDEO") {
+    let mediaVideo = media as Media_Video_Fragment;
+    return (
+      <video
+        controls
+        className="w-full h-auto object-cover rounded"
+        style={{ aspectRatio: imageAspectRatio }}
+      >
+        <track kind="captions" />
+        <source src={mediaVideo.sources[0].url} type="video/mp4" />
+      </video>
+    );
+  }
+  return null;
 }
 
 function getSelectedVariantMediaIndex(
