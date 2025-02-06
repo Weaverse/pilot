@@ -1,4 +1,3 @@
-import { Image } from "@shopify/hydrogen";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
@@ -8,6 +7,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
+import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
 

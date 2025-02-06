@@ -1,8 +1,8 @@
 import { useLoaderData } from "@remix-run/react";
-import { Image } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
+import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { getImageLoadingPriority } from "~/utils/image";
@@ -84,7 +84,6 @@ function ArticleCard({
         <div className="card-image aspect-[3/2]">
           <Image
             alt={article.image.altText || article.title}
-            className="object-cover w-full"
             data={article.image}
             aspectRatio={imageAspectRatio}
             loading={loading}

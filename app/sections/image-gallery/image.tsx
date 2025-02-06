@@ -1,4 +1,3 @@
-import { Image } from "@shopify/hydrogen";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
@@ -8,44 +7,42 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { forwardRef } from "react";
+import { Image } from "~/components/image";
 
-let variants = cva(
-  "h-[var(--image-height)] object-cover object-center w-full",
-  {
-    variants: {
-      columnSpan: {
-        1: "col-span-1",
-        2: "col-span-2",
-        3: "col-span-3",
-        4: "col-span-4",
-      },
-      borderRadius: {
-        0: "",
-        2: "rounded-sm",
-        4: "rounded",
-        6: "rounded-md",
-        8: "rounded-lg",
-        10: "rounded-[10px]",
-        12: "rounded-xl",
-        14: "rounded-[14px]",
-        16: "rounded-2xl",
-        18: "rounded-[18px]",
-        20: "rounded-[20px]",
-        22: "rounded-[22px]",
-        24: "rounded-3xl",
-      },
-      hideOnMobile: {
-        true: "hidden sm:block",
-        false: "",
-      },
+let variants = cva("h-[--image-height]", {
+  variants: {
+    columnSpan: {
+      1: "col-span-1",
+      2: "col-span-2",
+      3: "col-span-3",
+      4: "col-span-4",
     },
-    defaultVariants: {
-      columnSpan: 1,
-      borderRadius: 8,
-      hideOnMobile: false,
+    borderRadius: {
+      0: "",
+      2: "rounded-sm",
+      4: "rounded",
+      6: "rounded-md",
+      8: "rounded-lg",
+      10: "rounded-[10px]",
+      12: "rounded-xl",
+      14: "rounded-[14px]",
+      16: "rounded-2xl",
+      18: "rounded-[18px]",
+      20: "rounded-[20px]",
+      22: "rounded-[22px]",
+      24: "rounded-3xl",
+    },
+    hideOnMobile: {
+      true: "hidden sm:block",
+      false: "",
     },
   },
-);
+  defaultVariants: {
+    columnSpan: 1,
+    borderRadius: 8,
+    hideOnMobile: false,
+  },
+});
 
 interface ImageGalleryItemProps
   extends VariantProps<typeof variants>,
@@ -63,8 +60,10 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
         {...rest}
         className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
         data-motion="slide-in"
+        loading="lazy"
         data={data}
-        sizes={`(min-width: 45em) 50vw, 100vw`}
+        width={1000}
+        sizes="(min-width: 45em) 50vw, 100vw"
       />
     );
   },

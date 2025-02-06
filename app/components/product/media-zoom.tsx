@@ -57,6 +57,7 @@ export function ZoomModal({
       }
     }
     if (open) {
+      window.requestAnimationFrame(() => scrollToMedia(zoomMediaId));
       window.addEventListener("keydown", handleKeyDown);
     } else {
       window.removeEventListener("keydown", handleKeyDown);
@@ -64,7 +65,7 @@ export function ZoomModal({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open, setZoomMediaId, nextMedia, prevMedia]);
+  }, [open, zoomMediaId, setZoomMediaId, nextMedia, prevMedia]);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -104,7 +105,7 @@ export function ZoomModal({
                         key={id}
                         id={`zoom-media--${mediaId}`}
                         className={cn(
-                          "relative",
+                          "relative bg-gray-100",
                           "p-1 border rounded-md transition-colors cursor-pointer border-transparent !h-auto",
                           zoomMediaId === id && "border-line",
                         )}

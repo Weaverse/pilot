@@ -1,6 +1,7 @@
 import { ArrowLeft, Tag } from "@phosphor-icons/react";
 import { useLoaderData } from "@remix-run/react";
-import { Image, Money } from "@shopify/hydrogen";
+import { Money } from "@shopify/hydrogen";
+import { Image } from "~/components/image";
 import clsx from "clsx";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
@@ -15,7 +16,7 @@ export function OrderDetails() {
   for (let lineItem of lineItems) {
     totalDiscount += lineItem.discountAllocations.reduce(
       (acc, curr) => acc + Number.parseFloat(curr.allocatedAmount.amount),
-      0
+      0,
     );
   }
 
@@ -167,7 +168,7 @@ export function OrderDetails() {
                 <div
                   className={clsx(
                     "mt-3 px-2.5 py-1 text-sm inline-block w-auto",
-                    "text-body-inverse bg-body-subtle"
+                    "text-body-inverse bg-body-subtle",
                   )}
                 >
                   {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}

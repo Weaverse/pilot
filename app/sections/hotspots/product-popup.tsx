@@ -1,9 +1,10 @@
-import { Image, Money } from "@shopify/hydrogen";
+import { Money } from "@shopify/hydrogen";
 import type { MediaImage } from "@shopify/hydrogen/storefront-api-types";
 import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import type { ProductQuery } from "storefront-api.generated";
+import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import type { HotspotsItemData } from "./item";
 

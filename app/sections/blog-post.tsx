@@ -1,12 +1,9 @@
 import { FacebookLogo, PinterestLogo } from "@phosphor-icons/react";
 import { useLoaderData } from "@remix-run/react";
-import { Image } from "@shopify/hydrogen";
 import type { Article } from "@shopify/hydrogen/storefront-api-types";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import { Image } from "~/components/image";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 
 interface BlogPostProps extends SectionProps {
@@ -26,11 +23,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
       <Section ref={ref} {...rest}>
         <div className="relative h-[520px]">
           {image && (
-            <Image
-              data={image}
-              className="w-full absolute inset-0 z-0 object-cover h-full"
-              sizes="90vw"
-            />
+            <Image data={image} className="absolute inset-0 z-0" sizes="90vw" />
           )}
         </div>
         <div className="space-y-5 w-full h-full flex items-center justify-end py-16 flex-col relative z-10 px-10 lg:px-20">
