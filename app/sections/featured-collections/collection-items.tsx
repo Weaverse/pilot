@@ -1,4 +1,3 @@
-import { Image } from "@shopify/hydrogen";
 import {
   type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
@@ -16,6 +15,7 @@ import { useAnimation } from "~/hooks/use-animation";
 import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
+import { Image } from "~/components/image";
 
 let variants = cva("", {
   variants: {
@@ -128,7 +128,6 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
                   height={collection.image.height || 400}
                   sizes="(max-width: 32em) 100vw, 45vw"
                   className={clsx([
-                    "w-full h-full object-cover",
                     "transition-all duration-300",
                     "will-change-transform scale-100 group-hover:scale-[1.05]",
                   ])}

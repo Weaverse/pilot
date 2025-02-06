@@ -1,4 +1,3 @@
-import { Image } from "@shopify/hydrogen";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
@@ -7,6 +6,7 @@ import {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
+import { Image } from "~/components/image";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
   heading: string;
@@ -46,7 +46,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
           </blockquote>
           <figcaption className="flex items-center space-x-3">
             <Image
-              className="h-9 rounded-full object-cover object-center"
+              className="h-9 rounded-full"
               data={
                 typeof authorImage === "object"
                   ? authorImage

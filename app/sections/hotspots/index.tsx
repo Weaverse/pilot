@@ -1,14 +1,14 @@
-import { Image } from "@shopify/hydrogen";
-import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import type {
   HydrogenComponentSchema,
   WeaverseImage,
 } from "@weaverse/hydrogen";
+import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import Heading, {
   headingInputs,
   type HeadingProps,
 } from "~/components/heading";
+import { Image } from "~/components/image";
 import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
@@ -75,7 +75,7 @@ let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
         <Image
           data={imageData}
           sizes="auto"
-          className="object-cover z-0 w-full h-full"
+          className="z-0"
           data-motion="zoom-in"
         />
         {children}

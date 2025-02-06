@@ -1,7 +1,6 @@
 import { Trash } from "@phosphor-icons/react";
 import {
   CartForm,
-  Image,
   Money,
   type OptimisticCart,
   OptimisticInput,
@@ -17,6 +16,7 @@ import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { getImageAspectRatio } from "~/utils/image";
 import { CartBestSellers } from "./cart-best-sellers";
@@ -268,7 +268,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
             width={250}
             height={250}
             data={merchandise.image}
-            className="object-cover object-center w-24 h-auto"
+            className="w-24 h-auto"
             alt={merchandise.title}
             aspectRatio={getImageAspectRatio(merchandise.image, "adapt")}
           />

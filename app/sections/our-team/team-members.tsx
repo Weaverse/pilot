@@ -1,6 +1,5 @@
 import { GithubLogo, LinkedinLogo, XLogo } from "@phosphor-icons/react";
 import { Link } from "@remix-run/react";
-import { Image } from "@shopify/hydrogen";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
@@ -9,6 +8,7 @@ import {
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { OurTeamQuery } from "storefront-api.generated";
+import { Image } from "~/components/image";
 
 type MemberType = {
   name: string;
@@ -49,7 +49,6 @@ let TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                     className="w-full h-auto sm:w-48 sm:h-48"
                     aspectRatio="1/1"
                     width={500}
-                    height={500}
                   />
                 )}
                 <div className="p-5">

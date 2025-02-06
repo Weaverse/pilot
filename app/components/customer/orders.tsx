@@ -1,4 +1,5 @@
-import { Image, flattenConnection } from "@shopify/hydrogen";
+import { flattenConnection } from "@shopify/hydrogen";
+import { Image } from "~/components/image";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import type { OrderCardFragment } from "customer-account-api.generated";
 import Link from "~/components/link";
@@ -56,7 +57,7 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
           <Image
             width={500}
             height={500}
-            className="max-w-36 h-auto opacity-0 animate-fade-in cover"
+            className="max-w-36 h-auto"
             alt={lineItems[0].image?.altText ?? "Order image"}
             src={lineItems[0].image.url}
           />
