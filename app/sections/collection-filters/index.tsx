@@ -93,7 +93,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             {showBanner && banner && (
               <div
                 className={clsx([
-                  "mt-6 overflow-hidden",
+                  "mt-6 overflow-hidden bg-gray-100",
                   "rounded-[--banner-border-radius]",
                   "h-[--banner-height-mobile] lg:h-[--banner-height-desktop]",
                 ])}

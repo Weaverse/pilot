@@ -181,7 +181,7 @@ export function ProductMedia(props: ProductMediaProps) {
             className="overflow-visible rounded md:overflow-hidden pb-10 md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
             {media.map((media, idx) => (
-              <SwiperSlide key={media.id}>
+              <SwiperSlide key={media.id} className="bg-gray-100">
                 <Media
                   media={media}
                   imageAspectRatio={imageAspectRatio}

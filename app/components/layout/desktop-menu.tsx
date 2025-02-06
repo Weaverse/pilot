@@ -108,7 +108,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
         resource?.image && children.length === 0 ? (
           <SlideIn
             key={id}
-            className="grow max-w-72 w-72 aspect-square relative group/item overflow-hidden"
+            className="grow max-w-72 w-72 bg-gray-100 aspect-square relative group/item overflow-hidden"
             style={{ "--idx": idx } as React.CSSProperties}
           >
             <Image
@@ -176,7 +176,7 @@ function SlideIn(props: {
       style={
         {
           "--slide-left-from": "40px",
-          "--slide-left-duration": "400ms",
+          "--slide-left-duration": "300ms",
           ...style,
         } as React.CSSProperties
       }
