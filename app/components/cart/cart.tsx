@@ -18,6 +18,7 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { RevealUnderline } from "~/reveal-underline";
 import { getImageAspectRatio } from "~/utils/image";
 import { CartBestSellers } from "./cart-best-sellers";
 
@@ -280,9 +281,9 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
             <div>
               {merchandise?.product?.handle ? (
                 <Link to={`/products/${merchandise.product.handle}`}>
-                  <span className="reveal-underline">
+                  <RevealUnderline>
                     {merchandise?.product?.title || ""}
-                  </span>
+                  </RevealUnderline>
                 </Link>
               ) : (
                 <p>{merchandise?.product?.title || ""}</p>

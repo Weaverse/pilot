@@ -258,23 +258,6 @@ h6,
   view-transition-name: product-image;
 }
 
-.reveal-underline {
-  background-image: linear-gradient(
-    to right,
-    var(--underline-color, rgb(15, 15, 15)),
-    var(--underline-color, rgb(15, 15, 15))
-  );
-  background-size: 0% 1px;
-  background-repeat: no-repeat;
-  display: inline;
-  padding-bottom: 3px;
-  transition: background 200ms ease-in-out;
-  background-position: left calc(1em + 4px);
-}
-.reveal-underline:hover {
-  background-size: 100% 1px;
-}
-
 mark {
   background-color: none;
   font-weight: 500;

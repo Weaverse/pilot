@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { RevealUnderline } from "~/reveal-underline";
 import type {
   NormalizedPredictiveSearchResultItem,
   NormalizedPredictiveSearchResults,
@@ -89,21 +90,20 @@ function SearchResultItem({
             <div className="text-body-subtle text-sm">By {vendor}</div>
           )}
           {styledTitle ? (
-            <div
-              className="reveal-underline"
-              dangerouslySetInnerHTML={{ __html: styledTitle }}
-            />
+            <RevealUnderline as="div">
+              <span dangerouslySetInnerHTML={{ __html: styledTitle }} />
+            </RevealUnderline>
           ) : (
             <div
               className={clsx(
                 __typename === "Product" ? "line-clamp-1" : "line-clamp-2",
               )}
             >
-              <span className="reveal-underline">{title}</span>
+              <RevealUnderline>{title}</RevealUnderline>
             </div>
           )}
           {price && (
-            <div className="flex gap-2 text-sm">
+            <div className="flex gap-2 text-sm pt-1">
               <Money withoutTrailingZeros data={price as MoneyV2} />
               {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
                 <CompareAtPrice data={compareAtPrice as MoneyV2} />
