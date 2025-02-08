@@ -1,24 +1,25 @@
 import {
+  Money,
   flattenConnection,
   mapSelectedProductOptionToObject,
-  Money,
-  VariantSelector,
 } from "@shopify/hydrogen";
-import type {
-  MoneyV2,
-  ProductVariant,
-} from "@shopify/hydrogen/storefront-api-types";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import type { ProductCardFragment } from "storefront-api.generated";
+import { useState } from "react";
+import type {
+  ProductCardFragment,
+  ProductVariantFragment,
+} from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { VariantPrices } from "~/components/variant-prices";
+import { RevealUnderline } from "~/reveal-underline";
 import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
-import { cva } from "class-variance-authority";
-import { VariantOption } from "./variant-option";
+import { ProductCardOptions } from "./product-card-options";
 
 let styleVariants = cva("", {
   variants: {
@@ -47,9 +48,6 @@ export function ProductCard({
     pcardShowVendor,
     pcardShowLowestPrice,
     pcardShowSalePrice,
-    pcardShowOptionSwatches,
-    pcardOptionToShow,
-    pcardMaxOptionValues,
     pcardEnableQuickShop,
     pcardQuickShopButtonType,
     pcardQuickShopButtonText,
@@ -61,21 +59,34 @@ export function ProductCard({
     pcardShowOutOfStockBadges,
   } = useThemeSettings();
 
-  let { images, badges, priceRange, options } = product;
-  let variants = flattenConnection(product.variants);
-  let selectedVariant = variants[0];
-  let [image, secondImage] = images.nodes;
+  let [selectedVariant, setSelectedVariant] =
+    useState<ProductVariantFragment | null>(null);
+  let { images, badges, priceRange } = product;
   let { minVariantPrice, maxVariantPrice } = priceRange;
+
+  let firstVariant = flattenConnection(product.variants)[0];
+  let params = new URLSearchParams(
+    mapSelectedProductOptionToObject(
+      (selectedVariant || firstVariant).selectedOptions,
+    ),
+  );
+
   let isVertical = pcardTitlePricesAlignment === "vertical";
   let isBestSellerProduct = badges
     .filter(Boolean)
     .some(({ key, value }) => key === "best_seller" && value === "true");
 
-  let firstVariant = variants[0];
-  let optionsObject = mapSelectedProductOptionToObject(
-    firstVariant.selectedOptions,
-  );
-  let firstVariantParams = new URLSearchParams(optionsObject);
+  let [image, secondImage] = images.nodes;
+  if (selectedVariant) {
+    if (selectedVariant.image) {
+      image = selectedVariant.image;
+      let imageUrl = image.url;
+      let imageIndex = images.nodes.findIndex(({ url }) => url === imageUrl);
+      if (imageIndex > 0 && imageIndex < images.nodes.length - 1) {
+        secondImage = images.nodes[imageIndex + 1];
+      }
+    }
+  }
 
   return (
     <div
@@ -91,7 +102,7 @@ export function ProductCard({
       <div className="relative group">
         {image && (
           <Link
-            to={`/products/${product.handle}?${firstVariantParams.toString()}`}
+            to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
             className="block group relative aspect-[--pcard-image-ratio] overflow-hidden bg-gray-100"
           >
@@ -158,13 +169,13 @@ export function ProductCard({
           )}
         >
           <NavLink
-            to={`/products/${product.handle}`}
+            to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
             className={({ isTransitioning }) =>
               clsx("font-bold ", isTransitioning && "vt-product-image")
             }
           >
-            {product.title}
+            <RevealUnderline>{product.title}</RevealUnderline>
           </NavLink>
           {pcardShowLowestPrice ? (
             <div className="flex gap-1">
@@ -173,29 +184,16 @@ export function ProductCard({
             </div>
           ) : (
             <VariantPrices
-              variant={selectedVariant as ProductVariant}
+              variant={selectedVariant || firstVariant}
               showCompareAtPrice={pcardShowSalePrice}
             />
           )}
         </div>
-        {/* {pcardShowOptionSwatches && (
-          <div className="flex flex-wrap gap-2">
-            {options.map((option) => {
-              if (option.name === pcardOptionToShow) {
-                return (
-                  <VariantOption
-                    key={option.id}
-                    name={option.name}
-                    values={option.optionValues.slice(0, pcardMaxOptionValues)}
-                    selectedOptionValue=""
-                    onSelectOptionValue={console.log}
-                  />
-                );
-              }
-              return null;
-            })}
-          </div>
-        )} */}
+        <ProductCardOptions
+          product={product}
+          selectedVariant={selectedVariant}
+          setSelectedVariant={setSelectedVariant}
+        />
       </div>
     </div>
   );
