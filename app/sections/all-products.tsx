@@ -20,7 +20,7 @@ let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
   let { products } = useLoaderData<AllProductsQuery>();
 
   return (
-    <Section ref={ref} {...rest}>
+    <Section ref={ref} {...rest} overflow="unset">
       <BreadCrumb page={heading} className="justify-center mb-4" />
       <h4 className="mb-8 lg:mb-20 font-medium text-center">{heading}</h4>
       <Pagination connection={products}>
