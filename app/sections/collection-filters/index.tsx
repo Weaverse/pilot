@@ -122,7 +122,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             }}
             {...props}
           />
-          <div className="flex gap-8 pt-6 lg:pt-12 pb-8 lg:pb-20">
+          <div className="flex gap-5 pt-6 lg:pt-12 pb-8 lg:pb-20">
             {enableFilter && filtersPosition === "sidebar" && (
               <div className="hidden lg:block shrink-0 w-72">
                 <div className="space-y-4 sticky top-[calc(var(--height-nav)+40px)]">
