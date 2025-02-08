@@ -138,7 +138,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     key={id}
                     className={cn(
                       "relative",
-                      "p-1 border rounded-md transition-colors cursor-pointer border-transparent !h-auto",
+                      "p-1 border transition-colors cursor-pointer border-transparent !h-auto",
                       "[&.swiper-slide-thumb-active]:border-line",
                     )}
                   >
@@ -150,7 +150,7 @@ export function ProductMedia(props: ProductMediaProps) {
                       loading="lazy"
                       width={200}
                       aspectRatio="1/1"
-                      className="object-cover w-full h-auto rounded"
+                      className="object-cover w-full h-auto"
                       sizes="auto"
                     />
                     {mediaContentType === "VIDEO" && (
@@ -178,7 +178,7 @@ export function ProductMedia(props: ProductMediaProps) {
             }}
             pagination={{ type: "fraction" }}
             modules={[Pagination, Navigation, Thumbs]}
-            className="overflow-visible rounded md:overflow-hidden pb-10 md:pb-0 md:[&_.swiper-pagination]:hidden"
+            className="overflow-visible md:overflow-hidden pb-10 md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
             {media.map((media, idx) => (
               <SwiperSlide key={media.id} className="bg-gray-100">
@@ -210,13 +210,13 @@ export function ProductMedia(props: ProductMediaProps) {
           <div className="absolute bottom-6 right-6 z-10 hidden md:flex items-center gap-2">
             <button
               type="button"
-              className="media_slider__prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-lg left-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white left-6 disabled:cursor-not-allowed disabled:text-body-subtle"
             >
               <ArrowLeft className="w-4.5 h-4.5" />
             </button>
             <button
               type="button"
-              className="media_slider__next p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white rounded-lg right-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__next p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white right-6 disabled:cursor-not-allowed disabled:text-body-subtle"
             >
               <ArrowRight className="w-4.5 h-4.5" />
             </button>
@@ -251,7 +251,7 @@ function Media({
       <Image
         data={{ ...image, altText: alt || "Product image" }}
         loading={index === 0 ? "eager" : "lazy"}
-        className="object-cover w-full h-auto rounded"
+        className="object-cover w-full h-auto"
         width={2048}
         aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
         sizes="auto"
@@ -264,7 +264,7 @@ function Media({
       <video
         controls
         aria-label={mediaVideo.alt || "Product video"}
-        className="w-full h-auto object-cover rounded"
+        className="w-full h-auto object-cover"
         style={{ aspectRatio: imageAspectRatio }}
         onError={console.error}
       >

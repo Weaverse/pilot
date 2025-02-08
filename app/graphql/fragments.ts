@@ -64,7 +64,7 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
     publishedAt
     handle
     vendor
-    images(first: 2) {
+    images(first: 50) {
       nodes {
         id
         url
@@ -95,31 +95,7 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
     }
     variants(first: 10) {
       nodes {
-        id
-        availableForSale
-        image {
-          url
-          altText
-          width
-          height
-        }
-        price {
-          amount
-          currencyCode
-        }
-        compareAtPrice {
-          amount
-          currencyCode
-        }
-        selectedOptions {
-          name
-          value
-        }
-        product {
-          handle
-          title
-        }
-        sku
+        ...ProductVariant
       }
     }
   }

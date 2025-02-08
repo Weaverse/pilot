@@ -106,7 +106,7 @@ export function ZoomModal({
                         id={`zoom-media--${mediaId}`}
                         className={cn(
                           "relative bg-gray-100",
-                          "p-1 border rounded-md transition-colors cursor-pointer border-transparent !h-auto",
+                          "p-1 border transition-colors cursor-pointer border-transparent !h-auto",
                           zoomMediaId === id && "border-line",
                         )}
                         onClick={() => setZoomMediaId(id)}
@@ -119,7 +119,7 @@ export function ZoomModal({
                           loading="lazy"
                           width={200}
                           aspectRatio="1/1"
-                          className="object-cover w-full h-auto rounded"
+                          className="object-cover w-full h-auto"
                           sizes="auto"
                         />
                         {mediaContentType === "VIDEO" && (
@@ -140,7 +140,7 @@ export function ZoomModal({
             <div className="flex items-center gap-2 justify-center absolute bottom-10 left-10 md:left-auto right-10">
               <Button
                 variant="secondary"
-                className="rounded border-line-subtle"
+                className="border-line-subtle"
                 onClick={() => {
                   setZoomMediaId(prevMedia.id);
                   scrollToMedia(prevMedia.id);
@@ -150,7 +150,7 @@ export function ZoomModal({
               </Button>
               <Button
                 variant="secondary"
-                className="rounded border-line-subtle"
+                className="border-line-subtle"
                 onClick={() => {
                   setZoomMediaId(nextMedia.id);
                   scrollToMedia(nextMedia.id);

@@ -665,8 +665,8 @@ export let themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
-          label: "Show option swatches",
-          name: "pcardShowOptionSwatches",
+          label: "Show option values",
+          name: "pcardShowOptionValues",
           defaultValue: true,
         },
         {
@@ -675,7 +675,7 @@ export let themeSchema: HydrogenThemeSchema = {
           name: "pcardOptionToShow",
           defaultValue: "Color",
           placeholder: "Color",
-          condition: "pcardShowOptionSwatches.eq.true",
+          condition: "pcardShowOptionValues.eq.true",
         },
         {
           type: "range",
@@ -686,7 +686,7 @@ export let themeSchema: HydrogenThemeSchema = {
             max: 10,
           },
           defaultValue: 5,
-          condition: "pcardShowOptionSwatches.eq.true",
+          condition: "pcardShowOptionValues.eq.true",
         },
         {
           type: "heading",

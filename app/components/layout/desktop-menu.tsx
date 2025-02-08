@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
+import { RevealUnderline } from "~/reveal-underline";
 import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
 
@@ -94,7 +95,7 @@ function DropdownSubMenu({ items }: { items: SingleMenuItem[] }) {
           prefetch="intent"
           className="transition-none block"
         >
-          <span className="reveal-underline">{title}</span>
+          <RevealUnderline>{title}</RevealUnderline>
         </Link>
       ))}
     </ul>
@@ -140,7 +141,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
               prefetch="intent"
               className="uppercase inline transition-none"
             >
-              <span className="reveal-underline">{title}</span>
+              <RevealUnderline>{title}</RevealUnderline>
             </Link>
             <div className="flex flex-col gap-1.5">
               {children.map((cItem) => (
@@ -150,7 +151,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
                   prefetch="intent"
                   className="relative inline transition-none"
                 >
-                  <span className="reveal-underline">{cItem.title}</span>
+                  <RevealUnderline>{cItem.title}</RevealUnderline>
                 </Link>
               ))}
             </div>

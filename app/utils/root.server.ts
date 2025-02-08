@@ -1,10 +1,6 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
 import type { AppLoadContext, LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import {
-  type ColorSwatch,
-  type ImageSwatch,
-  resizeShopifyImage,
-} from "@weaverse/hydrogen";
+import type { ColorSwatch, ImageSwatch } from "@weaverse/hydrogen";
 import type {
   LayoutQuery,
   MenuFragment,
@@ -131,7 +127,7 @@ async function getSwatchesConfigs(context: AppLoadContext) {
     if (imageRef) {
       let url = imageRef?.image?.url;
       if (url) {
-        images.push({ id, name, value: resizeShopifyImage(url, "300x") });
+        images.push({ id, name, value: url });
       }
     } else if (color) {
       colors.push({ id, name, value: color });
