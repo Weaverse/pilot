@@ -7,7 +7,7 @@ import clsx from "clsx";
 import Link from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 
-const OPTIONS_AS_SWATCH = ["Color", "Colors", "Colour", "Colours"];
+export const OPTIONS_AS_SWATCH = ["Color", "Colors", "Colour", "Colours"];
 const OPTIONS_AS_BUTTON = ["Size"];
 const OPTIONS_AS_IMAGE = [];
 const OPTIONS_AS_DROPDOWN = [];
