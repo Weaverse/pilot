@@ -11,8 +11,7 @@ import type { AppliedFilter } from "~/utils/filter";
 import type { CollectionFiltersData } from ".";
 import { FilterItem } from "./filter-item";
 import { PriceRangeFilter } from "./price-range-filter";
-
-const COLORS_OPTION_NAME = ["Color", "Colors", "Colour", "Colours"];
+import { OPTIONS_AS_SWATCH } from "~/components/product/variant-option";
 
 export function Filters({ className }: { className?: string }) {
   let ref = useRef<HTMLDivElement>(null);
@@ -42,7 +41,7 @@ export function Filters({ className }: { className?: string }) {
     >
       {filters.map((filter: Filter) => {
         let asSwatch =
-          enableSwatches && COLORS_OPTION_NAME.includes(filter.label);
+          enableSwatches && OPTIONS_AS_SWATCH.includes(filter.label);
         let asButton = displayAsButtonFor.includes(filter.label);
 
         return (

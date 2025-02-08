@@ -6,14 +6,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
-import {
-  type ColorSwatch,
-  type ImageSwatch,
-  type SwatchesConfigs,
-  useThemeSettings,
-} from "@weaverse/hydrogen";
 import { useState } from "react";
-import { variants as productOptionsVariants } from "~/components/product/variant-option";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
@@ -36,9 +29,7 @@ export function FilterItem({
   let navigate = useNavigate();
   let [params] = useSearchParams();
   let location = useLocation();
-  let themeSettings = useThemeSettings();
   let { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
-  let { options, swatches }: SwatchesConfigs = themeSettings.productSwatches;
 
   let filter = appliedFilters.find(
     (filter) => JSON.stringify(filter.filter) === option.input,
@@ -58,32 +49,18 @@ export function FilterItem({
   }
 
   if (displayAs === "swatch") {
-    let colors: ColorSwatch[] = swatchesConfigs?.colors?.length
-      ? swatchesConfigs.colors
-      : swatches.colors;
-    let images: ImageSwatch[] = swatchesConfigs?.images?.length
-      ? swatchesConfigs.images
-      : swatches.images;
-
+    let { colors, images } = swatchesConfigs;
     let swatchImage = images.find(({ name }) => name === option.label);
     let swatchColor = colors.find(({ name }) => name === option.label);
 
-    let optionConf = options.find(({ name }) => {
-      return name.toLowerCase() === option.label.toLowerCase();
-    });
-
-    let { shape = "square", size = "md" } = optionConf || {};
     return (
       <Tooltip>
         <TooltipTrigger>
           <button
             type="button"
             className={cn(
-              "disabled:cursor-not-allowed",
-              productOptionsVariants({
-                colorSize: size,
-                shape,
-              }),
+              "w-10 h-10 disabled:cursor-not-allowed",
+              "border hover:border-body",
               checked ? "p-1 border-line" : "border-line-subtle",
               option.count === 0 && "diagonal",
             )}
@@ -91,10 +68,7 @@ export function FilterItem({
             disabled={option.count === 0}
           >
             <span
-              className={cn(
-                "w-full h-full inline-block border-none hover:border-none",
-                productOptionsVariants({ shape }),
-              )}
+              className="w-full h-full inline-block"
               style={{
                 backgroundImage: swatchImage?.value
                   ? `url(${swatchImage?.value})`
