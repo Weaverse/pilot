@@ -90,11 +90,11 @@ export function ProductCard({
 
   return (
     <div
-      className={clsx("overflow-hidden", className)}
+      className={clsx("rounded-[--pcard-radius]", className)}
       style={
         {
-          borderRadius: pcardBorderRadius,
           backgroundColor: pcardBackgroundColor,
+          "--pcard-radius": `${pcardBorderRadius}px`,
           "--pcard-image-ratio": getImageAspectRatio(image, pcardImageRatio),
         } as React.CSSProperties
       }
@@ -104,7 +104,7 @@ export function ProductCard({
           <Link
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
-            className="block group relative aspect-[--pcard-image-ratio] overflow-hidden bg-gray-100"
+            className="overflow-hidden rounded-t-[--pcard-radius] block group relative aspect-[--pcard-image-ratio] bg-gray-100"
           >
             <Image
               className={clsx([
