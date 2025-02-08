@@ -1,18 +1,16 @@
 import { Money } from "@shopify/hydrogen";
-import { CompareAtPrice } from "./compare-at-price";
-import { isDiscounted } from "~/utils/product";
-import type {
-  MoneyV2,
-  ProductVariant,
-} from "@shopify/hydrogen/storefront-api-types";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
+import type { ProductVariantFragment } from "storefront-api.generated";
+import { isDiscounted } from "~/utils/product";
+import { CompareAtPrice } from "./compare-at-price";
 
 export function VariantPrices({
   variant,
   showCompareAtPrice = true,
   className,
 }: {
-  variant: ProductVariant;
+  variant: ProductVariantFragment;
   showCompareAtPrice?: boolean;
   className?: string;
 }) {
