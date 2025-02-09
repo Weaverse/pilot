@@ -1,6 +1,5 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
 import type { AppLoadContext, LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import type { ColorSwatch, ImageSwatch } from "@weaverse/hydrogen";
 import type {
   LayoutQuery,
   MenuFragment,
@@ -108,6 +107,12 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
   return { shop: data.shop, headerMenu, footerMenu };
 }
 
+type Swatch = {
+  id: string;
+  name: string;
+  value: string;
+};
+
 async function getSwatchesConfigs(context: AppLoadContext) {
   let { METAOBJECT_COLORS_TYPE: type } = context.env;
   if (!type) {
@@ -117,8 +122,8 @@ async function getSwatchesConfigs(context: AppLoadContext) {
     SWATCHES_QUERY,
     { variables: { type } },
   );
-  let colors: ColorSwatch[] = [];
-  let images: ImageSwatch[] = [];
+  let colors: Swatch[] = [];
+  let images: Swatch[] = [];
   for (let { id, fields } of metaobjects.nodes) {
     let { value: color } = fields.find(({ key }) => key === "color") || {};
     let { reference: imageRef } =
