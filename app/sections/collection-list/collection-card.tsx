@@ -24,6 +24,10 @@ export function CollectionCard({
   overlayColorHover,
   overlayOpacity,
 }: CollectionCardProps) {
+  if (collection.products.nodes.length === 0) {
+    return null;
+  }
+
   let collectionImage = collection.image;
   if (!collectionImage) {
     let collectionProducts = collection.products.nodes;
@@ -56,7 +60,6 @@ export function CollectionCard({
             data={collectionImage}
             width={collectionImage.width || 600}
             height={collectionImage.height || 400}
-            aspectRatio={imageAspectRatio}
             sizes="(max-width: 32em) 100vw, 45vw"
             loading={loading}
             className={clsx(
