@@ -34,7 +34,7 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
     return (
       <Section ref={ref} {...rest}>
         <h4 className="text-center font-medium">{blog.title}</h4>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-4 gap-y-12">
           {articles.map((article, i) => (
             <ArticleCard
               key={article.id}
