@@ -74,8 +74,11 @@ const ARTICLE_QUERY = `#graphql
     $articleHandle: String!
   ) @inContext(language: $language) {
     blog(handle: $blogHandle) {
+      title
+      handle
       articleByHandle(handle: $articleHandle) {
         title
+        handle
         contentHtml
         publishedAt
         tags
