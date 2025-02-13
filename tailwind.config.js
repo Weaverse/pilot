@@ -183,6 +183,15 @@ export default {
       transitionDuration: {
         400: "400ms",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            img: {
+              margin: "0 auto",
+            },
+          },
+        },
+      },
     },
   },
   plugins: [
