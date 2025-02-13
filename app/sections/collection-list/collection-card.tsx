@@ -24,6 +24,19 @@ export function CollectionCard({
   overlayColorHover,
   overlayOpacity,
 }: CollectionCardProps) {
+  let collectionImage = collection.image;
+  if (!collectionImage) {
+    let collectionProducts = collection.products.nodes;
+    if (collectionProducts.length > 0) {
+      let firstProduct = collectionProducts[0];
+      if (firstProduct.media.nodes.length > 0) {
+        let firstProductMedia = firstProduct.media.nodes[0];
+        if (firstProductMedia.previewImage) {
+          collectionImage = firstProductMedia.previewImage;
+        }
+      }
+    }
+  }
   return (
     <Link
       to={`/collections/${collection.handle}`}
@@ -38,11 +51,11 @@ export function CollectionCard({
       }
     >
       <div className="aspect-[--aspect-ratio] group relative flex items-center justify-center overflow-hidden">
-        {collection?.image ? (
+        {collectionImage ? (
           <Image
-            data={collection.image}
-            width={collection.image.width || 600}
-            height={collection.image.height || 400}
+            data={collectionImage}
+            width={collectionImage.width || 600}
+            height={collectionImage.height || 400}
             aspectRatio={imageAspectRatio}
             sizes="(max-width: 32em) 100vw, 45vw"
             loading={loading}
