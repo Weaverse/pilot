@@ -1,3 +1,8 @@
+import { colord, extend } from "colord";
+import namesPlugin from "colord/plugins/names";
+
+extend([namesPlugin]);
+
 export function constructURL(
   url: string,
   queries: Record<string, string | number | boolean> = {},
@@ -9,4 +14,9 @@ export function constructURL(
     }
   }
   return _url.toString();
+}
+
+export function isLightColor(color: string, threshold = 0.8) {
+  let c = colord(color);
+  return c.isValid() && c.brightness() > threshold;
 }

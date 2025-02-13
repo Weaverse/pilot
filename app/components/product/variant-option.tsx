@@ -6,6 +6,7 @@ import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import Link from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
+import { isLightColor } from "~/utils/misc";
 
 export const OPTIONS_AS_SWATCH = ["Color", "Colors", "Colour", "Colours"];
 const OPTIONS_AS_BUTTON = ["Size"];
@@ -98,7 +99,11 @@ export function VariantOption({ option }: VariantOptionProps) {
                     />
                   ) : (
                     <span
-                      className="w-full h-full inline-block text-[0px]"
+                      className={clsx(
+                        "w-full h-full inline-block text-[0px] rounded-full",
+                        isLightColor(swatch?.color || value) &&
+                          "border border-line-subtle",
+                      )}
                       style={{ backgroundColor: swatch?.color || value }}
                     >
                       {value}

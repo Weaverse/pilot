@@ -112,7 +112,7 @@ export let schema: HydrogenComponentSchema = {
           type: "select",
           name: "imageAspectRatio",
           label: "Image aspect ratio",
-          defaultValue: "adapt",
+          defaultValue: "1/1",
           configs: {
             options: [
               { value: "adapt", label: "Adapt to image" },

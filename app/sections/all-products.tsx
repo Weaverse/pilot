@@ -45,7 +45,7 @@ let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
               )}
               <div
                 className={clsx([
-                  "w-full gap-x-1.5 gap-y-8 lg:gap-y-10",
+                  "w-full gap-x-4 gap-y-6 lg:gap-y-10",
                   "grid grid-cols-1 lg:grid-cols-4",
                 ])}
               >

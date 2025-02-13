@@ -51,7 +51,7 @@ export default function Policies() {
     <Section verticalPadding="medium" width="fixed">
       <BreadCrumb page="Policies" className="mb-4" />
       <h4 className="mb-4 font-medium">Policies</h4>
-      <Link variant="underline" to="/policies" className="text-body-subtle">
+      <Link variant="underline" to="/policies">
         &larr; Back to Policies
       </Link>
       <div className="mt-8 lg:mt-20">

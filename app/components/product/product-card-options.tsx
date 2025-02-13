@@ -1,3 +1,4 @@
+import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type {
@@ -8,8 +9,8 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { RevealUnderline } from "~/reveal-underline";
+import { isLightColor } from "~/utils/misc";
 import { OPTIONS_AS_SWATCH } from "./variant-option";
-import { Image } from "@shopify/hydrogen";
 
 export function ProductCardOptions({
   product,
@@ -70,7 +71,11 @@ export function ProductCardOptions({
                       />
                     ) : (
                       <span
-                        className="w-full h-full inline-block text-[0px] rounded-full"
+                        className={clsx(
+                          "w-full h-full inline-block text-[0px] rounded-full",
+                          isLightColor(swatch?.color || name) &&
+                            "border border-line-subtle",
+                        )}
                         style={{ backgroundColor: swatch?.color || name }}
                       >
                         {name}

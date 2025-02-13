@@ -79,6 +79,24 @@ const COLLECTIONS_QUERY = `#graphql
           height
           altText
         }
+        products(first: 1) {
+          nodes {
+            id
+            title
+            handle
+            media(first: 1) {
+              nodes {
+                previewImage {
+                  id
+                  url
+                  width
+                  height
+                  altText
+                }
+              }
+            }
+          }
+        }
       }
       pageInfo {
         hasPreviousPage

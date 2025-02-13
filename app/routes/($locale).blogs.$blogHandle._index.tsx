@@ -1,8 +1,7 @@
 import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
-import { json } from "@shopify/remix-oxygen";
-import type { RouteLoaderArgs, WeaverseClient } from "@weaverse/hydrogen";
+import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import type { BlogQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
@@ -10,11 +9,11 @@ import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
-export const headers = routeHeaders;
+export let headers = routeHeaders;
 
-export const loader = async (args: RouteLoaderArgs) => {
+export let loader = async (args: LoaderFunctionArgs) => {
   let { params, request, context } = args;
-  let storefront = context.storefront as WeaverseClient["storefront"];
+  let storefront = context.storefront;
   let { language, country } = storefront.i18n;
 
   invariant(params.blogHandle, "Missing blog handle");

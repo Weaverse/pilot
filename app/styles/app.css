@@ -225,17 +225,6 @@ h6,
       box-shadow: 0.5px 0.5px 0px 0.5px white;
     }
   }
-
-  .card-image {
-    @apply relative flex items-center justify-center overflow-clip rounded;
-    &::before {
-      content: " ";
-      @apply absolute top-0 left-0 z-10 block h-full w-full rounded shadow-border;
-    }
-    img {
-      @apply aspect-[inherit] w-full object-cover;
-    }
-  }
 }
 
 .diagonal {
