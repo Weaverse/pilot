@@ -1,53 +1,86 @@
-import { FacebookLogo, PinterestLogo } from "@phosphor-icons/react";
-import { useLoaderData } from "@remix-run/react";
-import type { Article } from "@shopify/hydrogen/storefront-api-types";
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { FacebookLogo, PinterestLogo, XLogo } from "@phosphor-icons/react";
+import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
+import { type HydrogenComponentSchema, isBrowser } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import {
+  FacebookShareButton,
+  PinterestShareButton,
+  TwitterShareButton,
+} from "react-share";
+import type { ArticleQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import type { RootLoader } from "~/root";
 
 interface BlogPostProps extends SectionProps {
-  paddingTop: number;
-  paddingBottom: number;
+  showTags: boolean;
+  showShareButtons: boolean;
 }
 
 let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
-  let { paddingTop, paddingBottom, ...rest } = props;
-  let { article, formattedDate } = useLoaderData<{
-    article: Article;
+  let { showTags, showShareButtons, ...rest } = props;
+  let { layout } = useRouteLoaderData<RootLoader>("root");
+  let { article, blog, formattedDate } = useLoaderData<{
+    article: ArticleQuery["blog"]["articleByHandle"];
+    blog: ArticleQuery["blog"];
     formattedDate: string;
   }>();
-  let { title, image, contentHtml, author, tags } = article;
+  let { title, handle, image, contentHtml, author, tags } = article;
   if (article) {
+    let domain = layout.shop.primaryDomain.url;
+    if (isBrowser) {
+      let origin = window.location.origin;
+      if (!origin.includes("localhost")) {
+        domain = origin;
+      }
+    }
+    let { handle: blogHandle } = blog;
+    let articleUrl = `${domain}/blogs/${blogHandle}/${handle}`;
     return (
       <Section ref={ref} {...rest}>
-        <div className="relative h-[520px]">
-          {image && (
-            <Image data={image} className="absolute inset-0 z-0" sizes="90vw" />
+        {image && (
+          <div className="h-[520px]">
+            <Image data={image} sizes="90vw" />
+          </div>
+        )}
+        <div className="space-y-5 py-4 lg:py-16 text-center">
+          <div className="text-body-subtle">{formattedDate}</div>
+          <h1 className="h3 !leading-tight">{title}</h1>
+          {author?.name && (
+            <div className="font-medium uppercase">
+              by <span>{author.name}</span>
+            </div>
           )}
         </div>
-        <div className="space-y-5 w-full h-full flex items-center justify-end py-16 flex-col relative z-10 px-10 lg:px-20">
-          <h5>{formattedDate}</h5>
-          <h1 className="text-center">{title}</h1>
-          <span className="uppercase">by {author?.name}</span>
-        </div>
         <div className="border-t border-line-subtle w-1/3 mx-auto" />
-        <article className="prose max-w-screen-xl mx-auto py-10">
-          <div className="px-4 mx-auto space-y-8 md:space-y-16">
+        <article className="prose lg:max-w-4xl mx-auto py-4 lg:py-10">
+          <div className="mx-auto space-y-8 md:space-y-16">
             <div
               suppressHydrationWarning
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
-            <div className="md:flex items-center justify-between gap-2">
-              <div>
-                <strong>Tags:</strong>
-                <span className="ml-2">{tags.join(", ")}</span>
-              </div>
-              <div className="flex gap-4 items-center">
-                <strong>Share:</strong>
-                <PinterestLogo size={24} />
-                <FacebookLogo size={24} />
-              </div>
+            <div className="border-t border-line-subtle w-1/3 mx-auto" />
+            <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+              {showTags && (
+                <div>
+                  <strong>Tags:</strong>
+                  <span className="ml-2">{tags.join(", ")}</span>
+                </div>
+              )}
+              {showShareButtons && (
+                <div className="flex gap-2 items-center">
+                  <strong>Share:</strong>
+                  <FacebookShareButton url={articleUrl}>
+                    <FacebookLogo size={24} />
+                  </FacebookShareButton>
+                  <PinterestShareButton url={articleUrl} media={image?.url}>
+                    <PinterestLogo size={24} />
+                  </PinterestShareButton>
+                  <TwitterShareButton url={articleUrl} title={title}>
+                    <XLogo size={24} />
+                  </TwitterShareButton>
+                </div>
+              )}
             </div>
           </div>
         </article>
@@ -67,33 +100,24 @@ export let schema: HydrogenComponentSchema = {
     pages: ["ARTICLE"],
   },
   inspector: [
-    { group: "Layout", inputs: layoutInputs },
     {
-      group: "Blog post",
+      group: "Layout",
+      inputs: layoutInputs.filter((input) => input.name !== "borderRadius"),
+    },
+    {
+      group: "Article",
       inputs: [
         {
-          type: "range",
-          label: "Top padding",
-          name: "paddingTop",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 0,
+          type: "switch",
+          label: "Show tags",
+          name: "showTags",
+          defaultValue: true,
         },
         {
-          type: "range",
-          label: "Bottom padding",
-          name: "paddingBottom",
-          configs: {
-            min: 0,
-            max: 100,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 0,
+          type: "switch",
+          label: "Show share buttons",
+          name: "showShareButtons",
+          defaultValue: true,
         },
       ],
     },
