@@ -5,24 +5,19 @@ import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { getImageLoadingPriority } from "~/utils/image";
+import { RevealUnderline } from "~/reveal-underline";
+import type { ImageAspectRatio } from "~/types/image";
+import { getImageAspectRatio, getImageLoadingPriority } from "~/utils/image";
 
-interface BlogsProps extends SectionProps {
+interface BlogsProps
+  extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
+    SectionProps {
   layout: "blog" | "default";
-  paddingTop: number;
-  paddingBottom: number;
-  showExcerpt: boolean;
-  showReadmore: boolean;
-  showDate: boolean;
-  showAuthor: boolean;
-  imageAspectRatio: string;
 }
 
 let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
   let {
     layout,
-    paddingTop,
-    paddingBottom,
     showExcerpt,
     showAuthor,
     showDate,
@@ -37,7 +32,7 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
   if (blog) {
     return (
       <Section ref={ref} {...rest}>
-        <h3 className="text-center pt-2 md:pt-0 pb-4 md:pb-16">{blog.title}</h3>
+        <h4 className="text-center font-medium">{blog.title}</h4>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {articles.map((article, i) => (
             <ArticleCard
@@ -59,6 +54,17 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
   return <Section ref={ref} {...rest} />;
 });
 
+interface ArticleCardProps {
+  article: ArticleFragment;
+  blogHandle: string;
+  loading?: HTMLImageElement["loading"];
+  showDate: boolean;
+  showExcerpt: boolean;
+  showAuthor: boolean;
+  showReadmore: boolean;
+  imageAspectRatio: ImageAspectRatio;
+}
+
 function ArticleCard({
   blogHandle,
   article,
@@ -68,44 +74,48 @@ function ArticleCard({
   showDate,
   showReadmore,
   imageAspectRatio,
-}: {
-  blogHandle: string;
-  article: ArticleFragment;
-  loading?: HTMLImageElement["loading"];
-  showDate: boolean;
-  showExcerpt: boolean;
-  showAuthor: boolean;
-  showReadmore: boolean;
-  imageAspectRatio: string;
-}) {
+}: ArticleCardProps) {
   return (
-    <Link to={`/blogs/${blogHandle}/${article.handle}`}>
+    <div className="flex flex-col gap-5">
       {article.image && (
-        <div className="card-image aspect-[3/2]">
+        <Link
+          to={`/blogs/${blogHandle}/${article.handle}`}
+          className="flex flex-col gap-5"
+        >
           <Image
             alt={article.image.altText || article.title}
             data={article.image}
-            aspectRatio={imageAspectRatio}
+            aspectRatio={getImageAspectRatio(article.image, imageAspectRatio)}
             loading={loading}
             sizes="(min-width: 768px) 50vw, 100vw"
           />
-        </div>
+        </Link>
       )}
       <div className="space-y-2.5">
-        <h6 className="mt-4 font-medium text-2xl">{article.title}</h6>
-        <div className="flex items-center space-x-1">
+        <Link
+          to={`/blogs/${blogHandle}/${article.handle}`}
+          className="text-xl leading-relaxed inline"
+        >
+          <RevealUnderline>{article.title}</RevealUnderline>
+        </Link>
+        <div className="flex items-center gap-2 empty:hidden text-gray-600">
           {showDate && <span className="block">{article.publishedAt}</span>}
           {showDate && showAuthor && <span>•</span>}
           {showAuthor && <span className="block">{article.author?.name}</span>}
         </div>
-        {showExcerpt && <div> {article.excerpt}</div>}
+        {showExcerpt && <div>{article.excerpt}</div>}
         {showReadmore && (
           <div>
-            <span className="underline underline-offset-4">Read more</span>
+            <Link
+              to={`/blogs/${blogHandle}/${article.handle}`}
+              variant="underline"
+            >
+              Read more →
+            </Link>
           </div>
         )}
       </div>
-    </Link>
+    </div>
   );
 }
 
