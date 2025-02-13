@@ -1,33 +1,28 @@
-import { Await, Link, useLoaderData } from "@remix-run/react";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { Await, useLoaderData } from "@remix-run/react";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
-import type { ArticleFragment } from "storefront-api.generated";
-import { Image } from "~/components/image";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { Skeleton } from "~/components/skeleton";
 import { getImageLoadingPriority } from "~/utils/image";
+import { ArticleCard, type ArticleCardProps } from "./blogs";
+import type { ArticleFragment } from "storefront-api.generated";
+import { Swimlane } from "~/components/swimlane";
+import Heading from "~/components/heading";
 
-interface RelatedArticlesProps extends HydrogenComponentProps {
+interface RelatedArticlesProps
+  extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
+    SectionProps {
   heading: string;
-  articlesCount: number;
-  showExcerpt: boolean;
-  showReadmore: boolean;
-  showDate: boolean;
-  showAuthor: boolean;
-  imageAspectRatio: string;
 }
 
 let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
   (props, ref) => {
     let { blog, relatedArticles } = useLoaderData<{
-      relatedArticles: any[];
+      relatedArticles: ArticleFragment[];
       blog: { handle: string };
     }>();
     let {
       heading,
-      articlesCount,
       showExcerpt,
       showAuthor,
       showDate,
@@ -37,94 +32,30 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
     } = props;
     if (relatedArticles.length > 0) {
       return (
-        <section ref={ref} {...rest}>
-          <Suspense fallback={<Skeleton className="h-32" />}>
-            <Await
-              errorElement="There was a problem loading related products"
-              resolve={relatedArticles}
-            >
-              <div className="space-y-8 md:space-y-16 md:p-8 lg:p-12 p-4">
-                <h2 className="text-3xl font-bold max-w-prose text-center mx-auto">
-                  {heading}
-                </h2>
-                <ol className="md:grid grid-cols-3 hidden-scroll md:gap-6">
-                  {relatedArticles.slice(0, articlesCount).map((article, i) => (
-                    <ArticleCard
-                      key={article.id}
-                      blogHandle={blog.handle}
-                      article={article}
-                      loading={getImageLoadingPriority(i, 2)}
-                      showAuthor={showAuthor}
-                      showExcerpt={showExcerpt}
-                      showDate={showDate}
-                      showReadmore={showReadmore}
-                      imageAspectRatio={imageAspectRatio}
-                    />
-                  ))}
-                </ol>
-              </div>
-            </Await>
-          </Suspense>
-        </section>
+        <Section ref={ref} {...rest}>
+          <Heading content={heading} animate={false} />
+          <Swimlane>
+            {relatedArticles.map((article, i) => (
+              <ArticleCard
+                key={article.id}
+                blogHandle={blog.handle}
+                article={article}
+                loading={getImageLoadingPriority(i, 2)}
+                showAuthor={showAuthor}
+                showExcerpt={showExcerpt}
+                showDate={showDate}
+                showReadmore={showReadmore}
+                imageAspectRatio={imageAspectRatio}
+                className="snap-start w-80"
+              />
+            ))}
+          </Swimlane>
+        </Section>
       );
     }
     return <section ref={ref} />;
   },
 );
-
-function ArticleCard({
-  blogHandle,
-  article,
-  loading,
-  showExcerpt,
-  showAuthor,
-  showDate,
-  showReadmore,
-  imageAspectRatio,
-}: {
-  blogHandle: string;
-  article: ArticleFragment;
-  loading?: HTMLImageElement["loading"];
-  showDate: boolean;
-  showExcerpt: boolean;
-  showAuthor: boolean;
-  showReadmore: boolean;
-  imageAspectRatio: string;
-}) {
-  return (
-    <li key={article.id}>
-      <Link to={`/blogs/${blogHandle}/${article.handle}`}>
-        {article.image && (
-          <div className="card-image aspect-[3/2]">
-            <Image
-              alt={article.image.altText || article.title}
-              data={article.image}
-              aspectRatio={imageAspectRatio}
-              loading={loading}
-              sizes="(min-width: 768px) 50vw, 100vw"
-            />
-          </div>
-        )}
-        <div className="space-y-2.5">
-          <h2 className="mt-4 font-medium text-2xl">{article.title}</h2>
-          <div className="flex items-center space-x-1">
-            {showDate && <span className="block">{article.publishedAt}</span>}
-            {showDate && showAuthor && <span>•</span>}
-            {showAuthor && (
-              <span className="block">{article.author?.name}</span>
-            )}
-          </div>
-          {showExcerpt && <div className="text-sm"> {article.excerpt}</div>}
-          {showReadmore && (
-            <div>
-              <span className="underline">Read more</span>
-            </div>
-          )}
-        </div>
-      </Link>
-    </li>
-  );
-}
 
 export default RelatedArticles;
 
@@ -137,7 +68,11 @@ export let schema: HydrogenComponentSchema = {
   },
   inspector: [
     {
-      group: "Related articles",
+      group: "Layout",
+      inputs: layoutInputs,
+    },
+    {
+      group: "Content",
       inputs: [
         {
           type: "text",
@@ -147,15 +82,21 @@ export let schema: HydrogenComponentSchema = {
           placeholder: "Related articles",
         },
         {
-          type: "range",
-          name: "articlesCount",
-          label: "Number of articles",
-          defaultValue: 3,
+          type: "select",
+          name: "imageAspectRatio",
+          label: "Image aspect ratio",
+          defaultValue: "adapt",
           configs: {
-            min: 1,
-            max: 12,
-            step: 1,
+            options: [
+              { value: "adapt", label: "Adapt to image" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
+            ],
           },
+          helpText:
+            'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
         },
         {
           type: "switch",
