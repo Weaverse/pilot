@@ -93,6 +93,7 @@ export interface HeadingProps
   backgroundColor?: string;
   minSize?: number;
   maxSize?: number;
+  animate?: boolean;
 }
 
 let Heading = forwardRef<
@@ -113,6 +114,7 @@ let Heading = forwardRef<
     minSize,
     maxSize,
     className,
+    animate = true,
     ...rest
   } = props;
   let style: CSSProperties = { color, backgroundColor };
@@ -124,15 +126,17 @@ let Heading = forwardRef<
       "--max-size": maxSize,
     } as CSSProperties;
   }
+  if (animate) {
+    rest["data-motion"] = "fade-up";
+  }
   return (
     <Tag
       ref={ref}
       {...rest}
-      data-motion="fade-up"
       style={style}
       className={cn(
         size === "custom" && fontSizeVariants({ mobileSize, desktopSize }),
-        variants({ size, weight, letterSpacing, alignment, className })
+        variants({ size, weight, letterSpacing, alignment, className }),
       )}
     >
       {content}
