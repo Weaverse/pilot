@@ -37,6 +37,8 @@ export default defineConfig({
   ssr: {
     optimizeDeps: {
       include: [
+        "jsonp",
+        "classnames",
         "typographic-trademark",
         "typographic-single-spaces",
         "typographic-registered-trademark",
