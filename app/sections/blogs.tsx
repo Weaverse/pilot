@@ -7,6 +7,7 @@ import { Link } from "~/components/link";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { RevealUnderline } from "~/reveal-underline";
 import type { ImageAspectRatio } from "~/types/image";
+import { cn } from "~/utils/cn";
 import { getImageAspectRatio, getImageLoadingPriority } from "~/utils/image";
 
 interface BlogsProps
@@ -54,7 +55,7 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
   return <Section ref={ref} {...rest} />;
 });
 
-interface ArticleCardProps {
+export interface ArticleCardProps {
   article: ArticleFragment;
   blogHandle: string;
   loading?: HTMLImageElement["loading"];
@@ -63,9 +64,10 @@ interface ArticleCardProps {
   showAuthor: boolean;
   showReadmore: boolean;
   imageAspectRatio: ImageAspectRatio;
+  className?: string;
 }
 
-function ArticleCard({
+export function ArticleCard({
   blogHandle,
   article,
   loading,
@@ -74,9 +76,10 @@ function ArticleCard({
   showDate,
   showReadmore,
   imageAspectRatio,
+  className,
 }: ArticleCardProps) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className={cn("flex flex-col gap-5", className)}>
       {article.image && (
         <Link
           to={`/blogs/${blogHandle}/${article.handle}`}
@@ -103,7 +106,9 @@ function ArticleCard({
           {showDate && showAuthor && <span>•</span>}
           {showAuthor && <span className="block">{article.author?.name}</span>}
         </div>
-        {showExcerpt && <div>{article.excerpt}</div>}
+        {showExcerpt && (
+          <div className="line-clamp-2 lg:line-clamp-4">{article.excerpt}</div>
+        )}
         {showReadmore && (
           <div>
             <Link
