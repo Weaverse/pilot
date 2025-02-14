@@ -253,5 +253,5 @@ mark {
 }
 
 .animated-scope [data-motion] {
-  opacity: 0;
+  /* opacity: 0; */
 }
