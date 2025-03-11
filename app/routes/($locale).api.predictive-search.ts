@@ -2,7 +2,7 @@ import {
   flattenConnection,
   mapSelectedProductOptionToObject,
 } from "@shopify/hydrogen";
-import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs, data } from "@shopify/remix-oxygen";
 import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,
@@ -48,7 +48,7 @@ export async function action({ request, params, context }: LoaderFunctionArgs) {
     context,
   });
 
-  return json(search);
+  return data(search);
 }
 
 async function fetchPredictiveSearchResults({

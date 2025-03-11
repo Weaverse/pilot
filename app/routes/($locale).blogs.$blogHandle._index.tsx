@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
-import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { data, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import type { BlogQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
@@ -44,7 +44,7 @@ export let loader = async (args: LoaderFunctionArgs) => {
 
   let seo = seoPayload.blog({ blog, url: request.url });
 
-  return json({
+  return data({
     blog,
     articles,
     seo,

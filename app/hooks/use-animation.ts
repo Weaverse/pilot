@@ -31,9 +31,9 @@ export function useAnimation(ref?: ForwardedRef<any>) {
       elems.forEach((elem: HTMLElement, idx: number) => {
         inView(
           elem,
-          ({ target }) => {
+          (element: Element, entry: IntersectionObserverEntry) => {
             let { motion, delay } = elem.dataset;
-            animate(target, ANIMATIONS[motion || "fade-up"], {
+            animate(element, ANIMATIONS[motion || "fade-up"], {
               delay: Number(delay) || idx * 0.15,
               duration: 0.5,
             });

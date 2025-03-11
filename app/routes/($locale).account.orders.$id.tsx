@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
-import { type LoaderFunctionArgs, json, redirect } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
 import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import { OrderDetails } from "~/components/customer/order-details";
 
@@ -46,13 +46,13 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
         ? fulfillments[0].status
         : ("OPEN" as FulfillmentStatus);
 
-    return json({
+    return {
       order,
       lineItems,
       discountValue,
       discountPercentage,
       fulfillmentStatus,
-    });
+    }
   } catch (error) {
     throw new Response(error instanceof Error ? error.message : undefined, {
       status: 404,

@@ -12,7 +12,6 @@ import type {
 import {
   type LoaderFunctionArgs,
   type MetaArgs,
-  json,
   redirect,
 } from "@shopify/remix-oxygen";
 import type { CollectionQuery } from "storefront-api.generated";
@@ -136,7 +135,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     })
     .filter((filter): filter is NonNullable<typeof filter> => filter !== null);
 
-  return json({
+  return {
     collection,
     appliedFilters,
     // @ts-ignore
@@ -146,7 +145,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       type: "COLLECTION",
       handle: collectionHandle,
     }),
-  });
+  }
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {

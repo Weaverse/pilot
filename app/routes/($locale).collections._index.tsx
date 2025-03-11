@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
-import { json } from "@shopify/remix-oxygen";
+import { data } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
@@ -36,13 +36,16 @@ export let loader = async (args: RouteLoaderArgs) => {
     url: request.url,
   });
 
-  return json({
-    collections,
-    seo,
-    weaverseData: await weaverse.loadPage({
-      type: "COLLECTION_LIST",
-    }),
-  });
+  return data(
+    {
+      collections,
+      seo,
+      weaverseData: await weaverse.loadPage({
+        type: "COLLECTION_LIST",
+      }),
+    },
+    { status: 200 },
+  );
 };
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {

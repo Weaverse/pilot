@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
@@ -41,7 +41,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
 
   let seo = seoPayload.policy({ policy, url: request.url });
 
-  return json({ policy, seo });
+  return { policy, seo }
 }
 
 export default function Policies() {

@@ -1,5 +1,5 @@
 import type { LoaderFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import { data } from "@remix-run/server-runtime";
 import type { Storefront } from "@shopify/hydrogen";
 import type { VariantsQuery, ProductQuery } from "storefront-api.generated";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
@@ -12,9 +12,9 @@ export let loader: LoaderFunction = async ({
   let handle = searchParams.get("handle");
   if (handle) {
     let productData = await getProductData(storefront, handle);
-    return json(productData);
+    return data(productData);
   }
-  return json(null, { status: 404 });
+  return data(null, { status: 404 });
 };
 
 async function getProductData(storefront: Storefront, handle: string) {

@@ -12,7 +12,7 @@ import {
   flattenConnection,
   generateCacheControlHeader,
 } from "@shopify/hydrogen";
-import { type LoaderFunctionArgs, defer } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs, data } from "@shopify/remix-oxygen";
 import type {
   CustomerDetailsFragment,
   CustomerDetailsQuery,
@@ -36,7 +36,7 @@ import {
 export let headers = routeHeaders;
 
 export async function loader({ context }: LoaderFunctionArgs) {
-  let { data, errors } =
+  let { data: d, errors } =
     await context.customerAccount.query<CustomerDetailsQuery>(
       CUSTOMER_DETAILS_QUERY,
     );
@@ -44,15 +44,15 @@ export async function loader({ context }: LoaderFunctionArgs) {
   /**
    * If the customer failed to load, we assume their access token is invalid.
    */
-  if (errors?.length || !data?.customer) {
+  if (errors?.length || !d?.customer) {
     throw await doLogout(context);
   }
 
-  let customer = data?.customer;
+  let customer = d?.customer;
   let heading = customer ? "My Account" : "Account Details";
   let featuredData = getFeaturedData(context.storefront);
 
-  return defer(
+  return data(
     { customer, heading, featuredData },
     { headers: { "Cache-Control": generateCacheControlHeader(CacheNone()) } },
   );
