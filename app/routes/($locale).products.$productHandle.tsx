@@ -5,7 +5,7 @@ import type {
   LoaderFunctionArgs,
   MetaArgs,
 } from "@shopify/remix-oxygen";
-import { defer, json } from "@shopify/remix-oxygen";
+import { data } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import type { ProductQuery, VariantsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -53,7 +53,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     });
   let variants = productWithAllVariants.variants.nodes;
 
-  return defer({
+  return {
     shop,
     product,
     variants,
@@ -66,7 +66,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     }),
     recommended: getRecommendedProducts(storefront, product.id),
     selectedOptions,
-  });
+  }
 }
 
 export async function action({
@@ -84,10 +84,10 @@ export async function action({
       apiToken: env.JUDGEME_PRIVATE_API_TOKEN,
       shopDomain: env.PUBLIC_STORE_DOMAIN,
     });
-    return json(response);
+    return response
   } catch (error) {
     console.error(error);
-    return json({ error: "Failed to create review!" }, { status: 500 });
+    return data({ error: "Failed to create review!" }, { status: 500 });
   }
 }
 

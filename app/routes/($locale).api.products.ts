@@ -1,6 +1,6 @@
 import { flattenConnection } from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
-import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs, data } from "@shopify/remix-oxygen";
 import type { ApiAllProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
@@ -61,7 +61,7 @@ export async function loader({
 
   invariant(products, "No data returned from top products query");
 
-  return json({ products: flattenConnection(products) });
+  return data({ products: flattenConnection(products) });
 }
 
 const API_ALL_PRODUCTS_QUERY = `#graphql

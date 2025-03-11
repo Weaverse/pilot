@@ -1,7 +1,7 @@
 import {
   type ActionFunction,
   type ActionFunctionArgs,
-  json,
+  data,
 } from "@remix-run/server-runtime";
 
 const KLAVIYO_API = "https://a.klaviyo.com/api/profiles";
@@ -22,7 +22,7 @@ export let action: ActionFunction = async ({
     errorMessage = "Email is required";
   }
   if (errorMessage) {
-    return json(
+    return data(
       {
         success: false,
         message: errorMessage,
@@ -50,11 +50,11 @@ export let action: ActionFunction = async ({
     let status = response.status;
     let message = await response.json();
     if (response.ok) {
-      return json({ success: true }, status);
+      return data({ success: true }, status);
     }
-    return json({ success: false, message }, status);
+    return data({ success: false, message }, status);
   } catch (e) {
-    return json(
+    return data(
       { success: false, message: "Something went wrong! Please try again." },
       500
     );

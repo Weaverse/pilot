@@ -2,7 +2,7 @@ import type { MetaFunction } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
-import { type LoaderFunctionArgs, json } from "@shopify/remix-oxygen";
+import { type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
@@ -36,10 +36,10 @@ export async function loader({
 
   let seo = seoPayload.policies({ policies, url: request.url });
 
-  return json({
+  return {
     policies,
     seo,
-  });
+  }
 }
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {

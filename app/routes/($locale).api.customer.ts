@@ -2,7 +2,7 @@ import type {
   ActionFunction,
   ActionFunctionArgs,
 } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import { data } from "@remix-run/server-runtime";
 import type { CustomerCreateMutation } from "storefront-api.generated";
 
 const CUSTOMER_CREATE = `#graphql
@@ -41,7 +41,7 @@ export let action: ActionFunction = async ({
   let customerUserErrors = customerCreate?.customerUserErrors;
 
   if (queryErrors?.length) {
-    return json(
+    return data(
       {
         errors: queryErrors,
         errorMessage: "Internal server error!",
@@ -51,7 +51,7 @@ export let action: ActionFunction = async ({
     );
   }
   if (customerUserErrors?.length) {
-    return json(
+    return data(
       {
         errors: customerUserErrors,
         errorMessage: customerUserErrors?.[0]?.message,
@@ -61,9 +61,12 @@ export let action: ActionFunction = async ({
     );
   }
   if (customer) {
-    return json({ customer, ok: true }, { status: 201 });
+    return data(
+      { customer, ok: true },
+      { status: 201 },
+    );
   }
-  return json(
+  return data(
     {
       errorMessage: "Something went wrong! Please try again later.",
       ok: false,

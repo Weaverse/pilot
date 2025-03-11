@@ -2,7 +2,6 @@ import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import { json } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { routeHeaders } from "~/utils/cache";
@@ -48,13 +47,13 @@ export async function loader({
     },
   });
 
-  return json({
+  return {
     products: data.products,
     seo,
     weaverseData: await weaverse.loadPage({
       type: "ALL_PRODUCTS",
     }),
-  });
+  }
 }
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {
