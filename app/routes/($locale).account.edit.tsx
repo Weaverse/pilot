@@ -8,7 +8,7 @@ import type {
   Customer,
   CustomerUpdateInput,
 } from "@shopify/hydrogen/customer-account-api-types";
-import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
+import { type ActionFunction, data, redirect } from "@shopify/remix-oxygen";
 import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
@@ -82,7 +82,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
 
     return redirect(params?.locale ? `${params.locale}/account` : "/account");
   } catch (error: any) {
-    return json(
+    return data(
       { formError: error?.message },
       {
         status: 400,

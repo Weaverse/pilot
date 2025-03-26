@@ -10,9 +10,9 @@ import type {
   CartLineUpdateInput,
 } from "@shopify/hydrogen/storefront-api-types";
 import {
+  data,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-  json,
 } from "@shopify/remix-oxygen";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -75,7 +75,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   let { cart: cartResult, errors, userErrors } = result;
 
-  return json(
+  return data(
     {
       cart: cartResult,
       userErrors,
@@ -87,7 +87,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
 export async function loader({ context }: LoaderFunctionArgs) {
   let { cart } = context;
-  return json(await cart.get());
+  return await cart.get();
 }
 
 export default function CartRoute() {

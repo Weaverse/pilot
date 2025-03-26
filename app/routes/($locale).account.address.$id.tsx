@@ -1,5 +1,5 @@
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
-import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
+import { type ActionFunction, data, redirect } from "@shopify/remix-oxygen";
 import invariant from "tiny-invariant";
 import { AccountEditAddressForm } from "~/components/customer/edit-address-form";
 import { doLogout } from "./($locale).account_.logout";
@@ -45,7 +45,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
         params?.locale ? `${params?.locale}/account` : "/account",
       );
     } catch (error: any) {
-      return json(
+      return data(
         { formError: error.message },
         {
           status: 400,
@@ -104,7 +104,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
         params?.locale ? `${params?.locale}/account` : "/account",
       );
     } catch (error: any) {
-      return json(
+      return data(
         { formError: error.message },
         {
           status: 400,
@@ -136,7 +136,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
         params?.locale ? `${params?.locale}/account` : "/account",
       );
     } catch (error: any) {
-      return json(
+      return data(
         { formError: error.message },
         {
           status: 400,

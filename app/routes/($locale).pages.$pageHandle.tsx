@@ -1,7 +1,6 @@
 import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
-import { json } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { PageDetailsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -28,14 +27,14 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
 
   let seo = seoPayload.page({ page, url: request.url });
 
-  return json({
+  return {
     page,
     seo,
     weaverseData: await context.weaverse.loadPage({
       type: "PAGE",
       handle: params.pageHandle,
     }),
-  });
+  }
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

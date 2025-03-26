@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import { json } from "@shopify/remix-oxygen";
+import { data } from "@shopify/remix-oxygen";
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const { cart } = context;
@@ -24,7 +24,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
     const { cart: cartResult, errors, userErrors } = result;
 
-    return json(
+    return data(
       {
         cart: cartResult,
         userErrors,
@@ -34,6 +34,6 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     );
   } catch (e) {
     console.error(e);
-    return json({ error: e });
+    return data({ error: e });
   }
 }

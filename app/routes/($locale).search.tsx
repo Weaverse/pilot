@@ -7,7 +7,6 @@ import {
   getSeoMeta,
 } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
-import { defer } from "@shopify/remix-oxygen";
 import { clsx } from "clsx";
 import { Fragment, Suspense, useEffect, useState } from "react";
 import type { SearchQuery } from "storefront-api.generated";
@@ -53,7 +52,7 @@ export async function loader({
 
   let hasResults = products?.nodes?.length > 0;
 
-  return defer({
+  return {
     seo: seoPayload.collection({
       url: request.url,
       collection: {
@@ -80,7 +79,7 @@ export async function loader({
     recommendations: hasResults
       ? Promise.resolve(null)
       : getRecommendations(storefront),
-  });
+  }
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {

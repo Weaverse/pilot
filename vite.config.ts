@@ -3,7 +3,11 @@ import { hydrogen } from "@shopify/hydrogen/vite";
 import { oxygen } from "@shopify/mini-oxygen/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-
+declare module "@remix-run/server-runtime" {
+  interface Future {
+    v3_singleFetch: true;
+  }
+}
 export default defineConfig({
   plugins: [
     hydrogen(),
@@ -15,7 +19,7 @@ export default defineConfig({
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
         v3_lazyRouteDiscovery: true,
-        v3_singleFetch: false,
+        v3_singleFetch: true,
       },
     }),
     tsconfigPaths(),
