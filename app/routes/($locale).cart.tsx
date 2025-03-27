@@ -11,6 +11,7 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import {
   data,
+  redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from "@shopify/remix-oxygen";
@@ -64,13 +65,13 @@ export async function action({ request, context }: ActionFunctionArgs) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  // let cartId = result.cart.id;
   let headers = cart.setCartId(result.cart.id);
 
   let redirectTo = formData.get("redirectTo") ?? null;
   if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
-    status = 303;
-    headers.set("Location", redirectTo);
+    // status = 303;
+    // headers.set("Location", redirectTo);
+    return redirect(redirectTo);
   }
 
   let { cart: cartResult, errors, userErrors } = result;
