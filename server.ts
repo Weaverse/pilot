@@ -174,6 +174,8 @@ class AppSession implements HydrogenSession {
 function getLocaleFromRequest(request: Request): I18nLocale {
   let url = new URL(request.url);
   let firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
+  firstPathPart = firstPathPart.replace(".data", "");
+
   return COUNTRIES[firstPathPart]
     ? {
         ...COUNTRIES[firstPathPart],
