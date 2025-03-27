@@ -8,12 +8,13 @@ import {
 } from "@remix-run/react";
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
+import type { Locale } from "@weaverse/hydrogen";
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useInView } from "react-intersection-observer";
-import { DEFAULT_LOCALE } from "~/utils/const";
 import type { RootLoader } from "~/root";
-import type { Locale, Localizations } from "~/types/locale";
+import type { Localizations } from "~/types/locale";
+import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {
   let fetcher = useFetcher();
@@ -23,7 +24,7 @@ export function CountrySelector() {
   let { pathname, search } = useLocation();
   let pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
-    ""
+    "",
   )}${search}`;
 
   let countries = (fetcher.data ?? {}) as Localizations;
@@ -46,30 +47,30 @@ export function CountrySelector() {
 
   // Get available countries list when in view
   useEffect(() => {
-    if (!inView || fetcher.data || fetcher.state === "loading") return;
+    if (!inView || fetcher.data || fetcher.state === "loading") {
+      return;
+    }
     fetcher.load("/api/countries");
   }, [inView, fetcher]);
 
-  let handleLocaleChange = ({
+  function handleLocaleChange({
     redirectTo,
     buyerIdentity,
   }: {
     redirectTo: string;
     buyerIdentity: CartBuyerIdentityInput;
-  }) => {
-    let cartFormInput = {
-      action: CartForm.ACTIONS.BuyerIdentityUpdate,
-      inputs: { buyerIdentity },
-    };
-    let formData = {
-      redirectTo,
-      cartFormInput: JSON.stringify(cartFormInput),
-    };
-    submit(formData, {
-      method: "POST",
-      action: "/cart",
-    });
-  };
+  }) {
+    submit(
+      {
+        redirectTo,
+        cartFormInput: JSON.stringify({
+          action: CartForm.ACTIONS.BuyerIdentityUpdate,
+          inputs: { buyerIdentity },
+        }),
+      },
+      { method: "POST", action: "/cart" },
+    );
+  }
 
   return (
     <div ref={observerRef} className="grid gap-4 w-80">
