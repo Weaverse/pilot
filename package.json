@@ -90,6 +90,6 @@
     "@esbuild/linux-x64": "0.25.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20"
   }
 }
