@@ -149,7 +149,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+  return getSeoMeta(...matches.map((match) => (match.data as any)?.seo).filter(Boolean));
 };
 
 export default function Collection() {

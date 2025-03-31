@@ -24,7 +24,7 @@ import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
 import { GlobalStyle } from "./weaverse/style";
 
-export function Layout({ children }: { children?: React.ReactNode }) {
+export function Layout() {
   let nonce = useNonce();
   let data = useRouteLoaderData<RootLoader>("root");
   let locale = data?.selectedLocale ?? DEFAULT_LOCALE;
