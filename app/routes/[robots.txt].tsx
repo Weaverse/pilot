@@ -1,5 +1,5 @@
-import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { parseGid } from '@shopify/hydrogen';
+import { parseGid } from "@shopify/hydrogen";
+import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -12,9 +12,9 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   return new Response(body, {
     status: 200,
     headers: {
-      'Content-Type': 'text/plain',
+      "Content-Type": "text/plain",
 
-      'Cache-Control': `max-age=${60 * 60 * 24}`,
+      "Cache-Control": `max-age=${60 * 60 * 24}`,
     },
   });
 }
@@ -32,8 +32,8 @@ Disallow: /checkouts/
 Disallow: /checkout
 Disallow: /carts
 Disallow: /orders
-${shopId ? `Disallow: /${shopId}/checkouts` : ''}
-${shopId ? `Disallow: /${shopId}/orders` : ''}
+${shopId ? `Disallow: /${shopId}/checkouts` : ""}
+${shopId ? `Disallow: /${shopId}/orders` : ""}
 Disallow: /*?*oseid=*
 Disallow: /*preview_theme_id*
 Disallow: /*preview_script_id*
@@ -73,8 +73,8 @@ Disallow: /cart
 Disallow: /orders
 Disallow: /checkouts/
 Disallow: /checkout
-${shopId ? `Disallow: /${shopId}/checkouts` : ''}
-${shopId ? `Disallow: /${shopId}/orders` : ''}
+${shopId ? `Disallow: /${shopId}/checkouts` : ""}
+${shopId ? `Disallow: /${shopId}/orders` : ""}
 Disallow: /carts
 Disallow: /account
 Disallow: /collections/*sort_by*
@@ -104,7 +104,7 @@ Allow: /search/
 Disallow: /search/?*
 Disallow: /apple-app-site-association
 Disallow: /.well-known/shopify/monorail
-${sitemapUrl ? `Sitemap: ${sitemapUrl}` : ''}`;
+${sitemapUrl ? `Sitemap: ${sitemapUrl}` : ""}`;
 }
 
 const ROBOTS_QUERY = `#graphql

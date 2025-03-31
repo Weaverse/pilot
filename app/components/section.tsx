@@ -121,7 +121,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         variants({ padding: width, overflow, className }),
         hasBackground &&
           !isBgForContent &&
-          "bg-[--section-bg-color] rounded-[--section-radius]"
+          "bg-[--section-bg-color] rounded-[--section-radius]",
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
@@ -133,7 +133,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
               "bg-[--section-bg-color] rounded-[--section-radius]",
               "px-4 sm:px-8",
             ],
-          containerClassName
+          containerClassName,
         )}
       >
         {isBgForContent && <OverlayAndBackground {...props} />}

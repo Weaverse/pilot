@@ -79,7 +79,7 @@ export async function loader({
     recommendations: hasResults
       ? Promise.resolve(null)
       : getRecommendations(storefront),
-  }
+  };
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {

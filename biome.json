@@ -23,7 +23,9 @@
       "a11y": {
         "useKeyWithClickEvents": "off",
         "noSvgWithoutTitle": "off",
-        "useButtonType": "off"
+        "useButtonType": "off",
+        "useSemanticElements": "warn",
+        "useFocusableInteractive": "warn"
       }
     }
   },

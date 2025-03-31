@@ -7,13 +7,13 @@ import type {
 } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import type { ProductQuery } from "storefront-api.generated";
-import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
-import { useAnimation } from "~/hooks/use-animation";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductPlaceholder } from "~/components/product/placeholder";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
-import { layoutInputs, Section } from "~/components/section";
+import { Section, layoutInputs } from "~/components/section";
+import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
+import { useAnimation } from "~/hooks/use-animation";
 
 interface SingleProductData {
   productsCount: number;

@@ -1,7 +1,7 @@
 import { flattenConnection } from "@shopify/hydrogen";
-import { Image } from "~/components/image";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import type { OrderCardFragment } from "customer-account-api.generated";
+import { Image } from "~/components/image";
 import Link from "~/components/link";
 
 export const ORDER_STATUS: Record<FulfillmentStatus, string> = {

@@ -61,7 +61,7 @@ export const COUNTRIES: Localizations = {
     country: "JP",
     currency: "JPY",
   },
-  
+
   "/en-nl": {
     label: "Netherlands (EUR €)",
     language: "EN",

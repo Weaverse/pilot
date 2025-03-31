@@ -61,10 +61,7 @@ export let action: ActionFunction = async ({
     );
   }
   if (customer) {
-    return data(
-      { customer, ok: true },
-      { status: 201 },
-    );
+    return data({ customer, ok: true }, { status: 201 });
   }
   return data(
     {

@@ -66,7 +66,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     }),
     recommended: getRecommendedProducts(storefront, product.id),
     selectedOptions,
-  }
+  };
 }
 
 export async function action({
@@ -84,7 +84,7 @@ export async function action({
       apiToken: env.JUDGEME_PRIVATE_API_TOKEN,
       shopDomain: env.PUBLIC_STORE_DOMAIN,
     });
-    return response
+    return response;
   } catch (error) {
     console.error(error);
     return data({ error: "Failed to create review!" }, { status: 500 });

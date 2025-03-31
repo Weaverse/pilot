@@ -145,7 +145,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       type: "COLLECTION",
       handle: collectionHandle,
     }),
-  }
+  };
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {

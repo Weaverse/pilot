@@ -1,16 +1,16 @@
+import { FileText } from "@phosphor-icons/react";
 import type { MetaFunction } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
-import { type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
+import { BreadCrumb } from "~/components/breadcrumb";
+import { Link } from "~/components/link";
+import { Section } from "~/components/section";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
-import { Link } from "~/components/link";
-import type { PoliciesIndexQuery } from "storefront-api.generated";
-import { BreadCrumb } from "~/components/breadcrumb";
-import { Section } from "~/components/section";
-import { FileText } from "@phosphor-icons/react";
 
 export let headers = routeHeaders;
 
@@ -39,7 +39,7 @@ export async function loader({
   return {
     policies,
     seo,
-  }
+  };
 }
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {

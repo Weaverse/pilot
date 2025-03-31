@@ -1,13 +1,13 @@
 import { Await, useLoaderData } from "@remix-run/react";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
-import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import type { ArticleFragment } from "storefront-api.generated";
+import Heading from "~/components/heading";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
 import { Skeleton } from "~/components/skeleton";
+import { Swimlane } from "~/components/swimlane";
 import { getImageLoadingPriority } from "~/utils/image";
 import { ArticleCard, type ArticleCardProps } from "./blogs";
-import type { ArticleFragment } from "storefront-api.generated";
-import { Swimlane } from "~/components/swimlane";
-import Heading from "~/components/heading";
 
 interface RelatedArticlesProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,

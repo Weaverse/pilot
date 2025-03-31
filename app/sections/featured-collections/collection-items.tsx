@@ -8,6 +8,7 @@ import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
+import { Image } from "~/components/image";
 import Link, { linkStylesInputs, type LinkStyleProps } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
@@ -15,7 +16,6 @@ import { useAnimation } from "~/hooks/use-animation";
 import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
-import { Image } from "~/components/image";
 
 let variants = cva("", {
   variants: {

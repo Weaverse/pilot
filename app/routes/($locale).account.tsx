@@ -25,8 +25,8 @@ import { OutletModal } from "~/components/customer/outlet-modal";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { routeHeaders } from "~/utils/cache";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { routeHeaders } from "~/utils/cache";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,

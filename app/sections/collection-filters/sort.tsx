@@ -60,7 +60,7 @@ export function Sort() {
                   to={`${location.pathname}?${params.toString()}`}
                   className={cn(
                     "hover:underline underline-offset-[6px] hover:outline-none",
-                    currentSort.key === key && "font-bold"
+                    currentSort.key === key && "font-bold",
                   )}
                   preventScrollReset
                 >
