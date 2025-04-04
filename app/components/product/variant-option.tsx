@@ -83,7 +83,7 @@ export function VariantOption({ option }: VariantOptionProps) {
                   className={clsx(
                     "size-[--option-swatch-size] flex aspect-square cursor-pointer",
                     "rounded-full overflow-hidden",
-                    "transition-[outline-color] outline outline-offset-2 outline-1",
+                    "transition-[outline-color] [outline-style:solid] outline-offset-2 outline-1",
                     isActive
                       ? "outline-line"
                       : "outline-transparent hover:outline-line",
