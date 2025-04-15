@@ -98,8 +98,6 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-
-
 export function Layout({ children }: { children: React.ReactNode }) {
   let nonce = useNonce();
   let data = useRouteLoaderData<RootLoader>("root");

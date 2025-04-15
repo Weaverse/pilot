@@ -26,7 +26,6 @@ export async function loadCriticalData({
   let seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
   let { storefront, env } = context;
-
   return {
     layout,
     seo,

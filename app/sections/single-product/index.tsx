@@ -210,28 +210,6 @@ export let schema: HydrogenComponentSchema = {
           type: "switch",
           defaultValue: true,
         },
-        {
-          label: "Number of thumbnails",
-          name: "numberOfThumbnails",
-          type: "range",
-          condition: "showThumbnails.eq.true",
-          configs: {
-            min: 1,
-            max: 10,
-          },
-          defaultValue: 4,
-        },
-        {
-          label: "Gap between images",
-          name: "spacing",
-          type: "range",
-          configs: {
-            min: 0,
-            step: 2,
-            max: 100,
-          },
-          defaultValue: 10,
-        },
       ],
     },
   ],

@@ -13,7 +13,7 @@ import Link, { linkContentInputs, type LinkProps } from "~/components/link";
 import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 
-let variants = cva("bg-gray-100", {
+let variants = cva("", {
   variants: {
     size: {
       large: "col-span-6",

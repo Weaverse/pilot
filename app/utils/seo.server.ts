@@ -1,13 +1,12 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import type {
-  Article,
-  Blog,
-  Collection,
-  Image,
-  Page,
-  Product,
-  ProductVariant,
-  ShopPolicy,
+	Article,
+	Blog,
+	Collection,
+	Image,
+	Page,
+	Product,
+	ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
 import type {
@@ -231,6 +230,7 @@ function collection({
       collection?.seo?.description ?? collection?.description ?? "",
     ),
     titleTemplate: "%s | Collection",
+    url,
     media: {
       type: "image",
       url: collection?.image?.url,
