@@ -1,10 +1,10 @@
+import { useSearchParams } from "@remix-run/react";
 import { VariantSelector } from "@shopify/hydrogen";
 import type {
   ProductOptionFragment,
   ProductVariantFragment,
 } from "storefront-api.generated";
 import { VariantOption } from "./variant-option";
-import { useSearchParams } from "@remix-run/react";
 
 interface ProductVariantsProps {
   productHandle: string;

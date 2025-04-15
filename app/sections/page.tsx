@@ -3,7 +3,7 @@ import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { PageDetailsQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
-import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { Section, type SectionProps, layoutInputs } from "~/components/section";
 
 interface PageProps extends SectionProps {}
 

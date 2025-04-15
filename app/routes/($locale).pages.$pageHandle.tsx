@@ -34,11 +34,11 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
       type: "PAGE",
       handle: params.pageHandle,
     }),
-  }
+  };
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+  return getSeoMeta(data?.seo as SeoConfig);
 };
 
 export default function Page() {

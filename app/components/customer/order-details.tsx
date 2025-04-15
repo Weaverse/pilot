@@ -1,8 +1,8 @@
 import { ArrowLeft, Tag } from "@phosphor-icons/react";
 import { useLoaderData } from "@remix-run/react";
 import { Money } from "@shopify/hydrogen";
-import { Image } from "~/components/image";
 import clsx from "clsx";
+import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import type { loader as orderDetailsLoader } from "~/routes/($locale).account.orders.$id";

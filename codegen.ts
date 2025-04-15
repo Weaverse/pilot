@@ -1,5 +1,5 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
-import { pluckConfig, preset, getSchema } from "@shopify/hydrogen-codegen";
+import { getSchema, pluckConfig, preset } from "@shopify/hydrogen-codegen";
 
 export default {
   overwrite: true,

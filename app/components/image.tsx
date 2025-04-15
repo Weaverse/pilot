@@ -1,6 +1,7 @@
 import { Image as HydrogenImage } from "@shopify/hydrogen";
 import type { Image as ImageType } from "@shopify/hydrogen/storefront-api-types";
-import { useEffect, useRef, useState } from "react";
+import type React from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
 
 type Crop = "center" | "top" | "bottom" | "left" | "right";
@@ -27,19 +28,24 @@ export interface ImageProps extends React.ComponentPropsWithRef<"img"> {
   };
 }
 
-export function Image(props: ImageProps) {
+export const Image = forwardRef<HTMLDivElement, ImageProps>(function Image(props, forwardedRef) {
   let { className, ...rest } = props;
-  let ref = useRef<HTMLImageElement>(null);
+  /**
+   * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
+   * even when using forwardRef for the outer div
+   */
+  let hydrogenImageRef = useRef<HTMLImageElement>(null);
   let [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (ref.current?.complete) {
+    if (hydrogenImageRef.current?.complete) {
       setLoaded(true);
     }
   }, []);
 
   return (
     <div
+      ref={forwardedRef}
       className={cn(
         "w-full h-full overflow-hidden",
         !loaded && "animate-pulse [animation-duration:4s]",
@@ -47,7 +53,7 @@ export function Image(props: ImageProps) {
       )}
     >
       <HydrogenImage
-        ref={ref}
+        ref={hydrogenImageRef}
         className={cn(
           "[transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
           "h-full max-h-full w-full object-cover object-center",
@@ -58,4 +64,4 @@ export function Image(props: ImageProps) {
       />
     </div>
   );
-}
+});

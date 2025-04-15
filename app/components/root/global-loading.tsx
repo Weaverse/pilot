@@ -13,7 +13,7 @@ export function GlobalLoading() {
     if (!ref.current) return;
 
     Promise.allSettled(
-      ref.current.getAnimations().map(({ finished }) => finished)
+      ref.current.getAnimations().map(({ finished }) => finished),
     ).then(() => {
       if (!active) setAnimating(false);
     });
@@ -38,7 +38,7 @@ export function GlobalLoading() {
           transition.state === "idle" &&
             (animating ? "w-full" : "w-0 opacity-0 transition-none"),
           transition.state === "submitting" && "w-4/12",
-          transition.state === "loading" && "w-10/12"
+          transition.state === "loading" && "w-10/12",
         )}
       />
     </div>

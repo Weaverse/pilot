@@ -224,7 +224,7 @@ function getReviewsSummary(allReviews: AliReview[]) {
         count: number;
         avg: number;
       };
-    }
+    },
   );
   return {
     totalReviews,

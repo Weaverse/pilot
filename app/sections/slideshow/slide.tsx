@@ -121,7 +121,7 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: "center center",
         },
         ...layoutInputs.filter(
-          (inp) => inp.name !== "divider" && inp.name !== "borderRadius"
+          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
         ),
       ],
     },
@@ -129,8 +129,8 @@ export let schema: HydrogenComponentSchema = {
       group: "Background",
       inputs: backgroundInputs.filter((inp) =>
         ["backgroundImage", "backgroundFit", "backgroundPosition"].includes(
-          inp.name
-        )
+          inp.name,
+        ),
       ),
     },
     { group: "Overlay", inputs: overlayInputs },

@@ -53,7 +53,7 @@ export async function loader({
     weaverseData: await weaverse.loadPage({
       type: "ALL_PRODUCTS",
     }),
-  }
+  };
 }
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {

@@ -19,7 +19,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
         {children}
       </Section>
     );
-  }
+  },
 );
 
 export default ImageWithText;

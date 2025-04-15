@@ -101,7 +101,7 @@ export function ReviewItem(props: ReviewItemProps) {
                 "flex items-center justify-center bg-gray-800 w-20 h-20 overflow-hidden cursor-pointer",
                 "outline-offset-2 hover:outline hover:outline-2 hover:outline-gray-500",
                 previewMedia?.id === media.id &&
-                  "outline outline-2 outline-gray-500"
+                  "outline outline-2 outline-gray-500",
               )}
               onClick={() => {
                 if (previewMedia?.id === media.id) {

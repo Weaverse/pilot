@@ -1,6 +1,6 @@
 import { useRouteLoaderData } from "@remix-run/react";
-import { DEFAULT_LOCALE } from "~/utils/const";
 import type { RootLoader } from "~/root";
+import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function usePrefixPathWithLocale(path: string) {
   let rootData = useRouteLoaderData<RootLoader>("root");

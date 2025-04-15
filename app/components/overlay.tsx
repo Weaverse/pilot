@@ -25,7 +25,7 @@ export function Overlay(props: OverlayProps) {
           "absolute inset-0 z-[-1] transition-colors duration-300",
           "bg-[var(--overlay-color)]",
           "group-hover/overlay:bg-[var(--overlay-color-hover,var(--overlay-color))]",
-          className
+          className,
         )}
         style={
           {

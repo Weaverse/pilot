@@ -11,13 +11,13 @@ import { Suspense } from "react";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import Link from "~/components/link";
 import { Logo } from "~/components/logo";
-import { cn } from "~/utils/cn";
 import type { RootLoader } from "~/root";
+import { cn } from "~/utils/cn";
+import { DEFAULT_LOCALE } from "~/utils/const";
 import { CartDrawer } from "./cart-drawer";
 import { DesktopMenu } from "./desktop-menu";
 import { MobileMenu } from "./mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
-import { DEFAULT_LOCALE } from "~/utils/const";
 
 let variants = cva("", {
   variants: {
@@ -81,13 +81,13 @@ export function Header() {
               "[&_.cart-count]:bg-[--color-header-text]",
               "[&_.main-logo]:opacity-100",
               "[&_.transparent-logo]:opacity-0",
-            ]
+            ],
       )}
     >
       <div
         className={cn(
           "h-nav py-1.5 lg:py-3 flex items-center justify-between gap-2 lg:gap-8",
-          variants({ width: headerWidth })
+          variants({ width: headerWidth }),
         )}
       >
         <MobileMenu />

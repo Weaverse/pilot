@@ -14,10 +14,10 @@ import clsx from "clsx";
 import { type FormEvent, useEffect, useState } from "react";
 import { Button } from "~/components/button";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import { cn } from "~/utils/cn";
-import type { SingleMenuItem } from "~/types/menu";
-import { CountrySelector } from "./country-selector";
 import { RevealUnderline } from "~/reveal-underline";
+import type { SingleMenuItem } from "~/types/menu";
+import { cn } from "~/utils/cn";
+import { CountrySelector } from "./country-selector";
 
 let variants = cva("", {
   variants: {

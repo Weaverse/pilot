@@ -27,7 +27,7 @@ export let action: ActionFunction = async ({
         success: false,
         message: errorMessage,
       },
-      400
+      400,
     );
   }
 
@@ -56,7 +56,7 @@ export let action: ActionFunction = async ({
   } catch (e) {
     return data(
       { success: false, message: "Something went wrong! Please try again." },
-      500
+      500,
     );
   }
 };

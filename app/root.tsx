@@ -1,14 +1,9 @@
-import poppins400 from "@fontsource/poppins/400.css?url";
-import poppins500 from "@fontsource/poppins/500.css?url";
-import poppins600 from "@fontsource/poppins/600.css?url";
-import poppins700 from "@fontsource/poppins/700.css?url";
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  type ShouldRevalidateFunction,
   isRouteErrorResponse,
   useRouteError,
   useRouteLoaderData,
@@ -20,64 +15,29 @@ import type {
   LoaderFunctionArgs,
   MetaArgs,
 } from "@shopify/remix-oxygen";
-import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
-import { Footer } from "~/components/layout/footer";
-import { Header } from "~/components/layout/header";
-import { CustomAnalytics } from "~/components/root/custom-analytics";
-import { GlobalLoading } from "~/components/root/global-loading";
-import { TooltipProvider } from "~/components/tooltip";
-import { DEFAULT_LOCALE } from "~/utils/const";
-import { loadCriticalData, loadDeferredData } from "~/utils/root.server";
-import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
 import { GenericError } from "./components/root/generic-error";
 import { NotFound } from "./components/root/not-found";
-import styles from "./styles/app.css?url";
+import { loadCriticalData, loadDeferredData } from "./utils/root.server";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { Footer } from "./components/layout/footer";
+import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import { CustomAnalytics } from "./components/root/custom-analytics";
+import { GlobalLoading } from "./components/root/global-loading";
+import { DEFAULT_LOCALE } from "./utils/const";
 import { GlobalStyle } from "./weaverse/style";
+import { Header } from "./components/layout/header";
+import poppins400 from "@fontsource/poppins/400.css?url";
+import poppins500 from "@fontsource/poppins/500.css?url";
+import poppins600 from "@fontsource/poppins/600.css?url";
+import poppins700 from "@fontsource/poppins/700.css?url";
+import styles from "./styles/app.css?url";
 
 export type RootLoader = typeof loader;
 
-/**
- * This is important to avoid re-fetching root queries on sub-navigations
- */
-export const shouldRevalidate: ShouldRevalidateFunction = ({
-  formMethod,
-  currentUrl,
-  nextUrl,
-}) => {
-  // revalidate when a mutation is performed e.g add to cart, login...
-  if (formMethod && formMethod !== "GET") return true;
-
-  // revalidate when manually revalidating via useRevalidator
-  if (currentUrl.toString() === nextUrl.toString()) return true;
-
-  // Defaulting to no revalidation for root loader data to improve performance.
-  // When using this feature, you risk your UI getting out of sync with your server.
-  // Use with caution. If you are uncomfortable with this optimization, update the
-  // line below to `return defaultShouldRevalidate` instead.
-  // For more details see: https://remix.run/docs/en/main/route/should-revalidate
-  return false;
-};
-
 export let links: LinksFunction = () => {
   return [
-    {
-      rel: "stylesheet",
-      href: poppins400,
-    },
-    {
-      rel: "stylesheet",
-      href: poppins500,
-    },
-    {
-      rel: "stylesheet",
-      href: poppins600,
-    },
-    {
-      rel: "stylesheet",
-      href: poppins700,
-    },
-    { rel: "stylesheet", href: styles },
     {
       rel: "preconnect",
       href: "https://cdn.shopify.com",
@@ -107,7 +67,38 @@ export let meta = ({ data }: MetaArgs<typeof loader>) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 
-export function Layout({ children }: { children?: React.ReactNode }) {
+function App() {
+  return <Outlet />;
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  let routeError: { status?: number; data?: any } = useRouteError();
+  let isRouteError = isRouteErrorResponse(routeError);
+
+  let pageType = "page";
+
+  if (isRouteError) {
+    if (routeError.status === 404) {
+      pageType = routeError.data || pageType;
+    }
+  }
+
+  return isRouteError ? (
+    <>
+      {routeError.status === 404 ? (
+        <NotFound type={pageType} />
+      ) : (
+        <GenericError
+          error={{ message: `${routeError.status} ${routeError.data}` }}
+        />
+      )}
+    </>
+  ) : (
+    <GenericError error={error instanceof Error ? error : undefined} />
+  );
+}
+
+export function Layout({ children }: { children: React.ReactNode }) {
   let nonce = useNonce();
   let data = useRouteLoaderData<RootLoader>("root");
   let locale = data?.selectedLocale ?? DEFAULT_LOCALE;
@@ -118,6 +109,11 @@ export function Layout({ children }: { children?: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="stylesheet" href={poppins400} />
+        <link rel="stylesheet" href={poppins500} />
+        <link rel="stylesheet" href={poppins600} />
+        <link rel="stylesheet" href={poppins700} />
+        <link rel="stylesheet" href={styles} />
         <Meta />
         <Links />
         <GlobalStyle />
@@ -168,35 +164,4 @@ export function Layout({ children }: { children?: React.ReactNode }) {
   );
 }
 
-function App() {
-  return <Outlet />;
-}
-
 export default withWeaverse(App);
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  let routeError: { status?: number; data?: any } = useRouteError();
-  let isRouteError = isRouteErrorResponse(routeError);
-
-  let pageType = "page";
-
-  if (isRouteError) {
-    if (routeError.status === 404) {
-      pageType = routeError.data || pageType;
-    }
-  }
-
-  return isRouteError ? (
-    <>
-      {routeError.status === 404 ? (
-        <NotFound type={pageType} />
-      ) : (
-        <GenericError
-          error={{ message: `${routeError.status} ${routeError.data}` }}
-        />
-      )}
-    </>
-  ) : (
-    <GenericError error={error instanceof Error ? error : undefined} />
-  );
-}

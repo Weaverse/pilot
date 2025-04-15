@@ -47,7 +47,7 @@ let ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
         </Swimlane>
       </div>
     );
-  }
+  },
 );
 
 export default ProductItems;

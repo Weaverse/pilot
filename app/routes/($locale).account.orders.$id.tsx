@@ -52,7 +52,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       discountValue,
       discountPercentage,
       fulfillmentStatus,
-    }
+    };
   } catch (error) {
     throw new Response(error instanceof Error ? error.message : undefined, {
       status: 404,

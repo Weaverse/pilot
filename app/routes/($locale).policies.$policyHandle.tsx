@@ -1,12 +1,12 @@
 import { useLoaderData } from "@remix-run/react";
-import { type LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import invariant from "tiny-invariant";
-import { routeHeaders } from "~/utils/cache";
-import { seoPayload } from "~/utils/seo.server";
+import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type { PoliciesHandleQuery } from "storefront-api.generated";
-import { Section } from "~/components/section";
+import invariant from "tiny-invariant";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
+import { Section } from "~/components/section";
+import { routeHeaders } from "~/utils/cache";
+import { seoPayload } from "~/utils/seo.server";
 
 export let headers = routeHeaders;
 
@@ -41,7 +41,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
 
   let seo = seoPayload.policy({ policy, url: request.url });
 
-  return { policy, seo }
+  return { policy, seo };
 }
 
 export default function Policies() {

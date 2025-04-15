@@ -29,7 +29,7 @@ export function LayoutSwitcher({
         "[&>button]:text-[#b7b7b7] [&>button]:border-[#b7b7b7]",
         '[&>button[data-active="true"]]:text-[#696662]',
         '[&>button[data-active="true"]]:border-[#696662]',
-        className
+        className,
       )}
     >
       {[1, 2, 3, 4, 5].map((col) => {
@@ -44,7 +44,7 @@ export function LayoutSwitcher({
             onClick={() => onGridSizeChange(col)}
             className={clsx(
               "border w-12 h-12 items-center justify-center",
-              col > 2 ? "hidden lg:flex" : "flex lg:hidden"
+              col > 2 ? "hidden lg:flex" : "flex lg:hidden",
             )}
           >
             <Icon className="w-[22px] h-[22px]" />

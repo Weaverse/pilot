@@ -79,11 +79,12 @@ export async function loader({
     recommendations: hasResults
       ? Promise.resolve(null)
       : getRecommendations(storefront),
-  }
+  };
 }
 
+
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+  return getSeoMeta(...matches.map((match) => (match.data as any)?.seo).filter(Boolean));
 };
 
 const POPULAR_SEARCHES = ["French Linen", "Shirt", "Cotton"];

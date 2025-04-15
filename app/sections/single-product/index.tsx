@@ -7,14 +7,13 @@ import type {
 } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import type { ProductQuery } from "storefront-api.generated";
-import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
-import { useAnimation } from "~/hooks/use-animation";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductPlaceholder } from "~/components/product/placeholder";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
-import { ProductVariants } from "~/components/product/variants";
-import { layoutInputs, Section } from "~/components/section";
+import { Section, layoutInputs } from "~/components/section";
+import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
+import { useAnimation } from "~/hooks/use-animation";
 
 interface SingleProductData {
   productsCount: number;
@@ -22,6 +21,7 @@ interface SingleProductData {
   hideUnavailableOptions: boolean;
   // product media props
   showThumbnails: boolean;
+  numberOfThumbnails: number;
 }
 
 type SingleProductProps = HydrogenComponentProps<
@@ -37,6 +37,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       product: _product,
       hideUnavailableOptions,
       showThumbnails,
+      numberOfThumbnails,
       ...rest
     } = props;
     let { storeDomain, product, variants: _variants } = loaderData || {};

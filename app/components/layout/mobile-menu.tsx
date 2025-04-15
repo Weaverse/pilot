@@ -5,8 +5,8 @@ import { forwardRef } from "react";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import { cn } from "~/utils/cn";
 import type { SingleMenuItem } from "~/types/menu";
+import { cn } from "~/utils/cn";
 
 export function MobileMenu() {
   let { headerMenu } = useShopMenu();
@@ -100,5 +100,5 @@ let MenuTrigger = forwardRef<HTMLButtonElement, Dialog.DialogTriggerProps>(
         <List className="w-5 h-5" />
       </button>
     );
-  }
+  },
 );

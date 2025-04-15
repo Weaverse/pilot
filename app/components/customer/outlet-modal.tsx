@@ -1,8 +1,8 @@
 import { X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { clsx } from "clsx";
 import Link from "~/components/link";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 export function OutletModal({
   children,
