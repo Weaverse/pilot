@@ -12,14 +12,25 @@ export let themeSchema: HydrogenThemeSchema = {
     documentationUrl: "https://weaverse.io/docs",
     supportUrl: "https://weaverse.io/contact",
   },
-  i18n: Object.values(COUNTRIES).map((i) => {
-    return {
-      language: i.language,
-      country: i.country,
-      label: i.label,
-    };
-  }),
-  defaultLocale: "en-us",
+  i18n: {
+    urlStructure: "url-path",
+    defaultLocale: {
+      pathPrefix: "",
+      label: "United States (USD $)",
+      language: "EN",
+      country: "US",
+    },
+    shopLocales: Object.entries(COUNTRIES).map(
+      ([pathPrefix, { label, language, country }]) => {
+        return {
+          pathPrefix: pathPrefix === "default" ? "" : pathPrefix,
+          label,
+          language,
+          country,
+        };
+      },
+    ),
+  },
   inspector: [
     {
       group: "Layout",
@@ -117,7 +128,7 @@ export let themeSchema: HydrogenThemeSchema = {
             step: 1,
             unit: "x",
           },
-          defaultValue: 5,
+          defaultValue: 1,
         },
       ],
     },

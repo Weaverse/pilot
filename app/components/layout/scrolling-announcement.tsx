@@ -32,7 +32,7 @@ export function ScrollingAnnouncement() {
     return () => window.removeEventListener("scroll", updateStyles);
   }, [topbarText]);
 
-  if (!topbarText) {
+  if (topbarText?.replace(/<[^>]*>/g, "").trim() === "") {
     return null;
   }
 
