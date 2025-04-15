@@ -20,7 +20,6 @@ import type {
   LoaderFunctionArgs,
   MetaArgs,
 } from "@shopify/remix-oxygen";
-import { defer } from "@shopify/remix-oxygen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { Footer } from "~/components/layout/footer";
@@ -47,14 +46,14 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   nextUrl,
 }) => {
   // revalidate when a mutation is performed e.g add to cart, login...
-  if (formMethod && formMethod !== 'GET') return true;
+  if (formMethod && formMethod !== "GET") return true;
 
   // revalidate when manually revalidating via useRevalidator
   if (currentUrl.toString() === nextUrl.toString()) return true;
 
-  // Defaulting to no revalidation for root loader data to improve performance. 
-  // When using this feature, you risk your UI getting out of sync with your server. 
-  // Use with caution. If you are uncomfortable with this optimization, update the 
+  // Defaulting to no revalidation for root loader data to improve performance.
+  // When using this feature, you risk your UI getting out of sync with your server.
+  // Use with caution. If you are uncomfortable with this optimization, update the
   // line below to `return defaultShouldRevalidate` instead.
   // For more details see: https://remix.run/docs/en/main/route/should-revalidate
   return false;
@@ -98,10 +97,10 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   let criticalData = await loadCriticalData(args);
 
-  return defer({
+  return {
     ...deferredData,
     ...criticalData,
-  });
+  };
 }
 
 export let meta = ({ data }: MetaArgs<typeof loader>) => {
@@ -170,9 +169,7 @@ export function Layout({ children }: { children?: React.ReactNode }) {
 }
 
 function App() {
-  return (
-    <Outlet />
-  );
+  return <Outlet />;
 }
 
 export default withWeaverse(App);
@@ -201,5 +198,5 @@ export function ErrorBoundary({ error }: { error: Error }) {
     </>
   ) : (
     <GenericError error={error instanceof Error ? error : undefined} />
-  )
+  );
 }
