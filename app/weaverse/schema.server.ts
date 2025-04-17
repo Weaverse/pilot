@@ -19,6 +19,7 @@ export let themeSchema: HydrogenThemeSchema = {
       label: "United States (USD $)",
       language: "EN",
       country: "US",
+      currency: "USD",
     },
     shopLocales: Object.entries(COUNTRIES).map(
       ([pathPrefix, { label, language, country }]) => {
