@@ -109,7 +109,6 @@ export let schema: HydrogenComponentSchema = {
   ],
   presets: {
     gap: 32,
-    width: "full",
     content: "You may also like",
   },
 };
