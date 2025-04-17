@@ -152,7 +152,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "switch",
           label: "Enable transparent header",
           name: "enableTransparentHeader",
-          defaultValue: true,
+          defaultValue: false,
           helpText: "Header is transparent in home page only.",
         },
         {
