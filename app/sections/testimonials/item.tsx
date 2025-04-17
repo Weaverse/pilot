@@ -46,7 +46,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
           </blockquote>
           <figcaption className="flex items-center space-x-3">
             <Image
-              className="h-9 rounded-full"
+              className="h-9 w-9 rounded-full"
               data={
                 typeof authorImage === "object"
                   ? authorImage

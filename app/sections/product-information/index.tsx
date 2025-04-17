@@ -377,7 +377,6 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   presets: {
-    width: "stretch",
     mediaLayout: "grid",
     gridSize: "2x2",
   },
