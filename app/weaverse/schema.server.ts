@@ -19,6 +19,7 @@ export let themeSchema: HydrogenThemeSchema = {
       label: "United States (USD $)",
       language: "EN",
       country: "US",
+      currency: "USD",
     },
     shopLocales: Object.entries(COUNTRIES).map(
       ([pathPrefix, { label, language, country }]) => {
@@ -152,7 +153,7 @@ export let themeSchema: HydrogenThemeSchema = {
           type: "switch",
           label: "Enable transparent header",
           name: "enableTransparentHeader",
-          defaultValue: true,
+          defaultValue: false,
           helpText: "Header is transparent in home page only.",
         },
         {
