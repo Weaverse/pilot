@@ -6,6 +6,7 @@ import type { PageDetailsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 
 import { routeHeaders } from "~/utils/cache";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -24,6 +25,7 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
   if (!page) {
     throw new Response(null, { status: 404 });
   }
+  redirectIfHandleIsLocalized(request, { handle: params.pageHandle, data: page });
 
   let seo = seoPayload.page({ page, url: request.url });
 
@@ -51,6 +53,7 @@ const PAGE_QUERY = `#graphql
     page(handle: $handle) {
       id
       title
+      handle
       body
       seo {
         description

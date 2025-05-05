@@ -6,6 +6,7 @@ import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { ArticleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -19,10 +20,11 @@ export async function loader(args: RouteLoaderArgs) {
   invariant(params.blogHandle, "Missing blog handle");
   invariant(params.articleHandle, "Missing article handle");
 
+  let { blogHandle, articleHandle } = params;
   let { blog } = await storefront.query<ArticleQuery>(ARTICLE_QUERY, {
     variables: {
-      blogHandle: params.blogHandle,
-      articleHandle: params.articleHandle,
+      blogHandle,
+      articleHandle,
       language,
     },
   });
@@ -30,10 +32,21 @@ export async function loader(args: RouteLoaderArgs) {
   if (!blog?.articleByHandle) {
     throw new Response(null, { status: 404 });
   }
+  redirectIfHandleIsLocalized(
+    request,
+    {
+      handle: articleHandle,
+      data: blog.articleByHandle,
+    },
+    {
+      handle: blogHandle,
+      data: blog,
+    },
+  );
 
   let article = blog.articleByHandle;
   let relatedArticles = blog.articles.nodes.filter(
-    (art) => art?.handle !== params?.articleHandle,
+    (art) => art?.handle !== articleHandle,
   );
 
   let formattedDate = new Intl.DateTimeFormat(`${language}-${country}`, {
@@ -44,19 +57,19 @@ export async function loader(args: RouteLoaderArgs) {
 
   let seo = seoPayload.article({ article, url: request.url });
 
-  return data({
+  return {
     article,
     blog: {
-      handle: params.blogHandle,
+      handle: blogHandle,
     },
     relatedArticles,
     formattedDate,
     seo,
     weaverseData: await context.weaverse.loadPage({
       type: "ARTICLE",
-      handle: params.articleHandle,
+      handle: articleHandle,
     }),
-  });
+  }
 }
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {

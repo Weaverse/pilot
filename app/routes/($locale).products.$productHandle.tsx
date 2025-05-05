@@ -13,6 +13,7 @@ import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
 import { createJudgeMeReview, getJudgeMeProductReviews } from "~/utils/judgeme";
 import { getRecommendedProducts } from "~/utils/product";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -42,6 +43,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   if (!product?.id) {
     throw new Response("product", { status: 404 });
   }
+  redirectIfHandleIsLocalized(request, { handle, data: product });
 
   let { product: productWithAllVariants } =
     await storefront.query<VariantsQuery>(VARIANTS_QUERY, {

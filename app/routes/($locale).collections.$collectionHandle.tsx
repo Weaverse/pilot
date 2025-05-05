@@ -21,6 +21,7 @@ import type { I18nLocale } from "~/types/locale";
 import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { FILTER_URL_PREFIX, type SortParam } from "~/utils/filter";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -85,6 +86,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     }
     throw new Response("collection", { status: 404 });
   }
+  redirectIfHandleIsLocalized(request, { handle: collectionHandle, data: collection });
 
   let seo = seoPayload.collection({ collection, url: request.url });
 
