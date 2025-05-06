@@ -8,12 +8,11 @@ import {
 } from "@remix-run/react";
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import type { Locale } from "@weaverse/hydrogen";
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useInView } from "react-intersection-observer";
 import type { RootLoader } from "~/root";
-import type { Localizations } from "~/types/locale";
+import type { I18nLocale, Localizations } from "~/types/locale";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {
@@ -145,7 +144,7 @@ function getCountryUrlPath({
   defaultLocalePrefix,
   pathWithoutLocale,
 }: {
-  countryLocale: Locale;
+  countryLocale: I18nLocale;
   pathWithoutLocale: string;
   defaultLocalePrefix: string;
 }) {
