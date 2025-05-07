@@ -107,7 +107,7 @@ export async function createAppLoadContext(
       cache,
       themeSchema,
       components,
-    } as WeaverseClientArgs),
+    }),
   };
 }
 

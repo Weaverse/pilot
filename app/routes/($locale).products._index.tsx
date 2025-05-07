@@ -19,13 +19,19 @@ export async function loader({
     pageBy: PAGINATION_SIZE,
   });
 
-  let data = await storefront.query(ALL_PRODUCTS_QUERY, {
-    variables: {
-      ...variables,
-      country: storefront.i18n.country,
-      language: storefront.i18n.language,
-    },
-  });
+  // Load products data and weaverseData in parallel
+  let [data, weaverseData] = await Promise.all([
+    storefront.query(ALL_PRODUCTS_QUERY, {
+      variables: {
+        ...variables,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      },
+    }),
+    weaverse.loadPage({
+      type: "ALL_PRODUCTS",
+    }),
+  ]);
 
   invariant(data, "No data returned from Shopify API");
 
@@ -50,9 +56,7 @@ export async function loader({
   return {
     products: data.products,
     seo,
-    weaverseData: await weaverse.loadPage({
-      type: "ALL_PRODUCTS",
-    }),
+    weaverseData,
   };
 }
 
