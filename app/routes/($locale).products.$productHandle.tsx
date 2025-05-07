@@ -45,15 +45,19 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }
   redirectIfHandleIsLocalized(request, { handle, data: product });
 
-  let { product: productWithAllVariants } =
-    await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
-      variables: {
-        handle,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      },
-    });
+  // Load variants since they're needed for initial rendering
+  let { product: productWithAllVariants } = await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
+    variables: {
+      handle,
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
+    },
+  });
+
   let variants = productWithAllVariants.variants.nodes;
+
+  // Use Hydrogen/Remix streaming for recommended products
+  let recommended = getRecommendedProducts(storefront, product.id);
 
   return {
     shop,
@@ -66,7 +70,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       product: { ...product, variants },
       url: request.url,
     }),
-    recommended: getRecommendedProducts(storefront, product.id),
+    recommended,
     selectedOptions,
   };
 }

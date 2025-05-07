@@ -21,13 +21,21 @@ export async function loader(args: RouteLoaderArgs) {
   invariant(params.articleHandle, "Missing article handle");
 
   let { blogHandle, articleHandle } = params;
-  let { blog } = await storefront.query<ArticleQuery>(ARTICLE_QUERY, {
-    variables: {
-      blogHandle,
-      articleHandle,
-      language,
-    },
-  });
+
+  // Load blog data and weaverseData in parallel
+  let [{ blog }, weaverseData] = await Promise.all([
+    storefront.query<ArticleQuery>(ARTICLE_QUERY, {
+      variables: {
+        blogHandle,
+        articleHandle,
+        language,
+      },
+    }),
+    context.weaverse.loadPage({
+      type: "ARTICLE",
+      handle: articleHandle,
+    }),
+  ]);
 
   if (!blog?.articleByHandle) {
     throw new Response(null, { status: 404 });
@@ -65,10 +73,7 @@ export async function loader(args: RouteLoaderArgs) {
     relatedArticles,
     formattedDate,
     seo,
-    weaverseData: await context.weaverse.loadPage({
-      type: "ARTICLE",
-      handle: articleHandle,
-    }),
+    weaverseData,
   }
 }
 

@@ -17,10 +17,11 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  let [layout, swatchesConfigs] = await Promise.all([
+  let [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
     getLayoutData(context),
     getSwatchesConfigs(context),
     // Add other queries here, so that they are loaded in parallel
+    context.weaverse.loadThemeSettings()
   ]);
 
   let seo = seoPayload.root({ shop: layout.shop, url: request.url });
@@ -42,7 +43,7 @@ export async function loadCriticalData({
       language: storefront.i18n.language,
     },
     selectedLocale: storefront.i18n,
-    weaverseTheme: await context.weaverse.loadThemeSettings(),
+    weaverseTheme,
     googleGtmID: context.env.PUBLIC_GOOGLE_GTM_ID,
     swatchesConfigs,
   };

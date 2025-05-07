@@ -20,13 +20,20 @@ export async function loader(args: LoaderFunctionArgs) {
     // Update for Weaverse: if it not locale, it probably is a custom page handle
     type = "CUSTOM";
   }
-  let weaverseData = await context.weaverse.loadPage({ type });
+
+  // Calculate seo payload synchronously
+  let seo = seoPayload.home();
+
+  // Load async data in parallel for better performance
+  let [weaverseData, { shop }] = await Promise.all([
+    context.weaverse.loadPage({ type }),
+    context.storefront.query<ShopQuery>(SHOP_QUERY),
+  ]);
+
+  // Check weaverseData after parallel loading
   if (!weaverseData?.page?.id || weaverseData.page.id.includes("fallback")) {
     throw new Response(null, { status: 404 });
   }
-
-  let { shop } = await context.storefront.query<ShopQuery>(SHOP_QUERY);
-  let seo = seoPayload.home();
 
   return {
     shop,

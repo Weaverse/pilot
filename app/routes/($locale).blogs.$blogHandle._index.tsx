@@ -19,13 +19,20 @@ export let loader = async (args: LoaderFunctionArgs) => {
 
   invariant(params.blogHandle, "Missing blog handle");
 
-  let { blog } = await storefront.query<BlogQuery>(BLOGS_QUERY, {
-    variables: {
-      blogHandle: params.blogHandle,
-      pageBy: PAGINATION_SIZE,
-      language,
-    },
-  });
+  // Load blog data and weaverseData in parallel
+  let [{ blog }, weaverseData] = await Promise.all([
+    storefront.query<BlogQuery>(BLOGS_QUERY, {
+      variables: {
+        blogHandle: params.blogHandle,
+        pageBy: PAGINATION_SIZE,
+        language,
+      },
+    }),
+    context.weaverse.loadPage({
+      type: "BLOG",
+      handle: params.blogHandle,
+    }),
+  ]);
 
   if (!blog?.articles) {
     throw new Response("Not found", { status: 404 });
@@ -50,10 +57,7 @@ export let loader = async (args: LoaderFunctionArgs) => {
     blog,
     articles,
     seo,
-    weaverseData: await context.weaverse.loadPage({
-      type: "BLOG",
-      handle: params.blogHandle,
-    }),
+    weaverseData,
   });
 };
 

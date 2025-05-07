@@ -55,25 +55,32 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   let [bannerNamespace = "", bannerKey = ""] =
     CUSTOM_COLLECTION_BANNER_METAFIELD.split(".");
 
-  let { collection, collections } = await storefront
-    .query<CollectionQuery>(COLLECTION_QUERY, {
-      variables: {
-        ...paginationVariables,
-        handle: collectionHandle,
-        filters,
-        sortKey,
-        reverse,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-        // Query custom banner stored in Shopify's collection metafields
-        customBannerNamespace: bannerNamespace,
-        customBannerKey: bannerKey,
-      },
-    })
-    .catch((e) => {
-      console.error(e);
-      return { collection: null, collections: [] };
-    });
+  // Load collection data and weaverseData in parallel
+  let [{ collection, collections }, weaverseData] = await Promise.all([
+    storefront
+      .query<CollectionQuery>(COLLECTION_QUERY, {
+        variables: {
+          ...paginationVariables,
+          handle: collectionHandle,
+          filters,
+          sortKey,
+          reverse,
+          country: storefront.i18n.country,
+          language: storefront.i18n.language,
+          // Query custom banner stored in Shopify's collection metafields
+          customBannerNamespace: bannerNamespace,
+          customBannerKey: bannerKey,
+        },
+      })
+      .catch((e) => {
+        console.error(e);
+        return { collection: null, collections: [] };
+      }),
+    context.weaverse.loadPage({
+      type: "COLLECTION",
+      handle: collectionHandle,
+    }),
+  ]);
 
   if (!collection) {
     // @ts-expect-error
@@ -143,10 +150,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     // @ts-ignore
     collections: flattenConnection(collections),
     seo,
-    weaverseData: await context.weaverse.loadPage({
-      type: "COLLECTION",
-      handle: collectionHandle,
-    }),
+    weaverseData,
   };
 }
 
