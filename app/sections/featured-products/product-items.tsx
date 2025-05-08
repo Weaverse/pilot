@@ -32,7 +32,7 @@ let ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
   (props, ref) => {
     let { gap, ...rest } = props;
     let parent = useParentInstance();
-    let { products } = parent.data.loaderData as FeaturedProductsLoaderData;
+    let products = parent.data?.loaderData?.products
 
     return (
       <div ref={ref} {...rest}>
