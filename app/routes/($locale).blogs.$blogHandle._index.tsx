@@ -8,6 +8,7 @@ import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 
 export let headers = routeHeaders;
 
@@ -18,17 +19,25 @@ export let loader = async (args: LoaderFunctionArgs) => {
 
   invariant(params.blogHandle, "Missing blog handle");
 
-  let { blog } = await storefront.query<BlogQuery>(BLOGS_QUERY, {
-    variables: {
-      blogHandle: params.blogHandle,
-      pageBy: PAGINATION_SIZE,
-      language,
-    },
-  });
+  // Load blog data and weaverseData in parallel
+  let [{ blog }, weaverseData] = await Promise.all([
+    storefront.query<BlogQuery>(BLOGS_QUERY, {
+      variables: {
+        blogHandle: params.blogHandle,
+        pageBy: PAGINATION_SIZE,
+        language,
+      },
+    }),
+    context.weaverse.loadPage({
+      type: "BLOG",
+      handle: params.blogHandle,
+    }),
+  ]);
 
   if (!blog?.articles) {
     throw new Response("Not found", { status: 404 });
   }
+  redirectIfHandleIsLocalized(request, { handle: params.blogHandle, data: blog });
 
   let articles = flattenConnection(blog.articles).map((article) => {
     let { publishedAt } = article;
@@ -48,10 +57,7 @@ export let loader = async (args: LoaderFunctionArgs) => {
     blog,
     articles,
     seo,
-    weaverseData: await context.weaverse.loadPage({
-      type: "BLOG",
-      handle: params.blogHandle,
-    }),
+    weaverseData,
   });
 };
 
