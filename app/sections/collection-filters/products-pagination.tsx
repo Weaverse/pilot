@@ -72,7 +72,7 @@ export function ProductsPagination({
           ) : null}
         </div>
       ) : null}
-      {collection.products.nodes.length > 0 ? (
+      {/* {collection.products.nodes.length > 0 ? (
         <Pagination connection={collection.products}>
           {({
             nodes,
@@ -126,7 +126,7 @@ export function ProductsPagination({
           <FunnelX size={50} weight="light" />
           <div className="text-lg">No products matched your filters.</div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -37,7 +37,7 @@ let ReviewList = forwardRef<
     ...rest
   } = props;
   let parent = useParentInstance();
-  let allReviews: AliReviewsLoaderData = parent.data.loaderData;
+  let allReviews: AliReviewsLoaderData = parent.data?.loaderData;
   if (allReviews?.length) {
     let { totalReviews, avgRating, reviewsByRating } =
       getReviewsSummary(allReviews);

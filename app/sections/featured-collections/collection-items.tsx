@@ -89,7 +89,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
       ...rest
     } = props;
     let parent = useParentInstance();
-    let collections: FeaturedCollectionsLoaderData = parent.data.loaderData;
+    let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
     if (!collections?.length) {
       collections = Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
     }
