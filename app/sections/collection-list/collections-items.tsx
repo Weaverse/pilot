@@ -33,7 +33,7 @@ let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
     } = props;
     return (
       <div ref={ref} {...rest}>
-        <Pagination connection={collections}>
+        {/* <Pagination connection={collections}>
           {({
             nodes,
             isLoading,
@@ -74,7 +74,7 @@ let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
               )}
             </div>
           )}
-        </Pagination>
+        </Pagination> */}
       </div>
     );
   },

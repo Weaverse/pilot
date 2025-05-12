@@ -23,7 +23,7 @@ type MemberType = {
 let TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
     let parent = useParentInstance();
-    let { metaobjects }: OurTeamQuery = parent.data.loaderData || {};
+    let { metaobjects }: OurTeamQuery = parent.data?.loaderData || {};
     if (metaobjects?.nodes?.length) {
       let members = metaobjects.nodes;
       return (
