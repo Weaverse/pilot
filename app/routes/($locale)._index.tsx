@@ -6,7 +6,7 @@ import type { PageType } from "@weaverse/hydrogen";
 import type { ShopQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
-import { WeaverseContent } from "~/weaverse";
+import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
 
@@ -31,9 +31,7 @@ export async function loader(args: LoaderFunctionArgs) {
   ]);
 
   // Check weaverseData after parallel loading
-  if (!weaverseData?.page?.id || weaverseData.page.id.includes("fallback")) {
-    throw new Response(null, { status: 404 });
-  }
+  validateWeaverseData(weaverseData)
 
   return {
     shop,
