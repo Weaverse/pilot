@@ -6,9 +6,8 @@ import {
   useRouteLoaderData,
   useSubmit,
 } from "@remix-run/react";
-import { CartForm } from "@shopify/hydrogen";
+import { CartForm, type I18nBase } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import type { Locale } from "@weaverse/hydrogen";
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useInView } from "react-intersection-observer";
@@ -145,7 +144,7 @@ function getCountryUrlPath({
   defaultLocalePrefix,
   pathWithoutLocale,
 }: {
-  countryLocale: Locale;
+  countryLocale: I18nBase;
   pathWithoutLocale: string;
   defaultLocalePrefix: string;
 }) {
