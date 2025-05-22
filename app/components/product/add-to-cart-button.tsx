@@ -99,7 +99,7 @@ function AddToCartAnalytics({
 }: {
   fetcher: FetcherWithComponents<any>;
   children: React.ReactNode;
-}): JSX.Element {
+}) {
   let fetcherData = fetcher.data;
   let formData = fetcher.formData;
   let pageAnalytics = usePageAnalytics({ hasUserConsent: true });
