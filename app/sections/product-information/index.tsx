@@ -44,7 +44,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       useLoaderData<typeof productRouteLoader>();
     let [params] = useSearchParams();
     let selectedVariant = useOptimisticVariant(
-      product.selectedVariant,
+      product?.selectedVariant,
       variants,
     );
 
