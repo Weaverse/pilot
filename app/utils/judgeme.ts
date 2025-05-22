@@ -72,7 +72,7 @@ export async function getJudgeMeProductReviews({
       }
     }
   } catch (error) {
-    console.error("Error fetching Judgeme product reviews", error.message);
+    console.log("Error fetching Judgeme product reviews", error.message);
   }
   return { rating: 0, reviewNumber: 0, reviews: [] };
 }

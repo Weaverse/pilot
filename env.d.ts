@@ -36,3 +36,9 @@ declare module "@shopify/remix-oxygen" {
     // declare local additions to the Remix session data here
   }
 }
+
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
