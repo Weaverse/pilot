@@ -53,7 +53,7 @@ export function Filters({ className }: { className?: string }) {
               value={filter.id}
               className="w-full pb-6 pt-7"
             >
-              <Accordion.Trigger className="flex w-full justify-between items-center [&>svg]:data-[state=open]:rotate-90">
+              <Accordion.Trigger className="flex w-full justify-between items-center data-[state=open]:[&>svg]:rotate-90">
                 <span>{filter.label}</span>
                 <CaretRight className="w-4 h-4 transition-transform rotate-0" />
               </Accordion.Trigger>

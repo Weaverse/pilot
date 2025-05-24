@@ -78,7 +78,7 @@ export function PriceRangeFilter({
             onPointerDown={() => (thumbRef.current = s)}
             className={clsx(
               "block h-4 w-4 bg-gray-800 cursor-grab rounded-full shadow-md",
-              "focus-visible:outline-none",
+              "focus-visible:outline-hidden",
             )}
           />
         ))}
@@ -105,7 +105,7 @@ export function PriceRangeFilter({
               setMinPrice(newMinPrice);
             }}
             onBlur={handleFilter}
-            className="text-right focus-visible:outline-none py-3 bg-transparent w-full"
+            className="text-right focus-visible:outline-hidden py-3 bg-transparent w-full"
           />
         </div>
         <span>To</span>
@@ -130,7 +130,7 @@ export function PriceRangeFilter({
               setMaxPrice(newMaxPrice);
             }}
             onBlur={handleFilter}
-            className="text-right focus-visible:outline-none py-3 bg-transparent w-full"
+            className="text-right focus-visible:outline-hidden py-3 bg-transparent w-full"
           />
         </div>
       </div>

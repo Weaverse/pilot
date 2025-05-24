@@ -108,12 +108,12 @@ function CartDiscounts({
       <UpdateDiscountForm discountCodes={codes}>
         <div className="flex items-center gap-3">
           <input
-            className="p-3 border border-line rounded-none !leading-tight grow"
+            className="p-3 border border-line rounded-none leading-tight! grow"
             type="text"
             name="discountCode"
             placeholder="Discount code"
           />
-          <Button variant="outline" className="!leading-tight">
+          <Button variant="outline" className="leading-tight!">
             Apply
           </Button>
         </div>
@@ -159,7 +159,7 @@ function CartLines({
       aria-labelledby="cart-contents"
       className={clsx([
         y > 0 ? "border-t border-line-subtle" : "",
-        layout === "page" && "flex-grow md:translate-y-4 lg:col-span-2",
+        layout === "page" && "grow md:translate-y-4 lg:col-span-2",
         layout === "drawer" && "overflow-auto transition",
       ])}
     >
@@ -217,7 +217,7 @@ function CartSummary({
       className={clsx(
         layout === "drawer" && "grid gap-4 border-t border-line-subtle pt-4",
         layout === "page" &&
-          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 rounded w-full",
+          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 rounded-sm w-full",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
@@ -295,7 +295,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
                 .map((option) => (
                   <div
                     key={option.name}
-                    className="text-[var(--color-compare-price-text)]"
+                    className="text-(--color-compare-price-text)"
                   >
                     {option.name}: {option.value}
                   </div>

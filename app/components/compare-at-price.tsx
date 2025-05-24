@@ -13,7 +13,7 @@ export function CompareAtPrice({
     useMoney(data);
   return (
     <span
-      className={cn("strike text-[var(--color-compare-price-text)]", className)}
+      className={cn("strike text-(--color-compare-price-text)", className)}
     >
       {currencyNarrowSymbol}
       {withoutTrailingZerosAndCurrency}

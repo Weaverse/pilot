@@ -107,7 +107,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
             bulletClass: clsx(
               "dot rounded-full cursor-pointer",
               "w-2.5 h-2.5 p-0",
-              "outline outline-offset-3 outline-2 outline-transparent",
+              "outline-solid outline-offset-3 outline-2 outline-transparent",
               "transition-all duration-200",
             ),
             bulletActiveClass: "active",
@@ -260,12 +260,12 @@ export let schema: HydrogenComponentSchema = {
           name: "arrowsShape",
           configs: {
             options: [
-              { value: "rounded", label: "Rounded", icon: "squircle" },
+              { value: "rounded-sm", label: "Rounded", icon: "squircle" },
               { value: "circle", label: "Circle", icon: "circle" },
               { value: "square", label: "Square", icon: "square" },
             ],
           },
-          defaultValue: "rounded",
+          defaultValue: "rounded-sm",
           condition: "showArrows.eq.true",
         },
 

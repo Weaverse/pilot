@@ -1,110 +1,180 @@
-@import "swiper/swiper-bundle.css";
+@import 'swiper/swiper-bundle.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-body,
-button,
-input,
-select,
-textarea {
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-size-adjust: 100%;
-  font-size: var(--body-base-size);
-  letter-spacing: var(--body-base-spacing);
-  line-height: var(--body-base-line-height);
-  text-rendering: optimizeSpeed;
-}
+@config '../../tailwind.config.js';
 
-.h0,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  letter-spacing: var(--heading-base-spacing);
-  line-height: var(--heading-base-line-height);
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-/* Mobile sizes */
-h1,
-.h1 {
-  font-size: var(--h1-mobile-size);
-}
-h2,
-.h2 {
-  font-size: var(--h2-mobile-size);
-}
-h3,
-.h3 {
-  font-size: var(--h3-mobile-size);
-}
-h4,
-.h4 {
-  font-size: var(--h4-mobile-size);
-}
-h5,
-.h5 {
-  font-size: var(--h5-mobile-size);
-}
-h6,
-.h6 {
-  font-size: var(--h6-mobile-size);
+@utility article {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-body;
+  }
+  @apply prose mx-auto mb-12 grid justify-center font-serif text-body;
+  p,
+  ul,
+  li {
+    @apply mb-4 text-lg;
+  }
+  img {
+    @apply md:-mx-8 lg:-mx-16;
+
+    @media (min-width: 48em) {
+      width: calc(100% + 4rem);
+      max-width: 100vw;
+    }
+    @media (min-width: 64em) {
+      width: calc(100% + 8rem);
+    }
+  }
 }
 
-/* Desktop sizes */
-@media (min-width: 32em) {
+@utility hidden-scroll {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility strike {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 108%;
+    height: 1px;
+    left: -4%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-compare-price-text);
+    box-shadow: 0.5px 0.5px 0px 0.5px white;
+  }
+}
+
+@layer utilities {
+  body,
+  button,
+  input,
+  select,
+  textarea {
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    font-size: var(--body-base-size);
+    letter-spacing: var(--body-base-spacing);
+    line-height: var(--body-base-line-height);
+    text-rendering: optimizeSpeed;
+  }
+
+  .h0,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: var(--heading-base-spacing);
+    line-height: var(--heading-base-line-height);
+  }
+
+  /* Mobile sizes */
   h1,
   .h1 {
-    font-size: var(--h1-base-size);
+    font-size: var(--h1-mobile-size);
   }
   h2,
   .h2 {
-    font-size: var(--h2-base-size);
+    font-size: var(--h2-mobile-size);
   }
   h3,
   .h3 {
-    font-size: var(--h3-base-size);
+    font-size: var(--h3-mobile-size);
   }
   h4,
   .h4 {
-    font-size: var(--h4-base-size);
+    font-size: var(--h4-mobile-size);
   }
   h5,
   .h5 {
-    font-size: var(--h5-base-size);
+    font-size: var(--h5-mobile-size);
   }
   h6,
   .h6 {
-    font-size: var(--h6-base-size);
+    font-size: var(--h6-mobile-size);
   }
-}
 
-/* Tokens */
-:root {
-  --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
-  --shop-pay-button-border-radius: 0;
-  --screen-height: 100vh;
-  --screen-height-dynamic: 100vh;
-
-  /* Product options */
-  --option-swatch-radius: 0;
-  --option-swatch-size: 2.25rem;
-  --option-image-width: 4rem;
-
-  @supports (height: 100svh) {
-    --screen-height: 100svh;
+  /* Desktop sizes */
+  @media (min-width: 32em) {
+    h1,
+    .h1 {
+      font-size: var(--h1-base-size);
+    }
+    h2,
+    .h2 {
+      font-size: var(--h2-base-size);
+    }
+    h3,
+    .h3 {
+      font-size: var(--h3-base-size);
+    }
+    h4,
+    .h4 {
+      font-size: var(--h4-base-size);
+    }
+    h5,
+    .h5 {
+      font-size: var(--h5-base-size);
+    }
+    h6,
+    .h6 {
+      font-size: var(--h6-base-size);
+    }
   }
-  @supports (height: 100dvh) {
-    --screen-height-dynamic: 100dvh;
+
+  /* Tokens */
+  :root {
+    --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
+    --shop-pay-button-border-radius: 0;
+    --screen-height: 100vh;
+    --screen-height-dynamic: 100vh;
+
+    /* Product options */
+    --option-swatch-radius: 0;
+    --option-swatch-size: 2.25rem;
+    --option-image-width: 4rem;
+
+    @supports (height: 100svh) {
+      --screen-height: 100svh;
+    }
+    @supports (height: 100dvh) {
+      --screen-height-dynamic: 100dvh;
+    }
   }
 }
 
@@ -169,60 +239,6 @@ h6,
       &:first-child {
         @apply mt-0;
       }
-    }
-  }
-}
-
-@layer components {
-  .article {
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      @apply text-body;
-    }
-    @apply prose mx-auto mb-12 grid justify-center font-serif text-body;
-    p,
-    ul,
-    li {
-      @apply mb-4 text-lg;
-    }
-    img {
-      @apply md:-mx-8 lg:-mx-16;
-
-      @media (min-width: 48em) {
-        width: calc(100% + 4rem);
-        max-width: 100vw;
-      }
-      @media (min-width: 64em) {
-        width: calc(100% + 8rem);
-      }
-    }
-  }
-}
-
-@layer utilities {
-  .hidden-scroll {
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-  .strike {
-    position: relative;
-    &::before {
-      content: "";
-      position: absolute;
-      display: block;
-      width: 108%;
-      height: 1px;
-      left: -4%;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--color-compare-price-text);
-      box-shadow: 0.5px 0.5px 0px 0.5px white;
     }
   }
 }

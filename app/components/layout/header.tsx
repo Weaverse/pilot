@@ -56,29 +56,29 @@ export function Header() {
       className={cn(
         "w-full z-10",
         "transition-all duration-300 ease-in-out",
-        "bg-[--color-header-bg] hover:bg-[--color-header-bg]",
-        "text-[--color-header-text] hover:text-[--color-header-text]",
+        "bg-(--color-header-bg) hover:bg-(--color-header-bg)",
+        "text-(--color-header-text) hover:text-(--color-header-text)",
         "border-b border-line-subtle",
         variants({ padding: headerWidth }),
         scrolled ? "shadow-header" : "shadow-none",
         enableTransparent
           ? [
               "fixed w-screen group/header",
-              "top-[var(--topbar-height,var(--initial-topbar-height))]",
+              "top-(--topbar-height,var(--initial-topbar-height))",
             ]
           : "sticky top-0",
         isTransparent
           ? [
               "bg-transparent border-transparent",
-              "text-[--color-transparent-header-text]",
-              "[&_.cart-count]:text-[--color-header-text]",
-              "[&_.cart-count]:bg-[--color-transparent-header-text]",
+              "text-(--color-transparent-header-text)",
+              "[&_.cart-count]:text-(--color-header-text)",
+              "[&_.cart-count]:bg-(--color-transparent-header-text)",
               "[&_.main-logo]:opacity-0",
               "[&_.transparent-logo]:opacity-100",
             ]
           : [
-              "[&_.cart-count]:text-[--color-header-bg]",
-              "[&_.cart-count]:bg-[--color-header-text]",
+              "[&_.cart-count]:text-(--color-header-bg)",
+              "[&_.cart-count]:bg-(--color-header-text)",
               "[&_.main-logo]:opacity-100",
               "[&_.transparent-logo]:opacity-0",
             ],

@@ -37,8 +37,8 @@ export function DesktopMenu() {
                   asChild={!hasSubmenu}
                   className={clsx([
                     "cursor-pointer px-3 py-2 h-full flex items-center gap-1.5",
-                    '[&>svg]:data-[state="open"]:rotate-180',
-                    "focus:outline-none uppercase",
+                    'data-[state="open"]:[&>svg]:rotate-180',
+                    "focus:outline-hidden uppercase",
                   ])}
                   onMouseEnter={() => {
                     if (openMenuBy === "hover" && value !== id) {
@@ -61,7 +61,7 @@ export function DesktopMenu() {
                   <Menubar.Content
                     className={cn([
                       "px-3 md:px-4 lg:px-6",
-                      "bg-[--color-header-bg] shadow-lg",
+                      "bg-(--color-header-bg) shadow-lg",
                       isDropdown ? "py-6" : "w-screen py-8",
                     ])}
                   >

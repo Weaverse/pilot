@@ -51,7 +51,7 @@ export function AccountEditAddressForm() {
           </div>
         )}
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="firstName"
           name="firstName"
           required
@@ -62,7 +62,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.firstName ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="lastName"
           name="lastName"
           required
@@ -73,7 +73,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.lastName ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="company"
           name="company"
           type="text"
@@ -83,7 +83,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.company ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="address1"
           name="address1"
           type="text"
@@ -94,7 +94,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.address1 ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="address2"
           name="address2"
           type="text"
@@ -104,7 +104,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.address2 ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="city"
           name="city"
           type="text"
@@ -115,7 +115,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.city ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="zoneCode"
           name="zoneCode"
           type="text"
@@ -126,7 +126,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.zoneCode ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="zip"
           name="zip"
           type="text"
@@ -137,7 +137,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.zip ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="territoryCode"
           name="territoryCode"
           type="text"
@@ -148,7 +148,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.territoryCode ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           id="phone"
           name="phoneNumber"
           type="tel"
@@ -164,7 +164,7 @@ export function AccountEditAddressForm() {
             defaultChecked={defaultAddress?.id === address?.id}
             className={clsx(
               "w-5 h-5 shrink-0",
-              "border border-line focus-visible:outline-none",
+              "border border-line focus-visible:outline-hidden",
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}
           >

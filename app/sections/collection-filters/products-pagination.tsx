@@ -157,7 +157,7 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
     <div
       className={clsx([
         "w-full gap-x-4 gap-y-6 lg:gap-y-10",
-        "grid grid-cols-[--cols-mobile] lg:grid-cols-[--cols-desktop]",
+        "grid grid-cols-(--cols-mobile) lg:grid-cols-(--cols-desktop)",
       ])}
     >
       {nodes.map((product: ProductCardFragment) => (

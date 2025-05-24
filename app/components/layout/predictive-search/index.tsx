@@ -22,7 +22,7 @@ export function PredictiveSearchButton() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         asChild
-        className="hidden lg:flex h-8 w-8 items-center justify-center focus-visible:outline-none"
+        className="hidden lg:flex h-8 w-8 items-center justify-center focus-visible:outline-hidden"
       >
         <button type="button">
           <MagnifyingGlass className="w-5 h-5" />
@@ -35,9 +35,9 @@ export function PredictiveSearchButton() {
         />
         <Dialog.Content
           className={cn([
-            "fixed inset-x-0 top-0 bg-[--color-header-bg] z-10",
+            "fixed inset-x-0 top-0 bg-(--color-header-bg) z-10",
             "-translate-y-full data-[state=open]:animate-enter-from-top",
-            "focus-visible:outline-none",
+            "focus-visible:outline-hidden",
           ])}
           style={
             { "--enter-from-top-duration": "200ms" } as React.CSSProperties
@@ -47,7 +47,7 @@ export function PredictiveSearchButton() {
           <VisuallyHidden.Root asChild>
             <Dialog.Title>Predictive search</Dialog.Title>
           </VisuallyHidden.Root>
-          <div className="relative pt-[--topbar-height]">
+          <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
                 <div className="flex items-center gap-3 w-[560px] max-w-[90vw] mx-auto px-3 my-6 border border-line-subtle">
@@ -60,7 +60,7 @@ export function PredictiveSearchButton() {
                     placeholder="Enter a keyword"
                     ref={inputRef}
                     autoComplete="off"
-                    className="focus-visible:outline-none w-full h-full py-4"
+                    className="focus-visible:outline-hidden w-full h-full py-4"
                   />
                   <button
                     type="button"
@@ -100,7 +100,7 @@ function PredictiveSearchResults() {
   }
   return (
     <div className="absolute left-1/2 top-full z-10 flex w-fit -translate-x-1/2 items-center justify-center">
-      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-[--color-header-bg] p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
+      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-(--color-header-bg) p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-line">
             <PredictiveSearchResult type="queries" items={queries?.items} />

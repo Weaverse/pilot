@@ -99,9 +99,9 @@ export function ReviewItem(props: ReviewItemProps) {
               role="button"
               className={clsx(
                 "flex items-center justify-center bg-gray-800 w-20 h-20 overflow-hidden cursor-pointer",
-                "outline-offset-2 hover:outline hover:outline-2 hover:outline-gray-500",
+                "outline-offset-2 hover:outline-solid hover:outline-2 hover:outline-gray-500",
                 previewMedia?.id === media.id &&
-                  "outline outline-2 outline-gray-500",
+                  "outline-solid outline-2 outline-gray-500",
               )}
               onClick={() => {
                 if (previewMedia?.id === media.id) {

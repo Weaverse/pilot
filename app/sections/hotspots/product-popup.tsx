@@ -87,7 +87,7 @@ export function ProductPopup({
       className={clsx(
         "absolute z-10 py-1.5 text-sm sm:text-base transition-all",
         "invisible opacity-0",
-        "w-40 sm:w-[var(--popup-width)]",
+        "w-40 sm:w-(--popup-width)",
         "translate-x-[calc(var(--translate-x-ratio)*var(--spot-size))]",
         "translate-y-[calc(var(--translate-y-ratio)*-16px)]",
         "group-hover:visible group-hover:opacity-100",

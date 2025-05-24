@@ -87,7 +87,7 @@ export function ZoomModal({
           }
           aria-describedby={undefined}
         >
-          <div className="w-full h-full flex items-center justify-center bg-[--color-background] relative">
+          <div className="w-full h-full flex items-center justify-center bg-(--color-background) relative">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
@@ -106,7 +106,7 @@ export function ZoomModal({
                         id={`zoom-media--${mediaId}`}
                         className={cn(
                           "relative bg-gray-100",
-                          "p-1 border transition-colors cursor-pointer border-transparent !h-auto",
+                          "p-1 border transition-colors cursor-pointer border-transparent h-auto!",
                           zoomMediaId === id && "border-line",
                         )}
                         onClick={() => setZoomMediaId(id)}
