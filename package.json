@@ -47,7 +47,7 @@
     "clsx": "2.1.1",
     "colord": "2.9.3",
     "cross-env": "7.0.3",
-    "framer-motion": "12.7.3",
+    "framer-motion": "^12.12.2",
     "graphql": "16.10.0",
     "graphql-tag": "2.12.6",
     "isbot": "5.1.25",
