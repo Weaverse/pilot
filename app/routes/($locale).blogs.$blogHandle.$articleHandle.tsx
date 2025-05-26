@@ -1,8 +1,8 @@
-import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import { data } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { MetaFunction } from "react-router";
 import type { ArticleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
@@ -74,7 +74,7 @@ export async function loader(args: RouteLoaderArgs) {
     formattedDate,
     seo,
     weaverseData,
-  }
+  };
 }
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {

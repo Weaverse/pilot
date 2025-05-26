@@ -1,9 +1,9 @@
-import type {Storefront as HydrogenStorefront} from '@shopify/hydrogen';
+import type { Storefront as HydrogenStorefront } from "@shopify/hydrogen";
 import type {
   CountryCode,
   CurrencyCode,
   LanguageCode,
-} from '@shopify/hydrogen/storefront-api-types';
+} from "@shopify/hydrogen/storefront-api-types";
 
 export type NonNullableFields<T> = {
   [P in keyof T]: NonNullable<T[P]>;

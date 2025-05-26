@@ -1,12 +1,12 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import type {
-	Article,
-	Blog,
-	Collection,
-	Image,
-	Page,
-	Product,
-	ShopPolicy,
+  Article,
+  Blog,
+  Collection,
+  Image,
+  Page,
+  Product,
+  ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
 import type {

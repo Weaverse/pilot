@@ -1,7 +1,7 @@
-import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { MetaFunction } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
@@ -22,16 +22,13 @@ export let loader = async (args: RouteLoaderArgs) => {
 
   // Load collections data and weaverseData in parallel
   let [{ collections }, weaverseData] = await Promise.all([
-    storefront.query<CollectionsQuery>(
-      COLLECTIONS_QUERY,
-      {
-        variables: {
-          ...variables,
-          country: storefront.i18n.country,
-          language: storefront.i18n.language,
-        },
+    storefront.query<CollectionsQuery>(COLLECTIONS_QUERY, {
+      variables: {
+        ...variables,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
       },
-    ),
+    }),
     weaverse.loadPage({
       type: "COLLECTION_LIST",
     }),
@@ -46,7 +43,7 @@ export let loader = async (args: RouteLoaderArgs) => {
     collections,
     seo,
     weaverseData,
-  }
+  };
 };
 
 export let meta: MetaFunction<typeof loader> = ({ data }) => {

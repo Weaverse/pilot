@@ -1,4 +1,3 @@
-import { useLoaderData } from "@remix-run/react";
 import { Analytics, getSeoMeta } from "@shopify/hydrogen";
 import type {
   ActionFunctionArgs,
@@ -7,6 +6,7 @@ import type {
 } from "@shopify/remix-oxygen";
 import { data } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
+import { useLoaderData } from "react-router";
 import type { ProductQuery, VariantsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
@@ -46,13 +46,14 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   redirectIfHandleIsLocalized(request, { handle, data: product });
 
   // Load variants since they're needed for initial rendering
-  let { product: productWithAllVariants } = await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
-    variables: {
-      handle,
-      country: storefront.i18n.country,
-      language: storefront.i18n.language,
-    },
-  });
+  let { product: productWithAllVariants } =
+    await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
+      variables: {
+        handle,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      },
+    });
 
   let variants = productWithAllVariants.variants.nodes;
 
@@ -98,7 +99,9 @@ export async function action({
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(...matches.map((match) => (match.data as any)?.seo).filter(Boolean));
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
+  );
 };
 
 export default function Product() {

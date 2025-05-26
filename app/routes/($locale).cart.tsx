@@ -1,4 +1,3 @@
-import { Await, useRouteLoaderData } from "@remix-run/react";
 import {
   Analytics,
   CartForm,
@@ -15,6 +14,7 @@ import {
   data,
   redirect,
 } from "@shopify/remix-oxygen";
+import { Await, useRouteLoaderData } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { Cart } from "~/components/cart/cart";

@@ -28,40 +28,42 @@ export interface ImageProps extends React.ComponentPropsWithRef<"img"> {
   };
 }
 
-export const Image = forwardRef<HTMLDivElement, ImageProps>(function Image(props, forwardedRef) {
-  let { className, ...rest } = props;
-  /**
-   * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
-   * even when using forwardRef for the outer div
-   */
-  let hydrogenImageRef = useRef<HTMLImageElement>(null);
-  let [loaded, setLoaded] = useState(false);
+export const Image = forwardRef<HTMLDivElement, ImageProps>(
+  function Image(props, forwardedRef) {
+    let { className, ...rest } = props;
+    /**
+     * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
+     * even when using forwardRef for the outer div
+     */
+    let hydrogenImageRef = useRef<HTMLImageElement>(null);
+    let [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    if (hydrogenImageRef.current?.complete) {
-      setLoaded(true);
-    }
-  }, []);
+    useEffect(() => {
+      if (hydrogenImageRef.current?.complete) {
+        setLoaded(true);
+      }
+    }, []);
 
-  return (
-    <div
-      ref={forwardedRef}
-      className={cn(
-        "w-full h-full overflow-hidden",
-        !loaded && "animate-pulse [animation-duration:4s]",
-        className,
-      )}
-    >
-      <HydrogenImage
-        ref={hydrogenImageRef}
+    return (
+      <div
+        ref={forwardedRef}
         className={cn(
-          "[transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
-          "h-full max-h-full w-full object-cover object-center",
-          loaded ? "blur-0" : "blur-xl",
+          "w-full h-full overflow-hidden",
+          !loaded && "animate-pulse [animation-duration:4s]",
+          className,
         )}
-        onLoad={() => setLoaded(true)}
-        {...rest}
-      />
-    </div>
-  );
-});
+      >
+        <HydrogenImage
+          ref={hydrogenImageRef}
+          className={cn(
+            "[transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
+            "h-full max-h-full w-full object-cover object-center",
+            loaded ? "blur-0" : "blur-xl",
+          )}
+          onLoad={() => setLoaded(true)}
+          {...rest}
+        />
+      </div>
+    );
+  },
+);

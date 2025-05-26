@@ -1,13 +1,13 @@
 import { MagnifyingGlass, User } from "@phosphor-icons/react";
+import { useThemeSettings } from "@weaverse/hydrogen";
+import { cva } from "class-variance-authority";
+import { Suspense } from "react";
 import {
   Await,
   useLocation,
   useRouteError,
   useRouteLoaderData,
-} from "@remix-run/react";
-import { useThemeSettings } from "@weaverse/hydrogen";
-import { cva } from "class-variance-authority";
-import { Suspense } from "react";
+} from "react-router";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import Link from "~/components/link";
 import { Logo } from "~/components/logo";

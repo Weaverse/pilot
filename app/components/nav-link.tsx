@@ -1,10 +1,10 @@
+import { useThemeSettings } from "@weaverse/hydrogen";
+import { forwardRef } from "react";
 import {
   NavLink as RemixNavLink,
   type NavLinkProps as RemixNavLinkProps,
   useRouteLoaderData,
-} from "@remix-run/react";
-import { useThemeSettings } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
+} from "react-router";
 import type { RootLoader } from "~/root";
 
 export let NavLink = forwardRef(

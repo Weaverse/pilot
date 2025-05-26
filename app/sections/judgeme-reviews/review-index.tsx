@@ -1,6 +1,6 @@
-import { useLoaderData } from "@remix-run/react";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import ReviewForm from "./review-form";
 import { ReviewList } from "./review-list";

@@ -1,7 +1,7 @@
 import { Minus, Plus } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Link, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
+import { Link, useLoaderData } from "react-router";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
 
 export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {

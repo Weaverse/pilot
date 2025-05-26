@@ -1,8 +1,8 @@
-import { useFetcher } from "@remix-run/react";
 import { ShopPayButton } from "@shopify/hydrogen";
 import type { ProductVariant } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
+import { useFetcher } from "react-router";
 import type {
   ProductQuery,
   ProductVariantFragment,

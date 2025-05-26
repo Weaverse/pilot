@@ -1,5 +1,3 @@
-import type { FetcherWithComponents } from "@remix-run/react";
-import { useMatches } from "@remix-run/react";
 import type {
   OptimisticCartLineInput,
   ShopifyAddToCartPayload,
@@ -13,6 +11,8 @@ import {
 import type { ShopifyPageViewPayload } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { useMemo } from "react";
+import type { FetcherWithComponents } from "react-router";
+import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { openCartDrawer } from "~/components/layout/cart-drawer";
 import { cn } from "~/utils/cn";

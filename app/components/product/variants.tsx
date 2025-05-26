@@ -1,5 +1,5 @@
-import { useSearchParams } from "@remix-run/react";
 import { VariantSelector } from "@shopify/hydrogen";
+import { useSearchParams } from "react-router";
 import type {
   ProductOptionFragment,
   ProductVariantFragment,

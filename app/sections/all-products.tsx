@@ -1,8 +1,8 @@
-import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
+import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";

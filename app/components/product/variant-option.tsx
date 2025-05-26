@@ -1,9 +1,9 @@
 import { CaretDown, CaretUp, Check } from "@phosphor-icons/react";
 import * as Select from "@radix-ui/react-select";
-import { useNavigate } from "@remix-run/react";
 import { Image, type VariantOptionValue } from "@shopify/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import { useNavigate } from "react-router";
 import Link from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { isLightColor } from "~/utils/misc";
