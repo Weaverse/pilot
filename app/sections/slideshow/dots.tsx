@@ -9,7 +9,7 @@ export interface SlideshowDotsProps extends VariantProps<typeof variants> {
 let variants = cva(
   [
     "slideshow-dots",
-    "absolute z-1 w-auto! flex justify-center items-center px-2.5 gap-4 w-",
+    "absolute z-1 w-auto! flex justify-center items-center px-2.5 gap-4",
   ],
   {
     variants: {

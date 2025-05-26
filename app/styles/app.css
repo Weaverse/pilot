@@ -1,6 +1,5 @@
-@import 'swiper/swiper-bundle.css' layer(base);
-
-@import 'tailwindcss';
+@import "swiper/swiper-bundle.css" layer(base);
+@import "tailwindcss";
 
 @config '../../tailwind.config.js';
 
@@ -12,6 +11,15 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+
+@theme {
+  --breakpoint-sm: 32em;
+  --breakpoint-md: 48em;
+  --breakpoint-lg: 64em;
+  --breakpoint-xl: 80em;
+  --breakpoint-2xl: 96em;
+}
+
 @layer base {
   *,
   ::after,
@@ -59,7 +67,7 @@
 @utility strike {
   position: relative;
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     display: block;
     width: 108%;
