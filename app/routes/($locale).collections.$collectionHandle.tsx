@@ -1,4 +1,3 @@
-import { useLoaderData } from "@remix-run/react";
 import {
   Analytics,
   flattenConnection,
@@ -14,6 +13,7 @@ import {
   type MetaArgs,
   redirect,
 } from "@shopify/remix-oxygen";
+import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
@@ -93,7 +93,10 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     }
     throw new Response("collection", { status: 404 });
   }
-  redirectIfHandleIsLocalized(request, { handle: collectionHandle, data: collection });
+  redirectIfHandleIsLocalized(request, {
+    handle: collectionHandle,
+    data: collection,
+  });
 
   let seo = seoPayload.collection({ collection, url: request.url });
 
@@ -155,7 +158,9 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 }
 
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(...matches.map((match) => (match.data as any)?.seo).filter(Boolean));
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
+  );
 };
 
 export default function Collection() {

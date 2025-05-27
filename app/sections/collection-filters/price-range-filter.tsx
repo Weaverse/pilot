@@ -1,9 +1,9 @@
 import * as Slider from "@radix-ui/react-slider";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useLocation, useNavigate, useSearchParams } from "@remix-run/react";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useRef, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { FILTER_URL_PREFIX, filterInputToParams } from "~/utils/filter";
 

@@ -1,7 +1,7 @@
 import { FacebookLogo, PinterestLogo, XLogo } from "@phosphor-icons/react";
-import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { type HydrogenComponentSchema, isBrowser } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import { useLoaderData, useRouteLoaderData } from "react-router";
 import {
   FacebookShareButton,
   PinterestShareButton,

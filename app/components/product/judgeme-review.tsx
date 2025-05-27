@@ -1,10 +1,10 @@
-import { useFetcher, useLoaderData } from "@remix-run/react";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { useParentInstance } from "@weaverse/hydrogen";
 import { forwardRef, useEffect } from "react";
+import { useFetcher, useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";

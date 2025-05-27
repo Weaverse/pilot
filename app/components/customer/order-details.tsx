@@ -1,7 +1,7 @@
 import { ArrowLeft, Tag } from "@phosphor-icons/react";
-import { useLoaderData } from "@remix-run/react";
 import { Money } from "@shopify/hydrogen";
 import clsx from "clsx";
+import { useLoaderData } from "react-router";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";

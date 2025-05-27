@@ -1,5 +1,5 @@
-import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { useLoaderData } from "react-router";
 import type { PoliciesHandleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { BreadCrumb } from "~/components/breadcrumb";

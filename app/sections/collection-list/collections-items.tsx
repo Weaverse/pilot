@@ -1,8 +1,8 @@
-import { useLoaderData } from "@remix-run/react";
 import { Pagination } from "@shopify/hydrogen";
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import { useLoaderData } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { type OverlayProps, overlayInputs } from "~/components/overlay";

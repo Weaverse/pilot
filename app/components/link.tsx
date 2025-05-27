@@ -1,9 +1,4 @@
 import {
-  Link as RemixLink,
-  type LinkProps as RemixLinkProps,
-  useRouteLoaderData,
-} from "@remix-run/react";
-import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
   type InspectorGroup,
@@ -11,6 +6,11 @@ import {
 } from "@weaverse/hydrogen";
 import { type VariantProps, cva } from "class-variance-authority";
 import { type HTMLAttributes, forwardRef } from "react";
+import {
+  Link as RemixLink,
+  type LinkProps as RemixLinkProps,
+  useRouteLoaderData,
+} from "react-router";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 

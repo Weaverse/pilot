@@ -1,15 +1,15 @@
 import { Check } from "@phosphor-icons/react";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
+import { flattenConnection } from "@shopify/hydrogen";
+import clsx from "clsx";
 import {
   Form,
   useActionData,
   useNavigation,
   useOutletContext,
   useParams,
-} from "@remix-run/react";
-import { flattenConnection } from "@shopify/hydrogen";
-import clsx from "clsx";
+} from "react-router";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/($locale).account.edit";

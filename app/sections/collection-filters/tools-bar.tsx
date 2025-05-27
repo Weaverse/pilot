@@ -1,7 +1,7 @@
 import { Sliders, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
+import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";

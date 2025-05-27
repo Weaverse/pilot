@@ -1,6 +1,6 @@
-import type { LoaderFunction } from "@remix-run/server-runtime";
-import { data } from "@remix-run/server-runtime";
 import type { Storefront } from "@shopify/hydrogen";
+import type { LoaderFunction } from "react-router";
+import { data } from "react-router";
 import type { ProductQuery, VariantsQuery } from "storefront-api.generated";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
 

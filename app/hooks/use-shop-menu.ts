@@ -1,4 +1,4 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useRouteLoaderData } from "react-router";
 import type { RootLoader } from "~/root";
 import type { EnhancedMenu } from "~/types/menu";
 

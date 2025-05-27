@@ -1,5 +1,4 @@
 import { GithubLogo, LinkedinLogo, XLogo } from "@phosphor-icons/react";
-import { Link } from "@remix-run/react";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
@@ -7,6 +6,7 @@ import {
   useParentInstance,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
+import { Link } from "react-router";
 import type { OurTeamQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 

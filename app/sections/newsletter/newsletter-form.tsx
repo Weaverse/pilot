@@ -1,11 +1,11 @@
 import { EnvelopeSimple } from "@phosphor-icons/react";
-import { useFetcher } from "@remix-run/react";
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
+import { useFetcher } from "react-router";
 import { Button } from "~/components/button";
 import type { CustomerApiPlayLoad } from "~/routes/($locale).api.customer";
 

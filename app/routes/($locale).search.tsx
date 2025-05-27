@@ -1,5 +1,4 @@
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
-import { Await, Form, useLoaderData } from "@remix-run/react";
 import {
   Analytics,
   Pagination,
@@ -9,6 +8,7 @@ import {
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { clsx } from "clsx";
 import { Fragment, Suspense, useEffect, useState } from "react";
+import { Await, Form, useLoaderData } from "react-router";
 import type { SearchQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
@@ -82,9 +82,10 @@ export async function loader({
   };
 }
 
-
 export let meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(...matches.map((match) => (match.data as any)?.seo).filter(Boolean));
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
+  );
 };
 
 const POPULAR_SEARCHES = ["French Linen", "Shirt", "Cotton"];

@@ -9,7 +9,8 @@
       "dist/**",
       "storefront-api.generated.d.ts",
       "customer-account-api.generated.d.ts",
-      ".shopify/**"
+      ".shopify/**",
+      ".react-router/**"
     ]
   },
   "linter": {

@@ -1,7 +1,7 @@
 import { Star } from "@phosphor-icons/react";
-import { useFetcher, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import { type FormEvent, useEffect, useRef, useState } from "react";
+import { useFetcher, useLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { StarRating } from "~/components/star-rating";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";

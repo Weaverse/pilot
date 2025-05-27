@@ -1,6 +1,6 @@
-import { Await, useLoaderData } from "@remix-run/react";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
+import { Await, useLoaderData } from "react-router";
 import type { ArticleFragment } from "storefront-api.generated";
 import Heading from "~/components/heading";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
