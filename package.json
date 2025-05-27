@@ -81,8 +81,6 @@
     "@types/react-dom": "18.3.1",
     "@weaverse/biome": "1.1.0",
     "cross-env": "7.0.3",
-    "postcss": "8.5.3",
-    "postcss-preset-env": "10.1.5",
     "tailwindcss": "^4.1.7",
     "ts-node": "10.9.2",
     "typescript": "5.8.2",
