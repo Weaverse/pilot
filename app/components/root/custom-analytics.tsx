@@ -1,6 +1,14 @@
-import { useRouteLoaderData } from "@remix-run/react";
-import { AnalyticsEvent, type CartUpdatePayload, type PageViewPayload, type ProductViewPayload, Script, useAnalytics, useNonce } from "@shopify/hydrogen";
+import {
+  AnalyticsEvent,
+  type CartUpdatePayload,
+  type PageViewPayload,
+  type ProductViewPayload,
+  Script,
+  useAnalytics,
+  useNonce,
+} from "@shopify/hydrogen";
 import { useEffect } from "react";
+import { useRouteLoaderData } from "react-router";
 import type { RootLoader } from "~/root";
 
 export function CustomAnalytics() {

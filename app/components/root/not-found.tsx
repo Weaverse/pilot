@@ -1,5 +1,5 @@
-import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
+import { useFetcher } from "react-router";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";

@@ -1,7 +1,7 @@
-import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import type { MetaFunction } from "react-router";
 import type { PageDetailsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 
@@ -33,7 +33,10 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
   if (!page) {
     throw new Response(null, { status: 404 });
   }
-  redirectIfHandleIsLocalized(request, { handle: params.pageHandle, data: page });
+  redirectIfHandleIsLocalized(request, {
+    handle: params.pageHandle,
+    data: page,
+  });
 
   let seo = seoPayload.page({ page, url: request.url });
 

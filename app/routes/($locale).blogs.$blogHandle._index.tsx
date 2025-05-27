@@ -1,14 +1,14 @@
-import type { MetaFunction } from "@remix-run/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, data } from "@shopify/remix-oxygen";
+import type { MetaFunction } from "react-router";
 import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
-import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 
 export let headers = routeHeaders;
 
@@ -37,7 +37,10 @@ export let loader = async (args: LoaderFunctionArgs) => {
   if (!blog?.articles) {
     throw new Response("Not found", { status: 404 });
   }
-  redirectIfHandleIsLocalized(request, { handle: params.blogHandle, data: blog });
+  redirectIfHandleIsLocalized(request, {
+    handle: params.blogHandle,
+    data: blog,
+  });
 
   let articles = flattenConnection(blog.articles).map((article) => {
     let { publishedAt } = article;

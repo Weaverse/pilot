@@ -1,10 +1,10 @@
-import { useFetcher } from "@remix-run/react";
 import type {
   Product,
   ProductSortKeys,
 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useEffect, useId, useMemo } from "react";
+import { useFetcher } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";

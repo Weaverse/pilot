@@ -1,8 +1,5 @@
-import type {
-  ActionFunction,
-  ActionFunctionArgs,
-} from "@remix-run/server-runtime";
-import { data } from "@remix-run/server-runtime";
+import type { ActionFunction, ActionFunctionArgs } from "react-router";
+import { data } from "react-router";
 import type { CustomerCreateMutation } from "storefront-api.generated";
 
 const CUSTOMER_CREATE = `#graphql

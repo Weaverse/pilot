@@ -1,6 +1,6 @@
-import { Form } from "@remix-run/react";
 import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
 import type { CustomerDetailsFragment } from "customer-account-api.generated";
+import { Form } from "react-router";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 

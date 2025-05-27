@@ -1,12 +1,12 @@
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import { validateWeaverseData, WeaverseContent } from "~/weaverse";
+import { WeaverseContent, validateWeaverseData } from "~/weaverse";
 
 export async function loader({ context }: LoaderFunctionArgs) {
   let weaverseData = await context.weaverse.loadPage({
     type: "CUSTOM",
   });
 
-  validateWeaverseData(weaverseData)
+  validateWeaverseData(weaverseData);
 
   return {
     weaverseData,

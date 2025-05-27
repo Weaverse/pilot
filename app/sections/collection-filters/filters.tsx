@@ -1,9 +1,9 @@
 import { CaretRight } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
-import { useLoaderData } from "@remix-run/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useRef } from "react";
+import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { OPTIONS_AS_SWATCH } from "~/components/product/variant-option";
 import { ScrollArea } from "~/components/scroll-area";

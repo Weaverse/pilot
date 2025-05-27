@@ -1,6 +1,12 @@
 {
-  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx"],
+  "include": [
+    "./**/*.d.ts",
+    "./**/*.ts",
+    "./**/*.tsx",
+    ".react-router/types/**/*"
+  ],
   "compilerOptions": {
+    "rootDirs": [".", "./.react-router/types"],
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -14,11 +20,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "types": [
-      "@shopify/oxygen-workers-types",
-      "@remix-run/server-runtime",
-      "vite/client"
-    ],
+    "types": ["@shopify/oxygen-workers-types", "react-router", "vite/client"],
     "paths": {
       "~/*": ["app/*"]
     },

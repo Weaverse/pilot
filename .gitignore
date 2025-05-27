@@ -15,3 +15,4 @@ node_modules
 /playwright/.cache/
 pnpm-lock.yaml
 .DS_Store
+.react-router

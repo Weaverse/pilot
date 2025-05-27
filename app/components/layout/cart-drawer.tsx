@@ -1,9 +1,9 @@
 import { Handbag, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Await, useRouteLoaderData } from "@remix-run/react";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { Suspense, useState } from "react";
+import { Await, useRouteLoaderData } from "react-router";
 import { Cart } from "~/components/cart/cart";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";

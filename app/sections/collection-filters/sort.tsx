@@ -1,6 +1,6 @@
 import { CaretDown } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useLocation, useSearchParams } from "@remix-run/react";
+import { useLocation, useSearchParams } from "react-router";
 import Link from "~/components/link";
 import { cn } from "~/utils/cn";
 import type { SortParam } from "~/utils/filter";

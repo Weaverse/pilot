@@ -1,4 +1,7 @@
-import { WeaverseHydrogenRoot, type WeaverseLoaderData } from "@weaverse/hydrogen";
+import {
+  WeaverseHydrogenRoot,
+  type WeaverseLoaderData,
+} from "@weaverse/hydrogen";
 import { GenericError } from "~/components/root/generic-error";
 import { components } from "./components";
 
@@ -11,9 +14,12 @@ export function WeaverseContent() {
   );
 }
 
-
 export function validateWeaverseData(weaverseData: WeaverseLoaderData) {
-  if (!weaverseData?.page?.id || (weaverseData?.page?.id?.includes("fallback") && !weaverseData?.configs?.requestInfo?.queries?.isDesignMode)) {
+  if (
+    !weaverseData?.page?.id ||
+    (weaverseData?.page?.id?.includes("fallback") &&
+      !weaverseData?.configs?.requestInfo?.queries?.isDesignMode)
+  ) {
     throw new Response(null, { status: 404 });
   }
 }

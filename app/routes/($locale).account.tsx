@@ -1,13 +1,5 @@
 import { SignOut } from "@phosphor-icons/react";
 import {
-  Await,
-  Form,
-  Outlet,
-  useLoaderData,
-  useMatches,
-  useOutlet,
-} from "@remix-run/react";
-import {
   CacheNone,
   flattenConnection,
   generateCacheControlHeader,
@@ -18,6 +10,14 @@ import type {
   CustomerDetailsQuery,
 } from "customer-account-api.generated";
 import { Suspense } from "react";
+import {
+  Await,
+  Form,
+  Outlet,
+  useLoaderData,
+  useMatches,
+  useOutlet,
+} from "react-router";
 import { AccountDetails } from "~/components/customer/account-details";
 import { AccountAddressBook } from "~/components/customer/address-book";
 import { AccountOrderHistory } from "~/components/customer/orders";

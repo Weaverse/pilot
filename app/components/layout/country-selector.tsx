@@ -1,17 +1,16 @@
 import { CaretDown, CheckCircle } from "@phosphor-icons/react";
 import * as Popover from "@radix-ui/react-popover";
+import { CartForm, type I18nBase } from "@shopify/hydrogen";
+import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
+import { useEffect, useRef } from "react";
+import ReactCountryFlag from "react-country-flag";
+import { useInView } from "react-intersection-observer";
 import {
   useFetcher,
   useLocation,
   useRouteLoaderData,
   useSubmit,
-} from "@remix-run/react";
-import { CartForm } from "@shopify/hydrogen";
-import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import type { Locale } from "@weaverse/hydrogen";
-import { useEffect, useRef } from "react";
-import ReactCountryFlag from "react-country-flag";
-import { useInView } from "react-intersection-observer";
+} from "react-router";
 import type { RootLoader } from "~/root";
 import type { Localizations } from "~/types/locale";
 import { DEFAULT_LOCALE } from "~/utils/const";
@@ -145,7 +144,7 @@ function getCountryUrlPath({
   defaultLocalePrefix,
   pathWithoutLocale,
 }: {
-  countryLocale: Locale;
+  countryLocale: I18nBase;
   pathWithoutLocale: string;
   defaultLocalePrefix: string;
 }) {

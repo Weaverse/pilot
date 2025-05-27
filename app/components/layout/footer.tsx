@@ -6,12 +6,12 @@ import {
   XLogo,
 } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Link, useFetcher } from "@remix-run/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { type FormEvent, useEffect, useState } from "react";
+import { Link, useFetcher } from "react-router";
 import { Button } from "~/components/button";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import { RevealUnderline } from "~/reveal-underline";

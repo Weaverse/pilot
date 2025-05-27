@@ -1,10 +1,10 @@
-import { type FormProps, useFetcher, useParams } from "@remix-run/react";
 import {
   type MutableRefObject,
   type ReactNode,
   useEffect,
   useRef,
 } from "react";
+import { type FormProps, useFetcher, useParams } from "react-router";
 import type { NormalizedPredictiveSearchResults } from "~/types/predictive-search";
 
 type ChildrenRenderProps = {

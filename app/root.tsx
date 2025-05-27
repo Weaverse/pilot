@@ -1,3 +1,17 @@
+import poppins400 from "@fontsource/poppins/400.css?url";
+import poppins500 from "@fontsource/poppins/500.css?url";
+import poppins600 from "@fontsource/poppins/600.css?url";
+import poppins700 from "@fontsource/poppins/700.css?url";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import type { SeoConfig } from "@shopify/hydrogen";
+import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaArgs,
+} from "@shopify/remix-oxygen";
+import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
 import {
   Links,
   Meta,
@@ -7,32 +21,18 @@ import {
   isRouteErrorResponse,
   useRouteError,
   useRouteLoaderData,
-} from "@remix-run/react";
-import type { SeoConfig } from "@shopify/hydrogen";
-import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
-import type {
-  LinksFunction,
-  LoaderFunctionArgs,
-  MetaArgs,
-} from "@shopify/remix-oxygen";
-import { GenericError } from "./components/root/generic-error";
-import { NotFound } from "./components/root/not-found";
-import { loadCriticalData, loadDeferredData } from "./utils/root.server";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
+} from "react-router";
 import { Footer } from "./components/layout/footer";
+import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
 import { CustomAnalytics } from "./components/root/custom-analytics";
+import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
-import { DEFAULT_LOCALE } from "./utils/const";
-import { GlobalStyle } from "./weaverse/style";
-import { Header } from "./components/layout/header";
-import poppins400 from "@fontsource/poppins/400.css?url";
-import poppins500 from "@fontsource/poppins/500.css?url";
-import poppins600 from "@fontsource/poppins/600.css?url";
-import poppins700 from "@fontsource/poppins/700.css?url";
+import { NotFound } from "./components/root/not-found";
 import styles from "./styles/app.css?url";
+import { DEFAULT_LOCALE } from "./utils/const";
+import { loadCriticalData, loadDeferredData } from "./utils/root.server";
+import { GlobalStyle } from "./weaverse/style";
 
 export type RootLoader = typeof loader;
 

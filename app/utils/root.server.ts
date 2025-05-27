@@ -21,7 +21,7 @@ export async function loadCriticalData({
     getLayoutData(context),
     getSwatchesConfigs(context),
     // Add other queries here, so that they are loaded in parallel
-    context.weaverse.loadThemeSettings()
+    context.weaverse.loadThemeSettings(),
   ]);
 
   let seo = seoPayload.root({ shop: layout.shop, url: request.url });
