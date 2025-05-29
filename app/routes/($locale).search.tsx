@@ -1,9 +1,9 @@
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import {
   Analytics,
-  Pagination,
   getPaginationVariables,
   getSeoMeta,
+  Pagination,
 } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { clsx } from "clsx";

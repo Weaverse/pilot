@@ -4,7 +4,7 @@ import {
   flattenConnection,
   generateCacheControlHeader,
 } from "@shopify/hydrogen";
-import { type LoaderFunctionArgs, data } from "@shopify/remix-oxygen";
+import { data, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type {
   CustomerDetailsFragment,
   CustomerDetailsQuery,

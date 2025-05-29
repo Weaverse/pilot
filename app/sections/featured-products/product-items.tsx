@@ -7,7 +7,6 @@ import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
 import { ProductCard } from "~/components/product/product-card";
 import { Swimlane } from "~/components/swimlane";
-import type { FeaturedProductsLoaderData } from ".";
 
 let variants = cva("", {
   variants: {

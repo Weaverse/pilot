@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 import type { OurTeamQuery } from "storefront-api.generated";
 import { backgroundInputs } from "~/components/background-image";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 type OurTeamData = {
   metaobject: WeaverseMetaObject;

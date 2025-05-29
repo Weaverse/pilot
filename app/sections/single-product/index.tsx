@@ -11,7 +11,7 @@ import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductPlaceholder } from "~/components/product/placeholder";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
-import { Section, layoutInputs } from "~/components/section";
+import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
 

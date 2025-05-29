@@ -4,7 +4,7 @@ import { useLoaderData } from "react-router";
 import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { RevealUnderline } from "~/reveal-underline";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";

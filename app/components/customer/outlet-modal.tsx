@@ -7,7 +7,10 @@ import Link from "~/components/link";
 export function OutletModal({
   children,
   cancelLink,
-}: { children: React.ReactNode; cancelLink: string }) {
+}: {
+  children: React.ReactNode;
+  cancelLink: string;
+}) {
   return (
     <Dialog.Root defaultOpen>
       <Dialog.Portal>

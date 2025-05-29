@@ -9,7 +9,7 @@ import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import { Image } from "~/components/image";
-import Link, { linkStylesInputs, type LinkStyleProps } from "~/components/link";
+import Link, { type LinkStyleProps, linkStylesInputs } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
