@@ -33,7 +33,10 @@ function Badge({
 export function NewBadge({
   publishedAt,
   className,
-}: { publishedAt: string; className?: string }) {
+}: {
+  publishedAt: string;
+  className?: string;
+}) {
   let { newBadgeText, newBadgeColor, newBadgeDaysOld } = useThemeSettings();
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
@@ -73,7 +76,11 @@ export function SaleBadge({
   price,
   compareAtPrice,
   className,
-}: { price: MoneyV2; compareAtPrice: MoneyV2; className?: string }) {
+}: {
+  price: MoneyV2;
+  compareAtPrice: MoneyV2;
+  className?: string;
+}) {
   let { saleBadgeText = "Sale", saleBadgeColor } = useThemeSettings();
   let { amount, percentage } = calculateDiscount(price, compareAtPrice);
   let discountAmount = useMoney({ amount, currencyCode: price.currencyCode });

@@ -1,10 +1,9 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
-import { Suspense, forwardRef } from "react";
-import { Await, useLoaderData } from "react-router";
+import { forwardRef } from "react";
+import { useLoaderData } from "react-router";
 import type { ArticleFragment } from "storefront-api.generated";
 import Heading from "~/components/heading";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
-import { Skeleton } from "~/components/skeleton";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { getImageLoadingPriority } from "~/utils/image";
 import { ArticleCard, type ArticleCardProps } from "./blogs";

@@ -2,8 +2,8 @@ import { GithubLogo, LinkedinLogo, XLogo } from "@phosphor-icons/react";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
-  type WeaverseImage,
   useParentInstance,
+  type WeaverseImage,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { Link } from "react-router";

@@ -3,12 +3,12 @@ import * as remixBuild from "virtual:react-router/server-build"; // Virtual entr
 import type { HydrogenSession } from "@shopify/hydrogen";
 import { createHydrogenContext, storefrontRedirect } from "@shopify/hydrogen";
 import {
-  type Session,
-  type SessionStorage,
   createCookieSessionStorage,
   createRequestHandler,
+  type Session,
+  type SessionStorage,
 } from "@shopify/remix-oxygen";
-import { WeaverseClient, type WeaverseClientArgs } from "@weaverse/hydrogen";
+import { WeaverseClient } from "@weaverse/hydrogen";
 import type { I18nLocale } from "~/types/locale";
 import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
@@ -24,7 +24,7 @@ export default {
     executionContext: ExecutionContext,
   ): Promise<Response> {
     try {
-      let appLoadContext = await createAppLoadContext(
+      const appLoadContext = await createAppLoadContext(
         request,
         env,
         executionContext,
@@ -34,13 +34,13 @@ export default {
        * Create a Remix request handler and pass
        * Hydrogen's Storefront client to the loader context.
        */
-      let handleRequest = createRequestHandler({
+      const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
         getLoadContext: () => appLoadContext,
       });
 
-      let response = await handleRequest(request);
+      const response = await handleRequest(request);
 
       if (appLoadContext.session.isPending) {
         response.headers.set(
@@ -83,13 +83,13 @@ export async function createAppLoadContext(
     throw new Error("SESSION_SECRET environment variable is not set");
   }
 
-  let waitUntil = executionContext.waitUntil.bind(executionContext);
-  let [cache, session] = await Promise.all([
+  const waitUntil = executionContext.waitUntil.bind(executionContext);
+  const [cache, session] = await Promise.all([
     caches.open("hydrogen"),
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
-  let hydrogenContext = createHydrogenContext({
+  const hydrogenContext = createHydrogenContext({
     env,
     request,
     cache,
@@ -122,7 +122,7 @@ class AppSession implements HydrogenSession {
   }
 
   static async init(request: Request, secrets: string[]) {
-    let storage = createCookieSessionStorage({
+    const storage = createCookieSessionStorage({
       cookie: {
         name: "session",
         httpOnly: true,
@@ -132,7 +132,7 @@ class AppSession implements HydrogenSession {
       },
     });
 
-    let session = await storage
+    const session = await storage
       .getSession(request.headers.get("Cookie"))
       .catch(() => storage.getSession());
 
@@ -172,7 +172,7 @@ class AppSession implements HydrogenSession {
 }
 
 function getLocaleFromRequest(request: Request): I18nLocale {
-  let url = new URL(request.url);
+  const url = new URL(request.url);
   let firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
   firstPathPart = firstPathPart.replace(".data", "");
 

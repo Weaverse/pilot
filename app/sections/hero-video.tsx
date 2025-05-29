@@ -8,9 +8,9 @@ import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import {
-  Suspense,
   forwardRef,
   lazy,
+  Suspense,
   useCallback,
   useEffect,
   useState,

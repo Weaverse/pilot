@@ -5,7 +5,7 @@ import type {
 import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import type { SectionProps } from "~/components/section";
-import { Section, layoutInputs } from "~/components/section";
+import { layoutInputs, Section } from "~/components/section";
 import type { AliReview } from "./review-item";
 
 type AliReviewsData = {

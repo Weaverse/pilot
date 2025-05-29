@@ -1,6 +1,5 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
-import { data } from "@shopify/remix-oxygen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
 import type { MetaFunction } from "react-router";
 import type { ArticleQuery } from "storefront-api.generated";

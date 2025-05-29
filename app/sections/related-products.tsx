@@ -1,5 +1,5 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
-import { Suspense, forwardRef } from "react";
+import { forwardRef, Suspense } from "react";
 import { Await, useLoaderData } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import Heading, {
@@ -7,7 +7,7 @@ import Heading, {
   headingInputs,
 } from "~/components/heading";
 import { ProductCard } from "~/components/product/product-card";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 
 interface RelatedProductsProps

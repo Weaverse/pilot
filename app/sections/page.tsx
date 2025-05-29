@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { PageDetailsQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 interface PageProps extends SectionProps {}
 

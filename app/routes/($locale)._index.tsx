@@ -6,7 +6,7 @@ import type { MetaFunction } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
-import { WeaverseContent, validateWeaverseData } from "~/weaverse";
+import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
 

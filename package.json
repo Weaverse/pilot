@@ -63,7 +63,7 @@
     "typographic-base": "1.0.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "^2.0.0-beta.5",
     "@playwright/test": "1.52.0",
     "@react-router/dev": "^7.6.1",
     "@react-router/fs-routes": "^7.6.1",
@@ -76,7 +76,7 @@
     "@total-typescript/ts-reset": "0.6.1",
     "@types/react": "19.1.5",
     "@types/react-dom": "19.1.5",
-    "@weaverse/biome": "1.1.1",
+    "@weaverse/biome": "1.2.2",
     "cross-env": "7.0.3",
     "postcss": "8.5.3",
     "postcss-import": "16.1.0",

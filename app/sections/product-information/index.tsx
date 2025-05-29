@@ -18,7 +18,7 @@ import {
 } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { ProductVariants } from "~/components/product/variants";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import { isDiscounted } from "~/utils/product";
 import { ProductDetails } from "./product-details";

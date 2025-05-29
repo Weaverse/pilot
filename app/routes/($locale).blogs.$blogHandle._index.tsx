@@ -1,6 +1,6 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
-import { type LoaderFunctionArgs, data } from "@shopify/remix-oxygen";
+import { data, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type { MetaFunction } from "react-router";
 import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";

@@ -6,7 +6,7 @@ import type {
 import { forwardRef } from "react";
 import type { CollectionsByIdsQuery } from "storefront-api.generated";
 import type { SectionProps } from "~/components/section";
-import { Section, layoutInputs } from "~/components/section";
+import { layoutInputs, Section } from "~/components/section";
 
 interface FeaturedCollectionsData {
   collections: WeaverseCollection[];

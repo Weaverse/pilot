@@ -5,7 +5,7 @@ import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Image } from "~/components/image";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { Filters } from "./filters";
 import { ProductsPagination } from "./products-pagination";
 import { ToolsBar } from "./tools-bar";

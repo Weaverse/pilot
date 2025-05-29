@@ -10,8 +10,8 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import {
   type ActionFunctionArgs,
-  type LoaderFunctionArgs,
   data,
+  type LoaderFunctionArgs,
   redirect,
 } from "@shopify/remix-oxygen";
 import { Await, useRouteLoaderData } from "react-router";
