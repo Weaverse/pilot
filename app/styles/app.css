@@ -16,7 +16,9 @@
 }
 
 @theme inline {
-  --spacing-screen: calc(var(--screen-height, 100vh) - var(--initial-topbar-height));
+  --spacing-screen: calc(
+    var(--screen-height, 100vh) - var(--initial-topbar-height)
+  );
 
   --color-body: var(--color-text);
   --color-body-subtle: var(--color-text-subtle);
@@ -183,10 +185,18 @@
   button {
     @apply cursor-pointer;
   }
+
+  mark {
+    background-color: none;
+    font-weight: 500;
+  }
 }
 
 @utility h-screen-no-nav {
-  height: calc(var(--screen-height, 100vh) - var(--height-nav) - var(--initial-topbar-height));
+  height: calc(
+    var(--screen-height, 100vh) - var(--height-nav) -
+      var(--initial-topbar-height)
+  );
 }
 
 @utility article {
@@ -236,6 +246,22 @@
     transform: translateY(-50%);
     background: var(--color-compare-price-text);
     box-shadow: 0.5px 0.5px 0px 0.5px white;
+  }
+}
+
+@utility diagonal {
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: "";
+    @apply absolute inset-0 z-1;
+    background: linear-gradient(
+        to top left,
+        transparent calc(50% - 1px),
+        var(--color-sold-out-and-unavailable),
+        transparent calc(50% + 1px)
+      )
+      no-repeat;
   }
 }
 
@@ -404,31 +430,6 @@
       }
     }
   }
-}
-
-.diagonal {
-  position: relative;
-  overflow: hidden;
-  &::before {
-    content: "";
-    @apply absolute inset-0 z-1;
-    background: linear-gradient(
-        to top left,
-        transparent calc(50% - 1px),
-        var(--color-sold-out-and-unavailable),
-        transparent calc(50% + 1px)
-      )
-      no-repeat;
-  }
-}
-
-.vt-product-image {
-  view-transition-name: product-image;
-}
-
-mark {
-  background-color: none;
-  font-weight: 500;
 }
 
 .animated-scope [data-motion] {

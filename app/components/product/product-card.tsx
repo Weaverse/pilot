@@ -172,7 +172,10 @@ export function ProductCard({
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
             className={({ isTransitioning }) =>
-              clsx("font-bold ", isTransitioning && "vt-product-image")
+              clsx(
+                "font-bold ",
+                isTransitioning && "[view-transition-name:product-image]",
+              )
             }
           >
             <RevealUnderline>{product.title}</RevealUnderline>
