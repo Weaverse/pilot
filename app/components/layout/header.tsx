@@ -24,7 +24,7 @@ let variants = cva("", {
     width: {
       full: "w-full h-full",
       stretch: "w-full h-full",
-      fixed: "w-full h-full max-w-page mx-auto",
+      fixed: "w-full h-full max-w-(--page-width) mx-auto",
     },
     padding: {
       full: "",
@@ -86,7 +86,7 @@ export function Header() {
     >
       <div
         className={cn(
-          "h-nav py-1.5 lg:py-3 flex items-center justify-between gap-2 lg:gap-8",
+          "h-(--height-nav) py-1.5 lg:py-3 flex items-center justify-between gap-2 lg:gap-8",
           variants({ width: headerWidth }),
         )}
       >

@@ -22,7 +22,7 @@ export function DesktopMenu() {
         asChild
         value={value}
         onValueChange={setValue}
-        onMouseLeave={() => setValue(null)}
+        // onMouseLeave={() => setValue(null)}
       >
         <nav className="hidden lg:flex grow justify-center h-full">
           {items.map((menuItem) => {
@@ -104,7 +104,7 @@ function DropdownSubMenu({ items }: { items: SingleMenuItem[] }) {
 
 function MegaMenu({ items }: { items: SingleMenuItem[] }) {
   return (
-    <div className="max-w-page mx-auto flex gap-4">
+    <div className="max-w-(--page-width) mx-auto flex gap-4">
       {items.map(({ id, title, to, items: children, resource }, idx) =>
         resource?.image && children.length === 0 ? (
           <SlideIn

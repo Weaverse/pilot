@@ -57,7 +57,7 @@ function CartDetails({
         layout === "drawer" &&
           "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto] px-4",
         layout === "page" && [
-          "pb-12 w-full max-w-page mx-auto",
+          "pb-12 w-full max-w-(--page-width) mx-auto",
           "grid md:grid-cols-2 lg:grid-cols-3 md:items-start",
           "gap-8 md:gap-8 lg:gap-12",
         ],
@@ -217,7 +217,7 @@ function CartSummary({
       className={clsx(
         layout === "drawer" && "grid gap-4 border-t border-line-subtle pt-4",
         layout === "page" &&
-          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 rounded-sm w-full",
+          "sticky top-(--height-nav) grid gap-6 p-4 md:px-6 md:translate-y-4 rounded-sm w-full",
       )}
     >
       <h2 id="summary-heading" className="sr-only">

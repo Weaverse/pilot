@@ -230,8 +230,8 @@ export function ReviewForm({
           )}
           role="alert"
         >
-          <p className="font-bold leading-normal text-lg">REVIEW SUBMITTED</p>
-          <p className="font-normal leading-normal text-base">
+          <p className="font-bold text-lg">REVIEW SUBMITTED</p>
+          <p className="font-normal text-base">
             Thanks for leaving your review!
           </p>
           <div
