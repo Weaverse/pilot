@@ -22,7 +22,7 @@ export function DesktopMenu() {
         asChild
         value={value}
         onValueChange={setValue}
-        // onMouseLeave={() => setValue(null)}
+        onMouseLeave={() => setValue(null)}
       >
         <nav className="hidden lg:flex grow justify-center h-full">
           {items.map((menuItem) => {
