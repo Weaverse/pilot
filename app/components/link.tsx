@@ -4,8 +4,8 @@ import {
   type InspectorGroup,
   useThemeSettings,
 } from "@weaverse/hydrogen";
-import { type VariantProps, cva } from "class-variance-authority";
-import { type HTMLAttributes, forwardRef } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { forwardRef, type HTMLAttributes } from "react";
 import {
   Link as RemixLink,
   type LinkProps as RemixLinkProps,

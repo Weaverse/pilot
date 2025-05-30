@@ -9,7 +9,7 @@ import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
-import { Section, layoutInputs } from "~/components/section";
+import { layoutInputs, Section } from "~/components/section";
 
 export interface HeroImageProps extends VariantProps<typeof variants> {}
 

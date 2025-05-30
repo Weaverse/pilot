@@ -2,7 +2,7 @@ import {
   flattenConnection,
   mapSelectedProductOptionToObject,
 } from "@shopify/hydrogen";
-import { type LoaderFunctionArgs, data } from "@shopify/remix-oxygen";
+import { data, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type {
   PredictiveArticleFragment,
   PredictiveCollectionFragment,

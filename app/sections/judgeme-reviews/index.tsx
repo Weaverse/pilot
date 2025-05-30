@@ -1,6 +1,6 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 let JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
   (props, ref) => {

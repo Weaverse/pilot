@@ -4,11 +4,7 @@ import { oxygen } from "@shopify/mini-oxygen/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
-declare module "@remix-run/server-runtime" {
-  interface Future {
-    v3_singleFetch: true;
-  }
-}
+
 export default defineConfig({
   plugins: [
     hydrogen(),

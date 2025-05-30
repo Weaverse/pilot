@@ -5,8 +5,8 @@ import type {
 import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import Heading, {
-  headingInputs,
   type HeadingProps,
+  headingInputs,
 } from "~/components/heading";
 import { Image } from "~/components/image";
 import Paragraph from "~/components/paragraph";

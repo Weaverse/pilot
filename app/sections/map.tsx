@@ -1,5 +1,5 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { forwardRef } from "react";
 import Heading from "~/components/heading";

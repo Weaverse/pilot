@@ -13,12 +13,12 @@ import type {
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
   useRouteError,
   useRouteLoaderData,
 } from "react-router";

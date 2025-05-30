@@ -9,7 +9,7 @@ import {
 } from "react-share";
 import type { ArticleQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { RootLoader } from "~/root";
 
 interface BlogPostProps extends SectionProps {

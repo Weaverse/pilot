@@ -1,6 +1,7 @@
 import type {
   OptimisticCartLineInput,
   ShopifyAddToCartPayload,
+  ShopifyPageViewPayload,
 } from "@shopify/hydrogen";
 import {
   AnalyticsEventName,
@@ -8,9 +9,7 @@ import {
   getClientBrowserParameters,
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
-import type { ShopifyPageViewPayload } from "@shopify/hydrogen";
-import { useEffect } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";

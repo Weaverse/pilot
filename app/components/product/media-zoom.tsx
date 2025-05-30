@@ -5,9 +5,9 @@ import { parseGid } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import type {
-  MediaFragment,
   Media_MediaImage_Fragment,
   Media_Video_Fragment,
+  MediaFragment,
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";

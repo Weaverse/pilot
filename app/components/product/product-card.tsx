@@ -1,6 +1,6 @@
 import {
-  Money,
   flattenConnection,
+  Money,
   mapSelectedProductOptionToObject,
 } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";

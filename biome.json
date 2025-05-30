@@ -1,34 +1,21 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.5/schema.json",
   "extends": ["./node_modules/@weaverse/biome/biome.json"],
   "files": {
-    "ignore": [
-      "public/**",
-      "node_modules/**",
-      "build/**",
-      "dist/**",
-      "storefront-api.generated.d.ts",
-      "customer-account-api.generated.d.ts",
-      ".shopify/**",
-      ".react-router/**"
+    "includes": [
+      "**",
+      "!**/public/**",
+      "!**/node_modules/**",
+      "!**/build/**",
+      "!**/dist/**",
+      "!**/storefront-api.generated.d.ts",
+      "!**/customer-account-api.generated.d.ts",
+      "!**/.shopify/**",
+      "!**/.react-router/**"
     ]
   },
   "linter": {
-    "rules": {
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noArrayIndexKey": "off",
-        "noAssignInExpressions": "off"
-      },
-      "style": {},
-      "a11y": {
-        "useKeyWithClickEvents": "off",
-        "noSvgWithoutTitle": "off",
-        "useButtonType": "off",
-        "useSemanticElements": "warn",
-        "useFocusableInteractive": "warn"
-      }
-    }
+    "rules": {}
   },
   "javascript": {
     "formatter": {

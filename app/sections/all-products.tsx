@@ -7,7 +7,7 @@ import type { AllProductsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
-import { Section, type SectionProps, layoutInputs } from "~/components/section";
+import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 interface AllProductsProps extends SectionProps {
   heading: string;

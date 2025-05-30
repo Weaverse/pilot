@@ -9,7 +9,7 @@ import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import { Image } from "~/components/image";
-import Link, { linkContentInputs, type LinkProps } from "~/components/link";
+import Link, { type LinkProps, linkContentInputs } from "~/components/link";
 import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 

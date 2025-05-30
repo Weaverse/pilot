@@ -7,11 +7,7 @@ import { StarRating } from "~/components/star-rating";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import type { JudgemeReviewsData } from "~/utils/judgeme";
 
-export function ReviewForm({
-  reviews,
-}: {
-  reviews: JudgemeReviewsData;
-}) {
+export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
   let { product } = useLoaderData<typeof productRouteLoader>();
   let [rating, setRating] = useState(0);
   let [hover, setHover] = useState(0);
