@@ -16,7 +16,7 @@
 }
 
 @theme inline {
-  --spacing-screen: calc(
+  --spacing-screen-no-topbar: calc(
     var(--screen-height, 100vh) - var(--initial-topbar-height)
   );
 
@@ -192,7 +192,13 @@
   }
 }
 
-@utility h-screen-no-nav {
+@utility h-screen-no-topbar {
+  height: calc(
+    var(--screen-height, 100vh) - var(--initial-topbar-height)
+  );
+}
+
+@utility h-screen-dynamic {
   height: calc(
     var(--screen-height, 100vh) - var(--height-nav) -
       var(--initial-topbar-height)
