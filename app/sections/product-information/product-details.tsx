@@ -32,8 +32,8 @@ export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
             className={clsx([
               "flex justify-between py-4 w-full font-bold",
               "border-b border-line-subtle",
-              "[&>.minus]:data-[state=open]:inline-block",
-              "[&>.plus]:data-[state=open]:hidden",
+              "data-[state=open]:[&>.minus]:inline-block",
+              "data-[state=open]:[&>.plus]:hidden",
             ])}
           >
             <span>{title}</span>

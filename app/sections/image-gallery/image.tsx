@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { forwardRef } from "react";
 import { Image } from "~/components/image";
 
-let variants = cva("h-[--image-height]", {
+let variants = cva("h-(--image-height)", {
   variants: {
     columnSpan: {
       1: "col-span-1",
@@ -19,8 +19,8 @@ let variants = cva("h-[--image-height]", {
     },
     borderRadius: {
       0: "",
-      2: "rounded-sm",
-      4: "rounded",
+      2: "rounded-xs",
+      4: "rounded-sm",
       6: "rounded-md",
       8: "rounded-lg",
       10: "rounded-[10px]",

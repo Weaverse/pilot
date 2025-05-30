@@ -44,7 +44,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       useLoaderData<typeof productRouteLoader>();
     let [params] = useSearchParams();
     let selectedVariant = useOptimisticVariant(
-      product.selectedVariant,
+      product?.selectedVariant,
       variants,
     );
 
@@ -136,7 +136,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   {showVendor && vendor && (
                     <span className="text-body-subtle">{vendor}</span>
                   )}
-                  <h1 className="h3 !tracking-tight">{title}</h1>
+                  <h1 className="h3 tracking-tight!">{title}</h1>
                 </div>
                 {selectedVariant ? (
                   <div className="flex items-center gap-2">

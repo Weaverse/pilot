@@ -118,7 +118,7 @@ export default function AccountDetailsEdit() {
         <input
           id="firstName"
           name="firstName"
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           type="text"
           autoComplete="given-name"
           placeholder="First name"
@@ -128,7 +128,7 @@ export default function AccountDetailsEdit() {
         <input
           id="lastName"
           name="lastName"
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           type="text"
           autoComplete="family-name"
           placeholder="Last name"

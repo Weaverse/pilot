@@ -24,7 +24,7 @@ let variants = cva("", {
     width: {
       full: "",
       stretch: "",
-      fixed: "max-w-page mx-auto",
+      fixed: "max-w-(--page-width) mx-auto",
     },
     padding: {
       full: "",
@@ -102,7 +102,7 @@ export function Footer() {
   return (
     <footer
       className={cn(
-        "w-full bg-[--color-footer-bg] text-[--color-footer-text] pt-9 lg:pt-16",
+        "w-full bg-(--color-footer-bg) text-(--color-footer-text) pt-9 lg:pt-16",
         variants({ padding: footerWidth }),
       )}
     >
@@ -169,7 +169,7 @@ export function Footer() {
                       type="email"
                       required
                       placeholder={newsletterPlaceholder}
-                      className="grow text-body focus-visible:outline-none px-3"
+                      className="grow text-body focus-visible:outline-hidden px-3"
                     />
                     <Button
                       variant="custom"
@@ -220,7 +220,7 @@ function FooterMenu() {
     >
       {items.map(({ id, to, title, items }) => (
         <Accordion.Item key={id} value={id} className="flex flex-col">
-          <Accordion.Trigger className="flex py-4 justify-between items-center lg:hidden text-left font-medium [&>svg]:data-[state=open]:rotate-90">
+          <Accordion.Trigger className="flex py-4 justify-between items-center lg:hidden text-left font-medium data-[state=open]:[&>svg]:rotate-90">
             {["#", "/"].includes(to) ? (
               <span>{title}</span>
             ) : (
@@ -249,7 +249,7 @@ function FooterMenu() {
             <div className="pb-4 lg:pt-6 flex flex-col gap-2">
               {items.map(({ id, to, title }) => (
                 <Link to={to} key={id} className="relative">
-                  <RevealUnderline className="[--underline-color:--color-footer-text]">
+                  <RevealUnderline className="[--underline-color:var(--color-footer-text)]">
                     {title}
                   </RevealUnderline>
                 </Link>

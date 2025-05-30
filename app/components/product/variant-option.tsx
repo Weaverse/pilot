@@ -81,7 +81,7 @@ export function VariantOption({ option }: VariantOptionProps) {
                   prefetch="intent"
                   replace
                   className={clsx(
-                    "size-[--option-swatch-size] flex aspect-square cursor-pointer",
+                    "size-(--option-swatch-size) flex aspect-square cursor-pointer",
                     "rounded-full overflow-hidden",
                     "transition-[outline-color] [outline-style:solid] outline-offset-2 outline-1",
                     isActive
@@ -163,7 +163,7 @@ export function VariantOption({ option }: VariantOptionProps) {
                   prefetch="intent"
                   replace
                   className={clsx(
-                    "flex items-center justify-center p-1 w-[--option-image-width] h-auto",
+                    "flex items-center justify-center p-1 w-(--option-image-width) h-auto",
                     "text-center border border-line-subtle transition-colors",
                     isActive
                       ? [
@@ -206,7 +206,7 @@ export function VariantOption({ option }: VariantOptionProps) {
         }}
       >
         <Select.Trigger
-          className="inline-flex border border-line h-10 items-center justify-center gap-3 bg-white pl-4 pr-3 py-3 outline-none"
+          className="inline-flex border border-line h-10 items-center justify-center gap-3 bg-white pl-4 pr-3 py-3 outline-hidden"
           aria-label={name}
         >
           <Select.Value />
@@ -215,7 +215,7 @@ export function VariantOption({ option }: VariantOptionProps) {
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
-          <Select.Content className="overflow-hidden bg-white shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+          <Select.Content className="overflow-hidden bg-white shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)]">
             <Select.ScrollUpButton className="cursor-pointer flex items-center justify-center hover:bg-gray-100">
               <CaretUp size={16} />
             </Select.ScrollUpButton>
@@ -225,7 +225,7 @@ export function VariantOption({ option }: VariantOptionProps) {
                   key={value}
                   value={value}
                   className={clsx(
-                    "flex gap-4 cursor-pointer w-full items-center justify-between hover:bg-gray-100 outline-none h-10 select-none pl-4 pr-2 py-2.5",
+                    "flex gap-4 cursor-pointer w-full items-center justify-between hover:bg-gray-100 outline-hidden h-10 select-none pl-4 pr-2 py-2.5",
                     isUnavailable && "text-body-subtle line-through",
                   )}
                 >

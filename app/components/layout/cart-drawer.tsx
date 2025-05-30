@@ -52,8 +52,8 @@ export function CartDrawer() {
                     "flex items-center text-center justify-center min-w-4.5 h-4.5 px-1 rounded-full",
                     "text-sm leading-none text-center font-medium",
                     "transition-colors duration-300",
-                    "group-hover/header:bg-[--color-header-text]",
-                    "group-hover/header:text-[--color-header-bg]",
+                    "group-hover/header:bg-(--color-header-text)",
+                    "group-hover/header:text-(--color-header-bg)",
                   )}
                 >
                   <span className="-mr-px">{cart?.totalQuantity}</span>
@@ -67,8 +67,8 @@ export function CartDrawer() {
               />
               <Dialog.Content
                 className={clsx([
-                  "fixed inset-y-0 w-screen max-w-[400px] bg-[--color-background] py-4 z-10",
-                  "right-0 translate-x-full data-[state=open]:animate-enter-from-right",
+                  "fixed inset-y-0 right-0 w-screen max-w-[400px] bg-background py-4 z-10",
+                  "data-[state=open]:animate-enter-from-right",
                 ])}
                 aria-describedby={undefined}
               >

@@ -90,7 +90,7 @@ export function ProductCard({
 
   return (
     <div
-      className={clsx("rounded-[--pcard-radius]", className)}
+      className={clsx("rounded-(--pcard-radius)", className)}
       style={
         {
           backgroundColor: pcardBackgroundColor,
@@ -104,7 +104,7 @@ export function ProductCard({
           <Link
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
-            className="overflow-hidden rounded-t-[--pcard-radius] block group relative aspect-[--pcard-image-ratio] bg-gray-100"
+            className="overflow-hidden rounded-t-(--pcard-radius) block group relative aspect-(--pcard-image-ratio) bg-gray-100"
           >
             <Image
               className={clsx([
@@ -172,7 +172,10 @@ export function ProductCard({
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
             className={({ isTransitioning }) =>
-              clsx("font-bold ", isTransitioning && "vt-product-image")
+              clsx(
+                "font-bold ",
+                isTransitioning && "[view-transition-name:product-image]",
+              )
             }
           >
             <RevealUnderline>{product.title}</RevealUnderline>
