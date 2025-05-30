@@ -174,7 +174,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
       <Image
         data={{ ...image, altText: alt || "Product image zoom" }}
         loading="lazy"
-        className="object-cover max-w-[95vw] w-auto h-auto md:h-full max-h-screen"
+        className="object-cover max-w-[95vw] w-auto h-auto md:h-full max-h-screen-no-topbar"
         width={4096}
         aspectRatio={getImageAspectRatio(image, "adapt")}
         sizes="auto"

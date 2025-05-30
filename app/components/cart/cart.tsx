@@ -55,7 +55,7 @@ function CartDetails({
     <div
       className={clsx(
         layout === "drawer" &&
-          "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto] px-4",
+          "grid grid-cols-1 h-screen-dynamic grid-rows-[1fr_auto] px-4",
         layout === "page" && [
           "pb-12 w-full max-w-(--page-width) mx-auto",
           "grid md:grid-cols-2 lg:grid-cols-3 md:items-start",
@@ -475,7 +475,7 @@ function CartEmpty({
       ref={scrollRef}
       className={clsx(
         layout === "drawer" && [
-          "content-start space-y-12 px-5 pb-5 transition overflow-y-scroll h-screen-no-nav w-[400px]",
+          "content-start space-y-12 px-5 pb-5 transition overflow-y-scroll h-screen-dynamic w-[400px]",
           y > 0 ? "border-t" : "",
         ],
         layout === "page" && [

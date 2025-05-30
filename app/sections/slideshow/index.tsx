@@ -32,12 +32,12 @@ let variants = cva("group [&_.swiper]:h-full", {
     {
       height: "full",
       enableTransparentHeader: true,
-      className: "h-screen",
+      className: "h-screen-no-topbar",
     },
     {
       height: "full",
       enableTransparentHeader: false,
-      className: "h-screen-no-nav",
+      className: "h-screen-dynamic",
     },
   ],
   defaultVariants: {
