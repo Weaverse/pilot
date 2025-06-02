@@ -36,7 +36,7 @@ let ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
     return (
       <div ref={ref} {...rest}>
         <Swimlane className={variants({ gap })}>
-          {products.nodes.map((product) => (
+          {products?.nodes?.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

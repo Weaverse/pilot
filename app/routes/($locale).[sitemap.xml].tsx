@@ -5,7 +5,7 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  let response = await getSitemapIndex({
+  const response = await getSitemapIndex({
     storefront,
     request,
   });

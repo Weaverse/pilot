@@ -44,7 +44,7 @@
     "clsx": "2.1.1",
     "colord": "2.9.3",
     "cross-env": "7.0.3",
-    "framer-motion": "12.12.2",
+    "framer-motion": "12.15.0",
     "graphql": "16.11.0",
     "graphql-tag": "2.12.6",
     "isbot": "5.1.28",
@@ -70,17 +70,17 @@
     "@shopify/cli": "3.80.7",
     "@shopify/hydrogen-codegen": "0.3.3",
     "@shopify/mini-oxygen": "3.2.1",
-    "@shopify/oxygen-workers-types": "4.1.9",
+    "@shopify/oxygen-workers-types": "4.1.10",
     "@tailwindcss/forms": "0.5.10",
     "@tailwindcss/typography": "0.5.16",
     "@total-typescript/ts-reset": "0.6.1",
-    "@types/react": "19.1.5",
+    "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
     "@weaverse/biome": "1.2.2",
     "cross-env": "7.0.3",
-    "postcss": "8.5.3",
+    "postcss": "8.5.4",
     "postcss-import": "16.1.0",
-    "postcss-preset-env": "10.1.6",
+    "postcss-preset-env": "10.2.0",
     "tailwindcss": "3.4.17",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
@@ -88,7 +88,7 @@
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "0.25.4"
+    "@esbuild/linux-x64": "0.25.5"
   },
   "engines": {
     "node": ">=20"

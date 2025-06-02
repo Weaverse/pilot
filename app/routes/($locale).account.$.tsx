@@ -1,8 +1,8 @@
 import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
 
 // fallback wild card for all unauthenticated routes in account section
-export async function loader({ context, params }: LoaderFunctionArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   await context.customerAccount.handleAuthStatus();
-  let locale = params.locale;
-  return redirect(locale ? `/${locale}/account` : "/account");
+
+  return redirect("/account");
 }
