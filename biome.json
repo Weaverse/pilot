@@ -15,7 +15,11 @@
     ]
   },
   "linter": {
-    "rules": {}
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
   },
   "javascript": {
     "formatter": {
