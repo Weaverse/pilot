@@ -27,7 +27,7 @@ export function ProductPlaceholder(props: any) {
             </p>
             <div>
               <div className="flex flex-col flex-wrap mb-4 gap-y-2 last:mb-0">
-                <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug min-w-[4rem]">
+                <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug min-w-16">
                   Size
                 </legend>
                 <div className="flex flex-wrap items-baseline gap-4">
@@ -52,7 +52,7 @@ export function ProductPlaceholder(props: any) {
                 </div>
               </div>
               <div className="flex flex-col flex-wrap mb-4 gap-y-2 last:mb-0">
-                <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug min-w-[4rem]">
+                <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug min-w-16">
                   Color
                 </legend>
                 <div className="flex flex-wrap items-baseline gap-4">
@@ -82,7 +82,7 @@ export function ProductPlaceholder(props: any) {
             <legend className="whitespace-pre-wrap max-w-prose font-bold text-lg leading-snug">
               Quantity
             </legend>
-            <div className="rounded-sm border w-fit">
+            <div className="rounded-xs border w-fit">
               <button
                 name="decrease-quantity"
                 aria-label="Decrease quantity"
@@ -106,7 +106,7 @@ export function ProductPlaceholder(props: any) {
           </div>
           <div>
             <button
-              className="inline-block rounded font-medium text-center py-3 px-4 text-sm border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content w-full"
+              className="inline-block rounded-sm font-medium text-center py-3 px-4 text-sm border-2 border-btn hover:bg-inv-btn hover:text-inv-btn-content bg-btn text-btn-content w-full"
               type="submit"
               data-test="add-to-cart"
             >

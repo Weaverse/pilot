@@ -56,7 +56,7 @@ let HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(
       <div
         ref={ref}
         {...rest}
-        className="absolute -translate-x-1/2 -translate-y-1/2 hover:z-[1]"
+        className="absolute -translate-x-1/2 -translate-y-1/2 hover:z-1"
         style={
           {
             top: `${offsetY}%`,

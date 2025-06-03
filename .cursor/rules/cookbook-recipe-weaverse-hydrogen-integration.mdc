@@ -488,7 +488,7 @@ const FeaturedCollection = forwardRef<HTMLDivElement, FeaturedCollectionProps>(
                 to={`/products/${product.handle}`}
                 className="group product-card"
               >
-                <div className="relative overflow-hidden aspect-square rounded bg-gray-100">
+                <div className="relative overflow-hidden aspect-square rounded-sm bg-gray-100">
                   {product.featuredImage ? (
                     <Image
                       data={product.featuredImage}
@@ -523,7 +523,7 @@ const FeaturedCollection = forwardRef<HTMLDivElement, FeaturedCollectionProps>(
             <div className="mt-8 text-center">
               <Link
                 to={`/collections/${collection.handle}`}
-                className="inline-block px-6 py-3 text-sm font-medium text-center text-white bg-gray-900 rounded hover:bg-gray-800"
+                className="inline-block px-6 py-3 text-sm font-medium text-center text-white bg-gray-900 rounded-sm hover:bg-gray-800"
               >
                 View all {collection.title}
               </Link>
@@ -669,7 +669,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
           } as CSSProperties
         }
-        className="transition-opacity !opacity-100 duration-300 antialiased bg-background text-body"
+        className="transition-opacity opacity-100! duration-300 antialiased bg-background text-body"
       >
         {data ? (
           <Analytics.Provider
@@ -678,7 +678,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             consent={data.consent}
           >
             {/* Layout components */}
-            <main id="mainContent" className="flex-grow">
+            <main id="mainContent" className="grow">
               {children}
             </main>
             {/* Footer components */}

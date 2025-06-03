@@ -92,7 +92,7 @@ function CartBestSellersContent({
       <>
         {[...new Array(count)].map((_, i) => (
           <div key={`${id + i}`} className="grid gap-2">
-            <Skeleton className="aspect-[3/4]" />
+            <Skeleton className="aspect-3/4" />
             <Skeleton className="w-32 h-4" />
           </div>
         ))}

@@ -81,7 +81,7 @@ export function OrderDetails() {
                             discountApp?.title || discountApp?.code;
                           return (
                             <div
-                              className="text-body-subtle flex items-center gap-1 border border-line-subtle py-1 px-1.5 rounded-sm text-sm w-fit"
+                              className="text-body-subtle flex items-center gap-1 border border-line-subtle py-1 px-1.5 rounded-xs text-sm w-fit"
                               key={index}
                             >
                               <Tag className="w-4 h-4" />

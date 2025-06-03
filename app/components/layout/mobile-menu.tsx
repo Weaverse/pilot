@@ -17,7 +17,7 @@ export function MobileMenu() {
     <Dialog.Root>
       <Dialog.Trigger
         asChild
-        className="relative flex lg:hidden items-center justify-center w-8 h-8 focus-visible:outline-none"
+        className="relative flex lg:hidden items-center justify-center w-8 h-8 focus-visible:outline-hidden"
       >
         <MenuTrigger />
       </Dialog.Trigger>
@@ -28,9 +28,9 @@ export function MobileMenu() {
         />
         <Dialog.Content
           className={cn([
-            "fixed inset-0 h-screen-dynamic bg-[--color-header-bg] pt-4 pb-2 z-10",
+            "fixed inset-0 h-screen-no-topbar bg-(--color-header-bg) pt-4 pb-2 z-10",
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
-            "focus-visible:outline-none",
+            "focus-visible:outline-hidden",
             "uppercase",
           ])}
           style={
@@ -79,7 +79,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
   return (
     <Collapsible.Root>
       <Collapsible.Trigger asChild>
-        <button className='py-3 w-full flex items-center gap-4 justify-between [&>svg]:data-[state="open"]:rotate-90'>
+        <button className='py-3 w-full flex items-center gap-4 justify-between data-[state="open"]:[&>svg]:rotate-90'>
           <span className="uppercase">{title}</span>
           <CaretRight className="w-4 h-4" />
         </button>

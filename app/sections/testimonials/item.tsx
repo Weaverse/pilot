@@ -35,7 +35,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
         data-motion="slide-in"
         className={clsx(hideOnMobile && "hidden sm:block")}
       >
-        <figure className="p-6 bg-gray-50 rounded">
+        <figure className="p-6 bg-gray-50 rounded-sm">
           <blockquote>
             <div className="text-xl md:text-2xl">{heading}</div>
             <p

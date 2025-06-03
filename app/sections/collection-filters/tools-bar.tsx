@@ -82,7 +82,7 @@ function FiltersDrawer({
         />
         <Dialog.Content
           className={clsx([
-            "fixed inset-y-0 w-full md:w-[360px] bg-[--color-background] py-4 z-10",
+            "fixed inset-y-0 w-full md:w-[360px] bg-(--color-background) py-4 z-10",
             "left-0 -translate-x-full data-[state=open]:animate-enter-from-left",
           ])}
           aria-describedby={undefined}

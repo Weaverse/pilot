@@ -125,7 +125,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
           } as CSSProperties
         }
-        className="transition-opacity !opacity-100 duration-300 antialiased bg-background text-body"
+        className="transition-opacity opacity-100! duration-300 antialiased bg-background text-body"
       >
         {data ? (
           <Analytics.Provider
@@ -135,7 +135,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           >
             <TooltipProvider disableHoverableContent>
               <div
-                className="flex flex-col min-h-screen"
+                className="flex flex-col min-h-screen-no-topbar"
                 key={`${locale.language}-${locale.country}`}
               >
                 <div className="">
@@ -145,7 +145,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </div>
                 <ScrollingAnnouncement />
                 <Header />
-                <main id="mainContent" className="flex-grow">
+                <main id="mainContent" className="grow">
                   {children}
                 </main>
                 <Footer />
