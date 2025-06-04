@@ -63,28 +63,28 @@ let CountdownTimer = forwardRef<
     <div
       ref={ref}
       {...rest}
-      className="countdown--timer flex text-[var(--timer-color)] py-3 sm:py-0"
+      className="countdown--timer flex text-(--timer-color) py-3 sm:py-0"
       data-motion="fade-up"
       style={timerStyle}
     >
       <div className="space-y-1">
         <div className="text-4xl leading-tight md:text-5xl font-medium flex items-center">
           <div className="px-6">{remainingTime?.days || 0}</div>
-          <div className="h-6 border-r border-[var(--timer-color)]" />
+          <div className="h-6 border-r border-(--timer-color)" />
         </div>
         <div className="text-sm text-center md:text-base capitalize">Days</div>
       </div>
       <div className="space-y-1">
         <div className="text-4xl leading-tight md:text-5xl font-medium flex items-center">
           <div className="px-6">{remainingTime?.hours || 0}</div>
-          <div className="h-6 border-r border-[var(--timer-color)]" />
+          <div className="h-6 border-r border-(--timer-color)" />
         </div>
         <div className="text-sm text-center md:text-base capitalize">hours</div>
       </div>
       <div className="space-y-1">
         <div className="text-4xl leading-tight md:text-5xl font-medium flex items-center">
           <div className="px-6">{remainingTime?.minutes || 0}</div>
-          <div className="h-6 border-r border-[var(--timer-color)]" />
+          <div className="h-6 border-r border-(--timer-color)" />
         </div>
         <div className="text-sm text-center md:text-base capitalize">
           minutes
@@ -110,7 +110,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 export let schema: HydrogenComponentSchema = {
   type: "countdown--timer",
   title: "Timer",
-  inspector: [
+  settings: [
     {
       group: "Timer",
       inputs: [

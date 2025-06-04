@@ -80,7 +80,7 @@ export default Paragraph;
 export let schema: HydrogenComponentSchema = {
   type: "paragraph",
   title: "Paragraph",
-  inspector: [
+  settings: [
     {
       group: "Paragraph",
       inputs: [

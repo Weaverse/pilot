@@ -37,7 +37,7 @@ let variants = cva("relative", {
     width: {
       full: "w-full h-full",
       stretch: "w-full h-full",
-      fixed: "w-full h-full max-w-page mx-auto",
+      fixed: "w-full h-full max-w-(--page-width) mx-auto",
     },
     padding: {
       full: "",
@@ -121,7 +121,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
         variants({ padding: width, overflow, className }),
         hasBackground &&
           !isBgForContent &&
-          "bg-[--section-bg-color] rounded-[--section-radius]",
+          "bg-(--section-bg-color) rounded-(--section-radius)",
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
@@ -130,7 +130,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
           variants({ gap, width, verticalPadding, overflow }),
           hasBackground &&
             isBgForContent && [
-              "bg-[--section-bg-color] rounded-[--section-radius]",
+              "bg-(--section-bg-color) rounded-(--section-radius)",
               "px-4 sm:px-8",
             ],
           containerClassName,
@@ -198,7 +198,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
   },
 ];
 
-export let sectionInspector: InspectorGroup[] = [
+export let sectionSettings: InspectorGroup[] = [
   { group: "Layout", inputs: layoutInputs },
   { group: "Background", inputs: backgroundInputs },
   { group: "Overlay", inputs: overlayInputs },

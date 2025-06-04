@@ -70,7 +70,7 @@ export default SubHeading;
 export let schema: HydrogenComponentSchema = {
   type: "subheading",
   title: "Subheading",
-  inspector: [
+  settings: [
     {
       group: "Subheading",
       inputs: [

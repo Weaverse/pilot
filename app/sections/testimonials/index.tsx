@@ -1,7 +1,7 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { SectionProps } from "~/components/section";
-import { Section, sectionInspector } from "~/components/section";
+import { Section, sectionSettings } from "~/components/section";
 
 type TestimonialsProps = SectionProps;
 
@@ -21,7 +21,7 @@ export let schema: HydrogenComponentSchema = {
   type: "testimonials",
   title: "Testimonials",
   childTypes: ["subheading", "heading", "paragraph", "testimonials-items"],
-  inspector: sectionInspector,
+  settings: sectionSettings,
   presets: {
     children: [
       {
@@ -44,7 +44,7 @@ export let schema: HydrogenComponentSchema = {
               "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/glen_p.webp?v=1711343796",
             heading: "Shopify Headless Game Changer",
             content:
-              "I run a Shopify development agency and this is the kind of tool I’ve been looking for. Clients do not understand why headless is rather expensive to build but having a tool/option like this is a game changer. ",
+              "I run a Shopify development agency and this is the kind of tool I've been looking for. Clients do not understand why headless is rather expensive to build but having a tool/option like this is a game changer. ",
           },
           {
             type: "testimonial--item",
@@ -75,7 +75,7 @@ export let schema: HydrogenComponentSchema = {
               "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/leo_1.webp?v=1711359106",
             heading: "Hydrogen Shift Eases for Solo Dev",
             content:
-              "As a solo dev with a small Shopify shop, this is something interesting to hear about. I’m migrating from a GatsbyJS headless to Hydrogen solution, and Weaverse makes it a lot easier because I want to avoid hydrogen-react with NextJS!",
+              "As a solo dev with a small Shopify shop, this is something interesting to hear about. I'm migrating from a GatsbyJS headless to Hydrogen solution, and Weaverse makes it a lot easier because I want to avoid hydrogen-react with NextJS!",
             hideOnMobile: true,
           },
           {

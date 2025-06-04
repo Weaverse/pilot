@@ -45,7 +45,7 @@ export let schema: HydrogenComponentSchema = {
   type: "image-with-text--content",
   title: "Content",
   limit: 1,
-  inspector: [
+  settings: [
     {
       group: "Content",
       inputs: [

@@ -18,7 +18,7 @@ let variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
     width: {
       full: "",
       stretch: "px-3 md:px-10 lg:px-16",
-      fixed: "max-w-page mx-auto px-3 md:px-10 lg:px-16",
+      fixed: "max-w-(--page-width) mx-auto px-3 md:px-10 lg:px-16",
     },
     verticalPadding: {
       none: "",
@@ -45,20 +45,15 @@ let variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
       60: "space-y-7 lg:space-y-[60px]",
     },
     contentPosition: {
-      "top left": "justify-start items-start [&_.paragraph]:[text-align:left]",
-      "top center":
-        "justify-start items-center [&_.paragraph]:[text-align:center]",
-      "top right": "justify-start items-end [&_.paragraph]:[text-align:right]",
-      "center left":
-        "justify-center items-start [&_.paragraph]:[text-align:left]",
-      "center center":
-        "justify-center items-center [&_.paragraph]:[text-align:center]",
-      "center right":
-        "justify-center items-end [&_.paragraph]:[text-align:right]",
-      "bottom left": "justify-end items-start [&_.paragraph]:[text-align:left]",
-      "bottom center":
-        "justify-end items-center [&_.paragraph]:[text-align:center]",
-      "bottom right": "justify-end items-end [&_.paragraph]:[text-align:right]",
+      "top left": "justify-start items-start [&_.paragraph]:text-left",
+      "top center": "justify-start items-center [&_.paragraph]:text-center",
+      "top right": "justify-start items-end [&_.paragraph]:text-right",
+      "center left": "justify-center items-start [&_.paragraph]:text-left",
+      "center center": "justify-center items-center [&_.paragraph]:text-center",
+      "center right": "justify-center items-end [&_.paragraph]:text-right",
+      "bottom left": "justify-end items-start [&_.paragraph]:text-left",
+      "bottom center": "justify-end items-center [&_.paragraph]:text-center",
+      "bottom right": "justify-end items-end [&_.paragraph]:text-right",
     },
   },
   defaultVariants: {
@@ -110,7 +105,7 @@ export let schema: HydrogenComponentSchema = {
   title: "Slide",
   type: "slideshow-slide",
   childTypes: ["subheading", "heading", "paragraph", "button"],
-  inspector: [
+  settings: [
     {
       group: "Slide",
       inputs: [

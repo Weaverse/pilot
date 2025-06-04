@@ -26,32 +26,27 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
       false: "",
     },
     contentPosition: {
-      "top left": "justify-start items-start [&_.paragraph]:[text-align:left]",
-      "top center":
-        "justify-start items-center [&_.paragraph]:[text-align:center]",
-      "top right": "justify-start items-end [&_.paragraph]:[text-align:right]",
-      "center left":
-        "justify-center items-start [&_.paragraph]:[text-align:left]",
-      "center center":
-        "justify-center items-center [&_.paragraph]:[text-align:center]",
-      "center right":
-        "justify-center items-end [&_.paragraph]:[text-align:right]",
-      "bottom left": "justify-end items-start [&_.paragraph]:[text-align:left]",
-      "bottom center":
-        "justify-end items-center [&_.paragraph]:[text-align:center]",
-      "bottom right": "justify-end items-end [&_.paragraph]:[text-align:right]",
+      "top left": "justify-start items-start [&_.paragraph]:text-left",
+      "top center": "justify-start items-center [&_.paragraph]:text-center",
+      "top right": "justify-start items-end [&_.paragraph]:text-right",
+      "center left": "justify-center items-start [&_.paragraph]:text-left",
+      "center center": "justify-center items-center [&_.paragraph]:text-center",
+      "center right": "justify-center items-end [&_.paragraph]:text-right",
+      "bottom left": "justify-end items-start [&_.paragraph]:text-left",
+      "bottom center": "justify-end items-center [&_.paragraph]:text-center",
+      "bottom right": "justify-end items-end [&_.paragraph]:text-right",
     },
   },
   compoundVariants: [
     {
       height: "full",
       enableTransparentHeader: true,
-      className: "h-screen",
+      className: "h-screen-no-topbar",
     },
     {
       height: "full",
       enableTransparentHeader: false,
-      className: "h-screen-no-nav",
+      className: "h-screen-dynamic",
     },
   ],
   defaultVariants: {
@@ -85,7 +80,7 @@ export default HeroImage;
 export let schema: HydrogenComponentSchema = {
   type: "hero-image",
   title: "Hero image",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

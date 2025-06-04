@@ -158,7 +158,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
       <div
         className={clsx(
           "flex items-center justify-center relative overflow-hidden",
-          "h-[var(--mobile-height)] sm:h-[var(--desktop-height)]",
+          "h-(--mobile-height) sm:h-(--desktop-height)",
           "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
           "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
@@ -197,7 +197,7 @@ export default HeroVideo;
 export let schema: HydrogenComponentSchema = {
   type: "hero-video",
   title: "Hero video",
-  inspector: [
+  settings: [
     {
       group: "Video",
       inputs: [

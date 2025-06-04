@@ -53,7 +53,7 @@ export function ProductCardOptions({
                     type="button"
                     className={clsx(
                       "size-4 flex aspect-square rounded-full",
-                      "transition-[outline-color] outline outline-offset-2 outline-1",
+                      "transition-[outline-color] outline-solid outline-offset-2 outline-1",
                       selectedValue === name
                         ? "outline-line"
                         : "outline-transparent hover:outline-line",

@@ -89,7 +89,7 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["PRODUCT"],
   },
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: layoutInputs.filter((i) => i.name !== "borderRadius"),

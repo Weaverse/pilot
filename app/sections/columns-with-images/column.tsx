@@ -65,7 +65,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
         <Image
           data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}
           sizes="auto"
-          className="h-auto rounded-[--radius]"
+          className="h-auto rounded-(--radius)"
           aspectRatio={getImageAspectRatio(imageSrc, imageAspectRatio)}
         />
         <div className="text-center w-full space-y-3.5 mt-6">
@@ -87,7 +87,7 @@ export default ColumnWithImageItem;
 export let schema: HydrogenComponentSchema = {
   type: "column-with-image--item",
   title: "Column",
-  inspector: [
+  settings: [
     {
       group: "Column",
       inputs: [

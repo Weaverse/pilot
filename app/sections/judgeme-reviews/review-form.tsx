@@ -145,7 +145,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                   type="text"
                   id="name"
                   name="name"
-                  className="w-full border px-3 py-3 border-line outline-none focus-visible:border-line"
+                  className="w-full border px-3 py-3 border-line outline-hidden focus-visible:border-line"
                 />
               </div>
               <div className="mb-4">
@@ -160,7 +160,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                   id="email"
                   name="email"
                   required
-                  className="w-full border px-3 py-3 border-line outline-none focus-visible:border-line"
+                  className="w-full border px-3 py-3 border-line outline-hidden focus-visible:border-line"
                 />
               </div>
               <div className="mb-4">
@@ -175,7 +175,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                   id="title"
                   name="title"
                   required
-                  className="w-full border px-3 py-3 border-line outline-none focus-visible:border-line"
+                  className="w-full border px-3 py-3 border-line outline-hidden focus-visible:border-line"
                 />
               </div>
               <div className="mb-4">
@@ -188,7 +188,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                 <textarea
                   id="review-body"
                   name="body"
-                  className="w-full border px-3 py-3 border-line outline-none focus-visible:border-line"
+                  className="w-full border px-3 py-3 border-line outline-hidden focus-visible:border-line"
                   rows={4}
                 />
               </div>
@@ -202,7 +202,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                 <Button
                   variant="outline"
                   onClick={() => setIsFormVisible(false)}
-                  className="!border-none bg-background"
+                  className="border-none! bg-background"
                 >
                   Close
                 </Button>
@@ -226,8 +226,8 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
           )}
           role="alert"
         >
-          <p className="font-bold leading-normal text-lg">REVIEW SUBMITTED</p>
-          <p className="font-normal leading-normal text-base">
+          <p className="font-bold text-lg">REVIEW SUBMITTED</p>
+          <p className="font-normal text-base">
             Thanks for leaving your review!
           </p>
           <div
@@ -241,7 +241,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                 setIsPopupVisible(false);
               }}
               variant="outline"
-              className="!border-none bg-background"
+              className="border-none! bg-background"
             >
               Close
             </Button>

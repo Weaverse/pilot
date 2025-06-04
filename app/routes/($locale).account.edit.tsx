@@ -13,6 +13,7 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
+import { CUSTOMER_UPDATE_MUTATION } from "./($locale).account.profile";
 import { doLogout } from "./($locale).account_.logout";
 
 export interface AccountOutletContext {
@@ -118,7 +119,7 @@ export default function AccountDetailsEdit() {
         <input
           id="firstName"
           name="firstName"
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           type="text"
           autoComplete="given-name"
           placeholder="First name"
@@ -128,7 +129,7 @@ export default function AccountDetailsEdit() {
         <input
           id="lastName"
           name="lastName"
-          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
           type="text"
           autoComplete="family-name"
           placeholder="Last name"
@@ -147,15 +148,3 @@ export default function AccountDetailsEdit() {
     </div>
   );
 }
-
-const CUSTOMER_UPDATE_MUTATION = `#graphql
-  mutation customerUpdate($customer: CustomerUpdateInput!) {
-    customerUpdate(input: $customer) {
-      userErrors {
-        code
-        field
-        message
-      }
-    }
-  }
-`;

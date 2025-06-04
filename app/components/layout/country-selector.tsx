@@ -1,6 +1,6 @@
 import { CaretDown, CheckCircle } from "@phosphor-icons/react";
 import * as Popover from "@radix-ui/react-popover";
-import { CartForm, type I18nBase } from "@shopify/hydrogen";
+import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
@@ -12,7 +12,7 @@ import {
   useSubmit,
 } from "react-router";
 import type { RootLoader } from "~/root";
-import type { Localizations } from "~/types/locale";
+import type { I18nLocale, Localizations } from "~/types/locale";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {
@@ -76,7 +76,7 @@ export function CountrySelector() {
       <Popover.Root>
         <Popover.Trigger asChild>
           <button
-            className="w-full border border-line-subtle overflow-clip px-4 py-3 cursor-pointer text-left outline-none flex items-center gap-2"
+            className="w-full border border-line-subtle overflow-clip px-4 py-3 cursor-pointer text-left outline-hidden flex items-center gap-2"
             aria-label="Select country"
           >
             <ReactCountryFlag
@@ -144,7 +144,7 @@ function getCountryUrlPath({
   defaultLocalePrefix,
   pathWithoutLocale,
 }: {
-  countryLocale: I18nBase;
+  countryLocale: I18nLocale;
   pathWithoutLocale: string;
   defaultLocalePrefix: string;
 }) {

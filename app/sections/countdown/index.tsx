@@ -13,10 +13,9 @@ import { Section } from "~/components/section";
 let variants = cva("flex flex-col [&_.paragraph]:mx-[unset] px-4 sm:px-16", {
   variants: {
     alignment: {
-      left: "items-start [&_.paragraph]:[text-align:left] [&_.countdown--timer]:-ml-4",
-      center: "items-center [&_.paragraph]:[text-align:center]",
-      right:
-        "items-end [&_.paragraph]:[text-align:right] [&_.countdown--timer]:-mr-4",
+      left: "items-start [&_.paragraph]:text-left [&_.countdown--timer]:-ml-4",
+      center: "items-center [&_.paragraph]:text-center",
+      right: "items-end [&_.paragraph]:text-right [&_.countdown--timer]:-mr-4",
     },
   },
 });
@@ -37,7 +36,7 @@ export default Countdown;
 export let schema: HydrogenComponentSchema = {
   type: "countdown",
   title: "Countdown",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

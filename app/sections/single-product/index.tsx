@@ -180,7 +180,7 @@ export let schema: HydrogenComponentSchema = {
   type: "single-product",
   title: "Single product",
   childTypes: ["judgeme"],
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: layoutInputs,

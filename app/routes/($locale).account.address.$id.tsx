@@ -149,7 +149,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
 export default AccountEditAddressForm;
 
 // NOTE: https://shopify.dev/docs/api/customer/latest/mutations/customerAddressUpdate
-const UPDATE_ADDRESS_MUTATION = `#graphql
+export const UPDATE_ADDRESS_MUTATION = `#graphql
   mutation customerAddressUpdate(
     $address: CustomerAddressInput!
     $addressId: ID!
@@ -170,7 +170,7 @@ const UPDATE_ADDRESS_MUTATION = `#graphql
 ` as const;
 
 // NOTE: https://shopify.dev/docs/api/customer/latest/mutations/customerAddressDelete
-const DELETE_ADDRESS_MUTATION = `#graphql
+export const DELETE_ADDRESS_MUTATION = `#graphql
   mutation customerAddressDelete(
     $addressId: ID!,
   ) {
@@ -186,7 +186,7 @@ const DELETE_ADDRESS_MUTATION = `#graphql
 ` as const;
 
 // NOTE: https://shopify.dev/docs/api/customer/latest/mutations/customerAddressCreate
-const CREATE_ADDRESS_MUTATION = `#graphql
+export const CREATE_ADDRESS_MUTATION = `#graphql
   mutation customerAddressCreate(
     $address: CustomerAddressInput!
     $defaultAddress: Boolean

@@ -41,7 +41,7 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
               type="email"
               required
               placeholder={placeholder}
-              className="py-3 pr-3 pl-1.5 focus:outline-none leading-tight w-full bg-transparent"
+              className="py-3 pr-3 pl-1.5 focus:outline-hidden leading-tight w-full bg-transparent"
             />
           </div>
           <Button
@@ -78,7 +78,7 @@ export default NewsLetterForm;
 export let schema: HydrogenComponentSchema = {
   type: "newsletter-form",
   title: "Form",
-  inspector: [
+  settings: [
     {
       group: "Form",
       inputs: [

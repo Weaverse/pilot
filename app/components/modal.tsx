@@ -42,11 +42,11 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
             style={{ maxHeight: "90vh" }}
             className={cn(
               "animate-slide-up relative overflow-hidden",
-              "w-full mx-auto h-auto max-w-screen-xl",
+              "w-full mx-auto h-auto max-w-(--breakpoint-xl)",
             )}
           >
             <ModalClose />
-            <div className={cn("bg-white shadow p-6", className)}>
+            <div className={cn("bg-white shadow-sm p-6", className)}>
               {children}
             </div>
           </div>

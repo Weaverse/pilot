@@ -45,7 +45,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
         )}
         <div className="space-y-5 py-4 lg:py-16 text-center">
           <div className="text-body-subtle">{formattedDate}</div>
-          <h1 className="h3 !leading-tight">{title}</h1>
+          <h1 className="h3 leading-tight!">{title}</h1>
           {author?.name && (
             <div className="font-medium uppercase">
               by <span>{author.name}</span>
@@ -99,7 +99,7 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["ARTICLE"],
   },
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: layoutInputs.filter((input) => input.name !== "borderRadius"),

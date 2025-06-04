@@ -94,8 +94,8 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
               <div
                 className={clsx([
                   "mt-6 overflow-hidden bg-gray-100",
-                  "rounded-[--banner-border-radius]",
-                  "h-[--banner-height-mobile] lg:h-[--banner-height-desktop]",
+                  "rounded-(--banner-border-radius)",
+                  "h-(--banner-height-mobile) lg:h-(--banner-height-desktop)",
                 ])}
                 style={
                   {
@@ -154,7 +154,7 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["COLLECTION"],
   },
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

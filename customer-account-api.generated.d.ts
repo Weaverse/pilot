@@ -63,21 +63,6 @@ export type CustomerAddressCreateMutation = {
   }>;
 };
 
-export type CustomerUpdateMutationVariables = CustomerAccountAPI.Exact<{
-  customer: CustomerAccountAPI.CustomerUpdateInput;
-}>;
-
-export type CustomerUpdateMutation = {
-  customerUpdate?: CustomerAccountAPI.Maybe<{
-    userErrors: Array<
-      Pick<
-        CustomerAccountAPI.UserErrorsCustomerUserErrors,
-        'code' | 'field' | 'message'
-      >
-    >;
-  }>;
-};
-
 export type OrderMoneyFragment = Pick<
   CustomerAccountAPI.MoneyV2,
   'amount' | 'currencyCode'
@@ -464,6 +449,99 @@ export type OrderQuery = {
   >;
 };
 
+export type OrderItemFragment = Pick<
+  CustomerAccountAPI.Order,
+  'financialStatus' | 'id' | 'number' | 'processedAt'
+> & {
+  totalPrice: Pick<CustomerAccountAPI.MoneyV2, 'amount' | 'currencyCode'>;
+  fulfillments: {nodes: Array<Pick<CustomerAccountAPI.Fulfillment, 'status'>>};
+};
+
+export type CustomerOrdersFragment = {
+  orders: {
+    nodes: Array<
+      Pick<
+        CustomerAccountAPI.Order,
+        'financialStatus' | 'id' | 'number' | 'processedAt'
+      > & {
+        totalPrice: Pick<CustomerAccountAPI.MoneyV2, 'amount' | 'currencyCode'>;
+        fulfillments: {
+          nodes: Array<Pick<CustomerAccountAPI.Fulfillment, 'status'>>;
+        };
+      }
+    >;
+    pageInfo: Pick<
+      CustomerAccountAPI.PageInfo,
+      'hasPreviousPage' | 'hasNextPage' | 'endCursor' | 'startCursor'
+    >;
+  };
+};
+
+export type CustomerOrdersQueryVariables = CustomerAccountAPI.Exact<{
+  endCursor?: CustomerAccountAPI.InputMaybe<
+    CustomerAccountAPI.Scalars['String']['input']
+  >;
+  first?: CustomerAccountAPI.InputMaybe<
+    CustomerAccountAPI.Scalars['Int']['input']
+  >;
+  last?: CustomerAccountAPI.InputMaybe<
+    CustomerAccountAPI.Scalars['Int']['input']
+  >;
+  startCursor?: CustomerAccountAPI.InputMaybe<
+    CustomerAccountAPI.Scalars['String']['input']
+  >;
+}>;
+
+export type CustomerOrdersQuery = {
+  customer: {
+    orders: {
+      nodes: Array<
+        Pick<
+          CustomerAccountAPI.Order,
+          'financialStatus' | 'id' | 'number' | 'processedAt'
+        > & {
+          totalPrice: Pick<
+            CustomerAccountAPI.MoneyV2,
+            'amount' | 'currencyCode'
+          >;
+          fulfillments: {
+            nodes: Array<Pick<CustomerAccountAPI.Fulfillment, 'status'>>;
+          };
+        }
+      >;
+      pageInfo: Pick<
+        CustomerAccountAPI.PageInfo,
+        'hasPreviousPage' | 'hasNextPage' | 'endCursor' | 'startCursor'
+      >;
+    };
+  };
+};
+
+export type CustomerUpdateMutationVariables = CustomerAccountAPI.Exact<{
+  customer: CustomerAccountAPI.CustomerUpdateInput;
+}>;
+
+export type CustomerUpdateMutation = {
+  customerUpdate?: CustomerAccountAPI.Maybe<{
+    customer?: CustomerAccountAPI.Maybe<
+      Pick<CustomerAccountAPI.Customer, 'firstName' | 'lastName'> & {
+        emailAddress?: CustomerAccountAPI.Maybe<
+          Pick<CustomerAccountAPI.CustomerEmailAddress, 'emailAddress'>
+        >;
+        phoneNumber?: CustomerAccountAPI.Maybe<
+          Pick<CustomerAccountAPI.CustomerPhoneNumber, 'phoneNumber'>
+        >;
+      }
+    >;
+    userErrors: Array<
+      Pick<
+        CustomerAccountAPI.UserErrorsCustomerUserErrors,
+        'code' | 'field' | 'message'
+      >
+    >;
+  }>;
+};
+
 export type CustomerDetailsQueryVariables = CustomerAccountAPI.Exact<{
   [key: string]: never;
 }>;
@@ -654,6 +732,10 @@ interface GeneratedQueryTypes {
     return: OrderQuery;
     variables: OrderQueryVariables;
   };
+  '#graphql\n  #graphql\n  fragment CustomerOrders on Customer {\n    orders(\n      sortKey: PROCESSED_AT,\n      reverse: true,\n      first: $first,\n      last: $last,\n      before: $startCursor,\n      after: $endCursor\n    ) {\n      nodes {\n        ...OrderItem\n      }\n      pageInfo {\n        hasPreviousPage\n        hasNextPage\n        endCursor\n        startCursor\n      }\n    }\n  }\n  #graphql\n  fragment OrderItem on Order {\n    totalPrice {\n      amount\n      currencyCode\n    }\n    financialStatus\n    fulfillments(first: 1) {\n      nodes {\n        status\n      }\n    }\n    id\n    number\n    processedAt\n  }\n\n\n  query CustomerOrders(\n    $endCursor: String\n    $first: Int\n    $last: Int\n    $startCursor: String\n  ) {\n    customer {\n      ...CustomerOrders\n    }\n  }\n': {
+    return: CustomerOrdersQuery;
+    variables: CustomerOrdersQueryVariables;
+  };
   '#graphql\n  query CustomerDetails {\n    customer {\n      ...CustomerDetails\n    }\n  }\n  fragment OrderCard on Order {\n    id\n    number\n    processedAt\n    financialStatus\n    fulfillments(first: 1) {\n      nodes {\n        status\n      }\n    }\n    totalPrice {\n      amount\n      currencyCode\n    }\n    lineItems(first: 2) {\n      edges {\n        node {\n          title\n          image {\n            altText\n            height\n            url\n            width\n          }\n        }\n      }\n    }\n  }\n\n  fragment AddressPartial on CustomerAddress {\n    id\n    formatted\n    firstName\n    lastName\n    company\n    address1\n    address2\n    territoryCode\n    zoneCode\n    city\n    zip\n    phoneNumber\n  }\n\n  fragment CustomerDetails on Customer {\n    firstName\n    lastName\n    phoneNumber {\n      phoneNumber\n    }\n    emailAddress {\n      emailAddress\n    }\n    defaultAddress {\n      ...AddressPartial\n    }\n    addresses(first: 6) {\n      edges {\n        node {\n          ...AddressPartial\n        }\n      }\n    }\n    orders(first: 250, sortKey: PROCESSED_AT, reverse: true) {\n      edges {\n        node {\n          ...OrderCard\n        }\n      }\n    }\n  }\n': {
     return: CustomerDetailsQuery;
     variables: CustomerDetailsQueryVariables;
@@ -673,7 +755,7 @@ interface GeneratedMutationTypes {
     return: CustomerAddressCreateMutation;
     variables: CustomerAddressCreateMutationVariables;
   };
-  '#graphql\n  mutation customerUpdate($customer: CustomerUpdateInput!) {\n    customerUpdate(input: $customer) {\n      userErrors {\n        code\n        field\n        message\n      }\n    }\n  }\n': {
+  '#graphql\n  mutation customerUpdate(\n    $customer: CustomerUpdateInput!\n  ){\n    customerUpdate(input: $customer) {\n      customer {\n        firstName\n        lastName\n        emailAddress {\n          emailAddress\n        }\n        phoneNumber {\n          phoneNumber\n        }\n      }\n      userErrors {\n        code\n        field\n        message\n      }\n    }\n  }\n': {
     return: CustomerUpdateMutation;
     variables: CustomerUpdateMutationVariables;
   };
