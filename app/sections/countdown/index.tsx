@@ -15,8 +15,7 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset] px-4 sm:px-16", {
     alignment: {
       left: "items-start [&_.paragraph]:text-left [&_.countdown--timer]:-ml-4",
       center: "items-center [&_.paragraph]:text-center",
-      right:
-        "items-end [&_.paragraph]:text-right [&_.countdown--timer]:-mr-4",
+      right: "items-end [&_.paragraph]:text-right [&_.countdown--timer]:-mr-4",
     },
   },
 });

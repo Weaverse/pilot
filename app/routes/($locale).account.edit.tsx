@@ -71,14 +71,14 @@ export let action: ActionFunction = async ({ request, context, params }) => {
           variables: {
             customer,
           },
-        }
+        },
       );
 
     invariant(!errors?.length, errors?.[0]?.message);
 
     invariant(
       !data?.customerUpdate?.userErrors?.length,
-      data?.customerUpdate?.userErrors?.[0]?.message
+      data?.customerUpdate?.userErrors?.[0]?.message,
     );
 
     return redirect(params?.locale ? `${params.locale}/account` : "/account");
@@ -87,7 +87,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
       { formError: error?.message },
       {
         status: 400,
-      }
+      },
     );
   }
 };

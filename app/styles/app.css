@@ -193,9 +193,7 @@
 }
 
 @utility h-screen-no-topbar {
-  height: calc(
-    var(--screen-height, 100vh) - var(--initial-topbar-height)
-  );
+  height: calc(var(--screen-height, 100vh) - var(--initial-topbar-height));
 }
 
 @utility h-screen-dynamic {

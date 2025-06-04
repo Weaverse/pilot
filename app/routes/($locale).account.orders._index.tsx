@@ -85,7 +85,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
       variables: {
         ...paginationVariables,
       },
-    }
+    },
   );
 
   if (errors?.length || !data?.customer) {
