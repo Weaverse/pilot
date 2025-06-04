@@ -4,7 +4,7 @@ import {
   data,
   type LoaderFunctionArgs,
 } from "@shopify/remix-oxygen";
-import type { CustomerFragment } from "customer-accountapi.generated";
+import { CustomerUpdateMutation } from "customer-account-api.generated";
 import {
   Form,
   type MetaFunction,
@@ -12,11 +12,35 @@ import {
   useNavigation,
   useOutletContext,
 } from "react-router";
-import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/CustomerUpdateMutation";
+
+// https://shopify.dev/docs/api/customer/latest/mutations/customerUpdate
+export const CUSTOMER_UPDATE_MUTATION = `#graphql
+  mutation customerUpdate(
+    $customer: CustomerUpdateInput!
+  ){
+    customerUpdate(input: $customer) {
+      customer {
+        firstName
+        lastName
+        emailAddress {
+          emailAddress
+        }
+        phoneNumber {
+          phoneNumber
+        }
+      }
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+` as const;
 
 export type ActionResponse = {
   error: string | null;
-  customer: CustomerFragment | null;
+  customer: CustomerUpdateMutation["customerUpdate"]["customer"] | null;
 };
 
 export const meta: MetaFunction = () => {
@@ -57,7 +81,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
         variables: {
           customer,
         },
-      },
+      }
     );
 
     if (errors?.length) {
@@ -77,13 +101,15 @@ export async function action({ request, context }: ActionFunctionArgs) {
       { error: error.message, customer: null },
       {
         status: 400,
-      },
+      }
     );
   }
 }
 
 export default function AccountProfile() {
-  const account = useOutletContext<{ customer: CustomerFragment }>();
+  const account = useOutletContext<{
+    customer: CustomerUpdateMutation["customerUpdate"]["customer"];
+  }>();
   const { state } = useNavigation();
   const action = useActionData<ActionResponse>();
   const customer = action?.customer ?? account?.customer;

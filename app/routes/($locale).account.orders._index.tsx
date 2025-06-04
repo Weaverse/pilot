@@ -10,7 +10,65 @@ import type {
 } from "customer-accountapi.generated";
 import { Link, type MetaFunction, useLoaderData } from "react-router";
 import { PaginatedResourceSection } from "~/components/PaginatedResourceSection";
-import { CUSTOMER_ORDERS_QUERY } from "~/graphql/customer-account/CustomerOrdersQuery";
+
+// https://shopify.dev/docs/api/customer/latest/objects/Order
+const ORDER_ITEM_FRAGMENT = `#graphql
+  fragment OrderItem on Order {
+    totalPrice {
+      amount
+      currencyCode
+    }
+    financialStatus
+    fulfillments(first: 1) {
+      nodes {
+        status
+      }
+    }
+    id
+    number
+    processedAt
+  }
+` as const;
+
+// https://shopify.dev/docs/api/customer/latest/objects/Customer
+const CUSTOMER_ORDERS_FRAGMENT = `#graphql
+  fragment CustomerOrders on Customer {
+    orders(
+      sortKey: PROCESSED_AT,
+      reverse: true,
+      first: $first,
+      last: $last,
+      before: $startCursor,
+      after: $endCursor
+    ) {
+      nodes {
+        ...OrderItem
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        endCursor
+        startCursor
+      }
+    }
+  }
+  ${ORDER_ITEM_FRAGMENT}
+` as const;
+
+// https://shopify.dev/docs/api/customer/latest/queries/customer
+const CUSTOMER_ORDERS_QUERY = `#graphql
+  ${CUSTOMER_ORDERS_FRAGMENT}
+  query CustomerOrders(
+    $endCursor: String
+    $first: Int
+    $last: Int
+    $startCursor: String
+  ) {
+    customer {
+      ...CustomerOrders
+    }
+  }
+` as const;
 
 export const meta: MetaFunction = () => {
   return [{ title: "Orders" }];
@@ -27,7 +85,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
       variables: {
         ...paginationVariables,
       },
-    },
+    }
   );
 
   if (errors?.length || !data?.customer) {

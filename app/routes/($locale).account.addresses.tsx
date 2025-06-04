@@ -20,7 +20,7 @@ import {
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
   UPDATE_ADDRESS_MUTATION,
-} from "~/graphql/customer-account/CustomerAddressMutations";
+} from "./($locale).account.address.$id";
 
 export type ActionResponse = {
   addressId?: string | null;
@@ -54,14 +54,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
       throw new Error("You must provide an address id.");
     }
 
-    // this will ensure redirecting to login never happen for mutatation
+    // this will ensure redirecting to login never happen for mutation
     const isLoggedIn = await customerAccount.isLoggedIn();
     if (!isLoggedIn) {
       return data(
         { error: { [addressId]: "Unauthorized" } },
         {
           status: 401,
-        },
+        }
       );
     }
 
@@ -97,7 +97,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
             CREATE_ADDRESS_MUTATION,
             {
               variables: { address, defaultAddress },
-            },
+            }
           );
 
           if (errors?.length) {
@@ -123,14 +123,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
               { error: { [addressId]: error.message } },
               {
                 status: 400,
-              },
+              }
             );
           }
           return data(
             { error: { [addressId]: error } },
             {
               status: 400,
-            },
+            }
           );
         }
       }
@@ -146,7 +146,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
                 addressId: decodeURIComponent(addressId),
                 defaultAddress,
               },
-            },
+            }
           );
 
           if (errors?.length) {
@@ -172,14 +172,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
               { error: { [addressId]: error.message } },
               {
                 status: 400,
-              },
+              }
             );
           }
           return data(
             { error: { [addressId]: error } },
             {
               status: 400,
-            },
+            }
           );
         }
       }
@@ -191,7 +191,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
             DELETE_ADDRESS_MUTATION,
             {
               variables: { addressId: decodeURIComponent(addressId) },
-            },
+            }
           );
 
           if (errors?.length) {
@@ -213,14 +213,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
               { error: { [addressId]: error.message } },
               {
                 status: 400,
-              },
+              }
             );
           }
           return data(
             { error: { [addressId]: error } },
             {
               status: 400,
-            },
+            }
           );
         }
       }
@@ -230,7 +230,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
           { error: { [addressId]: "Method not allowed" } },
           {
             status: 405,
-          },
+          }
         );
       }
     }
@@ -240,14 +240,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
         { error: error.message },
         {
           status: 400,
-        },
+        }
       );
     }
     return data(
       { error },
       {
         status: 400,
-      },
+      }
     );
   }
 }

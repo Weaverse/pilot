@@ -13,6 +13,7 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
+import { CUSTOMER_UPDATE_MUTATION } from "./($locale).account.profile";
 import { doLogout } from "./($locale).account_.logout";
 
 export interface AccountOutletContext {
@@ -70,14 +71,14 @@ export let action: ActionFunction = async ({ request, context, params }) => {
           variables: {
             customer,
           },
-        },
+        }
       );
 
     invariant(!errors?.length, errors?.[0]?.message);
 
     invariant(
       !data?.customerUpdate?.userErrors?.length,
-      data?.customerUpdate?.userErrors?.[0]?.message,
+      data?.customerUpdate?.userErrors?.[0]?.message
     );
 
     return redirect(params?.locale ? `${params.locale}/account` : "/account");
@@ -86,7 +87,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
       { formError: error?.message },
       {
         status: 400,
-      },
+      }
     );
   }
 };
@@ -147,15 +148,3 @@ export default function AccountDetailsEdit() {
     </div>
   );
 }
-
-const CUSTOMER_UPDATE_MUTATION = `#graphql
-  mutation customerUpdate($customer: CustomerUpdateInput!) {
-    customerUpdate(input: $customer) {
-      userErrors {
-        code
-        field
-        message
-      }
-    }
-  }
-`;
