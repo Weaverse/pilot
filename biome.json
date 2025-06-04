@@ -18,6 +18,12 @@
     "rules": {
       "suspicious": {
         "noExplicitAny": "off"
+      },
+      "nursery": {
+        "useUniqueElementIds": "off"
+      },
+      "correctness": {
+        "noUnusedVariables": "off"
       }
     }
   },
