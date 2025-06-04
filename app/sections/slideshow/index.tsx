@@ -138,7 +138,7 @@ export let schema: HydrogenComponentSchema = {
   title: "Slideshow",
   type: "slideshow",
   childTypes: ["slideshow-slide"],
-  inspector: [
+  settings: [
     {
       group: "Slideshow",
       inputs: [

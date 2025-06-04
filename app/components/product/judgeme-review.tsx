@@ -53,7 +53,7 @@ export default JudgemeReview;
 export let schema: HydrogenComponentSchema = {
   type: "judgeme",
   title: "Judgeme review",
-  inspector: [
+  settings: [
     {
       group: "Judgeme",
       inputs: [],

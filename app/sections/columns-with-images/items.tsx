@@ -32,7 +32,7 @@ export default ColumnsWithImagesItems;
 export let schema: HydrogenComponentSchema = {
   type: "columns-with-images--items",
   title: "Items",
-  inspector: [
+  settings: [
     {
       group: "Items",
       inputs: [

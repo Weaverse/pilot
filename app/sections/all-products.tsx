@@ -75,7 +75,7 @@ export let schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["ALL_PRODUCTS"],
   },
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

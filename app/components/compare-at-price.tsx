@@ -12,9 +12,7 @@ export function CompareAtPrice({
   let { currencyNarrowSymbol, withoutTrailingZerosAndCurrency } =
     useMoney(data);
   return (
-    <span
-      className={cn("strike text-(--color-compare-price-text)", className)}
-    >
+    <span className={cn("strike text-(--color-compare-price-text)", className)}>
       {currencyNarrowSymbol}
       {withoutTrailingZerosAndCurrency}
     </span>

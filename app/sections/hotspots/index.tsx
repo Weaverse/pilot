@@ -90,7 +90,7 @@ export let schema: HydrogenComponentSchema = {
   type: "hotspots",
   title: "Hotspots",
   childTypes: ["hotspots--item"],
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

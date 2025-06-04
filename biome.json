@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.5/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.6/schema.json",
   "extends": ["./node_modules/@weaverse/biome/biome.json"],
   "files": {
     "includes": [
@@ -11,7 +11,8 @@
       "!**/storefront-api.generated.d.ts",
       "!**/customer-account-api.generated.d.ts",
       "!**/.shopify/**",
-      "!**/.react-router/**"
+      "!**/.react-router/**",
+      "!**/app/styles/app.css"
     ]
   },
   "linter": {

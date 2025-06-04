@@ -47,7 +47,7 @@ export default Spacer;
 export let schema: HydrogenComponentSchema = {
   type: "spacer",
   title: "Spacer",
-  inspector: [
+  settings: [
     {
       group: "Spacer",
       inputs: [

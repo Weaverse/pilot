@@ -86,7 +86,7 @@ export let schema: HydrogenComponentSchema = {
     "subheading",
     "paragraph",
   ],
-  inspector: [
+  settings: [
     {
       group: "Featured collections",
       inputs: [

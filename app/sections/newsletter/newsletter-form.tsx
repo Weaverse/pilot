@@ -78,7 +78,7 @@ export default NewsLetterForm;
 export let schema: HydrogenComponentSchema = {
   type: "newsletter-form",
   title: "Form",
-  inspector: [
+  settings: [
     {
       group: "Form",
       inputs: [

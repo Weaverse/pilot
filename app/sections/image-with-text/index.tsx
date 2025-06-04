@@ -27,7 +27,7 @@ export default ImageWithText;
 export let schema: HydrogenComponentSchema = {
   type: "image-with-text",
   title: "Image with text",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: layoutInputs.filter(({ name }) => name !== "gap"),

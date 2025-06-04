@@ -73,7 +73,7 @@ export let schema: HydrogenComponentSchema = {
   type: "our-team",
   title: "Our team",
   childTypes: ["heading", "paragraph", "our-team-members"],
-  inspector: [
+  settings: [
     {
       group: "Data source",
       inputs: [

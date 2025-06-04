@@ -4,7 +4,7 @@ import {
   data,
   type LoaderFunctionArgs,
 } from "@shopify/remix-oxygen";
-import { CustomerUpdateMutation } from "customer-account-api.generated";
+import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import {
   Form,
   type MetaFunction,
@@ -81,7 +81,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
         variables: {
           customer,
         },
-      }
+      },
     );
 
     if (errors?.length) {
@@ -101,7 +101,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       { error: error.message, customer: null },
       {
         status: 400,
-      }
+      },
     );
   }
 }

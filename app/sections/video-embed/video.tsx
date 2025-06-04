@@ -74,7 +74,7 @@ export default VideoEmbedItem;
 export let schema: HydrogenComponentSchema = {
   type: "video-embed--item",
   title: "Video",
-  inspector: [
+  settings: [
     {
       group: "Video",
       inputs: [

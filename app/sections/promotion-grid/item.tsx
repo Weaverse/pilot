@@ -21,24 +21,16 @@ let variants = cva(
   {
     variants: {
       contentPosition: {
-        "top left":
-          "justify-start items-start [&_.paragraph]:text-left",
-        "top center":
-          "justify-start items-center [&_.paragraph]:text-center",
-        "top right":
-          "justify-start items-end [&_.paragraph]:text-right",
-        "center left":
-          "justify-center items-start [&_.paragraph]:text-left",
+        "top left": "justify-start items-start [&_.paragraph]:text-left",
+        "top center": "justify-start items-center [&_.paragraph]:text-center",
+        "top right": "justify-start items-end [&_.paragraph]:text-right",
+        "center left": "justify-center items-start [&_.paragraph]:text-left",
         "center center":
           "justify-center items-center [&_.paragraph]:text-center",
-        "center right":
-          "justify-center items-end [&_.paragraph]:text-right",
-        "bottom left":
-          "justify-end items-start [&_.paragraph]:text-left",
-        "bottom center":
-          "justify-end items-center [&_.paragraph]:text-center",
-        "bottom right":
-          "justify-end items-end [&_.paragraph]:text-right",
+        "center right": "justify-center items-end [&_.paragraph]:text-right",
+        "bottom left": "justify-end items-start [&_.paragraph]:text-left",
+        "bottom center": "justify-end items-center [&_.paragraph]:text-center",
+        "bottom right": "justify-end items-end [&_.paragraph]:text-right",
       },
       borderRadius: {
         0: "",
@@ -112,7 +104,7 @@ export default PromotionGridItem;
 export let schema: HydrogenComponentSchema = {
   type: "promotion-grid-item",
   title: "Promotion",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
