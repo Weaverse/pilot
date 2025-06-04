@@ -4,10 +4,10 @@ import {
   data,
   type LoaderFunctionArgs,
 } from "@shopify/remix-oxygen";
-import type {
-  AddressFragment,
-  CustomerFragment,
-} from "customer-accountapi.generated";
+import {
+  AddressPartialFragment,
+  CustomerDetailsFragment,
+} from "customer-account-api.generated";
 import {
   type Fetcher,
   Form,
@@ -24,11 +24,11 @@ import {
 
 export type ActionResponse = {
   addressId?: string | null;
-  createdAddress?: AddressFragment;
+  createdAddress?: AddressPartialFragment;
   defaultAddress?: string | null;
   deletedAddress?: string | null;
-  error: Record<AddressFragment["id"], string> | null;
-  updatedAddress?: AddressFragment;
+  error: Record<AddressPartialFragment["id"], string> | null;
+  updatedAddress?: AddressPartialFragment;
 };
 
 export const meta: MetaFunction = () => {
@@ -157,7 +157,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
             throw new Error(data?.customerAddressUpdate?.userErrors[0].message);
           }
 
-          if (!data?.customerAddressUpdate?.customerAddress) {
+          if (!data?.customerAddressUpdate?.userErrors?.length) {
             throw new Error("Customer address update failed.");
           }
 
@@ -253,14 +253,16 @@ export async function action({ request, context }: ActionFunctionArgs) {
 }
 
 export default function Addresses() {
-  const { customer } = useOutletContext<{ customer: CustomerFragment }>();
+  const { customer } = useOutletContext<{
+    customer: CustomerDetailsFragment;
+  }>();
   const { defaultAddress, addresses } = customer;
 
   return (
     <div className="account-addresses">
       <h2>Addresses</h2>
       <br />
-      {!addresses.nodes.length ? (
+      {!addresses.edges.length ? (
         <p>You have no addresses saved.</p>
       ) : (
         <div>
@@ -320,11 +322,11 @@ function NewAddressForm() {
 function ExistingAddresses({
   addresses,
   defaultAddress,
-}: Pick<CustomerFragment, "addresses" | "defaultAddress">) {
+}: Pick<CustomerDetailsFragment, "addresses" | "defaultAddress">) {
   return (
     <div>
       <legend>Existing addresses</legend>
-      {addresses.nodes.map((address) => (
+      {addresses.edges.map(({ node: address }) => (
         <AddressForm
           key={address.id}
           addressId={address.id}
@@ -361,9 +363,9 @@ export function AddressForm({
   defaultAddress,
   children,
 }: {
-  addressId: AddressFragment["id"];
+  addressId: AddressPartialFragment["id"];
   address: CustomerAddressInput;
-  defaultAddress: CustomerFragment["defaultAddress"];
+  defaultAddress: CustomerDetailsFragment["defaultAddress"];
   children: (props: {
     stateForMethod: (method: "PUT" | "POST" | "DELETE") => Fetcher["state"];
   }) => React.ReactNode;

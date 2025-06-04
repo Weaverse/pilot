@@ -7,7 +7,7 @@ import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type {
   CustomerOrdersFragment,
   OrderItemFragment,
-} from "customer-accountapi.generated";
+} from "customer-account-api.generated";
 import { Link, type MetaFunction, useLoaderData } from "react-router";
 import { PaginatedResourceSection } from "~/components/PaginatedResourceSection";
 
