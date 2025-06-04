@@ -197,7 +197,7 @@ export default HeroVideo;
 export let schema: HydrogenComponentSchema = {
   type: "hero-video",
   title: "Hero video",
-  inspector: [
+  settings: [
     {
       group: "Video",
       inputs: [

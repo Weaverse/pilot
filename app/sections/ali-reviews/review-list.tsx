@@ -114,7 +114,7 @@ export default ReviewList;
 export let schema: HydrogenComponentSchema = {
   type: "ali-reviews--list",
   title: "Reviews list",
-  inspector: [
+  settings: [
     {
       group: "Summary section",
       inputs: [

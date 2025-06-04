@@ -85,7 +85,7 @@ export default CollectionsItems;
 export let schema: HydrogenComponentSchema = {
   type: "collections-items",
   title: "Collection items",
-  inspector: [
+  settings: [
     {
       group: "Pagination",
       inputs: [

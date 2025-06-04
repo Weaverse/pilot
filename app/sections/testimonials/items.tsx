@@ -51,7 +51,7 @@ export let schema: HydrogenComponentSchema = {
   type: "testimonials-items",
   title: "Items",
   childTypes: ["testimonial--item"],
-  inspector: [
+  settings: [
     {
       group: "Items",
       inputs: [

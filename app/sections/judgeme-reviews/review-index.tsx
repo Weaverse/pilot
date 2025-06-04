@@ -27,7 +27,7 @@ export let schema: HydrogenComponentSchema = {
   type: "judgeme-review--index",
   title: "Judgeme Review",
   limit: 1,
-  inspector: [
+  settings: [
     {
       group: "Review",
       inputs: [],

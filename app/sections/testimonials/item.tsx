@@ -72,7 +72,7 @@ export default TestimonialItem;
 export let schema: HydrogenComponentSchema = {
   type: "testimonial--item",
   title: "Testimonial",
-  inspector: [
+  settings: [
     {
       group: "Testimonial",
       inputs: [

@@ -87,7 +87,7 @@ export default ColumnWithImageItem;
 export let schema: HydrogenComponentSchema = {
   type: "column-with-image--item",
   title: "Column",
-  inspector: [
+  settings: [
     {
       group: "Column",
       inputs: [

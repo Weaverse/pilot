@@ -105,7 +105,7 @@ export let schema: HydrogenComponentSchema = {
   title: "Slide",
   type: "slideshow-slide",
   childTypes: ["subheading", "heading", "paragraph", "button"],
-  inspector: [
+  settings: [
     {
       group: "Slide",
       inputs: [

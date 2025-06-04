@@ -114,5 +114,5 @@ export default TeamMembers;
 export let schema: HydrogenComponentSchema = {
   type: "our-team-members",
   title: "Members",
-  inspector: [],
+  settings: [],
 };

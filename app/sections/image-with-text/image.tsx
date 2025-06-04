@@ -98,7 +98,7 @@ export let schema: HydrogenComponentSchema = {
   type: "image-with-text--image",
   title: "Image",
   limit: 1,
-  inspector: [
+  settings: [
     {
       group: "Image",
       inputs: [

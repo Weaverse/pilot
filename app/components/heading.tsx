@@ -321,7 +321,7 @@ export let headingInputs: InspectorGroup["inputs"] = [
 export let schema: HydrogenComponentSchema = {
   type: "heading",
   title: "Heading",
-  inspector: [
+  settings: [
     {
       group: "Heading",
       inputs: headingInputs,

@@ -1,7 +1,7 @@
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { SectionProps } from "~/components/section";
-import { Section, sectionInspector } from "~/components/section";
+import { Section, sectionSettings } from "~/components/section";
 
 type ColumnsWithImagesProps = SectionProps;
 
@@ -21,7 +21,7 @@ export default ColumnsWithImages;
 export let schema: HydrogenComponentSchema = {
   type: "columns-with-images",
   title: "Columns with images",
-  inspector: sectionInspector,
+  settings: sectionSettings,
   childTypes: [
     "columns-with-images--items",
     "subheading",

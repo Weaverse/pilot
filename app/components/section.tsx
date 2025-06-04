@@ -198,7 +198,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
   },
 ];
 
-export let sectionInspector: InspectorGroup[] = [
+export let sectionSettings: InspectorGroup[] = [
   { group: "Layout", inputs: layoutInputs },
   { group: "Background", inputs: backgroundInputs },
   { group: "Overlay", inputs: overlayInputs },

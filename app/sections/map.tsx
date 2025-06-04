@@ -113,7 +113,7 @@ export default MapSection;
 export let schema: HydrogenComponentSchema = {
   type: "map",
   title: "Map",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

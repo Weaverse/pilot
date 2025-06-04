@@ -203,7 +203,7 @@ export default CollectionItems;
 export let schema: HydrogenComponentSchema = {
   type: "featured-collections-items",
   title: "Collection items",
-  inspector: [
+  settings: [
     {
       group: "Collection items",
       inputs: [

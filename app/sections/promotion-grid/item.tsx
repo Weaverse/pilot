@@ -104,7 +104,7 @@ export default PromotionGridItem;
 export let schema: HydrogenComponentSchema = {
   type: "promotion-grid-item",
   title: "Promotion",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

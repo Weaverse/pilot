@@ -54,7 +54,7 @@ export default ProductItems;
 export let schema: HydrogenComponentSchema = {
   type: "featured-products-items",
   title: "Product items",
-  inspector: [
+  settings: [
     {
       group: "Product items",
       inputs: [

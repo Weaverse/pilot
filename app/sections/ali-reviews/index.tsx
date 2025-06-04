@@ -60,7 +60,7 @@ export default AliReviewSection;
 export let schema: HydrogenComponentSchema = {
   type: "ali-reviews",
   title: "Ali Reviews box",
-  inspector: [
+  settings: [
     {
       group: "Integration",
       inputs: [

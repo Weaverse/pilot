@@ -74,7 +74,7 @@ export default ImageGalleryItem;
 export let schema: HydrogenComponentSchema = {
   type: "image-gallery--item",
   title: "Image",
-  inspector: [
+  settings: [
     {
       group: "Image gallery item",
       inputs: [

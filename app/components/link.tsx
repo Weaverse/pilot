@@ -261,7 +261,7 @@ export let linkInputs: InspectorGroup["inputs"] = [
 export let schema: HydrogenComponentSchema = {
   type: "button",
   title: "Button",
-  inspector: [
+  settings: [
     {
       group: "Button",
       inputs: linkInputs,

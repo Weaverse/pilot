@@ -36,7 +36,7 @@ export default Countdown;
 export let schema: HydrogenComponentSchema = {
   type: "countdown",
   title: "Countdown",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
