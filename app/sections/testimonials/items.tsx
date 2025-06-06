@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
@@ -47,7 +44,7 @@ let TestimonialsItems = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
 
 export default TestimonialsItems;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "testimonials-items",
   title: "Items",
   childTypes: ["testimonial--item"],
@@ -70,4 +67,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

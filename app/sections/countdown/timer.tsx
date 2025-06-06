@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { forwardRef, useEffect, useState } from "react";
 
@@ -107,7 +104,7 @@ export default CountdownTimer;
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "countdown--timer",
   title: "Timer",
   settings: [
@@ -128,4 +125,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

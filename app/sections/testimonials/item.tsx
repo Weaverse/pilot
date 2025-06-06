@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   type WeaverseImage,
 } from "@weaverse/hydrogen";
@@ -69,7 +69,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
 
 export default TestimonialItem;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "testimonial--item",
   title: "Testimonial",
   settings: [
@@ -119,4 +119,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

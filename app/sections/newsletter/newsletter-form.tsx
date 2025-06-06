@@ -1,8 +1,5 @@
 import { EnvelopeSimple } from "@phosphor-icons/react";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
 import { useFetcher } from "react-router";
@@ -75,7 +72,7 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
 
 export default NewsLetterForm;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "newsletter-form",
   title: "Form",
   settings: [
@@ -125,4 +122,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

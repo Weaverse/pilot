@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
@@ -77,7 +74,7 @@ let Paragraph = forwardRef<
 
 export default Paragraph;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "paragraph",
   title: "Paragraph",
   settings: [
@@ -169,4 +166,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

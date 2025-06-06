@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
@@ -15,7 +15,7 @@ let JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
 
 export default JudgemeReviewSection;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "judgeme-reviews",
   title: "Judgeme Reviews",
   enabledOn: {
@@ -43,4 +43,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

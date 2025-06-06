@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
@@ -17,7 +17,7 @@ let Testimonials = forwardRef<HTMLElement, TestimonialsProps>((props, ref) => {
 
 export default Testimonials;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "testimonials",
   title: "Testimonials",
   childTypes: ["subheading", "heading", "paragraph", "testimonials-items"],
@@ -104,4 +104,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

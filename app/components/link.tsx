@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   type InspectorGroup,
   useThemeSettings,
 } from "@weaverse/hydrogen";
@@ -258,7 +258,7 @@ export let linkInputs: InspectorGroup["inputs"] = [
   ...linkStylesInputs,
 ];
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "button",
   title: "Button",
   settings: [
@@ -267,4 +267,4 @@ export let schema: HydrogenComponentSchema = {
       inputs: linkInputs,
     },
   ],
-};
+});

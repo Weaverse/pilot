@@ -1,7 +1,7 @@
 import { GithubLogo, LinkedinLogo, XLogo } from "@phosphor-icons/react";
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   useParentInstance,
   type WeaverseImage,
 } from "@weaverse/hydrogen";
@@ -111,8 +111,8 @@ let TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
 export default TeamMembers;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "our-team-members",
   title: "Members",
   settings: [],
-};
+});

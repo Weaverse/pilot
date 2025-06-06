@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   useThemeSettings,
 } from "@weaverse/hydrogen";
@@ -134,7 +134,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
 
 export default Slideshow;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   title: "Slideshow",
   type: "slideshow",
   childTypes: ["slideshow-slide"],
@@ -396,4 +396,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

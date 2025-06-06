@@ -1,5 +1,5 @@
 import {
-  type HydrogenComponentSchema,
+  createSchema,
   IMAGES_PLACEHOLDERS,
   useParentInstance,
 } from "@weaverse/hydrogen";
@@ -200,7 +200,7 @@ let COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
 
 export default CollectionItems;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "featured-collections-items",
   title: "Collection items",
   settings: [
@@ -322,4 +322,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

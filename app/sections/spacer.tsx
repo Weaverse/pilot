@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 
 type SpacerProps = HydrogenComponentProps & {
@@ -44,7 +41,7 @@ let Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
 
 export default Spacer;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "spacer",
   title: "Spacer",
   settings: [
@@ -98,4 +95,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

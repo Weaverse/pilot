@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
@@ -147,7 +147,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
 
 export default CollectionFilters;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "collection-filters",
   title: "Collection filters",
   limit: 1,
@@ -335,4 +335,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

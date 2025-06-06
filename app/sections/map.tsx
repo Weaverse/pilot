@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { forwardRef } from "react";
@@ -110,7 +110,7 @@ let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
 
 export default MapSection;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "map",
   title: "Map",
   settings: [
@@ -224,4 +224,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

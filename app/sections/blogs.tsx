@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
@@ -126,7 +126,7 @@ export function ArticleCard({
 
 export default Blogs;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "blogs",
   title: "Blogs",
   limit: 1,
@@ -182,4 +182,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

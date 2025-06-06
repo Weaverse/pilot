@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   type WeaverseImage,
 } from "@weaverse/hydrogen";
@@ -84,7 +84,7 @@ let ColumnWithImageItem = forwardRef<HTMLDivElement, ColumnWithImageItemProps>(
 
 export default ColumnWithImageItem;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "column-with-image--item",
   title: "Column",
   settings: [
@@ -185,4 +185,4 @@ export let schema: HydrogenComponentSchema = {
   presets: {
     imageSrc: IMAGES_PLACEHOLDERS.product_4,
   },
-};
+});

@@ -1,7 +1,4 @@
-import {
-  type HydrogenComponentSchema,
-  useParentInstance,
-} from "@weaverse/hydrogen";
+import { createSchema, useParentInstance } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
@@ -51,7 +48,7 @@ let ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
 
 export default ProductItems;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "featured-products-items",
   title: "Product items",
   settings: [
@@ -72,4 +69,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

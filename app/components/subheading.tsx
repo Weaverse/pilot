@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
@@ -67,7 +64,7 @@ let SubHeading = forwardRef<
 
 export default SubHeading;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "subheading",
   title: "Subheading",
   settings: [
@@ -145,4 +142,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

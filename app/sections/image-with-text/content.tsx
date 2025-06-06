@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
@@ -41,7 +38,7 @@ let ImageWithTextContent = forwardRef<
 
 export default ImageWithTextContent;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "image-with-text--content",
   title: "Content",
   limit: 1,
@@ -88,4 +85,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

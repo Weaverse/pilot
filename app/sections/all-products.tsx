@@ -1,5 +1,5 @@
 import { Pagination } from "@shopify/hydrogen";
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
@@ -68,7 +68,7 @@ let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
 
 export default AllProducts;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "all-products",
   title: "All products",
   limit: 1,
@@ -114,4 +114,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

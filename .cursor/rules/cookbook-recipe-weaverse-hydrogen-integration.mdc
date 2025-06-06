@@ -14,6 +14,7 @@ The same logic can be applied to any Hydrogen storefront project, adapting the i
 - Always follow naming conventions for Weaverse components: use PascalCase for component names.
 - Keep component-specific types in the same file as the component.
 - Ensure all components have proper schema definitions for the Weaverse builder.
+- **CRITICAL**: Always use `settings` instead of `inspector` in component and theme schemas. The `inspector` key is deprecated and has been replaced with `settings` for better consistency with industry standards.
 
 # Summary
 
@@ -65,7 +66,7 @@ In this recipe, you'll make the following changes:
 
 - A Shopify Hydrogen storefront (created with `@shopify/create-hydrogen` or similar).
 - Node.js and npm/yarn/pnpm installed on your development machine.
-- A Weaverse account (sign up at [weaverse.io](mdc:https:/weaverse.io)).
+- A Weaverse account (sign up at [weaverse.io](mdc:workspace/workspace/workspace/workspace/https:/weaverse.io)).
 
 ## Project Structure Overview
 
@@ -163,7 +164,7 @@ export let themeSchema: HydrogenThemeSchema = {
     },
     // Add other locales as needed
   },
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
@@ -220,7 +221,7 @@ export let themeSchema: HydrogenThemeSchema = {
         // Add other header settings
       ],
     },
-    // Add other inspector groups
+    // Add other settings groups
   ],
   // Additional schema settings
 };
@@ -292,6 +293,7 @@ A complete example of a section component with data fetching capabilities.
 ```tsx
 import clsx from "clsx";
 import type { HydrogenComponentProps, ComponentLoaderArgs } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { Money, Image, Link } from "@shopify/hydrogen";
 import type { CollectionQuery } from "storefrontapi.generated";
@@ -313,10 +315,10 @@ type LoaderData = {
   collection: CollectionQuery["collection"];
 };
 
-export let schema = {
+export let schema = createSchema({
   type: "featured-collection",
   title: "Featured Collection",
-  inspector: [
+  settings: [
     {
       group: "Content",
       inputs: [
@@ -404,7 +406,7 @@ export let schema = {
   presets: {
     children: [],
   },
-};
+});
 
 // Data fetching loader function
 export let loader = async ({
@@ -819,7 +821,7 @@ WEAVERSE_HOST="https://studio.weaverse.io"
 
 2. **Component Exports**: Each component should export:
    - A default component (can use forwardRef for better integration)
-   - A `schema` object that defines the component's properties and UI controls
+   - A `schema` object created with `createSchema()` that defines the component's properties and UI controls
 
 3. **Children Components**: For complex sections, create nested component structures:
    ```
@@ -833,26 +835,29 @@ WEAVERSE_HOST="https://studio.weaverse.io"
 
 1. **Comprehensive Controls**: Design your schema with intuitive controls:
    ```typescript
-   inspector: [
-     {
-       group: "Content",
-       inputs: [
-         {
-           type: "text",
-           name: "heading",
-           label: "Heading",
-           defaultValue: "Featured Products",
-         },
-         // Other controls
-       ],
-     },
-     {
-       group: "Style",
-       inputs: [
-         // Style controls
-       ],
-     },
-   ],
+   export let schema = createSchema({
+     // ... other properties
+     settings: [
+       {
+         group: "Content",
+         inputs: [
+           {
+             type: "text",
+             name: "heading",
+             label: "Heading",
+             defaultValue: "Featured Products",
+           },
+           // Other controls
+         ],
+       },
+       {
+         group: "Style",
+         inputs: [
+           // Style controls
+         ],
+       },
+     ],
+   });
    ```
 
 2. **Presets**: Provide default configurations to make components usable out of the box.
@@ -960,9 +965,9 @@ if (!loaderData || !loaderData.collection) {
 
 ## Further Resources
 
-- [Weaverse Documentation](mdc:https:/weaverse.io/docs)
-- [Shopify Hydrogen Documentation](mdc:https:/shopify.dev/docs/custom-storefronts/hydrogen)
-- [Weaverse Component Schema Guide](mdc:https:/weaverse.io/docs/guides/component-schema)
-- [Data Fetching in Weaverse](mdc:https:/weaverse.io/docs/guides/section-data-fetching)
-- [Weaverse Theme Settings](mdc:https:/weaverse.io/docs/guides/global-theme-settings)
+- [Weaverse Documentation](mdc:workspace/workspace/workspace/workspace/workspace/workspace/https:/weaverse.io/docs)
+- [Shopify Hydrogen Documentation](mdc:workspace/workspace/workspace/workspace/workspace/workspace/https:/shopify.dev/docs/custom-storefronts/hydrogen)
+- [Weaverse Component Schema Guide](mdc:workspace/workspace/workspace/workspace/workspace/workspace/https:/weaverse.io/docs/guides/component-schema)
+- [Data Fetching in Weaverse](mdc:workspace/workspace/workspace/workspace/workspace/workspace/https:/weaverse.io/docs/guides/section-data-fetching)
+- [Weaverse Theme Settings](mdc:workspace/workspace/workspace/workspace/workspace/workspace/https:/weaverse.io/docs/guides/global-theme-settings)
 </recipe_implementation>

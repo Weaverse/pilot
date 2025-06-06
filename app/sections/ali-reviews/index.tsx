@@ -1,7 +1,4 @@
-import type {
-  ComponentLoaderArgs,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { type ComponentLoaderArgs, createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import type { SectionProps } from "~/components/section";
@@ -57,7 +54,7 @@ export let loader = async ({
 
 export default AliReviewSection;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "ali-reviews",
   title: "Ali Reviews box",
   settings: [
@@ -114,4 +111,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

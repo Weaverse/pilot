@@ -1,7 +1,7 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseVideo,
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  type WeaverseVideo,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -71,7 +71,7 @@ let VideoEmbedItem = forwardRef<HTMLIFrameElement, VideoItemProps>(
 
 export default VideoEmbedItem;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "video-embed--item",
   title: "Video",
   settings: [
@@ -123,4 +123,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
