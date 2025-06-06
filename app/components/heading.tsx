@@ -1,7 +1,7 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  InspectorGroup,
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  type InspectorGroup,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -318,7 +318,7 @@ export let headingInputs: InspectorGroup["inputs"] = [
   },
 ];
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "heading",
   title: "Heading",
   settings: [
@@ -327,4 +327,4 @@ export let schema: HydrogenComponentSchema = {
       inputs: headingInputs,
     },
   ],
-};
+});

@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
@@ -29,7 +29,7 @@ let ColumnsWithImagesItems = forwardRef<
 
 export default ColumnsWithImagesItems;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "columns-with-images--items",
   title: "Items",
   settings: [
@@ -68,4 +68,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

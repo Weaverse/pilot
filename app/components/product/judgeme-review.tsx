@@ -1,8 +1,8 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
+import {
+	createSchema,
+	type HydrogenComponentProps,
+	useParentInstance,
 } from "@weaverse/hydrogen";
-import { useParentInstance } from "@weaverse/hydrogen";
 import { forwardRef, useEffect } from "react";
 import { useFetcher, useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
@@ -10,53 +10,47 @@ import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
 type JudgemeReviewsData = {
-  rating: number;
-  reviewNumber: number;
-  error?: string;
+	rating: number;
+	reviewNumber: number;
+	error?: string;
 };
 
 let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
-  (props, ref) => {
-    let { productReviews } = useLoaderData<typeof productRouteLoader>();
-    let { load, data: fetchData } = useFetcher<JudgemeReviewsData>();
-    let context = useParentInstance();
-    let handle = context?.data?.product?.handle;
-    let api = usePrefixPathWithLocale(`/api/review/${handle}`);
+	(props, ref) => {
+		let { productReviews } = useLoaderData<typeof productRouteLoader>();
+		let { load, data: fetchData } = useFetcher<JudgemeReviewsData>();
+		let context = useParentInstance();
+		let handle = context?.data?.product?.handle;
+		let api = usePrefixPathWithLocale(`/api/review/${handle}`);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-      if (productReviews || !handle) return;
-      load(api);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [handle, api]);
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+		useEffect(() => {
+			if (productReviews || !handle) return;
+			load(api);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [handle, api]);
 
-    let data = productReviews || fetchData;
+		let data = productReviews || fetchData;
 
-    if (!data) return null;
+		if (!data) return null;
 
-    let rating = Math.round((data.rating || 0) * 100) / 100;
-    let reviewNumber = data.reviewNumber || 0;
+		let rating = Math.round((data.rating || 0) * 100) / 100;
+		let reviewNumber = data.reviewNumber || 0;
 
-    return (
-      <div {...props} ref={ref}>
-        <div className="space-x-2">
-          <StarRating rating={rating} />
-          <span className="align-top">({reviewNumber})</span>
-        </div>
-      </div>
-    );
-  },
+		return (
+			<div {...props} ref={ref}>
+				<div className="space-x-2">
+					<StarRating rating={rating} />
+					<span className="align-top">({reviewNumber})</span>
+				</div>
+			</div>
+		);
+	},
 );
 
 export default JudgemeReview;
 
-export let schema: HydrogenComponentSchema = {
-  type: "judgeme",
-  title: "Judgeme review",
-  settings: [
-    {
-      group: "Judgeme",
-      inputs: [],
-    },
-  ],
-};
+export let schema = createSchema({
+	type: "judgeme",
+	title: "Judgeme review",
+});

@@ -1,5 +1,5 @@
 import {
-  type HydrogenComponentSchema,
+  createSchema,
   IMAGES_PLACEHOLDERS,
   useThemeSettings,
 } from "@weaverse/hydrogen";
@@ -77,7 +77,7 @@ let HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
 
 export default HeroImage;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "hero-image",
   title: "Hero image",
   settings: [
@@ -148,4 +148,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

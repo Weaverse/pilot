@@ -182,7 +182,7 @@ To create a section, you need to create a new file in [`app/sections`](app/secti
 ```tsx:app/weaverse/sections/Video.tsx
 import type {
   HydrogenComponentProps,
-  HydrogenComponentSchema,
+  createSchema,
 } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 
@@ -221,7 +221,7 @@ export default Video;
 Export a `schema` object from the file to define the component's schema with default data and settings to be used in the **Weaverse Studio**.
 
 ```tsx:app/weaverse/sections/Video.tsx
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'video',
   title: 'Video',
   settings: [
@@ -252,7 +252,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 ```
 
 What if your component needs to fetch data from Shopify API or any third-party API?

@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   type WeaverseImage,
 } from "@weaverse/hydrogen";
@@ -94,7 +94,7 @@ let ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
 
 export default ImageWithTextImage;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "image-with-text--image",
   title: "Image",
   limit: 1,
@@ -171,4 +171,4 @@ export let schema: HydrogenComponentSchema = {
     objectFit: "cover",
     borderRadius: 0,
   },
-};
+});

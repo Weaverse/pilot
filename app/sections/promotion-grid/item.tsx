@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
   type WeaverseImage,
 } from "@weaverse/hydrogen";
@@ -101,7 +101,7 @@ let PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
 
 export default PromotionGridItem;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "promotion-grid-item",
   title: "Promotion",
   settings: [
@@ -172,4 +172,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

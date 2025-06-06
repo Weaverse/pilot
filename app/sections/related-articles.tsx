@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { ArticleFragment } from "storefront-api.generated";
@@ -58,7 +58,7 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
 
 export default RelatedArticles;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "related-articles",
   title: "Related articles",
   limit: 1,
@@ -124,4 +124,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
