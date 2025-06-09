@@ -185,7 +185,7 @@ export let schema = createSchema({
             unit: "s",
           },
           defaultValue: 5,
-          condition: "autoRotate.eq.true",
+          condition: (data) => data.autoRotate,
           helpText: "Auto-rotate is disabled inside Weaverse Studio.",
         },
         {
@@ -220,7 +220,7 @@ export let schema = createSchema({
             ],
           },
           defaultValue: "arrow",
-          condition: "showArrows.eq.true",
+          condition: (data) => data.showArrows,
         },
         {
           type: "range",
@@ -232,14 +232,14 @@ export let schema = createSchema({
             step: 2,
           },
           defaultValue: 20,
-          condition: "showArrows.eq.true",
+          condition: (data) => data.showArrows,
         },
         {
           type: "switch",
           label: "Show arrows on hover",
           name: "showArrowsOnHover",
           defaultValue: true,
-          condition: "showArrows.eq.true",
+          condition: (data) => data.showArrows,
         },
         {
           type: "select",
@@ -252,7 +252,7 @@ export let schema = createSchema({
             ],
           },
           defaultValue: "light",
-          condition: "showArrows.eq.true",
+          condition: (data) => data.showArrows,
         },
         {
           type: "toggle-group",
@@ -266,7 +266,7 @@ export let schema = createSchema({
             ],
           },
           defaultValue: "rounded-sm",
-          condition: "showArrows.eq.true",
+          condition: (data) => data.showArrows,
         },
 
         {
@@ -292,7 +292,7 @@ export let schema = createSchema({
             ],
           },
           defaultValue: "bottom",
-          condition: "showDots.eq.true",
+          condition: (data) => data.showDots,
         },
         {
           type: "select",
@@ -305,7 +305,7 @@ export let schema = createSchema({
             ],
           },
           defaultValue: "light",
-          condition: "showDots.eq.true",
+          condition: (data) => data.showDots,
         },
       ],
     },

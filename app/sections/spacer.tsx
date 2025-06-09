@@ -90,7 +90,7 @@ export let schema = createSchema({
           label: "Separator color",
           name: "separatorColor",
           defaultValue: "#000",
-          condition: "addSeparator.eq.true",
+          condition: (data) => data.addSeparator,
         },
       ],
     },

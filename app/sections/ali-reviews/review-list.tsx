@@ -186,7 +186,7 @@ export let schema = createSchema({
           name: "verifiedBadgeText",
           label: "Verified badge text",
           defaultValue: "Verified purchase",
-          condition: "showVerifiedBadge.eq.true",
+          condition: (data) => data.showVerifiedBadge,
         },
         {
           type: "switch",

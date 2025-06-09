@@ -86,13 +86,13 @@ export let backgroundInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "cover",
-    condition: "backgroundImage.ne.nil",
+    condition: (data) => !!data.backgroundImage,
   },
   {
     type: "position",
     name: "backgroundPosition",
     label: "Background position",
     defaultValue: "center center",
-    condition: "backgroundImage.ne.nil",
+    condition: (data) => !!data.backgroundImage,
   },
 ];

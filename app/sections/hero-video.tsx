@@ -238,7 +238,7 @@ export let schema = createSchema({
             step: 10,
             unit: "px",
           },
-          condition: "height.eq.custom",
+          condition: (data) => data.height === "custom",
         },
         {
           type: "range",
@@ -251,7 +251,7 @@ export let schema = createSchema({
             step: 10,
             unit: "px",
           },
-          condition: "height.eq.custom",
+          condition: (data) => data.height === "custom",
         },
         {
           type: "range",

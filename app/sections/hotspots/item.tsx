@@ -224,7 +224,7 @@ export let schema = createSchema({
           name: "viewDetailsLinkText",
           label: "View details link text",
           defaultValue: "View full details",
-          condition: "showViewDetailsLink.eq.true",
+          condition: (data) => data.showViewDetailsLink,
         },
       ],
     },

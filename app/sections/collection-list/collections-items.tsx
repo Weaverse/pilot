@@ -130,7 +130,7 @@ export let schema = createSchema({
           name: "collectionNameColor",
           label: "Collection name color",
           defaultValue: "#fff",
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         },
         {
           type: "heading",

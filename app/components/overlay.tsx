@@ -53,13 +53,13 @@ export let overlayInputs: InspectorGroup["inputs"] = [
     name: "overlayColor",
     label: "Overlay color",
     defaultValue: "#000000",
-    condition: "enableOverlay.eq.true",
+    condition: (data) => data.enableOverlay,
   },
   {
     type: "color",
     name: "overlayColorHover",
     label: "Overlay color (hover)",
-    condition: "enableOverlay.eq.true",
+    condition: (data) => data.enableOverlay,
   },
   {
     type: "range",
@@ -72,6 +72,6 @@ export let overlayInputs: InspectorGroup["inputs"] = [
       step: 1,
       unit: "%",
     },
-    condition: "enableOverlay.eq.true",
+    condition: (data) => data.enableOverlay,
   },
 ];

@@ -289,14 +289,14 @@ export let schema = createSchema({
               { label: "Mix", value: "mix" },
             ],
           },
-          condition: "mediaLayout.eq.grid",
+          condition: (data) => data.mediaLayout === "grid",
         },
         {
           label: "Show thumbnails",
           name: "showThumbnails",
           type: "switch",
           defaultValue: true,
-          condition: "mediaLayout.eq.slider",
+          condition: (data) => data.mediaLayout === "slider",
         },
         {
           label: "Enable zoom",
