@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { PageDetailsQuery } from "storefront-api.generated";
@@ -36,7 +36,7 @@ let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
 
 export default Page;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "page",
   title: "Page",
   limit: 1,
@@ -51,4 +51,4 @@ export let schema: HydrogenComponentSchema = {
       ),
     },
   ],
-};
+});

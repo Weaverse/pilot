@@ -1,7 +1,4 @@
-import {
-  type HydrogenComponentSchema,
-  IMAGES_PLACEHOLDERS,
-} from "@weaverse/hydrogen";
+import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
@@ -33,7 +30,7 @@ let Countdown = forwardRef<HTMLElement, CountdownProps>((props, ref) => {
 
 export default Countdown;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "countdown",
   title: "Countdown",
   settings: [
@@ -149,4 +146,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

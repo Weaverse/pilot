@@ -1,6 +1,6 @@
 import { Pagination } from "@shopify/hydrogen";
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
@@ -82,7 +82,7 @@ let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
 
 export default CollectionsItems;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "collections-items",
   title: "Collection items",
   settings: [
@@ -130,7 +130,7 @@ export let schema: HydrogenComponentSchema = {
           name: "collectionNameColor",
           label: "Collection name color",
           defaultValue: "#fff",
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         },
         {
           type: "heading",
@@ -140,4 +140,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

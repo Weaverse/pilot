@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   useParentInstance,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
@@ -111,7 +111,7 @@ let ReviewList = forwardRef<
 
 export default ReviewList;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "ali-reviews--list",
   title: "Reviews list",
   settings: [
@@ -186,7 +186,7 @@ export let schema: HydrogenComponentSchema = {
           name: "verifiedBadgeText",
           label: "Verified badge text",
           defaultValue: "Verified purchase",
-          condition: "showVerifiedBadge.eq.true",
+          condition: (data) => data.showVerifiedBadge,
         },
         {
           type: "switch",
@@ -197,7 +197,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 
 function getReviewsSummary(allReviews: AliReview[]) {
   let totalReviews = allReviews.length;

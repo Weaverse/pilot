@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
@@ -23,14 +23,8 @@ let ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
 
 export default ReviewIndex;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "judgeme-review--index",
   title: "Judgeme Review",
   limit: 1,
-  settings: [
-    {
-      group: "Review",
-      inputs: [],
-    },
-  ],
-};
+});

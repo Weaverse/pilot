@@ -1,7 +1,7 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-  WeaverseImage,
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  type WeaverseImage,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -71,7 +71,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
 
 export default ImageGalleryItem;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "image-gallery--item",
   title: "Image",
   settings: [
@@ -117,4 +117,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

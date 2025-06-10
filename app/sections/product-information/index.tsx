@@ -1,6 +1,6 @@
 import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useState } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
@@ -230,7 +230,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
 
 export default ProductInformation;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "product-information",
   title: "Main product",
   childTypes: ["judgeme"],
@@ -289,14 +289,14 @@ export let schema: HydrogenComponentSchema = {
               { label: "Mix", value: "mix" },
             ],
           },
-          condition: "mediaLayout.eq.grid",
+          condition: (data) => data.mediaLayout === "grid",
         },
         {
           label: "Show thumbnails",
           name: "showThumbnails",
           type: "switch",
           defaultValue: true,
-          condition: "mediaLayout.eq.slider",
+          condition: (data) => data.mediaLayout === "slider",
         },
         {
           label: "Enable zoom",
@@ -380,4 +380,4 @@ export let schema: HydrogenComponentSchema = {
     mediaLayout: "grid",
     gridSize: "2x2",
   },
-};
+});

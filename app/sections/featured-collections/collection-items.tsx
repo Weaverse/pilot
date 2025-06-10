@@ -1,5 +1,5 @@
 import {
-  type HydrogenComponentSchema,
+  createSchema,
   IMAGES_PLACEHOLDERS,
   useParentInstance,
 } from "@weaverse/hydrogen";
@@ -200,7 +200,7 @@ let COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
 
 export default CollectionItems;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "featured-collections-items",
   title: "Collection items",
   settings: [
@@ -291,21 +291,21 @@ export let schema: HydrogenComponentSchema = {
           name: "collectionNameColor",
           label: "Collection name color",
           defaultValue: "#fff",
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         },
         {
           type: "heading",
           label: "Overlay",
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         },
         ...overlayInputs.map((inp) => ({
           ...inp,
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         })),
         {
           type: "heading",
           label: "Button (optional)",
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         },
         {
           type: "text",
@@ -313,13 +313,13 @@ export let schema: HydrogenComponentSchema = {
           label: "Button text",
           defaultValue: "Shop now",
           placeholder: "Shop now",
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         },
         ...linkStylesInputs.map((inp) => ({
           ...inp,
-          condition: "contentPosition.eq.over",
+          condition: (data) => data.contentPosition === "over",
         })),
       ],
     },
   ],
-};
+});
