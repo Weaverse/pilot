@@ -21,7 +21,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "typeRoots": ["node_modules/@types"],
     "types": ["@shopify/oxygen-workers-types", "vite/client"],
     "paths": {
       "~/*": ["app/*"],
