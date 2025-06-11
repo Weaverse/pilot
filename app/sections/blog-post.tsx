@@ -1,5 +1,5 @@
 import { FacebookLogo, PinterestLogo, XLogo } from "@phosphor-icons/react";
-import { type HydrogenComponentSchema, isBrowser } from "@weaverse/hydrogen";
+import { createSchema, isBrowser } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData, useRouteLoaderData } from "react-router";
 import {
@@ -92,7 +92,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
 
 export default BlogPost;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "blog-post",
   title: "Blog post",
   limit: 1,
@@ -122,4 +122,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});

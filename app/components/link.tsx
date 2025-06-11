@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   type InspectorGroup,
   useThemeSettings,
 } from "@weaverse/hydrogen";
@@ -186,7 +186,7 @@ export let linkContentInputs: InspectorGroup["inputs"] = [
     name: "openInNewTab",
     label: "Open in new tab",
     defaultValue: false,
-    condition: "to.ne.nil",
+    condition: (data) => !!data.to,
   },
   {
     type: "select",
@@ -210,42 +210,42 @@ export let linkStylesInputs: InspectorGroup["inputs"] = [
     label: "Background color",
     name: "backgroundColor",
     defaultValue: "#000",
-    condition: "variant.eq.custom",
+    condition: (data) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Text color",
     name: "textColor",
     defaultValue: "#fff",
-    condition: "variant.eq.custom",
+    condition: (data) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Border color",
     name: "borderColor",
     defaultValue: "#00000000",
-    condition: "variant.eq.custom",
+    condition: (data) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Background color (hover)",
     name: "backgroundColorHover",
     defaultValue: "#00000000",
-    condition: "variant.eq.custom",
+    condition: (data) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Text color (hover)",
     name: "textColorHover",
     defaultValue: "#000",
-    condition: "variant.eq.custom",
+    condition: (data) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Border color (hover)",
     name: "borderColorHover",
     defaultValue: "#000",
-    condition: "variant.eq.custom",
+    condition: (data) => data.variant === "custom",
   },
 ];
 
@@ -258,7 +258,7 @@ export let linkInputs: InspectorGroup["inputs"] = [
   ...linkStylesInputs,
 ];
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "button",
   title: "Button",
   settings: [
@@ -267,4 +267,4 @@ export let schema: HydrogenComponentSchema = {
       inputs: linkInputs,
     },
   ],
-};
+});

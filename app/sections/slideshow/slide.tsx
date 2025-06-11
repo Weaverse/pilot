@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   IMAGES_PLACEHOLDERS,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
@@ -101,7 +101,7 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
 
 export default Slide;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   title: "Slide",
   type: "slideshow-slide",
   childTypes: ["subheading", "heading", "paragraph", "button"],
@@ -170,4 +170,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

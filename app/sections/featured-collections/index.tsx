@@ -1,7 +1,7 @@
-import type {
-  ComponentLoaderArgs,
-  HydrogenComponentSchema,
-  WeaverseCollection,
+import {
+  type ComponentLoaderArgs,
+  createSchema,
+  type WeaverseCollection,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { CollectionsByIdsQuery } from "storefront-api.generated";
@@ -77,7 +77,7 @@ export let loader = async ({
   return [];
 };
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "featured-collections",
   title: "Featured collections",
   childTypes: [
@@ -125,4 +125,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

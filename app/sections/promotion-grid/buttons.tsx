@@ -1,7 +1,4 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 
@@ -25,7 +22,7 @@ let PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>(
 
 export default PromotionItemButtons;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "promotion-item--buttons",
   title: "Buttons",
   settings: [
@@ -48,4 +45,4 @@ export let schema: HydrogenComponentSchema = {
     },
   ],
   childTypes: ["button"],
-};
+});

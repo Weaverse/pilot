@@ -179,7 +179,7 @@ export let themeSchema: HydrogenThemeSchema = {
             width: 320,
             height: 116,
           },
-          condition: "enableTransparentHeader.eq.true",
+          condition: (data) => data.enableTransparentHeader === true,
         },
         {
           type: "range",
@@ -654,7 +654,7 @@ export let themeSchema: HydrogenThemeSchema = {
             ],
           },
           defaultValue: "center",
-          condition: "pcardTitlePricesAlignment.eq.vertical",
+          condition: (data) => data.pcardTitlePricesAlignment === "vertical",
         },
         {
           type: "switch",
@@ -673,7 +673,7 @@ export let themeSchema: HydrogenThemeSchema = {
           label: "Show sale price",
           name: "pcardShowSalePrice",
           defaultValue: true,
-          condition: "pcardShowLowestPrice.ne.true",
+          condition: (data) => data.pcardShowLowestPrice !== true,
         },
         {
           type: "switch",
@@ -687,7 +687,7 @@ export let themeSchema: HydrogenThemeSchema = {
           name: "pcardOptionToShow",
           defaultValue: "Color",
           placeholder: "Color",
-          condition: "pcardShowOptionValues.eq.true",
+          condition: (data) => data.pcardShowOptionValues === true,
         },
         {
           type: "range",
@@ -698,7 +698,7 @@ export let themeSchema: HydrogenThemeSchema = {
             max: 10,
           },
           defaultValue: 5,
-          condition: "pcardShowOptionValues.eq.true",
+          condition: (data) => data.pcardShowOptionValues === true,
         },
         {
           type: "heading",
@@ -721,7 +721,7 @@ export let themeSchema: HydrogenThemeSchema = {
             ],
           },
           defaultValue: "icon",
-          condition: "pcardEnableQuickShop.eq.true",
+          condition: (data) => data.pcardEnableQuickShop === true,
         },
         {
           type: "text",
@@ -729,7 +729,7 @@ export let themeSchema: HydrogenThemeSchema = {
           name: "pcardQuickShopButtonText",
           defaultValue: "Quick shop",
           placeholder: "Quick shop",
-          condition: "pcardQuickShopButtonType.eq.text",
+          condition: (data) => data.pcardQuickShopButtonType === "text",
         },
         {
           type: "select",
@@ -742,7 +742,7 @@ export let themeSchema: HydrogenThemeSchema = {
             ],
           },
           defaultValue: "open-quick-shop",
-          condition: "pcardEnableQuickShop.eq.true",
+          condition: (data) => data.pcardEnableQuickShop === true,
         },
         {
           type: "select",
@@ -755,7 +755,7 @@ export let themeSchema: HydrogenThemeSchema = {
             ],
           },
           defaultValue: "modal",
-          condition: "pcardQuickShopAction.eq.open-quick-shop",
+          condition: (data) => data.pcardQuickShopAction === "open-quick-shop",
         },
         {
           type: "heading",

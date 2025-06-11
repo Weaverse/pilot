@@ -25,6 +25,9 @@
       },
       "correctness": {
         "noUnusedVariables": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off"
       }
     }
   },

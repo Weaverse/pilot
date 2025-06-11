@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import type { SectionProps } from "~/components/section";
@@ -24,7 +24,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
 
 export default ImageWithText;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "image-with-text",
   title: "Image with text",
   settings: [
@@ -44,4 +44,4 @@ export let schema: HydrogenComponentSchema = {
       { type: "image-with-text--content" },
     ],
   },
-};
+});

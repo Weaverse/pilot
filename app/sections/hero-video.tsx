@@ -1,6 +1,6 @@
 import {
+  createSchema,
   type HydrogenComponentProps,
-  type HydrogenComponentSchema,
   isBrowser,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
@@ -194,7 +194,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
 
 export default HeroVideo;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "hero-video",
   title: "Hero video",
   settings: [
@@ -238,7 +238,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
-          condition: "height.eq.custom",
+          condition: (data) => data.height === "custom",
         },
         {
           type: "range",
@@ -251,7 +251,7 @@ export let schema: HydrogenComponentSchema = {
             step: 10,
             unit: "px",
           },
-          condition: "height.eq.custom",
+          condition: (data) => data.height === "custom",
         },
         {
           type: "range",
@@ -300,4 +300,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});
