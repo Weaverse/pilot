@@ -1,5 +1,5 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
-import type { AppLoadContext, LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { AppLoadContext, LoaderFunctionArgs } from "react-router";
 import type {
   LayoutQuery,
   MenuFragment,
@@ -44,7 +44,7 @@ export async function loadCriticalData({
     },
     selectedLocale: storefront.i18n,
     weaverseTheme,
-    googleGtmID: context.env.PUBLIC_GOOGLE_GTM_ID,
+    googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     swatchesConfigs,
   };
 }

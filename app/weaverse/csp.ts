@@ -1,4 +1,4 @@
-import type { AppLoadContext } from "@shopify/remix-oxygen";
+import type { AppLoadContext } from "react-router";
 
 export function getWeaverseCsp(request: Request, context: AppLoadContext) {
   let url = new URL(request.url);

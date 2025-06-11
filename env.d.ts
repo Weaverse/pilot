@@ -23,20 +23,22 @@ declare global {
     METAOBJECT_COLOR_VALUE_KEY: string;
     KLAVIYO_PRIVATE_API_TOKEN: string;
     PUBLIC_SHOPIFY_INBOX_SHOP_ID: string;
+    WEAVERSE_HOST?: string;
   }
 }
+
 declare module "react-router" {
   interface AppLoadContext
     extends Awaited<ReturnType<typeof createAppLoadContext>> {
     // to change context type, change the return of createAppLoadContext() instead
   }
 
-  // TODO: remove this once we've migrated to `Route.LoaderArgs` instead for our loaders
+  // TODO: remove this once we've migrated our loaders to `Route.LoaderArgs`
   interface LoaderFunctionArgs {
     context: AppLoadContext;
   }
 
-  // TODO: remove this once we've migrated to `Route.ActionArgs` instead for our actions
+  // TODO: remove this once we've migrated our loaders to `Route.ActionArgs`
   interface ActionFunctionArgs {
     context: AppLoadContext;
   }

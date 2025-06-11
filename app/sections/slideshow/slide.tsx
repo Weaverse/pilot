@@ -124,7 +124,7 @@ export let schema = createSchema({
       group: "Background",
       inputs: backgroundInputs.filter((inp) =>
         ["backgroundImage", "backgroundFit", "backgroundPosition"].includes(
-          inp.name,
+          inp.name as string,
         ),
       ),
     },
