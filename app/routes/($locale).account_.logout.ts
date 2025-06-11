@@ -4,7 +4,7 @@ import {
   type AppLoadContext,
   type LoaderFunctionArgs,
   redirect,
-} from "@shopify/remix-oxygen";
+} from "react-router";
 
 export async function doLogout(context: AppLoadContext) {
   return context.customerAccount.logout();

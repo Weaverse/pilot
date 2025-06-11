@@ -1,4 +1,4 @@
-import type { AppLoadContext } from "@shopify/remix-oxygen";
+import type { AppLoadContext } from "react-router";
 import { constructURL } from "./misc";
 
 type JudgemeProductData = {

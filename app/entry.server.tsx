@@ -1,5 +1,5 @@
 import { createContentSecurityPolicy } from "@shopify/hydrogen";
-import type { AppLoadContext, EntryContext } from "@shopify/remix-oxygen";
+import type { AppLoadContext, EntryContext } from "react-router";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import { ServerRouter } from "react-router";
