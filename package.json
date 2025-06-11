@@ -41,7 +41,7 @@
     "@shopify/hydrogen": "2025.5.0",
     "@shopify/remix-oxygen": "3.0.0",
     "@tailwindcss/vite": "^4.1.7",
-    "@weaverse/hydrogen": "^5.2.6",
+    "@weaverse/hydrogen": "^5.3.2",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.9.3",
