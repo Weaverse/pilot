@@ -1,4 +1,4 @@
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
@@ -16,7 +16,7 @@ let VideoEmbed = forwardRef<HTMLElement, VideoEmbedProps>((props, ref) => {
 
 export default VideoEmbed;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "video-embed",
   title: "Video embed",
   settings: sectionSettings,
@@ -37,4 +37,4 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});

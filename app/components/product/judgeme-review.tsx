@@ -1,8 +1,8 @@
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  useParentInstance,
 } from "@weaverse/hydrogen";
-import { useParentInstance } from "@weaverse/hydrogen";
 import { forwardRef, useEffect } from "react";
 import { useFetcher, useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
@@ -50,13 +50,7 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
 export default JudgemeReview;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "judgeme",
   title: "Judgeme review",
-  settings: [
-    {
-      group: "Judgeme",
-      inputs: [],
-    },
-  ],
-};
+});

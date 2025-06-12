@@ -1,7 +1,7 @@
-import type {
-  ComponentLoaderArgs,
-  HydrogenComponentSchema,
-  WeaverseMetaObject,
+import {
+  type ComponentLoaderArgs,
+  createSchema,
+  type WeaverseMetaObject,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { OurTeamQuery } from "storefront-api.generated";
@@ -69,7 +69,7 @@ let OUR_TEAM_QUERY = `#graphql
   }
 `;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "our-team",
   title: "Our team",
   childTypes: ["heading", "paragraph", "our-team-members"],
@@ -119,6 +119,6 @@ export let schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});
 
 export default OurTeam;
