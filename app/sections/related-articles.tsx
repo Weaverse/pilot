@@ -14,13 +14,13 @@ interface RelatedArticlesProps
   heading: string;
 }
 
-let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
+const RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
   (props, ref) => {
-    let { blog, relatedArticles } = useLoaderData<{
+    const { blog, relatedArticles } = useLoaderData<{
       relatedArticles: ArticleFragment[];
       blog: { handle: string };
     }>();
-    let {
+    const {
       heading,
       showExcerpt,
       showAuthor,
@@ -58,7 +58,7 @@ let RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
 
 export default RelatedArticles;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "related-articles",
   title: "Related articles",
   limit: 1,

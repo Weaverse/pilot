@@ -33,10 +33,10 @@ import {
   getFeaturedData,
 } from "./($locale).api.featured-items";
 
-export let headers = routeHeaders;
+export const headers = routeHeaders;
 
 export async function loader({ context }: LoaderFunctionArgs) {
-  let { data: d, errors } =
+  const { data: d, errors } =
     await context.customerAccount.query<CustomerDetailsQuery>(
       CUSTOMER_DETAILS_QUERY,
     );
@@ -48,9 +48,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
     throw await doLogout(context);
   }
 
-  let customer = d?.customer;
-  let heading = customer ? "My Account" : "Account Details";
-  let featuredData = getFeaturedData(context.storefront);
+  const customer = d?.customer;
+  const heading = customer ? "My Account" : "Account Details";
+  const featuredData = getFeaturedData(context.storefront);
 
   return data(
     { customer, heading, featuredData },
@@ -59,14 +59,14 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function Authenticated() {
-  let data = useLoaderData<typeof loader>();
-  let outlet = useOutlet();
-  let matches = useMatches();
+  const data = useLoaderData<typeof loader>();
+  const outlet = useOutlet();
+  const matches = useMatches();
 
   // routes that export handle { renderInModal: true }
-  let renderInModal = matches.find(
+  const renderInModal = matches.find(
     (match: { handle?: { renderInModal?: boolean } }) => {
-      let handle = match?.handle;
+      const handle = match?.handle;
       return handle?.renderInModal;
     },
   );
@@ -95,8 +95,8 @@ interface AccountType {
 }
 
 function Account({ customer, heading, featuredData }: AccountType) {
-  let orders = flattenConnection(customer.orders);
-  let addresses = flattenConnection(customer.addresses);
+  const orders = flattenConnection(customer.orders);
+  const addresses = flattenConnection(customer.addresses);
 
   return (
     <Section

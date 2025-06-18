@@ -8,7 +8,7 @@ import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 
-let variants = cva("flex flex-col sm:grid sm:grid-cols-4", {
+const variants = cva("flex flex-col sm:grid sm:grid-cols-4", {
   variants: {
     gap: {
       0: "",
@@ -37,9 +37,9 @@ interface ImageGalleyItemsProps
   height: number;
 }
 
-let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
+const ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
   (props, ref) => {
-    let { children, gap, height, ...rest } = props;
+    const { children, gap, height, ...rest } = props;
 
     return (
       <div
@@ -56,7 +56,7 @@ let ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
 
 export default ImageGalleyItems;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "image-gallery--items",
   title: "Images",
   settings: [

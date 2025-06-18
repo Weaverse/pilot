@@ -68,15 +68,15 @@ export function AddToCartButton({
 }
 
 function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
-  let matches = useMatches();
+  const matches = useMatches();
 
   return useMemo(() => {
-    let data: Record<string, unknown> = {};
-    for (let match of matches) {
-      let eventData = match?.data as Record<string, unknown>;
+    const data: Record<string, unknown> = {};
+    for (const match of matches) {
+      const eventData = match?.data as Record<string, unknown>;
       if (eventData) {
         eventData.analytics && Object.assign(data, eventData.analytics);
-        let selectedLocale =
+        const selectedLocale =
           (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
         Object.assign(data, {
           currency: selectedLocale.currency,
@@ -99,18 +99,18 @@ function AddToCartAnalytics({
   fetcher: FetcherWithComponents<any>;
   children: React.ReactNode;
 }) {
-  let fetcherData = fetcher.data;
-  let formData = fetcher.formData;
-  let pageAnalytics = usePageAnalytics({ hasUserConsent: true });
+  const fetcherData = fetcher.data;
+  const formData = fetcher.formData;
+  const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
 
   useEffect(() => {
     if (formData) {
-      let cartData: Record<string, unknown> = {};
-      let cartInputs = CartForm.getFormInput(formData);
+      const cartData: Record<string, unknown> = {};
+      const cartInputs = CartForm.getFormInput(formData);
 
       try {
         if (cartInputs.inputs.analytics) {
-          let dataInForm: unknown = JSON.parse(
+          const dataInForm: unknown = JSON.parse(
             String(cartInputs.inputs.analytics),
           );
           Object.assign(cartData, dataInForm);
@@ -120,7 +120,7 @@ function AddToCartAnalytics({
       }
 
       if (Object.keys(cartData).length && fetcherData) {
-        let addToCartPayload: ShopifyAddToCartPayload = {
+        const addToCartPayload: ShopifyAddToCartPayload = {
           ...getClientBrowserParameters(),
           ...pageAnalytics,
           ...cartData,

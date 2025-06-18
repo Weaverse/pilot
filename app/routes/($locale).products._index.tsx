@@ -9,18 +9,18 @@ import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
-export let headers = routeHeaders;
+export const headers = routeHeaders;
 
 export async function loader({
   request,
   context: { storefront, weaverse },
 }: LoaderFunctionArgs) {
-  let variables = getPaginationVariables(request, {
+  const variables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
 
   // Load products data and weaverseData in parallel
-  let [data, weaverseData] = await Promise.all([
+  const [data, weaverseData] = await Promise.all([
     storefront.query(ALL_PRODUCTS_QUERY, {
       variables: {
         ...variables,
@@ -35,7 +35,7 @@ export async function loader({
 
   invariant(data, "No data returned from Shopify API");
 
-  let seo = seoPayload.collection({
+  const seo = seoPayload.collection({
     url: request.url,
     collection: {
       id: "all-products",
@@ -60,7 +60,7 @@ export async function loader({
   };
 }
 
-export let meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return getSeoMeta(data.seo as SeoConfig);
 };
 export default function AllProducts() {

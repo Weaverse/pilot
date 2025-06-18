@@ -5,8 +5,8 @@ import { Link } from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 
 export function Logo() {
-  let { shopName } = useShopMenu();
-  let { logoData, transparentLogoData, logoWidth } = useThemeSettings();
+  const { shopName } = useShopMenu();
+  const { logoData, transparentLogoData, logoWidth } = useThemeSettings();
 
   return (
     <Link

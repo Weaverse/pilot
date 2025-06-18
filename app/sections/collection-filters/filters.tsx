@@ -15,21 +15,25 @@ import { FilterItem } from "./filter-item";
 import { PriceRangeFilter } from "./price-range-filter";
 
 export function Filters({ className }: { className?: string }) {
-  let ref = useRef<HTMLDivElement>(null);
-  let parentInstance = useClosestWeaverseItem(ref);
-  let parentData = parentInstance.data as unknown as CollectionFiltersData;
-  let { expandFilters, showFiltersCount, enableSwatches, displayAsButtonFor } =
-    parentData;
-  let { collection, appliedFilters } = useLoaderData<
+  const ref = useRef<HTMLDivElement>(null);
+  const parentInstance = useClosestWeaverseItem(ref);
+  const parentData = parentInstance.data as unknown as CollectionFiltersData;
+  const {
+    expandFilters,
+    showFiltersCount,
+    enableSwatches,
+    displayAsButtonFor,
+  } = parentData;
+  const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
       appliedFilters: AppliedFilter[];
     }
   >();
-  let appliedFiltersKeys = appliedFilters
+  const appliedFiltersKeys = appliedFilters
     .map((filter) => filter.label)
     .join("-");
-  let filters = collection.products.filters as Filter[];
+  const filters = collection.products.filters as Filter[];
 
   return (
     <ScrollArea className="h-[calc(100vh-var(--height-nav)-100px)]">
@@ -42,9 +46,9 @@ export function Filters({ className }: { className?: string }) {
         defaultValue={expandFilters ? filters.map((filter) => filter.id) : []}
       >
         {filters.map((filter: Filter) => {
-          let asSwatch =
+          const asSwatch =
             enableSwatches && OPTIONS_AS_SWATCH.includes(filter.label);
-          let asButton = displayAsButtonFor.includes(filter.label);
+          const asButton = displayAsButtonFor.includes(filter.label);
 
           return (
             <Accordion.Item

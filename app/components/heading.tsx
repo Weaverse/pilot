@@ -9,7 +9,7 @@ import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
-let fontSizeVariants = cva("", {
+const fontSizeVariants = cva("", {
   variants: {
     mobileSize: {
       xs: "text-xs",
@@ -44,7 +44,7 @@ let fontSizeVariants = cva("", {
   },
 });
 
-let variants = cva("heading", {
+const variants = cva("heading", {
   variants: {
     size: {
       default: "",
@@ -96,11 +96,11 @@ export interface HeadingProps
   animate?: boolean;
 }
 
-let Heading = forwardRef<
+const Heading = forwardRef<
   HTMLHeadingElement,
   HeadingProps & Partial<HydrogenComponentProps>
 >((props, ref) => {
-  let {
+  const {
     as: Tag = "h4",
     content,
     size,
@@ -146,7 +146,7 @@ let Heading = forwardRef<
 
 export default Heading;
 
-export let headingInputs: InspectorGroup["inputs"] = [
+export const headingInputs: InspectorGroup["inputs"] = [
   {
     type: "text",
     name: "content",
@@ -318,7 +318,7 @@ export let headingInputs: InspectorGroup["inputs"] = [
   },
 ];
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "heading",
   title: "Heading",
   settings: [

@@ -9,11 +9,11 @@ interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
   gap: number;
 }
 
-let ColumnsWithImagesItems = forwardRef<
+const ColumnsWithImagesItems = forwardRef<
   HTMLDivElement,
   ColumnsWithImagesItemsProps
 >((props, ref) => {
-  let { children, gap, ...rest } = props;
+  const { children, gap, ...rest } = props;
 
   return (
     <div
@@ -29,7 +29,7 @@ let ColumnsWithImagesItems = forwardRef<
 
 export default ColumnsWithImagesItems;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "columns-with-images--items",
   title: "Items",
   settings: [

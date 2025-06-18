@@ -32,7 +32,7 @@ export interface SectionProps<T = any>
   children?: React.ReactNode;
 }
 
-let variants = cva("relative", {
+const variants = cva("relative", {
   variants: {
     width: {
       full: "w-full h-full",
@@ -78,7 +78,7 @@ let variants = cva("relative", {
   },
 });
 
-export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
+export const Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   let {
     as: Component = "section",
     width,
@@ -101,7 +101,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
-  let [scope] = useAnimation(ref);
+  const [scope] = useAnimation(ref);
 
   style = {
     ...style,
@@ -109,8 +109,8 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     "--section-radius": `${borderRadius || 0}px`,
   } as React.CSSProperties;
 
-  let isBgForContent = backgroundFor === "content";
-  let hasBackground = backgroundColor || backgroundImage || borderRadius > 0;
+  const isBgForContent = backgroundFor === "content";
+  const hasBackground = backgroundColor || backgroundImage || borderRadius > 0;
 
   return (
     <Component
@@ -143,7 +143,7 @@ export let Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
   );
 });
 
-export let layoutInputs: InspectorGroup["inputs"] = [
+export const layoutInputs: InspectorGroup["inputs"] = [
   {
     type: "select",
     name: "width",
@@ -198,7 +198,7 @@ export let layoutInputs: InspectorGroup["inputs"] = [
   },
 ];
 
-export let sectionSettings: InspectorGroup[] = [
+export const sectionSettings: InspectorGroup[] = [
   { group: "Layout", inputs: layoutInputs },
   { group: "Background", inputs: backgroundInputs },
   { group: "Overlay", inputs: overlayInputs },

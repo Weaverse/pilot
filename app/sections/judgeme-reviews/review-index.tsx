@@ -5,8 +5,8 @@ import type { loader as productRouteLoader } from "~/routes/($locale).products.$
 import ReviewForm from "./review-form";
 import { ReviewList } from "./review-list";
 
-let ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
-  let { productReviews } = useLoaderData<typeof productRouteLoader>();
+const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
+  const { productReviews } = useLoaderData<typeof productRouteLoader>();
   return (
     <div
       ref={ref}
@@ -23,7 +23,7 @@ let ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
 
 export default ReviewIndex;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "judgeme-review--index",
   title: "Judgeme Review",
   limit: 1,

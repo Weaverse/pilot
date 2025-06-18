@@ -21,12 +21,12 @@ export function ProductCardOptions({
   selectedVariant: ProductVariantFragment;
   setSelectedVariant: (variant: ProductVariantFragment) => void;
 }) {
-  let { pcardShowOptionValues, pcardOptionToShow, pcardMaxOptionValues } =
+  const { pcardShowOptionValues, pcardOptionToShow, pcardMaxOptionValues } =
     useThemeSettings();
-  let { handle, options } = product;
-  let { optionValues } =
+  const { handle, options } = product;
+  const { optionValues } =
     options.find(({ name }) => name === pcardOptionToShow) || {};
-  let restCount = optionValues?.length - pcardMaxOptionValues;
+  const restCount = optionValues?.length - pcardMaxOptionValues;
 
   if (!pcardShowOptionValues || !optionValues?.length) {
     return null;
@@ -38,7 +38,7 @@ export function ProductCardOptions({
       ({ name }) => name === pcardOptionToShow,
     )?.value;
   }
-  let asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
+  const asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
 
   return (
     <div className="flex flex-wrap items-center gap-2 pt-1">

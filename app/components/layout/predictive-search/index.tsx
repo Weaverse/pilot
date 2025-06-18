@@ -10,8 +10,8 @@ import { PredictiveSearchResult } from "./predictive-search-result";
 import { PredictiveSearchForm } from "./search-form";
 
 export function PredictiveSearchButton() {
-  let [open, setOpen] = useState(false);
-  let location = useLocation();
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: close the dialog when the location changes, aka when the user navigates to a search result page
   useEffect(() => {
@@ -86,10 +86,10 @@ export function PredictiveSearchButton() {
 }
 
 function PredictiveSearchResults() {
-  let { results, totalResults, searchTerm } = usePredictiveSearch();
-  let queries = results?.find(({ type }) => type === "queries");
-  let articles = results?.find(({ type }) => type === "articles");
-  let products = results?.find(({ type }) => type === "products");
+  const { results, totalResults, searchTerm } = usePredictiveSearch();
+  const queries = results?.find(({ type }) => type === "queries");
+  const articles = results?.find(({ type }) => type === "articles");
+  const products = results?.find(({ type }) => type === "products");
 
   if (!totalResults) {
     return (

@@ -21,8 +21,8 @@ interface HotspotsProps
   aspectRatio: ImageAspectRatio;
 }
 
-let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
-  let {
+const Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
+  const {
     headingTagName,
     content,
     size,
@@ -40,7 +40,7 @@ let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
     children,
     ...rest
   } = props;
-  let imageData: Partial<WeaverseImage> =
+  const imageData: Partial<WeaverseImage> =
     typeof image === "string"
       ? { url: image, altText: "Hotspots image" }
       : image;
@@ -83,7 +83,7 @@ let Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
 
 export default Hotspots;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "hotspots",
   title: "Hotspots",
   childTypes: ["hotspots--item"],

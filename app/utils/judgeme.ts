@@ -47,11 +47,11 @@ export async function getJudgeMeProductReviews({
   handle: string;
 }) {
   try {
-    let { weaverse, env } = context;
-    let { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
+    const { weaverse, env } = context;
+    const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
     if (JUDGEME_PRIVATE_API_TOKEN) {
-      let { fetchWithCache } = weaverse;
-      let { product } = await fetchWithCache<JudgemeProductData>(
+      const { fetchWithCache } = weaverse;
+      const { product } = await fetchWithCache<JudgemeProductData>(
         constructURL(JUDGEME_PRODUCT_API, {
           handle,
           shop_domain: PUBLIC_STORE_DOMAIN,
@@ -59,15 +59,15 @@ export async function getJudgeMeProductReviews({
         }),
       );
       if (product?.id) {
-        let { reviews } = await fetchWithCache<JudgemeReviewsData>(
+        const { reviews } = await fetchWithCache<JudgemeReviewsData>(
           constructURL(JUDGEME_REVIEWS_API, {
             api_token: JUDGEME_PRIVATE_API_TOKEN,
             shop_domain: PUBLIC_STORE_DOMAIN,
             product_id: product?.id,
           }),
         );
-        let reviewNumber = reviews.length || 1;
-        let rating = reviews.reduce((a, c) => a + c.rating, 0) / reviewNumber;
+        const reviewNumber = reviews.length || 1;
+        const rating = reviews.reduce((a, c) => a + c.rating, 0) / reviewNumber;
         return { rating, reviewNumber, reviews };
       }
     }
@@ -104,8 +104,8 @@ export async function createJudgeMeReview({
 }
 
 function formDataToObject(formData: FormData) {
-  let data = {};
-  for (let [key, value] of formData.entries()) {
+  const data = {};
+  for (const [key, value] of formData.entries()) {
     data[key] = value;
   }
   return data;

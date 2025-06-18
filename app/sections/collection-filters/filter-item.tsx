@@ -26,32 +26,32 @@ export function FilterItem({
   appliedFilters: AppliedFilter[];
   showFiltersCount: boolean;
 }) {
-  let navigate = useNavigate();
-  let [params] = useSearchParams();
-  let location = useLocation();
-  let { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const location = useLocation();
+  const { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
 
-  let filter = appliedFilters.find(
+  const filter = appliedFilters.find(
     (filter) => JSON.stringify(filter.filter) === option.input,
   );
 
-  let [checked, setChecked] = useState(!!filter);
+  const [checked, setChecked] = useState(!!filter);
 
   function handleCheckedChange(checked: boolean) {
     setChecked(checked);
     if (checked) {
-      let link = getFilterLink(option.input as string, params, location);
+      const link = getFilterLink(option.input as string, params, location);
       navigate(link, { preventScrollReset: true });
     } else if (filter) {
-      let link = getAppliedFilterLink(filter, params, location);
+      const link = getAppliedFilterLink(filter, params, location);
       navigate(link, { preventScrollReset: true });
     }
   }
 
   if (displayAs === "swatch") {
-    let { colors, images } = swatchesConfigs;
-    let swatchImage = images.find(({ name }) => name === option.label);
-    let swatchColor = colors.find(({ name }) => name === option.label);
+    const { colors, images } = swatchesConfigs;
+    const swatchImage = images.find(({ name }) => name === option.label);
+    const swatchColor = colors.find(({ name }) => name === option.label);
 
     return (
       <Tooltip>

@@ -17,10 +17,10 @@ interface CollectionsItemsProps extends OverlayProps {
   collectionNameColor: string;
 }
 
-let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
+const CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
   (props, ref) => {
-    let { collections } = useLoaderData<CollectionsQuery>();
-    let {
+    const { collections } = useLoaderData<CollectionsQuery>();
+    const {
       prevButtonText,
       nextButtonText,
       imageAspectRatio,
@@ -82,7 +82,7 @@ let CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
 
 export default CollectionsItems;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "collections-items",
   title: "Collection items",
   settings: [

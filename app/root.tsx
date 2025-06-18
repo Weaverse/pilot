@@ -36,7 +36,7 @@ import { GlobalStyle } from "./weaverse/style";
 
 export type RootLoader = typeof loader;
 
-export let links: LinksFunction = () => {
+export const links: LinksFunction = () => {
   return [
     {
       rel: "preconnect",
@@ -52,10 +52,10 @@ export let links: LinksFunction = () => {
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
-  let deferredData = loadDeferredData(args);
+  const deferredData = loadDeferredData(args);
 
   // Await the critical data required to render initial state of the page
-  let criticalData = await loadCriticalData(args);
+  const criticalData = await loadCriticalData(args);
 
   return {
     ...deferredData,
@@ -63,7 +63,7 @@ export async function loader(args: LoaderFunctionArgs) {
   };
 }
 
-export let meta = ({ data }: MetaArgs<typeof loader>) => {
+export const meta = ({ data }: MetaArgs<typeof loader>) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 
@@ -72,8 +72,8 @@ function App() {
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  let routeError: { status?: number; data?: any } = useRouteError();
-  let isRouteError = isRouteErrorResponse(routeError);
+  const routeError: { status?: number; data?: any } = useRouteError();
+  const isRouteError = isRouteErrorResponse(routeError);
 
   let pageType = "page";
 
@@ -99,10 +99,10 @@ export function ErrorBoundary({ error }: { error: Error }) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  let nonce = useNonce();
-  let data = useRouteLoaderData<RootLoader>("root");
-  let locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-  let { topbarHeight, topbarText } = useThemeSettings();
+  const nonce = useNonce();
+  const data = useRouteLoaderData<RootLoader>("root");
+  const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  const { topbarHeight, topbarText } = useThemeSettings();
 
   return (
     <html lang={locale.language}>

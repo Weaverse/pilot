@@ -6,13 +6,13 @@ import {
 
 const KLAVIYO_API = "https://a.klaviyo.com/api/profiles";
 
-export let action: ActionFunction = async ({
+export const action: ActionFunction = async ({
   request,
   context,
 }: ActionFunctionArgs) => {
-  let apiToken = context.env.KLAVIYO_PRIVATE_API_TOKEN;
-  let formData = await request.formData();
-  let email = formData.get("email");
+  const apiToken = context.env.KLAVIYO_PRIVATE_API_TOKEN;
+  const formData = await request.formData();
+  const email = formData.get("email");
   let errorMessage = "";
 
   if (!apiToken) {
@@ -32,7 +32,7 @@ export let action: ActionFunction = async ({
   }
 
   try {
-    let response = await fetch(KLAVIYO_API, {
+    const response = await fetch(KLAVIYO_API, {
       method: "POST",
       headers: {
         accept: "application/vnd.api+json",
@@ -47,8 +47,8 @@ export let action: ActionFunction = async ({
         },
       }),
     });
-    let status = response.status;
-    let message = await response.json();
+    const status = response.status;
+    const message = await response.json();
     if (response.ok) {
       return data({ success: true }, status);
     }

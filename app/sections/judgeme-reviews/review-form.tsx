@@ -8,16 +8,16 @@ import type { loader as productRouteLoader } from "~/routes/($locale).products.$
 import type { JudgemeReviewsData } from "~/utils/judgeme";
 
 export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
-  let { product } = useLoaderData<typeof productRouteLoader>();
-  let [rating, setRating] = useState(0);
-  let [hover, setHover] = useState(0);
-  let [isFormVisible, setIsFormVisible] = useState(false);
-  let [isPopupVisible, setIsPopupVisible] = useState(false);
-  let fetcher = useFetcher<any>();
-  let formRef = useRef<HTMLFormElement>(null);
-  let [message, setMessage] = useState("");
-  let internalId = product.id.split("gid://shopify/Product/")[1];
-  let submittable = rating > 0;
+  const { product } = useLoaderData<typeof productRouteLoader>();
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const fetcher = useFetcher<any>();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [message, setMessage] = useState("");
+  const internalId = product.id.split("gid://shopify/Product/")[1];
+  const submittable = rating > 0;
 
   useEffect(() => {
     if (fetcher.data) {

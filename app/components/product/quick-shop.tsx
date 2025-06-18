@@ -24,22 +24,22 @@ interface QuickViewData {
 }
 
 export function QuickShop({ data }: { data: QuickViewData }) {
-  let themeSettings = useThemeSettings();
-  let { product, variants: _variants, storeDomain } = data || {};
+  const themeSettings = useThemeSettings();
+  const { product, variants: _variants, storeDomain } = data || {};
   // @ts-expect-error
-  let firstVariant = product?.variants?.nodes?.[0];
-  let [selectedVariant, setSelectedVariant] = useState(
+  const firstVariant = product?.variants?.nodes?.[0];
+  const [selectedVariant, setSelectedVariant] = useState(
     firstVariant as ProductVariantFragment,
   );
-  let [quantity, setQuantity] = useState<number>(1);
-  let {
+  const [quantity, setQuantity] = useState<number>(1);
+  const {
     addToCartText,
     soldOutText,
     unavailableText,
     hideUnavailableOptions,
     productQuickViewImageAspectRatio,
   } = themeSettings;
-  let handleSelectedVariantChange = (variant: any) => {
+  const handleSelectedVariantChange = (variant: any) => {
     setSelectedVariant(variant);
   };
 
@@ -54,8 +54,8 @@ export function QuickShop({ data }: { data: QuickViewData }) {
   //   }
   // }, [product?.id]);
 
-  let { title, summary } = product;
-  let atcText = selectedVariant?.availableForSale
+  const { title, summary } = product;
+  const atcText = selectedVariant?.availableForSale
     ? addToCartText
     : selectedVariant?.quantityAvailable === -1
       ? unavailableText
@@ -126,8 +126,8 @@ export function QuickShop({ data }: { data: QuickViewData }) {
 }
 
 export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
-  let [open, setOpen] = useState(false);
-  let { load, data, state } = useFetcher<ProductData>();
+  const [open, setOpen] = useState(false);
+  const { load, data, state } = useFetcher<ProductData>();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

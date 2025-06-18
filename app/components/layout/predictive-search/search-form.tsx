@@ -31,13 +31,13 @@ export function PredictiveSearchForm({
   method = "POST",
   ...props
 }: SearchFromProps) {
-  let params = useParams();
-  let fetcher = useFetcher<NormalizedPredictiveSearchResults>();
-  let inputRef = useRef<HTMLInputElement | null>(null);
+  const params = useParams();
+  const fetcher = useFetcher<NormalizedPredictiveSearchResults>();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   function fetchResults(searchTerm: string) {
-    let searchAction = action ?? "/api/predictive-search";
-    let localizedAction = params.locale
+    const searchAction = action ?? "/api/predictive-search";
+    const localizedAction = params.locale
       ? `/${params.locale}${searchAction}`
       : searchAction;
     fetcher.submit(

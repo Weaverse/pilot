@@ -9,7 +9,7 @@ import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
 
 export function MobileMenu() {
-  let { headerMenu } = useShopMenu();
+  const { headerMenu } = useShopMenu();
 
   if (!headerMenu) return <MenuTrigger />;
 
@@ -64,7 +64,7 @@ export function MobileMenu() {
 }
 
 function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
-  let { title, to, items } = item;
+  const { title, to, items } = item;
 
   if (!items?.length) {
     return (
@@ -93,7 +93,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
   );
 }
 
-let MenuTrigger = forwardRef<HTMLButtonElement, Dialog.DialogTriggerProps>(
+const MenuTrigger = forwardRef<HTMLButtonElement, Dialog.DialogTriggerProps>(
   (props, ref) => {
     return (
       <button ref={ref} type="button" {...props}>

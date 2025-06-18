@@ -17,7 +17,7 @@ type SearchResultTypeProps = {
 };
 
 export function PredictiveSearchResult({ items, type }: SearchResultTypeProps) {
-  let isSuggestions = type === "queries";
+  const isSuggestions = type === "queries";
 
   return (
     <div key={type} className="predictive-search-result flex flex-col gap-4">

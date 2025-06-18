@@ -21,7 +21,7 @@ import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
 
-let styleVariants = cva("", {
+const styleVariants = cva("", {
   variants: {
     alignment: {
       left: "",
@@ -38,7 +38,7 @@ export function ProductCard({
   product: ProductCardFragment;
   className?: string;
 }) {
-  let {
+  const {
     pcardBorderRadius,
     pcardBackgroundColor,
     pcardShowImageOnHover,
@@ -59,20 +59,20 @@ export function ProductCard({
     pcardShowOutOfStockBadges,
   } = useThemeSettings();
 
-  let [selectedVariant, setSelectedVariant] =
+  const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(null);
-  let { images, badges, priceRange } = product;
-  let { minVariantPrice, maxVariantPrice } = priceRange;
+  const { images, badges, priceRange } = product;
+  const { minVariantPrice, maxVariantPrice } = priceRange;
 
-  let firstVariant = flattenConnection(product.variants)[0];
-  let params = new URLSearchParams(
+  const firstVariant = flattenConnection(product.variants)[0];
+  const params = new URLSearchParams(
     mapSelectedProductOptionToObject(
       (selectedVariant || firstVariant).selectedOptions,
     ),
   );
 
-  let isVertical = pcardTitlePricesAlignment === "vertical";
-  let isBestSellerProduct = badges
+  const isVertical = pcardTitlePricesAlignment === "vertical";
+  const isBestSellerProduct = badges
     .filter(Boolean)
     .some(({ key, value }) => key === "best_seller" && value === "true");
 
@@ -80,8 +80,8 @@ export function ProductCard({
   if (selectedVariant) {
     if (selectedVariant.image) {
       image = selectedVariant.image;
-      let imageUrl = image.url;
-      let imageIndex = images.nodes.findIndex(({ url }) => url === imageUrl);
+      const imageUrl = image.url;
+      const imageIndex = images.nodes.findIndex(({ url }) => url === imageUrl);
       if (imageIndex > 0 && imageIndex < images.nodes.length - 1) {
         secondImage = images.nodes[imageIndex + 1];
       }

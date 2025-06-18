@@ -15,7 +15,7 @@ import { Arrows } from "./arrows";
 import type { SlideshowDotsProps } from "./dots";
 import { Dots } from "./dots";
 
-let variants = cva("group [&_.swiper]:h-full", {
+const variants = cva("group [&_.swiper]:h-full", {
   variants: {
     height: {
       small: "h-[40vh] lg:h-[50vh]",
@@ -60,8 +60,8 @@ export interface SlideshowProps
   changeSlidesEvery: number;
 }
 
-let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
-  let {
+const Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
+  const {
     height,
     effect,
     showArrows,
@@ -79,7 +79,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     children = [],
     ...rest
   } = props;
-  let { enableTransparentHeader } = useThemeSettings();
+  const { enableTransparentHeader } = useThemeSettings();
 
   return (
     <section
@@ -134,7 +134,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
 
 export default Slideshow;
 
-export let schema = createSchema({
+export const schema = createSchema({
   title: "Slideshow",
   type: "slideshow",
   childTypes: ["slideshow-slide"],

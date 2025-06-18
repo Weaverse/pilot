@@ -37,16 +37,16 @@ export interface ActionData {
 function formDataHas(formData: FormData, key: string) {
   if (!formData.has(key)) return false;
 
-  let value = formData.get(key);
+  const value = formData.get(key);
   return typeof value === "string" && value.length > 0;
 }
 
-export let handle = {
+export const handle = {
   renderInModal: true,
 };
 
-export let action: ActionFunction = async ({ request, context, params }) => {
-  let formData = await request.formData();
+export const action: ActionFunction = async ({ request, context, params }) => {
+  const formData = await request.formData();
 
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
@@ -55,7 +55,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
   }
 
   try {
-    let customer: CustomerUpdateInput = {};
+    const customer: CustomerUpdateInput = {};
 
     if (formDataHas(formData, "firstName")) {
       customer.firstName = formData.get("firstName") as string;
@@ -64,7 +64,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
       customer.lastName = formData.get("lastName") as string;
     }
 
-    let { data, errors } =
+    const { data, errors } =
       await context.customerAccount.mutate<CustomerUpdateMutation>(
         CUSTOMER_UPDATE_MUTATION,
         {
@@ -103,9 +103,9 @@ export let action: ActionFunction = async ({ request, context, params }) => {
  * - use the presence of outlet data (in `account.tsx`) to open/close the modal (no useState)
  */
 export default function AccountDetailsEdit() {
-  let actionData = useActionData<ActionData>();
-  let { customer } = useOutletContext<AccountOutletContext>();
-  let { state } = useNavigation();
+  const actionData = useActionData<ActionData>();
+  const { customer } = useOutletContext<AccountOutletContext>();
+  const { state } = useNavigation();
 
   return (
     <div className="space-y-2">
