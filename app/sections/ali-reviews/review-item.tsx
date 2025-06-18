@@ -45,7 +45,7 @@ type ReviewItemProps = ReviewItemData & {
 };
 
 export function ReviewItem(props: ReviewItemProps) {
-  let {
+  const {
     review,
     showCountry,
     showDate,
@@ -53,7 +53,7 @@ export function ReviewItem(props: ReviewItemProps) {
     verifiedBadgeText,
     showStar,
   } = props;
-  let [previewMedia, setPreviewMedia] = useState<ReviewMedia | null>(null);
+  const [previewMedia, setPreviewMedia] = useState<ReviewMedia | null>(null);
 
   return (
     <div className="gap-3 py-6 space-y-4">
@@ -132,7 +132,7 @@ function ReviewMediaPreview(props: {
   media: ReviewMedia | null;
   closePreview: () => void;
 }) {
-  let { media, closePreview } = props;
+  const { media, closePreview } = props;
   if (media) {
     return (
       <div className="flex gap-2 items-start">
@@ -154,13 +154,13 @@ function ReviewMediaPreview(props: {
 }
 
 function formatDate(date: string) {
-  let dateObj = new Date(date);
-  let dateStr = dateObj.toLocaleDateString("en-US", {
+  const dateObj = new Date(date);
+  const dateStr = dateObj.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-  let timeStr = dateObj.toLocaleTimeString("en-US", {
+  const timeStr = dateObj.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "numeric",
   });

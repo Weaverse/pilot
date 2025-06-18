@@ -13,7 +13,7 @@ import { OverlayAndBackground } from "~/components/overlay-and-background";
 import { layoutInputs } from "~/components/section";
 import { useAnimation } from "~/hooks/use-animation";
 
-let variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
+const variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
     width: {
       full: "",
@@ -68,9 +68,9 @@ export interface SlideProps
   backgroundColor: string;
 }
 
-let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
+const Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
   const [scope] = useAnimation(ref);
-  let {
+  const {
     contentPosition,
     width,
     gap,
@@ -101,7 +101,7 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
 
 export default Slide;
 
-export let schema = createSchema({
+export const schema = createSchema({
   title: "Slide",
   type: "slideshow-slide",
   childTypes: ["subheading", "heading", "paragraph", "button"],
@@ -124,7 +124,7 @@ export let schema = createSchema({
       group: "Background",
       inputs: backgroundInputs.filter((inp) =>
         ["backgroundImage", "backgroundFit", "backgroundPosition"].includes(
-          inp.name,
+          inp.name as string,
         ),
       ),
     },

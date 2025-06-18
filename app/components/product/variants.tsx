@@ -14,21 +14,21 @@ interface ProductVariantsProps {
 }
 
 export function ProductVariants(props: ProductVariantsProps) {
-  let { productHandle, variants, options, hideUnavailableOptions } = props;
-  let [params] = useSearchParams();
-  let allOptionNames = options.map((option) => option.name);
-  let selectedOptionsInParams = allOptionNames
+  const { productHandle, variants, options, hideUnavailableOptions } = props;
+  const [params] = useSearchParams();
+  const allOptionNames = options.map((option) => option.name);
+  const selectedOptionsInParams = allOptionNames
     .map((name) => {
-      let value = params.get(name);
+      const value = params.get(name);
       return value ? { name, value } : null;
     })
     .filter(Boolean);
 
   let hasOnlyDefaultVariant = false;
   if (options.length === 1) {
-    let { name, optionValues } = options[0];
+    const { name, optionValues } = options[0];
     if (name === "Title" && optionValues.length === 1) {
-      let { name: optionValueName } = optionValues[0];
+      const { name: optionValueName } = optionValues[0];
       if (optionValueName === "Default Title") {
         hasOnlyDefaultVariant = true;
       }
@@ -47,15 +47,15 @@ export function ProductVariants(props: ProductVariantsProps) {
         options={options}
       >
         {({ option }) => {
-          let otherOptionsSelected =
+          const otherOptionsSelected =
             selectedOptionsInParams.filter(
               (selectedOption) => selectedOption.name !== option.name,
             ).length ===
             allOptionNames.length - 1;
 
-          let values = option.values
+          const values = option.values
             .map((optionValue) => {
-              let { variant } = optionValue;
+              const { variant } = optionValue;
               if (!variant && hideUnavailableOptions) {
                 return null;
               }

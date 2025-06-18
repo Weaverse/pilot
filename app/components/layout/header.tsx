@@ -19,7 +19,7 @@ import { DesktopMenu } from "./desktop-menu";
 import { MobileMenu } from "./mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
 
-let variants = cva("", {
+const variants = cva("", {
   variants: {
     width: {
       full: "w-full h-full",
@@ -35,21 +35,21 @@ let variants = cva("", {
 });
 
 function useIsHomeCheck() {
-  let { pathname } = useLocation();
-  let rootData = useRouteLoaderData<RootLoader>("root");
-  let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  const { pathname } = useLocation();
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   return pathname.replace(selectedLocale.pathPrefix, "") === "/";
 }
 
 export function Header() {
-  let { enableTransparentHeader, headerWidth } = useThemeSettings();
-  let isHome = useIsHomeCheck();
-  let { y } = useWindowScroll();
-  let routeError = useRouteError();
+  const { enableTransparentHeader, headerWidth } = useThemeSettings();
+  const isHome = useIsHomeCheck();
+  const { y } = useWindowScroll();
+  const routeError = useRouteError();
 
-  let scrolled = y >= 50;
-  let enableTransparent = enableTransparentHeader && isHome && !routeError;
-  let isTransparent = enableTransparent && !scrolled;
+  const scrolled = y >= 50;
+  const enableTransparent = enableTransparentHeader && isHome && !routeError;
+  const isTransparent = enableTransparent && !scrolled;
 
   return (
     <header
@@ -107,8 +107,8 @@ export function Header() {
 }
 
 function AccountLink({ className }: { className?: string }) {
-  let rootData = useRouteLoaderData<RootLoader>("root");
-  let isLoggedIn = rootData?.isLoggedIn;
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const isLoggedIn = rootData?.isLoggedIn;
 
   return (
     <Link to="/account" className={className}>

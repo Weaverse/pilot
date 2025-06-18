@@ -3,8 +3,8 @@ import type { RootLoader } from "~/root";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function usePrefixPathWithLocale(path: string) {
-  let rootData = useRouteLoaderData<RootLoader>("root");
-  let { pathPrefix } = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  let suffix = path.startsWith("/") ? path : `/${path}`;
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const { pathPrefix } = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  const suffix = path.startsWith("/") ? path : `/${path}`;
   return pathPrefix + suffix;
 }

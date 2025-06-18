@@ -73,12 +73,12 @@ export function ProductPopup({
     return null;
   }
 
-  let featuredMedia = product.media.nodes.find(
+  const featuredMedia = product.media.nodes.find(
     (node) => node.__typename === "MediaImage",
   ) as MediaImage;
-  let featuredImage = featuredMedia?.image;
-  let price = product.priceRange?.minVariantPrice;
-  let compareAtPrice = product.priceRange?.maxVariantPrice;
+  const featuredImage = featuredMedia?.image;
+  const price = product.priceRange?.minVariantPrice;
+  const compareAtPrice = product.priceRange?.maxVariantPrice;
   // let price = product.variants.nodes[0].price;
   // let compareAtPrice = product.variants.nodes[0].compareAtPrice;
 

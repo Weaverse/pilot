@@ -5,19 +5,21 @@ import { Section, sectionSettings } from "~/components/section";
 
 type TestimonialsProps = SectionProps;
 
-let Testimonials = forwardRef<HTMLElement, TestimonialsProps>((props, ref) => {
-  let { children, ...rest } = props;
+const Testimonials = forwardRef<HTMLElement, TestimonialsProps>(
+  (props, ref) => {
+    const { children, ...rest } = props;
 
-  return (
-    <Section ref={ref} {...rest}>
-      {children}
-    </Section>
-  );
-});
+    return (
+      <Section ref={ref} {...rest}>
+        {children}
+      </Section>
+    );
+  },
+);
 
 export default Testimonials;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "testimonials",
   title: "Testimonials",
   childTypes: ["subheading", "heading", "paragraph", "testimonials-items"],

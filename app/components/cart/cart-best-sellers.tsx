@@ -39,8 +39,8 @@ export function CartBestSellers({
   reverse,
   sortKey = "BEST_SELLING",
 }: CartBestSellersProps) {
-  let { load, data } = useFetcher<{ products: Product[] }>();
-  let queryString = useMemo(
+  const { load, data } = useFetcher<{ products: Product[] }>();
+  const queryString = useMemo(
     () =>
       Object.entries({ count, sortKey, query, reverse })
         .map(([key, val]) => (val ? `${key}=${val}` : null))
@@ -48,7 +48,9 @@ export function CartBestSellers({
         .join("&"),
     [count, sortKey, query, reverse],
   );
-  let productsApiPath = usePrefixPathWithLocale(`/api/products?${queryString}`);
+  const productsApiPath = usePrefixPathWithLocale(
+    `/api/products?${queryString}`,
+  );
 
   useEffect(() => {
     load(productsApiPath);
@@ -85,7 +87,7 @@ function CartBestSellersContent({
   products: Product[] | undefined;
   onClick?: () => void;
 }) {
-  let id = useId();
+  const id = useId();
 
   if (!products) {
     return (

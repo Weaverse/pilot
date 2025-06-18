@@ -8,17 +8,17 @@ import { Section } from "~/components/section";
 import { routeHeaders } from "~/utils/cache";
 import { seoPayload } from "~/utils/seo.server";
 
-export let headers = routeHeaders;
+export const headers = routeHeaders;
 
 export async function loader({ request, params, context }: LoaderFunctionArgs) {
   invariant(params.policyHandle, "Missing policy handle");
 
-  let policyName = params.policyHandle.replace(
+  const policyName = params.policyHandle.replace(
     /-([a-z])/g,
     (_: unknown, m1: string) => m1.toUpperCase(),
   ) as "privacyPolicy" | "shippingPolicy" | "termsOfService" | "refundPolicy";
 
-  let data = await context.storefront.query<PoliciesHandleQuery>(
+  const data = await context.storefront.query<PoliciesHandleQuery>(
     POLICY_CONTENT_QUERY,
     {
       variables: {
@@ -33,19 +33,19 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
   );
 
   invariant(data, "No data returned from Shopify API");
-  let policy = data.shop?.[policyName];
+  const policy = data.shop?.[policyName];
 
   if (!policy) {
     throw new Response(null, { status: 404 });
   }
 
-  let seo = seoPayload.policy({ policy, url: request.url });
+  const seo = seoPayload.policy({ policy, url: request.url });
 
   return { policy, seo };
 }
 
 export default function Policies() {
-  let { policy } = useLoaderData<typeof loader>();
+  const { policy } = useLoaderData<typeof loader>();
 
   return (
     <Section verticalPadding="medium" width="fixed">

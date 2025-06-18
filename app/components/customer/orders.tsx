@@ -43,10 +43,10 @@ function Orders({ orders }: OrderCardsProps) {
 function OrderCard({ order }: { order: OrderCardFragment }) {
   if (!order?.id) return null;
 
-  let [legacyOrderId, key] = order.id.split("/").pop().split("?");
-  let lineItems = flattenConnection(order?.lineItems);
-  let fulfillmentStatus = flattenConnection(order?.fulfillments)[0]?.status;
-  let orderLink = key
+  const [legacyOrderId, key] = order.id.split("/").pop().split("?");
+  const lineItems = flattenConnection(order?.lineItems);
+  const fulfillmentStatus = flattenConnection(order?.fulfillments)[0]?.status;
+  const orderLink = key
     ? `/account/orders/${legacyOrderId}?${key}`
     : `/account/orders/${legacyOrderId}`;
 

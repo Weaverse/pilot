@@ -17,16 +17,16 @@ import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
-export let headers = routeHeaders;
+export const headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
-  let { productHandle: handle } = params;
+  const { productHandle: handle } = params;
 
   invariant(handle, "Missing productHandle param, check route filename");
 
-  let { storefront, weaverse } = context;
-  let selectedOptions = getSelectedProductOptions(request);
-  let [{ shop, product }, weaverseData, productReviews] = await Promise.all([
+  const { storefront, weaverse } = context;
+  const selectedOptions = getSelectedProductOptions(request);
+  const [{ shop, product }, weaverseData, productReviews] = await Promise.all([
     storefront.query<ProductQuery>(PRODUCT_QUERY, {
       variables: {
         handle,
@@ -46,7 +46,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   redirectIfHandleIsLocalized(request, { handle, data: product });
 
   // Load variants since they're needed for initial rendering
-  let { product: productWithAllVariants } =
+  const { product: productWithAllVariants } =
     await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
       variables: {
         handle,
@@ -55,10 +55,10 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       },
     });
 
-  let variants = productWithAllVariants.variants.nodes;
+  const variants = productWithAllVariants.variants.nodes;
 
   // Use Hydrogen/Remix streaming for recommended products
-  let recommended = getRecommendedProducts(storefront, product.id);
+  const recommended = getRecommendedProducts(storefront, product.id);
 
   return {
     shop,
@@ -86,7 +86,7 @@ export async function action({
       "Missing `JUDGEME_PRIVATE_API_TOKEN`",
     );
 
-    let response = await createJudgeMeReview({
+    const response = await createJudgeMeReview({
       formData: await request.formData(),
       apiToken: env.JUDGEME_PRIVATE_API_TOKEN,
       shopDomain: env.PUBLIC_STORE_DOMAIN,
@@ -98,14 +98,14 @@ export async function action({
   }
 }
 
-export let meta = ({ matches }: MetaArgs<typeof loader>) => {
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(
     ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
   );
 };
 
 export default function Product() {
-  let { product } = useLoaderData<typeof loader>();
+  const { product } = useLoaderData<typeof loader>();
   return (
     <>
       <WeaverseContent />

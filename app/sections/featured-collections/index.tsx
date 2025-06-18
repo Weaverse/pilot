@@ -16,9 +16,9 @@ interface FeaturedCollectionsProps
   extends SectionProps<FeaturedCollectionsLoaderData>,
     FeaturedCollectionsData {}
 
-let FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
+const FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
   (props, ref) => {
-    let { loaderData, children, ...rest } = props;
+    const { loaderData, children, ...rest } = props;
     return (
       <Section ref={ref} {...rest}>
         {children}
@@ -29,7 +29,7 @@ let FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
 
 export default FeaturedCollections;
 
-let COLLECTIONS_QUERY = `#graphql
+const COLLECTIONS_QUERY = `#graphql
   query collectionsByIds($country: CountryCode, $language: LanguageCode, $ids: [ID!]!)
   @inContext(country: $country, language: $language) {
     nodes(ids: $ids) {
@@ -53,16 +53,16 @@ let COLLECTIONS_QUERY = `#graphql
 
 export type FeaturedCollectionsLoaderData = Awaited<ReturnType<typeof loader>>;
 
-export let loader = async ({
+export const loader = async ({
   data,
   weaverse,
 }: ComponentLoaderArgs<FeaturedCollectionsData>) => {
-  let { language, country } = weaverse.storefront.i18n;
-  let ids = data.collections?.map(
+  const { language, country } = weaverse.storefront.i18n;
+  const ids = data.collections?.map(
     (collection) => `gid://shopify/Collection/${collection.id}`,
   );
   if (ids?.length) {
-    let { nodes } = await weaverse.storefront.query<CollectionsByIdsQuery>(
+    const { nodes } = await weaverse.storefront.query<CollectionsByIdsQuery>(
       COLLECTIONS_QUERY,
       {
         variables: {
@@ -77,7 +77,7 @@ export let loader = async ({
   return [];
 };
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "featured-collections",
   title: "Featured collections",
   childTypes: [

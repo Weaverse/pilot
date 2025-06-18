@@ -11,6 +11,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "module": "ES2022",
@@ -20,10 +21,14 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "types": ["@shopify/oxygen-workers-types", "react-router", "vite/client"],
+    "types": ["@shopify/oxygen-workers-types", "vite/client"],
     "paths": {
-      "~/*": ["app/*"]
+      "~/*": ["app/*"],
+      "react": ["node_modules/@types/react"],
+      "react-dom": ["node_modules/@types/react-dom"]
     },
-    "noEmit": true
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": true
   }
 }

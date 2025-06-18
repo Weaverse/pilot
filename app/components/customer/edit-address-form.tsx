@@ -15,13 +15,13 @@ import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/($locale).account.edit";
 
 export function AccountEditAddressForm() {
-  let { id: addressId } = useParams();
-  let isNewAddress = addressId === "add";
-  let actionData = useActionData<{ formError?: string }>();
-  let { state } = useNavigation();
-  let { customer } = useOutletContext<AccountOutletContext>();
-  let addresses = flattenConnection(customer.addresses);
-  let defaultAddress = customer.defaultAddress;
+  const { id: addressId } = useParams();
+  const isNewAddress = addressId === "add";
+  const actionData = useActionData<{ formError?: string }>();
+  const { state } = useNavigation();
+  const { customer } = useOutletContext<AccountOutletContext>();
+  const addresses = flattenConnection(customer.addresses);
+  const defaultAddress = customer.defaultAddress;
   /**
    * When a refresh happens (or a user visits this link directly), the URL
    * is actually stale because it contains a special token. This means the data
@@ -29,8 +29,8 @@ export function AccountEditAddressForm() {
    * and we don't find a match. We update the `find` logic to just perform a match
    * on the first (permanent) part of the ID.
    */
-  let normalizedAddress = decodeURIComponent(addressId ?? "").split("?")[0];
-  let address = addresses.find((address) =>
+  const normalizedAddress = decodeURIComponent(addressId ?? "").split("?")[0];
+  const address = addresses.find((address) =>
     address.id?.startsWith(normalizedAddress),
   );
 

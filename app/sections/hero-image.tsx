@@ -13,7 +13,7 @@ import { layoutInputs, Section } from "~/components/section";
 
 export interface HeroImageProps extends VariantProps<typeof variants> {}
 
-let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
+const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
     height: {
       small: "min-h-[40vh] lg:min-h-[50vh]",
@@ -55,10 +55,10 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
   },
 });
 
-let HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
+const HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
   (props, ref) => {
-    let { children, height, contentPosition, ...rest } = props;
-    let { enableTransparentHeader } = useThemeSettings();
+    const { children, height, contentPosition, ...rest } = props;
+    const { enableTransparentHeader } = useThemeSettings();
     return (
       <Section
         ref={ref}
@@ -77,7 +77,7 @@ let HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
 
 export default HeroImage;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "hero-image",
   title: "Hero image",
   settings: [

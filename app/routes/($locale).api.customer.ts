@@ -21,21 +21,21 @@ const CUSTOMER_CREATE = `#graphql
   }
 ` as const;
 
-export let action: ActionFunction = async ({
+export const action: ActionFunction = async ({
   request,
   context,
 }: ActionFunctionArgs) => {
-  let formData = await request.formData();
-  let email = formData.get("email") as string;
-  let { customerCreate, errors: queryErrors } =
+  const formData = await request.formData();
+  const email = formData.get("email") as string;
+  const { customerCreate, errors: queryErrors } =
     await context.storefront.mutate<CustomerCreateMutation>(CUSTOMER_CREATE, {
       variables: {
         input: { email, password: "5hopify" },
       },
     });
 
-  let customer = customerCreate?.customer;
-  let customerUserErrors = customerCreate?.customerUserErrors;
+  const customer = customerCreate?.customer;
+  const customerUserErrors = customerCreate?.customerUserErrors;
 
   if (queryErrors?.length) {
     return data(

@@ -29,9 +29,9 @@ type SingleProductProps = HydrogenComponentProps<
 > &
   SingleProductData;
 
-let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
+const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {
+    const {
       loaderData,
       children,
       product: _product,
@@ -40,10 +40,10 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       numberOfThumbnails,
       ...rest
     } = props;
-    let { storeDomain, product, variants: _variants } = loaderData || {};
-    let variants = _variants?.product?.variants;
-    let [selectedVariant, setSelectedVariant] = useState<any>(null);
-    let [quantity, setQuantity] = useState<number>(1);
+    const { storeDomain, product, variants: _variants } = loaderData || {};
+    const variants = _variants?.product?.variants;
+    const [selectedVariant, setSelectedVariant] = useState<any>(null);
+    const [quantity, setQuantity] = useState<number>(1);
     useEffect(() => {
       setSelectedVariant(variants?.nodes?.[0]);
       setQuantity(1);
@@ -61,7 +61,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
         </section>
       );
 
-    let atcText = selectedVariant?.availableForSale
+    const atcText = selectedVariant?.availableForSale
       ? "Add to Cart"
       : selectedVariant?.quantityAvailable === -1
         ? "Unavailable"
@@ -146,22 +146,25 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   },
 );
 
-export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
-  let { weaverse, data } = args;
-  let { storefront } = weaverse;
+export const loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
+  const { weaverse, data } = args;
+  const { storefront } = weaverse;
   if (!data.product) {
     return null;
   }
-  let productHandle = data.product.handle;
-  let { product, shop } = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
-    variables: {
-      handle: productHandle,
-      selectedOptions: [],
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
+  const productHandle = data.product.handle;
+  const { product, shop } = await storefront.query<ProductQuery>(
+    PRODUCT_QUERY,
+    {
+      variables: {
+        handle: productHandle,
+        selectedOptions: [],
+        language: storefront.i18n.language,
+        country: storefront.i18n.country,
+      },
     },
-  });
-  let variants = await storefront.query(VARIANTS_QUERY, {
+  );
+  const variants = await storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
       language: storefront.i18n.language,
@@ -176,7 +179,7 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
   };
 };
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "single-product",
   title: "Single product",
   childTypes: ["judgeme"],

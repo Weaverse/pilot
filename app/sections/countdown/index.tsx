@@ -7,7 +7,7 @@ import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
 
-let variants = cva("flex flex-col [&_.paragraph]:mx-[unset] px-4 sm:px-16", {
+const variants = cva("flex flex-col [&_.paragraph]:mx-[unset] px-4 sm:px-16", {
   variants: {
     alignment: {
       left: "items-start [&_.paragraph]:text-left [&_.countdown--timer]:-ml-4",
@@ -19,8 +19,8 @@ let variants = cva("flex flex-col [&_.paragraph]:mx-[unset] px-4 sm:px-16", {
 
 interface CountdownProps extends VariantProps<typeof variants>, SectionProps {}
 
-let Countdown = forwardRef<HTMLElement, CountdownProps>((props, ref) => {
-  let { children, alignment, ...rest } = props;
+const Countdown = forwardRef<HTMLElement, CountdownProps>((props, ref) => {
+  const { children, alignment, ...rest } = props;
   return (
     <Section ref={ref} {...rest} containerClassName={variants({ alignment })}>
       {children}
@@ -30,7 +30,7 @@ let Countdown = forwardRef<HTMLElement, CountdownProps>((props, ref) => {
 
 export default Countdown;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "countdown",
   title: "Countdown",
   settings: [

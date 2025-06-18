@@ -6,10 +6,10 @@ interface ButtonItemsProps extends HydrogenComponentProps {
   gap: number;
 }
 
-let PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>(
+const PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>(
   (props, ref) => {
-    let { gap, children, ...rest } = props;
-    let spacingStyle: CSSProperties = {
+    const { gap, children, ...rest } = props;
+    const spacingStyle: CSSProperties = {
       gap: `${gap}px`,
     } as CSSProperties;
     return (
@@ -22,7 +22,7 @@ let PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>(
 
 export default PromotionItemButtons;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "promotion-item--buttons",
   title: "Buttons",
   settings: [

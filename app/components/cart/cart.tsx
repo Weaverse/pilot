@@ -34,9 +34,9 @@ export function Cart({
   onClose?: () => void;
   cart: CartApiQueryFragment;
 }) {
-  let optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
-  let linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
-  let cartHasItems = !!cart && cart.totalQuantity > 0;
+  const optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
+  const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
+  const cartHasItems = !!cart && cart.totalQuantity > 0;
 
   if (cartHasItems) {
     return <CartDetails cart={optimisticCart} layout={layout} />;
@@ -82,7 +82,7 @@ function CartDiscounts({
 }: {
   discountCodes: CartType["discountCodes"];
 }) {
-  let codes: string[] =
+  const codes: string[] =
     discountCodes
       ?.filter((discount) => discount.applicable)
       ?.map(({ code }) => code) || [];
@@ -149,9 +149,9 @@ function CartLines({
   layout: Layouts;
   lines: CartLine[];
 }) {
-  let currentLines = cartLines;
-  let scrollRef = useRef(null);
-  let { y } = useScroll(scrollRef);
+  const currentLines = cartLines;
+  const scrollRef = useRef(null);
+  const { y } = useScroll(scrollRef);
 
   return (
     <div
@@ -246,11 +246,11 @@ type OptimisticData = {
 };
 
 function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
-  let optimisticData = useOptimisticData<OptimisticData>(line?.id);
+  const optimisticData = useOptimisticData<OptimisticData>(line?.id);
 
   if (!line?.id) return null;
 
-  let { id, quantity, merchandise } = line;
+  const { id, quantity, merchandise } = line;
   if (typeof quantity === "undefined" || !merchandise?.product) return null;
 
   return (
@@ -350,16 +350,16 @@ function ItemRemoveButton({
 }
 
 function CartLineQuantityAdjust({ line }: { line: CartLine }) {
-  let optimisticId = line?.id;
-  let optimisticData = useOptimisticData<OptimisticData>(optimisticId);
+  const optimisticId = line?.id;
+  const optimisticData = useOptimisticData<OptimisticData>(optimisticId);
 
   if (!line || typeof line?.quantity === "undefined") return null;
 
-  let optimisticQuantity = optimisticData?.quantity || line.quantity;
+  const optimisticQuantity = optimisticData?.quantity || line.quantity;
 
-  let { id: lineId, isOptimistic } = line;
-  let prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
-  let nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
+  const { id: lineId, isOptimistic } = line;
+  const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
+  const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
 
   return (
     <>
@@ -440,7 +440,7 @@ function CartLinePrice({
 }) {
   if (!line?.cost?.amountPerQuantity || !line?.cost?.totalAmount) return null;
 
-  let moneyV2 =
+  const moneyV2 =
     priceType === "regular"
       ? line.cost.totalAmount
       : line.cost.compareAtAmountPerQuantity;
@@ -468,8 +468,8 @@ function CartEmpty({
   layout?: Layouts;
   onClose?: () => void;
 }) {
-  let scrollRef = useRef(null);
-  let { y } = useScroll(scrollRef);
+  const scrollRef = useRef(null);
+  const { y } = useScroll(scrollRef);
   return (
     <div
       ref={scrollRef}

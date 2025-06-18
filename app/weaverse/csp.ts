@@ -1,16 +1,16 @@
-import type { AppLoadContext } from "@shopify/remix-oxygen";
+import type { AppLoadContext } from "react-router";
 
 export function getWeaverseCsp(request: Request, context: AppLoadContext) {
-  let url = new URL(request.url);
+  const url = new URL(request.url);
   // Get weaverse host from query params
-  let weaverseHost =
+  const weaverseHost =
     url.searchParams.get("weaverseHost") || context.env.WEAVERSE_HOST;
-  let isDesignMode = url.searchParams.get("weaverseHost");
-  let weaverseHosts = ["*.weaverse.io", "*.shopify.com", "*.myshopify.com"];
+  const isDesignMode = url.searchParams.get("weaverseHost");
+  const weaverseHosts = ["*.weaverse.io", "*.shopify.com", "*.myshopify.com"];
   if (weaverseHost) {
     weaverseHosts.push(weaverseHost);
   }
-  let updatedCsp: {
+  const updatedCsp: {
     [x: string]: string[] | string | boolean;
   } = {
     defaultSrc: [

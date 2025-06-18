@@ -5,8 +5,8 @@ import { Section, sectionSettings } from "~/components/section";
 
 type VideoEmbedProps = SectionProps;
 
-let VideoEmbed = forwardRef<HTMLElement, VideoEmbedProps>((props, ref) => {
-  let { children, ...rest } = props;
+const VideoEmbed = forwardRef<HTMLElement, VideoEmbedProps>((props, ref) => {
+  const { children, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
@@ -16,7 +16,7 @@ let VideoEmbed = forwardRef<HTMLElement, VideoEmbedProps>((props, ref) => {
 
 export default VideoEmbed;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "video-embed",
   title: "Video embed",
   settings: sectionSettings,

@@ -1,5 +1,5 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
-import type { AppLoadContext, LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { AppLoadContext, LoaderFunctionArgs } from "react-router";
 import type {
   LayoutQuery,
   MenuFragment,
@@ -17,16 +17,16 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  let [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
+  const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
     getLayoutData(context),
     getSwatchesConfigs(context),
     // Add other queries here, so that they are loaded in parallel
     context.weaverse.loadThemeSettings(),
   ]);
 
-  let seo = seoPayload.root({ shop: layout.shop, url: request.url });
+  const seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
-  let { storefront, env } = context;
+  const { storefront, env } = context;
   return {
     layout,
     seo,
@@ -44,7 +44,7 @@ export async function loadCriticalData({
     },
     selectedLocale: storefront.i18n,
     weaverseTheme,
-    googleGtmID: context.env.PUBLIC_GOOGLE_GTM_ID,
+    googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     swatchesConfigs,
   };
 }
@@ -55,7 +55,7 @@ export async function loadCriticalData({
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 export function loadDeferredData({ context }: LoaderFunctionArgs) {
-  let { cart, customerAccount } = context;
+  const { cart, customerAccount } = context;
 
   return {
     isLoggedIn: customerAccount.isLoggedIn(),
@@ -64,7 +64,7 @@ export function loadDeferredData({ context }: LoaderFunctionArgs) {
 }
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  let data = await storefront
+  const data = await storefront
     .query<LayoutQuery>(LAYOUT_QUERY, {
       variables: {
         headerMenuHandle: "main-menu",
@@ -84,9 +84,9 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
         - /blog/news/blog-post -> /news/blog-post
         - /collections/all -> /products
     */
-  let customPrefixes = { CATALOG: "products" };
+  const customPrefixes = { CATALOG: "products" };
 
-  let headerMenu = data?.headerMenu
+  const headerMenu = data?.headerMenu
     ? parseMenu(
         data.headerMenu,
         data.shop.primaryDomain.url,
@@ -95,7 +95,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
       )
     : undefined;
 
-  let footerMenu = data?.footerMenu
+  const footerMenu = data?.footerMenu
     ? parseMenu(
         data.footerMenu,
         data.shop.primaryDomain.url,
@@ -114,23 +114,23 @@ type Swatch = {
 };
 
 async function getSwatchesConfigs(context: AppLoadContext) {
-  let { METAOBJECT_COLORS_TYPE: type } = context.env;
+  const { METAOBJECT_COLORS_TYPE: type } = context.env;
   if (!type) {
     return { colors: [], images: [] };
   }
-  let { metaobjects } = await context.storefront.query<SwatchesQuery>(
+  const { metaobjects } = await context.storefront.query<SwatchesQuery>(
     SWATCHES_QUERY,
     { variables: { type } },
   );
-  let colors: Swatch[] = [];
-  let images: Swatch[] = [];
-  for (let { id, fields } of metaobjects.nodes) {
-    let { value: color } = fields.find(({ key }) => key === "color") || {};
-    let { reference: imageRef } =
+  const colors: Swatch[] = [];
+  const images: Swatch[] = [];
+  for (const { id, fields } of metaobjects.nodes) {
+    const { value: color } = fields.find(({ key }) => key === "color") || {};
+    const { reference: imageRef } =
       fields.find(({ key }) => key === "image") || {};
-    let { value: name } = fields.find(({ key }) => key === "label") || {};
+    const { value: name } = fields.find(({ key }) => key === "label") || {};
     if (imageRef) {
-      let url = imageRef?.image?.url;
+      const url = imageRef?.image?.url;
       if (url) {
         images.push({ id, name, value: url });
       }
@@ -157,8 +157,8 @@ function parseMenu(
     console.warn("Invalid menu passed to parseMenu");
     return null;
   }
-  let parser = parseItem(primaryDomain, env, customPrefixes);
-  let parsedMenu = {
+  const parser = parseItem(primaryDomain, env, customPrefixes);
+  const parsedMenu = {
     ...menu,
     items: menu.items.map(parser).filter(Boolean),
   } as EnhancedMenu;
@@ -185,10 +185,10 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
     }
 
     // extract path from url because we don't need the origin on internal to attributes
-    let { host, pathname } = new URL(item.url);
-    let isInternalLink =
+    const { host, pathname } = new URL(item.url);
+    const isInternalLink =
       host === new URL(primaryDomain).host || host === env.PUBLIC_STORE_DOMAIN;
-    let parsedItem = isInternalLink
+    const parsedItem = isInternalLink
       ? // internal links
         {
           ...item,
@@ -236,7 +236,7 @@ function resolveToFromType(
     MenuItemType enum
     @see: https://shopify.dev/api/storefront/unstable/enums/MenuItemType
   */
-  let defaultPrefixes = {
+  const defaultPrefixes = {
     BLOG: "blogs",
     COLLECTION: "collections",
     COLLECTIONS: "collections", // Collections All (not documented)
@@ -249,9 +249,9 @@ function resolveToFromType(
     SHOP_POLICY: "policies",
   };
 
-  let pathParts = pathname.split("/");
-  let handle = pathParts.pop() || "";
-  let routePrefix: Record<string, string> = {
+  const pathParts = pathname.split("/");
+  const handle = pathParts.pop() || "";
+  const routePrefix: Record<string, string> = {
     ...defaultPrefixes,
     ...customPrefixes,
   };
@@ -261,7 +261,7 @@ function resolveToFromType(
     case type === "FRONTPAGE":
       return "/";
     case type === "ARTICLE": {
-      let blogHandle = pathParts.pop();
+      const blogHandle = pathParts.pop();
       return routePrefix.BLOG
         ? `/${routePrefix.BLOG}/${blogHandle}/${handle}/`
         : `/${blogHandle}/${handle}/`;

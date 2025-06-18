@@ -16,12 +16,12 @@ interface RelatedProductsProps
   headingTagName?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
-let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
+const RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
   (props, ref) => {
-    let { recommended } = useLoaderData<{
+    const { recommended } = useLoaderData<{
       recommended: { nodes: ProductCardFragment[] };
     }>();
-    let {
+    const {
       headingTagName,
       content,
       size,
@@ -82,7 +82,7 @@ let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
 
 export default RelatedProducts;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "related-products",
   title: "Related products",
   limit: 1,

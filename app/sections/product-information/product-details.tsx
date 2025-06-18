@@ -5,10 +5,10 @@ import { Link, useLoaderData } from "react-router";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
 
 export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
-  let { shop, product } = useLoaderData<typeof productLoader>();
-  let { description } = product;
-  let { shippingPolicy, refundPolicy } = shop;
-  let details = [
+  const { shop, product } = useLoaderData<typeof productLoader>();
+  const { description } = product;
+  const { shippingPolicy, refundPolicy } = shop;
+  const details = [
     { title: "Description", content: description },
     showShippingPolicy &&
       shippingPolicy?.body && {
@@ -76,7 +76,7 @@ export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
 }
 
 function getExcerpt(text: string) {
-  let regex = /<p.*>(.*?)<\/p>/;
-  let match = regex.exec(text);
+  const regex = /<p.*>(.*?)<\/p>/;
+  const match = regex.exec(text);
   return match?.length ? match[0] : text;
 }

@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
 import { forwardRef } from "react";
 
-let variants = cva("grid lg:grid-cols-3", {
+const variants = cva("grid lg:grid-cols-3", {
   variants: {
     gap: {
       16: "gap-4",
@@ -22,9 +22,9 @@ interface TestimonialsItemsProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {}
 
-let TestimonialsItems = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
+const TestimonialsItems = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
   (props, ref) => {
-    let { gap, children, ...rest } = props;
+    const { gap, children, ...rest } = props;
 
     return (
       <div ref={ref} {...rest} className={clsx(variants({ gap }))}>
@@ -44,7 +44,7 @@ let TestimonialsItems = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
 
 export default TestimonialsItems;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "testimonials-items",
   title: "Items",
   childTypes: ["testimonial--item"],

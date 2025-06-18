@@ -42,7 +42,7 @@ export async function action({ request, params, context }: LoaderFunctionArgs) {
     throw new Error("Invalid request method");
   }
 
-  let search = await fetchPredictiveSearchResults({
+  const search = await fetchPredictiveSearchResults({
     params,
     request,
     context,
@@ -56,17 +56,19 @@ async function fetchPredictiveSearchResults({
   request,
   context,
 }: Pick<LoaderFunctionArgs, "params" | "context" | "request">) {
-  let url = new URL(request.url);
-  let searchParams = new URLSearchParams(url.search);
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
   let body: FormData | null = null;
   try {
     body = await request.formData();
   } catch (error) {}
-  let searchTerm = String(body?.get("q") || searchParams.get("q") || "");
-  let limit = Number(body?.get("limit") || searchParams.get("limit") || 10);
-  let rawTypes = String(body?.get("type") || searchParams.get("type") || "ANY");
+  const searchTerm = String(body?.get("q") || searchParams.get("q") || "");
+  const limit = Number(body?.get("limit") || searchParams.get("limit") || 10);
+  const rawTypes = String(
+    body?.get("type") || searchParams.get("type") || "ANY",
+  );
 
-  let searchTypes =
+  const searchTypes =
     rawTypes === "ANY"
       ? DEFAULT_SEARCH_TYPES
       : rawTypes
@@ -82,7 +84,7 @@ async function fetchPredictiveSearchResults({
     };
   }
 
-  let data = await context.storefront.query(PREDICTIVE_SEARCH_QUERY, {
+  const data = await context.storefront.query(PREDICTIVE_SEARCH_QUERY, {
     variables: {
       limit,
       limitScope: "EACH",
@@ -95,7 +97,7 @@ async function fetchPredictiveSearchResults({
     throw new Error("No data returned from Shopify API");
   }
 
-  let searchResults = normalizePredictiveSearchResults(
+  const searchResults = normalizePredictiveSearchResults(
     data.predictiveSearch,
     params.locale,
   );
@@ -130,8 +132,8 @@ function normalizePredictiveSearchResults(
     return resource.trackingParameters ? `?${resource.trackingParameters}` : "";
   }
 
-  let localePrefix = locale ? `/${locale}` : "";
-  let results: NormalizedPredictiveSearchResults = [];
+  const localePrefix = locale ? `/${locale}` : "";
+  const results: NormalizedPredictiveSearchResults = [];
 
   if (predictiveSearch.queries.length) {
     results.push({
@@ -162,15 +164,15 @@ function normalizePredictiveSearchResults(
       type: "products",
       items: predictiveSearch.products.map(
         (product: PredictiveProductFragment) => {
-          let variants = flattenConnection(product.variants);
-          let firstVariant = variants[0];
-          let optionsObject = mapSelectedProductOptionToObject(
+          const variants = flattenConnection(product.variants);
+          const firstVariant = variants[0];
+          const optionsObject = mapSelectedProductOptionToObject(
             firstVariant.selectedOptions,
           );
-          let firstVariantParams = new URLSearchParams(optionsObject);
+          const firstVariantParams = new URLSearchParams(optionsObject);
 
           totalResults++;
-          let trackingParams = applyTrackingParams(product);
+          const trackingParams = applyTrackingParams(product);
           return {
             __typename: product.__typename,
             handle: product.handle,
@@ -194,7 +196,7 @@ function normalizePredictiveSearchResults(
       items: predictiveSearch.collections.map(
         (collection: PredictiveCollectionFragment) => {
           totalResults++;
-          let trackingParams = applyTrackingParams(collection);
+          const trackingParams = applyTrackingParams(collection);
           return {
             __typename: collection.__typename,
             handle: collection.handle,
@@ -214,7 +216,7 @@ function normalizePredictiveSearchResults(
       // @ts-expect-error
       items: predictiveSearch.pages.map((page: PredictivePageFragment) => {
         totalResults++;
-        let trackingParams = applyTrackingParams(page);
+        const trackingParams = applyTrackingParams(page);
         return {
           __typename: page.__typename,
           handle: page.handle,
@@ -234,7 +236,7 @@ function normalizePredictiveSearchResults(
       items: predictiveSearch.articles.map(
         (article: PredictiveArticleFragment) => {
           totalResults++;
-          let trackingParams = applyTrackingParams(article);
+          const trackingParams = applyTrackingParams(article);
           return {
             __typename: article.__typename,
             handle: article.handle,

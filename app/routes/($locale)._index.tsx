@@ -11,9 +11,9 @@ import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 export const headers = routeHeaders;
 
 export async function loader(args: LoaderFunctionArgs) {
-  let { params, context } = args;
-  let { pathPrefix } = context.storefront.i18n;
-  let locale = pathPrefix.slice(1);
+  const { params, context } = args;
+  const { pathPrefix } = context.storefront.i18n;
+  const locale = pathPrefix.slice(1);
   let type: PageType = "INDEX";
 
   if (params.locale && params.locale.toLowerCase() !== locale) {
@@ -22,10 +22,10 @@ export async function loader(args: LoaderFunctionArgs) {
   }
 
   // Calculate seo payload synchronously
-  let seo = seoPayload.home();
+  const seo = seoPayload.home();
 
   // Load async data in parallel for better performance
-  let [weaverseData, { shop }] = await Promise.all([
+  const [weaverseData, { shop }] = await Promise.all([
     context.weaverse.loadPage({ type }),
     context.storefront.query<ShopQuery>(SHOP_QUERY),
   ]);

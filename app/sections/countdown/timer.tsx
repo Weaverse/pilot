@@ -8,8 +8,8 @@ const ONE_HOUR = ONE_MIN * 60;
 const ONE_DAY = ONE_HOUR * 24;
 
 function calculateRemainingTime(endTime: number) {
-  let now = new Date().getTime();
-  let diff = endTime - now;
+  const now = new Date().getTime();
+  const diff = endTime - now;
   if (diff <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   }
@@ -26,18 +26,18 @@ type CountDownTimerData = {
   endTime: number;
 };
 
-let CountdownTimer = forwardRef<
+const CountdownTimer = forwardRef<
   HTMLDivElement,
   CountDownTimerData & HydrogenComponentProps
 >((props, ref) => {
-  let { textColor, endTime, ...rest } = props;
-  let [remainingTime, setRemainingTime] = useState(
+  const { textColor, endTime, ...rest } = props;
+  const [remainingTime, setRemainingTime] = useState(
     calculateRemainingTime(endTime),
   );
 
   useEffect(() => {
-    let intervalId = setInterval(() => {
-      let updatedTimeRemaining = calculateRemainingTime(endTime);
+    const intervalId = setInterval(() => {
+      const updatedTimeRemaining = calculateRemainingTime(endTime);
       setRemainingTime(updatedTimeRemaining);
       if (
         updatedTimeRemaining.days <= 0 &&
@@ -52,7 +52,7 @@ let CountdownTimer = forwardRef<
     return () => clearInterval(intervalId);
   }, [endTime]);
 
-  let timerStyle: CSSProperties = {
+  const timerStyle: CSSProperties = {
     "--timer-color": textColor,
   } as CSSProperties;
 
@@ -101,10 +101,10 @@ let CountdownTimer = forwardRef<
 
 export default CountdownTimer;
 
-let tomorrow = new Date();
+const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "countdown--timer",
   title: "Timer",
   settings: [

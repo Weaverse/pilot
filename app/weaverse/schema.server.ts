@@ -2,13 +2,13 @@ import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
 import { COUNTRIES } from "~/utils/const";
 import pkg from "../../package.json";
 
-export let themeSchema: HydrogenThemeSchema = {
+export const themeSchema: HydrogenThemeSchema = {
   info: {
     version: pkg.version,
     author: "Weaverse",
     name: "Pilot",
     authorProfilePhoto:
-      "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Weaverse_logo_-_3000x_b2c0c4be-44bb-4750-9abb-099696808ec6_120x120.png?v=1698245759",
+      "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Weaverse_logo_-_3000x_e2fa8c13-dac2-4dcb-a2c2-f7aaf7a58169.png?v=1698245759",
     documentationUrl: "https://weaverse.io/docs",
     supportUrl: "https://help.weaverse.io/",
   },

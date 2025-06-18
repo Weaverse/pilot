@@ -10,7 +10,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useSwiper } from "swiper/react";
 
-let variants = cva(
+const variants = cva(
   [
     "hidden md:block",
     "absolute top-1/2 -translate-y-1/2 z-1",
@@ -68,11 +68,11 @@ export interface SlideshowArrowsProps extends VariantProps<typeof variants> {
 }
 
 export function Arrows(props: SlideshowArrowsProps) {
-  let { arrowsIcon, iconSize, arrowsColor, showArrowsOnHover, arrowsShape } =
+  const { arrowsIcon, iconSize, arrowsColor, showArrowsOnHover, arrowsShape } =
     props;
-  let [canNext, setCanNext] = useState(true);
-  let [canPrev, setCanPrev] = useState(true);
-  let swiper = useSwiper();
+  const [canNext, setCanNext] = useState(true);
+  const [canPrev, setCanPrev] = useState(true);
+  const swiper = useSwiper();
 
   if (!swiper.params.loop) {
     swiper.on("init", ({ activeIndex, slides }) => {
