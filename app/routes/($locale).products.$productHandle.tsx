@@ -1,4 +1,11 @@
-import { Analytics, getSeoMeta } from "@shopify/hydrogen";
+import {
+  Analytics,
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  getSeoMeta,
+  mapSelectedProductOptionToObject,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -6,10 +13,11 @@ import type {
 } from "@shopify/remix-oxygen";
 import { data } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
+import { useEffect } from "react";
 import { useLoaderData } from "react-router";
-import type { ProductQuery, VariantsQuery } from "storefront-api.generated";
+import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
+import { PRODUCT_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
 import { createJudgeMeReview, getJudgeMeProductReviews } from "~/utils/judgeme";
 import { getRecommendedProducts } from "~/utils/product";
@@ -45,30 +53,17 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }
   redirectIfHandleIsLocalized(request, { handle, data: product });
 
-  // Load variants since they're needed for initial rendering
-  const { product: productWithAllVariants } =
-    await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
-      variables: {
-        handle,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      },
-    });
-
-  const variants = productWithAllVariants.variants.nodes;
-
   // Use Hydrogen/Remix streaming for recommended products
   const recommended = getRecommendedProducts(storefront, product.id);
 
   return {
     shop,
     product,
-    variants,
     weaverseData,
     productReviews,
     storeDomain: shop.primaryDomain.url,
     seo: seoPayload.product({
-      product: { ...product, variants },
+      product,
       url: request.url,
     }),
     recommended,
@@ -106,20 +101,49 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
+
+  // Optimistically selects a variant with given available variant information
+  const selectedVariant = useOptimisticVariant(
+    product.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
+  );
+
+  // Sets the search param to the selected variant without navigation
+  // only when no search params are set in the url
+  useEffect(() => {
+    const searchParams = new URLSearchParams(
+      mapSelectedProductOptionToObject(selectedVariant?.selectedOptions || []),
+    );
+
+    if (window.location.search === "" && searchParams.toString() !== "") {
+      window.history.replaceState(
+        {},
+        "",
+        `${location.pathname}?${searchParams.toString()}`,
+      );
+    }
+  }, [selectedVariant?.selectedOptions]);
+
+  // Get the product options array
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
+
   return (
     <>
       <WeaverseContent />
-      {product.selectedVariant && (
+      {selectedVariant && (
         <Analytics.ProductView
           data={{
             products: [
               {
                 id: product.id,
                 title: product.title,
-                price: product.selectedVariant?.price.amount || "0",
+                price: selectedVariant?.price.amount || "0",
                 vendor: product.vendor,
-                variantId: product.selectedVariant?.id || "",
-                variantTitle: product.selectedVariant?.title || "",
+                variantId: selectedVariant?.id || "",
+                variantTitle: selectedVariant?.title || "",
                 quantity: 1,
               },
             ],
