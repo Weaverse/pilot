@@ -1,8 +1,4 @@
-import {
-  MEDIA_FRAGMENT,
-  PRODUCT_OPTION_FRAGMENT,
-  PRODUCT_VARIANT_FRAGMENT,
-} from "~/graphql/fragments";
+import { MEDIA_FRAGMENT, PRODUCT_OPTION_FRAGMENT } from "~/graphql/fragments";
 
 export const PRODUCT_QUERY = `#graphql
   query product(
@@ -20,6 +16,8 @@ export const PRODUCT_QUERY = `#graphql
       descriptionHtml
       description
       summary: description(truncateAt: 200)
+      encodedVariantExistence
+      encodedVariantAvailability
       priceRange {
         minVariantPrice {
           amount
@@ -40,11 +38,10 @@ export const PRODUCT_QUERY = `#graphql
       options {
         ...ProductOption
       }
-      selectedVariant: variantBySelectedOptions(
-        selectedOptions: $selectedOptions, 
-        ignoreUnknownOptions: true, 
-        caseInsensitiveMatch: true
-      ) {
+      selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+        ...ProductVariant
+      }
+      adjacentVariants(selectedOptions: $selectedOptions) {
         ...ProductVariant
       }
       media(first: 50) {
@@ -74,21 +71,4 @@ export const PRODUCT_QUERY = `#graphql
   }
   ${MEDIA_FRAGMENT}
   ${PRODUCT_OPTION_FRAGMENT}
-` as const;
-
-export const VARIANTS_QUERY = `#graphql
-  query variants(
-    $country: CountryCode
-    $language: LanguageCode
-    $handle: String!
-  ) @inContext(country: $country, language: $language) {
-    product(handle: $handle) {
-      variants(first: 250) {
-        nodes {
-          ...ProductVariant
-        }
-      }
-    }
-  }
-  ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;

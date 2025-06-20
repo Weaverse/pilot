@@ -5,7 +5,7 @@ import { forwardRef } from "react";
 import { ProductCard } from "~/components/product/product-card";
 import { Swimlane } from "~/components/swimlane";
 
-let variants = cva("", {
+const variants = cva("", {
   variants: {
     gap: {
       8: "gap-2",
@@ -24,11 +24,11 @@ let variants = cva("", {
 
 interface ProductItemsProps extends VariantProps<typeof variants> {}
 
-let ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
+const ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
   (props, ref) => {
-    let { gap, ...rest } = props;
-    let parent = useParentInstance();
-    let products = parent.data?.loaderData?.products;
+    const { gap, ...rest } = props;
+    const parent = useParentInstance();
+    const products = parent.data?.loaderData?.products;
 
     return (
       <div ref={ref} {...rest}>
@@ -48,7 +48,7 @@ let ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
 
 export default ProductItems;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "featured-products-items",
   title: "Product items",
   settings: [

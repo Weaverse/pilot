@@ -4,8 +4,8 @@ import { useEffect } from "react";
 const MAX_DURATION = 20;
 
 export function ScrollingAnnouncement() {
-  let themeSettings = useThemeSettings();
-  let {
+  const themeSettings = useThemeSettings();
+  const {
     topbarText,
     topbarHeight,
     topbarTextColor,

@@ -7,8 +7,8 @@ export function constructURL(
   url: string,
   queries: Record<string, string | number | boolean> = {},
 ) {
-  let _url = new URL(url);
-  for (let [k, v] of Object.entries(queries)) {
+  const _url = new URL(url);
+  for (const [k, v] of Object.entries(queries)) {
     if (v !== undefined && v !== null) {
       _url.searchParams.set(k, v.toString());
     }
@@ -17,6 +17,6 @@ export function constructURL(
 }
 
 export function isLightColor(color: string, threshold = 0.8) {
-  let c = colord(color);
+  const c = colord(color);
   return c.isValid() && c.brightness() > threshold;
 }

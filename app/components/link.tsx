@@ -14,7 +14,7 @@ import {
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 
-let variants = cva(["transition-colors inline-flex"], {
+const variants = cva(["transition-colors inline-flex"], {
   variants: {
     variant: {
       primary: [
@@ -83,8 +83,8 @@ export interface LinkProps
 }
 
 export function useHrefWithLocale(href: LinkProps["to"]) {
-  let rootData = useRouteLoaderData<RootLoader>("root");
-  let selectedLocale = rootData?.selectedLocale;
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const selectedLocale = rootData?.selectedLocale;
 
   let toWithLocale = href;
   if (typeof toWithLocale === "string" && selectedLocale?.pathPrefix) {
@@ -111,7 +111,7 @@ export function useHrefWithLocale(href: LinkProps["to"]) {
  *
  * Ultimately, it is up to you to decide how to implement this behavior.
  */
-export let Link = forwardRef(
+export const Link = forwardRef(
   (props: LinkProps, ref: React.Ref<HTMLAnchorElement>) => {
     let {
       to,
@@ -129,8 +129,8 @@ export let Link = forwardRef(
       children,
       ...rest
     } = props;
-    let { enableViewTransition } = useThemeSettings();
-    let href = useHrefWithLocale(to);
+    const { enableViewTransition } = useThemeSettings();
+    const href = useHrefWithLocale(to);
 
     if (variant === "custom") {
       style = {
@@ -166,7 +166,7 @@ export let Link = forwardRef(
 
 export default Link;
 
-export let linkContentInputs: InspectorGroup["inputs"] = [
+export const linkContentInputs: InspectorGroup["inputs"] = [
   {
     type: "text",
     name: "text",
@@ -204,7 +204,7 @@ export let linkContentInputs: InspectorGroup["inputs"] = [
     defaultValue: "primary",
   },
 ];
-export let linkStylesInputs: InspectorGroup["inputs"] = [
+export const linkStylesInputs: InspectorGroup["inputs"] = [
   {
     type: "color",
     label: "Background color",
@@ -249,7 +249,7 @@ export let linkStylesInputs: InspectorGroup["inputs"] = [
   },
 ];
 
-export let linkInputs: InspectorGroup["inputs"] = [
+export const linkInputs: InspectorGroup["inputs"] = [
   ...linkContentInputs,
   {
     type: "heading",
@@ -258,7 +258,7 @@ export let linkInputs: InspectorGroup["inputs"] = [
   ...linkStylesInputs,
 ];
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "button",
   title: "Button",
   settings: [

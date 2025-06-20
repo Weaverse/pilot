@@ -2,9 +2,9 @@ import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-let JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
+const JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
   (props, ref) => {
-    let { children, loaderData, ...rest } = props;
+    const { children, loaderData, ...rest } = props;
     return (
       <Section ref={ref} {...rest} overflow="unset">
         {children}
@@ -15,7 +15,7 @@ let JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
 
 export default JudgemeReviewSection;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "judgeme-reviews",
   title: "Judgeme Reviews",
   enabledOn: {

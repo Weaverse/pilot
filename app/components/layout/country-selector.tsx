@@ -16,29 +16,29 @@ import type { I18nLocale, Localizations } from "~/types/locale";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {
-  let fetcher = useFetcher();
-  let submit = useSubmit();
-  let rootData = useRouteLoaderData<RootLoader>("root");
-  let selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  let { pathname, search } = useLocation();
-  let pathWithoutLocale = `${pathname.replace(
+  const fetcher = useFetcher();
+  const submit = useSubmit();
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  const { pathname, search } = useLocation();
+  const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
     "",
   )}${search}`;
 
-  let countries = (fetcher.data ?? {}) as Localizations;
+  const countries = (fetcher.data ?? {}) as Localizations;
   // biome-ignore lint/complexity/useLiteralKeys: <explanation>
-  let defaultLocale = countries?.["default"];
-  let defaultLocalePrefix = defaultLocale
+  const defaultLocale = countries?.["default"];
+  const defaultLocalePrefix = defaultLocale
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : "";
 
-  let { ref, inView } = useInView({
+  const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });
 
-  let observerRef = useRef(null);
+  const observerRef = useRef(null);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     ref(observerRef.current);
@@ -93,8 +93,8 @@ export function CountrySelector() {
             <div className="w-80 max-h-40 overflow-auto py-2 bg-neutral-800 my-2">
               {countries &&
                 Object.keys(countries).map((countryPath) => {
-                  let countryLocale = countries[countryPath];
-                  let isSelected =
+                  const countryLocale = countries[countryPath];
+                  const isSelected =
                     countryLocale.language === selectedLocale.language &&
                     countryLocale.country === selectedLocale.country;
 
@@ -149,7 +149,7 @@ function getCountryUrlPath({
   defaultLocalePrefix: string;
 }) {
   let countryPrefixPath = "";
-  let countryLocalePrefix = `${countryLocale.language}-${countryLocale.country}`;
+  const countryLocalePrefix = `${countryLocale.language}-${countryLocale.country}`;
   if (countryLocalePrefix !== defaultLocalePrefix) {
     countryPrefixPath = `/${countryLocalePrefix.toLowerCase()}`;
   }

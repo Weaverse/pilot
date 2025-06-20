@@ -28,16 +28,16 @@ export function ProductsPagination({
   loadPrevText: string;
   loadMoreText: string;
 }) {
-  let { collection, appliedFilters } = useLoaderData<
+  const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
       appliedFilters: AppliedFilter[];
     }
   >();
-  let [params] = useSearchParams();
-  let location = useLocation();
-  let { pathname } = location;
-  let { ref, inView } = useInView();
+  const [params] = useSearchParams();
+  const location = useLocation();
+  const { pathname } = location;
+  const { ref, inView } = useInView();
 
   return (
     <div className="space-y-6 grow">
@@ -45,7 +45,7 @@ export function ProductsPagination({
         <div className="flex items-center flex-wrap gap-6">
           <div className="flex items-center gap-2">
             {appliedFilters.map((filter: AppliedFilter) => {
-              let { label } = filter;
+              const { label } = filter;
               return (
                 <Link
                   key={label}
@@ -140,8 +140,8 @@ interface ProductsLoadedOnScrollProps {
 }
 
 function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
-  let { nodes, inView, nextPageUrl, hasNextPage, state } = props;
-  let navigate = useNavigate();
+  const { nodes, inView, nextPageUrl, hasNextPage, state } = props;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (inView && hasNextPage) {

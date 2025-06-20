@@ -15,13 +15,13 @@ type JudgemeReviewsData = {
   error?: string;
 };
 
-let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
+const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
-    let { productReviews } = useLoaderData<typeof productRouteLoader>();
-    let { load, data: fetchData } = useFetcher<JudgemeReviewsData>();
-    let context = useParentInstance();
-    let handle = context?.data?.product?.handle;
-    let api = usePrefixPathWithLocale(`/api/review/${handle}`);
+    const { productReviews } = useLoaderData<typeof productRouteLoader>();
+    const { load, data: fetchData } = useFetcher<JudgemeReviewsData>();
+    const context = useParentInstance();
+    const handle = context?.data?.product?.handle;
+    const api = usePrefixPathWithLocale(`/api/review/${handle}`);
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
@@ -30,12 +30,12 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [handle, api]);
 
-    let data = productReviews || fetchData;
+    const data = productReviews || fetchData;
 
     if (!data) return null;
 
-    let rating = Math.round((data.rating || 0) * 100) / 100;
-    let reviewNumber = data.reviewNumber || 0;
+    const rating = Math.round((data.rating || 0) * 100) / 100;
+    const reviewNumber = data.reviewNumber || 0;
 
     return (
       <div {...props} ref={ref}>
@@ -50,7 +50,7 @@ let JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
 export default JudgemeReview;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "judgeme",
   title: "Judgeme review",
 });

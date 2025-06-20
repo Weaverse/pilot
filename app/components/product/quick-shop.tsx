@@ -1,13 +1,14 @@
-import { ShopPayButton } from "@shopify/hydrogen";
+import {
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  ShopPayButton,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import type { ProductVariant } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-import type {
-  ProductQuery,
-  ProductVariantFragment,
-  VariantsQuery,
-} from "storefront-api.generated";
+import type { ProductQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
@@ -19,29 +20,33 @@ import type { ProductData } from "~/routes/($locale).api.product";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
-  variants: VariantsQuery;
   storeDomain: string;
 }
 
 export function QuickShop({ data }: { data: QuickViewData }) {
-  let themeSettings = useThemeSettings();
-  let { product, variants: _variants, storeDomain } = data || {};
-  // @ts-expect-error
-  let firstVariant = product?.variants?.nodes?.[0];
-  let [selectedVariant, setSelectedVariant] = useState(
-    firstVariant as ProductVariantFragment,
+  const themeSettings = useThemeSettings();
+  const { product, storeDomain } = data || {};
+
+  // Optimistically selects a variant with given available variant information
+  const selectedVariant = useOptimisticVariant(
+    product?.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
   );
-  let [quantity, setQuantity] = useState<number>(1);
-  let {
+
+  // Get the product options array
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
+
+  const [quantity, setQuantity] = useState<number>(1);
+  const {
     addToCartText,
     soldOutText,
     unavailableText,
     hideUnavailableOptions,
     productQuickViewImageAspectRatio,
   } = themeSettings;
-  let handleSelectedVariantChange = (variant: any) => {
-    setSelectedVariant(variant);
-  };
 
   // // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   // useEffect(() => {
@@ -54,8 +59,8 @@ export function QuickShop({ data }: { data: QuickViewData }) {
   //   }
   // }, [product?.id]);
 
-  let { title, summary } = product;
-  let atcText = selectedVariant?.availableForSale
+  const { title, summary } = product;
+  const atcText = selectedVariant?.availableForSale
     ? addToCartText
     : selectedVariant?.quantityAvailable === -1
       ? unavailableText
@@ -126,10 +131,10 @@ export function QuickShop({ data }: { data: QuickViewData }) {
 }
 
 export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
-  let [open, setOpen] = useState(false);
-  let { load, data, state } = useFetcher<ProductData>();
+  const [open, setOpen] = useState(false);
+  const { load, data, state } = useFetcher<ProductData>();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
   useEffect(() => {
     if (open && !data && state !== "loading") {
       load(`/api/product?handle=${productHandle}`);

@@ -6,8 +6,8 @@ export function AccountDetails({
 }: {
   customer: CustomerDetailsFragment;
 }) {
-  let { firstName, lastName, emailAddress, phoneNumber } = customer;
-  let fullName = `${firstName || ""} ${lastName || ""}`.trim();
+  const { firstName, lastName, emailAddress, phoneNumber } = customer;
+  const fullName = `${firstName || ""} ${lastName || ""}`.trim();
   return (
     <div className="space-y-4">
       <div className="font-bold">Account</div>

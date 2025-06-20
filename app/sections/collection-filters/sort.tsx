@@ -30,12 +30,12 @@ const SORT_LIST: { label: string; key: SortParam }[] = [
 ];
 
 export function Sort() {
-  let [searchParams] = useSearchParams();
-  let location = useLocation();
-  let currentSort =
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const currentSort =
     SORT_LIST.find(({ key }) => key === searchParams.get("sort")) ||
     SORT_LIST[0];
-  let params = new URLSearchParams(searchParams);
+  const params = new URLSearchParams(searchParams);
 
   return (
     <DropdownMenu.Root>

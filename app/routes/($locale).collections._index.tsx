@@ -8,20 +8,20 @@ import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
-export let headers = routeHeaders;
+export const headers = routeHeaders;
 
-export let loader = async (args: RouteLoaderArgs) => {
-  let {
+export const loader = async (args: RouteLoaderArgs) => {
+  const {
     request,
     context: { weaverse },
   } = args;
-  let storefront = weaverse.storefront;
-  let variables = getPaginationVariables(request, {
+  const storefront = weaverse.storefront;
+  const variables = getPaginationVariables(request, {
     pageBy: PAGINATION_SIZE,
   });
 
   // Load collections data and weaverseData in parallel
-  let [{ collections }, weaverseData] = await Promise.all([
+  const [{ collections }, weaverseData] = await Promise.all([
     storefront.query<CollectionsQuery>(COLLECTIONS_QUERY, {
       variables: {
         ...variables,
@@ -34,7 +34,7 @@ export let loader = async (args: RouteLoaderArgs) => {
     }),
   ]);
 
-  let seo = seoPayload.listCollections({
+  const seo = seoPayload.listCollections({
     collections,
     url: request.url,
   });
@@ -46,7 +46,7 @@ export let loader = async (args: RouteLoaderArgs) => {
   };
 };
 
-export let meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 

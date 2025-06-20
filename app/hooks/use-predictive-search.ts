@@ -16,10 +16,10 @@ export const NO_PREDICTIVE_SEARCH_RESULTS: NormalizedPredictiveSearchResults = [
 export function usePredictiveSearch(): NormalizedPredictiveSearch & {
   searchTerm: React.MutableRefObject<string>;
 } {
-  let [results, setResults] = useState<NormalizedPredictiveSearchResults>();
-  let fetchers = useFetchers();
-  let searchTerm = useRef<string>("");
-  let searchFetcher = fetchers.find((fetcher) => fetcher.data?.searchResults);
+  const [results, setResults] = useState<NormalizedPredictiveSearchResults>();
+  const fetchers = useFetchers();
+  const searchTerm = useRef<string>("");
+  const searchFetcher = fetchers.find((fetcher) => fetcher.data?.searchResults);
 
   useEffect(() => {
     if (searchFetcher) {
@@ -31,7 +31,7 @@ export function usePredictiveSearch(): NormalizedPredictiveSearch & {
     searchTerm.current = (searchFetcher.formData?.get("q") || "") as string;
   }
 
-  let search = (results || {
+  const search = (results || {
     results: NO_PREDICTIVE_SEARCH_RESULTS,
     totalResults: 0,
   }) as NormalizedPredictiveSearch;

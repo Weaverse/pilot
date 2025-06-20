@@ -5,15 +5,15 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   const { cart } = context;
 
   try {
-    let variantId = params.variantId;
+    const variantId = params.variantId;
 
-    let inputLines = [
+    const inputLines = [
       {
         merchandiseId: `gid://shopify/ProductVariant/${variantId}`,
         quantity: 1,
       },
     ];
-    let result = await cart.addLines(inputLines);
+    const result = await cart.addLines(inputLines);
 
     /**
      * The Cart ID may change after each mutation. We need to update it each time in the session.

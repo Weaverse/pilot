@@ -21,12 +21,12 @@ import { Cart } from "~/components/cart/cart";
 import type { RootLoader } from "~/root";
 
 export async function action({ request, context }: ActionFunctionArgs) {
-  let { cart } = context;
-  let formData = await request.formData();
-  let { action, inputs } = CartForm.getFormInput(formData);
+  const { cart } = context;
+  const formData = await request.formData();
+  const { action, inputs } = CartForm.getFormInput(formData);
   invariant(action, "No cartAction defined");
 
-  let status = 200;
+  const status = 200;
   let result: CartQueryDataReturn;
 
   switch (action) {
@@ -40,10 +40,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
       result = await cart.removeLines(inputs.lineIds as string[]);
       break;
     case CartForm.ACTIONS.DiscountCodesUpdate: {
-      let formDiscountCode = inputs.discountCode;
+      const formDiscountCode = inputs.discountCode;
 
       // User inputted discount code
-      let discountCodes = (
+      const discountCodes = (
         formDiscountCode ? [formDiscountCode] : []
       ) as string[];
 
@@ -65,16 +65,16 @@ export async function action({ request, context }: ActionFunctionArgs) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  let headers = cart.setCartId(result.cart.id);
+  const headers = cart.setCartId(result.cart.id);
 
-  let redirectTo = formData.get("redirectTo") ?? null;
+  const redirectTo = formData.get("redirectTo") ?? null;
   if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
     // status = 303;
     // headers.set("Location", redirectTo);
     return redirect(redirectTo);
   }
 
-  let { cart: cartResult, errors, userErrors } = result;
+  const { cart: cartResult, errors, userErrors } = result;
 
   return data(
     {
@@ -87,12 +87,12 @@ export async function action({ request, context }: ActionFunctionArgs) {
 }
 
 export async function loader({ context }: LoaderFunctionArgs) {
-  let { cart } = context;
+  const { cart } = context;
   return await cart.get();
 }
 
 export default function CartRoute() {
-  let rootData = useRouteLoaderData<RootLoader>("root");
+  const rootData = useRouteLoaderData<RootLoader>("root");
   if (!rootData) return null;
 
   return (

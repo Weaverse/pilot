@@ -10,17 +10,17 @@ import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
-export let headers = routeHeaders;
+export const headers = routeHeaders;
 
-export let loader = async (args: LoaderFunctionArgs) => {
-  let { params, request, context } = args;
-  let storefront = context.storefront;
-  let { language, country } = storefront.i18n;
+export const loader = async (args: LoaderFunctionArgs) => {
+  const { params, request, context } = args;
+  const storefront = context.storefront;
+  const { language, country } = storefront.i18n;
 
   invariant(params.blogHandle, "Missing blog handle");
 
   // Load blog data and weaverseData in parallel
-  let [{ blog }, weaverseData] = await Promise.all([
+  const [{ blog }, weaverseData] = await Promise.all([
     storefront.query<BlogQuery>(BLOGS_QUERY, {
       variables: {
         blogHandle: params.blogHandle,
@@ -42,8 +42,8 @@ export let loader = async (args: LoaderFunctionArgs) => {
     data: blog,
   });
 
-  let articles = flattenConnection(blog.articles).map((article) => {
-    let { publishedAt } = article;
+  const articles = flattenConnection(blog.articles).map((article) => {
+    const { publishedAt } = article;
     return {
       ...article,
       publishedAt: new Intl.DateTimeFormat(`${language}-${country}`, {
@@ -54,7 +54,7 @@ export let loader = async (args: LoaderFunctionArgs) => {
     };
   });
 
-  let seo = seoPayload.blog({ blog, url: request.url });
+  const seo = seoPayload.blog({ blog, url: request.url });
 
   return data({
     blog,
@@ -64,7 +64,7 @@ export let loader = async (args: LoaderFunctionArgs) => {
   });
 };
 
-export let meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 

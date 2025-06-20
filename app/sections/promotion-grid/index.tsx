@@ -9,7 +9,7 @@ import { layoutInputs, Section } from "~/components/section";
 
 type PromotionGridProps = VariantProps<typeof variants> & SectionProps;
 
-let variants = cva("flex flex-col sm:grid", {
+const variants = cva("flex flex-col sm:grid", {
   variants: {
     gridSize: {
       "2x2": "sm:grid-cols-2 sm:[&_.promotion-grid-item]:p-16",
@@ -41,9 +41,9 @@ let variants = cva("flex flex-col sm:grid", {
   },
 });
 
-let PromotionGrid = forwardRef<HTMLElement, PromotionGridProps>(
+const PromotionGrid = forwardRef<HTMLElement, PromotionGridProps>(
   (props, ref) => {
-    let { children, gridSize, gap, ...rest } = props;
+    const { children, gridSize, gap, ...rest } = props;
     return (
       <Section
         ref={ref}
@@ -58,7 +58,7 @@ let PromotionGrid = forwardRef<HTMLElement, PromotionGridProps>(
 
 export default PromotionGrid;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "promotion-grid",
   title: "Promotion grid",
   settings: [

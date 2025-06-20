@@ -9,13 +9,13 @@ import invariant from "tiny-invariant";
 import { AccountEditAddressForm } from "~/components/customer/edit-address-form";
 import { doLogout } from "./($locale).account_.logout";
 
-export let handle = {
+export const handle = {
   renderInModal: true,
 };
 
-export let action: ActionFunction = async ({ request, context, params }) => {
-  let { customerAccount } = context;
-  let formData = await request.formData();
+export const action: ActionFunction = async ({ request, context, params }) => {
+  const { customerAccount } = context;
+  const formData = await request.formData();
 
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
@@ -23,12 +23,12 @@ export let action: ActionFunction = async ({ request, context, params }) => {
     throw await doLogout(context);
   }
 
-  let addressId = formData.get("addressId");
+  const addressId = formData.get("addressId");
   invariant(typeof addressId === "string", "You must provide an address id.");
 
   if (request.method === "DELETE") {
     try {
-      let { data, errors } =
+      const { data, errors } =
         await customerAccount.mutate<CustomerAddressDeleteMutation>(
           DELETE_ADDRESS_MUTATION,
           { variables: { addressId } },
@@ -54,9 +54,9 @@ export let action: ActionFunction = async ({ request, context, params }) => {
     }
   }
 
-  let address: CustomerAddressInput = {};
+  const address: CustomerAddressInput = {};
 
-  let keys: (keyof CustomerAddressInput)[] = [
+  const keys: (keyof CustomerAddressInput)[] = [
     "lastName",
     "firstName",
     "address1",
@@ -69,20 +69,20 @@ export let action: ActionFunction = async ({ request, context, params }) => {
     "company",
   ];
 
-  for (let key of keys) {
-    let value = formData.get(key);
+  for (const key of keys) {
+    const value = formData.get(key);
     if (typeof value === "string") {
       address[key] = value;
     }
   }
 
-  let defaultAddress = formData.has("defaultAddress")
+  const defaultAddress = formData.has("defaultAddress")
     ? String(formData.get("defaultAddress")) === "on"
     : false;
 
   if (addressId === "add") {
     try {
-      let { data, errors } =
+      const { data, errors } =
         await customerAccount.mutate<CustomerAddressCreateMutation>(
           CREATE_ADDRESS_MUTATION,
           { variables: { address, defaultAddress } },
@@ -113,7 +113,7 @@ export let action: ActionFunction = async ({ request, context, params }) => {
     }
   } else {
     try {
-      let { data, errors } =
+      const { data, errors } =
         await customerAccount.mutate<CustomerAddressUpdateMutation>(
           UPDATE_ADDRESS_MUTATION,
           {

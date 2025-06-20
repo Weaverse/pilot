@@ -46,7 +46,7 @@ export interface HeroVideoProps
   heightOnMobile: number;
 }
 
-let variants = cva(
+const variants = cva(
   "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
   {
     variants: {
@@ -75,14 +75,14 @@ let variants = cva(
   },
 );
 
-let ReactPlayer = lazy(() => import("react-player/lazy"));
+const ReactPlayer = lazy(() => import("react-player/lazy"));
 
 function getPlayerSize(id: string) {
   if (isBrowser) {
-    let section = document.querySelector(`[data-wv-id="${id}"]`);
+    const section = document.querySelector(`[data-wv-id="${id}"]`);
     if (section) {
-      let rect = section.getBoundingClientRect();
-      let aspectRatio = rect.width / rect.height;
+      const rect = section.getBoundingClientRect();
+      const aspectRatio = rect.width / rect.height;
       if (aspectRatio < 16 / 9) {
         return { width: "auto", height: "100%" };
       }
@@ -91,8 +91,8 @@ function getPlayerSize(id: string) {
   return { width: "100%", height: "auto" };
 }
 
-let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
-  let {
+const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
+  const {
     videoURL,
     gap,
     height,
@@ -106,24 +106,24 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     ...rest
   } = props;
 
-  let id = rest["data-wv-id"];
-  let [size, setSize] = useState(() => getPlayerSize(id));
+  const id = rest["data-wv-id"];
+  const [size, setSize] = useState(() => getPlayerSize(id));
 
-  let desktopHeight =
+  const desktopHeight =
     SECTION_HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
-  let mobileHeight = SECTION_HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
-  let sectionStyle: CSSProperties = {
+  const mobileHeight = SECTION_HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
+  const sectionStyle: CSSProperties = {
     "--desktop-height": desktopHeight,
     "--mobile-height": mobileHeight,
   } as CSSProperties;
 
-  let { ref: inViewRef, inView } = useInView({
+  const { ref: inViewRef, inView } = useInView({
     triggerOnce: true,
   });
 
   // Use `useCallback` so we don't recreate the function on each render
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  let setRefs = useCallback(
+  const setRefs = useCallback(
     (node: HTMLElement) => {
       // Ref's from useRef needs to have the node assigned to `current`
       ref && Object.assign(ref, { current: node });
@@ -146,7 +146,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     };
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
-  let [scope] = useAnimation();
+  const [scope] = useAnimation();
 
   return (
     <section
@@ -194,7 +194,7 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
 
 export default HeroVideo;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "hero-video",
   title: "Hero video",
   settings: [

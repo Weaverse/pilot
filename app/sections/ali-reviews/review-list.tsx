@@ -18,11 +18,11 @@ type AliReviewsProps = ReviewItemData & {
   showReviewWithMediaOnly: boolean;
 };
 
-let ReviewList = forwardRef<
+const ReviewList = forwardRef<
   HTMLDivElement,
   AliReviewsProps & HydrogenComponentProps
 >((props, ref) => {
-  let {
+  const {
     children,
     showAvgRating,
     showReviewsCount,
@@ -36,10 +36,10 @@ let ReviewList = forwardRef<
     showStar,
     ...rest
   } = props;
-  let parent = useParentInstance();
-  let allReviews: AliReviewsLoaderData = parent.data?.loaderData;
+  const parent = useParentInstance();
+  const allReviews: AliReviewsLoaderData = parent.data?.loaderData;
   if (allReviews?.length) {
-    let { totalReviews, avgRating, reviewsByRating } =
+    const { totalReviews, avgRating, reviewsByRating } =
       getReviewsSummary(allReviews);
     let reviewsToRender = Array.from(allReviews);
     if (showReviewWithMediaOnly) {
@@ -111,7 +111,7 @@ let ReviewList = forwardRef<
 
 export default ReviewList;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "ali-reviews--list",
   title: "Reviews list",
   settings: [
@@ -200,12 +200,12 @@ export let schema = createSchema({
 });
 
 function getReviewsSummary(allReviews: AliReview[]) {
-  let totalReviews = allReviews.length;
-  let avgRating =
+  const totalReviews = allReviews.length;
+  const avgRating =
     totalReviews > 0
       ? allReviews.reduce((acc, curr) => acc + curr.star, 0) / totalReviews
       : 0;
-  let reviewsByRating = allReviews.reduce(
+  const reviewsByRating = allReviews.reduce(
     (acc, curr) => {
       if (curr.star) {
         acc[curr.star].count += 1;

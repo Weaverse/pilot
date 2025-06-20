@@ -28,17 +28,17 @@ export function ZoomModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  let scrollAreaRef = useRef<HTMLDivElement>(null);
-  let zoomMedia = media.find((med) => med.id === zoomMediaId);
-  let zoomMediaIndex = media.findIndex((med) => med.id === zoomMediaId);
-  let nextMedia = media[zoomMediaIndex + 1] ?? media[0];
-  let prevMedia = media[zoomMediaIndex - 1] ?? media[media.length - 1];
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const zoomMedia = media.find((med) => med.id === zoomMediaId);
+  const zoomMediaIndex = media.findIndex((med) => med.id === zoomMediaId);
+  const nextMedia = media[zoomMediaIndex + 1] ?? media[0];
+  const prevMedia = media[zoomMediaIndex - 1] ?? media[media.length - 1];
 
   function scrollToMedia(id: string) {
-    let { id: mediaId } = parseGid(id);
-    let mediaElement = document.getElementById(`zoom-media--${mediaId}`);
+    const { id: mediaId } = parseGid(id);
+    const mediaElement = document.getElementById(`zoom-media--${mediaId}`);
     if (mediaElement) {
-      let isVisible = isVisibleInParent(mediaElement, scrollAreaRef.current);
+      const isVisible = isVisibleInParent(mediaElement, scrollAreaRef.current);
       if (!isVisible) {
         mediaElement.scrollIntoView({ behavior: "smooth" });
       }
@@ -99,7 +99,7 @@ export function ZoomModal({
               >
                 <div className="w-24 pr-2 space-y-2">
                   {media.map(({ id, previewImage, alt, mediaContentType }) => {
-                    let { id: mediaId } = parseGid(id);
+                    const { id: mediaId } = parseGid(id);
                     return (
                       <div
                         key={id}
@@ -169,7 +169,7 @@ export function ZoomModal({
 function ZoomMedia({ media }: { media: MediaFragment }) {
   if (!media) return null;
   if (media.mediaContentType === "IMAGE") {
-    let { image, alt } = media as Media_MediaImage_Fragment;
+    const { image, alt } = media as Media_MediaImage_Fragment;
     return (
       <Image
         data={{ ...image, altText: alt || "Product image zoom" }}
@@ -182,7 +182,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
     );
   }
   if (media.mediaContentType === "VIDEO") {
-    let mediaVideo = media as Media_Video_Fragment;
+    const mediaVideo = media as Media_Video_Fragment;
     return (
       <video controls className="h-auto md:h-full object-cover">
         <track kind="captions" />
@@ -194,8 +194,8 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
 }
 
 function isVisibleInParent(child: HTMLElement, parent: HTMLElement) {
-  let childRect = child.getBoundingClientRect();
-  let parentRect = parent.getBoundingClientRect();
+  const childRect = child.getBoundingClientRect();
+  const parentRect = parent.getBoundingClientRect();
   return (
     childRect.top >= parentRect.top &&
     childRect.bottom <= parentRect.bottom &&

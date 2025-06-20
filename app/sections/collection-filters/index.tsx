@@ -33,9 +33,9 @@ export interface CollectionFiltersData {
 
 interface CollectionFiltersProps extends SectionProps, CollectionFiltersData {}
 
-let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
+const CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
   (props, ref) => {
-    let {
+    const {
       showBreadcrumb,
       showDescription,
       showBanner,
@@ -56,16 +56,16 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       loadMoreText,
       ...rest
     } = props;
-    let { collection, collections } = useLoaderData<
+    const { collection, collections } = useLoaderData<
       CollectionQuery & {
         collections: Array<{ handle: string; title: string }>;
       }
     >();
 
-    let [gridSizeDesktop, setGridSizeDesktop] = useState(
+    const [gridSizeDesktop, setGridSizeDesktop] = useState(
       Number(productsPerRowDesktop) || 3,
     );
-    let [gridSizeMobile, setGridSizeMobile] = useState(
+    const [gridSizeMobile, setGridSizeMobile] = useState(
       Number(productsPerRowMobile) || 1,
     );
 
@@ -75,7 +75,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
     }, [productsPerRowDesktop, productsPerRowMobile]);
 
     if (collection?.products && collections) {
-      let banner = collection.metafield
+      const banner = collection.metafield
         ? collection.metafield.reference.image
         : collection.image;
       return (
@@ -147,7 +147,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
 
 export default CollectionFilters;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "collection-filters",
   title: "Collection filters",
   limit: 1,

@@ -12,9 +12,9 @@ type AliReviewsData = {
 type AliReviewsProps = SectionProps<Awaited<ReturnType<typeof loader>>> &
   AliReviewsData;
 
-let AliReviewSection = forwardRef<HTMLElement, AliReviewsProps>(
+const AliReviewSection = forwardRef<HTMLElement, AliReviewsProps>(
   (props, ref) => {
-    let { children, loaderData, aliReviewsApiKey, ...rest } = props;
+    const { children, loaderData, aliReviewsApiKey, ...rest } = props;
     return (
       <Section ref={ref} {...rest} overflow="unset">
         {children}
@@ -30,11 +30,11 @@ type AliReviewsAPIPayload = {
   status: number;
 };
 
-export let loader = async ({
+export const loader = async ({
   data: { aliReviewsApiKey = "" },
   weaverse,
 }: ComponentLoaderArgs<AliReviewsData>) => {
-  let res = await weaverse
+  const res = await weaverse
     .fetchWithCache<AliReviewsAPIPayload>(
       "https://widget-hub-api.alireviews.io/api/public/reviews",
       {
@@ -54,7 +54,7 @@ export let loader = async ({
 
 export default AliReviewSection;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "ali-reviews",
   title: "Ali Reviews box",
   settings: [

@@ -19,7 +19,7 @@ import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
 import { CountrySelector } from "./country-selector";
 
-let variants = cva("", {
+const variants = cva("", {
   variants: {
     width: {
       full: "",
@@ -35,8 +35,8 @@ let variants = cva("", {
 });
 
 export function Footer() {
-  let { shopName } = useShopMenu();
-  let {
+  const { shopName } = useShopMenu();
+  const {
     footerWidth,
     socialFacebook,
     socialInstagram,
@@ -54,11 +54,11 @@ export function Footer() {
     newsletterPlaceholder,
     newsletterButtonText,
   } = useThemeSettings();
-  let fetcher = useFetcher<any>();
-  let [message, setMessage] = useState("");
-  let [error, setError] = useState("");
+  const fetcher = useFetcher<any>();
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  let handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     setMessage("");
     setError("");
     fetcher.submit(event.currentTarget);
@@ -66,9 +66,9 @@ export function Footer() {
 
   useEffect(() => {
     if (fetcher.data) {
-      let message = (fetcher.data as any)?.message;
+      const message = (fetcher.data as any)?.message;
       if (!fetcher.data.success) {
-        let error = message?.errors[0]?.detail;
+        const error = message?.errors[0]?.detail;
         setError(error);
       } else {
         setMessage("Thank you for signing up!");
@@ -76,7 +76,7 @@ export function Footer() {
     }
   }, [fetcher.data]);
 
-  let socialItems = [
+  const socialItems = [
     {
       name: "Instagram",
       to: socialInstagram,
@@ -210,8 +210,8 @@ export function Footer() {
 }
 
 function FooterMenu() {
-  let { footerMenu } = useShopMenu();
-  let items = footerMenu.items as unknown as SingleMenuItem[];
+  const { footerMenu } = useShopMenu();
+  const items = footerMenu.items as unknown as SingleMenuItem[];
   return (
     <Accordion.Root
       type="multiple"

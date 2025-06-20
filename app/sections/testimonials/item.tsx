@@ -17,9 +17,9 @@ interface TestimonialItemProps extends HydrogenComponentProps {
   hideOnMobile: boolean;
 }
 
-let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
+const TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
   (props, ref) => {
-    let {
+    const {
       heading,
       content,
       authorImage,
@@ -69,7 +69,7 @@ let TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
 
 export default TestimonialItem;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "testimonial--item",
   title: "Testimonial",
   settings: [

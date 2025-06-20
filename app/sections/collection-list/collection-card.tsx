@@ -30,11 +30,11 @@ export function CollectionCard({
 
   let collectionImage = collection.image;
   if (!collectionImage) {
-    let collectionProducts = collection.products.nodes;
+    const collectionProducts = collection.products.nodes;
     if (collectionProducts.length > 0) {
-      let firstProduct = collectionProducts[0];
+      const firstProduct = collectionProducts[0];
       if (firstProduct.media.nodes.length > 0) {
-        let firstProductMedia = firstProduct.media.nodes[0];
+        const firstProductMedia = firstProduct.media.nodes[0];
         if (firstProductMedia.previewImage) {
           collectionImage = firstProductMedia.previewImage;
         }

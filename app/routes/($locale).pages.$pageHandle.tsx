@@ -14,10 +14,10 @@ export const headers = routeHeaders;
 
 export async function loader({ request, params, context }: RouteLoaderArgs) {
   invariant(params.pageHandle, "Missing page handle");
-  let { storefront } = context.weaverse;
+  const { storefront } = context.weaverse;
 
   // Load page data and weaverseData in parallel
-  let [{ page }, weaverseData] = await Promise.all([
+  const [{ page }, weaverseData] = await Promise.all([
     storefront.query<PageDetailsQuery>(PAGE_QUERY, {
       variables: {
         handle: params.pageHandle,
@@ -38,7 +38,7 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
     data: page,
   });
 
-  let seo = seoPayload.page({ page, url: request.url });
+  const seo = seoPayload.page({ page, url: request.url });
 
   return {
     page,

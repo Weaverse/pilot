@@ -16,8 +16,8 @@ interface BlogsProps
   layout: "blog" | "default";
 }
 
-let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
-  let {
+const Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
+  const {
     layout,
     showExcerpt,
     showAuthor,
@@ -26,7 +26,7 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
     imageAspectRatio,
     ...rest
   } = props;
-  let { blog, articles } = useLoaderData<
+  const { blog, articles } = useLoaderData<
     BlogQuery & { articles: ArticleFragment[] }
   >();
 
@@ -126,7 +126,7 @@ export function ArticleCard({
 
 export default Blogs;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "blogs",
   title: "Blogs",
   limit: 1,

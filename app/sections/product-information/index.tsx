@@ -1,4 +1,10 @@
-import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
+import {
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  Money,
+  ShopPayButton,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
@@ -38,17 +44,24 @@ interface ProductInformationProps
   hideUnavailableOptions: boolean;
 }
 
-let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
+const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
-    let { product, variants, storeDomain } =
-      useLoaderData<typeof productRouteLoader>();
-    let [params] = useSearchParams();
-    let selectedVariant = useOptimisticVariant(
-      product?.selectedVariant,
-      variants,
+    const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
+    const [params] = useSearchParams();
+
+    // Optimistically selects a variant with given available variant information
+    const selectedVariant = useOptimisticVariant(
+      product?.selectedOrFirstAvailableVariant,
+      getAdjacentAndFirstAvailableVariants(product),
     );
 
-    let {
+    // Get the product options array
+    const productOptions = getProductOptions({
+      ...product,
+      selectedOrFirstAvailableVariant: selectedVariant,
+    });
+
+    const {
       addToCartText,
       soldOutText,
       unavailableText,
@@ -67,10 +80,10 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       enableZoom,
       ...rest
     } = props;
-    let [quantity, setQuantity] = useState<number>(1);
+    const [quantity, setQuantity] = useState<number>(1);
 
     if (product) {
-      let {
+      const {
         title,
         handle,
         vendor,
@@ -80,11 +93,11 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         publishedAt,
         badges,
       } = product;
-      let allOptionNames = options.map(({ name }) => name);
-      let isAllOptionsSelected = allOptionNames.every((name) =>
+      const allOptionNames = options.map(({ name }) => name);
+      const isAllOptionsSelected = allOptionNames.every((name) =>
         params.get(name),
       );
-      let isBestSellerProduct = badges
+      const isBestSellerProduct = badges
         .filter(Boolean)
         .some(({ key, value }) => key === "best_seller" && value === "true");
 
@@ -170,10 +183,8 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   <p className="leading-relaxed">{summary}</p>
                 )}
                 <ProductVariants
-                  variants={variants}
-                  options={options}
-                  productHandle={handle}
-                  hideUnavailableOptions={hideUnavailableOptions}
+                  productOptions={productOptions}
+                  selectedVariant={selectedVariant}
                 />
                 <Quantity value={quantity} onChange={setQuantity} />
                 <div className="space-y-2">
@@ -230,7 +241,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
 
 export default ProductInformation;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "product-information",
   title: "Main product",
   childTypes: ["judgeme"],

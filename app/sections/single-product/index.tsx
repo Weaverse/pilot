@@ -1,18 +1,25 @@
-import { Money, ShopPayButton } from "@shopify/hydrogen";
+import {
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  Money,
+  ShopPayButton,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import {
   type ComponentLoaderArgs,
   createSchema,
   type HydrogenComponentProps,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useState } from "react";
 import type { ProductQuery } from "storefront-api.generated";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductPlaceholder } from "~/components/product/placeholder";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
+import { ProductVariants } from "~/components/product/variants";
 import { layoutInputs, Section } from "~/components/section";
-import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
+import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
 
 interface SingleProductData {
@@ -29,9 +36,9 @@ type SingleProductProps = HydrogenComponentProps<
 > &
   SingleProductData;
 
-let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
+const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   (props, ref) => {
-    let {
+    const {
       loaderData,
       children,
       product: _product,
@@ -40,14 +47,21 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       numberOfThumbnails,
       ...rest
     } = props;
-    let { storeDomain, product, variants: _variants } = loaderData || {};
-    let variants = _variants?.product?.variants;
-    let [selectedVariant, setSelectedVariant] = useState<any>(null);
-    let [quantity, setQuantity] = useState<number>(1);
-    useEffect(() => {
-      setSelectedVariant(variants?.nodes?.[0]);
-      setQuantity(1);
-    }, [variants?.nodes]);
+    const { storeDomain, product } = loaderData || {};
+
+    // Optimistically selects a variant with given available variant information
+    const selectedVariant = useOptimisticVariant(
+      product?.selectedOrFirstAvailableVariant,
+      getAdjacentAndFirstAvailableVariants(product),
+    );
+
+    // Get the product options array
+    const productOptions = getProductOptions({
+      ...product,
+      selectedOrFirstAvailableVariant: selectedVariant,
+    });
+
+    const [quantity, setQuantity] = useState<number>(1);
     const [scope] = useAnimation(ref);
 
     if (!product)
@@ -61,7 +75,7 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
         </section>
       );
 
-    let atcText = selectedVariant?.availableForSale
+    const atcText = selectedVariant?.availableForSale
       ? "Add to Cart"
       : selectedVariant?.quantityAvailable === -1
         ? "Unavailable"
@@ -100,15 +114,10 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                     __html: product?.summary,
                   }}
                 />
-                {/* <ProductVariants
-                  product={product}
+                <ProductVariants
+                  productOptions={productOptions}
                   selectedVariant={selectedVariant}
-                  onSelectedVariantChange={setSelectedVariant}
-                  variants={variants}
-                  options={product?.options}
-                  productHandle={product?.handle}
-                  hideUnavailableOptions={hideUnavailableOptions}
-                /> */}
+                />
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
               <AddToCartButton
@@ -146,37 +155,32 @@ let SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
   },
 );
 
-export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
-  let { weaverse, data } = args;
-  let { storefront } = weaverse;
+export const loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
+  const { weaverse, data } = args;
+  const { storefront } = weaverse;
   if (!data.product) {
     return null;
   }
-  let productHandle = data.product.handle;
-  let { product, shop } = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
-    variables: {
-      handle: productHandle,
-      selectedOptions: [],
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
+  const productHandle = data.product.handle;
+  const { product, shop } = await storefront.query<ProductQuery>(
+    PRODUCT_QUERY,
+    {
+      variables: {
+        handle: productHandle,
+        selectedOptions: [],
+        language: storefront.i18n.language,
+        country: storefront.i18n.country,
+      },
     },
-  });
-  let variants = await storefront.query(VARIANTS_QUERY, {
-    variables: {
-      handle: productHandle,
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
-    },
-  });
+  );
 
   return {
     product,
-    variants,
     storeDomain: shop.primaryDomain.url,
   };
 };
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "single-product",
   title: "Single product",
   childTypes: ["judgeme"],

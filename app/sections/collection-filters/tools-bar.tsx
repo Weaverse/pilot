@@ -28,7 +28,7 @@ export function ToolsBar({
   gridSizeMobile,
   onGridSizeChange,
 }: ToolsBarProps) {
-  let { collection } = useLoaderData<CollectionQuery>();
+  const { collection } = useLoaderData<CollectionQuery>();
   return (
     <div className="border-y border-line-subtle py-4">
       <div className="gap-4 md:gap-8 flex w-full items-center justify-between">

@@ -6,7 +6,7 @@ export interface SlideshowDotsProps extends VariantProps<typeof variants> {
   className?: string;
 }
 
-let variants = cva(
+const variants = cva(
   [
     "slideshow-dots",
     "absolute z-1 w-auto! flex justify-center items-center px-2.5 gap-4",
@@ -32,7 +32,7 @@ let variants = cva(
 );
 
 export function Dots(props: SlideshowDotsProps) {
-  let { className, dotsPosition, dotsColor } = props;
+  const { className, dotsPosition, dotsColor } = props;
   return (
     <div className={clsx(variants({ dotsPosition, dotsColor }), className)} />
   );

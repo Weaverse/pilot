@@ -15,8 +15,8 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  let { origin } = new URL(request.url);
-  let { shop } = await storefront.query<GetShopPrimaryDomainQuery>(
+  const { origin } = new URL(request.url);
+  const { shop } = await storefront.query<GetShopPrimaryDomainQuery>(
     SHOP_PRIMARY_DOMAIN_QUERY,
     { cache: storefront.CacheLong() },
   );

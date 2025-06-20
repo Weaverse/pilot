@@ -11,14 +11,17 @@ export async function getFeaturedData(
   storefront: LoaderFunctionArgs["context"]["storefront"],
   variables: { pageBy?: number } = {},
 ) {
-  let data = await storefront.query<FeaturedItemsQuery>(FEATURED_ITEMS_QUERY, {
-    variables: {
-      pageBy: 12,
-      country: storefront.i18n.country,
-      language: storefront.i18n.language,
-      ...variables,
+  const data = await storefront.query<FeaturedItemsQuery>(
+    FEATURED_ITEMS_QUERY,
+    {
+      variables: {
+        pageBy: 12,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+        ...variables,
+      },
     },
-  });
+  );
 
   invariant(data, "No featured items data returned from Shopify API");
 

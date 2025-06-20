@@ -93,10 +93,12 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
         currencyCode
       }
     }
-    variants(first: 10) {
-      nodes {
-        ...ProductVariant
-      }
+    selectedOrFirstAvailableVariant(
+      selectedOptions: []
+      ignoreUnknownOptions: true
+      caseInsensitiveMatch: true
+    ) {
+      ...ProductVariant
     }
   }
   ${PRODUCT_OPTION_FRAGMENT}

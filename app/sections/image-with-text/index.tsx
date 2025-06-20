@@ -6,9 +6,9 @@ import { layoutInputs, Section } from "~/components/section";
 
 type ImageWithTextProps = SectionProps;
 
-let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
+const ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
   (props, ref) => {
-    let { children, ...rest } = props;
+    const { children, ...rest } = props;
 
     return (
       <Section
@@ -24,7 +24,7 @@ let ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
 
 export default ImageWithText;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "image-with-text",
   title: "Image with text",
   settings: [

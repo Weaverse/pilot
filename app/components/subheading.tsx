@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
-let variants = cva("subheading", {
+const variants = cva("subheading", {
   variants: {
     size: {
       base: "text-base",
@@ -35,11 +35,11 @@ interface SubHeadingProps
   content: string;
 }
 
-let SubHeading = forwardRef<
+const SubHeading = forwardRef<
   HTMLHeadingElement | HTMLParagraphElement | HTMLDivElement,
   SubHeadingProps
 >((props, ref) => {
-  let {
+  const {
     as: Tag = "p",
     content,
     color,
@@ -64,7 +64,7 @@ let SubHeading = forwardRef<
 
 export default SubHeading;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "subheading",
   title: "Subheading",
   settings: [

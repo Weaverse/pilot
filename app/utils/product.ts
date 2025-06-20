@@ -23,7 +23,7 @@ export async function getRecommendedProducts(
   storefront: Storefront<I18nLocale>,
   productId: string,
 ) {
-  let products = await storefront.query<ProductRecommendationsQuery>(
+  const products = await storefront.query<ProductRecommendationsQuery>(
     RECOMMENDED_PRODUCTS_QUERY,
     {
       variables: { productId, count: 12 },
@@ -32,13 +32,13 @@ export async function getRecommendedProducts(
 
   invariant(products, "No data returned from Shopify API");
 
-  let mergedProducts = (products.recommended ?? [])
+  const mergedProducts = (products.recommended ?? [])
     .concat(products.additional.nodes)
     .filter((prod, idx, arr) => {
       return arr.findIndex(({ id }) => id === prod.id) === idx;
     });
 
-  let originalProduct = mergedProducts.findIndex(
+  const originalProduct = mergedProducts.findIndex(
     (item) => item.id === productId,
   );
 

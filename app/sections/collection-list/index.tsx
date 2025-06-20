@@ -2,8 +2,8 @@ import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-let CollectionList = forwardRef<HTMLElement, SectionProps>((props, ref) => {
-  let { children, ...rest } = props;
+const CollectionList = forwardRef<HTMLElement, SectionProps>((props, ref) => {
+  const { children, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
@@ -13,7 +13,7 @@ let CollectionList = forwardRef<HTMLElement, SectionProps>((props, ref) => {
 
 export default CollectionList;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "collection-list",
   title: "Collection list",
   limit: 1,

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
-let variants = cva("", {
+const variants = cva("", {
   variants: {
     size: {
       sm: "data-[orientation=horizontal]:h-1 data-[orientation=vertical]:w-1",
@@ -27,7 +27,7 @@ interface ScrollAreaProps
   thumbClassName?: string;
 }
 
-export let ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
+export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
   (
     {
       size,

@@ -9,20 +9,20 @@ import { redirectIfHandleIsLocalized } from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
-export let headers = routeHeaders;
+export const headers = routeHeaders;
 
 export async function loader(args: RouteLoaderArgs) {
-  let { request, params, context } = args;
-  let { storefront } = context.weaverse;
-  let { language, country } = storefront.i18n;
+  const { request, params, context } = args;
+  const { storefront } = context.weaverse;
+  const { language, country } = storefront.i18n;
 
   invariant(params.blogHandle, "Missing blog handle");
   invariant(params.articleHandle, "Missing article handle");
 
-  let { blogHandle, articleHandle } = params;
+  const { blogHandle, articleHandle } = params;
 
   // Load blog data and weaverseData in parallel
-  let [{ blog }, weaverseData] = await Promise.all([
+  const [{ blog }, weaverseData] = await Promise.all([
     storefront.query<ArticleQuery>(ARTICLE_QUERY, {
       variables: {
         blogHandle,
@@ -51,18 +51,18 @@ export async function loader(args: RouteLoaderArgs) {
     },
   );
 
-  let article = blog.articleByHandle;
-  let relatedArticles = blog.articles.nodes.filter(
+  const article = blog.articleByHandle;
+  const relatedArticles = blog.articles.nodes.filter(
     (art) => art?.handle !== articleHandle,
   );
 
-  let formattedDate = new Intl.DateTimeFormat(`${language}-${country}`, {
+  const formattedDate = new Intl.DateTimeFormat(`${language}-${country}`, {
     year: "numeric",
     month: "long",
     day: "numeric",
   }).format(new Date(article?.publishedAt));
 
-  let seo = seoPayload.article({ article, url: request.url });
+  const seo = seoPayload.article({ article, url: request.url });
 
   return {
     article,
@@ -76,7 +76,7 @@ export async function loader(args: RouteLoaderArgs) {
   };
 }
 
-export let meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 

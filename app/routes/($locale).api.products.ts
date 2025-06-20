@@ -18,15 +18,15 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  let url = new URL(request.url);
-  let searchParams = new URLSearchParams(url.search);
-  let query = searchParams.get("query") ?? "";
-  let sortKey =
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const query = searchParams.get("query") ?? "";
+  const sortKey =
     (searchParams.get("sortKey") as null | ProductSortKeys) ?? "BEST_SELLING";
   let reverse = false;
 
   try {
-    let _reverse = searchParams.get("reverse");
+    const _reverse = searchParams.get("reverse");
     if (_reverse === "true") {
       reverse = true;
     }
@@ -36,7 +36,7 @@ export async function loader({
 
   let count = 4;
   try {
-    let _count = searchParams.get("count");
+    const _count = searchParams.get("count");
     if (typeof _count === "string") {
       count = Number.parseInt(_count);
     }
@@ -44,7 +44,7 @@ export async function loader({
     // noop
   }
 
-  let { products } = await storefront.query<ApiAllProductsQuery>(
+  const { products } = await storefront.query<ApiAllProductsQuery>(
     API_ALL_PRODUCTS_QUERY,
     {
       variables: {

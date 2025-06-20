@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { forwardRef } from "react";
 import { Image } from "~/components/image";
 
-let variants = cva("h-(--image-height)", {
+const variants = cva("h-(--image-height)", {
   variants: {
     columnSpan: {
       1: "col-span-1",
@@ -50,10 +50,10 @@ interface ImageGalleryItemProps
   src: WeaverseImage;
 }
 
-let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
+const ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
   (props, ref) => {
-    let { src, columnSpan, borderRadius, hideOnMobile, ...rest } = props;
-    let data = typeof src === "object" ? src : { url: src, altText: src };
+    const { src, columnSpan, borderRadius, hideOnMobile, ...rest } = props;
+    const data = typeof src === "object" ? src : { url: src, altText: src };
     return (
       <Image
         ref={ref}
@@ -71,7 +71,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
 
 export default ImageGalleryItem;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "image-gallery--item",
   title: "Image",
   settings: [

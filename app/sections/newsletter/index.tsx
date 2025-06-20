@@ -5,8 +5,8 @@ import { Section, sectionSettings } from "~/components/section";
 
 type NewsLetterProps = SectionProps;
 
-let NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
-  let { children, ...rest } = props;
+const NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
+  const { children, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
@@ -16,7 +16,7 @@ let NewsLetter = forwardRef<HTMLElement, NewsLetterProps>((props, ref) => {
 
 export default NewsLetter;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "newsletter",
   title: "Newsletter",
   settings: sectionSettings,

@@ -8,7 +8,7 @@ export interface OverlayAndBackgroundProps
     Partial<OverlayProps> {}
 
 export function OverlayAndBackground(props: OverlayAndBackgroundProps) {
-  let {
+  const {
     backgroundImage,
     backgroundFit,
     backgroundPosition,

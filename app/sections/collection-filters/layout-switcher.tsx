@@ -33,7 +33,7 @@ export function LayoutSwitcher({
       )}
     >
       {[1, 2, 3, 4, 5].map((col) => {
-        let Icon = LAYOUT_ICONS[col];
+        const Icon = LAYOUT_ICONS[col];
         return (
           <button
             key={col}

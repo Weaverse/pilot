@@ -5,7 +5,7 @@ import type { JudgemeReviewsData } from "~/utils/judgeme";
 const REVIEWS_PER_PAGE = 5;
 
 function formatDate(dateString: string) {
-  let date = new Date(dateString);
+  const date = new Date(dateString);
   return date.toLocaleDateString("en-US");
 }
 
@@ -14,10 +14,10 @@ export function ReviewList({
 }: {
   reviews: JudgemeReviewsData;
 }) {
-  let [page, setPage] = useState(0);
-  let pageNumber = Math.ceil(reviewsData.reviews.length / REVIEWS_PER_PAGE);
+  const [page, setPage] = useState(0);
+  const pageNumber = Math.ceil(reviewsData.reviews.length / REVIEWS_PER_PAGE);
 
-  let reviews = reviewsData.reviews.slice(
+  const reviews = reviewsData.reviews.slice(
     page * REVIEWS_PER_PAGE,
     (page + 1) * REVIEWS_PER_PAGE,
   );

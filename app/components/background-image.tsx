@@ -3,7 +3,7 @@ import type { InspectorGroup, WeaverseImage } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 
-let variants = cva("absolute inset-0 w-full h-full z-[-1]", {
+const variants = cva("absolute inset-0 w-full h-full z-[-1]", {
   variants: {
     backgroundFit: {
       fill: "object-fill",
@@ -33,9 +33,9 @@ export type BackgroundImageProps = VariantProps<typeof variants> & {
 };
 
 export function BackgroundImage(props: BackgroundImageProps) {
-  let { backgroundImage, backgroundFit, backgroundPosition } = props;
+  const { backgroundImage, backgroundFit, backgroundPosition } = props;
   if (backgroundImage) {
-    let data =
+    const data =
       typeof backgroundImage === "string"
         ? { url: backgroundImage, altText: "Section background" }
         : backgroundImage;
@@ -50,7 +50,7 @@ export function BackgroundImage(props: BackgroundImageProps) {
   return null;
 }
 
-export let backgroundInputs: InspectorGroup["inputs"] = [
+export const backgroundInputs: InspectorGroup["inputs"] = [
   {
     type: "select",
     name: "backgroundFor",

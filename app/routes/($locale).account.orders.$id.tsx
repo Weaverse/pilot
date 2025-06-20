@@ -5,7 +5,7 @@ import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import type { MetaFunction } from "react-router";
 import { OrderDetails } from "~/components/customer/order-details";
 
-export let meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Order ${data?.order?.name}` }];
 };
 
@@ -14,15 +14,15 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
     return redirect(params?.locale ? `${params.locale}/account` : "/account");
   }
 
-  let queryParams = new URL(request.url).searchParams;
-  let orderToken = queryParams.get("key");
+  const queryParams = new URL(request.url).searchParams;
+  const orderToken = queryParams.get("key");
 
   try {
-    let orderId = orderToken
+    const orderId = orderToken
       ? `gid://shopify/Order/${params.id}?key=${orderToken}`
       : `gid://shopify/Order/${params.id}`;
 
-    let { data, errors } = await context.customerAccount.query<OrderQuery>(
+    const { data, errors } = await context.customerAccount.query<OrderQuery>(
       CUSTOMER_ORDER_QUERY,
       { variables: { orderId } },
     );
@@ -31,17 +31,17 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       throw new Error("Order not found");
     }
 
-    let order: OrderFragment = data.order;
-    let lineItems = flattenConnection(order.lineItems);
-    let discountApplications = flattenConnection(order.discountApplications);
-    let firstDiscount = discountApplications[0]?.value;
-    let discountValue =
+    const order: OrderFragment = data.order;
+    const lineItems = flattenConnection(order.lineItems);
+    const discountApplications = flattenConnection(order.discountApplications);
+    const firstDiscount = discountApplications[0]?.value;
+    const discountValue =
       firstDiscount?.__typename === "MoneyV2" && firstDiscount;
-    let discountPercentage =
+    const discountPercentage =
       firstDiscount?.__typename === "PricingPercentageValue" &&
       firstDiscount?.percentage;
-    let fulfillments = flattenConnection(order.fulfillments);
-    let fulfillmentStatus =
+    const fulfillments = flattenConnection(order.fulfillments);
+    const fulfillmentStatus =
       fulfillments.length > 0
         ? fulfillments[0].status
         : ("OPEN" as FulfillmentStatus);

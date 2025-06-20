@@ -21,8 +21,8 @@ export function getAppliedFilterLink(
   params: URLSearchParams,
   location: Location,
 ) {
-  let paramsClone = new URLSearchParams(params);
-  for (let [k, v] of Object.entries(filter)) {
+  const paramsClone = new URLSearchParams(params);
+  for (const [k, v] of Object.entries(filter)) {
     paramsClone.delete(FILTER_URL_PREFIX + k, JSON.stringify(v));
   }
   return `${location.pathname}?${paramsClone.toString()}`;
@@ -33,8 +33,8 @@ export function getFilterLink(
   params: URLSearchParams,
   location: ReturnType<typeof useLocation>,
 ) {
-  let paramsClone = new URLSearchParams(params);
-  let newParams = filterInputToParams(input, paramsClone);
+  const paramsClone = new URLSearchParams(params);
+  const newParams = filterInputToParams(input, paramsClone);
   return `${location.pathname}?${newParams.toString()}`;
 }
 
@@ -42,12 +42,12 @@ export function filterInputToParams(
   input: string | ProductFilter,
   params: URLSearchParams,
 ) {
-  let filter =
+  const filter =
     typeof input === "string" ? (JSON.parse(input) as ProductFilter) : input;
 
-  for (let [k, v] of Object.entries(filter)) {
-    let key = `${FILTER_URL_PREFIX}${k}`;
-    let value = JSON.stringify(v);
+  for (const [k, v] of Object.entries(filter)) {
+    const key = `${FILTER_URL_PREFIX}${k}`;
+    const value = JSON.stringify(v);
     if (params.has(key, value)) {
       return params;
     }

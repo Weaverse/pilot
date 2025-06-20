@@ -12,9 +12,9 @@ import type { RootLoader } from "~/root";
 export let openCartDrawer = () => {};
 
 export function CartDrawer() {
-  let rootData = useRouteLoaderData<RootLoader>("root");
-  let { publish } = useAnalytics();
-  let [open, setOpen] = useState(false);
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const { publish } = useAnalytics();
+  const [open, setOpen] = useState(false);
   openCartDrawer = () => setOpen(true);
 
   // Toggle cart drawer when adding to cart

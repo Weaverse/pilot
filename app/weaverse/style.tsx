@@ -1,9 +1,9 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 
 export function GlobalStyle() {
-  let settings = useThemeSettings();
+  const settings = useThemeSettings();
   if (settings) {
-    let {
+    const {
       colorBackground,
       colorText,
       colorTextSubtle,

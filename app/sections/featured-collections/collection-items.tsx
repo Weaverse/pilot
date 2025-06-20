@@ -17,7 +17,7 @@ import type { ImageAspectRatio } from "~/types/image";
 import { getImageAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
 
-let variants = cva("", {
+const variants = cva("", {
   variants: {
     gridSize: {
       3: "md:grid-cols-3",
@@ -65,10 +65,10 @@ interface CollectionItemsProps
   buttonText: string;
 }
 
-let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
+const CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
   (props, ref) => {
     const [scope] = useAnimation(ref);
-    let {
+    const {
       gridSize,
       gap,
       imageAspectRatio,
@@ -88,7 +88,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
       borderColorHover,
       ...rest
     } = props;
-    let parent = useParentInstance();
+    const parent = useParentInstance();
     let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
     if (!collections?.length) {
       collections = Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
@@ -184,7 +184,7 @@ let CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
   },
 );
 
-let COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
+const COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
   id: "gid://shopify/Collection/1234567890",
   title: "Collection title",
   handle: "collection-handle",
@@ -200,7 +200,7 @@ let COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
 
 export default CollectionItems;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "featured-collections-items",
   title: "Collection items",
   settings: [

@@ -13,7 +13,7 @@ function Badge({
   backgroundColor: string;
   className?: string;
 }) {
-  let { colorText, colorTextInverse, badgeBorderRadius, badgeTextTransform } =
+  const { colorText, colorTextInverse, badgeBorderRadius, badgeTextTransform } =
     useThemeSettings();
   return (
     <span
@@ -37,7 +37,7 @@ export function NewBadge({
   publishedAt: string;
   className?: string;
 }) {
-  let { newBadgeText, newBadgeColor, newBadgeDaysOld } = useThemeSettings();
+  const { newBadgeText, newBadgeColor, newBadgeDaysOld } = useThemeSettings();
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
@@ -51,7 +51,7 @@ export function NewBadge({
 }
 
 export function BestSellerBadge({ className }: { className?: string }) {
-  let { bestSellerBadgeText, bestSellerBadgeColor } = useThemeSettings();
+  const { bestSellerBadgeText, bestSellerBadgeColor } = useThemeSettings();
   return (
     <Badge
       text={bestSellerBadgeText}
@@ -62,7 +62,7 @@ export function BestSellerBadge({ className }: { className?: string }) {
 }
 
 export function SoldOutBadge({ className }: { className?: string }) {
-  let { soldOutBadgeText, soldOutBadgeColor } = useThemeSettings();
+  const { soldOutBadgeText, soldOutBadgeColor } = useThemeSettings();
   return (
     <Badge
       text={soldOutBadgeText}
@@ -81,10 +81,10 @@ export function SaleBadge({
   compareAtPrice: MoneyV2;
   className?: string;
 }) {
-  let { saleBadgeText = "Sale", saleBadgeColor } = useThemeSettings();
-  let { amount, percentage } = calculateDiscount(price, compareAtPrice);
-  let discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
-  let text = saleBadgeText
+  const { saleBadgeText = "Sale", saleBadgeColor } = useThemeSettings();
+  const { amount, percentage } = calculateDiscount(price, compareAtPrice);
+  const discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
+  const text = saleBadgeText
     .replace("[amount]", discountAmount.withoutTrailingZeros)
     .replace("[percentage]", percentage);
 
@@ -102,8 +102,8 @@ export function SaleBadge({
 
 function calculateDiscount(price: MoneyV2, compareAtPrice: MoneyV2) {
   if (price?.amount && compareAtPrice?.amount) {
-    let priceNumber = Number(price.amount);
-    let compareAtPriceNumber = Number(compareAtPrice.amount);
+    const priceNumber = Number(price.amount);
+    const compareAtPriceNumber = Number(compareAtPrice.amount);
     if (compareAtPriceNumber > priceNumber) {
       return {
         amount: String(compareAtPriceNumber - priceNumber),

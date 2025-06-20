@@ -9,11 +9,7 @@ import type {
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
-import type {
-  ProductQuery,
-  ProductVariantFragment,
-  ShopFragment,
-} from "storefront-api.generated";
+import type { ProductQuery, ShopFragment } from "storefront-api.generated";
 
 function root({
   shop,
@@ -75,31 +71,54 @@ function productJsonLd({
   selectedVariant,
   url,
 }: {
-  product: ProductQuery["product"] & { variants: ProductVariantFragment[] };
-  selectedVariant: ProductVariantFragment;
+  product: ProductQuery["product"];
+  selectedVariant: ProductQuery["product"]["selectedOrFirstAvailableVariant"];
   url: Request["url"];
 }): SeoConfig["jsonLd"] {
-  let origin = new URL(url).origin;
-  let description = truncate(product?.seo?.description ?? product?.description);
-  // @ts-ignore
-  let offers: Offer[] = (product.variants || []).map((variant) => {
-    let variantUrl = new URL(url);
-    for (let option of variant.selectedOptions) {
-      variantUrl.searchParams.set(option.name, option.value);
+  const origin = new URL(url).origin;
+  const description = truncate(
+    product?.seo?.description ?? product?.description,
+  );
+
+  // Create offers array from adjacent variants
+  const offers: Offer[] = [];
+  if (product?.adjacentVariants) {
+    for (const variant of product.adjacentVariants) {
+      const variantUrl = new URL(url);
+      for (const option of variant.selectedOptions) {
+        variantUrl.searchParams.set(option.name, option.value);
+      }
+      const availability: any = variant.availableForSale
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock";
+
+      offers.push({
+        "@type": "Offer",
+        availability,
+        price: Number.parseFloat(variant.price.amount),
+        priceCurrency: variant.price.currencyCode,
+        sku: variant?.sku ?? "",
+        url: variantUrl.toString(),
+      });
     }
-    let availability: any = variant.availableForSale
+  }
+
+  // If no adjacent variants, add the selected variant
+  if (offers.length === 0 && selectedVariant) {
+    const availability: any = selectedVariant.availableForSale
       ? "https://schema.org/InStock"
       : "https://schema.org/OutOfStock";
 
-    return {
+    offers.push({
       "@type": "Offer",
       availability,
-      price: Number.parseFloat(variant.price.amount),
-      priceCurrency: variant.price.currencyCode,
-      sku: variant?.sku ?? "",
-      url: variantUrl.toString(),
-    };
-  });
+      price: Number.parseFloat(selectedVariant.price.amount),
+      priceCurrency: selectedVariant.price.currencyCode,
+      sku: selectedVariant?.sku ?? "",
+      url,
+    });
+  }
+
   return [
     {
       "@context": "https://schema.org",
@@ -139,13 +158,13 @@ function product({
   product,
   url,
 }: {
-  product: ProductQuery["product"] & { variants: ProductVariantFragment[] };
+  product: ProductQuery["product"];
   url: Request["url"];
 }): SeoConfig {
-  let description = truncate(
+  const description = truncate(
     product?.seo?.description ?? product?.description ?? "",
   );
-  let selectedVariant = product.selectedVariant || product.variants[0];
+  const selectedVariant = product?.selectedOrFirstAvailableVariant;
   return {
     title: product?.seo?.title ?? product?.title,
     description,
@@ -172,8 +191,8 @@ function collectionJsonLd({
   url: Request["url"];
   collection: CollectionRequiredFields;
 }): SeoConfig["jsonLd"] {
-  let siteUrl = new URL(url);
-  let itemListElement: CollectionPage["mainEntity"] =
+  const siteUrl = new URL(url);
+  const itemListElement: CollectionPage["mainEntity"] =
     collection.products.nodes.map((product, index) => {
       return {
         "@type": "ListItem",
@@ -253,7 +272,7 @@ function collectionsJsonLd({
   url: Request["url"];
   collections: CollectionListRequiredFields;
 }): SeoConfig["jsonLd"] {
-  let itemListElement: CollectionPage["mainEntity"] = collections.nodes.map(
+  const itemListElement: CollectionPage["mainEntity"] = collections.nodes.map(
     (collection, index) => {
       return {
         "@type": "ListItem",
@@ -399,8 +418,8 @@ function policies({
   policies: Array<Pick<ShopPolicy, "title" | "handle">>;
   url: Request["url"];
 }): SeoConfig {
-  let origin = new URL(url).origin;
-  let itemListElement: BreadcrumbList["itemListElement"] = policies
+  const origin = new URL(url).origin;
+  const itemListElement: BreadcrumbList["itemListElement"] = policies
     .filter(Boolean)
     .map((policy, index) => {
       return {
@@ -431,7 +450,7 @@ function policies({
   };
 }
 
-export let seoPayload = {
+export const seoPayload = {
   article,
   blog,
   collection,

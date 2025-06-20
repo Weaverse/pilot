@@ -27,19 +27,19 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  let { searchParams } = new URL(request.url);
-  let searchTerm = searchParams.get("q");
+  const { searchParams } = new URL(request.url);
+  const searchTerm = searchParams.get("q");
   let products: SearchQuery["products"] = {
     nodes: [],
     pageInfo: null,
   };
 
   if (searchTerm) {
-    let variables = getPaginationVariables(request, {
+    const variables = getPaginationVariables(request, {
       pageBy: PAGINATION_SIZE,
     });
 
-    let data = await storefront.query<SearchQuery>(SEARCH_QUERY, {
+    const data = await storefront.query<SearchQuery>(SEARCH_QUERY, {
       variables: {
         searchTerm,
         ...variables,
@@ -50,7 +50,7 @@ export async function loader({
     products = data.products;
   }
 
-  let hasResults = products?.nodes?.length > 0;
+  const hasResults = products?.nodes?.length > 0;
 
   return {
     seo: seoPayload.collection({
@@ -82,7 +82,7 @@ export async function loader({
   };
 }
 
-export let meta = ({ matches }: MetaArgs<typeof loader>) => {
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return getSeoMeta(
     ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
   );
@@ -91,10 +91,10 @@ export let meta = ({ matches }: MetaArgs<typeof loader>) => {
 const POPULAR_SEARCHES = ["French Linen", "Shirt", "Cotton"];
 
 export default function Search() {
-  let { searchTerm, products, recommendations } =
+  const { searchTerm, products, recommendations } =
     useLoaderData<typeof loader>();
-  let [searchKey, setSearchKey] = useState(searchTerm);
-  let hasResults = products?.nodes?.length > 0;
+  const [searchKey, setSearchKey] = useState(searchTerm);
+  const hasResults = products?.nodes?.length > 0;
 
   useEffect(() => {
     setSearchKey(searchTerm);
@@ -214,7 +214,7 @@ function NoResults({
             if (!data) {
               return null;
             }
-            let { featuredProducts } = data;
+            const { featuredProducts } = data;
             return (
               <div className="space-y-6 pt-20">
                 <h5>Trending Products</h5>

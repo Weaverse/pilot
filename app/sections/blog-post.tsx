@@ -17,25 +17,25 @@ interface BlogPostProps extends SectionProps {
   showShareButtons: boolean;
 }
 
-let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
-  let { showTags, showShareButtons, ...rest } = props;
-  let { layout } = useRouteLoaderData<RootLoader>("root");
-  let { article, blog, formattedDate } = useLoaderData<{
+const BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
+  const { showTags, showShareButtons, ...rest } = props;
+  const { layout } = useRouteLoaderData<RootLoader>("root");
+  const { article, blog, formattedDate } = useLoaderData<{
     article: ArticleQuery["blog"]["articleByHandle"];
     blog: ArticleQuery["blog"];
     formattedDate: string;
   }>();
-  let { title, handle, image, contentHtml, author, tags } = article;
+  const { title, handle, image, contentHtml, author, tags } = article;
   if (article) {
     let domain = layout.shop.primaryDomain.url;
     if (isBrowser) {
-      let origin = window.location.origin;
+      const origin = window.location.origin;
       if (!origin.includes("localhost")) {
         domain = origin;
       }
     }
-    let { handle: blogHandle } = blog;
-    let articleUrl = `${domain}/blogs/${blogHandle}/${handle}`;
+    const { handle: blogHandle } = blog;
+    const articleUrl = `${domain}/blogs/${blogHandle}/${handle}`;
     return (
       <Section ref={ref} {...rest}>
         {image && (
@@ -92,7 +92,7 @@ let BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
 
 export default BlogPost;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "blog-post",
   title: "Blog post",
   limit: 1,

@@ -12,7 +12,7 @@ import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
 
-let variants = cva("", {
+const variants = cva("", {
   variants: {
     alignment: {
       left: "justify-start",
@@ -42,8 +42,8 @@ interface MapSectionProps
   boxBorderRadius: number;
 }
 
-let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
-  let {
+const MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
+  const {
     height,
     alignment,
     heading,
@@ -110,7 +110,7 @@ let MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
 
 export default MapSection;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "map",
   title: "Map",
   settings: [

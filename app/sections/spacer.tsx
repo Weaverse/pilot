@@ -9,8 +9,8 @@ type SpacerProps = HydrogenComponentProps & {
   separatorColor: string;
 };
 
-let Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
-  let {
+const Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
+  const {
     mobileHeight,
     desktopHeight,
     backgroundColor,
@@ -41,7 +41,7 @@ let Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
 
 export default Spacer;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "spacer",
   title: "Spacer",
   settings: [

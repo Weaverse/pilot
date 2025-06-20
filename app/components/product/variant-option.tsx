@@ -13,7 +13,7 @@ const OPTIONS_AS_BUTTON = ["Size"];
 const OPTIONS_AS_IMAGE = [];
 const OPTIONS_AS_DROPDOWN = [];
 
-export let variants = cva(
+export const variants = cva(
   "border border-line hover:border-body cursor-pointer",
   {
     variants: {
@@ -64,14 +64,14 @@ interface VariantOptionProps {
 export function VariantOption({ option }: VariantOptionProps) {
   if (!option?.name) return null;
 
-  let { name, value, values } = option;
-  let navigate = useNavigate();
+  const { name, value, values } = option;
+  const navigate = useNavigate();
 
   if (OPTIONS_AS_SWATCH.includes(name)) {
     return (
       <div className="flex flex-wrap gap-3">
         {values.map(({ value, optionValue, isUnavailable, isActive, to }) => {
-          let { swatch } = optionValue;
+          const { swatch } = optionValue;
           return (
             <Tooltip key={value}>
               <TooltipTrigger>
@@ -153,7 +153,7 @@ export function VariantOption({ option }: VariantOptionProps) {
     return (
       <div className="flex flex-wrap gap-3">
         {values.map(({ value, optionValue, isUnavailable, isActive, to }) => {
-          let { firstSelectableVariant } = optionValue;
+          const { firstSelectableVariant } = optionValue;
           return (
             <Tooltip key={value}>
               <TooltipTrigger>
@@ -201,7 +201,7 @@ export function VariantOption({ option }: VariantOptionProps) {
       <Select.Root
         value={value}
         onValueChange={(v) => {
-          let { to } = values.find(({ value }) => value === v);
+          const { to } = values.find(({ value }) => value === v);
           navigate(to);
         }}
       >

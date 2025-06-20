@@ -13,17 +13,17 @@ import {
 import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
-export let TooltipProvider = Provider;
-export let Tooltip = ({ delayDuration = 100, ...rest }: TooltipProps) => (
+export const TooltipProvider = Provider;
+export const Tooltip = ({ delayDuration = 100, ...rest }: TooltipProps) => (
   <Root delayDuration={delayDuration} {...rest} />
 );
 
-export let TooltipTrigger = ({
+export const TooltipTrigger = ({
   asChild = true,
   ...rest
 }: TooltipTriggerProps) => <Trigger asChild={asChild} {...rest} />;
 
-export let TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
+export const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
   ({ children, className, sideOffset = 4, style, ...rest }, ref) => {
     return (
       <Content

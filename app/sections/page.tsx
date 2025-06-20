@@ -7,8 +7,8 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 interface PageProps extends SectionProps {}
 
-let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
-  let { page } = useLoaderData<PageDetailsQuery>();
+const Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
+  const { page } = useLoaderData<PageDetailsQuery>();
 
   if (page) {
     return (
@@ -36,7 +36,7 @@ let Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
 
 export default Page;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "page",
   title: "Page",
   limit: 1,

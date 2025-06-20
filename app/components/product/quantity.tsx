@@ -3,8 +3,8 @@ interface QuantityProps {
   onChange: (value: number) => void;
 }
 export function Quantity(props: QuantityProps) {
-  let { value, onChange } = props;
-  let handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const { value, onChange } = props;
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Prevent the user from entering non-numeric characters
     if (
       e.key !== "Backspace" &&

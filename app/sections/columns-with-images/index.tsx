@@ -5,9 +5,9 @@ import { Section, sectionSettings } from "~/components/section";
 
 type ColumnsWithImagesProps = SectionProps;
 
-let ColumnsWithImages = forwardRef<HTMLElement, ColumnsWithImagesProps>(
+const ColumnsWithImages = forwardRef<HTMLElement, ColumnsWithImagesProps>(
   (props, ref) => {
-    let { children, ...rest } = props;
+    const { children, ...rest } = props;
     return (
       <Section ref={ref} {...rest}>
         {children}
@@ -18,7 +18,7 @@ let ColumnsWithImages = forwardRef<HTMLElement, ColumnsWithImagesProps>(
 
 export default ColumnsWithImages;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "columns-with-images",
   title: "Columns with images",
   settings: sectionSettings,

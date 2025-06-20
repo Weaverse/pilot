@@ -21,7 +21,7 @@ import { cn } from "~/utils/cn";
 import { getImageAspectRatio } from "~/utils/image";
 import { ZoomModal } from "./media-zoom";
 
-let variants = cva(
+const variants = cva(
   [
     "w-full grid justify-start gap-2 lg:gap-1",
     "lg:grid-cols-1",
@@ -50,7 +50,7 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
 }
 
 export function ProductMedia(props: ProductMediaProps) {
-  let {
+  const {
     mediaLayout,
     gridSize,
     showThumbnails,
@@ -60,15 +60,15 @@ export function ProductMedia(props: ProductMediaProps) {
     enableZoom,
   } = props;
 
-  let [swiper, setSwiper] = useState<SwiperClass | null>(null);
-  let [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
-  let [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
-  let [zoomModalOpen, setZoomModalOpen] = useState(false);
+  const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+  const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
+  const [zoomModalOpen, setZoomModalOpen] = useState(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (selectedVariant && swiper) {
-      let index = getSelectedVariantMediaIndex(media, selectedVariant);
+      const index = getSelectedVariantMediaIndex(media, selectedVariant);
       if (index !== swiper.activeIndex) {
         swiper.slideTo(index);
       }
@@ -79,7 +79,7 @@ export function ProductMedia(props: ProductMediaProps) {
     return (
       <div className={variants({ gridSize })}>
         {media.map((med, idx) => {
-          let image = {
+          const image = {
             ...med.previewImage,
             altText: med.alt || "Product image",
           };
@@ -246,7 +246,7 @@ function Media({
   index: number;
 }) {
   if (media.mediaContentType === "IMAGE") {
-    let { image, alt } = media as Media_MediaImage_Fragment;
+    const { image, alt } = media as Media_MediaImage_Fragment;
     return (
       <Image
         data={{ ...image, altText: alt || "Product image" }}
@@ -259,7 +259,7 @@ function Media({
     );
   }
   if (media.mediaContentType === "VIDEO") {
-    let mediaVideo = media as Media_Video_Fragment;
+    const mediaVideo = media as Media_Video_Fragment;
     return (
       <video
         controls
@@ -287,6 +287,6 @@ function getSelectedVariantMediaIndex(
   selectedVariant: ProductVariantFragment,
 ) {
   if (!selectedVariant) return 0;
-  let mediaUrl = selectedVariant.image?.url;
+  const mediaUrl = selectedVariant.image?.url;
   return media.findIndex((med) => med.previewImage?.url === mediaUrl);
 }

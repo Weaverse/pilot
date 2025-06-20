@@ -17,8 +17,8 @@ interface OurTeamProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
     OurTeamData {}
 
-let OurTeam = forwardRef<HTMLDivElement, OurTeamProps>((props, ref) => {
-  let { loaderData, metaobject, membersCount, children, ...rest } = props;
+const OurTeam = forwardRef<HTMLDivElement, OurTeamProps>((props, ref) => {
+  const { loaderData, metaobject, membersCount, children, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
@@ -26,10 +26,10 @@ let OurTeam = forwardRef<HTMLDivElement, OurTeamProps>((props, ref) => {
   );
 });
 
-export let loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
-  let { weaverse, data } = args;
-  let { storefront } = weaverse;
-  let { metaobject, membersCount } = data;
+export const loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
+  const { weaverse, data } = args;
+  const { storefront } = weaverse;
+  const { metaobject, membersCount } = data;
   if (metaobject) {
     return await storefront.query<OurTeamQuery>(OUR_TEAM_QUERY, {
       variables: {
@@ -41,7 +41,7 @@ export let loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
   return null;
 };
 
-let OUR_TEAM_QUERY = `#graphql
+const OUR_TEAM_QUERY = `#graphql
   query OurTeam ($type: String!, $first: Int) {
     metaobjects(type: $type, first: $first) {
       nodes {
@@ -69,7 +69,7 @@ let OUR_TEAM_QUERY = `#graphql
   }
 `;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "our-team",
   title: "Our team",
   childTypes: ["heading", "paragraph", "our-team-members"],

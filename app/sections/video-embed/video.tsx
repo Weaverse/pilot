@@ -7,7 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
 
-let variants = cva("mx-auto w-full aspect-video", {
+const variants = cva("mx-auto w-full aspect-video", {
   variants: {
     size: {
       small: "md:w-1/2",
@@ -51,9 +51,9 @@ interface VideoItemProps
   videoUrl: string;
 }
 
-let VideoEmbedItem = forwardRef<HTMLIFrameElement, VideoItemProps>(
+const VideoEmbedItem = forwardRef<HTMLIFrameElement, VideoItemProps>(
   (props, ref) => {
-    let { video, videoUrl, size, borderRadius, ...rest } = props;
+    const { video, videoUrl, size, borderRadius, ...rest } = props;
     return (
       <iframe
         ref={ref}
@@ -71,7 +71,7 @@ let VideoEmbedItem = forwardRef<HTMLIFrameElement, VideoItemProps>(
 
 export default VideoEmbedItem;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "video-embed--item",
   title: "Video",
   settings: [

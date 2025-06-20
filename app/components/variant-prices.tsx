@@ -15,7 +15,7 @@ export function VariantPrices({
   className?: string;
 }) {
   if (variant) {
-    let { price, compareAtPrice } = variant;
+    const { price, compareAtPrice } = variant;
     return (
       <div className={clsx("flex gap-2", className)}>
         <Money withoutTrailingZeros data={price} />

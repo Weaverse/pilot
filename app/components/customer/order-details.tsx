@@ -9,18 +9,18 @@ import type { loader as orderDetailsLoader } from "~/routes/($locale).account.or
 import { ORDER_STATUS } from "./orders";
 
 export function OrderDetails() {
-  let { order, lineItems, fulfillmentStatus } =
+  const { order, lineItems, fulfillmentStatus } =
     useLoaderData<typeof orderDetailsLoader>();
 
   let totalDiscount = 0;
-  for (let lineItem of lineItems) {
+  for (const lineItem of lineItems) {
     totalDiscount += lineItem.discountAllocations.reduce(
       (acc, curr) => acc + Number.parseFloat(curr.allocatedAmount.amount),
       0,
     );
   }
 
-  let totalDiscountMoney = {
+  const totalDiscountMoney = {
     amount: totalDiscount.toString(),
     currencyCode: order.totalPrice?.currencyCode,
   };
@@ -76,8 +76,9 @@ export function OrderDetails() {
                       <dt className="sr-only">Discount</dt>
                       <dd className="truncate flex gap-2 flex-wrap">
                         {lineItem.discountAllocations.map((discount, index) => {
-                          let discountApp = discount.discountApplication as any;
-                          let discountTitle =
+                          const discountApp =
+                            discount.discountApplication as any;
+                          const discountTitle =
                             discountApp?.title || discountApp?.code;
                           return (
                             <div

@@ -15,9 +15,9 @@ interface AllProductsProps extends SectionProps {
   nextPageText: string;
 }
 
-let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
-  let { heading, prevPageText, nextPageText, ...rest } = props;
-  let { products } = useLoaderData<AllProductsQuery>();
+const AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
+  const { heading, prevPageText, nextPageText, ...rest } = props;
+  const { products } = useLoaderData<AllProductsQuery>();
 
   return (
     <Section ref={ref} {...rest} overflow="unset">
@@ -68,7 +68,7 @@ let AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
 
 export default AllProducts;
 
-export let schema = createSchema({
+export const schema = createSchema({
   type: "all-products",
   title: "All products",
   limit: 1,
