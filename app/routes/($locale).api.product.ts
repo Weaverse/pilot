@@ -1,8 +1,8 @@
 import type { Storefront } from "@shopify/hydrogen";
 import type { LoaderFunction } from "react-router";
 import { data } from "react-router";
-import type { ProductQuery, VariantsQuery } from "storefront-api.generated";
-import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
+import type { ProductQuery } from "storefront-api.generated";
+import { PRODUCT_QUERY } from "~/graphql/queries";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -29,17 +29,9 @@ async function getProductData(storefront: Storefront, handle: string) {
       },
     },
   );
-  const variants = await storefront.query<VariantsQuery>(VARIANTS_QUERY, {
-    variables: {
-      handle,
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
-    },
-  });
   return {
     shop,
     product,
-    variants,
     storeDomain: shop.primaryDomain.url,
   };
 }
