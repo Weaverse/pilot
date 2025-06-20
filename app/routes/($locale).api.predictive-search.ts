@@ -1,7 +1,4 @@
-import {
-  flattenConnection,
-  mapSelectedProductOptionToObject,
-} from "@shopify/hydrogen";
+import { mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import { data, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type {
   PredictiveArticleFragment,
@@ -164,10 +161,9 @@ function normalizePredictiveSearchResults(
       type: "products",
       items: predictiveSearch.products.map(
         (product: PredictiveProductFragment) => {
-          const variants = flattenConnection(product.variants);
-          const firstVariant = variants[0];
+          const selectedVariant = product.selectedOrFirstAvailableVariant;
           const optionsObject = mapSelectedProductOptionToObject(
-            firstVariant.selectedOptions,
+            selectedVariant?.selectedOptions || [],
           );
           const firstVariantParams = new URLSearchParams(optionsObject);
 
@@ -181,8 +177,8 @@ function normalizePredictiveSearchResults(
             title: product.title,
             vendor: product.vendor,
             url: `${localePrefix}/products/${product.handle}${trackingParams}&${firstVariantParams.toString()}`,
-            price: product.variants.nodes[0].price,
-            compareAtPrice: product.variants.nodes[0].compareAtPrice,
+            price: selectedVariant?.price,
+            compareAtPrice: selectedVariant?.compareAtPrice,
           };
         },
       ),
@@ -303,21 +299,23 @@ const PREDICTIVE_SEARCH_QUERY = `#graphql
       width
       height
     }
-    variants(first: 1) {
-      nodes {
-        id
-        price {
-          amount
-          currencyCode
-        }
-        compareAtPrice {
-          amount
-          currencyCode
-        }
-        selectedOptions {
-          name
-          value
-        }
+    selectedOrFirstAvailableVariant(
+      selectedOptions: []
+      ignoreUnknownOptions: true
+      caseInsensitiveMatch: true
+    ) {
+      id
+      price {
+        amount
+        currencyCode
+      }
+      compareAtPrice {
+        amount
+        currencyCode
+      }
+      selectedOptions {
+        name
+        value
       }
     }
   }
