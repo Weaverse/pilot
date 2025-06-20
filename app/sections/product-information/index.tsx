@@ -1,4 +1,10 @@
-import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
+import {
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  Money,
+  ShopPayButton,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
@@ -40,13 +46,20 @@ interface ProductInformationProps
 
 const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
-    const { product, variants, storeDomain } =
-      useLoaderData<typeof productRouteLoader>();
+    const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
     const [params] = useSearchParams();
+
+    // Optimistically selects a variant with given available variant information
     const selectedVariant = useOptimisticVariant(
-      product?.selectedVariant,
-      variants,
+      product?.selectedOrFirstAvailableVariant,
+      getAdjacentAndFirstAvailableVariants(product),
     );
+
+    // Get the product options array
+    const productOptions = getProductOptions({
+      ...product,
+      selectedOrFirstAvailableVariant: selectedVariant,
+    });
 
     const {
       addToCartText,
@@ -170,10 +183,8 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   <p className="leading-relaxed">{summary}</p>
                 )}
                 <ProductVariants
-                  variants={variants}
-                  options={options}
-                  productHandle={handle}
-                  hideUnavailableOptions={hideUnavailableOptions}
+                  productOptions={productOptions}
+                  selectedVariant={selectedVariant}
                 />
                 <Quantity value={quantity} onChange={setQuantity} />
                 <div className="space-y-2">
