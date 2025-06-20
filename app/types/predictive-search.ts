@@ -10,7 +10,7 @@ type PredictiveSearchResultItemImage =
   | PredictiveProductFragment["featuredImage"];
 
 type PredictiveSearchResultItemPrice =
-  PredictiveProductFragment["variants"]["nodes"][0]["price"];
+  PredictiveProductFragment["selectedOrFirstAvailableVariant"]["price"];
 
 export type NormalizedPredictiveSearch = {
   results: NormalizedPredictiveSearchResults;
