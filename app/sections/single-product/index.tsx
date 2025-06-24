@@ -114,10 +114,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                     __html: product?.summary,
                   }}
                 />
-                <ProductVariants
-                  productOptions={productOptions}
-                  selectedVariant={selectedVariant}
-                />
+                <ProductVariants productOptions={productOptions} />
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
               <AddToCartButton

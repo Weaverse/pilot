@@ -1,15 +1,11 @@
 import type { MappedProductOptions } from "@shopify/hydrogen";
-import type { ProductQuery } from "storefront-api.generated";
 import { ProductForm } from "./product-form";
 
-interface ProductVariantsProps {
+export function ProductVariants({
+  productOptions,
+}: {
   productOptions: MappedProductOptions[];
-  selectedVariant: ProductQuery["product"]["selectedOrFirstAvailableVariant"];
-}
-
-export function ProductVariants(props: ProductVariantsProps) {
-  const { productOptions, selectedVariant } = props;
-
+}) {
   // Check if this is a default variant only product
   if (productOptions.length === 1) {
     const option = productOptions[0];
@@ -23,10 +19,7 @@ export function ProductVariants(props: ProductVariantsProps) {
 
   return (
     <div className="space-y-5" data-motion="fade-up">
-      <ProductForm
-        productOptions={productOptions}
-        selectedVariant={selectedVariant}
-      />
+      <ProductForm productOptions={productOptions} />
     </div>
   );
 }

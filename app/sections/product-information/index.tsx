@@ -182,10 +182,7 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                 {showShortDescription && (
                   <p className="leading-relaxed">{summary}</p>
                 )}
-                <ProductVariants
-                  productOptions={productOptions}
-                  selectedVariant={selectedVariant}
-                />
+                <ProductVariants productOptions={productOptions} />
                 <Quantity value={quantity} onChange={setQuantity} />
                 <div className="space-y-2">
                   <AddToCartButton
