@@ -1,7 +1,6 @@
 import {
   Analytics,
   getAdjacentAndFirstAvailableVariants,
-  getProductOptions,
   getSeoMeta,
   mapSelectedProductOptionToObject,
   useOptimisticVariant,
@@ -62,10 +61,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     weaverseData,
     productReviews,
     storeDomain: shop.primaryDomain.url,
-    seo: seoPayload.product({
-      product,
-      url: request.url,
-    }),
+    seo: seoPayload.product({ product, url: request.url }),
     recommended,
     selectedOptions,
   };
@@ -123,12 +119,6 @@ export default function Product() {
       );
     }
   }, [selectedVariant?.selectedOptions]);
-
-  // Get the product options array
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
 
   return (
     <>
