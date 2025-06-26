@@ -35,12 +35,11 @@ export function ProductOptionValues({
   option: MappedProductOptions;
 }) {
   const navigate = useNavigate();
+  const { name: optionName, optionValues } = option || {};
 
-  if (!option?.name) return null;
+  if (!optionName) return null;
 
-  const { name, optionValues } = option;
-
-  if (OPTIONS_AS_DROPDOWN.includes(name)) {
+  if (OPTIONS_AS_DROPDOWN.includes(optionName)) {
     const selectedValue = optionValues.find((v) => v.selected)?.name;
     return (
       <Select.Root
@@ -61,7 +60,7 @@ export function ProductOptionValues({
       >
         <Select.Trigger
           className="inline-flex border border-line h-10 items-center justify-center gap-3 bg-white pl-4 pr-3 py-3 outline-hidden"
-          aria-label={name}
+          aria-label={optionName}
         >
           <Select.Value />
           <Select.Icon className="shrink-0">
@@ -103,13 +102,15 @@ export function ProductOptionValues({
 
   return (
     <div className="flex flex-wrap gap-3">
-      {optionValues.map((value) => {
+      {optionValues.map((optionValue) => {
         return (
-          <Tooltip key={value.name}>
+          <Tooltip key={optionValue.name}>
             <TooltipTrigger>
-              <OptionValue value={value} />
+              <div>
+                <OptionValue optionName={optionName} value={optionValue} />
+              </div>
             </TooltipTrigger>
-            <TooltipContent sideOffset={6}>{value.name}</TooltipContent>
+            <TooltipContent sideOffset={6}>{optionValue.name}</TooltipContent>
           </Tooltip>
         );
       })}
@@ -118,8 +119,10 @@ export function ProductOptionValues({
 }
 
 function OptionValue({
+  optionName,
   value,
 }: {
+  optionName: string;
   value: MappedProductOptions["optionValues"][number];
 }) {
   const navigate = useNavigate();
@@ -154,10 +157,10 @@ function OptionValue({
     },
   };
 
-  if (OPTIONS_AS_SWATCH.includes(name)) {
+  if (OPTIONS_AS_SWATCH.includes(optionName)) {
     const swatchColor = swatch?.color || name;
     return (
-      //@ts-expect-error: TypeScript cannot infer the correct props for variable component
+      // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
         {...(isDifferentProduct ? linkProps : buttonProps)}
         className={clsx(
@@ -191,7 +194,7 @@ function OptionValue({
     );
   }
 
-  if (OPTIONS_AS_BUTTON.includes(name)) {
+  if (OPTIONS_AS_BUTTON.includes(optionName)) {
     return (
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
@@ -212,7 +215,7 @@ function OptionValue({
     );
   }
 
-  if (OPTIONS_AS_IMAGE.includes(name)) {
+  if (OPTIONS_AS_IMAGE.includes(optionName)) {
     return (
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
