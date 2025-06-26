@@ -110,7 +110,11 @@ export function ProductOptionValues({
                 <OptionValue optionName={optionName} value={optionValue} />
               </div>
             </TooltipTrigger>
-            <TooltipContent sideOffset={6}>{optionValue.name}</TooltipContent>
+            <TooltipContent sideOffset={6}>
+              {optionValue.exists
+                ? optionValue.name
+                : `${optionValue.name} (Not available)`}
+            </TooltipContent>
           </Tooltip>
         );
       })}
@@ -149,7 +153,7 @@ function OptionValue({
   };
   const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
     type: "button" as const,
-    disabled: !available,
+    disabled: !exists,
     onClick: () => {
       if (!selected && exists) {
         navigate(to, { replace: true });
@@ -164,9 +168,10 @@ function OptionValue({
       <Component
         {...(isDifferentProduct ? linkProps : buttonProps)}
         className={clsx(
-          "size-(--option-swatch-size) flex aspect-square cursor-pointer",
+          "size-(--option-swatch-size) flex aspect-square",
           "rounded-full overflow-hidden",
           "transition-[outline-color] outline-offset-2 outline-1",
+          !exists && "cursor-not-allowed",
           selected ? "outline-line" : "outline-transparent hover:outline-line",
           !available && "diagonal",
         )}
@@ -201,6 +206,7 @@ function OptionValue({
         {...(isDifferentProduct ? linkProps : buttonProps)}
         className={clsx(
           "px-4 py-2.5 text-center border border-line-subtle transition-colors",
+          !exists && "cursor-not-allowed",
           selected
             ? [
                 available ? "text-body-inverse bg-body" : "text-body-subtle",
@@ -223,6 +229,7 @@ function OptionValue({
         className={clsx(
           "flex items-center justify-center p-1 w-(--option-image-width) h-auto",
           "text-center border border-line-subtle transition-colors",
+          !exists && "cursor-not-allowed",
           selected
             ? [
                 available ? "text-body-inverse" : "text-body-subtle",
@@ -252,7 +259,8 @@ function OptionValue({
     <Component
       {...(isDifferentProduct ? linkProps : buttonProps)}
       className={clsx(
-        "py-0.5 cursor-pointer border-b",
+        "py-0.5 border-b",
+        !exists && "cursor-not-allowed",
         selected
           ? [available ? "border-line" : "border-line-subtle"]
           : [
