@@ -9,7 +9,7 @@ import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useState } from "react";
-import { useLoaderData, useSearchParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
@@ -34,20 +34,16 @@ interface ProductInformationProps
     Omit<ProductMediaProps, "selectedVariant" | "media"> {
   addToCartText: string;
   soldOutText: string;
-  unavailableText: string;
-  selectVariantText: string;
   showVendor: boolean;
   showSalePrice: boolean;
   showShortDescription: boolean;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
-  hideUnavailableOptions: boolean;
 }
 
 const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
     const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
-    const [params] = useSearchParams();
 
     // Optimistically selects a variant with given available variant information
     const selectedVariant = useOptimisticVariant(
@@ -64,14 +60,11 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     const {
       addToCartText,
       soldOutText,
-      unavailableText,
-      selectVariantText,
       showVendor,
       showSalePrice,
       showShortDescription,
       showShippingPolicy,
       showRefundPolicy,
-      hideUnavailableOptions,
       mediaLayout,
       gridSize,
       imageAspectRatio,
@@ -88,15 +81,11 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         handle,
         vendor,
         summary,
-        options,
         priceRange,
         publishedAt,
         badges,
       } = product;
-      const allOptionNames = options.map(({ name }) => name);
-      const isAllOptionsSelected = allOptionNames.every((name) =>
-        params.get(name),
-      );
+
       const isBestSellerProduct = badges
         .filter(Boolean)
         .some(({ key, value }) => key === "best_seller" && value === "true");
@@ -197,13 +186,9 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     data-test="add-to-cart"
                     className="w-full uppercase"
                   >
-                    {isAllOptionsSelected
-                      ? selectedVariant
-                        ? selectedVariant.availableForSale
-                          ? addToCartText
-                          : soldOutText
-                        : unavailableText
-                      : selectVariantText}
+                    {selectedVariant.availableForSale
+                      ? addToCartText
+                      : soldOutText}
                   </AddToCartButton>
                   {selectedVariant?.availableForSale && (
                     <ShopPayButton
