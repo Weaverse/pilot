@@ -9,10 +9,19 @@ import Link, { type LinkProps } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { isLightColor } from "~/utils/misc";
 
+/*
+ * Configure how different product option types are rendered by adding the option name to the appropriate array:
+ * - OPTIONS_AS_SWATCH: Renders as color swatches (circular buttons with color/image)
+ * - OPTIONS_AS_BUTTON: Renders as rectangular buttons
+ * - OPTIONS_AS_IMAGE: Renders as image thumbnails
+ * - OPTIONS_AS_DROPDOWN: Renders as a dropdown select menu
+ *
+ * If an option name is not found in any of these arrays, it will render with the default UI (underlined links).
+ */
 export const OPTIONS_AS_SWATCH = ["Color", "Colors", "Colour", "Colours"];
 const OPTIONS_AS_BUTTON = ["Size"];
 const OPTIONS_AS_IMAGE = [];
-const OPTIONS_AS_DROPDOWN = [];
+const OPTIONS_AS_DROPDOWN = ["Carry options"];
 
 export const variants = cva(
   "border border-line hover:border-body cursor-pointer",
@@ -50,14 +59,18 @@ export const variants = cva(
   },
 );
 
-/**
+/*
  * SEO: When the variant is a combined listing child product that leads to a different URL,
  * we need to render it as an anchor tag.
  * When the variant is an update to the search param, render it as a button with JavaScript navigating to
  * the variant so that SEO bots do not index these as duplicated links.
  */
 
-export function VariantOption({ option }: { option: MappedProductOptions }) {
+export function ProductOptionValues({
+  option,
+}: {
+  option: MappedProductOptions;
+}) {
   const navigate = useNavigate();
 
   if (!option?.name) return null;
@@ -202,6 +215,7 @@ export function VariantOption({ option }: { option: MappedProductOptions }) {
       </div>
     );
   }
+
   if (OPTIONS_AS_IMAGE.includes(name)) {
     return (
       <div className="flex flex-wrap gap-3">
