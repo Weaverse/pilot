@@ -121,13 +121,12 @@ export function ProductOptionValues({
                     className={clsx(
                       "size-(--option-swatch-size) flex aspect-square cursor-pointer",
                       "rounded-full overflow-hidden",
-                      "transition-[outline-color] [outline-style:solid] outline-offset-2 outline-1",
+                      "transition-[outline-color] outline-offset-2 outline-1",
                       selected
                         ? "outline-line"
                         : "outline-transparent hover:outline-line",
                       !available && "diagonal",
                     )}
-                    style={{ background: swatch?.color || value }}
                   >
                     {swatch?.image?.previewImage ? (
                       <Image
