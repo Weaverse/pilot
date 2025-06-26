@@ -1,6 +1,6 @@
 import { CaretDownIcon, CaretUpIcon, CheckIcon } from "@phosphor-icons/react";
 import * as Select from "@radix-ui/react-select";
-import { Image, type VariantOptionValue } from "@shopify/hydrogen";
+import { Image, type MappedProductOptions } from "@shopify/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { ButtonHTMLAttributes } from "react";
@@ -50,20 +50,6 @@ export const variants = cva(
   },
 );
 
-interface VariantOptionProps {
-  option: {
-    name: string;
-    value?: string;
-    values: Array<
-      VariantOptionValue & {
-        isUnavailable: boolean;
-        isDifferentProduct?: boolean;
-        to: string;
-      }
-    >;
-  };
-}
-
 /**
  * SEO: When the variant is a combined listing child product that leads to a different URL,
  * we need to render it as an anchor tag.
@@ -71,26 +57,30 @@ interface VariantOptionProps {
  * the variant so that SEO bots do not index these as duplicated links.
  */
 
-export function VariantOption({ option }: VariantOptionProps) {
+export function VariantOption({ option }: { option: MappedProductOptions }) {
   const navigate = useNavigate();
 
   if (!option?.name) return null;
 
-  const { name, value, values } = option;
+  const { name, optionValues } = option;
 
   if (OPTIONS_AS_SWATCH.includes(name)) {
     return (
       <div className="flex flex-wrap gap-3">
-        {values.map(
+        {optionValues.map(
           ({
-            value,
-            optionValue,
-            isUnavailable,
-            isActive,
-            to,
+            name: value,
+            handle,
+            variantUriQuery,
+            selected,
+            available,
+            exists,
             isDifferentProduct,
+            swatch,
           }) => {
-            const { swatch } = optionValue;
+            const to = isDifferentProduct
+              ? `/products/${handle}?${variantUriQuery}`
+              : `?${variantUriQuery}`;
             const Component = isDifferentProduct ? Link : "button";
             const linkProps: LinkProps = {
               to,
@@ -100,9 +90,9 @@ export function VariantOption({ option }: VariantOptionProps) {
             };
             const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
               type: "button" as const,
-              disabled: isUnavailable,
+              disabled: !available,
               onClick: () => {
-                if (!isActive && !isUnavailable) {
+                if (!selected && exists) {
                   navigate(to, { replace: true });
                 }
               },
@@ -117,10 +107,10 @@ export function VariantOption({ option }: VariantOptionProps) {
                       "size-(--option-swatch-size) flex aspect-square cursor-pointer",
                       "rounded-full overflow-hidden",
                       "transition-[outline-color] [outline-style:solid] outline-offset-2 outline-1",
-                      isActive
+                      selected
                         ? "outline-line"
                         : "outline-transparent hover:outline-line",
-                      isUnavailable && "diagonal",
+                      !available && "diagonal",
                     )}
                     style={{ background: swatch?.color || value }}
                   >
@@ -157,8 +147,19 @@ export function VariantOption({ option }: VariantOptionProps) {
   if (OPTIONS_AS_BUTTON.includes(name)) {
     return (
       <div className="flex flex-wrap gap-3">
-        {values.map(
-          ({ value, to, isActive, isUnavailable, isDifferentProduct }) => {
+        {optionValues.map(
+          ({
+            name: value,
+            handle,
+            variantUriQuery,
+            selected,
+            available,
+            exists,
+            isDifferentProduct,
+          }) => {
+            const to = isDifferentProduct
+              ? `/products/${handle}?${variantUriQuery}`
+              : `?${variantUriQuery}`;
             const Component = isDifferentProduct ? Link : "button";
             const linkProps: LinkProps = {
               to,
@@ -168,9 +169,9 @@ export function VariantOption({ option }: VariantOptionProps) {
             };
             const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
               type: "button" as const,
-              disabled: isUnavailable,
+              disabled: !available,
               onClick: () => {
-                if (!isActive && !isUnavailable) {
+                if (!selected && exists) {
                   navigate(to, { replace: true });
                 }
               },
@@ -182,15 +183,15 @@ export function VariantOption({ option }: VariantOptionProps) {
                 {...(isDifferentProduct ? linkProps : buttonProps)}
                 className={clsx(
                   "px-4 py-2.5 text-center border border-line-subtle transition-colors",
-                  isActive
+                  selected
                     ? [
-                        isUnavailable
+                        !available
                           ? "text-body-subtle"
                           : "text-body-inverse bg-body",
                         "border-body",
                       ]
                     : "hover:border-line",
-                  isUnavailable && "text-body-subtle diagonal bg-gray-100",
+                  !available && "text-body-subtle diagonal bg-gray-100",
                 )}
               >
                 {value}
@@ -204,16 +205,20 @@ export function VariantOption({ option }: VariantOptionProps) {
   if (OPTIONS_AS_IMAGE.includes(name)) {
     return (
       <div className="flex flex-wrap gap-3">
-        {values.map(
+        {optionValues.map(
           ({
-            value,
-            optionValue,
-            isUnavailable,
-            isActive,
-            to,
+            name: value,
+            variantUriQuery,
+            selected,
+            available,
+            exists,
             isDifferentProduct,
+            firstSelectableVariant,
+            handle,
           }) => {
-            const { firstSelectableVariant } = optionValue;
+            const to = isDifferentProduct
+              ? `/products/${handle}?${variantUriQuery}`
+              : `?${variantUriQuery}`;
             const Component = isDifferentProduct ? Link : "button";
             const linkProps: LinkProps = {
               to,
@@ -223,9 +228,9 @@ export function VariantOption({ option }: VariantOptionProps) {
             };
             const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
               type: "button" as const,
-              disabled: isUnavailable,
+              disabled: !available,
               onClick: () => {
-                if (!isActive && !isUnavailable) {
+                if (!selected && exists) {
                   navigate(to, { replace: true });
                 }
               },
@@ -239,15 +244,15 @@ export function VariantOption({ option }: VariantOptionProps) {
                     className={clsx(
                       "flex items-center justify-center p-1 w-(--option-image-width) h-auto",
                       "text-center border border-line-subtle transition-colors",
-                      isActive
+                      selected
                         ? [
-                            isUnavailable
+                            !available
                               ? "text-body-subtle"
                               : "text-body-inverse",
                             "border-body",
                           ]
                         : "hover:border-line",
-                      isUnavailable && "text-body-subtle diagonal opacity-75",
+                      !available && "text-body-subtle diagonal opacity-75",
                     )}
                   >
                     {firstSelectableVariant?.image ? (
@@ -272,16 +277,20 @@ export function VariantOption({ option }: VariantOptionProps) {
   }
 
   if (OPTIONS_AS_DROPDOWN.includes(name)) {
+    const selectedValue = optionValues.find((v) => v.selected)?.name;
     return (
       <Select.Root
-        value={value}
+        value={selectedValue}
         onValueChange={(v) => {
-          const found = values.find(({ value }) => value === v);
+          const found = optionValues.find(({ name: value }) => value === v);
           if (found) {
+            const to = found.isDifferentProduct
+              ? `/products/${found.handle}?${found.variantUriQuery}`
+              : `?${found.variantUriQuery}`;
             if (found.isDifferentProduct) {
-              window.location.href = found.to;
+              window.location.href = to;
             } else {
-              navigate(found.to, { replace: true });
+              navigate(to, { replace: true });
             }
           }
         }}
@@ -301,17 +310,17 @@ export function VariantOption({ option }: VariantOptionProps) {
               <CaretUpIcon size={16} />
             </Select.ScrollUpButton>
             <Select.Viewport className="p-1.5">
-              {values.map(({ value, isActive, isUnavailable }) => (
+              {optionValues.map(({ name: value, selected, available }) => (
                 <Select.Item
                   key={value}
                   value={value}
                   className={clsx(
                     "flex gap-4 cursor-pointer w-full items-center justify-between hover:bg-gray-100 outline-hidden h-10 select-none pl-4 pr-2 py-2.5",
-                    isUnavailable && "text-body-subtle line-through",
+                    !available && "text-body-subtle line-through",
                   )}
                 >
                   <Select.ItemText>{value}</Select.ItemText>
-                  {isActive && (
+                  {selected && (
                     <Select.ItemIndicator className="inline-flex w-6 shrink-0 items-center justify-center">
                       <CheckIcon size={16} />
                     </Select.ItemIndicator>
@@ -331,8 +340,19 @@ export function VariantOption({ option }: VariantOptionProps) {
   // Default fallback
   return (
     <div className="flex flex-wrap gap-3">
-      {values.map(
-        ({ value, to, isActive, isUnavailable, isDifferentProduct }) => {
+      {optionValues.map(
+        ({
+          name: value,
+          variantUriQuery,
+          selected,
+          available,
+          exists,
+          isDifferentProduct,
+          handle,
+        }) => {
+          const to = isDifferentProduct
+            ? `/products/${handle}?${variantUriQuery}`
+            : `?${variantUriQuery}`;
           const Component = isDifferentProduct ? Link : "button";
           const linkProps: LinkProps = {
             to,
@@ -342,9 +362,9 @@ export function VariantOption({ option }: VariantOptionProps) {
           };
           const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
             type: "button" as const,
-            disabled: isUnavailable,
+            disabled: !available,
             onClick: () => {
-              if (!isActive && !isUnavailable) {
+              if (!selected && exists) {
                 navigate(to, { replace: true });
               }
             },
@@ -356,15 +376,15 @@ export function VariantOption({ option }: VariantOptionProps) {
               {...(isDifferentProduct ? linkProps : buttonProps)}
               className={clsx(
                 "py-0.5 cursor-pointer border-b",
-                isActive
-                  ? [isUnavailable ? "border-line-subtle" : "border-line"]
+                selected
+                  ? [!available ? "border-line-subtle" : "border-line"]
                   : [
                       "border-transparent",
-                      isUnavailable
+                      !available
                         ? "hover:border-line-subtle"
                         : "hover:border-line",
                     ],
-                isUnavailable && "text-body-subtle line-through",
+                !available && "text-body-subtle line-through",
               )}
             >
               {value}
