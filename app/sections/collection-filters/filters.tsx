@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { useRef } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
-import { OPTIONS_AS_SWATCH } from "~/components/product/variant-option";
+import { OPTIONS_AS_SWATCH } from "~/components/product/product-option-values";
 import { ScrollArea } from "~/components/scroll-area";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import { cn } from "~/utils/cn";

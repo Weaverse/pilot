@@ -1,8 +1,4 @@
-import {
-  flattenConnection,
-  Money,
-  mapSelectedProductOptionToObject,
-} from "@shopify/hydrogen";
+import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
@@ -64,10 +60,10 @@ export function ProductCard({
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
 
-  const firstVariant = flattenConnection(product.variants)[0];
+  const firstVariant = product.selectedOrFirstAvailableVariant;
   const params = new URLSearchParams(
     mapSelectedProductOptionToObject(
-      (selectedVariant || firstVariant).selectedOptions,
+      (selectedVariant || firstVariant)?.selectedOptions || [],
     ),
   );
 

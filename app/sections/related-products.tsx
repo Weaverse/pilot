@@ -37,7 +37,7 @@ const RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
     } = props;
     if (recommended) {
       return (
-        <Section ref={ref} {...rest}>
+        <Section ref={ref} {...rest} overflow="unset">
           {content && (
             <Heading
               content={content}

@@ -106,7 +106,7 @@ export function ProductMedia(props: ProductMediaProps) {
     <div className="overflow-hidden product-media-slider">
       <div
         className={clsx(
-          "flex items-start gap-4 [--thumbs-width:0px]",
+          "flex items-start gap-4 [--thumbs-width:0px] overflow-hidden",
           showThumbnails && "md:[--thumbs-width:8rem]",
         )}
       >

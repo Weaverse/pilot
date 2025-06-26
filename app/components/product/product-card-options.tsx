@@ -9,8 +9,9 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { RevealUnderline } from "~/reveal-underline";
-import { isLightColor } from "~/utils/misc";
-import { OPTIONS_AS_SWATCH } from "./variant-option";
+import { cn } from "~/utils/cn";
+import { isLightColor, isValidColor } from "~/utils/misc";
+import { OPTIONS_AS_SWATCH } from "./product-option-values";
 
 export function ProductCardOptions({
   product,
@@ -41,22 +42,21 @@ export function ProductCardOptions({
   const asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
 
   return (
-    <div className="flex flex-wrap items-center gap-2 pt-1">
+    <div className="flex flex-wrap items-center gap-1 pt-1">
       {optionValues
         .slice(0, pcardMaxOptionValues)
         .map(({ name, swatch, firstSelectableVariant }) => {
           if (asSwatch) {
+            const swatchColor = swatch?.color || name;
             return (
               <Tooltip key={name}>
                 <TooltipTrigger>
                   <button
                     type="button"
-                    className={clsx(
-                      "size-4 flex aspect-square rounded-full",
-                      "transition-[outline-color] outline-solid outline-offset-2 outline-1",
-                      selectedValue === name
-                        ? "outline-line"
-                        : "outline-transparent hover:outline-line",
+                    className={cn(
+                      "size-4.5 flex aspect-square rounded-full",
+                      "transition-all border border-transparent",
+                      selectedValue === name ? "p-0.5 border-gray-800" : "p-0",
                     )}
                     onClick={() => {
                       setSelectedVariant(firstSelectableVariant);
@@ -73,10 +73,11 @@ export function ProductCardOptions({
                       <span
                         className={clsx(
                           "w-full h-full inline-block text-[0px] rounded-full",
-                          isLightColor(swatch?.color || name) &&
+                          (!isValidColor(swatchColor) ||
+                            isLightColor(swatchColor)) &&
                             "border border-line-subtle",
                         )}
-                        style={{ backgroundColor: swatch?.color || name }}
+                        style={{ backgroundColor: swatchColor }}
                       >
                         {name}
                       </span>
