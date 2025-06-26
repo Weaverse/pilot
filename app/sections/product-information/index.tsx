@@ -361,12 +361,6 @@ export const schema = createSchema({
           name: "showRefundPolicy",
           defaultValue: true,
         },
-        {
-          label: "Hide unavailable options",
-          type: "switch",
-          name: "hideUnavailableOptions",
-          defaultValue: false,
-        },
       ],
     },
   ],
