@@ -332,20 +332,6 @@ export const schema = createSchema({
           placeholder: "Sold out",
         },
         {
-          type: "text",
-          label: "Unavailable text",
-          name: "unavailableText",
-          defaultValue: "Unavailable",
-          placeholder: "Unavailable",
-        },
-        {
-          type: "text",
-          label: "Select variant text",
-          name: "selectVariantText",
-          defaultValue: "Select variant",
-          placeholder: "Select variant",
-        },
-        {
           type: "switch",
           label: "Show vendor",
           name: "showVendor",
