@@ -9,6 +9,7 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { RevealUnderline } from "~/reveal-underline";
+import { cn } from "~/utils/cn";
 import { isLightColor, isValidColor } from "~/utils/misc";
 import { OPTIONS_AS_SWATCH } from "./product-option-values";
 
@@ -41,7 +42,7 @@ export function ProductCardOptions({
   const asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
 
   return (
-    <div className="flex flex-wrap items-center gap-2 pt-1">
+    <div className="flex flex-wrap items-center gap-1 pt-1">
       {optionValues
         .slice(0, pcardMaxOptionValues)
         .map(({ name, swatch, firstSelectableVariant }) => {
@@ -52,12 +53,10 @@ export function ProductCardOptions({
                 <TooltipTrigger>
                   <button
                     type="button"
-                    className={clsx(
-                      "size-4 flex aspect-square rounded-full",
-                      "transition-[outline-color] outline-solid outline-offset-2 outline-1",
-                      selectedValue === name
-                        ? "outline-line"
-                        : "outline-transparent hover:outline-line",
+                    className={cn(
+                      "size-4.5 flex aspect-square rounded-full",
+                      "transition-all border border-transparent",
+                      selectedValue === name ? "p-0.5 border-gray-800" : "p-0",
                     )}
                     onClick={() => {
                       setSelectedVariant(firstSelectableVariant);
