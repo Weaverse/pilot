@@ -21,7 +21,7 @@ export function ProductVariants({
     <div className="space-y-5" data-motion="fade-up">
       <div className="product-form space-y-5">
         {productOptions.map((option) => (
-          <div className="product-options space-y-1.5" key={option.name}>
+          <div className="product-options space-y-2" key={option.name}>
             <legend className="leading-tight">
               <span className="font-bold">{option.name}</span>
             </legend>
