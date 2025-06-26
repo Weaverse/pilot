@@ -1,5 +1,5 @@
 import type { MappedProductOptions } from "@shopify/hydrogen";
-import { ProductForm } from "./product-form";
+import { ProductOptionValues } from "./product-option-values";
 
 export function ProductVariants({
   productOptions,
@@ -19,7 +19,16 @@ export function ProductVariants({
 
   return (
     <div className="space-y-5" data-motion="fade-up">
-      <ProductForm productOptions={productOptions} />
+      <div className="product-form space-y-5">
+        {productOptions.map((option) => (
+          <div className="product-options space-y-1.5" key={option.name}>
+            <legend className="leading-tight">
+              <span className="font-bold">{option.name}</span>
+            </legend>
+            <ProductOptionValues option={option} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

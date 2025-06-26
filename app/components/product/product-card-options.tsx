@@ -10,7 +10,7 @@ import { Link } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { RevealUnderline } from "~/reveal-underline";
 import { isLightColor } from "~/utils/misc";
-import { OPTIONS_AS_SWATCH } from "./variant-option";
+import { OPTIONS_AS_SWATCH } from "./product-option-values";
 
 export function ProductCardOptions({
   product,

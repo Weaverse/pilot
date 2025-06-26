@@ -1,11 +1,11 @@
 import type { MappedProductOptions } from "@shopify/hydrogen";
-import { VariantOption } from "./variant-option";
+import { ProductOptionValues } from "./product-option-values";
 
-interface ProductFormProps {
+export function ProductForm({
+  productOptions,
+}: {
   productOptions: MappedProductOptions[];
-}
-
-export function ProductForm({ productOptions }: ProductFormProps) {
+}) {
   return (
     <div className="product-form space-y-5">
       {productOptions.map((option) => (
@@ -13,7 +13,7 @@ export function ProductForm({ productOptions }: ProductFormProps) {
           <legend className="leading-tight">
             <span className="font-bold">{option.name}</span>
           </legend>
-          <VariantOption option={option} />
+          <ProductOptionValues option={option} />
         </div>
       ))}
     </div>
