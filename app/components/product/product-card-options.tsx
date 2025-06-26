@@ -9,7 +9,7 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { RevealUnderline } from "~/reveal-underline";
-import { isLightColor } from "~/utils/misc";
+import { isLightColor, isValidColor } from "~/utils/misc";
 import { OPTIONS_AS_SWATCH } from "./product-option-values";
 
 export function ProductCardOptions({
@@ -46,6 +46,7 @@ export function ProductCardOptions({
         .slice(0, pcardMaxOptionValues)
         .map(({ name, swatch, firstSelectableVariant }) => {
           if (asSwatch) {
+            const swatchColor = swatch?.color || name;
             return (
               <Tooltip key={name}>
                 <TooltipTrigger>
@@ -73,10 +74,11 @@ export function ProductCardOptions({
                       <span
                         className={clsx(
                           "w-full h-full inline-block text-[0px] rounded-full",
-                          isLightColor(swatch?.color || name) &&
+                          (!isValidColor(swatchColor) ||
+                            isLightColor(swatchColor)) &&
                             "border border-line-subtle",
                         )}
-                        style={{ backgroundColor: swatch?.color || name }}
+                        style={{ backgroundColor: swatchColor }}
                       >
                         {name}
                       </span>

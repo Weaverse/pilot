@@ -7,7 +7,7 @@ import type { ButtonHTMLAttributes } from "react";
 import { useNavigate } from "react-router";
 import Link, { type LinkProps } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
-import { isLightColor } from "~/utils/misc";
+import { isLightColor, isValidColor } from "~/utils/misc";
 
 /*
  * Configure how different product option types are rendered by adding the option name to the appropriate array:
@@ -21,7 +21,7 @@ import { isLightColor } from "~/utils/misc";
 export const OPTIONS_AS_SWATCH = ["Color", "Colors", "Colour", "Colours"];
 const OPTIONS_AS_BUTTON = ["Size"];
 const OPTIONS_AS_IMAGE = [];
-const OPTIONS_AS_DROPDOWN = ["Carry options"];
+const OPTIONS_AS_DROPDOWN = [];
 
 export const variants = cva(
   "border border-line hover:border-body cursor-pointer",
@@ -91,6 +91,7 @@ export function ProductOptionValues({
             isDifferentProduct,
             swatch,
           }) => {
+            console.log("👉 --------> - swatch:", swatch, value);
             const to = isDifferentProduct
               ? `/products/${handle}?${variantUriQuery}`
               : `?${variantUriQuery}`;
@@ -110,6 +111,7 @@ export function ProductOptionValues({
                 }
               },
             };
+            const swatchColor = swatch?.color || value;
             return (
               <Tooltip key={value}>
                 <TooltipTrigger>
@@ -138,10 +140,11 @@ export function ProductOptionValues({
                       <span
                         className={clsx(
                           "w-full h-full inline-block text-[0px] rounded-full",
-                          isLightColor(swatch?.color || value) &&
+                          (!isValidColor(swatchColor) ||
+                            isLightColor(swatchColor)) &&
                             "border border-line-subtle",
                         )}
-                        style={{ backgroundColor: swatch?.color || value }}
+                        style={{ backgroundColor: swatchColor }}
                       >
                         {value}
                       </span>
