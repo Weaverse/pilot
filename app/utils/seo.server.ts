@@ -88,7 +88,7 @@ function productJsonLd({
       for (const option of variant.selectedOptions) {
         variantUrl.searchParams.set(option.name, option.value);
       }
-      const availability: any = variant.availableForSale
+      const availability = variant.availableForSale
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock";
 
@@ -105,7 +105,7 @@ function productJsonLd({
 
   // If no adjacent variants, add the selected variant
   if (offers.length === 0 && selectedVariant) {
-    const availability: any = selectedVariant.availableForSale
+    const availability = selectedVariant.availableForSale
       ? "https://schema.org/InStock"
       : "https://schema.org/OutOfStock";
 
