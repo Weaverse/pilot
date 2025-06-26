@@ -130,7 +130,7 @@ function OptionValue({
   value: MappedProductOptions["optionValues"][number];
 }) {
   const navigate = useNavigate();
-  let {
+  const {
     name,
     variantUriQuery,
     selected,
