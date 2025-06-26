@@ -91,7 +91,6 @@ export function ProductOptionValues({
             isDifferentProduct,
             swatch,
           }) => {
-            console.log("👉 --------> - swatch:", swatch, value);
             const to = isDifferentProduct
               ? `/products/${handle}?${variantUriQuery}`
               : `?${variantUriQuery}`;
