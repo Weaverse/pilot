@@ -2,7 +2,6 @@ import {
   Analytics,
   getAdjacentAndFirstAvailableVariants,
   getSeoMeta,
-  mapSelectedProductOptionToObject,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import type {
@@ -105,18 +104,44 @@ export default function Product() {
   );
 
   // Sets the search param to the selected variant without navigation
-  // only when no search params are set in the url
+  // when no search params are set or when variant options don't match
   useEffect(() => {
-    const searchParams = new URLSearchParams(
-      mapSelectedProductOptionToObject(selectedVariant?.selectedOptions || []),
-    );
+    if (!selectedVariant?.selectedOptions) return;
 
-    if (window.location.search === "" && searchParams.toString() !== "") {
-      window.history.replaceState(
-        {},
-        "",
-        `${location.pathname}?${searchParams.toString()}`,
-      );
+    const currentParams = new URLSearchParams(window.location.search);
+    let needsUpdate = false;
+
+    // If no search params exist, we need to add them
+    if (window.location.search === "") {
+      needsUpdate = true;
+    } else {
+      // Check if any of the selected variant options differ from current params
+      for (const option of selectedVariant.selectedOptions) {
+        const currentValue = currentParams.get(option.name);
+        if (currentValue !== option.value) {
+          needsUpdate = true;
+          break;
+        }
+      }
+    }
+
+    if (needsUpdate) {
+      // Preserve existing non-variant-related params
+      const updatedParams = new URLSearchParams(currentParams);
+
+      // Update or add variant option params
+      for (const option of selectedVariant.selectedOptions) {
+        updatedParams.set(option.name, option.value);
+      }
+
+      const newSearch = updatedParams.toString();
+      if (newSearch !== window.location.search.slice(1)) {
+        window.history.replaceState(
+          {},
+          "",
+          `${location.pathname}?${newSearch}`,
+        );
+      }
     }
   }, [selectedVariant?.selectedOptions]);
 
