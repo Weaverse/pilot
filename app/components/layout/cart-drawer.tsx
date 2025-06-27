@@ -6,7 +6,6 @@ import { Suspense, useState } from "react";
 import { Await, useRouteLoaderData } from "react-router";
 import { Cart } from "~/components/cart/cart";
 import Link from "~/components/link";
-import { ScrollArea } from "~/components/scroll-area";
 import type { RootLoader } from "~/root";
 
 export let openCartDrawer = () => {};
@@ -79,9 +78,7 @@ export function CartDrawer() {
                       </button>
                     </Dialog.Close>
                   </div>
-                  <ScrollArea className="max-h-[calc(100vh-4.5rem)]" size="sm">
-                    <Cart layout="drawer" cart={cart as CartReturn} />
-                  </ScrollArea>
+                  <Cart layout="drawer" cart={cart as CartReturn} />
                 </div>
               </Dialog.Content>
             </Dialog.Portal>
