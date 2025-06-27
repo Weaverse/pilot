@@ -437,6 +437,6 @@
   }
 }
 
-.animated-scope [data-motion] {
-  /* opacity: 0; */
-}
+/* .animated-scope [data-motion] {
+  opacity: 0;
+} */
