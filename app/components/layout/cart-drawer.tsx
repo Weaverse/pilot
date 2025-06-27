@@ -17,14 +17,6 @@ export function CartDrawer() {
   const [open, setOpen] = useState(false);
   openCartDrawer = () => setOpen(true);
 
-  // Toggle cart drawer when adding to cart
-  // let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
-  // useEffect(() => {
-  //   if (!open && addToCartFetchers.length) {
-  //     setOpen(true);
-  //   }
-  // }, [addToCartFetchers, open]);
-
   return (
     <Suspense
       fallback={
@@ -50,7 +42,7 @@ export function CartDrawer() {
                     "cart-count",
                     "absolute top-0 -right-1.5",
                     "flex items-center text-center justify-center min-w-4.5 h-4.5 px-1 rounded-full",
-                    "text-sm leading-none text-center font-medium",
+                    "text-[13px] leading-none text-center font-medium",
                     "transition-colors duration-300",
                     "group-hover/header:bg-(--color-header-text)",
                     "group-hover/header:text-(--color-header-bg)",

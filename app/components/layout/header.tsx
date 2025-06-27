@@ -74,6 +74,8 @@ export function Header() {
               "text-(--color-transparent-header-text)",
               "[&_.cart-count]:text-(--color-header-text)",
               "[&_.cart-count]:bg-(--color-transparent-header-text)",
+              "hover:[&_.cart-count]:bg-(--color-header-text)",
+              "hover:[&_.cart-count]:text-(--color-transparent-header-text)",
               "[&_.main-logo]:opacity-0",
               "[&_.transparent-logo]:opacity-100",
             ]
