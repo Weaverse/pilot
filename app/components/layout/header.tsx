@@ -1,6 +1,7 @@
 import { MagnifyingGlassIcon, UserIcon } from "@phosphor-icons/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
+import clsx from "clsx";
 import { Suspense } from "react";
 import {
   Await,
@@ -111,7 +112,7 @@ function AccountLink({ className }: { className?: string }) {
   const isLoggedIn = rootData?.isLoggedIn;
 
   return (
-    <Link to="/account" className={className}>
+    <Link to="/account" className={clsx("transition-none", className)}>
       <Suspense fallback={<UserIcon className="w-5 h-5" />}>
         <Await
           resolve={isLoggedIn}
