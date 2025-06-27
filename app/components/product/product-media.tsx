@@ -1,8 +1,8 @@
 import {
-  ArrowLeft,
-  ArrowRight,
-  MagnifyingGlassPlus,
-  VideoCamera,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  MagnifyingGlassPlusIcon,
+  VideoCameraIcon,
 } from "@phosphor-icons/react";
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
@@ -65,7 +65,7 @@ export function ProductMedia(props: ProductMediaProps) {
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     if (selectedVariant && swiper) {
       const index = getSelectedVariantMediaIndex(media, selectedVariant);
@@ -155,7 +155,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     />
                     {mediaContentType === "VIDEO" && (
                       <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
-                        <VideoCamera className="w-4 h-4" />
+                        <VideoCameraIcon className="w-4 h-4" />
                       </div>
                     )}
                   </SwiperSlide>
@@ -201,7 +201,7 @@ export function ProductMedia(props: ProductMediaProps) {
                       setZoomModalOpen(true);
                     }}
                   >
-                    <MagnifyingGlassPlus className="w-5 h-5" />
+                    <MagnifyingGlassPlusIcon className="w-5 h-5" />
                   </button>
                 )}
               </SwiperSlide>
@@ -212,13 +212,13 @@ export function ProductMedia(props: ProductMediaProps) {
               type="button"
               className="media_slider__prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white left-6 disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowLeft className="w-4.5 h-4.5" />
+              <ArrowLeftIcon className="w-4.5 h-4.5" />
             </button>
             <button
               type="button"
               className="media_slider__next p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white right-6 disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowRight className="w-4.5 h-4.5" />
+              <ArrowRightIcon className="w-4.5 h-4.5" />
             </button>
           </div>
         </div>

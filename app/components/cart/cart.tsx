@@ -1,4 +1,4 @@
-import { Trash } from "@phosphor-icons/react";
+import { TrashIcon } from "@phosphor-icons/react";
 import {
   CartForm,
   Money,
@@ -96,7 +96,10 @@ function CartDiscounts({
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
               <button type="button">
-                <Trash aria-hidden="true" className="h-[18px] w-[18px] mr-1" />
+                <TrashIcon
+                  aria-hidden="true"
+                  className="h-[18px] w-[18px] mr-1"
+                />
               </button>
             </UpdateDiscountForm>
             <dd>{codes?.join(", ")}</dd>
@@ -156,7 +159,6 @@ function CartLines({
   return (
     <div
       ref={scrollRef}
-      aria-labelledby="cart-contents"
       className={clsx([
         y > 0 ? "border-t border-line-subtle" : "",
         layout === "page" && "grow md:translate-y-4 lg:col-span-2",
@@ -213,7 +215,6 @@ function CartSummary({
 }) {
   return (
     <div
-      aria-labelledby="summary-heading"
       className={clsx(
         layout === "drawer" && "grid gap-4 border-t border-line-subtle pt-4",
         layout === "page" &&
@@ -342,7 +343,7 @@ function ItemRemoveButton({
         type="submit"
       >
         <span className="sr-only">Remove</span>
-        <Trash aria-hidden="true" className="h-4 w-4" />
+        <TrashIcon aria-hidden="true" className="h-4 w-4" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>

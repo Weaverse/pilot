@@ -1,4 +1,4 @@
-import { CaretRight, List, X } from "@phosphor-icons/react";
+import { CaretRightIcon, ListIcon, XIcon } from "@phosphor-icons/react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Dialog from "@radix-ui/react-dialog";
 import { forwardRef } from "react";
@@ -42,7 +42,7 @@ export function MobileMenu() {
             <div className="px-4">Menu</div>
           </Dialog.Title>
           <Dialog.Close asChild>
-            <X className="w-5 h-5 fixed top-4 right-4" />
+            <XIcon className="w-5 h-5 fixed top-4 right-4" />
           </Dialog.Close>
           <div className="mt-4 border-t border-line-subtle" />
           <div className="py-2">
@@ -79,9 +79,12 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
   return (
     <Collapsible.Root>
       <Collapsible.Trigger asChild>
-        <button className='py-3 w-full flex items-center gap-4 justify-between data-[state="open"]:[&>svg]:rotate-90'>
+        <button
+          type="button"
+          className='py-3 w-full flex items-center gap-4 justify-between data-[state="open"]:[&>svg]:rotate-90'
+        >
           <span className="uppercase">{title}</span>
-          <CaretRight className="w-4 h-4" />
+          <CaretRightIcon className="w-4 h-4" />
         </button>
       </Collapsible.Trigger>
       <Collapsible.Content className="pl-4 border-l border-gray-300">
@@ -97,7 +100,7 @@ const MenuTrigger = forwardRef<HTMLButtonElement, Dialog.DialogTriggerProps>(
   (props, ref) => {
     return (
       <button ref={ref} type="button" {...props}>
-        <List className="w-5 h-5" />
+        <ListIcon className="w-5 h-5" />
       </button>
     );
   },

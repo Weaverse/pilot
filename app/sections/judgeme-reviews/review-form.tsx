@@ -1,4 +1,4 @@
-import { Star } from "@phosphor-icons/react";
+import { StarIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useFetcher, useLoaderData } from "react-router";
@@ -112,9 +112,9 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                         aria-label={`Rate ${ratingValue} out of 5 stars`}
                       >
                         {ratingValue <= (hover || rating) ? (
-                          <Star weight="fill" />
+                          <StarIcon weight="fill" />
                         ) : (
-                          <Star />
+                          <StarIcon />
                         )}
                       </div>
                     );

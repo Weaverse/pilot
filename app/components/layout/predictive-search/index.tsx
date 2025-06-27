@@ -1,4 +1,8 @@
-import { ArrowRight, MagnifyingGlass, X } from "@phosphor-icons/react";
+import {
+  ArrowRightIcon,
+  MagnifyingGlassIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { type MutableRefObject, useEffect, useState } from "react";
@@ -25,7 +29,7 @@ export function PredictiveSearchButton() {
         className="hidden lg:flex h-8 w-8 items-center justify-center focus-visible:outline-hidden"
       >
         <button type="button">
-          <MagnifyingGlass className="w-5 h-5" />
+          <MagnifyingGlassIcon className="w-5 h-5" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -51,7 +55,7 @@ export function PredictiveSearchButton() {
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
                 <div className="flex items-center gap-3 w-[560px] max-w-[90vw] mx-auto px-3 my-6 border border-line-subtle">
-                  <MagnifyingGlass className="h-5 w-5 shrink-0 text-gray-500" />
+                  <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                   <input
                     name="q"
                     type="search"
@@ -72,7 +76,7 @@ export function PredictiveSearchButton() {
                       }
                     }}
                   >
-                    <X className="w-5 h-5" />
+                    <XIcon className="w-5 h-5" />
                   </button>
                 </div>
               )}
@@ -122,7 +126,7 @@ function PredictiveSearchResults() {
                 className="flex items-center gap-2 w-fit"
               >
                 <span>View all results</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRightIcon className="w-4 h-4" />
               </Link>
             </div>
           )}

@@ -1,4 +1,4 @@
-import { CaretRight } from "@phosphor-icons/react";
+import { CaretRightIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
@@ -59,7 +59,7 @@ export function Filters({ className }: { className?: string }) {
             >
               <Accordion.Trigger className="flex w-full justify-between items-center data-[state=open]:[&>svg]:rotate-90">
                 <span>{filter.label}</span>
-                <CaretRight className="w-4 h-4 transition-transform rotate-0" />
+                <CaretRightIcon className="w-4 h-4 transition-transform rotate-0" />
               </Accordion.Trigger>
               <Accordion.Content
                 style={

@@ -1,4 +1,4 @@
-import { SealCheck, X } from "@phosphor-icons/react";
+import { SealCheckIcon, XIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
@@ -79,7 +79,7 @@ export function ReviewItem(props: ReviewItemProps) {
         <div className="flex items-center gap-6">
           {showVerifiedBadge && (
             <div className="inline-flex items-center gap-1">
-              <SealCheck className="h-4 w-4 text-white" fill="black" />
+              <SealCheckIcon className="h-4 w-4 text-white" fill="black" />
               <p className="text-xs">{verifiedBadgeText}</p>
             </div>
           )}
@@ -143,7 +143,7 @@ function ReviewMediaPreview(props: {
             alt="Review media preview"
           />
         </div>
-        <X
+        <XIcon
           className="w-5 h-5 cursor-pointer text-gray-600"
           onClick={closePreview}
         />

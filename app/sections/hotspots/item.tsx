@@ -1,4 +1,9 @@
-import { Circle, Handbag, Plus, Tag } from "@phosphor-icons/react";
+import {
+  CircleIcon,
+  HandbagIcon,
+  PlusIcon,
+  TagIcon,
+} from "@phosphor-icons/react";
 import {
   type ComponentLoaderArgs,
   createSchema,
@@ -28,10 +33,10 @@ interface HotspotsItemProps
     HotspotsItemData {}
 
 const ICONS = {
-  circle: Circle,
-  plus: Plus,
-  bag: Handbag,
-  tag: Tag,
+  circle: CircleIcon,
+  plus: PlusIcon,
+  bag: HandbagIcon,
+  tag: TagIcon,
 };
 
 const HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(

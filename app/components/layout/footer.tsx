@@ -1,9 +1,9 @@
 import {
-  CaretRight,
-  FacebookLogo,
-  InstagramLogo,
-  LinkedinLogo,
-  XLogo,
+  CaretRightIcon,
+  FacebookLogoIcon,
+  InstagramLogoIcon,
+  LinkedinLogoIcon,
+  XLogoIcon,
 } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { Image } from "@shopify/hydrogen";
@@ -80,22 +80,22 @@ export function Footer() {
     {
       name: "Instagram",
       to: socialInstagram,
-      icon: <InstagramLogo className="w-5 h-5" />,
+      icon: <InstagramLogoIcon className="w-5 h-5" />,
     },
     {
       name: "X",
       to: socialX,
-      icon: <XLogo className="w-5 h-5" />,
+      icon: <XLogoIcon className="w-5 h-5" />,
     },
     {
       name: "LinkedIn",
       to: socialLinkedIn,
-      icon: <LinkedinLogo className="w-5 h-5" />,
+      icon: <LinkedinLogoIcon className="w-5 h-5" />,
     },
     {
       name: "Facebook",
       to: socialFacebook,
-      icon: <FacebookLogo className="w-5 h-5" />,
+      icon: <FacebookLogoIcon className="w-5 h-5" />,
     },
   ];
 
@@ -226,7 +226,7 @@ function FooterMenu() {
             ) : (
               <Link to={to}>{title}</Link>
             )}
-            <CaretRight className="w-4 h-4 transition-transform rotate-0" />
+            <CaretRightIcon className="w-4 h-4 transition-transform rotate-0" />
           </Accordion.Trigger>
           <div className="text-lg font-medium hidden lg:block">
             {["#", "/"].includes(to) ? title : <Link to={to}>{title}</Link>}
