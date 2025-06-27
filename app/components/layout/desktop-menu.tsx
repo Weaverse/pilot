@@ -139,7 +139,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
             <Link
               to={to}
               prefetch="intent"
-              className="uppercase inline transition-none"
+              className="uppercase transition-none"
             >
               <RevealUnderline>{title}</RevealUnderline>
             </Link>
