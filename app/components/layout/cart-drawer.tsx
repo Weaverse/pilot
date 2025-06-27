@@ -65,7 +65,7 @@ export function CartDrawer() {
               >
                 <div className="space-y-6">
                   <div className="flex gap-2 items-center justify-between px-4">
-                    <Dialog.Title asChild className="py-2.5">
+                    <Dialog.Title asChild className="text-base">
                       <span className="font-bold">Cart</span>
                     </Dialog.Title>
                     <Dialog.Close asChild>
