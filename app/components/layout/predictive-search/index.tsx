@@ -40,7 +40,8 @@ export function PredictiveSearchButton() {
         <Dialog.Content
           className={cn([
             "fixed inset-x-0 top-0 bg-(--color-header-bg) z-10",
-            "-translate-y-full data-[state=open]:animate-enter-from-top",
+            "-translate-y-full data-[state=open]:translate-y-0",
+            "data-[state=open]:animate-enter-from-top",
             "focus-visible:outline-hidden",
           ])}
           style={
