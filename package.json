@@ -65,7 +65,7 @@
     "typographic-base": "1.0.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.0",
+    "@biomejs/biome": "2.0.6",
     "@playwright/test": "1.53.1",
     "@react-router/dev": "^7.6.2",
     "@react-router/fs-routes": "^7.6.2",
