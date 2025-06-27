@@ -8,7 +8,7 @@ const ONE_HOUR = ONE_MIN * 60;
 const ONE_DAY = ONE_HOUR * 24;
 
 function calculateRemainingTime(endTime: number) {
-  const now = new Date().getTime();
+  const now = Date.now();
   const diff = endTime - now;
   if (diff <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0 };

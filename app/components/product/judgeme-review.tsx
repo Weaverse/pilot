@@ -23,7 +23,7 @@ const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
     const handle = context?.data?.product?.handle;
     const api = usePrefixPathWithLocale(`/api/review/${handle}`);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
       if (productReviews || !handle) return;
       load(api);

@@ -20,7 +20,7 @@ export function useAnimation(ref?: ForwardedRef<any>) {
     Object.assign(ref, { current: scope.current });
   }, [scope, ref]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     if (!revealElementsOnScroll) {
       return;
@@ -31,7 +31,7 @@ export function useAnimation(ref?: ForwardedRef<any>) {
       elems.forEach((elem: HTMLElement, idx: number) => {
         inView(
           elem,
-          (element: Element, entry: IntersectionObserverEntry) => {
+          (element: Element) => {
             const { motion, delay } = elem.dataset;
             animate(element, ANIMATIONS[motion || "fade-up"], {
               delay: Number(delay) || idx * 0.15,

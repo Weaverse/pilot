@@ -109,7 +109,6 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
                         }
                         onMouseEnter={() => setHover(ratingValue)}
                         onMouseLeave={() => setHover(0)}
-                        aria-label={`Rate ${ratingValue} out of 5 stars`}
                       >
                         {ratingValue <= (hover || rating) ? (
                           <StarIcon weight="fill" />

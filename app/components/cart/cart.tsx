@@ -504,7 +504,6 @@ function CartEmpty({
           count={4}
           heading="Shop Best Sellers"
           layout={layout}
-          onClose={onClose}
           sortKey="BEST_SELLING"
         />
       </div>

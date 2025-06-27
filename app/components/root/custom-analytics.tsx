@@ -17,7 +17,7 @@ export function CustomAnalytics() {
 
   const data = useRouteLoaderData<RootLoader>("root");
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     setTimeout(() => {
       const isTrackingAllowed = canTrack();

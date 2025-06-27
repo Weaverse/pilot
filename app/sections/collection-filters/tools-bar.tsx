@@ -94,6 +94,7 @@ function FiltersDrawer({
               </Dialog.Title>
               <Dialog.Close asChild>
                 <button
+                  type="button"
                   className="p-2 translate-x-2"
                   aria-label="Close filters drawer"
                 >

@@ -74,8 +74,12 @@ export function PriceRangeFilter({
         {["from", "to"].map((s: "from" | "to") => (
           <Slider.Thumb
             key={s}
-            onPointerUp={() => (thumbRef.current = null)}
-            onPointerDown={() => (thumbRef.current = s)}
+            onPointerUp={() => {
+              thumbRef.current = null;
+            }}
+            onPointerDown={() => {
+              thumbRef.current = s;
+            }}
             className={clsx(
               "block h-4 w-4 bg-gray-800 cursor-grab rounded-full shadow-md",
               "focus-visible:outline-hidden",

@@ -96,7 +96,6 @@ export function ReviewItem(props: ReviewItemProps) {
           {review.media.map((media) => (
             <div
               key={media.id}
-              role="button"
               className={clsx(
                 "flex items-center justify-center bg-gray-800 w-20 h-20 overflow-hidden cursor-pointer",
                 "outline-offset-2 hover:outline-solid hover:outline-2 hover:outline-gray-500",
