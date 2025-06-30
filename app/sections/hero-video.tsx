@@ -47,7 +47,7 @@ export interface HeroVideoProps
 }
 
 const variants = cva(
-  "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
+  "absolute inset-0 max-w-screen mx-auto px-3 flex flex-col justify-center items-center z-10",
   {
     variants: {
       gap: {
@@ -160,7 +160,8 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "flex items-center justify-center relative overflow-hidden",
           "h-(--mobile-height) sm:h-(--desktop-height)",
           "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
-          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
+          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))]",
+          "sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
         {inView && (
