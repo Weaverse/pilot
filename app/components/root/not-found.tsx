@@ -44,7 +44,7 @@ export function FeaturedProducts() {
   const { load, data } = useFetcher<FeaturedData>();
   const api = usePrefixPathWithLocale("/api/featured-items");
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     load(api);
   }, [api]);

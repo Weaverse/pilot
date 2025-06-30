@@ -1,6 +1,7 @@
-import { MagnifyingGlass, User } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, UserIcon } from "@phosphor-icons/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
+import clsx from "clsx";
 import { Suspense } from "react";
 import {
   Await,
@@ -73,6 +74,8 @@ export function Header() {
               "text-(--color-transparent-header-text)",
               "[&_.cart-count]:text-(--color-header-text)",
               "[&_.cart-count]:bg-(--color-transparent-header-text)",
+              "hover:[&_.cart-count]:bg-(--color-header-text)",
+              "hover:[&_.cart-count]:text-(--color-transparent-header-text)",
               "[&_.main-logo]:opacity-0",
               "[&_.transparent-logo]:opacity-100",
             ]
@@ -92,7 +95,7 @@ export function Header() {
       >
         <MobileMenu />
         <Link to="/search" className="p-1.5 lg:hidden">
-          <MagnifyingGlass className="w-5 h-5" />
+          <MagnifyingGlassIcon className="w-5 h-5" />
         </Link>
         <Logo />
         <DesktopMenu />
@@ -111,14 +114,17 @@ function AccountLink({ className }: { className?: string }) {
   const isLoggedIn = rootData?.isLoggedIn;
 
   return (
-    <Link to="/account" className={className}>
-      <Suspense fallback={<User className="w-5 h-5" />}>
-        <Await resolve={isLoggedIn} errorElement={<User className="w-5 h-5" />}>
+    <Link to="/account" className={clsx("transition-none", className)}>
+      <Suspense fallback={<UserIcon className="w-5 h-5" />}>
+        <Await
+          resolve={isLoggedIn}
+          errorElement={<UserIcon className="w-5 h-5" />}
+        >
           {(isLoggedIn) =>
             isLoggedIn ? (
-              <User className="w-5 h-5" />
+              <UserIcon className="w-5 h-5" />
             ) : (
-              <User className="w-5 h-5" />
+              <UserIcon className="w-5 h-5" />
             )
           }
         </Await>

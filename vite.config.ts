@@ -31,6 +31,7 @@ export default defineConfig({
   ssr: {
     optimizeDeps: {
       include: [
+        "deepmerge",
         "@radix-ui/react-primitive",
         "jsonp",
         "classnames",

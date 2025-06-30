@@ -5,23 +5,17 @@ import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 
-// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
-interface FeaturedProductsData {}
-
-interface FeaturedProductsProps
-  extends SectionProps<FeaturedProductsLoaderData>,
-    FeaturedProductsData {}
-
-const FeaturedProducts = forwardRef<HTMLElement, FeaturedProductsProps>(
-  (props, ref) => {
-    const { loaderData, children, ...rest } = props;
-    return (
-      <Section ref={ref} {...rest}>
-        {children}
-      </Section>
-    );
-  },
-);
+const FeaturedProducts = forwardRef<
+  HTMLElement,
+  SectionProps<FeaturedProductsLoaderData>
+>((props, ref) => {
+  const { loaderData, children, ...rest } = props;
+  return (
+    <Section ref={ref} {...rest}>
+      {children}
+    </Section>
+  );
+});
 
 export default FeaturedProducts;
 

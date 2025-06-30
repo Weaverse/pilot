@@ -7,15 +7,9 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import {
-  forwardRef,
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { forwardRef, useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import ReactPlayer from "react-player";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
@@ -47,7 +41,7 @@ export interface HeroVideoProps
 }
 
 const variants = cva(
-  "absolute inset-0 max-w-[100vw] mx-auto px-3 flex flex-col justify-center items-center z-10",
+  "absolute inset-0 max-w-screen mx-auto px-3 flex flex-col justify-center items-center z-10",
   {
     variants: {
       gap: {
@@ -74,8 +68,6 @@ const variants = cva(
     },
   },
 );
-
-const ReactPlayer = lazy(() => import("react-player/lazy"));
 
 function getPlayerSize(id: string) {
   if (isBrowser) {
@@ -122,7 +114,7 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   });
 
   // Use `useCallback` so we don't recreate the function on each render
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   const setRefs = useCallback(
     (node: HTMLElement) => {
       // Ref's from useRef needs to have the node assigned to `current`
@@ -137,7 +129,7 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     setSize(getPlayerSize(id));
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -160,22 +152,21 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "flex items-center justify-center relative overflow-hidden",
           "h-(--mobile-height) sm:h-(--desktop-height)",
           "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
-          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))] sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
+          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))]",
+          "sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
         {inView && (
-          <Suspense fallback={null}>
-            <ReactPlayer
-              url={videoURL}
-              playing
-              muted
-              loop={true}
-              width={size.width}
-              height={size.height}
-              controls={false}
-              className="aspect-video"
-            />
-          </Suspense>
+          <ReactPlayer
+            src={videoURL}
+            playing
+            muted
+            loop={true}
+            width={size.width}
+            height={size.height}
+            controls={false}
+            className="aspect-video"
+          />
         )}
         <Overlay
           enableOverlay={enableOverlay}

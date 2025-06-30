@@ -1,4 +1,4 @@
-import { EnvelopeSimple } from "@phosphor-icons/react";
+import { EnvelopeSimpleIcon } from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
@@ -32,7 +32,7 @@ const NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           data-motion="fade-up"
         >
           <div className="flex items-center border-r-0 border-y border-l grow">
-            <EnvelopeSimple className="w-5 h-5 ml-3 mr-1.5 shrink-0" />
+            <EnvelopeSimpleIcon className="w-5 h-5 ml-3 mr-1.5 shrink-0" />
             <input
               name="email"
               type="email"

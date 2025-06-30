@@ -1,4 +1,4 @@
-import { CircleNotch } from "@phosphor-icons/react";
+import { CircleNotchIcon } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
@@ -153,7 +153,7 @@ function Spinner() {
       className="[&~*]:invisible absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       style={style}
     >
-      <CircleNotch className="animate-spin w-5 h-5" />
+      <CircleNotchIcon className="animate-spin w-5 h-5" />
     </span>
   );
 }

@@ -1,4 +1,4 @@
-import { X } from "@phosphor-icons/react";
+import { XIcon } from "@phosphor-icons/react";
 import {
   Close,
   Content,
@@ -63,7 +63,7 @@ export const ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         {asChild ? (
           children
         ) : (
-          <X className="absolute right-3 top-3 cursor-pointer" size={20} />
+          <XIcon className="absolute right-3 top-3 cursor-pointer" size={20} />
         )}
       </Close>
     );

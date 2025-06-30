@@ -1,4 +1,4 @@
-import { Check } from "@phosphor-icons/react";
+import { CheckIcon } from "@phosphor-icons/react";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import { flattenConnection } from "@shopify/hydrogen";
@@ -169,7 +169,7 @@ export function AccountEditAddressForm() {
             )}
           >
             <Checkbox.Indicator className="flex items-center justify-center text-current">
-              <Check className="w-4 h-4" weight="regular" />
+              <CheckIcon className="w-4 h-4" weight="regular" />
             </Checkbox.Indicator>
           </Checkbox.Root>
           <label htmlFor="defaultAddress">Set as default address</label>

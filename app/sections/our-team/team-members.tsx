@@ -1,4 +1,8 @@
-import { GithubLogo, LinkedinLogo, XLogo } from "@phosphor-icons/react";
+import {
+  GithubLogoIcon,
+  LinkedinLogoIcon,
+  XLogoIcon,
+} from "@phosphor-icons/react";
 import {
   createSchema,
   type HydrogenComponentProps,
@@ -74,7 +78,7 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <LinkedinLogo className="w-6 h-6" />
+                          <LinkedinLogoIcon className="w-6 h-6" />
                         </Link>
                       </li>
                     )}
@@ -85,7 +89,7 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <GithubLogo className="w-6 h-6" />
+                          <GithubLogoIcon className="w-6 h-6" />
                         </Link>
                       </li>
                     )}
@@ -96,7 +100,7 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <XLogo className="w-6 h-6" />
+                          <XLogoIcon className="w-6 h-6" />
                         </Link>
                       </li>
                     )}

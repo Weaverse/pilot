@@ -1,4 +1,4 @@
-export function ProductPlaceholder(props: any) {
+export function ProductPlaceholder() {
   return (
     <div className="container px-4 md:px-6 mx-auto pointer-events-none">
       <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
@@ -84,6 +84,7 @@ export function ProductPlaceholder(props: any) {
             </legend>
             <div className="rounded-xs border w-fit">
               <button
+                type="button"
                 name="decrease-quantity"
                 aria-label="Decrease quantity"
                 className="w-10 h-10 transition "
@@ -96,6 +97,7 @@ export function ProductPlaceholder(props: any) {
                 readOnly
               />
               <button
+                type="button"
                 className="w-10 h-10 transition text-body hover:text-body"
                 name="increase-quantity"
                 aria-label="Increase quantity"
