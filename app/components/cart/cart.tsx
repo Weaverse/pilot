@@ -1,5 +1,4 @@
 import { TrashIcon } from "@phosphor-icons/react";
-import * as Dialog from "@radix-ui/react-dialog";
 import {
   CartForm,
   Money,
@@ -22,6 +21,7 @@ import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { RevealUnderline } from "~/reveal-underline";
 import { getImageAspectRatio } from "~/utils/image";
+import { toggleCartDrawer } from "../layout/cart-drawer";
 import { CartBestSellers } from "./cart-best-sellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
@@ -298,13 +298,9 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
           <div className="space-y-1">
             <div>
               {product?.handle ? (
-                <Dialog.Close asChild>
-                  <div>
-                    <Link to={url}>
-                      <RevealUnderline>{product?.title || ""}</RevealUnderline>
-                    </Link>
-                  </div>
-                </Dialog.Close>
+                <Link to={url} onClick={() => toggleCartDrawer(false)}>
+                  <RevealUnderline>{product?.title || ""}</RevealUnderline>
+                </Link>
               ) : (
                 <p>{product?.title || ""}</p>
               )}
