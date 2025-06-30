@@ -97,9 +97,11 @@ export function ArticleCard({
       <div className="space-y-2.5">
         <Link
           to={`/blogs/${blogHandle}/${article.handle}`}
-          className="text-xl leading-relaxed inline"
+          className="inline-block"
         >
-          <RevealUnderline>{article.title}</RevealUnderline>
+          <RevealUnderline className="text-xl leading-6">
+            {article.title}
+          </RevealUnderline>
         </Link>
         <div className="flex items-center gap-2 empty:hidden text-gray-600">
           {showDate && <span className="block">{article.publishedAt}</span>}
@@ -107,7 +109,9 @@ export function ArticleCard({
           {showAuthor && <span className="block">{article.author?.name}</span>}
         </div>
         {showExcerpt && (
-          <div className="line-clamp-2 lg:line-clamp-4">{article.excerpt}</div>
+          <div className="line-clamp-2 lg:line-clamp-4 text-gray-700">
+            {article.excerpt}
+          </div>
         )}
         {showReadmore && (
           <div>
