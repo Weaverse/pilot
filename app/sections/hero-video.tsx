@@ -7,9 +7,15 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import {
+  forwardRef,
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useInView } from "react-intersection-observer";
-import ReactPlayer from "react-player";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
@@ -82,6 +88,8 @@ function getPlayerSize(id: string) {
   }
   return { width: "100%", height: "auto" };
 }
+
+const ReactPlayer = lazy(() => import("react-player"));
 
 const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   const {
@@ -157,16 +165,18 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
         )}
       >
         {inView && (
-          <ReactPlayer
-            src={videoURL}
-            playing
-            muted
-            loop={true}
-            width={size.width}
-            height={size.height}
-            controls={false}
-            className="aspect-video"
-          />
+          <Suspense fallback={null}>
+            <ReactPlayer
+              src={videoURL}
+              playing
+              muted
+              loop={true}
+              width={size.width}
+              height={size.height}
+              controls={false}
+              className="aspect-video"
+            />
+          </Suspense>
         )}
         <Overlay
           enableOverlay={enableOverlay}
