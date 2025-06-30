@@ -37,15 +37,15 @@
   --text-scale--line-height: 1;
   --text-xs: calc(var(--body-base-size) * 0.75);
   --text-xs--line-height: 1;
-  --text-sm: calc(var(--body-base-size) * 0.875), 1;
+  --text-sm: calc(var(--body-base-size) * 0.875);
   --text-sm--line-height: 1.25;
   --text-base: calc(var(--body-base-size) * 1.125);
   --text-lg--line-height: 1.75;
-  --text-xl: calc(var(--body-base-size) * 1.25), 1;
+  --text-xl: calc(var(--body-base-size) * 1.25);
   --text-xl--line-height: 1.75;
   --text-2xl: calc(var(--body-base-size) * 1.5);
   --text-2xl--line-height: 2;
-  --text-3xl: calc(var(--body-base-size) * 1.875), 2;
+  --text-3xl: calc(var(--body-base-size) * 1.875);
   --text-3xl--line-height: 2.25;
   --text-4xl: calc(var(--body-base-size) * 2.25);
   --text-4xl--line-height: 2.5;
