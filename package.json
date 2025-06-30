@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "codegen": "shopify hydrogen codegen",
     "hydrogen": "shopify hydrogen",
-    "clean": "rm -rf dist node_modules package-lock.json",
+    "clean": "rm -rf dist node_modules package-lock.json .shopify .react-router",
     "e2e": "npx playwright test",
     "e2e:ui": "npx playwright test --ui",
     "biome": "biome check --diagnostic-level=error",
