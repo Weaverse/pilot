@@ -14,7 +14,6 @@ interface CartBestSellersProps {
   count: number;
   heading: string;
   layout?: "drawer" | "page";
-  onClose?: () => void;
   query?: string;
   reverse?: boolean;
   sortKey: ProductSortKeys;
@@ -34,7 +33,6 @@ export function CartBestSellers({
   count = 4,
   heading = "Shop Best Sellers",
   layout = "drawer",
-  onClose,
   query,
   reverse,
   sortKey = "BEST_SELLING",
@@ -67,7 +65,6 @@ export function CartBestSellers({
       >
         <CartBestSellersContent
           count={count}
-          onClick={onClose}
           products={data?.products as Product[]}
         />
       </div>
@@ -80,12 +77,10 @@ export function CartBestSellers({
  */
 function CartBestSellersContent({
   count = 4,
-  onClick,
   products,
 }: {
   count: CartBestSellersProps["count"];
   products: Product[] | undefined;
-  onClick?: () => void;
 }) {
   const id = useId();
 

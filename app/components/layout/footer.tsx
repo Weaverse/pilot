@@ -1,9 +1,9 @@
 import {
-  CaretRight,
-  FacebookLogo,
-  InstagramLogo,
-  LinkedinLogo,
-  XLogo,
+  CaretRightIcon,
+  FacebookLogoIcon,
+  InstagramLogoIcon,
+  LinkedinLogoIcon,
+  XLogoIcon,
 } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { Image } from "@shopify/hydrogen";
@@ -54,50 +54,45 @@ export function Footer() {
     newsletterPlaceholder,
     newsletterButtonText,
   } = useThemeSettings();
-  const fetcher = useFetcher<any>();
+  const fetcher = useFetcher<{ ok: boolean; error: string }>();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    setMessage("");
-    setError("");
-    fetcher.submit(event.currentTarget);
-  };
+  const newsLetterResponse = fetcher.data;
 
   useEffect(() => {
-    if (fetcher.data) {
-      const message = (fetcher.data as any)?.message;
-      if (!fetcher.data.success) {
-        const error = message?.errors[0]?.detail;
-        setError(error);
+    if (newsLetterResponse) {
+      if (!newsLetterResponse.ok) {
+        setError(
+          newsLetterResponse.error || "An error occurred while signing up.",
+        );
       } else {
-        setMessage("Thank you for signing up!");
+        setMessage("Thank you for signing up! 🎉");
       }
     }
-  }, [fetcher.data]);
+  }, [newsLetterResponse]);
 
-  const socialItems = [
+  const SOCIAL_ACCOUNTS = [
     {
       name: "Instagram",
       to: socialInstagram,
-      icon: <InstagramLogo className="w-5 h-5" />,
+      Icon: InstagramLogoIcon,
     },
     {
       name: "X",
       to: socialX,
-      icon: <XLogo className="w-5 h-5" />,
+      Icon: XLogoIcon,
     },
     {
       name: "LinkedIn",
       to: socialLinkedIn,
-      icon: <LinkedinLogo className="w-5 h-5" />,
+      Icon: LinkedinLogoIcon,
     },
     {
       name: "Facebook",
       to: socialFacebook,
-      icon: <FacebookLogo className="w-5 h-5" />,
+      Icon: FacebookLogoIcon,
     },
-  ];
+  ].filter((acc) => acc.to && acc.to.trim() !== "");
 
   return (
     <footer
@@ -131,19 +126,17 @@ export function Footer() {
               )}
               {bio ? <div dangerouslySetInnerHTML={{ __html: bio }} /> : null}
               <div className="flex gap-4">
-                {socialItems.map((social) =>
-                  social.to ? (
-                    <Link
-                      key={social.name}
-                      to={social.to}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-lg"
-                    >
-                      {social.icon}
-                    </Link>
-                  ) : null,
-                )}
+                {SOCIAL_ACCOUNTS.map(({ to, name, Icon }) => (
+                  <Link
+                    key={name}
+                    to={to}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-lg"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </Link>
+                ))}
               </div>
             </div>
             <div className="flex flex-col gap-6">
@@ -158,7 +151,11 @@ export function Footer() {
               <div className="space-y-2">
                 <p>{newsletterDescription}</p>
                 <fetcher.Form
-                  onSubmit={handleSubmit}
+                  onSubmit={(event: FormEvent<HTMLFormElement>) => {
+                    setMessage("");
+                    setError("");
+                    fetcher.submit(event.currentTarget);
+                  }}
                   action="/api/klaviyo"
                   method="POST"
                   encType="multipart/form-data"
@@ -169,7 +166,7 @@ export function Footer() {
                       type="email"
                       required
                       placeholder={newsletterPlaceholder}
-                      className="grow text-body focus-visible:outline-hidden px-3"
+                      className="grow border border-gray-100 focus-visible:outline-hidden px-3"
                     />
                     <Button
                       variant="custom"
@@ -182,14 +179,14 @@ export function Footer() {
                 </fetcher.Form>
                 <div className="h-8">
                   {error && (
-                    <div className="bg-red-100 border-l-4 border-red-500 text-red-700 py-1 px-2 mb-6 flex gap-1 w-fit">
+                    <div className="bg-red-100 text-red-700 py-1 px-2 mb-6 flex gap-1 w-fit">
                       <p className="font-semibold">ERROR:</p>
                       <p>{error}</p>
                     </div>
                   )}
                   {message && (
-                    <div className="bg-green-100 border-l-4 border-green-500 text-green-700 py-1 px-2 mb-6 flex gap-1 w-fit">
-                      <p>{message}</p>
+                    <div className="text-green-500 py-1 mb-6 w-fit">
+                      {message}
                     </div>
                   )}
                 </div>
@@ -226,7 +223,7 @@ function FooterMenu() {
             ) : (
               <Link to={to}>{title}</Link>
             )}
-            <CaretRight className="w-4 h-4 transition-transform rotate-0" />
+            <CaretRightIcon className="w-4 h-4 transition-transform rotate-0" />
           </Accordion.Trigger>
           <div className="text-lg font-medium hidden lg:block">
             {["#", "/"].includes(to) ? title : <Link to={to}>{title}</Link>}

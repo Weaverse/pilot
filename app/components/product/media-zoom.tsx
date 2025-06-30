@@ -1,4 +1,9 @@
-import { ArrowLeft, ArrowRight, VideoCamera, X } from "@phosphor-icons/react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  VideoCameraIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { parseGid } from "@shopify/hydrogen";
@@ -45,7 +50,7 @@ export function ZoomModal({
     }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "ArrowRight" || event.key === "ArrowDown") {
@@ -124,7 +129,7 @@ export function ZoomModal({
                         />
                         {mediaContentType === "VIDEO" && (
                           <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
-                            <VideoCamera className="w-4 h-4" />
+                            <VideoCameraIcon className="w-4 h-4" />
                           </div>
                         )}
                       </div>
@@ -135,7 +140,7 @@ export function ZoomModal({
             </div>
             <ZoomMedia media={zoomMedia} />
             <Dialog.Close className="absolute top-4 right-4 z-1">
-              <X className="w-6 h-6" />
+              <XIcon className="w-6 h-6" />
             </Dialog.Close>
             <div className="flex items-center gap-2 justify-center absolute bottom-10 left-10 md:left-auto right-10">
               <Button
@@ -146,7 +151,7 @@ export function ZoomModal({
                   scrollToMedia(prevMedia.id);
                 }}
               >
-                <ArrowLeft className="w-4.5 h-4.5" />
+                <ArrowLeftIcon className="w-4.5 h-4.5" />
               </Button>
               <Button
                 variant="secondary"
@@ -156,7 +161,7 @@ export function ZoomModal({
                   scrollToMedia(nextMedia.id);
                 }}
               >
-                <ArrowRight className="w-4.5 h-4.5" />
+                <ArrowRightIcon className="w-4.5 h-4.5" />
               </Button>
             </div>
           </div>

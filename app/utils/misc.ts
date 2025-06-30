@@ -16,6 +16,11 @@ export function constructURL(
   return _url.toString();
 }
 
+export function isValidColor(color: string) {
+  const c = colord(color);
+  return c.isValid();
+}
+
 export function isLightColor(color: string, threshold = 0.8) {
   const c = colord(color);
   return c.isValid() && c.brightness() > threshold;

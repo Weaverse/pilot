@@ -1,4 +1,4 @@
-import { SignOut } from "@phosphor-icons/react";
+import { SignOutIcon } from "@phosphor-icons/react";
 import {
   CacheNone,
   flattenConnection,
@@ -111,7 +111,7 @@ function Account({ customer, heading, featuredData }: AccountType) {
             type="submit"
             className="text-body-subtle group flex gap-2 items-center"
           >
-            <SignOut className="w-4 h-4" />
+            <SignOutIcon className="w-4 h-4" />
             <span className="group-hover:underline underline-offset-4">
               Sign out
             </span>

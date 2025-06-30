@@ -21,6 +21,7 @@ export function Quantity(props: QuantityProps) {
       <legend className="font-bold leading-tight">Quantity</legend>
       <div className="border border-line w-fit">
         <button
+          type="button"
           name="decrease-quantity"
           aria-label="Decrease quantity"
           className="w-10 h-10 transition "
@@ -36,6 +37,7 @@ export function Quantity(props: QuantityProps) {
           onChange={(e) => onChange(Number(e.currentTarget.value))}
         />
         <button
+          type="button"
           className="w-10 h-10 transition text-body hover:text-body"
           name="increase-quantity"
           aria-label="Increase quantity"

@@ -1,4 +1,8 @@
-import { FacebookLogo, PinterestLogo, XLogo } from "@phosphor-icons/react";
+import {
+  FacebookLogoIcon,
+  PinterestLogoIcon,
+  XLogoIcon,
+} from "@phosphor-icons/react";
 import { createSchema, isBrowser } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData, useRouteLoaderData } from "react-router";
@@ -71,13 +75,13 @@ const BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
                 <div className="flex gap-2 items-center">
                   <strong>Share:</strong>
                   <FacebookShareButton url={articleUrl}>
-                    <FacebookLogo size={24} />
+                    <FacebookLogoIcon size={24} />
                   </FacebookShareButton>
                   <PinterestShareButton url={articleUrl} media={image?.url}>
-                    <PinterestLogo size={24} />
+                    <PinterestLogoIcon size={24} />
                   </PinterestShareButton>
                   <TwitterShareButton url={articleUrl} title={title}>
-                    <XLogo size={24} />
+                    <XLogoIcon size={24} />
                   </TwitterShareButton>
                 </div>
               )}

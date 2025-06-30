@@ -13,7 +13,7 @@ import { useEffect, useMemo } from "react";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
-import { openCartDrawer } from "~/components/layout/cart-drawer";
+import { toggleCartDrawer } from "~/components/layout/cart-drawer";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -55,7 +55,7 @@ export function AddToCartButton({
                 className,
               )}
               disabled={disabled ?? fetcher.state !== "idle"}
-              onClick={openCartDrawer}
+              onClick={() => toggleCartDrawer(true)}
               {...props}
             >
               {children}

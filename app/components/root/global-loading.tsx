@@ -27,8 +27,6 @@ export function GlobalLoading() {
   return (
     <div
       aria-hidden={!active}
-      aria-valuetext={active ? "Loading" : undefined}
-      aria-label="Global loading progress bar"
       className="fixed inset-x-0 left-0 top-0 z-50 h-1 animate-pulse"
     >
       <div

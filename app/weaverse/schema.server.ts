@@ -374,7 +374,7 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Sold out & unavailable",
+          label: "Sold out / unavailable",
           name: "soldOutBadgeColor",
           defaultValue: "#d4d4d4",
         },

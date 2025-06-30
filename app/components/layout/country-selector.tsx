@@ -1,4 +1,4 @@
-import { CaretDown, CheckCircle } from "@phosphor-icons/react";
+import { CaretDownIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import * as Popover from "@radix-ui/react-popover";
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
@@ -27,8 +27,7 @@ export function CountrySelector() {
   )}${search}`;
 
   const countries = (fetcher.data ?? {}) as Localizations;
-  // biome-ignore lint/complexity/useLiteralKeys: <explanation>
-  const defaultLocale = countries?.["default"];
+  const defaultLocale = countries?.default;
   const defaultLocalePrefix = defaultLocale
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : "";
@@ -39,7 +38,7 @@ export function CountrySelector() {
   });
 
   const observerRef = useRef(null);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     ref(observerRef.current);
   }, [ref, observerRef]);
@@ -76,6 +75,7 @@ export function CountrySelector() {
       <Popover.Root>
         <Popover.Trigger asChild>
           <button
+            type="button"
             className="w-full border border-line-subtle overflow-clip px-4 py-3 cursor-pointer text-left outline-hidden flex items-center gap-2"
             aria-label="Select country"
           >
@@ -85,7 +85,7 @@ export function CountrySelector() {
               style={{ width: "24px", height: "14px" }}
             />
             <span>{selectedLocale.label}</span>
-            <CaretDown className="ml-auto w-4 h-4" />
+            <CaretDownIcon className="ml-auto w-4 h-4" />
           </button>
         </Popover.Trigger>
         <Popover.Portal>
@@ -125,7 +125,7 @@ export function CountrySelector() {
                       <span>{countryLocale.label}</span>
                       {isSelected ? (
                         <span className="ml-auto">
-                          <CheckCircle className="w-5 h-5" />
+                          <CheckCircleIcon className="w-5 h-5" />
                         </span>
                       ) : null}
                     </Popover.Close>

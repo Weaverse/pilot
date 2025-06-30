@@ -1,4 +1,4 @@
-import { Handbag, X } from "@phosphor-icons/react";
+import { HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
@@ -6,24 +6,15 @@ import { Suspense, useState } from "react";
 import { Await, useRouteLoaderData } from "react-router";
 import { Cart } from "~/components/cart/cart";
 import Link from "~/components/link";
-import { ScrollArea } from "~/components/scroll-area";
 import type { RootLoader } from "~/root";
 
-export let openCartDrawer = () => {};
+export let toggleCartDrawer = (_open: boolean) => {};
 
 export function CartDrawer() {
   const rootData = useRouteLoaderData<RootLoader>("root");
   const { publish } = useAnalytics();
   const [open, setOpen] = useState(false);
-  openCartDrawer = () => setOpen(true);
-
-  // Toggle cart drawer when adding to cart
-  // let addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
-  // useEffect(() => {
-  //   if (!open && addToCartFetchers.length) {
-  //     setOpen(true);
-  //   }
-  // }, [addToCartFetchers, open]);
+  toggleCartDrawer = setOpen;
 
   return (
     <Suspense
@@ -32,7 +23,7 @@ export function CartDrawer() {
           to="/cart"
           className="relative flex items-center justify-center w-8 h-8 focus:ring-border"
         >
-          <Handbag className="w-5 h-5" />
+          <HandbagIcon className="w-5 h-5" />
         </Link>
       }
     >
@@ -43,14 +34,14 @@ export function CartDrawer() {
               onClick={() => publish("custom_sidecart_viewed", { cart })}
               className="relative flex items-center justify-center w-8 h-8 focus:ring-border"
             >
-              <Handbag className="w-5 h-5" />
+              <HandbagIcon className="w-5 h-5" />
               {cart?.totalQuantity > 0 && (
                 <div
                   className={clsx(
                     "cart-count",
                     "absolute top-0 -right-1.5",
                     "flex items-center text-center justify-center min-w-4.5 h-4.5 px-1 rounded-full",
-                    "text-sm leading-none text-center font-medium",
+                    "text-[13px] leading-none text-center font-medium",
                     "transition-colors duration-300",
                     "group-hover/header:bg-(--color-header-text)",
                     "group-hover/header:text-(--color-header-bg)",
@@ -74,21 +65,20 @@ export function CartDrawer() {
               >
                 <div className="space-y-6">
                   <div className="flex gap-2 items-center justify-between px-4">
-                    <Dialog.Title asChild className="py-2.5">
+                    <Dialog.Title asChild className="text-base">
                       <span className="font-bold">Cart</span>
                     </Dialog.Title>
                     <Dialog.Close asChild>
                       <button
+                        type="button"
                         className="p-2 translate-x-2"
                         aria-label="Close cart drawer"
                       >
-                        <X className="w-4 h-4" />
+                        <XIcon className="w-4 h-4" />
                       </button>
                     </Dialog.Close>
                   </div>
-                  <ScrollArea className="max-h-[calc(100vh-4.5rem)]" size="sm">
-                    <Cart layout="drawer" cart={cart as CartReturn} />
-                  </ScrollArea>
+                  <Cart layout="drawer" cart={cart as CartReturn} />
                 </div>
               </Dialog.Content>
             </Dialog.Portal>

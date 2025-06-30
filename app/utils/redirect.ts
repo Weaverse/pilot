@@ -10,13 +10,12 @@ export function redirectIfHandleIsLocalized(
   const url = new URL(request.url);
   let shouldRedirect = false;
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
-  localizedResources.forEach(({ handle, data }) => {
+  for (const { handle, data } of localizedResources) {
     if (handle !== data.handle) {
       url.pathname = url.pathname.replace(handle, data.handle);
       shouldRedirect = true;
     }
-  });
+  }
 
   if (shouldRedirect) {
     throw redirect(url.toString());

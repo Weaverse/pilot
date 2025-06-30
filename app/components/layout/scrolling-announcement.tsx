@@ -25,7 +25,7 @@ export function ScrollingAnnouncement() {
     }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     updateStyles();
     window.addEventListener("scroll", updateStyles);

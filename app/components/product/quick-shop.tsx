@@ -1,13 +1,14 @@
-import { ShopPayButton } from "@shopify/hydrogen";
+import {
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  ShopPayButton,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import type { ProductVariant } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-import type {
-  ProductQuery,
-  ProductVariantFragment,
-  VariantsQuery,
-} from "storefront-api.generated";
+import type { ProductQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
@@ -19,18 +20,25 @@ import type { ProductData } from "~/routes/($locale).api.product";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
-  variants: VariantsQuery;
   storeDomain: string;
 }
 
 export function QuickShop({ data }: { data: QuickViewData }) {
   const themeSettings = useThemeSettings();
-  const { product, variants: _variants, storeDomain } = data || {};
-  // @ts-expect-error
-  const firstVariant = product?.variants?.nodes?.[0];
-  const [selectedVariant, setSelectedVariant] = useState(
-    firstVariant as ProductVariantFragment,
+  const { product, storeDomain } = data || {};
+
+  // Optimistically selects a variant with given available variant information
+  const selectedVariant = useOptimisticVariant(
+    product?.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
   );
+
+  // Get the product options array
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
+
   const [quantity, setQuantity] = useState<number>(1);
   const {
     addToCartText,
@@ -39,9 +47,6 @@ export function QuickShop({ data }: { data: QuickViewData }) {
     hideUnavailableOptions,
     productQuickViewImageAspectRatio,
   } = themeSettings;
-  const handleSelectedVariantChange = (variant: any) => {
-    setSelectedVariant(variant);
-  };
 
   // // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   // useEffect(() => {
@@ -129,7 +134,7 @@ export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
   const [open, setOpen] = useState(false);
   const { load, data, state } = useFetcher<ProductData>();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
   useEffect(() => {
     if (open && !data && state !== "loading") {
       load(`/api/product?handle=${productHandle}`);

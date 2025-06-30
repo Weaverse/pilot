@@ -1,18 +1,25 @@
-import { Money, ShopPayButton } from "@shopify/hydrogen";
+import {
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  Money,
+  ShopPayButton,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import {
   type ComponentLoaderArgs,
   createSchema,
   type HydrogenComponentProps,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useState } from "react";
 import type { ProductQuery } from "storefront-api.generated";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductPlaceholder } from "~/components/product/placeholder";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
+import { ProductVariants } from "~/components/product/variants";
 import { layoutInputs, Section } from "~/components/section";
-import { PRODUCT_QUERY, VARIANTS_QUERY } from "~/graphql/queries";
+import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
 
 interface SingleProductData {
@@ -40,14 +47,21 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       numberOfThumbnails,
       ...rest
     } = props;
-    const { storeDomain, product, variants: _variants } = loaderData || {};
-    const variants = _variants?.product?.variants;
-    const [selectedVariant, setSelectedVariant] = useState<any>(null);
+    const { storeDomain, product } = loaderData || {};
+
+    // Optimistically selects a variant with given available variant information
+    const selectedVariant = useOptimisticVariant(
+      product?.selectedOrFirstAvailableVariant,
+      getAdjacentAndFirstAvailableVariants(product),
+    );
+
+    // Get the product options array
+    const productOptions = getProductOptions({
+      ...product,
+      selectedOrFirstAvailableVariant: selectedVariant,
+    });
+
     const [quantity, setQuantity] = useState<number>(1);
-    useEffect(() => {
-      setSelectedVariant(variants?.nodes?.[0]);
-      setQuantity(1);
-    }, [variants?.nodes]);
     const [scope] = useAnimation(ref);
 
     if (!product)
@@ -100,15 +114,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                     __html: product?.summary,
                   }}
                 />
-                {/* <ProductVariants
-                  product={product}
-                  selectedVariant={selectedVariant}
-                  onSelectedVariantChange={setSelectedVariant}
-                  variants={variants}
-                  options={product?.options}
-                  productHandle={product?.handle}
-                  hideUnavailableOptions={hideUnavailableOptions}
-                /> */}
+                <ProductVariants productOptions={productOptions} />
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
               <AddToCartButton
@@ -164,17 +170,9 @@ export const loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
       },
     },
   );
-  const variants = await storefront.query(VARIANTS_QUERY, {
-    variables: {
-      handle: productHandle,
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
-    },
-  });
 
   return {
     product,
-    variants,
     storeDomain: shop.primaryDomain.url,
   };
 };

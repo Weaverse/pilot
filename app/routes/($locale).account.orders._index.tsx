@@ -107,7 +107,7 @@ export default function Orders() {
 
 function OrdersTable({ orders }: Pick<CustomerOrdersFragment, "orders">) {
   return (
-    <div className="acccount-orders">
+    <div className="account-orders">
       {orders?.nodes.length ? (
         <PaginatedResourceSection connection={orders}>
           {({ node: order }) => <OrderItem key={order.id} order={order} />}

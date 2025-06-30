@@ -1,4 +1,4 @@
-import { Trash } from "@phosphor-icons/react";
+import { TrashIcon } from "@phosphor-icons/react";
 import {
   CartForm,
   Money,
@@ -18,8 +18,10 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { ScrollArea } from "~/components/scroll-area";
 import { RevealUnderline } from "~/reveal-underline";
 import { getImageAspectRatio } from "~/utils/image";
+import { toggleCartDrawer } from "../layout/cart-drawer";
 import { CartBestSellers } from "./cart-best-sellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
@@ -96,7 +98,10 @@ function CartDiscounts({
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
               <button type="button">
-                <Trash aria-hidden="true" className="h-[18px] w-[18px] mr-1" />
+                <TrashIcon
+                  aria-hidden="true"
+                  className="h-[18px] w-[18px] mr-1"
+                />
               </button>
             </UpdateDiscountForm>
             <dd>{codes?.join(", ")}</dd>
@@ -156,24 +161,29 @@ function CartLines({
   return (
     <div
       ref={scrollRef}
-      aria-labelledby="cart-contents"
       className={clsx([
+        "-mx-4 pb-4",
         y > 0 ? "border-t border-line-subtle" : "",
         layout === "page" && "grow md:translate-y-4 lg:col-span-2",
-        layout === "drawer" && "overflow-auto transition",
+        layout === "drawer" && "transition",
       ])}
     >
-      <ul
-        className={clsx(
-          "grid",
-          layout === "page" && "gap-9",
-          layout === "drawer" && "gap-5",
-        )}
+      <ScrollArea
+        className={clsx(layout === "drawer" && "max-h-[calc(100vh-312px)]")}
+        size="sm"
       >
-        {currentLines.map((line) => (
-          <CartLineItem key={line.id} line={line} layout={layout} />
-        ))}
-      </ul>
+        <ul
+          className={clsx(
+            "px-4 grid",
+            layout === "page" && "gap-9",
+            layout === "drawer" && "gap-5",
+          )}
+        >
+          {currentLines.map((line) => (
+            <CartLineItem key={line.id} line={line} layout={layout} />
+          ))}
+        </ul>
+      </ScrollArea>
     </div>
   );
 }
@@ -213,7 +223,6 @@ function CartSummary({
 }) {
   return (
     <div
-      aria-labelledby="summary-heading"
       className={clsx(
         layout === "drawer" && "grid gap-4 border-t border-line-subtle pt-4",
         layout === "page" &&
@@ -251,11 +260,23 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
   if (!line?.id) return null;
 
   const { id, quantity, merchandise } = line;
-  if (typeof quantity === "undefined" || !merchandise?.product) return null;
+
+  if (typeof quantity === "undefined" || !merchandise?.product) {
+    return null;
+  }
+
+  let { image, title, product, selectedOptions } = merchandise;
+  let url = `/products/${product.handle}`;
+  if (selectedOptions?.length) {
+    let params = new URLSearchParams();
+    for (const option of selectedOptions) {
+      params.append(option.name, option.value);
+    }
+    url += `?${params.toString()}`;
+  }
 
   return (
     <li
-      key={id}
       className="flex gap-4"
       style={{
         // Hide the line item if the optimistic data action is remove
@@ -264,43 +285,30 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
       }}
     >
       <div className="shrink-0">
-        {merchandise.image && (
+        {image && (
           <Image
             width={250}
             height={250}
-            data={merchandise.image}
+            data={image}
             className="w-24 h-auto"
-            alt={merchandise.title}
-            aspectRatio={getImageAspectRatio(merchandise.image, "adapt")}
+            alt={title}
+            aspectRatio={getImageAspectRatio(image, "adapt")}
           />
         )}
       </div>
-      <div className="flex flex-col justify-between grow">
+      <div className="flex flex-col gap-3 grow">
         <div className="flex justify-between gap-4">
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div>
-              {merchandise?.product?.handle ? (
-                <Link to={`/products/${merchandise.product.handle}`}>
-                  <RevealUnderline>
-                    {merchandise?.product?.title || ""}
-                  </RevealUnderline>
+              {product?.handle ? (
+                <Link to={url} onClick={() => toggleCartDrawer(false)}>
+                  <RevealUnderline>{product?.title || ""}</RevealUnderline>
                 </Link>
               ) : (
-                <p>{merchandise?.product?.title || ""}</p>
+                <p>{product?.title || ""}</p>
               )}
             </div>
-            <div className="text-sm space-y-0.5">
-              {(merchandise?.selectedOptions || [])
-                .filter((option) => option.value !== "Default Title")
-                .map((option) => (
-                  <div
-                    key={option.name}
-                    className="text-(--color-compare-price-text)"
-                  >
-                    {option.name}: {option.value}
-                  </div>
-                ))}
-            </div>
+            <div className="text-sm text-gray-500 space-y-0.5">{title}</div>
           </div>
           {layout === "drawer" && (
             <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
@@ -342,7 +350,7 @@ function ItemRemoveButton({
         type="submit"
       >
         <span className="sr-only">Remove</span>
-        <Trash aria-hidden="true" className="h-4 w-4" />
+        <TrashIcon aria-hidden="true" className="h-4 w-4" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>
@@ -353,7 +361,9 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
   const optimisticId = line?.id;
   const optimisticData = useOptimisticData<OptimisticData>(optimisticId);
 
-  if (!line || typeof line?.quantity === "undefined") return null;
+  if (!line || typeof line?.quantity === "undefined") {
+    return null;
+  }
 
   const optimisticQuantity = optimisticData?.quantity || line.quantity;
 
@@ -503,7 +513,6 @@ function CartEmpty({
           count={4}
           heading="Shop Best Sellers"
           layout={layout}
-          onClose={onClose}
           sortKey="BEST_SELLING"
         />
       </div>

@@ -84,15 +84,13 @@ export function ErrorBoundary({ error }: { error: Error }) {
   }
 
   return isRouteError ? (
-    <>
-      {routeError.status === 404 ? (
-        <NotFound type={pageType} />
-      ) : (
-        <GenericError
-          error={{ message: `${routeError.status} ${routeError.data}` }}
-        />
-      )}
-    </>
+    routeError.status === 404 ? (
+      <NotFound type={pageType} />
+    ) : (
+      <GenericError
+        error={{ message: `${routeError.status} ${routeError.data}` }}
+      />
+    )
   ) : (
     <GenericError error={error instanceof Error ? error : undefined} />
   );

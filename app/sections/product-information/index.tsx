@@ -1,9 +1,15 @@
-import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
+import {
+  getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  Money,
+  ShopPayButton,
+  useOptimisticVariant,
+} from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useState } from "react";
-import { useLoaderData, useSearchParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
@@ -28,37 +34,37 @@ interface ProductInformationProps
     Omit<ProductMediaProps, "selectedVariant" | "media"> {
   addToCartText: string;
   soldOutText: string;
-  unavailableText: string;
-  selectVariantText: string;
   showVendor: boolean;
   showSalePrice: boolean;
   showShortDescription: boolean;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
-  hideUnavailableOptions: boolean;
 }
 
 const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
   (props, ref) => {
-    const { product, variants, storeDomain } =
-      useLoaderData<typeof productRouteLoader>();
-    const [params] = useSearchParams();
+    const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
+
+    // Optimistically selects a variant with given available variant information
     const selectedVariant = useOptimisticVariant(
-      product?.selectedVariant,
-      variants,
+      product?.selectedOrFirstAvailableVariant,
+      getAdjacentAndFirstAvailableVariants(product),
     );
+
+    // Get the product options array
+    const productOptions = getProductOptions({
+      ...product,
+      selectedOrFirstAvailableVariant: selectedVariant,
+    });
 
     const {
       addToCartText,
       soldOutText,
-      unavailableText,
-      selectVariantText,
       showVendor,
       showSalePrice,
       showShortDescription,
       showShippingPolicy,
       showRefundPolicy,
-      hideUnavailableOptions,
       mediaLayout,
       gridSize,
       imageAspectRatio,
@@ -75,15 +81,11 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
         handle,
         vendor,
         summary,
-        options,
         priceRange,
         publishedAt,
         badges,
       } = product;
-      const allOptionNames = options.map(({ name }) => name);
-      const isAllOptionsSelected = allOptionNames.every((name) =>
-        params.get(name),
-      );
+
       const isBestSellerProduct = badges
         .filter(Boolean)
         .some(({ key, value }) => key === "best_seller" && value === "true");
@@ -169,12 +171,7 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                 {showShortDescription && (
                   <p className="leading-relaxed">{summary}</p>
                 )}
-                <ProductVariants
-                  variants={variants}
-                  options={options}
-                  productHandle={handle}
-                  hideUnavailableOptions={hideUnavailableOptions}
-                />
+                <ProductVariants productOptions={productOptions} />
                 <Quantity value={quantity} onChange={setQuantity} />
                 <div className="space-y-2">
                   <AddToCartButton
@@ -189,13 +186,9 @@ const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                     data-test="add-to-cart"
                     className="w-full uppercase"
                   >
-                    {isAllOptionsSelected
-                      ? selectedVariant
-                        ? selectedVariant.availableForSale
-                          ? addToCartText
-                          : soldOutText
-                        : unavailableText
-                      : selectVariantText}
+                    {selectedVariant.availableForSale
+                      ? addToCartText
+                      : soldOutText}
                   </AddToCartButton>
                   {selectedVariant?.availableForSale && (
                     <ShopPayButton
@@ -324,20 +317,6 @@ export const schema = createSchema({
           placeholder: "Sold out",
         },
         {
-          type: "text",
-          label: "Unavailable text",
-          name: "unavailableText",
-          defaultValue: "Unavailable",
-          placeholder: "Unavailable",
-        },
-        {
-          type: "text",
-          label: "Select variant text",
-          name: "selectVariantText",
-          defaultValue: "Select variant",
-          placeholder: "Select variant",
-        },
-        {
           type: "switch",
           label: "Show vendor",
           name: "showVendor",
@@ -366,12 +345,6 @@ export const schema = createSchema({
           label: "Show refund policy",
           name: "showRefundPolicy",
           defaultValue: true,
-        },
-        {
-          label: "Hide unavailable options",
-          type: "switch",
-          name: "hideUnavailableOptions",
-          defaultValue: false,
         },
       ],
     },

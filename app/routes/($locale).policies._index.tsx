@@ -1,4 +1,4 @@
-import { FileText } from "@phosphor-icons/react";
+import { FileTextIcon } from "@phosphor-icons/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
@@ -63,7 +63,7 @@ export default function Policies() {
                   className="w-fit gap-2"
                   to={`/policies/${policy.handle}`}
                 >
-                  <FileText className="w-5 h-5" />
+                  <FileTextIcon className="w-5 h-5" />
                   <span>{policy.title}</span>
                 </Link>
               )

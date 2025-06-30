@@ -182,7 +182,8 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 
-  button {
+  button,
+  a {
     @apply cursor-pointer;
   }
 
@@ -436,6 +437,6 @@
   }
 }
 
-.animated-scope [data-motion] {
-  /* opacity: 0; */
-}
+/* .animated-scope [data-motion] {
+  opacity: 0;
+} */

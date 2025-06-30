@@ -1,4 +1,4 @@
-import { FunnelX, X } from "@phosphor-icons/react";
+import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect } from "react";
@@ -55,7 +55,7 @@ export function ProductsPagination({
                   preventScrollReset
                 >
                   <span>{label}</span>
-                  <X className="w-4 h-4" />
+                  <XIcon className="w-4 h-4" />
                 </Link>
               );
             })}
@@ -123,7 +123,7 @@ export function ProductsPagination({
         </Pagination>
       ) : (
         <div className="gap-3 pt-20 flex justify-center items-center flex-col">
-          <FunnelX size={50} weight="light" />
+          <FunnelXIcon size={50} weight="light" />
           <div className="text-lg">No products matched your filters.</div>
         </div>
       )}

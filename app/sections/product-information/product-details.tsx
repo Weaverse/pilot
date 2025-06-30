@@ -1,4 +1,4 @@
-import { Minus, Plus } from "@phosphor-icons/react";
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import clsx from "clsx";
 import { Link, useLoaderData } from "react-router";
@@ -37,8 +37,8 @@ export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
             ])}
           >
             <span>{title}</span>
-            <Minus className="w-4 h-4 minus hidden" />
-            <Plus className="w-4 h-4 plus" />
+            <MinusIcon className="w-4 h-4 minus hidden" />
+            <PlusIcon className="w-4 h-4 plus" />
           </Accordion.Trigger>
           <Accordion.Content
             style={

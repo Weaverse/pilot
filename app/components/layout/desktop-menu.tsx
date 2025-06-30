@@ -1,4 +1,4 @@
-import { CaretDown } from "@phosphor-icons/react";
+import { CaretDownIcon } from "@phosphor-icons/react";
 import * as Menubar from "@radix-ui/react-menubar";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
@@ -49,7 +49,7 @@ export function DesktopMenu() {
                   {hasSubmenu ? (
                     <>
                       <span>{title}</span>
-                      <CaretDown className="w-3.5 h-3.5 transition-transform" />
+                      <CaretDownIcon className="w-3.5 h-3.5 transition-transform" />
                     </>
                   ) : (
                     <Link to={to} className="transition-none">
@@ -139,7 +139,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
             <Link
               to={to}
               prefetch="intent"
-              className="uppercase inline transition-none"
+              className="uppercase transition-none"
             >
               <RevealUnderline>{title}</RevealUnderline>
             </Link>

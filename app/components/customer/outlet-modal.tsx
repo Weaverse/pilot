@@ -1,4 +1,4 @@
-import { X } from "@phosphor-icons/react";
+import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { clsx } from "clsx";
@@ -43,7 +43,7 @@ export function OutletModal({
                 className="p-2 top-5 right-4 absolute"
                 aria-label="Close account modal"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
               </Link>
             </Dialog.Close>
           </div>

@@ -1,4 +1,4 @@
-import { MagnifyingGlass, X } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react";
 import {
   Analytics,
   getPaginationVariables,
@@ -124,7 +124,7 @@ export default function Search() {
         method="get"
         className="flex items-center gap-3 w-[700px] max-w-[90vw] mx-auto mt-6 border border-line px-3"
       >
-        <MagnifyingGlass className="w-5 h-5 shrink-0 text-gray-500" />
+        <MagnifyingGlassIcon className="w-5 h-5 shrink-0 text-gray-500" />
         <input
           className="focus-visible:outline-hidden w-full h-full py-4"
           value={searchKey}
@@ -138,7 +138,7 @@ export default function Search() {
           className="shrink-0 text-gray-500 p-1"
           onClick={() => setSearchKey("")}
         >
-          <X className="w-5 h-5" />
+          <XIcon className="w-5 h-5" />
         </button>
       </Form>
       {hasResults ? (
