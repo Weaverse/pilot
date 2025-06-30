@@ -168,7 +168,10 @@ function CartLines({
         layout === "drawer" && "transition",
       ])}
     >
-      <ScrollArea className="max-h-[calc(100vh-312px)]" size="sm">
+      <ScrollArea
+        className={clsx(layout === "drawer" && "max-h-[calc(100vh-312px)]")}
+        size="sm"
+      >
         <ul
           className={clsx(
             "px-4 grid",
