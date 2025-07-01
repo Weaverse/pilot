@@ -14,21 +14,19 @@ import {
 import { forwardRef, useState } from "react";
 import type { ProductQuery } from "storefront-api.generated";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import { ProductPlaceholder } from "~/components/product/placeholder";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { ProductVariants } from "~/components/product/variants";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
+import { ProductPlaceholder } from "./product-placeholder";
 
 interface SingleProductData {
   productsCount: number;
   product: WeaverseProduct;
   hideUnavailableOptions: boolean;
-  // product media props
   showThumbnails: boolean;
-  numberOfThumbnails: number;
 }
 
 type SingleProductProps = HydrogenComponentProps<
@@ -44,25 +42,31 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       product: _product,
       hideUnavailableOptions,
       showThumbnails,
-      numberOfThumbnails,
       ...rest
     } = props;
     const { storeDomain, product } = loaderData || {};
+    const [quantity, setQuantity] = useState<number>(1);
+    const [scope] = useAnimation(ref);
 
     // Optimistically selects a variant with given available variant information
     const selectedVariant = useOptimisticVariant(
       product?.selectedOrFirstAvailableVariant,
-      getAdjacentAndFirstAvailableVariants(product),
+      product ? getAdjacentAndFirstAvailableVariants(product) : [],
     );
+
+    if (!product) {
+      return (
+        <Section ref={ref} {...rest}>
+          <ProductPlaceholder />
+        </Section>
+      );
+    }
 
     // Get the product options array
     const productOptions = getProductOptions({
       ...product,
       selectedOrFirstAvailableVariant: selectedVariant,
     });
-
-    const [quantity, setQuantity] = useState<number>(1);
-    const [scope] = useAnimation(ref);
 
     if (!product)
       return (
@@ -80,6 +84,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       : selectedVariant?.quantityAvailable === -1
         ? "Unavailable"
         : "Sold Out";
+
     return (
       <Section ref={ref} {...rest}>
         <div ref={scope}>
