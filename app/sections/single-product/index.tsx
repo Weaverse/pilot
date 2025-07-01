@@ -32,7 +32,6 @@ import { SingleProductVariantSelector } from "./variant-selector";
 interface SingleProductData {
   productsCount: number;
   product: WeaverseProduct;
-  hideUnavailableOptions: boolean;
   showThumbnails: boolean;
 }
 
@@ -47,7 +46,6 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       loaderData,
       children,
       product: _product,
-      hideUnavailableOptions,
       showThumbnails,
       ...rest
     } = props;
@@ -304,11 +302,6 @@ export const schema = createSchema({
           type: "product",
           name: "product",
           shouldRevalidate: true,
-        },
-        {
-          label: "Hide unavailable options",
-          type: "switch",
-          name: "hideUnavailableOptions",
         },
       ],
     },
