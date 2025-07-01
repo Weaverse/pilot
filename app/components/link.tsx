@@ -63,7 +63,7 @@ const variants = cva(["transition-colors inline-flex"], {
   },
 });
 
-export interface LinkStyleProps {
+export interface LinkStyles {
   backgroundColor: string;
   textColor: string;
   borderColor: string;
@@ -72,15 +72,18 @@ export interface LinkStyleProps {
   borderColorHover: string;
 }
 
-export interface LinkProps
+export interface LinkData
   extends RemixLinkProps,
-    VariantProps<typeof variants>,
-    HTMLAttributes<HTMLAnchorElement>,
-    Partial<Omit<HydrogenComponentProps, "children">>,
-    Partial<LinkStyleProps> {
+    Partial<LinkStyles>,
+    VariantProps<typeof variants> {
   text?: string;
   openInNewTab?: boolean;
 }
+
+export interface LinkProps
+  extends HTMLAttributes<HTMLAnchorElement>,
+    Partial<Omit<HydrogenComponentProps, "children">>,
+    LinkData {}
 
 export function useHrefWithLocale(href: LinkProps["to"]) {
   const rootData = useRouteLoaderData<RootLoader>("root");
@@ -186,7 +189,7 @@ export const linkContentInputs: InspectorGroup["inputs"] = [
     name: "openInNewTab",
     label: "Open in new tab",
     defaultValue: false,
-    condition: (data) => !!data.to,
+    condition: (data: LinkData) => !!data.to,
   },
   {
     type: "select",
@@ -210,42 +213,42 @@ export const linkStylesInputs: InspectorGroup["inputs"] = [
     label: "Background color",
     name: "backgroundColor",
     defaultValue: "#000",
-    condition: (data) => data.variant === "custom",
+    condition: (data: LinkData) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Text color",
     name: "textColor",
     defaultValue: "#fff",
-    condition: (data) => data.variant === "custom",
+    condition: (data: LinkData) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Border color",
     name: "borderColor",
     defaultValue: "#00000000",
-    condition: (data) => data.variant === "custom",
+    condition: (data: LinkData) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Background color (hover)",
     name: "backgroundColorHover",
     defaultValue: "#00000000",
-    condition: (data) => data.variant === "custom",
+    condition: (data: LinkData) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Text color (hover)",
     name: "textColorHover",
     defaultValue: "#000",
-    condition: (data) => data.variant === "custom",
+    condition: (data: LinkData) => data.variant === "custom",
   },
   {
     type: "color",
     label: "Border color (hover)",
     name: "borderColorHover",
     defaultValue: "#000",
-    condition: (data) => data.variant === "custom",
+    condition: (data: LinkData) => data.variant === "custom",
   },
 ];
 

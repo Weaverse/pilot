@@ -199,7 +199,7 @@ export const headingInputs: InspectorGroup["inputs"] = [
       unit: "px",
     },
     defaultValue: 16,
-    condition: (data) => data.size === "scale",
+    condition: (data: HeadingProps) => data.size === "scale",
   },
   {
     type: "range",
@@ -212,7 +212,7 @@ export const headingInputs: InspectorGroup["inputs"] = [
       unit: "px",
     },
     defaultValue: 64,
-    condition: (data) => data.size === "scale",
+    condition: (data: HeadingProps) => data.size === "scale",
     helpText:
       'See how scale text works <a href="https://css-tricks.com/snippets/css/fluid-typography/" target="_blank" rel="noreferrer">here</a>.',
   },
@@ -220,7 +220,7 @@ export const headingInputs: InspectorGroup["inputs"] = [
     type: "select",
     name: "mobileSize",
     label: "Mobile text size",
-    condition: (data) => data.size === "custom",
+    condition: (data: HeadingProps) => data.size === "custom",
     configs: {
       options: [
         { value: "xs", label: "Extra small (text-xs)" },
@@ -244,7 +244,7 @@ export const headingInputs: InspectorGroup["inputs"] = [
     type: "select",
     name: "desktopSize",
     label: "Desktop text size",
-    condition: (data) => data.size === "custom",
+    condition: (data: HeadingProps) => data.size === "custom",
     configs: {
       options: [
         { value: "xs", label: "Extra small (text-xs)" },

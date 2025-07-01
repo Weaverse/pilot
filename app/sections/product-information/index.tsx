@@ -29,9 +29,8 @@ import type { loader as productRouteLoader } from "~/routes/($locale).products.$
 import { isDiscounted } from "~/utils/product";
 import { ProductDetails } from "./product-details";
 
-interface ProductInformationProps
-  extends SectionProps,
-    Omit<ProductMediaProps, "selectedVariant" | "media"> {
+interface ProductInformationData
+  extends Omit<ProductMediaProps, "selectedVariant" | "media"> {
   addToCartText: string;
   soldOutText: string;
   showVendor: boolean;
@@ -41,185 +40,179 @@ interface ProductInformationProps
   showRefundPolicy: boolean;
 }
 
-const ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
-  (props, ref) => {
-    const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
+const ProductInformation = forwardRef<
+  HTMLDivElement,
+  ProductInformationData & SectionProps
+>((props, ref) => {
+  const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
 
-    // Optimistically selects a variant with given available variant information
-    const selectedVariant = useOptimisticVariant(
-      product?.selectedOrFirstAvailableVariant,
-      getAdjacentAndFirstAvailableVariants(product),
-    );
+  // Optimistically selects a variant with given available variant information
+  const selectedVariant = useOptimisticVariant(
+    product?.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
+  );
 
-    // Get the product options array
-    const productOptions = getProductOptions({
-      ...product,
-      selectedOrFirstAvailableVariant: selectedVariant,
-    });
+  // Get the product options array
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
 
-    const {
-      addToCartText,
-      soldOutText,
-      showVendor,
-      showSalePrice,
-      showShortDescription,
-      showShippingPolicy,
-      showRefundPolicy,
-      mediaLayout,
-      gridSize,
-      imageAspectRatio,
-      showThumbnails,
-      children,
-      enableZoom,
-      ...rest
-    } = props;
-    const [quantity, setQuantity] = useState<number>(1);
+  const {
+    addToCartText,
+    soldOutText,
+    showVendor,
+    showSalePrice,
+    showShortDescription,
+    showShippingPolicy,
+    showRefundPolicy,
+    mediaLayout,
+    gridSize,
+    imageAspectRatio,
+    showThumbnails,
+    children,
+    enableZoom,
+    ...rest
+  } = props;
+  const [quantity, setQuantity] = useState<number>(1);
 
-    if (product) {
-      const {
-        title,
-        handle,
-        vendor,
-        summary,
-        priceRange,
-        publishedAt,
-        badges,
-      } = product;
+  if (product) {
+    const { title, handle, vendor, summary, priceRange, publishedAt, badges } =
+      product;
 
-      const isBestSellerProduct = badges
-        .filter(Boolean)
-        .some(({ key, value }) => key === "best_seller" && value === "true");
+    const isBestSellerProduct = badges
+      .filter(Boolean)
+      .some(({ key, value }) => key === "best_seller" && value === "true");
 
-      return (
-        <Section ref={ref} {...rest} overflow="unset">
-          <div
-            className={clsx([
-              "space-y-5 lg:space-y-0 lg:grid",
-              "lg:gap-[clamp(30px,5%,60px)]",
-              "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
-            ])}
-          >
-            <ProductMedia
-              key={handle}
-              mediaLayout={mediaLayout}
-              gridSize={gridSize}
-              imageAspectRatio={imageAspectRatio}
-              media={product?.media.nodes}
-              selectedVariant={selectedVariant}
-              showThumbnails={showThumbnails}
-              enableZoom={enableZoom}
-            />
-            <div>
-              <div
-                className="sticky flex flex-col justify-start space-y-5"
-                style={{ top: "calc(var(--height-nav) + 20px)" }}
-              >
-                <div className="flex items-center gap-1.5">
-                  <Link
-                    to="/"
-                    className="text-body-subtle hover:underline underline-offset-4"
-                  >
-                    Home
-                  </Link>
-                  <span className="inline-block h-4 border-r border-body-subtle" />
-                  <span>{product.title}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm empty:hidden">
-                  {selectedVariant && (
-                    <SaleBadge
-                      price={selectedVariant.price as MoneyV2}
-                      compareAtPrice={selectedVariant.compareAtPrice as MoneyV2}
-                    />
-                  )}
-                  <NewBadge publishedAt={publishedAt} />
-                  {isBestSellerProduct && <BestSellerBadge />}
-                </div>
-                <div className="flex flex-col gap-2">
-                  {showVendor && vendor && (
-                    <span className="text-body-subtle">{vendor}</span>
-                  )}
-                  <h1 className="h3 tracking-tight!">{title}</h1>
-                </div>
-                {selectedVariant ? (
-                  <div className="flex items-center gap-2">
-                    <Money
-                      withoutTrailingZeros
-                      data={selectedVariant.price}
-                      as="span"
-                      className="font-medium text-2xl/none"
-                    />
-                    {isDiscounted(
-                      selectedVariant.price as MoneyV2,
-                      selectedVariant.compareAtPrice as MoneyV2,
-                    ) &&
-                      showSalePrice && (
-                        <CompareAtPrice
-                          data={selectedVariant.compareAtPrice as MoneyV2}
-                          className="text-2xl/none"
-                        />
-                      )}
-                  </div>
-                ) : (
-                  <Money
-                    withoutTrailingZeros
-                    data={priceRange.minVariantPrice}
-                    as="div"
-                    className="font-medium text-2xl/none"
+    return (
+      <Section ref={ref} {...rest} overflow="unset">
+        <div
+          className={clsx([
+            "space-y-5 lg:space-y-0 lg:grid",
+            "lg:gap-[clamp(30px,5%,60px)]",
+            "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
+          ])}
+        >
+          <ProductMedia
+            key={handle}
+            mediaLayout={mediaLayout}
+            gridSize={gridSize}
+            imageAspectRatio={imageAspectRatio}
+            media={product?.media.nodes}
+            selectedVariant={selectedVariant}
+            showThumbnails={showThumbnails}
+            enableZoom={enableZoom}
+          />
+          <div>
+            <div
+              className="sticky flex flex-col justify-start space-y-5"
+              style={{ top: "calc(var(--height-nav) + 20px)" }}
+            >
+              <div className="flex items-center gap-1.5">
+                <Link
+                  to="/"
+                  className="text-body-subtle hover:underline underline-offset-4"
+                >
+                  Home
+                </Link>
+                <span className="inline-block h-4 border-r border-body-subtle" />
+                <span>{product.title}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm empty:hidden">
+                {selectedVariant && (
+                  <SaleBadge
+                    price={selectedVariant.price as MoneyV2}
+                    compareAtPrice={selectedVariant.compareAtPrice as MoneyV2}
                   />
                 )}
-                {children}
-                {showShortDescription && (
-                  <p className="leading-relaxed">{summary}</p>
+                <NewBadge publishedAt={publishedAt} />
+                {isBestSellerProduct && <BestSellerBadge />}
+              </div>
+              <div className="flex flex-col gap-2">
+                {showVendor && vendor && (
+                  <span className="text-body-subtle">{vendor}</span>
                 )}
-                <ProductVariants productOptions={productOptions} />
-                <Quantity value={quantity} onChange={setQuantity} />
-                <div className="space-y-2">
-                  <AddToCartButton
-                    disabled={!selectedVariant?.availableForSale}
-                    lines={[
+                <h1 className="h3 tracking-tight!">{title}</h1>
+              </div>
+              {selectedVariant ? (
+                <div className="flex items-center gap-2">
+                  <Money
+                    withoutTrailingZeros
+                    data={selectedVariant.price}
+                    as="span"
+                    className="font-medium text-2xl/none"
+                  />
+                  {isDiscounted(
+                    selectedVariant.price as MoneyV2,
+                    selectedVariant.compareAtPrice as MoneyV2,
+                  ) &&
+                    showSalePrice && (
+                      <CompareAtPrice
+                        data={selectedVariant.compareAtPrice as MoneyV2}
+                        className="text-2xl/none"
+                      />
+                    )}
+                </div>
+              ) : (
+                <Money
+                  withoutTrailingZeros
+                  data={priceRange.minVariantPrice}
+                  as="div"
+                  className="font-medium text-2xl/none"
+                />
+              )}
+              {children}
+              {showShortDescription && (
+                <p className="leading-relaxed">{summary}</p>
+              )}
+              <ProductVariants productOptions={productOptions} />
+              <Quantity value={quantity} onChange={setQuantity} />
+              <div className="space-y-2">
+                <AddToCartButton
+                  disabled={!selectedVariant?.availableForSale}
+                  lines={[
+                    {
+                      merchandiseId: selectedVariant?.id,
+                      quantity,
+                      selectedVariant,
+                    },
+                  ]}
+                  data-test="add-to-cart"
+                  className="w-full uppercase"
+                >
+                  {selectedVariant.availableForSale
+                    ? addToCartText
+                    : soldOutText}
+                </AddToCartButton>
+                {selectedVariant?.availableForSale && (
+                  <ShopPayButton
+                    width="100%"
+                    variantIdsAndQuantities={[
                       {
-                        merchandiseId: selectedVariant?.id,
+                        id: selectedVariant?.id,
                         quantity,
-                        selectedVariant,
                       },
                     ]}
-                    data-test="add-to-cart"
-                    className="w-full uppercase"
-                  >
-                    {selectedVariant.availableForSale
-                      ? addToCartText
-                      : soldOutText}
-                  </AddToCartButton>
-                  {selectedVariant?.availableForSale && (
-                    <ShopPayButton
-                      width="100%"
-                      variantIdsAndQuantities={[
-                        {
-                          id: selectedVariant?.id,
-                          quantity,
-                        },
-                      ]}
-                      storeDomain={storeDomain}
-                    />
-                  )}
-                </div>
-                <ProductDetails
-                  showShippingPolicy={showShippingPolicy}
-                  showRefundPolicy={showRefundPolicy}
-                />
+                    storeDomain={storeDomain}
+                  />
+                )}
               </div>
+              <ProductDetails
+                showShippingPolicy={showShippingPolicy}
+                showRefundPolicy={showRefundPolicy}
+              />
             </div>
           </div>
-        </Section>
-      );
-    }
-    return (
-      <div ref={ref} {...rest}>
-        No product data...
-      </div>
+        </div>
+      </Section>
     );
-  },
-);
+  }
+  return (
+    <div ref={ref} {...rest}>
+      No product data...
+    </div>
+  );
+});
 
 export default ProductInformation;
 
@@ -282,14 +275,16 @@ export const schema = createSchema({
               { label: "Mix", value: "mix" },
             ],
           },
-          condition: (data) => data.mediaLayout === "grid",
+          condition: (data: ProductInformationData) =>
+            data.mediaLayout === "grid",
         },
         {
           label: "Show thumbnails",
           name: "showThumbnails",
           type: "switch",
           defaultValue: true,
-          condition: (data) => data.mediaLayout === "slider",
+          condition: (data: ProductInformationData) =>
+            data.mediaLayout === "slider",
         },
         {
           label: "Enable zoom",

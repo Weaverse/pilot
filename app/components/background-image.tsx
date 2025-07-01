@@ -86,13 +86,13 @@ export const backgroundInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "cover",
-    condition: (data) => !!data.backgroundImage,
+    condition: (data: BackgroundImageProps) => !!data.backgroundImage,
   },
   {
     type: "position",
     name: "backgroundPosition",
     label: "Background position",
     defaultValue: "center center",
-    condition: (data) => !!data.backgroundImage,
+    condition: (data: BackgroundImageProps) => !!data.backgroundImage,
   },
 ];

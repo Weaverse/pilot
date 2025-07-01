@@ -36,15 +36,14 @@ const SECTION_HEIGHTS = {
   custom: null,
 };
 
-export interface HeroVideoProps
-  extends Omit<VariantProps<typeof variants>, "padding">,
-    HydrogenComponentProps,
-    OverlayProps {
+interface HeroVideoData extends OverlayProps, VariantProps<typeof variants> {
   videoURL: string;
   height: "small" | "medium" | "large" | "custom";
   heightOnDesktop: number;
   heightOnMobile: number;
 }
+
+export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {}
 
 const variants = cva(
   "absolute inset-0 max-w-screen mx-auto px-3 flex flex-col justify-center items-center z-10",
@@ -239,7 +238,7 @@ export const schema = createSchema({
             step: 10,
             unit: "px",
           },
-          condition: (data) => data.height === "custom",
+          condition: (data: HeroVideoData) => data.height === "custom",
         },
         {
           type: "range",
@@ -252,7 +251,7 @@ export const schema = createSchema({
             step: 10,
             unit: "px",
           },
-          condition: (data) => data.height === "custom",
+          condition: (data: HeroVideoData) => data.height === "custom",
         },
         {
           type: "range",

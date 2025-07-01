@@ -1,5 +1,6 @@
 import {
   createSchema,
+  type HydrogenComponentProps,
   IMAGES_PLACEHOLDERS,
   useParentInstance,
 } from "@weaverse/hydrogen";
@@ -9,7 +10,7 @@ import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 import { Image } from "~/components/image";
-import Link, { type LinkStyleProps, linkStylesInputs } from "~/components/link";
+import Link, { type LinkStyles, linkStylesInputs } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
@@ -56,133 +57,132 @@ const variants = cva("", {
   },
 });
 
-interface CollectionItemsProps
+interface CollectionItemsData
   extends VariantProps<typeof variants>,
     OverlayProps,
-    LinkStyleProps {
+    LinkStyles {
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
   buttonText: string;
 }
 
-const CollectionItems = forwardRef<HTMLDivElement, CollectionItemsProps>(
-  (props, ref) => {
-    const [scope] = useAnimation(ref);
-    const {
-      gridSize,
-      gap,
-      imageAspectRatio,
-      borderRadius,
-      contentPosition,
-      collectionNameColor,
-      enableOverlay,
-      overlayColor,
-      overlayColorHover,
-      overlayOpacity,
-      buttonText,
-      backgroundColor,
-      textColor,
-      borderColor,
-      backgroundColorHover,
-      textColorHover,
-      borderColorHover,
-      ...rest
-    } = props;
-    const parent = useParentInstance();
-    let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
-    if (!collections?.length) {
-      collections = Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
-    }
-    return (
-      <div
-        ref={scope}
-        {...rest}
-        className={clsx(
-          [
-            "snap-x snap-mandatory",
-            "overflow-x-scroll md:overflow-x-hidden hidden-scroll scroll-px-6",
-            "grid w-full grid-flow-col md:grid-flow-row justify-start gap-2",
-          ],
-          variants({ gridSize, gap }),
-        )}
-      >
-        {collections.map((collection, ind) => (
-          <div
-            key={collection.id + ind}
-            className="relative w-[67vw] md:w-auto group group/overlay"
-            data-motion="slide-in"
-          >
-            {collection?.image && (
-              <div
-                className={clsx("overflow-hidden", variants({ borderRadius }))}
-                style={{
-                  aspectRatio: getImageAspectRatio(
-                    collection?.image || {},
-                    imageAspectRatio,
-                  ),
-                }}
-              >
-                <Image
-                  data={collection.image}
-                  width={collection.image.width || 600}
-                  height={collection.image.height || 400}
-                  sizes="(max-width: 32em) 100vw, 45vw"
-                  className={clsx([
-                    "transition-all duration-300",
-                    "will-change-transform scale-100 group-hover:scale-[1.05]",
-                  ])}
-                />
-              </div>
-            )}
-            {contentPosition === "over" && (
-              <Overlay
-                enableOverlay={enableOverlay}
-                overlayColor={overlayColor}
-                overlayColorHover={overlayColorHover}
-                overlayOpacity={overlayOpacity}
-                className={clsx("z-0", variants({ borderRadius }))}
-              />
-            )}
+const CollectionItems = forwardRef<
+  HTMLDivElement,
+  CollectionItemsData & HydrogenComponentProps
+>((props, ref) => {
+  const [scope] = useAnimation(ref);
+  const {
+    gridSize,
+    gap,
+    imageAspectRatio,
+    borderRadius,
+    contentPosition,
+    collectionNameColor,
+    enableOverlay,
+    overlayColor,
+    overlayColorHover,
+    overlayOpacity,
+    buttonText,
+    backgroundColor,
+    textColor,
+    borderColor,
+    backgroundColorHover,
+    textColorHover,
+    borderColorHover,
+    ...rest
+  } = props;
+  const parent = useParentInstance();
+  let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
+  if (!collections?.length) {
+    collections = Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
+  }
+  return (
+    <div
+      ref={scope}
+      {...rest}
+      className={clsx(
+        [
+          "snap-x snap-mandatory",
+          "overflow-x-scroll md:overflow-x-hidden hidden-scroll scroll-px-6",
+          "grid w-full grid-flow-col md:grid-flow-row justify-start gap-2",
+        ],
+        variants({ gridSize, gap }),
+      )}
+    >
+      {collections.map((collection, ind) => (
+        <div
+          key={collection.id + ind}
+          className="relative w-[67vw] md:w-auto group group/overlay"
+          data-motion="slide-in"
+        >
+          {collection?.image && (
             <div
-              className={clsx("items-center", variants({ contentPosition }))}
+              className={clsx("overflow-hidden", variants({ borderRadius }))}
+              style={{
+                aspectRatio: getImageAspectRatio(
+                  collection?.image || {},
+                  imageAspectRatio,
+                ),
+              }}
             >
-              <div
-                style={
-                  { "--col-name-color": collectionNameColor } as CSSProperties
-                }
-                className={clsx(
-                  contentPosition === "over"
-                    ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-(--col-name-color)"
-                    : "py-4",
-                )}
-              >
-                {contentPosition === "over" ? (
-                  <h5>{collection.title}</h5>
-                ) : (
-                  <h6>{collection.title}</h6>
-                )}
-                {contentPosition === "over" && buttonText && (
-                  <Link
-                    to={`/collections/${collection.handle}`}
-                    variant="custom"
-                    backgroundColor={backgroundColor}
-                    textColor={textColor}
-                    borderColor={borderColor}
-                    backgroundColorHover={backgroundColorHover}
-                    textColorHover={textColorHover}
-                    borderColorHover={borderColorHover}
-                  >
-                    {buttonText}
-                  </Link>
-                )}
-              </div>
+              <Image
+                data={collection.image}
+                width={collection.image.width || 600}
+                height={collection.image.height || 400}
+                sizes="(max-width: 32em) 100vw, 45vw"
+                className={clsx([
+                  "transition-all duration-300",
+                  "will-change-transform scale-100 group-hover:scale-[1.05]",
+                ])}
+              />
+            </div>
+          )}
+          {contentPosition === "over" && (
+            <Overlay
+              enableOverlay={enableOverlay}
+              overlayColor={overlayColor}
+              overlayColorHover={overlayColorHover}
+              overlayOpacity={overlayOpacity}
+              className={clsx("z-0", variants({ borderRadius }))}
+            />
+          )}
+          <div className={clsx("items-center", variants({ contentPosition }))}>
+            <div
+              style={
+                { "--col-name-color": collectionNameColor } as CSSProperties
+              }
+              className={clsx(
+                contentPosition === "over"
+                  ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-(--col-name-color)"
+                  : "py-4",
+              )}
+            >
+              {contentPosition === "over" ? (
+                <h5>{collection.title}</h5>
+              ) : (
+                <h6>{collection.title}</h6>
+              )}
+              {contentPosition === "over" && buttonText && (
+                <Link
+                  to={`/collections/${collection.handle}`}
+                  variant="custom"
+                  backgroundColor={backgroundColor}
+                  textColor={textColor}
+                  borderColor={borderColor}
+                  backgroundColorHover={backgroundColorHover}
+                  textColorHover={textColorHover}
+                  borderColorHover={borderColorHover}
+                >
+                  {buttonText}
+                </Link>
+              )}
             </div>
           </div>
-        ))}
-      </div>
-    );
-  },
-);
+        </div>
+      ))}
+    </div>
+  );
+});
 
 const COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
   id: "gid://shopify/Collection/1234567890",
@@ -291,21 +291,25 @@ export const schema = createSchema({
           name: "collectionNameColor",
           label: "Collection name color",
           defaultValue: "#fff",
-          condition: (data) => data.contentPosition === "over",
+          condition: (data: CollectionItemsData) =>
+            data.contentPosition === "over",
         },
         {
           type: "heading",
           label: "Overlay",
-          condition: (data) => data.contentPosition === "over",
+          condition: (data: CollectionItemsData) =>
+            data.contentPosition === "over",
         },
         ...overlayInputs.map((inp) => ({
           ...inp,
-          condition: (data) => data.contentPosition === "over",
+          condition: (data: CollectionItemsData) =>
+            data.contentPosition === "over",
         })),
         {
           type: "heading",
           label: "Button (optional)",
-          condition: (data) => data.contentPosition === "over",
+          condition: (data: CollectionItemsData) =>
+            data.contentPosition === "over",
         },
         {
           type: "text",
@@ -313,11 +317,13 @@ export const schema = createSchema({
           label: "Button text",
           defaultValue: "Shop now",
           placeholder: "Shop now",
-          condition: (data) => data.contentPosition === "over",
+          condition: (data: CollectionItemsData) =>
+            data.contentPosition === "over",
         },
         ...linkStylesInputs.map((inp) => ({
           ...inp,
-          condition: (data) => data.contentPosition === "over",
+          condition: (data: CollectionItemsData) =>
+            data.contentPosition === "over",
         })),
       ],
     },

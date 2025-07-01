@@ -10,7 +10,7 @@ import { ReviewBar } from "./review-bar";
 import type { AliReview, ReviewItemData } from "./review-item";
 import { ReviewItem } from "./review-item";
 
-type AliReviewsProps = ReviewItemData & {
+type AliReviewsData = ReviewItemData & {
   showAvgRating: boolean;
   showReviewsCount: boolean;
   showReviewsProgressBar: boolean;
@@ -20,7 +20,7 @@ type AliReviewsProps = ReviewItemData & {
 
 const ReviewList = forwardRef<
   HTMLDivElement,
-  AliReviewsProps & HydrogenComponentProps
+  AliReviewsData & HydrogenComponentProps
 >((props, ref) => {
   const {
     children,
@@ -186,7 +186,7 @@ export const schema = createSchema({
           name: "verifiedBadgeText",
           label: "Verified badge text",
           defaultValue: "Verified purchase",
-          condition: (data) => data.showVerifiedBadge,
+          condition: (data: AliReviewsData) => data.showVerifiedBadge,
         },
         {
           type: "switch",
