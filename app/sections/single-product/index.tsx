@@ -5,22 +5,32 @@ import {
   ShopPayButton,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
+import type { MoneyV2 } from "@shopify/hydrogen/customer-account-api-types";
 import {
   type ComponentLoaderArgs,
   createSchema,
   type HydrogenComponentProps,
+  IMAGES_PLACEHOLDERS,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
 import { forwardRef, useState } from "react";
 import type { ProductQuery } from "storefront-api.generated";
+import { Button } from "~/components/button";
+import { Image } from "~/components/image";
+import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import {
+  BestSellerBadge,
+  NewBadge,
+  SaleBadge,
+  SoldOutBadge,
+} from "~/components/product/badges";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { ProductVariants } from "~/components/product/variants";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
-import { ProductPlaceholder } from "./product-placeholder";
 
 interface SingleProductData {
   productsCount: number;
@@ -57,7 +67,55 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     if (!product) {
       return (
         <Section ref={ref} {...rest}>
-          <ProductPlaceholder />
+          <div className="container px-4 md:px-6 mx-auto">
+            <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
+              <Image
+                data={{
+                  url: IMAGES_PLACEHOLDERS.product_2,
+                  width: 1660,
+                  height: 1660,
+                }}
+                loading="lazy"
+                width={1660}
+                aspectRatio="1/1"
+                sizes="auto"
+              />
+              <div className="flex flex-col justify-start items-start gap-4">
+                <SoldOutBadge />
+                <h3 data-motion="fade-up" className="tracking-tight">
+                  EXAMPLE PRODUCT TITLE
+                </h3>
+                <Money
+                  withoutTrailingZeros
+                  data={{ amount: "19.99", currencyCode: "USD" }}
+                  as="span"
+                  className="text-lg"
+                />
+                <p className="text-body-subtle">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+                <Button
+                  type="button"
+                  className="w-full cursor-not-allowed"
+                  disabled
+                >
+                  SOLD OUT
+                </Button>
+                <Link
+                  to="#"
+                  prefetch="intent"
+                  variant="underline"
+                  className="w-fit cursor-not-allowed"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  View full details →
+                </Link>
+              </div>
+            </div>
+          </div>
         </Section>
       );
     }
@@ -67,23 +125,14 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       ...product,
       selectedOrFirstAvailableVariant: selectedVariant,
     });
-
-    if (!product)
-      return (
-        <section
-          className="w-full py-12 md:py-24 lg:py-32"
-          ref={scope}
-          {...rest}
-        >
-          <ProductPlaceholder />
-        </section>
-      );
-
     const atcText = selectedVariant?.availableForSale
       ? "Add to Cart"
       : selectedVariant?.quantityAvailable === -1
         ? "Unavailable"
         : "Sold Out";
+    const isBestSellerProduct = product.badges
+      .filter(Boolean)
+      .some(({ key, value }) => key === "best_seller" && value === "true");
 
     return (
       <Section ref={ref} {...rest}>
@@ -101,7 +150,27 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               data-motion="slide-in"
             >
               <div className="space-y-4">
-                <h3 data-motion="fade-up">{product?.title}</h3>
+                <div className="flex items-center gap-2 text-sm empty:hidden">
+                  {selectedVariant.availableForSale ? (
+                    <>
+                      {selectedVariant && (
+                        <SaleBadge
+                          price={selectedVariant.price as MoneyV2}
+                          compareAtPrice={
+                            selectedVariant.compareAtPrice as MoneyV2
+                          }
+                        />
+                      )}
+                      <NewBadge publishedAt={product.publishedAt} />
+                      {isBestSellerProduct && <BestSellerBadge />}
+                    </>
+                  ) : (
+                    <SoldOutBadge />
+                  )}
+                </div>
+                <h3 data-motion="fade-up" className="tracking-tight">
+                  {product?.title}
+                </h3>
                 <p className="text-lg" data-motion="fade-up">
                   {selectedVariant ? (
                     <Money
@@ -132,7 +201,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   },
                 ]}
                 variant="primary"
-                className="w-full"
+                className="w-full -mt-2"
                 data-test="add-to-cart"
               >
                 {atcText}
@@ -147,8 +216,17 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                     },
                   ]}
                   storeDomain={storeDomain}
+                  className="-mt-2"
                 />
               )}
+              <Link
+                to={`/products/${product.handle}`}
+                prefetch="intent"
+                variant="underline"
+                className="w-fit"
+              >
+                View full details →
+              </Link>
             </div>
           </div>
         </div>
@@ -214,7 +292,7 @@ export const schema = createSchema({
           label: "Show thumbnails",
           name: "showThumbnails",
           type: "switch",
-          defaultValue: true,
+          defaultValue: false,
         },
       ],
     },
