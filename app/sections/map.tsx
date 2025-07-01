@@ -5,7 +5,7 @@ import { forwardRef } from "react";
 import Heading from "~/components/heading";
 import Link, {
   type LinkProps,
-  type LinkStyleProps,
+  type LinkStyles,
   linkStylesInputs,
 } from "~/components/link";
 import Paragraph from "~/components/paragraph";
@@ -30,7 +30,7 @@ const variants = cva("", {
 interface MapSectionProps
   extends Omit<SectionProps, "backgroundColor">,
     VariantProps<typeof variants>,
-    LinkStyleProps {
+    LinkStyles {
   address: string;
   heading: string;
   description: string;

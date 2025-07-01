@@ -2,11 +2,14 @@ import type { InspectorGroup } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { cn } from "~/utils/cn";
 
-export type OverlayProps = {
+export interface OverlayData {
   enableOverlay: boolean;
   overlayColor: string;
   overlayColorHover: string;
   overlayOpacity: number;
+}
+
+export type OverlayProps = OverlayData & {
   className?: string;
 };
 
@@ -53,13 +56,13 @@ export const overlayInputs: InspectorGroup["inputs"] = [
     name: "overlayColor",
     label: "Overlay color",
     defaultValue: "#000000",
-    condition: (data) => data.enableOverlay,
+    condition: (data: OverlayData) => data.enableOverlay,
   },
   {
     type: "color",
     name: "overlayColorHover",
     label: "Overlay color (hover)",
-    condition: (data) => data.enableOverlay,
+    condition: (data: OverlayData) => data.enableOverlay,
   },
   {
     type: "range",
@@ -72,6 +75,6 @@ export const overlayInputs: InspectorGroup["inputs"] = [
       step: 1,
       unit: "%",
     },
-    condition: (data) => data.enableOverlay,
+    condition: (data: OverlayData) => data.enableOverlay,
   },
 ];

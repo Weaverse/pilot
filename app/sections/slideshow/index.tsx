@@ -45,11 +45,10 @@ const variants = cva("group [&_.swiper]:h-full", {
   },
 });
 
-export interface SlideshowProps
+export interface SlideshowData
   extends VariantProps<typeof variants>,
     SlideshowArrowsProps,
-    SlideshowDotsProps,
-    HydrogenComponentProps {
+    SlideshowDotsProps {
   effect?: "fade" | "slide";
   showArrows: boolean;
   showDots: boolean;
@@ -60,7 +59,10 @@ export interface SlideshowProps
   changeSlidesEvery: number;
 }
 
-const Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
+const Slideshow = forwardRef<
+  HTMLDivElement,
+  SlideshowData & HydrogenComponentProps
+>((props, ref) => {
   const {
     height,
     effect,
@@ -185,7 +187,7 @@ export const schema = createSchema({
             unit: "s",
           },
           defaultValue: 5,
-          condition: (data) => data.autoRotate,
+          condition: (data: SlideshowData) => data.autoRotate,
           helpText: "Auto-rotate is disabled inside Weaverse Studio.",
         },
         {
@@ -220,7 +222,7 @@ export const schema = createSchema({
             ],
           },
           defaultValue: "arrow",
-          condition: (data) => data.showArrows,
+          condition: (data: SlideshowData) => data.showArrows,
         },
         {
           type: "range",
@@ -232,14 +234,14 @@ export const schema = createSchema({
             step: 2,
           },
           defaultValue: 20,
-          condition: (data) => data.showArrows,
+          condition: (data: SlideshowData) => data.showArrows,
         },
         {
           type: "switch",
           label: "Show arrows on hover",
           name: "showArrowsOnHover",
           defaultValue: true,
-          condition: (data) => data.showArrows,
+          condition: (data: SlideshowData) => data.showArrows,
         },
         {
           type: "select",
@@ -252,7 +254,7 @@ export const schema = createSchema({
             ],
           },
           defaultValue: "light",
-          condition: (data) => data.showArrows,
+          condition: (data: SlideshowData) => data.showArrows,
         },
         {
           type: "toggle-group",
@@ -266,7 +268,7 @@ export const schema = createSchema({
             ],
           },
           defaultValue: "rounded-sm",
-          condition: (data) => data.showArrows,
+          condition: (data: SlideshowData) => data.showArrows,
         },
 
         {
@@ -292,7 +294,7 @@ export const schema = createSchema({
             ],
           },
           defaultValue: "bottom",
-          condition: (data) => data.showDots,
+          condition: (data: SlideshowData) => data.showDots,
         },
         {
           type: "select",
@@ -305,7 +307,7 @@ export const schema = createSchema({
             ],
           },
           defaultValue: "light",
-          condition: (data) => data.showDots,
+          condition: (data: SlideshowData) => data.showDots,
         },
       ],
     },

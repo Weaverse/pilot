@@ -1,43 +1,45 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 
-type SpacerProps = HydrogenComponentProps & {
+interface SpacerData {
   mobileHeight: number;
   desktopHeight: number;
   backgroundColor: string;
   addSeparator: boolean;
   separatorColor: string;
-};
+}
 
-const Spacer = forwardRef<HTMLDivElement, SpacerProps>((props, ref) => {
-  const {
-    mobileHeight,
-    desktopHeight,
-    backgroundColor,
-    addSeparator,
-    separatorColor,
-    ...rest
-  } = props;
-  return (
-    <div
-      ref={ref}
-      {...rest}
-      className="w-full flex items-center justify-center h-(--mobile-height) md:h-(--desktop-height)"
-      style={
-        {
-          backgroundColor,
-          "--mobile-height": `${mobileHeight}px`,
-          "--desktop-height": `${desktopHeight}px`,
-          "--separator-color": separatorColor,
-        } as React.CSSProperties
-      }
-    >
-      {addSeparator && (
-        <div className="w-3/4 md:w-2/3 mx-auto border-t h-px border-(--separator-color,var(--color-border))" />
-      )}
-    </div>
-  );
-});
+const Spacer = forwardRef<HTMLDivElement, SpacerData & HydrogenComponentProps>(
+  (props, ref) => {
+    const {
+      mobileHeight,
+      desktopHeight,
+      backgroundColor,
+      addSeparator,
+      separatorColor,
+      ...rest
+    } = props;
+    return (
+      <div
+        ref={ref}
+        {...rest}
+        className="w-full flex items-center justify-center h-(--mobile-height) md:h-(--desktop-height)"
+        style={
+          {
+            backgroundColor,
+            "--mobile-height": `${mobileHeight}px`,
+            "--desktop-height": `${desktopHeight}px`,
+            "--separator-color": separatorColor,
+          } as React.CSSProperties
+        }
+      >
+        {addSeparator && (
+          <div className="w-3/4 md:w-2/3 mx-auto border-t h-px border-(--separator-color,var(--color-border))" />
+        )}
+      </div>
+    );
+  },
+);
 
 export default Spacer;
 
@@ -90,7 +92,7 @@ export const schema = createSchema({
           label: "Separator color",
           name: "separatorColor",
           defaultValue: "#000",
-          condition: (data) => data.addSeparator,
+          condition: (data: SpacerData) => data.addSeparator,
         },
       ],
     },
