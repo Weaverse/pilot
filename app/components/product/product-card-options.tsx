@@ -17,10 +17,12 @@ export function ProductCardOptions({
   product,
   selectedVariant,
   setSelectedVariant,
+  className,
 }: {
   product: ProductCardFragment;
   selectedVariant: ProductVariantFragment;
   setSelectedVariant: (variant: ProductVariantFragment) => void;
+  className?: string;
 }) {
   const { pcardShowOptionValues, pcardOptionToShow, pcardMaxOptionValues } =
     useThemeSettings();
@@ -42,7 +44,7 @@ export function ProductCardOptions({
   const asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
 
   return (
-    <div className="flex flex-wrap items-center gap-1 pt-1">
+    <div className={cn("flex flex-wrap items-center gap-1 pt-1", className)}>
       {optionValues
         .slice(0, pcardMaxOptionValues)
         .map(({ name, swatch, firstSelectableVariant }) => {
