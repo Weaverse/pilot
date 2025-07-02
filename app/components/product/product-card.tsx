@@ -1,7 +1,6 @@
 import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useState } from "react";
 import type {
@@ -16,16 +15,6 @@ import { RevealUnderline } from "~/reveal-underline";
 import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
-
-const styleVariants = cva("", {
-  variants: {
-    alignment: {
-      left: "",
-      center: "text-center [&_.title-and-price]:items-center",
-      right: "text-right [&_.title-and-price]:items-end",
-    },
-  },
-});
 
 export function ProductCard({
   product,
@@ -150,7 +139,12 @@ export function ProductCard({
       <div
         className={clsx(
           "py-3 text-sm space-y-2",
-          isVertical && styleVariants({ alignment: pcardAlignment }),
+          pcardBackgroundColor && "px-2",
+          isVertical && [
+            pcardAlignment === "left" && "text-left",
+            pcardAlignment === "center" && "text-center",
+            pcardAlignment === "right" && "text-right",
+          ],
         )}
       >
         {pcardShowVendor && (
@@ -160,7 +154,14 @@ export function ProductCard({
           className={clsx(
             "flex",
             isVertical
-              ? "title-and-price flex-col gap-1"
+              ? [
+                  "flex-col gap-1",
+                  [
+                    pcardAlignment === "left" && "items-start",
+                    pcardAlignment === "center" && "items-center",
+                    pcardAlignment === "right" && "items-end",
+                  ],
+                ]
               : "justify-between gap-4",
           )}
         >
@@ -192,6 +193,11 @@ export function ProductCard({
           product={product}
           selectedVariant={selectedVariant}
           setSelectedVariant={setSelectedVariant}
+          className={clsx(
+            pcardAlignment === "left" && "justify-start",
+            pcardAlignment === "center" && "justify-center",
+            pcardAlignment === "right" && "justify-end",
+          )}
         />
       </div>
     </div>
