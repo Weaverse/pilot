@@ -40,8 +40,10 @@ export const Image = forwardRef<HTMLDivElement, ImageProps>(
     useEffect(() => {
       if (hydrogenImageRef.current?.complete) {
         setLoaded(true);
+        // @ts-expect-error
+        onLoad?.();
       }
-    }, []);
+    }, [onLoad]);
 
     return (
       <div
