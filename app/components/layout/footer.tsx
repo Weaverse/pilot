@@ -24,12 +24,12 @@ const variants = cva("", {
     width: {
       full: "",
       stretch: "",
-      fixed: "max-w-(--page-width) mx-auto",
+      fixed: "mx-auto max-w-(--page-width)",
     },
     padding: {
       full: "",
       stretch: "px-3 md:px-10 lg:px-16",
-      fixed: "px-3 md:px-4 lg:px-6 mx-auto",
+      fixed: "mx-auto px-3 md:px-4 lg:px-6",
     },
   },
 });
@@ -97,18 +97,18 @@ export function Footer() {
   return (
     <footer
       className={cn(
-        "w-full bg-(--color-footer-bg) text-(--color-footer-text) pt-9 lg:pt-16",
+        "w-full bg-(--color-footer-bg) pt-9 text-(--color-footer-text) lg:pt-16",
         variants({ padding: footerWidth }),
       )}
     >
       <div
         className={cn(
-          "divide-y divide-line-subtle space-y-9 w-full h-full",
+          "h-full w-full space-y-9 divide-y divide-line-subtle",
           variants({ width: footerWidth }),
         )}
       >
         <div className="space-y-9">
-          <div className="w-full grid lg:grid-cols-3 gap-8">
+          <div className="grid w-full gap-8 lg:grid-cols-3">
             <div className="flex flex-col gap-6">
               {footerLogoData ? (
                 <div className="relative" style={{ width: footerLogoWidth }}>
@@ -116,7 +116,7 @@ export function Footer() {
                     data={footerLogoData}
                     sizes="auto"
                     width={500}
-                    className="w-full h-full object-contain object-left"
+                    className="h-full w-full object-contain object-left"
                   />
                 </div>
               ) : (
@@ -134,7 +134,7 @@ export function Footer() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-lg"
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="h-5 w-5" />
                   </Link>
                 ))}
               </div>
@@ -166,7 +166,7 @@ export function Footer() {
                       type="email"
                       required
                       placeholder={newsletterPlaceholder}
-                      className="grow border border-gray-100 focus-visible:outline-hidden px-3"
+                      className="grow border border-gray-100 px-3 focus-visible:outline-hidden"
                     />
                     <Button
                       variant="custom"
@@ -179,13 +179,13 @@ export function Footer() {
                 </fetcher.Form>
                 <div className="h-8">
                   {error && (
-                    <div className="bg-red-100 text-red-700 py-1 px-2 mb-6 flex gap-1 w-fit">
+                    <div className="mb-6 flex w-fit gap-1 bg-red-100 px-2 py-1 text-red-700">
                       <p className="font-semibold">ERROR:</p>
                       <p>{error}</p>
                     </div>
                   )}
                   {message && (
-                    <div className="text-green-500 py-1 mb-6 w-fit">
+                    <div className="mb-6 w-fit py-1 text-green-500">
                       {message}
                     </div>
                   )}
@@ -195,7 +195,7 @@ export function Footer() {
           </div>
           <FooterMenu />
         </div>
-        <div className="py-9 flex gap-4 flex-col lg:flex-row justify-between items-center">
+        <div className="flex flex-col items-center justify-between gap-4 py-9 lg:flex-row">
           <div className="flex gap-2 ">
             <CountrySelector />
           </div>
@@ -213,19 +213,19 @@ function FooterMenu() {
     <Accordion.Root
       type="multiple"
       defaultValue={items.map(({ id }) => id)}
-      className="w-full grid lg:grid-cols-3 lg:gap-8"
+      className="grid w-full lg:grid-cols-3 lg:gap-8"
     >
       {items.map(({ id, to, title, items }) => (
         <Accordion.Item key={id} value={id} className="flex flex-col">
-          <Accordion.Trigger className="flex py-4 justify-between items-center lg:hidden text-left font-medium data-[state=open]:[&>svg]:rotate-90">
+          <Accordion.Trigger className="flex items-center justify-between py-4 text-left font-medium lg:hidden data-[state=open]:[&>svg]:rotate-90">
             {["#", "/"].includes(to) ? (
               <span>{title}</span>
             ) : (
               <Link to={to}>{title}</Link>
             )}
-            <CaretRightIcon className="w-4 h-4 transition-transform rotate-0" />
+            <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
           </Accordion.Trigger>
-          <div className="text-lg font-medium hidden lg:block">
+          <div className="hidden font-medium text-lg lg:block">
             {["#", "/"].includes(to) ? title : <Link to={to}>{title}</Link>}
           </div>
           <Accordion.Content
@@ -243,7 +243,7 @@ function FooterMenu() {
               "data-[state=open]:animate-expand",
             ])}
           >
-            <div className="pb-4 lg:pt-6 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pb-4 lg:pt-6">
               {items.map(({ id, to, title }) => (
                 <Link to={to} key={id} className="relative">
                   <RevealUnderline className="[--underline-color:var(--color-footer-text)]">

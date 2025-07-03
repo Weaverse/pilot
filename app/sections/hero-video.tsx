@@ -46,7 +46,7 @@ interface HeroVideoData extends OverlayProps, VariantProps<typeof variants> {
 export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {}
 
 const variants = cva(
-  "absolute inset-0 max-w-screen mx-auto px-3 flex flex-col justify-center items-center z-10",
+  "absolute inset-0 z-10 mx-auto flex max-w-screen flex-col items-center justify-center px-3",
   {
     variants: {
       gap: {
@@ -151,12 +151,12 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     <section
       ref={setRefs}
       {...rest}
-      className="overflow-hidden w-full h-full"
+      className="h-full w-full overflow-hidden"
       style={sectionStyle}
     >
       <div
         className={clsx(
-          "flex items-center justify-center relative overflow-hidden",
+          "relative flex items-center justify-center overflow-hidden",
           "h-(--mobile-height) sm:h-(--desktop-height)",
           "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
           "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))]",

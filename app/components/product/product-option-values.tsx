@@ -59,7 +59,7 @@ export function ProductOptionValues({
         }}
       >
         <Select.Trigger
-          className="inline-flex border border-line h-10 items-center justify-center gap-3 bg-white pl-4 pr-3 py-3 outline-hidden"
+          className="inline-flex h-10 items-center justify-center gap-3 border border-line bg-white py-3 pr-3 pl-4 outline-hidden"
           aria-label={optionName}
         >
           <Select.Value />
@@ -69,7 +69,7 @@ export function ProductOptionValues({
         </Select.Trigger>
         <Select.Portal>
           <Select.Content className="overflow-hidden bg-white shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)]">
-            <Select.ScrollUpButton className="cursor-pointer flex items-center justify-center hover:bg-gray-100">
+            <Select.ScrollUpButton className="flex cursor-pointer items-center justify-center hover:bg-gray-100">
               <CaretUpIcon size={16} />
             </Select.ScrollUpButton>
             <Select.Viewport className="p-1.5">
@@ -78,7 +78,7 @@ export function ProductOptionValues({
                   key={value}
                   value={value}
                   className={clsx(
-                    "flex gap-4 cursor-pointer w-full items-center justify-between hover:bg-gray-100 outline-hidden h-10 select-none pl-4 pr-2 py-2.5",
+                    "flex h-10 w-full cursor-pointer select-none items-center justify-between gap-4 py-2.5 pr-2 pl-4 outline-hidden hover:bg-gray-100",
                     !available && "text-body-subtle line-through",
                   )}
                 >
@@ -91,7 +91,7 @@ export function ProductOptionValues({
                 </Select.Item>
               ))}
             </Select.Viewport>
-            <Select.ScrollDownButton className="cursor-pointer flex items-center justify-center rounded-lg hover:bg-info-100 dark:hover:bg-info-700">
+            <Select.ScrollDownButton className="flex cursor-pointer items-center justify-center rounded-lg hover:bg-info-100 dark:hover:bg-info-700">
               <CaretDownIcon size={16} />
             </Select.ScrollDownButton>
           </Select.Content>
@@ -168,9 +168,9 @@ function OptionValue({
       <Component
         {...(isDifferentProduct ? linkProps : buttonProps)}
         className={clsx(
-          "size-(--option-swatch-size) flex aspect-square",
-          "rounded-full overflow-hidden",
-          "transition-[outline-color] outline-offset-2 outline-1",
+          "flex aspect-square size-(--option-swatch-size)",
+          "overflow-hidden rounded-full",
+          "outline-1 outline-offset-2 transition-[outline-color]",
           !exists && "cursor-not-allowed",
           selected ? "outline-line" : "outline-transparent hover:outline-line",
           !available && "diagonal",
@@ -179,14 +179,14 @@ function OptionValue({
         {swatch?.image?.previewImage ? (
           <Image
             data={swatch.image.previewImage}
-            className="w-full h-full object-cover object-center"
+            className="h-full w-full object-cover object-center"
             width={200}
             sizes="auto"
           />
         ) : (
           <span
             className={clsx(
-              "w-full h-full inline-block text-[0px] rounded-full",
+              "inline-block h-full w-full rounded-full text-[0px]",
               (!isValidColor(swatchColor) || isLightColor(swatchColor)) &&
                 "border border-line-subtle",
             )}
@@ -205,15 +205,15 @@ function OptionValue({
       <Component
         {...(isDifferentProduct ? linkProps : buttonProps)}
         className={clsx(
-          "px-4 py-2.5 text-center border border-line-subtle transition-colors",
+          "border border-line-subtle px-4 py-2.5 text-center transition-colors",
           !exists && "cursor-not-allowed",
           selected
             ? [
-                available ? "text-body-inverse bg-body" : "text-body-subtle",
+                available ? "bg-body text-body-inverse" : "text-body-subtle",
                 "border-body",
               ]
             : "hover:border-line",
-          !available && "text-body-subtle diagonal bg-gray-100",
+          !available && "diagonal bg-gray-100 text-body-subtle",
         )}
       >
         {name}
@@ -227,8 +227,8 @@ function OptionValue({
       <Component
         {...(isDifferentProduct ? linkProps : buttonProps)}
         className={clsx(
-          "flex items-center justify-center p-1 w-(--option-image-width) h-auto",
-          "text-center border border-line-subtle transition-colors",
+          "flex h-auto w-(--option-image-width) items-center justify-center p-1",
+          "border border-line-subtle text-center transition-colors",
           !exists && "cursor-not-allowed",
           selected
             ? [
@@ -236,7 +236,7 @@ function OptionValue({
                 "border-body",
               ]
             : "hover:border-line",
-          !available && "text-body-subtle diagonal opacity-75",
+          !available && "diagonal text-body-subtle opacity-75",
         )}
       >
         {firstSelectableVariant?.image ? (
@@ -244,7 +244,7 @@ function OptionValue({
             data={firstSelectableVariant?.image}
             sizes="auto"
             width={200}
-            className="w-full h-full object-cover object-center"
+            className="h-full w-full object-cover object-center"
           />
         ) : (
           <span>{name}</span>
@@ -259,7 +259,7 @@ function OptionValue({
     <Component
       {...(isDifferentProduct ? linkProps : buttonProps)}
       className={clsx(
-        "py-0.5 border-b",
+        "border-b py-0.5",
         !exists && "cursor-not-allowed",
         selected
           ? [available ? "border-line" : "border-line-subtle"]

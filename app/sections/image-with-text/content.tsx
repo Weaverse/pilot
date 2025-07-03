@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { forwardRef } from "react";
 
 const variants = cva(
-  "grow flex flex-col justify-center gap-5 py-6 px-4 md:px-8 md:py-8 [&_.paragraph]:mx-[unset] [&_.paragraph]:w-auto",
+  "flex grow flex-col justify-center gap-5 px-4 py-6 md:px-8 md:py-8 [&_.paragraph]:mx-[unset] [&_.paragraph]:w-auto",
   {
     variants: {
       alignment: {

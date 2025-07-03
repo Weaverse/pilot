@@ -23,7 +23,7 @@ function Badge({
         borderRadius: `${badgeBorderRadius}px`,
         textTransform: badgeTextTransform,
       }}
-      className={clsx("px-1.5 py-1 uppercase text-sm", className)}
+      className={clsx("px-1.5 py-1 text-sm uppercase", className)}
     >
       {text}
     </span>

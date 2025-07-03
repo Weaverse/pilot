@@ -28,17 +28,17 @@ const NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
         <Form
           method="POST"
           action="/api/customer"
-          className="flex items-center w-full"
+          className="flex w-full items-center"
           data-motion="fade-up"
         >
-          <div className="flex items-center border-r-0 border-y border-l grow">
-            <EnvelopeSimpleIcon className="w-5 h-5 ml-3 mr-1.5 shrink-0" />
+          <div className="flex grow items-center border-y border-r-0 border-l">
+            <EnvelopeSimpleIcon className="mr-1.5 ml-3 h-5 w-5 shrink-0" />
             <input
               name="email"
               type="email"
               required
               placeholder={placeholder}
-              className="py-3 pr-3 pl-1.5 focus:outline-hidden leading-tight w-full bg-transparent"
+              className="w-full bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:outline-hidden"
             />
           </div>
           <Button
@@ -51,14 +51,14 @@ const NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
         </Form>
         {helpText && (
           <div
-            className="text-body-subtle mt-2"
+            className="mt-2 text-body-subtle"
             data-motion="fade-up"
             dangerouslySetInnerHTML={{ __html: helpText }}
           />
         )}
         <div
           className={clsx(
-            "mx-auto mt-4 font-medium text-center",
+            "mx-auto mt-4 text-center font-medium",
             state === "idle" && data ? "visible" : "invisible",
             ok ? "text-green-700" : "text-red-700",
           )}

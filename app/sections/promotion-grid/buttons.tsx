@@ -13,7 +13,7 @@ const PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>(
       gap: `${gap}px`,
     } as CSSProperties;
     return (
-      <div ref={ref} {...rest} className="flex mt-3" style={spacingStyle}>
+      <div ref={ref} {...rest} className="mt-3 flex" style={spacingStyle}>
         {children}
       </div>
     );

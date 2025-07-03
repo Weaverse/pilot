@@ -26,7 +26,7 @@ export function LayoutSwitcher({
     <div
       className={cn(
         "flex gap-1",
-        "[&>button]:text-[#b7b7b7] [&>button]:border-[#b7b7b7]",
+        "[&>button]:border-[#b7b7b7] [&>button]:text-[#b7b7b7]",
         '[&>button[data-active="true"]]:text-[#696662]',
         '[&>button[data-active="true"]]:border-[#696662]',
         className,
@@ -43,11 +43,11 @@ export function LayoutSwitcher({
             }
             onClick={() => onGridSizeChange(col)}
             className={clsx(
-              "border w-12 h-12 items-center justify-center",
+              "h-12 w-12 items-center justify-center border",
               col > 2 ? "hidden lg:flex" : "flex lg:hidden",
             )}
           >
-            <Icon className="w-[22px] h-[22px]" />
+            <Icon className="h-[22px] w-[22px]" />
           </button>
         );
       })}

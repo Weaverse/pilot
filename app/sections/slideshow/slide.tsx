@@ -13,12 +13,12 @@ import { OverlayAndBackground } from "~/components/overlay-and-background";
 import { layoutInputs } from "~/components/section";
 import { useAnimation } from "~/hooks/use-animation";
 
-const variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
+const variants = cva("flex h-full w-full flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
     width: {
       full: "",
       stretch: "px-3 md:px-10 lg:px-16",
-      fixed: "max-w-(--page-width) mx-auto px-3 md:px-10 lg:px-16",
+      fixed: "mx-auto max-w-(--page-width) px-3 md:px-10 lg:px-16",
     },
     verticalPadding: {
       none: "",
@@ -45,15 +45,15 @@ const variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
       60: "space-y-7 lg:space-y-[60px]",
     },
     contentPosition: {
-      "top left": "justify-start items-start [&_.paragraph]:text-left",
-      "top center": "justify-start items-center [&_.paragraph]:text-center",
-      "top right": "justify-start items-end [&_.paragraph]:text-right",
-      "center left": "justify-center items-start [&_.paragraph]:text-left",
-      "center center": "justify-center items-center [&_.paragraph]:text-center",
-      "center right": "justify-center items-end [&_.paragraph]:text-right",
-      "bottom left": "justify-end items-start [&_.paragraph]:text-left",
-      "bottom center": "justify-end items-center [&_.paragraph]:text-center",
-      "bottom right": "justify-end items-end [&_.paragraph]:text-right",
+      "top left": "items-start justify-start [&_.paragraph]:text-left",
+      "top center": "items-center justify-start [&_.paragraph]:text-center",
+      "top right": "items-end justify-start [&_.paragraph]:text-right",
+      "center left": "items-start justify-center [&_.paragraph]:text-left",
+      "center center": "items-center justify-center [&_.paragraph]:text-center",
+      "center right": "items-end justify-center [&_.paragraph]:text-right",
+      "bottom left": "items-start justify-end [&_.paragraph]:text-left",
+      "bottom center": "items-center justify-end [&_.paragraph]:text-center",
+      "bottom right": "items-end justify-end [&_.paragraph]:text-right",
     },
   },
   defaultVariants: {
@@ -88,7 +88,7 @@ const Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
   } = props;
 
   return (
-    <div ref={scope} {...rest} className="w-full h-full">
+    <div ref={scope} {...rest} className="h-full w-full">
       <OverlayAndBackground {...props} />
       <div
         className={variants({ contentPosition, width, gap, verticalPadding })}

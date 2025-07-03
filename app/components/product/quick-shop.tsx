@@ -7,6 +7,7 @@ import {
 } from "@shopify/hydrogen";
 import type { ProductVariant } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
@@ -24,7 +25,13 @@ interface QuickViewData {
   storeDomain: string;
 }
 
-export function QuickShop({ data }: { data: QuickViewData }) {
+export function QuickShop({
+  data,
+  panelType = "modal",
+}: {
+  data: QuickViewData;
+  panelType?: "modal" | "drawer";
+}) {
   const themeSettings = useThemeSettings();
   const { product, storeDomain } = data || {};
 
@@ -68,7 +75,12 @@ export function QuickShop({ data }: { data: QuickViewData }) {
       : soldOutText;
   return (
     <div className="bg-background">
-      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2">
+      <div
+        className={clsx(
+          "grid grid-cols-1 items-start gap-5",
+          panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
+        )}
+      >
         <ProductMedia
           mediaLayout="slider"
           media={product?.media.nodes}
@@ -131,7 +143,19 @@ export function QuickShop({ data }: { data: QuickViewData }) {
   );
 }
 
-export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
+export function QuickShopTrigger({
+  productHandle,
+  showOnHover = true,
+  buttonType = "icon",
+  buttonText = "Quick shop",
+  panelType = "modal",
+}: {
+  productHandle: string;
+  showOnHover?: boolean;
+  buttonType?: "icon" | "text";
+  buttonText?: string;
+  panelType?: "modal" | "drawer";
+}) {
   const [open, setOpen] = useState(false);
   const { load, data, state } = useFetcher<ProductData>();
 
@@ -146,29 +170,54 @@ export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
     <Modal open={open} onOpenChange={setOpen}>
       <ModalTrigger>
         <Button
+          animate={false}
           variant="secondary"
           loading={state === "loading"}
-          className="absolute right-4 bottom-4 rounded-full p-3 shadow-xl group"
+          className={clsx(
+            "group/quick-shop absolute right-4 bottom-4 h-10.5 p-3 leading-4 shadow-xl",
+            buttonType === "icon" && "rounded-full",
+            showOnHover &&
+              "opacity-0 transition-opacity group-hover:opacity-100",
+          )}
         >
-          <HandbagSimpleIcon size={16} />
-          <span className="ml-2 w-0 group-hover:w-fit">Add</span>
+          {buttonType === "icon" ? (
+            <>
+              <HandbagSimpleIcon size={16} className="h-4 w-4" />
+              <span className="w-0 overflow-hidden pl-0 text-base transition-all group-hover/quick-shop:w-9.5 group-hover/quick-shop:pl-2">
+                Add
+              </span>
+            </>
+          ) : (
+            <span className="px-2">{buttonText}</span>
+          )}
         </Button>
       </ModalTrigger>
-      <ModalContent className="min-h-[700px]">
+      <ModalContent
+        className={clsx(
+          panelType === "drawer"
+            ? "mr-0 ml-auto min-h-screen max-w-md p-4"
+            : "min-h-[700px]",
+        )}
+      >
         {state === "loading" ? (
-          <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2 min-h-[inherit]">
+          <div
+            className={clsx(
+              "grid min-h-[inherit] grid-cols-1 items-start gap-5",
+              panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
+            )}
+          >
             <Skeleton className="min-h-[inherit]" />
             <div className="space-y-3">
-              <Skeleton className="w-2/3 h-12" />
-              <Skeleton className="w-1/3 h-6" />
-              <Skeleton className="w-1/2 h-10" />
-              <Skeleton className="w-full h-6" />
-              <Skeleton className="w-full h-6" />
-              <Skeleton className="w-full h-6" />
+              <Skeleton className="h-12 w-2/3" />
+              <Skeleton className="h-6 w-1/3" />
+              <Skeleton className="h-10 w-1/2" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
             </div>
           </div>
         ) : (
-          <QuickShop data={data as QuickViewData} />
+          <QuickShop data={data as QuickViewData} panelType={panelType} />
         )}
       </ModalContent>
     </Modal>

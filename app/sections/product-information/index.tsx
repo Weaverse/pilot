@@ -88,7 +88,7 @@ const ProductInformation = forwardRef<
       <Section ref={ref} {...rest} overflow="unset">
         <div
           className={clsx([
-            "space-y-5 lg:space-y-0 lg:grid",
+            "space-y-5 lg:grid lg:space-y-0",
             "lg:gap-[clamp(30px,5%,60px)]",
             "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
           ])}
@@ -111,11 +111,11 @@ const ProductInformation = forwardRef<
               <div className="flex items-center gap-1.5">
                 <Link
                   to="/"
-                  className="text-body-subtle hover:underline underline-offset-4"
+                  className="text-body-subtle underline-offset-4 hover:underline"
                 >
                   Home
                 </Link>
-                <span className="inline-block h-4 border-r border-body-subtle" />
+                <span className="inline-block h-4 border-body-subtle border-r" />
                 <span>{product.title}</span>
               </div>
               <div className="flex items-center gap-2 text-sm empty:hidden">

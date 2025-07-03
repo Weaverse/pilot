@@ -113,17 +113,17 @@ export function ProductCard({
         } as React.CSSProperties
       }
     >
-      <div className="relative group">
+      <div className="group relative">
         {image && (
           <Link
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
-            className="overflow-hidden rounded-t-(--pcard-radius) block group relative aspect-(--pcard-image-ratio) bg-gray-100"
+            className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
           >
             {/* Loading skeleton overlay */}
             {isImageLoading && (
-              <div className="absolute inset-0 bg-gray-100 flex items-center justify-center z-10">
-                <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-100">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
               </div>
             )}
             <Image
@@ -144,7 +144,7 @@ export function ProductCard({
               <Image
                 className={clsx([
                   "absolute inset-0",
-                  "transition-opacity duration-300 opacity-0 group-hover:opacity-100",
+                  "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
                 ])}
                 sizes="auto"
                 width={700}
@@ -157,7 +157,7 @@ export function ProductCard({
             )}
           </Link>
         )}
-        <div className="flex gap-1 absolute top-2.5 right-2.5">
+        <div className="absolute top-2.5 right-2.5 flex gap-1">
           {pcardShowSaleBadges && (
             <SaleBadge
               price={minVariantPrice as MoneyV2}
@@ -182,7 +182,7 @@ export function ProductCard({
       </div>
       <div
         className={clsx(
-          "py-3 text-sm space-y-2",
+          "space-y-2 py-3 text-sm",
           pcardBackgroundColor && "px-2",
           isVertical && [
             pcardAlignment === "left" && "text-left",
@@ -192,7 +192,7 @@ export function ProductCard({
         )}
       >
         {pcardShowVendor && (
-          <div className="uppercase text-body-subtle">{product.vendor}</div>
+          <div className="text-body-subtle uppercase">{product.vendor}</div>
         )}
         <div
           className={clsx(

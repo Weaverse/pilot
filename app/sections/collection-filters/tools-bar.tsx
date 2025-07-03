@@ -30,15 +30,15 @@ export function ToolsBar({
 }: ToolsBarProps) {
   const { collection } = useLoaderData<CollectionQuery>();
   return (
-    <div className="border-y border-line-subtle py-4">
-      <div className="gap-4 md:gap-8 flex w-full items-center justify-between">
+    <div className="border-line-subtle border-y py-4">
+      <div className="flex w-full items-center justify-between gap-4 md:gap-8">
         <LayoutSwitcher
           gridSizeDesktop={gridSizeDesktop}
           gridSizeMobile={gridSizeMobile}
           onGridSizeChange={onGridSizeChange}
         />
         {showProductsCount && (
-          <span className="text-center hidden md:inline">
+          <span className="hidden text-center md:inline">
             {collection?.products.nodes.length} products
           </span>
         )}
@@ -66,7 +66,7 @@ function FiltersDrawer({
         <Button
           variant="outline"
           className={cn(
-            "flex items-center gap-1.5 border py-2 h-12",
+            "flex h-12 items-center gap-1.5 border py-2",
             filtersPosition === "sidebar" && "lg:hidden",
           )}
           animate={false}
@@ -77,28 +77,28 @@ function FiltersDrawer({
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 bg-black/50 data-[state=open]:animate-fade-in z-10"
+          className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in"
           style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
         />
         <Dialog.Content
           className={clsx([
-            "fixed inset-y-0 w-full md:w-[360px] bg-(--color-background) py-4 z-10",
-            "left-0 -translate-x-full data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",
+            "fixed inset-y-0 z-10 w-full bg-(--color-background) py-4 md:w-[360px]",
+            "-translate-x-full left-0 data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",
           ])}
           aria-describedby={undefined}
         >
           <div className="space-y-1">
-            <div className="flex gap-2 items-center justify-between px-4">
+            <div className="flex items-center justify-between gap-2 px-4">
               <Dialog.Title asChild className="py-2.5 font-bold">
                 <span>Filters</span>
               </Dialog.Title>
               <Dialog.Close asChild>
                 <button
                   type="button"
-                  className="p-2 translate-x-2"
+                  className="translate-x-2 p-2"
                   aria-label="Close filters drawer"
                 >
-                  <XIcon className="w-4 h-4" />
+                  <XIcon className="h-4 w-4" />
                 </button>
               </Dialog.Close>
             </div>

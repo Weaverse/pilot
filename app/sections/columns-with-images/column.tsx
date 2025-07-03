@@ -70,7 +70,7 @@ const ColumnWithImageItem = forwardRef<
         className="h-auto rounded-(--radius)"
         aspectRatio={getImageAspectRatio(imageSrc, imageAspectRatio)}
       />
-      <div className="text-center w-full space-y-3.5 mt-6">
+      <div className="mt-6 w-full space-y-3.5 text-center">
         {heading && <h6>{heading}</h6>}
         {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
         {text && (

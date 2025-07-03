@@ -30,15 +30,15 @@ export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
         <Accordion.Item key={title} value={title}>
           <Accordion.Trigger
             className={clsx([
-              "flex justify-between py-4 w-full font-bold",
-              "border-b border-line-subtle",
+              "flex w-full justify-between py-4 font-bold",
+              "border-line-subtle border-b",
               "data-[state=open]:[&>.minus]:inline-block",
               "data-[state=open]:[&>.plus]:hidden",
             ])}
           >
             <span>{title}</span>
-            <MinusIcon className="w-4 h-4 minus hidden" />
-            <PlusIcon className="w-4 h-4 plus" />
+            <MinusIcon className="minus hidden h-4 w-4" />
+            <PlusIcon className="plus h-4 w-4" />
           </Accordion.Trigger>
           <Accordion.Content
             style={
@@ -62,7 +62,7 @@ export function ProductDetails({ showShippingPolicy, showRefundPolicy }) {
             />
             {learnMore && (
               <Link
-                className="pb-px border-b border-line-subtle text-body-subtle"
+                className="border-line-subtle border-b pb-px text-body-subtle"
                 to={learnMore}
               >
                 Learn more

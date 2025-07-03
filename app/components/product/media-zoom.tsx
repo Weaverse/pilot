@@ -76,12 +76,12 @@ export function ZoomModal({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 bg-white data-[state=open]:animate-fade-in z-10"
+          className="fixed inset-0 z-10 bg-white data-[state=open]:animate-fade-in"
           style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
         />
         <Dialog.Content
           className={clsx([
-            "fixed inset-0 w-screen z-10",
+            "fixed inset-0 z-10 w-screen",
             "data-[state=open]:animate-slide-up",
           ])}
           style={
@@ -92,17 +92,17 @@ export function ZoomModal({
           }
           aria-describedby={undefined}
         >
-          <div className="w-full h-full flex items-center justify-center bg-(--color-background) relative">
+          <div className="relative flex h-full w-full items-center justify-center bg-(--color-background)">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
-            <div className="hidden md:block absolute top-10 left-8">
+            <div className="absolute top-10 left-8 hidden md:block">
               <ScrollArea
                 ref={scrollAreaRef}
                 className="max-h-[700px]"
                 size="sm"
               >
-                <div className="w-24 pr-2 space-y-2">
+                <div className="w-24 space-y-2 pr-2">
                   {media.map(({ id, previewImage, alt, mediaContentType }) => {
                     const { id: mediaId } = parseGid(id);
                     return (
@@ -111,7 +111,7 @@ export function ZoomModal({
                         id={`zoom-media--${mediaId}`}
                         className={cn(
                           "relative bg-gray-100",
-                          "p-1 border transition-colors cursor-pointer border-transparent h-auto!",
+                          "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
                           zoomMediaId === id && "border-line",
                         )}
                         onClick={() => setZoomMediaId(id)}
@@ -124,12 +124,12 @@ export function ZoomModal({
                           loading="lazy"
                           width={200}
                           aspectRatio="1/1"
-                          className="object-cover w-full h-auto"
+                          className="h-auto w-full object-cover"
                           sizes="auto"
                         />
                         {mediaContentType === "VIDEO" && (
-                          <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
-                            <VideoCameraIcon className="w-4 h-4" />
+                          <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+                            <VideoCameraIcon className="h-4 w-4" />
                           </div>
                         )}
                       </div>
@@ -140,9 +140,9 @@ export function ZoomModal({
             </div>
             <ZoomMedia media={zoomMedia} />
             <Dialog.Close className="absolute top-4 right-4 z-1">
-              <XIcon className="w-6 h-6" />
+              <XIcon className="h-6 w-6" />
             </Dialog.Close>
-            <div className="flex items-center gap-2 justify-center absolute bottom-10 left-10 md:left-auto right-10">
+            <div className="absolute right-10 bottom-10 left-10 flex items-center justify-center gap-2 md:left-auto">
               <Button
                 variant="secondary"
                 className="border-line-subtle"
@@ -151,7 +151,7 @@ export function ZoomModal({
                   scrollToMedia(prevMedia.id);
                 }}
               >
-                <ArrowLeftIcon className="w-4.5 h-4.5" />
+                <ArrowLeftIcon className="h-4.5 w-4.5" />
               </Button>
               <Button
                 variant="secondary"
@@ -161,7 +161,7 @@ export function ZoomModal({
                   scrollToMedia(nextMedia.id);
                 }}
               >
-                <ArrowRightIcon className="w-4.5 h-4.5" />
+                <ArrowRightIcon className="h-4.5 w-4.5" />
               </Button>
             </div>
           </div>
@@ -179,7 +179,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
       <Image
         data={{ ...image, altText: alt || "Product image zoom" }}
         loading="lazy"
-        className="object-cover max-w-[95vw] w-auto h-auto md:h-full max-h-screen-no-topbar"
+        className="h-auto max-h-screen-no-topbar w-auto max-w-[95vw] object-cover md:h-full"
         width={4096}
         aspectRatio={getImageAspectRatio(image, "adapt")}
         sizes="auto"
@@ -189,7 +189,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
   if (media.mediaContentType === "VIDEO") {
     const mediaVideo = media as Media_Video_Fragment;
     return (
-      <video controls className="h-auto md:h-full object-cover">
+      <video controls className="h-auto object-cover md:h-full">
         <track kind="captions" />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>

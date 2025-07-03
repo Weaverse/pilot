@@ -37,7 +37,7 @@ const ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
             <ProductCard
               key={product.id}
               product={product}
-              className="snap-start w-80"
+              className="w-80 snap-start"
             />
           ))}
         </Swimlane>

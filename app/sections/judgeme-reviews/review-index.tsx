@@ -11,7 +11,7 @@ const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
     <div
       ref={ref}
       {...props}
-      className="flex flex-col md:flex-row md:gap-10 gap-5"
+      className="flex flex-col gap-5 md:flex-row md:gap-10"
     >
       <ReviewForm reviews={productReviews} />
       {productReviews.reviews.length > 0 ? (

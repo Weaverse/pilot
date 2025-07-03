@@ -51,7 +51,7 @@ const variants = cva("", {
       24: "rounded-3xl",
     },
     contentPosition: {
-      over: "absolute inset-0 flex flex-col justify-center z-1",
+      over: "absolute inset-0 z-1 flex flex-col justify-center",
       below: "",
     },
   },
@@ -103,8 +103,8 @@ const CollectionItems = forwardRef<
       className={clsx(
         [
           "snap-x snap-mandatory",
-          "overflow-x-scroll md:overflow-x-hidden hidden-scroll scroll-px-6",
-          "grid w-full grid-flow-col md:grid-flow-row justify-start gap-2",
+          "hidden-scroll scroll-px-6 overflow-x-scroll md:overflow-x-hidden",
+          "grid w-full grid-flow-col justify-start gap-2 md:grid-flow-row",
         ],
         variants({ gridSize, gap }),
       )}
@@ -112,7 +112,7 @@ const CollectionItems = forwardRef<
       {collections.map((collection, ind) => (
         <div
           key={collection.id + ind}
-          className="relative w-[67vw] md:w-auto group group/overlay"
+          className="group group/overlay relative w-[67vw] md:w-auto"
           data-motion="slide-in"
         >
           {collection?.image && (
@@ -132,7 +132,7 @@ const CollectionItems = forwardRef<
                 sizes="(max-width: 32em) 100vw, 45vw"
                 className={clsx([
                   "transition-all duration-300",
-                  "will-change-transform scale-100 group-hover:scale-[1.05]",
+                  "scale-100 will-change-transform group-hover:scale-[1.05]",
                 ])}
               />
             </div>
@@ -153,7 +153,7 @@ const CollectionItems = forwardRef<
               }
               className={clsx(
                 contentPosition === "over"
-                  ? "text-center space-y-4 xl:space-y-7 px-4 py-16 text-(--col-name-color)"
+                  ? "space-y-4 px-4 py-16 text-center text-(--col-name-color) xl:space-y-7"
                   : "py-4",
               )}
             >

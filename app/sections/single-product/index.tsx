@@ -62,7 +62,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     if (!product) {
       return (
         <Section ref={ref} {...rest}>
-          <div className="container px-4 md:px-6 mx-auto">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
               <Image
                 data={{
@@ -75,7 +75,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 aspectRatio="1/1"
                 sizes="auto"
               />
-              <div className="flex flex-col justify-start items-start gap-4">
+              <div className="flex flex-col items-start justify-start gap-4">
                 <SoldOutBadge />
                 <h3 data-motion="fade-up" className="tracking-tight">
                   EXAMPLE PRODUCT TITLE
@@ -144,7 +144,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     return (
       <Section ref={ref} {...rest}>
         <div ref={scope}>
-          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12 fade-up">
+          <div className="fade-up grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
             <ProductMedia
               mediaLayout="slider"
               imageAspectRatio="adapt"
@@ -189,7 +189,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 </p>
                 {children}
                 <p
-                  className="leading-relaxed fade-up line-clamp-5"
+                  className="fade-up line-clamp-5 leading-relaxed"
                   suppressHydrationWarning
                   dangerouslySetInnerHTML={{ __html: product?.summary }}
                 />
@@ -226,7 +226,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   },
                 ]}
                 variant="primary"
-                className="w-full -mt-2"
+                className="-mt-2 w-full"
                 data-test="add-to-cart"
               >
                 {atcText}

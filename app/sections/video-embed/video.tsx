@@ -7,7 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { forwardRef } from "react";
 
-const variants = cva("mx-auto w-full aspect-video", {
+const variants = cva("mx-auto aspect-video w-full", {
   variants: {
     size: {
       small: "md:w-1/2",

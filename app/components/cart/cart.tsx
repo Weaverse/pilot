@@ -57,10 +57,10 @@ function CartDetails({
     <div
       className={clsx(
         layout === "drawer" &&
-          "grid grid-cols-1 h-screen-dynamic grid-rows-[1fr_auto] px-4",
+          "grid h-screen-dynamic grid-cols-1 grid-rows-[1fr_auto] px-4",
         layout === "page" && [
-          "pb-12 w-full max-w-(--page-width) mx-auto",
-          "grid md:grid-cols-2 lg:grid-cols-3 md:items-start",
+          "mx-auto w-full max-w-(--page-width) pb-12",
+          "grid md:grid-cols-2 md:items-start lg:grid-cols-3",
           "gap-8 md:gap-8 lg:gap-12",
         ],
       )}
@@ -100,7 +100,7 @@ function CartDiscounts({
               <button type="button">
                 <TrashIcon
                   aria-hidden="true"
-                  className="h-[18px] w-[18px] mr-1"
+                  className="mr-1 h-[18px] w-[18px]"
                 />
               </button>
             </UpdateDiscountForm>
@@ -113,7 +113,7 @@ function CartDiscounts({
       <UpdateDiscountForm discountCodes={codes}>
         <div className="flex items-center gap-3">
           <input
-            className="p-3 border border-line rounded-none leading-tight! grow"
+            className="grow rounded-none border border-line p-3 leading-tight!"
             type="text"
             name="discountCode"
             placeholder="Discount code"
@@ -163,7 +163,7 @@ function CartLines({
       ref={scrollRef}
       className={clsx([
         "-mx-4 pb-4",
-        y > 0 ? "border-t border-line-subtle" : "",
+        y > 0 ? "border-line-subtle border-t" : "",
         layout === "page" && "grow md:translate-y-4 lg:col-span-2",
         layout === "drawer" && "transition",
       ])}
@@ -174,7 +174,7 @@ function CartLines({
       >
         <ul
           className={clsx(
-            "px-4 grid",
+            "grid px-4",
             layout === "page" && "gap-9",
             layout === "drawer" && "gap-5",
           )}
@@ -204,7 +204,7 @@ function CartCheckoutActions({
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
       {layout === "drawer" && (
-        <Link variant="underline" to="/cart" className="w-fit mx-auto">
+        <Link variant="underline" to="/cart" className="mx-auto w-fit">
           View cart
         </Link>
       )}
@@ -224,9 +224,9 @@ function CartSummary({
   return (
     <div
       className={clsx(
-        layout === "drawer" && "grid gap-4 border-t border-line-subtle pt-4",
+        layout === "drawer" && "grid gap-4 border-line-subtle border-t pt-4",
         layout === "page" &&
-          "sticky top-(--height-nav) grid gap-6 p-4 md:px-6 md:translate-y-4 rounded-sm w-full",
+          "sticky top-(--height-nav) grid w-full gap-6 rounded-sm p-4 md:translate-y-4 md:px-6",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
@@ -290,13 +290,13 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
             width={250}
             height={250}
             data={image}
-            className="w-24 h-auto"
+            className="h-auto w-24"
             alt={title}
             aspectRatio={getImageAspectRatio(image, "adapt")}
           />
         )}
       </div>
-      <div className="flex flex-col gap-3 grow">
+      <div className="flex grow flex-col gap-3">
         <div className="flex justify-between gap-4">
           <div className="space-y-1">
             <div>
@@ -308,7 +308,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
                 <p>{product?.title || ""}</p>
               )}
             </div>
-            <div className="text-sm text-gray-500 space-y-0.5">{title}</div>
+            <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
           </div>
           {layout === "drawer" && (
             <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
@@ -344,7 +344,7 @@ function ItemRemoveButton({
     >
       <button
         className={clsx(
-          "flex items-center justify-center w-8 h-8 border-none",
+          "flex h-8 w-8 items-center justify-center border-none",
           className,
         )}
         type="submit"
@@ -382,7 +382,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
             type="submit"
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-9 h-9 transition disabled:text-body-subtle disabled:cursor-not-allowed"
+            className="h-9 w-9 transition disabled:cursor-not-allowed disabled:text-body-subtle"
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
@@ -401,7 +401,7 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
             type="submit"
-            className="w-9 h-9 transition disabled:text-body-subtle disabled:cursor-not-allowed"
+            className="h-9 w-9 transition disabled:cursor-not-allowed disabled:text-body-subtle"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"
@@ -464,7 +464,7 @@ function CartLinePrice({
       withoutTrailingZeros
       {...passthroughProps}
       data={moneyV2}
-      className="text-sm ml-auto"
+      className="ml-auto text-sm"
     />
   );
 }
@@ -485,12 +485,12 @@ function CartEmpty({
       ref={scrollRef}
       className={clsx(
         layout === "drawer" && [
-          "content-start space-y-12 px-5 pb-5 transition overflow-y-scroll h-screen-dynamic w-[400px]",
+          "h-screen-dynamic w-[400px] content-start space-y-12 overflow-y-scroll px-5 pb-5 transition",
           y > 0 ? "border-t" : "",
         ],
         layout === "page" && [
           hidden ? "" : "grid",
-          "pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12",
+          "w-full gap-4 pb-12 md:items-start md:gap-8 lg:gap-12",
         ],
       )}
       hidden={hidden}

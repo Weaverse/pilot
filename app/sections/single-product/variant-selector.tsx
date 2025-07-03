@@ -50,9 +50,9 @@ export function SingleProductVariantSelector({
                   type="button"
                   disabled={!exists}
                   className={clsx(
-                    "size-(--option-swatch-size) flex aspect-square",
-                    "rounded-full overflow-hidden",
-                    "transition-[outline-color] outline-offset-2 outline-1",
+                    "flex aspect-square size-(--option-swatch-size)",
+                    "overflow-hidden rounded-full",
+                    "outline-1 outline-offset-2 transition-[outline-color]",
                     !exists && "cursor-not-allowed",
                     selected
                       ? "outline-line"
@@ -68,14 +68,14 @@ export function SingleProductVariantSelector({
                   {swatch?.image?.previewImage ? (
                     <Image
                       data={swatch.image.previewImage}
-                      className="w-full h-full object-cover object-center"
+                      className="h-full w-full object-cover object-center"
                       width={200}
                       sizes="auto"
                     />
                   ) : (
                     <span
                       className={clsx(
-                        "w-full h-full inline-block text-[0px] rounded-full",
+                        "inline-block h-full w-full rounded-full text-[0px]",
                         (!isValidColor(swatchColor) ||
                           isLightColor(swatchColor)) &&
                           "border border-line-subtle",
@@ -104,17 +104,17 @@ export function SingleProductVariantSelector({
                 variant="outline"
                 animate={false}
                 className={clsx(
-                  "px-4 py-2.5 text-center border border-line-subtle transition-colors",
+                  "border border-line-subtle px-4 py-2.5 text-center transition-colors",
                   !exists && "cursor-not-allowed",
                   selected
                     ? [
                         available
-                          ? "text-body-inverse bg-body"
+                          ? "bg-body text-body-inverse"
                           : "text-body-subtle",
                         "border-body",
                       ]
                     : "hover:border-line",
-                  !available && "text-body-subtle diagonal bg-gray-100",
+                  !available && "diagonal bg-gray-100 text-body-subtle",
                 )}
                 onClick={() => {
                   if (exists && firstSelectableVariant && !selected) {

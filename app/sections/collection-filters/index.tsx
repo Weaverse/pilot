@@ -86,7 +86,7 @@ const CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             )}
             <h3>{collection.title}</h3>
             {showDescription && collection.description && (
-              <p className="text-body-subtle mt-2.5">
+              <p className="mt-2.5 text-body-subtle">
                 {collection.description}
               </p>
             )}
@@ -122,10 +122,10 @@ const CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
             }}
             {...props}
           />
-          <div className="flex gap-5 pt-6 lg:pt-12 pb-8 lg:pb-20">
+          <div className="flex gap-5 pt-6 pb-8 lg:pt-12 lg:pb-20">
             {enableFilter && filtersPosition === "sidebar" && (
-              <div className="hidden lg:block shrink-0 w-72">
-                <div className="space-y-4 sticky top-[calc(var(--height-nav)+40px)]">
+              <div className="hidden w-72 shrink-0 lg:block">
+                <div className="sticky top-[calc(var(--height-nav)+40px)] space-y-4">
                   <div className="font-bold">Filters</div>
                   <Filters />
                 </div>

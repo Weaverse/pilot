@@ -23,15 +23,15 @@ export function ReviewList({
   );
 
   return (
-    <div className="lg:w-2/3 md:w-3/5 w-full py-6 flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6 py-6 md:w-3/5 lg:w-2/3">
       <div className="flex flex-col gap-6">
         <span className="font-bold text-lg uppercase">
           Reviews ({reviewsData.reviewNumber})
         </span>
         {reviews.map(({ id, rating, reviewer, title, created_at, body }) => (
           <Fragment key={id}>
-            <div className="flex gap-4 flex-col md:flex-row">
-              <div className="flex flex-col gap-4 md:w-1/4 w-full">
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="flex w-full flex-col gap-4 md:w-1/4">
                 <div className="flex items-center gap-0.5">
                   <StarRating rating={rating} />
                 </div>
@@ -40,15 +40,15 @@ export function ReviewList({
                   <p>{reviewer.email}</p>
                 </div>
               </div>
-              <div className="md:w-3/4 w-full flex flex-col gap-4">
-                <div className="flex justify-between items-center">
+              <div className="flex w-full flex-col gap-4 md:w-3/4">
+                <div className="flex items-center justify-between">
                   <p className="font-bold">{title}</p>
                   <p>{formatDate(created_at)}</p>
                 </div>
-                <p className=" font-normal text-base line-clamp-4">{body}</p>
+                <p className=" line-clamp-4 font-normal text-base">{body}</p>
               </div>
             </div>
-            <hr className="border-t border-line-subtle" />
+            <hr className="border-line-subtle border-t" />
           </Fragment>
         ))}
       </div>
@@ -59,7 +59,7 @@ export function ReviewList({
               key={i}
               type="button"
               onClick={() => setPage(i)}
-              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-black disabled:text-white"
+              className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 transition-colors duration-200 hover:bg-gray-300 disabled:cursor-not-allowed disabled:bg-black disabled:text-white disabled:opacity-50"
               disabled={i === page}
             >
               {i + 1}

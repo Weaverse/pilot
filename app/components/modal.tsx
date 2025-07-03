@@ -41,12 +41,12 @@ export const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
           <div
             style={{ maxHeight: "90vh" }}
             className={cn(
-              "animate-slide-up relative overflow-hidden",
-              "w-full mx-auto h-auto max-w-(--breakpoint-xl)",
+              "relative animate-slide-up overflow-hidden",
+              "mx-auto h-auto w-full max-w-(--breakpoint-xl)",
             )}
           >
             <ModalClose />
-            <div className={cn("bg-white shadow-sm p-6", className)}>
+            <div className={cn("bg-white p-6 shadow-sm", className)}>
               {children}
             </div>
           </div>
@@ -63,7 +63,7 @@ export const ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         {asChild ? (
           children
         ) : (
-          <XIcon className="absolute right-3 top-3 cursor-pointer" size={20} />
+          <XIcon className="absolute top-3 right-3 cursor-pointer" size={20} />
         )}
       </Close>
     );

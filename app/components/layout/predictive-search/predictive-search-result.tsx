@@ -21,7 +21,7 @@ export function PredictiveSearchResult({ items, type }: SearchResultTypeProps) {
 
   return (
     <div key={type} className="predictive-search-result flex flex-col gap-4">
-      <div className="uppercase font-bold border-b border-line-subtle pb-3">
+      <div className="border-line-subtle border-b pb-3 font-bold uppercase">
         {isSuggestions ? "Suggestions" : type}
       </div>
       {items?.length ? (
@@ -103,7 +103,7 @@ function SearchResultItem({
             </div>
           )}
           {price && (
-            <div className="flex gap-2 text-sm pt-1">
+            <div className="flex gap-2 pt-1 text-sm">
               <Money withoutTrailingZeros data={price as MoneyV2} />
               {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
                 <CompareAtPrice data={compareAtPrice as MoneyV2} />

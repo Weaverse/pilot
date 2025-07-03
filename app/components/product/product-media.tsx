@@ -23,10 +23,10 @@ import { ZoomModal } from "./media-zoom";
 
 const variants = cva(
   [
-    "w-full grid justify-start gap-2 lg:gap-1",
+    "grid w-full justify-start gap-2 lg:gap-1",
     "lg:grid-cols-1",
     "grid-flow-col lg:grid-flow-row",
-    "overflow-x-scroll scroll-px-6",
+    "scroll-px-6 overflow-x-scroll",
     "snap-x snap-mandatory",
   ],
   {
@@ -91,7 +91,7 @@ export function ProductMedia(props: ProductMediaProps) {
               width={1660}
               aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
               className={clsx(
-                "object-cover w-[80vw] max-w-none lg:w-full lg:h-full",
+                "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
                 gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
               )}
               sizes="auto"
@@ -103,17 +103,17 @@ export function ProductMedia(props: ProductMediaProps) {
   }
 
   return (
-    <div className="overflow-hidden product-media-slider">
+    <div className="product-media-slider overflow-hidden">
       <div
         className={clsx(
-          "flex items-start gap-4 [--thumbs-width:0px] overflow-hidden",
+          "flex items-start gap-4 overflow-hidden [--thumbs-width:0px]",
           showThumbnails && "md:[--thumbs-width:8rem]",
         )}
       >
         {showThumbnails && (
           <div
             className={clsx(
-              "shrink-0 hidden md:block",
+              "hidden shrink-0 md:block",
               "h-[450px] w-[calc(var(--thumbs-width,0px)-1rem)]",
               "opacity-0 transition-opacity duration-300",
             )}
@@ -126,7 +126,7 @@ export function ProductMedia(props: ProductMediaProps) {
               watchSlidesProgress
               rewind
               freeMode
-              className="w-full h-full overflow-visible"
+              className="h-full w-full overflow-visible"
               onInit={(sw) => {
                 sw.el.parentElement.style.opacity = "1";
               }}
@@ -138,7 +138,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     key={id}
                     className={cn(
                       "relative",
-                      "p-1 border transition-colors cursor-pointer border-transparent h-auto!",
+                      "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
                       "[&.swiper-slide-thumb-active]:border-line",
                     )}
                   >
@@ -150,12 +150,12 @@ export function ProductMedia(props: ProductMediaProps) {
                       loading="lazy"
                       width={200}
                       aspectRatio="1/1"
-                      className="object-cover w-full h-auto"
+                      className="h-auto w-full object-cover"
                       sizes="auto"
                     />
                     {mediaContentType === "VIDEO" && (
-                      <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
-                        <VideoCameraIcon className="w-4 h-4" />
+                      <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+                        <VideoCameraIcon className="h-4 w-4" />
                       </div>
                     )}
                   </SwiperSlide>
@@ -178,7 +178,7 @@ export function ProductMedia(props: ProductMediaProps) {
             }}
             pagination={{ type: "fraction" }}
             modules={[Pagination, Navigation, Thumbs]}
-            className="overflow-visible md:overflow-hidden pb-10 md:pb-0 md:[&_.swiper-pagination]:hidden"
+            className="overflow-visible pb-10 md:overflow-hidden md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
             {media.map((media, idx) => (
               <SwiperSlide key={media.id} className="bg-gray-100">
@@ -191,34 +191,34 @@ export function ProductMedia(props: ProductMediaProps) {
                   <button
                     type="button"
                     className={clsx(
-                      "absolute top-2 right-2 md:right-6 md:top-6",
-                      "p-2 text-center border border-transparent rounded-full",
+                      "absolute top-2 right-2 md:top-6 md:right-6",
+                      "rounded-full border border-transparent p-2 text-center",
                       "transition-all duration-200",
-                      "text-gray-900 bg-white hover:bg-gray-800 hover:text-white",
+                      "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
                     )}
                     onClick={() => {
                       setZoomMediaId(media.id);
                       setZoomModalOpen(true);
                     }}
                   >
-                    <MagnifyingGlassPlusIcon className="w-5 h-5" />
+                    <MagnifyingGlassPlusIcon className="h-5 w-5" />
                   </button>
                 )}
               </SwiperSlide>
             ))}
           </Swiper>
-          <div className="absolute bottom-6 right-6 z-10 hidden md:flex items-center gap-2">
+          <div className="absolute right-6 bottom-6 z-10 hidden items-center gap-2 md:flex">
             <button
               type="button"
-              className="media_slider__prev p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white left-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__prev left-6 border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowLeftIcon className="w-4.5 h-4.5" />
+              <ArrowLeftIcon className="h-4.5 w-4.5" />
             </button>
             <button
               type="button"
-              className="media_slider__next p-2 text-center border border-transparent transition-all duration-200 text-gray-900 bg-white hover:bg-gray-800 hover:text-white right-6 disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__next right-6 border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowRightIcon className="w-4.5 h-4.5" />
+              <ArrowRightIcon className="h-4.5 w-4.5" />
             </button>
           </div>
         </div>
@@ -251,7 +251,7 @@ function Media({
       <Image
         data={{ ...image, altText: alt || "Product image" }}
         loading={index === 0 ? "eager" : "lazy"}
-        className="object-cover w-full h-auto"
+        className="h-auto w-full object-cover"
         width={2048}
         aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
         sizes="auto"
@@ -264,7 +264,7 @@ function Media({
       <video
         controls
         aria-label={mediaVideo.alt || "Product video"}
-        className="w-full h-auto object-cover"
+        className="h-auto w-full object-cover"
         style={{ aspectRatio: imageAspectRatio }}
         onError={console.error}
       >
