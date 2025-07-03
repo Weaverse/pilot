@@ -1,4 +1,4 @@
-import type { Storefront } from "@shopify/hydrogen";
+import type { MappedProductOptions, Storefront } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { ProductRecommendationsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -65,3 +65,16 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   ${PRODUCT_CARD_FRAGMENT}
 ` as const;
+
+export function hasOnlyDefaultVariant(
+  productOptions: MappedProductOptions[] = [],
+) {
+  if (productOptions.length === 1) {
+    const option = productOptions[0];
+    if (option.name === "Title" && option.optionValues.length === 1) {
+      const optionValue = option.optionValues[0];
+      return optionValue.name === "Default Title";
+    }
+  }
+  return false;
+}
