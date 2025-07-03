@@ -2,7 +2,7 @@ import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   ProductCardFragment,
   ProductVariantFragment,
@@ -15,6 +15,8 @@ import { RevealUnderline } from "~/reveal-underline";
 import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
+
+const pcardLoadedImages = [];
 
 export function ProductCard({
   product,
@@ -46,8 +48,32 @@ export function ProductCard({
 
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
+
+  const handleVariantChange = (variant: ProductVariantFragment) => {
+    if (
+      variant.image &&
+      variant.id !== selectedVariant?.id &&
+      !pcardLoadedImages.includes(variant.image.url)
+    ) {
+      setIsImageLoading(true);
+    }
+    setSelectedVariant(variant);
+  };
+
+  const handleImageLoad = () => {
+    setIsImageLoading(false);
+    pcardLoadedImages.push(selectedVariant.image.url);
+  };
+
+  // Reset loading state if variant doesn't have an image
+  useEffect(() => {
+    if (selectedVariant && !selectedVariant.image) {
+      setIsImageLoading(false);
+    }
+  }, [selectedVariant]);
 
   const firstVariant = product.selectedOrFirstAvailableVariant;
   const params = new URLSearchParams(
@@ -91,6 +117,12 @@ export function ProductCard({
             prefetch="intent"
             className="overflow-hidden rounded-t-(--pcard-radius) block group relative aspect-(--pcard-image-ratio) bg-gray-100"
           >
+            {/* Loading skeleton overlay */}
+            {isImageLoading && (
+              <div className="absolute inset-0 bg-gray-100 flex items-center justify-center z-10">
+                <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+              </div>
+            )}
             <Image
               className={clsx([
                 "absolute inset-0",
@@ -103,6 +135,7 @@ export function ProductCard({
               width={700}
               alt={image.altText || `Picture of ${product.title}`}
               loading="lazy"
+              onLoad={handleImageLoad}
             />
             {pcardShowImageOnHover && secondImage && (
               <Image
@@ -192,11 +225,13 @@ export function ProductCard({
         <ProductCardOptions
           product={product}
           selectedVariant={selectedVariant}
-          setSelectedVariant={setSelectedVariant}
+          setSelectedVariant={handleVariantChange}
           className={clsx(
-            pcardAlignment === "left" && "justify-start",
-            pcardAlignment === "center" && "justify-center",
-            pcardAlignment === "right" && "justify-end",
+            isVertical && [
+              pcardAlignment === "left" && "justify-start",
+              pcardAlignment === "center" && "justify-center",
+              pcardAlignment === "right" && "justify-end",
+            ],
           )}
         />
       </div>
