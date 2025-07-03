@@ -12,7 +12,7 @@ import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { VariantPrices } from "~/components/variant-prices";
 import { RevealUnderline } from "~/reveal-underline";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
@@ -64,13 +64,6 @@ export function ProductCard({
     setSelectedVariant(variant);
   };
 
-  const handleImageLoad = () => {
-    setIsImageLoading(false);
-    if (selectedVariant?.image) {
-      pcardLoadedImages.push(selectedVariant.image.url);
-    }
-  };
-
   // Reset loading state if variant doesn't have an image
   useEffect(() => {
     if (selectedVariant && !selectedVariant.image) {
@@ -109,7 +102,7 @@ export function ProductCard({
         {
           backgroundColor: pcardBackgroundColor,
           "--pcard-radius": `${pcardBorderRadius}px`,
-          "--pcard-image-ratio": getImageAspectRatio(image, pcardImageRatio),
+          "--pcard-image-ratio": calculateAspectRatio(image, pcardImageRatio),
         } as React.CSSProperties
       }
     >
@@ -138,7 +131,12 @@ export function ProductCard({
               width={700}
               alt={image.altText || `Picture of ${product.title}`}
               loading="lazy"
-              onLoad={handleImageLoad}
+              onLoad={() => {
+                setIsImageLoading(false);
+                if (!pcardLoadedImages.includes(image.url)) {
+                  pcardLoadedImages.push(image.url);
+                }
+              }}
             />
             {pcardShowImageOnHover && secondImage && (
               <Image

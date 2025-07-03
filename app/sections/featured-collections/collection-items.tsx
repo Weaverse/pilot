@@ -15,7 +15,7 @@ import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
 import type { ImageAspectRatio } from "~/types/image";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
 
 const variants = cva("", {
@@ -119,7 +119,7 @@ const CollectionItems = forwardRef<
             <div
               className={clsx("overflow-hidden", variants({ borderRadius }))}
               style={{
-                aspectRatio: getImageAspectRatio(
+                aspectRatio: calculateAspectRatio(
                   collection?.image || {},
                   imageAspectRatio,
                 ),

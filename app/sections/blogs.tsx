@@ -8,7 +8,7 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { RevealUnderline } from "~/reveal-underline";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
-import { getImageAspectRatio, getImageLoadingPriority } from "~/utils/image";
+import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
 
 interface BlogsProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
@@ -88,7 +88,7 @@ export function ArticleCard({
           <Image
             alt={article.image.altText || article.title}
             data={article.image}
-            aspectRatio={getImageAspectRatio(article.image, imageAspectRatio)}
+            aspectRatio={calculateAspectRatio(article.image, imageAspectRatio)}
             loading={loading}
             sizes="(min-width: 768px) 50vw, 100vw"
           />

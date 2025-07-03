@@ -18,7 +18,7 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/utils/cn";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
 
 export function ZoomModal({
   media,
@@ -181,7 +181,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
         loading="lazy"
         className="h-auto max-h-screen-no-topbar w-auto max-w-[95vw] object-cover md:h-full"
         width={4096}
-        aspectRatio={getImageAspectRatio(image, "adapt")}
+        aspectRatio={calculateAspectRatio(image, "adapt")}
         sizes="auto"
       />
     );

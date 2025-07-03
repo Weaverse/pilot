@@ -20,7 +20,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { RevealUnderline } from "~/reveal-underline";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
 import { toggleCartDrawer } from "../layout/cart-drawer";
 import { CartBestSellers } from "./cart-best-sellers";
 
@@ -292,7 +292,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
             data={image}
             className="h-auto w-24"
             alt={title}
-            aspectRatio={getImageAspectRatio(image, "adapt")}
+            aspectRatio={calculateAspectRatio(image, "adapt")}
           />
         )}
       </div>

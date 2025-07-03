@@ -5,7 +5,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
 import type { ImageAspectRatio } from "~/types/image";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
 
 interface CollectionCardProps extends OverlayProps {
   collection: Collection;
@@ -47,7 +47,7 @@ export function CollectionCard({
       className="flex flex-col gap-2"
       style={
         {
-          "--aspect-ratio": getImageAspectRatio(
+          "--aspect-ratio": calculateAspectRatio(
             collection?.image,
             imageAspectRatio,
           ),
