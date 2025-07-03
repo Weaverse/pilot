@@ -65,12 +65,13 @@ export function QuickShop({
           selectedVariant={selectedVariant}
           showThumbnails={false}
         />
-        <div className="flex flex-col justify-start space-y-5 py-6 pr-5">
+        <div className="flex flex-col justify-start gap-5 py-6 pr-5">
           <div className="space-y-4">
             <div className="flex flex-col gap-2">
               <h5>{product.title}</h5>
             </div>
             <VariantPrices variant={selectedVariant} />
+            <p className="leading-relaxed">{product.summary}</p>
             {productOptions.length > 0 &&
               !hasOnlyDefaultVariant(productOptions) && (
                 <div className="space-y-4">
@@ -118,9 +119,9 @@ export function QuickShop({
                 },
               ]}
               storeDomain={storeDomain}
+              className="-mt-2"
             />
           )}
-          <p className="leading-relaxed">{product.summary}</p>
         </div>
       </div>
     </div>
@@ -195,7 +196,7 @@ export function QuickShopTrigger({
             )}
           >
             <Skeleton className="min-h-[inherit]" />
-            <div className="space-y-3">
+            <div className="flex flex-col justify-start gap-5 py-6 pr-5">
               <Skeleton className="h-12 w-2/3" />
               <Skeleton className="h-6 w-1/3" />
               <Skeleton className="h-10 w-1/2" />
