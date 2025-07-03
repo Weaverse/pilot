@@ -1,3 +1,4 @@
+import { HandbagSimpleIcon } from "@phosphor-icons/react";
 import {
   getAdjacentAndFirstAvailableVariants,
   getProductOptions,
@@ -147,9 +148,10 @@ export function QuickShopTrigger({ productHandle }: { productHandle: string }) {
         <Button
           variant="secondary"
           loading={state === "loading"}
-          className="absolute inset-x-4 bottom-4 hidden lg:group-hover:block"
+          className="absolute right-4 bottom-4 rounded-full p-3 shadow-xl group"
         >
-          Quick shop
+          <HandbagSimpleIcon size={16} />
+          <span className="ml-2 w-0 group-hover:w-fit">Add</span>
         </Button>
       </ModalTrigger>
       <ModalContent className="min-h-[700px]">

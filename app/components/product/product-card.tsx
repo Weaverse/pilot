@@ -15,6 +15,7 @@ import { RevealUnderline } from "~/reveal-underline";
 import { getImageAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
+import { QuickShopTrigger } from "./quick-shop";
 
 const pcardLoadedImages = [];
 
@@ -36,6 +37,7 @@ export function ProductCard({
     pcardShowLowestPrice,
     pcardShowSalePrice,
     pcardEnableQuickShop,
+    pcardShowQuickShopOnHover,
     pcardQuickShopButtonType,
     pcardQuickShopButtonText,
     pcardQuickShopAction,
@@ -167,7 +169,9 @@ export function ProductCard({
           {pcardShowNewBadges && <NewBadge publishedAt={product.publishedAt} />}
           {pcardShowOutOfStockBadges && <SoldOutBadge />}
         </div>
-        {/* <QuickShopTrigger productHandle={product.handle} /> */}
+        {pcardEnableQuickShop && (
+          <QuickShopTrigger productHandle={product.handle} />
+        )}
       </div>
       <div
         className={clsx(
