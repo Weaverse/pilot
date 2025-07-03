@@ -745,19 +745,6 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "select",
-          label: "Quick shop action",
-          name: "pcardQuickShopAction",
-          configs: {
-            options: [
-              { value: "go-to-page", label: "Go to product page" },
-              { value: "open-quick-shop", label: "Open quick shop panel" },
-            ],
-          },
-          defaultValue: "open-quick-shop",
-          condition: (theme) => theme.pcardEnableQuickShop === true,
-        },
-        {
-          type: "select",
           label: "Quick shop panel type",
           name: "pcardQuickShopPanelType",
           configs: {
@@ -767,12 +754,7 @@ export const themeSchema: HydrogenThemeSchema = {
             ],
           },
           defaultValue: "modal",
-          condition: (theme) => {
-            return (
-              theme.pcardEnableQuickShop === true &&
-              theme.pcardQuickShopAction === "open-quick-shop"
-            );
-          },
+          condition: (theme) => theme.pcardEnableQuickShop === true,
         },
         {
           type: "heading",
