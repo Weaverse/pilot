@@ -1,7 +1,6 @@
 import { HandbagSimpleIcon } from "@phosphor-icons/react";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { getProductOptions, ShopPayButton } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
@@ -32,24 +31,14 @@ export function QuickShop({
   data: QuickViewData;
   panelType?: "modal" | "drawer";
 }) {
-  const themeSettings = useThemeSettings();
   const { product, storeDomain } = data || {};
-
-  // Internal variant state for quick shop
+  const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
-  console.log(
-    "👉 --------> - quick-shop.tsx - selectedVariant:",
-    selectedVariant,
-  );
-
-  // Get the product options array
   const productOptions = getProductOptions({
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
   });
-
-  const [quantity, setQuantity] = useState<number>(1);
 
   return (
     <div className="bg-background">
