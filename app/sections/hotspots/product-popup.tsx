@@ -32,30 +32,15 @@ const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
       },
     ],
   },
-  // @ts-ignore
-  variants: {
-    nodes: [
-      {
-        id: "1",
-        availableForSale: true,
-        quantityAvailable: 0,
-        selectedOptions: [],
-        price: {
-          amount: "99.0",
-          currencyCode: "USD",
-        },
-        compareAtPrice: {
-          amount: "129.0",
-          currencyCode: "USD",
-        },
-        title: "Default Title",
-        unitPrice: null,
-        product: {
-          title: "Example Product",
-          handle: "#",
-        },
-      },
-    ],
+  priceRange: {
+    minVariantPrice: {
+      amount: "99.0",
+      currencyCode: "USD",
+    },
+    maxVariantPrice: {
+      amount: "129.0",
+      currencyCode: "USD",
+    },
   },
 };
 
@@ -79,8 +64,6 @@ export function ProductPopup({
   const featuredImage = featuredMedia?.image;
   const price = product.priceRange?.minVariantPrice;
   const compareAtPrice = product.priceRange?.maxVariantPrice;
-  // let price = product.variants.nodes[0].price;
-  // let compareAtPrice = product.variants.nodes[0].compareAtPrice;
 
   return (
     <div
