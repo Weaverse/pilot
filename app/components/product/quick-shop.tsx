@@ -174,8 +174,10 @@ export function QuickShopTrigger({
           variant="secondary"
           loading={state === "loading"}
           className={clsx(
-            "group/quick-shop absolute right-4 bottom-4 h-10.5 p-3 leading-4 shadow-xl",
-            buttonType === "icon" && "rounded-full",
+            "group/quick-shop absolute bottom-4 h-10.5 p-3 leading-4",
+            buttonType === "icon"
+              ? "right-4 rounded-full shadow-xl"
+              : "inset-x-4 shadow-xs",
             showOnHover &&
               "opacity-0 transition-opacity group-hover:opacity-100",
           )}
