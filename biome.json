@@ -22,7 +22,14 @@
         "noArrayIndexKey": "off"
       },
       "nursery": {
-        "useUniqueElementIds": "off"
+        "useUniqueElementIds": "off",
+        "useSortedClasses": {
+          "level": "on",
+          "fix": "safe",
+          "options": {
+            "functions": ["clsx", "cva", "cn"]
+          }
+        }
       },
       "correctness": {
         "noUnusedVariables": "off"
