@@ -10,6 +10,7 @@ import type {
   ProductVariantFragment,
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { ProductOptionValues } from "~/components/product/product-option-values";
@@ -111,6 +112,14 @@ export function QuickShop({
               className="-mt-2"
             />
           )}
+          <Link
+            to={`/products/${product.handle}`}
+            prefetch="intent"
+            variant="underline"
+            className="w-fit"
+          >
+            View full details →
+          </Link>
         </div>
       </div>
     </div>
@@ -168,11 +177,11 @@ export function QuickShopTrigger({
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50" />
+        <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50 [--fade-in-duration:150ms] data-[state=open]:animate-fade-in" />
         <Dialog.Content
           className={clsx(
             "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
-            "data-[state=open]:animate-slide-up",
+            "backdrop-blur-xs data-[state=open]:animate-slide-up",
           )}
           style={
             {
