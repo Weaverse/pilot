@@ -27,6 +27,7 @@ import { Quantity } from "~/components/product/quantity";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
+import { hasOnlyDefaultVariant } from "~/utils/product";
 import { SingleProductVariantSelector } from "./variant-selector";
 
 interface SingleProductData {
@@ -120,17 +121,6 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       ...product,
       selectedOrFirstAvailableVariant: currentVariant,
     });
-    let shouldRenderVariants = true;
-    // Check if this is a default variant only product
-    if (productOptions.length === 1) {
-      const option = productOptions[0];
-      if (option.name === "Title" && option.optionValues.length === 1) {
-        const optionValue = option.optionValues[0];
-        if (optionValue.name === "Default Title") {
-          shouldRenderVariants = false;
-        }
-      }
-    }
 
     const atcText = currentVariant?.availableForSale
       ? "Add to Cart"
@@ -193,7 +183,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   suppressHydrationWarning
                   dangerouslySetInnerHTML={{ __html: product?.summary }}
                 />
-                {shouldRenderVariants ? (
+                {!hasOnlyDefaultVariant(productOptions) ? (
                   <div className="space-y-5" data-motion="fade-up">
                     <div className="product-form space-y-5">
                       {productOptions.map((option) => (

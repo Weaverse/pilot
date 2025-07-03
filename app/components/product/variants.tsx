@@ -1,4 +1,5 @@
 import type { MappedProductOptions } from "@shopify/hydrogen";
+import { hasOnlyDefaultVariant } from "~/utils/product";
 import { ProductOptionValues } from "./product-option-values";
 
 export function ProductVariants({
@@ -6,15 +7,8 @@ export function ProductVariants({
 }: {
   productOptions: MappedProductOptions[];
 }) {
-  // Check if this is a default variant only product
-  if (productOptions.length === 1) {
-    const option = productOptions[0];
-    if (option.name === "Title" && option.optionValues.length === 1) {
-      const optionValue = option.optionValues[0];
-      if (optionValue.name === "Default Title") {
-        return null;
-      }
-    }
+  if (hasOnlyDefaultVariant(productOptions)) {
+    return null;
   }
 
   return (
