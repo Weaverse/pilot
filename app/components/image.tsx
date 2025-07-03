@@ -29,7 +29,7 @@ export interface ImageProps extends React.ComponentPropsWithRef<"img"> {
 }
 
 export const Image = forwardRef<HTMLDivElement, ImageProps>(
-  ({ className, ...rest }, ref) => {
+  ({ className, onLoad, ...rest }, ref) => {
     /**
      * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
      * even when using forwardRef for the outer div
@@ -59,7 +59,10 @@ export const Image = forwardRef<HTMLDivElement, ImageProps>(
             "h-full max-h-full w-full object-cover object-center",
             loaded ? "blur-0" : "blur-xl",
           )}
-          onLoad={() => setLoaded(true)}
+          onLoad={(e) => {
+            setLoaded(true);
+            onLoad?.(e);
+          }}
           {...rest}
         />
       </div>
