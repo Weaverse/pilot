@@ -58,7 +58,7 @@ export function AddToCartButton({
               onClick={() => toggleCartDrawer(true)}
               {...props}
             >
-              {children}
+              {children || "Add to cart"}
             </Button>
           </AddToCartAnalytics>
         );
