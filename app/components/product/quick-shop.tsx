@@ -1,24 +1,24 @@
 import { HandbagSimpleIcon } from "@phosphor-icons/react";
-import {
-  getAdjacentAndFirstAvailableVariants,
-  getProductOptions,
-  ShopPayButton,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
-import type { ProductVariant } from "@shopify/hydrogen/storefront-api-types";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { getProductOptions, ShopPayButton } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-import type { ProductQuery } from "storefront-api.generated";
+import type {
+  ProductQuery,
+  ProductVariantFragment,
+} from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
+import { ProductOptionValues } from "~/components/product/product-option-values";
 import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
 import { VariantPrices } from "~/components/variant-prices";
 import type { ProductData } from "~/routes/($locale).api.product";
+import { hasOnlyDefaultVariant } from "~/utils/product";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -35,10 +35,12 @@ export function QuickShop({
   const themeSettings = useThemeSettings();
   const { product, storeDomain } = data || {};
 
-  // Optimistically selects a variant with given available variant information
-  const selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
+  // Internal variant state for quick shop
+  const [selectedVariant, setSelectedVariant] =
+    useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
+  console.log(
+    "👉 --------> - quick-shop.tsx - selectedVariant:",
+    selectedVariant,
   );
 
   // Get the product options array
@@ -48,31 +50,7 @@ export function QuickShop({
   });
 
   const [quantity, setQuantity] = useState<number>(1);
-  const {
-    addToCartText,
-    soldOutText,
-    unavailableText,
-    hideUnavailableOptions,
-    productQuickViewImageAspectRatio,
-  } = themeSettings;
 
-  // // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  // useEffect(() => {
-  //   if (variants?.nodes?.length) {
-  //     if (!selectedVariant) {
-  //       setSelectedVariant(variants?.nodes?.[0]);
-  //     } else if (selectedVariant?.id !== product?.selectedVariant?.id) {
-  //       setSelectedVariant(product?.selectedVariant);
-  //     }
-  //   }
-  // }, [product?.id]);
-
-  const { title, summary } = product;
-  const atcText = selectedVariant?.availableForSale
-    ? addToCartText
-    : selectedVariant?.quantityAvailable === -1
-      ? unavailableText
-      : soldOutText;
   return (
     <div className="bg-background">
       <div
@@ -86,27 +64,33 @@ export function QuickShop({
           media={product?.media.nodes}
           selectedVariant={selectedVariant}
           showThumbnails={false}
-          imageAspectRatio={productQuickViewImageAspectRatio}
         />
-        <div className="flex flex-col justify-start space-y-5">
+        <div className="flex flex-col justify-start space-y-5 py-6 pr-5">
           <div className="space-y-4">
             <div className="flex flex-col gap-2">
-              <h5>{title}</h5>
+              <h5>{product.title}</h5>
             </div>
-            <VariantPrices variant={selectedVariant as ProductVariant} />
-            {/* <ProductVariants
-              product={product}
-              options={product?.options}
-              productHandle={product?.handle}
-              selectedVariant={selectedVariant}
-              onSelectedVariantChange={handleSelectedVariantChange}
-              variants={
-                _variants.product?.variants as {
-                  nodes: ProductVariantFragment[];
-                }
-              }
-              hideUnavailableOptions={hideUnavailableOptions}
-            /> */}
+            <VariantPrices variant={selectedVariant} />
+            {productOptions.length > 0 &&
+              !hasOnlyDefaultVariant(productOptions) && (
+                <div className="space-y-4">
+                  {productOptions.map((option) => (
+                    <div className="space-y-2" key={option.name}>
+                      <legend className="leading-tight">
+                        <span className="font-bold">{option.name}</span>
+                      </legend>
+                      <ProductOptionValues
+                        option={option}
+                        onVariantChange={(
+                          newVariant: ProductVariantFragment,
+                        ) => {
+                          setSelectedVariant(newVariant);
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
           <Quantity value={quantity} onChange={setQuantity} />
           {/* TODO: fix quick-shop modal & cart drawer overlap each other */}
@@ -122,7 +106,7 @@ export function QuickShop({
             data-test="add-to-cart"
             className="w-full"
           >
-            {atcText}
+            {selectedVariant?.availableForSale ? "Add to cart" : "Sold out"}
           </AddToCartButton>
           {selectedVariant?.availableForSale && (
             <ShopPayButton
@@ -136,7 +120,7 @@ export function QuickShop({
               storeDomain={storeDomain}
             />
           )}
-          <p className="leading-relaxed">{summary}</p>
+          <p className="leading-relaxed">{product.summary}</p>
         </div>
       </div>
     </div>
@@ -172,7 +156,6 @@ export function QuickShopTrigger({
         <Button
           animate={false}
           variant="secondary"
-          loading={state === "loading"}
           className={clsx(
             "group/quick-shop absolute bottom-4 h-10.5 p-3 leading-4",
             buttonType === "icon"
@@ -198,10 +181,13 @@ export function QuickShopTrigger({
         className={clsx(
           panelType === "drawer"
             ? "mr-0 ml-auto min-h-screen max-w-md p-4"
-            : "min-h-[700px]",
+            : "min-h-[700px] p-0",
         )}
       >
-        {state === "loading" ? (
+        <VisuallyHidden.Root asChild>
+          {/* <Dialog.Title>Quick shop modal</Dialog.Title> */}
+        </VisuallyHidden.Root>
+        {state === "loading" || !data?.product ? (
           <div
             className={clsx(
               "grid min-h-[inherit] grid-cols-1 items-start gap-5",
