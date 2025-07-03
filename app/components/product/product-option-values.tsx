@@ -4,6 +4,7 @@ import { Image, type MappedProductOptions } from "@shopify/hydrogen";
 import clsx from "clsx";
 import type { ButtonHTMLAttributes } from "react";
 import { useNavigate } from "react-router";
+import type { ProductVariantFragment } from "storefront-api.generated";
 import Link, { type LinkProps } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { isLightColor, isValidColor } from "~/utils/misc";
@@ -22,17 +23,12 @@ const OPTIONS_AS_BUTTON = ["Size"];
 const OPTIONS_AS_IMAGE = [];
 const OPTIONS_AS_DROPDOWN = [];
 
-/*
- * SEO: When the variant is a combined listing child product that leads to a different URL,
- * we need to render it as an anchor tag.
- * When the variant is an update to the search param, render it as a button with JavaScript navigating to
- * the variant so that SEO bots do not index these as duplicated links.
- */
-
 export function ProductOptionValues({
   option,
+  onVariantChange,
 }: {
   option: MappedProductOptions;
+  onVariantChange?: (variant: ProductVariantFragment) => void;
 }) {
   const navigate = useNavigate();
   const { name: optionName, optionValues } = option || {};
@@ -47,13 +43,17 @@ export function ProductOptionValues({
         onValueChange={(v) => {
           const found = optionValues.find(({ name: value }) => value === v);
           if (found) {
-            const to = found.isDifferentProduct
-              ? `/products/${found.handle}?${found.variantUriQuery}`
-              : `?${found.variantUriQuery}`;
-            if (found.isDifferentProduct) {
-              window.location.href = to;
+            if (onVariantChange && found.firstSelectableVariant) {
+              onVariantChange(found.firstSelectableVariant);
             } else {
-              navigate(to, { replace: true });
+              const to = found.isDifferentProduct
+                ? `/products/${found.handle}?${found.variantUriQuery}`
+                : `?${found.variantUriQuery}`;
+              if (found.isDifferentProduct) {
+                window.location.href = to;
+              } else {
+                navigate(to, { replace: true });
+              }
             }
           }
         }}
@@ -107,7 +107,11 @@ export function ProductOptionValues({
           <Tooltip key={optionValue.name}>
             <TooltipTrigger>
               <div>
-                <OptionValue optionName={optionName} value={optionValue} />
+                <OptionValue
+                  optionName={optionName}
+                  value={optionValue}
+                  onVariantChange={onVariantChange}
+                />
               </div>
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>
@@ -125,9 +129,11 @@ export function ProductOptionValues({
 function OptionValue({
   optionName,
   value,
+  onVariantChange,
 }: {
   optionName: string;
   value: MappedProductOptions["optionValues"][number];
+  onVariantChange?: (variant: ProductVariantFragment) => void;
 }) {
   const navigate = useNavigate();
   const {
@@ -141,10 +147,10 @@ function OptionValue({
     handle,
     swatch,
   } = value;
+
   const to = isDifferentProduct
     ? `/products/${handle}?${variantUriQuery}`
     : `?${variantUriQuery}`;
-  const Component = isDifferentProduct ? Link : "button";
   const linkProps: LinkProps = {
     to,
     preventScrollReset: true,
@@ -155,18 +161,39 @@ function OptionValue({
     type: "button" as const,
     disabled: !exists,
     onClick: () => {
-      if (!selected && exists) {
+      if (onVariantChange && firstSelectableVariant) {
+        onVariantChange(firstSelectableVariant);
+      } else if (!selected && exists) {
         navigate(to, { replace: true });
       }
     },
   };
+
+  /*
+   * - When onVariantChange is provided, which mean the variant is being managed by the parent component,
+   * we always render as a button.
+   * - When the variant is a combined listing child product that leads to a different URL,
+   * we need to render it as an anchor tag.
+   * - When the variant is an update to the search param, render it as a button with JavaScript navigating to
+   * the variant so that SEO bots do not index these as duplicated links.
+   */
+  const Component = onVariantChange
+    ? "button"
+    : isDifferentProduct
+      ? Link
+      : "button";
+  const componentProps = onVariantChange
+    ? buttonProps
+    : isDifferentProduct
+      ? linkProps
+      : buttonProps;
 
   if (OPTIONS_AS_SWATCH.includes(optionName)) {
     const swatchColor = swatch?.color || name;
     return (
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
-        {...(isDifferentProduct ? linkProps : buttonProps)}
+        {...componentProps}
         className={clsx(
           "flex aspect-square size-(--option-swatch-size)",
           "overflow-hidden rounded-full",
@@ -203,7 +230,7 @@ function OptionValue({
     return (
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
-        {...(isDifferentProduct ? linkProps : buttonProps)}
+        {...componentProps}
         className={clsx(
           "border border-line-subtle px-4 py-2.5 text-center transition-colors",
           !exists && "cursor-not-allowed",
@@ -225,7 +252,7 @@ function OptionValue({
     return (
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
-        {...(isDifferentProduct ? linkProps : buttonProps)}
+        {...componentProps}
         className={clsx(
           "flex h-auto w-(--option-image-width) items-center justify-center p-1",
           "border border-line-subtle text-center transition-colors",
@@ -257,7 +284,7 @@ function OptionValue({
   return (
     // @ts-expect-error: TypeScript cannot infer the correct props for variable component
     <Component
-      {...(isDifferentProduct ? linkProps : buttonProps)}
+      {...componentProps}
       className={clsx(
         "border-b py-0.5",
         !exists && "cursor-not-allowed",
