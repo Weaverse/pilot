@@ -1,4 +1,5 @@
-import { HandbagSimpleIcon } from "@phosphor-icons/react";
+import { HandbagSimpleIcon, XIcon } from "@phosphor-icons/react";
+import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { getProductOptions, ShopPayButton } from "@shopify/hydrogen";
 import clsx from "clsx";
@@ -9,7 +10,6 @@ import type {
   ProductVariantFragment,
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
-import { Modal, ModalContent, ModalTrigger } from "~/components/modal";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { ProductOptionValues } from "~/components/product/product-option-values";
@@ -141,8 +141,8 @@ export function QuickShopTrigger({
   }, [open]);
 
   return (
-    <Modal open={open} onOpenChange={setOpen}>
-      <ModalTrigger>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger asChild>
         <Button
           animate={false}
           variant="secondary"
@@ -166,38 +166,64 @@ export function QuickShopTrigger({
             <span className="px-2">{buttonText}</span>
           )}
         </Button>
-      </ModalTrigger>
-      <ModalContent
-        className={clsx(
-          panelType === "drawer"
-            ? "mr-0 ml-auto min-h-screen max-w-md p-4"
-            : "min-h-[700px] p-0",
-        )}
-      >
-        <VisuallyHidden.Root asChild>
-          {/* <Dialog.Title>Quick shop modal</Dialog.Title> */}
-        </VisuallyHidden.Root>
-        {state === "loading" || !data?.product ? (
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50" />
+        <Dialog.Content
+          className={clsx(
+            "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
+            "data-[state=open]:animate-slide-up",
+          )}
+          style={
+            {
+              "--slide-up-from": "20px",
+              "--slide-up-duration": "300ms",
+            } as React.CSSProperties
+          }
+          aria-describedby={undefined}
+        >
           <div
+            style={{ maxHeight: "90vh" }}
             className={clsx(
-              "grid min-h-[inherit] grid-cols-1 items-start gap-5",
-              panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
+              "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) overflow-hidden",
+              "animate-slide-up bg-white shadow-sm",
+              panelType === "drawer"
+                ? "mr-0 ml-auto min-h-screen max-w-md p-4"
+                : "min-h-[700px] p-0",
             )}
           >
-            <Skeleton className="min-h-[inherit]" />
-            <div className="flex flex-col justify-start gap-5 py-6 pr-5">
-              <Skeleton className="h-12 w-2/3" />
-              <Skeleton className="h-6 w-1/3" />
-              <Skeleton className="h-10 w-1/2" />
-              <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-6 w-full" />
-            </div>
+            <Dialog.Close asChild>
+              <XIcon
+                className="absolute top-3 right-3 cursor-pointer"
+                size={20}
+              />
+            </Dialog.Close>
+            <VisuallyHidden.Root asChild>
+              <Dialog.Title>Quick shop modal</Dialog.Title>
+            </VisuallyHidden.Root>
+            {state === "loading" || !data?.product ? (
+              <div
+                className={clsx(
+                  "grid min-h-[inherit] grid-cols-1 items-start gap-5",
+                  panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
+                )}
+              >
+                <Skeleton className="min-h-[inherit]" />
+                <div className="flex flex-col justify-start gap-5 py-6 pr-5">
+                  <Skeleton className="h-12 w-2/3" />
+                  <Skeleton className="h-6 w-1/3" />
+                  <Skeleton className="h-10 w-1/2" />
+                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-6 w-full" />
+                </div>
+              </div>
+            ) : (
+              <QuickShop data={data as QuickViewData} panelType={panelType} />
+            )}
           </div>
-        ) : (
-          <QuickShop data={data as QuickViewData} panelType={panelType} />
-        )}
-      </ModalContent>
-    </Modal>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
