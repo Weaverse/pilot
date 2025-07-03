@@ -40,7 +40,6 @@ export function ProductCard({
     pcardShowQuickShopOnHover,
     pcardQuickShopButtonType,
     pcardQuickShopButtonText,
-    pcardQuickShopAction,
     pcardQuickShopPanelType,
     pcardShowSaleBadges,
     pcardShowBestSellerBadges,
@@ -67,7 +66,9 @@ export function ProductCard({
 
   const handleImageLoad = () => {
     setIsImageLoading(false);
-    pcardLoadedImages.push(selectedVariant.image.url);
+    if (selectedVariant?.image) {
+      pcardLoadedImages.push(selectedVariant.image.url);
+    }
   };
 
   // Reset loading state if variant doesn't have an image
@@ -170,7 +171,13 @@ export function ProductCard({
           {pcardShowOutOfStockBadges && <SoldOutBadge />}
         </div>
         {pcardEnableQuickShop && (
-          <QuickShopTrigger productHandle={product.handle} />
+          <QuickShopTrigger
+            productHandle={product.handle}
+            showOnHover={pcardShowQuickShopOnHover}
+            buttonType={pcardQuickShopButtonType}
+            buttonText={pcardQuickShopButtonText}
+            panelType={pcardQuickShopPanelType}
+          />
         )}
       </div>
       <div
