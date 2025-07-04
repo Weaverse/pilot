@@ -1,4 +1,9 @@
-import { HandbagSimpleIcon, XIcon } from "@phosphor-icons/react";
+import {
+  HandbagSimpleIcon,
+  ImageIcon,
+  ShoppingCartIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { getProductOptions, ShopPayButton } from "@shopify/hydrogen";
@@ -182,6 +187,7 @@ export function QuickShopTrigger({
           className={clsx(
             "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
             "backdrop-blur-xs data-[state=open]:animate-slide-up",
+            "[--quick-shop-modal-width:var(--breakpoint-xl)]",
           )}
           style={
             {
@@ -194,11 +200,11 @@ export function QuickShopTrigger({
           <div
             style={{ maxHeight: "90vh" }}
             className={clsx(
-              "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) overflow-hidden",
+              "relative mx-auto h-auto w-full max-w-(--quick-shop-modal-width) overflow-hidden",
               "animate-slide-up bg-white shadow-sm",
               panelType === "drawer"
                 ? "mr-0 ml-auto min-h-screen max-w-md p-4"
-                : "min-h-[calc(((var(--breakpoint-xl)-20px)/2)*4/3)] p-0",
+                : "min-h-[calc(((var(--quick-shop-modal-width)-20px)/2)*4/3)] p-0",
             )}
           >
             <Dialog.Close asChild>
@@ -213,18 +219,28 @@ export function QuickShopTrigger({
             {state === "loading" || !data?.product ? (
               <div
                 className={clsx(
-                  "grid h-full grid-cols-1 items-start gap-5",
+                  "grid min-h-[inherit] grid-cols-1 items-start gap-5",
                   panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
                 )}
               >
-                <Skeleton className="min-h-[inherit]" />
+                <Skeleton className="flex min-h-[inherit] items-center justify-center">
+                  <ImageIcon className="h-16 w-16 text-body-subtle" />
+                </Skeleton>
                 <div className="flex flex-col justify-start gap-5 py-6 pr-5">
-                  <Skeleton className="h-12 w-2/3" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-16" />
+                  </div>
+                  <Skeleton className="h-12 w-full" />
                   <Skeleton className="h-6 w-1/3" />
-                  <Skeleton className="h-10 w-1/2" />
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="flex h-10 w-1/2 items-center justify-center">
+                    <ShoppingCartIcon className="h-5 w-5 text-body-subtle" />
+                  </Skeleton>
                 </div>
               </div>
             ) : (
