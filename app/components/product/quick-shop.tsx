@@ -170,9 +170,16 @@ export function QuickShopTrigger({
         <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50 [--fade-in-duration:150ms] data-[state=open]:animate-fade-in" />
         <Dialog.Content
           className={clsx(
+            "quick-shop-dialog-content",
             "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
             "backdrop-blur-xs data-[state=open]:animate-slide-up",
           )}
+          onClick={(e) => {
+            const target = e.target as HTMLElement;
+            if (target.classList.contains("quick-shop-dialog-content")) {
+              setOpen(false);
+            }
+          }}
           style={
             {
               "--slide-up-from": "20px",
