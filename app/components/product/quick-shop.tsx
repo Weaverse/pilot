@@ -6,7 +6,7 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { getProductOptions, ShopPayButton } from "@shopify/hydrogen";
+import { ShopPayButton } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
@@ -18,12 +18,11 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
-import { ProductOptionValues } from "~/components/product/product-option-values";
 import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
 import { VariantPrices } from "~/components/variant-prices";
 import type { ProductData } from "~/routes/($locale).api.product";
-import { hasOnlyDefaultVariant } from "~/utils/product";
+import { VariantSelector } from "./variant-selector";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -41,10 +40,6 @@ export function QuickShop({
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
 
   return (
     <div className="bg-background">
@@ -67,26 +62,11 @@ export function QuickShop({
             </div>
             <VariantPrices variant={selectedVariant} />
             <p className="leading-relaxed">{product.summary}</p>
-            {productOptions.length > 0 &&
-              !hasOnlyDefaultVariant(productOptions) && (
-                <div className="space-y-4">
-                  {productOptions.map((option) => (
-                    <div className="space-y-2" key={option.name}>
-                      <legend className="leading-tight">
-                        <span className="font-bold">{option.name}</span>
-                      </legend>
-                      <ProductOptionValues
-                        option={option}
-                        onVariantChange={(
-                          newVariant: ProductVariantFragment,
-                        ) => {
-                          setSelectedVariant(newVariant);
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+            <VariantSelector
+              product={product}
+              selectedVariant={selectedVariant}
+              setSelectedVariant={setSelectedVariant}
+            />
           </div>
           <Quantity value={quantity} onChange={setQuantity} />
           {/* TODO: fix quick-shop modal & cart drawer overlap each other */}

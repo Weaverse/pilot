@@ -1,4 +1,4 @@
-import { getProductOptions, Money, ShopPayButton } from "@shopify/hydrogen";
+import { Money, ShopPayButton } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/customer-account-api-types";
 import {
   type ComponentLoaderArgs,
@@ -24,11 +24,10 @@ import {
 } from "~/components/product/badges";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
+import { VariantSelector } from "~/components/product/variant-selector";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
-import { hasOnlyDefaultVariant } from "~/utils/product";
-import { SingleProductVariantSelector } from "./variant-selector";
 
 interface SingleProductData {
   productsCount: number;
@@ -53,12 +52,10 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
     const { storeDomain, product } = loaderData || {};
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedVariant, setSelectedVariant] =
-      useState<ProductVariantFragment | null>(null);
+      useState<ProductVariantFragment | null>(
+        product?.selectedOrFirstAvailableVariant,
+      );
     const [scope] = useAnimation(ref);
-
-    // Use the selected variant or fall back to the first available variant
-    const currentVariant =
-      selectedVariant || product?.selectedOrFirstAvailableVariant;
 
     if (!product) {
       return (
@@ -116,15 +113,9 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       );
     }
 
-    // Get the product options array
-    const productOptions = getProductOptions({
-      ...product,
-      selectedOrFirstAvailableVariant: currentVariant,
-    });
-
-    const atcText = currentVariant?.availableForSale
+    const atcText = selectedVariant?.availableForSale
       ? "Add to Cart"
-      : currentVariant?.quantityAvailable === -1
+      : selectedVariant?.quantityAvailable === -1
         ? "Unavailable"
         : "Sold Out";
     const isBestSellerProduct = product.badges
@@ -139,7 +130,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               mediaLayout="slider"
               imageAspectRatio="adapt"
               media={product?.media.nodes}
-              selectedVariant={currentVariant}
+              selectedVariant={selectedVariant}
               showThumbnails={showThumbnails}
             />
             <div
@@ -148,13 +139,13 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-sm empty:hidden">
-                  {currentVariant?.availableForSale ? (
+                  {selectedVariant?.availableForSale ? (
                     <>
-                      {currentVariant && (
+                      {selectedVariant && (
                         <SaleBadge
-                          price={currentVariant.price as MoneyV2}
+                          price={selectedVariant.price as MoneyV2}
                           compareAtPrice={
-                            currentVariant.compareAtPrice as MoneyV2
+                            selectedVariant.compareAtPrice as MoneyV2
                           }
                         />
                       )}
@@ -169,10 +160,10 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   {product?.title}
                 </h3>
                 <p className="text-lg" data-motion="fade-up">
-                  {currentVariant ? (
+                  {selectedVariant ? (
                     <Money
                       withoutTrailingZeros
-                      data={currentVariant.price}
+                      data={selectedVariant.price}
                       as="span"
                     />
                   ) : null}
@@ -183,36 +174,20 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   suppressHydrationWarning
                   dangerouslySetInnerHTML={{ __html: product?.summary }}
                 />
-                {!hasOnlyDefaultVariant(productOptions) ? (
-                  <div className="space-y-5" data-motion="fade-up">
-                    <div className="product-form space-y-5">
-                      {productOptions.map((option) => (
-                        <div
-                          className="product-options space-y-2"
-                          key={option.name}
-                        >
-                          <legend className="leading-tight">
-                            <span className="font-bold">{option.name}</span>
-                          </legend>
-                          <SingleProductVariantSelector
-                            option={option}
-                            selectedVariant={selectedVariant}
-                            onVariantChange={setSelectedVariant}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
+                <VariantSelector
+                  product={product}
+                  selectedVariant={selectedVariant}
+                  setSelectedVariant={setSelectedVariant}
+                />
               </div>
               <Quantity value={quantity} onChange={setQuantity} />
               <AddToCartButton
-                disabled={!currentVariant?.availableForSale}
+                disabled={!selectedVariant?.availableForSale}
                 lines={[
                   {
-                    merchandiseId: currentVariant?.id,
+                    merchandiseId: selectedVariant?.id,
                     quantity,
-                    selectedVariant: currentVariant,
+                    selectedVariant: selectedVariant,
                   },
                 ]}
                 variant="primary"
@@ -221,12 +196,12 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               >
                 {atcText}
               </AddToCartButton>
-              {currentVariant?.availableForSale && (
+              {selectedVariant?.availableForSale && (
                 <ShopPayButton
                   width="100%"
                   variantIdsAndQuantities={[
                     {
-                      id: currentVariant?.id,
+                      id: selectedVariant?.id,
                       quantity,
                     },
                   ]}
