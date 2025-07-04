@@ -1,15 +1,14 @@
-import { Money } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
-import { CompareAtPrice } from "~/components/compare-at-price";
+import type { ProductVariantFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { VariantPrices } from "~/components/product/variant-prices";
 import { RevealUnderline } from "~/reveal-underline";
 import type {
   NormalizedPredictiveSearchResultItem,
   NormalizedPredictiveSearchResults,
 } from "~/types/predictive-search";
-import { isDiscounted } from "~/utils/product";
 
 type SearchResultTypeProps = {
   items?: NormalizedPredictiveSearchResultItem[];
@@ -102,14 +101,15 @@ function SearchResultItem({
               <RevealUnderline>{title}</RevealUnderline>
             </div>
           )}
-          {price && (
-            <div className="flex gap-2 pt-1 text-sm">
-              <Money withoutTrailingZeros data={price as MoneyV2} />
-              {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
-                <CompareAtPrice data={compareAtPrice as MoneyV2} />
-              )}
-            </div>
-          )}
+          <VariantPrices
+            variant={
+              {
+                price: price as MoneyV2,
+                compareAtPrice: compareAtPrice as MoneyV2,
+              } as ProductVariantFragment
+            }
+            className="pt-1 text-sm"
+          />
         </div>
       </Link>
     </li>

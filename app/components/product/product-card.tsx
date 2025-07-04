@@ -10,12 +10,12 @@ import type {
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
-import { VariantPrices } from "~/components/variant-prices";
 import { RevealUnderline } from "~/reveal-underline";
 import { calculateAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
+import { VariantPrices } from "./variant-prices";
 
 const pcardLoadedImages = [];
 

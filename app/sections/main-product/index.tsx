@@ -1,16 +1,13 @@
 import {
   getAdjacentAndFirstAvailableVariants,
   getProductOptions,
-  Money,
   ShopPayButton,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
-import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useState } from "react";
 import { useLoaderData } from "react-router";
-import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
@@ -19,9 +16,9 @@ import {
   type ProductMediaProps,
 } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
+import { VariantPrices } from "~/components/product/variant-prices";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
-import { isDiscounted } from "~/utils/product";
 import { ProductDetails } from "./product-details";
 import { ProductVariants } from "./variants";
 
@@ -119,33 +116,11 @@ const ProductInformation = forwardRef<
                 )}
                 <h1 className="h3 tracking-tight!">{title}</h1>
               </div>
-              {selectedVariant ? (
-                <div className="flex items-center gap-2">
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant.price}
-                    as="span"
-                    className="font-medium text-2xl/none"
-                  />
-                  {isDiscounted(
-                    selectedVariant.price as MoneyV2,
-                    selectedVariant.compareAtPrice as MoneyV2,
-                  ) &&
-                    showSalePrice && (
-                      <CompareAtPrice
-                        data={selectedVariant.compareAtPrice as MoneyV2}
-                        className="text-2xl/none"
-                      />
-                    )}
-                </div>
-              ) : (
-                <Money
-                  withoutTrailingZeros
-                  data={priceRange.minVariantPrice}
-                  as="div"
-                  className="font-medium text-2xl/none"
-                />
-              )}
+              <VariantPrices
+                variant={selectedVariant}
+                showCompareAtPrice={showSalePrice}
+                className="text-2xl/none"
+              />
               {children}
               {showShortDescription && (
                 <p className="leading-relaxed">{summary}</p>
