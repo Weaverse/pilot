@@ -22,6 +22,7 @@ import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
 import { VariantPrices } from "~/components/variant-prices";
 import type { ProductData } from "~/routes/($locale).api.product";
+import { ProductBadges } from "./badges";
 import { VariantSelector } from "./variant-selector";
 
 interface QuickViewData {
@@ -57,6 +58,10 @@ export function QuickShop({
         />
         <div className="flex flex-col justify-start gap-5 py-6 pr-5">
           <div className="space-y-4">
+            <ProductBadges
+              product={product}
+              selectedVariant={selectedVariant}
+            />
             <div className="flex flex-col gap-2">
               <h5>{product.title}</h5>
             </div>

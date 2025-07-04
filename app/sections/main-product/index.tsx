@@ -13,11 +13,7 @@ import { useLoaderData } from "react-router";
 import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import {
-  BestSellerBadge,
-  NewBadge,
-  SaleBadge,
-} from "~/components/product/badges";
+import { ProductBadges } from "~/components/product/badges";
 import {
   ProductMedia,
   type ProductMediaProps,
@@ -77,12 +73,7 @@ const ProductInformation = forwardRef<
   const [quantity, setQuantity] = useState<number>(1);
 
   if (product) {
-    const { title, handle, vendor, summary, priceRange, publishedAt, badges } =
-      product;
-
-    const isBestSellerProduct = badges
-      .filter(Boolean)
-      .some(({ key, value }) => key === "best_seller" && value === "true");
+    const { title, handle, vendor, summary, priceRange } = product;
 
     return (
       <Section ref={ref} {...rest} overflow="unset">
@@ -118,16 +109,10 @@ const ProductInformation = forwardRef<
                 <span className="inline-block h-4 border-body-subtle border-r" />
                 <span>{product.title}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm empty:hidden">
-                {selectedVariant && (
-                  <SaleBadge
-                    price={selectedVariant.price as MoneyV2}
-                    compareAtPrice={selectedVariant.compareAtPrice as MoneyV2}
-                  />
-                )}
-                <NewBadge publishedAt={publishedAt} />
-                {isBestSellerProduct && <BestSellerBadge />}
-              </div>
+              <ProductBadges
+                product={product}
+                selectedVariant={selectedVariant}
+              />
               <div className="flex flex-col gap-2">
                 {showVendor && vendor && (
                   <span className="text-body-subtle">{vendor}</span>

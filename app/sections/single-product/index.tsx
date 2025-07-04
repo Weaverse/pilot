@@ -1,5 +1,4 @@
 import { Money, ShopPayButton } from "@shopify/hydrogen";
-import type { MoneyV2 } from "@shopify/hydrogen/customer-account-api-types";
 import {
   type ComponentLoaderArgs,
   createSchema,
@@ -16,12 +15,7 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import {
-  BestSellerBadge,
-  NewBadge,
-  SaleBadge,
-  SoldOutBadge,
-} from "~/components/product/badges";
+import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { VariantSelector } from "~/components/product/variant-selector";
@@ -118,9 +112,6 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       : selectedVariant?.quantityAvailable === -1
         ? "Unavailable"
         : "Sold Out";
-    const isBestSellerProduct = product.badges
-      .filter(Boolean)
-      .some(({ key, value }) => key === "best_seller" && value === "true");
 
     return (
       <Section ref={ref} {...rest}>
@@ -138,24 +129,10 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
               data-motion="slide-in"
             >
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-sm empty:hidden">
-                  {selectedVariant?.availableForSale ? (
-                    <>
-                      {selectedVariant && (
-                        <SaleBadge
-                          price={selectedVariant.price as MoneyV2}
-                          compareAtPrice={
-                            selectedVariant.compareAtPrice as MoneyV2
-                          }
-                        />
-                      )}
-                      <NewBadge publishedAt={product.publishedAt} />
-                      {isBestSellerProduct && <BestSellerBadge />}
-                    </>
-                  ) : (
-                    <SoldOutBadge />
-                  )}
-                </div>
+                <ProductBadges
+                  product={product}
+                  selectedVariant={selectedVariant}
+                />
                 <h3 data-motion="fade-up" className="tracking-tight">
                   {product?.title}
                 </h3>
