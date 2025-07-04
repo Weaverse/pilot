@@ -8,6 +8,6 @@ export function ProductTag({
   className?: string;
 }) {
   return (
-    <span className={clsx(["py-1.5 px-2 text-sm", className])}>{children}</span>
+    <span className={clsx(["px-2 py-1.5 text-sm", className])}>{children}</span>
   );
 }

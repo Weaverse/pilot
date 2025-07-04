@@ -12,7 +12,7 @@ export function Logo() {
     <Link
       to="/"
       prefetch="intent"
-      className="flex items-center justify-center w-full h-full lg:w-fit lg:h-fit z-30"
+      className="z-30 flex h-full w-full items-center justify-center lg:h-fit lg:w-fit"
     >
       <div
         className="relative h-full"
@@ -25,7 +25,7 @@ export function Logo() {
               sizes="auto"
               className={clsx(
                 "main-logo",
-                "max-w-full h-full object-contain mx-auto",
+                "mx-auto h-full max-w-full object-contain",
                 "transition-opacity duration-300 ease-in group-hover/header:opacity-100",
               )}
               width={500}
@@ -37,7 +37,7 @@ export function Logo() {
                 sizes="auto"
                 className={clsx(
                   "transparent-logo",
-                  "absolute top-0 left-0 max-w-full h-full object-contain mx-auto",
+                  "absolute top-0 left-0 mx-auto h-full max-w-full object-contain",
                   "transition-opacity duration-300 ease-in group-hover/header:opacity-0",
                 )}
                 width={500}
@@ -46,7 +46,7 @@ export function Logo() {
             )}
           </>
         ) : (
-          <div className="text-lg sm:text-2xl font-medium line-clamp-1">
+          <div className="line-clamp-1 font-medium text-lg sm:text-2xl">
             {shopName}
           </div>
         )}

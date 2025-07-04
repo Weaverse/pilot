@@ -26,20 +26,20 @@ export function PredictiveSearchButton() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         asChild
-        className="hidden lg:flex h-8 w-8 items-center justify-center focus-visible:outline-hidden"
+        className="hidden h-8 w-8 items-center justify-center focus-visible:outline-hidden lg:flex"
       >
         <button type="button">
-          <MagnifyingGlassIcon className="w-5 h-5" />
+          <MagnifyingGlassIcon className="h-5 w-5" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 bg-black/50 data-[state=open]:animate-fade-in z-10"
+          className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in"
           style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
         />
         <Dialog.Content
           className={cn([
-            "fixed inset-x-0 top-0 bg-(--color-header-bg) z-10",
+            "fixed inset-x-0 top-0 z-10 bg-(--color-header-bg)",
             "-translate-y-full data-[state=open]:translate-y-0",
             "data-[state=open]:animate-enter-from-top",
             "focus-visible:outline-hidden",
@@ -55,7 +55,7 @@ export function PredictiveSearchButton() {
           <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
-                <div className="flex items-center gap-3 w-[560px] max-w-[90vw] mx-auto px-3 my-6 border border-line-subtle">
+                <div className="mx-auto my-6 flex w-[560px] max-w-[90vw] items-center gap-3 border border-line-subtle px-3">
                   <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                   <input
                     name="q"
@@ -65,11 +65,11 @@ export function PredictiveSearchButton() {
                     placeholder="Enter a keyword"
                     ref={inputRef}
                     autoComplete="off"
-                    className="focus-visible:outline-hidden w-full h-full py-4"
+                    className="h-full w-full py-4 focus-visible:outline-hidden"
                   />
                   <button
                     type="button"
-                    className="shrink-0 text-gray-500 p-1"
+                    className="shrink-0 p-1 text-gray-500"
                     onClick={() => {
                       if (inputRef.current) {
                         inputRef.current.value = "";
@@ -77,7 +77,7 @@ export function PredictiveSearchButton() {
                       }
                     }}
                   >
-                    <XIcon className="w-5 h-5" />
+                    <XIcon className="h-5 w-5" />
                   </button>
                 </div>
               )}
@@ -104,8 +104,8 @@ function PredictiveSearchResults() {
     );
   }
   return (
-    <div className="absolute left-1/2 top-full z-10 flex w-fit -translate-x-1/2 items-center justify-center">
-      <div className="grid w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 bg-(--color-header-bg) p-6 lg:grid-cols-[1fr_2fr] max-h-[80vh] overflow-y-auto">
+    <div className="-translate-x-1/2 absolute top-full left-1/2 z-10 flex w-fit items-center justify-center">
+      <div className="grid max-h-[80vh] w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 overflow-y-auto bg-(--color-header-bg) p-6 lg:grid-cols-[1fr_2fr]">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-line">
             <PredictiveSearchResult type="queries" items={queries?.items} />
@@ -124,10 +124,10 @@ function PredictiveSearchResults() {
               <Link
                 to={`/search?q=${searchTerm.current}`}
                 variant="underline"
-                className="flex items-center gap-2 w-fit"
+                className="flex w-fit items-center gap-2"
               >
                 <span>View all results</span>
-                <ArrowRightIcon className="w-4 h-4" />
+                <ArrowRightIcon className="h-4 w-4" />
               </Link>
             </div>
           )}
@@ -142,7 +142,7 @@ function NoResults({ searchTerm }: { searchTerm: MutableRefObject<string> }) {
     return null;
   }
   return (
-    <p className="w-[640px] shadow-header bg-background p-6">
+    <p className="w-[640px] bg-background p-6 shadow-header">
       No results found for <q>{searchTerm.current}</q>
     </p>
   );

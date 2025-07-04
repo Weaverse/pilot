@@ -4,8 +4,6 @@ import * as Link from "~/components/link";
 import * as Paragraph from "~/components/paragraph";
 import * as Judgeme from "~/components/product/judgeme-review";
 import * as SubHeading from "~/components/subheading";
-// import * as AliReview from "~/sections/ali-reviews";
-// import * as AliReviewList from "~/sections/ali-reviews/review-list";
 import * as AllProducts from "~/sections/all-products";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
@@ -33,13 +31,13 @@ import * as ImageWithTextContent from "~/sections/image-with-text/content";
 import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as JudgemeReview from "~/sections/judgeme-reviews";
 import * as ReviewIndex from "~/sections/judgeme-reviews/review-index";
+import * as MainProduct from "~/sections/main-product";
 import * as MapSection from "~/sections/map";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
 import * as OurTeam from "~/sections/our-team";
 import * as OurTeamMembers from "~/sections/our-team/team-members";
 import * as Page from "~/sections/page";
-import * as ProductInformation from "~/sections/product-information";
 import * as PromotionGrid from "~/sections/promotion-grid";
 import * as PromotionGridButtons from "~/sections/promotion-grid/buttons";
 import * as PromotionGridItem from "~/sections/promotion-grid/item";
@@ -99,7 +97,7 @@ export const components: HydrogenComponent[] = [
   ImageGallery,
   ImageGalleryItems,
   ImageGalleryItem,
-  ProductInformation,
+  MainProduct,
   RelatedProducts,
   RelatedArticles,
   CollectionFilters,

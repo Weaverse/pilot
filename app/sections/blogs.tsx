@@ -8,7 +8,7 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { RevealUnderline } from "~/reveal-underline";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
-import { getImageAspectRatio, getImageLoadingPriority } from "~/utils/image";
+import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
 
 interface BlogsProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
@@ -34,7 +34,7 @@ const Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
     return (
       <Section ref={ref} {...rest}>
         <h4 className="text-center font-medium">{blog.title}</h4>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-4 gap-y-12">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-12 lg:grid-cols-3">
           {articles.map((article, i) => (
             <ArticleCard
               key={article.id}
@@ -88,7 +88,7 @@ export function ArticleCard({
           <Image
             alt={article.image.altText || article.title}
             data={article.image}
-            aspectRatio={getImageAspectRatio(article.image, imageAspectRatio)}
+            aspectRatio={calculateAspectRatio(article.image, imageAspectRatio)}
             loading={loading}
             sizes="(min-width: 768px) 50vw, 100vw"
           />
@@ -103,13 +103,13 @@ export function ArticleCard({
             {article.title}
           </RevealUnderline>
         </Link>
-        <div className="flex items-center gap-2 empty:hidden text-gray-600">
+        <div className="flex items-center gap-2 text-gray-600 empty:hidden">
           {showDate && <span className="block">{article.publishedAt}</span>}
           {showDate && showAuthor && <span>•</span>}
           {showAuthor && <span className="block">{article.author?.name}</span>}
         </div>
         {showExcerpt && (
-          <div className="line-clamp-2 lg:line-clamp-4 text-gray-700">
+          <div className="line-clamp-2 text-gray-700 lg:line-clamp-4">
             {article.excerpt}
           </div>
         )}

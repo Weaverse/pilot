@@ -81,14 +81,14 @@ export function PriceRangeFilter({
               thumbRef.current = s;
             }}
             className={clsx(
-              "block h-4 w-4 bg-gray-800 cursor-grab rounded-full shadow-md",
+              "block h-4 w-4 cursor-grab rounded-full bg-gray-800 shadow-md",
               "focus-visible:outline-hidden",
             )}
           />
         ))}
       </Slider.Root>
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1 px-4 border border-line-subtle bg-gray-50 shrink">
+        <div className="flex shrink items-center gap-1 border border-line-subtle bg-gray-50 px-4">
           <VisuallyHidden.Root asChild>
             <label htmlFor="minPrice" aria-label="Min price">
               Min price
@@ -109,11 +109,11 @@ export function PriceRangeFilter({
               setMinPrice(newMinPrice);
             }}
             onBlur={handleFilter}
-            className="text-right focus-visible:outline-hidden py-3 bg-transparent w-full"
+            className="w-full bg-transparent py-3 text-right focus-visible:outline-hidden"
           />
         </div>
         <span>To</span>
-        <div className="flex items-center gap-1 px-4 border border-line-subtle bg-gray-50">
+        <div className="flex items-center gap-1 border border-line-subtle bg-gray-50 px-4">
           <VisuallyHidden.Root asChild>
             <label htmlFor="maxPrice" aria-label="Max price">
               Max price
@@ -134,7 +134,7 @@ export function PriceRangeFilter({
               setMaxPrice(newMaxPrice);
             }}
             onBlur={handleFilter}
-            className="text-right focus-visible:outline-hidden py-3 bg-transparent w-full"
+            className="w-full bg-transparent py-3 text-right focus-visible:outline-hidden"
           />
         </div>
       </div>

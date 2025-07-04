@@ -45,7 +45,7 @@ const RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
                 showDate={showDate}
                 showReadmore={showReadmore}
                 imageAspectRatio={imageAspectRatio}
-                className="snap-start w-80"
+                className="w-80 snap-start"
               />
             ))}
           </Swimlane>

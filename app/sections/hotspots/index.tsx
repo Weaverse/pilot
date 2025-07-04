@@ -10,7 +10,7 @@ import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
 import type { ImageAspectRatio } from "~/types/image";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
 
 interface HotspotsProps
   extends Omit<SectionProps, "content">,
@@ -67,7 +67,7 @@ const Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
       )}
       <div
         className="relative"
-        style={{ aspectRatio: getImageAspectRatio(imageData, aspectRatio) }}
+        style={{ aspectRatio: calculateAspectRatio(imageData, aspectRatio) }}
       >
         <Image
           data={imageData}

@@ -39,7 +39,7 @@ export function ScrollingAnnouncement() {
   return (
     <div
       id="announcement-bar"
-      className="text-center relative flex items-center whitespace-nowrap overflow-hidden"
+      className="relative flex items-center overflow-hidden whitespace-nowrap text-center"
       style={
         {
           height: `${topbarHeight}px`,
@@ -54,7 +54,7 @@ export function ScrollingAnnouncement() {
         return (
           <div className="animate-marquee px-[calc(var(--gap)/2)]" key={idx}>
             <div
-              className="flex items-center gap-(--gap) whitespace-nowrap [&_p]:flex [&_p]:gap-2 [&_p]:items-center"
+              className="flex items-center gap-(--gap) whitespace-nowrap [&_p]:flex [&_p]:items-center [&_p]:gap-2"
               dangerouslySetInnerHTML={{ __html: topbarText }}
             />
           </div>

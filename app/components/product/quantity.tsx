@@ -19,12 +19,12 @@ export function Quantity(props: QuantityProps) {
   return (
     <div className="space-y-1.5" data-motion="fade-up">
       <legend className="font-bold leading-tight">Quantity</legend>
-      <div className="border border-line w-fit">
+      <div className="w-fit border border-line">
         <button
           type="button"
           name="decrease-quantity"
           aria-label="Decrease quantity"
-          className="w-10 h-10 transition "
+          className="h-10 w-10 transition "
           disabled={value <= 1}
           onClick={() => onChange(value - 1)}
         >
@@ -38,7 +38,7 @@ export function Quantity(props: QuantityProps) {
         />
         <button
           type="button"
-          className="w-10 h-10 transition text-body hover:text-body"
+          className="h-10 w-10 text-body transition hover:text-body"
           name="increase-quantity"
           aria-label="Increase quantity"
           onClick={() => onChange(value + 1)}

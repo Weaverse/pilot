@@ -36,8 +36,8 @@ export const schema = createSchema({
       },
       {
         type: "collections-items",
-        prevButtonText: "Previous",
-        nextButtonText: "Next",
+        prevButtonText: "↑ Load previous",
+        nextButtonText: "Load more ↓",
         imageAspectRatio: "adapt",
         enableOverlay: true,
         overlayColor: "#000",

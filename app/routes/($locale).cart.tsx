@@ -97,7 +97,7 @@ export default function CartRoute() {
 
   return (
     <>
-      <div className="px-3 md:px-10 lg:px-16 py-6 md:py-20 space-y-6 md:space-y-12">
+      <div className="space-y-6 px-3 py-6 md:space-y-12 md:px-10 md:py-20 lg:px-16">
         <h3 className="text-center">Cart</h3>
         <Await resolve={rootData?.cart}>
           {(cart) => <Cart layout="page" cart={cart as CartApiQueryFragment} />}

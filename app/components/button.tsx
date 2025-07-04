@@ -7,8 +7,8 @@ import { cn } from "~/utils/cn";
 
 export const variants = cva(
   [
-    "inline-flex items-center justify-center rounded-none relative",
-    "text-base leading-tight font-normal whitespace-nowrap",
+    "relative inline-flex items-center justify-center rounded-none",
+    "whitespace-nowrap font-normal text-base leading-tight",
     "focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50!",
     "transition-colors",
   ],
@@ -53,8 +53,8 @@ export const variants = cva(
         ],
         underline: [
           "bg-transparent pb-1 text-body",
-          "after:bg-body after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px",
-          "after:scale-x-100 after:transition-transform after:origin-right",
+          "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
+          "after:origin-right after:scale-x-100 after:transition-transform",
           "hover:after:origin-left hover:after:animate-underline-toggle",
         ],
       },
@@ -150,10 +150,10 @@ function Spinner() {
   const style = { "--duration": "500ms" } as React.CSSProperties;
   return (
     <span
-      className="[&~*]:invisible absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 [&~*]:invisible"
       style={style}
     >
-      <CircleNotchIcon className="animate-spin w-5 h-5" />
+      <CircleNotchIcon className="h-5 w-5 animate-spin" />
     </span>
   );
 }

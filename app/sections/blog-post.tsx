@@ -47,7 +47,7 @@ const BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
             <Image data={image} sizes="90vw" />
           </div>
         )}
-        <div className="space-y-5 py-4 lg:py-16 text-center">
+        <div className="space-y-5 py-4 text-center lg:py-16">
           <div className="text-body-subtle">{formattedDate}</div>
           <h1 className="h3 leading-tight!">{title}</h1>
           {author?.name && (
@@ -56,15 +56,15 @@ const BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
             </div>
           )}
         </div>
-        <div className="border-t border-line-subtle w-1/3 mx-auto" />
-        <article className="prose lg:max-w-4xl mx-auto py-4 lg:py-10">
+        <div className="mx-auto w-1/3 border-line-subtle border-t" />
+        <article className="prose mx-auto py-4 lg:max-w-4xl lg:py-10">
           <div className="mx-auto space-y-8 md:space-y-16">
             <div
               suppressHydrationWarning
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
-            <div className="border-t border-line-subtle w-1/3 mx-auto" />
-            <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+            <div className="mx-auto w-1/3 border-line-subtle border-t" />
+            <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
               {showTags && (
                 <div>
                   <strong>Tags:</strong>
@@ -72,7 +72,7 @@ const BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
                 </div>
               )}
               {showShareButtons && (
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                   <strong>Share:</strong>
                   <FacebookShareButton url={articleUrl}>
                     <FacebookLogoIcon size={24} />

@@ -3,6 +3,11 @@ import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { clsx } from "clsx";
 import { colord } from "colord";
+import type {
+  ProductQuery,
+  ProductVariantFragment,
+} from "storefront-api.generated";
+import { cn } from "~/utils/cn";
 
 function Badge({
   text,
@@ -23,7 +28,7 @@ function Badge({
         borderRadius: `${badgeBorderRadius}px`,
         textTransform: badgeTextTransform,
       }}
-      className={clsx("px-1.5 py-1 uppercase text-sm", className)}
+      className={clsx("px-1.5 py-1 text-sm uppercase", className)}
     >
       {text}
     </span>
@@ -120,5 +125,43 @@ function isNewArrival(date: string, daysOld = 30) {
   return (
     new Date(date).valueOf() >
     new Date().setDate(new Date().getDate() - daysOld).valueOf()
+  );
+}
+
+export function ProductBadges({
+  product,
+  selectedVariant,
+  className = "",
+}: {
+  product: NonNullable<ProductQuery["product"]>;
+  selectedVariant: ProductVariantFragment;
+  className?: string;
+}) {
+  if (!product || !selectedVariant) {
+    return null;
+  }
+
+  const { publishedAt, badges } = product;
+  const isBestSellerProduct = badges
+    .filter(Boolean)
+    .some(({ key, value }) => key === "best_seller" && value === "true");
+
+  return (
+    <div
+      className={cn("flex items-center gap-2 text-sm empty:hidden", className)}
+    >
+      {selectedVariant.availableForSale ? (
+        <>
+          <SaleBadge
+            price={selectedVariant.price as MoneyV2}
+            compareAtPrice={selectedVariant.compareAtPrice as MoneyV2}
+          />
+          <NewBadge publishedAt={publishedAt} />
+          {isBestSellerProduct && <BestSellerBadge />}
+        </>
+      ) : (
+        <SoldOutBadge />
+      )}
+    </div>
   );
 }

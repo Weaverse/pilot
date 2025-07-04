@@ -51,19 +51,19 @@ const ReviewList = forwardRef<
       <div
         ref={ref}
         {...rest}
-        className="md:flex md:gap-16 space-y-8 md:space-y-0"
+        className="space-y-8 md:flex md:gap-16 md:space-y-0"
       >
-        <div className="my-6 space-y-6 md:my-8 shrink-0" data-motion="slide-in">
-          <div className="shrink-0 flex gap-4">
+        <div className="my-6 shrink-0 space-y-6 md:my-8" data-motion="slide-in">
+          <div className="flex shrink-0 gap-4">
             {showAvgRating && (
-              <div className="text-6xl font-bold leading-none">
+              <div className="font-bold text-6xl leading-none">
                 {avgRating.toFixed(1)}
               </div>
             )}
-            <div className="flex flex-col gap-1.5 justify-center">
+            <div className="flex flex-col justify-center gap-1.5">
               <StarRating rating={avgRating} />
               {showReviewsCount && (
-                <div className="text-sm font-medium leading-none text-gray-500">
+                <div className="font-medium text-gray-500 text-sm leading-none">
                   {totalReviews} reviews
                 </div>
               )}
@@ -84,7 +84,7 @@ const ReviewList = forwardRef<
           )}
         </div>
         <div
-          className="mt-6 divide-y divide-gray-200 grow"
+          className="mt-6 grow divide-y divide-gray-200"
           data-motion="slide-in"
         >
           {reviewsToRender.map((review) => (

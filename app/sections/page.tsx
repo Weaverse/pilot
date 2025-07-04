@@ -13,8 +13,8 @@ const Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
   if (page) {
     return (
       <Section ref={ref} {...props}>
-        <div className="flex items-center justify-center gap-2 text-body-subtle mb-4">
-          <Link to="/" className="hover:underline underline-offset-4">
+        <div className="mb-4 flex items-center justify-center gap-2 text-body-subtle">
+          <Link to="/" className="underline-offset-4 hover:underline">
             Home
           </Link>
           <span>/</span>
@@ -22,11 +22,11 @@ const Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
           <span>/</span>
           <span>{page.title}</span>
         </div>
-        <h1 className="h2 text-center mb-8 md:mb-16">{page.title}</h1>
+        <h1 className="h2 mb-8 text-center md:mb-16">{page.title}</h1>
         <div
           suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: page.body }}
-          className="prose max-w-3xl mx-auto border-t border-line-subtle"
+          className="prose mx-auto max-w-3xl border-line-subtle border-t"
         />
       </Section>
     );

@@ -42,7 +42,7 @@ const CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
             nextPageUrl,
             previousPageUrl,
           }) => (
-            <div className="flex w-full flex-col gap-8 items-center">
+            <div className="flex w-full flex-col items-center gap-8">
               {hasPreviousPage && (
                 <Link
                   to={previousPageUrl}
@@ -52,7 +52,7 @@ const CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
                   {isLoading ? "Loading..." : prevButtonText}
                 </Link>
               )}
-              <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-8 lg:gap-y-12">
+              <div className="grid w-full grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-2 lg:gap-y-12 xl:grid-cols-3">
                 {nodes.map((collection, i) => (
                   <CollectionCard
                     key={collection.id}

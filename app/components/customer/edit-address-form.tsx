@@ -36,7 +36,7 @@ export function AccountEditAddressForm() {
 
   return (
     <div className="space-y-2">
-      <div className="text-xl py-2.5">
+      <div className="py-2.5 text-xl">
         {isNewAddress ? "Add new address" : "Edit address"}
       </div>
       <Form method="post" className="space-y-3">
@@ -46,12 +46,12 @@ export function AccountEditAddressForm() {
           value={address?.id ?? addressId}
         />
         {actionData?.formError && (
-          <div className="flex items-center justify-center bg-red-100 text-red-900 p-3">
+          <div className="flex items-center justify-center bg-red-100 p-3 text-red-900">
             {actionData.formError}
           </div>
         )}
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="firstName"
           name="firstName"
           required
@@ -62,7 +62,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.firstName ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="lastName"
           name="lastName"
           required
@@ -73,7 +73,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.lastName ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="company"
           name="company"
           type="text"
@@ -83,7 +83,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.company ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="address1"
           name="address1"
           type="text"
@@ -94,7 +94,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.address1 ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="address2"
           name="address2"
           type="text"
@@ -104,7 +104,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.address2 ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="city"
           name="city"
           type="text"
@@ -115,7 +115,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.city ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="zoneCode"
           name="zoneCode"
           type="text"
@@ -126,7 +126,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.zoneCode ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="zip"
           name="zip"
           type="text"
@@ -137,7 +137,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.zip ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="territoryCode"
           name="territoryCode"
           type="text"
@@ -148,7 +148,7 @@ export function AccountEditAddressForm() {
           defaultValue={address?.territoryCode ?? ""}
         />
         <input
-          className="appearance-none border border-line p-3 focus:outline-hidden w-full"
+          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
           id="phone"
           name="phoneNumber"
           type="tel"
@@ -163,22 +163,22 @@ export function AccountEditAddressForm() {
             id="defaultAddress"
             defaultChecked={defaultAddress?.id === address?.id}
             className={clsx(
-              "w-5 h-5 shrink-0",
+              "h-5 w-5 shrink-0",
               "border border-line focus-visible:outline-hidden",
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}
           >
             <Checkbox.Indicator className="flex items-center justify-center text-current">
-              <CheckIcon className="w-4 h-4" weight="regular" />
+              <CheckIcon className="h-4 w-4" weight="regular" />
             </Checkbox.Indicator>
           </Checkbox.Root>
           <label htmlFor="defaultAddress">Set as default address</label>
         </div>
-        <div className="flex gap-6 items-center justify-end">
+        <div className="flex items-center justify-end gap-6">
           <Dialog.Close asChild>
             <Link
               to="/account/address"
-              className="hover:underline underline-offset-4"
+              className="underline-offset-4 hover:underline"
             >
               Cancel
             </Link>

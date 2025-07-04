@@ -3,7 +3,7 @@ import type { InspectorGroup, WeaverseImage } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 
-const variants = cva("absolute inset-0 w-full h-full z-[-1]", {
+const variants = cva("absolute inset-0 z-[-1] h-full w-full", {
   variants: {
     backgroundFit: {
       fill: "object-fill",

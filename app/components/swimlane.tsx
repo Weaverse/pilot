@@ -10,9 +10,9 @@ export function Swimlane({
   return (
     <div
       className={cn([
-        "grid grid-flow-col gap-4 w-full justify-start",
+        "grid w-full grid-flow-col justify-start gap-4",
         "snap-x snap-mandatory",
-        "scroll-px-6 overflow-x-scroll hidden-scroll",
+        "hidden-scroll scroll-px-6 overflow-x-scroll",
         className,
       ])}
     >

@@ -14,7 +14,7 @@ import {
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 
-const variants = cva(["transition-colors inline-flex"], {
+const variants = cva(["inline-flex transition-colors"], {
   variants: {
     variant: {
       primary: [
@@ -55,8 +55,8 @@ const variants = cva(["transition-colors inline-flex"], {
       ],
       underline: [
         "relative bg-transparent pb-1 text-body",
-        "after:bg-body after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px",
-        "after:scale-x-100 after:transition-transform after:origin-right",
+        "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
+        "after:origin-right after:scale-x-100 after:transition-transform",
         "hover:after:origin-left hover:after:animate-underline-toggle",
       ],
     },

@@ -61,7 +61,7 @@ const HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(
       <div
         ref={ref}
         {...rest}
-        className="absolute -translate-x-1/2 -translate-y-1/2 hover:z-1"
+        className="-translate-x-1/2 -translate-y-1/2 absolute hover:z-1"
         style={
           {
             top: `${offsetY}%`,
@@ -74,10 +74,10 @@ const HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(
       >
         <div className="relative flex cursor-pointer">
           <span
-            className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-700 opacity-75"
+            className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gray-700 opacity-75"
             style={{ animationDuration: "1500ms" }}
           />
-          <span className="relative inline-flex rounded-full p-2 bg-white group">
+          <span className="group relative inline-flex rounded-full bg-white p-2">
             <Icon style={{ width: iconSize, height: iconSize }} />
             <ProductPopup
               product={loaderData?.product}

@@ -40,9 +40,9 @@ export function ProductsPagination({
   const { ref, inView } = useInView();
 
   return (
-    <div className="space-y-6 grow">
+    <div className="grow space-y-6">
       {appliedFilters.length > 0 ? (
-        <div className="flex items-center flex-wrap gap-6">
+        <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-2">
             {appliedFilters.map((filter: AppliedFilter) => {
               const { label } = filter;
@@ -50,12 +50,12 @@ export function ProductsPagination({
                 <Link
                   key={label}
                   to={getAppliedFilterLink(filter, params, location)}
-                  className="px-2 py-1 border border-line-subtle hover:border-line items-center gap-2"
+                  className="items-center gap-2 border border-line-subtle px-2 py-1 hover:border-line"
                   variant="custom"
                   preventScrollReset
                 >
                   <span>{label}</span>
-                  <XIcon className="w-4 h-4" />
+                  <XIcon className="h-4 w-4" />
                 </Link>
               );
             })}
@@ -84,7 +84,7 @@ export function ProductsPagination({
             state,
           }) => (
             <div
-              className="flex w-full flex-col gap-8 items-center"
+              className="flex w-full flex-col items-center gap-8"
               style={
                 {
                   "--cols-mobile": `repeat(${mobileCols}, minmax(0, 1fr))`,
@@ -122,7 +122,7 @@ export function ProductsPagination({
           )}
         </Pagination>
       ) : (
-        <div className="gap-3 pt-20 flex justify-center items-center flex-col">
+        <div className="flex flex-col items-center justify-center gap-3 pt-20">
           <FunnelXIcon size={50} weight="light" />
           <div className="text-lg">No products matched your filters.</div>
         </div>

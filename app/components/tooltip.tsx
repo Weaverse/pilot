@@ -30,7 +30,7 @@ export const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         ref={ref}
         className={cn(
           "animate-slide-up",
-          "z-50 px-3 py-1 shadow-xs text-background bg-body",
+          "z-50 bg-body px-3 py-1 text-background shadow-xs",
           className,
         )}
         align="center"
@@ -47,7 +47,7 @@ export const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         {...rest}
       >
         <Arrow asChild>
-          <span className="border-x-6 border-t-6 border-x-transparent border-t-body" />
+          <span className="border-x-6 border-x-transparent border-t-6 border-t-body" />
         </Arrow>
         {children}
       </Content>

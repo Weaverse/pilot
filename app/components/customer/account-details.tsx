@@ -11,7 +11,7 @@ export function AccountDetails({
   return (
     <div className="space-y-4">
       <div className="font-bold">Account</div>
-      <div className="p-5 border border-line-subtle space-y-4">
+      <div className="space-y-4 border border-line-subtle p-5">
         <div className="space-y-1">
           <div className="text-body-subtle">Name</div>
           <div>{fullName || "N/A"}</div>

@@ -107,9 +107,9 @@ const Slideshow = forwardRef<
             el: ".slideshow-dots",
             clickable: true,
             bulletClass: clsx(
-              "dot rounded-full cursor-pointer",
-              "w-2.5 h-2.5 p-0",
-              "outline-solid outline-offset-3 outline-2 outline-transparent",
+              "dot cursor-pointer rounded-full",
+              "h-2.5 w-2.5 p-0",
+              "outline-2 outline-solid outline-transparent outline-offset-3",
               "transition-all duration-200",
             ),
             bulletActiveClass: "active",

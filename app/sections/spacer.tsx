@@ -23,7 +23,7 @@ const Spacer = forwardRef<HTMLDivElement, SpacerData & HydrogenComponentProps>(
       <div
         ref={ref}
         {...rest}
-        className="w-full flex items-center justify-center h-(--mobile-height) md:h-(--desktop-height)"
+        className="flex h-(--mobile-height) w-full items-center justify-center md:h-(--desktop-height)"
         style={
           {
             backgroundColor,
@@ -34,7 +34,7 @@ const Spacer = forwardRef<HTMLDivElement, SpacerData & HydrogenComponentProps>(
         }
       >
         {addSeparator && (
-          <div className="w-3/4 md:w-2/3 mx-auto border-t h-px border-(--separator-color,var(--color-border))" />
+          <div className="mx-auto h-px w-3/4 border-(--separator-color,var(--color-border)) border-t md:w-2/3" />
         )}
       </div>
     );

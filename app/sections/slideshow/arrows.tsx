@@ -13,16 +13,16 @@ import { useSwiper } from "swiper/react";
 const variants = cva(
   [
     "hidden md:block",
-    "absolute top-1/2 -translate-y-1/2 z-1",
-    "p-2 text-center cursor-pointer",
+    "-translate-y-1/2 absolute top-1/2 z-1",
+    "cursor-pointer p-2 text-center",
     "border border-transparent",
     "transition-all duration-200",
   ],
   {
     variants: {
       arrowsColor: {
-        light: "text-gray-900 bg-white hover:bg-gray-100",
-        dark: "text-gray-100 bg-gray-900 hover:bg-gray-800",
+        light: "bg-white text-gray-900 hover:bg-gray-100",
+        dark: "bg-gray-900 text-gray-100 hover:bg-gray-800",
       },
       arrowsShape: {
         square: "",
@@ -30,7 +30,7 @@ const variants = cva(
         circle: "rounded-full",
       },
       disabled: {
-        true: "opacity-75 cursor-not-allowed",
+        true: "cursor-not-allowed opacity-75",
         false: "",
       },
       showArrowsOnHover: { true: "", false: "" },

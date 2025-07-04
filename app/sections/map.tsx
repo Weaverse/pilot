@@ -73,12 +73,12 @@ const MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
       )}
     >
       <iframe
-        className="w-full h-full object-cover absolute inset-0 z-[-1]"
+        className="absolute inset-0 z-[-1] h-full w-full object-cover"
         title="Google map embedded frame"
         src={`https://maps.google.com/maps?t=m&q=${address}&ie=UTF8&&output=embed`}
       />
       <div
-        className="w-80 max-w-full shadow-2xl p-8 space-y-3 md:space-y-6"
+        className="w-80 max-w-full space-y-3 p-8 shadow-2xl md:space-y-6"
         style={{
           backgroundColor: boxBgColor,
           color: boxTextColor,

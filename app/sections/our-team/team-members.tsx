@@ -34,7 +34,7 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
         <div
           ref={ref}
           {...props}
-          className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2 pt-4"
+          className="mb-6 grid gap-8 pt-4 md:grid-cols-2 lg:mb-16"
         >
           {members.map(({ id, fields }) => {
             const member: Partial<MemberType> = {};
@@ -57,13 +57,13 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                   <Image
                     data={avatar}
                     sizes="auto"
-                    className="w-full h-auto sm:w-48 sm:h-48"
+                    className="h-auto w-full sm:h-48 sm:w-48"
                     aspectRatio="1/1"
                     width={500}
                   />
                 )}
                 <div className="p-5">
-                  <div className="text-xl font-semibold tracking-tight">
+                  <div className="font-semibold text-xl tracking-tight">
                     {name}
                   </div>
                   <span className="text-gray-600">{title}</span>
@@ -78,7 +78,7 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <LinkedinLogoIcon className="w-6 h-6" />
+                          <LinkedinLogoIcon className="h-6 w-6" />
                         </Link>
                       </li>
                     )}
@@ -89,7 +89,7 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <GithubLogoIcon className="w-6 h-6" />
+                          <GithubLogoIcon className="h-6 w-6" />
                         </Link>
                       </li>
                     )}
@@ -100,7 +100,7 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
                           target="_blank"
                           className="text-gray-500 hover:text-gray-900"
                         >
-                          <XLogoIcon className="w-6 h-6" />
+                          <XLogoIcon className="h-6 w-6" />
                         </Link>
                       </li>
                     )}

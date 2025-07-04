@@ -23,14 +23,14 @@ import { PredictiveSearchButton } from "./predictive-search";
 const variants = cva("", {
   variants: {
     width: {
-      full: "w-full h-full",
-      stretch: "w-full h-full",
-      fixed: "w-full h-full max-w-(--page-width) mx-auto",
+      full: "h-full w-full",
+      stretch: "h-full w-full",
+      fixed: "mx-auto h-full w-full max-w-(--page-width)",
     },
     padding: {
       full: "",
       stretch: "px-3 md:px-10 lg:px-16",
-      fixed: "px-3 md:px-4 lg:px-6 mx-auto",
+      fixed: "mx-auto px-3 md:px-4 lg:px-6",
     },
   },
 });
@@ -55,22 +55,22 @@ export function Header() {
   return (
     <header
       className={cn(
-        "w-full z-10",
+        "z-10 w-full",
         "transition-all duration-300 ease-in-out",
         "bg-(--color-header-bg) hover:bg-(--color-header-bg)",
         "text-(--color-header-text) hover:text-(--color-header-text)",
-        "border-b border-line-subtle",
+        "border-line-subtle border-b",
         variants({ padding: headerWidth }),
         scrolled ? "shadow-header" : "shadow-none",
         enableTransparent
           ? [
-              "fixed w-screen group/header",
+              "group/header fixed w-screen",
               "top-(--topbar-height,var(--initial-topbar-height))",
             ]
           : "sticky top-0",
         isTransparent
           ? [
-              "bg-transparent border-transparent",
+              "border-transparent bg-transparent",
               "text-(--color-transparent-header-text)",
               "[&_.cart-count]:text-(--color-header-text)",
               "[&_.cart-count]:bg-(--color-transparent-header-text)",
@@ -89,19 +89,19 @@ export function Header() {
     >
       <div
         className={cn(
-          "h-(--height-nav) py-1.5 lg:py-3 flex items-center justify-between gap-2 lg:gap-8",
+          "flex h-(--height-nav) items-center justify-between gap-2 py-1.5 lg:gap-8 lg:py-3",
           variants({ width: headerWidth }),
         )}
       >
         <MobileMenu />
         <Link to="/search" className="p-1.5 lg:hidden">
-          <MagnifyingGlassIcon className="w-5 h-5" />
+          <MagnifyingGlassIcon className="h-5 w-5" />
         </Link>
         <Logo />
         <DesktopMenu />
-        <div className="flex items-center gap-1 z-1">
+        <div className="z-1 flex items-center gap-1">
           <PredictiveSearchButton />
-          <AccountLink className="relative flex items-center justify-center w-8 h-8" />
+          <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
           <CartDrawer />
         </div>
       </div>
@@ -115,16 +115,16 @@ function AccountLink({ className }: { className?: string }) {
 
   return (
     <Link to="/account" className={clsx("transition-none", className)}>
-      <Suspense fallback={<UserIcon className="w-5 h-5" />}>
+      <Suspense fallback={<UserIcon className="h-5 w-5" />}>
         <Await
           resolve={isLoggedIn}
-          errorElement={<UserIcon className="w-5 h-5" />}
+          errorElement={<UserIcon className="h-5 w-5" />}
         >
           {(isLoggedIn) =>
             isLoggedIn ? (
-              <UserIcon className="w-5 h-5" />
+              <UserIcon className="h-5 w-5" />
             ) : (
-              <UserIcon className="w-5 h-5" />
+              <UserIcon className="h-5 w-5" />
             )
           }
         </Await>

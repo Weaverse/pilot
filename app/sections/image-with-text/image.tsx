@@ -11,7 +11,7 @@ import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
 
-const variants = cva("w-full h-auto", {
+const variants = cva("h-auto w-full", {
   variants: {
     width: {
       small: "md:w-[40%]",
@@ -85,7 +85,7 @@ const ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
           data-motion="slide-in"
           sizes="auto"
           aspectRatio={aspRt}
-          className={cn("w-full h-auto", variants({ objectFit, borderRadius }))}
+          className={cn("h-auto w-full", variants({ objectFit, borderRadius }))}
         />
       </div>
     );

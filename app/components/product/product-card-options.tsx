@@ -17,10 +17,12 @@ export function ProductCardOptions({
   product,
   selectedVariant,
   setSelectedVariant,
+  className,
 }: {
   product: ProductCardFragment;
   selectedVariant: ProductVariantFragment;
   setSelectedVariant: (variant: ProductVariantFragment) => void;
+  className?: string;
 }) {
   const { pcardShowOptionValues, pcardOptionToShow, pcardMaxOptionValues } =
     useThemeSettings();
@@ -42,7 +44,7 @@ export function ProductCardOptions({
   const asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
 
   return (
-    <div className="flex flex-wrap items-center gap-1 pt-1">
+    <div className={cn("flex flex-wrap items-center gap-1 pt-1", className)}>
       {optionValues
         .slice(0, pcardMaxOptionValues)
         .map(({ name, swatch, firstSelectableVariant }) => {
@@ -54,9 +56,9 @@ export function ProductCardOptions({
                   <button
                     type="button"
                     className={cn(
-                      "size-4.5 flex aspect-square rounded-full",
-                      "transition-all border border-transparent",
-                      selectedValue === name ? "p-0.5 border-gray-800" : "p-0",
+                      "flex aspect-square size-4.5 rounded-full",
+                      "border border-transparent transition-all",
+                      selectedValue === name ? "border-gray-800 p-0.5" : "p-0",
                     )}
                     onClick={() => {
                       setSelectedVariant(firstSelectableVariant);
@@ -65,14 +67,14 @@ export function ProductCardOptions({
                     {swatch?.image?.previewImage ? (
                       <Image
                         data={swatch.image.previewImage}
-                        className="w-full h-full object-cover object-center rounded-full"
+                        className="h-full w-full rounded-full object-cover object-center"
                         width={200}
                         sizes="auto"
                       />
                     ) : (
                       <span
                         className={clsx(
-                          "w-full h-full inline-block text-[0px] rounded-full",
+                          "inline-block h-full w-full rounded-full text-[0px]",
                           (!isValidColor(swatchColor) ||
                             isLightColor(swatchColor)) &&
                             "border border-line-subtle",
@@ -94,9 +96,9 @@ export function ProductCardOptions({
               variant="outline"
               animate={false}
               className={clsx(
-                "px-2 py-1 text-sm text-center border border-line-subtle transition-colors",
+                "border border-line-subtle px-2 py-1 text-center text-sm transition-colors",
                 selectedValue === name &&
-                  "bg-body border-body text-body-inverse",
+                  "border-body bg-body text-body-inverse",
               )}
               onClick={() => {
                 setSelectedVariant(firstSelectableVariant);
