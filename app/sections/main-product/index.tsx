@@ -217,7 +217,7 @@ const ProductInformation = forwardRef<
 export default ProductInformation;
 
 export const schema = createSchema({
-  type: "product-information",
+  type: "main-product",
   title: "Main product",
   childTypes: ["judgeme"],
   limit: 1,
