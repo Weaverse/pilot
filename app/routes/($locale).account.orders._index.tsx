@@ -2,14 +2,15 @@ import {
   flattenConnection,
   getPaginationVariables,
   Money,
+  Pagination,
 } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type {
   CustomerOrdersFragment,
   OrderItemFragment,
 } from "customer-account-api.generated";
+import type * as React from "react";
 import { Link, type MetaFunction, useLoaderData } from "react-router";
-import { PaginatedResourceSection } from "~/components/PaginatedResourceSection";
 
 // https://shopify.dev/docs/api/customer/latest/objects/Order
 const ORDER_ITEM_FRAGMENT = `#graphql
@@ -100,22 +101,56 @@ export default function Orders() {
   const { orders } = customer;
   return (
     <div className="orders">
-      {orders.nodes.length ? <OrdersTable orders={orders} /> : <EmptyOrders />}
-    </div>
-  );
-}
-
-function OrdersTable({ orders }: Pick<CustomerOrdersFragment, "orders">) {
-  return (
-    <div className="account-orders">
-      {orders?.nodes.length ? (
-        <PaginatedResourceSection connection={orders}>
-          {({ node: order }) => <OrderItem key={order.id} order={order} />}
-        </PaginatedResourceSection>
+      {orders.nodes.length ? (
+        <div className="account-orders">
+          {orders?.nodes.length ? (
+            <PaginatedOrders connection={orders}>
+              {({ node: order }) => <OrderItem key={order.id} order={order} />}
+            </PaginatedOrders>
+          ) : (
+            <EmptyOrders />
+          )}
+        </div>
       ) : (
         <EmptyOrders />
       )}
     </div>
+  );
+}
+
+function PaginatedOrders<NodesType>({
+  connection,
+  children,
+  resourcesClassName,
+}: {
+  connection: React.ComponentProps<typeof Pagination<NodesType>>["connection"];
+  children: (props: { node: NodesType; index: number }) => React.ReactNode;
+  resourcesClassName?: string;
+}) {
+  return (
+    <Pagination connection={connection}>
+      {({ nodes, isLoading, PreviousLink, NextLink }) => {
+        const resourcesMarkup = nodes.map((node, index) =>
+          children({ node, index }),
+        );
+
+        return (
+          <div>
+            <PreviousLink>
+              {isLoading ? "Loading..." : <span>↑ Load previous</span>}
+            </PreviousLink>
+            {resourcesClassName ? (
+              <div className={resourcesClassName}>{resourcesMarkup}</div>
+            ) : (
+              resourcesMarkup
+            )}
+            <NextLink>
+              {isLoading ? "Loading..." : <span>Load more ↓</span>}
+            </NextLink>
+          </div>
+        );
+      }}
+    </Pagination>
   );
 }
 

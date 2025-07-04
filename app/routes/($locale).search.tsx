@@ -159,7 +159,7 @@ export default function Search() {
                     variant="outline"
                     className="mx-auto"
                   >
-                    {isLoading ? "Loading..." : "Previous"}
+                    {isLoading ? "Loading..." : "↑ Load previous"}
                   </Link>
                 )}
                 <div
@@ -174,7 +174,7 @@ export default function Search() {
                 </div>
                 {hasNextPage && (
                   <Link to={nextPageUrl} variant="outline" className="mx-auto">
-                    {isLoading ? "Loading..." : "Next"}
+                    {isLoading ? "Loading..." : "Load more ↓"}
                   </Link>
                 )}
               </div>
