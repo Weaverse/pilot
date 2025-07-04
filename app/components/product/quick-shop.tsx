@@ -172,7 +172,6 @@ export function QuickShopTrigger({
           className={clsx(
             "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
             "backdrop-blur-xs data-[state=open]:animate-slide-up",
-            "[--quick-shop-modal-width:var(--breakpoint-xl)]",
           )}
           style={
             {
@@ -185,11 +184,10 @@ export function QuickShopTrigger({
           <div
             style={{ maxHeight: "90vh" }}
             className={clsx(
-              "relative mx-auto h-auto w-full max-w-(--quick-shop-modal-width) overflow-hidden",
+              "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) overflow-hidden",
               "animate-slide-up bg-white shadow-sm",
-              panelType === "drawer"
-                ? "mr-0 ml-auto min-h-screen max-w-md p-4"
-                : "min-h-[calc(((var(--quick-shop-modal-width)-20px)/2)*4/3)] p-0",
+              panelType === "drawer" &&
+                "mr-0 ml-auto min-h-screen max-w-md p-4",
             )}
           >
             <Dialog.Close asChild>
@@ -204,11 +202,11 @@ export function QuickShopTrigger({
             {state === "loading" || !data?.product ? (
               <div
                 className={clsx(
-                  "grid min-h-[inherit] grid-cols-1 items-start gap-5",
+                  "grid grid-cols-1 items-start gap-5",
                   panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
                 )}
               >
-                <Skeleton className="flex min-h-[inherit] items-center justify-center">
+                <Skeleton className="flex h-183 items-center justify-center">
                   <ImageIcon className="h-16 w-16 text-body-subtle" />
                 </Skeleton>
                 <div className="flex flex-col justify-start gap-5 py-6 pr-5">
