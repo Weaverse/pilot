@@ -9,7 +9,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { parseGid } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   Media_MediaImage_Fragment,
   Media_Video_Fragment,
@@ -18,8 +18,23 @@ import type {
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { ScrollArea } from "~/components/scroll-area";
+import { Spinner } from "~/components/spinner";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
+
+const MAX_CACHED_IMAGES = 50;
+const zoomLoadedImages = new Set<string>();
+
+function addToImageCache(url: string) {
+  if (zoomLoadedImages.size >= MAX_CACHED_IMAGES) {
+    // Remove the oldest entry (first one added)
+    const firstUrl = zoomLoadedImages.values().next().value;
+    if (firstUrl) {
+      zoomLoadedImages.delete(firstUrl);
+    }
+  }
+  zoomLoadedImages.add(url);
+}
 
 export function ZoomModal({
   media,
@@ -35,15 +50,58 @@ export function ZoomModal({
   onOpenChange: (open: boolean) => void;
 }) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [previousMediaId, setPreviousMediaId] = useState(zoomMediaId);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const zoomMedia = media.find((med) => med.id === zoomMediaId);
   const zoomMediaIndex = media.findIndex((med) => med.id === zoomMediaId);
   const nextMedia = media[zoomMediaIndex + 1] ?? media[0];
   const prevMedia = media[zoomMediaIndex - 1] ?? media[media.length - 1];
 
+  // Handle loading state when media changes
+  useEffect(() => {
+    if (zoomMediaId !== previousMediaId) {
+      // Clear any existing timeout to prevent race conditions
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+        loadingTimeoutRef.current = null;
+      }
+
+      const currentMedia = media.find((med) => med.id === zoomMediaId);
+      if (
+        currentMedia?.mediaContentType === "IMAGE"
+      ) {
+        const imageMedia = currentMedia as Media_MediaImage_Fragment;
+        if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
+          setIsImageLoading(true);
+          // Set a timeout to prevent infinite loading state
+          loadingTimeoutRef.current = setTimeout(() => {
+            setIsImageLoading(false);
+          }, 5000);
+        } else {
+          setIsImageLoading(false);
+        }
+      } else {
+        setIsImageLoading(false);
+      }
+      setPreviousMediaId(zoomMediaId);
+    }
+  }, [zoomMediaId, previousMediaId, media]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
+
   function scrollToMedia(id: string) {
     const { id: mediaId } = parseGid(id);
     const mediaElement = document.getElementById(`zoom-media--${mediaId}`);
-    if (mediaElement) {
+    if (mediaElement && scrollAreaRef.current) {
       const isVisible = isVisibleInParent(mediaElement, scrollAreaRef.current);
       if (!isVisible) {
         mediaElement.scrollIntoView({ behavior: "smooth" });
@@ -139,7 +197,28 @@ export function ZoomModal({
                 </div>
               </ScrollArea>
             </div>
-            <ZoomMedia media={zoomMedia} />
+            <div className="relative">
+              {isImageLoading && <Spinner />}
+              <ZoomMedia
+                media={zoomMedia}
+                onImageLoad={() => {
+                  // Clear timeout when image loads successfully
+                  if (loadingTimeoutRef.current) {
+                    clearTimeout(loadingTimeoutRef.current);
+                    loadingTimeoutRef.current = null;
+                  }
+                  setIsImageLoading(false);
+                  if (
+                    zoomMedia?.mediaContentType === "IMAGE"
+                  ) {
+                    const imageMedia = zoomMedia as Media_MediaImage_Fragment;
+                    if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
+                      addToImageCache(imageMedia.image.url);
+                    }
+                  }
+                }}
+              />
+            </div>
             <Dialog.Close className="absolute top-4 right-4 z-1">
               <XIcon className="h-6 w-6" />
             </Dialog.Close>
@@ -172,7 +251,13 @@ export function ZoomModal({
   );
 }
 
-function ZoomMedia({ media }: { media: MediaFragment }) {
+function ZoomMedia({
+  media,
+  onImageLoad,
+}: {
+  media: MediaFragment | undefined;
+  onImageLoad?: () => void;
+}) {
   if (!media) return null;
   if (media.mediaContentType === "IMAGE") {
     const { image, alt } = media as Media_MediaImage_Fragment;
@@ -184,6 +269,7 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
         width={4096}
         aspectRatio={calculateAspectRatio(image, "adapt")}
         sizes="auto"
+        onLoad={onImageLoad}
       />
     );
   }
@@ -210,7 +296,8 @@ function isVisibleInParent(child: HTMLElement, parent: HTMLElement) {
   );
 }
 
-export interface ZoomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface ZoomButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export function ZoomButton({ className, ...props }: ZoomButtonProps) {
   return (
