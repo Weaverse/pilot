@@ -81,7 +81,7 @@ export function ProductMedia(props: ProductMediaProps) {
         <div className={variants({ gridSize })}>
           {media.map((med, idx) => {
             return (
-              <div key={med.id} className="relative">
+              <div key={med.id} className="group relative">
                 <Media
                   media={med}
                   imageAspectRatio={imageAspectRatio}
@@ -99,6 +99,7 @@ export function ProductMedia(props: ProductMediaProps) {
                       "rounded-full border border-transparent p-2 text-center",
                       "transition-all duration-200",
                       "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
+                      "opacity-0 group-hover:opacity-100",
                     )}
                     onClick={() => {
                       setZoomMediaId(med.id);
@@ -204,7 +205,7 @@ export function ProductMedia(props: ProductMediaProps) {
             className="overflow-visible pb-10 md:overflow-hidden md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
             {media.map((media, idx) => (
-              <SwiperSlide key={media.id} className="bg-gray-100">
+              <SwiperSlide key={media.id} className="group bg-gray-100">
                 <Media
                   media={media}
                   imageAspectRatio={imageAspectRatio}
@@ -218,6 +219,7 @@ export function ProductMedia(props: ProductMediaProps) {
                       "rounded-full border border-transparent p-2 text-center",
                       "transition-all duration-200",
                       "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
+                      "opacity-0 group-hover:opacity-100",
                     )}
                     onClick={() => {
                       setZoomMediaId(media.id);
