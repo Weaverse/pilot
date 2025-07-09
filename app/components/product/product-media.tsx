@@ -77,28 +77,51 @@ export function ProductMedia(props: ProductMediaProps) {
 
   if (mediaLayout === "grid") {
     return (
-      <div className={variants({ gridSize })}>
-        {media.map((med, idx) => {
-          const image = {
-            ...med.previewImage,
-            altText: med.alt || "Product image",
-          };
-          return (
-            <Image
-              key={med.id}
-              data={image}
-              loading={idx === 0 ? "eager" : "lazy"}
-              width={1660}
-              aspectRatio={calculateAspectRatio(image, imageAspectRatio)}
-              className={clsx(
-                "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
-                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
-              )}
-              sizes="auto"
-            />
-          );
-        })}
-      </div>
+      <>
+        <div className={variants({ gridSize })}>
+          {media.map((med, idx) => {
+            return (
+              <div key={med.id} className="relative">
+                <Media
+                  media={med}
+                  imageAspectRatio={imageAspectRatio}
+                  index={idx}
+                  className={clsx(
+                    "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
+                    gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
+                  )}
+                />
+                {enableZoom && (
+                  <button
+                    type="button"
+                    className={clsx(
+                      "absolute top-2 right-2 md:top-6 md:right-6",
+                      "rounded-full border border-transparent p-2 text-center",
+                      "transition-all duration-200",
+                      "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
+                    )}
+                    onClick={() => {
+                      setZoomMediaId(med.id);
+                      setZoomModalOpen(true);
+                    }}
+                  >
+                    <MagnifyingGlassPlusIcon className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        {enableZoom && (
+          <ZoomModal
+            media={media}
+            zoomMediaId={zoomMediaId}
+            setZoomMediaId={setZoomMediaId}
+            open={zoomModalOpen}
+            onOpenChange={setZoomModalOpen}
+          />
+        )}
+      </>
     );
   }
 
@@ -240,10 +263,12 @@ function Media({
   media,
   imageAspectRatio,
   index,
+  className,
 }: {
   media: MediaFragment;
   imageAspectRatio: ImageAspectRatio;
   index: number;
+  className?: string;
 }) {
   if (media.mediaContentType === "IMAGE") {
     const { image, alt } = media as Media_MediaImage_Fragment;
@@ -251,7 +276,7 @@ function Media({
       <Image
         data={{ ...image, altText: alt || "Product image" }}
         loading={index === 0 ? "eager" : "lazy"}
-        className="h-auto w-full object-cover"
+        className={cn("h-auto w-full object-cover", className)}
         width={2048}
         aspectRatio={calculateAspectRatio(image, imageAspectRatio)}
         sizes="auto"
@@ -264,7 +289,7 @@ function Media({
       <video
         controls
         aria-label={mediaVideo.alt || "Product video"}
-        className="h-auto w-full object-cover"
+        className={cn("h-auto w-full object-cover", className)}
         style={{ aspectRatio: imageAspectRatio }}
         onError={console.error}
       >
