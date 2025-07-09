@@ -1,7 +1,6 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  MagnifyingGlassPlusIcon,
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -19,7 +18,7 @@ import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
-import { ZoomModal } from "./media-zoom";
+import { ZoomButton, ZoomModal } from "./media-zoom";
 
 const variants = cva(
   [
@@ -113,13 +112,9 @@ export function ProductMedia(props: ProductMediaProps) {
                   />
                 </div>
                 {shouldShowButton && (
-                  <button
-                    type="button"
+                  <ZoomButton
                     className={clsx(
                       "absolute top-2 right-2 md:top-4 md:right-4",
-                      "rounded-full border border-transparent p-2 text-center",
-                      "transition-all duration-200",
-                      "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
                       zoomButtonVisibility === "hover" &&
                         "opacity-0 group-hover:opacity-100",
                     )}
@@ -127,9 +122,7 @@ export function ProductMedia(props: ProductMediaProps) {
                       setZoomMediaId(med.id);
                       setZoomModalOpen(true);
                     }}
-                  >
-                    <MagnifyingGlassPlusIcon className="h-5 w-5" />
-                  </button>
+                  />
                 )}
               </div>
             );
@@ -247,13 +240,9 @@ export function ProductMedia(props: ProductMediaProps) {
                     />
                   </div>
                   {shouldShowButton && (
-                    <button
-                      type="button"
+                    <ZoomButton
                       className={clsx(
                         "absolute top-2 right-2 md:top-6 md:right-6",
-                        "rounded-full border border-transparent p-2 text-center",
-                        "transition-all duration-200",
-                        "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
                         zoomButtonVisibility === "hover" &&
                           "opacity-0 group-hover:opacity-100",
                       )}
@@ -261,9 +250,7 @@ export function ProductMedia(props: ProductMediaProps) {
                         setZoomMediaId(media.id);
                         setZoomModalOpen(true);
                       }}
-                    >
-                      <MagnifyingGlassPlusIcon className="h-5 w-5" />
-                    </button>
+                    />
                   )}
                 </SwiperSlide>
               );
