@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  MagnifyingGlassPlusIcon,
   VideoCameraIcon,
   XIcon,
 } from "@phosphor-icons/react";
@@ -206,5 +207,25 @@ function isVisibleInParent(child: HTMLElement, parent: HTMLElement) {
     childRect.bottom <= parentRect.bottom &&
     childRect.left >= parentRect.left &&
     childRect.right <= parentRect.right
+  );
+}
+
+export interface ZoomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+
+export function ZoomButton({ className, ...props }: ZoomButtonProps) {
+  return (
+    <button
+      type="button"
+      className={clsx(
+        "rounded-full border border-transparent p-2 text-center",
+        "transition-all duration-200",
+        "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
+        className,
+      )}
+      aria-label="Zoom product media"
+      {...props}
+    >
+      <MagnifyingGlassPlusIcon className="h-5 w-5" />
+    </button>
   );
 }
