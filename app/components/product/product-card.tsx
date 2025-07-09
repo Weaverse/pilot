@@ -2,7 +2,7 @@ import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   ProductCardFragment,
   ProductVariantFragment,
@@ -18,7 +18,19 @@ import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
 import { VariantPrices } from "./variant-prices";
 
-const pcardLoadedImages = [];
+const MAX_CACHED_IMAGES = 100;
+const pcardLoadedImages = new Set<string>();
+
+function addToImageCache(url: string) {
+  if (pcardLoadedImages.size >= MAX_CACHED_IMAGES) {
+    // Remove the oldest entry (first one added)
+    const firstUrl = pcardLoadedImages.values().next().value;
+    if (firstUrl) {
+      pcardLoadedImages.delete(firstUrl);
+    }
+  }
+  pcardLoadedImages.add(url);
+}
 
 export function ProductCard({
   product,
@@ -51,16 +63,27 @@ export function ProductCard({
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
 
   const handleVariantChange = (variant: ProductVariantFragment) => {
+    // Clear any existing timeout
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
+
     if (
       variant.image &&
       variant.id !== selectedVariant?.id &&
-      !pcardLoadedImages.includes(variant.image.url)
+      !pcardLoadedImages.has(variant.image.url)
     ) {
       setIsImageLoading(true);
+      // Set a timeout to prevent infinite loading state
+      loadingTimeoutRef.current = setTimeout(() => {
+        setIsImageLoading(false);
+      }, 5000);
     }
     setSelectedVariant(variant);
   };
@@ -71,6 +94,15 @@ export function ProductCard({
       setIsImageLoading(false);
     }
   }, [selectedVariant]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const firstVariant = product.selectedOrFirstAvailableVariant;
   const params = new URLSearchParams(
@@ -129,9 +161,14 @@ export function ProductCard({
               alt={image.altText || `Picture of ${product.title}`}
               loading="lazy"
               onLoad={() => {
+                // Clear timeout when image loads successfully
+                if (loadingTimeoutRef.current) {
+                  clearTimeout(loadingTimeoutRef.current);
+                  loadingTimeoutRef.current = null;
+                }
                 setIsImageLoading(false);
-                if (!pcardLoadedImages.includes(image.url)) {
-                  pcardLoadedImages.push(image.url);
+                if (!pcardLoadedImages.has(image.url)) {
+                  addToImageCache(image.url);
                 }
               }}
             />
