@@ -66,7 +66,9 @@ export function QuickShop({
               <h5>{product.title}</h5>
             </div>
             <VariantPrices variant={selectedVariant} />
-            <p className="leading-relaxed">{product.summary}</p>
+            {product.summary && (
+              <p className="leading-relaxed">{product.summary}</p>
+            )}
             <VariantSelector
               product={product}
               selectedVariant={selectedVariant}
