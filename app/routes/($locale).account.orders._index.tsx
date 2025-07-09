@@ -103,16 +103,18 @@ export default function Orders() {
     <div className="orders">
       {orders.nodes.length ? (
         <div className="account-orders">
-          {orders?.nodes.length ? (
-            <PaginatedOrders connection={orders}>
-              {({ node: order }) => <OrderItem key={order.id} order={order} />}
-            </PaginatedOrders>
-          ) : (
-            <EmptyOrders />
-          )}
+          <PaginatedOrders connection={orders}>
+            {({ node: order }) => <OrderItem key={order.id} order={order} />}
+          </PaginatedOrders>
         </div>
       ) : (
-        <EmptyOrders />
+        <div>
+          <p>You haven&apos;t placed any orders yet.</p>
+          <br />
+          <p>
+            <Link to="/collections">Start Shopping →</Link>
+          </p>
+        </div>
       )}
     </div>
   );
@@ -151,18 +153,6 @@ function PaginatedOrders<NodesType>({
         );
       }}
     </Pagination>
-  );
-}
-
-function EmptyOrders() {
-  return (
-    <div>
-      <p>You haven&apos;t placed any orders yet.</p>
-      <br />
-      <p>
-        <Link to="/collections">Start Shopping →</Link>
-      </p>
-    </div>
   );
 }
 
