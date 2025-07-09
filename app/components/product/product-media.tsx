@@ -47,6 +47,8 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
   selectedVariant: ProductVariantFragment;
   media: MediaFragment[];
   enableZoom?: boolean;
+  zoomTrigger?: "image" | "button" | "both";
+  zoomButtonVisibility?: "always" | "hover";
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -58,6 +60,8 @@ export function ProductMedia(props: ProductMediaProps) {
     selectedVariant,
     media,
     enableZoom,
+    zoomTrigger = "button",
+    zoomButtonVisibility = "hover",
   } = props;
 
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
@@ -75,6 +79,11 @@ export function ProductMedia(props: ProductMediaProps) {
     }
   }, [selectedVariant]);
 
+  const shouldShowButton =
+    enableZoom && (zoomTrigger === "button" || zoomTrigger === "both");
+  const canClickImage =
+    enableZoom && (zoomTrigger === "image" || zoomTrigger === "both");
+
   if (mediaLayout === "grid") {
     return (
       <>
@@ -82,24 +91,37 @@ export function ProductMedia(props: ProductMediaProps) {
           {media.map((med, idx) => {
             return (
               <div key={med.id} className="group relative">
-                <Media
-                  media={med}
-                  imageAspectRatio={imageAspectRatio}
-                  index={idx}
-                  className={clsx(
-                    "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
-                    gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
-                  )}
-                />
-                {enableZoom && (
+                <div
+                  onClick={
+                    canClickImage
+                      ? () => {
+                          setZoomMediaId(med.id);
+                          setZoomModalOpen(true);
+                        }
+                      : undefined
+                  }
+                  className={canClickImage ? "cursor-zoom-in" : ""}
+                >
+                  <Media
+                    media={med}
+                    imageAspectRatio={imageAspectRatio}
+                    index={idx}
+                    className={clsx(
+                      "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
+                      gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
+                    )}
+                  />
+                </div>
+                {shouldShowButton && (
                   <button
                     type="button"
                     className={clsx(
-                      "absolute top-2 right-2 md:top-6 md:right-6",
+                      "absolute top-2 right-2 md:top-4 md:right-4",
                       "rounded-full border border-transparent p-2 text-center",
                       "transition-all duration-200",
                       "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
-                      "opacity-0 group-hover:opacity-100",
+                      zoomButtonVisibility === "hover" &&
+                        "opacity-0 group-hover:opacity-100",
                     )}
                     onClick={() => {
                       setZoomMediaId(med.id);
@@ -204,33 +226,48 @@ export function ProductMedia(props: ProductMediaProps) {
             modules={[Pagination, Navigation, Thumbs]}
             className="overflow-visible pb-10 md:overflow-hidden md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
-            {media.map((media, idx) => (
-              <SwiperSlide key={media.id} className="group bg-gray-100">
-                <Media
-                  media={media}
-                  imageAspectRatio={imageAspectRatio}
-                  index={idx}
-                />
-                {enableZoom && (
-                  <button
-                    type="button"
-                    className={clsx(
-                      "absolute top-2 right-2 md:top-6 md:right-6",
-                      "rounded-full border border-transparent p-2 text-center",
-                      "transition-all duration-200",
-                      "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
-                      "opacity-0 group-hover:opacity-100",
-                    )}
-                    onClick={() => {
-                      setZoomMediaId(media.id);
-                      setZoomModalOpen(true);
-                    }}
+            {media.map((media, idx) => {
+              return (
+                <SwiperSlide key={media.id} className="group bg-gray-100">
+                  <div
+                    onClick={
+                      canClickImage
+                        ? () => {
+                            setZoomMediaId(media.id);
+                            setZoomModalOpen(true);
+                          }
+                        : undefined
+                    }
+                    className={canClickImage ? "cursor-zoom-in" : ""}
                   >
-                    <MagnifyingGlassPlusIcon className="h-5 w-5" />
-                  </button>
-                )}
-              </SwiperSlide>
-            ))}
+                    <Media
+                      media={media}
+                      imageAspectRatio={imageAspectRatio}
+                      index={idx}
+                    />
+                  </div>
+                  {shouldShowButton && (
+                    <button
+                      type="button"
+                      className={clsx(
+                        "absolute top-2 right-2 md:top-6 md:right-6",
+                        "rounded-full border border-transparent p-2 text-center",
+                        "transition-all duration-200",
+                        "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
+                        zoomButtonVisibility === "hover" &&
+                          "opacity-0 group-hover:opacity-100",
+                      )}
+                      onClick={() => {
+                        setZoomMediaId(media.id);
+                        setZoomModalOpen(true);
+                      }}
+                    >
+                      <MagnifyingGlassPlusIcon className="h-5 w-5" />
+                    </button>
+                  )}
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
           <div className="absolute right-6 bottom-6 z-10 hidden items-center gap-2 md:flex">
             <button
