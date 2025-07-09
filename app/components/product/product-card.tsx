@@ -10,6 +10,7 @@ import type {
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
+import { Spinner } from "~/components/spinner";
 import { RevealUnderline } from "~/reveal-underline";
 import { calculateAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
@@ -114,11 +115,7 @@ export function ProductCard({
             className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
           >
             {/* Loading skeleton overlay */}
-            {isImageLoading && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-100">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
-              </div>
-            )}
+            {isImageLoading && <Spinner />}
             <Image
               className={clsx([
                 "absolute inset-0",
