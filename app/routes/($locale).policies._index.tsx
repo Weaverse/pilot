@@ -52,7 +52,7 @@ export default function Policies() {
   return (
     <Section width="fixed" verticalPadding="medium">
       <BreadCrumb page="Policies" className="mb-4" />
-      <h4 className="mb-8 lg:mb-20 font-medium">Policies</h4>
+      <h4 className="mb-8 font-medium lg:mb-20">Policies</h4>
       <div className="flex flex-col gap-3">
         {policies.map((policy) => {
           if (policy) {
@@ -63,7 +63,7 @@ export default function Policies() {
                   className="w-fit gap-2"
                   to={`/policies/${policy.handle}`}
                 >
-                  <FileTextIcon className="w-5 h-5" />
+                  <FileTextIcon className="h-5 w-5" />
                   <span>{policy.title}</span>
                 </Link>
               )

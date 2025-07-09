@@ -1,33 +1,26 @@
 import {
   getAdjacentAndFirstAvailableVariants,
   getProductOptions,
-  Money,
   ShopPayButton,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
-import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useState } from "react";
 import { useLoaderData } from "react-router";
-import { CompareAtPrice } from "~/components/compare-at-price";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import {
-  BestSellerBadge,
-  NewBadge,
-  SaleBadge,
-} from "~/components/product/badges";
+import { ProductBadges } from "~/components/product/badges";
 import {
   ProductMedia,
   type ProductMediaProps,
 } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
-import { ProductVariants } from "~/components/product/variants";
+import { VariantPrices } from "~/components/product/variant-prices";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
-import { isDiscounted } from "~/utils/product";
 import { ProductDetails } from "./product-details";
+import { ProductVariants } from "./variants";
 
 interface ProductInformationData
   extends Omit<ProductMediaProps, "selectedVariant" | "media"> {
@@ -72,23 +65,20 @@ const ProductInformation = forwardRef<
     showThumbnails,
     children,
     enableZoom,
+    zoomTrigger,
+    zoomButtonVisibility,
     ...rest
   } = props;
   const [quantity, setQuantity] = useState<number>(1);
 
   if (product) {
-    const { title, handle, vendor, summary, priceRange, publishedAt, badges } =
-      product;
-
-    const isBestSellerProduct = badges
-      .filter(Boolean)
-      .some(({ key, value }) => key === "best_seller" && value === "true");
+    const { title, handle, vendor, summary } = product;
 
     return (
       <Section ref={ref} {...rest} overflow="unset">
         <div
           className={clsx([
-            "space-y-5 lg:space-y-0 lg:grid",
+            "space-y-5 lg:grid lg:space-y-0",
             "lg:gap-[clamp(30px,5%,60px)]",
             "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
           ])}
@@ -102,6 +92,8 @@ const ProductInformation = forwardRef<
             selectedVariant={selectedVariant}
             showThumbnails={showThumbnails}
             enableZoom={enableZoom}
+            zoomTrigger={zoomTrigger}
+            zoomButtonVisibility={zoomButtonVisibility}
           />
           <div>
             <div
@@ -111,56 +103,28 @@ const ProductInformation = forwardRef<
               <div className="flex items-center gap-1.5">
                 <Link
                   to="/"
-                  className="text-body-subtle hover:underline underline-offset-4"
+                  className="text-body-subtle underline-offset-4 hover:underline"
                 >
                   Home
                 </Link>
-                <span className="inline-block h-4 border-r border-body-subtle" />
+                <span className="inline-block h-4 border-body-subtle border-r" />
                 <span>{product.title}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm empty:hidden">
-                {selectedVariant && (
-                  <SaleBadge
-                    price={selectedVariant.price as MoneyV2}
-                    compareAtPrice={selectedVariant.compareAtPrice as MoneyV2}
-                  />
-                )}
-                <NewBadge publishedAt={publishedAt} />
-                {isBestSellerProduct && <BestSellerBadge />}
-              </div>
+              <ProductBadges
+                product={product}
+                selectedVariant={selectedVariant}
+              />
               <div className="flex flex-col gap-2">
                 {showVendor && vendor && (
                   <span className="text-body-subtle">{vendor}</span>
                 )}
                 <h1 className="h3 tracking-tight!">{title}</h1>
               </div>
-              {selectedVariant ? (
-                <div className="flex items-center gap-2">
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant.price}
-                    as="span"
-                    className="font-medium text-2xl/none"
-                  />
-                  {isDiscounted(
-                    selectedVariant.price as MoneyV2,
-                    selectedVariant.compareAtPrice as MoneyV2,
-                  ) &&
-                    showSalePrice && (
-                      <CompareAtPrice
-                        data={selectedVariant.compareAtPrice as MoneyV2}
-                        className="text-2xl/none"
-                      />
-                    )}
-                </div>
-              ) : (
-                <Money
-                  withoutTrailingZeros
-                  data={priceRange.minVariantPrice}
-                  as="div"
-                  className="font-medium text-2xl/none"
-                />
-              )}
+              <VariantPrices
+                variant={selectedVariant}
+                showCompareAtPrice={showSalePrice}
+                className="text-2xl/none"
+              />
               {children}
               {showShortDescription && (
                 <p className="leading-relaxed">{summary}</p>
@@ -217,7 +181,7 @@ const ProductInformation = forwardRef<
 export default ProductInformation;
 
 export const schema = createSchema({
-  type: "product-information",
+  type: "main-product",
   title: "Main product",
   childTypes: ["judgeme"],
   limit: 1,
@@ -291,6 +255,35 @@ export const schema = createSchema({
           name: "enableZoom",
           type: "switch",
           defaultValue: true,
+        },
+        {
+          type: "select",
+          name: "zoomTrigger",
+          label: "Zoom trigger",
+          defaultValue: "both",
+          configs: {
+            options: [
+              { value: "image", label: "Click on image" },
+              { value: "button", label: "Click on zoom button" },
+              { value: "both", label: "Both" },
+            ],
+          },
+          condition: (data: ProductInformationData) => data.enableZoom === true,
+        },
+        {
+          type: "select",
+          name: "zoomButtonVisibility",
+          label: "When to show zoom button",
+          defaultValue: "hover",
+          configs: {
+            options: [
+              { value: "always", label: "Always" },
+              { value: "hover", label: "On hover" },
+            ],
+          },
+          condition: (data: ProductInformationData) =>
+            data.enableZoom === true &&
+            (data.zoomTrigger === "button" || data.zoomTrigger === "both"),
         },
       ],
     },

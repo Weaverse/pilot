@@ -35,7 +35,7 @@ const TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
         data-motion="slide-in"
         className={clsx(hideOnMobile && "hidden sm:block")}
       >
-        <figure className="p-6 bg-gray-50 rounded-sm">
+        <figure className="rounded-sm bg-gray-50 p-6">
           <blockquote>
             <div className="text-xl md:text-2xl">{heading}</div>
             <p
@@ -58,7 +58,7 @@ const TestimonialItem = forwardRef<HTMLDivElement, TestimonialItemProps>(
             />
             <div className="space-y-0.5">
               <div className="font-medium">{authorName}</div>
-              <div className="text-sm text-gray-500">{authorTitle}</div>
+              <div className="text-gray-500 text-sm">{authorTitle}</div>
             </div>
           </figcaption>
         </figure>

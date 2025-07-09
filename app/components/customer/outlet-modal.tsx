@@ -15,12 +15,12 @@ export function OutletModal({
     <Dialog.Root defaultOpen>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 bg-black/50 data-[state=open]:animate-fade-in z-10"
+          className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in"
           style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
         />
         <Dialog.Content
           className={clsx([
-            "fixed inset-0 w-screen p-4 z-10",
+            "fixed inset-0 z-10 w-screen p-4",
             "flex items-center justify-center",
             "data-[state=open]:animate-slide-up",
           ])}
@@ -32,7 +32,7 @@ export function OutletModal({
           }
           aria-describedby={undefined}
         >
-          <div className="w-[500px] max-w-[90vw] bg-(--color-background) px-6 py-3 relative">
+          <div className="relative w-[500px] max-w-[90vw] bg-(--color-background) px-6 py-3">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Account modal</Dialog.Title>
             </VisuallyHidden.Root>
@@ -40,10 +40,10 @@ export function OutletModal({
             <Dialog.Close asChild>
               <Link
                 to={cancelLink}
-                className="p-2 top-5 right-4 absolute"
+                className="absolute top-5 right-4 p-2"
                 aria-label="Close account modal"
               >
-                <XIcon className="w-4 h-4" />
+                <XIcon className="h-4 w-4" />
               </Link>
             </Dialog.Close>
           </div>

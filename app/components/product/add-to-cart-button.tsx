@@ -51,14 +51,14 @@ export function AddToCartButton({
             <Button
               type="submit"
               className={cn(
-                "hover:text-(--btn-primary-text) hover:bg-(--btn-primary-bg)",
+                "hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
                 className,
               )}
               disabled={disabled ?? fetcher.state !== "idle"}
               onClick={() => toggleCartDrawer(true)}
               {...props}
             >
-              {children}
+              {children || "Add to cart"}
             </Button>
           </AddToCartAnalytics>
         );

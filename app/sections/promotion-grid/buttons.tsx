@@ -1,5 +1,4 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
 import { forwardRef } from "react";
 
 interface ButtonItemsProps extends HydrogenComponentProps {
@@ -9,11 +8,13 @@ interface ButtonItemsProps extends HydrogenComponentProps {
 const PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>(
   (props, ref) => {
     const { gap, children, ...rest } = props;
-    const spacingStyle: CSSProperties = {
-      gap: `${gap}px`,
-    } as CSSProperties;
     return (
-      <div ref={ref} {...rest} className="flex mt-3" style={spacingStyle}>
+      <div
+        ref={ref}
+        {...rest}
+        className="mt-3 flex"
+        style={{ gap: `${gap}px` }}
+      >
         {children}
       </div>
     );

@@ -1,9 +1,8 @@
 import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   ProductCardFragment,
   ProductVariantFragment,
@@ -11,21 +10,27 @@ import type {
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
-import { VariantPrices } from "~/components/variant-prices";
+import { Spinner } from "~/components/spinner";
 import { RevealUnderline } from "~/reveal-underline";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
 import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
+import { QuickShopTrigger } from "./quick-shop";
+import { VariantPrices } from "./variant-prices";
 
-const styleVariants = cva("", {
-  variants: {
-    alignment: {
-      left: "",
-      center: "text-center [&_.title-and-price]:items-center",
-      right: "text-right [&_.title-and-price]:items-end",
-    },
-  },
-});
+const MAX_CACHED_IMAGES = 100;
+const pcardLoadedImages = new Set<string>();
+
+function addToImageCache(url: string) {
+  if (pcardLoadedImages.size >= MAX_CACHED_IMAGES) {
+    // Remove the oldest entry (first one added)
+    const firstUrl = pcardLoadedImages.values().next().value;
+    if (firstUrl) {
+      pcardLoadedImages.delete(firstUrl);
+    }
+  }
+  pcardLoadedImages.add(url);
+}
 
 export function ProductCard({
   product,
@@ -45,9 +50,9 @@ export function ProductCard({
     pcardShowLowestPrice,
     pcardShowSalePrice,
     pcardEnableQuickShop,
+    pcardShowQuickShopOnHover,
     pcardQuickShopButtonType,
     pcardQuickShopButtonText,
-    pcardQuickShopAction,
     pcardQuickShopPanelType,
     pcardShowSaleBadges,
     pcardShowBestSellerBadges,
@@ -57,8 +62,47 @@ export function ProductCard({
 
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
+
+  const handleVariantChange = (variant: ProductVariantFragment) => {
+    // Clear any existing timeout
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
+
+    if (
+      variant.image &&
+      variant.id !== selectedVariant?.id &&
+      !pcardLoadedImages.has(variant.image.url)
+    ) {
+      setIsImageLoading(true);
+      // Set a timeout to prevent infinite loading state
+      loadingTimeoutRef.current = setTimeout(() => {
+        setIsImageLoading(false);
+      }, 5000);
+    }
+    setSelectedVariant(variant);
+  };
+
+  // Reset loading state if variant doesn't have an image
+  useEffect(() => {
+    if (selectedVariant && !selectedVariant.image) {
+      setIsImageLoading(false);
+    }
+  }, [selectedVariant]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const firstVariant = product.selectedOrFirstAvailableVariant;
   const params = new URLSearchParams(
@@ -91,17 +135,19 @@ export function ProductCard({
         {
           backgroundColor: pcardBackgroundColor,
           "--pcard-radius": `${pcardBorderRadius}px`,
-          "--pcard-image-ratio": getImageAspectRatio(image, pcardImageRatio),
+          "--pcard-image-ratio": calculateAspectRatio(image, pcardImageRatio),
         } as React.CSSProperties
       }
     >
-      <div className="relative group">
+      <div className="group relative">
         {image && (
           <Link
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
-            className="overflow-hidden rounded-t-(--pcard-radius) block group relative aspect-(--pcard-image-ratio) bg-gray-100"
+            className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
           >
+            {/* Loading skeleton overlay */}
+            {isImageLoading && <Spinner />}
             <Image
               className={clsx([
                 "absolute inset-0",
@@ -114,12 +160,23 @@ export function ProductCard({
               width={700}
               alt={image.altText || `Picture of ${product.title}`}
               loading="lazy"
+              onLoad={() => {
+                // Clear timeout when image loads successfully
+                if (loadingTimeoutRef.current) {
+                  clearTimeout(loadingTimeoutRef.current);
+                  loadingTimeoutRef.current = null;
+                }
+                setIsImageLoading(false);
+                if (!pcardLoadedImages.has(image.url)) {
+                  addToImageCache(image.url);
+                }
+              }}
             />
             {pcardShowImageOnHover && secondImage && (
               <Image
                 className={clsx([
                   "absolute inset-0",
-                  "transition-opacity duration-300 opacity-0 group-hover:opacity-100",
+                  "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
                 ])}
                 sizes="auto"
                 width={700}
@@ -132,7 +189,7 @@ export function ProductCard({
             )}
           </Link>
         )}
-        <div className="flex gap-1 absolute top-2.5 right-2.5">
+        <div className="absolute top-2.5 right-2.5 flex gap-1">
           {pcardShowSaleBadges && (
             <SaleBadge
               price={minVariantPrice as MoneyV2}
@@ -145,22 +202,42 @@ export function ProductCard({
           {pcardShowNewBadges && <NewBadge publishedAt={product.publishedAt} />}
           {pcardShowOutOfStockBadges && <SoldOutBadge />}
         </div>
-        {/* <QuickShopTrigger productHandle={product.handle} /> */}
+        {pcardEnableQuickShop && (
+          <QuickShopTrigger
+            productHandle={product.handle}
+            showOnHover={pcardShowQuickShopOnHover}
+            buttonType={pcardQuickShopButtonType}
+            buttonText={pcardQuickShopButtonText}
+            panelType={pcardQuickShopPanelType}
+          />
+        )}
       </div>
       <div
         className={clsx(
-          "py-3 text-sm space-y-2",
-          isVertical && styleVariants({ alignment: pcardAlignment }),
+          "space-y-2 py-3 text-sm",
+          pcardBackgroundColor && "px-2",
+          isVertical && [
+            pcardAlignment === "left" && "text-left",
+            pcardAlignment === "center" && "text-center",
+            pcardAlignment === "right" && "text-right",
+          ],
         )}
       >
         {pcardShowVendor && (
-          <div className="uppercase text-body-subtle">{product.vendor}</div>
+          <div className="text-body-subtle uppercase">{product.vendor}</div>
         )}
         <div
           className={clsx(
             "flex",
             isVertical
-              ? "title-and-price flex-col gap-1"
+              ? [
+                  "flex-col gap-1",
+                  [
+                    pcardAlignment === "left" && "items-start",
+                    pcardAlignment === "center" && "items-center",
+                    pcardAlignment === "right" && "items-end",
+                  ],
+                ]
               : "justify-between gap-4",
           )}
         >
@@ -191,7 +268,14 @@ export function ProductCard({
         <ProductCardOptions
           product={product}
           selectedVariant={selectedVariant}
-          setSelectedVariant={setSelectedVariant}
+          setSelectedVariant={handleVariantChange}
+          className={clsx(
+            isVertical && [
+              pcardAlignment === "left" && "justify-start",
+              pcardAlignment === "center" && "justify-center",
+              pcardAlignment === "right" && "justify-end",
+            ],
+          )}
         />
       </div>
     </div>

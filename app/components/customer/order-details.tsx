@@ -27,15 +27,15 @@ export function OrderDetails() {
 
   return (
     <Section width="fixed" verticalPadding="medium">
-      <div className="w-full sm:grid-cols-1 lg:py-6">
-        <div className="flex flex-col gap-4 mb-8">
+      <div className="w-full lg:py-6">
+        <div className="mb-8 flex flex-col gap-4">
           <h1 className="h4 font-medium">Order Detail</h1>
           <Link
             to="/account"
-            className="text-body-subtle w-fit items-center gap-2 after:bg-body-subtle"
+            className="w-fit items-center gap-2 text-body-subtle after:bg-body-subtle"
             variant="underline"
           >
-            <ArrowLeftIcon className="w-4 h-4" />
+            <ArrowLeftIcon className="h-4 w-4" />
             <span>Return to My Account</span>
           </Link>
         </div>
@@ -44,8 +44,8 @@ export function OrderDetails() {
           <p className="mt-2">
             Placed on {new Date(order.processedAt).toDateString()}
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 mt-6">
-            <div className="space-y-6 col-span-2 md:pr-14">
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3">
+            <div className="col-span-2 space-y-6 md:pr-14">
               {lineItems.map((lineItem) => {
                 let hasDiscount = false;
                 if (
@@ -57,7 +57,7 @@ export function OrderDetails() {
                 return (
                   <div className="flex gap-4" key={lineItem.id}>
                     {lineItem?.image && (
-                      <div className="w-[120px] h-auto shrink-0">
+                      <div className="h-auto w-[120px] shrink-0">
                         <Image data={lineItem.image} width={500} height={500} />
                       </div>
                     )}
@@ -70,11 +70,11 @@ export function OrderDetails() {
                         </div>
                       </dd>
                       <dt className="sr-only">Quantity</dt>
-                      <dd className="truncate mt-1 grow">
+                      <dd className="mt-1 grow truncate">
                         x{lineItem.quantity}
                       </dd>
                       <dt className="sr-only">Discount</dt>
-                      <dd className="truncate flex gap-2 flex-wrap">
+                      <dd className="flex flex-wrap gap-2 truncate">
                         {lineItem.discountAllocations.map((discount, index) => {
                           const discountApp =
                             discount.discountApplication as any;
@@ -83,9 +83,9 @@ export function OrderDetails() {
                           return (
                             <div
                               key={index}
-                              className="text-body-subtle flex items-center gap-1 border border-line-subtle py-1 px-1.5 rounded-xs text-sm w-fit"
+                              className="flex w-fit items-center gap-1 rounded-xs border border-line-subtle px-1.5 py-1 text-body-subtle text-sm"
                             >
-                              <TagIcon className="w-4 h-4" />
+                              <TagIcon className="h-4 w-4" />
                               <span>{discountTitle}</span>
                               <div className="inline-flex">
                                 (<span>-</span>
@@ -96,9 +96,9 @@ export function OrderDetails() {
                         })}
                       </dd>
                       <dt className="sr-only">Current Price</dt>
-                      <dd className="truncate flex gap-2 mt-2">
+                      <dd className="mt-2 flex gap-2 truncate">
                         {hasDiscount && (
-                          <span className="line-through text-body-subtle">
+                          <span className="text-body-subtle line-through">
                             <Money data={lineItem.totalPrice} />
                           </span>
                         )}
@@ -108,8 +108,8 @@ export function OrderDetails() {
                   </div>
                 );
               })}
-              <hr className="border-t border-line-subtle" />
-              <div className="space-y-4 ml-auto">
+              <hr className="border-line-subtle border-t" />
+              <div className="ml-auto space-y-4">
                 <div className="flex justify-between gap-4 ">
                   <span className="font-bold">Subtotal</span>
                   <span>
@@ -128,7 +128,7 @@ export function OrderDetails() {
                     <Money data={order.totalShipping} />
                   </span>
                 </div>
-                <hr className="border-t border-line-subtle pb-2" />
+                <hr className="border-line-subtle border-t pb-2" />
                 <div className="flex justify-between gap-4">
                   <span className="font-bold">Total</span>
                   <span className="text-xl">
@@ -136,9 +136,9 @@ export function OrderDetails() {
                   </span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <div className="flex gap-2 items-center">
-                    <TagIcon className="w-4 h-4" />
-                    <span className="uppercase font-bold text-sm leading-none">
+                  <div className="flex items-center gap-2">
+                    <TagIcon className="h-4 w-4" />
+                    <span className="font-bold text-sm uppercase leading-none">
                       Total savings
                     </span>
                   </div>
@@ -148,7 +148,7 @@ export function OrderDetails() {
                 </div>
               </div>
             </div>
-            <div className="shrink-0 mt-4 pt-10 md:pt-0 md:m-0 md:border-none">
+            <div className="mt-4 shrink-0 pt-10 md:m-0 md:border-none md:pt-0">
               <div className="font-bold">Shipping Address</div>
               {order?.shippingAddress ? (
                 <ul className="mt-3">
@@ -164,12 +164,12 @@ export function OrderDetails() {
               ) : (
                 <p className="mt-3">No shipping address defined</p>
               )}
-              <div className="font-bold mt-6">Status</div>
+              <div className="mt-6 font-bold">Status</div>
               {fulfillmentStatus && (
                 <div
                   className={clsx(
-                    "mt-3 px-2.5 py-1 text-sm inline-block w-auto",
-                    "text-body-inverse bg-body-subtle",
+                    "mt-3 inline-block w-auto px-2.5 py-1 text-sm",
+                    "bg-body-subtle text-body-inverse",
                   )}
                 >
                   {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}

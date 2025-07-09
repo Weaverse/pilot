@@ -7,12 +7,12 @@ import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
 
-const variants = cva("flex flex-col [&_.paragraph]:mx-[unset] px-4 sm:px-16", {
+const variants = cva("flex flex-col px-4 sm:px-16 [&_.paragraph]:mx-[unset]", {
   variants: {
     alignment: {
-      left: "items-start [&_.paragraph]:text-left [&_.countdown--timer]:-ml-4",
+      left: "[&_.countdown--timer]:-ml-4 items-start [&_.paragraph]:text-left",
       center: "items-center [&_.paragraph]:text-center",
-      right: "items-end [&_.paragraph]:text-right [&_.countdown--timer]:-mr-4",
+      right: "[&_.countdown--timer]:-mr-4 items-end [&_.paragraph]:text-right",
     },
   },
 });

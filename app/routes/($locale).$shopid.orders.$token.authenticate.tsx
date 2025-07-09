@@ -31,10 +31,10 @@ export default function () {
 export function ErrorBoundary() {
   return (
     <Section width="fixed" verticalPadding="medium">
-      <h4 className="mb-8 lg:mb-20 font-medium text-center text-red-600">
+      <h4 className="mb-8 text-center font-medium text-red-600 lg:mb-20">
         Error redirecting to the order status URL
       </h4>
-      <div className="flex items-baseline justify-between w-full mt-8">
+      <div className="mt-8 flex w-full items-baseline justify-between">
         <Button onClick={() => window.location.reload()}>Try Again</Button>
       </div>
     </Section>

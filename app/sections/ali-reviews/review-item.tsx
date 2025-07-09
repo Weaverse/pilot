@@ -56,8 +56,8 @@ export function ReviewItem(props: ReviewItemProps) {
   const [previewMedia, setPreviewMedia] = useState<ReviewMedia | null>(null);
 
   return (
-    <div className="gap-3 py-6 space-y-4">
-      <div className="space-y-2 md:flex justify-between w-full">
+    <div className="gap-3 space-y-4 py-6">
+      <div className="w-full justify-between space-y-2 md:flex">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-base">{review.author}</span>
@@ -71,7 +71,7 @@ export function ReviewItem(props: ReviewItemProps) {
             )}
           </div>
           {showDate && (
-            <p className="text-sm font-normal text-gray-500">
+            <p className="font-normal text-gray-500 text-sm">
               {formatDate(review.created_at)}
             </p>
           )}
@@ -91,16 +91,16 @@ export function ReviewItem(props: ReviewItemProps) {
         </div>
       </div>
       <div className="mt-4 min-w-0 flex-1 space-y-4 sm:mt-0">
-        <p className="text-base font-normal">{review.content}</p>
-        <div className="flex gap-3 flex-wrap">
+        <p className="font-normal text-base">{review.content}</p>
+        <div className="flex flex-wrap gap-3">
           {review.media.map((media) => (
             <div
               key={media.id}
               className={clsx(
-                "flex items-center justify-center bg-gray-800 w-20 h-20 overflow-hidden cursor-pointer",
-                "outline-offset-2 hover:outline-solid hover:outline-2 hover:outline-gray-500",
+                "flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden bg-gray-800",
+                "outline-offset-2 hover:outline-2 hover:outline-gray-500 hover:outline-solid",
                 previewMedia?.id === media.id &&
-                  "outline-solid outline-2 outline-gray-500",
+                  "outline-2 outline-gray-500 outline-solid",
               )}
               onClick={() => {
                 if (previewMedia?.id === media.id) {
@@ -111,7 +111,7 @@ export function ReviewItem(props: ReviewItemProps) {
               }}
             >
               <img
-                className="w-full h-full object-cover object-center"
+                className="h-full w-full object-cover object-center"
                 src={media.url}
                 alt="Review media"
               />
@@ -134,16 +134,16 @@ function ReviewMediaPreview(props: {
   const { media, closePreview } = props;
   if (media) {
     return (
-      <div className="flex gap-2 items-start">
-        <div className="w-96 h-96 flex items-center justify-center overflow-hidden bg-gray-800">
+      <div className="flex items-start gap-2">
+        <div className="flex h-96 w-96 items-center justify-center overflow-hidden bg-gray-800">
           <img
-            className="max-w-full max-h-full object-cover"
+            className="max-h-full max-w-full object-cover"
             src={media.url}
             alt="Review media preview"
           />
         </div>
         <XIcon
-          className="w-5 h-5 cursor-pointer text-gray-600"
+          className="h-5 w-5 cursor-pointer text-gray-600"
           onClick={closePreview}
         />
       </div>

@@ -39,7 +39,7 @@
   --text-xs--line-height: 1;
   --text-sm: calc(var(--body-base-size) * 0.875);
   --text-sm--line-height: 1.25;
-  --text-base: calc(var(--body-base-size) * 1.125);
+  --text-base: var(--body-base-size);
   --text-lg--line-height: 1.75;
   --text-xl: calc(var(--body-base-size) * 1.25);
   --text-xl--line-height: 1.75;

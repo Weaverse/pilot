@@ -55,11 +55,11 @@ export function Filters({ className }: { className?: string }) {
               key={filter.id}
               ref={ref}
               value={filter.id}
-              className="w-full pb-6 pt-7"
+              className="w-full pt-7 pb-6"
             >
-              <Accordion.Trigger className="flex w-full justify-between items-center data-[state=open]:[&>svg]:rotate-90">
+              <Accordion.Trigger className="flex w-full items-center justify-between data-[state=open]:[&>svg]:rotate-90">
                 <span>{filter.label}</span>
-                <CaretRightIcon className="w-4 h-4 transition-transform rotate-0" />
+                <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
               </Accordion.Trigger>
               <Accordion.Content
                 style={
@@ -80,7 +80,7 @@ export function Filters({ className }: { className?: string }) {
                   className={clsx(
                     "flex pt-8",
                     asSwatch || asButton
-                      ? "gap-1.5 flex-wrap"
+                      ? "flex-wrap gap-1.5"
                       : "flex-col gap-5",
                   )}
                 >

@@ -32,7 +32,7 @@ function EmptyOrders() {
 
 function Orders({ orders }: OrderCardsProps) {
   return (
-    <ul className="grid grid-flow-row grid-cols-1 gap-5 false sm:grid-cols-2">
+    <ul className="grid grid-flow-row grid-cols-1 gap-5 sm:grid-cols-2">
       {orders.map((order) => (
         <OrderCard order={order} key={order.id} />
       ))}
@@ -51,13 +51,13 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
     : `/account/orders/${legacyOrderId}`;
 
   return (
-    <li className="flex text-center border border-line-subtle items-center gap-5 p-5">
+    <li className="flex items-center gap-5 border border-line-subtle p-5 text-center">
       {lineItems[0].image && (
         <Link className="shrink-0" to={orderLink} prefetch="intent">
           <Image
             width={500}
             height={500}
-            className="max-w-36 h-auto"
+            className="h-auto max-w-36"
             alt={lineItems[0].image?.altText ?? "Order image"}
             src={lineItems[0].image.url}
           />
@@ -68,12 +68,12 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
           !lineItems[0].image ? "md:col-span-2" : ""
         }`}
       >
-        <div className="font-medium line-clamp-1">
+        <div className="line-clamp-1 font-medium">
           {lineItems.length > 1
             ? `${lineItems[0].title} +${lineItems.length - 1} more`
             : lineItems[0].title}
         </div>
-        <dl className="flex flex-col mt-2">
+        <dl className="mt-2 flex flex-col">
           <dt className="sr-only">Order ID</dt>
           <dd>
             <p className="text-body-subtle">Order No. {order.number}</p>
@@ -88,7 +88,7 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
             <>
               <dt className="sr-only">Fulfillment Status</dt>
               <dd className="mt-3">
-                <span className="px-2.5 py-1 text-xs font-medium border bg-gray-100">
+                <span className="border bg-gray-100 px-2.5 py-1 font-medium text-xs">
                   {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}
                 </span>
               </dd>
@@ -98,7 +98,7 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
             to={orderLink}
             prefetch="intent"
             variant="underline"
-            className="mt-3 text-body-subtle w-fit after:bg-body-subtle"
+            className="mt-3 w-fit text-body-subtle after:bg-body-subtle"
           >
             View details
           </Link>

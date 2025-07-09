@@ -32,30 +32,15 @@ const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
       },
     ],
   },
-  // @ts-ignore
-  variants: {
-    nodes: [
-      {
-        id: "1",
-        availableForSale: true,
-        quantityAvailable: 0,
-        selectedOptions: [],
-        price: {
-          amount: "99.0",
-          currencyCode: "USD",
-        },
-        compareAtPrice: {
-          amount: "129.0",
-          currencyCode: "USD",
-        },
-        title: "Default Title",
-        unitPrice: null,
-        product: {
-          title: "Example Product",
-          handle: "#",
-        },
-      },
-    ],
+  priceRange: {
+    minVariantPrice: {
+      amount: "99.0",
+      currencyCode: "USD",
+    },
+    maxVariantPrice: {
+      amount: "129.0",
+      currencyCode: "USD",
+    },
   },
 };
 
@@ -79,13 +64,11 @@ export function ProductPopup({
   const featuredImage = featuredMedia?.image;
   const price = product.priceRange?.minVariantPrice;
   const compareAtPrice = product.priceRange?.maxVariantPrice;
-  // let price = product.variants.nodes[0].price;
-  // let compareAtPrice = product.variants.nodes[0].compareAtPrice;
 
   return (
     <div
       className={clsx(
-        "absolute z-10 py-1.5 text-sm sm:text-base transition-all",
+        "absolute z-10 py-1.5 text-sm transition-all sm:text-base",
         "invisible opacity-0",
         "w-40 sm:w-(--popup-width)",
         "translate-x-[calc(var(--translate-x-ratio)*var(--spot-size))]",
@@ -106,9 +89,9 @@ export function ProductPopup({
         } as CSSProperties
       }
     >
-      <div className="p-2.5 bg-white shadow-lg flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col gap-3 bg-white p-2.5 shadow-lg sm:flex-row">
         {featuredImage && (
-          <div className="w-full sm:w-28 h-auto">
+          <div className="h-auto w-full sm:w-28">
             <Image data={featuredImage} alt={product.title} sizes="auto" />
           </div>
         )}
@@ -122,7 +105,7 @@ export function ProductPopup({
                     withoutTrailingZeros
                     data={compareAtPrice}
                     as="div"
-                    className="text-base font-medium line-through text-gray-400"
+                    className="font-medium text-base text-gray-400 line-through"
                   />
                 )}
                 {price && (
@@ -130,7 +113,7 @@ export function ProductPopup({
                     withoutTrailingZeros
                     data={price}
                     as="div"
-                    className="text-base font-medium"
+                    className="font-medium text-base"
                   />
                 )}
               </div>

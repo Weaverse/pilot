@@ -24,7 +24,7 @@ export function AccountAddressBook({
           </Link>
         </div>
         {addresses?.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {customer.defaultAddress && (
               <Address address={customer.defaultAddress} defaultAddress />
             )}
@@ -48,10 +48,10 @@ function Address({
   defaultAddress?: boolean;
 }) {
   return (
-    <div className="p-5 border border-line-subtle flex flex-col">
+    <div className="flex flex-col border border-line-subtle p-5">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="px-3 py-1 text-sm font-medium bg-body-subtle text-body-inverse">
+          <span className="bg-body-subtle px-3 py-1 font-medium text-body-inverse text-sm">
             Default
           </span>
         </div>
@@ -69,7 +69,7 @@ function Address({
         ))}
       </ul>
 
-      <div className="flex flex-row font-medium mt-6 items-baseline">
+      <div className="mt-6 flex flex-row items-baseline font-medium">
         <Link
           to={`/account/address/${encodeURIComponent(address.id)}`}
           className="text-body-subtle after:bg-body-subtle"
@@ -82,7 +82,7 @@ function Address({
           <input type="hidden" name="addressId" value={address.id} />
           <Button
             variant="underline"
-            className="after:bg-body-subtle text-body-subtle ml-6"
+            className="ml-6 text-body-subtle after:bg-body-subtle"
             animate={false}
           >
             Remove

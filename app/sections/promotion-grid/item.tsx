@@ -15,22 +15,22 @@ const variants = cva(
   [
     "promotion-grid-item",
     "group/overlay",
-    "relative aspect-square overflow-hidden flex flex-col gap-4 p-4",
+    "relative flex aspect-square flex-col gap-4 overflow-hidden p-4",
     "[&_.paragraph]:mx-[unset]",
   ],
   {
     variants: {
       contentPosition: {
-        "top left": "justify-start items-start [&_.paragraph]:text-left",
-        "top center": "justify-start items-center [&_.paragraph]:text-center",
-        "top right": "justify-start items-end [&_.paragraph]:text-right",
-        "center left": "justify-center items-start [&_.paragraph]:text-left",
+        "top left": "items-start justify-start [&_.paragraph]:text-left",
+        "top center": "items-center justify-start [&_.paragraph]:text-center",
+        "top right": "items-end justify-start [&_.paragraph]:text-right",
+        "center left": "items-start justify-center [&_.paragraph]:text-left",
         "center center":
-          "justify-center items-center [&_.paragraph]:text-center",
-        "center right": "justify-center items-end [&_.paragraph]:text-right",
-        "bottom left": "justify-end items-start [&_.paragraph]:text-left",
-        "bottom center": "justify-end items-center [&_.paragraph]:text-center",
-        "bottom right": "justify-end items-end [&_.paragraph]:text-right",
+          "items-center justify-center [&_.paragraph]:text-center",
+        "center right": "items-end justify-center [&_.paragraph]:text-right",
+        "bottom left": "items-start justify-end [&_.paragraph]:text-left",
+        "bottom center": "items-center justify-end [&_.paragraph]:text-center",
+        "bottom right": "items-end justify-end [&_.paragraph]:text-right",
       },
       borderRadius: {
         0: "",

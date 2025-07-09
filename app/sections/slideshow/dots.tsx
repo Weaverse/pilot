@@ -9,19 +9,19 @@ export interface SlideshowDotsProps extends VariantProps<typeof variants> {
 const variants = cva(
   [
     "slideshow-dots",
-    "absolute z-1 w-auto! flex justify-center items-center px-2.5 gap-4",
+    "absolute z-1 flex w-auto! items-center justify-center gap-4 px-2.5",
   ],
   {
     variants: {
       dotsPosition: {
-        top: "left-0! right-0! top-10! bottom-auto!",
-        bottom: "left-0! right-0! bottom-10! top-auto!",
-        left: "top-0! bottom-0! flex-col left-5! right-auto!",
-        right: "top-0! bottom-0! flex-col right-5! left-auto!",
+        top: "top-10! right-0! bottom-auto! left-0!",
+        bottom: "top-auto! right-0! bottom-10! left-0!",
+        left: "top-0! right-auto! bottom-0! left-5! flex-col",
+        right: "top-0! right-5! bottom-0! left-auto! flex-col",
       },
       dotsColor: {
-        light: "[&_.dot]:bg-white [&_.active]:outline-white!",
-        dark: "[&_.dot]:bg-black [&_.active]:outline-black!",
+        light: "[&_.active]:outline-white! [&_.dot]:bg-white",
+        dark: "[&_.active]:outline-black! [&_.dot]:bg-black",
       },
     },
     defaultVariants: {

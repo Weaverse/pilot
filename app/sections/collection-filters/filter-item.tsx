@@ -59,16 +59,16 @@ export function FilterItem({
           <button
             type="button"
             className={cn(
-              "w-10 h-10 disabled:cursor-not-allowed",
+              "h-10 w-10 disabled:cursor-not-allowed",
               "border hover:border-body",
-              checked ? "p-1 border-line" : "border-line-subtle",
+              checked ? "border-line p-1" : "border-line-subtle",
               option.count === 0 && "diagonal",
             )}
             onClick={() => handleCheckedChange(!checked)}
             disabled={option.count === 0}
           >
             <span
-              className="w-full h-full inline-block"
+              className="inline-block h-full w-full"
               style={{
                 backgroundImage: swatchImage?.value
                   ? `url(${swatchImage?.value})`
@@ -92,7 +92,7 @@ export function FilterItem({
       <button
         type="button"
         className={cn(
-          "px-3 py-1.5 border text-center disabled:cursor-not-allowed",
+          "border px-3 py-1.5 text-center disabled:cursor-not-allowed",
           option.count === 0 && "diagonal text-body-subtle",
           checked
             ? "border-line bg-body text-background"
@@ -118,13 +118,13 @@ export function FilterItem({
         onCheckedChange={handleCheckedChange}
         disabled={option.count === 0}
         className={cn(
-          "w-5 h-5 shrink-0",
+          "h-5 w-5 shrink-0",
           "border border-line focus-visible:outline-hidden",
           "disabled:cursor-not-allowed disabled:opacity-50",
         )}
       >
         <Checkbox.Indicator className="flex items-center justify-center text-current">
-          <span className="inline-block w-3 h-3 bg-body" />
+          <span className="inline-block h-3 w-3 bg-body" />
         </Checkbox.Indicator>
       </Checkbox.Root>
       <FilterLabel option={option} showFiltersCount={showFiltersCount} />

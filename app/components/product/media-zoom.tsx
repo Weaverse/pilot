@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  MagnifyingGlassPlusIcon,
   VideoCameraIcon,
   XIcon,
 } from "@phosphor-icons/react";
@@ -8,7 +9,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { parseGid } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   Media_MediaImage_Fragment,
   Media_Video_Fragment,
@@ -17,8 +18,23 @@ import type {
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { ScrollArea } from "~/components/scroll-area";
+import { Spinner } from "~/components/spinner";
 import { cn } from "~/utils/cn";
-import { getImageAspectRatio } from "~/utils/image";
+import { calculateAspectRatio } from "~/utils/image";
+
+const MAX_CACHED_IMAGES = 50;
+const zoomLoadedImages = new Set<string>();
+
+function addToImageCache(url: string) {
+  if (zoomLoadedImages.size >= MAX_CACHED_IMAGES) {
+    // Remove the oldest entry (first one added)
+    const firstUrl = zoomLoadedImages.values().next().value;
+    if (firstUrl) {
+      zoomLoadedImages.delete(firstUrl);
+    }
+  }
+  zoomLoadedImages.add(url);
+}
 
 export function ZoomModal({
   media,
@@ -34,15 +50,58 @@ export function ZoomModal({
   onOpenChange: (open: boolean) => void;
 }) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [previousMediaId, setPreviousMediaId] = useState(zoomMediaId);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const zoomMedia = media.find((med) => med.id === zoomMediaId);
   const zoomMediaIndex = media.findIndex((med) => med.id === zoomMediaId);
   const nextMedia = media[zoomMediaIndex + 1] ?? media[0];
   const prevMedia = media[zoomMediaIndex - 1] ?? media[media.length - 1];
 
+  // Handle loading state when media changes
+  useEffect(() => {
+    if (zoomMediaId !== previousMediaId) {
+      // Clear any existing timeout to prevent race conditions
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+        loadingTimeoutRef.current = null;
+      }
+
+      const currentMedia = media.find((med) => med.id === zoomMediaId);
+      if (
+        currentMedia?.mediaContentType === "IMAGE"
+      ) {
+        const imageMedia = currentMedia as Media_MediaImage_Fragment;
+        if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
+          setIsImageLoading(true);
+          // Set a timeout to prevent infinite loading state
+          loadingTimeoutRef.current = setTimeout(() => {
+            setIsImageLoading(false);
+          }, 5000);
+        } else {
+          setIsImageLoading(false);
+        }
+      } else {
+        setIsImageLoading(false);
+      }
+      setPreviousMediaId(zoomMediaId);
+    }
+  }, [zoomMediaId, previousMediaId, media]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
+
   function scrollToMedia(id: string) {
     const { id: mediaId } = parseGid(id);
     const mediaElement = document.getElementById(`zoom-media--${mediaId}`);
-    if (mediaElement) {
+    if (mediaElement && scrollAreaRef.current) {
       const isVisible = isVisibleInParent(mediaElement, scrollAreaRef.current);
       if (!isVisible) {
         mediaElement.scrollIntoView({ behavior: "smooth" });
@@ -76,12 +135,12 @@ export function ZoomModal({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 bg-white data-[state=open]:animate-fade-in z-10"
+          className="fixed inset-0 z-10 bg-white data-[state=open]:animate-fade-in"
           style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
         />
         <Dialog.Content
           className={clsx([
-            "fixed inset-0 w-screen z-10",
+            "fixed inset-0 z-10 w-screen",
             "data-[state=open]:animate-slide-up",
           ])}
           style={
@@ -92,17 +151,17 @@ export function ZoomModal({
           }
           aria-describedby={undefined}
         >
-          <div className="w-full h-full flex items-center justify-center bg-(--color-background) relative">
+          <div className="relative flex h-full w-full items-center justify-center bg-(--color-background)">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
-            <div className="hidden md:block absolute top-10 left-8">
+            <div className="absolute top-10 left-8 hidden md:block">
               <ScrollArea
                 ref={scrollAreaRef}
                 className="max-h-[700px]"
                 size="sm"
               >
-                <div className="w-24 pr-2 space-y-2">
+                <div className="w-24 space-y-2 pr-2">
                   {media.map(({ id, previewImage, alt, mediaContentType }) => {
                     const { id: mediaId } = parseGid(id);
                     return (
@@ -111,7 +170,7 @@ export function ZoomModal({
                         id={`zoom-media--${mediaId}`}
                         className={cn(
                           "relative bg-gray-100",
-                          "p-1 border transition-colors cursor-pointer border-transparent h-auto!",
+                          "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
                           zoomMediaId === id && "border-line",
                         )}
                         onClick={() => setZoomMediaId(id)}
@@ -124,12 +183,12 @@ export function ZoomModal({
                           loading="lazy"
                           width={200}
                           aspectRatio="1/1"
-                          className="object-cover w-full h-auto"
+                          className="h-auto w-full object-cover"
                           sizes="auto"
                         />
                         {mediaContentType === "VIDEO" && (
-                          <div className="absolute bottom-2 right-2 bg-gray-900 text-white p-0.5">
-                            <VideoCameraIcon className="w-4 h-4" />
+                          <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+                            <VideoCameraIcon className="h-4 w-4" />
                           </div>
                         )}
                       </div>
@@ -138,11 +197,32 @@ export function ZoomModal({
                 </div>
               </ScrollArea>
             </div>
-            <ZoomMedia media={zoomMedia} />
+            <div className="relative">
+              {isImageLoading && <Spinner />}
+              <ZoomMedia
+                media={zoomMedia}
+                onImageLoad={() => {
+                  // Clear timeout when image loads successfully
+                  if (loadingTimeoutRef.current) {
+                    clearTimeout(loadingTimeoutRef.current);
+                    loadingTimeoutRef.current = null;
+                  }
+                  setIsImageLoading(false);
+                  if (
+                    zoomMedia?.mediaContentType === "IMAGE"
+                  ) {
+                    const imageMedia = zoomMedia as Media_MediaImage_Fragment;
+                    if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
+                      addToImageCache(imageMedia.image.url);
+                    }
+                  }
+                }}
+              />
+            </div>
             <Dialog.Close className="absolute top-4 right-4 z-1">
-              <XIcon className="w-6 h-6" />
+              <XIcon className="h-6 w-6" />
             </Dialog.Close>
-            <div className="flex items-center gap-2 justify-center absolute bottom-10 left-10 md:left-auto right-10">
+            <div className="absolute right-10 bottom-10 left-10 flex items-center justify-center gap-2 md:left-auto">
               <Button
                 variant="secondary"
                 className="border-line-subtle"
@@ -151,7 +231,7 @@ export function ZoomModal({
                   scrollToMedia(prevMedia.id);
                 }}
               >
-                <ArrowLeftIcon className="w-4.5 h-4.5" />
+                <ArrowLeftIcon className="h-4.5 w-4.5" />
               </Button>
               <Button
                 variant="secondary"
@@ -161,7 +241,7 @@ export function ZoomModal({
                   scrollToMedia(nextMedia.id);
                 }}
               >
-                <ArrowRightIcon className="w-4.5 h-4.5" />
+                <ArrowRightIcon className="h-4.5 w-4.5" />
               </Button>
             </div>
           </div>
@@ -171,7 +251,13 @@ export function ZoomModal({
   );
 }
 
-function ZoomMedia({ media }: { media: MediaFragment }) {
+function ZoomMedia({
+  media,
+  onImageLoad,
+}: {
+  media: MediaFragment | undefined;
+  onImageLoad?: () => void;
+}) {
   if (!media) return null;
   if (media.mediaContentType === "IMAGE") {
     const { image, alt } = media as Media_MediaImage_Fragment;
@@ -179,17 +265,18 @@ function ZoomMedia({ media }: { media: MediaFragment }) {
       <Image
         data={{ ...image, altText: alt || "Product image zoom" }}
         loading="lazy"
-        className="object-cover max-w-[95vw] w-auto h-auto md:h-full max-h-screen-no-topbar"
+        className="h-auto max-h-screen-no-topbar w-auto max-w-[95vw] object-cover md:h-full"
         width={4096}
-        aspectRatio={getImageAspectRatio(image, "adapt")}
+        aspectRatio={calculateAspectRatio(image, "adapt")}
         sizes="auto"
+        onLoad={onImageLoad}
       />
     );
   }
   if (media.mediaContentType === "VIDEO") {
     const mediaVideo = media as Media_Video_Fragment;
     return (
-      <video controls className="h-auto md:h-full object-cover">
+      <video controls className="h-auto object-cover md:h-full">
         <track kind="captions" />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
@@ -206,5 +293,26 @@ function isVisibleInParent(child: HTMLElement, parent: HTMLElement) {
     childRect.bottom <= parentRect.bottom &&
     childRect.left >= parentRect.left &&
     childRect.right <= parentRect.right
+  );
+}
+
+export interface ZoomButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+
+export function ZoomButton({ className, ...props }: ZoomButtonProps) {
+  return (
+    <button
+      type="button"
+      className={clsx(
+        "rounded-full border border-transparent p-2 text-center",
+        "transition-all duration-200",
+        "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
+        className,
+      )}
+      aria-label="Zoom product media"
+      {...props}
+    >
+      <MagnifyingGlassPlusIcon className="h-5 w-5" />
+    </button>
   );
 }

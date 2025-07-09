@@ -60,7 +60,7 @@ export function CartBestSellers({
       <div
         className={clsx([
           "grid grid-cols-2 gap-x-6 gap-y-8",
-          layout === "page" ? "md:grid-cols-4 sm:grid-col-4" : "",
+          layout === "page" ? "sm:grid-cols-4 md:grid-cols-4" : "",
         ])}
       >
         <CartBestSellersContent
@@ -90,7 +90,7 @@ function CartBestSellersContent({
         {[...new Array(count)].map((_, i) => (
           <div key={`${id + i}`} className="grid gap-2">
             <Skeleton className="aspect-3/4" />
-            <Skeleton className="w-32 h-4" />
+            <Skeleton className="h-4 w-32" />
           </div>
         ))}
       </>

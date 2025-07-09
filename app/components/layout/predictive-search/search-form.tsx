@@ -1,16 +1,11 @@
-import {
-  type MutableRefObject,
-  type ReactNode,
-  useEffect,
-  useRef,
-} from "react";
+import { type ReactNode, type RefObject, useEffect, useRef } from "react";
 import { type FormProps, useFetcher, useParams } from "react-router";
 import type { NormalizedPredictiveSearchResults } from "~/types/predictive-search";
 
 type ChildrenRenderProps = {
   fetchResults: (event: string) => void;
   fetcher: ReturnType<typeof useFetcher<NormalizedPredictiveSearchResults>>;
-  inputRef: MutableRefObject<HTMLInputElement | null>;
+  inputRef: RefObject<HTMLInputElement | null>;
 };
 
 type SearchFromProps = {
