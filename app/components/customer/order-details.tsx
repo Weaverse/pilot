@@ -27,7 +27,7 @@ export function OrderDetails() {
 
   return (
     <Section width="fixed" verticalPadding="medium">
-      <div className="w-full sm:grid-cols-1 lg:py-6">
+      <div className="w-full lg:py-6">
         <div className="mb-8 flex flex-col gap-4">
           <h1 className="h4 font-medium">Order Detail</h1>
           <Link

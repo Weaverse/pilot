@@ -32,7 +32,7 @@ function EmptyOrders() {
 
 function Orders({ orders }: OrderCardsProps) {
   return (
-    <ul className="false grid grid-flow-row grid-cols-1 gap-5 sm:grid-cols-2">
+    <ul className="grid grid-flow-row grid-cols-1 gap-5 sm:grid-cols-2">
       {orders.map((order) => (
         <OrderCard order={order} key={order.id} />
       ))}
