@@ -26,7 +26,7 @@ const variants = cva(
     "grid w-full justify-start gap-2 lg:gap-1",
     "lg:grid-cols-1",
     "grid-flow-col lg:grid-flow-row",
-    "scroll-px-6 overflow-x-scroll",
+    "scroll-px-6 overflow-x-scroll md:overflow-x-auto",
     "snap-x snap-mandatory",
   ],
   {
