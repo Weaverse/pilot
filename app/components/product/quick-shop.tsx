@@ -136,7 +136,7 @@ export function QuickShopTrigger({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
   useEffect(() => {
-    if (open && !data && state !== "loading") {
+    if (open && !data) {
       load(`/api/product?handle=${productHandle}`);
     }
   }, [open]);
@@ -208,7 +208,7 @@ export function QuickShopTrigger({
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Quick shop modal</Dialog.Title>
             </VisuallyHidden.Root>
-            {state === "loading" || !data?.product ? (
+            {!data?.product ? (
               <div
                 className={clsx(
                   "grid grid-cols-1 items-start gap-5",
