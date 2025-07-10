@@ -67,27 +67,6 @@ export function ProductCard({
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
 
-  const handleVariantChange = (variant: ProductVariantFragment) => {
-    // Clear any existing timeout
-    if (loadingTimeoutRef.current) {
-      clearTimeout(loadingTimeoutRef.current);
-      loadingTimeoutRef.current = null;
-    }
-
-    if (
-      variant.image &&
-      variant.id !== selectedVariant?.id &&
-      !pcardLoadedImages.has(variant.image.url)
-    ) {
-      setIsImageLoading(true);
-      // Set a timeout to prevent infinite loading state
-      loadingTimeoutRef.current = setTimeout(() => {
-        setIsImageLoading(false);
-      }, 5000);
-    }
-    setSelectedVariant(variant);
-  };
-
   // Reset loading state if variant doesn't have an image
   useEffect(() => {
     if (selectedVariant && !selectedVariant.image) {
@@ -268,7 +247,26 @@ export function ProductCard({
         <ProductCardOptions
           product={product}
           selectedVariant={selectedVariant}
-          setSelectedVariant={handleVariantChange}
+          setSelectedVariant={(variant: ProductVariantFragment) => {
+            // Clear any existing timeout
+            if (loadingTimeoutRef.current) {
+              clearTimeout(loadingTimeoutRef.current);
+              loadingTimeoutRef.current = null;
+            }
+
+            if (
+              variant.image &&
+              variant.id !== selectedVariant?.id &&
+              !pcardLoadedImages.has(variant.image.url)
+            ) {
+              setIsImageLoading(true);
+              // Set a timeout to prevent infinite loading state
+              loadingTimeoutRef.current = setTimeout(() => {
+                setIsImageLoading(false);
+              }, 5000);
+            }
+            setSelectedVariant(variant);
+          }}
           className={clsx(
             isVertical && [
               pcardAlignment === "left" && "justify-start",
