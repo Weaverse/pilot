@@ -69,9 +69,7 @@ export function ZoomModal({
       }
 
       const currentMedia = media.find((med) => med.id === zoomMediaId);
-      if (
-        currentMedia?.mediaContentType === "IMAGE"
-      ) {
+      if (currentMedia?.mediaContentType === "IMAGE") {
         const imageMedia = currentMedia as Media_MediaImage_Fragment;
         if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
           setIsImageLoading(true);
@@ -182,7 +180,6 @@ export function ZoomModal({
                           }}
                           loading="lazy"
                           width={200}
-                          aspectRatio="1/1"
                           className="h-auto w-full object-cover"
                           sizes="auto"
                         />
@@ -208,11 +205,12 @@ export function ZoomModal({
                     loadingTimeoutRef.current = null;
                   }
                   setIsImageLoading(false);
-                  if (
-                    zoomMedia?.mediaContentType === "IMAGE"
-                  ) {
+                  if (zoomMedia?.mediaContentType === "IMAGE") {
                     const imageMedia = zoomMedia as Media_MediaImage_Fragment;
-                    if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
+                    if (
+                      imageMedia.image &&
+                      !zoomLoadedImages.has(imageMedia.image.url)
+                    ) {
                       addToImageCache(imageMedia.image.url);
                     }
                   }
