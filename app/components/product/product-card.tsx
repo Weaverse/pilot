@@ -225,12 +225,14 @@ export function ProductCard({
             prefetch="intent"
             className={({ isTransitioning }) =>
               clsx(
-                "font-bold ",
+                "font-bold",
                 isTransitioning && "[view-transition-name:product-image]",
               )
             }
           >
-            <RevealUnderline>{product.title}</RevealUnderline>
+            <RevealUnderline className="bg-position-[left_calc(1em+3px)] leading-normal">
+              {product.title}
+            </RevealUnderline>
           </NavLink>
           {pcardShowLowestPrice ? (
             <div className="flex gap-1">
