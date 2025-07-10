@@ -46,7 +46,7 @@
     "clsx": "2.1.1",
     "colord": "2.9.3",
     "cross-env": "7.0.3",
-    "framer-motion": "12.19.2",
+    "framer-motion": "12.23.1",
     "graphql": "16.11.0",
     "graphql-tag": "2.12.6",
     "isbot": "5.1.28",
@@ -65,11 +65,11 @@
     "typographic-base": "1.0.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.6",
-    "@playwright/test": "1.53.1",
+    "@biomejs/biome": "2.1.1",
+    "@playwright/test": "1.53.2",
     "@react-router/dev": "^7.6.3",
     "@react-router/fs-routes": "^7.6.3",
-    "@shopify/cli": "3.81.2",
+    "@shopify/cli": "3.82.0",
     "@shopify/hydrogen-codegen": "0.3.3",
     "@shopify/mini-oxygen": "3.2.1",
     "@shopify/oxygen-workers-types": "4.1.10",
@@ -83,11 +83,11 @@
     "tailwindcss": "^4.1.10",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
-    "vite": "6.3.5",
+    "vite": "7.0.3",
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "0.25.5"
+    "@esbuild/linux-x64": "0.25.6"
   },
   "engines": {
     "node": ">=20"
