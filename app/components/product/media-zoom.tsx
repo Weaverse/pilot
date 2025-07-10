@@ -22,20 +22,6 @@ import { Spinner } from "~/components/spinner";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
 
-const MAX_CACHED_IMAGES = 50;
-const zoomLoadedImages = new Set<string>();
-
-function addToImageCache(url: string) {
-  if (zoomLoadedImages.size >= MAX_CACHED_IMAGES) {
-    // Remove the oldest entry (first one added)
-    const firstUrl = zoomLoadedImages.values().next().value;
-    if (firstUrl) {
-      zoomLoadedImages.delete(firstUrl);
-    }
-  }
-  zoomLoadedImages.add(url);
-}
-
 export function ZoomModal({
   media,
   zoomMediaId,
@@ -52,7 +38,6 @@ export function ZoomModal({
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [previousMediaId, setPreviousMediaId] = useState(zoomMediaId);
-  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const zoomMedia = media.find((med) => med.id === zoomMediaId);
   const zoomMediaIndex = media.findIndex((med) => med.id === zoomMediaId);
@@ -62,25 +47,18 @@ export function ZoomModal({
   // Handle loading state when media changes
   useEffect(() => {
     if (zoomMediaId !== previousMediaId) {
-      // Clear any existing timeout to prevent race conditions
-      if (loadingTimeoutRef.current) {
-        clearTimeout(loadingTimeoutRef.current);
-        loadingTimeoutRef.current = null;
-      }
-
       const currentMedia = media.find((med) => med.id === zoomMediaId);
-      if (
-        currentMedia?.mediaContentType === "IMAGE"
-      ) {
+      if (currentMedia?.mediaContentType === "IMAGE") {
         const imageMedia = currentMedia as Media_MediaImage_Fragment;
-        if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
+        const previousMedia = media.find((med) => med.id === previousMediaId);
+        const previousImageUrl =
+          previousMedia?.mediaContentType === "IMAGE"
+            ? (previousMedia as Media_MediaImage_Fragment).image?.url
+            : null;
+
+        // Only show loading if switching to a different image
+        if (imageMedia.image?.url !== previousImageUrl) {
           setIsImageLoading(true);
-          // Set a timeout to prevent infinite loading state
-          loadingTimeoutRef.current = setTimeout(() => {
-            setIsImageLoading(false);
-          }, 5000);
-        } else {
-          setIsImageLoading(false);
         }
       } else {
         setIsImageLoading(false);
@@ -88,15 +66,6 @@ export function ZoomModal({
       setPreviousMediaId(zoomMediaId);
     }
   }, [zoomMediaId, previousMediaId, media]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (loadingTimeoutRef.current) {
-        clearTimeout(loadingTimeoutRef.current);
-      }
-    };
-  }, []);
 
   function scrollToMedia(id: string) {
     const { id: mediaId } = parseGid(id);
@@ -155,7 +124,7 @@ export function ZoomModal({
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
-            <div className="absolute top-10 left-8 hidden md:block">
+            <div className="absolute top-10 left-8 hidden lg:block">
               <ScrollArea
                 ref={scrollAreaRef}
                 className="max-h-[700px]"
@@ -182,7 +151,6 @@ export function ZoomModal({
                           }}
                           loading="lazy"
                           width={200}
-                          aspectRatio="1/1"
                           className="h-auto w-full object-cover"
                           sizes="auto"
                         />
@@ -201,22 +169,7 @@ export function ZoomModal({
               {isImageLoading && <Spinner />}
               <ZoomMedia
                 media={zoomMedia}
-                onImageLoad={() => {
-                  // Clear timeout when image loads successfully
-                  if (loadingTimeoutRef.current) {
-                    clearTimeout(loadingTimeoutRef.current);
-                    loadingTimeoutRef.current = null;
-                  }
-                  setIsImageLoading(false);
-                  if (
-                    zoomMedia?.mediaContentType === "IMAGE"
-                  ) {
-                    const imageMedia = zoomMedia as Media_MediaImage_Fragment;
-                    if (imageMedia.image && !zoomLoadedImages.has(imageMedia.image.url)) {
-                      addToImageCache(imageMedia.image.url);
-                    }
-                  }
-                }}
+                onImageLoad={() => setIsImageLoading(false)}
               />
             </div>
             <Dialog.Close className="absolute top-4 right-4 z-1">
@@ -265,7 +218,7 @@ function ZoomMedia({
       <Image
         data={{ ...image, altText: alt || "Product image zoom" }}
         loading="lazy"
-        className="h-auto max-h-screen-no-topbar w-auto max-w-[95vw] object-cover md:h-full"
+        className="h-auto w-auto object-cover md:h-full lg:max-w-[calc(100vw-16rem)] [&>img]:max-h-screen"
         width={4096}
         aspectRatio={calculateAspectRatio(image, "adapt")}
         sizes="auto"
