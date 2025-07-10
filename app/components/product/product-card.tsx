@@ -2,7 +2,7 @@ import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import type {
   ProductCardFragment,
   ProductVariantFragment,
@@ -17,20 +17,6 @@ import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
 import { VariantPrices } from "./variant-prices";
-
-const MAX_CACHED_IMAGES = 100;
-const pcardLoadedImages = new Set<string>();
-
-function addToImageCache(url: string) {
-  if (pcardLoadedImages.size >= MAX_CACHED_IMAGES) {
-    // Remove the oldest entry (first one added)
-    const firstUrl = pcardLoadedImages.values().next().value;
-    if (firstUrl) {
-      pcardLoadedImages.delete(firstUrl);
-    }
-  }
-  pcardLoadedImages.add(url);
-}
 
 export function ProductCard({
   product,
@@ -63,25 +49,8 @@ export function ProductCard({
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
-  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
-
-  // Reset loading state if variant doesn't have an image
-  useEffect(() => {
-    if (selectedVariant && !selectedVariant.image) {
-      setIsImageLoading(false);
-    }
-  }, [selectedVariant]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (loadingTimeoutRef.current) {
-        clearTimeout(loadingTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const firstVariant = product.selectedOrFirstAvailableVariant;
   const params = new URLSearchParams(
@@ -139,17 +108,7 @@ export function ProductCard({
               width={700}
               alt={image.altText || `Picture of ${product.title}`}
               loading="lazy"
-              onLoad={() => {
-                // Clear timeout when image loads successfully
-                if (loadingTimeoutRef.current) {
-                  clearTimeout(loadingTimeoutRef.current);
-                  loadingTimeoutRef.current = null;
-                }
-                setIsImageLoading(false);
-                if (!pcardLoadedImages.has(image.url)) {
-                  addToImageCache(image.url);
-                }
-              }}
+              onLoad={() => setIsImageLoading(false)}
             />
             {pcardShowImageOnHover && secondImage && (
               <Image
@@ -250,22 +209,9 @@ export function ProductCard({
           product={product}
           selectedVariant={selectedVariant}
           setSelectedVariant={(variant: ProductVariantFragment) => {
-            // Clear any existing timeout
-            if (loadingTimeoutRef.current) {
-              clearTimeout(loadingTimeoutRef.current);
-              loadingTimeoutRef.current = null;
-            }
-
-            if (
-              variant.image &&
-              variant.id !== selectedVariant?.id &&
-              !pcardLoadedImages.has(variant.image.url)
-            ) {
+            // Only show loading if variant has a different image
+            if (variant.image?.url !== selectedVariant?.image?.url) {
               setIsImageLoading(true);
-              // Set a timeout to prevent infinite loading state
-              loadingTimeoutRef.current = setTimeout(() => {
-                setIsImageLoading(false);
-              }, 5000);
             }
             setSelectedVariant(variant);
           }}
