@@ -153,7 +153,7 @@ export function ZoomModal({
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
-            <div className="absolute top-10 left-8 hidden md:block">
+            <div className="absolute top-10 left-8 hidden lg:block">
               <ScrollArea
                 ref={scrollAreaRef}
                 className="max-h-[700px]"
@@ -263,7 +263,7 @@ function ZoomMedia({
       <Image
         data={{ ...image, altText: alt || "Product image zoom" }}
         loading="lazy"
-        className="h-auto max-h-screen-no-topbar w-auto max-w-[95vw] object-cover md:h-full"
+        className="h-auto max-h-screen-no-topbar w-auto object-cover md:h-full lg:max-w-[calc(100vw-16rem)] [&>img]:max-h-screen"
         width={4096}
         aspectRatio={calculateAspectRatio(image, "adapt")}
         sizes="auto"
