@@ -4,7 +4,7 @@
 
 @theme {
   --font-sans: Poppins, ui-sans-serif, system-ui, sans-serif;
-  --font-serif: Arial, IBMPlexSerif, Palatino, ui-serif;
+  --font-serif: Poppins, Arial, IBMPlexSerif, Palatino, ui-serif;
 
   --breakpoint-sm: 32em;
   --breakpoint-md: 48em;
