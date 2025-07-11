@@ -19,13 +19,17 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
-import { NewsletterPopup } from "./components/newsletter-popup";
+import {
+  NewsletterPopup,
+  useShouldRenderNewsletterPopup,
+} from "./components/newsletter-popup";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
@@ -98,10 +102,12 @@ export function ErrorBoundary({ error }: { error: Error }) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { topbarHeight, topbarText } = useThemeSettings();
+  const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
 
   return (
     <html lang={locale.language}>
@@ -149,7 +155,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </main>
                 <Footer />
               </div>
-              <NewsletterPopup />
+              {shouldShowNewsletterPopup && <NewsletterPopup />}
             </TooltipProvider>
             <CustomAnalytics />
           </Analytics.Provider>

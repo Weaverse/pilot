@@ -1,23 +1,35 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings, useWeaverse } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
-import type { loader } from "~/root";
+import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 const POPUP_DISMISSED_KEY = "newsletter-popup-dismissed";
 
-export function NewsletterPopup() {
+export function useShouldRenderNewsletterPopup() {
   const location = useLocation();
+  const data = useRouteLoaderData<RootLoader>("root");
+  const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  const { newsletterPopupEnabled, newsletterPopupHomeOnly } =
+    useThemeSettings();
+  const pathParts = location.pathname.split("/").filter(Boolean);
+  const isHomePage =
+    pathParts.length === 0 ||
+    (pathParts.length === 1 && pathParts[0] === locale.pathPrefix.slice(1));
+  return (
+    newsletterPopupEnabled && (newsletterPopupHomeOnly ? isHomePage : true)
+  );
+}
+
+export function NewsletterPopup() {
   const {
-    newsletterPopupEnabled,
     newsletterPopupDelay,
-    newsletterPopupHomeOnly,
     newsletterPopupAllowDismiss,
     newsletterPopupImage,
     newsletterPopupImagePosition = "left",
@@ -30,14 +42,14 @@ export function NewsletterPopup() {
   const [open, setOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
-  const rootData = useRouteLoaderData<typeof loader>("root");
-  const locale = rootData.selectedLocale || DEFAULT_LOCALE;
+  const { isDesignMode } = useWeaverse();
 
   // Compute message and error from fetcher data
   const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
-  const error = fetcher.data && !fetcher.data.ok 
-    ? fetcher.data.error || "An error occurred while signing up."
-    : "";
+  const error =
+    fetcher.data && !fetcher.data.ok
+      ? fetcher.data.error || "An error occurred while signing up."
+      : "";
 
   // Check if popup was dismissed
   useEffect(() => {
@@ -59,32 +71,14 @@ export function NewsletterPopup() {
 
   // Handle popup display logic
   useEffect(() => {
-    if (!newsletterPopupEnabled || isDismissed) return;
-
-    // Check if it's homepage, accounting for locale strings like /en-us, /fr-ca, etc.
-    const pathParts = location.pathname.split("/").filter(Boolean);
-    const isHomePage =
-      pathParts.length === 0 ||
-      (pathParts.length === 1 && pathParts[0] === locale.pathPrefix.slice(1));
-    if (newsletterPopupHomeOnly && !isHomePage) return;
+    if (isDismissed) return;
 
     const timer = setTimeout(() => {
       setOpen(true);
     }, newsletterPopupDelay * 1000);
 
     return () => clearTimeout(timer);
-  }, [
-    newsletterPopupEnabled,
-    newsletterPopupDelay,
-    newsletterPopupHomeOnly,
-    location.pathname,
-    isDismissed,
-    locale.pathPrefix,
-  ]);
-
-  if (!newsletterPopupEnabled) {
-    return null;
-  }
+  }, [newsletterPopupDelay, isDismissed]);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
