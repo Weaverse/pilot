@@ -25,6 +25,7 @@ import {
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import { NewsletterPopup } from "./components/newsletter-popup";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
@@ -148,6 +149,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </main>
                 <Footer />
               </div>
+              <NewsletterPopup />
             </TooltipProvider>
             <CustomAnalytics />
           </Analytics.Provider>
