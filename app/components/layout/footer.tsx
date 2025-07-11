@@ -10,7 +10,6 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { type FormEvent, useEffect, useState } from "react";
 import { Link, useFetcher } from "react-router";
 import { Button } from "~/components/button";
 import { useShopMenu } from "~/hooks/use-shop-menu";
@@ -55,21 +54,12 @@ export function Footer() {
     newsletterButtonText,
   } = useThemeSettings();
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const newsLetterResponse = fetcher.data;
-
-  useEffect(() => {
-    if (newsLetterResponse) {
-      if (!newsLetterResponse.ok) {
-        setError(
-          newsLetterResponse.error || "An error occurred while signing up.",
-        );
-      } else {
-        setMessage("Thank you for signing up! 🎉");
-      }
-    }
-  }, [newsLetterResponse]);
+  
+  // Compute message and error from fetcher data
+  const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
+  const error = fetcher.data && !fetcher.data.ok 
+    ? fetcher.data.error || "An error occurred while signing up."
+    : "";
 
   const SOCIAL_ACCOUNTS = [
     {
@@ -151,11 +141,6 @@ export function Footer() {
               <div className="space-y-2">
                 <p>{newsletterDescription}</p>
                 <fetcher.Form
-                  onSubmit={(event: FormEvent<HTMLFormElement>) => {
-                    setMessage("");
-                    setError("");
-                    fetcher.submit(event.currentTarget);
-                  }}
                   action="/api/klaviyo"
                   method="POST"
                   encType="multipart/form-data"
