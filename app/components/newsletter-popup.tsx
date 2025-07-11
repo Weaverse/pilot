@@ -2,7 +2,7 @@ import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { type FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
@@ -30,11 +30,14 @@ export function NewsletterPopup() {
   const [open, setOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const newsLetterResponse = fetcher.data;
   const rootData = useRouteLoaderData<typeof loader>("root");
   const locale = rootData.selectedLocale || DEFAULT_LOCALE;
+
+  // Compute message and error from fetcher data
+  const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
+  const error = fetcher.data && !fetcher.data.ok 
+    ? fetcher.data.error || "An error occurred while signing up."
+    : "";
 
   // Check if popup was dismissed
   useEffect(() => {
@@ -44,22 +47,15 @@ export function NewsletterPopup() {
     }
   }, []);
 
-  // Handle newsletter response
+  // Close popup after successful submission
   useEffect(() => {
-    if (newsLetterResponse) {
-      if (!newsLetterResponse.ok) {
-        setError(
-          newsLetterResponse.error || "An error occurred while signing up.",
-        );
-      } else {
-        setMessage("Thank you for signing up! 🎉");
-        // Close popup after successful submission
-        setTimeout(() => {
-          setOpen(false);
-        }, 2000);
-      }
+    if (fetcher.data?.ok) {
+      const timer = setTimeout(() => {
+        setOpen(false);
+      }, 2000);
+      return () => clearTimeout(timer);
     }
-  }, [newsLetterResponse]);
+  }, [fetcher.data]);
 
   // Handle popup display logic
   useEffect(() => {
@@ -179,11 +175,6 @@ export function NewsletterPopup() {
                 </p>
 
                 <fetcher.Form
-                  onSubmit={(event: FormEvent<HTMLFormElement>) => {
-                    setMessage("");
-                    setError("");
-                    fetcher.submit(event.currentTarget);
-                  }}
                   action="/api/klaviyo"
                   method="POST"
                   encType="multipart/form-data"
