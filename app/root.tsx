@@ -1,7 +1,5 @@
-import poppins400 from "@fontsource/poppins/400.css?url";
-import poppins500 from "@fontsource/poppins/500.css?url";
-import poppins600 from "@fontsource/poppins/600.css?url";
-import poppins700 from "@fontsource/poppins/700.css?url";
+// Supports weights 400-700
+import "@fontsource-variable/cabin";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
@@ -112,10 +110,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={poppins400} />
-        <link rel="stylesheet" href={poppins500} />
-        <link rel="stylesheet" href={poppins600} />
-        <link rel="stylesheet" href={poppins700} />
         <link rel="stylesheet" href={styles} />
         <Meta />
         <Links />

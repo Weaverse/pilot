@@ -23,7 +23,7 @@
     "format:check": "biome format"
   },
   "dependencies": {
-    "@fontsource/poppins": "5.2.6",
+    "@fontsource-variable/cabin": "^5.2.6",
     "@graphql-codegen/cli": "5.0.7",
     "@phosphor-icons/react": "2.1.10",
     "@radix-ui/react-accordion": "1.2.11",

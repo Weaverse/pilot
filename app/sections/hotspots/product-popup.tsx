@@ -95,7 +95,7 @@ export function ProductPopup({
             <Image data={featuredImage} alt={product.title} sizes="auto" />
           </div>
         )}
-        <div className="flex flex-col gap-2 py-2 font-sans">
+        <div className="flex flex-col gap-2 py-2">
           <div className="space-y-1">
             <div className="font-semibold">{product.title}</div>
             {showPrice && (
