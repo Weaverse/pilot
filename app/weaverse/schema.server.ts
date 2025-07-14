@@ -482,7 +482,7 @@ export const themeSchema: HydrogenThemeSchema = {
             step: 1,
             unit: "px",
           },
-          defaultValue: 14,
+          defaultValue: 15,
         },
         {
           type: "range",
