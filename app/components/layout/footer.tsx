@@ -54,12 +54,13 @@ export function Footer() {
     newsletterButtonText,
   } = useThemeSettings();
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
-  
+
   // Compute message and error from fetcher data
   const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
-  const error = fetcher.data && !fetcher.data.ok 
-    ? fetcher.data.error || "An error occurred while signing up."
-    : "";
+  const error =
+    fetcher.data && !fetcher.data.ok
+      ? fetcher.data.error || "An error occurred while signing up."
+      : "";
 
   const SOCIAL_ACCOUNTS = [
     {
