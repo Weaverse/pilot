@@ -89,7 +89,13 @@ export function ProductMedia(props: ProductMediaProps) {
         <div className={variants({ gridSize })}>
           {media.map((med, idx) => {
             return (
-              <div key={med.id} className="group relative">
+              <div
+                key={med.id}
+                className={clsx(
+                  "group relative",
+                  gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
+                )}
+              >
                 <div
                   onClick={
                     canClickImage
@@ -105,10 +111,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     media={med}
                     imageAspectRatio={imageAspectRatio}
                     index={idx}
-                    className={clsx(
-                      "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
-                      gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
-                    )}
+                    className="w-[80vw] max-w-none object-cover lg:h-full lg:w-full"
                   />
                 </div>
                 {shouldShowButton && (

@@ -1,7 +1,5 @@
-import poppins400 from "@fontsource/poppins/400.css?url";
-import poppins500 from "@fontsource/poppins/500.css?url";
-import poppins600 from "@fontsource/poppins/600.css?url";
-import poppins700 from "@fontsource/poppins/700.css?url";
+// Supports weights 400-700
+import "@fontsource-variable/cabin";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
@@ -25,6 +23,10 @@ import {
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import {
+  NewsletterPopup,
+  useShouldRenderNewsletterPopup,
+} from "./components/newsletter-popup";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
@@ -101,16 +103,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { topbarHeight, topbarText } = useThemeSettings();
+  const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
 
   return (
     <html lang={locale.language}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={poppins400} />
-        <link rel="stylesheet" href={poppins500} />
-        <link rel="stylesheet" href={poppins600} />
-        <link rel="stylesheet" href={poppins700} />
         <link rel="stylesheet" href={styles} />
         <Meta />
         <Links />
@@ -148,6 +147,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </main>
                 <Footer />
               </div>
+              {shouldShowNewsletterPopup && <NewsletterPopup />}
             </TooltipProvider>
             <CustomAnalytics />
           </Analytics.Provider>

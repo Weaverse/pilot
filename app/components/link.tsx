@@ -14,7 +14,7 @@ import {
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 
-const variants = cva(["inline-flex transition-colors"], {
+export const variants = cva(["inline-flex transition-colors"], {
   variants: {
     variant: {
       primary: [

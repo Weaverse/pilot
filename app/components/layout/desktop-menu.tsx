@@ -124,7 +124,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
               className={clsx([
                 "absolute inset-0 flex items-center justify-center p-2 text-center",
                 "bg-black/20 group-hover/item:bg-black/40",
-                "h6 font-medium text-body-inverse transition-all duration-300",
+                "h6 text-body-inverse transition-all duration-300",
               ])}
             >
               {title}

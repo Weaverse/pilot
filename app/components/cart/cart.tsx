@@ -57,7 +57,7 @@ function CartDetails({
     <div
       className={clsx(
         layout === "drawer" &&
-          "grid h-screen-dynamic grid-cols-1 grid-rows-[1fr_auto] px-4",
+          "grid grow grid-cols-1 grid-rows-[1fr_auto] px-4",
         layout === "page" && [
           "mx-auto w-full max-w-(--page-width) pb-12",
           "grid md:grid-cols-2 md:items-start lg:grid-cols-3",
