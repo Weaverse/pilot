@@ -861,7 +861,8 @@ export const themeSchema: HydrogenThemeSchema = {
           },
           defaultValue: "left",
           helpText: "Image position for desktop devices only",
-          condition: (theme) => theme.newsletterPopupEnabled === true && theme.newsletterPopupImage,
+          condition: (theme) =>
+            theme.newsletterPopupEnabled === true && theme.newsletterPopupImage,
         },
         {
           type: "text",
