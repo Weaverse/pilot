@@ -1,11 +1,12 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useThemeSettings, useWeaverse } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
+import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
@@ -40,9 +41,8 @@ export function NewsletterPopup() {
   } = useThemeSettings();
 
   const [open, setOpen] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
-  const { isDesignMode } = useWeaverse();
+  const isDesignMode = useWeaverseStudioCheck();
 
   // Compute message and error from fetcher data
   const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
@@ -50,14 +50,6 @@ export function NewsletterPopup() {
     fetcher.data && !fetcher.data.ok
       ? fetcher.data.error || "An error occurred while signing up."
       : "";
-
-  // Check if popup was dismissed
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const dismissed = localStorage.getItem(POPUP_DISMISSED_KEY);
-      setIsDismissed(dismissed === "true");
-    }
-  }, []);
 
   // Close popup after successful submission
   useEffect(() => {
@@ -69,16 +61,33 @@ export function NewsletterPopup() {
     }
   }, [fetcher.data]);
 
-  // Handle popup display logic
+  // biome-ignore lint/correctness/useExhaustiveDependencies: just need to run once
   useEffect(() => {
+    const isDismissed = localStorage.getItem(POPUP_DISMISSED_KEY) === "true";
     if (isDismissed) return;
-
     const timer = setTimeout(() => {
       setOpen(true);
     }, newsletterPopupDelay * 1000);
 
     return () => clearTimeout(timer);
-  }, [newsletterPopupDelay, isDismissed]);
+  }, []);
+
+  // Re-open popup when settings change in design mode
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to track all settings changes in design mode
+  useEffect(() => {
+    if (isDesignMode) {
+      setOpen(true);
+    }
+  }, [
+    newsletterPopupDelay,
+    newsletterPopupAllowDismiss,
+    newsletterPopupImage,
+    newsletterPopupImagePosition,
+    newsletterPopupHeading,
+    newsletterPopupDescription,
+    newsletterPopupButtonText,
+    newsletterPopupPosition,
+  ]);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -191,12 +200,12 @@ export function NewsletterPopup() {
                 </fetcher.Form>
 
                 {error && (
-                  <div className="mt-4 bg-red-50 px-3 py-2 text-red-700 text-sm">
+                  <div className="mt-4 bg-red-200 px-3 py-2 text-center text-red-700 text-sm">
                     {error}
                   </div>
                 )}
                 {message && (
-                  <div className="mt-4 bg-green-50 px-3 py-2 text-green-700 text-sm">
+                  <div className="mt-4 bg-green-50 px-3 py-2 text-center text-green-700 text-sm">
                     {message}
                   </div>
                 )}
@@ -205,13 +214,7 @@ export function NewsletterPopup() {
                   <button
                     type="button"
                     onClick={() => {
-                      if (
-                        newsletterPopupAllowDismiss &&
-                        typeof window !== "undefined"
-                      ) {
-                        localStorage.setItem(POPUP_DISMISSED_KEY, "true");
-                        setIsDismissed(true);
-                      }
+                      localStorage.setItem(POPUP_DISMISSED_KEY, "true");
                       setOpen(false);
                     }}
                     className="mt-4 text-body-subtle text-sm underline underline-offset-4 hover:text-body"
