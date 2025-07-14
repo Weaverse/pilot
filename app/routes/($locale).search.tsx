@@ -11,11 +11,12 @@ import { Fragment, Suspense, useEffect, useState } from "react";
 import { Await, Form, useLoaderData } from "react-router";
 import type { SearchQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
-import Link from "~/components/link";
+import Link, { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { cn } from "~/utils/cn";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import {
@@ -146,21 +147,19 @@ export default function Search() {
           {({
             nodes,
             isLoading,
-            nextPageUrl,
             hasNextPage,
-            previousPageUrl,
             hasPreviousPage,
+            NextLink,
+            PreviousLink,
           }) => {
             return (
               <div className="flex w-full flex-col items-center gap-8 pt-20">
                 {hasPreviousPage && (
-                  <Link
-                    to={previousPageUrl}
-                    variant="outline"
-                    className="mx-auto"
+                  <PreviousLink
+                    className={cn("mx-auto", variants({ variant: "outline" }))}
                   >
                     {isLoading ? "Loading..." : "↑ Load previous"}
-                  </Link>
+                  </PreviousLink>
                 )}
                 <div
                   className={clsx([
@@ -173,9 +172,11 @@ export default function Search() {
                   ))}
                 </div>
                 {hasNextPage && (
-                  <Link to={nextPageUrl} variant="outline" className="mx-auto">
-                    {isLoading ? "Loading..." : "Load more ↓"}
-                  </Link>
+                  <NextLink
+                    className={cn("mx-auto", variants({ variant: "outline" }))}
+                  >
+                    {isLoading ? "Loading..." : "↓ Load more"}
+                  </NextLink>
                 )}
               </div>
             );

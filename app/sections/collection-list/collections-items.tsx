@@ -4,9 +4,10 @@ import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
-import { Link } from "~/components/link";
+import { variants } from "~/components/link";
 import { type OverlayProps, overlayInputs } from "~/components/overlay";
 import type { ImageAspectRatio } from "~/types/image";
+import { cn } from "~/utils/cn";
 import { getImageLoadingPriority } from "~/utils/image";
 import { CollectionCard } from "./collection-card";
 
@@ -39,18 +40,16 @@ const CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
             isLoading,
             hasPreviousPage,
             hasNextPage,
-            nextPageUrl,
-            previousPageUrl,
+            NextLink,
+            PreviousLink,
           }) => (
             <div className="flex w-full flex-col items-center gap-8">
               {hasPreviousPage && (
-                <Link
-                  to={previousPageUrl}
-                  variant="outline"
-                  className="mx-auto"
+                <PreviousLink
+                  className={cn("mx-auto", variants({ variant: "outline" }))}
                 >
                   {isLoading ? "Loading..." : prevButtonText}
-                </Link>
+                </PreviousLink>
               )}
               <div className="grid w-full grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-2 lg:gap-y-12 xl:grid-cols-3">
                 {nodes.map((collection, i) => (
@@ -68,9 +67,11 @@ const CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
                 ))}
               </div>
               {hasNextPage && (
-                <Link to={nextPageUrl} variant="outline" className="mx-auto">
+                <NextLink
+                  className={cn("mx-auto", variants({ variant: "outline" }))}
+                >
                   {isLoading ? "Loading..." : nextButtonText}
-                </Link>
+                </NextLink>
               )}
             </div>
           )}
