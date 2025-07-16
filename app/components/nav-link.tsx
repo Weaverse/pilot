@@ -15,10 +15,12 @@ export const NavLink = forwardRef(
     const selectedLocale = rootData?.selectedLocale;
 
     let toWithLocale = to;
-    if (typeof toWithLocale === "string" && selectedLocale?.pathPrefix) {
-      if (!toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)) {
-        toWithLocale = `${selectedLocale.pathPrefix}${to}`;
-      }
+    if (
+      typeof toWithLocale === "string" &&
+      selectedLocale?.pathPrefix &&
+      !toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)
+    ) {
+      toWithLocale = `${selectedLocale.pathPrefix}${to}`;
     }
 
     return (

@@ -90,10 +90,12 @@ export function useHrefWithLocale(href: LinkProps["to"]) {
   const selectedLocale = rootData?.selectedLocale;
 
   let toWithLocale = href;
-  if (typeof toWithLocale === "string" && selectedLocale?.pathPrefix) {
-    if (!toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)) {
-      toWithLocale = `${selectedLocale.pathPrefix}${href}`;
-    }
+  if (
+    typeof toWithLocale === "string" &&
+    selectedLocale?.pathPrefix &&
+    !toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)
+  ) {
+    toWithLocale = `${selectedLocale.pathPrefix}${href}`;
   }
 
   return toWithLocale;
@@ -147,7 +149,7 @@ export const Link = forwardRef(
       } as React.CSSProperties;
     }
 
-    if (!text && !children) {
+    if (!(text || children)) {
       return null;
     }
 

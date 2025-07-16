@@ -45,7 +45,7 @@ const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
 };
 
 export function ProductPopup({
-  // @ts-ignore
+  // @ts-expect-error
   product = PRODUCT_PLACEHOLDER,
   popupWidth,
   offsetX,

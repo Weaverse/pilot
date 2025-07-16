@@ -31,7 +31,7 @@ export function ProductCardOptions({
     options.find(({ name }) => name === pcardOptionToShow) || {};
   const restCount = optionValues?.length - pcardMaxOptionValues;
 
-  if (!pcardShowOptionValues || !optionValues?.length) {
+  if (!(pcardShowOptionValues && optionValues?.length)) {
     return null;
   }
 
