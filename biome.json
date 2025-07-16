@@ -1,20 +1,6 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
   "extends": ["./node_modules/@weaverse/biome/biome.json"],
-  "files": {
-    "includes": [
-      "**",
-      "!**/public/**",
-      "!**/node_modules/**",
-      "!**/build/**",
-      "!**/dist/**",
-      "!**/storefront-api.generated.d.ts",
-      "!**/customer-account-api.generated.d.ts",
-      "!**/.shopify/**",
-      "!**/.react-router/**",
-      "!**/app/styles/app.css"
-    ]
-  },
   "linter": {
     "rules": {
       "suspicious": {
@@ -33,9 +19,6 @@
       },
       "correctness": {
         "noUnusedVariables": "off"
-      },
-      "a11y": {
-        "noSvgWithoutTitle": "off"
       }
     }
   },
