@@ -63,12 +63,14 @@ export function NewsletterPopup() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: just need to run once
   useEffect(() => {
-    const isDismissed = localStorage.getItem(POPUP_DISMISSED_KEY) === "true";
-    if (isDismissed) return;
-    const timer = setTimeout(() => {
-      setOpen(true);
-    }, newsletterPopupDelay * 1000);
-
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    if (!isDesignMode) {
+      const isDismissed = localStorage.getItem(POPUP_DISMISSED_KEY) === "true";
+      if (isDismissed) return;
+      timer = setTimeout(() => {
+        setOpen(true);
+      }, newsletterPopupDelay * 1000);
+    }
     return () => clearTimeout(timer);
   }, []);
 
@@ -125,7 +127,7 @@ export function NewsletterPopup() {
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100"
+                className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
                 aria-label="Close"
               >
                 <XIcon size={16} />
