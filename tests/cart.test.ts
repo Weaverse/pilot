@@ -5,16 +5,16 @@ import { formatPrice, normalizePrice } from "./utils";
 test.describe("Cart", () => {
   test("From home to checkout flow", async ({ page }) => {
     // Home => Collections => First collection => First product
-    await page.goto(`/`);
+    await page.goto("/");
     await page.locator(`header nav a:text-is("Collections")`).click();
-    await page.locator(`[data-test=collection-grid] a  >> nth=0`).click();
-    await page.locator(`[data-test=product-grid] a  >> nth=0`).click();
+    await page.locator("[data-test=collection-grid] a  >> nth=0").click();
+    await page.locator("[data-test=product-grid] a  >> nth=0").click();
 
     const firstItemPrice = normalizePrice(
-      await page.locator(`[data-test=price]`).textContent(),
+      await page.locator("[data-test=price]").textContent(),
     );
 
-    await page.locator(`[data-test=add-to-cart]`).click();
+    await page.locator("[data-test=add-to-cart]").click();
 
     await expect(
       page.locator("[data-test=subtotal]"),
@@ -39,14 +39,14 @@ test.describe("Cart", () => {
     // Close cart drawer => Products => First product
     await page.locator("[data-test=close-cart]").click();
     await page.locator(`header nav a:text-is("Products")`).click();
-    await page.locator(`[data-test=product-grid] a  >> nth=0`).click();
+    await page.locator("[data-test=product-grid] a  >> nth=0").click();
 
     const secondItemPrice = normalizePrice(
-      await page.locator(`[data-test=price]`).textContent(),
+      await page.locator("[data-test=price]").textContent(),
     );
 
     // Add another unit by adding to cart the same item
-    await page.locator(`[data-test=add-to-cart]`).click();
+    await page.locator("[data-test=add-to-cart]").click();
 
     await expect(
       page.locator("[data-test=subtotal]"),

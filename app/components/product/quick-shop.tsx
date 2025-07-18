@@ -208,7 +208,9 @@ export function QuickShopTrigger({
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Quick shop modal</Dialog.Title>
             </VisuallyHidden.Root>
-            {!data?.product ? (
+            {data?.product ? (
+              <QuickShop data={data as QuickViewData} panelType={panelType} />
+            ) : (
               <div
                 className={clsx(
                   "grid grid-cols-1 items-start gap-5",
@@ -235,8 +237,6 @@ export function QuickShopTrigger({
                   </Skeleton>
                 </div>
               </div>
-            ) : (
-              <QuickShop data={data as QuickViewData} panelType={panelType} />
             )}
           </div>
         </Dialog.Content>

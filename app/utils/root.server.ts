@@ -178,7 +178,7 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
     | EnhancedMenu["items"][0]
     | EnhancedMenu["items"][number]["items"][0]
     | null => {
-    if (!item?.url || !item?.type) {
+    if (!(item?.url && item?.type)) {
       // eslint-disable-next-line no-console
       console.warn("Invalid menu item.  Must include a url and type.");
       return null;
@@ -208,7 +208,6 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
       return {
         ...parsedItem,
         items: item.items
-          // @ts-ignore
           .map(parseItem(primaryDomain, env, customPrefixes))
           .filter(Boolean),
       } as EnhancedMenu["items"][number];
@@ -230,7 +229,7 @@ function resolveToFromType(
     customPrefixes: {},
   },
 ) {
-  if (!pathname || !type) return "";
+  if (!(pathname && type)) return "";
 
   /*
     MenuItemType enum

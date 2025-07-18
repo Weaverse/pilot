@@ -39,7 +39,6 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
           {members.map(({ id, fields }) => {
             const member: Partial<MemberType> = {};
             for (const { key, value, reference } of fields) {
-              // @ts-ignore
               member[key] = key === "avatar" ? reference?.image : value;
             }
             const {

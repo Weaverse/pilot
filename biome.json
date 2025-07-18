@@ -1,22 +1,11 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
-  "extends": ["./node_modules/@weaverse/biome/biome.json"],
-  "files": {
-    "includes": [
-      "**",
-      "!**/public/**",
-      "!**/node_modules/**",
-      "!**/build/**",
-      "!**/dist/**",
-      "!**/storefront-api.generated.d.ts",
-      "!**/customer-account-api.generated.d.ts",
-      "!**/.shopify/**",
-      "!**/.react-router/**",
-      "!**/app/styles/app.css"
-    ]
-  },
+  "extends": ["ultracite", "./node_modules/@weaverse/biome/biome.json"],
   "linter": {
     "rules": {
+      "style": {
+        "useThrowNewError": "warn"
+      },
       "suspicious": {
         "noExplicitAny": "off",
         "noArrayIndexKey": "off"
@@ -33,16 +22,21 @@
       },
       "correctness": {
         "noUnusedVariables": "off"
-      },
-      "a11y": {
-        "noSvgWithoutTitle": "off"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "useSortedAttributes": "off"
       }
     }
   },
   "javascript": {
     "formatter": {
       "quoteStyle": "double",
-      "semicolons": "always"
+      "semicolons": "always",
+      "trailingCommas": "all"
     }
   }
 }

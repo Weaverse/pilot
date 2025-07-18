@@ -153,7 +153,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   return {
     collection,
     appliedFilters,
-    // @ts-ignore
+    // @ts-expect-error
     collections: flattenConnection(collections),
     seo,
     weaverseData,

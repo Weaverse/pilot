@@ -55,10 +55,8 @@ export function PriceRangeFilter({
               if (maxPrice === undefined || newMin < maxPrice) {
                 setMinPrice(newMin);
               }
-            } else {
-              if (minPrice === undefined || newMax > minPrice) {
-                setMaxPrice(newMax);
-              }
+            } else if (minPrice === undefined || newMax > minPrice) {
+              setMaxPrice(newMax);
             }
           } else {
             setMinPrice(newMin);

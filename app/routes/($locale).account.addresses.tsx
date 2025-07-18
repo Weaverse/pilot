@@ -262,9 +262,7 @@ export default function Addresses() {
     <div className="account-addresses">
       <h2>Addresses</h2>
       <br />
-      {!addresses.edges.length ? (
-        <p>You have no addresses saved.</p>
-      ) : (
+      {addresses.edges.length ? (
         <div>
           <div>
             <legend>Create address</legend>
@@ -278,6 +276,8 @@ export default function Addresses() {
             defaultAddress={defaultAddress}
           />
         </div>
+      ) : (
+        <p>You have no addresses saved.</p>
       )}
     </div>
   );

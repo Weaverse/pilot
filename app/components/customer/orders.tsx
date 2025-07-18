@@ -65,7 +65,7 @@ function OrderCard({ order }: { order: OrderCardFragment }) {
       )}
       <div
         className={`h-full flex-col justify-center text-left ${
-          !lineItems[0].image ? "md:col-span-2" : ""
+          lineItems[0].image ? "" : "md:col-span-2"
         }`}
       >
         <div className="line-clamp-1 font-medium">

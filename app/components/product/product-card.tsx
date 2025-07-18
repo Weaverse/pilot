@@ -65,14 +65,12 @@ export function ProductCard({
     .some(({ key, value }) => key === "best_seller" && value === "true");
 
   let [image, secondImage] = images.nodes;
-  if (selectedVariant) {
-    if (selectedVariant.image) {
-      image = selectedVariant.image;
-      const imageUrl = image.url;
-      const imageIndex = images.nodes.findIndex(({ url }) => url === imageUrl);
-      if (imageIndex > 0 && imageIndex < images.nodes.length - 1) {
-        secondImage = images.nodes[imageIndex + 1];
-      }
+  if (selectedVariant && selectedVariant.image) {
+    image = selectedVariant.image;
+    const imageUrl = image.url;
+    const imageIndex = images.nodes.findIndex(({ url }) => url === imageUrl);
+    if (imageIndex > 0 && imageIndex < images.nodes.length - 1) {
+      secondImage = images.nodes[imageIndex + 1];
     }
   }
 

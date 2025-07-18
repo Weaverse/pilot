@@ -18,7 +18,7 @@ export function formatPrice(
  * Removes symbols and decimals from a price and converts to number.
  */
 export function normalizePrice(price: string | null) {
-  if (!price || !/^[$\d.,]+$/.test(price)) {
+  if (!(price && /^[$\d.,]+$/.test(price))) {
     throw new Error("Price was not found");
   }
 
