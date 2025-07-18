@@ -97,7 +97,7 @@ function CartDiscounts({
           <dt>Discount(s)</dt>
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
-              <button type="button">
+              <button type="submit">
                 <TrashIcon
                   aria-hidden="true"
                   className="mr-1 h-[18px] w-[18px]"
@@ -118,7 +118,7 @@ function CartDiscounts({
             name="discountCode"
             placeholder="Discount code"
           />
-          <Button variant="outline" className="leading-tight!">
+          <Button type="submit" variant="outline" className="leading-tight!">
             Apply
           </Button>
         </div>
