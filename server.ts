@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as remixBuild from "virtual:react-router/server-build"; // Virtual entry point for the app
 import type { HydrogenSession } from "@shopify/hydrogen";
 import { createHydrogenContext, storefrontRedirect } from "@shopify/hydrogen";

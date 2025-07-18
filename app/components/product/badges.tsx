@@ -137,7 +137,7 @@ export function ProductBadges({
   selectedVariant: ProductVariantFragment;
   className?: string;
 }) {
-  if (!product || !selectedVariant) {
+  if (!(product && selectedVariant)) {
     return null;
   }
 

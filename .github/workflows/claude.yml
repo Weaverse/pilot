@@ -35,8 +35,7 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          model: "claude-opus-4-20250514"
-          
+
           # Direct prompt for automated review
           direct_prompt: |
             Please review this pull request and provide feedback on:
@@ -45,7 +44,7 @@ jobs:
             - Performance considerations
             - Security concerns
             - Test coverage
-            
+
             Be constructive and helpful in your feedback.
 
           # Use sticky comments to update the same comment
@@ -76,7 +75,6 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          model: "claude-opus-4-20250514"
 
           # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |

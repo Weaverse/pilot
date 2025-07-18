@@ -79,10 +79,8 @@ export function ErrorBoundary({ error }: { error: Error }) {
 
   let pageType = "page";
 
-  if (isRouteError) {
-    if (routeError.status === 404) {
-      pageType = routeError.data || pageType;
-    }
+  if (isRouteError && routeError.status === 404) {
+    pageType = routeError.data || pageType;
   }
 
   return isRouteError ? (

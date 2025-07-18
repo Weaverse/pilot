@@ -1,8 +1,11 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
-  "extends": ["./node_modules/@weaverse/biome/biome.json"],
+  "extends": ["ultracite", "./node_modules/@weaverse/biome/biome.json"],
   "linter": {
     "rules": {
+      "style": {
+        "useThrowNewError": "warn"
+      },
       "suspicious": {
         "noExplicitAny": "off",
         "noArrayIndexKey": "off"
@@ -22,10 +25,18 @@
       }
     }
   },
+  "assist": {
+    "actions": {
+      "source": {
+        "useSortedAttributes": "off"
+      }
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double",
-      "semicolons": "always"
+      "semicolons": "always",
+      "trailingCommas": "all"
     }
   }
 }
