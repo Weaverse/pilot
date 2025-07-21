@@ -4,6 +4,7 @@ import {
   ShopPayButton,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
+import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useState } from "react";
@@ -19,6 +20,7 @@ import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import { BundledVariants } from "./bundled-variants";
 import { ProductDetails } from "./product-details";
 import { ProductVariants } from "./variants";
 
@@ -71,8 +73,17 @@ const ProductInformation = forwardRef<
   } = props;
   const [quantity, setQuantity] = useState<number>(1);
 
+  const isBundle = Boolean(product?.isBundle?.requiresComponents);
+  const bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
+
   if (product) {
     const { title, handle, vendor, summary } = product;
+    let atcButtonText = "Add to cart";
+    if (selectedVariant.availableForSale) {
+      atcButtonText = isBundle ? "Add bundle to cart" : addToCartText;
+    } else {
+      atcButtonText = soldOutText;
+    }
 
     return (
       <Section ref={ref} {...rest} overflow="unset">
@@ -129,6 +140,14 @@ const ProductInformation = forwardRef<
               {showShortDescription && (
                 <p className="leading-relaxed">{summary}</p>
               )}
+              {isBundle && (
+                <div className="space-y-3">
+                  <h4 className="text-2xl">Bundled Products</h4>
+                  <BundledVariants
+                    variants={bundledVariants as ProductVariantComponent[]}
+                  />
+                </div>
+              )}
               <ProductVariants productOptions={productOptions} />
               <Quantity value={quantity} onChange={setQuantity} />
               <div className="space-y-2">
@@ -144,9 +163,7 @@ const ProductInformation = forwardRef<
                   data-test="add-to-cart"
                   className="w-full uppercase"
                 >
-                  {selectedVariant.availableForSale
-                    ? addToCartText
-                    : soldOutText}
+                  {atcButtonText}
                 </AddToCartButton>
                 {selectedVariant?.availableForSale && (
                   <ShopPayButton
