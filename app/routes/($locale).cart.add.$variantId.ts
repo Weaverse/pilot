@@ -33,6 +33,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
       { status: 303, headers },
     );
   } catch (e) {
+    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     console.error(e);
     return data({ error: e });
   }

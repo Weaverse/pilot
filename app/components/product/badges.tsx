@@ -80,10 +80,10 @@ export function SoldOutBadge({ className }: { className?: string }) {
 export function BundleBadge({ className }: { className?: string }) {
   const { bundleBadgeText, bundleBadgeColor } = useThemeSettings();
   return (
-    <Badge 
-      text={bundleBadgeText} 
-      backgroundColor={bundleBadgeColor} 
-      className={className} 
+    <Badge
+      text={bundleBadgeText}
+      backgroundColor={bundleBadgeColor}
+      className={className}
     />
   );
 }
