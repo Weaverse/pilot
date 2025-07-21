@@ -244,19 +244,6 @@ const CART_QUERY_FRAGMENT = `#graphql
           name
           value
         }
-        requiresComponents
-        components(first: 10) {
-          nodes {
-            productVariant {
-              id
-              title
-              product {
-                handle
-              }
-            }
-            quantity
-          }
-        }
       }
     }
   }
@@ -306,6 +293,19 @@ const CART_QUERY_FRAGMENT = `#graphql
         selectedOptions {
           name
           value
+        }
+        requiresComponents
+        components(first: 10) {
+          nodes {
+            productVariant {
+              id
+              title
+              product {
+                handle
+              }
+            }
+            quantity
+          }
         }
       }
     }
