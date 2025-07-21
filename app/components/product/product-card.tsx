@@ -13,7 +13,13 @@ import { NavLink } from "~/components/nav-link";
 import { Spinner } from "~/components/spinner";
 import { RevealUnderline } from "~/reveal-underline";
 import { calculateAspectRatio } from "~/utils/image";
-import { BestSellerBadge, NewBadge, SaleBadge, SoldOutBadge } from "./badges";
+import {
+  BestSellerBadge,
+  BundleBadge,
+  NewBadge,
+  SaleBadge,
+  SoldOutBadge,
+} from "./badges";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
 import { VariantPrices } from "./variant-prices";
@@ -63,9 +69,10 @@ export function ProductCard({
   const isBestSellerProduct = badges
     .filter(Boolean)
     .some(({ key, value }) => key === "best_seller" && value === "true");
+  const isBundle = Boolean(product?.isBundle?.requiresComponents);
 
   let [image, secondImage] = images.nodes;
-  if (selectedVariant && selectedVariant.image) {
+  if (selectedVariant?.image) {
     image = selectedVariant.image;
     const imageUrl = image.url;
     const imageIndex = images.nodes.findIndex(({ url }) => url === imageUrl);
@@ -126,6 +133,7 @@ export function ProductCard({
           </Link>
         )}
         <div className="absolute top-2.5 right-2.5 flex gap-1">
+          {isBundle && <BundleBadge />}
           {pcardShowSaleBadges && (
             <SaleBadge
               price={minVariantPrice as MoneyV2}
