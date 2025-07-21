@@ -66,7 +66,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       customer.lastName = formData.get("lastName") as string;
     }
 
-    const { data, errors } =
+    const { data: updateData, errors } =
       await context.customerAccount.mutate<CustomerUpdateMutation>(
         CUSTOMER_UPDATE_MUTATION,
         {
@@ -79,8 +79,8 @@ export const action: ActionFunction = async ({ request, context, params }) => {
     invariant(!errors?.length, errors?.[0]?.message);
 
     invariant(
-      !data?.customerUpdate?.userErrors?.length,
-      data?.customerUpdate?.userErrors?.[0]?.message,
+      !updateData?.customerUpdate?.userErrors?.length,
+      updateData?.customerUpdate?.userErrors?.[0]?.message,
     );
 
     return redirect(params?.locale ? `${params.locale}/account` : "/account");

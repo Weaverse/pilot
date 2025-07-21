@@ -18,10 +18,15 @@ import { isLightColor, isValidColor } from "~/utils/misc";
  *
  * If an option name is not found in any of these arrays, it will render with the default UI (underlined links).
  */
-export const OPTIONS_AS_SWATCH = ["Color", "Colors", "Colour", "Colours"];
-const OPTIONS_AS_BUTTON = ["Size"];
-const OPTIONS_AS_IMAGE = [];
-const OPTIONS_AS_DROPDOWN = [];
+export const OPTIONS_AS_SWATCH: string[] = [
+  "Color",
+  "Colors",
+  "Colour",
+  "Colours",
+];
+const OPTIONS_AS_BUTTON: string[] = ["Size"];
+const OPTIONS_AS_IMAGE: string[] = [];
+const OPTIONS_AS_DROPDOWN: string[] = [];
 
 export function ProductOptionValues({
   option,

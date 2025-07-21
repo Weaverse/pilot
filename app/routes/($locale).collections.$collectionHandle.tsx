@@ -41,18 +41,15 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const { sortKey, reverse } = getSortValuesFromParam(
     searchParams.get("sort") as SortParam,
   );
-  const filters = [...searchParams.entries()].reduce(
-    (filters, [key, value]) => {
-      if (key.startsWith(FILTER_URL_PREFIX)) {
-        const filterKey = key.substring(FILTER_URL_PREFIX.length);
-        filters.push({
-          [filterKey]: JSON.parse(value),
-        });
-      }
-      return filters;
-    },
-    [] as ProductFilter[],
-  );
+  const filters = [...searchParams.entries()].reduce((flt, [key, value]) => {
+    if (key.startsWith(FILTER_URL_PREFIX)) {
+      const filterKey = key.substring(FILTER_URL_PREFIX.length);
+      flt.push({
+        [filterKey]: JSON.parse(value),
+      });
+    }
+    return flt;
+  }, [] as ProductFilter[]);
 
   const { CUSTOM_COLLECTION_BANNER_METAFIELD = "" } = env;
   const [bannerNamespace = "", bannerKey = ""] =

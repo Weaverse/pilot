@@ -222,14 +222,14 @@ export function ProductMedia(props: ProductMediaProps) {
             modules={[Pagination, Navigation, Thumbs]}
             className="overflow-visible pb-10 md:overflow-hidden md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
-            {media.map((media, idx) => {
+            {media.map((med, idx) => {
               return (
-                <SwiperSlide key={media.id} className="group bg-gray-100">
+                <SwiperSlide key={med.id} className="group bg-gray-100">
                   <div
                     onClick={
                       canClickImage
                         ? () => {
-                            setZoomMediaId(media.id);
+                            setZoomMediaId(med.id);
                             setZoomModalOpen(true);
                           }
                         : undefined
@@ -237,7 +237,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     className={canClickImage ? "cursor-zoom-in" : ""}
                   >
                     <Media
-                      media={media}
+                      media={med}
                       imageAspectRatio={imageAspectRatio}
                       index={idx}
                     />
@@ -250,7 +250,7 @@ export function ProductMedia(props: ProductMediaProps) {
                           "opacity-0 group-hover:opacity-100",
                       )}
                       onClick={() => {
-                        setZoomMediaId(media.id);
+                        setZoomMediaId(med.id);
                         setZoomModalOpen(true);
                       }}
                     />
@@ -320,6 +320,7 @@ function Media({
         aria-label={mediaVideo.alt || "Product video"}
         className={cn("h-auto w-full object-cover", className)}
         style={{ aspectRatio: imageAspectRatio }}
+        // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
         onError={console.error}
       >
         <track

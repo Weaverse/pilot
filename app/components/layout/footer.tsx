@@ -201,7 +201,7 @@ function FooterMenu() {
       defaultValue={items.map(({ id }) => id)}
       className="grid w-full lg:grid-cols-3 lg:gap-8"
     >
-      {items.map(({ id, to, title, items }) => (
+      {items.map(({ id, to, title, items: childItems }) => (
         <Accordion.Item key={id} value={id} className="flex flex-col">
           <Accordion.Trigger className="flex items-center justify-between py-4 text-left font-medium lg:hidden data-[state=open]:[&>svg]:rotate-90">
             {["#", "/"].includes(to) ? (
@@ -230,10 +230,10 @@ function FooterMenu() {
             ])}
           >
             <div className="flex flex-col gap-2 pb-4 lg:pt-6">
-              {items.map(({ id, to, title }) => (
-                <Link to={to} key={id} className="relative">
+              {childItems.map((child) => (
+                <Link to={child.to} key={child.id} className="relative">
                   <RevealUnderline className="[--underline-color:var(--color-footer-text)]">
-                    {title}
+                    {child.title}
                   </RevealUnderline>
                 </Link>
               ))}

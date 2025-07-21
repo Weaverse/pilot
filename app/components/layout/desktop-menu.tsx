@@ -26,11 +26,12 @@ export function DesktopMenu() {
       >
         <nav className="hidden h-full grow justify-center lg:flex">
           {items.map((menuItem) => {
-            const { id, items = [], title, to } = menuItem;
+            const { id, items: childItems = [], title, to } = menuItem;
             const level = getMaxDepth(menuItem);
             const hasSubmenu = level > 1;
             const isDropdown =
-              level === 2 && items.every(({ resource }) => !resource?.image);
+              level === 2 &&
+              childItems.every(({ resource }) => !resource?.image);
             return (
               <Menubar.Menu key={id} value={id}>
                 <Menubar.Trigger
@@ -66,9 +67,9 @@ export function DesktopMenu() {
                     ])}
                   >
                     {isDropdown ? (
-                      <DropdownSubMenu items={items} />
+                      <DropdownSubMenu items={childItems} />
                     ) : (
-                      <MegaMenu items={items} />
+                      <MegaMenu items={childItems} />
                     )}
                   </Menubar.Content>
                 )}

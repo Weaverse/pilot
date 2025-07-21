@@ -30,9 +30,7 @@ export function AccountEditAddressForm() {
    * on the first (permanent) part of the ID.
    */
   const normalizedAddress = decodeURIComponent(addressId ?? "").split("?")[0];
-  const address = addresses.find((address) =>
-    address.id?.startsWith(normalizedAddress),
-  );
+  const address = addresses.find((ad) => ad.id?.startsWith(normalizedAddress));
 
   return (
     <div className="space-y-2">

@@ -90,8 +90,8 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
         </button>
       </Collapsible.Trigger>
       <Collapsible.Content className="border-gray-300 border-l pl-4">
-        {items.map((item) => (
-          <CollapsibleMenuItem key={item.id} item={item} />
+        {items.map((childItem) => (
+          <CollapsibleMenuItem key={childItem.id} item={childItem} />
         ))}
       </Collapsible.Content>
     </Collapsible.Root>

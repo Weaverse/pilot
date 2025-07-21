@@ -11,7 +11,7 @@ export async function getFeaturedData(
   storefront: LoaderFunctionArgs["context"]["storefront"],
   variables: { pageBy?: number } = {},
 ) {
-  const data = await storefront.query<FeaturedItemsQuery>(
+  const featuredItemsData = await storefront.query<FeaturedItemsQuery>(
     FEATURED_ITEMS_QUERY,
     {
       variables: {
@@ -23,9 +23,12 @@ export async function getFeaturedData(
     },
   );
 
-  invariant(data, "No featured items data returned from Shopify API");
+  invariant(
+    featuredItemsData,
+    "No featured items data returned from Shopify API",
+  );
 
-  return data;
+  return featuredItemsData;
 }
 
 export type FeaturedData = Awaited<ReturnType<typeof getFeaturedData>>;
