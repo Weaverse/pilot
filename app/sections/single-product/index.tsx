@@ -1,4 +1,5 @@
 import { Money, ShopPayButton } from "@shopify/hydrogen";
+import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import {
   type ComponentLoaderArgs,
   createSchema,
@@ -16,6 +17,7 @@ import { Image } from "~/components/image";
 import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
+import { BundledVariants } from "~/components/product/bundled-variants";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { VariantSelector } from "~/components/product/variant-selector";
@@ -107,11 +109,18 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
       );
     }
 
-    const atcText = selectedVariant?.availableForSale
-      ? "Add to Cart"
-      : selectedVariant?.quantityAvailable === -1
-        ? "Unavailable"
-        : "Sold Out";
+    const isBundle = Boolean(product?.isBundle?.requiresComponents);
+    const bundledVariants = isBundle
+      ? product?.isBundle?.components.nodes
+      : null;
+    let atcText = "Add to Cart";
+    if (selectedVariant?.availableForSale) {
+      atcText = isBundle ? "Add bundle to cart" : "Add to Cart";
+    } else if (selectedVariant?.quantityAvailable === -1) {
+      atcText = "Unavailable";
+    } else {
+      atcText = "Sold Out";
+    }
 
     return (
       <Section ref={ref} {...rest}>
@@ -151,6 +160,14 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                   suppressHydrationWarning
                   dangerouslySetInnerHTML={{ __html: product?.summary }}
                 />
+                {isBundle && (
+                  <div className="space-y-3">
+                    <h4 className="text-2xl">Bundled Products</h4>
+                    <BundledVariants
+                      variants={bundledVariants as ProductVariantComponent[]}
+                    />
+                  </div>
+                )}
                 <VariantSelector
                   product={product}
                   selectedVariant={selectedVariant}
