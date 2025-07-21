@@ -18,7 +18,6 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
-import { BundleBadge } from "~/components/product/badges";
 import { ScrollArea } from "~/components/scroll-area";
 import { RevealUnderline } from "~/reveal-underline";
 import { calculateAspectRatio } from "~/utils/image";
@@ -280,8 +279,6 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
     url += `?${params.toString()}`;
   }
 
-  const isBundle = Boolean(line.merchandise?.requiresComponents);
-
   return (
     <li
       className="flex gap-4"
@@ -302,7 +299,6 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
             aspectRatio={calculateAspectRatio(image, "adapt")}
           />
         )}
-        {isBundle && <BundleBadge />}
       </div>
       <div className="flex grow flex-col gap-3">
         <div className="flex justify-between gap-4">
