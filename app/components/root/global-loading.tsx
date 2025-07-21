@@ -10,12 +10,16 @@ export function GlobalLoading() {
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) {
+      return;
+    }
 
     Promise.allSettled(
       ref.current.getAnimations().map(({ finished }) => finished),
     ).then(() => {
-      if (!active) setAnimating(false);
+      if (!active) {
+        setAnimating(false);
+      }
     });
 
     if (active) {

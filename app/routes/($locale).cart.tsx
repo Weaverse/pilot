@@ -93,7 +93,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
 export default function CartRoute() {
   const rootData = useRouteLoaderData<RootLoader>("root");
-  if (!rootData) return null;
+  if (!rootData) {
+    return null;
+  }
 
   return (
     <>

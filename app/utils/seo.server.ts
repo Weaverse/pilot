@@ -415,7 +415,7 @@ function policies({
   policies,
   url,
 }: {
-  policies: Array<Pick<ShopPolicy, "title" | "handle">>;
+  policies: Pick<ShopPolicy, "title" | "handle">[];
   url: Request["url"];
 }): SeoConfig {
   const origin = new URL(url).origin;
@@ -474,7 +474,9 @@ export const seoPayload = {
  * ```
  */
 function truncate(str: string, num = 155): string {
-  if (typeof str !== "string") return "";
+  if (typeof str !== "string") {
+    return "";
+  }
   if (str.length <= num) {
     return str;
   }

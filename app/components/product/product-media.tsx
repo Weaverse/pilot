@@ -340,7 +340,9 @@ function getSelectedVariantMediaIndex(
   media: MediaFragment[],
   selectedVariant: ProductVariantFragment,
 ) {
-  if (!selectedVariant) return 0;
+  if (!selectedVariant) {
+    return 0;
+  }
   const mediaUrl = selectedVariant.image?.url;
   return media.findIndex((med) => med.previewImage?.url === mediaUrl);
 }

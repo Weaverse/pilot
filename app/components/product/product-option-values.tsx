@@ -33,7 +33,9 @@ export function ProductOptionValues({
   const navigate = useNavigate();
   const { name: optionName, optionValues } = option || {};
 
-  if (!optionName) return null;
+  if (!optionName) {
+    return null;
+  }
 
   if (OPTIONS_AS_DROPDOWN.includes(optionName)) {
     const selectedValue = optionValues.find((v) => v.selected)?.name;

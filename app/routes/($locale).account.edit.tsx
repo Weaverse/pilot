@@ -35,7 +35,9 @@ export interface ActionData {
 }
 
 function formDataHas(formData: FormData, key: string) {
-  if (!formData.has(key)) return false;
+  if (!formData.has(key)) {
+    return false;
+  }
 
   const value = formData.get(key);
   return typeof value === "string" && value.length > 0;

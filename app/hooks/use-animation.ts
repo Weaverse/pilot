@@ -16,7 +16,9 @@ export function useAnimation(ref?: ForwardedRef<any>) {
   const [scope] = useAnimate();
 
   useEffect(() => {
-    if (!(scope.current && ref)) return;
+    if (!(scope.current && ref)) {
+      return;
+    }
     Object.assign(ref, { current: scope.current });
   }, [scope, ref]);
 

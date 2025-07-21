@@ -38,7 +38,7 @@ export async function loader({
   try {
     const _count = searchParams.get("count");
     if (typeof _count === "string") {
-      count = Number.parseInt(_count);
+      count = Number.parseInt(_count, 10);
     }
   } catch (_) {
     // noop

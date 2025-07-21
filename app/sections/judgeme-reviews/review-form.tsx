@@ -97,7 +97,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
               <div className="flex flex-col gap-3">
                 <span className="font-bold text-base">Rating</span>
                 <div className="flex items-center pr-1">
-                  {[...Array(5)].map((_, index) => {
+                  {[...new Array(5)].map((_, index) => {
                     const ratingValue = index + 1;
                     return (
                       <div

@@ -75,8 +75,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
           customBannerKey: bannerKey,
         },
       })
-      .catch((e) => {
-        console.error(e);
+      .catch((_e) => {
         return { collection: null, collections: [] };
       }),
     context.weaverse.loadPage({

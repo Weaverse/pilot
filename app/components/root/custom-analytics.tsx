@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noConsole: use console.log for debugging */
 import {
   AnalyticsEvent,
   type CartUpdatePayload,
@@ -14,8 +15,7 @@ import type { RootLoader } from "~/root";
 export function CustomAnalytics() {
   const { subscribe, canTrack } = useAnalytics();
   const nonce = useNonce();
-
-  const data = useRouteLoaderData<RootLoader>("root");
+  const rootData = useRouteLoaderData<RootLoader>("root");
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
@@ -76,7 +76,7 @@ export function CustomAnalytics() {
     });
   }, []);
 
-  const id = data?.googleGtmID;
+  const id = rootData?.googleGtmID;
   if (!id) {
     return null;
   }

@@ -11,7 +11,9 @@ import { cn } from "~/utils/cn";
 export function MobileMenu() {
   const { headerMenu } = useShopMenu();
 
-  if (!headerMenu) return <MenuTrigger />;
+  if (!headerMenu) {
+    return <MenuTrigger />;
+  }
 
   return (
     <Dialog.Root>

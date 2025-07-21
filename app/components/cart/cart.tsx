@@ -54,7 +54,6 @@ function CartDetails({
   layout: Layouts;
   cart: OptimisticCart<CartApiQueryFragment>;
 }) {
-  console.log("👉 --------> - cart.tsx - cart:", cart);
   return (
     <div
       className={clsx(
@@ -197,7 +196,9 @@ function CartCheckoutActions({
   checkoutUrl: string;
   layout: Layouts;
 }) {
-  if (!checkoutUrl) return null;
+  if (!checkoutUrl) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -455,7 +456,9 @@ function CartLinePrice({
   priceType?: "regular" | "compareAt";
   [key: string]: any;
 }) {
-  if (!(line?.cost?.amountPerQuantity && line?.cost?.totalAmount)) return null;
+  if (!(line?.cost?.amountPerQuantity && line?.cost?.totalAmount)) {
+    return null;
+  }
 
   const moneyV2 =
     priceType === "regular"
