@@ -25,6 +25,14 @@
       },
       "performance": {
         "noNamespaceImport": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 50
+          }
+        }
       }
     }
   },
