@@ -22,6 +22,9 @@
       },
       "correctness": {
         "noUnusedVariables": "off"
+      },
+      "performance": {
+        "noNamespaceImport": "off"
       }
     }
   },
