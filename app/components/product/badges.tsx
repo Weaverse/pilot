@@ -77,6 +77,17 @@ export function SoldOutBadge({ className }: { className?: string }) {
   );
 }
 
+export function BundleBadge({ className }: { className?: string }) {
+  const { bundleBadgeText, bundleBadgeColor } = useThemeSettings();
+  return (
+    <Badge 
+      text={bundleBadgeText} 
+      backgroundColor={bundleBadgeColor} 
+      className={className} 
+    />
+  );
+}
+
 export function SaleBadge({
   price,
   compareAtPrice,
@@ -141,6 +152,7 @@ export function ProductBadges({
     return null;
   }
 
+  const isBundle = Boolean(product?.isBundle?.requiresComponents);
   const { publishedAt, badges } = product;
   const isBestSellerProduct = badges
     .filter(Boolean)
@@ -152,6 +164,7 @@ export function ProductBadges({
     >
       {selectedVariant.availableForSale ? (
         <>
+          {isBundle && <BundleBadge />}
           <SaleBadge
             price={selectedVariant.price as MoneyV2}
             compareAtPrice={selectedVariant.compareAtPrice as MoneyV2}

@@ -374,6 +374,12 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
+          label: "Bundle",
+          name: "bundleBadgeColor",
+          defaultValue: "#10804c",
+        },
+        {
+          type: "color",
           label: "Sold out / unavailable",
           name: "soldOutBadgeColor",
           defaultValue: "#d4d4d4",
@@ -552,6 +558,13 @@ export const themeSchema: HydrogenThemeSchema = {
           defaultValue: 30,
           helpText:
             "The <strong>New</strong> badge will be shown if the product is published within the last days.",
+        },
+        {
+          type: "text",
+          label: "Bundle text",
+          name: "bundleBadgeText",
+          defaultValue: "Bundle",
+          placeholder: "Bundle",
         },
         {
           type: "text",
