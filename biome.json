@@ -5,10 +5,13 @@
     "rules": {
       "style": {
         "useThrowNewError": "warn",
+        "useFilenamingConvention": "off",
+        "noParameterAssign": "off",
         "noNestedTernary": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
+        "useAwait": "off",
         "noArrayIndexKey": "off"
       },
       "nursery": {
@@ -19,13 +22,15 @@
           "options": {
             "functions": ["clsx", "cva", "cn"]
           }
-        }
+        },
+        "noNoninteractiveElementInteractions": "off"
       },
       "correctness": {
         "noUnusedVariables": "off"
       },
       "performance": {
-        "noNamespaceImport": "off"
+        "noNamespaceImport": "off",
+        "useTopLevelRegex": "off"
       },
       "complexity": {
         "noExcessiveCognitiveComplexity": {
