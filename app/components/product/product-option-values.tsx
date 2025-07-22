@@ -108,7 +108,12 @@ export function ProductOptionValues({
   }
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div
+      className={clsx(
+        "flex flex-wrap gap-3",
+        OPTIONS_AS_SWATCH.includes(optionName) && "pt-0.5",
+      )}
+    >
       {optionValues.map((optionValue) => {
         return (
           <Tooltip key={optionValue.name}>
