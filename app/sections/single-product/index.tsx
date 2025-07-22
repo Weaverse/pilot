@@ -141,6 +141,7 @@ const SingleProduct = forwardRef<HTMLElement, SingleProductProps>(
                 <ProductBadges
                   product={product}
                   selectedVariant={selectedVariant}
+                  className="[&_span:nth-child(n+3)]:hidden"
                 />
                 <h3 data-motion="fade-up" className="tracking-tight">
                   {product?.title}
