@@ -492,10 +492,10 @@ function CartEmpty({
       className={clsx(
         layout === "drawer" && [
           "h-screen-dynamic w-[400px] content-start space-y-12 overflow-y-scroll px-5 pb-5 transition",
-          y > 0 ? "border-t" : "",
+          y > 0 && "border-t",
         ],
         layout === "page" && [
-          hidden ? "" : "grid",
+          !hidden && "grid",
           "w-full gap-4 pb-12 md:items-start md:gap-8 lg:gap-12",
         ],
       )}
