@@ -2,7 +2,7 @@
   "name": "@weaverse/pilot",
   "private": true,
   "sideEffects": false,
-  "version": "5.3.1",
+  "version": "5.4.0",
   "type": "module",
   "author": "Weaverse",
   "scripts": {
@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "codegen": "shopify hydrogen codegen",
     "hydrogen": "shopify hydrogen",
-    "clean": "rm -rf dist node_modules package-lock.json .shopify .react-router",
+    "clean": "rm -rf dist node_modules package-lock.json pnpm-lock.yaml .shopify .react-router",
     "e2e": "npx playwright test",
     "e2e:ui": "npx playwright test --ui",
     "biome": "biome check --diagnostic-level=error",
@@ -83,12 +83,12 @@
     "tailwindcss": "^4.1.11",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
-    "ultracite": "5.0.36",
+    "ultracite": "5.0.47",
     "vite": "6.3.5",
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "0.25.6"
+    "@esbuild/linux-x64": "0.25.8"
   },
   "engines": {
     "node": ">=20"
