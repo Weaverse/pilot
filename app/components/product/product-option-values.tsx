@@ -1,12 +1,12 @@
 import { CaretDownIcon, CaretUpIcon, CheckIcon } from "@phosphor-icons/react";
 import * as Select from "@radix-ui/react-select";
 import { Image, type MappedProductOptions } from "@shopify/hydrogen";
-import clsx from "clsx";
 import type { ButtonHTMLAttributes } from "react";
 import { useNavigate } from "react-router";
 import type { ProductVariantFragment } from "storefront-api.generated";
 import Link, { type LinkProps } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
+import { cn } from "~/utils/cn";
 import { isLightColor, isValidColor } from "~/utils/misc";
 
 /*
@@ -84,7 +84,7 @@ export function ProductOptionValues({
                 <Select.Item
                   key={value}
                   value={value}
-                  className={clsx(
+                  className={cn(
                     "flex h-10 w-full cursor-pointer select-none items-center justify-between gap-4 py-2.5 pr-2 pl-4 outline-hidden hover:bg-gray-100",
                     !available && "text-body-subtle line-through",
                   )}
@@ -109,7 +109,7 @@ export function ProductOptionValues({
 
   return (
     <div
-      className={clsx(
+      className={cn(
         "flex flex-wrap gap-3",
         OPTIONS_AS_SWATCH.includes(optionName) && "pt-0.5",
       )}
@@ -206,7 +206,7 @@ function OptionValue({
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
         {...componentProps}
-        className={clsx(
+        className={cn(
           "flex aspect-square size-(--option-swatch-size)",
           "overflow-hidden rounded-full",
           "outline-1 outline-offset-2 transition-[outline-color]",
@@ -224,7 +224,7 @@ function OptionValue({
           />
         ) : (
           <span
-            className={clsx(
+            className={cn(
               "inline-block h-full w-full rounded-full text-[0px]",
               (!isValidColor(swatchColor) || isLightColor(swatchColor)) &&
                 "border border-line-subtle",
@@ -243,7 +243,7 @@ function OptionValue({
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
         {...componentProps}
-        className={clsx(
+        className={cn(
           "border border-line-subtle px-4 py-2.5 text-center transition-colors",
           !exists && "cursor-not-allowed",
           selected
@@ -265,7 +265,7 @@ function OptionValue({
       // @ts-expect-error: TypeScript cannot infer the correct props for variable component
       <Component
         {...componentProps}
-        className={clsx(
+        className={cn(
           "flex h-auto w-(--option-image-width) items-center justify-center p-1",
           "border border-line-subtle text-center transition-colors",
           !exists && "cursor-not-allowed",
@@ -297,7 +297,7 @@ function OptionValue({
     // @ts-expect-error: TypeScript cannot infer the correct props for variable component
     <Component
       {...componentProps}
-      className={clsx(
+      className={cn(
         "border-b py-0.5",
         !exists && "cursor-not-allowed",
         selected
