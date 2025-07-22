@@ -24,21 +24,28 @@ export function VariantSelector({
     return null;
   }
 
+  const selectedOptions = selectedVariant?.selectedOptions || [];
+
   return (
     <div className="space-y-4">
-      {productOptions.map((option) => (
-        <div className="space-y-2" key={option.name}>
-          <legend className="leading-tight">
-            <span className="font-bold">{option.name}</span>
-          </legend>
-          <ProductOptionValues
-            option={option}
-            onVariantChange={(newVariant: ProductVariantFragment) => {
-              setSelectedVariant(newVariant);
-            }}
-          />
-        </div>
-      ))}
+      {productOptions.map((option) => {
+        const { name } = option;
+        const selected = selectedOptions.find((opt) => opt.name === name);
+        return (
+          <div className="space-y-2" key={name}>
+            <legend className="leading-tight">
+              <span className="font-bold">{name}</span>
+              {selected?.value && <span>: {selected.value}</span>}
+            </legend>
+            <ProductOptionValues
+              option={option}
+              onVariantChange={(newVariant: ProductVariantFragment) => {
+                setSelectedVariant(newVariant);
+              }}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

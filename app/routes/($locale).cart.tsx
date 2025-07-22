@@ -23,13 +23,13 @@ import type { RootLoader } from "~/root";
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart } = context;
   const formData = await request.formData();
-  const { action, inputs } = CartForm.getFormInput(formData);
-  invariant(action, "No cartAction defined");
+  const { action: cartFormAction, inputs } = CartForm.getFormInput(formData);
+  invariant(cartFormAction, "No cartAction defined");
 
   const status = 200;
   let result: CartQueryDataReturn;
 
-  switch (action) {
+  switch (cartFormAction) {
     case CartForm.ACTIONS.LinesAdd:
       result = await cart.addLines(inputs.lines as CartLineInput[]);
       break;
@@ -59,7 +59,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       });
       break;
     default:
-      invariant(false, `${action} cart action is not defined`);
+      invariant(false, `${cartFormAction} cart action is not defined`);
   }
 
   /**
@@ -93,7 +93,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
 export default function CartRoute() {
   const rootData = useRouteLoaderData<RootLoader>("root");
-  if (!rootData) return null;
+  if (!rootData) {
+    return null;
+  }
 
   return (
     <>

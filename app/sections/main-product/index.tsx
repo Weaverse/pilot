@@ -4,6 +4,7 @@ import {
   ShopPayButton,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
+import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useState } from "react";
@@ -11,6 +12,7 @@ import { useLoaderData } from "react-router";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
+import { BundledVariants } from "~/components/product/bundled-variants";
 import {
   ProductMedia,
   type ProductMediaProps,
@@ -25,6 +27,7 @@ import { ProductVariants } from "./variants";
 interface ProductInformationData
   extends Omit<ProductMediaProps, "selectedVariant" | "media"> {
   addToCartText: string;
+  addBundleToCartText: string;
   soldOutText: string;
   showVendor: boolean;
   showSalePrice: boolean;
@@ -53,6 +56,7 @@ const ProductInformation = forwardRef<
 
   const {
     addToCartText,
+    addBundleToCartText,
     soldOutText,
     showVendor,
     showSalePrice,
@@ -71,8 +75,17 @@ const ProductInformation = forwardRef<
   } = props;
   const [quantity, setQuantity] = useState<number>(1);
 
+  const isBundle = Boolean(product?.isBundle?.requiresComponents);
+  const bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
+
   if (product) {
     const { title, handle, vendor, summary } = product;
+    let atcButtonText = "Add to cart";
+    if (selectedVariant.availableForSale) {
+      atcButtonText = isBundle ? addBundleToCartText : addToCartText;
+    } else {
+      atcButtonText = soldOutText;
+    }
 
     return (
       <Section ref={ref} {...rest} overflow="unset">
@@ -129,7 +142,18 @@ const ProductInformation = forwardRef<
               {showShortDescription && (
                 <p className="leading-relaxed">{summary}</p>
               )}
-              <ProductVariants productOptions={productOptions} />
+              {isBundle && (
+                <div className="space-y-3">
+                  <h4 className="text-2xl">Bundled Products</h4>
+                  <BundledVariants
+                    variants={bundledVariants as ProductVariantComponent[]}
+                  />
+                </div>
+              )}
+              <ProductVariants
+                productOptions={productOptions}
+                selectedVariant={selectedVariant}
+              />
               <Quantity value={quantity} onChange={setQuantity} />
               <div className="space-y-2">
                 <AddToCartButton
@@ -144,9 +168,7 @@ const ProductInformation = forwardRef<
                   data-test="add-to-cart"
                   className="w-full uppercase"
                 >
-                  {selectedVariant.availableForSale
-                    ? addToCartText
-                    : soldOutText}
+                  {atcButtonText}
                 </AddToCartButton>
                 {selectedVariant?.availableForSale && (
                   <ShopPayButton
@@ -296,6 +318,13 @@ export const schema = createSchema({
           name: "addToCartText",
           defaultValue: "Add to cart",
           placeholder: "Add to cart",
+        },
+        {
+          type: "text",
+          label: "Bundle add to cart text",
+          name: "addBundleToCartText",
+          defaultValue: "Add bundle to cart",
+          placeholder: "Add bundle to cart",
         },
         {
           type: "text",

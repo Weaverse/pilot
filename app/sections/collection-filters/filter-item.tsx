@@ -32,14 +32,14 @@ export function FilterItem({
   const { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
 
   const filter = appliedFilters.find(
-    (filter) => JSON.stringify(filter.filter) === option.input,
+    (flt) => JSON.stringify(flt.filter) === option.input,
   );
 
   const [checked, setChecked] = useState(!!filter);
 
-  function handleCheckedChange(checked: boolean) {
-    setChecked(checked);
-    if (checked) {
+  function handleCheckedChange(newChecked: boolean) {
+    setChecked(newChecked);
+    if (newChecked) {
       const link = getFilterLink(option.input as string, params, location);
       navigate(link, { preventScrollReset: true });
     } else if (filter) {

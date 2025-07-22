@@ -19,6 +19,7 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
+import { Section } from "~/components/section";
 import { RevealUnderline } from "~/reveal-underline";
 import { calculateAspectRatio } from "~/utils/image";
 import { toggleCartDrawer } from "../layout/cart-drawer";
@@ -195,7 +196,9 @@ function CartCheckoutActions({
   checkoutUrl: string;
   layout: Layouts;
 }) {
-  if (!checkoutUrl) return null;
+  if (!checkoutUrl) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -257,7 +260,9 @@ type OptimisticData = {
 function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
   const optimisticData = useOptimisticData<OptimisticData>(line?.id);
 
-  if (!line?.id) return null;
+  if (!line?.id) {
+    return null;
+  }
 
   const { id, quantity, merchandise } = line;
 
@@ -274,6 +279,11 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
     }
     url += `?${params.toString()}`;
   }
+  let isDefaultVariant = false;
+  if (selectedOptions?.length === 1) {
+    const { name, value } = selectedOptions[0];
+    isDefaultVariant = name === "Title" && value === "Default Title";
+  }
 
   return (
     <li
@@ -284,7 +294,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
         display: optimisticData?.action === "remove" ? "none" : "flex",
       }}
     >
-      <div className="shrink-0">
+      <div className="relative shrink-0">
         {image && (
           <Image
             width={250}
@@ -298,17 +308,23 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
       </div>
       <div className="flex grow flex-col gap-3">
         <div className="flex justify-between gap-4">
-          <div className="space-y-1">
+          <div>
             <div>
               {product?.handle ? (
-                <Link to={url} onClick={() => toggleCartDrawer(false)}>
+                <Link
+                  to={url}
+                  onClick={() => toggleCartDrawer(false)}
+                  className="inline-block"
+                >
                   <RevealUnderline>{product?.title || ""}</RevealUnderline>
                 </Link>
               ) : (
                 <p>{product?.title || ""}</p>
               )}
             </div>
-            <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
+            {!isDefaultVariant && (
+              <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
+            )}
           </div>
           {layout === "drawer" && (
             <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
@@ -448,7 +464,9 @@ function CartLinePrice({
   priceType?: "regular" | "compareAt";
   [key: string]: any;
 }) {
-  if (!(line?.cost?.amountPerQuantity && line?.cost?.totalAmount)) return null;
+  if (!(line?.cost?.amountPerQuantity && line?.cost?.totalAmount)) {
+    return null;
+  }
 
   const moneyV2 =
     priceType === "regular"
@@ -486,10 +504,9 @@ function CartEmpty({
       className={clsx(
         layout === "drawer" && [
           "h-screen-dynamic w-[400px] content-start space-y-12 overflow-y-scroll px-5 pb-5 transition",
-          y > 0 ? "border-t" : "",
+          y > 0 && "border-t",
         ],
         layout === "page" && [
-          hidden ? "" : "grid",
           "w-full gap-4 pb-12 md:items-start md:gap-8 lg:gap-12",
         ],
       )}
@@ -501,21 +518,30 @@ function CartEmpty({
           started!
         </p>
         <Link
+          variant="outline"
           to={layout === "page" ? "/products" : ""}
-          className={clsx(layout === "drawer" ? "w-full" : "min-w-48")}
+          className={clsx(
+            layout === "drawer" ? "w-full" : "min-w-48",
+            "justify-center",
+          )}
           onClick={onClose}
         >
           Start Shopping
         </Link>
       </div>
-      <div className="grid gap-4">
-        <CartBestSellers
-          count={4}
-          heading="Shop Best Sellers"
-          layout={layout}
-          sortKey="BEST_SELLING"
-        />
-      </div>
+      <Section
+        width={layout === "drawer" ? "full" : "fixed"}
+        verticalPadding="medium"
+      >
+        <div className="grid gap-4">
+          <CartBestSellers
+            count={4}
+            heading="Shop Best Sellers"
+            layout={layout}
+            sortKey="BEST_SELLING"
+          />
+        </div>
+      </Section>
     </div>
   );
 }

@@ -45,8 +45,7 @@ export const loader = async ({
         },
       },
     )
-    .catch((err) => {
-      console.log(err);
+    .catch((_err) => {
       return { data: { reviews: [], cursor: "" }, message: "", status: 0 };
     });
   return res?.data?.reviews;

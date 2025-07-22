@@ -13,8 +13,9 @@ import type {
   CollectionQuery,
   ProductCardFragment,
 } from "storefront-api.generated";
-import Link from "~/components/link";
+import Link, { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
+import { cn } from "~/utils/cn";
 import { type AppliedFilter, getAppliedFilterLink } from "~/utils/filter";
 
 export function ProductsPagination({
@@ -78,9 +79,10 @@ export function ProductsPagination({
             nodes,
             isLoading,
             nextPageUrl,
-            previousPageUrl,
             hasNextPage,
             hasPreviousPage,
+            PreviousLink,
+            NextLink,
             state,
           }) => (
             <div
@@ -93,13 +95,11 @@ export function ProductsPagination({
               }
             >
               {hasPreviousPage && (
-                <Link
-                  to={previousPageUrl}
-                  variant="outline"
-                  className="mx-auto"
+                <PreviousLink
+                  className={cn("mx-auto", variants({ variant: "outline" }))}
                 >
                   {isLoading ? "Loading..." : loadPrevText}
-                </Link>
+                </PreviousLink>
               )}
               <ProductsLoadedOnScroll
                 nodes={nodes}
@@ -109,14 +109,11 @@ export function ProductsPagination({
                 state={state}
               />
               {hasNextPage && (
-                <Link
-                  ref={ref}
-                  to={nextPageUrl}
-                  variant="outline"
-                  className="mx-auto"
+                <NextLink
+                  className={cn("mx-auto", variants({ variant: "outline" }))}
                 >
                   {isLoading ? "Loading..." : loadMoreText}
-                </Link>
+                </NextLink>
               )}
             </div>
           )}

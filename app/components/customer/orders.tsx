@@ -41,7 +41,9 @@ function Orders({ orders }: OrderCardsProps) {
 }
 
 function OrderCard({ order }: { order: OrderCardFragment }) {
-  if (!order?.id) return null;
+  if (!order?.id) {
+    return null;
+  }
 
   const [legacyOrderId, key] = order.id.split("/").pop().split("?");
   const lineItems = flattenConnection(order?.lineItems);

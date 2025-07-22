@@ -60,7 +60,7 @@ All routes follow the pattern `($locale).{route}.tsx` to support internationaliz
    - `/app/components/` - Reusable UI components organized by feature
    - Each Weaverse section exports both the component and a schema for visual editing
 
-3. **Data Fetching**: 
+3. **Data Fetching**:
    - GraphQL fragments in `/app/graphql/fragments.ts`
    - Complete queries in `/app/graphql/queries.ts`
    - Route loaders handle all data fetching server-side
@@ -84,7 +84,7 @@ All routes follow the pattern `($locale).{route}.tsx` to support internationaliz
 
 ### Development Guidelines
 
-1. **Adding New Sections**: 
+1. **Adding New Sections**:
    - Create folder in `/app/sections/`
    - Export component and schema
    - Register in `/app/weaverse/components.ts`
@@ -114,3 +114,42 @@ The project uses environment variables for Shopify integration. Required variabl
 ### Testing Approach
 
 E2E tests use Playwright and are located in `/tests/`. Tests run against `localhost:3000` and focus on critical user flows like cart operations.
+
+## Coding Standards
+
+- Use camelCase for variable and function names.
+- Use PascalCase for component names.
+- Use kebab-case for file names.
+- Use ALL_CAPS for constants
+- Use double quotes for strings.
+- Use 2 spaces for indentation.
+- Use arrow functions for callbacks.
+- Prefix private class members with underscore (\_)
+- Use async/await for asynchronous code.
+- Use const for constants only (variable named with all camel-cased letters) and prefer let for others.
+- Use destructuring for objects and arrays.
+- Use template literals for strings that contain variables.
+- Use the latest JavaScript features (ES6+) where possible.
+
+## TypeScript Guidelines
+
+- Always define types for function parameters and return values, try to avoid using `any`
+- Use TypeScript for all new code
+- Follow functional programming principles where possible
+- Use interfaces for data structures and type definitions
+- Prefer immutable data (readonly)
+- Use optional chaining (?.) and nullish coalescing (??) operators for safe property access
+
+## React Guidelines
+
+- Use functional components with hooks
+- Follow the React hooks rules (no conditional hooks)
+- Use React.FC type for components with children
+- Keep components small and focused
+- Use CSS modules for component styling
+
+## Error Handling
+
+- Use try/catch blocks for async operations
+- Implement proper error boundaries in React components
+- Always log errors with contextual information

@@ -94,7 +94,7 @@ const CollectionItems = forwardRef<
   const parent = useParentInstance();
   let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
   if (!collections?.length) {
-    collections = Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
+    collections = new Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
   }
   return (
     <div

@@ -6,6 +6,7 @@ import type {
   CustomerAddressUpdateMutation,
 } from "customer-account-api.generated";
 import invariant from "tiny-invariant";
+// biome-ignore lint/style/noExportedImports: <explanation> --- IGNORE ---
 import { AccountEditAddressForm } from "~/components/customer/edit-address-form";
 import { doLogout } from "./($locale).account_.logout";
 
@@ -28,7 +29,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
 
   if (request.method === "DELETE") {
     try {
-      const { data, errors } =
+      const { data: deleteData, errors } =
         await customerAccount.mutate<CustomerAddressDeleteMutation>(
           DELETE_ADDRESS_MUTATION,
           { variables: { addressId } },
@@ -37,8 +38,8 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       invariant(!errors?.length, errors?.[0]?.message);
 
       invariant(
-        !data?.customerAddressDelete?.userErrors?.length,
-        data?.customerAddressDelete?.userErrors?.[0]?.message,
+        !deleteData?.customerAddressDelete?.userErrors?.length,
+        deleteData?.customerAddressDelete?.userErrors?.[0]?.message,
       );
 
       return redirect(
@@ -82,7 +83,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
 
   if (addressId === "add") {
     try {
-      const { data, errors } =
+      const { data: createData, errors } =
         await customerAccount.mutate<CustomerAddressCreateMutation>(
           CREATE_ADDRESS_MUTATION,
           { variables: { address, defaultAddress } },
@@ -91,12 +92,12 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       invariant(!errors?.length, errors?.[0]?.message);
 
       invariant(
-        !data?.customerAddressCreate?.userErrors?.length,
-        data?.customerAddressCreate?.userErrors?.[0]?.message,
+        !createData?.customerAddressCreate?.userErrors?.length,
+        createData?.customerAddressCreate?.userErrors?.[0]?.message,
       );
 
       invariant(
-        data?.customerAddressCreate?.customerAddress?.id,
+        createData?.customerAddressCreate?.customerAddress?.id,
         "Expected customer address to be created",
       );
 
@@ -113,7 +114,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
     }
   } else {
     try {
-      const { data, errors } =
+      const { data: updateData, errors } =
         await customerAccount.mutate<CustomerAddressUpdateMutation>(
           UPDATE_ADDRESS_MUTATION,
           {
@@ -128,8 +129,8 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       invariant(!errors?.length, errors?.[0]?.message);
 
       invariant(
-        !data?.customerAddressUpdate?.userErrors?.length,
-        data?.customerAddressUpdate?.userErrors?.[0]?.message,
+        !updateData?.customerAddressUpdate?.userErrors?.length,
+        updateData?.customerAddressUpdate?.userErrors?.[0]?.message,
       );
 
       return redirect(

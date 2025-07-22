@@ -75,7 +75,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     }
 
     // update customer and possibly password
-    const { data, errors } = await customerAccount.mutate(
+    const { data: updateData, errors } = await customerAccount.mutate(
       CUSTOMER_UPDATE_MUTATION,
       {
         variables: {
@@ -88,13 +88,13 @@ export async function action({ request, context }: ActionFunctionArgs) {
       throw new Error(errors[0].message);
     }
 
-    if (!data?.customerUpdate?.customer) {
+    if (!updateData?.customerUpdate?.customer) {
       throw new Error("Customer profile update failed.");
     }
 
     return {
       error: null,
-      customer: data?.customerUpdate?.customer,
+      customer: updateData?.customerUpdate?.customer,
     };
   } catch (error: any) {
     return data(
@@ -111,8 +111,8 @@ export default function AccountProfile() {
     customer: CustomerUpdateMutation["customerUpdate"]["customer"];
   }>();
   const { state } = useNavigation();
-  const action = useActionData<ActionResponse>();
-  const customer = action?.customer ?? account?.customer;
+  const actionData = useActionData<ActionResponse>();
+  const customer = actionData?.customer ?? account?.customer;
 
   return (
     <div className="account-profile">
@@ -144,10 +144,10 @@ export default function AccountProfile() {
             minLength={2}
           />
         </fieldset>
-        {action?.error ? (
+        {actionData?.error ? (
           <p>
             <mark>
-              <small>{action.error}</small>
+              <small>{actionData.error}</small>
             </mark>
           </p>
         ) : (

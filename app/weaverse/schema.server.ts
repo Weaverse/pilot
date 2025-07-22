@@ -374,6 +374,12 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
+          label: "Bundle",
+          name: "bundleBadgeColor",
+          defaultValue: "#10804c",
+        },
+        {
+          type: "color",
           label: "Sold out / unavailable",
           name: "soldOutBadgeColor",
           defaultValue: "#d4d4d4",
@@ -552,6 +558,13 @@ export const themeSchema: HydrogenThemeSchema = {
           defaultValue: 30,
           helpText:
             "The <strong>New</strong> badge will be shown if the product is published within the last days.",
+        },
+        {
+          type: "text",
+          label: "Bundle text",
+          name: "bundleBadgeText",
+          defaultValue: "Bundle",
+          placeholder: "Bundle",
         },
         {
           type: "text",
@@ -762,26 +775,32 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
-          label: "Show sale badges",
-          name: "pcardShowSaleBadges",
+          label: "Show sale badge",
+          name: "pcardShowSaleBadge",
           defaultValue: true,
         },
         {
           type: "switch",
-          label: "Show Hot / Best Seller badges",
-          name: "pcardShowBestSellerBadges",
+          label: "Show bundle badge",
+          name: "pcardShowBundleBadge",
           defaultValue: true,
         },
         {
           type: "switch",
-          label: "Show New badges",
-          name: "pcardShowNewBadges",
+          label: "Show Hot / Best Seller badge",
+          name: "pcardShowBestSellerBadge",
           defaultValue: true,
         },
         {
           type: "switch",
-          label: "Show Out of stock badges",
-          name: "pcardShowOutOfStockBadges",
+          label: "Show New badge",
+          name: "pcardShowNewBadge",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show Out of stock badge",
+          name: "pcardShowOutOfStockBadge",
           defaultValue: false,
         },
       ],

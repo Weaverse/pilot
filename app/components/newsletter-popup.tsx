@@ -66,7 +66,9 @@ export function NewsletterPopup() {
     let timer: ReturnType<typeof setTimeout> | null = null;
     if (!isDesignMode) {
       const isDismissed = localStorage.getItem(POPUP_DISMISSED_KEY) === "true";
-      if (isDismissed) return;
+      if (isDismissed) {
+        return;
+      }
       timer = setTimeout(() => {
         setOpen(true);
       }, newsletterPopupDelay * 1000);
