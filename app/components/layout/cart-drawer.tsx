@@ -8,7 +8,9 @@ import { Cart } from "~/components/cart/cart";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 
-export let toggleCartDrawer = (_open: boolean) => {};
+export let toggleCartDrawer = (_open: boolean) => {
+  /* */
+};
 
 export function CartDrawer() {
   const rootData = useRouteLoaderData<RootLoader>("root");

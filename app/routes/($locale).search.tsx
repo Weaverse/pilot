@@ -52,6 +52,14 @@ export async function loader({
   }
 
   const hasResults = products?.nodes?.length > 0;
+  let seoDescription = "";
+  if (hasResults) {
+    seoDescription = `Showing ${products.nodes.length} search results for "${searchTerm}"`;
+  } else if (searchTerm) {
+    seoDescription = `No results found for "${searchTerm}"`;
+  } else {
+    seoDescription = "Search our store";
+  }
 
   return {
     seo: seoPayload.collection({
@@ -62,14 +70,7 @@ export async function loader({
         handle: "search",
         descriptionHtml: "Search results",
         description: "Search results",
-        seo: {
-          title: "Search",
-          description: hasResults
-            ? `Showing ${products.nodes.length} search results for "${searchTerm}"`
-            : searchTerm
-              ? `No results found for "${searchTerm}"`
-              : "Search our store",
-        },
+        seo: { title: "Search", description: seoDescription },
         metafields: [],
         products,
         updatedAt: new Date().toISOString(),

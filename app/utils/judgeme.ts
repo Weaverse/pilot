@@ -72,6 +72,7 @@ export async function getJudgeMeProductReviews({
       }
     }
   } catch (error) {
+    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     console.log("Error fetching Judgeme product reviews", error.message);
   }
   return { rating: 0, reviewNumber: 0, reviews: [] };

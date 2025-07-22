@@ -93,7 +93,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       case "POST": {
         // handle new address creation
         try {
-          const { data, errors } = await customerAccount.mutate(
+          const { data: createData, errors } = await customerAccount.mutate(
             CREATE_ADDRESS_MUTATION,
             {
               variables: { address, defaultAddress },
@@ -104,17 +104,19 @@ export async function action({ request, context }: ActionFunctionArgs) {
             throw new Error(errors[0].message);
           }
 
-          if (data?.customerAddressCreate?.userErrors?.length) {
-            throw new Error(data?.customerAddressCreate?.userErrors[0].message);
+          if (createData?.customerAddressCreate?.userErrors?.length) {
+            throw new Error(
+              createData?.customerAddressCreate?.userErrors[0].message,
+            );
           }
 
-          if (!data?.customerAddressCreate?.customerAddress) {
+          if (!createData?.customerAddressCreate?.customerAddress) {
             throw new Error("Customer address create failed.");
           }
 
           return {
             error: null,
-            createdAddress: data?.customerAddressCreate?.customerAddress,
+            createdAddress: createData?.customerAddressCreate?.customerAddress,
             defaultAddress,
           };
         } catch (error: unknown) {
@@ -138,7 +140,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       case "PUT": {
         // handle address updates
         try {
-          const { data, errors } = await customerAccount.mutate(
+          const { data: updateData, errors } = await customerAccount.mutate(
             UPDATE_ADDRESS_MUTATION,
             {
               variables: {
@@ -153,11 +155,13 @@ export async function action({ request, context }: ActionFunctionArgs) {
             throw new Error(errors[0].message);
           }
 
-          if (data?.customerAddressUpdate?.userErrors?.length) {
-            throw new Error(data?.customerAddressUpdate?.userErrors[0].message);
+          if (updateData?.customerAddressUpdate?.userErrors?.length) {
+            throw new Error(
+              updateData?.customerAddressUpdate?.userErrors[0].message,
+            );
           }
 
-          if (!data?.customerAddressUpdate?.userErrors?.length) {
+          if (!updateData?.customerAddressUpdate?.userErrors?.length) {
             throw new Error("Customer address update failed.");
           }
 
@@ -187,7 +191,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       case "DELETE": {
         // handles address deletion
         try {
-          const { data, errors } = await customerAccount.mutate(
+          const { data: delateData, errors } = await customerAccount.mutate(
             DELETE_ADDRESS_MUTATION,
             {
               variables: { addressId: decodeURIComponent(addressId) },
@@ -198,11 +202,13 @@ export async function action({ request, context }: ActionFunctionArgs) {
             throw new Error(errors[0].message);
           }
 
-          if (data?.customerAddressDelete?.userErrors?.length) {
-            throw new Error(data?.customerAddressDelete?.userErrors[0].message);
+          if (delateData?.customerAddressDelete?.userErrors?.length) {
+            throw new Error(
+              delateData?.customerAddressDelete?.userErrors[0].message,
+            );
           }
 
-          if (!data?.customerAddressDelete?.deletedAddressId) {
+          if (!delateData?.customerAddressDelete?.deletedAddressId) {
             throw new Error("Customer address delete failed.");
           }
 
@@ -371,8 +377,8 @@ export function AddressForm({
   }) => React.ReactNode;
 }) {
   const { state, formMethod } = useNavigation();
-  const action = useActionData<ActionResponse>();
-  const error = action?.error?.[addressId];
+  const actionData = useActionData<ActionResponse>();
+  const error = actionData?.error?.[addressId];
   const isDefaultAddress = defaultAddress?.id === addressId;
   return (
     <Form id={addressId}>

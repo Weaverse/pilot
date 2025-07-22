@@ -59,7 +59,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function Authenticated() {
-  const data = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
   const outlet = useOutlet();
   const matches = useMatches();
 
@@ -76,16 +76,16 @@ export default function Authenticated() {
       return (
         <>
           <OutletModal cancelLink="/account">
-            <Outlet context={{ customer: data.customer }} />
+            <Outlet context={{ customer: loaderData.customer }} />
           </OutletModal>
-          <Account {...data} customer={data.customer} />
+          <Account {...loaderData} customer={loaderData.customer} />
         </>
       );
     }
-    return <Outlet context={{ customer: data.customer }} />;
+    return <Outlet context={{ customer: loaderData.customer }} />;
   }
 
-  return <Account {...data} customer={data.customer} />;
+  return <Account {...loaderData} customer={loaderData.customer} />;
 }
 
 interface AccountType {

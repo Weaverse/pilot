@@ -20,15 +20,13 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
   const submittable = rating > 0;
 
   useEffect(() => {
-    if (fetcher.data) {
+    if ((fetcher.data as Response)?.ok) {
       // setMessage((fetcher.data as Response)?.message || "");
-      if ((fetcher.data as Response).ok) {
-        setIsFormVisible(false);
-        setIsPopupVisible(true);
-        setRating(0);
-        setHover(0);
-        (formRef as React.MutableRefObject<HTMLFormElement>).current?.reset();
-      }
+      setIsFormVisible(false);
+      setIsPopupVisible(true);
+      setRating(0);
+      setHover(0);
+      (formRef as React.RefObject<HTMLFormElement>).current?.reset();
     }
   }, [fetcher.data]);
 
@@ -97,7 +95,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
               <div className="flex flex-col gap-3">
                 <span className="font-bold text-base">Rating</span>
                 <div className="flex items-center pr-1">
-                  {[...Array(5)].map((_, index) => {
+                  {[...new Array(5)].map((_, index) => {
                     const ratingValue = index + 1;
                     return (
                       <div

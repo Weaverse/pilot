@@ -83,7 +83,6 @@ export async function action({
     });
     return response;
   } catch (error) {
-    console.error(error);
     return data({ error: "Failed to create review!" }, { status: 500 });
   }
 }
@@ -106,7 +105,9 @@ export default function Product() {
   // Sets the search param to the selected variant without navigation
   // when no search params are set or when variant options don't match
   useEffect(() => {
-    if (!selectedVariant?.selectedOptions) return;
+    if (!selectedVariant?.selectedOptions) {
+      return;
+    }
 
     const currentParams = new URLSearchParams(window.location.search);
     let needsUpdate = false;

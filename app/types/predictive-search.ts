@@ -18,11 +18,11 @@ export type NormalizedPredictiveSearch = {
 };
 
 export type NormalizedPredictiveSearchResults = Array<
-  | { type: "queries"; items: Array<NormalizedPredictiveSearchResultItem> }
-  | { type: "products"; items: Array<NormalizedPredictiveSearchResultItem> }
-  | { type: "collections"; items: Array<NormalizedPredictiveSearchResultItem> }
-  | { type: "pages"; items: Array<NormalizedPredictiveSearchResultItem> }
-  | { type: "articles"; items: Array<NormalizedPredictiveSearchResultItem> }
+  | { type: "queries"; items: NormalizedPredictiveSearchResultItem[] }
+  | { type: "products"; items: NormalizedPredictiveSearchResultItem[] }
+  | { type: "collections"; items: NormalizedPredictiveSearchResultItem[] }
+  | { type: "pages"; items: NormalizedPredictiveSearchResultItem[] }
+  | { type: "articles"; items: NormalizedPredictiveSearchResultItem[] }
 >;
 
 export type NormalizedPredictiveSearchResultItem = {

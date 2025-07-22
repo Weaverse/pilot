@@ -12,7 +12,9 @@ export async function loader({
     params,
     locales: ["EN-US", "EN-CA", "FR-CA"],
     getLink: ({ type, baseUrl, handle, locale }) => {
-      if (!locale) return `${baseUrl}/${type}/${handle}`;
+      if (!locale) {
+        return `${baseUrl}/${type}/${handle}`;
+      }
       return `${baseUrl}/${locale}/${type}/${handle}`;
     },
   });

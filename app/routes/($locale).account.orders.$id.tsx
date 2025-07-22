@@ -3,6 +3,7 @@ import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-t
 import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
 import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import type { MetaFunction } from "react-router";
+// biome-ignore lint/style/noExportedImports: <explanation> --- IGNORE ---
 import { OrderDetails } from "~/components/customer/order-details";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

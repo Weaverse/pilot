@@ -130,7 +130,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           >
             <TooltipProvider disableHoverableContent>
               <div
-                className="flex min-h-screen-no-topbar flex-col"
+                className="flex min-h-screen flex-col"
                 key={`${locale.language}-${locale.country}`}
               >
                 <div className="">

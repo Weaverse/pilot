@@ -25,14 +25,17 @@ const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
-      if (productReviews || !handle) return;
+      if (productReviews || !handle) {
+        return;
+      }
       load(api);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [handle, api]);
 
     const data = productReviews || fetchData;
 
-    if (!data) return null;
+    if (!data) {
+      return null;
+    }
 
     const rating = Math.round((data.rating || 0) * 100) / 100;
     const reviewNumber = data.reviewNumber || 0;

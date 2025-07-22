@@ -49,7 +49,9 @@ export function FeaturedProducts() {
     load(api);
   }, [api]);
 
-  if (!data) return null;
+  if (!data) {
+    return null;
+  }
 
   const { featuredProducts } = data;
 

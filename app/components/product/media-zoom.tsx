@@ -42,7 +42,7 @@ export function ZoomModal({
   const zoomMedia = media.find((med) => med.id === zoomMediaId);
   const zoomMediaIndex = media.findIndex((med) => med.id === zoomMediaId);
   const nextMedia = media[zoomMediaIndex + 1] ?? media[0];
-  const prevMedia = media[zoomMediaIndex - 1] ?? media[media.length - 1];
+  const prevMedia = media[zoomMediaIndex - 1] ?? media.at(-1);
 
   // Handle loading state when media changes
   useEffect(() => {
@@ -211,7 +211,9 @@ function ZoomMedia({
   media: MediaFragment | undefined;
   onImageLoad?: () => void;
 }) {
-  if (!media) return null;
+  if (!media) {
+    return null;
+  }
   if (media.mediaContentType === "IMAGE") {
     const { image, alt } = media as Media_MediaImage_Fragment;
     return (

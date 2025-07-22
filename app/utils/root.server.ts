@@ -72,6 +72,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
         language: storefront.i18n.language,
       },
     })
+    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     .catch(console.error);
 
   invariant(data, "No data returned from Shopify API");
@@ -153,7 +154,7 @@ function parseMenu(
   customPrefixes = {},
 ): EnhancedMenu | null {
   if (!menu?.items) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     console.warn("Invalid menu passed to parseMenu");
     return null;
   }
@@ -179,7 +180,7 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
     | EnhancedMenu["items"][number]["items"][0]
     | null => {
     if (!(item?.url && item?.type)) {
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
       console.warn("Invalid menu item.  Must include a url and type.");
       return null;
     }
@@ -229,7 +230,9 @@ function resolveToFromType(
     customPrefixes: {},
   },
 ) {
-  if (!(pathname && type)) return "";
+  if (!(pathname && type)) {
+    return "";
+  }
 
   /*
     MenuItemType enum

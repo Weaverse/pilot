@@ -58,7 +58,9 @@ async function fetchPredictiveSearchResults({
   let body: FormData | null = null;
   try {
     body = await request.formData();
-  } catch (error) {}
+  } catch (error) {
+    /* */
+  }
   const searchTerm = String(body?.get("q") || searchParams.get("q") || "");
   const limit = Number(body?.get("limit") || searchParams.get("limit") || 10);
   const rawTypes = String(
@@ -81,7 +83,7 @@ async function fetchPredictiveSearchResults({
     };
   }
 
-  const data = await context.storefront.query(PREDICTIVE_SEARCH_QUERY, {
+  const searchData = await context.storefront.query(PREDICTIVE_SEARCH_QUERY, {
     variables: {
       limit,
       limitScope: "EACH",
@@ -90,12 +92,12 @@ async function fetchPredictiveSearchResults({
     },
   });
 
-  if (!data) {
+  if (!searchData) {
     throw new Error("No data returned from Shopify API");
   }
 
   const searchResults = normalizePredictiveSearchResults(
-    data.predictiveSearch,
+    searchData.predictiveSearch,
     params.locale,
   );
 

@@ -90,7 +90,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   );
 
   if (errors?.length || !data?.customer) {
-    throw Error("Customer orders not found");
+    throw new Error("Customer orders not found");
   }
 
   return { customer: data.customer };

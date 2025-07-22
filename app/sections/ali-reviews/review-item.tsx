@@ -110,6 +110,7 @@ export function ReviewItem(props: ReviewItemProps) {
                 }
               }}
             >
+              {/** biome-ignore lint/performance/noImgElement: <explanation> --- IGNORE --- */}
               <img
                 className="h-full w-full object-cover object-center"
                 src={media.url}
@@ -136,6 +137,7 @@ function ReviewMediaPreview(props: {
     return (
       <div className="flex items-start gap-2">
         <div className="flex h-96 w-96 items-center justify-center overflow-hidden bg-gray-800">
+          {/** biome-ignore lint/performance/noImgElement: <explanation> --- IGNORE --- */}
           <img
             className="max-h-full max-w-full object-cover"
             src={media.url}

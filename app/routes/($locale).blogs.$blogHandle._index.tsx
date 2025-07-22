@@ -64,8 +64,8 @@ export const loader = async (args: LoaderFunctionArgs) => {
   });
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data?.seo as SeoConfig);
+export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
+  return getSeoMeta(loaderData?.seo as SeoConfig);
 };
 
 export default function Blogs() {

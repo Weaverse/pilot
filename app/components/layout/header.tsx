@@ -120,8 +120,8 @@ function AccountLink({ className }: { className?: string }) {
           resolve={isLoggedIn}
           errorElement={<UserIcon className="h-5 w-5" />}
         >
-          {(isLoggedIn) =>
-            isLoggedIn ? (
+          {(loggedIn) =>
+            loggedIn ? (
               <UserIcon className="h-5 w-5" />
             ) : (
               <UserIcon className="h-5 w-5" />

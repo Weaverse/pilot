@@ -18,7 +18,7 @@ type SearchFromProps = {
 
 /**
  *  Search form component that posts search requests to the `/search` route
- **/
+ */
 export function PredictiveSearchForm({
   action,
   children,
