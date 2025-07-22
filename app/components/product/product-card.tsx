@@ -46,10 +46,11 @@ export function ProductCard({
     pcardQuickShopButtonType,
     pcardQuickShopButtonText,
     pcardQuickShopPanelType,
-    pcardShowSaleBadges,
-    pcardShowBestSellerBadges,
-    pcardShowNewBadges,
-    pcardShowOutOfStockBadges,
+    pcardShowSaleBadge,
+    pcardShowBundleBadge,
+    pcardShowBestSellerBadge,
+    pcardShowNewBadge,
+    pcardShowOutOfStockBadge,
   } = useThemeSettings();
 
   const [selectedVariant, setSelectedVariant] =
@@ -133,18 +134,18 @@ export function ProductCard({
           </Link>
         )}
         <div className="absolute top-2.5 right-2.5 flex gap-1">
-          {isBundle && <BundleBadge />}
-          {pcardShowSaleBadges && (
+          {isBundle && pcardShowBundleBadge && <BundleBadge />}
+          {pcardShowSaleBadge && (
             <SaleBadge
               price={minVariantPrice as MoneyV2}
               compareAtPrice={maxVariantPrice as MoneyV2}
             />
           )}
-          {pcardShowBestSellerBadges && isBestSellerProduct && (
+          {pcardShowBestSellerBadge && isBestSellerProduct && (
             <BestSellerBadge />
           )}
-          {pcardShowNewBadges && <NewBadge publishedAt={product.publishedAt} />}
-          {pcardShowOutOfStockBadges && <SoldOutBadge />}
+          {pcardShowNewBadge && <NewBadge publishedAt={product.publishedAt} />}
+          {pcardShowOutOfStockBadge && <SoldOutBadge />}
         </div>
         {pcardEnableQuickShop && (
           <QuickShopTrigger
