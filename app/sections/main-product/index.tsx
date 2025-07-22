@@ -150,7 +150,10 @@ const ProductInformation = forwardRef<
                   />
                 </div>
               )}
-              <ProductVariants productOptions={productOptions} />
+              <ProductVariants
+                productOptions={productOptions}
+                selectedVariant={selectedVariant}
+              />
               <Quantity value={quantity} onChange={setQuantity} />
               <div className="space-y-2">
                 <AddToCartButton
