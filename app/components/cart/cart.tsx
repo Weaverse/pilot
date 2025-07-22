@@ -279,6 +279,11 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
     }
     url += `?${params.toString()}`;
   }
+  let isDefaultVariant = false;
+  if (selectedOptions?.length === 1) {
+    const { name, value } = selectedOptions[0];
+    isDefaultVariant = name === "Title" && value === "Default Title";
+  }
 
   return (
     <li
@@ -303,17 +308,23 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
       </div>
       <div className="flex grow flex-col gap-3">
         <div className="flex justify-between gap-4">
-          <div className="space-y-1">
+          <div>
             <div>
               {product?.handle ? (
-                <Link to={url} onClick={() => toggleCartDrawer(false)}>
+                <Link
+                  to={url}
+                  onClick={() => toggleCartDrawer(false)}
+                  className="inline-block"
+                >
                   <RevealUnderline>{product?.title || ""}</RevealUnderline>
                 </Link>
               ) : (
                 <p>{product?.title || ""}</p>
               )}
             </div>
-            <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
+            {!isDefaultVariant && (
+              <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
+            )}
           </div>
           {layout === "drawer" && (
             <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
