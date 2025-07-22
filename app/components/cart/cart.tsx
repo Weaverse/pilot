@@ -19,6 +19,7 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
+import { Section } from "~/components/section";
 import { RevealUnderline } from "~/reveal-underline";
 import { calculateAspectRatio } from "~/utils/image";
 import { toggleCartDrawer } from "../layout/cart-drawer";
@@ -495,7 +496,6 @@ function CartEmpty({
           y > 0 && "border-t",
         ],
         layout === "page" && [
-          !hidden && "grid",
           "w-full gap-4 pb-12 md:items-start md:gap-8 lg:gap-12",
         ],
       )}
@@ -518,14 +518,19 @@ function CartEmpty({
           Start Shopping
         </Link>
       </div>
-      <div className="grid gap-4">
-        <CartBestSellers
-          count={4}
-          heading="Shop Best Sellers"
-          layout={layout}
-          sortKey="BEST_SELLING"
-        />
-      </div>
+      <Section
+        width={layout === "drawer" ? "full" : "fixed"}
+        verticalPadding="medium"
+      >
+        <div className="grid gap-4">
+          <CartBestSellers
+            count={4}
+            heading="Shop Best Sellers"
+            layout={layout}
+            sortKey="BEST_SELLING"
+          />
+        </div>
+      </Section>
     </div>
   );
 }

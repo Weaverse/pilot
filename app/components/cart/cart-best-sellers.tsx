@@ -56,7 +56,11 @@ export function CartBestSellers({
 
   return (
     <>
-      <h6>{heading}</h6>
+      <h5
+        className={clsx(layout === "page" && "mt-4 mb-2 text-center lg:mb-6")}
+      >
+        {heading}
+      </h5>
       <div
         className={clsx([
           "grid grid-cols-2 gap-x-6 gap-y-8",
