@@ -132,7 +132,7 @@ export function QuickShopTrigger({
   panelType?: "modal" | "drawer";
 }) {
   const [open, setOpen] = useState(false);
-  const { load, data, state } = useFetcher<ProductData>();
+  const { load, data } = useFetcher<ProductData>();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
   useEffect(() => {
@@ -190,6 +190,14 @@ export function QuickShopTrigger({
           }
           aria-describedby={undefined}
         >
+          <Dialog.Close asChild>
+            <Button
+              className="absolute top-3 right-3 rounded-full p-2"
+              variant="secondary"
+            >
+              <XIcon size={18} />
+            </Button>
+          </Dialog.Close>
           <div
             style={{ maxHeight: "90vh" }}
             className={clsx(
@@ -199,12 +207,6 @@ export function QuickShopTrigger({
                 "mr-0 ml-auto min-h-screen max-w-md p-4",
             )}
           >
-            <Dialog.Close asChild>
-              <XIcon
-                className="absolute top-3 right-3 cursor-pointer"
-                size={20}
-              />
-            </Dialog.Close>
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Quick shop modal</Dialog.Title>
             </VisuallyHidden.Root>
