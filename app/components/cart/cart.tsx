@@ -507,8 +507,12 @@ function CartEmpty({
           started!
         </p>
         <Link
+          variant="outline"
           to={layout === "page" ? "/products" : ""}
-          className={clsx(layout === "drawer" ? "w-full" : "min-w-48")}
+          className={clsx(
+            layout === "drawer" ? "w-full" : "min-w-48",
+            "justify-center",
+          )}
           onClick={onClose}
         >
           Start Shopping
