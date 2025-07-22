@@ -1,7 +1,7 @@
 import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { clsx } from "clsx";
+import clsx from "clsx";
 import { colord } from "colord";
 import type {
   ProductQuery,
@@ -28,7 +28,7 @@ function Badge({
         borderRadius: `${badgeBorderRadius}px`,
         textTransform: badgeTextTransform,
       }}
-      className={clsx("px-1.5 py-1 text-sm uppercase", className)}
+      className={cn("px-1.5 py-1 text-sm uppercase", className)}
     >
       {text}
     </span>
@@ -48,7 +48,7 @@ export function NewBadge({
       <Badge
         text={newBadgeText}
         backgroundColor={newBadgeColor}
-        className={className}
+        className={clsx("new-badge", className)}
       />
     );
   }
@@ -61,7 +61,7 @@ export function BestSellerBadge({ className }: { className?: string }) {
     <Badge
       text={bestSellerBadgeText}
       backgroundColor={bestSellerBadgeColor}
-      className={className}
+      className={clsx("best-seller-badge", className)}
     />
   );
 }
@@ -72,7 +72,7 @@ export function SoldOutBadge({ className }: { className?: string }) {
     <Badge
       text={soldOutBadgeText}
       backgroundColor={soldOutBadgeColor}
-      className={className}
+      className={clsx("sold-out-badge", className)}
     />
   );
 }
@@ -83,7 +83,7 @@ export function BundleBadge({ className }: { className?: string }) {
     <Badge
       text={bundleBadgeText}
       backgroundColor={bundleBadgeColor}
-      className={className}
+      className={clsx("bundle-badge", className)}
     />
   );
 }
@@ -109,7 +109,7 @@ export function SaleBadge({
       <Badge
         text={text}
         backgroundColor={saleBadgeColor}
-        className={className}
+        className={clsx("sale-badge", className)}
       />
     );
   }
