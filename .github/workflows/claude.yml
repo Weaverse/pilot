@@ -38,12 +38,28 @@ jobs:
 
           # Direct prompt for automated review
           direct_prompt: |
+            You are reviewing a PR for Pilot, a Shopify Hydrogen theme powered by Weaverse. This project uses:
+            - React Router 7, TypeScript, and Tailwind CSS v4
+            - Weaverse for visual page building
+            - Biome for linting/formatting (not ESLint/Prettier)
+            - GraphQL with code generation
+            - Parallel data loading patterns
+
             Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
+            - Code quality and adherence to project conventions (check CLAUDE.md for guidelines)
+            - Weaverse section implementation (must use forwardRef and export schema)
+            - GraphQL usage and type safety
+            - Performance considerations (especially parallel data loading)
+            - Biome linting compliance
+            - Test coverage (Playwright E2E tests)
             - Security concerns
-            - Test coverage
+            - Proper TypeScript typing (avoid `any`)
+
+            Key areas to check:
+            - Routes should follow `($locale).{route}.tsx` pattern
+            - Weaverse sections must be registered in `/app/weaverse/components.ts`
+            - Use `Promise.all()` for parallel data fetching
+            - Follow the project's code conventions (camelCase, double quotes, semicolons)
 
             Be constructive and helpful in your feedback.
 
