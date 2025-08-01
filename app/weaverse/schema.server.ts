@@ -1,10 +1,10 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
 import { COUNTRIES } from "~/utils/const";
-import pkg from "../../package.json";
+import { version } from "../../package.json";
 
 export const themeSchema: HydrogenThemeSchema = {
   info: {
-    version: pkg.version,
+    version,
     author: "Weaverse",
     name: "Pilot",
     authorProfilePhoto:
