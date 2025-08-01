@@ -169,7 +169,7 @@ Required environment variables are defined in `env.d.ts`. The project uses `@sho
 ### Testing Strategy
 
 - E2E tests use Playwright and are located in `/tests/`
-- Tests run against `localhost:3000`
+- Tests run against `localhost:3456` (same as dev server)
 - Focus on critical user flows: cart operations, checkout process
 - Run individual tests: `npx playwright test tests/cart.test.ts`
 
