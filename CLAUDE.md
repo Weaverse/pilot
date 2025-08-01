@@ -4,23 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React, TypeScript, Remix, and Tailwind CSS.
+This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting.
 
 ## Essential Commands
 
 ### Development
 ```bash
 npm run dev        # Start development server on port 3456
+npm run dev:ca     # Start with customer account push (unstable)
 npm run build      # Production build with GraphQL codegen
 npm run preview    # Preview production build
 npm start          # Start production server
+npm run clean      # Clean all build artifacts and dependencies
 ```
 
-### Code Quality
+### Code Quality (Always run before committing)
 ```bash
 npm run biome      # Check for linting/formatting errors
 npm run biome:fix  # Fix linting/formatting errors
-npm run format     # Format code
+npm run format     # Format code with Biome
 npm run typecheck  # Run TypeScript type checking
 ```
 
@@ -44,112 +46,156 @@ All routes follow the pattern `($locale).{route}.tsx` to support internationaliz
 - Collections: `($locale).collections.$collectionHandle.tsx`
 - Account: `($locale).account.*`
 - API routes: `($locale).api.*`
+- Cart operations: `($locale).cart.*`
+- Policies & Pages: `($locale).pages.$pageHandle.tsx`, `($locale).policies.$policyHandle.tsx`
 
 ### Key Architectural Patterns
 
-1. **Weaverse Integration**: Every page route loads Weaverse data alongside GraphQL queries using parallel data loading:
+1. **Parallel Data Loading**: Every page route loads Weaverse data alongside GraphQL queries using `Promise.all()`:
    ```typescript
-   const [weaverseData, collections] = await Promise.all([
-     context.weaverse.loadPage(),
-     storefront.query(COLLECTIONS_QUERY)
+   const [{ shop, product }, weaverseData, productReviews] = await Promise.all([
+     storefront.query(PRODUCT_QUERY, { variables }),
+     weaverse.loadPage({ type: "PRODUCT", handle }),
+     getJudgeMeProductReviews({ context, handle }),
    ]);
    ```
 
 2. **Component Structure**:
-   - `/app/sections/` - Weaverse visual builder sections with schema exports
-   - `/app/components/` - Reusable UI components organized by feature
-   - Each Weaverse section exports both the component and a schema for visual editing
+   - `/app/sections/` - Weaverse visual builder sections with schema exports and optional loaders
+   - `/app/components/` - Reusable UI components organized by feature (cart/, product/, layout/, customer/)
+   - Each Weaverse section must export: default component + schema + optional loader
 
 3. **Data Fetching**:
    - GraphQL fragments in `/app/graphql/fragments.ts`
    - Complete queries in `/app/graphql/queries.ts`
    - Route loaders handle all data fetching server-side
+   - Use `routeHeaders` for consistent cache control
 
 4. **Styling**:
-   - Tailwind CSS with custom utilities
+   - Tailwind CSS v4 with custom utilities
    - class-variance-authority (cva) for component variants
    - Use the `cn()` utility from `/app/utils/cn.ts` for class merging
+   - Biome's `useSortedClasses` enabled for `clsx`, `cva`, and `cn` functions
 
 5. **Type Safety**:
    - GraphQL types are auto-generated via codegen
    - Path alias `~/` maps to `/app/` directory
    - Strict TypeScript configuration
+   - Two separate codegen outputs:
+     - `storefront-api.generated.d.ts` - For all storefront queries (excludes account routes)
+     - `customer-account-api.generated.d.ts` - For customer account queries (only in `*.account*.{ts,tsx,js,jsx}` files)
 
 ### Important Integrations
 
 - **Weaverse**: Visual page builder - sections must be registered in `/app/weaverse/components.ts`
 - **Judge.me**: Product reviews integration via utilities in `/app/utils/judgeme.ts`
 - **Analytics**: Shopify Analytics integrated throughout components
-- **Customer Accounts**: New Shopify Customer Account API support
+- **Customer Accounts**: New Shopify Customer Account API support (OAuth-based)
+- **Radix UI**: For accessible UI primitives (accordion, dialog, dropdown, etc.)
+- **Swiper**: For carousel/slideshow functionality
 
-### Development Guidelines
+### Weaverse Section Development
 
-1. **Adding New Sections**:
-   - Create folder in `/app/sections/`
-   - Export component and schema
-   - Register in `/app/weaverse/components.ts`
+1. **Creating a New Section**:
+   ```typescript
+   // app/sections/my-section/index.tsx
+   import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+   import { forwardRef } from 'react';
+   
+   interface MyProps extends HydrogenComponentProps {
+     heading: string;
+   }
+   
+   const MySection = forwardRef<HTMLElement, MyProps>((props, ref) => {
+     // Component implementation
+   });
+   
+   export default MySection;
+   
+   export const schema = createSchema({
+     type: 'my-section',
+     title: 'My Section',
+     settings: [/* ... */]
+   });
+   
+   // Optional loader for server-side data fetching
+   export const loader = async ({ weaverse, data }) => {
+     // Fetch data
+   };
+   ```
 
-2. **Route Data Loading**:
-   - Always load Weaverse data in route loaders
-   - Use parallel loading with `Promise.all()`
-   - Set appropriate cache headers
+2. **Register in `/app/weaverse/components.ts`**:
+   ```typescript
+   import * as MySection from "~/sections/my-section";
+   export const components = [
+     // ... existing components
+     MySection,
+   ];
+   ```
 
-3. **Component Patterns**:
-   - Use TypeScript for all new components
-   - Follow existing schema patterns for Weaverse sections
-   - Implement proper loading states with Suspense
+### Route Data Loading Pattern
 
-4. **GraphQL Usage**:
-   - Add fragments to `/app/graphql/fragments.ts`
-   - Run `npm run codegen` after GraphQL changes
-   - Two separate codegen outputs:
-     - `storefront-api.generated.d.ts` - For all storefront queries (excludes account routes)
-     - `customer-account-api.generated.d.ts` - For customer account queries (only in `*.account*.{ts,tsx,js,jsx}` files)
-   - Place customer account queries ONLY in account-related route files
+```typescript
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
+  const { handle } = params;
+  invariant(handle, "Missing handle param");
+  
+  const { storefront, weaverse } = context;
+  
+  // Parallel data loading
+  const [shopifyData, weaverseData, thirdPartyData] = await Promise.all([
+    storefront.query(QUERY, { variables }),
+    weaverse.loadPage({ type: "PAGE_TYPE", handle }),
+    fetchThirdPartyData(),
+  ]);
+  
+  // Handle errors
+  if (!shopifyData.resource) {
+    throw new Response("Not found", { status: 404 });
+  }
+  
+  return data({
+    shopifyData,
+    weaverseData,
+    thirdPartyData,
+  });
+}
+```
 
 ### Environment Configuration
 
-The project uses environment variables for Shopify integration. Required variables are defined in `env.d.ts`.
+Required environment variables are defined in `env.d.ts`. The project uses `@shopify/hydrogen` and `@shopify/remix-oxygen` for environment handling.
 
-### Testing Approach
+### Testing Strategy
 
-E2E tests use Playwright and are located in `/tests/`. Tests run against `localhost:3000` and focus on critical user flows like cart operations.
+- E2E tests use Playwright and are located in `/tests/`
+- Tests run against `localhost:3000`
+- Focus on critical user flows: cart operations, checkout process
+- Run individual tests: `npx playwright test tests/cart.test.ts`
 
-## Coding Standards
+### Biome Configuration
 
-- Use camelCase for variable and function names.
-- Use PascalCase for component names.
-- Use kebab-case for file names.
-- Use ALL_CAPS for constants
-- Use double quotes for strings.
-- Use 2 spaces for indentation.
-- Use arrow functions for callbacks.
-- Prefix private class members with underscore (\_)
-- Use async/await for asynchronous code.
-- Use const for constants only (variable named with all camel-cased letters) and prefer let for others.
-- Use destructuring for objects and arrays.
-- Use template literals for strings that contain variables.
-- Use the latest JavaScript features (ES6+) where possible.
+The project extends from `ultracite` and `@weaverse/biome` configurations with these customizations:
+- Double quotes for strings
+- Semicolons always
+- Trailing commas
+- Max cognitive complexity: 50
+- Sorted Tailwind classes in `clsx`, `cva`, and `cn` functions
 
-## TypeScript Guidelines
+## Code Conventions
 
-- Always define types for function parameters and return values, try to avoid using `any`
-- Use TypeScript for all new code
-- Follow functional programming principles where possible
-- Use interfaces for data structures and type definitions
-- Prefer immutable data (readonly)
-- Use optional chaining (?.) and nullish coalescing (??) operators for safe property access
+- **Naming**: camelCase for variables/functions, PascalCase for components, kebab-case for files, ALL_CAPS for constants
+- **Formatting**: 2 spaces indentation, double quotes, semicolons, trailing commas
+- **TypeScript**: Always type function parameters and returns, avoid `any`, use interfaces for data structures
+- **React**: Functional components with hooks only, small focused components, forwardRef for Weaverse sections
+- **Async**: Use async/await, proper error handling with try/catch
+- **Imports**: Use `~/` path alias for app directory imports
 
-## React Guidelines
+## Common Pitfalls to Avoid
 
-- Use functional components with hooks
-- Follow the React hooks rules (no conditional hooks)
-- Use React.FC type for components with children
-- Keep components small and focused
-- Use CSS modules for component styling
-
-## Error Handling
-
-- Use try/catch blocks for async operations
-- Implement proper error boundaries in React components
-- Always log errors with contextual information
+1. **GraphQL Codegen**: Always run `npm run codegen` after modifying GraphQL queries/fragments
+2. **Weaverse Registration**: New sections must be registered in `/app/weaverse/components.ts`
+3. **Route Caching**: Use `routeHeaders` export for consistent cache control
+4. **Customer Account Queries**: Only use in `*.account*.{ts,tsx}` files
+5. **Parallel Loading**: Always use `Promise.all()` for multiple data fetches in loaders
+6. **Type Safety**: Never use `any` type, properly type all Weaverse section props
