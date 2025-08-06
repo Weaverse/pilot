@@ -20,6 +20,7 @@ import {
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { isCombinedListing } from "~/lib/combined-listings";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import { ProductDetails } from "./product-details";
 import { ProductVariants } from "./variants";
@@ -77,6 +78,7 @@ const ProductInformation = forwardRef<
 
   const isBundle = Boolean(product?.isBundle?.requiresComponents);
   const bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
+  const combinedListing = isCombinedListing(product);
 
   if (product) {
     const { title, handle, vendor, summary } = product;
@@ -101,7 +103,21 @@ const ProductInformation = forwardRef<
             mediaLayout={mediaLayout}
             gridSize={gridSize}
             imageAspectRatio={imageAspectRatio}
-            media={product?.media.nodes}
+            media={
+              combinedListing && product?.featuredImage
+                ? [
+                    {
+                      __typename: "MediaImage",
+                      id: product.featuredImage.id,
+                      mediaContentType: "IMAGE",
+                      alt: product.featuredImage.altText,
+                      previewImage: product.featuredImage,
+                      image: product.featuredImage,
+                    },
+                    ...(product?.media?.nodes || []),
+                  ]
+                : product?.media?.nodes || []
+            }
             selectedVariant={selectedVariant}
             showThumbnails={showThumbnails}
             enableZoom={enableZoom}
@@ -133,11 +149,30 @@ const ProductInformation = forwardRef<
                 )}
                 <h1 className="h3 tracking-tight!">{title}</h1>
               </div>
-              <VariantPrices
-                variant={selectedVariant}
-                showCompareAtPrice={showSalePrice}
-                className="text-2xl/none"
-              />
+              {combinedListing ? (
+                <div className="flex gap-2 text-2xl/none">
+                  <span className="flex gap-1">
+                    From
+                    <VariantPrices
+                      variant={{ price: product.priceRange.minVariantPrice }}
+                      showCompareAtPrice={false}
+                    />
+                  </span>
+                  <span className="flex gap-1">
+                    To
+                    <VariantPrices
+                      variant={{ price: product.priceRange.maxVariantPrice }}
+                      showCompareAtPrice={false}
+                    />
+                  </span>
+                </div>
+              ) : (
+                <VariantPrices
+                  variant={selectedVariant}
+                  showCompareAtPrice={showSalePrice}
+                  className="text-2xl/none"
+                />
+              )}
               {children}
               {showShortDescription && (
                 <p className="leading-relaxed">{summary}</p>
@@ -153,36 +188,41 @@ const ProductInformation = forwardRef<
               <ProductVariants
                 productOptions={productOptions}
                 selectedVariant={selectedVariant}
+                combinedListing={combinedListing}
               />
-              <Quantity value={quantity} onChange={setQuantity} />
-              <div className="space-y-2">
-                <AddToCartButton
-                  disabled={!selectedVariant?.availableForSale}
-                  lines={[
-                    {
-                      merchandiseId: selectedVariant?.id,
-                      quantity,
-                      selectedVariant,
-                    },
-                  ]}
-                  data-test="add-to-cart"
-                  className="w-full uppercase"
-                >
-                  {atcButtonText}
-                </AddToCartButton>
-                {selectedVariant?.availableForSale && (
-                  <ShopPayButton
-                    width="100%"
-                    variantIdsAndQuantities={[
-                      {
-                        id: selectedVariant?.id,
-                        quantity,
-                      },
-                    ]}
-                    storeDomain={storeDomain}
-                  />
-                )}
-              </div>
+              {!combinedListing && (
+                <>
+                  <Quantity value={quantity} onChange={setQuantity} />
+                  <div className="space-y-2">
+                    <AddToCartButton
+                      disabled={!selectedVariant?.availableForSale}
+                      lines={[
+                        {
+                          merchandiseId: selectedVariant?.id,
+                          quantity,
+                          selectedVariant,
+                        },
+                      ]}
+                      data-test="add-to-cart"
+                      className="w-full uppercase"
+                    >
+                      {atcButtonText}
+                    </AddToCartButton>
+                    {selectedVariant?.availableForSale && (
+                      <ShopPayButton
+                        width="100%"
+                        variantIdsAndQuantities={[
+                          {
+                            id: selectedVariant?.id,
+                            quantity,
+                          },
+                        ]}
+                        storeDomain={storeDomain}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
               <ProductDetails
                 showShippingPolicy={showShippingPolicy}
                 showRefundPolicy={showRefundPolicy}
