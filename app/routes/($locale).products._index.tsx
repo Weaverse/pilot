@@ -4,6 +4,7 @@ import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type { MetaFunction } from "react-router";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { maybeFilterOutCombinedListingsQuery } from "~/lib/combined-listings";
 import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
@@ -26,6 +27,7 @@ export async function loader({
         ...variables,
         country: storefront.i18n.country,
         language: storefront.i18n.language,
+        query: maybeFilterOutCombinedListingsQuery,
       },
     }),
     weaverse.loadPage({
@@ -75,8 +77,9 @@ const ALL_PRODUCTS_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
+    $query: String
   ) @inContext(country: $country, language: $language) {
-    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
+    products(first: $first, last: $last, before: $startCursor, after: $endCursor, query: $query) {
       nodes {
         ...ProductCard
       }

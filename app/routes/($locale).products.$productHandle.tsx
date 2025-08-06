@@ -16,10 +16,17 @@ import { useLoaderData } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_QUERY } from "~/graphql/queries";
+import {
+  combinedListingsSettings,
+  isCombinedListing,
+} from "~/lib/combined-listings";
 import { routeHeaders } from "~/utils/cache";
 import { createJudgeMeReview, getJudgeMeProductReviews } from "~/utils/judgeme";
 import { getRecommendedProducts } from "~/utils/product";
-import { redirectIfHandleIsLocalized } from "~/utils/redirect";
+import {
+  redirectIfCombinedListing,
+  redirectIfHandleIsLocalized,
+} from "~/utils/redirect";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -50,6 +57,10 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     throw new Response("product", { status: 404 });
   }
   redirectIfHandleIsLocalized(request, { handle, data: product });
+
+  if (combinedListingsSettings.redirectToFirstVariant) {
+    redirectIfCombinedListing(request, product);
+  }
 
   // Use Hydrogen/Remix streaming for recommended products
   const recommended = getRecommendedProducts(storefront, product.id);
@@ -95,6 +106,7 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
+  const combinedListing = isCombinedListing(product);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -105,7 +117,7 @@ export default function Product() {
   // Sets the search param to the selected variant without navigation
   // when no search params are set or when variant options don't match
   useEffect(() => {
-    if (!selectedVariant?.selectedOptions) {
+    if (!selectedVariant?.selectedOptions || combinedListing) {
       return;
     }
 
@@ -144,7 +156,7 @@ export default function Product() {
         );
       }
     }
-  }, [selectedVariant?.selectedOptions]);
+  }, [selectedVariant?.selectedOptions, combinedListing]);
 
   return (
     <>
