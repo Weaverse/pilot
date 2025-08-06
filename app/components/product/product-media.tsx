@@ -52,8 +52,8 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
 
 export function ProductMedia(props: ProductMediaProps) {
   const {
-    mediaLayout,
-    gridSize,
+    mediaLayout: initialMediaLayout,
+    gridSize: initialGridSize,
     showThumbnails,
     imageAspectRatio,
     selectedVariant,
@@ -77,6 +77,13 @@ export function ProductMedia(props: ProductMediaProps) {
       }
     }
   }, [selectedVariant]);
+
+  let mediaLayout = initialMediaLayout;
+  let gridSize = initialGridSize;
+  if (media.length === 1) {
+    mediaLayout = "grid";
+    gridSize = "1x1";
+  }
 
   const shouldShowButton =
     enableZoom && (zoomTrigger === "button" || zoomTrigger === "both");
