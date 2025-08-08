@@ -40,7 +40,7 @@ export function CartBestSellers({
   const { load, data } = useFetcher<{ products: Product[] }>();
   const queryString = useMemo(
     () =>
-      Object.entries({ count, sortKey, query, reverse })
+      Object.entries({ count: count * 2, sortKey, query, reverse })
         .map(([key, val]) => (val ? `${key}=${val}` : null))
         .filter(Boolean)
         .join("&"),
@@ -106,10 +106,13 @@ function CartBestSellersContent({
     return <div>No products found.</div>;
   }
 
-  return products.map((product) => (
-    <ProductCard
-      product={product as unknown as ProductCardFragment}
-      key={product.id}
-    />
-  ));
+  return products
+    .filter((product) => product.images?.nodes?.length > 0)
+    .slice(0, count)
+    .map((product) => (
+      <ProductCard
+        product={product as unknown as ProductCardFragment}
+        key={product.id}
+      />
+    ));
 }

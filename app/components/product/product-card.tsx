@@ -12,6 +12,7 @@ import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { Spinner } from "~/components/spinner";
 import { RevealUnderline } from "~/reveal-underline";
+import { isCombinedListing } from "~/utils/combined-listings";
 import { calculateAspectRatio } from "~/utils/image";
 import {
   BestSellerBadge,
@@ -200,10 +201,16 @@ export function ProductCard({
               {product.title}
             </RevealUnderline>
           </NavLink>
-          {pcardShowLowestPrice ? (
+          {pcardShowLowestPrice || isCombinedListing(product) ? (
             <div className="flex gap-1">
               <span>From</span>
               <Money withoutTrailingZeros data={minVariantPrice} />
+              {isCombinedListing(product) && (
+                <>
+                  <span>–</span>
+                  <Money withoutTrailingZeros data={maxVariantPrice} />
+                </>
+              )}
             </div>
           ) : (
             <VariantPrices
