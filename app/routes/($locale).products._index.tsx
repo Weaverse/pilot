@@ -4,8 +4,8 @@ import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type { MetaFunction } from "react-router";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import { maybeFilterOutCombinedListingsQuery } from "~/lib/combined-listings";
 import { routeHeaders } from "~/utils/cache";
+import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
@@ -30,9 +30,7 @@ export async function loader({
         query: maybeFilterOutCombinedListingsQuery,
       },
     }),
-    weaverse.loadPage({
-      type: "ALL_PRODUCTS",
-    }),
+    weaverse.loadPage({ type: "ALL_PRODUCTS" }),
   ]);
 
   invariant(data, "No data returned from Shopify API");

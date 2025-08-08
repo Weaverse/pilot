@@ -20,8 +20,8 @@ import {
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
-import { isCombinedListing } from "~/lib/combined-listings";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import { isCombinedListing } from "~/utils/combined-listings";
 import { ProductDetails } from "./product-details";
 import { ProductVariants } from "./variants";
 

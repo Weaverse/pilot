@@ -15,11 +15,11 @@ import type {
 } from "storefront-api.generated";
 import Link, { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
-import {
-  combinedListingsSettings,
-  isCombinedListing,
-} from "~/lib/combined-listings";
 import { cn } from "~/utils/cn";
+import {
+  COMBINED_LISTINGS_CONFIGS,
+  isCombinedListing,
+} from "~/utils/combined-listings";
 import { type AppliedFilter, getAppliedFilterLink } from "~/utils/filter";
 
 export function ProductsPagination({
@@ -165,7 +165,7 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
         .filter(
           (product: ProductCardFragment) =>
             !(
-              combinedListingsSettings.hideCombinedListingsFromProductList &&
+              COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList &&
               isCombinedListing(product)
             ),
         )

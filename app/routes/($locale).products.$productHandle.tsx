@@ -16,11 +16,11 @@ import { useLoaderData } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_QUERY } from "~/graphql/queries";
-import {
-  combinedListingsSettings,
-  isCombinedListing,
-} from "~/lib/combined-listings";
 import { routeHeaders } from "~/utils/cache";
+import {
+  COMBINED_LISTINGS_CONFIGS,
+  isCombinedListing,
+} from "~/utils/combined-listings";
 import { createJudgeMeReview, getJudgeMeProductReviews } from "~/utils/judgeme";
 import { getRecommendedProducts } from "~/utils/product";
 import {
@@ -58,7 +58,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }
   redirectIfHandleIsLocalized(request, { handle, data: product });
 
-  if (combinedListingsSettings.redirectToFirstVariant) {
+  if (COMBINED_LISTINGS_CONFIGS.redirectToFirstVariant) {
     redirectIfCombinedListing(request, product);
   }
 

@@ -1,6 +1,6 @@
 import { redirect } from "@shopify/remix-oxygen";
 import type { ProductQuery } from "storefront-api.generated";
-import { isCombinedListing } from "~/lib/combined-listings";
+import { isCombinedListing } from "~/utils/combined-listings";
 
 export function redirectIfHandleIsLocalized(
   request: Request,

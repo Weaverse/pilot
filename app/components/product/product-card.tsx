@@ -11,8 +11,8 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { Spinner } from "~/components/spinner";
-import { isCombinedListing } from "~/lib/combined-listings";
 import { RevealUnderline } from "~/reveal-underline";
+import { isCombinedListing } from "~/utils/combined-listings";
 import { calculateAspectRatio } from "~/utils/image";
 import {
   BestSellerBadge,
