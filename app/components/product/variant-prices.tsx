@@ -26,12 +26,16 @@ export function VariantPrices({
   showCompareAtPrice = true,
   className,
 }: {
-  variant: ProductVariantFragment;
+  variant:
+    | ProductVariantFragment
+    | { price: Pick<MoneyV2, "amount" | "currencyCode"> };
   showCompareAtPrice?: boolean;
   className?: string;
 }) {
   if (variant) {
-    const { price, compareAtPrice } = variant;
+    const { price } = variant;
+    const compareAtPrice =
+      "compareAtPrice" in variant ? variant.compareAtPrice : undefined;
     if (price) {
       return (
         <div className={cn("flex items-center gap-2", className)}>

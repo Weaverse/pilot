@@ -27,8 +27,8 @@ export async function getRecommendedProducts(
   const products = await storefront.query<ProductRecommendationsQuery>(
     RECOMMENDED_PRODUCTS_QUERY,
     {
-      variables: { 
-        productId, 
+      variables: {
+        productId,
         count: 12,
         query: maybeFilterOutCombinedListingsQuery,
       },

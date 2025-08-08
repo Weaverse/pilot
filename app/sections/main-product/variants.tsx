@@ -30,7 +30,10 @@ export function ProductVariants({
                 <span className="font-bold">{name}</span>
                 {selected?.value && <span>: {selected.value}</span>}
               </legend>
-              <ProductOptionValues option={option} combinedListing={combinedListing} />
+              <ProductOptionValues
+                option={option}
+                combinedListing={combinedListing}
+              />
             </div>
           );
         })}

@@ -216,7 +216,9 @@ function OptionValue({
           "overflow-hidden rounded-full",
           "outline-1 outline-offset-2 transition-[outline-color]",
           !exists && "cursor-not-allowed",
-          selected && !combinedListing ? "outline-line" : "outline-transparent hover:outline-line",
+          selected && !combinedListing
+            ? "outline-line"
+            : "outline-transparent hover:outline-line",
           !available && "diagonal",
         )}
       >
