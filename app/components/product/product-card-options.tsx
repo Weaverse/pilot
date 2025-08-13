@@ -109,7 +109,7 @@ export function ProductCardOptions({
           );
         })}
       {restCount > 0 && (
-        <Link to={`/products/${handle}`} className="mt-1">
+        <Link to={`/products/${handle}`} className="mt-1 pl-0.5">
           <RevealUnderline>+{restCount}</RevealUnderline>
         </Link>
       )}

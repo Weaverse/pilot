@@ -4,6 +4,7 @@ import type { FeaturedProductsQuery } from "storefront-api.generated";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 const FeaturedProducts = forwardRef<
   HTMLElement,
@@ -21,9 +22,9 @@ export default FeaturedProducts;
 
 // TODO: allowing pick products or select a collection
 const FEATURED_PRODUCTS_QUERY = `#graphql
-  query featuredProducts($country: CountryCode, $language: LanguageCode)
+  query featuredProducts($country: CountryCode, $language: LanguageCode, $query: String)
   @inContext(country: $country, language: $language) {
-    products(first: 16) {
+    products(first: 16, query: $query) {
       nodes {
         ...ProductCard
       }
@@ -42,6 +43,7 @@ export const loader = async ({ weaverse }: ComponentLoaderArgs) => {
       variables: {
         country,
         language,
+        query: maybeFilterOutCombinedListingsQuery,
       },
     },
   );

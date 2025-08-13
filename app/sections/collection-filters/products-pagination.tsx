@@ -16,6 +16,10 @@ import type {
 import Link, { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { cn } from "~/utils/cn";
+import {
+  COMBINED_LISTINGS_CONFIGS,
+  isCombinedListing,
+} from "~/utils/combined-listings";
 import { type AppliedFilter, getAppliedFilterLink } from "~/utils/filter";
 
 export function ProductsPagination({
@@ -157,9 +161,17 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
         "grid grid-cols-(--cols-mobile) lg:grid-cols-(--cols-desktop)",
       ])}
     >
-      {nodes.map((product: ProductCardFragment) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+      {nodes
+        .filter(
+          (product: ProductCardFragment) =>
+            !(
+              COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList &&
+              isCombinedListing(product)
+            ),
+        )
+        .map((product: ProductCardFragment) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
     </div>
   );
 }

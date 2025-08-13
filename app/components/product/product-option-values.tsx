@@ -31,9 +31,11 @@ const OPTIONS_AS_DROPDOWN: string[] = [];
 export function ProductOptionValues({
   option,
   onVariantChange,
+  combinedListing,
 }: {
   option: MappedProductOptions;
   onVariantChange?: (variant: ProductVariantFragment) => void;
+  combinedListing?: boolean;
 }) {
   const navigate = useNavigate();
   const { name: optionName, optionValues } = option || {};
@@ -123,6 +125,7 @@ export function ProductOptionValues({
                   optionName={optionName}
                   value={optionValue}
                   onVariantChange={onVariantChange}
+                  combinedListing={combinedListing}
                 />
               </div>
             </TooltipTrigger>
@@ -142,10 +145,12 @@ function OptionValue({
   optionName,
   value,
   onVariantChange,
+  combinedListing,
 }: {
   optionName: string;
   value: MappedProductOptions["optionValues"][number];
   onVariantChange?: (variant: ProductVariantFragment) => void;
+  combinedListing?: boolean;
 }) {
   const navigate = useNavigate();
   const {
@@ -167,7 +172,7 @@ function OptionValue({
     to,
     preventScrollReset: true,
     prefetch: "intent",
-    replace: true,
+    replace: !combinedListing,
   };
   const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
     type: "button" as const,
@@ -211,7 +216,9 @@ function OptionValue({
           "overflow-hidden rounded-full",
           "outline-1 outline-offset-2 transition-[outline-color]",
           !exists && "cursor-not-allowed",
-          selected ? "outline-line" : "outline-transparent hover:outline-line",
+          selected && !combinedListing
+            ? "outline-line"
+            : "outline-transparent hover:outline-line",
           !available && "diagonal",
         )}
       >
@@ -246,7 +253,7 @@ function OptionValue({
         className={cn(
           "border border-line-subtle px-4 py-2.5 text-center transition-colors",
           !exists && "cursor-not-allowed",
-          selected
+          selected && !combinedListing
             ? [
                 available ? "bg-body text-body-inverse" : "text-body-subtle",
                 "border-body",
@@ -269,7 +276,7 @@ function OptionValue({
           "flex h-auto w-(--option-image-width) items-center justify-center p-1",
           "border border-line-subtle text-center transition-colors",
           !exists && "cursor-not-allowed",
-          selected
+          selected && !combinedListing
             ? [
                 available ? "text-body-inverse" : "text-body-subtle",
                 "border-body",
@@ -300,7 +307,7 @@ function OptionValue({
       className={cn(
         "border-b py-0.5",
         !exists && "cursor-not-allowed",
-        selected
+        selected && !combinedListing
           ? [available ? "border-line" : "border-line-subtle"]
           : [
               "border-transparent",
