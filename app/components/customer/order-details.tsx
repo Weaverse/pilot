@@ -110,7 +110,7 @@ export function OrderDetails() {
               })}
               <hr className="border-line-subtle border-t" />
               <div className="ml-auto space-y-4">
-                <div className="flex justify-between gap-4 ">
+                <div className="flex justify-between gap-4">
                   <span className="font-bold">Subtotal</span>
                   <span>
                     <Money data={order.subtotal} />

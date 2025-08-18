@@ -45,7 +45,7 @@ export function ReviewList({
                   <p className="font-bold">{title}</p>
                   <p>{formatDate(created_at)}</p>
                 </div>
-                <p className=" line-clamp-4 font-normal text-base">{body}</p>
+                <p className="line-clamp-4 font-normal text-base">{body}</p>
               </div>
             </div>
             <hr className="border-line-subtle border-t" />

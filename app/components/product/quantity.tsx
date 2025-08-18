@@ -24,7 +24,7 @@ export function Quantity(props: QuantityProps) {
           type="button"
           name="decrease-quantity"
           aria-label="Decrease quantity"
-          className="h-10 w-10 transition "
+          className="h-10 w-10 transition"
           disabled={value <= 1}
           onClick={() => onChange(value - 1)}
         >
