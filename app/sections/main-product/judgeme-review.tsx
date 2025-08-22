@@ -1,10 +1,6 @@
-import {
-  createSchema,
-  type HydrogenComponentProps,
-  useParentInstance,
-} from "@weaverse/hydrogen";
-import { forwardRef, useEffect } from "react";
-import { useFetcher, useLoaderData } from "react-router";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { forwardRef, useEffect, useState } from "react";
+import { useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
@@ -17,24 +13,50 @@ type JudgemeReviewsData = {
 
 const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
-    const { productReviews } = useLoaderData<typeof productRouteLoader>();
-    const { load, data: fetchData } = useFetcher<JudgemeReviewsData>();
-    const context = useParentInstance();
-    const handle = context?.data?.product?.handle;
+    const [data, setData] = useState<JudgemeReviewsData | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const { product } = useLoaderData<typeof productRouteLoader>();
+    const handle = product?.handle;
     const api = usePrefixPathWithLocale(`/api/review/${handle}`);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
-      if (productReviews || !handle) {
+      if (!handle) {
         return;
       }
-      load(api);
+
+      const fetchReviews = async () => {
+        setIsLoading(true);
+        try {
+          const response = await fetch(api);
+          if (response.ok) {
+            const reviewsData = (await response.json()) as JudgemeReviewsData;
+            setData(reviewsData);
+          }
+        } catch (error) {
+          // Silently handle errors - component will show skeleton or null
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchReviews();
     }, [handle, api]);
 
-    const data = productReviews || fetchData;
-
-    if (!data) {
+    if (!handle) {
       return null;
+    }
+
+    if (isLoading || !data) {
+      return (
+        <div {...props} ref={ref}>
+          <div className="space-x-2">
+            <div className="inline-flex items-center gap-1">
+              <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+              <div className="h-4 w-8 animate-pulse rounded bg-gray-200" />
+            </div>
+          </div>
+        </div>
+      );
     }
 
     const rating = Math.round((data.rating || 0) * 100) / 100;
@@ -42,9 +64,9 @@ const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
     return (
       <div {...props} ref={ref}>
-        <div className="space-x-2">
+        <div className="flex items-center gap-2">
           <StarRating rating={rating} />
-          <span className="align-top">({reviewNumber})</span>
+          <span>({reviewNumber ? reviewNumber : 'No reviews'})</span>
         </div>
       </div>
     );
