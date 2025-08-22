@@ -21,7 +21,7 @@ import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import { createJudgeMeReview, getJudgeMeProductReviews } from "~/utils/judgeme";
+import { createJudgeMeReview } from "~/utils/judgeme";
 import { getRecommendedProducts } from "~/utils/product";
 import {
   redirectIfCombinedListing,
@@ -39,7 +39,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
   const { storefront, weaverse } = context;
   const selectedOptions = getSelectedProductOptions(request);
-  const [{ shop, product }, weaverseData, productReviews] = await Promise.all([
+  const [{ shop, product }, weaverseData] = await Promise.all([
     storefront.query<ProductQuery>(PRODUCT_QUERY, {
       variables: {
         handle,
@@ -49,7 +49,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       },
     }),
     weaverse.loadPage({ type: "PRODUCT", handle }),
-    getJudgeMeProductReviews({ context, handle }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
@@ -69,7 +68,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     shop,
     product,
     weaverseData,
-    productReviews,
     storeDomain: shop.primaryDomain.url,
     seo: seoPayload.product({ product, url: request.url }),
     recommended,
