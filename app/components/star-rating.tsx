@@ -2,7 +2,7 @@ import { StarHalfIcon, StarIcon } from "@phosphor-icons/react";
 
 export function StarRating({ rating }: { rating: number }) {
   return (
-    <div className="inline-flex gap-0.5">
+    <div className="inline-flex gap-0.5 text-(--color-star-rating)">
       {Array.from({ length: 5 }).map((_, i) => {
         if (rating >= i + 1) {
           return <StarIcon weight="fill" className="h-4 w-4" key={i} />;
