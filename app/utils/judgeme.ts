@@ -66,7 +66,7 @@ export async function getJudgeMeProductReviews({
             product_id: product?.id,
           }),
         );
-        const reviewNumber = reviews.length || 1;
+        const reviewNumber = reviews.length || 0;
         const rating = reviews.reduce((a, c) => a + c.rating, 0) / reviewNumber;
         return { rating, reviewNumber, reviews };
       }
