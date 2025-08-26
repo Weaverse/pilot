@@ -5,15 +5,15 @@ import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
-type JudgemeReviewsData = {
+type JudgemeReviewsBadgeData = {
   rating: number;
   reviewNumber: number;
   error?: string;
 };
 
-const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
+const JudgemeReviewsBadge = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
-    const [data, setData] = useState<JudgemeReviewsData | null>(null);
+    const [data, setData] = useState<JudgemeReviewsBadgeData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { product } = useLoaderData<typeof productRouteLoader>();
     const handle = product?.handle;
@@ -29,7 +29,7 @@ const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
         try {
           const response = await fetch(api);
           if (response.ok) {
-            const reviewsData = (await response.json()) as JudgemeReviewsData;
+            const reviewsData = (await response.json()) as JudgemeReviewsBadgeData;
             setData(reviewsData);
           }
         } catch (error) {
@@ -73,9 +73,9 @@ const JudgemeReview = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   },
 );
 
-export default JudgemeReview;
+export default JudgemeReviewsBadge;
 
 export const schema = createSchema({
-  type: "judgeme",
+  type: "judgeme-reviews-badge",
   title: "Judgeme review",
 });

@@ -31,7 +31,7 @@ import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as JudgemeReview from "~/sections/judgeme-reviews";
 import * as ReviewIndex from "~/sections/judgeme-reviews/review-index";
 import * as MainProduct from "~/sections/main-product";
-import * as Judgeme from "~/sections/main-product/judgeme-review";
+import * as JudgemeReviewsBadge from "~/sections/main-product/judgeme-reviews-badge";
 import * as MapSection from "~/sections/map";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
@@ -104,9 +104,9 @@ export const components: HydrogenComponent[] = [
   CollectionList,
   CollectionListItems,
   SingleProduct,
-  Judgeme,
-  JudgemeReview,
-  ReviewIndex,
+  JudgemeReviewsBadge,
+  // JudgemeReview,
+  // ReviewIndex,
   OurTeam,
   OurTeamMembers,
   SlideShow,

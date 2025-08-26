@@ -245,7 +245,7 @@ export default ProductInformation;
 export const schema = createSchema({
   type: "main-product",
   title: "Main product",
-  childTypes: ["judgeme"],
+  childTypes: ["judgeme-reviews-badge"],
   limit: 1,
   enabledOn: {
     pages: ["PRODUCT"],
