@@ -1,22 +1,138 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
+import { forwardRef, useCallback, useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
+import { useInView } from "react-intersection-observer";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { JudgemeReviewsData } from "~/utils/judgeme";
 import ReviewForm from "./review-form";
 import { ReviewList } from "./review-list";
 
 const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
-  const { productReviews } = useLoaderData<typeof productRouteLoader>();
+  const { product } = useLoaderData<typeof productRouteLoader>();
+  const [reviewsData, setReviewsData] = useState<JudgemeReviewsData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handle = product?.handle;
+  const api = usePrefixPathWithLocale(`/api/review/${handle}`);
+
+  const { ref: inViewRef, inView } = useInView({
+    triggerOnce: true,
+  });
+
+  const setRefs = useCallback(
+    (node: HTMLDivElement) => {
+      if (ref && typeof ref === 'object') {
+        ref.current = node;
+      } else if (typeof ref === 'function') {
+        ref(node);
+      }
+      inViewRef(node);
+    },
+    [ref, inViewRef],
+  );
+
+  useEffect(() => {
+    if (!handle || !inView || reviewsData || isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    fetch(api)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error(`Failed to fetch reviews: ${res.status}`);
+      })
+      .then((data: JudgemeReviewsData) => {
+        setReviewsData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Judge.me reviews:", error);
+        setError("Failed to load reviews");
+        setReviewsData({ rating: 0, reviewNumber: 0, reviews: [] });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [handle, api, inView, reviewsData, isLoading]);
+
+  if (!handle) {
+    return null;
+  }
+
+  if (isLoading) {
+    return (
+      <div
+        ref={setRefs}
+        {...props}
+        className="flex flex-col gap-5 md:flex-row md:gap-10"
+      >
+        <div className="space-y-4">
+          <div className="h-6 w-32 animate-pulse rounded bg-gray-200" />
+          <div className="h-20 w-full animate-pulse rounded bg-gray-200" />
+        </div>
+        <div className="space-y-4">
+          <div className="h-6 w-24 animate-pulse rounded bg-gray-200" />
+          <div className="space-y-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+                <div className="h-16 w-full animate-pulse rounded bg-gray-200" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        ref={setRefs}
+        {...props}
+        className="flex flex-col gap-5 md:flex-row md:gap-10"
+      >
+        <div className="text-center text-gray-500">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!reviewsData) {
+    return (
+      <div
+        ref={setRefs}
+        {...props}
+        className="flex flex-col gap-5 md:flex-row md:gap-10"
+      >
+        <div className="text-center text-gray-500">
+          <p>Loading reviews...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
-      ref={ref}
+      ref={setRefs}
       {...props}
       className="flex flex-col gap-5 md:flex-row md:gap-10"
     >
-      <ReviewForm reviews={productReviews} />
-      {productReviews.reviews.length > 0 ? (
-        <ReviewList reviews={productReviews} />
-      ) : null}
+      <ReviewForm reviews={reviewsData} />
+      {reviewsData.reviews.length > 0 ? (
+        <ReviewList reviews={reviewsData} />
+      ) : (
+        <div className="text-center text-gray-500">
+          <p>No reviews yet. Be the first to write a review!</p>
+        </div>
+      )}
     </div>
   );
 });
