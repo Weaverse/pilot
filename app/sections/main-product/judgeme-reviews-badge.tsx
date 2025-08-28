@@ -4,42 +4,45 @@ import { useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
-
-type JudgemeReviewsBadgeData = {
-  rating: number;
-  reviewNumber: number;
-  error?: string;
-};
+import type { JudgemeBadgeApiResponse, JudgemeBadgeData } from "~/types/judgeme";
 
 const JudgemeReviewsBadge = forwardRef<HTMLDivElement, HydrogenComponentProps>(
   (props, ref) => {
-    const [data, setData] = useState<JudgemeReviewsBadgeData | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<JudgemeBadgeData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { product } = useLoaderData<typeof productRouteLoader>();
     const handle = product?.handle;
-    const api = usePrefixPathWithLocale(`/api/review/${handle}`);
+    const api = usePrefixPathWithLocale(`/api/review/${handle}?type=badge`);
 
     useEffect(() => {
       if (!handle) {
         return;
       }
 
-      const fetchReviews = async () => {
-        setIsLoading(true);
-        try {
-          const response = await fetch(api);
-          if (response.ok) {
-            const reviewsData = (await response.json()) as JudgemeReviewsBadgeData;
-            setData(reviewsData);
+      setIsLoading(true);
+      fetch(api)
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
           }
-        } catch (error) {
-          // Silently handle errors - component will show skeleton or null
-        } finally {
+          throw new Error("Response not ok");
+        })
+        .then((response: JudgemeBadgeApiResponse) => {
+          if (response.ok) {
+            setData(response.data);
+          } else {
+            const errorResponse = response as { ok: false; error: string };
+            setError(errorResponse.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Judge.me badge data:", error);
+          setError("Failed to fetch Judge.me badge data");
+        })
+        .finally(() => {
           setIsLoading(false);
-        }
-      };
-
-      fetchReviews();
+        });
     }, [handle, api]);
 
     if (!handle) {
@@ -59,14 +62,21 @@ const JudgemeReviewsBadge = forwardRef<HTMLDivElement, HydrogenComponentProps>(
       );
     }
 
-    const rating = Math.round((data.rating || 0) * 100) / 100;
-    const reviewNumber = data.reviewNumber || 0;
+    if (error) {
+      return (
+        <div {...props} ref={ref}>
+          <div className="text-gray-500">
+            Unable to load reviews
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div {...props} ref={ref}>
         <div className="flex items-center gap-2">
-          <StarRating rating={rating} />
-          <span>({reviewNumber ? reviewNumber : 'No reviews'})</span>
+          <StarRating rating={data?.averageRating} />
+          <span>({data?.totalReviews ? data.totalReviews : 'No reviews'})</span>
         </div>
       </div>
     );
