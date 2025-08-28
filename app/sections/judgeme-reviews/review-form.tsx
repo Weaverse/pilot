@@ -40,7 +40,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
       {reviews.reviews.length !== 0 || !isFormVisible ? (
         <div
           className={clsx(
-            "flex flex-col gap-4 bg-line-subtle p-6",
+            "flex flex-col gap-4 p-6",
             reviews.reviews.length === 0 ? "items-center" : "items-start",
           )}
         >
