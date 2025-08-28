@@ -34,19 +34,19 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
     <div
       className={clsx(
         "flex w-full flex-col gap-5",
-        reviews.reviews.length !== 0 && "md:w-2/5 lg:w-1/3",
+        // reviews.reviews.length !== 0 && "md:w-2/5 lg:w-1/3",
       )}
     >
       {reviews.reviews.length !== 0 || !isFormVisible ? (
         <div
           className={clsx(
             "flex flex-col gap-4 p-6",
-            reviews.reviews.length === 0 ? "items-center" : "items-start",
+            // reviews.reviews.length === 0 ? "items-center" : "items-start",
           )}
         >
-          <p className="mb-1.5 font-bold text-lg uppercase">
+          {/* <p className="mb-1.5 font-bold text-lg uppercase">
             product reviews ({reviews.reviewNumber})
-          </p>
+          </p> */}
           <div className="flex items-center justify-start gap-3">
             {reviews?.rating ? (
               <>
@@ -73,7 +73,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
       {isFormVisible && (
         <div
           className={clsx(
-            "w-full bg-line-subtle p-6",
+            "w-full p-6",
             reviews.reviews.length === 0 && "flex justify-center",
           )}
         >
@@ -218,7 +218,7 @@ export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
       {isPopupVisible && (
         <div
           className={clsx(
-            "flex flex-col gap-6 bg-line-subtle p-6",
+            "flex flex-col gap-6 p-6",
             reviews.reviews.length === 0 && "items-center",
           )}
           role="alert"

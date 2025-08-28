@@ -23,7 +23,7 @@ export function ReviewList({
   );
 
   return (
-    <div className="flex w-full flex-col gap-6 py-6 md:w-3/5 lg:w-2/3">
+    <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
       <div className="flex flex-col gap-6">
         <span className="font-bold text-lg uppercase">
           Reviews ({reviewsData.reviewNumber})

@@ -70,13 +70,13 @@ const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
       <div
         ref={setRefs}
         {...props}
-        className="flex flex-col gap-5 md:flex-row md:gap-10"
+        className="grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-3"
       >
         <div className="space-y-4">
           <div className="h-6 w-32 animate-pulse rounded bg-gray-200" />
           <div className="h-20 w-full animate-pulse rounded bg-gray-200" />
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 md:col-span-2">
           <div className="h-6 w-24 animate-pulse rounded bg-gray-200" />
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -123,13 +123,13 @@ const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
     <div
       ref={setRefs}
       {...props}
-      className="flex flex-col gap-5 md:flex-row md:gap-10"
+      className="grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-3"
     >
       <ReviewForm reviews={reviewsData} />
       {reviewsData.reviews.length > 0 ? (
         <ReviewList reviews={reviewsData} />
       ) : (
-        <div className="text-center text-gray-500">
+        <div className="text-center text-gray-500 md:col-span-2 pt-10">
           <p>No reviews yet. Be the first to write a review!</p>
         </div>
       )}
