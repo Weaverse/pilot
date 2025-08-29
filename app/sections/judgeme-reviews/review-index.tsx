@@ -1,5 +1,5 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { useInView } from "react-intersection-observer";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
@@ -13,33 +13,36 @@ const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
   const [reviewsData, setReviewsData] = useState<JudgemeReviewsData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handle = product?.handle;
-  const api = usePrefixPathWithLocale(`/api/review/${handle}`);
+  const [currentProductHandle, setCurrentProductHandle] = useState<string | null>(null);
 
   const { ref: inViewRef, inView } = useInView({
     triggerOnce: true,
   });
 
-  const setRefs = useCallback(
-    (node: HTMLDivElement) => {
-      if (ref && typeof ref === 'object') {
-        ref.current = node;
-      } else if (typeof ref === 'function') {
-        ref(node);
-      }
-      inViewRef(node);
-    },
-    [ref, inViewRef],
-  );
+  const setRefs = (node: HTMLDivElement) => {
+    if (ref && typeof ref === 'object') {
+      ref.current = node;
+    } else if (typeof ref === 'function') {
+      ref(node);
+    }
+    inViewRef(node);
+  };
 
   useEffect(() => {
-    if (!handle || !inView || reviewsData || isLoading) {
+    if (!product?.handle || !inView || isLoading) {
       return;
     }
 
+    // Check if we need to fetch data for a new product
+    if (currentProductHandle === product.handle && reviewsData) {
+      return;
+    }
+
+    const api = usePrefixPathWithLocale(`/api/review/${product.handle}`);
+
     setIsLoading(true);
     setError(null);
+    setCurrentProductHandle(product.handle);
 
     fetch(api)
       .then((res) => {
@@ -59,9 +62,9 @@ const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [handle, api, inView, reviewsData, isLoading]);
+  }, [product?.handle, inView, isLoading, currentProductHandle, reviewsData]);
 
-  if (!handle) {
+  if (!product) {
     return null;
   }
 
