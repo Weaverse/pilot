@@ -3,7 +3,7 @@ import {
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
+import { forwardRef, Fragment } from "react";
 import { useLoaderData } from "react-router";
 import { ProductBadges } from "~/components/product/badges";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
@@ -24,8 +24,8 @@ const ProductBadgesComponent = forwardRef<
   if (!product) return null;
 
   return (
-    <div ref={ref} {...props} className="empty:hidden">
-      <ProductBadges product={product} selectedVariant={selectedVariant} />
+    <div ref={ref} {...props} className="flex items-center gap-2 text-sm empty:hidden">
+      <ProductBadges as={Fragment} product={product} selectedVariant={selectedVariant} />
     </div>
   );
 });
