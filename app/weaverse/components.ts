@@ -32,6 +32,17 @@ import * as JudgemeReview from "~/sections/judgeme-reviews";
 import * as ReviewIndex from "~/sections/judgeme-reviews/review-index";
 import * as MainProduct from "~/sections/main-product";
 import * as JudgemeReviewsBadge from "~/sections/main-product/judgeme-reviews-badge";
+import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
+import * as ProductBadges from "~/sections/main-product/product-badges";
+import * as ProductVendor from "~/sections/main-product/product-vendor";
+import * as ProductTitle from "~/sections/main-product/product-title";
+import * as ProductPrices from "~/sections/main-product/product-prices";
+import * as ProductSummary from "~/sections/main-product/product-summary";
+import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
+import * as ProductVariantSelector from "~/sections/main-product/product-variant-selector";
+import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
+import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
+import * as ProductDetailsAccordion from "~/sections/main-product/product-details-accordion";
 import * as MapSection from "~/sections/map";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
@@ -98,6 +109,17 @@ export const components: HydrogenComponent[] = [
   ImageGalleryItems,
   ImageGalleryItem,
   MainProduct,
+  ProductBreadcrumb,
+  ProductBadges,
+  ProductVendor,
+  ProductTitle,
+  ProductPrices,
+  ProductSummary,
+  ProductBundledVariants,
+  ProductVariantSelector,
+  ProductQuantitySelector,
+  ProductATCButtons,
+  ProductDetailsAccordion,
   RelatedProducts,
   RelatedArticles,
   CollectionFilters,
