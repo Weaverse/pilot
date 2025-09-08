@@ -39,5 +39,16 @@ export const schema = createSchema({
   enabledOn: {
     pages: ["PRODUCT"],
   },
-  settings: [],
+  settings: [
+    {
+      group: "General",
+      inputs: [
+        {
+          type: "heading",
+          label: "Badge configuration",
+          helpText: "Badge display settings are configured globally in Theme Settings. Go to Theme Settings to customize which badges are shown and their appearance.",
+        },
+      ],
+    },
+  ],
 });

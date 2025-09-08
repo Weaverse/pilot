@@ -87,5 +87,5 @@ export default JudgemeReviewsBadge;
 
 export const schema = createSchema({
   type: "judgeme-reviews-badge",
-  title: "Judgeme review",
+  title: "Judgeme reviews badge",
 });
