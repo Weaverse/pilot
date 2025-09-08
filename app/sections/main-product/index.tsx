@@ -229,7 +229,6 @@ export const schema = createSchema({
       },
       {
         type: "mp--vendor",
-        showVendor: false,
       },
       {
         type: "mp--title",

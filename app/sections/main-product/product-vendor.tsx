@@ -3,16 +3,14 @@ import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
-interface ProductVendorProps extends HydrogenComponentProps {
-  showVendor: boolean;
-}
+interface ProductVendorProps extends HydrogenComponentProps {}
 
 const ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
   (props, ref) => {
-    const { showVendor, ...rest } = props;
+    const { ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product || !showVendor || !product.vendor) return null;
+    if (!product || !product.vendor) return null;
 
     return (
       <div ref={ref} {...rest} className="empty:hidden">
@@ -31,17 +29,5 @@ export const schema = createSchema({
   enabledOn: {
     pages: ["PRODUCT"],
   },
-  settings: [
-    {
-      group: "General",
-      inputs: [
-        {
-          type: "switch",
-          label: "Show vendor",
-          name: "showVendor",
-          defaultValue: false,
-        },
-      ],
-    },
-  ],
+  settings: [],
 });
