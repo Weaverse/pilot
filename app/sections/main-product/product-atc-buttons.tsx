@@ -16,7 +16,6 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
   addBundleToCartText: string;
   soldOutText: string;
   showShopPayButton: boolean;
-  buttonClassName: string;
 }
 
 const ProductATCButtons = forwardRef<HTMLDivElement, ProductATCButtonsProps>(
@@ -26,7 +25,6 @@ const ProductATCButtons = forwardRef<HTMLDivElement, ProductATCButtonsProps>(
       addBundleToCartText,
       soldOutText,
       showShopPayButton,
-      buttonClassName,
       ...rest
     } = props;
     const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
@@ -61,7 +59,7 @@ const ProductATCButtons = forwardRef<HTMLDivElement, ProductATCButtonsProps>(
             },
           ]}
           data-test="add-to-cart"
-          className={buttonClassName || "w-full uppercase"}
+          className="w-full uppercase"
         >
           {atcButtonText}
         </AddToCartButton>
@@ -108,6 +106,7 @@ export const schema = createSchema({
           name: "addBundleToCartText",
           defaultValue: "Add bundle to cart",
           placeholder: "Add bundle to cart",
+          helpText: "This component will only show if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
         },
         {
           type: "text",
@@ -121,13 +120,6 @@ export const schema = createSchema({
           label: "Show Shop Pay button",
           name: "showShopPayButton",
           defaultValue: true,
-        },
-        {
-          type: "text",
-          label: "Button CSS classes",
-          name: "buttonClassName",
-          defaultValue: "w-full uppercase",
-          placeholder: "w-full uppercase",
         },
       ],
     },
