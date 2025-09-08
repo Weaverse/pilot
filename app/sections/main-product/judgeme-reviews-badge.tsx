@@ -76,7 +76,7 @@ const JudgemeReviewsBadge = forwardRef<HTMLDivElement, HydrogenComponentProps>(
       <div {...props} ref={ref}>
         <div className="flex items-center gap-2">
           <StarRating rating={data?.averageRating} />
-          <span>({data?.totalReviews ? data.totalReviews : 'No reviews'})</span>
+          <span className="leading-4">({data?.totalReviews ? data.totalReviews : 'No reviews'})</span>
         </div>
       </div>
     );
