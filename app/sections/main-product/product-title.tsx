@@ -4,24 +4,19 @@ import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
 interface ProductTitleProps extends HydrogenComponentProps {
-  headingLevel: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-  className: string;
+  headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 const ProductTitle = forwardRef<HTMLDivElement, ProductTitleProps>(
   (props, ref) => {
-    const { headingLevel, className, ...rest } = props;
+    const { headingTag: Tag, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     if (!product) return null;
 
-    const HeadingTag = headingLevel;
-
     return (
       <div ref={ref} {...rest}>
-        <HeadingTag className={className || "h3 tracking-tight!"}>
-          {product.title}
-        </HeadingTag>
+        <Tag>{product.title}</Tag>
       </div>
     );
   },
@@ -42,8 +37,8 @@ export const schema = createSchema({
       inputs: [
         {
           type: "select",
-          label: "Heading level",
-          name: "headingLevel",
+          label: "Heading tag",
+          name: "headingTag",
           defaultValue: "h1",
           configs: {
             options: [
@@ -55,14 +50,7 @@ export const schema = createSchema({
               { value: "h6", label: "H6" },
             ],
           },
-        },
-        {
-          type: "text",
-          label: "CSS classes",
-          name: "className",
-          defaultValue: "h3 tracking-tight!",
-          placeholder: "h3 tracking-tight!",
-        },
+        }
       ],
     },
   ],

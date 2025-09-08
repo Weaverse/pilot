@@ -232,8 +232,7 @@ export const schema = createSchema({
       },
       {
         type: "mp--title",
-        headingLevel: "h1",
-        className: "h3 tracking-tight!",
+        headingTag: "h1",
       },
       {
         type: "mp--prices",
