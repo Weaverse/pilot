@@ -7,14 +7,13 @@ import type { loader as productRouteLoader } from "~/routes/($locale).products.$
 
 interface ProductBundledVariantsProps extends HydrogenComponentProps {
   headingText: string;
-  headingClassName: string;
 }
 
 const ProductBundledVariants = forwardRef<
   HTMLDivElement,
   ProductBundledVariantsProps
 >((props, ref) => {
-  const { headingText, headingClassName, ...rest } = props;
+  const { headingText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const isBundle = Boolean(product?.isBundle?.requiresComponents);
@@ -24,7 +23,7 @@ const ProductBundledVariants = forwardRef<
 
   return (
     <div ref={ref} {...rest} className="space-y-3 empty:hidden">
-      <h4 className={headingClassName || "text-2xl"}>{headingText}</h4>
+      <h4 className="text-2xl">{headingText}</h4>
       <BundledVariants
         variants={bundledVariants as ProductVariantComponent[]}
       />
@@ -46,18 +45,16 @@ export const schema = createSchema({
       group: "General",
       inputs: [
         {
+          type: "heading",
+          label: "Bundled variants",
+          helpText: "This component will only show if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
+        },
+        {
           type: "text",
           label: "Heading text",
           name: "headingText",
           defaultValue: "Bundled Products",
           placeholder: "Bundled Products",
-        },
-        {
-          type: "text",
-          label: "Heading CSS classes",
-          name: "headingClassName",
-          defaultValue: "text-2xl",
-          placeholder: "text-2xl",
         },
       ],
     },
