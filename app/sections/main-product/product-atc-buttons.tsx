@@ -106,7 +106,7 @@ export const schema = createSchema({
           name: "addBundleToCartText",
           defaultValue: "Add bundle to cart",
           placeholder: "Add bundle to cart",
-          helpText: "This component will only show if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
+          helpText: "Apply if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
         },
         {
           type: "text",
