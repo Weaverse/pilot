@@ -11,12 +11,11 @@ import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductPricesProps extends HydrogenComponentProps {
   showCompareAtPrice: boolean;
-  className: string;
 }
 
 const ProductPrices = forwardRef<HTMLDivElement, ProductPricesProps>(
   (props, ref) => {
-    const { showCompareAtPrice, className, ...rest } = props;
+    const { showCompareAtPrice, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     const selectedVariant = useOptimisticVariant(
@@ -51,7 +50,7 @@ const ProductPrices = forwardRef<HTMLDivElement, ProductPricesProps>(
           <VariantPrices
             variant={selectedVariant}
             showCompareAtPrice={showCompareAtPrice}
-            className={className || "text-2xl/none"}
+            className="text-2xl/none"
           />
         )}
       </div>
@@ -77,13 +76,6 @@ export const schema = createSchema({
           label: "Show compare at price",
           name: "showCompareAtPrice",
           defaultValue: true,
-        },
-        {
-          type: "text",
-          label: "CSS classes",
-          name: "className",
-          defaultValue: "text-2xl/none",
-          placeholder: "text-2xl/none",
         },
       ],
     },

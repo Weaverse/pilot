@@ -16,7 +16,7 @@ const ProductTitle = forwardRef<HTMLDivElement, ProductTitleProps>(
 
     return (
       <div ref={ref} {...rest}>
-        <Tag>{product.title}</Tag>
+        <Tag className="h3 tracking-tight!">{product.title}</Tag>
       </div>
     );
   },

@@ -236,16 +236,13 @@ export const schema = createSchema({
       },
       {
         type: "mp--prices",
-        showCompareAtPrice: true,
-        className: "text-2xl/none",
+        showCompareAtPrice: true
       },
       {
         type: "mp--reviews-badge",
       },
       {
         type: "mp--summary",
-        showSummary: true,
-        className: "leading-relaxed",
       },
       {
         type: "mp--bundled-variants",

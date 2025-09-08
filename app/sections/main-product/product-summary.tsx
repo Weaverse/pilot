@@ -3,21 +3,18 @@ import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
-interface ProductSummaryProps extends HydrogenComponentProps {
-  showSummary: boolean;
-  className: string;
-}
+interface ProductSummaryProps extends HydrogenComponentProps {}
 
 const ProductSummary = forwardRef<HTMLDivElement, ProductSummaryProps>(
   (props, ref) => {
-    const { showSummary, className, ...rest } = props;
+    const { ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product || !showSummary || !product.summary) return null;
+    if (!product || !product.summary) return null;
 
     return (
       <div ref={ref} {...rest} className="empty:hidden">
-        <p className={className || "leading-relaxed"}>{product.summary}</p>
+        <p className="leading-relaxed">{product.summary}</p>
       </div>
     );
   },
@@ -32,24 +29,5 @@ export const schema = createSchema({
   enabledOn: {
     pages: ["PRODUCT"],
   },
-  settings: [
-    {
-      group: "General",
-      inputs: [
-        {
-          type: "switch",
-          label: "Show summary",
-          name: "showSummary",
-          defaultValue: true,
-        },
-        {
-          type: "text",
-          label: "CSS classes",
-          name: "className",
-          defaultValue: "leading-relaxed",
-          placeholder: "leading-relaxed",
-        },
-      ],
-    },
-  ],
+  settings: [],
 });
