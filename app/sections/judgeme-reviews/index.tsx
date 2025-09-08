@@ -9,9 +9,13 @@ import type { JudgemeReviewsData } from "~/utils/judgeme";
 import ReviewForm from "./review-form";
 import { ReviewList } from "./review-list";
 
-const JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
+interface JudgemeReviewSectionProps extends SectionProps {
+  sectionId?: string;
+}
+
+const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
   (props, ref) => {
-    const { children, loaderData, ...rest } = props;
+    const { children, loaderData, sectionId, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
     const [reviewsData, setReviewsData] = useState<JudgemeReviewsData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +75,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
     }
 
     return (
-      <Section ref={ref} {...rest} overflow="unset">
+      <Section ref={ref} {...rest} overflow="unset" id={sectionId}>
         {children}
         <div
           ref={setRefs}
@@ -130,6 +134,18 @@ export const schema = createSchema({
     pages: ["PRODUCT"],
   },
   settings: [
+    {
+      group: "Section",
+      inputs: [
+        {
+          type: "text",
+          name: "sectionId",
+          label: "Section ID",
+          placeholder: "Enter section ID",
+          helpText: "This ID can be used to scroll to this section from other components",
+        },
+      ],
+    },
     {
       group: "Layout",
       inputs: layoutInputs.filter((inp) => inp.name !== "borderRadius"),
