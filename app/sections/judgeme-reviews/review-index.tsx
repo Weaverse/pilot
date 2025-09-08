@@ -14,6 +14,7 @@ const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentProductHandle, setCurrentProductHandle] = useState<string | null>(null);
+  const reviewsAPI = usePrefixPathWithLocale(`/api/review/${product?.handle}`);
 
   const { ref: inViewRef, inView } = useInView({
     triggerOnce: true,
@@ -38,13 +39,11 @@ const ReviewIndex = forwardRef<HTMLDivElement>((props, ref) => {
       return;
     }
 
-    const api = usePrefixPathWithLocale(`/api/review/${product.handle}`);
-
     setIsLoading(true);
     setError(null);
     setCurrentProductHandle(product.handle);
 
-    fetch(api)
+    fetch(reviewsAPI)
       .then((res) => {
         if (res.ok) {
           return res.json();
