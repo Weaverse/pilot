@@ -26,7 +26,7 @@ export function ReviewList({
     <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
       <div className="flex flex-col gap-6">
         <span className="font-bold text-lg uppercase">
-          Reviews ({reviewsData.reviewNumber})
+          Reviews ({reviewsData.totalReviews})
         </span>
         {reviews.map(({ id, rating, reviewer, title, created_at, body }) => (
           <Fragment key={id}>

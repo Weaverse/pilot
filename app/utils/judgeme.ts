@@ -33,7 +33,7 @@ type JudgeMeReviewType = {
 
 export type JudgemeReviewsData = {
   rating: number;
-  reviewNumber: number;
+  totalReviews: number;
   reviews: JudgeMeReviewType[];
 };
 
@@ -77,13 +77,13 @@ export async function getJudgeMeProductReviews({
         product_id: product?.id,
       }),
     );
-    const reviewNumber = reviews.length || 0;
-    const rating = reviews.reduce((a, c) => a + c.rating, 0) / reviewNumber;
-    return { rating, reviewNumber, reviews };
+    const totalReviews = reviews.length || 0;
+    const rating = reviews.reduce((a, c) => a + c.rating, 0) / totalReviews;
+    return { rating, totalReviews, reviews };
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     console.log("Error fetching Judgeme product reviews", error.message);
-    return { rating: 0, reviewNumber: 0, reviews: [] };
+    return { rating: 0, totalReviews: 0, reviews: [] };
   }
 }
 
@@ -101,7 +101,7 @@ function parseBadgeHtml(badgeHtml: string): JudgemeStarsRatingData {
   };
 }
 
-export async function getJudgeMeBadgeData({
+export async function getJudgeMeProductRating({
   context,
   productHandle,
 }: {

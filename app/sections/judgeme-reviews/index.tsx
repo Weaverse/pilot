@@ -21,7 +21,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [currentProductHandle, setCurrentProductHandle] = useState<string | null>(null);
-    const reviewsAPI = usePrefixPathWithLocale(`/api/review/${product?.handle}`);
+    const reviewsAPI = usePrefixPathWithLocale(`/api/reviews/${product?.handle}`);
 
     const { ref: inViewRef, inView } = useInView({
       triggerOnce: true,
@@ -63,7 +63,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
         .catch((error) => {
           console.error("Error fetching Judge.me reviews:", error);
           setError("Failed to load reviews");
-          setReviewsData({ rating: 0, reviewNumber: 0, reviews: [] });
+          setReviewsData({ rating: 0, totalReviews: 0, reviews: [] });
         })
         .finally(() => {
           setIsLoading(false);
@@ -129,19 +129,20 @@ export default JudgemeReviewSection;
 
 export const schema = createSchema({
   type: "judgeme-reviews",
-  title: "Judgeme Reviews",
+  title: "Judgeme reviews widget",
   enabledOn: {
     pages: ["PRODUCT"],
   },
   settings: [
     {
-      group: "Section",
+      group: "General",
       inputs: [
         {
           type: "text",
           name: "sectionId",
           label: "Section ID",
-          placeholder: "Enter section ID",
+          placeholder: "judgeme-reviews-widget",
+          defaultValue: 'judgeme-reviews-widget',
           helpText: "This ID can be used to scroll to this section from other components",
         },
       ],

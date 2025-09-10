@@ -1,5 +1,5 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef, useEffect, useState, useCallback } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
@@ -36,7 +36,7 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
     const [isLoading, setIsLoading] = useState(false);
     const { product } = useLoaderData<typeof productRouteLoader>();
     const handle = product?.handle;
-    const api = usePrefixPathWithLocale(`/api/review/${handle}?type=badge`);
+    const api = usePrefixPathWithLocale(`/api/reviews/${handle}?type=rating`);
 
     useEffect(() => {
       if (!handle) {
