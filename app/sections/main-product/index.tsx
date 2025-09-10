@@ -239,7 +239,7 @@ export const schema = createSchema({
         showCompareAtPrice: true
       },
       {
-        type: "mp--reviews-badge",
+        type: "judgeme-stars-rating",
       },
       {
         type: "mp--summary",
@@ -264,7 +264,7 @@ export const schema = createSchema({
         buttonClassName: "w-full uppercase",
       },
       {
-        type: "mp--details-accordion",
+        type: "mp--collapsible-details",
         showShippingPolicy: true,
         showRefundPolicy: true,
       },

@@ -30,7 +30,7 @@ import * as ImageWithTextContent from "~/sections/image-with-text/content";
 import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as JudgemeReview from "~/sections/judgeme-reviews";
 import * as MainProduct from "~/sections/main-product";
-import * as JudgemeReviewsBadge from "~/sections/main-product/judgeme-reviews-badge";
+import * as JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
 import * as ProductBadges from "~/sections/main-product/product-badges";
 import * as ProductVendor from "~/sections/main-product/product-vendor";
@@ -41,7 +41,7 @@ import * as ProductBundledVariants from "~/sections/main-product/product-bundled
 import * as ProductVariantSelector from "~/sections/main-product/product-variant-selector";
 import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
 import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
-import * as ProductDetailsAccordion from "~/sections/main-product/product-details-accordion";
+import * as ProductCollapsibleDetails from "~/sections/main-product/product-collapsible-details";
 import * as MapSection from "~/sections/map";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
@@ -118,14 +118,14 @@ export const components: HydrogenComponent[] = [
   ProductVariantSelector,
   ProductQuantitySelector,
   ProductATCButtons,
-  ProductDetailsAccordion,
+  ProductCollapsibleDetails,
   RelatedProducts,
   RelatedArticles,
   CollectionFilters,
   CollectionList,
   CollectionListItems,
   SingleProduct,
-  JudgemeReviewsBadge,
+  JudgemeStarsRating,
   JudgemeReview,
   OurTeam,
   OurTeamMembers,

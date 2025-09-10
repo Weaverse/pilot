@@ -1,5 +1,5 @@
 import type { AppLoadContext } from "react-router";
-import type { JudgemeBadgeApiResponse, JudgemeBadgeData } from "~/types/judgeme";
+import type { JudgemeStarsRatingApiResponse, JudgemeStarsRatingData } from "~/types/judgeme";
 import { constructURL } from "./misc";
 
 type JudgemeProductData = {
@@ -87,7 +87,7 @@ export async function getJudgeMeProductReviews({
   }
 }
 
-function parseBadgeHtml(badgeHtml: string): JudgemeBadgeData {
+function parseBadgeHtml(badgeHtml: string): JudgemeStarsRatingData {
   const averageRatingMatch = badgeHtml.match(/data-average-rating=['"]([^'"]+)['"]/);
   const numberOfReviewsMatch = badgeHtml.match(/data-number-of-reviews=['"]([^'"]+)['"]/);
 
@@ -107,7 +107,7 @@ export async function getJudgeMeBadgeData({
 }: {
   context: AppLoadContext;
   productHandle: string;
-}): Promise<JudgemeBadgeApiResponse> {
+}): Promise<JudgemeStarsRatingApiResponse> {
   try {
     const { weaverse, env } = context;
     const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;

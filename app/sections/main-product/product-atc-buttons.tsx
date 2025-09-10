@@ -84,7 +84,7 @@ export default ProductATCButtons;
 
 export const schema = createSchema({
   type: "mp--atc-buttons",
-  title: "ATC buttons",
+  title: "Buy buttons",
   limit: 1,
   enabledOn: {
     pages: ["PRODUCT"],

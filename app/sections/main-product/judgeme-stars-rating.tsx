@@ -4,18 +4,18 @@ import { useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
-import type { JudgemeBadgeApiResponse, JudgemeBadgeData } from "~/types/judgeme";
+import type { JudgemeStarsRatingApiResponse, JudgemeStarsRatingData } from "~/types/judgeme";
 
-interface JudgemeReviewsBadgeProps extends HydrogenComponentProps {
+interface JudgemeStarsRatingProps extends HydrogenComponentProps {
   onClickEvent?: "do-nothing" | "scroll-to-section";
   sectionId?: string;
 }
 
-const JudgemeReviewsBadge = forwardRef<HTMLDivElement, JudgemeReviewsBadgeProps>(
+const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
   (props, ref) => {
     const { onClickEvent = "do-nothing", sectionId, ...rest } = props;
     const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<JudgemeBadgeData | null>(null);
+    const [data, setData] = useState<JudgemeStarsRatingData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { product } = useLoaderData<typeof productRouteLoader>();
     const handle = product?.handle;
@@ -43,7 +43,7 @@ const JudgemeReviewsBadge = forwardRef<HTMLDivElement, JudgemeReviewsBadgeProps>
           }
           throw new Error("Response not ok");
         })
-        .then((response: JudgemeBadgeApiResponse) => {
+        .then((response: JudgemeStarsRatingApiResponse) => {
           if (response.ok) {
             setData(response.data);
           } else {
@@ -52,8 +52,8 @@ const JudgemeReviewsBadge = forwardRef<HTMLDivElement, JudgemeReviewsBadgeProps>
           }
         })
         .catch((error) => {
-          console.error("Error fetching Judge.me badge data:", error);
-          setError("Failed to fetch Judge.me badge data");
+          console.error("Error fetching Judge.me stars rating data:", error);
+          setError("Failed to fetch Judge.me stars rating data");
         })
         .finally(() => {
           setIsLoading(false);
@@ -98,14 +98,14 @@ const JudgemeReviewsBadge = forwardRef<HTMLDivElement, JudgemeReviewsBadgeProps>
   },
 );
 
-export default JudgemeReviewsBadge;
+export default JudgemeStarsRating;
 
 export const schema = createSchema({
-  type: "judgeme-reviews-badge",
-  title: "Judgeme reviews badge",
+  type: "judgeme-stars-rating",
+  title: "Stars rating",
   settings: [
     {
-      group: "Badge Settings",
+      group: "General",
       inputs: [
         {
           type: "select",

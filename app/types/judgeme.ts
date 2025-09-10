@@ -1,13 +1,13 @@
-export interface JudgemeBadgeData {
+export interface JudgemeStarsRatingData {
   totalReviews: number;
   averageRating: number;
   badge: string;
 }
 
-export type JudgemeBadgeApiResponse =
+export type JudgemeStarsRatingApiResponse =
   | {
       ok: true;
-      data: JudgemeBadgeData;
+      data: JudgemeStarsRatingData;
     }
   | {
       ok: false;
