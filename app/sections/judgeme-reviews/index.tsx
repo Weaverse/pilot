@@ -156,11 +156,11 @@ export const schema = createSchema({
     children: [
       {
         type: "heading",
-        Content: "Reviews",
+        content: "Customer Reviews",
       },
       {
         type: "paragraph",
-        Content: "Reviews from Judgeme",
+        content: "Read what our customers are saying about this product.",
       },
     ],
   },
