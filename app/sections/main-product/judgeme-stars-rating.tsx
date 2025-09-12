@@ -59,8 +59,7 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
             setError(errorResponse.error);
           }
         })
-        .catch((error) => {
-          console.error("Error fetching Judge.me stars rating data:", error);
+        .catch((_error) => {
           setError("Failed to fetch Judge.me stars rating data");
         })
         .finally(() => {
@@ -100,13 +99,13 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
         onClick={
           onClickEvent !== "do-nothing"
             ? () => {
-              if (onClickEvent === "scroll-to-section" && sectionId) {
-                const element = document.getElementById(sectionId);
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
+                if (onClickEvent === "scroll-to-section" && sectionId) {
+                  const element = document.getElementById(sectionId);
+                  if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                  }
                 }
               }
-            }
             : undefined
         }
         className={onClickEvent !== "do-nothing" ? "cursor-pointer" : ""}
@@ -115,9 +114,12 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
           <StarRating rating={data?.averageRating} />
           <span className="leading-4">
             {data?.totalReviews > 0
-              ? formatRatingText(ratingText, data.averageRating, data.totalReviews)
-              : noReviewsText
-            }
+              ? formatRatingText(
+                  ratingText,
+                  data.averageRating,
+                  data.totalReviews,
+                )
+              : noReviewsText}
           </span>
         </div>
       </div>
@@ -164,7 +166,8 @@ export const schema = createSchema({
           label: "Rating text format",
           defaultValue: "{{rating}}/5 ({{total_reviews}} reviews)",
           placeholder: "{{rating}}/5 ({{total_reviews}} reviews)",
-          helpText: "Use <strong>{{rating}}</strong> for average rating and <strong>{{total_reviews}}</strong> for total review count.",
+          helpText:
+            "Use <strong>{{rating}}</strong> for average rating and <strong>{{total_reviews}}</strong> for total review count.",
         },
         {
           type: "text",

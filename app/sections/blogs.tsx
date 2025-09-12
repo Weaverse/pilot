@@ -55,7 +55,7 @@ const Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
   return <Section ref={ref} {...rest} />;
 });
 
-export interface ArticleCardProps {
+export type ArticleCardProps = {
   article: ArticleFragment;
   blogHandle: string;
   loading?: HTMLImageElement["loading"];
@@ -65,7 +65,7 @@ export interface ArticleCardProps {
   showReadmore: boolean;
   imageAspectRatio: ImageAspectRatio;
   className?: string;
-}
+};
 
 export function ArticleCard({
   blogHandle,

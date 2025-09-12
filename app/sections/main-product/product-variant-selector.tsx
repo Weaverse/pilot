@@ -30,7 +30,9 @@ const ProductVariantSelector = forwardRef<
 
   const combinedListing = isCombinedListing(product);
 
-  if (!product) return null;
+  if (!product) {
+    return null;
+  }
 
   return (
     <div ref={ref} {...props}>

@@ -1,5 +1,8 @@
 import type { AppLoadContext } from "react-router";
-import type { JudgemeStarsRatingApiResponse, JudgemeStarsRatingData } from "~/types/judgeme";
+import type {
+  JudgemeStarsRatingApiResponse,
+  JudgemeStarsRatingData,
+} from "~/types/judgeme";
 import { constructURL } from "./misc";
 
 type JudgemeProductData = {
@@ -56,8 +59,10 @@ export async function getJudgeMeProductReviews({
   try {
     const { weaverse, env } = context;
     const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
-    if (!JUDGEME_PRIVATE_API_TOKEN || !PUBLIC_STORE_DOMAIN) {
-      throw new Error("JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.");
+    if (!(JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN)) {
+      throw new Error(
+        "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.",
+      );
     }
     const { fetchWithCache } = weaverse;
     const { product } = await fetchWithCache<JudgemeProductData>(
@@ -88,11 +93,19 @@ export async function getJudgeMeProductReviews({
 }
 
 function parseBadgeHtml(badgeHtml: string): JudgemeStarsRatingData {
-  const averageRatingMatch = badgeHtml.match(/data-average-rating=['"]([^'"]+)['"]/);
-  const numberOfReviewsMatch = badgeHtml.match(/data-number-of-reviews=['"]([^'"]+)['"]/);
+  const averageRatingMatch = badgeHtml.match(
+    /data-average-rating=['"]([^'"]+)['"]/,
+  );
+  const numberOfReviewsMatch = badgeHtml.match(
+    /data-number-of-reviews=['"]([^'"]+)['"]/,
+  );
 
-  const averageRating = averageRatingMatch ? Number.parseFloat(averageRatingMatch[1]) : 0;
-  const totalReviews = numberOfReviewsMatch ? Number.parseInt(numberOfReviewsMatch[1], 10) : 0;
+  const averageRating = averageRatingMatch
+    ? Number.parseFloat(averageRatingMatch[1])
+    : 0;
+  const totalReviews = numberOfReviewsMatch
+    ? Number.parseInt(numberOfReviewsMatch[1], 10)
+    : 0;
 
   return {
     totalReviews,
@@ -112,10 +125,11 @@ export async function getJudgeMeProductRating({
     const { weaverse, env } = context;
     const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
 
-    if (!JUDGEME_PRIVATE_API_TOKEN || !PUBLIC_STORE_DOMAIN) {
+    if (!(JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN)) {
       return {
         ok: false,
-        error: "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured",
+        error:
+          "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured",
       };
     }
 
@@ -142,7 +156,10 @@ export async function getJudgeMeProductRating({
     };
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
-    console.error("Error fetching Judge.me badge data:", error?.message || error);
+    console.error(
+      "Error fetching Judge.me badge data:",
+      error?.message || error,
+    );
     return {
       ok: false,
       error: error?.message || "Failed to fetch Judge.me badge data",
@@ -177,9 +194,186 @@ export async function createJudgeMeReview({
 }
 
 function formDataToObject(formData: FormData) {
-  const data = {};
+  const data: Record<string, any> = {};
   for (const [key, value] of formData.entries()) {
     data[key] = value;
   }
   return data;
+}
+
+/**
+ * Get reviews with pagination and filtering (redesigned version)
+ */
+export async function getJudgeMeProductReviewsRedesigned({
+  context,
+  productHandle,
+  page = 1,
+  perPage = 10,
+  sort = "newest",
+  rating,
+}: {
+  context: AppLoadContext;
+  productHandle: string;
+  page?: number;
+  perPage?: number;
+  sort?: "newest" | "oldest" | "rating_high" | "rating_low";
+  rating?: number;
+}) {
+  const { getJudgeMeProductReviewsRedesigned } = await import(
+    "./judgeme-redesigned"
+  );
+  return getJudgeMeProductReviewsRedesigned({
+    context,
+    productHandle,
+    page,
+    perPage,
+    sort,
+    rating,
+  });
+}
+
+/**
+ * Submit review with improved error handling
+ */
+export async function submitJudgeMeReview({
+  context,
+  formData,
+}: {
+  context: AppLoadContext;
+  formData: FormData;
+}) {
+  const { env } = context;
+  const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
+
+  if (!(JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN)) {
+    return {
+      success: false,
+      error: "Judge.me API is not configured",
+    };
+  }
+
+  try {
+    const response = await createJudgeMeReview({
+      formData,
+      shopDomain: PUBLIC_STORE_DOMAIN,
+      apiToken: JUDGEME_PRIVATE_API_TOKEN,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        review: result.review,
+      };
+    }
+    return {
+      success: false,
+      error: result.error || "Failed to submit review",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "Failed to submit review. Please try again.",
+    };
+  }
+}
+
+/**
+ * Get reviews summary for a product
+ */
+export async function getJudgeMeReviewsSummary({
+  context,
+  productHandle,
+}: {
+  context: AppLoadContext;
+  productHandle: string;
+}) {
+  try {
+    const reviews = await getJudgeMeProductReviews({ context, productHandle });
+
+    if (!reviews.reviews.length) {
+      return {
+        totalReviews: 0,
+        averageRating: 0,
+        ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+      };
+    }
+
+    const ratingDistribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    reviews.reviews.forEach((review) => {
+      ratingDistribution[review.rating as keyof typeof ratingDistribution]++;
+    });
+
+    return {
+      totalReviews: reviews.totalReviews,
+      averageRating: reviews.rating,
+      ratingDistribution,
+    };
+  } catch (error) {
+    return {
+      totalReviews: 0,
+      averageRating: 0,
+      ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+    };
+  }
+}
+
+/**
+ * Check if a user has already reviewed a product
+ */
+export async function hasUserReviewedProduct({
+  context,
+  productHandle,
+  userEmail,
+}: {
+  context: AppLoadContext;
+  productHandle: string;
+  userEmail: string;
+}) {
+  try {
+    const reviews = await getJudgeMeProductReviews({ context, productHandle });
+    return reviews.reviews.some(
+      (review) =>
+        review.reviewer.email.toLowerCase() === userEmail.toLowerCase(),
+    );
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Get featured reviews for a product
+ */
+export async function getFeaturedReviews({
+  context,
+  productHandle,
+  limit = 3,
+}: {
+  context: AppLoadContext;
+  productHandle: string;
+  limit?: number;
+}) {
+  try {
+    // For now, we'll fetch all reviews and filter
+    // In a real implementation, you might want to add a featured parameter to the API
+    const reviews = await getJudgeMeProductReviews({ context, productHandle });
+
+    return reviews.reviews
+      .filter((review) => review.featured)
+      .slice(0, limit)
+      .map((review) => ({
+        id: review.id,
+        title: review.title,
+        body: review.body,
+        rating: review.rating,
+        createdAt: review.created_at,
+        reviewer: {
+          name: review.reviewer.name,
+        },
+        verifiedBuyer: review.verified_buyer,
+      }));
+  } catch (error) {
+    return [];
+  }
 }

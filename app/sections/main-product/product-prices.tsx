@@ -25,7 +25,9 @@ const ProductPrices = forwardRef<HTMLDivElement, ProductPricesProps>(
 
     const combinedListing = isCombinedListing(product);
 
-    if (!product) return null;
+    if (!product) {
+      return null;
+    }
 
     return (
       <div ref={ref} {...rest}>

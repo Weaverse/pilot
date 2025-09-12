@@ -65,14 +65,14 @@ export const variants = cva(
   },
 );
 
-export interface ButtonStyleProps {
+export type ButtonStyleProps = {
   backgroundColor: string;
   textColor: string;
   borderColor: string;
   backgroundColorHover: string;
   textColorHover: string;
   borderColorHover: string;
-}
+};
 
 export interface ButtonProps
   extends VariantProps<typeof variants>,

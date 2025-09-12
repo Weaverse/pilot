@@ -132,13 +132,13 @@ export function ProductsPagination({
   );
 }
 
-interface ProductsLoadedOnScrollProps {
+type ProductsLoadedOnScrollProps = {
   nodes: any;
   inView: boolean;
   nextPageUrl: string;
   hasNextPage: boolean;
   state: any;
-}
+};
 
 function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
   const { nodes, inView, nextPageUrl, hasNextPage, state } = props;

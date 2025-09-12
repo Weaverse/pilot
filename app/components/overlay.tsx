@@ -2,12 +2,12 @@ import type { InspectorGroup } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { cn } from "~/utils/cn";
 
-export interface OverlayData {
+export type OverlayData = {
   enableOverlay: boolean;
   overlayColor: string;
   overlayColorHover: string;
   overlayOpacity: number;
-}
+};
 
 export type OverlayProps = OverlayData & {
   className?: string;

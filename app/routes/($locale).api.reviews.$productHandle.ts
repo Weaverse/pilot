@@ -1,8 +1,22 @@
-import invariant from "tiny-invariant";
 import type { LoaderFunctionArgs } from "react-router";
-import { getJudgeMeProductRating, getJudgeMeProductReviews } from "~/utils/judgeme";
+import { data } from "react-router";
+import invariant from "tiny-invariant";
+import {
+  getJudgeMeProductRating,
+} from "~/utils/judgeme";
+import { loader as reviewsLoader } from "~/utils/judgeme-redesigned";
 
-export async function loader({ params: { productHandle }, request, context }: LoaderFunctionArgs) {
+interface AppContext {
+  storefront: any;
+  weaverse: any;
+  env: any;
+}
+
+export async function loader({
+  params: { productHandle },
+  request,
+  context,
+}: LoaderFunctionArgs) {
   invariant(productHandle, "Missing product handle");
 
   const url = new URL(request.url);
@@ -12,5 +26,6 @@ export async function loader({ params: { productHandle }, request, context }: Lo
     return await getJudgeMeProductRating({ context, productHandle });
   }
 
-  return await getJudgeMeProductReviews({ context, productHandle });
+  // Use the redesigned loader that returns the correct format
+  return await reviewsLoader({ request, context, params });
 }

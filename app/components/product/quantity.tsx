@@ -1,8 +1,8 @@
-interface QuantityProps {
+type QuantityProps = {
   value: number;
   onChange: (value: number) => void;
   label?: string;
-}
+};
 export function Quantity(props: QuantityProps) {
   const { value, onChange, label = "Quantity" } = props;
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

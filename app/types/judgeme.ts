@@ -1,8 +1,8 @@
-export interface JudgemeStarsRatingData {
+export type JudgemeStarsRatingData = {
   totalReviews: number;
   averageRating: number;
   badge: string;
-}
+};
 
 export type JudgemeStarsRatingApiResponse =
   | {

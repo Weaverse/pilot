@@ -15,18 +15,17 @@
         "noArrayIndexKey": "off"
       },
       "nursery": {
-        "useUniqueElementIds": "off",
         "useSortedClasses": {
           "level": "on",
           "fix": "safe",
           "options": {
             "functions": ["clsx", "cva", "cn"]
           }
-        },
-        "noNoninteractiveElementInteractions": "off"
+        }
       },
       "correctness": {
-        "noUnusedVariables": "off"
+        "noUnusedVariables": "off",
+        "useUniqueElementIds": "off"
       },
       "performance": {
         "noNamespaceImport": "off",
@@ -38,7 +37,11 @@
           "options": {
             "maxAllowedComplexity": 50
           }
-        }
+        },
+        "noExcessiveLinesPerFunction": "off"
+      },
+      "a11y": {
+        "noNoninteractiveElementInteractions": "off"
       }
     }
   },

@@ -38,7 +38,9 @@ const ProductATCButtons = forwardRef<HTMLDivElement, ProductATCButtonsProps>(
     const combinedListing = isCombinedListing(product);
     const isBundle = Boolean(product?.isBundle?.requiresComponents);
 
-    if (!product || combinedListing) return null;
+    if (!product || combinedListing) {
+      return null;
+    }
 
     let atcButtonText = "Add to cart";
     if (selectedVariant.availableForSale) {
@@ -106,7 +108,8 @@ export const schema = createSchema({
           name: "addBundleToCartText",
           defaultValue: "Add bundle to cart",
           placeholder: "Add bundle to cart",
-          helpText: "Apply if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
+          helpText:
+            "Apply if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
         },
         {
           type: "text",

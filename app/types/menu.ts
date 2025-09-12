@@ -21,7 +21,7 @@ export type EnhancedMenu = Pick<MenuFragment, "id"> & {
   items: ParentEnhancedMenuItem[];
 };
 
-export interface SingleMenuItem {
+export type SingleMenuItem = {
   id: string;
   title: string;
   items: SingleMenuItem[];
@@ -35,4 +35,4 @@ export interface SingleMenuItem {
       width: number;
     };
   };
-}
+};

@@ -16,7 +16,7 @@ import type { ProductQuery } from "storefront-api.generated";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { ProductPopup } from "./product-popup";
 
-export interface HotspotsItemData {
+export type HotspotsItemData = {
   icon: "circle" | "plus" | "bag" | "tag";
   iconSize: number;
   offsetX: number;
@@ -26,7 +26,7 @@ export interface HotspotsItemData {
   showPrice: boolean;
   showViewDetailsLink: boolean;
   viewDetailsLinkText: string;
-}
+};
 
 interface HotspotsItemProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>>,

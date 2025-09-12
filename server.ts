@@ -112,8 +112,8 @@ export async function createAppLoadContext(
 
 class AppSession implements HydrogenSession {
   isPending = false;
-  #sessionStorage: SessionStorage;
-  #session: Session;
+  readonly #sessionStorage: SessionStorage;
+  readonly #session: Session;
 
   constructor(sessionStorage: SessionStorage, session: Session) {
     this.#sessionStorage = sessionStorage;

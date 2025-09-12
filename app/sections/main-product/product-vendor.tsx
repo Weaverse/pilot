@@ -10,7 +10,9 @@ const ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
     const { ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product || !product.vendor) return null;
+    if (!product?.vendor) {
+      return null;
+    }
 
     return (
       <div ref={ref} {...rest} className="empty:hidden">

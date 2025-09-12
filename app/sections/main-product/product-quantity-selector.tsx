@@ -20,7 +20,9 @@ const ProductQuantitySelector = forwardRef<
 
   const combinedListing = isCombinedListing(product);
 
-  if (!product || combinedListing) return null;
+  if (!product || combinedListing) {
+    return null;
+  }
 
   return (
     <div ref={ref} {...rest} className="empty:hidden">

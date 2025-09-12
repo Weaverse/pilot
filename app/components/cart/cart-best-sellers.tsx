@@ -10,14 +10,14 @@ import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 
-interface CartBestSellersProps {
+type CartBestSellersProps = {
   count: number;
   heading: string;
   layout?: "drawer" | "page";
   query?: string;
   reverse?: boolean;
   sortKey: ProductSortKeys;
-}
+};
 
 /**
  * Display a grid of products and a heading based on some options.

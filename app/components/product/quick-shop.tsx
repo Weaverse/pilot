@@ -25,10 +25,10 @@ import { ProductBadges } from "./badges";
 import { VariantPrices } from "./variant-prices";
 import { VariantSelector } from "./variant-selector";
 
-interface QuickViewData {
+type QuickViewData = {
   product: NonNullable<ProductQuery["product"]>;
   storeDomain: string;
-}
+};
 
 export function QuickShop({
   data,

@@ -16,11 +16,11 @@ import Link from "~/components/link";
 import { CUSTOMER_UPDATE_MUTATION } from "./($locale).account.profile";
 import { doLogout } from "./($locale).account_.logout";
 
-export interface AccountOutletContext {
+export type AccountOutletContext = {
   customer: Customer;
-}
+};
 
-export interface ActionData {
+export type ActionData = {
   success?: boolean;
   formError?: string;
   fieldErrors?: {
@@ -32,7 +32,7 @@ export interface ActionData {
     newPassword?: string;
     newPassword2?: string;
   };
-}
+};
 
 function formDataHas(formData: FormData, key: string) {
   if (!formData.has(key)) {

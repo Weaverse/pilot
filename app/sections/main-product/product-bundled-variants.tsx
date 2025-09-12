@@ -19,7 +19,9 @@ const ProductBundledVariants = forwardRef<
   const isBundle = Boolean(product?.isBundle?.requiresComponents);
   const bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
 
-  if (!product || !isBundle || !bundledVariants) return null;
+  if (!(product && isBundle && bundledVariants)) {
+    return null;
+  }
 
   return (
     <div ref={ref} {...rest} className="space-y-3 empty:hidden">
@@ -47,7 +49,8 @@ export const schema = createSchema({
         {
           type: "heading",
           label: "Bundled variants",
-          helpText: "This component will only show if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
+          helpText:
+            "This component will only show if the product is a bundled product. Learn more about <a href='https://shopify.dev/docs/apps/build/product-merchandising/bundles' target='_blank'>Shopify product bundles</a>.",
         },
         {
           type: "text",

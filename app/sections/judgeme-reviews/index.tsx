@@ -2,8 +2,8 @@ import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import type { JudgemeReviewsData } from "~/utils/judgeme";
 import ReviewForm from "./review-form";
@@ -17,27 +17,33 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
   (props, ref) => {
     const { children, loaderData, sectionId, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
-    const [reviewsData, setReviewsData] = useState<JudgemeReviewsData | null>(null);
+    const [reviewsData, setReviewsData] = useState<JudgemeReviewsData | null>(
+      null,
+    );
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [currentProductHandle, setCurrentProductHandle] = useState<string | null>(null);
-    const reviewsAPI = usePrefixPathWithLocale(`/api/reviews/${product?.handle}`);
+    const [currentProductHandle, setCurrentProductHandle] = useState<
+      string | null
+    >(null);
+    const reviewsAPI = usePrefixPathWithLocale(
+      `/api/reviews/${product?.handle}`,
+    );
 
     const { ref: inViewRef, inView } = useInView({
       triggerOnce: true,
     });
 
     const setRefs = (node: HTMLDivElement) => {
-      if (ref && typeof ref === 'object') {
+      if (ref && typeof ref === "object") {
         ref.current = node;
-      } else if (typeof ref === 'function') {
+      } else if (typeof ref === "function") {
         ref(node);
       }
       inViewRef(node);
     };
 
     useEffect(() => {
-      if (!product?.handle || !inView || isLoading) {
+      if (!(product?.handle && inView) || isLoading) {
         return;
       }
 
@@ -60,15 +66,21 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
         .then((data: JudgemeReviewsData) => {
           setReviewsData(data);
         })
-        .catch((error) => {
-          console.error("Error fetching Judge.me reviews:", error);
+        .catch((_error) => {
           setError("Failed to load reviews");
           setReviewsData({ rating: 0, totalReviews: 0, reviews: [] });
         })
         .finally(() => {
           setIsLoading(false);
         });
-    }, [product?.handle, inView, isLoading, currentProductHandle, reviewsData]);
+    }, [
+      product?.handle,
+      inView,
+      isLoading,
+      currentProductHandle,
+      reviewsData,
+      reviewsAPI,
+    ]);
 
     if (!product) {
       return null;
@@ -79,7 +91,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
         {children}
         <div
           ref={setRefs}
-          className="grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-3"
+          className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-10"
         >
           {isLoading ? (
             <>
@@ -103,21 +115,21 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
             <div className="col-span-3 text-center text-gray-500">
               <p>{error}</p>
             </div>
-          ) : !reviewsData ? (
-            <div className="col-span-3 text-center text-gray-500">
-              <p>Loading reviews...</p>
-            </div>
-          ) : (
+          ) : reviewsData ? (
             <>
               <ReviewForm reviews={reviewsData} />
               {reviewsData.reviews.length > 0 ? (
                 <ReviewList reviews={reviewsData} />
               ) : (
-                <div className="text-center text-gray-500 md:col-span-2 pt-10">
+                <div className="pt-10 text-center text-gray-500 md:col-span-2">
                   <p>No reviews yet. Be the first to write a review!</p>
                 </div>
               )}
             </>
+          ) : (
+            <div className="col-span-3 text-center text-gray-500">
+              <p>Loading reviews...</p>
+            </div>
           )}
         </div>
       </Section>
@@ -142,8 +154,9 @@ export const schema = createSchema({
           name: "sectionId",
           label: "Section ID",
           placeholder: "judgeme-reviews-widget",
-          defaultValue: 'judgeme-reviews-widget',
-          helpText: "This ID can be used to scroll to this section from other components",
+          defaultValue: "judgeme-reviews-widget",
+          helpText:
+            "This ID can be used to scroll to this section from other components",
         },
       ],
     },

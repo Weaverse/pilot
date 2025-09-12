@@ -88,11 +88,11 @@ export default function Authenticated() {
   return <Account {...loaderData} customer={loaderData.customer} />;
 }
 
-interface AccountType {
+type AccountType = {
   customer: CustomerDetailsFragment;
   featuredData: Promise<FeaturedData>;
   heading: string;
-}
+};
 
 function Account({ customer, heading, featuredData }: AccountType) {
   const orders = flattenConnection(customer.orders);

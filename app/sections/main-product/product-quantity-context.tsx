@@ -1,13 +1,21 @@
 import { createContext, useContext, useState } from "react";
 
-interface ProductQuantityContextType {
+type ProductQuantityContextType = {
   quantity: number;
   setQuantity: (quantity: number) => void;
-}
+};
 
-const ProductQuantityContext = createContext<ProductQuantityContextType | undefined>(undefined);
+const ProductQuantityContext = createContext<
+  ProductQuantityContextType | undefined
+>(undefined);
 
-export function ProductQuantityProvider({ children, initialQuantity = 1 }: { children: React.ReactNode; initialQuantity?: number }) {
+export function ProductQuantityProvider({
+  children,
+  initialQuantity = 1,
+}: {
+  children: React.ReactNode;
+  initialQuantity?: number;
+}) {
   const [quantity, setQuantity] = useState(initialQuantity);
 
   return (

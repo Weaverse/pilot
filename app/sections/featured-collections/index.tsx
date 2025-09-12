@@ -8,9 +8,9 @@ import type { CollectionsByIdsQuery } from "storefront-api.generated";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 
-interface FeaturedCollectionsData {
+type FeaturedCollectionsData = {
   collections: WeaverseCollection[];
-}
+};
 
 interface FeaturedCollectionsProps
   extends SectionProps<FeaturedCollectionsLoaderData>,

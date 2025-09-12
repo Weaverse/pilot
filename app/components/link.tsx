@@ -63,14 +63,14 @@ export const variants = cva(["inline-flex transition-colors"], {
   },
 });
 
-export interface LinkStyles {
+export type LinkStyles = {
   backgroundColor: string;
   textColor: string;
   borderColor: string;
   backgroundColorHover: string;
   textColorHover: string;
   borderColorHover: string;
-}
+};
 
 export interface LinkData
   extends RemixLinkProps,
@@ -191,7 +191,7 @@ export const linkContentInputs: InspectorGroup["inputs"] = [
     name: "openInNewTab",
     label: "Open in new tab",
     defaultValue: false,
-    condition: (data: LinkData) => !!data.to,
+    condition: (data: LinkData) => Boolean(data.to),
   },
   {
     type: "select",

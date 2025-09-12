@@ -13,9 +13,9 @@ export const maybeFilterOutCombinedListingsQuery =
     ? `NOT tag:${COMBINED_LISTINGS_CONFIGS.combinedListingTag}`
     : "";
 
-interface ProductWithTags {
+type ProductWithTags = {
   tags: string[];
-}
+};
 
 function isProductWithTags(u: unknown): u is ProductWithTags {
   const maybe = u as ProductWithTags;

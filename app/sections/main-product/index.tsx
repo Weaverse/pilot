@@ -77,9 +77,7 @@ const ProductInformation = forwardRef<
               className="sticky flex flex-col justify-start gap-5"
               style={{ top: "calc(var(--height-nav) + 20px)" }}
             >
-              <ProductQuantityProvider>
-                {children}
-              </ProductQuantityProvider>
+              <ProductQuantityProvider>{children}</ProductQuantityProvider>
             </div>
           </div>
         </div>
@@ -236,7 +234,7 @@ export const schema = createSchema({
       },
       {
         type: "mp--prices",
-        showCompareAtPrice: true
+        showCompareAtPrice: true,
       },
       {
         type: "judgeme-stars-rating",

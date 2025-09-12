@@ -15,11 +15,11 @@ import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
-interface FeaturedProductsData {
+type FeaturedProductsData = {
   selectionMethod: "auto" | "collection" | "manual";
   collection?: WeaverseCollection;
   products?: WeaverseProduct[];
-}
+};
 
 interface FeaturedProductsProps
   extends SectionProps<FeaturedProductsLoaderData>,

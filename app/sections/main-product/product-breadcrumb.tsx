@@ -13,7 +13,9 @@ const ProductBreadcrumb = forwardRef<HTMLDivElement, ProductBreadcrumbProps>(
     const { homeText, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product) return null;
+    if (!product) {
+      return null;
+    }
 
     return (
       <div ref={ref} {...rest} className="flex items-center gap-1.5">

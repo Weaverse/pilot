@@ -25,11 +25,11 @@ import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
 
-interface SingleProductData {
+type SingleProductData = {
   productsCount: number;
   product: WeaverseProduct;
   showThumbnails: boolean;
-}
+};
 
 type SingleProductProps = HydrogenComponentProps<
   Awaited<ReturnType<typeof loader>>

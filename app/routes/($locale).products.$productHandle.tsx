@@ -21,7 +21,10 @@ import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import { createJudgeMeReview } from "~/utils/judgeme";
+import {
+  getJudgeMeProductReviewsRedesigned,
+  action as submitJudgeMeReview,
+} from "~/utils/judgeme-redesigned";
 import { getRecommendedProducts } from "~/utils/product";
 import {
   redirectIfCombinedListing,
@@ -39,7 +42,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
   const { storefront, weaverse } = context;
   const selectedOptions = getSelectedProductOptions(request);
-  const [{ shop, product }, weaverseData] = await Promise.all([
+  const [{ shop, product }, weaverseData, productReviews] = await Promise.all([
     storefront.query<ProductQuery>(PRODUCT_QUERY, {
       variables: {
         handle,
@@ -49,6 +52,12 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       },
     }),
     weaverse.loadPage({ type: "PRODUCT", handle }),
+    getJudgeMeProductReviewsRedesigned({
+      context,
+      productHandle: handle,
+      page: 1,
+      perPage: 10,
+    }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
@@ -68,6 +77,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     shop,
     product,
     weaverseData,
+    productReviews,
     storeDomain: shop.primaryDomain.url,
     seo: seoPayload.product({ product, url: request.url }),
     recommended,
@@ -75,24 +85,23 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   };
 }
 
-export async function action({
-  request,
-  context: { env },
-}: ActionFunctionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   try {
-    invariant(
-      env.JUDGEME_PRIVATE_API_TOKEN,
-      "Missing `JUDGEME_PRIVATE_API_TOKEN`",
-    );
-
-    const response = await createJudgeMeReview({
-      formData: await request.formData(),
-      apiToken: env.JUDGEME_PRIVATE_API_TOKEN,
-      shopDomain: env.PUBLIC_STORE_DOMAIN,
+    const formData = await request.formData();
+    const result = await submitJudgeMeReview({
+      context,
+      formData,
     });
-    return response;
+
+    return data(result);
   } catch (error) {
-    return data({ error: "Failed to create review!" }, { status: 500 });
+    return data(
+      {
+        success: false,
+        error: "Failed to submit review. Please try again.",
+      },
+      { status: 500 },
+    );
   }
 }
 

@@ -12,7 +12,9 @@ const ProductTitle = forwardRef<HTMLDivElement, ProductTitleProps>(
     const { headingTag: Tag, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product) return null;
+    if (!product) {
+      return null;
+    }
 
     return (
       <div ref={ref} {...rest}>
@@ -50,7 +52,7 @@ export const schema = createSchema({
               { value: "h6", label: "H6" },
             ],
           },
-        }
+        },
       ],
     },
   ],

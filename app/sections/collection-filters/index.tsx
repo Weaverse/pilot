@@ -10,7 +10,7 @@ import { Filters } from "./filters";
 import { ProductsPagination } from "./products-pagination";
 import { ToolsBar } from "./tools-bar";
 
-export interface CollectionFiltersData {
+export type CollectionFiltersData = {
   showBreadcrumb: boolean;
   showDescription: boolean;
   showBanner: boolean;
@@ -29,7 +29,7 @@ export interface CollectionFiltersData {
   productsPerRowMobile: number;
   loadPrevText: string;
   loadMoreText: string;
-}
+};
 
 interface CollectionFiltersProps extends SectionProps, CollectionFiltersData {}
 

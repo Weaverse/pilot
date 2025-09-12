@@ -1,13 +1,13 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 
-interface SpacerData {
+type SpacerData = {
   mobileHeight: number;
   desktopHeight: number;
   backgroundColor: string;
   addSeparator: boolean;
   separatorColor: string;
-}
+};
 
 const Spacer = forwardRef<HTMLDivElement, SpacerData & HydrogenComponentProps>(
   (props, ref) => {

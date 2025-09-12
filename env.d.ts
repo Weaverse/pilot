@@ -34,14 +34,14 @@ declare module "react-router" {
   }
 
   // TODO: remove this once we've migrated our loaders to `Route.LoaderArgs`
-  interface LoaderFunctionArgs {
+  type LoaderFunctionArgs = {
     context: AppLoadContext;
-  }
+  };
 
   // TODO: remove this once we've migrated our loaders to `Route.ActionArgs`
-  interface ActionFunctionArgs {
+  type ActionFunctionArgs = {
     context: AppLoadContext;
-  }
+  };
 
   interface SessionData extends HydrogenSessionData {
     // declare local additions to the Remix session data here
@@ -49,7 +49,7 @@ declare module "react-router" {
 }
 
 declare global {
-  interface Window {
+  type Window = {
     dataLayer: any[];
-  }
+  };
 }
