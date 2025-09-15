@@ -8,15 +8,16 @@ import type { loader as productRouteLoader } from "~/routes/($locale).products.$
 import type {
   PaginationInfo,
   Review,
-  ReviewImage,
   ReviewsFilter,
   ReviewsSummary as ReviewsSummaryType,
 } from "~/types/judgeme-redesigned";
 import { cn } from "~/utils/cn";
+import { ImageModal } from "./components/image-modal";
 import { ReviewPagination } from "./components/review-pagination";
 import { ReviewsFilters } from "./components/reviews-filters";
 import { ReviewsList } from "./components/reviews-list";
 import { ReviewsSummary } from "./components/reviews-summary";
+import { useImageModal } from "./hooks/use-image-modal";
 import { ReviewForm } from "./review-form";
 
 type LoaderData = {
@@ -106,13 +107,15 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
     );
     const [isLoading, setIsLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    
-    // Image modal state
-    const [selectedImage, setSelectedImage] = useState<{
-      image: ReviewImage;
-      allImages: ReviewImage[];
-      currentIndex: number;
-    } | null>(null);
+
+    // Image modal hook
+    const {
+      selectedImage,
+      handleImageClick,
+      handleClose: handleImageModalClose,
+      handleNext: handleNextImage,
+      handlePrevious: handlePreviousImage,
+    } = useImageModal();
 
     // Use the reviews filter hook for URL state management
     const {
@@ -201,41 +204,6 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
       }
     };
 
-    // Image modal handlers
-    const handleImageClick = useCallback((image: ReviewImage, allImages: ReviewImage[]) => {
-      const currentIndex = allImages.findIndex(img => img.id === image.id);
-      setSelectedImage({
-        image,
-        allImages,
-        currentIndex: currentIndex >= 0 ? currentIndex : 0
-      });
-    }, []);
-
-    const handleImageModalClose = useCallback(() => {
-      setSelectedImage(null);
-    }, []);
-
-    const handleNextImage = useCallback(() => {
-      if (selectedImage) {
-        const nextIndex = (selectedImage.currentIndex + 1) % selectedImage.allImages.length;
-        setSelectedImage({
-          ...selectedImage,
-          image: selectedImage.allImages[nextIndex],
-          currentIndex: nextIndex
-        });
-      }
-    }, [selectedImage]);
-
-    const handlePreviousImage = useCallback(() => {
-      if (selectedImage) {
-        const prevIndex = (selectedImage.currentIndex - 1 + selectedImage.allImages.length) % selectedImage.allImages.length;
-        setSelectedImage({
-          ...selectedImage,
-          image: selectedImage.allImages[prevIndex],
-          currentIndex: prevIndex
-        });
-      }
-    }, [selectedImage]);
 
     // Track last fetched filter to prevent duplicate requests
     const lastFetchedFilter = useRef<ReviewsFilter | null>(null);
@@ -440,79 +408,14 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
             {(summary?.totalReviews || 0) === 1 ? "review" : "reviews"}
           </div>
         )}
-        
+
         {/* Image Modal */}
-        {selectedImage && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-            onClick={handleImageModalClose}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                handleImageModalClose();
-              }
-            }}
-            tabIndex={-1}
-          >
-            <div 
-              className="relative max-h-[90vh] max-w-[90vw]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close button */}
-              <button
-                onClick={handleImageModalClose}
-                className="absolute -top-12 right-0 rounded-full bg-opacity-20 p-2 text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white bg-white"
-                aria-label="Close image"
-              >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              
-              {/* Previous button */}
-              {selectedImage.allImages.length > 1 && (
-                <button
-                  onClick={handlePreviousImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-opacity-20 p-2 text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white bg-white"
-                  aria-label="Previous image"
-                >
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-              )}
-              
-              {/* Image */}
-              <img
-                src={selectedImage.image.urls.original || selectedImage.image.urls.huge || selectedImage.image.urls.small}
-                alt={selectedImage.image.alt_text || "Review image"}
-                className="max-h-[85vh] max-w-[85vw] object-contain"
-                onError={() => {
-                  // Image failed to load
-                }}
-              />
-              
-              {/* Next button */}
-              {selectedImage.allImages.length > 1 && (
-                <button
-                  onClick={handleNextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-opacity-20 p-2 text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white bg-white"
-                  aria-label="Next image"
-                >
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              )}
-              
-              {/* Image counter */}
-              {selectedImage.allImages.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black bg-opacity-50 px-3 py-1 text-white">
-                  {selectedImage.currentIndex + 1} / {selectedImage.allImages.length}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        <ImageModal
+          selectedImage={selectedImage}
+          onClose={handleImageModalClose}
+          onNext={handleNextImage}
+          onPrevious={handlePreviousImage}
+        />
       </Section>
     );
   },
