@@ -43,7 +43,7 @@ interface HeroVideoData extends OverlayProps, VariantProps<typeof variants> {
   heightOnMobile: number;
 }
 
-export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {}
+export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps { }
 
 const variants = cva(
   "absolute inset-0 z-10 mx-auto flex max-w-screen flex-col items-center justify-center px-3",
