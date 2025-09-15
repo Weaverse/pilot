@@ -1,5 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon, XIcon } from "@phosphor-icons/react";
 import { useEffect } from "react";
+import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import type { ReviewImage } from "~/types/judgeme-redesigned";
 
@@ -51,69 +52,72 @@ export function ImageModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+      className="fixed inset-0 z-50 bg-black/75"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label="Review image gallery"
     >
-      <div
-        className="relative max-h-[90vh] max-w-[90vw]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="-top-12 absolute right-0 rounded-full bg-white bg-opacity-20 p-2 text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white"
-          aria-label="Close image"
+      <div className="relative flex h-full w-full items-center justify-center">
+        <div
+          className="max-h-[90vh] max-w-[90vw]"
+          onClick={(e) => e.stopPropagation()}
         >
-          <XIcon className="h-6 w-6" />
-        </button>
-
-        {/* Previous button */}
-        {selectedImage.allImages.length > 1 && (
-          <button
-            type="button"
-            onClick={onPrevious}
-            className="-translate-y-1/2 absolute top-1/2 left-4 rounded-full bg-white bg-opacity-20 p-2 text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white"
-            aria-label="Previous image"
+          {/* Close button */}
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="absolute top-6 right-6 p-2 text-white"
+            aria-label="Close image"
           >
-            <ArrowLeftIcon className="h-6 w-6" />
-          </button>
-        )}
+            <XIcon className="h-5 w-5" />
+          </Button>
 
-        {/* Image */}
-        <Image
-          src={
-            selectedImage.image.urls.original ||
-            selectedImage.image.urls.huge ||
-            selectedImage.image.urls.small
-          }
-          alt={selectedImage.image.alt_text || "Review image"}
-          className="max-h-[85vh] max-w-[85vw] object-contain"
-          width="auto"
-          height="auto"
-        />
+          {/* Previous button */}
+          {selectedImage.allImages.length > 1 && (
+            <Button
+              variant="secondary"
+              onClick={onPrevious}
+              className="-translate-y-1/2 absolute top-1/2 left-4 p-2"
+              aria-label="Previous image"
+            >
+              <ArrowLeftIcon className="h-5 w-5" />
+            </Button>
+          )}
 
-        {/* Next button */}
-        {selectedImage.allImages.length > 1 && (
-          <button
-            type="button"
-            onClick={onNext}
-            className="-translate-y-1/2 absolute top-1/2 right-4 rounded-full bg-white bg-opacity-20 p-2 text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white"
-            aria-label="Next image"
-          >
-            <ArrowRightIcon className="h-6 w-6" />
-          </button>
-        )}
+          {/* Image */}
+          <Image
+            src={
+              selectedImage.image.urls.original ||
+              selectedImage.image.urls.huge ||
+              selectedImage.image.urls.small
+            }
+            alt={selectedImage.image.alt_text || "Review image"}
+            className="max-h-[85vh] max-w-[85vw] object-contain"
+            width="auto"
+            height="auto"
+          />
 
-        {/* Image counter */}
-        {selectedImage.allImages.length > 1 && (
-          <div className="-translate-x-1/2 absolute bottom-4 left-1/2 rounded-full bg-black bg-opacity-50 px-3 py-1 text-white">
-            {selectedImage.currentIndex + 1} / {selectedImage.allImages.length}
-          </div>
-        )}
+          {/* Next button */}
+          {selectedImage.allImages.length > 1 && (
+            <Button
+              variant="secondary"
+              onClick={onNext}
+              className="-translate-y-1/2 absolute top-1/2 right-4 p-2"
+              aria-label="Next image"
+            >
+              <ArrowRightIcon className="h-5 w-5" />
+            </Button>
+          )}
+
+          {/* Image counter */}
+          {selectedImage.allImages.length > 1 && (
+            <div className="-translate-x-1/2 absolute bottom-4 left-1/2 rounded-full bg-black bg-opacity-50 px-3 py-1 text-white">
+              {selectedImage.currentIndex + 1} /{" "}
+              {selectedImage.allImages.length}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
