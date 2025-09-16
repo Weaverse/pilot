@@ -265,57 +265,40 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
         <div className="space-y-6">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h2 className="font-bold text-3xl text-gray-900 dark:text-gray-100">
+              <h2 className="font-bold text-3xl text-gray-900">
                 {labels.reviewsTitle}
               </h2>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-gray-600">
                 See what our customers are saying about this product
               </p>
             </div>
-            {showWriteReviewButton && enableReviewForm && (
-              <Button
-                variant="outline"
-                onClick={handleToggleForm}
-                disabled={showForm}
-                className="rounded-lg border-gray-300 px-6 py-3 font-medium text-sm transition-colors hover:bg-gray-50 sm:self-start dark:border-gray-600 dark:hover:bg-gray-800"
-              >
-                {labels.writeReview}
-              </Button>
-            )}
           </div>
+        </div>
 
-          {enableReviewForm && (
+        {/* Top Section - Summary */}
+        <div className="space-y-8">
+          <ReviewsSummary
+            summary={summary || {
+              totalReviews: 0,
+              averageRating: 0,
+              ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+            }}
+            onToggleForm={handleToggleForm}
+            showForm={showForm}
+            enableReviewForm={enableReviewForm}
+          />
+
+          {enableReviewForm && showForm && (
             <ReviewForm
-              productId={productId}
-              isOpen={showForm}
+              product={product}
               onToggle={handleToggleForm}
               onSubmitted={handleReviewSubmitted}
               className="w-full"
             />
           )}
-        </div>
 
-        {/* Two-column Layout */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {/* Left Column - Summary */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-6 space-y-6">
-              <ReviewsSummary
-                summary={summary || {
-                  totalReviews: 0,
-                  averageRating: 0,
-                  ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-                }}
-                onToggleForm={handleToggleForm}
-                showForm={showForm}
-                enableReviewForm={enableReviewForm}
-              />
-            </div>
-          </div>
-
-          {/* Right Column - Reviews List */}
-          <div className="lg:col-span-2">
-            <div className="space-y-6">
+          {/* Bottom Section - Reviews List */}
+          <div className="space-y-6">
               {/* Filters */}
               {summary?.totalReviews > 0 && (
                 <ReviewsFilters
@@ -328,9 +311,9 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
 
               {/* No reviews state */}
               {(summary?.totalReviews === 0 || !summary) && !isLoading && (
-                <div className="rounded-lg border border-gray-200 bg-gray-50 py-12 text-center dark:border-gray-700 dark:bg-gray-800/50">
+                <div className="rounded-lg border border-gray-200 bg-gray-50 py-12 text-center">
                   <svg
-                    className="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-500"
+                    className="mx-auto mb-4 h-12 w-12 text-gray-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -342,7 +325,7 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
                       d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
                     />
                   </svg>
-                  <p className="mb-2 font-medium text-gray-900 text-lg dark:text-gray-100">
+                  <p className="mb-2 font-medium text-gray-900 text-lg">
                     {labels.noReviews}
                   </p>
                   {enableReviewForm && !showForm && (
@@ -364,12 +347,11 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
                 pagination={pagination}
                 onPageChange={handlePageChange}
                 onImageClick={handleImageClick}
-                maxReviewLength={1000}
               />
 
               {/* Pagination */}
               {enablePagination && (pagination?.totalPages || 0) > 1 && (
-                <div className="border-gray-200 border-t pt-6 dark:border-gray-700">
+                <div className="border-gray-200 border-t pt-6">
                   <ReviewPagination
                     currentPage={pagination?.currentPage || 1}
                     totalPages={pagination?.totalPages || 1}
@@ -383,26 +365,25 @@ export const JudgemeReviewSectionRedesigned = forwardRef<
                   />
                 </div>
               )}
-            </div>
           </div>
         </div>
 
         {/* Reviews Info Footer */}
         {summary?.totalReviews > 0 && (
-          <div className="mt-8 border-gray-200 border-t pt-8 text-center text-gray-600 text-sm dark:border-gray-700 dark:text-gray-400">
+          <div className="mt-8 border-gray-200 border-t pt-8 text-center text-gray-600 text-sm">
             {labels.showingReviews}{" "}
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
+            <span className="font-semibold text-gray-900">
               {((pagination?.currentPage || 1) - 1) * (pagination?.perPage || 10) + 1}
             </span>{" "}
             {labels.ofTotalReviews}{" "}
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
+            <span className="font-semibold text-gray-900">
               {Math.min(
                 (pagination?.currentPage || 1) * (pagination?.perPage || 10),
                 pagination?.totalReviews || 0,
               )}
             </span>{" "}
             {labels.of}{" "}
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
+            <span className="font-semibold text-gray-900">
               {pagination?.totalReviews || 0}
             </span>{" "}
             {(summary?.totalReviews || 0) === 1 ? "review" : "reviews"}

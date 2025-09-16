@@ -6,7 +6,7 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import type { JudgemeReviewsData } from "~/utils/judgeme";
-import ReviewForm from "./review-form";
+import { ReviewForm } from "./review-form";
 import { ReviewList } from "./review-list";
 
 interface JudgemeReviewSectionProps extends SectionProps {

@@ -3,36 +3,84 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/button";
 import { RatingInput } from "./components/rating-input";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import type { ProductQuery } from "storefront-api.generated";
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 
 interface ReviewFormProps extends React.HTMLAttributes<HTMLDivElement> {
-  productId: string;
+  product: ProductQuery["product"];
   onToggle: () => void;
   onSubmitted?: () => void;
 }
 
 export function ReviewForm({
-  productId,
+  product,
   onToggle,
   onSubmitted,
   className,
   ...props
 }: ReviewFormProps) {
   const [rating, setRating] = useState(0);
-  const [formState, setFormState] = useState<FormState>('error');
+  const [formState, setFormState] = useState<FormState>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
+  const submitReviewAPI = usePrefixPathWithLocale(`/api/reviews/${product.handle}`);
 
   useEffect(() => {
     // Reset form when it is opened
     setRating(0);
-    // setFormState('idle');
+    setFormState('idle');
     setErrorMessage('');
     if (formRef.current) {
       formRef.current.reset();
     }
   }, []);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    // Use native form validation
+    if (!event.currentTarget.checkValidity()) {
+      return;
+    }
+    // Check if rating is selected
+    if (rating === 0) {
+      alert('Please select a rating');
+      return;
+    }
+
+    setFormState('submitting');
+    const submitData = new FormData(event.currentTarget);
+    submitData.set("rating", rating.toString());
+    submitData.set("id", product.id);
+
+    try {
+      const response = await fetch(submitReviewAPI, {
+        method: "POST",
+        body: submitData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('👉 --------> - review-form.tsx - result:', result)
+
+      if (result.success) {
+        setFormState('success');
+        onSubmitted?.();
+        formRef.current?.reset();
+        setRating(0);
+      } else {
+        setErrorMessage(result.message || "Failed to submit review. Please try again.");
+        setFormState('error');
+      }
+    } catch (error) {
+      setErrorMessage("Failed to submit review. Please try again.");
+      setFormState('error');
+    }
+  }
 
   return (
     <div
@@ -93,52 +141,7 @@ export function ReviewForm({
         <form
           ref={formRef}
           id="judgeme-review-form"
-          onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-
-            // Use native form validation
-            if (!event.currentTarget.checkValidity()) {
-              return;
-            }
-
-            // Check if rating is selected
-            if (rating === 0) {
-              alert('Please select a rating');
-              return;
-            }
-
-            setFormState('submitting');
-
-            const submitData = new FormData(event.currentTarget);
-            submitData.set("rating", rating.toString());
-            submitData.set("id", productId);
-
-            try {
-              const response = await fetch(window.location.pathname, {
-                method: "POST",
-                body: submitData,
-              });
-
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-
-              const result = await response.json();
-
-              if (result.success) {
-                setFormState('success');
-                onSubmitted?.();
-                formRef.current?.reset();
-                setRating(0);
-              } else {
-                setErrorMessage(result.message || "Failed to submit review. Please try again.");
-                setFormState('error');
-              }
-            } catch (error) {
-              setErrorMessage("Failed to submit review. Please try again.");
-              setFormState('error');
-            }
-          }}
+          onSubmit={handleSubmit}
           className="space-y-6"
         >
           <div className="space-y-2">

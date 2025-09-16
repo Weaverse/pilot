@@ -16,14 +16,7 @@
         "noArrayIndexKey": "off"
       },
       "nursery": {
-        "useConsistentTypeDefinitions": "off",
-        "useSortedClasses": {
-          "level": "on",
-          "fix": "safe",
-          "options": {
-            "functions": ["clsx", "cva", "cn"]
-          }
-        }
+        "useConsistentTypeDefinitions": "off"
       },
       "correctness": {
         "noUnusedVariables": "off",
