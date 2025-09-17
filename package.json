@@ -1,10 +1,30 @@
 {
   "name": "@weaverse/pilot",
-  "private": true,
-  "sideEffects": false,
   "version": "5.6.0",
-  "type": "module",
+  "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
+  "keywords": [
+    "shopify",
+    "hydrogen",
+    "theme",
+    "hydrogen-theme",
+    "weaverse",
+    "ecommerce",
+    "react",
+    "react-router",
+    "typescript",
+    "tailwindcss"
+  ],
+  "license": "MIT",
   "author": "Weaverse",
+  "type": "module",
+  "homepage": "https://pilot.weaverse.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weaverse/pilot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/weaverse/pilot/issues"
+  },
   "scripts": {
     "build": "shopify hydrogen build --codegen",
     "dev": "shopify hydrogen dev --codegen --port 3456",
@@ -45,7 +65,6 @@
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.9.3",
-    "cross-env": "10.0.0",
     "framer-motion": "12.23.12",
     "graphql": "16.11.0",
     "graphql-tag": "2.12.6",
