@@ -1,134 +1,11 @@
-import type { AppLoadContext } from "react-router";
 import type {
-  JudgemeBadgeInternalApiResponse,
-  JudgemeProductData,
-  JudgemeReviewsData,
-  JudgemeStarsRatingApiResponse,
+  JudgemeRatingDistribution,
   JudgemeStarsRatingData,
+  JudgemeWidgetData,
 } from "~/types/judgeme";
 import { constructURL } from "./misc";
 
-const JUDGEME_PRODUCT_API = "https://judge.me/api/v1/products/-1";
 const JUDGEME_REVIEWS_API = "https://judge.me/api/v1/reviews";
-const JUDGEME_BADGE_API = "https://api.judge.me/api/v1/widgets/preview_badge";
-
-export async function getJudgeMeProductReviews({
-  context,
-  productHandle,
-}: {
-  context: AppLoadContext;
-  productHandle: string;
-}) {
-  try {
-    const { weaverse, env } = context;
-    const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
-    if (!(JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN)) {
-      throw new Error(
-        "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.",
-      );
-    }
-    const { fetchWithCache } = weaverse;
-    const { product } = await fetchWithCache<JudgemeProductData>(
-      constructURL(JUDGEME_PRODUCT_API, {
-        handle: productHandle,
-        shop_domain: PUBLIC_STORE_DOMAIN,
-        api_token: JUDGEME_PRIVATE_API_TOKEN,
-      }),
-    );
-    if (!product?.id) {
-      throw new Error("Product not found in Judge.me database.");
-    }
-    const { reviews } = await fetchWithCache<JudgemeReviewsData>(
-      constructURL(JUDGEME_REVIEWS_API, {
-        api_token: JUDGEME_PRIVATE_API_TOKEN,
-        shop_domain: PUBLIC_STORE_DOMAIN,
-        product_id: product?.id,
-        per_page: 2,
-      }),
-    );
-    const totalReviews = reviews.length || 0;
-    const rating = reviews.reduce((a, c) => a + c.rating, 0) / totalReviews;
-    return { rating, totalReviews, reviews };
-  } catch (error) {
-    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
-    console.log("Error fetching Judgeme product reviews", error.message);
-    return { rating: 0, totalReviews: 0, reviews: [] };
-  }
-}
-
-function parseBadgeHtml(badgeHtml: string): JudgemeStarsRatingData {
-  const averageRatingMatch = badgeHtml.match(
-    /data-average-rating=['"]([^'"]+)['"]/,
-  );
-  const numberOfReviewsMatch = badgeHtml.match(
-    /data-number-of-reviews=['"]([^'"]+)['"]/,
-  );
-
-  const averageRating = averageRatingMatch
-    ? Number.parseFloat(averageRatingMatch[1])
-    : 0;
-  const totalReviews = numberOfReviewsMatch
-    ? Number.parseInt(numberOfReviewsMatch[1], 10)
-    : 0;
-
-  return {
-    totalReviews,
-    averageRating,
-    badge: badgeHtml,
-  };
-}
-
-export async function getJudgeMeProductRating({
-  context,
-  productHandle,
-}: {
-  context: AppLoadContext;
-  productHandle: string;
-}): Promise<JudgemeStarsRatingApiResponse> {
-  try {
-    const { weaverse, env } = context;
-    const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
-
-    if (!(JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN)) {
-      return {
-        ok: false,
-        error:
-          "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured",
-      };
-    }
-
-    const { fetchWithCache } = weaverse;
-    const badgeResponse = await fetchWithCache<JudgemeBadgeInternalApiResponse>(
-      constructURL(JUDGEME_BADGE_API, {
-        api_token: JUDGEME_PRIVATE_API_TOKEN,
-        shop_domain: PUBLIC_STORE_DOMAIN,
-        handle: productHandle,
-      }),
-    );
-
-    if (!badgeResponse.badge) {
-      return {
-        ok: true,
-        data: { totalReviews: 0, averageRating: 0, badge: "" },
-      };
-    }
-
-    const parsedData = parseBadgeHtml(badgeResponse.badge);
-    return {
-      ok: true,
-      data: parsedData,
-    };
-  } catch (error) {
-    console.error(
-      "Error fetching Judge.me badge data:",
-      error?.message || error,
-    );
-    return {
-      ok: false,
-      error: error?.message || "Failed to fetch Judge.me badge data",
-    };
-  }
-}
 
 export async function createJudgeMeReview({
   formData,
@@ -162,4 +39,50 @@ function formDataToObject(formData: FormData) {
     data[key] = value;
   }
   return data;
+}
+
+const WIDGET_REGEX =
+  /class=['"]jdgm-rev-widg['"][^>]*data-average-rating=['"]([^'"]*)['"]/;
+const REVIEWS_REGEX = /data-number-of-reviews=['"]([^'"]*)['"]/;
+const HISTOGRAM_ROW_REGEX =
+  /class=['"]jdgm-histogram__row['"][^>]*data-rating=['"](\d+)['"][^>]*data-frequency=['"](\d+)['"][^>]*data-percentage=['"](\d+)['"][^>]*>/g;
+const LAST_PAGE_REGEX =
+  /class=['"]jdgm-paginate__page jdgm-paginate__last-page['"][^>]*data-page=['"](\d+)['"][^>]*>/;
+
+export function parseJudgemeWidgetHTML(html: string): JudgemeWidgetData {
+  const ratingDistribution: JudgemeRatingDistribution[] = [];
+  let match: RegExpExecArray | null;
+  match = HISTOGRAM_ROW_REGEX.exec(html);
+  while (match !== null) {
+    const rating = Number.parseInt(match[1], 10);
+    const frequency = Number.parseInt(match[2], 10);
+    const percentage = Number.parseInt(match[3], 10);
+    ratingDistribution.push({
+      rating,
+      frequency,
+      percentage,
+    });
+    match = HISTOGRAM_ROW_REGEX.exec(html);
+  }
+
+  return {
+    averageRating: Number.parseFloat(html.match(WIDGET_REGEX)?.[1] || "0"),
+    totalReviews: Number.parseInt(html.match(REVIEWS_REGEX)?.[1] || "0", 10),
+    ratingDistribution: ratingDistribution.sort((a, b) => b.rating - a.rating),
+    lastPage: Number.parseInt(html.match(LAST_PAGE_REGEX)?.[1] || "1", 10),
+  };
+}
+
+const AVG_RATING_REGEX = /data-average-rating=['"]([^'"]+)['"]/;
+const NUM_REVIEWS_REGEX = /data-number-of-reviews=['"]([^'"]+)['"]/;
+
+export function parseBadgeHtml(html: string): JudgemeStarsRatingData {
+  return {
+    totalReviews: Number.parseInt(
+      html.match(NUM_REVIEWS_REGEX)?.[1] || "0",
+      10,
+    ),
+    averageRating: Number.parseFloat(html.match(AVG_RATING_REGEX)?.[1] || "0"),
+    badge: html,
+  };
 }
