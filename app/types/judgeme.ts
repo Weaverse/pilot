@@ -4,21 +4,11 @@ export interface JudgemeStarsRatingData {
   badge: string;
 }
 
-export type JudgemeStarsRatingApiResponse =
-  | {
-      ok: true;
-      data: JudgemeStarsRatingData;
-    }
-  | {
-      ok: false;
-      error: string;
-    };
-
-export type JudgemeProductData = {
-  product: {
-    id: string;
-    handle: string;
-  };
+export type JudgemeProduct = {
+  id: number;
+  external_id: number;
+  handle: string;
+  [key: string]: unknown;
 };
 
 export type JudgeMeReviewType = {
@@ -44,12 +34,22 @@ export type JudgeMeReviewType = {
 };
 
 export type JudgemeReviewsData = {
-  rating: number;
+  averageRating: number;
   totalReviews: number;
+  ratingDistribution: JudgemeRatingDistribution[];
+  currentPage: number;
+  lastPage: number;
+  perPage: number;
   reviews: JudgeMeReviewType[];
 };
 
-export type JudgemeBadgeInternalApiResponse = {
-  product_external_id: number;
-  badge: string;
+export type JudgemeRatingDistribution = {
+  rating: number;
+  frequency: number;
+  percentage: number;
 };
+
+export type JudgemeWidgetData = Pick<
+  JudgemeReviewsData,
+  "averageRating" | "totalReviews" | "ratingDistribution" | "lastPage"
+>;
