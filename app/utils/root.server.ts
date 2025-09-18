@@ -72,7 +72,6 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
         language: storefront.i18n.language,
       },
     })
-    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     .catch(console.error);
 
   invariant(data, "No data returned from Shopify API");
@@ -154,7 +153,6 @@ function parseMenu(
   customPrefixes = {},
 ): EnhancedMenu | null {
   if (!menu?.items) {
-    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     console.warn("Invalid menu passed to parseMenu");
     return null;
   }
@@ -180,7 +178,6 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
     | EnhancedMenu["items"][number]["items"][0]
     | null => {
     if (!(item?.url && item?.type)) {
-      // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
       console.warn("Invalid menu item.  Must include a url and type.");
       return null;
     }
@@ -258,21 +255,21 @@ function resolveToFromType(
     ...customPrefixes,
   };
 
-  switch (true) {
+  switch (type) {
     // special cases
-    case type === "FRONTPAGE":
+    case "FRONTPAGE":
       return "/";
-    case type === "ARTICLE": {
+    case "ARTICLE": {
       const blogHandle = pathParts.pop();
       return routePrefix.BLOG
         ? `/${routePrefix.BLOG}/${blogHandle}/${handle}/`
         : `/${blogHandle}/${handle}/`;
     }
-    case type === "COLLECTIONS":
+    case "COLLECTIONS":
       return `/${routePrefix.COLLECTIONS}`;
-    case type === "SEARCH":
+    case "SEARCH":
       return `/${routePrefix.SEARCH}`;
-    case type === "CATALOG":
+    case "CATALOG":
       return `/${routePrefix.CATALOG}`;
     // common cases: BLOG, PAGE, COLLECTION, PRODUCT, SHOP_POLICY, HTTP
     default:
