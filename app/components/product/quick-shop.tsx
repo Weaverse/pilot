@@ -20,7 +20,6 @@ import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
-import type { ProductData } from "~/routes/($locale).api.product";
 import { ProductBadges } from "./badges";
 import { VariantPrices } from "./variant-prices";
 import { VariantSelector } from "./variant-selector";
@@ -132,12 +131,12 @@ export function QuickShopTrigger({
   panelType?: "modal" | "drawer";
 }) {
   const [open, setOpen] = useState(false);
-  const { load, data } = useFetcher<ProductData>();
+  const { load, data } = useFetcher<{ product: ProductQuery['product'] }>();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
   useEffect(() => {
     if (open && !data) {
-      load(`/api/product?handle=${productHandle}`);
+      load(`/api/product/${productHandle}`);
     }
   }, [open]);
 
@@ -153,7 +152,7 @@ export function QuickShopTrigger({
               ? "right-4 rounded-full shadow-xl"
               : "inset-x-4 shadow-xs",
             showOnHover &&
-              "opacity-0 transition-opacity group-hover:opacity-100",
+            "opacity-0 transition-opacity group-hover:opacity-100",
           )}
         >
           {buttonType === "icon" ? (
@@ -204,7 +203,7 @@ export function QuickShopTrigger({
               "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) overflow-hidden",
               "animate-slide-up bg-white shadow-sm",
               panelType === "drawer" &&
-                "mr-0 ml-auto min-h-screen max-w-md p-4",
+              "mr-0 ml-auto min-h-screen max-w-md p-4",
             )}
           >
             <VisuallyHidden.Root asChild>

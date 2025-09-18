@@ -36,7 +36,7 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
     const [isLoading, setIsLoading] = useState(false);
     const { product } = useLoaderData<typeof productRouteLoader>();
     const handle = product?.handle;
-    const api = usePrefixPathWithLocale(`/api/reviews/${handle}?type=rating`);
+    const api = usePrefixPathWithLocale(`/api/product/${handle}/reviews?type=rating`);
 
     useEffect(() => {
       if (!handle) {
@@ -59,8 +59,8 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
             setError(errorResponse.error);
           }
         })
-        .catch((error) => {
-          console.error("Error fetching Judge.me stars rating data:", error);
+        .catch((err) => {
+          console.error("Error fetching Judge.me stars rating data:", err);
           setError("Failed to fetch Judge.me stars rating data");
         })
         .finally(() => {
