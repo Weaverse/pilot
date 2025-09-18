@@ -5,7 +5,6 @@ import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import type {
-  JudgemeStarsRatingApiResponse,
   JudgemeStarsRatingData,
 } from "~/types/judgeme";
 
@@ -31,48 +30,41 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
       noReviewsText = "No reviews",
       ...rest
     } = props;
-    const [error, setError] = useState<string | null>(null);
+    const [status, setStatus] = useState<"idle" | "loading" | "error" | "ok">("idle");
     const [data, setData] = useState<JudgemeStarsRatingData | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
     const { product } = useLoaderData<typeof productRouteLoader>();
     const handle = product?.handle;
-    const api = usePrefixPathWithLocale(`/api/product/${handle}/reviews?type=rating`);
+    const ratingAPI = usePrefixPathWithLocale(`/api/product/${handle}/reviews?type=rating`);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: only fetch when product handle change
     useEffect(() => {
       if (!handle) {
         return;
       }
 
-      setIsLoading(true);
-      fetch(api)
+      setStatus("loading");
+      fetch(ratingAPI)
         .then((res) => {
           if (res.ok) {
             return res.json();
           }
           throw new Error("Response not ok");
         })
-        .then((response: JudgemeStarsRatingApiResponse) => {
-          if (response.ok) {
-            setData(response.data);
-          } else {
-            const errorResponse = response as { ok: false; error: string };
-            setError(errorResponse.error);
-          }
+        .then((d: JudgemeStarsRatingData) => {
+          setData(d);
+          setStatus("ok");
         })
         .catch((err) => {
           console.error("Error fetching Judge.me stars rating data:", err);
-          setError("Failed to fetch Judge.me stars rating data");
+          setStatus("error");
         })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }, [handle, api]);
+    }, [handle]);
 
     if (!handle) {
       return null;
     }
 
-    if (isLoading || !data) {
+    if (status === "loading") {
       return (
         <div {...rest} ref={ref}>
           <div className="space-x-2">
@@ -85,7 +77,7 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
       );
     }
 
-    if (error) {
+    if (status === "error" || !data) {
       return (
         <div {...rest} ref={ref}>
           <div className="text-gray-500">Unable to load reviews</div>
