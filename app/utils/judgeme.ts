@@ -1,46 +1,12 @@
 import type { AppLoadContext } from "react-router";
-import type { JudgemeStarsRatingApiResponse, JudgemeStarsRatingData } from "~/types/judgeme";
+import type {
+  JudgemeBadgeInternalApiResponse,
+  JudgemeProductData,
+  JudgemeReviewsData,
+  JudgemeStarsRatingApiResponse,
+  JudgemeStarsRatingData,
+} from "~/types/judgeme";
 import { constructURL } from "./misc";
-
-type JudgemeProductData = {
-  product: {
-    id: string;
-    handle: string;
-  };
-};
-
-type JudgeMeReviewType = {
-  id: string;
-  title: string;
-  created_at: string;
-  body: string;
-  rating: number;
-  reviewer: {
-    id: number;
-    email: string;
-    name: string;
-    phone: string;
-  };
-  pictures: {
-    urls: {
-      original: string;
-      small: string;
-      compact: string;
-      huge: string;
-    };
-  }[];
-};
-
-export type JudgemeReviewsData = {
-  rating: number;
-  totalReviews: number;
-  reviews: JudgeMeReviewType[];
-};
-
-type JudgemeBadgeInternalApiResponse = {
-  product_external_id: number;
-  badge: string;
-};
 
 const JUDGEME_PRODUCT_API = "https://judge.me/api/v1/products/-1";
 const JUDGEME_REVIEWS_API = "https://judge.me/api/v1/reviews";
@@ -56,8 +22,10 @@ export async function getJudgeMeProductReviews({
   try {
     const { weaverse, env } = context;
     const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
-    if (!JUDGEME_PRIVATE_API_TOKEN || !PUBLIC_STORE_DOMAIN) {
-      throw new Error("JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.");
+    if (!(JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN)) {
+      throw new Error(
+        "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.",
+      );
     }
     const { fetchWithCache } = weaverse;
     const { product } = await fetchWithCache<JudgemeProductData>(
@@ -75,6 +43,7 @@ export async function getJudgeMeProductReviews({
         api_token: JUDGEME_PRIVATE_API_TOKEN,
         shop_domain: PUBLIC_STORE_DOMAIN,
         product_id: product?.id,
+        per_page: 2,
       }),
     );
     const totalReviews = reviews.length || 0;
@@ -88,11 +57,19 @@ export async function getJudgeMeProductReviews({
 }
 
 function parseBadgeHtml(badgeHtml: string): JudgemeStarsRatingData {
-  const averageRatingMatch = badgeHtml.match(/data-average-rating=['"]([^'"]+)['"]/);
-  const numberOfReviewsMatch = badgeHtml.match(/data-number-of-reviews=['"]([^'"]+)['"]/);
+  const averageRatingMatch = badgeHtml.match(
+    /data-average-rating=['"]([^'"]+)['"]/,
+  );
+  const numberOfReviewsMatch = badgeHtml.match(
+    /data-number-of-reviews=['"]([^'"]+)['"]/,
+  );
 
-  const averageRating = averageRatingMatch ? Number.parseFloat(averageRatingMatch[1]) : 0;
-  const totalReviews = numberOfReviewsMatch ? Number.parseInt(numberOfReviewsMatch[1], 10) : 0;
+  const averageRating = averageRatingMatch
+    ? Number.parseFloat(averageRatingMatch[1])
+    : 0;
+  const totalReviews = numberOfReviewsMatch
+    ? Number.parseInt(numberOfReviewsMatch[1], 10)
+    : 0;
 
   return {
     totalReviews,
@@ -112,10 +89,11 @@ export async function getJudgeMeProductRating({
     const { weaverse, env } = context;
     const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
 
-    if (!JUDGEME_PRIVATE_API_TOKEN || !PUBLIC_STORE_DOMAIN) {
+    if (!(JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN)) {
       return {
         ok: false,
-        error: "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured",
+        error:
+          "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured",
       };
     }
 
@@ -141,8 +119,10 @@ export async function getJudgeMeProductRating({
       data: parsedData,
     };
   } catch (error) {
-    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
-    console.error("Error fetching Judge.me badge data:", error?.message || error);
+    console.error(
+      "Error fetching Judge.me badge data:",
+      error?.message || error,
+    );
     return {
       ok: false,
       error: error?.message || "Failed to fetch Judge.me badge data",
