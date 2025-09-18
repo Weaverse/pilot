@@ -29,19 +29,20 @@ import * as ImageWithText from "~/sections/image-with-text";
 import * as ImageWithTextContent from "~/sections/image-with-text/content";
 import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as JudgemeReview from "~/sections/judgeme-reviews";
+import * as JudgemeReviewSummary from "~/sections/judgeme-reviews/review-summary";
 import * as MainProduct from "~/sections/main-product";
 import * as JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
-import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
-import * as ProductBadges from "~/sections/main-product/product-badges";
-import * as ProductVendor from "~/sections/main-product/product-vendor";
-import * as ProductTitle from "~/sections/main-product/product-title";
-import * as ProductPrices from "~/sections/main-product/product-prices";
-import * as ProductSummary from "~/sections/main-product/product-summary";
-import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
-import * as ProductVariantSelector from "~/sections/main-product/product-variant-selector";
-import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
 import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
+import * as ProductBadges from "~/sections/main-product/product-badges";
+import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
+import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
 import * as ProductCollapsibleDetails from "~/sections/main-product/product-collapsible-details";
+import * as ProductPrices from "~/sections/main-product/product-prices";
+import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
+import * as ProductSummary from "~/sections/main-product/product-summary";
+import * as ProductTitle from "~/sections/main-product/product-title";
+import * as ProductVariantSelector from "~/sections/main-product/product-variant-selector";
+import * as ProductVendor from "~/sections/main-product/product-vendor";
 import * as MapSection from "~/sections/map";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
@@ -127,6 +128,7 @@ export const components: HydrogenComponent[] = [
   SingleProduct,
   JudgemeStarsRating,
   JudgemeReview,
+  JudgemeReviewSummary,
   OurTeam,
   OurTeamMembers,
   SlideShow,
