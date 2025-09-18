@@ -13,6 +13,7 @@
       "suspicious": {
         "noExplicitAny": "off",
         "useAwait": "off",
+        "noConsole": "off",
         "noArrayIndexKey": "off"
       },
       "nursery": {
