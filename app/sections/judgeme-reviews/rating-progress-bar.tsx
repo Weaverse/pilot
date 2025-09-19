@@ -7,7 +7,7 @@ export function RatingProgressBar({
   percentage,
 }: JudgemeRatingDistribution) {
   return (
-    <div className="grid grid-cols-[35px_1fr_70px] gap-4 py-1 transition-colors">
+    <div className="grid grid-cols-[35px_1fr_80px] gap-4 py-1 transition-colors">
       {/* Star icon */}
       <div className="flex items-center flex-shrink-0 gap-1">
         <span className="ml-1 text-gray-700">{rating}</span>

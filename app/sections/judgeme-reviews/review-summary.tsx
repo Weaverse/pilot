@@ -17,7 +17,7 @@ export default function JudgemeReviewSummary(
     <div ref={ref} {...rest} className="py-4">
       {status === "ok" && data ? (
         <div className="space-y-12">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr_2fr]">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_2fr_1fr]">
             {/* Column 1 - Main Summary */}
             <div className="flex flex-col items-center justify-center space-y-3">
               <div className="flex flex-col items-center gap-2">
@@ -36,8 +36,8 @@ export default function JudgemeReviewSummary(
             </div>
 
             {/* Column 2 - Ratings Breakdown */}
-            <div className="border-gray-200 md:border-x px-8 py-2">
-              <div className="w-full space-y-1">
+            <div className="border-gray-200 md:border-x px-12 py-2">
+              <div className="w-full space-y-0.5">
                 {data.ratingDistribution.map(
                   ({ rating, frequency, percentage }) => (
                     <div key={rating} className="w-full">
