@@ -3,43 +3,6 @@ import type {
   JudgemeStarsRatingData,
   JudgemeWidgetData,
 } from "~/types/judgeme";
-import { constructURL } from "./misc";
-
-const JUDGEME_REVIEWS_API = "https://judge.me/api/v1/reviews";
-
-export async function createJudgeMeReview({
-  formData,
-  shopDomain,
-  apiToken,
-}: {
-  shopDomain: string;
-  apiToken: string;
-  formData: FormData;
-}) {
-  return await fetch(
-    constructURL(JUDGEME_REVIEWS_API, {
-      api_token: apiToken,
-      shop_domain: shopDomain,
-    }),
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        shop_domain: shopDomain,
-        platform: "shopify",
-        ...formDataToObject(formData),
-      }),
-    },
-  );
-}
-
-function formDataToObject(formData: FormData) {
-  const data = {};
-  for (const [key, value] of formData.entries()) {
-    data[key] = value;
-  }
-  return data;
-}
 
 const WIDGET_REGEX =
   /class=['"]jdgm-rev-widg['"][^>]*data-average-rating=['"]([^'"]*)['"]/;

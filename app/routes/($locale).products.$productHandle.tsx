@@ -4,12 +4,7 @@ import {
   getSeoMeta,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
-import type {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  MetaArgs,
-} from "@shopify/remix-oxygen";
-import { data } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import { useLoaderData } from "react-router";
@@ -21,7 +16,6 @@ import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import { createJudgeMeReview } from "~/utils/judgeme";
 import { getRecommendedProducts } from "~/utils/product";
 import {
   redirectIfCombinedListing,
@@ -73,27 +67,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     recommended,
     selectedOptions,
   };
-}
-
-export async function action({
-  request,
-  context: { env },
-}: ActionFunctionArgs) {
-  try {
-    invariant(
-      env.JUDGEME_PRIVATE_API_TOKEN,
-      "Missing `JUDGEME_PRIVATE_API_TOKEN`",
-    );
-
-    const response = await createJudgeMeReview({
-      formData: await request.formData(),
-      apiToken: env.JUDGEME_PRIVATE_API_TOKEN,
-      shopDomain: env.PUBLIC_STORE_DOMAIN,
-    });
-    return response;
-  } catch (error) {
-    return data({ error: "Failed to create review!" }, { status: 500 });
-  }
 }
 
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {

@@ -16,6 +16,14 @@ export function constructURL(
   return _url.toString();
 }
 
+export function formDataToObject(formData: FormData) {
+  const data = {};
+  for (const [key, value] of formData.entries()) {
+    data[key] = value;
+  }
+  return data;
+}
+
 export function isValidColor(color: string) {
   const c = colord(color);
   return c.isValid();
