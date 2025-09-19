@@ -1,6 +1,9 @@
+import { ArrowLeftIcon, ArrowRightIcon, XIcon } from "@phosphor-icons/react";
+import { useState } from "react";
+import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { StarRating } from "~/components/star-rating";
-import type { JudgeMeReviewType } from "~/types/judgeme";
+import type { JudgeMeReviewType, JudgemeReviewImage } from "~/types/judgeme";
 import { cn } from "~/utils/cn";
 import { formatDate } from "~/utils/misc";
 
@@ -22,6 +25,8 @@ export function ReviewItem({
   review: JudgeMeReviewType;
   className?: string;
 }) {
+  const [selectedImage, setSelectedImage] = useState<JudgemeReviewImage>(null);
+
   return (
     <div
       className={cn(
@@ -59,12 +64,14 @@ export function ReviewItem({
         {review.pictures && review.pictures.length > 0 && (
           <div data-testid="review-images" className="space-y-3">
             <div className="flex flex-wrap gap-3">
-              {review.pictures.map((image, index) => (
+              {review.pictures.map((image, ind) => (
                 <button
                   type="button"
-                  key={image.urls.original}
+                  key={image.urls.small}
                   className="group/image relative overflow-hidden border border-gray-200 transition-all duration-200 hover:border-gray-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                  // onClick={() => onImageClick(image, review.pictures)}
+                  onClick={() => {
+                    setSelectedImage(image);
+                  }}
                 >
                   <Image
                     src={
@@ -72,7 +79,7 @@ export function ReviewItem({
                       image.urls.compact ||
                       image.urls.original
                     }
-                    alt={`Review image ${index + 1}`}
+                    alt={`Review image ${ind + 1}`}
                     className="h-16 w-16 object-cover transition-transform duration-200"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-200 group-hover/image:bg-black/50">
@@ -88,6 +95,103 @@ export function ReviewItem({
         <p className="flex-shrink-0 text-gray-500 text-sm truncate">
           {formatDate(review.created_at)}
         </p>
+      </div>
+      <ReviewImagesModal
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+        review={review}
+      />
+    </div>
+  );
+}
+
+export function ReviewImagesModal({
+  selectedImage,
+  setSelectedImage,
+  review,
+}: {
+  selectedImage: JudgemeReviewImage;
+  setSelectedImage: (image: JudgemeReviewImage) => void;
+  review: JudgeMeReviewType;
+}) {
+  if (!selectedImage) {
+    return null;
+  }
+
+  const images = review.pictures || [];
+  const imageIndex = images.findIndex(
+    (img) => img.urls.original === selectedImage.urls.original,
+  );
+  const nextImage = images[(imageIndex + 1) % images.length];
+  const prevImage = images[(imageIndex - 1 + images.length) % images.length];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/75"
+      onClick={() => setSelectedImage(null)}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Review image gallery"
+    >
+      <div className="relative flex h-full w-full items-center justify-center">
+        <div
+          className="max-h-[90vh] max-w-[90vw]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close button */}
+          <Button
+            variant="outline"
+            onClick={() => setSelectedImage(null)}
+            className="absolute top-6 right-6 p-2 text-white"
+            aria-label="Close image"
+          >
+            <XIcon className="h-5 w-5" />
+          </Button>
+
+          {/* Previous button */}
+          {selectedImage.allImages.length > 1 && (
+            <Button
+              variant="secondary"
+              onClick={onPrevious}
+              className="-translate-y-1/2 absolute top-1/2 left-4 p-2"
+              aria-label="Previous image"
+            >
+              <ArrowLeftIcon className="h-5 w-5" />
+            </Button>
+          )}
+
+          {/* Image */}
+          <Image
+            src={
+              selectedImage.urls.huge ||
+              selectedImage.urls.original ||
+              selectedImage.urls.small
+            }
+            alt="Review image"
+            className="max-h-[85vh] max-w-[85vw] object-contain"
+            width="auto"
+            height="auto"
+          />
+
+          {/* Next button */}
+          {images.length > 1 && (
+            <Button
+              variant="secondary"
+              onClick={onNext}
+              className="-translate-y-1/2 absolute top-1/2 right-4 p-2"
+              aria-label="Next image"
+            >
+              <ArrowRightIcon className="h-5 w-5" />
+            </Button>
+          )}
+
+          {/* Image counter */}
+          {images.length > 1 && (
+            <div className="-translate-x-1/2 absolute bottom-4 left-1/2 rounded-full bg-black bg-opacity-50 px-3 py-1 text-white">
+              {imageIndex + 1} / {images.length}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
