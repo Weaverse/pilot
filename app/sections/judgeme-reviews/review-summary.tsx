@@ -36,7 +36,7 @@ export default function JudgemeReviewSummary(
             </div>
 
             {/* Column 2 - Ratings Breakdown */}
-            <div className="border-gray-200 md:border-x px-12 py-2">
+            <div className="border-gray-200 md:border-x px-8 md:px-12 py-2">
               <div className="w-full space-y-0.5">
                 {data.ratingDistribution.map(
                   ({ rating, frequency, percentage }) => (
