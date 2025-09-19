@@ -16,7 +16,7 @@ export default function JudgemeReviewSummary(
   return (
     <div ref={ref} {...rest} className="py-4">
       {status === "ok" && data ? (
-        <div className="space-y-8">
+        <div className="space-y-12">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr_2fr]">
             {/* Column 1 - Main Summary */}
             <div className="flex flex-col items-center justify-center space-y-3">
@@ -36,7 +36,7 @@ export default function JudgemeReviewSummary(
             </div>
 
             {/* Column 2 - Ratings Breakdown */}
-            <div className="border-gray-200 border-r border-l px-8 py-2">
+            <div className="border-gray-200 md:border-x px-8 py-2">
               <div className="w-full space-y-1">
                 {data.ratingDistribution.map(
                   ({ rating, frequency, percentage }) => (
@@ -53,7 +53,7 @@ export default function JudgemeReviewSummary(
             </div>
 
             {/* Column 3 - Write Review Button */}
-            <div className="flex items-center justify-center px-6">
+            <div className="flex items-center justify-center px-8">
               <Button
                 variant={showForm ? "outline" : "primary"}
                 onClick={() => setShowForm(!showForm)}
@@ -65,12 +65,7 @@ export default function JudgemeReviewSummary(
               </Button>
             </div>
           </div>
-          {showForm && (
-            <ReviewForm
-              closeForm={() => setShowForm(false)}
-              className="w-full"
-            />
-          )}
+          <ReviewForm showForm={showForm} setShowForm={setShowForm} />
         </div>
       ) : status === "loading" ? (
         <div className="space-y-8">
