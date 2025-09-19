@@ -2,7 +2,9 @@ import { SealCheckIcon, XIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
+import { Image } from "~/components/image";
 import { StarRating } from "~/components/star-rating";
+import { formatDate } from "~/utils/misc";
 
 export type AliReview = {
   id: number;
@@ -110,8 +112,7 @@ export function ReviewItem(props: ReviewItemProps) {
                 }
               }}
             >
-              {/** biome-ignore lint/performance/noImgElement: <explanation> --- IGNORE --- */}
-              <img
+              <Image
                 className="h-full w-full object-cover object-center"
                 src={media.url}
                 alt="Review media"
@@ -152,18 +153,4 @@ function ReviewMediaPreview(props: {
     );
   }
   return null;
-}
-
-function formatDate(date: string) {
-  const dateObj = new Date(date);
-  const dateStr = dateObj.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  const timeStr = dateObj.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-  });
-  return `${dateStr} at ${timeStr}`;
 }
