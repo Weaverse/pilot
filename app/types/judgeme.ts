@@ -17,12 +17,23 @@ export type JudgeMeReviewType = {
   created_at: string;
   body: string;
   rating: number;
+  product_external_id: number;
   reviewer: {
     id: number;
     email: string;
     name: string;
     phone: string;
+    accepts_marketing: boolean;
   };
+  source: string;
+  curated: boolean;
+  published: boolean;
+  hidden: boolean;
+  verified: boolean;
+  featured: boolean;
+  pinned: boolean;
+  has_published_pictures: boolean;
+  has_published_videos: boolean;
   pictures: {
     urls: {
       original: string;
@@ -30,7 +41,9 @@ export type JudgeMeReviewType = {
       compact: string;
       huge: string;
     };
+    hidden: boolean;
   }[];
+  ip_address: string;
 };
 
 export type JudgemeReviewsData = {
