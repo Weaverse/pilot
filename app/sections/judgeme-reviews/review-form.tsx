@@ -21,6 +21,7 @@ export function ReviewForm({
   className,
 }: ReviewFormProps) {
   const { product } = useLoaderData<typeof productRouteLoader>();
+  const [rating, setRating] = useState(0);
   const [formState, setFormState] = useState<FormState>("idle");
   const formRef = useRef<HTMLFormElement>(null);
   const submitReviewAPI = usePrefixPathWithLocale(
@@ -28,6 +29,7 @@ export function ReviewForm({
   );
 
   function resetForm() {
+    setRating(0);
     setFormState("idle");
     formRef.current?.reset();
   }
@@ -36,9 +38,7 @@ export function ReviewForm({
     ev.preventDefault();
 
     // Check if rating is selected first
-    const formData = new FormData(ev.currentTarget);
-    const rating = formData.get("rating");
-    if (!rating || rating === "0") {
+    if (rating === 0) {
       alert("Please select a rating");
       return;
     }
@@ -49,7 +49,10 @@ export function ReviewForm({
     }
 
     setFormState("submitting");
-    fetch(submitReviewAPI, { method: "POST", body: formData })
+    fetch(submitReviewAPI, {
+      method: "POST",
+      body: new FormData(ev.currentTarget),
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Response not ok");
@@ -146,7 +149,13 @@ export function ReviewForm({
         />
 
         {/* Rating */}
-        <RatingInput label="Rating" required name="rating" />
+        <RatingInput
+          label="Rating"
+          required
+          name="rating"
+          rating={rating}
+          onRatingChange={setRating}
+        />
 
         {/* Name */}
         <div className="space-y-2">

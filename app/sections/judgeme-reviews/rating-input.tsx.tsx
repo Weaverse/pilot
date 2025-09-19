@@ -6,16 +6,17 @@ interface RatingInputProps {
   label: string;
   required?: boolean;
   name?: string;
-  defaultRating?: number;
+  rating: number;
+  onRatingChange: (rating: number) => void;
 }
 
 export function RatingInput({
   label,
   required,
   name = "rating",
-  defaultRating = 0,
+  rating,
+  onRatingChange,
 }: RatingInputProps) {
-  const [rating, setRating] = useState(defaultRating);
   const [hoverRating, setHoverRating] = useState(0);
 
   return (
@@ -34,7 +35,7 @@ export function RatingInput({
             key={value}
             type="button"
             id={`judgeme-rating-${value}`}
-            onClick={() => setRating(value)}
+            onClick={() => onRatingChange(value)}
             onMouseEnter={() => setHoverRating(value)}
             onMouseLeave={() => setHoverRating(0)}
             className={cn(
