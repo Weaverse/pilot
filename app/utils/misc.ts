@@ -24,6 +24,20 @@ export function formDataToObject(formData: FormData) {
   return data;
 }
 
+export function formatDate(date: string) {
+  const dateObj = new Date(date);
+  const dateStr = dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  const timeStr = dateObj.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+  });
+  return `${dateStr} at ${timeStr}`;
+}
+
 export function isValidColor(color: string) {
   const c = colord(color);
   return c.isValid();
