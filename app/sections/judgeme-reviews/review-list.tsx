@@ -1,58 +1,25 @@
-import { Fragment, useState } from "react";
-import { StarRating } from "~/components/star-rating";
-import type { JudgemeReviewsData } from "~/utils/judgeme";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { useJudgemeStore } from ".";
+import { ReviewItem } from "./review-item";
 
-const REVIEWS_PER_PAGE = 5;
-
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US");
-}
-
-export function ReviewList({
-  reviews: reviewsData,
-}: {
-  reviews: JudgemeReviewsData;
-}) {
-  const [page, setPage] = useState(0);
-  const pageNumber = Math.ceil(reviewsData.reviews.length / REVIEWS_PER_PAGE);
-
-  const reviews = reviewsData.reviews.slice(
-    page * REVIEWS_PER_PAGE,
-    (page + 1) * REVIEWS_PER_PAGE,
-  );
+export default function ReviewList(
+  props: HydrogenComponentProps & { ref: React.Ref<HTMLDivElement> },
+) {
+  const { ref, ...rest } = props;
+  const { status, data } = useJudgemeStore();
+  // const [page, setPage] = useState(0);
+  // const pageNumber = Math.ceil(data.reviews.length / REVIEWS_PER_PAGE);
 
   return (
-    <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
-      <div className="flex flex-col gap-6">
-        <span className="font-bold text-lg uppercase">
-          Reviews ({reviewsData.totalReviews})
-        </span>
-        {reviews.map(({ id, rating, reviewer, title, created_at, body }) => (
-          <Fragment key={id}>
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="flex w-full flex-col gap-4 md:w-1/4">
-                <div className="flex items-center gap-0.5">
-                  <StarRating rating={rating} />
-                </div>
-                <div className="flex flex-col">
-                  <p className="font-semibold">{reviewer.name}</p>
-                  <p>{reviewer.email}</p>
-                </div>
-              </div>
-              <div className="flex w-full flex-col gap-4 md:w-3/4">
-                <div className="flex items-center justify-between">
-                  <p className="font-bold">{title}</p>
-                  <p>{formatDate(created_at)}</p>
-                </div>
-                <p className="line-clamp-4 font-normal text-base">{body}</p>
-              </div>
-            </div>
-            <hr className="border-line-subtle border-t" />
-          </Fragment>
-        ))}
-      </div>
-      {pageNumber > 1 && (
+    <div ref={ref} {...rest}>
+      {status === "ok" && data?.reviews?.length ? (
+        <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
+          <div className="space-y-8 divide-y divide-gray-200">
+            {data.reviews.map((review) => (
+              <ReviewItem key={review.id} review={review} className="pb-8" />
+            ))}
+          </div>
+          {/* {pageNumber > 1 && (
         <div className="flex justify-center gap-2">
           {Array.from({ length: pageNumber }, (_, i) => (
             <button
@@ -66,7 +33,18 @@ export function ReviewList({
             </button>
           ))}
         </div>
-      )}
+      )} */}
+        </div>
+      ) : status === "loading" ? (
+        <div>Loading reviews...</div>
+      ) : null}
     </div>
   );
 }
+
+export const schema = createSchema({
+  type: "judgeme-reviews--list",
+  title: "Reviews list",
+  settings: [],
+  presets: {},
+});
