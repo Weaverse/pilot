@@ -11,6 +11,16 @@ export type JudgemeProduct = {
   [key: string]: unknown;
 };
 
+export type JudgemeReviewImage = {
+  urls: {
+    original: string;
+    small: string;
+    compact: string;
+    huge: string;
+  };
+  hidden: boolean;
+};
+
 export type JudgeMeReviewType = {
   id: string;
   title: string;
@@ -34,15 +44,7 @@ export type JudgeMeReviewType = {
   pinned: boolean;
   has_published_pictures: boolean;
   has_published_videos: boolean;
-  pictures: {
-    urls: {
-      original: string;
-      small: string;
-      compact: string;
-      huge: string;
-    };
-    hidden: boolean;
-  }[];
+  pictures: JudgemeReviewImage[];
   ip_address: string;
 };
 
