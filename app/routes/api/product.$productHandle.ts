@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "react-router";
+import type { ActionFunction, LoaderFunction } from "react-router";
 import { data } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -9,7 +9,7 @@ import type {
   JudgemeWidgetData,
 } from "~/types/judgeme";
 import { parseBadgeHtml, parseJudgemeWidgetHTML } from "~/utils/judgeme";
-import { constructURL } from "~/utils/misc";
+import { constructURL, formDataToObject } from "~/utils/misc";
 
 const JUDGEME_PRODUCT_API = "https://judge.me/api/v1/products/-1";
 const JUDGEME_BADGE_API = "https://api.judge.me/api/v1/widgets/preview_badge";
@@ -117,7 +117,48 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     );
     return data({ shop, product, storeDomain: shop.primaryDomain.url });
   } catch (err) {
-    console.error("[API Error]", err);
+    console.error("[Error in product API loader]", err);
+    return data(
+      { error: err?.message || err?.toString() || "Unknown API error" },
+      { status: 500 },
+    );
+  }
+};
+
+export const action: ActionFunction = async ({ request, context, params }) => {
+  try {
+    const { env } = context;
+    const { productHandle } = params;
+
+    invariant(productHandle, "Missing product handle.");
+
+    const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
+
+    invariant(
+      JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN,
+      "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.",
+    );
+
+    const formData = await request.formData();
+    const response = await fetch(
+      constructURL(JUDGEME_REVIEWS_API, {
+        api_token: JUDGEME_PRIVATE_API_TOKEN,
+        shop_domain: PUBLIC_STORE_DOMAIN,
+      }),
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          shop_domain: PUBLIC_STORE_DOMAIN,
+          platform: "shopify",
+          ...formDataToObject(formData),
+        }),
+      },
+    );
+    const payload = await response.json<JudgeMeReviewType>();
+    return data({ review: payload }, { status: 201 });
+  } catch (err) {
+    console.error("[Error in product API action]", err);
     return data(
       { error: err?.message || err?.toString() || "Unknown API error" },
       { status: 500 },
