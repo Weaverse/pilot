@@ -93,7 +93,12 @@ export default JudgemeReviewSection;
 export const schema = createSchema({
   type: "judgeme-reviews",
   title: "Judgeme reviews widget",
-  childTypes: ["heading", "paragraph", "judgeme-reviews--summary"],
+  childTypes: [
+    "heading",
+    "paragraph",
+    "judgeme-reviews--summary",
+    "judgeme-reviews--list",
+  ],
   enabledOn: {
     pages: ["PRODUCT"],
   },
@@ -129,6 +134,9 @@ export const schema = createSchema({
       },
       {
         type: "judgeme-reviews--summary",
+      },
+      {
+        type: "judgeme-reviews--list",
       },
     ],
   },
