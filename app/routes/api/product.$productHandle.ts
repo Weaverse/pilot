@@ -53,7 +53,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         return parseBadgeHtml(badgeResponse.badge);
       }
 
-      const { product: judgemeProduct } = await fetchWithCache<{
+      const judgemeProductRes = await fetchWithCache<{
         product: JudgemeProduct;
       }>(
         constructURL(JUDGEME_PRODUCT_API, {
@@ -62,7 +62,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
           api_token: JUDGEME_PRIVATE_API_TOKEN,
         }),
       );
-      if (!judgemeProduct?.id) {
+      if (!judgemeProductRes?.product?.id) {
         throw new Error("Product not found in Judge.me database.");
       }
 
@@ -95,12 +95,17 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         constructURL(JUDGEME_REVIEWS_API, {
           api_token: JUDGEME_PRIVATE_API_TOKEN,
           shop_domain: PUBLIC_STORE_DOMAIN,
-          product_id: judgemeProduct.id,
+          product_id: judgemeProductRes.product.id,
           per_page,
           page,
         }),
       );
-      return { reviews, current_page, per_page, ...reviewSummary };
+      return {
+        reviews,
+        currentPage: current_page,
+        perPage: per_page,
+        ...reviewSummary,
+      };
     }
 
     // Handle product endpoint (default)
