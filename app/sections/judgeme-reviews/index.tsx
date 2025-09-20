@@ -7,10 +7,16 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import type { JudgemeReviewsData } from "~/types/judgeme";
+import { constructURL } from "~/utils/misc";
 
+type JudgemePagination = {
+  currentPage: number;
+  perPage: number;
+};
 type JudgemeStatus = "idle" | "loading" | "error" | "ok";
 type JudgemeStore = {
   status: JudgemeStatus;
+  paging: JudgemePagination;
   data: JudgemeReviewsData | null;
   setStatus: (status: JudgemeStatus) => void;
   setData: (data: JudgemeReviewsData | null) => void;
@@ -18,9 +24,12 @@ type JudgemeStore = {
 
 export const useJudgemeStore = create<JudgemeStore>()((set) => ({
   status: "idle",
+  paging: { currentPage: 2, perPage: 5 },
   data: null,
   setStatus: (status: JudgemeStatus) => set({ status }),
   setData: (data: JudgemeReviewsData | null) => set({ data }),
+  setPaging: (newPaging: JudgemePagination) =>
+    set((state) => ({ paging: { ...state.paging, ...newPaging } })),
 }));
 
 interface JudgemeReviewSectionProps extends SectionProps {
@@ -31,7 +40,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
   (props, ref) => {
     const { children, sectionId, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
-    const { setStatus, setData } = useJudgemeStore();
+    const { paging, setStatus, setData } = useJudgemeStore();
     const reviewsAPI = usePrefixPathWithLocale(
       `/api/product/${product?.handle}/reviews`,
     );
@@ -56,7 +65,12 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
       }
 
       setStatus("loading");
-      fetch(reviewsAPI)
+      fetch(
+        constructURL(reviewsAPI, {
+          page: paging.currentPage,
+          per_page: paging.perPage,
+        }),
+      )
         .then((res) => {
           if (res.ok) {
             return res.json();
