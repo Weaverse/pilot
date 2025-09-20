@@ -25,7 +25,9 @@ export function ReviewItem({
   review: JudgeMeReviewType;
   className?: string;
 }) {
-  const [selectedImage, setSelectedImage] = useState<JudgemeReviewImage>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null,
+  );
 
   return (
     <div
@@ -70,7 +72,7 @@ export function ReviewItem({
                   key={image.urls.small}
                   className="group/image relative overflow-hidden border border-gray-200 transition-all duration-200 hover:border-gray-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                   onClick={() => {
-                    setSelectedImage(image);
+                    setSelectedImageIndex(ind);
                   }}
                 >
                   <Image
@@ -97,38 +99,33 @@ export function ReviewItem({
         </p>
       </div>
       <ReviewImagesModal
-        selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage}
-        review={review}
+        selectedImageIndex={selectedImageIndex}
+        setSelectedImageIndex={setSelectedImageIndex}
+        images={review.pictures || []}
       />
     </div>
   );
 }
 
 export function ReviewImagesModal({
-  selectedImage,
-  setSelectedImage,
-  review,
+  selectedImageIndex,
+  setSelectedImageIndex,
+  images,
 }: {
-  selectedImage: JudgemeReviewImage;
-  setSelectedImage: (image: JudgemeReviewImage) => void;
-  review: JudgeMeReviewType;
+  selectedImageIndex: number | null;
+  setSelectedImageIndex: (index: number | null) => void;
+  images: JudgemeReviewImage[];
 }) {
-  if (!selectedImage) {
+  if (selectedImageIndex === null || !images.length) {
     return null;
   }
 
-  const images = review.pictures || [];
-  const imageIndex = images.findIndex(
-    (img) => img.urls.original === selectedImage.urls.original,
-  );
-  const nextImage = images[(imageIndex + 1) % images.length];
-  const prevImage = images[(imageIndex - 1 + images.length) % images.length];
+  const currentImage = images[selectedImageIndex];
 
   return (
     <div
       className="fixed inset-0 z-50 bg-black/75"
-      onClick={() => setSelectedImage(null)}
+      onClick={() => setSelectedImageIndex(null)}
       role="dialog"
       aria-modal="true"
       aria-label="Review image gallery"
@@ -141,7 +138,7 @@ export function ReviewImagesModal({
           {/* Close button */}
           <Button
             variant="outline"
-            onClick={() => setSelectedImage(null)}
+            onClick={() => setSelectedImageIndex(null)}
             className="absolute top-6 right-6 p-2 text-white"
             aria-label="Close image"
           >
@@ -149,10 +146,14 @@ export function ReviewImagesModal({
           </Button>
 
           {/* Previous button */}
-          {selectedImage.allImages.length > 1 && (
+          {images.length > 1 && (
             <Button
               variant="secondary"
-              onClick={onPrevious}
+              onClick={() => {
+                const prevIndex =
+                  (selectedImageIndex - 1 + images.length) % images.length;
+                setSelectedImageIndex(prevIndex);
+              }}
               className="-translate-y-1/2 absolute top-1/2 left-4 p-2"
               aria-label="Previous image"
             >
@@ -163,9 +164,9 @@ export function ReviewImagesModal({
           {/* Image */}
           <Image
             src={
-              selectedImage.urls.huge ||
-              selectedImage.urls.original ||
-              selectedImage.urls.small
+              currentImage.urls.huge ||
+              currentImage.urls.original ||
+              currentImage.urls.small
             }
             alt="Review image"
             className="max-h-[85vh] max-w-[85vw] object-contain"
@@ -177,7 +178,10 @@ export function ReviewImagesModal({
           {images.length > 1 && (
             <Button
               variant="secondary"
-              onClick={onNext}
+              onClick={() => {
+                const nextIndex = (selectedImageIndex + 1) % images.length;
+                setSelectedImageIndex(nextIndex);
+              }}
               className="-translate-y-1/2 absolute top-1/2 right-4 p-2"
               aria-label="Next image"
             >
@@ -188,7 +192,7 @@ export function ReviewImagesModal({
           {/* Image counter */}
           {images.length > 1 && (
             <div className="-translate-x-1/2 absolute bottom-4 left-1/2 rounded-full bg-black bg-opacity-50 px-3 py-1 text-white">
-              {imageIndex + 1} / {images.length}
+              {selectedImageIndex + 1} / {images.length}
             </div>
           )}
         </div>
