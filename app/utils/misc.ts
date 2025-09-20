@@ -7,7 +7,8 @@ export function constructURL(
   url: string,
   queries: Record<string, string | number | boolean> = {},
 ) {
-  const _url = new URL(url);
+  const fullUrl = url.startsWith("/") ? `${window.location.origin}${url}` : url;
+  const _url = new URL(fullUrl);
   for (const [k, v] of Object.entries(queries)) {
     if (v !== undefined && v !== null) {
       _url.searchParams.set(k, v.toString());
