@@ -13,9 +13,12 @@ export default function JudgemeReviewSummary(
   let { status, data } = useJudgemeStore();
   const [showForm, setShowForm] = useState(false);
 
+  // Only show loading skeleton on initial load
+  const showLoadingSkeleton = status === "initial-loading";
+
   return (
     <div ref={ref} {...rest} className="py-4">
-      {status === "ok" && data ? (
+      {(status === "ok" || data) && data ? (
         <div className="space-y-12">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_2fr_1fr]">
             {/* Column 1 - Main Summary */}
@@ -67,7 +70,7 @@ export default function JudgemeReviewSummary(
           </div>
           <ReviewForm showForm={showForm} setShowForm={setShowForm} />
         </div>
-      ) : status === "loading" ? (
+      ) : showLoadingSkeleton ? (
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr_2fr]">
             {/* Column 1 - Main Summary Skeleton */}

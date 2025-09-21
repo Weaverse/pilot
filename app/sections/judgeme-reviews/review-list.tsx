@@ -9,12 +9,13 @@ export default function ReviewList(
 ) {
   const { ref, ...rest } = props;
   const { status, data } = useJudgemeStore();
-  // const [page, setPage] = useState(0);
-  // const pageNumber = Math.ceil(data.reviews.length / REVIEWS_PER_PAGE);
+
+  // Show skeleton if initial loading or page loading
+  const showSkeleton = status === "initial-loading" || status === "page-loading";
 
   return (
     <div ref={ref} {...rest}>
-      {status === "ok" && data?.reviews?.length ? (
+      {(status === "ok" || data) && data?.reviews?.length && !showSkeleton ? (
         <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
           <div className="space-y-8 divide-y divide-gray-200">
             {data.reviews.map((review) => (
@@ -23,13 +24,15 @@ export default function ReviewList(
           </div>
           <ReviewsPagination />
         </div>
-      ) : status === "loading" ? (
+      ) : showSkeleton ? (
         <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
           <div className="space-y-8 divide-y divide-gray-200">
             {Array.from({ length: 3 }, (_, i) => (
               <ReviewSkeleton key={i} className="pb-8" />
             ))}
           </div>
+          {/* Show pagination even while loading if we have data */}
+          {data && <ReviewsPagination />}
         </div>
       ) : null}
     </div>

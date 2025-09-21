@@ -13,7 +13,7 @@ type JudgemePagination = {
   currentPage: number;
   perPage: number;
 };
-type JudgemeStatus = "idle" | "loading" | "error" | "ok";
+type JudgemeStatus = "idle" | "initial-loading" | "page-loading" | "error" | "ok";
 type JudgemeStore = {
   status: JudgemeStatus;
   paging: JudgemePagination;
@@ -25,7 +25,7 @@ type JudgemeStore = {
 
 export const useJudgemeStore = create<JudgemeStore>()((set) => ({
   status: "idle",
-  paging: { currentPage: 2, perPage: 2 },
+  paging: { currentPage: 1, perPage: 2 },
   data: null,
   setStatus: (status: JudgemeStatus) => set({ status }),
   setData: (data: JudgemeReviewsData | null) => set({ data }),
@@ -41,7 +41,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
   (props, ref) => {
     const { children, sectionId, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
-    const { paging, setStatus, setData } = useJudgemeStore();
+    const { paging, data, setStatus, setData } = useJudgemeStore();
     const reviewsAPI = usePrefixPathWithLocale(
       `/api/product/${product?.handle}/reviews`,
     );
@@ -65,7 +65,11 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
         return;
       }
 
-      setStatus("loading");
+      // If this is the first load (no data yet), show initial loading state
+      // If we have data already, show page loading state
+      const isFirstLoad = !data;
+      setStatus(isFirstLoad ? "initial-loading" : "page-loading");
+
       fetch(
         constructURL(reviewsAPI, {
           page: paging.currentPage,
@@ -87,7 +91,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
           setStatus("error");
           setData(null);
         });
-    }, [product?.handle, inView]);
+    }, [product?.handle, inView, paging]);
 
     if (!product) {
       return null;
