@@ -43,20 +43,20 @@ function getVisiblePages(
 export function ReviewsPagination() {
   const { status, paging, data, setPaging } = useJudgemeStore();
 
-  if (status !== "ok" || !data || data.lastPage <= 1) {
+  if (status !== "ok" || !data || data.totalPage <= 1) {
     return null;
   }
 
   const { currentPage, perPage } = paging;
-  const { lastPage } = data;
+  const { totalPage } = data;
 
   function handlePageChange(page: number) {
-    if (page >= 1 && page <= lastPage && page !== currentPage) {
+    if (page >= 1 && page <= totalPage && page !== currentPage) {
       setPaging({ currentPage: page, perPage });
     }
   }
 
-  const visiblePages = getVisiblePages(currentPage, lastPage);
+  const visiblePages = getVisiblePages(currentPage, totalPage);
 
   return (
     <div className="flex items-center justify-center gap-1.5 mt-6">
@@ -103,7 +103,7 @@ export function ReviewsPagination() {
       <button
         type="button"
         onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === lastPage}
+        disabled={currentPage === totalPage}
         className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <CaretRightIcon className="h-4 w-4" />
@@ -111,8 +111,8 @@ export function ReviewsPagination() {
 
       <button
         type="button"
-        onClick={() => handlePageChange(lastPage)}
-        disabled={currentPage === lastPage}
+        onClick={() => handlePageChange(totalPage)}
+        disabled={currentPage === totalPage}
         className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <CaretDoubleRightIcon className="h-4 w-4" />
