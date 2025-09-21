@@ -139,7 +139,7 @@ export function ReviewImagesModal({
           <Button
             variant="outline"
             onClick={() => setSelectedImageIndex(null)}
-            className="absolute top-6 right-6 p-2 text-white"
+            className="absolute top-6 right-6 p-2 text-white border-white"
             aria-label="Close image"
           >
             <XIcon className="h-5 w-5" />
