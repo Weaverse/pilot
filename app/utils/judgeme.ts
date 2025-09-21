@@ -9,8 +9,6 @@ const WIDGET_REGEX =
 const REVIEWS_REGEX = /data-number-of-reviews=['"]([^'"]*)['"]/;
 const HISTOGRAM_ROW_REGEX =
   /class=['"]jdgm-histogram__row['"][^>]*data-rating=['"](\d+)['"][^>]*data-frequency=['"](\d+)['"][^>]*data-percentage=['"](\d+)['"][^>]*>/g;
-const LAST_PAGE_REGEX =
-  /class=['"]jdgm-paginate__page jdgm-paginate__last-page['"][^>]*data-page=['"](\d+)['"][^>]*>/;
 
 export function parseJudgemeWidgetHTML(html: string): JudgemeWidgetData {
   const ratingDistribution: JudgemeRatingDistribution[] = [];
@@ -32,7 +30,6 @@ export function parseJudgemeWidgetHTML(html: string): JudgemeWidgetData {
     averageRating: Number.parseFloat(html.match(WIDGET_REGEX)?.[1] || "0"),
     totalReviews: Number.parseInt(html.match(REVIEWS_REGEX)?.[1] || "0", 10),
     ratingDistribution: ratingDistribution.sort((a, b) => b.rating - a.rating),
-    lastPage: Number.parseInt(html.match(LAST_PAGE_REGEX)?.[1] || "1", 10),
   };
 }
 

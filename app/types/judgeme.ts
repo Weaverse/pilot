@@ -53,7 +53,7 @@ export type JudgemeReviewsData = {
   totalReviews: number;
   ratingDistribution: JudgemeRatingDistribution[];
   currentPage: number;
-  lastPage: number;
+  totalPage: number;
   perPage: number;
   reviews: JudgeMeReviewType[];
 };
@@ -66,5 +66,5 @@ export type JudgemeRatingDistribution = {
 
 export type JudgemeWidgetData = Pick<
   JudgemeReviewsData,
-  "averageRating" | "totalReviews" | "ratingDistribution" | "lastPage"
+  "averageRating" | "totalReviews" | "ratingDistribution"
 >;

@@ -70,6 +70,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       const per_page = Number.parseInt(searchParams.get("per_page") || "5", 10);
 
       let reviewSummary: JudgemeWidgetData = null;
+      let totalPage = -1;
       const widgetResponse = await fetchWithCache<{
         product_external_id: number;
         widget: string;
@@ -85,6 +86,9 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
       if (widgetResponse?.widget) {
         reviewSummary = parseJudgemeWidgetHTML(widgetResponse.widget);
+        totalPage = Math.ceil(
+          reviewSummary.totalReviews / (per_page > 0 ? per_page : 5),
+        );
       }
 
       const { current_page, reviews } = await fetchWithCache<{
@@ -102,6 +106,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       );
       return {
         reviews,
+        totalPage,
         currentPage: current_page,
         perPage: per_page,
         ...reviewSummary,
