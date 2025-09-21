@@ -4,9 +4,7 @@ import { useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
-import type {
-  JudgemeStarsRatingData,
-} from "~/types/judgeme";
+import type { JudgemeStarsRatingData } from "~/types/judgeme";
 
 interface JudgemeStarsRatingProps extends HydrogenComponentProps {
   onClickEvent?: "do-nothing" | "scroll-to-section";
@@ -30,11 +28,15 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
       noReviewsText = "No reviews",
       ...rest
     } = props;
-    const [status, setStatus] = useState<"idle" | "loading" | "error" | "ok">("idle");
+    const [status, setStatus] = useState<"idle" | "loading" | "error" | "ok">(
+      "idle",
+    );
     const [data, setData] = useState<JudgemeStarsRatingData | null>(null);
     const { product } = useLoaderData<typeof productRouteLoader>();
     const handle = product?.handle;
-    const ratingAPI = usePrefixPathWithLocale(`/api/product/${handle}/reviews?type=rating`);
+    const ratingAPI = usePrefixPathWithLocale(
+      `/api/product/${handle}/reviews?type=rating`,
+    );
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: only fetch when product handle change
     useEffect(() => {
@@ -57,14 +59,14 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
         .catch((err) => {
           console.error("Error fetching Judge.me stars rating data:", err);
           setStatus("error");
-        })
+        });
     }, [handle]);
 
     if (!handle) {
       return null;
     }
 
-    if (status === "loading") {
+    if (status === "idle" || status === "loading") {
       return (
         <div {...rest} ref={ref}>
           <div className="space-x-2">
@@ -92,13 +94,13 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
         onClick={
           onClickEvent !== "do-nothing"
             ? () => {
-              if (onClickEvent === "scroll-to-section" && sectionId) {
-                const element = document.getElementById(sectionId);
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
+                if (onClickEvent === "scroll-to-section" && sectionId) {
+                  const element = document.getElementById(sectionId);
+                  if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                  }
                 }
               }
-            }
             : undefined
         }
         className={onClickEvent !== "do-nothing" ? "cursor-pointer" : ""}
@@ -107,9 +109,12 @@ const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
           <StarRating rating={data?.averageRating} />
           <span className="leading-4">
             {data?.totalReviews > 0
-              ? formatRatingText(ratingText, data.averageRating, data.totalReviews)
-              : noReviewsText
-            }
+              ? formatRatingText(
+                  ratingText,
+                  data.averageRating,
+                  data.totalReviews,
+                )
+              : noReviewsText}
           </span>
         </div>
       </div>
@@ -156,7 +161,8 @@ export const schema = createSchema({
           label: "Rating text format",
           defaultValue: "{{rating}}/5 ({{total_reviews}} reviews)",
           placeholder: "{{rating}}/5 ({{total_reviews}} reviews)",
-          helpText: "Use <strong>{{rating}}</strong> for average rating and <strong>{{total_reviews}}</strong> for total review count.",
+          helpText:
+            "Use <strong>{{rating}}</strong> for average rating and <strong>{{total_reviews}}</strong> for total review count.",
         },
         {
           type: "text",
