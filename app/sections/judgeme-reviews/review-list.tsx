@@ -10,33 +10,35 @@ export default function ReviewList(
   const { ref, ...rest } = props;
   const { status, data } = useJudgemeStore();
 
-  // Show skeleton if initial loading or page loading
-  const showSkeleton = status === "initial-loading" || status === "page-loading";
-
   return (
     <div ref={ref} {...rest}>
-      {(status === "ok" || data) && data?.reviews?.length && !showSkeleton ? (
-        <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
-          <div className="space-y-8 divide-y divide-gray-200">
-            {data.reviews.map((review) => (
-              <ReviewItem key={review.id} review={review} className="pb-8" />
-            ))}
-          </div>
-          <ReviewsPagination />
-        </div>
-      ) : showSkeleton ? (
+      {status === "initial-loading" ? (
+        // Show skeleton on first load
         <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
           <div className="space-y-8 divide-y divide-gray-200">
             {Array.from({ length: 3 }, (_, i) => (
               <ReviewSkeleton key={i} className="pb-8" />
             ))}
           </div>
-          {/* Show pagination even while loading if we have data */}
-          {data && <ReviewsPagination />}
+        </div>
+      ) : data?.reviews?.length ? (
+        // Show reviews with optional overlay and pagination
+        <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
+          <div className="space-y-8 divide-y divide-gray-200 relative">
+            {data.reviews.map((review) => (
+              <ReviewItem key={review.id} review={review} className="pb-8" />
+            ))}
+            {status === "page-loading" && <LoadingOverlay />}
+          </div>
+          <ReviewsPagination />
         </div>
       ) : null}
     </div>
   );
+}
+
+function LoadingOverlay() {
+  return <div className="absolute inset-0 bg-white/80 z-10" />;
 }
 
 function ReviewSkeleton({ className }: { className?: string }) {

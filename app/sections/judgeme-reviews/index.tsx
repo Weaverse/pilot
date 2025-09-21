@@ -13,7 +13,12 @@ type JudgemePagination = {
   currentPage: number;
   perPage: number;
 };
-type JudgemeStatus = "idle" | "initial-loading" | "page-loading" | "error" | "ok";
+type JudgemeStatus =
+  | "idle"
+  | "initial-loading"
+  | "page-loading"
+  | "error"
+  | "ok";
 type JudgemeStore = {
   status: JudgemeStatus;
   paging: JudgemePagination;
@@ -25,7 +30,7 @@ type JudgemeStore = {
 
 export const useJudgemeStore = create<JudgemeStore>()((set) => ({
   status: "idle",
-  paging: { currentPage: 1, perPage: 2 },
+  paging: { currentPage: 1, perPage: 5 },
   data: null,
   setStatus: (status: JudgemeStatus) => set({ status }),
   setData: (data: JudgemeReviewsData | null) => set({ data }),
