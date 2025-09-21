@@ -20,11 +20,12 @@ type JudgemeStore = {
   data: JudgemeReviewsData | null;
   setStatus: (status: JudgemeStatus) => void;
   setData: (data: JudgemeReviewsData | null) => void;
+  setPaging: (newPaging: JudgemePagination) => void;
 };
 
 export const useJudgemeStore = create<JudgemeStore>()((set) => ({
   status: "idle",
-  paging: { currentPage: 2, perPage: 5 },
+  paging: { currentPage: 2, perPage: 2 },
   data: null,
   setStatus: (status: JudgemeStatus) => set({ status }),
   setData: (data: JudgemeReviewsData | null) => set({ data }),
