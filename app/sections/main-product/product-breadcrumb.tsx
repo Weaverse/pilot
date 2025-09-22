@@ -1,16 +1,15 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import { Link } from "~/components/link";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
 interface ProductBreadcrumbProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   homeText: string;
 }
 
-const ProductBreadcrumb = forwardRef<HTMLDivElement, ProductBreadcrumbProps>(
-  (props, ref) => {
-    const { homeText, ...rest } = props;
+export default function ProductBreadcrumb(props: ProductBreadcrumbProps) {
+  const { ref, homeText, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     if (!product) {
@@ -29,10 +28,7 @@ const ProductBreadcrumb = forwardRef<HTMLDivElement, ProductBreadcrumbProps>(
         <span>{product.title}</span>
       </div>
     );
-  },
-);
-
-export default ProductBreadcrumb;
+}
 
 export const schema = createSchema({
   type: "mp--breadcrumb",

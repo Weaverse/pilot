@@ -1,20 +1,19 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-type ImageGalleryProps = SectionProps;
+interface ImageGalleryProps extends SectionProps {
+  ref?: React.Ref<HTMLElement>;
+}
 
-const ImageGallery = forwardRef<HTMLElement, ImageGalleryProps>(
-  (props, ref) => {
-    const { children, ...rest } = props;
-    return (
-      <Section ref={ref} {...rest}>
-        {children}
-      </Section>
-    );
-  },
-);
+function ImageGallery(props: ImageGalleryProps) {
+  const { children, ref, ...rest } = props;
+  return (
+    <Section ref={ref} {...rest}>
+      {children}
+    </Section>
+  );
+}
 
 export default ImageGallery;
 

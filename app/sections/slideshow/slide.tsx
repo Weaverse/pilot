@@ -5,7 +5,6 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { OverlayAndBackgroundProps } from "~/components/overlay-and-background";
@@ -65,12 +64,13 @@ export interface SlideProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps,
     OverlayAndBackgroundProps {
+  ref: React.Ref<HTMLDivElement>;
   backgroundColor: string;
 }
 
-const Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
-  const [scope] = useAnimation(ref);
+export default function Slide(props: SlideProps) {
   const {
+    ref,
     contentPosition,
     width,
     gap,
@@ -86,10 +86,19 @@ const Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
     children,
     ...rest
   } = props;
+  const [scope] = useAnimation(ref);
 
   return (
     <div ref={scope} {...rest} className="h-full w-full">
-      <OverlayAndBackground {...props} />
+      <OverlayAndBackground
+        backgroundImage={backgroundImage}
+        backgroundFit={backgroundFit}
+        backgroundPosition={backgroundPosition}
+        enableOverlay={enableOverlay}
+        overlayOpacity={overlayOpacity}
+        overlayColor={overlayColor}
+        overlayColorHover={overlayColorHover}
+      />
       <div
         className={variants({ contentPosition, width, gap, verticalPadding })}
       >
@@ -97,9 +106,7 @@ const Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
       </div>
     </div>
   );
-});
-
-export default Slide;
+}
 
 export const schema = createSchema({
   title: "Slide",

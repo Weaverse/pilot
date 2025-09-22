@@ -3,7 +3,6 @@ import {
   createSchema,
   type WeaverseCollection,
 } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import type { CollectionsByIdsQuery } from "storefront-api.generated";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
@@ -14,20 +13,18 @@ interface FeaturedCollectionsData {
 
 interface FeaturedCollectionsProps
   extends SectionProps<FeaturedCollectionsLoaderData>,
-    FeaturedCollectionsData {}
+    FeaturedCollectionsData {
+  ref: React.Ref<HTMLElement>;
+}
 
-const FeaturedCollections = forwardRef<HTMLElement, FeaturedCollectionsProps>(
-  (props, ref) => {
-    const { loaderData, children, ...rest } = props;
+export default function FeaturedCollections(props: FeaturedCollectionsProps) {
+  const { ref, loaderData, children, ...rest } = props;
     return (
       <Section ref={ref} {...rest}>
         {children}
       </Section>
     );
-  },
-);
-
-export default FeaturedCollections;
+}
 
 const COLLECTIONS_QUERY = `#graphql
   query collectionsByIds($country: CountryCode, $language: LanguageCode, $ids: [ID!]!)

@@ -1,7 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 
-interface SpacerData {
+interface SpacerData extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   mobileHeight: number;
   desktopHeight: number;
   backgroundColor: string;
@@ -9,39 +9,37 @@ interface SpacerData {
   separatorColor: string;
 }
 
-const Spacer = forwardRef<HTMLDivElement, SpacerData & HydrogenComponentProps>(
-  (props, ref) => {
-    const {
-      mobileHeight,
-      desktopHeight,
-      backgroundColor,
-      addSeparator,
-      separatorColor,
-      ...rest
-    } = props;
-    return (
-      <div
-        ref={ref}
-        {...rest}
-        className="flex h-(--mobile-height) w-full items-center justify-center md:h-(--desktop-height)"
-        style={
-          {
-            backgroundColor,
-            "--mobile-height": `${mobileHeight}px`,
-            "--desktop-height": `${desktopHeight}px`,
-            "--separator-color": separatorColor,
-          } as React.CSSProperties
-        }
-      >
-        {addSeparator && (
-          <div className="mx-auto h-px w-3/4 border-(--separator-color,var(--color-border)) border-t md:w-2/3" />
-        )}
-      </div>
-    );
-  },
-);
+export default function Spacer(props: SpacerData) {
+  const {
+    ref,
+    mobileHeight,
+    desktopHeight,
+    backgroundColor,
+    addSeparator,
+    separatorColor,
+    ...rest
+  } = props;
 
-export default Spacer;
+  return (
+    <div
+      ref={ref}
+      {...rest}
+      className="flex h-(--mobile-height) w-full items-center justify-center md:h-(--desktop-height)"
+      style={
+        {
+          backgroundColor,
+          "--mobile-height": `${mobileHeight}px`,
+          "--desktop-height": `${desktopHeight}px`,
+          "--separator-color": separatorColor,
+        } as React.CSSProperties
+      }
+    >
+      {addSeparator && (
+        <div className="mx-auto h-px w-3/4 border-(--separator-color,var(--color-border)) border-t md:w-2/3" />
+      )}
+    </div>
+  );
+}
 
 export const schema = createSchema({
   type: "spacer",

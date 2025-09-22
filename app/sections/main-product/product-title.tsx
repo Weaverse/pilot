@@ -1,15 +1,14 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
 interface ProductTitleProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
-const ProductTitle = forwardRef<HTMLDivElement, ProductTitleProps>(
-  (props, ref) => {
-    const { headingTag: Tag, ...rest } = props;
+export default function ProductTitle(props: ProductTitleProps) {
+  const { ref, headingTag: Tag, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     if (!product) {
@@ -21,10 +20,7 @@ const ProductTitle = forwardRef<HTMLDivElement, ProductTitleProps>(
         <Tag className="h3 tracking-tight!">{product.title}</Tag>
       </div>
     );
-  },
-);
-
-export default ProductTitle;
+}
 
 export const schema = createSchema({
   type: "mp--title",

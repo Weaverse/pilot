@@ -1,5 +1,4 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import { create } from "zustand";
 import { Quantity } from "~/components/product/quantity";
@@ -15,14 +14,12 @@ export const useProductQtyStore = create<{
 }));
 
 interface ProductQuantitySelectorProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   labelText: string;
 }
 
-const ProductQuantitySelector = forwardRef<
-  HTMLDivElement,
-  ProductQuantitySelectorProps
->((props, ref) => {
-  const { labelText, ...rest } = props;
+export default function ProductQuantitySelector(props: ProductQuantitySelectorProps) {
+  const { ref, labelText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity, setQuantity } = useProductQtyStore();
 
@@ -37,9 +34,7 @@ const ProductQuantitySelector = forwardRef<
       <Quantity value={quantity} onChange={setQuantity} label={labelText} />
     </div>
   );
-});
-
-export default ProductQuantitySelector;
+}
 
 export const schema = createSchema({
   type: "mp--quantity-selector",

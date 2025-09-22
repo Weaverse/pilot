@@ -7,14 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import {
-  forwardRef,
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
@@ -43,7 +36,9 @@ interface HeroVideoData extends OverlayProps, VariantProps<typeof variants> {
   heightOnMobile: number;
 }
 
-export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {}
+export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {
+  ref: React.Ref<HTMLElement>;
+}
 
 const variants = cva(
   "absolute inset-0 z-10 mx-auto flex max-w-screen flex-col items-center justify-center px-3",
@@ -90,8 +85,9 @@ function getPlayerSize(id: string) {
 
 const ReactPlayer = lazy(() => import("react-player/lazy"));
 
-const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
+export default function HeroVideo(props: HeroVideoProps) {
   const {
+    ref,
     videoURL,
     gap,
     height,
@@ -121,15 +117,18 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   });
 
   // Use `useCallback` so we don't recreate the function on each render
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   const setRefs = useCallback(
     (node: HTMLElement) => {
-      // Ref's from useRef needs to have the node assigned to `current`
-      ref && Object.assign(ref, { current: node });
       // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
       inViewRef(node);
+      // Handle ref prop
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref && "current" in ref) {
+        ref.current = node;
+      }
     },
-    [inViewRef],
+    [inViewRef, ref],
   );
 
   function handleResize() {
@@ -190,9 +189,7 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
       </div>
     </section>
   );
-});
-
-export default HeroVideo;
+}
 
 export const schema = createSchema({
   type: "hero-video",

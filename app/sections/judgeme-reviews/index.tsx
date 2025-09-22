@@ -1,5 +1,5 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import { create } from "zustand";
@@ -39,102 +39,99 @@ export const useJudgemeStore = create<JudgemeStore>()((set) => ({
 }));
 
 interface JudgemeReviewSectionProps extends SectionProps {
+  ref: React.Ref<HTMLElement>;
   sectionId?: string;
 }
 
-const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
-  (props, ref) => {
-    const { children, sectionId, ...rest } = props;
-    const { product } = useLoaderData<typeof productRouteLoader>();
-    const { paging, data, setStatus, setData, setPaging } = useJudgemeStore();
-    const reviewsAPI = usePrefixPathWithLocale(
-      `/api/product/${product?.handle}/reviews`,
-    );
-    const previousHandleRef = useRef<string | undefined>(product?.handle);
+export default function JudgemeReviewSection(props: JudgemeReviewSectionProps) {
+  const { ref, children, sectionId, ...rest } = props;
+  const { product } = useLoaderData<typeof productRouteLoader>();
+  const { paging, data, setStatus, setData, setPaging } = useJudgemeStore();
+  const reviewsAPI = usePrefixPathWithLocale(
+    `/api/product/${product?.handle}/reviews`,
+  );
+  const previousHandleRef = useRef<string | undefined>(product?.handle);
 
-    const { ref: inViewRef, inView } = useInView({
-      triggerOnce: true,
-    });
+  const { ref: inViewRef, inView } = useInView({
+    triggerOnce: true,
+  });
 
-    const setRefs = (node: HTMLDivElement) => {
-      if (ref && typeof ref === "object") {
-        ref.current = node;
-      } else if (typeof ref === "function") {
-        ref(node);
-      }
-      inViewRef(node);
-    };
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
-    useEffect(() => {
-      if (product?.handle) {
-        // Check if product handle changed
-        const handleChanged = previousHandleRef.current !== product.handle;
-        if (handleChanged) {
-          // Reset pagination and clear data for new product
-          previousHandleRef.current = product.handle;
-          setPaging({ currentPage: 1, perPage: 5 });
-          setData(null);
-          setStatus("idle");
-          // Don't fetch yet - let the effect run again with reset pagination
-          return;
-        }
-
-        if (inView) {
-          // If this is the first load (no data yet), show initial loading state
-          // If we have data already, show page loading state
-          const isFirstLoad = !data;
-          setStatus(isFirstLoad ? "initial-loading" : "page-loading");
-
-          fetch(
-            constructURL(reviewsAPI, {
-              page: paging.currentPage,
-              per_page: paging.perPage,
-            }),
-          )
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              }
-              throw new Error(`Failed to fetch reviews: ${res.status}`);
-            })
-            .then((d: JudgemeReviewsData) => {
-              setData(d);
-              setStatus("ok");
-            })
-            .catch((err) => {
-              console.error("Error fetching Judge.me reviews:", err);
-              setStatus("error");
-              setData(null);
-            });
-        }
-      }
-    }, [product?.handle, inView, paging]);
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Reset store when component unmounts
-    useEffect(() => {
-      return () => {
-        setStatus("idle");
-        setData(null);
-        setPaging({ currentPage: 1, perPage: 5 });
-      };
-    }, []);
-
-    if (!product) {
-      return null;
+  const setRefs = (node: HTMLDivElement) => {
+    if (ref && typeof ref === "object") {
+      ref.current = node;
+    } else if (typeof ref === "function") {
+      ref(node);
     }
+    inViewRef(node);
+  };
 
-    return (
-      <div ref={setRefs}>
-        <Section as="div" ref={ref} {...rest} overflow="unset" id={sectionId}>
-          {children}
-        </Section>
-      </div>
-    );
-  },
-);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
+  useEffect(() => {
+    if (product?.handle) {
+      // Check if product handle changed
+      const handleChanged = previousHandleRef.current !== product.handle;
+      if (handleChanged) {
+        // Reset pagination and clear data for new product
+        previousHandleRef.current = product.handle;
+        setPaging({ currentPage: 1, perPage: 5 });
+        setData(null);
+        setStatus("idle");
+        // Don't fetch yet - let the effect run again with reset pagination
+        return;
+      }
 
-export default JudgemeReviewSection;
+      if (inView) {
+        // If this is the first load (no data yet), show initial loading state
+        // If we have data already, show page loading state
+        const isFirstLoad = !data;
+        setStatus(isFirstLoad ? "initial-loading" : "page-loading");
+
+        fetch(
+          constructURL(reviewsAPI, {
+            page: paging.currentPage,
+            per_page: paging.perPage,
+          }),
+        )
+          .then((res) => {
+            if (res.ok) {
+              return res.json();
+            }
+            throw new Error(`Failed to fetch reviews: ${res.status}`);
+          })
+          .then((d: JudgemeReviewsData) => {
+            setData(d);
+            setStatus("ok");
+          })
+          .catch((err) => {
+            console.error("Error fetching Judge.me reviews:", err);
+            setStatus("error");
+            setData(null);
+          });
+      }
+    }
+  }, [product?.handle, inView, paging]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Reset store when component unmounts
+  useEffect(() => {
+    return () => {
+      setStatus("idle");
+      setData(null);
+      setPaging({ currentPage: 1, perPage: 5 });
+    };
+  }, []);
+
+  if (!product) {
+    return null;
+  }
+
+  return (
+    <div ref={setRefs}>
+      <Section as="div" ref={ref} {...rest} overflow="unset" id={sectionId}>
+        {children}
+      </Section>
+    </div>
+  );
+}
 
 export const schema = createSchema({
   type: "judgeme-reviews",

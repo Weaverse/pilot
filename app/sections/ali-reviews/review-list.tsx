@@ -3,25 +3,22 @@ import {
   type HydrogenComponentProps,
   useParentInstance,
 } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { StarRating } from "~/components/star-rating";
 import type { AliReviewsLoaderData } from ".";
 import { ReviewBar } from "./review-bar";
 import type { AliReview, ReviewItemData } from "./review-item";
 import { ReviewItem } from "./review-item";
 
-type AliReviewsData = ReviewItemData & {
+interface AliReviewsData extends ReviewItemData {
   showAvgRating: boolean;
   showReviewsCount: boolean;
   showReviewsProgressBar: boolean;
   reviewsToShow: number;
   showReviewWithMediaOnly: boolean;
-};
+  ref?: React.Ref<HTMLDivElement>;
+}
 
-const ReviewList = forwardRef<
-  HTMLDivElement,
-  AliReviewsData & HydrogenComponentProps
->((props, ref) => {
+function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
   const {
     children,
     showAvgRating,
@@ -34,6 +31,7 @@ const ReviewList = forwardRef<
     showVerifiedBadge,
     verifiedBadgeText,
     showStar,
+    ref,
     ...rest
   } = props;
   const parent = useParentInstance();
@@ -107,7 +105,7 @@ const ReviewList = forwardRef<
       <div className="p-8 text-center">No reviews available</div>
     </div>
   );
-});
+}
 
 export default ReviewList;
 

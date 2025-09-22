@@ -4,7 +4,6 @@ import {
   XLogoIcon,
 } from "@phosphor-icons/react";
 import { createSchema, isBrowser } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData, useRouteLoaderData } from "react-router";
 import {
   FacebookShareButton,
@@ -17,12 +16,13 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { RootLoader } from "~/root";
 
 interface BlogPostProps extends SectionProps {
+  ref: React.Ref<HTMLElement>;
   showTags: boolean;
   showShareButtons: boolean;
 }
 
-const BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
-  const { showTags, showShareButtons, ...rest } = props;
+export default function BlogPost(props: BlogPostProps) {
+  const { ref, showTags, showShareButtons, ...rest } = props;
   const { layout } = useRouteLoaderData<RootLoader>("root");
   const { article, blog, formattedDate } = useLoaderData<{
     article: ArticleQuery["blog"]["articleByHandle"];
@@ -92,9 +92,7 @@ const BlogPost = forwardRef<HTMLElement, BlogPostProps>((props, ref) => {
     );
   }
   return <Section ref={ref} {...rest} />;
-});
-
-export default BlogPost;
+}
 
 export const schema = createSchema({
   type: "blog-post",

@@ -4,7 +4,6 @@ import {
   type WeaverseCollection,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import type {
   CollectionProductsQuery,
   FeaturedProductsQuery,
@@ -23,20 +22,18 @@ interface FeaturedProductsData {
 
 interface FeaturedProductsProps
   extends SectionProps<FeaturedProductsLoaderData>,
-    FeaturedProductsData {}
+    FeaturedProductsData {
+  ref: React.Ref<HTMLElement>;
+}
 
-const FeaturedProducts = forwardRef<HTMLElement, FeaturedProductsProps>(
-  (props, ref) => {
-    const { loaderData, children, ...rest } = props;
+export default function FeaturedProducts(props: FeaturedProductsProps) {
+  const { ref, loaderData, children, ...rest } = props;
     return (
       <Section ref={ref} {...rest}>
         {children}
       </Section>
     );
-  },
-);
-
-export default FeaturedProducts;
+}
 
 const FEATURED_PRODUCTS_QUERY = `#graphql
   query featuredProducts($country: CountryCode, $language: LanguageCode, $query: String)

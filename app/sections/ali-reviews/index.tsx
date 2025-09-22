@@ -1,27 +1,25 @@
 import { type ComponentLoaderArgs, createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 import type { AliReview } from "./review-item";
 
-type AliReviewsData = {
+interface AliReviewsData {
   aliReviewsApiKey: string;
-};
+}
 
-type AliReviewsProps = SectionProps<Awaited<ReturnType<typeof loader>>> &
-  AliReviewsData;
+interface AliReviewsProps extends SectionProps<Awaited<ReturnType<typeof loader>>>, AliReviewsData {
+  ref?: React.Ref<HTMLElement>;
+}
 
-const AliReviewSection = forwardRef<HTMLElement, AliReviewsProps>(
-  (props, ref) => {
-    const { children, loaderData, aliReviewsApiKey, ...rest } = props;
-    return (
-      <Section ref={ref} {...rest} overflow="unset">
-        {children}
-      </Section>
-    );
-  },
-);
+function AliReviewSection(props: AliReviewsProps) {
+  const { children, loaderData, aliReviewsApiKey, ref, ...rest } = props;
+  return (
+    <Section ref={ref} {...rest} overflow="unset">
+      {children}
+    </Section>
+  );
+}
 
 export type AliReviewsLoaderData = Awaited<ReturnType<typeof loader>>;
 type AliReviewsAPIPayload = {

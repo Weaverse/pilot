@@ -6,7 +6,6 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
@@ -53,44 +52,44 @@ interface ImageWithTextImageProps
     HydrogenComponentProps {
   image: WeaverseImage | string;
   imageAspectRatio: ImageAspectRatio;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const ImageWithTextImage = forwardRef<HTMLDivElement, ImageWithTextImageProps>(
-  (props, ref) => {
-    const {
-      image = IMAGES_PLACEHOLDERS.image,
-      width,
-      imageAspectRatio,
-      borderRadius,
-      objectFit,
-      ...rest
-    } = props;
-    const imageData: Partial<WeaverseImage> =
-      typeof image === "string"
-        ? { url: image, altText: "Placeholder" }
-        : image;
-    let aspRt: string | undefined;
-    if (imageAspectRatio === "adapt") {
-      if (imageData.width && imageData.height) {
-        aspRt = `${imageData.width}/${imageData.height}`;
-      }
-    } else {
-      aspRt = imageAspectRatio;
+function ImageWithTextImage(props: ImageWithTextImageProps) {
+  const {
+    image = IMAGES_PLACEHOLDERS.image,
+    width,
+    imageAspectRatio,
+    borderRadius,
+    objectFit,
+    ref,
+    ...rest
+  } = props;
+  const imageData: Partial<WeaverseImage> =
+    typeof image === "string"
+      ? { url: image, altText: "Placeholder" }
+      : image;
+  let aspRt: string | undefined;
+  if (imageAspectRatio === "adapt") {
+    if (imageData.width && imageData.height) {
+      aspRt = `${imageData.width}/${imageData.height}`;
     }
+  } else {
+    aspRt = imageAspectRatio;
+  }
 
-    return (
-      <div ref={ref} {...rest} className={cn(variants({ width }))}>
-        <Image
-          data={imageData}
-          data-motion="slide-in"
-          sizes="auto"
-          aspectRatio={aspRt}
-          className={cn("h-auto w-full", variants({ objectFit, borderRadius }))}
-        />
-      </div>
-    );
-  },
-);
+  return (
+    <div ref={ref} {...rest} className={cn(variants({ width }))}>
+      <Image
+        data={imageData}
+        data-motion="slide-in"
+        sizes="auto"
+        aspectRatio={aspRt}
+        className={cn("h-auto w-full", variants({ objectFit, borderRadius }))}
+      />
+    </div>
+  );
+}
 
 export default ImageWithTextImage;
 

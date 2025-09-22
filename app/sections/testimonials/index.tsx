@@ -1,21 +1,20 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-type TestimonialsProps = SectionProps;
+interface TestimonialsProps extends SectionProps {
+  ref?: React.Ref<HTMLElement>;
+}
 
-const Testimonials = forwardRef<HTMLElement, TestimonialsProps>(
-  (props, ref) => {
-    const { children, ...rest } = props;
+function Testimonials(props: TestimonialsProps) {
+  const { children, ref, ...rest } = props;
 
-    return (
-      <Section ref={ref} {...rest}>
-        {children}
-      </Section>
-    );
-  },
-);
+  return (
+    <Section ref={ref} {...rest}>
+      {children}
+    </Section>
+  );
+}
 
 export default Testimonials;
 

@@ -5,7 +5,6 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 
 const variants = cva("mx-auto aspect-video w-full", {
   variants: {
@@ -47,29 +46,26 @@ const variants = cva("mx-auto aspect-video w-full", {
 interface VideoItemProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
+  ref: React.Ref<HTMLIFrameElement>;
   video: WeaverseVideo;
   videoUrl: string;
 }
 
-const VideoEmbedItem = forwardRef<HTMLIFrameElement, VideoItemProps>(
-  (props, ref) => {
-    const { video, videoUrl, size, borderRadius, ...rest } = props;
-    return (
-      <iframe
-        ref={ref}
-        {...rest}
-        className={variants({ size, borderRadius })}
-        src={video?.url || videoUrl}
-        allowFullScreen
-        title="YouTube video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        sandbox="allow-presentation allow-same-origin allow-scripts"
-      />
-    );
-  },
-);
-
-export default VideoEmbedItem;
+export default function VideoEmbedItem(props: VideoItemProps) {
+  const { ref, video, videoUrl, size, borderRadius, ...rest } = props;
+  return (
+    <iframe
+      ref={ref}
+      {...rest}
+      className={variants({ size, borderRadius })}
+      src={video?.url || videoUrl}
+      allowFullScreen
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      sandbox="allow-presentation allow-same-origin allow-scripts"
+    />
+  );
+}
 
 export const schema = createSchema({
   type: "video-embed--item",

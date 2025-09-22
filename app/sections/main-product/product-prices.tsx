@@ -3,19 +3,18 @@ import {
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductPricesProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   showCompareAtPrice: boolean;
 }
 
-const ProductPrices = forwardRef<HTMLDivElement, ProductPricesProps>(
-  (props, ref) => {
-    const { showCompareAtPrice, ...rest } = props;
+export default function ProductPrices(props: ProductPricesProps) {
+  const { ref, showCompareAtPrice, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     const selectedVariant = useOptimisticVariant(
@@ -57,10 +56,7 @@ const ProductPrices = forwardRef<HTMLDivElement, ProductPricesProps>(
         )}
       </div>
     );
-  },
-);
-
-export default ProductPrices;
+}
 
 export const schema = createSchema({
   type: "mp--prices",

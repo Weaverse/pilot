@@ -1,18 +1,19 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-type VideoEmbedProps = SectionProps;
+interface VideoEmbedProps extends SectionProps {
+  ref?: React.Ref<HTMLElement>;
+}
 
-const VideoEmbed = forwardRef<HTMLElement, VideoEmbedProps>((props, ref) => {
-  const { children, ...rest } = props;
+function VideoEmbed(props: VideoEmbedProps) {
+  const { children, ref, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
     </Section>
   );
-});
+}
 
 export default VideoEmbed;
 

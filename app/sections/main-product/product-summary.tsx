@@ -1,13 +1,13 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
-interface ProductSummaryProps extends HydrogenComponentProps {}
+interface ProductSummaryProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
+}
 
-const ProductSummary = forwardRef<HTMLDivElement, ProductSummaryProps>(
-  (props, ref) => {
-    const { ...rest } = props;
+export default function ProductSummary(props: ProductSummaryProps) {
+  const { ref, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     if (!product?.summary) {
@@ -19,10 +19,7 @@ const ProductSummary = forwardRef<HTMLDivElement, ProductSummaryProps>(
         <p className="leading-relaxed">{product.summary}</p>
       </div>
     );
-  },
-);
-
-export default ProductSummary;
+}
 
 export const schema = createSchema({
   type: "mp--summary",

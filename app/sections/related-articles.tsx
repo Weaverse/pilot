@@ -1,5 +1,4 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { ArticleFragment } from "storefront-api.generated";
 import Heading from "~/components/heading";
@@ -11,52 +10,51 @@ import { ArticleCard, type ArticleCardProps } from "./blogs";
 interface RelatedArticlesProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
     SectionProps {
+  ref: React.Ref<HTMLElement>;
   heading: string;
 }
 
-const RelatedArticles = forwardRef<HTMLElement, RelatedArticlesProps>(
-  (props, ref) => {
-    const { blog, relatedArticles } = useLoaderData<{
-      relatedArticles: ArticleFragment[];
-      blog: { handle: string };
-    }>();
-    const {
-      heading,
-      showExcerpt,
-      showAuthor,
-      showDate,
-      showReadmore,
-      imageAspectRatio,
-      ...rest
-    } = props;
-    if (relatedArticles.length > 0) {
-      return (
-        <Section ref={ref} {...rest}>
-          <Heading content={heading} animate={false} />
-          <Swimlane>
-            {relatedArticles.map((article, i) => (
-              <ArticleCard
-                key={article.id}
-                blogHandle={blog.handle}
-                article={article}
-                loading={getImageLoadingPriority(i, 2)}
-                showAuthor={showAuthor}
-                showExcerpt={showExcerpt}
-                showDate={showDate}
-                showReadmore={showReadmore}
-                imageAspectRatio={imageAspectRatio}
-                className="w-80 snap-start"
-              />
-            ))}
-          </Swimlane>
-        </Section>
-      );
-    }
-    return <section ref={ref} />;
-  },
-);
+export default function RelatedArticles(props: RelatedArticlesProps) {
+  const {
+    ref,
+    heading,
+    showExcerpt,
+    showAuthor,
+    showDate,
+    showReadmore,
+    imageAspectRatio,
+    ...rest
+  } = props;
+  const { blog, relatedArticles } = useLoaderData<{
+    relatedArticles: ArticleFragment[];
+    blog: { handle: string };
+  }>();
 
-export default RelatedArticles;
+  if (relatedArticles.length > 0) {
+    return (
+      <Section ref={ref} {...rest}>
+        <Heading content={heading} animate={false} />
+        <Swimlane>
+          {relatedArticles.map((article, i) => (
+            <ArticleCard
+              key={article.id}
+              blogHandle={blog.handle}
+              article={article}
+              loading={getImageLoadingPriority(i, 2)}
+              showAuthor={showAuthor}
+              showExcerpt={showExcerpt}
+              showDate={showDate}
+              showReadmore={showReadmore}
+              imageAspectRatio={imageAspectRatio}
+              className="w-80 snap-start"
+            />
+          ))}
+        </Swimlane>
+      </Section>
+    );
+  }
+  return <section ref={ref} />;
+}
 
 export const schema = createSchema({
   type: "related-articles",

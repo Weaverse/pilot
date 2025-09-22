@@ -2,7 +2,6 @@ import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { forwardRef } from "react";
 import { Link, useLoaderData } from "react-router";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
 
@@ -13,13 +12,13 @@ function getExcerpt(text: string) {
 }
 
 interface CollapsibleDetailsProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
 }
 
-const CollapsibleDetails = forwardRef<HTMLDivElement, CollapsibleDetailsProps>(
-  (props, ref) => {
-    const { showShippingPolicy, showRefundPolicy, ...rest } = props;
+export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
+  const { ref, showShippingPolicy, showRefundPolicy, ...rest } = props;
     const { shop, product } = useLoaderData<typeof productLoader>();
     const { description } = product;
     const { shippingPolicy, refundPolicy } = shop;
@@ -90,10 +89,7 @@ const CollapsibleDetails = forwardRef<HTMLDivElement, CollapsibleDetailsProps>(
         </Accordion.Root>
       </div>
     );
-  },
-);
-
-export default CollapsibleDetails;
+}
 
 export const schema = createSchema({
   type: "mp--collapsible-details",

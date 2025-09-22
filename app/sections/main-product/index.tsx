@@ -1,6 +1,5 @@
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import {
   ProductMedia,
@@ -11,15 +10,15 @@ import type { loader as productRouteLoader } from "~/routes/($locale).products.$
 import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductInformationData
-  extends Omit<ProductMediaProps, "selectedVariant" | "media"> {}
+  extends Omit<ProductMediaProps, "selectedVariant" | "media"> {
+  ref: React.Ref<HTMLDivElement>;
+}
 
-const ProductInformation = forwardRef<
-  HTMLDivElement,
-  ProductInformationData & SectionProps
->((props, ref) => {
-  const { product } = useLoaderData<typeof productRouteLoader>();
-
+export default function ProductInformation(
+  props: ProductInformationData & SectionProps,
+) {
   const {
+    ref,
     mediaLayout,
     gridSize,
     imageAspectRatio,
@@ -30,6 +29,7 @@ const ProductInformation = forwardRef<
     zoomButtonVisibility,
     ...rest
   } = props;
+  const { product } = useLoaderData<typeof productRouteLoader>();
 
   const combinedListing = isCombinedListing(product);
 
@@ -88,9 +88,7 @@ const ProductInformation = forwardRef<
       No product data...
     </div>
   );
-});
-
-export default ProductInformation;
+}
 
 export const schema = createSchema({
   type: "main-product",

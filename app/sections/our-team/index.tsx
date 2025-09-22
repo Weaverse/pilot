@@ -3,7 +3,6 @@ import {
   createSchema,
   type WeaverseMetaObject,
 } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import type { OurTeamQuery } from "storefront-api.generated";
 import { backgroundInputs } from "~/components/background-image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
@@ -15,16 +14,18 @@ type OurTeamData = {
 
 interface OurTeamProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
-    OurTeamData {}
+    OurTeamData {
+  ref?: React.Ref<HTMLDivElement>;
+}
 
-const OurTeam = forwardRef<HTMLDivElement, OurTeamProps>((props, ref) => {
-  const { loaderData, metaobject, membersCount, children, ...rest } = props;
+function OurTeam(props: OurTeamProps) {
+  const { loaderData, metaobject, membersCount, children, ref, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
     </Section>
   );
-});
+}
 
 export const loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
   const { weaverse, data } = args;

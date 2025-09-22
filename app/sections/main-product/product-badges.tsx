@@ -3,17 +3,17 @@ import {
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { Fragment, forwardRef } from "react";
+import { Fragment } from "react";
 import { useLoaderData } from "react-router";
 import { ProductBadges } from "~/components/product/badges";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
-interface ProductBadgesComponentProps extends HydrogenComponentProps {}
+interface ProductBadgesComponentProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
+}
 
-const ProductBadgesComponent = forwardRef<
-  HTMLDivElement,
-  ProductBadgesComponentProps
->((props, ref) => {
+export default function ProductBadgesComponent(props: ProductBadgesComponentProps) {
+  const { ref, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const selectedVariant = useOptimisticVariant(
@@ -28,7 +28,7 @@ const ProductBadgesComponent = forwardRef<
   return (
     <div
       ref={ref}
-      {...props}
+      {...rest}
       className="flex items-center gap-2 text-sm empty:hidden"
     >
       <ProductBadges
@@ -38,9 +38,7 @@ const ProductBadgesComponent = forwardRef<
       />
     </div>
   );
-});
-
-export default ProductBadgesComponent;
+}
 
 export const schema = createSchema({
   type: "mp--badges",

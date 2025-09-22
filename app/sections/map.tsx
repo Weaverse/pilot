@@ -1,7 +1,6 @@
 import { createSchema } from "@weaverse/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
-import { forwardRef } from "react";
 import Heading from "~/components/heading";
 import Link, {
   type LinkProps,
@@ -31,6 +30,7 @@ interface MapSectionProps
   extends Omit<SectionProps, "backgroundColor">,
     VariantProps<typeof variants>,
     LinkStyles {
+  ref: React.Ref<HTMLElement>;
   address: string;
   heading: string;
   description: string;
@@ -42,8 +42,9 @@ interface MapSectionProps
   boxBorderRadius: number;
 }
 
-const MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
+export default function MapSection(props: MapSectionProps) {
   const {
+    ref,
     height,
     alignment,
     heading,
@@ -106,9 +107,7 @@ const MapSection = forwardRef<HTMLElement, MapSectionProps>((props, ref) => {
       </div>
     </Section>
   );
-});
-
-export default MapSection;
+}
 
 export const schema = createSchema({
   type: "map",

@@ -4,18 +4,17 @@ import {
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { ProductVariants } from "./variants";
 
-interface ProductVariantSelectorProps extends HydrogenComponentProps {}
+interface ProductVariantSelectorProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
+}
 
-const ProductVariantSelector = forwardRef<
-  HTMLDivElement,
-  ProductVariantSelectorProps
->((props, ref) => {
+export default function ProductVariantSelector(props: ProductVariantSelectorProps) {
+  const { ref, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const selectedVariant = useOptimisticVariant(
@@ -35,7 +34,7 @@ const ProductVariantSelector = forwardRef<
   }
 
   return (
-    <div ref={ref} {...props}>
+    <div ref={ref} {...rest}>
       <ProductVariants
         productOptions={productOptions}
         selectedVariant={selectedVariant}
@@ -43,9 +42,7 @@ const ProductVariantSelector = forwardRef<
       />
     </div>
   );
-});
-
-export default ProductVariantSelector;
+}
 
 export const schema = createSchema({
   type: "mp--variant-selector",

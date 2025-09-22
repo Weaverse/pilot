@@ -4,7 +4,6 @@ import {
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
@@ -12,21 +11,22 @@ import { isCombinedListing } from "~/utils/combined-listings";
 import { useProductQtyStore } from "./product-quantity-selector";
 
 interface ProductATCButtonsProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   addToCartText: string;
   addBundleToCartText: string;
   soldOutText: string;
   showShopPayButton: boolean;
 }
 
-const ProductATCButtons = forwardRef<HTMLDivElement, ProductATCButtonsProps>(
-  (props, ref) => {
-    const {
-      addToCartText,
-      addBundleToCartText,
-      soldOutText,
-      showShopPayButton,
-      ...rest
-    } = props;
+export default function ProductATCButtons(props: ProductATCButtonsProps) {
+  const {
+    ref,
+    addToCartText,
+    addBundleToCartText,
+    soldOutText,
+    showShopPayButton,
+    ...rest
+  } = props;
     const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
     const { quantity } = useProductQtyStore();
 
@@ -79,10 +79,7 @@ const ProductATCButtons = forwardRef<HTMLDivElement, ProductATCButtonsProps>(
         )}
       </div>
     );
-  },
-);
-
-export default ProductATCButtons;
+}
 
 export const schema = createSchema({
   type: "mp--atc-buttons",

@@ -1,13 +1,13 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
-interface ProductVendorProps extends HydrogenComponentProps {}
+interface ProductVendorProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
+}
 
-const ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
-  (props, ref) => {
-    const { ...rest } = props;
+export default function ProductVendor(props: ProductVendorProps) {
+  const { ref, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     if (!product?.vendor) {
@@ -19,10 +19,7 @@ const ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
         <span className="text-body-subtle">{product.vendor}</span>
       </div>
     );
-  },
-);
-
-export default ProductVendor;
+}
 
 export const schema = createSchema({
   type: "mp--vendor",

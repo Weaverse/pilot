@@ -1,19 +1,16 @@
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import { BundledVariants } from "~/components/product/bundled-variants";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 
 interface ProductBundledVariantsProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
   headingText: string;
 }
 
-const ProductBundledVariants = forwardRef<
-  HTMLDivElement,
-  ProductBundledVariantsProps
->((props, ref) => {
-  const { headingText, ...rest } = props;
+export default function ProductBundledVariants(props: ProductBundledVariantsProps) {
+  const { ref, headingText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const isBundle = Boolean(product?.isBundle?.requiresComponents);
@@ -31,9 +28,7 @@ const ProductBundledVariants = forwardRef<
       />
     </div>
   );
-});
-
-export default ProductBundledVariants;
+}
 
 export const schema = createSchema({
   type: "mp--bundled-variants",

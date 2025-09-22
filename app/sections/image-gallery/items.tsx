@@ -6,7 +6,6 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
-import { forwardRef } from "react";
 
 const variants = cva("flex flex-col sm:grid sm:grid-cols-4", {
   variants: {
@@ -35,24 +34,23 @@ interface ImageGalleyItemsProps
   extends HydrogenComponentProps,
     VariantProps<typeof variants> {
   height: number;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const ImageGalleyItems = forwardRef<HTMLDivElement, ImageGalleyItemsProps>(
-  (props, ref) => {
-    const { children, gap, height, ...rest } = props;
+function ImageGalleyItems(props: ImageGalleyItemsProps) {
+  const { children, gap, height, ref, ...rest } = props;
 
-    return (
-      <div
-        ref={ref}
-        {...rest}
-        className={variants({ gap })}
-        style={{ "--image-height": `${height}px` } as CSSProperties}
-      >
-        {children}
-      </div>
-    );
-  },
-);
+  return (
+    <div
+      ref={ref}
+      {...rest}
+      className={variants({ gap })}
+      style={{ "--image-height": `${height}px` } as CSSProperties}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default ImageGalleyItems;
 

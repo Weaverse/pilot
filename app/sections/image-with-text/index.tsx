@@ -1,26 +1,25 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 
-type ImageWithTextProps = SectionProps;
+interface ImageWithTextProps extends SectionProps {
+  ref?: React.Ref<HTMLElement>;
+}
 
-const ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
-  (props, ref) => {
-    const { children, ...rest } = props;
+function ImageWithText(props: ImageWithTextProps) {
+  const { children, ref, ...rest } = props;
 
-    return (
-      <Section
-        ref={ref}
-        {...rest}
-        containerClassName="flex flex-col md:flex-row px-0 sm:px-0"
-      >
-        {children}
-      </Section>
-    );
-  },
-);
+  return (
+    <Section
+      ref={ref}
+      {...rest}
+      containerClassName="flex flex-col md:flex-row px-0 sm:px-0"
+    >
+      {children}
+    </Section>
+  );
+}
 
 export default ImageWithText;
 
