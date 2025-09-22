@@ -15,7 +15,7 @@ export default function JudgemeReviewSummary(
 
   return (
     <div ref={ref} {...rest} className="py-4">
-      {status === "initial-loading" ? (
+      {status === "initial-loading" || status === "idle" ? (
         // Loading skeleton
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr_2fr]">

@@ -1,8 +1,127 @@
+import {
+  CaretDoubleLeftIcon,
+  CaretDoubleRightIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
+} from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { cn } from "~/utils/cn";
 import { useJudgemeStore } from ".";
 import { ReviewItem } from "./review-item";
-import { ReviewsPagination } from "./reviews-pagination";
+
+function getVisiblePages(
+  currentPage: number,
+  lastPage: number,
+): (number | string)[] {
+  const DELTA = 1;
+  const range: number[] = [];
+  const rangeWithDots: (number | string)[] = [];
+
+  for (
+    let i = Math.max(2, currentPage - DELTA);
+    i <= Math.min(lastPage - 1, currentPage + DELTA);
+    i++
+  ) {
+    range.push(i);
+  }
+
+  if (currentPage - DELTA > 2) {
+    rangeWithDots.push(1, "...");
+  } else {
+    rangeWithDots.push(1);
+  }
+
+  rangeWithDots.push(...range);
+
+  if (currentPage + DELTA < lastPage - 1) {
+    rangeWithDots.push("...", lastPage);
+  } else if (lastPage > 1) {
+    rangeWithDots.push(lastPage);
+  }
+
+  return rangeWithDots;
+}
+
+export function ReviewsPagination() {
+  const { status, paging, data, setPaging } = useJudgemeStore();
+
+  if (status !== "ok" || !data || data.totalPage <= 1) {
+    return null;
+  }
+
+  const { currentPage, perPage } = paging;
+  const { totalPage } = data;
+
+  function handlePageChange(page: number) {
+    if (page >= 1 && page <= totalPage && page !== currentPage) {
+      setPaging({ currentPage: page, perPage });
+    }
+  }
+
+  const visiblePages = getVisiblePages(currentPage, totalPage);
+
+  return (
+    <div className="flex items-center justify-center gap-1.5 mt-6">
+      <button
+        type="button"
+        onClick={() => handlePageChange(1)}
+        disabled={currentPage === 1}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretDoubleLeftIcon className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretLeftIcon className="h-4 w-4" />
+      </button>
+
+      {visiblePages.map((page, index) =>
+        page === "..." ? (
+          <span key={`dots-${index}`} className="p-2 text-gray-500">
+            ...
+          </span>
+        ) : (
+          <button
+            key={page}
+            type="button"
+            onClick={() => handlePageChange(page as number)}
+            className={cn(
+              "p-2 underline-offset-4 leading-4",
+              currentPage === page
+                ? "underline font-semibold"
+                : "hover:underline",
+            )}
+          >
+            {page}
+          </button>
+        ),
+      )}
+
+      <button
+        type="button"
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPage}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretRightIcon className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => handlePageChange(totalPage)}
+        disabled={currentPage === totalPage}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretDoubleRightIcon className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
 
 export default function ReviewList(
   props: HydrogenComponentProps & { ref: React.Ref<HTMLDivElement> },
@@ -10,88 +129,24 @@ export default function ReviewList(
   const { ref, ...rest } = props;
   const { status, data } = useJudgemeStore();
 
-  return (
-    <div ref={ref} {...rest}>
-      {status === "initial-loading" ? (
-        // Show skeleton on first load
-        <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
-          <div className="space-y-8 divide-y divide-gray-200">
-            {Array.from({ length: 3 }, (_, i) => (
-              <ReviewSkeleton key={i} className="pb-8" />
-            ))}
-          </div>
-        </div>
-      ) : data?.reviews?.length ? (
-        // Show reviews with optional overlay and pagination
+  if (data?.reviews?.length) {
+    return (
+      <div ref={ref} {...rest}>
         <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
           <div className="space-y-8 divide-y divide-gray-200 relative">
             {data.reviews.map((review) => (
               <ReviewItem key={review.id} review={review} className="pb-8" />
             ))}
-            {status === "page-loading" && <LoadingOverlay />}
+            {status === "page-loading" && (
+              <div className="absolute inset-0 bg-white/80 z-10" />
+            )}
           </div>
           <ReviewsPagination />
         </div>
-      ) : null}
-    </div>
-  );
-}
-
-function LoadingOverlay() {
-  return <div className="absolute inset-0 bg-white/80 z-10" />;
-}
-
-function ReviewSkeleton({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn(
-        "group flex flex-col md:flex-row gap-4 md:gap-6 animate-pulse",
-        className,
-      )}
-    >
-      {/* Left column - Reviewer info skeleton */}
-      <div className="space-y-3 w-full flex-shrink-0 md:w-1/4">
-        {/* Star rating skeleton */}
-        <div className="flex gap-1">
-          {Array.from({ length: 5 }, (_, i) => (
-            <div key={i} className="h-4 w-4 bg-gray-200 rounded" />
-          ))}
-        </div>
-        <div className="space-y-2">
-          {/* Reviewer name skeleton */}
-          <div className="h-5 w-32 bg-gray-200 rounded" />
-          {/* Email skeleton */}
-          <div className="h-4 w-40 bg-gray-200 rounded" />
-        </div>
       </div>
-
-      {/* Right column - Review content skeleton */}
-      <div className="grow space-y-4">
-        {/* Review title skeleton */}
-        <div className="h-5 w-48 bg-gray-200 rounded" />
-
-        {/* Review body skeleton */}
-        <div className="space-y-2">
-          <div className="h-4 w-full bg-gray-200 rounded" />
-          <div className="h-4 w-3/4 bg-gray-200 rounded" />
-          <div className="h-4 w-5/6 bg-gray-200 rounded" />
-        </div>
-
-        {/* Review images skeleton */}
-        <div className="flex flex-wrap gap-3">
-          {Array.from({ length: 2 }, (_, i) => (
-            <div
-              key={i}
-              className="h-16 w-16 bg-gray-200 rounded border border-gray-200"
-            />
-          ))}
-        </div>
-
-        {/* Date skeleton */}
-        <div className="h-3 w-24 bg-gray-200 rounded" />
-      </div>
-    </div>
-  );
+    );
+  }
+  return null;
 }
 
 export const schema = createSchema({
