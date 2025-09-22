@@ -28,7 +28,7 @@ export function GlobalStyle() {
       bestSellerBadge,
       bundleBadgeColor,
       soldOutBadgeColor,
-      starRatingColor,
+      productReviewsColor,
       bodyBaseSize,
       bodyBaseSpacing,
       bodyBaseLineHeight,
@@ -82,7 +82,7 @@ export function GlobalStyle() {
               --color-best-seller: ${bestSellerBadge};
               --color-bundle-badge: ${bundleBadgeColor};
               --color-sold-out-and-unavailable: ${soldOutBadgeColor};
-              --color-star-rating: ${starRatingColor};
+              --color-product-reviews: ${productReviewsColor};
 
               /* Typography */
               --body-base-size: ${bodyBaseSize}px;

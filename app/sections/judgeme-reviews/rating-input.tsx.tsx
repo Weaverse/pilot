@@ -41,8 +41,8 @@ export function RatingInput({
             className={cn(
               "p-1 transition-all duration-200",
               value <= (hoverRating || rating)
-                ? "scale-110 text-(--color-star-rating)"
-                : "text-gray-300 hover:scale-105 hover:text-(--color-star-rating)",
+                ? "scale-110 text-(--color-product-reviews)"
+                : "text-gray-300 hover:scale-105 hover:text-(--color-product-reviews)",
             )}
             aria-label={`Rate ${value} star${value !== 1 ? "s" : ""}`}
             aria-pressed={value === rating}

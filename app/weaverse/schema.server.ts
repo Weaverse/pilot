@@ -396,8 +396,8 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Star rating",
-          name: "starRatingColor",
+          label: "Product reviews",
+          name: "productReviewsColor",
           defaultValue: "#108474",
         },
       ],
