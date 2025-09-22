@@ -9,7 +9,7 @@ import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import { isCombinedListing } from "~/utils/combined-listings";
-import { useProductQuantity } from "./product-quantity-context";
+import { useProductQtyStore } from "./product-quantity-selector";
 
 interface ProductATCButtonsProps extends HydrogenComponentProps {
   addToCartText: string;
@@ -28,7 +28,7 @@ const ProductATCButtons = forwardRef<HTMLDivElement, ProductATCButtonsProps>(
       ...rest
     } = props;
     const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
-    const { quantity } = useProductQuantity();
+    const { quantity } = useProductQtyStore();
 
     const selectedVariant = useOptimisticVariant(
       product?.selectedOrFirstAvailableVariant,

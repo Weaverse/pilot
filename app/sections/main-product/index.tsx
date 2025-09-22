@@ -9,7 +9,6 @@ import {
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import { isCombinedListing } from "~/utils/combined-listings";
-import { ProductQuantityProvider } from "./product-quantity-context";
 
 interface ProductInformationData
   extends Omit<ProductMediaProps, "selectedVariant" | "media"> {}
@@ -77,7 +76,7 @@ const ProductInformation = forwardRef<
               className="sticky flex flex-col justify-start gap-5"
               style={{ top: "calc(var(--height-nav) + 20px)" }}
             >
-              <ProductQuantityProvider>{children}</ProductQuantityProvider>
+              {children}
             </div>
           </div>
         </div>
