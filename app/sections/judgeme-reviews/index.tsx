@@ -152,6 +152,12 @@ export const schema = createSchema({
           helpText:
             "This ID can be used to scroll to this section from other components",
         },
+        {
+          type: "heading",
+          label: "Colors",
+          helpText:
+            "Colors settings for product reviews are global and can be found in <strong>Theme settings > Colors > Others</strong>",
+        },
       ],
     },
     {
