@@ -67,49 +67,48 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
-      if (!(product?.handle && inView)) {
-        return;
-      }
-
-      // Check if product handle changed
-      const handleChanged = previousHandleRef.current !== product.handle;
-
-      if (handleChanged) {
-        // Reset pagination and clear data for new product
-        previousHandleRef.current = product.handle;
-        setPaging({ currentPage: 1, perPage: 5 });
-        setData(null);
-
-        // Don't fetch yet - let the effect run again with reset pagination
-        return;
-      }
-
-      // If this is the first load (no data yet), show initial loading state
-      // If we have data already, show page loading state
-      const isFirstLoad = !data;
-      setStatus(isFirstLoad ? "initial-loading" : "page-loading");
-
-      fetch(
-        constructURL(reviewsAPI, {
-          page: paging.currentPage,
-          per_page: paging.perPage,
-        }),
-      )
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-          throw new Error(`Failed to fetch reviews: ${res.status}`);
-        })
-        .then((d: JudgemeReviewsData) => {
-          setData(d);
-          setStatus("ok");
-        })
-        .catch((err) => {
-          console.error("Error fetching Judge.me reviews:", err);
-          setStatus("error");
+      if (product?.handle) {
+        // Check if product handle changed
+        const handleChanged = previousHandleRef.current !== product.handle;
+        if (handleChanged) {
+          // Reset pagination and clear data for new product
+          previousHandleRef.current = product.handle;
+          setPaging({ currentPage: 1, perPage: 5 });
           setData(null);
-        });
+          setStatus("idle");
+          // Don't fetch yet - let the effect run again with reset pagination
+          return;
+        }
+
+        if (inView) {
+          // If this is the first load (no data yet), show initial loading state
+          // If we have data already, show page loading state
+          const isFirstLoad = !data;
+          setStatus(isFirstLoad ? "initial-loading" : "page-loading");
+
+          fetch(
+            constructURL(reviewsAPI, {
+              page: paging.currentPage,
+              per_page: paging.perPage,
+            }),
+          )
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              }
+              throw new Error(`Failed to fetch reviews: ${res.status}`);
+            })
+            .then((d: JudgemeReviewsData) => {
+              setData(d);
+              setStatus("ok");
+            })
+            .catch((err) => {
+              console.error("Error fetching Judge.me reviews:", err);
+              setStatus("error");
+              setData(null);
+            });
+        }
+      }
     }, [product?.handle, inView, paging]);
 
     if (!product) {
