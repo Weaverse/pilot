@@ -1,5 +1,5 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import { create } from "zustand";
@@ -50,6 +50,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
     const reviewsAPI = usePrefixPathWithLocale(
       `/api/product/${product?.handle}/reviews`,
     );
+    const previousHandleRef = useRef<string | undefined>(product?.handle);
 
     const { ref: inViewRef, inView } = useInView({
       triggerOnce: true,
@@ -64,17 +65,22 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
       inViewRef(node);
     };
 
-    // Reset pagination when product handle changes
-    useEffect(() => {
-      if (product?.handle) {
-        setPaging({ currentPage: 1, perPage: 5 });
-        setData(null); // Clear previous product's reviews
-      }
-    }, [product?.handle, setPaging, setData]);
-
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
       if (!(product?.handle && inView)) {
+        return;
+      }
+
+      // Check if product handle changed
+      const handleChanged = previousHandleRef.current !== product.handle;
+
+      if (handleChanged) {
+        // Reset pagination and clear data for new product
+        previousHandleRef.current = product.handle;
+        setPaging({ currentPage: 1, perPage: 5 });
+        setData(null);
+
+        // Don't fetch yet - let the effect run again with reset pagination
         return;
       }
 
