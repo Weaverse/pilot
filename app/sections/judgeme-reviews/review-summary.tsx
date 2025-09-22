@@ -221,5 +221,4 @@ export const schema = createSchema({
       ],
     },
   ],
-  presets: {},
 });

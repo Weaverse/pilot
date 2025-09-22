@@ -5,9 +5,10 @@ import {
   CaretRightIcon,
 } from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { useEffect } from "react";
 import { cn } from "~/utils/cn";
 import { useJudgemeStore } from ".";
-import { ReviewItem } from "./review-item";
+import { ReviewItem, type ReviewItemProps } from "./review-item";
 
 function getVisiblePages(
   currentPage: number,
@@ -123,11 +124,32 @@ export function ReviewsPagination() {
   );
 }
 
-export default function ReviewList(
-  props: HydrogenComponentProps & { ref: React.Ref<HTMLDivElement> },
-) {
-  const { ref, ...rest } = props;
-  const { status, data } = useJudgemeStore();
+interface ReviewListProps
+  extends HydrogenComponentProps,
+    Omit<ReviewItemProps, "review"> {
+  ref: React.Ref<HTMLDivElement>;
+  reviewsPerPage?: number;
+}
+
+export default function ReviewList(props: ReviewListProps) {
+  const {
+    ref,
+    showReviewerName = true,
+    showReviewerEmail = true,
+    reviewerEmailFormat = "partial",
+    showReviewTitle = true,
+    showReviewDate = true,
+    reviewsPerPage = 5,
+    ...rest
+  } = props;
+  const { status, data, setPaging, paging } = useJudgemeStore();
+
+  // Update store perPage when reviewsPerPage prop changes
+  useEffect(() => {
+    if (paging.perPage !== reviewsPerPage) {
+      setPaging({ currentPage: 1, perPage: reviewsPerPage });
+    }
+  }, [reviewsPerPage, paging.perPage, setPaging]);
 
   if (data?.reviews?.length) {
     return (
@@ -135,7 +157,16 @@ export default function ReviewList(
         <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
           <div className="space-y-8 divide-y divide-gray-200 relative">
             {data.reviews.map((review) => (
-              <ReviewItem key={review.id} review={review} className="pb-8" />
+              <ReviewItem
+                key={review.id}
+                review={review}
+                className="pb-8"
+                showReviewerName={showReviewerName}
+                showReviewerEmail={showReviewerEmail}
+                reviewerEmailFormat={reviewerEmailFormat}
+                showReviewTitle={showReviewTitle}
+                showReviewDate={showReviewDate}
+              />
             ))}
             {status === "page-loading" && (
               <div className="absolute inset-0 bg-white/80 z-10" />
@@ -152,6 +183,59 @@ export default function ReviewList(
 export const schema = createSchema({
   type: "judgeme-reviews--list",
   title: "Reviews list",
-  settings: [],
-  presets: {},
+  settings: [
+    {
+      group: "Display Settings",
+      inputs: [
+        {
+          type: "switch",
+          name: "showReviewerName",
+          label: "Show reviewer name",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showReviewerEmail",
+          label: "Show reviewer email",
+          defaultValue: true,
+        },
+        {
+          type: "select",
+          name: "reviewerEmailFormat",
+          label: "Reviewer email format",
+          defaultValue: "partial",
+          configs: {
+            options: [
+              { label: "Partial (e.g., joh***@email.com)", value: "partial" },
+              { label: "Full email address", value: "full" },
+            ],
+          },
+          condition: "showReviewerEmail.eq.true",
+        },
+        {
+          type: "switch",
+          name: "showReviewTitle",
+          label: "Show review title",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showReviewDate",
+          label: "Show review date",
+          defaultValue: true,
+        },
+        {
+          type: "range",
+          name: "reviewsPerPage",
+          label: "Reviews per page",
+          defaultValue: 5,
+          configs: {
+            min: 5,
+            max: 10,
+            step: 1,
+          },
+        },
+      ],
+    },
+  ],
 });

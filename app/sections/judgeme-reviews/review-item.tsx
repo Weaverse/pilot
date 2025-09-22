@@ -18,13 +18,25 @@ function truncateEmail(email: string) {
   return `${masked}@${domain}`;
 }
 
+export type ReviewItemProps = {
+  review: JudgeMeReviewType;
+  className?: string;
+  showReviewerName?: boolean;
+  showReviewerEmail?: boolean;
+  reviewerEmailFormat?: "full" | "partial";
+  showReviewTitle?: boolean;
+  showReviewDate?: boolean;
+};
+
 export function ReviewItem({
   review,
   className,
-}: {
-  review: JudgeMeReviewType;
-  className?: string;
-}) {
+  showReviewerName = true,
+  showReviewerEmail = true,
+  reviewerEmailFormat = "partial",
+  showReviewTitle = true,
+  showReviewDate = true,
+}: ReviewItemProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null,
   );
@@ -40,18 +52,24 @@ export function ReviewItem({
       <div className="space-y-3 w-full flex-shrink-0 md:w-1/4">
         <StarRating rating={review.rating} className="[&>svg]:size-4.5" />
         <div className="space-y-1">
-          <div className="font-semibold text-gray-900 text-lg/none">
-            {review.reviewer.name}
-          </div>
-          <div className="font-medium text-gray-500">
-            {truncateEmail(review.reviewer.email)}
-          </div>
+          {showReviewerName && (
+            <div className="font-semibold text-gray-900 text-lg/none">
+              {review.reviewer.name}
+            </div>
+          )}
+          {showReviewerEmail && (
+            <div className="font-medium text-gray-500">
+              {reviewerEmailFormat === "full"
+                ? review.reviewer.email
+                : truncateEmail(review.reviewer.email)}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Right column - Review content */}
       <div className="grow space-y-4">
-        {review.title && (
+        {showReviewTitle && review.title && (
           <h4 className="font-semibold text-gray-900 text-lg leading-none">
             {review.title}
           </h4>
@@ -94,9 +112,11 @@ export function ReviewItem({
             </div>
           </div>
         )}
-        <p className="flex-shrink-0 text-gray-500 text-sm truncate">
-          {formatDate(review.created_at)}
-        </p>
+        {showReviewDate && (
+          <p className="flex-shrink-0 text-gray-500 text-sm truncate">
+            {formatDate(review.created_at)}
+          </p>
+        )}
       </div>
       <ReviewImagesModal
         selectedImageIndex={selectedImageIndex}
