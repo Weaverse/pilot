@@ -148,7 +148,7 @@ export function ProductBadges({
   product: NonNullable<ProductQuery["product"]>;
   selectedVariant: ProductVariantFragment;
   className?: string;
-  as?: React.ElementType
+  as?: React.ElementType;
 }) {
   if (!(product && selectedVariant)) {
     return null;
@@ -160,10 +160,15 @@ export function ProductBadges({
     .filter(Boolean)
     .some(({ key, value }) => key === "best_seller" && value === "true");
 
-  const isFragment = Component.toString() === 'Symbol(react.fragment)';
+  const isFragment = Component.toString() === "Symbol(react.fragment)";
   const componentProps = isFragment
     ? {}
-    : { className: cn("flex items-center gap-2 text-sm empty:hidden", className) };
+    : {
+        className: cn(
+          "flex items-center gap-2 text-sm empty:hidden",
+          className,
+        ),
+      };
 
   return (
     <Component {...componentProps}>

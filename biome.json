@@ -17,7 +17,8 @@
         "noArrayIndexKey": "off"
       },
       "nursery": {
-        "useConsistentTypeDefinitions": "off"
+        "useConsistentTypeDefinitions": "off",
+        "noUnnecessaryConditions": "off"
       },
       "correctness": {
         "noUnusedVariables": "off",

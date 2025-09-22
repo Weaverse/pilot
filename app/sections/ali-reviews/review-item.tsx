@@ -138,8 +138,7 @@ function ReviewMediaPreview(props: {
     return (
       <div className="flex items-start gap-2">
         <div className="flex h-96 w-96 items-center justify-center overflow-hidden bg-gray-800">
-          {/** biome-ignore lint/performance/noImgElement: <explanation> --- IGNORE --- */}
-          <img
+          <Image
             className="max-h-full max-w-full object-cover"
             src={media.url}
             alt="Review media preview"

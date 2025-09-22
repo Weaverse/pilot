@@ -39,7 +39,7 @@ export function Cart({
 }) {
   const optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
   const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
-  const cartHasItems = !!cart && cart.totalQuantity > 0;
+  const cartHasItems = Boolean(cart) && cart.totalQuantity > 0;
 
   if (cartHasItems) {
     return <CartDetails cart={optimisticCart} layout={layout} />;

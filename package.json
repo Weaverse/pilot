@@ -37,7 +37,7 @@
     "clean": "rm -rf dist node_modules package-lock.json pnpm-lock.yaml .shopify .react-router",
     "e2e": "npx playwright test",
     "e2e:ui": "npx playwright test --ui",
-    "biome": "biome check --diagnostic-level=error",
+    "biome": "biome check",
     "biome:fix": "biome check --write --diagnostic-level=error",
     "format": "biome format --write",
     "format:check": "biome format"

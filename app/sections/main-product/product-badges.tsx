@@ -3,7 +3,7 @@ import {
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef, Fragment } from "react";
+import { Fragment, forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import { ProductBadges } from "~/components/product/badges";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
@@ -21,11 +21,21 @@ const ProductBadgesComponent = forwardRef<
     getAdjacentAndFirstAvailableVariants(product),
   );
 
-  if (!product) return null;
+  if (!product) {
+    return null;
+  }
 
   return (
-    <div ref={ref} {...props} className="flex items-center gap-2 text-sm empty:hidden">
-      <ProductBadges as={Fragment} product={product} selectedVariant={selectedVariant} />
+    <div
+      ref={ref}
+      {...props}
+      className="flex items-center gap-2 text-sm empty:hidden"
+    >
+      <ProductBadges
+        as={Fragment}
+        product={product}
+        selectedVariant={selectedVariant}
+      />
     </div>
   );
 });
@@ -46,7 +56,8 @@ export const schema = createSchema({
         {
           type: "heading",
           label: "Badge configuration",
-          helpText: "Badge display settings are configured globally in Theme Settings. Go to Theme Settings to customize which badges are shown and their appearance.",
+          helpText:
+            "Badge display settings are configured globally in Theme Settings. Go to Theme Settings to customize which badges are shown and their appearance.",
         },
       ],
     },
