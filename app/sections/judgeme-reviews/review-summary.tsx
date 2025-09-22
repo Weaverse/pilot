@@ -52,7 +52,7 @@ export default function JudgemeReviewSummary(
         </div>
       ) : status === "error" ? (
         <p className="text-center text-red-600">Error loading reviews.</p>
-      ) : data ? (
+      ) : data && data.totalReviews > 0 ? (
         // Summary with data
         <div className="space-y-12">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_2fr_1fr]">
@@ -106,7 +106,33 @@ export default function JudgemeReviewSummary(
           <ReviewForm showForm={showForm} setShowForm={setShowForm} />
         </div>
       ) : (
-        <p className="text-center text-gray-600">No reviews available.</p>
+        // No reviews state
+        <div className="space-y-12 pt-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 divide-x divide-gray-200">
+            {/* Column 1 - Empty Star Rating */}
+            <div className="flex items-center justify-end space-y-3 pr-14">
+              <div className="flex flex-col gap-2">
+                <StarRating rating={0} className="[&>svg]:size-10" />
+                <span className="text-gray-500 text-sm">
+                  Be the first to write a review
+                </span>
+              </div>
+            </div>
+            {/* Column 3 - Write Review Button */}
+            <div className="flex items-center px-8">
+              <Button
+                variant={showForm ? "outline" : "primary"}
+                onClick={() => setShowForm(!showForm)}
+                aria-expanded={showForm}
+                aria-controls="review-form"
+                className="w-64"
+              >
+                {showForm ? "Hide Form" : "Write a review"}
+              </Button>
+            </div>
+          </div>
+          <ReviewForm showForm={showForm} setShowForm={setShowForm} />
+        </div>
       )}
     </div>
   );
