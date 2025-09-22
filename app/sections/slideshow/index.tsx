@@ -7,7 +7,6 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { forwardRef } from "react";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SlideshowArrowsProps } from "./arrows";
@@ -49,6 +48,7 @@ export interface SlideshowData
   extends VariantProps<typeof variants>,
     SlideshowArrowsProps,
     SlideshowDotsProps {
+  ref: React.Ref<HTMLDivElement>;
   effect?: "fade" | "slide";
   showArrows: boolean;
   showDots: boolean;
@@ -59,11 +59,11 @@ export interface SlideshowData
   changeSlidesEvery: number;
 }
 
-const Slideshow = forwardRef<
-  HTMLDivElement,
-  SlideshowData & HydrogenComponentProps
->((props, ref) => {
+export default function Slideshow(
+  props: SlideshowData & HydrogenComponentProps,
+) {
   const {
+    ref,
     height,
     effect,
     showArrows,
@@ -81,11 +81,12 @@ const Slideshow = forwardRef<
     children = [],
     ...rest
   } = props;
+
   const { enableTransparentHeader } = useThemeSettings();
 
   return (
     <section
-      key={Object.values(props)
+      key={Object.values(rest)
         .filter((v) => typeof v !== "object")
         .join("-")}
       ref={ref}
@@ -127,14 +128,20 @@ const Slideshow = forwardRef<
             {child}
           </SwiperSlide>
         ))}
-        {showArrows && <Arrows {...props} />}
-        {showDots && <Dots {...props} />}
+        {showArrows && (
+          <Arrows
+            arrowsIcon={arrowsIcon}
+            iconSize={iconSize}
+            arrowsColor={arrowsColor}
+            showArrowsOnHover={showArrowsOnHover}
+            arrowsShape={arrowsShape}
+          />
+        )}
+        {showDots && <Dots dotsPosition={dotsPosition} dotsColor={dotsColor} />}
       </Swiper>
     </section>
   );
-});
-
-export default Slideshow;
+}
 
 export const schema = createSchema({
   title: "Slideshow",

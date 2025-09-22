@@ -1,5 +1,5 @@
 import type { ElementType } from "react";
-import { cn } from "./utils/cn";
+import { cn } from "../utils/cn";
 
 export function RevealUnderline({
   children,

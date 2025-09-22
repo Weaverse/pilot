@@ -1,25 +1,23 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 
 interface ButtonItemsProps extends HydrogenComponentProps {
   gap: number;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const PromotionItemButtons = forwardRef<HTMLDivElement, ButtonItemsProps>(
-  (props, ref) => {
-    const { gap, children, ...rest } = props;
-    return (
-      <div
-        ref={ref}
-        {...rest}
-        className="mt-3 flex"
-        style={{ gap: `${gap}px` }}
-      >
-        {children}
-      </div>
-    );
-  },
-);
+function PromotionItemButtons(props: ButtonItemsProps) {
+  const { gap, children, ref, ...rest } = props;
+  return (
+    <div
+      ref={ref}
+      {...rest}
+      className="mt-3 flex"
+      style={{ gap: `${gap}px` }}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default PromotionItemButtons;
 

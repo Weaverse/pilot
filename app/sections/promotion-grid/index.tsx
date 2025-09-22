@@ -1,13 +1,14 @@
 import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 
-type PromotionGridProps = VariantProps<typeof variants> & SectionProps;
+interface PromotionGridProps extends VariantProps<typeof variants>, SectionProps {
+  ref?: React.Ref<HTMLElement>;
+}
 
 const variants = cva("flex flex-col sm:grid", {
   variants: {
@@ -41,20 +42,18 @@ const variants = cva("flex flex-col sm:grid", {
   },
 });
 
-const PromotionGrid = forwardRef<HTMLElement, PromotionGridProps>(
-  (props, ref) => {
-    const { children, gridSize, gap, ...rest } = props;
-    return (
-      <Section
-        ref={ref}
-        {...rest}
-        containerClassName={variants({ gridSize, gap })}
-      >
-        {children}
-      </Section>
-    );
-  },
-);
+function PromotionGrid(props: PromotionGridProps) {
+  const { children, gridSize, gap, ref, ...rest } = props;
+  return (
+    <Section
+      ref={ref}
+      {...rest}
+      containerClassName={variants({ gridSize, gap })}
+    >
+      {children}
+    </Section>
+  );
+}
 
 export default PromotionGrid;
 

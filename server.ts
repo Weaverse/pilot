@@ -63,7 +63,6 @@ export default {
 
       return response;
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
       console.error(error);
       return new Response("An unexpected error occurred", { status: 500 });
     }
@@ -112,8 +111,8 @@ export async function createAppLoadContext(
 
 class AppSession implements HydrogenSession {
   isPending = false;
-  #sessionStorage: SessionStorage;
-  #session: Session;
+  readonly #sessionStorage: SessionStorage;
+  readonly #session: Session;
 
   constructor(sessionStorage: SessionStorage, session: Session) {
     this.#sessionStorage = sessionStorage;

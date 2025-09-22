@@ -1,7 +1,6 @@
 import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
@@ -17,16 +16,18 @@ const variants = cva("flex flex-col px-4 sm:px-16 [&_.paragraph]:mx-[unset]", {
   },
 });
 
-interface CountdownProps extends VariantProps<typeof variants>, SectionProps {}
+interface CountdownProps extends VariantProps<typeof variants>, SectionProps {
+  ref?: React.Ref<HTMLElement>;
+}
 
-const Countdown = forwardRef<HTMLElement, CountdownProps>((props, ref) => {
-  const { children, alignment, ...rest } = props;
+function Countdown(props: CountdownProps) {
+  const { children, alignment, ref, ...rest } = props;
   return (
     <Section ref={ref} {...rest} containerClassName={variants({ alignment })}>
       {children}
     </Section>
   );
-});
+}
 
 export default Countdown;
 

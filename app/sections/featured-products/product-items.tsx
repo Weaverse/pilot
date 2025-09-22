@@ -1,7 +1,6 @@
 import { createSchema, useParentInstance } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { ProductCard } from "~/components/product/product-card";
 import { Swimlane } from "~/components/swimlane";
 
@@ -22,29 +21,29 @@ const variants = cva("", {
   },
 });
 
-interface ProductItemsProps extends VariantProps<typeof variants> {}
+interface ProductItemsProps extends VariantProps<typeof variants> {
+  ref?: React.Ref<HTMLDivElement>;
+}
 
-const ProductItems = forwardRef<HTMLDivElement, ProductItemsProps>(
-  (props, ref) => {
-    const { gap, ...rest } = props;
-    const parent = useParentInstance();
-    const products = parent.data?.loaderData?.products;
+function ProductItems(props: ProductItemsProps) {
+  const { gap, ref, ...rest } = props;
+  const parent = useParentInstance();
+  const products = parent.data?.loaderData?.products;
 
-    return (
-      <div ref={ref} {...rest}>
-        <Swimlane className={variants({ gap })}>
-          {products?.nodes?.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              className="w-80 snap-start"
-            />
-          ))}
-        </Swimlane>
-      </div>
-    );
-  },
-);
+  return (
+    <div ref={ref} {...rest}>
+      <Swimlane className={variants({ gap })}>
+        {products?.nodes?.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            className="w-80 snap-start"
+          />
+        ))}
+      </Swimlane>
+    </div>
+  );
+}
 
 export default ProductItems;
 

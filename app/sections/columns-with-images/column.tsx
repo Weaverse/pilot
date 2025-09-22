@@ -7,7 +7,6 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
-import { forwardRef } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
 import type { ImageAspectRatio } from "~/types/image";
@@ -35,12 +34,10 @@ interface ColumnWithImageItemProps
   imageBorderRadius: number;
   heading: string;
   content: string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const ColumnWithImageItem = forwardRef<
-  HTMLDivElement,
-  ColumnWithImageItemProps
->((props, ref) => {
+function ColumnWithImageItem(props: ColumnWithImageItemProps) {
   const {
     imageSrc,
     imageAspectRatio,
@@ -53,6 +50,7 @@ const ColumnWithImageItem = forwardRef<
     openInNewTab,
     hideOnMobile,
     size,
+    ref,
     ...rest
   } = props;
 
@@ -81,7 +79,7 @@ const ColumnWithImageItem = forwardRef<
       </div>
     </div>
   );
-});
+}
 
 export default ColumnWithImageItem;
 

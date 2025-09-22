@@ -31,7 +31,7 @@ export const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         <Content
           ref={ref}
           className={cn(
-            "animate-slide-up",
+            "animate-slide-up text-sm",
             "z-1000 bg-body px-3 py-1 text-background shadow-xs",
             className,
           )}

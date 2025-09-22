@@ -6,7 +6,6 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { BackgroundImage } from "~/components/background-image";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
@@ -64,40 +63,40 @@ interface PromotionItemProps
     HydrogenComponentProps,
     OverlayProps {
   backgroundImage: WeaverseImage | string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const PromotionGridItem = forwardRef<HTMLDivElement, PromotionItemProps>(
-  (props, ref) => {
-    const {
-      contentPosition,
-      backgroundImage,
-      borderRadius,
-      children,
-      enableOverlay,
-      overlayColor,
-      overlayColorHover,
-      overlayOpacity,
-      ...rest
-    } = props;
-    return (
-      <div
-        ref={ref}
-        {...rest}
-        data-motion="slide-in"
-        className={variants({ contentPosition, borderRadius })}
-      >
-        <BackgroundImage backgroundImage={backgroundImage} />
-        <Overlay
-          enableOverlay={enableOverlay}
-          overlayColor={overlayColor}
-          overlayColorHover={overlayColorHover}
-          overlayOpacity={overlayOpacity}
-        />
-        {children}
-      </div>
-    );
-  },
-);
+function PromotionGridItem(props: PromotionItemProps) {
+  const {
+    contentPosition,
+    backgroundImage,
+    borderRadius,
+    children,
+    enableOverlay,
+    overlayColor,
+    overlayColorHover,
+    overlayOpacity,
+    ref,
+    ...rest
+  } = props;
+  return (
+    <div
+      ref={ref}
+      {...rest}
+      data-motion="slide-in"
+      className={variants({ contentPosition, borderRadius })}
+    >
+      <BackgroundImage backgroundImage={backgroundImage} />
+      <Overlay
+        enableOverlay={enableOverlay}
+        overlayColor={overlayColor}
+        overlayColorHover={overlayColorHover}
+        overlayOpacity={overlayOpacity}
+      />
+      {children}
+    </div>
+  );
+}
 
 export default PromotionGridItem;
 

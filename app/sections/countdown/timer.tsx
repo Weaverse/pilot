@@ -1,6 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
-import { forwardRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ONE_SEC = 1000;
 const ONE_MIN = ONE_SEC * 60;
@@ -21,16 +21,14 @@ function calculateRemainingTime(endTime: number) {
   };
 }
 
-type CountDownTimerData = {
+interface CountDownTimerData {
   textColor: string;
   endTime: number;
-};
+  ref?: React.Ref<HTMLDivElement>;
+}
 
-const CountdownTimer = forwardRef<
-  HTMLDivElement,
-  CountDownTimerData & HydrogenComponentProps
->((props, ref) => {
-  const { textColor, endTime, ...rest } = props;
+function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
+  const { textColor, endTime, ref, ...rest } = props;
   const [remainingTime, setRemainingTime] = useState(
     calculateRemainingTime(endTime),
   );
@@ -97,7 +95,7 @@ const CountdownTimer = forwardRef<
       </div>
     </div>
   );
-});
+}
 
 export default CountdownTimer;
 

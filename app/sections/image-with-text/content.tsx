@@ -2,7 +2,6 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { forwardRef } from "react";
 
 const variants = cva(
   "flex grow flex-col justify-center gap-5 px-4 py-6 md:px-8 md:py-8 [&_.paragraph]:mx-[unset] [&_.paragraph]:w-auto",
@@ -22,19 +21,18 @@ const variants = cva(
 
 interface ImageWithTextContentProps
   extends VariantProps<typeof variants>,
-    HydrogenComponentProps {}
+    HydrogenComponentProps {
+  ref?: React.Ref<HTMLDivElement>;
+}
 
-const ImageWithTextContent = forwardRef<
-  HTMLDivElement,
-  ImageWithTextContentProps
->((props, ref) => {
-  const { alignment, children, ...rest } = props;
+function ImageWithTextContent(props: ImageWithTextContentProps) {
+  const { alignment, children, ref, ...rest } = props;
   return (
     <div ref={ref} {...rest} className={clsx(variants({ alignment }))}>
       {children}
     </div>
   );
-});
+}
 
 export default ImageWithTextContent;
 

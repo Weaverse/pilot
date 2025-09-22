@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite", "./node_modules/@weaverse/biome/biome.json"],
   "linter": {
     "rules": {
@@ -7,26 +7,22 @@
         "useThrowNewError": "warn",
         "useFilenamingConvention": "off",
         "noParameterAssign": "off",
+        "noMagicNumbers": "off",
         "noNestedTernary": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
         "useAwait": "off",
+        "noConsole": "off",
         "noArrayIndexKey": "off"
       },
       "nursery": {
-        "useUniqueElementIds": "off",
-        "useSortedClasses": {
-          "level": "on",
-          "fix": "safe",
-          "options": {
-            "functions": ["clsx", "cva", "cn"]
-          }
-        },
-        "noNoninteractiveElementInteractions": "off"
+        "useConsistentTypeDefinitions": "off",
+        "noUnnecessaryConditions": "off"
       },
       "correctness": {
-        "noUnusedVariables": "off"
+        "noUnusedVariables": "off",
+        "useUniqueElementIds": "off"
       },
       "performance": {
         "noNamespaceImport": "off",
@@ -38,7 +34,11 @@
           "options": {
             "maxAllowedComplexity": 50
           }
-        }
+        },
+        "noExcessiveLinesPerFunction": "off"
+      },
+      "a11y": {
+        "noNoninteractiveElementInteractions": "off"
       }
     }
   },

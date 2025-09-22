@@ -12,8 +12,8 @@ import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { Link, useFetcher } from "react-router";
 import { Button } from "~/components/button";
+import { RevealUnderline } from "~/components/reveal-underline";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import { RevealUnderline } from "~/reveal-underline";
 import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
 import { CountrySelector } from "./country-selector";
@@ -182,7 +182,7 @@ export function Footer() {
           <FooterMenu />
         </div>
         <div className="flex flex-col items-center justify-between gap-4 py-9 lg:flex-row">
-          <div className="flex gap-2 ">
+          <div className="flex gap-2">
             <CountrySelector />
           </div>
           <p>{copyright}</p>

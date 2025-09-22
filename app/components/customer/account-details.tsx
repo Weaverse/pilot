@@ -18,12 +18,12 @@ export function AccountDetails({
         </div>
 
         <div className="space-y-1">
-          <div className=" text-body-subtle">Phone number</div>
+          <div className="text-body-subtle">Phone number</div>
           <div>{phoneNumber?.phoneNumber ?? "N/A"}</div>
         </div>
 
         <div className="space-y-1">
-          <div className=" text-body-subtle">Email address</div>
+          <div className="text-body-subtle">Email address</div>
           <div>{emailAddress?.emailAddress ?? "N/A"}</div>
         </div>
 

@@ -327,7 +327,6 @@ function Media({
         aria-label={mediaVideo.alt || "Product video"}
         className={cn("h-auto w-full object-cover", className)}
         style={{ aspectRatio: imageAspectRatio }}
-        // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
         onError={console.error}
       >
         <track

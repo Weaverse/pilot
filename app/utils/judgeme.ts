@@ -1,113 +1,48 @@
-import type { AppLoadContext } from "react-router";
-import { constructURL } from "./misc";
+import type {
+  JudgemeRatingDistribution,
+  JudgemeStarsRatingData,
+  JudgemeWidgetData,
+} from "~/types/judgeme";
 
-type JudgemeProductData = {
-  product: {
-    id: string;
-    handle: string;
-  };
-};
+const WIDGET_REGEX =
+  /class=['"]jdgm-rev-widg['"][^>]*data-average-rating=['"]([^'"]*)['"]/;
+const REVIEWS_REGEX = /data-number-of-reviews=['"]([^'"]*)['"]/;
+const HISTOGRAM_ROW_REGEX =
+  /class=['"]jdgm-histogram__row['"][^>]*data-rating=['"](\d+)['"][^>]*data-frequency=['"](\d+)['"][^>]*data-percentage=['"](\d+)['"][^>]*>/g;
 
-type JudgeMeReviewType = {
-  id: string;
-  title: string;
-  created_at: string;
-  body: string;
-  rating: number;
-  reviewer: {
-    id: number;
-    email: string;
-    name: string;
-    phone: string;
-  };
-  pictures: {
-    urls: {
-      original: string;
-      small: string;
-      compact: string;
-      huge: string;
-    };
-  }[];
-};
-
-export type JudgemeReviewsData = {
-  rating: number;
-  reviewNumber: number;
-  reviews: JudgeMeReviewType[];
-};
-
-const JUDGEME_PRODUCT_API = "https://judge.me/api/v1/products/-1";
-const JUDGEME_REVIEWS_API = "https://judge.me/api/v1/reviews";
-
-export async function getJudgeMeProductReviews({
-  context,
-  handle,
-}: {
-  context: AppLoadContext;
-  handle: string;
-}) {
-  try {
-    const { weaverse, env } = context;
-    const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
-    if (JUDGEME_PRIVATE_API_TOKEN) {
-      const { fetchWithCache } = weaverse;
-      const { product } = await fetchWithCache<JudgemeProductData>(
-        constructURL(JUDGEME_PRODUCT_API, {
-          handle,
-          shop_domain: PUBLIC_STORE_DOMAIN,
-          api_token: JUDGEME_PRIVATE_API_TOKEN,
-        }),
-      );
-      if (product?.id) {
-        const { reviews } = await fetchWithCache<JudgemeReviewsData>(
-          constructURL(JUDGEME_REVIEWS_API, {
-            api_token: JUDGEME_PRIVATE_API_TOKEN,
-            shop_domain: PUBLIC_STORE_DOMAIN,
-            product_id: product?.id,
-          }),
-        );
-        const reviewNumber = reviews.length || 1;
-        const rating = reviews.reduce((a, c) => a + c.rating, 0) / reviewNumber;
-        return { rating, reviewNumber, reviews };
-      }
-    }
-  } catch (error) {
-    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
-    console.log("Error fetching Judgeme product reviews", error.message);
+export function parseJudgemeWidgetHTML(html: string): JudgemeWidgetData {
+  const ratingDistribution: JudgemeRatingDistribution[] = [];
+  let match: RegExpExecArray | null;
+  match = HISTOGRAM_ROW_REGEX.exec(html);
+  while (match !== null) {
+    const rating = Number.parseInt(match[1], 10);
+    const frequency = Number.parseInt(match[2], 10);
+    const percentage = Number.parseInt(match[3], 10);
+    ratingDistribution.push({
+      rating,
+      frequency,
+      percentage,
+    });
+    match = HISTOGRAM_ROW_REGEX.exec(html);
   }
-  return { rating: 0, reviewNumber: 0, reviews: [] };
+
+  return {
+    averageRating: Number.parseFloat(html.match(WIDGET_REGEX)?.[1] || "0"),
+    totalReviews: Number.parseInt(html.match(REVIEWS_REGEX)?.[1] || "0", 10),
+    ratingDistribution: ratingDistribution.sort((a, b) => b.rating - a.rating),
+  };
 }
 
-export async function createJudgeMeReview({
-  formData,
-  shopDomain,
-  apiToken,
-}: {
-  shopDomain: string;
-  apiToken: string;
-  formData: FormData;
-}) {
-  return await fetch(
-    constructURL(JUDGEME_REVIEWS_API, {
-      api_token: apiToken,
-      shop_domain: shopDomain,
-    }),
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        shop_domain: shopDomain,
-        platform: "shopify",
-        ...formDataToObject(formData),
-      }),
-    },
-  );
-}
+const AVG_RATING_REGEX = /data-average-rating=['"]([^'"]+)['"]/;
+const NUM_REVIEWS_REGEX = /data-number-of-reviews=['"]([^'"]+)['"]/;
 
-function formDataToObject(formData: FormData) {
-  const data = {};
-  for (const [key, value] of formData.entries()) {
-    data[key] = value;
-  }
-  return data;
+export function parseBadgeHtml(html: string): JudgemeStarsRatingData {
+  return {
+    totalReviews: Number.parseInt(
+      html.match(NUM_REVIEWS_REGEX)?.[1] || "0",
+      10,
+    ),
+    averageRating: Number.parseFloat(html.match(AVG_RATING_REGEX)?.[1] || "0"),
+    badge: html,
+  };
 }

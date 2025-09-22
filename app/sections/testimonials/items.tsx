@@ -2,7 +2,6 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
-import { forwardRef } from "react";
 
 const variants = cva("grid lg:grid-cols-3", {
   variants: {
@@ -20,27 +19,27 @@ const variants = cva("grid lg:grid-cols-3", {
 
 interface TestimonialsItemsProps
   extends VariantProps<typeof variants>,
-    HydrogenComponentProps {}
+    HydrogenComponentProps {
+  ref?: React.Ref<HTMLDivElement>;
+}
 
-const TestimonialsItems = forwardRef<HTMLDivElement, TestimonialsItemsProps>(
-  (props, ref) => {
-    const { gap, children, ...rest } = props;
+function TestimonialsItems(props: TestimonialsItemsProps) {
+  const { gap, children, ref, ...rest } = props;
 
-    return (
-      <div ref={ref} {...rest} className={clsx(variants({ gap }))}>
-        <div className="space-y-6">
-          {children?.filter((_, i) => i % 3 === 0)}
-        </div>
-        <div className="space-y-6">
-          {children?.filter((_, i) => i % 3 === 1)}
-        </div>
-        <div className="space-y-6">
-          {children?.filter((_, i) => i % 3 === 2)}
-        </div>
+  return (
+    <div ref={ref} {...rest} className={clsx(variants({ gap }))}>
+      <div className="space-y-6">
+        {children?.filter((_, i) => i % 3 === 0)}
       </div>
-    );
-  },
-);
+      <div className="space-y-6">
+        {children?.filter((_, i) => i % 3 === 1)}
+      </div>
+      <div className="space-y-6">
+        {children?.filter((_, i) => i % 3 === 2)}
+      </div>
+    </div>
+  );
+}
 
 export default TestimonialsItems;
 

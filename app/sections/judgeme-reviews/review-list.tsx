@@ -1,72 +1,241 @@
-import { Fragment, useState } from "react";
-import { StarRating } from "~/components/star-rating";
-import type { JudgemeReviewsData } from "~/utils/judgeme";
+import {
+  CaretDoubleLeftIcon,
+  CaretDoubleRightIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
+} from "@phosphor-icons/react";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { useEffect } from "react";
+import { cn } from "~/utils/cn";
+import { useJudgemeStore } from ".";
+import { ReviewItem, type ReviewItemProps } from "./review-item";
 
-const REVIEWS_PER_PAGE = 5;
+function getVisiblePages(
+  currentPage: number,
+  lastPage: number,
+): (number | string)[] {
+  const DELTA = 1;
+  const range: number[] = [];
+  const rangeWithDots: (number | string)[] = [];
 
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US");
+  for (
+    let i = Math.max(2, currentPage - DELTA);
+    i <= Math.min(lastPage - 1, currentPage + DELTA);
+    i++
+  ) {
+    range.push(i);
+  }
+
+  if (currentPage - DELTA > 2) {
+    rangeWithDots.push(1, "...");
+  } else {
+    rangeWithDots.push(1);
+  }
+
+  rangeWithDots.push(...range);
+
+  if (currentPage + DELTA < lastPage - 1) {
+    rangeWithDots.push("...", lastPage);
+  } else if (lastPage > 1) {
+    rangeWithDots.push(lastPage);
+  }
+
+  return rangeWithDots;
 }
 
-export function ReviewList({
-  reviews: reviewsData,
-}: {
-  reviews: JudgemeReviewsData;
-}) {
-  const [page, setPage] = useState(0);
-  const pageNumber = Math.ceil(reviewsData.reviews.length / REVIEWS_PER_PAGE);
+export function ReviewsPagination() {
+  const { status, paging, data, setPaging } = useJudgemeStore();
 
-  const reviews = reviewsData.reviews.slice(
-    page * REVIEWS_PER_PAGE,
-    (page + 1) * REVIEWS_PER_PAGE,
-  );
+  if (status !== "ok" || !data || data.totalPage <= 1) {
+    return null;
+  }
+
+  const { currentPage, perPage } = paging;
+  const { totalPage } = data;
+
+  function handlePageChange(page: number) {
+    if (page >= 1 && page <= totalPage && page !== currentPage) {
+      setPaging({ currentPage: page, perPage });
+    }
+  }
+
+  const visiblePages = getVisiblePages(currentPage, totalPage);
 
   return (
-    <div className="flex w-full flex-col gap-6 py-6 md:w-3/5 lg:w-2/3">
-      <div className="flex flex-col gap-6">
-        <span className="font-bold text-lg uppercase">
-          Reviews ({reviewsData.reviewNumber})
-        </span>
-        {reviews.map(({ id, rating, reviewer, title, created_at, body }) => (
-          <Fragment key={id}>
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="flex w-full flex-col gap-4 md:w-1/4">
-                <div className="flex items-center gap-0.5">
-                  <StarRating rating={rating} />
-                </div>
-                <div className="flex flex-col">
-                  <p className="font-semibold">{reviewer.name}</p>
-                  <p>{reviewer.email}</p>
-                </div>
-              </div>
-              <div className="flex w-full flex-col gap-4 md:w-3/4">
-                <div className="flex items-center justify-between">
-                  <p className="font-bold">{title}</p>
-                  <p>{formatDate(created_at)}</p>
-                </div>
-                <p className=" line-clamp-4 font-normal text-base">{body}</p>
-              </div>
-            </div>
-            <hr className="border-line-subtle border-t" />
-          </Fragment>
-        ))}
-      </div>
-      {pageNumber > 1 && (
-        <div className="flex justify-center gap-2">
-          {Array.from({ length: pageNumber }, (_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setPage(i)}
-              className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 transition-colors duration-200 hover:bg-gray-300 disabled:cursor-not-allowed disabled:bg-black disabled:text-white disabled:opacity-50"
-              disabled={i === page}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
+    <div className="flex items-center justify-center gap-1.5 mt-6">
+      <button
+        type="button"
+        onClick={() => handlePageChange(1)}
+        disabled={currentPage === 1}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretDoubleLeftIcon className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretLeftIcon className="h-4 w-4" />
+      </button>
+
+      {visiblePages.map((page, index) =>
+        page === "..." ? (
+          <span key={`dots-${index}`} className="p-2 text-gray-500">
+            ...
+          </span>
+        ) : (
+          <button
+            key={page}
+            type="button"
+            onClick={() => handlePageChange(page as number)}
+            className={cn(
+              "p-2 underline-offset-4 leading-4",
+              currentPage === page
+                ? "underline font-semibold"
+                : "hover:underline",
+            )}
+          >
+            {page}
+          </button>
+        ),
       )}
+
+      <button
+        type="button"
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPage}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretRightIcon className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => handlePageChange(totalPage)}
+        disabled={currentPage === totalPage}
+        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <CaretDoubleRightIcon className="h-4 w-4" />
+      </button>
     </div>
   );
 }
+
+interface ReviewListProps
+  extends HydrogenComponentProps,
+    Omit<ReviewItemProps, "review"> {
+  ref: React.Ref<HTMLDivElement>;
+  reviewsPerPage?: number;
+}
+
+export default function ReviewList(props: ReviewListProps) {
+  const {
+    ref,
+    showReviewerName = true,
+    showReviewerEmail = true,
+    reviewerEmailFormat = "partial",
+    showReviewTitle = true,
+    showReviewDate = true,
+    reviewsPerPage = 5,
+    ...rest
+  } = props;
+  const { status, data, setPaging, paging } = useJudgemeStore();
+
+  // Update store perPage when reviewsPerPage prop changes
+  useEffect(() => {
+    if (paging.perPage !== reviewsPerPage) {
+      setPaging({ currentPage: 1, perPage: reviewsPerPage });
+    }
+  }, [reviewsPerPage, paging.perPage, setPaging]);
+
+  if (data?.reviews?.length) {
+    return (
+      <div ref={ref} {...rest}>
+        <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
+          <div className="space-y-8 divide-y divide-gray-200 relative">
+            {data.reviews.map((review) => (
+              <ReviewItem
+                key={review.id}
+                review={review}
+                className="pb-8"
+                showReviewerName={showReviewerName}
+                showReviewerEmail={showReviewerEmail}
+                reviewerEmailFormat={reviewerEmailFormat}
+                showReviewTitle={showReviewTitle}
+                showReviewDate={showReviewDate}
+              />
+            ))}
+            {status === "page-loading" && (
+              <div className="absolute inset-0 bg-white/80 z-10" />
+            )}
+          </div>
+          <ReviewsPagination />
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+export const schema = createSchema({
+  type: "judgeme-reviews--list",
+  title: "Reviews list",
+  settings: [
+    {
+      group: "Display Settings",
+      inputs: [
+        {
+          type: "switch",
+          name: "showReviewerName",
+          label: "Show reviewer name",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showReviewerEmail",
+          label: "Show reviewer email",
+          defaultValue: true,
+        },
+        {
+          type: "select",
+          name: "reviewerEmailFormat",
+          label: "Reviewer email format",
+          defaultValue: "partial",
+          configs: {
+            options: [
+              { label: "Partial (e.g., joh***@email.com)", value: "partial" },
+              { label: "Full email address", value: "full" },
+            ],
+          },
+          condition: "showReviewerEmail.eq.true",
+        },
+        {
+          type: "switch",
+          name: "showReviewTitle",
+          label: "Show review title",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showReviewDate",
+          label: "Show review date",
+          defaultValue: true,
+        },
+        {
+          type: "range",
+          name: "reviewsPerPage",
+          label: "Reviews per page",
+          defaultValue: 5,
+          configs: {
+            min: 5,
+            max: 10,
+            step: 1,
+          },
+        },
+      ],
+    },
+  ],
+});

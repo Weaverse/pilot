@@ -11,7 +11,6 @@ import {
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
-import { forwardRef } from "react";
 import type { ProductQuery } from "storefront-api.generated";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { ProductPopup } from "./product-popup";
@@ -30,7 +29,9 @@ export interface HotspotsItemData {
 
 interface HotspotsItemProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>>,
-    HotspotsItemData {}
+    HotspotsItemData {
+  ref: React.Ref<HTMLDivElement>;
+}
 
 const ICONS = {
   circle: CircleIcon,
@@ -39,63 +40,60 @@ const ICONS = {
   tag: TagIcon,
 };
 
-const HotspotsItem = forwardRef<HTMLDivElement, HotspotsItemProps>(
-  (props, ref) => {
-    const {
-      icon,
-      iconSize,
-      offsetX,
-      offsetY,
-      product,
-      popupWidth,
-      showPrice,
-      showViewDetailsLink,
-      viewDetailsLinkText,
-      children,
-      loaderData,
-      ...rest
-    } = props;
-    const Icon = ICONS[icon];
+export default function HotspotsItem(props: HotspotsItemProps) {
+  const {
+    ref,
+    icon,
+    iconSize,
+    offsetX,
+    offsetY,
+    product,
+    popupWidth,
+    showPrice,
+    showViewDetailsLink,
+    viewDetailsLinkText,
+    children,
+    loaderData,
+    ...rest
+  } = props;
+  const Icon = ICONS[icon];
 
-    return (
-      <div
-        ref={ref}
-        {...rest}
-        className="-translate-x-1/2 -translate-y-1/2 absolute hover:z-1"
-        style={
-          {
-            top: `${offsetY}%`,
-            left: `${offsetX}%`,
-            "--translate-x-ratio": offsetX > 50 ? 1 : -1,
-            "--translate-y-ratio": offsetY > 50 ? 1 : -1,
-            "--spot-size": `${iconSize + 16}px`,
-          } as CSSProperties
-        }
-      >
-        <div className="relative flex cursor-pointer">
-          <span
-            className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gray-700 opacity-75"
-            style={{ animationDuration: "1500ms" }}
+  return (
+    <div
+      ref={ref}
+      {...rest}
+      className="-translate-x-1/2 -translate-y-1/2 absolute hover:z-1"
+      style={
+        {
+          top: `${offsetY}%`,
+          left: `${offsetX}%`,
+          "--translate-x-ratio": offsetX > 50 ? 1 : -1,
+          "--translate-y-ratio": offsetY > 50 ? 1 : -1,
+          "--spot-size": `${iconSize + 16}px`,
+        } as CSSProperties
+      }
+    >
+      <div className="relative flex cursor-pointer">
+        <span
+          className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gray-700 opacity-75"
+          style={{ animationDuration: "1500ms" }}
+        />
+        <span className="group relative inline-flex rounded-full bg-white p-2">
+          <Icon style={{ width: iconSize, height: iconSize }} />
+          <ProductPopup
+            product={loaderData?.product}
+            popupWidth={popupWidth}
+            offsetX={offsetX}
+            offsetY={offsetY}
+            showPrice={showPrice}
+            showViewDetailsLink={showViewDetailsLink}
+            viewDetailsLinkText={viewDetailsLinkText}
           />
-          <span className="group relative inline-flex rounded-full bg-white p-2">
-            <Icon style={{ width: iconSize, height: iconSize }} />
-            <ProductPopup
-              product={loaderData?.product}
-              popupWidth={popupWidth}
-              offsetX={offsetX}
-              offsetY={offsetY}
-              showPrice={showPrice}
-              showViewDetailsLink={showViewDetailsLink}
-              viewDetailsLinkText={viewDetailsLinkText}
-            />
-          </span>
-        </div>
+        </span>
       </div>
-    );
-  },
-);
-
-export default HotspotsItem;
+    </div>
+  );
+}
 
 export const loader = async (args: ComponentLoaderArgs<HotspotsItemData>) => {
   const { weaverse, data } = args;

@@ -3,17 +3,14 @@ import {
   type HydrogenComponentProps,
   IMAGES_PLACEHOLDERS,
 } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 
 interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
   gap: number;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const ColumnsWithImagesItems = forwardRef<
-  HTMLDivElement,
-  ColumnsWithImagesItemsProps
->((props, ref) => {
-  const { children, gap, ...rest } = props;
+function ColumnsWithImagesItems(props: ColumnsWithImagesItemsProps) {
+  const { children, gap, ref, ...rest } = props;
 
   return (
     <div
@@ -25,7 +22,7 @@ const ColumnsWithImagesItems = forwardRef<
       {children}
     </div>
   );
-});
+}
 
 export default ColumnsWithImagesItems;
 

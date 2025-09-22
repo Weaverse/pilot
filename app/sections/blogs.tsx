@@ -1,11 +1,10 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { RevealUnderline } from "~/components/reveal-underline";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
-import { RevealUnderline } from "~/reveal-underline";
 import type { ImageAspectRatio } from "~/types/image";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
@@ -13,11 +12,13 @@ import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
 interface BlogsProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
     SectionProps {
+  ref: React.Ref<HTMLElement>;
   layout: "blog" | "default";
 }
 
-const Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
+export default function Blogs(props: BlogsProps) {
   const {
+    ref,
     layout,
     showExcerpt,
     showAuthor,
@@ -26,6 +27,7 @@ const Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
     imageAspectRatio,
     ...rest
   } = props;
+
   const { blog, articles } = useLoaderData<
     BlogQuery & { articles: ArticleFragment[] }
   >();
@@ -53,7 +55,7 @@ const Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
     );
   }
   return <Section ref={ref} {...rest} />;
-});
+}
 
 export interface ArticleCardProps {
   article: ArticleFragment;
@@ -127,8 +129,6 @@ export function ArticleCard({
     </div>
   );
 }
-
-export default Blogs;
 
 export const schema = createSchema({
   type: "blogs",

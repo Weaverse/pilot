@@ -1,9 +1,10 @@
 interface QuantityProps {
   value: number;
   onChange: (value: number) => void;
+  label?: string;
 }
 export function Quantity(props: QuantityProps) {
-  const { value, onChange } = props;
+  const { value, onChange, label = "Quantity" } = props;
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Prevent the user from entering non-numeric characters
     if (
@@ -18,13 +19,13 @@ export function Quantity(props: QuantityProps) {
   };
   return (
     <div className="space-y-1.5" data-motion="fade-up">
-      <legend className="font-bold leading-tight">Quantity</legend>
+      <legend className="font-bold leading-tight">{label}</legend>
       <div className="w-fit border border-line">
         <button
           type="button"
           name="decrease-quantity"
           aria-label="Decrease quantity"
-          className="h-10 w-10 transition "
+          className="h-10 w-10 transition"
           disabled={value <= 1}
           onClick={() => onChange(value - 1)}
         >

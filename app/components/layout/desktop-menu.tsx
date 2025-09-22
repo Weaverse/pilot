@@ -5,8 +5,8 @@ import clsx from "clsx";
 import { useState } from "react";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
+import { RevealUnderline } from "~/components/reveal-underline";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import { RevealUnderline } from "~/reveal-underline";
 import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
 

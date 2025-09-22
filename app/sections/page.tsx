@@ -1,18 +1,20 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { PageDetailsQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-interface PageProps extends SectionProps {}
+interface PageProps extends SectionProps {
+  ref: React.Ref<HTMLElement>;
+}
 
-const Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
+export default function Page(props: PageProps) {
+  const { ref, ...rest } = props;
   const { page } = useLoaderData<PageDetailsQuery>();
 
   if (page) {
     return (
-      <Section ref={ref} {...props}>
+      <Section ref={ref} {...rest}>
         <div className="mb-4 flex items-center justify-center gap-2 text-body-subtle">
           <Link to="/" className="underline-offset-4 hover:underline">
             Home
@@ -31,10 +33,8 @@ const Page = forwardRef<HTMLElement, PageProps>((props, ref) => {
       </Section>
     );
   }
-  return <Section ref={ref} {...props} />;
-});
-
-export default Page;
+  return <Section ref={ref} {...rest} />;
+}
 
 export const schema = createSchema({
   type: "page",

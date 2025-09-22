@@ -396,9 +396,9 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "color",
-          label: "Star rating",
-          name: "starRatingColor",
-          defaultValue: "#fde047",
+          label: "Product reviews",
+          name: "productReviewsColor",
+          defaultValue: "#108474",
         },
       ],
     },
@@ -488,7 +488,7 @@ export const themeSchema: HydrogenThemeSchema = {
             step: 1,
             unit: "px",
           },
-          defaultValue: 15,
+          defaultValue: 16,
         },
         {
           type: "range",

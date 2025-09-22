@@ -12,7 +12,6 @@ export function GenericError({
   // TODO hide error in prod?
   if (error) {
     description += `\n${error.message}`;
-    // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
     console.error(error);
   }
 

@@ -120,7 +120,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         );
       });
       if (!foundValue) {
-        // biome-ignore lint/suspicious/noConsole: <explanation> --- IGNORE ---
         console.error("Could not find filter value for filter", filter);
         return null;
       }

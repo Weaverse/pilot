@@ -1,15 +1,18 @@
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-const CollectionList = forwardRef<HTMLElement, SectionProps>((props, ref) => {
-  const { children, ...rest } = props;
+interface CollectionListProps extends SectionProps {
+  ref?: React.Ref<HTMLElement>;
+}
+
+function CollectionList(props: CollectionListProps) {
+  const { children, ref, ...rest } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}
     </Section>
   );
-});
+}
 
 export default CollectionList;
 

@@ -8,7 +8,6 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { forwardRef } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkStyles, linkStylesInputs } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
@@ -64,14 +63,12 @@ interface CollectionItemsData
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
   buttonText: string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const CollectionItems = forwardRef<
-  HTMLDivElement,
-  CollectionItemsData & HydrogenComponentProps
->((props, ref) => {
-  const [scope] = useAnimation(ref);
+function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
   const {
+    ref,
     gridSize,
     gap,
     imageAspectRatio,
@@ -91,6 +88,8 @@ const CollectionItems = forwardRef<
     borderColorHover,
     ...rest
   } = props;
+  const [scope] = useAnimation(ref);
+
   const parent = useParentInstance();
   let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
   if (!collections?.length) {
@@ -182,7 +181,7 @@ const CollectionItems = forwardRef<
       ))}
     </div>
   );
-});
+}
 
 const COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
   id: "gid://shopify/Collection/1234567890",

@@ -1,7 +1,6 @@
 import { Pagination } from "@shopify/hydrogen";
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
@@ -11,13 +10,14 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { cn } from "~/utils/cn";
 
 interface AllProductsProps extends SectionProps {
+  ref: React.Ref<HTMLElement>;
   heading: string;
   prevPageText: string;
   nextPageText: string;
 }
 
-const AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
-  const { heading, prevPageText, nextPageText, ...rest } = props;
+export default function AllProducts(props: AllProductsProps) {
+  const { ref, heading, prevPageText, nextPageText, ...rest } = props;
   const { products } = useLoaderData<AllProductsQuery>();
 
   return (
@@ -65,9 +65,7 @@ const AllProducts = forwardRef<HTMLElement, AllProductsProps>((props, ref) => {
       </Pagination>
     </Section>
   );
-});
-
-export default AllProducts;
+}
 
 export const schema = createSchema({
   type: "all-products",

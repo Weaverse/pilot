@@ -20,7 +20,6 @@ import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
-import type { ProductData } from "~/routes/($locale).api.product";
 import { ProductBadges } from "./badges";
 import { VariantPrices } from "./variant-prices";
 import { VariantSelector } from "./variant-selector";
@@ -132,12 +131,12 @@ export function QuickShopTrigger({
   panelType?: "modal" | "drawer";
 }) {
   const [open, setOpen] = useState(false);
-  const { load, data } = useFetcher<ProductData>();
+  const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
   useEffect(() => {
     if (open && !data) {
-      load(`/api/product?handle=${productHandle}`);
+      load(`/api/product/${productHandle}`);
     }
   }, [open]);
 

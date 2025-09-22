@@ -7,8 +7,8 @@ import type {
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
+import { RevealUnderline } from "~/components/reveal-underline";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
-import { RevealUnderline } from "~/reveal-underline";
 import { cn } from "~/utils/cn";
 import { isLightColor, isValidColor } from "~/utils/misc";
 import { OPTIONS_AS_SWATCH } from "./product-option-values";

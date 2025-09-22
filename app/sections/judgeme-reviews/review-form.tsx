@@ -1,252 +1,254 @@
-import { StarIcon } from "@phosphor-icons/react";
-import clsx from "clsx";
-import { type FormEvent, useEffect, useRef, useState } from "react";
-import { useFetcher, useLoaderData } from "react-router";
+import { CheckIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import type React from "react";
+import { useRef, useState } from "react";
+import { useLoaderData } from "react-router";
 import { Button } from "~/components/button";
-import { StarRating } from "~/components/star-rating";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
-import type { JudgemeReviewsData } from "~/utils/judgeme";
+import { cn } from "~/utils/cn";
+import { RatingInput } from "./rating-input";
 
-export function ReviewForm({ reviews }: { reviews: JudgemeReviewsData }) {
+type FormState = "idle" | "submitting" | "success" | "error";
+
+interface ReviewFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  showForm: boolean;
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function ReviewForm({
+  showForm,
+  setShowForm,
+  className,
+}: ReviewFormProps) {
   const { product } = useLoaderData<typeof productRouteLoader>();
   const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const fetcher = useFetcher<any>();
+  const [formState, setFormState] = useState<FormState>("idle");
   const formRef = useRef<HTMLFormElement>(null);
-  const [message, setMessage] = useState("");
-  const internalId = product.id.split("gid://shopify/Product/")[1];
-  const submittable = rating > 0;
+  const submitReviewAPI = usePrefixPathWithLocale(
+    `/api/product/${product.handle}/reviews`,
+  );
 
-  useEffect(() => {
-    if ((fetcher.data as Response)?.ok) {
-      // setMessage((fetcher.data as Response)?.message || "");
-      setIsFormVisible(false);
-      setIsPopupVisible(true);
-      setRating(0);
-      setHover(0);
-      (formRef as React.RefObject<HTMLFormElement>).current?.reset();
+  function resetForm() {
+    setRating(0);
+    setFormState("idle");
+    formRef.current?.reset();
+  }
+
+  async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
+    ev.preventDefault();
+
+    // Check if rating is selected first
+    if (rating === 0) {
+      alert("Please select a rating");
+      return;
     }
-  }, [fetcher.data]);
+
+    // Use native form validation for other fields
+    if (!ev.currentTarget.checkValidity()) {
+      return;
+    }
+
+    setFormState("submitting");
+    fetch(submitReviewAPI, {
+      method: "POST",
+      body: new FormData(ev.currentTarget),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Response not ok");
+        }
+        return res.json();
+      })
+      .then(() => setFormState("success"))
+      .catch((err) => {
+        console.error("Error submitting review:", err);
+        setFormState("error");
+      });
+  }
 
   return (
     <div
-      className={clsx(
-        "flex w-full flex-col gap-5",
-        reviews.reviews.length !== 0 && "md:w-2/5 lg:w-1/3",
+      className={cn(
+        "w-full space-y-6 border border-gray-200 shadow p-6 transition-all duration-200 md:p-8",
+        showForm ? "block" : "hidden",
+        className,
       )}
     >
-      {reviews.reviews.length !== 0 || !isFormVisible ? (
-        <div
-          className={clsx(
-            "flex flex-col gap-4 bg-line-subtle p-6",
-            reviews.reviews.length === 0 ? "items-center" : "items-start",
-          )}
+      <div
+        className={cn(
+          "space-y-4 py-4 text-center",
+          formState === "success" ? "block" : "hidden",
+        )}
+        role="alert"
+        aria-live="polite"
+      >
+        <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+          <CheckIcon className="h-8 w-8 text-green-600" />
+        </div>
+        <h3 className="mb-2 font-semibold text-green-900 text-xl">
+          Review Submitted Successfully!
+        </h3>
+        <p className="text-gray-600">
+          Thank you for your feedback. Your review is being processed in the
+          background, it will be published shortly in a few minutes.
+        </p>
+        <Button type="button" onClick={resetForm} className="mt-4">
+          Write Another Review
+        </Button>
+      </div>
+      <div
+        className={cn(
+          "space-y-4 py-4 text-center",
+          formState === "error" ? "block" : "hidden",
+        )}
+        role="alert"
+        aria-live="polite"
+      >
+        <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+          <WarningCircleIcon className="h-8 w-8 text-red-600" />
+        </div>
+        <h3 className="mb-2 font-semibold text-red-900 text-xl">
+          Submission Failed
+        </h3>
+        <p className="text-gray-600">
+          There was an error submitting your review. Please try again.
+        </p>
+        <Button
+          type="button"
+          onClick={() => setFormState("idle")}
+          className="mt-4"
         >
-          <p className="mb-1.5 font-bold text-lg uppercase">
-            product reviews ({reviews.reviewNumber})
+          Try Again
+        </Button>
+      </div>
+      <form
+        ref={formRef}
+        id="judgeme-review-form"
+        onSubmit={handleSubmit}
+        className={cn(
+          "space-y-6",
+          formState === "idle" || formState === "submitting"
+            ? "block"
+            : "hidden",
+        )}
+      >
+        <div className="space-y-2">
+          <h2 className="text-center font-bold text-2xl text-gray-900">
+            Write Your Review
+          </h2>
+          <p className="text-center text-gray-600">
+            Share your experience with other customers
           </p>
-          <div className="flex items-center justify-start gap-3">
-            {reviews?.rating ? (
-              <>
-                <h4 className="font-medium">{reviews.rating.toFixed(1)}</h4>
-                <div className="flex gap-0.5">
-                  <StarRating rating={reviews.rating} />
-                </div>
-              </>
-            ) : (
-              <p>
-                We'd love to hear from you. Provide a review for this product.
-              </p>
-            )}
-          </div>
+        </div>
+
+        {/* Hidden product ID input */}
+        <input
+          type="hidden"
+          name="id"
+          value={Number(product.id.split("/").pop())}
+        />
+
+        {/* Rating */}
+        <RatingInput
+          label="Rating"
+          required
+          name="rating"
+          rating={rating}
+          onRatingChange={setRating}
+        />
+
+        {/* Name */}
+        <div className="space-y-2">
+          <label
+            htmlFor="judgeme-reviewer-name"
+            className="block font-medium text-gray-700 text-sm"
+          >
+            Your Name
+            <span className="ml-1 text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            id="judgeme-reviewer-name"
+            defaultValue=""
+            placeholder="Enter your name"
+            required
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+        </div>
+
+        {/* Email */}
+        <div className="space-y-2">
+          <label
+            htmlFor="judgeme-reviewer-email"
+            className="block font-medium text-gray-700 text-sm"
+          >
+            Email Address
+            <span className="ml-1 text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="judgeme-reviewer-email"
+            defaultValue=""
+            placeholder="Enter your email"
+            required
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+        </div>
+
+        {/* Review Title */}
+        <div className="space-y-2">
+          <label
+            htmlFor="judgeme-review-title"
+            className="block font-medium text-gray-700 text-sm"
+          >
+            Review Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            id="judgeme-review-title"
+            defaultValue=""
+            placeholder="Give your review a title"
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+        </div>
+
+        {/* Review Body */}
+        <div className="space-y-2">
+          <label
+            htmlFor="judgeme-review-body"
+            className="block font-medium text-gray-700 text-sm"
+          >
+            Your Review
+            <span className="ml-1 text-red-500">*</span>
+          </label>
+          <textarea
+            name="body"
+            id="judgeme-review-body"
+            defaultValue=""
+            required
+            placeholder="Share your experience with this product"
+            rows={5}
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-end gap-4">
           <Button
             variant="outline"
-            onClick={() => setIsFormVisible(true)} // Show form
-            disabled={isFormVisible || isPopupVisible}
+            type="button"
+            onClick={() => setShowForm(false)}
           >
-            WRITE A REVIEW
+            Cancel
+          </Button>
+          <Button type="submit" disabled={formState === "submitting"}>
+            {formState === "submitting" ? "Submitting..." : "Submit Review"}
           </Button>
         </div>
-      ) : null}
-      {isFormVisible && (
-        <div
-          className={clsx(
-            "w-full bg-line-subtle p-6",
-            reviews.reviews.length === 0 && "flex justify-center",
-          )}
-        >
-          <div
-            className={clsx(
-              "flex w-full flex-col gap-4",
-              reviews.reviews.length === 0 && "md:w-2/5 lg:w-1/3",
-            )}
-          >
-            <div className="flex flex-col gap-6">
-              <span
-                className={clsx(
-                  "font-heading font-semibold text-xl uppercase",
-                  reviews.reviews.length === 0 && "text-center",
-                )}
-              >
-                WRITE YOUR REVIEW
-              </span>
-              <div className="flex flex-col gap-3">
-                <span className="font-bold text-base">Rating</span>
-                <div className="flex items-center pr-1">
-                  {[...new Array(5)].map((_, index) => {
-                    const ratingValue = index + 1;
-                    return (
-                      <div
-                        key={index}
-                        onClick={() =>
-                          ((value: number) => {
-                            setRating(value);
-                          })(ratingValue)
-                        }
-                        onMouseEnter={() => setHover(ratingValue)}
-                        onMouseLeave={() => setHover(0)}
-                      >
-                        {ratingValue <= (hover || rating) ? (
-                          <StarIcon weight="fill" />
-                        ) : (
-                          <StarIcon />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-            {/* Review Form */}
-            <fetcher.Form
-              onSubmit={(event: FormEvent<HTMLFormElement>) => {
-                fetcher.submit(event.currentTarget);
-              }}
-              ref={formRef}
-              method="POST"
-              encType="multipart/form-data"
-            >
-              <input type="hidden" name="rating" value={rating} />
-              <input type="hidden" name="id" value={internalId} />
-              <div className="mb-4">
-                <label
-                  htmlFor="name"
-                  className="mb-2 block font-bold text-gray-700"
-                >
-                  Your name
-                </label>
-                <input
-                  required
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="w-full border border-line px-3 py-3 outline-hidden focus-visible:border-line"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="email"
-                  className="mb-2 block font-bold text-gray-700"
-                >
-                  Your email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  className="w-full border border-line px-3 py-3 outline-hidden focus-visible:border-line"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="title"
-                  className="mb-2 block font-bold text-gray-700"
-                >
-                  Review title
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  required
-                  className="w-full border border-line px-3 py-3 outline-hidden focus-visible:border-line"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="review-body"
-                  className="mb-2 block font-bold text-gray-700"
-                >
-                  Your review
-                </label>
-                <textarea
-                  id="review-body"
-                  name="body"
-                  className="w-full border border-line px-3 py-3 outline-hidden focus-visible:border-line"
-                  rows={4}
-                />
-              </div>
-              {message && (
-                <div className="mb-6 flex w-fit gap-1 border-red-500 border-l-4 bg-red-100 px-2 py-1 text-red-700">
-                  <p className="font-semibold">ERROR:</p>
-                  <p>{message}</p>
-                </div>
-              )}
-              <div className="flex justify-end gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsFormVisible(false)}
-                  className="border-none! bg-background"
-                >
-                  Close
-                </Button>
-                <Button
-                  type="submit"
-                  loading={fetcher.state === "submitting"}
-                  disabled={!submittable}
-                >
-                  Submit Review
-                </Button>
-              </div>
-            </fetcher.Form>
-          </div>
-        </div>
-      )}
-      {isPopupVisible && (
-        <div
-          className={clsx(
-            "flex flex-col gap-6 bg-line-subtle p-6",
-            reviews.reviews.length === 0 && "items-center",
-          )}
-          role="alert"
-        >
-          <p className="font-bold text-lg">REVIEW SUBMITTED</p>
-          <p className="font-normal text-base">
-            Thanks for leaving your review!
-          </p>
-          <div
-            className={clsx(
-              "flex items-center",
-              reviews.reviews.length === 0 ? "justify-center" : "justify-end",
-            )}
-          >
-            <Button
-              onClick={() => {
-                setIsPopupVisible(false);
-              }}
-              variant="outline"
-              className="border-none! bg-background"
-            >
-              Close
-            </Button>
-          </div>
-        </div>
-      )}
+      </form>
     </div>
   );
 }
-
-export default ReviewForm;

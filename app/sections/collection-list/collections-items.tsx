@@ -1,7 +1,6 @@
 import { Pagination } from "@shopify/hydrogen";
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
@@ -16,22 +15,23 @@ interface CollectionsItemsProps extends OverlayProps {
   nextButtonText: string;
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-const CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
-  (props, ref) => {
-    const { collections } = useLoaderData<CollectionsQuery>();
-    const {
-      prevButtonText,
-      nextButtonText,
-      imageAspectRatio,
-      collectionNameColor,
-      enableOverlay,
-      overlayColor,
-      overlayColorHover,
-      overlayOpacity,
-      ...rest
-    } = props;
+function CollectionsItems(props: CollectionsItemsProps) {
+  const { collections } = useLoaderData<CollectionsQuery>();
+  const {
+    prevButtonText,
+    nextButtonText,
+    imageAspectRatio,
+    collectionNameColor,
+    enableOverlay,
+    overlayColor,
+    overlayColorHover,
+    overlayOpacity,
+    ref,
+    ...rest
+  } = props;
     return (
       <div ref={ref} {...rest}>
         <Pagination connection={collections}>
@@ -78,8 +78,7 @@ const CollectionsItems = forwardRef<HTMLDivElement, CollectionsItemsProps>(
         </Pagination>
       </div>
     );
-  },
-);
+}
 
 export default CollectionsItems;
 

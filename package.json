@@ -1,10 +1,30 @@
 {
   "name": "@weaverse/pilot",
-  "private": true,
-  "sideEffects": false,
-  "version": "5.6.0",
-  "type": "module",
+  "version": "6.0.0",
+  "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
+  "keywords": [
+    "shopify",
+    "hydrogen",
+    "theme",
+    "hydrogen-theme",
+    "weaverse",
+    "ecommerce",
+    "react",
+    "react-router",
+    "typescript",
+    "tailwindcss"
+  ],
+  "license": "MIT",
   "author": "Weaverse",
+  "type": "module",
+  "homepage": "https://pilot.weaverse.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weaverse/pilot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/weaverse/pilot/issues"
+  },
   "scripts": {
     "build": "shopify hydrogen build --codegen",
     "dev": "shopify hydrogen dev --codegen --port 3456",
@@ -17,14 +37,14 @@
     "clean": "rm -rf dist node_modules package-lock.json pnpm-lock.yaml .shopify .react-router",
     "e2e": "npx playwright test",
     "e2e:ui": "npx playwright test --ui",
-    "biome": "biome check --diagnostic-level=error",
+    "biome": "biome check",
     "biome:fix": "biome check --write --diagnostic-level=error",
     "format": "biome format --write",
     "format:check": "biome format"
   },
   "dependencies": {
-    "@fontsource-variable/cabin": "^5.2.6",
-    "@graphql-codegen/cli": "5.0.7",
+    "@fontsource-variable/cabin": "^5.2.8",
+    "@graphql-codegen/cli": "6.0.0",
     "@phosphor-icons/react": "2.1.10",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-checkbox": "1.3.3",
@@ -45,8 +65,7 @@
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.9.3",
-    "cross-env": "10.0.0",
-    "framer-motion": "12.23.12",
+    "framer-motion": "12.23.18",
     "graphql": "16.11.0",
     "graphql-tag": "2.12.6",
     "isbot": "5.1.30",
@@ -55,40 +74,41 @@
     "react-dom": "19.1.1",
     "react-intersection-observer": "9.16.0",
     "react-player": "2.16.0",
-    "react-router": "^7.8.2",
+    "react-router": "^7.9.1",
     "react-share": "5.2.2",
     "react-use": "17.6.0",
     "schema-dts": "1.1.5",
     "swiper": "11.2.10",
     "tailwind-merge": "3.3.1",
     "tiny-invariant": "1.3.3",
-    "typographic-base": "1.0.4"
+    "typographic-base": "1.0.4",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
+    "@biomejs/biome": "^2.2.4",
     "@playwright/test": "1.55.0",
-    "@react-router/dev": "^7.8.2",
-    "@react-router/fs-routes": "^7.8.2",
-    "@shopify/cli": "3.84.1",
+    "@react-router/dev": "^7.9.1",
+    "@react-router/fs-routes": "^7.9.1",
+    "@shopify/cli": "3.84.2",
     "@shopify/hydrogen-codegen": "0.3.3",
     "@shopify/mini-oxygen": "3.2.1",
     "@shopify/oxygen-workers-types": "4.2.0",
     "@tailwindcss/forms": "0.5.10",
-    "@tailwindcss/typography": "0.5.16",
+    "@tailwindcss/typography": "0.5.18",
     "@total-typescript/ts-reset": "0.6.1",
-    "@types/react": "19.1.12",
+    "@types/react": "19.1.13",
     "@types/react-dom": "19.1.9",
     "@weaverse/biome": "5.4.1",
     "cross-env": "10.0.0",
     "tailwindcss": "^4.1.13",
     "ts-node": "10.9.2",
     "typescript": "5.9.2",
-    "ultracite": "5.2.5",
+    "ultracite": "5.4.5",
     "vite": "6.3.5",
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "0.25.9"
+    "@esbuild/linux-x64": "0.25.10"
   },
   "engines": {
     "node": ">=20"

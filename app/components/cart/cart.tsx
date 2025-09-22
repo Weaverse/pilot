@@ -18,9 +18,9 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { RevealUnderline } from "~/components/reveal-underline";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
-import { RevealUnderline } from "~/reveal-underline";
 import { calculateAspectRatio } from "~/utils/image";
 import { toggleCartDrawer } from "../layout/cart-drawer";
 import { CartBestSellers } from "./cart-best-sellers";
@@ -39,7 +39,7 @@ export function Cart({
 }) {
   const optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
   const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
-  const cartHasItems = !!cart && cart.totalQuantity > 0;
+  const cartHasItems = Boolean(cart) && cart.totalQuantity > 0;
 
   if (cartHasItems) {
     return <CartDetails cart={optimisticCart} layout={layout} />;
