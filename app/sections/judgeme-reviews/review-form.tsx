@@ -204,15 +204,13 @@ export function ReviewForm({
             className="block font-medium text-gray-700 text-sm"
           >
             Review Title
-            <span className="ml-1 text-red-500">*</span>
           </label>
           <input
             type="text"
-            name="reviewTitle"
+            name="title"
             id="judgeme-review-title"
             defaultValue=""
             placeholder="Give your review a title"
-            required
             className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
           />
         </div>
@@ -230,8 +228,8 @@ export function ReviewForm({
             name="body"
             id="judgeme-review-body"
             defaultValue=""
-            placeholder="Share your experience with this product"
             required
+            placeholder="Share your experience with this product"
             rows={5}
             className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
           />
