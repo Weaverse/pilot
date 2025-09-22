@@ -10,8 +10,8 @@ import type {
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
+import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
-import { RevealUnderline } from "~/reveal-underline";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { calculateAspectRatio } from "~/utils/image";
 import {

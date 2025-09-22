@@ -4,7 +4,7 @@ import type { ProductVariantFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { VariantPrices } from "~/components/product/variant-prices";
-import { RevealUnderline } from "~/reveal-underline";
+import { RevealUnderline } from "~/components/reveal-underline";
 import type {
   NormalizedPredictiveSearchResultItem,
   NormalizedPredictiveSearchResults,
