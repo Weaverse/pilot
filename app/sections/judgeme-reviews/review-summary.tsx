@@ -6,10 +6,36 @@ import { useJudgemeStore } from ".";
 import { RatingProgressBar } from "./rating-progress-bar";
 import { ReviewForm } from "./review-form";
 
-export default function JudgemeReviewSummary(
-  props: HydrogenComponentProps & { ref: React.Ref<HTMLDivElement> },
-) {
-  const { ref, ...rest } = props;
+interface JudgemeReviewSummaryProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLDivElement>;
+  averageRatingText?: string;
+  totalReviewsText?: string;
+  writeReviewText?: string;
+  hideFormText?: string;
+  noReviewsText?: string;
+  errorText?: string;
+}
+
+function parseTemplate(
+  template: string,
+  variables: Record<string, string | number>,
+): string {
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    return variables[key]?.toString() || match;
+  });
+}
+
+export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
+  const {
+    ref,
+    averageRatingText = "{{avgRating}} out of 5",
+    totalReviewsText = "Based on {{totalReviews}} reviews",
+    writeReviewText = "Write a Review",
+    hideFormText = "Hide Form",
+    noReviewsText = "Be the first to write a review",
+    errorText = "Error loading reviews.",
+    ...rest
+  } = props;
   let { status, data } = useJudgemeStore();
   const [showForm, setShowForm] = useState(false);
 
@@ -51,7 +77,7 @@ export default function JudgemeReviewSummary(
           </div>
         </div>
       ) : status === "error" ? (
-        <p className="text-center text-red-600">Error loading reviews.</p>
+        <p className="text-center text-red-600">{errorText}</p>
       ) : data && data.totalReviews > 0 ? (
         // Summary with data
         <div className="space-y-12">
@@ -64,12 +90,15 @@ export default function JudgemeReviewSummary(
                   className="[&>svg]:size-10"
                 />
                 <span className="font-semibold text-gray-900 text-xl">
-                  {data.averageRating.toFixed(2)} out of 5
+                  {parseTemplate(averageRatingText, {
+                    avgRating: data.averageRating.toFixed(2),
+                  })}
                 </span>
               </div>
               <div className="text-gray-600 text-sm">
-                Based on {data.totalReviews}{" "}
-                {data.totalReviews === 1 ? "review" : "reviews"}
+                {parseTemplate(totalReviewsText, {
+                  totalReviews: data.totalReviews,
+                })}
               </div>
             </div>
 
@@ -99,7 +128,7 @@ export default function JudgemeReviewSummary(
                 aria-controls="review-form"
                 className="w-full"
               >
-                {showForm ? "Hide Form" : "Write a Review"}
+                {showForm ? hideFormText : writeReviewText}
               </Button>
             </div>
           </div>
@@ -113,9 +142,7 @@ export default function JudgemeReviewSummary(
             <div className="flex items-center justify-end space-y-3 pr-14">
               <div className="flex flex-col gap-2">
                 <StarRating rating={0} className="[&>svg]:size-10" />
-                <span className="text-gray-500 text-sm">
-                  Be the first to write a review
-                </span>
+                <span className="text-gray-500 text-sm">{noReviewsText}</span>
               </div>
             </div>
             {/* Column 3 - Write Review Button */}
@@ -127,7 +154,7 @@ export default function JudgemeReviewSummary(
                 aria-controls="review-form"
                 className="w-64"
               >
-                {showForm ? "Hide Form" : "Write a review"}
+                {showForm ? hideFormText : writeReviewText}
               </Button>
             </div>
           </div>
@@ -141,6 +168,58 @@ export default function JudgemeReviewSummary(
 export const schema = createSchema({
   type: "judgeme-reviews--summary",
   title: "Reviews summary",
-  settings: [],
+  settings: [
+    {
+      group: "Summary Text Settings",
+      inputs: [
+        {
+          type: "text",
+          name: "averageRatingText",
+          label: "Average rating text",
+          defaultValue: "{{avgRating}} out of 5",
+          placeholder: "{{avgRating}} out of 5",
+          helpText:
+            "Use <strong>{{avgRating}}</strong> to display the average rating value",
+        },
+        {
+          type: "text",
+          name: "totalReviewsText",
+          label: "Total reviews text",
+          defaultValue: "Based on {{totalReviews}} reviews",
+          placeholder: "Based on {{totalReviews}} reviews",
+          helpText:
+            "Use <strong>{{totalReviews}}</strong> to display the total number of reviews",
+        },
+        {
+          type: "text",
+          name: "writeReviewText",
+          label: "Write review button text",
+          defaultValue: "Write a Review",
+          placeholder: "Write a Review",
+        },
+        {
+          type: "text",
+          name: "hideFormText",
+          label: "Hide form button text",
+          defaultValue: "Hide Form",
+          placeholder: "Hide Form",
+        },
+        {
+          type: "text",
+          name: "noReviewsText",
+          label: "No reviews message",
+          defaultValue: "Be the first to write a review",
+          placeholder: "Be the first to write a review",
+        },
+        {
+          type: "text",
+          name: "errorText",
+          label: "Error message",
+          defaultValue: "Error loading reviews.",
+          placeholder: "Error loading reviews.",
+        },
+      ],
+    },
+  ],
   presets: {},
 });
