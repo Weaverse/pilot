@@ -46,7 +46,7 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
   (props, ref) => {
     const { children, sectionId, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
-    const { paging, data, setStatus, setData } = useJudgemeStore();
+    const { paging, data, setStatus, setData, setPaging } = useJudgemeStore();
     const reviewsAPI = usePrefixPathWithLocale(
       `/api/product/${product?.handle}/reviews`,
     );
@@ -63,6 +63,14 @@ const JudgemeReviewSection = forwardRef<HTMLElement, JudgemeReviewSectionProps>(
       }
       inViewRef(node);
     };
+
+    // Reset pagination when product handle changes
+    useEffect(() => {
+      if (product?.handle) {
+        setPaging({ currentPage: 1, perPage: 5 });
+        setData(null); // Clear previous product's reviews
+      }
+    }, [product?.handle, setPaging, setData]);
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
