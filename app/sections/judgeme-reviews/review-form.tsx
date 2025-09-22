@@ -6,7 +6,7 @@ import { Button } from "~/components/button";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import { cn } from "~/utils/cn";
-import { RatingInput } from "./rating-input.tsx";
+import { RatingInput } from "./rating-input";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
