@@ -56,42 +56,52 @@ export function PredictiveSearchButton() {
           <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
-                <div className="mx-auto my-6 flex w-[560px] max-w-[90vw] items-center gap-3 border border-line-subtle px-3">
-                  <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
-                  <input
-                    name="q"
-                    type="search"
-                    onChange={(e) => fetchResults(e.target.value)}
-                    onFocus={(e) => fetchResults(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        const query = e.currentTarget.value.trim();
-                        if (query) {
-                          const locale = params.locale
-                            ? `/${params.locale}`
-                            : "";
-                          window.location.href = `${locale}/search?q=${encodeURIComponent(query)}`;
-                        }
-                      }
-                    }}
-                    placeholder="Enter a keyword"
-                    ref={inputRef}
-                    autoComplete="off"
-                    className="h-full w-full py-4 focus-visible:outline-hidden"
-                  />
-                  <button
-                    type="button"
-                    className="shrink-0 p-1 text-gray-500"
-                    onClick={() => {
+                <div className="mx-auto w-[560px] max-w-[90vw]">
+                  <PopularKeywords
+                    onKeywordClick={(keyword) => {
                       if (inputRef.current) {
-                        inputRef.current.value = "";
-                        fetchResults("");
+                        inputRef.current.value = keyword;
+                        fetchResults(keyword);
                       }
                     }}
-                  >
-                    <XIcon className="h-5 w-5" />
-                  </button>
+                  />
+                  <div className="mb-6 mt-2 flex items-center gap-3 border border-line-subtle px-3">
+                    <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
+                    <input
+                      name="q"
+                      type="search"
+                      onChange={(e) => fetchResults(e.target.value)}
+                      onFocus={(e) => fetchResults(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          const query = e.currentTarget.value.trim();
+                          if (query) {
+                            const locale = params.locale
+                              ? `/${params.locale}`
+                              : "";
+                            window.location.href = `${locale}/search?q=${encodeURIComponent(query)}`;
+                          }
+                        }
+                      }}
+                      placeholder="Enter a keyword"
+                      ref={inputRef}
+                      autoComplete="off"
+                      className="h-full w-full py-4 focus-visible:outline-hidden"
+                    />
+                    <button
+                      type="button"
+                      className="shrink-0 p-1 text-gray-500"
+                      onClick={() => {
+                        if (inputRef.current) {
+                          inputRef.current.value = "";
+                          fetchResults("");
+                        }
+                      }}
+                    >
+                      <XIcon className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
               )}
             </PredictiveSearchForm>
@@ -158,5 +168,38 @@ function NoResults({ searchTerm }: { searchTerm: RefObject<string> }) {
     <p className="w-[640px] bg-background p-6 shadow-header">
       No results found for <q>{searchTerm.current}</q>
     </p>
+  );
+}
+
+function PopularKeywords({
+  onKeywordClick,
+}: {
+  onKeywordClick: (keyword: string) => void;
+}) {
+  const popularKeywords = [
+    "shirts",
+    "pants",
+    "dresses",
+    "shoes",
+    "accessories",
+  ];
+
+  return (
+    <div className="flex items-center gap-2">
+      <span>Popular searches:</span>
+      <div className="flex flex-wrap gap-2">
+        {popularKeywords.map((keyword, index) => (
+          <button
+            key={keyword}
+            type="button"
+            onClick={() => onKeywordClick(keyword)}
+            className="py-1 text-gray-700 transition-colors focus-visible:outline-hidden hover:underline underline-offset-4"
+          >
+            {keyword}
+            {index < popularKeywords.length - 1 && ","}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
