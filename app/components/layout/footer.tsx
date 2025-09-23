@@ -195,7 +195,6 @@ export function Footer() {
 function FooterMenu() {
   const { footerMenu } = useShopMenu();
   const items = footerMenu.items as unknown as SingleMenuItem[];
-  console.log("👉 --------> - footer.tsx - items:", items);
   return (
     <Accordion.Root
       type="multiple"
