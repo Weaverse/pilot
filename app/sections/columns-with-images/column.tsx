@@ -27,7 +27,7 @@ const variants = cva("", {
 
 interface ColumnWithImageItemProps
   extends VariantProps<typeof variants>,
-    Pick<LinkProps, "variant" | "text" | "to" | "openInNewTab">,
+    Pick<LinkProps, "variant" | "text" | "to">,
     HydrogenComponentProps {
   imageSrc: WeaverseImage;
   imageAspectRatio: ImageAspectRatio;
@@ -47,7 +47,6 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
     text,
     to,
     variant,
-    openInNewTab,
     hideOnMobile,
     size,
     ref,
@@ -72,7 +71,7 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
         {heading && <h6>{heading}</h6>}
         {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
         {text && (
-          <Link variant={variant} to={to} openInNewTab={openInNewTab}>
+          <Link variant={variant} to={to}>
             {text}
           </Link>
         )}

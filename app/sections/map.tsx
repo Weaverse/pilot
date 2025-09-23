@@ -35,7 +35,7 @@ interface MapSectionProps
   heading: string;
   description: string;
   alignment: "left" | "center" | "right";
-  buttonVariant: LinkProps["variant"];
+  variant: LinkProps["variant"];
   buttonText: LinkProps["children"];
   boxBgColor: string;
   boxTextColor: string;
@@ -54,7 +54,7 @@ export default function MapSection(props: MapSectionProps) {
     boxTextColor,
     boxBorderRadius,
     buttonText,
-    buttonVariant,
+    variant,
     backgroundColor,
     textColor,
     borderColor,
@@ -63,6 +63,15 @@ export default function MapSection(props: MapSectionProps) {
     borderColorHover,
     ...rest
   } = props;
+
+  const customButtonStyles = {
+    backgroundColor,
+    textColor,
+    borderColor,
+    backgroundColorHover,
+    textColorHover,
+    borderColorHover,
+  };
 
   return (
     <Section
@@ -92,14 +101,9 @@ export default function MapSection(props: MapSectionProps) {
         {buttonText && (
           <Link
             to={`https://www.google.com/maps/search/${address}`}
-            openInNewTab
-            variant={buttonVariant}
-            backgroundColor={backgroundColor}
-            textColor={textColor}
-            borderColor={borderColor}
-            backgroundColorHover={backgroundColorHover}
-            textColorHover={textColorHover}
-            borderColorHover={borderColorHover}
+            variant={variant}
+            {...(variant === "custom" ? customButtonStyles : {})}
+            target="_blank"
           >
             {buttonText}
           </Link>
@@ -217,7 +221,7 @@ export const schema = createSchema({
               { label: "Custom styles", value: "custom" },
             ],
           },
-          defaultValue: "primary",
+          defaultValue: "outline",
         },
         ...linkStylesInputs,
       ],
