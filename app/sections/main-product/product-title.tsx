@@ -9,17 +9,17 @@ interface ProductTitleProps extends HydrogenComponentProps {
 
 export default function ProductTitle(props: ProductTitleProps) {
   const { ref, headingTag: Tag, ...rest } = props;
-    const { product } = useLoaderData<typeof productRouteLoader>();
+  const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product) {
-      return null;
-    }
+  if (!product) {
+    return null;
+  }
 
-    return (
-      <div ref={ref} {...rest}>
-        <Tag className="h3 tracking-tight!">{product.title}</Tag>
-      </div>
-    );
+  return (
+    <div ref={ref} {...rest}>
+      <Tag className="h3 tracking-tight!">{product.title}</Tag>
+    </div>
+  );
 }
 
 export const schema = createSchema({

@@ -28,15 +28,9 @@ function TestimonialsItems(props: TestimonialsItemsProps) {
 
   return (
     <div ref={ref} {...rest} className={clsx(variants({ gap }))}>
-      <div className="space-y-6">
-        {children?.filter((_, i) => i % 3 === 0)}
-      </div>
-      <div className="space-y-6">
-        {children?.filter((_, i) => i % 3 === 1)}
-      </div>
-      <div className="space-y-6">
-        {children?.filter((_, i) => i % 3 === 2)}
-      </div>
+      <div className="space-y-6">{children?.filter((_, i) => i % 3 === 0)}</div>
+      <div className="space-y-6">{children?.filter((_, i) => i % 3 === 1)}</div>
+      <div className="space-y-6">{children?.filter((_, i) => i % 3 === 2)}</div>
     </div>
   );
 }

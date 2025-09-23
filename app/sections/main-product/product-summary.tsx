@@ -8,17 +8,17 @@ interface ProductSummaryProps extends HydrogenComponentProps {
 
 export default function ProductSummary(props: ProductSummaryProps) {
   const { ref, ...rest } = props;
-    const { product } = useLoaderData<typeof productRouteLoader>();
+  const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product?.summary) {
-      return null;
-    }
+  if (!product?.summary) {
+    return null;
+  }
 
-    return (
-      <div ref={ref} {...rest} className="empty:hidden">
-        <p className="leading-relaxed">{product.summary}</p>
-      </div>
-    );
+  return (
+    <div ref={ref} {...rest} className="empty:hidden">
+      <p className="leading-relaxed">{product.summary}</p>
+    </div>
+  );
 }
 
 export const schema = createSchema({

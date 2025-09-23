@@ -8,17 +8,17 @@ interface ProductVendorProps extends HydrogenComponentProps {
 
 export default function ProductVendor(props: ProductVendorProps) {
   const { ref, ...rest } = props;
-    const { product } = useLoaderData<typeof productRouteLoader>();
+  const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product?.vendor) {
-      return null;
-    }
+  if (!product?.vendor) {
+    return null;
+  }
 
-    return (
-      <div ref={ref} {...rest} className="empty:hidden">
-        <span className="text-body-subtle">{product.vendor}</span>
-      </div>
-    );
+  return (
+    <div ref={ref} {...rest} className="empty:hidden">
+      <span className="text-body-subtle">{product.vendor}</span>
+    </div>
+  );
 }
 
 export const schema = createSchema({

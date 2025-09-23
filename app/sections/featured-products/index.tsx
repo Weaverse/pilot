@@ -28,11 +28,11 @@ interface FeaturedProductsProps
 
 export default function FeaturedProducts(props: FeaturedProductsProps) {
   const { ref, loaderData, children, ...rest } = props;
-    return (
-      <Section ref={ref} {...rest}>
-        {children}
-      </Section>
-    );
+  return (
+    <Section ref={ref} {...rest}>
+      {children}
+    </Section>
+  );
 }
 
 const FEATURED_PRODUCTS_QUERY = `#graphql

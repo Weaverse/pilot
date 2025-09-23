@@ -66,9 +66,7 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
     ...rest
   } = props;
   const imageData: Partial<WeaverseImage> =
-    typeof image === "string"
-      ? { url: image, altText: "Placeholder" }
-      : image;
+    typeof image === "string" ? { url: image, altText: "Placeholder" } : image;
   let aspRt: string | undefined;
   if (imageAspectRatio === "adapt") {
     if (imageData.width && imageData.height) {

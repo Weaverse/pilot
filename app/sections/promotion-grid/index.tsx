@@ -6,7 +6,9 @@ import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 
-interface PromotionGridProps extends VariantProps<typeof variants>, SectionProps {
+interface PromotionGridProps
+  extends VariantProps<typeof variants>,
+    SectionProps {
   ref?: React.Ref<HTMLElement>;
 }
 

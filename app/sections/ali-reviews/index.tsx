@@ -8,7 +8,9 @@ interface AliReviewsData {
   aliReviewsApiKey: string;
 }
 
-interface AliReviewsProps extends SectionProps<Awaited<ReturnType<typeof loader>>>, AliReviewsData {
+interface AliReviewsProps
+  extends SectionProps<Awaited<ReturnType<typeof loader>>>,
+    AliReviewsData {
   ref?: React.Ref<HTMLElement>;
 }
 

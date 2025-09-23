@@ -12,7 +12,9 @@ interface ProductBadgesComponentProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;
 }
 
-export default function ProductBadgesComponent(props: ProductBadgesComponentProps) {
+export default function ProductBadgesComponent(
+  props: ProductBadgesComponentProps,
+) {
   const { ref, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 

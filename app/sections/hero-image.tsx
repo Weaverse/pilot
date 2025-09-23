@@ -58,20 +58,20 @@ const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
 
 export default function HeroImage(props: HeroImageProps & SectionProps) {
   const { ref, children, height, contentPosition, ...rest } = props;
-    const { enableTransparentHeader } = useThemeSettings();
-    return (
-      <Section
-        ref={ref}
-        {...rest}
-        containerClassName={variants({
-          contentPosition,
-          height,
-          enableTransparentHeader,
-        })}
-      >
-        {children}
-      </Section>
-    );
+  const { enableTransparentHeader } = useThemeSettings();
+  return (
+    <Section
+      ref={ref}
+      {...rest}
+      containerClassName={variants({
+        contentPosition,
+        height,
+        enableTransparentHeader,
+      })}
+    >
+      {children}
+    </Section>
+  );
 }
 
 export const schema = createSchema({

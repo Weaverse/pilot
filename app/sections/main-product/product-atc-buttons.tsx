@@ -27,58 +27,58 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     showShopPayButton,
     ...rest
   } = props;
-    const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
-    const { quantity } = useProductQtyStore();
+  const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
+  const { quantity } = useProductQtyStore();
 
-    const selectedVariant = useOptimisticVariant(
-      product?.selectedOrFirstAvailableVariant,
-      getAdjacentAndFirstAvailableVariants(product),
-    );
+  const selectedVariant = useOptimisticVariant(
+    product?.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
+  );
 
-    const combinedListing = isCombinedListing(product);
-    const isBundle = Boolean(product?.isBundle?.requiresComponents);
+  const combinedListing = isCombinedListing(product);
+  const isBundle = Boolean(product?.isBundle?.requiresComponents);
 
-    if (!product || combinedListing) {
-      return null;
-    }
+  if (!product || combinedListing) {
+    return null;
+  }
 
-    let atcButtonText = "Add to cart";
-    if (selectedVariant.availableForSale) {
-      atcButtonText = isBundle ? addBundleToCartText : addToCartText;
-    } else {
-      atcButtonText = soldOutText;
-    }
+  let atcButtonText = "Add to cart";
+  if (selectedVariant.availableForSale) {
+    atcButtonText = isBundle ? addBundleToCartText : addToCartText;
+  } else {
+    atcButtonText = soldOutText;
+  }
 
-    return (
-      <div ref={ref} {...rest} className="space-y-2 empty:hidden">
-        <AddToCartButton
-          disabled={!selectedVariant?.availableForSale}
-          lines={[
+  return (
+    <div ref={ref} {...rest} className="space-y-2 empty:hidden">
+      <AddToCartButton
+        disabled={!selectedVariant?.availableForSale}
+        lines={[
+          {
+            merchandiseId: selectedVariant?.id,
+            quantity,
+            selectedVariant,
+          },
+        ]}
+        data-test="add-to-cart"
+        className="w-full uppercase"
+      >
+        {atcButtonText}
+      </AddToCartButton>
+      {showShopPayButton && selectedVariant?.availableForSale && (
+        <ShopPayButton
+          width="100%"
+          variantIdsAndQuantities={[
             {
-              merchandiseId: selectedVariant?.id,
+              id: selectedVariant?.id,
               quantity,
-              selectedVariant,
             },
           ]}
-          data-test="add-to-cart"
-          className="w-full uppercase"
-        >
-          {atcButtonText}
-        </AddToCartButton>
-        {showShopPayButton && selectedVariant?.availableForSale && (
-          <ShopPayButton
-            width="100%"
-            variantIdsAndQuantities={[
-              {
-                id: selectedVariant?.id,
-                quantity,
-              },
-            ]}
-            storeDomain={storeDomain}
-          />
-        )}
-      </div>
-    );
+          storeDomain={storeDomain}
+        />
+      )}
+    </div>
+  );
 }
 
 export const schema = createSchema({

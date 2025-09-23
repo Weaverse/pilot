@@ -19,7 +19,8 @@ interface OurTeamProps
 }
 
 function OurTeam(props: OurTeamProps) {
-  const { loaderData, metaobject, membersCount, children, ref, ...rest } = props;
+  const { loaderData, metaobject, membersCount, children, ref, ...rest } =
+    props;
   return (
     <Section ref={ref} {...rest}>
       {children}

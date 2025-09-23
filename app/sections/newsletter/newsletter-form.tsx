@@ -15,8 +15,15 @@ interface NewsLetterInputProps extends HydrogenComponentProps {
 }
 
 function NewsLetterForm(props: NewsLetterInputProps) {
-  const { buttonText, width, placeholder, helpText, successText, ref, ...rest } =
-    props;
+  const {
+    buttonText,
+    width,
+    placeholder,
+    helpText,
+    successText,
+    ref,
+    ...rest
+  } = props;
   const fetcher = useFetcher();
   const { state, Form } = fetcher;
   const data = fetcher.data as CustomerApiPlayLoad;

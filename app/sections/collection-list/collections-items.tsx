@@ -32,52 +32,52 @@ function CollectionsItems(props: CollectionsItemsProps) {
     ref,
     ...rest
   } = props;
-    return (
-      <div ref={ref} {...rest}>
-        <Pagination connection={collections}>
-          {({
-            nodes,
-            isLoading,
-            hasPreviousPage,
-            hasNextPage,
-            NextLink,
-            PreviousLink,
-          }) => (
-            <div className="flex w-full flex-col items-center gap-8">
-              {hasPreviousPage && (
-                <PreviousLink
-                  className={cn("mx-auto", variants({ variant: "outline" }))}
-                >
-                  {isLoading ? "Loading..." : prevButtonText}
-                </PreviousLink>
-              )}
-              <div className="grid w-full grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-2 lg:gap-y-12 xl:grid-cols-3">
-                {nodes.map((collection, i) => (
-                  <CollectionCard
-                    key={collection.id}
-                    collection={collection as Collection}
-                    imageAspectRatio={imageAspectRatio}
-                    collectionNameColor={collectionNameColor}
-                    loading={getImageLoadingPriority(i, 2)}
-                    enableOverlay={enableOverlay}
-                    overlayColor={overlayColor}
-                    overlayColorHover={overlayColorHover}
-                    overlayOpacity={overlayOpacity}
-                  />
-                ))}
-              </div>
-              {hasNextPage && (
-                <NextLink
-                  className={cn("mx-auto", variants({ variant: "outline" }))}
-                >
-                  {isLoading ? "Loading..." : nextButtonText}
-                </NextLink>
-              )}
+  return (
+    <div ref={ref} {...rest}>
+      <Pagination connection={collections}>
+        {({
+          nodes,
+          isLoading,
+          hasPreviousPage,
+          hasNextPage,
+          NextLink,
+          PreviousLink,
+        }) => (
+          <div className="flex w-full flex-col items-center gap-8">
+            {hasPreviousPage && (
+              <PreviousLink
+                className={cn("mx-auto", variants({ variant: "outline" }))}
+              >
+                {isLoading ? "Loading..." : prevButtonText}
+              </PreviousLink>
+            )}
+            <div className="grid w-full grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-2 lg:gap-y-12 xl:grid-cols-3">
+              {nodes.map((collection, i) => (
+                <CollectionCard
+                  key={collection.id}
+                  collection={collection as Collection}
+                  imageAspectRatio={imageAspectRatio}
+                  collectionNameColor={collectionNameColor}
+                  loading={getImageLoadingPriority(i, 2)}
+                  enableOverlay={enableOverlay}
+                  overlayColor={overlayColor}
+                  overlayColorHover={overlayColorHover}
+                  overlayOpacity={overlayOpacity}
+                />
+              ))}
             </div>
-          )}
-        </Pagination>
-      </div>
-    );
+            {hasNextPage && (
+              <NextLink
+                className={cn("mx-auto", variants({ variant: "outline" }))}
+              >
+                {isLoading ? "Loading..." : nextButtonText}
+              </NextLink>
+            )}
+          </div>
+        )}
+      </Pagination>
+    </div>
+  );
 }
 
 export default CollectionsItems;

@@ -18,7 +18,9 @@ interface ProductQuantitySelectorProps extends HydrogenComponentProps {
   labelText: string;
 }
 
-export default function ProductQuantitySelector(props: ProductQuantitySelectorProps) {
+export default function ProductQuantitySelector(
+  props: ProductQuantitySelectorProps,
+) {
   const { ref, labelText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity, setQuantity } = useProductQtyStore();

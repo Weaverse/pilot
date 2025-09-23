@@ -100,7 +100,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>((props, ref) => {
     style = {},
     ...rest
   } = props;
-  
+
   style = {
     ...style,
     "--section-bg-color": backgroundColor,

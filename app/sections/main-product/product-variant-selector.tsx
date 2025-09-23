@@ -13,7 +13,9 @@ interface ProductVariantSelectorProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;
 }
 
-export default function ProductVariantSelector(props: ProductVariantSelectorProps) {
+export default function ProductVariantSelector(
+  props: ProductVariantSelectorProps,
+) {
   const { ref, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 

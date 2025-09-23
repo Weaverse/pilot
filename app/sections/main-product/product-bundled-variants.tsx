@@ -9,7 +9,9 @@ interface ProductBundledVariantsProps extends HydrogenComponentProps {
   headingText: string;
 }
 
-export default function ProductBundledVariants(props: ProductBundledVariantsProps) {
+export default function ProductBundledVariants(
+  props: ProductBundledVariantsProps,
+) {
   const { ref, headingText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
