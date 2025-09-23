@@ -5,11 +5,13 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { type RefObject, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import Link from "~/components/link";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { cn } from "~/utils/cn";
+import { PopularKeywords } from "./popular-keywords";
 import { PredictiveSearchResult } from "./predictive-search-result";
 import { PredictiveSearchForm } from "./search-form";
 
@@ -168,38 +170,5 @@ function NoResults({ searchTerm }: { searchTerm: RefObject<string> }) {
     <p className="w-[640px] bg-background p-6 shadow-header">
       No results found for <q>{searchTerm.current}</q>
     </p>
-  );
-}
-
-function PopularKeywords({
-  onKeywordClick,
-}: {
-  onKeywordClick: (keyword: string) => void;
-}) {
-  const popularKeywords = [
-    "shirts",
-    "pants",
-    "dresses",
-    "shoes",
-    "accessories",
-  ];
-
-  return (
-    <div className="flex items-center gap-2">
-      <span>Popular searches:</span>
-      <div className="flex flex-wrap gap-2">
-        {popularKeywords.map((keyword, index) => (
-          <button
-            key={keyword}
-            type="button"
-            onClick={() => onKeywordClick(keyword)}
-            className="py-1 text-gray-700 transition-colors focus-visible:outline-hidden hover:underline underline-offset-4"
-          >
-            {keyword}
-            {index < popularKeywords.length - 1 && ","}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
