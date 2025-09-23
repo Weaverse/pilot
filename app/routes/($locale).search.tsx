@@ -106,25 +106,9 @@ export default function Search() {
     <Section width="fixed" verticalPadding="medium">
       <BreadCrumb className="justify-center" page="Search" />
       <h4 className="mt-4 mb-2.5 text-center font-medium">Search</h4>
-      <div className="flex items-center justify-center text-body-subtle">
-        <span>Popular Searches:</span>
-        {POPULAR_SEARCHES.map((search, ind) => (
-          <Fragment key={search}>
-            <Link
-              to={`/search?q=${search}`}
-              className="ml-1 underline-offset-4 hover:underline"
-            >
-              {search}
-            </Link>
-            {ind < POPULAR_SEARCHES.length - 1 && (
-              <span className="mr-px">,</span>
-            )}
-          </Fragment>
-        ))}
-      </div>
       <Form
         method="get"
-        className="mx-auto mt-6 flex w-[700px] max-w-[90vw] items-center gap-3 border border-line px-3"
+        className="mx-auto mt-6 mb-2 flex w-[700px] max-w-[90vw] items-center gap-3 border border-line px-3"
       >
         <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
         <input
@@ -143,6 +127,22 @@ export default function Search() {
           <XIcon className="h-5 w-5" />
         </button>
       </Form>
+      <div className="flex items-center justify-center text-body-subtle">
+        <span>Popular Searches:</span>
+        {POPULAR_SEARCHES.map((search, ind) => (
+          <Fragment key={search}>
+            <Link
+              to={`/search?q=${search}`}
+              className="ml-1 underline-offset-4 hover:underline"
+            >
+              {search}
+            </Link>
+            {ind < POPULAR_SEARCHES.length - 1 && (
+              <span className="mr-px">,</span>
+            )}
+          </Fragment>
+        ))}
+      </div>
       {hasResults ? (
         <Pagination connection={products}>
           {({
@@ -203,7 +203,7 @@ function NoResults({
   return (
     <>
       {searchTerm && (
-        <div className="my-10 flex flex-col items-center justify-center text-lg">
+        <div className="my-10 lg:my-16 flex flex-col items-center justify-center text-xl">
           No results for "{searchTerm}", try a different search.
         </div>
       )}

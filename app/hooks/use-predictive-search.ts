@@ -14,7 +14,7 @@ export const NO_PREDICTIVE_SEARCH_RESULTS: NormalizedPredictiveSearchResults = [
 ];
 
 export function usePredictiveSearch(): NormalizedPredictiveSearch & {
-  searchTerm: React.MutableRefObject<string>;
+  searchTerm: React.RefObject<string>;
 } {
   const [results, setResults] = useState<NormalizedPredictiveSearchResults>();
   const fetchers = useFetchers();
