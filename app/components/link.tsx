@@ -77,7 +77,6 @@ export interface LinkData
     Partial<LinkStyles>,
     VariantProps<typeof variants> {
   text?: string;
-  openInNewTab?: boolean;
 }
 
 export interface LinkProps
@@ -85,9 +84,21 @@ export interface LinkProps
     Partial<Omit<HydrogenComponentProps, "children">>,
     LinkData {}
 
-export function useHrefWithLocale(href: LinkProps["to"]) {
+function checkExternal(to: LinkProps["to"]) {
+  return (
+    (typeof to === "string" && !to.startsWith("/")) ||
+    (typeof to === "object" && to.pathname && !to.pathname.startsWith("/"))
+  );
+}
+
+function useHrefWithLocale(href: LinkProps["to"]) {
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale;
+
+  const isExternal = checkExternal(href);
+  if (isExternal) {
+    return href;
+  }
 
   let toWithLocale = href;
   if (
@@ -122,7 +133,6 @@ export const Link = forwardRef(
       to,
       text,
       variant,
-      openInNewTab,
       className,
       style,
       textColor,
@@ -132,6 +142,7 @@ export const Link = forwardRef(
       backgroundColorHover,
       borderColorHover,
       children,
+      target,
       ...rest
     } = props;
     const { enableViewTransition } = useThemeSettings();
@@ -149,9 +160,11 @@ export const Link = forwardRef(
       } as React.CSSProperties;
     }
 
-    if (!(text || children)) {
+    if (!children || text) {
       return null;
     }
+
+    const isExternal = checkExternal(href);
 
     return (
       <RemixLink
@@ -159,8 +172,10 @@ export const Link = forwardRef(
         viewTransition={enableViewTransition}
         to={href}
         style={style}
-        target={openInNewTab ? "_blank" : undefined}
         className={cn(variants({ variant, className }))}
+        target={
+          target !== undefined ? target : isExternal ? "_blank" : undefined
+        }
         {...rest}
       >
         {children || text}
