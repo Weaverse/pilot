@@ -12,6 +12,7 @@ import { Link } from "~/components/link";
 import { NavLink } from "~/components/nav-link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
+import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { calculateAspectRatio } from "~/utils/image";
 import {
@@ -40,6 +41,7 @@ export function ProductCard({
     pcardTitlePricesAlignment,
     pcardAlignment,
     pcardShowVendor,
+    pcardShowReviews,
     pcardShowLowestPrice,
     pcardShowSalePrice,
     pcardEnableQuickShop,
@@ -171,6 +173,13 @@ export function ProductCard({
       >
         {pcardShowVendor && (
           <div className="text-body-subtle uppercase">{product.vendor}</div>
+        )}
+        {pcardShowReviews && (
+          <JudgemeStarsRating
+            product={product}
+            ratingText="{{rating}} ({{total_reviews}} reviews)"
+            errorText=""
+          />
         )}
         <div
           className={clsx(

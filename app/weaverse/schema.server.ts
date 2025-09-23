@@ -677,6 +677,12 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
+          label: "Show reviews (stars rating)",
+          name: "pcardShowReviews",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
           label: "Show lowest price",
           name: "pcardShowLowestPrice",
           defaultValue: false,
