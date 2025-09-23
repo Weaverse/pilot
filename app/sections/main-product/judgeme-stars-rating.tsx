@@ -1,17 +1,22 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
+import type { ProductCardFragment } from "storefront-api.generated";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import type { JudgemeStarsRatingData } from "~/types/judgeme";
 
-interface JudgemeStarsRatingProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
+interface JudgemeStarsRatingProps extends Partial<HydrogenComponentProps> {
+  ref?: React.Ref<HTMLDivElement>;
+  product?: ProductCardFragment;
   onClickEvent?: "do-nothing" | "scroll-to-section";
   sectionId?: string;
   ratingText?: string;
   noReviewsText?: string;
+  errorText?: string;
 }
 
 function formatRatingText(text: string, rating: number, totalReviews: number) {
@@ -23,10 +28,12 @@ function formatRatingText(text: string, rating: number, totalReviews: number) {
 export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
   const {
     ref,
+    product: productCard,
     onClickEvent = "do-nothing",
     sectionId,
     ratingText = "{{rating}}/5 - ({{total_reviews}} reviews)",
     noReviewsText = "No reviews",
+    errorText = "Unable to load reviews",
     ...rest
   } = props;
 
@@ -35,14 +42,25 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
   );
   const [data, setData] = useState<JudgemeStarsRatingData | null>(null);
   const { product } = useLoaderData<typeof productRouteLoader>();
-  const handle = product?.handle;
+  const handle = productCard?.handle || product?.handle;
   const ratingAPI = usePrefixPathWithLocale(
     `/api/product/${handle}/reviews?type=rating`,
   );
 
+  const { ref: inViewRef, inView } = useInView({ triggerOnce: true });
+
+  const setRefs = (node: HTMLDivElement) => {
+    if (ref && typeof ref === "object") {
+      ref.current = node;
+    } else if (typeof ref === "function") {
+      ref(node);
+    }
+    inViewRef(node);
+  };
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: only fetch when product handle change
   useEffect(() => {
-    if (!handle) {
+    if (!(handle && inView)) {
       return;
     }
 
@@ -62,7 +80,7 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
         console.error("Error fetching Judge.me stars rating data:", err);
         setStatus("error");
       });
-  }, [handle]);
+  }, [handle, inView]);
 
   if (!handle) {
     return null;
@@ -70,7 +88,7 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
 
   if (status === "idle" || status === "loading") {
     return (
-      <div {...rest} ref={ref}>
+      <div {...rest} ref={setRefs}>
         <div className="space-x-2">
           <div className="inline-flex items-center gap-1">
             <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
@@ -84,7 +102,9 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
   if (status === "error" || !data) {
     return (
       <div {...rest} ref={ref}>
-        <div className="text-gray-500">Unable to load reviews</div>
+        <div className={clsx("text-gray-500", !errorText && "hidden")}>
+          {errorText}
+        </div>
       </div>
     );
   }
@@ -169,6 +189,14 @@ export const schema = createSchema({
           label: "No reviews text",
           defaultValue: "No reviews",
           placeholder: "No reviews",
+        },
+        {
+          type: "text",
+          name: "errorText",
+          label: "Error text",
+          defaultValue: "Unable to load reviews",
+          placeholder: "Unable to load reviews",
+          helpText: "Leave empty to hide error message.",
         },
       ],
     },
