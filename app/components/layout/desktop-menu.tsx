@@ -86,17 +86,20 @@ export function DesktopMenu() {
 function DropdownSubMenu({ items }: { items: SingleMenuItem[] }) {
   return (
     <ul
-      className="animate-fade-in space-y-1.5"
+      className="animate-fade-in flex flex-col gap-1.5"
       style={{ "--fade-in-duration": "150ms" } as React.CSSProperties}
     >
-      {items.map(({ id, to, title }) => (
+      {items.map(({ id, to, title, isExternal }) => (
         <Link
           key={id}
           to={to}
           prefetch="intent"
-          className="block transition-none"
+          className="transition-none items-center gap-2 group"
         >
           <RevealUnderline>{title}</RevealUnderline>
+          {isExternal && (
+            <span className="invisible group-hover:visible text-sm">↗</span>
+          )}
         </Link>
       ))}
     </ul>
@@ -150,9 +153,14 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
                   key={cItem.id}
                   to={cItem.to}
                   prefetch="intent"
-                  className="relative inline transition-none"
+                  className="relative transition-none items-center gap-2 group"
                 >
                   <RevealUnderline>{cItem.title}</RevealUnderline>
+                  {cItem.isExternal && (
+                    <span className="invisible group-hover:visible text-sm">
+                      ↗
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>

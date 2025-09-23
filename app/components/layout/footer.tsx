@@ -10,12 +10,13 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { Link, useFetcher } from "react-router";
+import { useFetcher } from "react-router";
 import { Button } from "~/components/button";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
+import Link from "../link";
 import { CountrySelector } from "./country-selector";
 
 const variants = cva("", {
@@ -122,7 +123,6 @@ export function Footer() {
                     key={name}
                     to={to}
                     target="_blank"
-                    rel="noopener noreferrer"
                     className="flex items-center gap-2 text-lg"
                   >
                     <Icon className="h-5 w-5" />
@@ -195,6 +195,7 @@ export function Footer() {
 function FooterMenu() {
   const { footerMenu } = useShopMenu();
   const items = footerMenu.items as unknown as SingleMenuItem[];
+  console.log("👉 --------> - footer.tsx - items:", items);
   return (
     <Accordion.Root
       type="multiple"
@@ -231,10 +232,19 @@ function FooterMenu() {
           >
             <div className="flex flex-col gap-2 pb-4 lg:pt-6">
               {childItems.map((child) => (
-                <Link to={child.to} key={child.id} className="relative">
+                <Link
+                  to={child.to}
+                  key={child.id}
+                  className="relative items-center gap-2 group"
+                >
                   <RevealUnderline className="[--underline-color:var(--color-footer-text)]">
                     {child.title}
                   </RevealUnderline>
+                  {child.isExternal && (
+                    <span className="invisible group-hover:visible text-sm">
+                      ↗
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
