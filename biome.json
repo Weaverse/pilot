@@ -6,6 +6,7 @@
       "style": {
         "useThrowNewError": "warn",
         "useFilenamingConvention": "off",
+        "useNamingConvention": "off",
         "noParameterAssign": "off",
         "noMagicNumbers": "off",
         "noNestedTernary": "off"
@@ -14,10 +15,12 @@
         "noExplicitAny": "off",
         "useAwait": "off",
         "noConsole": "off",
+        "noAlert": "off",
         "noArrayIndexKey": "off"
       },
       "nursery": {
         "useConsistentTypeDefinitions": "off",
+        "useConsistentArrowReturn": "off",
         "noUnnecessaryConditions": "off"
       },
       "correctness": {
