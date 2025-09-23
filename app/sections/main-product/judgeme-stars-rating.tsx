@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
-import type { ProductCardFragment } from "storefront-api.generated";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
@@ -11,7 +10,7 @@ import type { JudgemeStarsRatingData } from "~/types/judgeme";
 
 interface JudgemeStarsRatingProps extends Partial<HydrogenComponentProps> {
   ref?: React.Ref<HTMLDivElement>;
-  product?: ProductCardFragment;
+  productHandle?: string;
   onClickEvent?: "do-nothing" | "scroll-to-section";
   sectionId?: string;
   ratingText?: string;
@@ -28,7 +27,7 @@ function formatRatingText(text: string, rating: number, totalReviews: number) {
 export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
   const {
     ref,
-    product: productCard,
+    productHandle,
     onClickEvent = "do-nothing",
     sectionId,
     ratingText = "{{rating}}/5 - ({{total_reviews}} reviews)",
@@ -42,7 +41,7 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
   );
   const [data, setData] = useState<JudgemeStarsRatingData | null>(null);
   const { product } = useLoaderData<typeof productRouteLoader>();
-  const handle = productCard?.handle || product?.handle;
+  const handle = productHandle || product?.handle;
   const ratingAPI = usePrefixPathWithLocale(
     `/api/product/${handle}/reviews?type=rating`,
   );

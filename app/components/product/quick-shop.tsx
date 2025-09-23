@@ -20,6 +20,7 @@ import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
+import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import { ProductBadges } from "./badges";
 import { VariantPrices } from "./variant-prices";
 import { VariantSelector } from "./variant-selector";
@@ -65,6 +66,11 @@ export function QuickShop({
               <h5>{product.title}</h5>
             </div>
             <VariantPrices variant={selectedVariant} />
+            <JudgemeStarsRating
+              productHandle={product.handle}
+              ratingText="{{rating}} ({{total_reviews}} reviews)"
+              errorText=""
+            />
             {product.summary && (
               <p className="leading-relaxed">{product.summary}</p>
             )}

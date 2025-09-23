@@ -176,7 +176,7 @@ export function ProductCard({
         )}
         {pcardShowReviews && (
           <JudgemeStarsRating
-            product={product}
+            productHandle={product.handle}
             ratingText="{{rating}} ({{total_reviews}} reviews)"
             errorText=""
           />
