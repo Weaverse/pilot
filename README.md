@@ -1,4 +1,4 @@
-<h1 align="center">Pilot - Shopify Hydrogen Theme</h1>
+<h1 align="center">Pilot - Production-ready Shopify Hydrogen Theme</h1>
 
 <div align="center">
 
@@ -10,27 +10,40 @@
 
 _Pilot is an innovative Shopify theme, powered by Hydrogen, React Router 7, and Weaverse, designed to create lightning-fast storefronts with exceptional performance. This theme combines a collection of powerful tools and features to streamline your Shopify development experience._
 
-## Demo
+## Who is using Weaverse/Pilot on production?
+These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
+- [Entropy Home](https://www.entropyhome.com/) - curated home goods brand operated by Entropy Bright LLC.
+- [Karma and Luck](https://www.karmaandluck.com) - modern lifestyle brand rooted in timeless traditions and spiritual intention.
+- [Baltzar](https://baltzar.com/) - curated selection of menswear brands from world renowned specialists such as Frank Clegg, Albert Thurston and Astorflex.
+- [iROCKER](https://irockersup.com/) - provide life on the water to all, with gear that goes the extra mile.
+- [Roland (Brazil)](https://store.roland.com.br/) - electronic musical instruments, drums, digital pianos, synthesizers, and dance/DJ gears.
+- [Timothy](https://timothy.london/) - British brand of premium travel goods and accessories.
+- And many more...
+
+## Links
 
 - Live store: https://pilot.weaverse.dev
-- Customizing Pilot on Weaverse Studio: https://studio.weaverse.io/demo
+- Customizing Pilot on Weaverse Studio: https://studio.weaverse.io/demo?theme=pilot
   ![pilot.weaverse.dev](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pilot.weavverse.dev_0b0b2f77-b79e-4524-8cf5-bc22d6ec4ba9.png?v=1744963684)
 
 ## What's included
 
-- React Router 7
-- Hydrogen
-- Oxygen
-- Shopify CLI
-- Biome (ESLint, Prettier alternative)
-- GraphQL code generator
+- Shopify Hydrogen / Oxygen / CLI
+- Shopify Basic/Plus features support:
+  - New [Shopify Customer Account API](https://www.shopify.com/partners/blog/introducing-customer-account-api-for-headless-stores) (OAuth-based)
+  - [Combined Listings](https://shopify.dev/docs/apps/build/product-merchandising/combined-listings)
+  - [Product bundles](https://help.shopify.com/en/manual/products/bundles)
+- [React Router 7](https://reactrouter.com/) for routing/SSR/data loading
+- [Biome](https://biomejs.dev/) code linter/formatter
 - TypeScript with strict configuration
-- Tailwind CSS v4
-- Radix UI for accessible components
-- class-variance-authority (cva) for component variants
-- Swiper for carousels
-- Judge.me reviews integration
-- New Shopify Customer Account API (OAuth-based)
+- GraphQL code generator
+- Styled with [TailwindCSS](https://tailwindcss.com/) (v4)
+- [Radix-UI](https://www.radix-ui.com/) for accessible/reusable UI components
+- [class-variance-authority](https://cva.style/) (cva) for component variants
+- [Swiper](https://swiperjs.com/) for carousels/sliders
+- [Framer Motion](https://www.framer.com/motion/) for animations
+- [Judge.me](https://judge.me/) reviews integration
+- [Klaviyo](https://www.klaviyo.com/) integration for email marketing
 - Full-featured setup of components and routes
 - Fully customizable inside [Weaverse Studio](https://weaverse.io)
 
@@ -44,7 +57,7 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, React Router 7, and 
 **Requirements:**
 
 - Node.js version 20.0.0 or higher
-- npm or pnpm package manager
+- `npm` or `pnpm` package manager
 
 **Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:**
 
@@ -209,23 +222,20 @@ export default withWeaverse(App);
 
 To create a section, you need to create a new file in [`app/sections`](app/sections) directory and register it in [`app/weaverse/components.ts`](app/weaverse/components.ts) file.
 
-**Important:** All Weaverse sections must use `forwardRef` and extend `HydrogenComponentProps`.
+**Important:** All Weaverse sections must include `ref` as a prop (or use `forwardRef` with React prior to v19) and extend `HydrogenComponentProps`.
 
 ```tsx:app/sections/video/index.tsx
-import type {
-  HydrogenComponentProps,
-  createSchema,
-} from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import type { HydrogenComponentProps } from '@weaverse/hydrogen';
 
 interface VideoProps extends HydrogenComponentProps {
+  ref: React.Ref<HTMLElement>
   heading: string;
   description: string;
   videoUrl: string;
 }
 
-const Video = forwardRef<HTMLElement, VideoProps>((props, ref) => {
-  const { heading, description, videoUrl, ...rest } = props;
+export default function Video(props: VideoProps) {
+  const { ref, heading, description, videoUrl, ...rest } = props;
   return (
     <section ref={ref} {...rest}>
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-12 lg:py-16 sm:text-center">
@@ -246,8 +256,6 @@ const Video = forwardRef<HTMLElement, VideoProps>((props, ref) => {
     </section>
   );
 });
-
-export default Video;
 ```
 
 Export a `schema` object from the file to define the component's schema with default data and settings to be used in the **Weaverse Studio**.
@@ -330,21 +338,18 @@ Weaverse provides a convenient way to customize your theme inside the **Weaverse
 
 ```
 app/
-├── components/      # Reusable UI components
-│   ├── layout/     # Header, footer, navigation
-│   ├── product/    # Product-specific components
-│   └── cart/       # Cart components
-├── sections/       # Weaverse page builder sections
+├── components/     # Reusable UI components
+├── sections/       # Weaverse sections/components
 ├── routes/         # React Router routes (with locale prefix)
 ├── graphql/        # GraphQL queries and fragments
 ├── utils/          # Helper functions
 └── weaverse/       # Weaverse configuration
 
 Key configuration files:
-- biome.json        # Code formatting and linting
-- codegen.ts       # GraphQL code generation
-- react-router.config.ts # React Router configuration
-- vite.config.ts   # Vite bundler configuration
+- biome.json                  # Code formatting and linting
+- codegen.ts                  # GraphQL code generation
+- react-router.config.ts      # React Router configuration
+- vite.config.ts              # Vite bundler configuration
 ```
 
 ### Development Tools
@@ -353,15 +358,6 @@ Key configuration files:
 - **GraphiQL API browser**: http://localhost:3456/graphiql
 - **Network inspector**: http://localhost:3456/debug-network
 - **Weaverse Studio**: Access through your Shopify admin
-
-### Code Quality
-
-Before committing, always run:
-```bash
-npm run biome:fix    # Fix linting/formatting
-npm run typecheck    # Check TypeScript types
-npm run codegen      # Update GraphQL types
-```
 
 ## References
 
