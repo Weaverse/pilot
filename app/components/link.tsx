@@ -5,7 +5,7 @@ import {
   useThemeSettings,
 } from "@weaverse/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
-import { forwardRef, type HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 import {
   Link as RemixLink,
   type LinkProps as RemixLinkProps,
@@ -82,7 +82,9 @@ export interface LinkData
 export interface LinkProps
   extends HTMLAttributes<HTMLAnchorElement>,
     Partial<Omit<HydrogenComponentProps, "children">>,
-    LinkData {}
+    LinkData {
+  ref?: React.Ref<HTMLAnchorElement>;
+}
 
 function checkExternal(to: LinkProps["to"]) {
   return (
@@ -127,62 +129,59 @@ function useHrefWithLocale(href: LinkProps["to"]) {
  *
  * Ultimately, it is up to you to decide how to implement this behavior.
  */
-export const Link = forwardRef(
-  (props: LinkProps, ref: React.Ref<HTMLAnchorElement>) => {
-    let {
-      to,
-      text,
-      variant,
-      className,
-      style,
-      textColor,
-      backgroundColor,
-      borderColor,
-      textColorHover,
-      backgroundColorHover,
-      borderColorHover,
-      children,
-      target,
-      ...rest
-    } = props;
-    const { enableViewTransition } = useThemeSettings();
-    const href = useHrefWithLocale(to);
+export function Link(props: LinkProps) {
+  let {
+    ref,
+    to,
+    text,
+    variant,
+    className,
+    style,
+    textColor,
+    backgroundColor,
+    borderColor,
+    textColorHover,
+    backgroundColorHover,
+    borderColorHover,
+    children,
+    target,
+    ...rest
+  } = props;
+  const { enableViewTransition } = useThemeSettings();
+  const href = useHrefWithLocale(to);
 
-    if (variant === "custom") {
-      style = {
-        ...style,
-        "--btn-text": textColor,
-        "--btn-bg": backgroundColor,
-        "--btn-border": borderColor,
-        "--btn-bg-hover": backgroundColorHover,
-        "--btn-text-hover": textColorHover,
-        "--btn-border-hover": borderColorHover,
-      } as React.CSSProperties;
-    }
+  if (variant === "custom") {
+    style = {
+      ...style,
+      "--btn-text": textColor,
+      "--btn-bg": backgroundColor,
+      "--btn-border": borderColor,
+      "--btn-bg-hover": backgroundColorHover,
+      "--btn-text-hover": textColorHover,
+      "--btn-border-hover": borderColorHover,
+    } as React.CSSProperties;
+  }
 
-    if (!children || text) {
-      return null;
-    }
+  if (!children || text) {
+    return null;
+  }
 
-    const isExternal = checkExternal(href);
+  const isExternal = checkExternal(href);
 
-    return (
-      <RemixLink
-        ref={ref}
-        viewTransition={enableViewTransition}
-        to={href}
-        style={style}
-        className={cn(variants({ variant, className }))}
-        target={
-          target !== undefined ? target : isExternal ? "_blank" : undefined
-        }
-        {...rest}
-      >
-        {children || text}
-      </RemixLink>
-    );
-  },
-);
+  return (
+    <RemixLink
+      ref={ref}
+      viewTransition={enableViewTransition}
+      to={href}
+      style={style}
+      className={cn(variants({ variant, className }))}
+      target={target !== undefined ? target : isExternal ? "_blank" : undefined}
+      {...rest}
+    >
+      {children || text}
+    </RemixLink>
+  );
+}
 
 export default Link;
 
