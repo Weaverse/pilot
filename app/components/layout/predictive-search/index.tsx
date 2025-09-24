@@ -58,16 +58,8 @@ export function PredictiveSearchButton() {
           <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
-                <div className="mx-auto w-[560px] max-w-[90vw]">
-                  <PopularKeywords
-                    onKeywordClick={(keyword) => {
-                      if (inputRef.current) {
-                        inputRef.current.value = keyword;
-                        fetchResults(keyword);
-                      }
-                    }}
-                  />
-                  <div className="mb-6 mt-2 flex items-center gap-3 border border-line-subtle px-3">
+                <div className="mx-auto w-[560px] max-w-[90vw] py-6 space-y-2">
+                  <div className="flex items-center gap-3 border border-line-subtle px-3">
                     <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                     <input
                       name="q"
@@ -104,6 +96,14 @@ export function PredictiveSearchButton() {
                       <XIcon className="h-5 w-5" />
                     </button>
                   </div>
+                  <PopularKeywords
+                    onKeywordClick={(keyword) => {
+                      if (inputRef.current) {
+                        inputRef.current.value = keyword;
+                        fetchResults(keyword);
+                      }
+                    }}
+                  />
                 </div>
               )}
             </PredictiveSearchForm>
