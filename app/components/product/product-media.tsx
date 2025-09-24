@@ -118,7 +118,11 @@ export function ProductMedia(props: ProductMediaProps) {
                     media={med}
                     imageAspectRatio={imageAspectRatio}
                     index={idx}
-                    className="w-[80vw] max-w-none object-cover lg:h-full lg:w-full"
+                    className={cn(
+                      "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
+                      idx === 0 &&
+                        "[&_img]:[view-transition-name:image-expand]",
+                    )}
                   />
                 </div>
                 {shouldShowButton && (
@@ -247,6 +251,10 @@ export function ProductMedia(props: ProductMediaProps) {
                       media={med}
                       imageAspectRatio={imageAspectRatio}
                       index={idx}
+                      className={
+                        idx === 0 &&
+                        "[&_img]:[view-transition-name:image-expand]"
+                      }
                     />
                   </div>
                   {shouldShowButton && (

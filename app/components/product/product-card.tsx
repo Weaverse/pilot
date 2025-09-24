@@ -107,7 +107,7 @@ export function ProductCard({
             {isImageLoading && <Spinner />}
             <Image
               className={clsx([
-                "absolute inset-0",
+                "absolute inset-0 [&_img]:[view-transition-name:image-expand]",
                 pcardShowImageOnHover &&
                   secondImage &&
                   "transition-opacity duration-300 group-hover:opacity-50",
@@ -199,12 +199,7 @@ export function ProductCard({
           <NavLink
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
-            className={({ isTransitioning }) =>
-              clsx(
-                "font-bold",
-                isTransitioning && "[view-transition-name:product-image]",
-              )
-            }
+            className="font-bold"
           >
             <RevealUnderline className="bg-position-[left_calc(1em+3px)] leading-normal">
               {product.title}
