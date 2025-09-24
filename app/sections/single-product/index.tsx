@@ -41,15 +41,7 @@ type SingleProductProps = HydrogenComponentProps<
   };
 
 export default function SingleProduct(props: SingleProductProps) {
-  const {
-    ref,
-    loaderData,
-    children,
-    product: _product,
-    showThumbnails,
-    ...rest
-  } = props;
-
+  const { ref, loaderData, product: _product, showThumbnails, ...rest } = props;
   const { storeDomain, product } = loaderData || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
@@ -155,7 +147,6 @@ export default function SingleProduct(props: SingleProductProps) {
                 ratingText="{{rating}} ({{total_reviews}} reviews)"
                 errorText=""
               />
-              {children}
               <p
                 className="fade-up line-clamp-5 leading-relaxed"
                 suppressHydrationWarning
@@ -247,7 +238,6 @@ export const loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
 export const schema = createSchema({
   type: "single-product",
   title: "Single product",
-  childTypes: ["judgeme"],
   settings: [
     {
       group: "Layout",
