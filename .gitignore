@@ -17,6 +17,7 @@ pnpm-lock.yaml
 .DS_Store
 .react-router
 .claude/
+.github/copilot-instructions.md
 memory/
 scripts/
 templates/
