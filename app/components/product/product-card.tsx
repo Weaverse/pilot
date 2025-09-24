@@ -9,7 +9,6 @@ import type {
 } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
-import { NavLink } from "~/components/nav-link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
@@ -196,7 +195,7 @@ export function ProductCard({
               : "justify-between gap-4",
           )}
         >
-          <NavLink
+          <Link
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
             className="font-bold"
@@ -204,7 +203,7 @@ export function ProductCard({
             <RevealUnderline className="bg-position-[left_calc(1em+3px)] leading-normal">
               {product.title}
             </RevealUnderline>
-          </NavLink>
+          </Link>
           {pcardShowLowestPrice || isCombinedListing(product) ? (
             <div className="flex gap-1">
               <span>From</span>
