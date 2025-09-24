@@ -87,12 +87,10 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
 
   if (status === "idle" || status === "loading") {
     return (
-      <div {...rest} ref={setRefs}>
-        <div className="space-x-2">
-          <div className="inline-flex items-center gap-1">
-            <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
-            <div className="h-4 w-8 animate-pulse rounded bg-gray-200" />
-          </div>
+      <div {...rest} ref={setRefs} className="flex">
+        <div className="inline-flex items-center gap-1">
+          <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+          <div className="h-4 w-8 animate-pulse rounded bg-gray-200" />
         </div>
       </div>
     );
