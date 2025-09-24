@@ -20,10 +20,12 @@ import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
+import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
+import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
 
 interface SingleProductData {
   productsCount: number;
@@ -147,15 +149,12 @@ export default function SingleProduct(props: SingleProductProps) {
               <h3 data-motion="fade-up" className="tracking-tight">
                 {product?.title}
               </h3>
-              <p className="text-lg" data-motion="fade-up">
-                {selectedVariant ? (
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant.price}
-                    as="span"
-                  />
-                ) : null}
-              </p>
+              <VariantPrices variant={selectedVariant} />
+              <JudgemeStarsRating
+                productHandle={product.handle}
+                ratingText="{{rating}} ({{total_reviews}} reviews)"
+                errorText=""
+              />
               {children}
               <p
                 className="fade-up line-clamp-5 leading-relaxed"
