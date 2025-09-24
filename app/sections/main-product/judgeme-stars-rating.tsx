@@ -153,7 +153,7 @@ export const schema = createSchema({
           type: "select",
           name: "onClickEvent",
           label: "On click event",
-          defaultValue: "do-nothing",
+          defaultValue: "scroll-to-section",
           configs: {
             options: [
               { value: "do-nothing", label: "Do nothing" },
