@@ -5,7 +5,6 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useThemeSettings } from "@weaverse/hydrogen";
 import { type RefObject, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import Link from "~/components/link";
