@@ -1,6 +1,6 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: false
 ---
 # Overview
@@ -294,7 +294,6 @@ A complete example of a section component with data fetching capabilities.
 import clsx from "clsx";
 import type { HydrogenComponentProps, ComponentLoaderArgs } from "@weaverse/hydrogen";
 import { createSchema } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
 import { Money, Image, Link } from "@shopify/hydrogen";
 import type { CollectionQuery } from "storefrontapi.generated";
 
@@ -437,107 +436,104 @@ export let loader = async ({
 };
 
 // Component implementation
-const FeaturedCollection = forwardRef<HTMLDivElement, FeaturedCollectionProps>(
-  (props, ref) => {
-    const {
-      heading,
-      showPrice = true,
-      showViewAll = true,
-      columnsDesktop = 4,
-      columnsMobile = 2,
-      className,
-      loaderData,
-    } = props;
+export default function FeaturedCollection(props: FeaturedCollectionProps) {
+  const {
+    heading,
+    showPrice = true,
+    showViewAll = true,
+    columnsDesktop = 4,
+    columnsMobile = 2,
+    className,
+    loaderData,
+    ref,
+  } = props;
 
-    // Get the collection data from the loader
-    const collection = loaderData?.collection;
+  // Get the collection data from the loader
+  const collection = loaderData?.collection;
 
-    // If no collection data is available, show a placeholder
-    if (!collection) {
-      return (
-        <div
-          ref={ref}
-          className={clsx("featured-collection py-8 text-center", className)}
-        >
-          <div className="container mx-auto">
-            <p>Select a collection to display its products</p>
-          </div>
-        </div>
-      );
-    }
-
+  // If no collection data is available, show a placeholder
+  if (!collection) {
     return (
       <div
         ref={ref}
-        className={clsx("featured-collection py-8", className)}
+        className={clsx("featured-collection py-8 text-center", className)}
       >
         <div className="container mx-auto">
-          {heading && (
-            <h2 className="text-2xl font-bold mb-6 text-center">{heading}</h2>
-          )}
-
-          {/* Products grid */}
-          <div
-            className={clsx(
-              "grid gap-4",
-              `sm:grid-cols-${columnsMobile}`,
-              `lg:grid-cols-${columnsDesktop}`
-            )}
-          >
-            {collection.products.nodes.map((product) => (
-              <Link
-                key={product.id}
-                to={`/products/${product.handle}`}
-                className="group product-card"
-              >
-                <div className="relative overflow-hidden aspect-square rounded-sm bg-gray-100">
-                  {product.featuredImage ? (
-                    <Image
-                      data={product.featuredImage}
-                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                      sizes="(min-width: 1024px) calc(100vw / 4), (min-width: 768px) 50vw, 100vw"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-gray-200">
-                      <span className="text-gray-500">No image</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-3">
-                  <h3 className="text-sm font-medium">{product.title}</h3>
-                  
-                  {showPrice && (
-                    <div className="mt-1">
-                      <Money
-                        data={product.priceRange.minVariantPrice}
-                        className="text-sm text-gray-700"
-                      />
-                    </div>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* View all link */}
-          {showViewAll && (
-            <div className="mt-8 text-center">
-              <Link
-                to={`/collections/${collection.handle}`}
-                className="inline-block px-6 py-3 text-sm font-medium text-center text-white bg-gray-900 rounded-sm hover:bg-gray-800"
-              >
-                View all {collection.title}
-              </Link>
-            </div>
-          )}
+          <p>Select a collection to display its products</p>
         </div>
       </div>
     );
   }
-);
 
-export default FeaturedCollection;
+  return (
+    <div
+      ref={ref}
+      className={clsx("featured-collection py-8", className)}
+    >
+      <div className="container mx-auto">
+        {heading && (
+          <h2 className="text-2xl font-bold mb-6 text-center">{heading}</h2>
+        )}
+
+        {/* Products grid */}
+        <div
+          className={clsx(
+            "grid gap-4",
+            `sm:grid-cols-${columnsMobile}`,
+            `lg:grid-cols-${columnsDesktop}`
+          )}
+        >
+          {collection.products.nodes.map((product) => (
+            <Link
+              key={product.id}
+              to={`/products/${product.handle}`}
+              className="group product-card"
+            >
+              <div className="relative overflow-hidden aspect-square rounded-sm bg-gray-100">
+                {product.featuredImage ? (
+                  <Image
+                    data={product.featuredImage}
+                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                    sizes="(min-width: 1024px) calc(100vw / 4), (min-width: 768px) 50vw, 100vw"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full bg-gray-200">
+                    <span className="text-gray-500">No image</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-3">
+                <h3 className="text-sm font-medium">{product.title}</h3>
+
+                {showPrice && (
+                  <div className="mt-1">
+                    <Money
+                      data={product.priceRange.minVariantPrice}
+                      className="text-sm text-gray-700"
+                    />
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* View all link */}
+        {showViewAll && (
+          <div className="mt-8 text-center">
+            <Link
+              to={`/collections/${collection.handle}`}
+              className="inline-block px-6 py-3 text-sm font-medium text-center text-white bg-gray-900 rounded-sm hover:bg-gray-800"
+            >
+              View all {collection.title}
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 // GraphQL query for fetching collection data
 const COLLECTION_QUERY = `#graphql
@@ -782,7 +778,7 @@ export function getWeaverseCsp(request: Request, context: AppLoadContext) {
   // You can add other CSP directives as needed
   // For example, if you're using Google Fonts:
   // cspObject.directives.fontSrc = [...cspObject.directives.fontSrc, 'fonts.gstatic.com'];
-  
+
   return cspObject;
 }
 ```
@@ -883,9 +879,9 @@ For components that need to fetch data, use the component loader pattern:
 export let loader = async ({ weaverse, data }: ComponentLoaderArgs<MyComponentProps>) => {
   const { storefront } = weaverse;
   const { productHandle } = data;
-  
+
   if (!productHandle) return null;
-  
+
   return await storefront.query(PRODUCT_QUERY, {
     variables: { handle: productHandle },
     cache: storefront.CacheLong(),

@@ -47,7 +47,7 @@ jobs:
 
             Please review this pull request and provide feedback on:
             - Code quality and adherence to project conventions (check CLAUDE.md for guidelines)
-            - Weaverse section implementation (must use forwardRef and export schema)
+            - Weaverse section implementation (must use ref as a prop and export schema)
             - GraphQL usage and type safety
             - Performance considerations (especially parallel data loading)
             - Biome linting compliance
