@@ -6,7 +6,6 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
-import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
 const fontSizeVariants = cva("", {
@@ -87,6 +86,7 @@ const variants = cva("heading", {
 export interface HeadingProps
   extends VariantProps<typeof variants>,
     VariantProps<typeof fontSizeVariants> {
+  ref?: React.Ref<HTMLHeadingElement>;
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   content: string;
   color?: string;
@@ -96,11 +96,9 @@ export interface HeadingProps
   animate?: boolean;
 }
 
-const Heading = forwardRef<
-  HTMLHeadingElement,
-  HeadingProps & Partial<HydrogenComponentProps>
->((props, ref) => {
+function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
   const {
+    ref,
     as: Tag = "h4",
     content,
     size,
@@ -142,7 +140,7 @@ const Heading = forwardRef<
       {content}
     </Tag>
   );
-});
+}
 
 export default Heading;
 

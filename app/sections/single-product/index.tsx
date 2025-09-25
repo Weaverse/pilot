@@ -20,10 +20,12 @@ import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
+import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
+import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
 
 interface SingleProductData {
   productsCount: number;
@@ -39,15 +41,7 @@ type SingleProductProps = HydrogenComponentProps<
   };
 
 export default function SingleProduct(props: SingleProductProps) {
-  const {
-    ref,
-    loaderData,
-    children,
-    product: _product,
-    showThumbnails,
-    ...rest
-  } = props;
-
+  const { ref, loaderData, product: _product, showThumbnails, ...rest } = props;
   const { storeDomain, product } = loaderData || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
@@ -147,16 +141,12 @@ export default function SingleProduct(props: SingleProductProps) {
               <h3 data-motion="fade-up" className="tracking-tight">
                 {product?.title}
               </h3>
-              <p className="text-lg" data-motion="fade-up">
-                {selectedVariant ? (
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant.price}
-                    as="span"
-                  />
-                ) : null}
-              </p>
-              {children}
+              <VariantPrices variant={selectedVariant} />
+              <JudgemeStarsRating
+                productHandle={product.handle}
+                ratingText="{{rating}} ({{total_reviews}} reviews)"
+                errorText=""
+              />
               <p
                 className="fade-up line-clamp-5 leading-relaxed"
                 suppressHydrationWarning
@@ -248,7 +238,6 @@ export const loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
 export const schema = createSchema({
   type: "single-product",
   title: "Single product",
-  childTypes: ["judgeme"],
   settings: [
     {
       group: "Layout",

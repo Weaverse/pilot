@@ -12,7 +12,7 @@ import { Swimlane } from "~/components/swimlane";
 
 interface RelatedProductsProps
   extends Omit<SectionProps, "content">,
-    Omit<HeadingProps, "as"> {
+    Omit<HeadingProps, "as" | "ref"> {
   ref: React.Ref<HTMLElement>;
   headingTagName?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }

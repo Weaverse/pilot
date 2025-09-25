@@ -98,32 +98,33 @@ All routes follow the pattern `($locale).{route}.tsx` to support internationaliz
 ### Weaverse Section Development
 
 1. **Creating a New Section**:
-   ```typescript
-   // app/sections/my-section/index.tsx
-   import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
-   import { forwardRef } from 'react';
-   
-   interface MyProps extends HydrogenComponentProps {
-     heading: string;
-   }
-   
-   const MySection = forwardRef<HTMLElement, MyProps>((props, ref) => {
-     // Component implementation
-   });
-   
-   export default MySection;
-   
-   export const schema = createSchema({
-     type: 'my-section',
-     title: 'My Section',
-     settings: [/* ... */]
-   });
-   
-   // Optional loader for server-side data fetching
-   export const loader = async ({ weaverse, data }) => {
-     // Fetch data
-   };
-   ```
+  ```typescript
+  // app/sections/my-section/index.tsx
+  import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+  import type { ComponentRef } from 'react';
+
+  interface MyProps extends HydrogenComponentProps {
+    heading: string;
+    ref?: React.Ref<HTMLDivElement>;
+  }
+
+  const MySection = ({ ref, ...props }: MyProps) => {
+    // Component implementation
+  };
+
+  export default MySection;
+
+  export const schema = createSchema({
+    type: 'my-section',
+    title: 'My Section',
+    settings: [/* ... */]
+  });
+
+  // Optional loader for server-side data fetching
+  export const loader = async ({ weaverse, data }) => {
+    // Fetch data
+  };
+  ```
 
 2. **Register in `/app/weaverse/components.ts`**:
    ```typescript
@@ -140,21 +141,21 @@ All routes follow the pattern `($locale).{route}.tsx` to support internationaliz
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const { handle } = params;
   invariant(handle, "Missing handle param");
-  
+
   const { storefront, weaverse } = context;
-  
+
   // Parallel data loading
   const [shopifyData, weaverseData, thirdPartyData] = await Promise.all([
     storefront.query(QUERY, { variables }),
     weaverse.loadPage({ type: "PAGE_TYPE", handle }),
     fetchThirdPartyData(),
   ]);
-  
+
   // Handle errors
   if (!shopifyData.resource) {
     throw new Response("Not found", { status: 404 });
   }
-  
+
   return data({
     shopifyData,
     weaverseData,

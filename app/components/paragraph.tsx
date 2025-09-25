@@ -2,11 +2,11 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
-import { forwardRef } from "react";
 
 export interface ParagraphProps
   extends VariantProps<typeof variants>,
     Partial<HydrogenComponentProps> {
+  ref?: React.Ref<HTMLParagraphElement | HTMLDivElement>;
   as?: "p" | "div";
   content: string;
   color?: string;
@@ -45,11 +45,9 @@ const variants = cva("paragraph", {
   },
 });
 
-const Paragraph = forwardRef<
-  HTMLParagraphElement | HTMLDivElement,
-  ParagraphProps
->((props, ref) => {
+function Paragraph(props: ParagraphProps) {
   const {
+    ref,
     as: Tag = "p",
     width,
     content,
@@ -70,7 +68,7 @@ const Paragraph = forwardRef<
       dangerouslySetInnerHTML={{ __html: content }}
     />
   );
-});
+}
 
 export default Paragraph;
 

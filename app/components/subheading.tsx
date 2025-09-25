@@ -1,7 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
 const variants = cva("subheading", {
@@ -30,16 +29,15 @@ const variants = cva("subheading", {
 interface SubHeadingProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
+  ref?: React.Ref<HTMLHeadingElement | HTMLParagraphElement | HTMLDivElement>;
   as?: "h4" | "h5" | "h6" | "div" | "p";
   color?: string;
   content: string;
 }
 
-const SubHeading = forwardRef<
-  HTMLHeadingElement | HTMLParagraphElement | HTMLDivElement,
-  SubHeadingProps
->((props, ref) => {
+function SubHeading(props: SubHeadingProps) {
   const {
+    ref,
     as: Tag = "p",
     content,
     color,
@@ -60,7 +58,7 @@ const SubHeading = forwardRef<
       {content}
     </Tag>
   );
-});
+}
 
 export default SubHeading;
 

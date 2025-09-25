@@ -2,7 +2,6 @@ import { CircleNotchIcon } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
-import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
 export const variants = cva(
@@ -78,6 +77,7 @@ export interface ButtonProps
   extends VariantProps<typeof variants>,
     Omit<HTMLAttributes<HTMLButtonElement>, "type">,
     Partial<ButtonStyleProps> {
+  ref?: React.Ref<HTMLButtonElement>;
   type?: "button" | "reset" | "submit";
   className?: string;
   disabled?: boolean;
@@ -86,65 +86,64 @@ export interface ButtonProps
   animate?: boolean;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => {
-    let {
-      type = "button",
-      variant,
-      loading,
-      className,
-      textColor,
-      backgroundColor,
-      borderColor,
-      textColorHover,
-      backgroundColorHover,
-      borderColorHover,
-      style = {},
-      animate = true,
-      children,
-      ...rest
-    } = props;
-    if (variant === "custom") {
-      style = {
-        ...style,
-        "--btn-text": textColor,
-        "--btn-bg": backgroundColor,
-        "--btn-border": borderColor,
-        "--btn-text-hover": textColorHover,
-        "--btn-bg-hover": backgroundColorHover,
-        "--btn-border-hover": borderColorHover,
-      } as React.CSSProperties;
-    }
+export function Button(props: ButtonProps) {
+  let {
+    ref,
+    type = "button",
+    variant,
+    loading,
+    className,
+    textColor,
+    backgroundColor,
+    borderColor,
+    textColorHover,
+    backgroundColorHover,
+    borderColorHover,
+    style = {},
+    animate = true,
+    children,
+    ...rest
+  } = props;
+  if (variant === "custom") {
+    style = {
+      ...style,
+      "--btn-text": textColor,
+      "--btn-bg": backgroundColor,
+      "--btn-border": borderColor,
+      "--btn-text-hover": textColorHover,
+      "--btn-bg-hover": backgroundColorHover,
+      "--btn-border-hover": borderColorHover,
+    } as React.CSSProperties;
+  }
 
-    if (!children) {
-      return null;
-    }
+  if (!children) {
+    return null;
+  }
 
-    let content: React.ReactNode;
-    if (typeof children === "string") {
-      content = <span>{children}</span>;
-    } else {
-      content = children;
-    }
+  let content: React.ReactNode;
+  if (typeof children === "string") {
+    content = <span>{children}</span>;
+  } else {
+    content = children;
+  }
 
-    if (animate) {
-      rest["data-motion"] = "fade-up";
-    }
+  if (animate) {
+    rest["data-motion"] = "fade-up";
+  }
 
-    return (
-      <button
-        ref={ref}
-        style={style}
-        type={type}
-        {...rest}
-        className={cn(variants({ variant, className }))}
-      >
-        {loading && <Spinner />}
-        {content}
-      </button>
-    );
-  },
-);
+  return (
+    <button
+      ref={ref}
+      style={style}
+      type={type}
+      {...rest}
+      className={cn(variants({ variant, className }))}
+    >
+      {loading && <Spinner />}
+      {content}
+    </button>
+  );
+}
 
 function Spinner() {
   const style = { "--duration": "500ms" } as React.CSSProperties;
