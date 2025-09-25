@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting.
+This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting. Current version: 5.6.0 with upcoming 5.7.0 release.
 
 ## Essential Commands
 
@@ -89,6 +89,7 @@ All routes follow the pattern `($locale).{route}.tsx` to support internationaliz
 
 - **Weaverse**: Visual page builder - sections must be registered in `/app/weaverse/components.ts`
 - **Judge.me**: Product reviews integration via utilities in `/app/utils/judgeme.ts`
+- **Combined Listings**: Intelligent product grouping system via utilities in `/app/utils/combined-listings.ts`
 - **Analytics**: Shopify Analytics integrated throughout components
 - **Customer Accounts**: New Shopify Customer Account API support (OAuth-based)
 - **Radix UI**: For accessible UI primitives (accordion, dialog, dropdown, etc.)
@@ -162,6 +163,31 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 }
 ```
 
+### Combined Listings Integration
+
+Combined Listings allow intelligent product grouping and filtering:
+
+```typescript
+// Use utility functions from app/utils/combined-listings.ts
+import { isCombinedListing, shouldFilterCombinedListings } from '~/utils/combined-listings';
+
+// In product queries and loaders
+const filteredProducts = products.filter(product => 
+  !shouldFilterCombinedListings(product, settings)
+);
+
+// In components
+if (isCombinedListing(product)) {
+  // Handle combined listing display differently
+}
+```
+
+Key integration points:
+- Product loaders filter combined listings based on settings
+- Cart functionality handles combined products specially
+- Product display components check for combined listing status
+- Featured products support both collection-based and manual selection
+
 ### Environment Configuration
 
 Required environment variables are defined in `env.d.ts`. The project uses `@shopify/hydrogen` and `@shopify/remix-oxygen` for environment handling.
@@ -169,7 +195,8 @@ Required environment variables are defined in `env.d.ts`. The project uses `@sho
 ### Testing Strategy
 
 - E2E tests use Playwright and are located in `/tests/`
-- Tests run against `localhost:3456` (same as dev server)
+- Tests run against `localhost:3000` using production build (`npm run preview`)
+- Playwright automatically starts the preview server before running tests
 - Focus on critical user flows: cart operations, checkout process
 - Run individual tests: `npx playwright test tests/cart.test.ts`
 
@@ -199,3 +226,19 @@ The project extends from `ultracite` and `@weaverse/biome` configurations with t
 4. **Customer Account Queries**: Only use in `*.account*.{ts,tsx}` files
 5. **Parallel Loading**: Always use `Promise.all()` for multiple data fetches in loaders
 6. **Type Safety**: Never use `any` type, properly type all Weaverse section props
+7. **Combined Listings**: Use utility functions from `/app/utils/combined-listings.ts` for product filtering and grouping logic
+8. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
+
+## Development Setup Requirements
+
+### Node.js and Dependencies
+- **Node.js**: Version 20.0.0 or higher required
+- **Package Manager**: npm (configured in package.json, don't use pnpm)
+- **Environment**: Copy `.env.example` to `.env` and configure Shopify store credentials
+
+### Key Configuration Files
+- **react-router.config.ts**: React Router v7 configuration (SSR enabled, app directory structure)
+- **vite.config.ts**: Includes Hydrogen, Oxygen, Tailwind CSS v4, and development server warmup
+- **biome.json**: Code quality configuration extending from `ultracite` and `@weaverse/biome`
+- **codegen.ts**: GraphQL code generation for Shopify Storefront and Customer Account APIs
+- **tsconfig.json**: TypeScript config with `~/` path alias, strict mode disabled for compatibility
