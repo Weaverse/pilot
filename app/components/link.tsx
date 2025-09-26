@@ -162,7 +162,7 @@ export function Link(props: LinkProps) {
     } as React.CSSProperties;
   }
 
-  if (!children || text) {
+  if (!(children || text)) {
     return null;
   }
 
