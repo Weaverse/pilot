@@ -29,6 +29,14 @@ export default hydrogenRoutes([
       index("routes/policies/list.tsx"),
       route(":policyHandle", "routes/policies/policy.tsx"),
     ]),
+    ...prefix("cart", [
+      index("routes/cart/cart-page.tsx"),
+      route(":lines", "routes/cart/lines.tsx"),
+    ]),
+    ...prefix("collections", [
+      index("routes/collections/list.tsx"),
+      route(":collectionHandle", "routes/collections/collection.tsx"),
+    ]),
   ]),
   // Flat routes for all other files in the routes directory
   ...(await flatRoutes()),
