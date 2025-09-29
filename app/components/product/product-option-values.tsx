@@ -232,7 +232,7 @@ function OptionValue({
         ) : (
           <span
             className={cn(
-              "inline-block h-full w-full rounded-full text-[0px]",
+              "block h-full w-full rounded-full text-[0px]",
               (!isValidColor(swatchColor) || isLightColor(swatchColor)) &&
                 "border border-line-subtle",
             )}
