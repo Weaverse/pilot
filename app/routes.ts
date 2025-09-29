@@ -1,4 +1,9 @@
-import { prefix, type RouteConfig, route } from "@react-router/dev/routes";
+import {
+  index,
+  prefix,
+  type RouteConfig,
+  route,
+} from "@react-router/dev/routes";
 import { flatRoutes } from "@react-router/fs-routes";
 import { hydrogenRoutes } from "@shopify/hydrogen";
 
@@ -15,6 +20,14 @@ export default hydrogenRoutes([
       route("products", "routes/api/products.ts"),
       route(":version/graphql.json", "routes/api/graphql.json.ts"),
       route("product/:productHandle/reviews?", "routes/api/product.ts"),
+    ]),
+    ...prefix("blogs", [
+      route(":blogHandle", "routes/blogs/blog.tsx"),
+      route(":blogHandle/:articleHandle", "routes/blogs/article.tsx"),
+    ]),
+    ...prefix("policies", [
+      index("routes/policies/list.tsx"),
+      route(":policyHandle", "routes/policies/policy.tsx"),
     ]),
   ]),
   // Flat routes for all other files in the routes directory
