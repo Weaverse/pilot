@@ -31,7 +31,7 @@ import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
   getFeaturedData,
-} from "./($locale).api.featured-items";
+} from "./api/featured-items";
 
 export const headers = routeHeaders;
 

@@ -6,7 +6,7 @@ import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { FeaturedData } from "~/routes/($locale).api.featured-items";
+import type { FeaturedData } from "~/routes/api/featured-items";
 
 export function NotFound({ type = "page" }: { type?: string }) {
   return (

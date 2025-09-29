@@ -3,7 +3,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useFetcher } from "react-router";
 import { Button } from "~/components/button";
-import type { CustomerApiPlayLoad } from "~/routes/($locale).api.customer";
+import type { CustomerApiPlayLoad } from "~/routes/api/customer";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {
   width: number;

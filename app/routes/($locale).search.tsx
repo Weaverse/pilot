@@ -23,7 +23,7 @@ import { seoPayload } from "~/utils/seo.server";
 import {
   type FeaturedData,
   getFeaturedData,
-} from "./($locale).api.featured-items";
+} from "./api/featured-items";
 
 export async function loader({
   request,
