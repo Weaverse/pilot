@@ -5,7 +5,7 @@ import { useLoaderData } from "react-router";
 import { create } from "zustand";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 import type { JudgemeReviewsData } from "~/types/judgeme";
 import { constructURL } from "~/utils/misc";
 
