@@ -16,8 +16,8 @@ export default hydrogenRoutes([
     route("search", "routes/search.tsx"),
     route("sitemap.xml", "routes/sitemap/all.ts"),
     route("sitemap/:type/:page.xml", "routes/sitemap/page.ts"),
-    route("pages/:pageHandle", "routes/pages/$pageHandle.tsx"),
-    route("discount/:code", "routes/discount/$code.tsx"),
+    route("pages/:pageHandle", "routes/page.tsx"),
+    route("discount/:code", "routes/discount.tsx"),
     ...prefix("api", [
       route("countries", "routes/api/countries.ts"),
       route("customer", "routes/api/customer.ts"),
