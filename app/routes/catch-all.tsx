@@ -5,7 +5,6 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const weaverseData = await context.weaverse.loadPage({
     type: "CUSTOM",
   });
-
   validateWeaverseData(weaverseData);
 
   return {

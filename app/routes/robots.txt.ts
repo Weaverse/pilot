@@ -3,9 +3,7 @@ import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-
   const { shop } = await context.storefront.query(ROBOTS_QUERY);
-
   const shopId = parseGid(shop.id).id;
   const body = robotsTxtData({ url: url.origin, shopId });
 
