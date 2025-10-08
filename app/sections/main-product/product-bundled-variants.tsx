@@ -2,7 +2,7 @@ import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-t
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import { BundledVariants } from "~/components/product/bundled-variants";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBundledVariantsProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;

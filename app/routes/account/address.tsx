@@ -8,7 +8,7 @@ import type {
 import invariant from "tiny-invariant";
 // biome-ignore lint/style/noExportedImports: <explanation> --- IGNORE ---
 import { AccountEditAddressForm } from "~/components/customer/edit-address-form";
-import { doLogout } from "./($locale).account_.logout";
+import { doLogout } from "./logout";
 
 export const handle = {
   renderInModal: true,

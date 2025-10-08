@@ -5,7 +5,7 @@ import {
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import { VariantPrices } from "~/components/product/variant-prices";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductPricesProps extends HydrogenComponentProps {

@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 import type { JudgemeStarsRatingData } from "~/types/judgeme";
 
 interface JudgemeStarsRatingProps extends Partial<HydrogenComponentProps> {

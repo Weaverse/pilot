@@ -1,6 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductSummaryProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;

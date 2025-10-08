@@ -5,7 +5,7 @@ import { useLoaderData } from "react-router";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
-import type { loader as orderDetailsLoader } from "~/routes/($locale).account.orders.$id";
+import type { loader as orderDetailsLoader } from "~/routes/account/orders/order";
 import { ORDER_STATUS } from "./orders";
 
 export function OrderDetails() {

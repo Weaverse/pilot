@@ -13,8 +13,8 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
-import { CUSTOMER_UPDATE_MUTATION } from "./($locale).account.profile";
-import { doLogout } from "./($locale).account_.logout";
+import { CUSTOMER_UPDATE_MUTATION } from "./profile";
+import { doLogout } from "./logout";
 
 export interface AccountOutletContext {
   customer: Customer;

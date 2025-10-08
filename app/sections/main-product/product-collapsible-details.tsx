@@ -3,7 +3,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Link, useLoaderData } from "react-router";
-import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productLoader } from "~/routes/products/product";
 
 function getExcerpt(text: string) {
   const regex = /<p.*>(.*?)<\/p>/;

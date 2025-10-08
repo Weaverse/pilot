@@ -1,7 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import { Link } from "~/components/link";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBreadcrumbProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;

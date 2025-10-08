@@ -12,7 +12,7 @@ import {
 } from "react-router";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
-import type { AccountOutletContext } from "~/routes/($locale).account.edit";
+import type { AccountOutletContext } from "~/routes/account/edit";
 
 export function AccountEditAddressForm() {
   const { id: addressId } = useParams();

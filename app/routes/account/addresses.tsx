@@ -20,7 +20,7 @@ import {
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
   UPDATE_ADDRESS_MUTATION,
-} from "./($locale).account.address.$id";
+} from "./address";
 
 export type ActionResponse = {
   addressId?: string | null;
