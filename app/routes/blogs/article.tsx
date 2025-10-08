@@ -5,7 +5,7 @@ import type { MetaFunction } from "react-router";
 import type { ArticleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
-import { redirectIfHandleIsLocalized } from "~/utils/redirect";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect.server";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 

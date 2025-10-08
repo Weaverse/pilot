@@ -16,13 +16,13 @@ import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import { getRecommendedProducts } from "~/utils/product";
 import {
   redirectIfCombinedListing,
   redirectIfHandleIsLocalized,
-} from "~/utils/redirect";
+} from "~/utils/redirect.server";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
+import { getRecommendedProducts } from "./recommended-product";
 
 export const headers = routeHeaders;
 

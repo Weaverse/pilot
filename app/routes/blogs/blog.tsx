@@ -6,7 +6,7 @@ import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
-import { redirectIfHandleIsLocalized } from "~/utils/redirect";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect.server";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 

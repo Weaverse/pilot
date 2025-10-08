@@ -1,4 +1,8 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { extend } from "colord";
+import namesPlugin from "colord/plugins/names";
+
+extend([namesPlugin]);
 
 export function GlobalStyle() {
   const settings = useThemeSettings();

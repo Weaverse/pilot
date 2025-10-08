@@ -21,7 +21,7 @@ import type { I18nLocale } from "~/types/locale";
 import { routeHeaders } from "~/utils/cache";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { FILTER_URL_PREFIX, type SortParam } from "~/utils/filter";
-import { redirectIfHandleIsLocalized } from "~/utils/redirect";
+import { redirectIfHandleIsLocalized } from "~/utils/redirect.server";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 

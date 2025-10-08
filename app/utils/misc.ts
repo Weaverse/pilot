@@ -1,7 +1,4 @@
-import { colord, extend } from "colord";
-import namesPlugin from "colord/plugins/names";
-
-extend([namesPlugin]);
+import { colord } from "colord";
 
 export function constructURL(
   url: string,
