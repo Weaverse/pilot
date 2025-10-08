@@ -20,10 +20,7 @@ import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { cn } from "~/utils/cn";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
-import {
-  type FeaturedData,
-  getFeaturedData,
-} from "./api/featured-items";
+import { type FeaturedData, getFeaturedData } from "./api/featured-items";
 
 export async function loader({
   request,
@@ -184,8 +181,8 @@ function PopularKeywords() {
   }
   const popularKeywords: string[] = popularSearchKeywords
     .split(",")
-    .map((k) => k.trim())
-    .filter((k) => k.length > 0);
+    .map((k: string) => k.trim())
+    .filter((k: string) => k.length > 0);
 
   return (
     <div className="flex items-center justify-center text-body-subtle">
