@@ -2,7 +2,14 @@ import { CheckIcon } from "@phosphor-icons/react";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import { flattenConnection } from "@shopify/hydrogen";
+import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
+import { type ActionFunction, data, redirect } from "@shopify/remix-oxygen";
 import clsx from "clsx";
+import type {
+  CustomerAddressCreateMutation,
+  CustomerAddressDeleteMutation,
+  CustomerAddressUpdateMutation,
+} from "customer-account-api.generated";
 import {
   Form,
   useActionData,
@@ -10,11 +17,150 @@ import {
   useOutletContext,
   useParams,
 } from "react-router";
+import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/account/edit";
+import { doLogout } from "../auth/logout";
+import {
+  CREATE_ADDRESS_MUTATION,
+  DELETE_ADDRESS_MUTATION,
+  UPDATE_ADDRESS_MUTATION,
+} from "./address-mutation-queries";
 
-export function AccountEditAddressForm() {
+export const handle = {
+  renderInModal: true,
+};
+
+const ADDRESS_INPUT_KEYS: (keyof CustomerAddressInput)[] = [
+  "lastName",
+  "firstName",
+  "address1",
+  "address2",
+  "city",
+  "zoneCode",
+  "territoryCode",
+  "zip",
+  "phoneNumber",
+  "company",
+];
+
+export const action: ActionFunction = async ({ request, context, params }) => {
+  const { customerAccount } = context;
+  const formData = await request.formData();
+
+  // Double-check current user is logged in.
+  // Will throw a logout redirect if not.
+  if (!(await customerAccount.isLoggedIn())) {
+    throw await doLogout(context);
+  }
+
+  const addressId = formData.get("addressId");
+  invariant(typeof addressId === "string", "You must provide an address id.");
+
+  if (request.method === "DELETE") {
+    try {
+      const { data: deleteData, errors } =
+        await customerAccount.mutate<CustomerAddressDeleteMutation>(
+          DELETE_ADDRESS_MUTATION,
+          { variables: { addressId } },
+        );
+
+      invariant(!errors?.length, errors?.[0]?.message);
+      invariant(
+        !deleteData?.customerAddressDelete?.userErrors?.length,
+        deleteData?.customerAddressDelete?.userErrors?.[0]?.message,
+      );
+
+      return redirect(
+        params?.locale ? `${params?.locale}/account` : "/account",
+      );
+    } catch (error: any) {
+      return data(
+        { formError: error.message },
+        {
+          status: 400,
+        },
+      );
+    }
+  }
+
+  const address: CustomerAddressInput = {};
+  for (const key of ADDRESS_INPUT_KEYS) {
+    const value = formData.get(key);
+    if (typeof value === "string") {
+      address[key] = value;
+    }
+  }
+
+  const defaultAddress = formData.has("defaultAddress")
+    ? String(formData.get("defaultAddress")) === "on"
+    : false;
+
+  if (addressId === "add") {
+    try {
+      const { data: createData, errors } =
+        await customerAccount.mutate<CustomerAddressCreateMutation>(
+          CREATE_ADDRESS_MUTATION,
+          { variables: { address, defaultAddress } },
+        );
+
+      invariant(!errors?.length, errors?.[0]?.message);
+      invariant(
+        !createData?.customerAddressCreate?.userErrors?.length,
+        createData?.customerAddressCreate?.userErrors?.[0]?.message,
+      );
+      invariant(
+        createData?.customerAddressCreate?.customerAddress?.id,
+        "Expected customer address to be created",
+      );
+
+      return redirect(
+        params?.locale ? `${params?.locale}/account` : "/account",
+      );
+    } catch (error: any) {
+      return data(
+        { formError: error.message },
+        {
+          status: 400,
+        },
+      );
+    }
+  } else {
+    try {
+      const { data: updateData, errors } =
+        await customerAccount.mutate<CustomerAddressUpdateMutation>(
+          UPDATE_ADDRESS_MUTATION,
+          {
+            variables: {
+              address,
+              addressId,
+              defaultAddress,
+            },
+          },
+        );
+
+      invariant(!errors?.length, errors?.[0]?.message);
+      invariant(
+        !updateData?.customerAddressUpdate?.userErrors?.length,
+        updateData?.customerAddressUpdate?.userErrors?.[0]?.message,
+      );
+
+      return redirect(
+        params?.locale ? `${params?.locale}/account` : "/account",
+      );
+    } catch (error: any) {
+      return data(
+        { formError: error.message },
+        {
+          status: 400,
+        },
+      );
+    }
+  }
+};
+
+export default function AccountEditAddressForm() {
   const { id: addressId } = useParams();
   const isNewAddress = addressId === "add";
   const actionData = useActionData<{ formError?: string }>();

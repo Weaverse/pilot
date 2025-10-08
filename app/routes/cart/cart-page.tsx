@@ -115,7 +115,7 @@ export default function CartRoute() {
  * @param url
  * @returns `true` if local `false`if external domain
  */
-export function isLocalPath(url: string) {
+function isLocalPath(url: string) {
   try {
     // We don't want to redirect cross domain,
     // doing so could create fishing vulnerability

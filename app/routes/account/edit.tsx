@@ -13,8 +13,8 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
+import { doLogout } from "./auth/logout";
 import { CUSTOMER_UPDATE_MUTATION } from "./profile";
-import { doLogout } from "./logout";
 
 export interface AccountOutletContext {
   customer: Customer;
@@ -77,7 +77,6 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       );
 
     invariant(!errors?.length, errors?.[0]?.message);
-
     invariant(
       !updateData?.customerUpdate?.userErrors?.length,
       updateData?.customerUpdate?.userErrors?.[0]?.message,

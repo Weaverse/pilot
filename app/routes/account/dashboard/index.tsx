@@ -3,14 +3,14 @@ import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerDetailsFragment } from "customer-account-api.generated";
 import { Suspense } from "react";
 import { Await, Form, useOutletContext } from "react-router";
-import { AccountDetails } from "~/components/customer/account-details";
-import { AccountAddressBook } from "~/components/customer/address-book";
-import { AccountOrderHistory } from "~/components/customer/orders";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { FeaturedData } from "../api/featured-items";
+import type { FeaturedData } from "../../api/featured-items";
+import { AccountDetails } from "./account-details";
+import { AccountAddressBook } from "./address-book";
+import { AccountOrderHistory } from "./orders";
 
 export default function AccountDashboard() {
   const { customer, heading, featuredData } = useOutletContext<{
