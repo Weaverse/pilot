@@ -1,10 +1,10 @@
 import {
   index,
+  layout,
   prefix,
   type RouteConfig,
   route,
 } from "@react-router/dev/routes";
-import { flatRoutes } from "@react-router/fs-routes";
 import { hydrogenRoutes } from "@shopify/hydrogen";
 
 // Manual route definitions can be added to this array, in addition to or instead of using the `flatRoutes` file-based routing convention.
@@ -14,7 +14,8 @@ export default hydrogenRoutes([
   ...prefix(":locale?", [
     index("routes/home.tsx"),
     route("search", "routes/search.tsx"),
-    route("sitemap.xml", "routes/sitemap/all.ts"),
+    route(":shopid/orders/:token/authenticate", "routes/order-redirect.tsx"),
+    route("sitemap.xml", "routes/sitemap/index.ts"),
     route("sitemap/:type/:page.xml", "routes/sitemap/page.ts"),
     route("pages/:pageHandle", "routes/page.tsx"),
     route("discount/:code", "routes/discount.tsx"),
@@ -48,8 +49,23 @@ export default hydrogenRoutes([
       index("routes/products/list.tsx"),
       route(":productHandle", "routes/products/product.tsx"),
     ]),
+    ...prefix("account", [
+      route("authorize", "routes/account/authorize.ts"),
+      route("login", "routes/account/login.tsx"),
+      route("logout", "routes/account/logout.ts"),
+      layout("routes/account/layout.tsx", [
+        index("routes/account/dashboard.tsx"),
+        route("profile", "routes/account/profile.tsx"),
+        route("edit", "routes/account/edit.tsx"),
+        route("addresses", "routes/account/addresses.tsx"),
+        route("address/:id", "routes/account/address.tsx"),
+        ...prefix("orders", [
+          index("routes/account/orders/list.tsx"),
+          route(":id", "routes/account/orders/order.tsx"),
+        ]),
+        route("*", "routes/account/catch-all.tsx"),
+      ]),
+    ]),
     route("*", "routes/catch-all.tsx"),
   ]),
-  // Flat routes for all other files in the routes directory
-  // ...(await flatRoutes()),
 ]) satisfies RouteConfig;
