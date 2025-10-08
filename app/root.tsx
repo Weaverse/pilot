@@ -23,13 +23,13 @@ import {
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
-import {
-  NewsletterPopup,
-  useShouldRenderNewsletterPopup,
-} from "./components/newsletter-popup";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
+import {
+  NewsletterPopup,
+  useShouldRenderNewsletterPopup,
+} from "./components/root/newsletter-popup";
 import { NotFound } from "./components/root/not-found";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";

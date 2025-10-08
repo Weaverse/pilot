@@ -40,7 +40,7 @@ export function NotFound({ type = "page" }: { type?: string }) {
   );
 }
 
-export function FeaturedProducts() {
+function FeaturedProducts() {
   const { load, data } = useFetcher<FeaturedData>();
   const api = usePrefixPathWithLocale("/api/featured-items");
 
