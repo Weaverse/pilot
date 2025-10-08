@@ -2,14 +2,14 @@ import { Suspense } from "react";
 import { Await } from "react-router";
 import { ProductCard } from "~/components/product/product-card";
 import { Swimlane } from "~/components/swimlane";
-import type { FeaturedData } from "../api/featured-items";
+import type { FeaturedProductsData } from "~/utils/featured-products";
 
 export function NoResults({
   searchTerm,
   recommendations,
 }: {
   searchTerm: string;
-  recommendations: Promise<null | FeaturedData>;
+  recommendations: Promise<null | FeaturedProductsData>;
 }) {
   return (
     <>

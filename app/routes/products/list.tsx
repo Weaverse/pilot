@@ -6,7 +6,6 @@ import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { routeHeaders } from "~/utils/cache";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
-import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
@@ -16,15 +15,11 @@ export async function loader({
   request,
   context: { storefront, weaverse },
 }: LoaderFunctionArgs) {
-  const variables = getPaginationVariables(request, {
-    pageBy: PAGINATION_SIZE,
-  });
-
   // Load products data and weaverseData in parallel
   const [data, weaverseData] = await Promise.all([
     storefront.query(ALL_PRODUCTS_QUERY, {
       variables: {
-        ...variables,
+        ...getPaginationVariables(request, { pageBy: 16 }),
         country: storefront.i18n.country,
         language: storefront.i18n.language,
         query: maybeFilterOutCombinedListingsQuery,

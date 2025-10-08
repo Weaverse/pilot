@@ -19,7 +19,6 @@ import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/locale";
 import { routeHeaders } from "~/utils/cache";
-import { PAGINATION_SIZE } from "~/utils/const";
 import { FILTER_URL_PREFIX, type SortParam } from "~/utils/filter";
 import { redirectIfHandleIsLocalized } from "~/utils/redirect.server";
 import { seoPayload } from "~/utils/seo.server";
@@ -29,7 +28,7 @@ export const headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: PAGINATION_SIZE,
+    pageBy: 16,
   });
   const { collectionHandle } = params;
   const { storefront, env } = context;

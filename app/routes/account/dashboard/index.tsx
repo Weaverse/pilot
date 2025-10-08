@@ -1,23 +1,19 @@
 import { SignOutIcon } from "@phosphor-icons/react";
 import { flattenConnection } from "@shopify/hydrogen";
-import type { CustomerDetailsFragment } from "customer-account-api.generated";
 import { Suspense } from "react";
 import { Await, Form, useOutletContext } from "react-router";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { FeaturedData } from "../../api/featured-items";
+import type { loader as accountLoader } from "../layout";
 import { AccountDetails } from "./account-details";
 import { AccountAddressBook } from "./address-book";
 import { AccountOrderHistory } from "./orders";
 
 export default function AccountDashboard() {
-  const { customer, heading, featuredData } = useOutletContext<{
-    customer: CustomerDetailsFragment;
-    heading: string;
-    featuredData: Promise<FeaturedData>;
-  }>();
+  const { customer, heading, featuredProducts } =
+    useOutletContext<Awaited<ReturnType<typeof accountLoader>>["data"]>();
   const orders = flattenConnection(customer.orders);
   const addresses = flattenConnection(customer.addresses);
 
@@ -47,14 +43,14 @@ export default function AccountDashboard() {
       {!orders.length && (
         <Suspense>
           <Await
-            resolve={featuredData}
+            resolve={featuredProducts}
             errorElement="There was a problem loading featured products."
           >
-            {({ featuredProducts }) => (
+            {({ featuredProducts: products }) => (
               <div className="space-y-8 pt-20">
                 <h5>Featured products</h5>
                 <Swimlane>
-                  {featuredProducts.nodes.map((product) => (
+                  {products.nodes.map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}

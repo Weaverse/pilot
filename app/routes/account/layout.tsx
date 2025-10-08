@@ -8,7 +8,7 @@ import type { CustomerDetailsQuery } from "customer-account-api.generated";
 import { Outlet, useLoaderData, useMatches } from "react-router";
 import Link from "~/components/link";
 import { routeHeaders } from "~/utils/cache";
-import { getFeaturedData } from "../api/featured-items";
+import { getFeaturedProducts } from "~/utils/featured-products";
 import { doLogout } from "./auth/logout";
 
 export const headers = routeHeaders;
@@ -28,10 +28,13 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   const customer = d?.customer;
   const heading = customer ? "My Account" : "Account Details";
-  const featuredData = getFeaturedData(context.storefront);
 
   return data(
-    { customer, heading, featuredData },
+    {
+      customer,
+      heading,
+      featuredProducts: getFeaturedProducts(context.storefront),
+    },
     { headers: { "Cache-Control": generateCacheControlHeader(CacheNone()) } },
   );
 }

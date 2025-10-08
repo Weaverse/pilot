@@ -5,7 +5,6 @@ import type { MetaFunction } from "react-router";
 import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { routeHeaders } from "~/utils/cache";
-import { PAGINATION_SIZE } from "~/utils/const";
 import { redirectIfHandleIsLocalized } from "~/utils/redirect.server";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
@@ -16,29 +15,23 @@ export const loader = async (args: LoaderFunctionArgs) => {
   const { params, request, context } = args;
   const storefront = context.storefront;
   const { language, country } = storefront.i18n;
+  const blogHandle = params?.blogHandle;
 
-  invariant(params.blogHandle, "Missing blog handle");
+  invariant(blogHandle, "Missing blog handle");
 
   // Load blog data and weaverseData in parallel
   const [{ blog }, weaverseData] = await Promise.all([
     storefront.query<BlogQuery>(BLOGS_QUERY, {
-      variables: {
-        blogHandle: params.blogHandle,
-        pageBy: PAGINATION_SIZE,
-        language,
-      },
+      variables: { blogHandle, pageBy: 16, language },
     }),
-    context.weaverse.loadPage({
-      type: "BLOG",
-      handle: params.blogHandle,
-    }),
+    context.weaverse.loadPage({ type: "BLOG", handle: blogHandle }),
   ]);
 
   if (!blog?.articles) {
     throw new Response("Not found", { status: 404 });
   }
   redirectIfHandleIsLocalized(request, {
-    handle: params.blogHandle,
+    handle: blogHandle,
     data: blog,
   });
 
@@ -56,12 +49,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   const seo = seoPayload.blog({ blog, url: request.url });
 
-  return data({
-    blog,
-    articles,
-    seo,
-    weaverseData,
-  });
+  return data({ blog, articles, seo, weaverseData });
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {

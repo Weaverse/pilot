@@ -16,9 +16,8 @@ import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { cn } from "~/utils/cn";
-import { PAGINATION_SIZE } from "~/utils/const";
+import { getFeaturedProducts } from "~/utils/featured-products";
 import { seoPayload } from "~/utils/seo.server";
-import { getFeaturedData } from "../api/featured-items";
 import { NoResults } from "./no-results";
 import { PopularKeywords } from "./popular-searches";
 
@@ -34,14 +33,10 @@ export async function loader({
   };
 
   if (searchTerm) {
-    const variables = getPaginationVariables(request, {
-      pageBy: PAGINATION_SIZE,
-    });
-
     const data = await storefront.query<SearchQuery>(SEARCH_QUERY, {
       variables: {
         searchTerm,
-        ...variables,
+        ...getPaginationVariables(request, { pageBy: 16 }),
         country: storefront.i18n.country,
         language: storefront.i18n.language,
       },
@@ -78,7 +73,7 @@ export async function loader({
     products,
     recommendations: hasResults
       ? Promise.resolve(null)
-      : getRecommendations(storefront),
+      : getFeaturedProducts(storefront),
   };
 }
 
@@ -172,12 +167,6 @@ export default function Search() {
       />
     </Section>
   );
-}
-
-function getRecommendations(
-  storefront: LoaderFunctionArgs["context"]["storefront"],
-) {
-  return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }
 
 const SEARCH_QUERY = `#graphql
