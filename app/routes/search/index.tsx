@@ -6,21 +6,21 @@ import {
   Pagination,
 } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
-import { useThemeSettings } from "@weaverse/hydrogen";
 import { clsx } from "clsx";
-import { Fragment, Suspense, useEffect, useState } from "react";
-import { Await, Form, useLoaderData } from "react-router";
+import { useEffect, useState } from "react";
+import { Form, useLoaderData } from "react-router";
 import type { SearchQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
-import Link, { variants } from "~/components/link";
+import { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
-import { Swimlane } from "~/components/swimlane";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { cn } from "~/utils/cn";
 import { PAGINATION_SIZE } from "~/utils/const";
 import { seoPayload } from "~/utils/seo.server";
-import { type FeaturedData, getFeaturedData } from "./api/featured-items";
+import { getFeaturedData } from "../api/featured-items";
+import { NoResults } from "./no-results";
+import { PopularKeywords } from "./popular-searches";
 
 export async function loader({
   request,
@@ -171,79 +171,6 @@ export default function Search() {
         data={{ searchTerm: searchTerm || "", searchResults: products }}
       />
     </Section>
-  );
-}
-
-function PopularKeywords() {
-  const { popularSearchKeywords } = useThemeSettings();
-  if (!popularSearchKeywords?.length) {
-    return null;
-  }
-  const popularKeywords: string[] = popularSearchKeywords
-    .split(",")
-    .map((k: string) => k.trim())
-    .filter((k: string) => k.length > 0);
-
-  return (
-    <div className="flex items-center justify-center text-body-subtle">
-      <span>Popular searches:</span>
-      {popularKeywords.map((search, ind) => (
-        <Fragment key={search}>
-          <Link
-            to={`/search?q=${search}`}
-            className="ml-1 underline-offset-4 hover:underline"
-          >
-            {search}
-          </Link>
-          {ind < popularKeywords.length - 1 && <span className="mr-px">,</span>}
-        </Fragment>
-      ))}
-    </div>
-  );
-}
-
-function NoResults({
-  searchTerm,
-  recommendations,
-}: {
-  searchTerm: string;
-  recommendations: Promise<null | FeaturedData>;
-}) {
-  return (
-    <>
-      {searchTerm && (
-        <div className="my-10 lg:my-16 flex flex-col items-center justify-center text-xl">
-          No results for "{searchTerm}", try a different search.
-        </div>
-      )}
-      <Suspense>
-        <Await
-          errorElement="There was a problem loading related products"
-          resolve={recommendations}
-        >
-          {(data) => {
-            if (!data) {
-              return null;
-            }
-            const { featuredProducts } = data;
-            return (
-              <div className="space-y-6 pt-20">
-                <h5>Trending Products</h5>
-                <Swimlane>
-                  {featuredProducts.nodes.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      className="w-80 snap-start"
-                    />
-                  ))}
-                </Swimlane>
-              </div>
-            );
-          }}
-        </Await>
-      </Suspense>
-    </>
   );
 }
 

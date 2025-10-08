@@ -13,12 +13,15 @@ export default hydrogenRoutes([
   route("robots.txt", "routes/seo/robots.ts"),
   ...prefix(":locale?", [
     index("routes/home.tsx"),
-    route("search", "routes/search.tsx"),
-    route(":shopid/orders/:token/authenticate", "routes/order-redirect.tsx"),
+    route("search", "routes/search/index.tsx"),
+    route(
+      ":shopid/orders/:token/authenticate",
+      "routes/others/order-redirect.tsx",
+    ),
     route("sitemap.xml", "routes/seo/sitemap.ts"),
     route("sitemap/:type/:page.xml", "routes/seo/sitemap-page.ts"),
-    route("pages/:pageHandle", "routes/page.tsx"),
-    route("discount/:code", "routes/discount.tsx"),
+    route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
+    route("discount/:code", "routes/others/discount-code.tsx"),
     ...prefix("api", [
       route("countries", "routes/api/countries.ts"),
       route("customer", "routes/api/customer.ts"),
