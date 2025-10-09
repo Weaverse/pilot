@@ -87,10 +87,15 @@ export interface LinkProps
 }
 
 function checkExternal(to: LinkProps["to"]) {
-  return (
-    (typeof to === "string" && !to.startsWith("/")) ||
-    (typeof to === "object" && to.pathname && !to.pathname.startsWith("/"))
-  );
+  if (typeof to === "string") {
+    // Check if it's a full URL with protocol
+    return /^https?:\/\//.test(to) || /^mailto:/.test(to) || /^tel:/.test(to);
+  }
+  if (typeof to === "object" && to.pathname) {
+    // For object syntax, only check if pathname looks like an external URL
+    return /^https?:\/\//.test(to.pathname);
+  }
+  return false;
 }
 
 function useHrefWithLocale(href: LinkProps["to"]) {
@@ -199,13 +204,6 @@ export const linkContentInputs: InspectorGroup["inputs"] = [
     label: "Link to",
     defaultValue: "/products",
     placeholder: "/products",
-  },
-  {
-    type: "switch",
-    name: "openInNewTab",
-    label: "Open in new tab",
-    defaultValue: false,
-    condition: (data: LinkData) => Boolean(data.to),
   },
   {
     type: "select",
