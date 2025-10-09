@@ -82,6 +82,7 @@ function Address({
           <input type="hidden" name="addressId" value={address.id} />
           <Button
             variant="underline"
+            type="submit"
             className="ml-6 text-body-subtle after:bg-body-subtle"
             animate={false}
           >
