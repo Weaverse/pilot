@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
+import { Skeleton } from "~/components/skeleton";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/products/product";
@@ -89,8 +90,8 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
     return (
       <div {...rest} ref={setRefs} className="flex">
         <div className="inline-flex items-center gap-1">
-          <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
-          <div className="h-4 w-8 animate-pulse rounded bg-gray-200" />
+          <Skeleton className="h-4 w-20 rounded" />
+          <Skeleton className="h-4 w-8 rounded" />
         </div>
       </div>
     );
