@@ -1,6 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useState } from "react";
 import { Button } from "~/components/button";
+import { Skeleton } from "~/components/skeleton";
 import { StarRating } from "~/components/star-rating";
 import { useJudgemeStore } from ".";
 import { RatingProgressBar } from "./rating-progress-bar";
@@ -49,10 +50,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
             <div className="flex flex-col items-center justify-center space-y-3">
               <div className="flex gap-3">
                 {[...new Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="bg-gray-200 size-10 rounded animate-pulse"
-                  />
+                  <Skeleton key={i} className="size-10 rounded" />
                 ))}
               </div>
             </div>
@@ -62,9 +60,9 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
               <div className="w-full space-y-4">
                 {[...new Array(5)].map((_, i) => (
                   <div key={i} className="flex items-center gap-3 w-full">
-                    <div className="bg-gray-200 size-6 rounded animate-pulse" />
-                    <div className="bg-gray-200 h-2.5 flex-1 rounded animate-pulse" />
-                    <div className="bg-gray-200 h-4 w-20 rounded animate-pulse" />
+                    <Skeleton className="size-6 rounded" />
+                    <Skeleton className="h-2.5 flex-1 rounded" />
+                    <Skeleton className="h-4 w-20 rounded" />
                   </div>
                 ))}
               </div>
@@ -72,7 +70,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
 
             {/* Column 3 - Write Review Button Skeleton */}
             <div className="flex items-center justify-center px-6">
-              <div className="bg-gray-200 h-10 w-full rounded animate-pulse" />
+              <Skeleton className="bg-gray-200 h-10 w-full rounded" />
             </div>
           </div>
         </div>

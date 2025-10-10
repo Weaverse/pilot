@@ -76,8 +76,6 @@ export const COUNTRIES: Localizations = {
   },
 };
 
-export const PAGINATION_SIZE = 16;
-
 export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
   ...COUNTRIES.default,
   pathPrefix: "",

@@ -6,7 +6,7 @@ import {
   type ProductMediaProps,
 } from "~/components/product/product-media";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductInformationData

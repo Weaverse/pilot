@@ -3,6 +3,7 @@ import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
+import { useViewTransitionState } from "react-router";
 import type {
   ProductCardFragment,
   ProductVariantFragment,
@@ -11,6 +12,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { calculateAspectRatio } from "~/utils/image";
@@ -58,6 +60,11 @@ export function ProductCard({
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const productPageHref = usePrefixPathWithLocale(
+    `/products/${product.handle}`,
+  );
+  const isTransitioning = useViewTransitionState(productPageHref);
+
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
 
@@ -106,10 +113,12 @@ export function ProductCard({
             {isImageLoading && <Spinner />}
             <Image
               className={clsx([
-                "absolute inset-0 [&_img]:[view-transition-name:image-expand]",
+                "absolute inset-0",
                 pcardShowImageOnHover &&
                   secondImage &&
                   "transition-opacity duration-300 group-hover:opacity-50",
+                isTransitioning &&
+                  "[&_img]:[view-transition-name:image-expand]",
               ])}
               sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
               data={image}

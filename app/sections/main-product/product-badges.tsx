@@ -6,7 +6,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { Fragment } from "react";
 import { useLoaderData } from "react-router";
 import { ProductBadges } from "~/components/product/badges";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBadgesComponentProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;

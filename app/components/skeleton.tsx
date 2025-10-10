@@ -1,27 +1,14 @@
-import clsx from "clsx";
+import { cn } from "~/utils/cn";
 
-/**
- * A shared component and Suspense call that's used in `App.server.jsx` to let your app wait for code to load while declaring a loading state
- */
 export function Skeleton({
   as: Component = "div",
-  width,
-  height,
   className,
   ...props
-}: {
-  as?: React.ElementType;
-  width?: string;
-  height?: string;
-  className?: string;
-  [key: string]: any;
-}) {
+}: { as?: React.ElementType } & React.HTMLAttributes<HTMLElement>) {
   return (
     <Component
       {...props}
-      width={width}
-      height={height}
-      className={clsx("animate-pulse bg-gray-300", className)}
+      className={cn("animate-pulse bg-gray-200", className)}
     />
   );
 }

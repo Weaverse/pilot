@@ -2,7 +2,6 @@ import { Money, useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { ProductVariantFragment } from "storefront-api.generated";
 import { cn } from "~/utils/cn";
-import { isDiscounted } from "~/utils/product";
 
 function CompareAtPrice({
   data,
@@ -42,7 +41,7 @@ export function VariantPrices({
           <Money withoutTrailingZeros data={price} />
           {showCompareAtPrice &&
             compareAtPrice &&
-            isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
+            compareAtPrice?.amount > price?.amount && (
               <CompareAtPrice data={compareAtPrice as MoneyV2} />
             )}
         </div>

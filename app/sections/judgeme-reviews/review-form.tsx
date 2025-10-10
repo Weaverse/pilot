@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
+import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 import { RatingInput } from "./rating-input";
 

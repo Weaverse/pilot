@@ -11,13 +11,13 @@ export default {
       documents: [
         "./*.{ts,tsx,js,jsx}",
         "./app/**/*.{ts,tsx,js,jsx}",
-        "!./app/routes/*.account*.{ts,tsx,js,jsx}",
+        "!./app/routes/account/**/*.{ts,tsx,js,jsx}",
       ],
     },
     "customer-account-api.generated.d.ts": {
       preset,
       schema: [getSchema("customer-account")],
-      documents: ["./app/routes/*.account*.{ts,tsx,js,jsx}"],
+      documents: ["./app/routes/account/**/*.{ts,tsx,js,jsx}"],
     },
   },
 } as CodegenConfig;

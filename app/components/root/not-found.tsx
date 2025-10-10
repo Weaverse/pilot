@@ -6,7 +6,7 @@ import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { FeaturedData } from "~/routes/($locale).api.featured-items";
+import type { FeaturedProductsData } from "~/utils/featured-products";
 
 export function NotFound({ type = "page" }: { type?: string }) {
   return (
@@ -40,9 +40,9 @@ export function NotFound({ type = "page" }: { type?: string }) {
   );
 }
 
-export function FeaturedProducts() {
-  const { load, data } = useFetcher<FeaturedData>();
-  const api = usePrefixPathWithLocale("/api/featured-items");
+function FeaturedProducts() {
+  const { load, data } = useFetcher<FeaturedProductsData>();
+  const api = usePrefixPathWithLocale("/api/featured-products");
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
