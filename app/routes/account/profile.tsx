@@ -98,9 +98,12 @@ export async function action({ request, context }: ActionFunctionArgs) {
       error: null,
       customer: updateData?.customerUpdate?.customer,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return data(
-      { error: error.message, customer: null },
+      {
+        error: error instanceof Error ? error.message : "Unknown error",
+        customer: null,
+      },
       {
         status: 400,
       },

@@ -75,9 +75,9 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       return redirect(
         params?.locale ? `${params?.locale}/account` : "/account",
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       return data(
-        { formError: error.message },
+        { formError: error instanceof Error ? error.message : "Unknown error" },
         {
           status: 400,
         },
@@ -118,9 +118,9 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       return redirect(
         params?.locale ? `${params?.locale}/account` : "/account",
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       return data(
-        { formError: error.message },
+        { formError: error instanceof Error ? error.message : "Unknown error" },
         {
           status: 400,
         },
@@ -149,9 +149,9 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       return redirect(
         params?.locale ? `${params?.locale}/account` : "/account",
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       return data(
-        { formError: error.message },
+        { formError: error instanceof Error ? error.message : "Unknown error" },
         {
           status: 400,
         },

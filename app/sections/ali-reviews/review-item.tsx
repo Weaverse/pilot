@@ -21,7 +21,7 @@ export type AliReview = {
   created_at: string;
   updated_at: string;
   shop_id: number;
-  reply: any;
+  reply: unknown;
 };
 
 type ReviewMedia = {
@@ -31,7 +31,7 @@ type ReviewMedia = {
   type: string;
   url: string;
   created_at: string;
-  metadata: any[];
+  metadata: unknown[];
 };
 
 export type ReviewItemData = {
