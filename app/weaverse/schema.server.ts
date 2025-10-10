@@ -9,7 +9,7 @@ export const themeSchema: HydrogenThemeSchema = {
     name: "Pilot",
     authorProfilePhoto:
       "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Weaverse_logo_-_3000x_e2fa8c13-dac2-4dcb-a2c2-f7aaf7a58169.png?v=1698245759",
-    documentationUrl: "https://weaverse.io/docs",
+    documentationUrl: "https://docs.weaverse.io",
     supportUrl: "https://help.weaverse.io/",
   },
   i18n: {

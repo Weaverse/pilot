@@ -84,7 +84,7 @@ export const schema = createSchema({
           name: "metaobject",
           label: "Select metaobject definition",
           helpText:
-            'See how to set up a metaobject definition for this section <a href="https://weaverse.io/docs/marketplace/the-pilot-theme#metaobjects" target="_blank">here</a>.',
+            'See how to set up a metaobject definition for this section <a href="https://docs.weaverse.io/themes-templates/pilot-theme-overview#metaobjects" target="_blank">here</a>.',
         },
         {
           label: "Members count",
