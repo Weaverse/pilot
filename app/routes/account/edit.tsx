@@ -117,32 +117,42 @@ export default function AccountDetailsEdit() {
             {actionData.formError}
           </div>
         )}
-        <input
-          id="firstName"
-          name="firstName"
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          type="text"
-          autoComplete="given-name"
-          placeholder="First name"
-          aria-label="First name"
-          defaultValue={customer.firstName ?? ""}
-        />
-        <input
-          id="lastName"
-          name="lastName"
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          type="text"
-          autoComplete="family-name"
-          placeholder="Last name"
-          aria-label="Last name"
-          defaultValue={customer.lastName ?? ""}
-        />
+        <div>
+          <label htmlFor="firstName" className="block mb-1">
+            First name
+          </label>
+          <input
+            id="firstName"
+            name="firstName"
+            className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+            type="text"
+            autoComplete="given-name"
+            placeholder="First name"
+            aria-label="First name"
+            defaultValue={customer.firstName ?? ""}
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName" className="block mb-1">
+            Last name
+          </label>
+          <input
+            id="lastName"
+            name="lastName"
+            className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+            type="text"
+            autoComplete="family-name"
+            placeholder="Last name"
+            aria-label="Last name"
+            defaultValue={customer.lastName ?? ""}
+          />
+        </div>
         <div className="flex items-center justify-end gap-6 py-2.5">
           <Link to="/account" className="underline-offset-4 hover:underline">
             Cancel
           </Link>
           <Button type="submit" variant="primary" disabled={state !== "idle"}>
-            {state !== "idle" ? "Saving" : "Save"}
+            {state === "submitting" ? "Saving" : "Save"}
           </Button>
         </div>
       </Form>

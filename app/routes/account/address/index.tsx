@@ -194,113 +194,161 @@ export default function AccountEditAddressForm() {
             {actionData.formError}
           </div>
         )}
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="firstName"
-          name="firstName"
-          required
-          type="text"
-          autoComplete="given-name"
-          placeholder="First name"
-          aria-label="First name"
-          defaultValue={address?.firstName ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="lastName"
-          name="lastName"
-          required
-          type="text"
-          autoComplete="family-name"
-          placeholder="Last name"
-          aria-label="Last name"
-          defaultValue={address?.lastName ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="company"
-          name="company"
-          type="text"
-          autoComplete="organization"
-          placeholder="Company"
-          aria-label="Company"
-          defaultValue={address?.company ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="address1"
-          name="address1"
-          type="text"
-          autoComplete="address-line1"
-          placeholder="Address line 1*"
-          required
-          aria-label="Address line 1"
-          defaultValue={address?.address1 ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="address2"
-          name="address2"
-          type="text"
-          autoComplete="address-line2"
-          placeholder="Address line 2"
-          aria-label="Address line 2"
-          defaultValue={address?.address2 ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="city"
-          name="city"
-          type="text"
-          required
-          autoComplete="address-level2"
-          placeholder="City"
-          aria-label="City"
-          defaultValue={address?.city ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="zoneCode"
-          name="zoneCode"
-          type="text"
-          autoComplete="address-level1"
-          placeholder="State / Province (zoneCode)"
-          required
-          aria-label="State / Province (zoneCode)"
-          defaultValue={address?.zoneCode ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="zip"
-          name="zip"
-          type="text"
-          autoComplete="postal-code"
-          placeholder="Zip / Postal Code"
-          required
-          aria-label="Zip"
-          defaultValue={address?.zip ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="territoryCode"
-          name="territoryCode"
-          type="text"
-          autoComplete="country"
-          placeholder="Country (Territory) Code"
-          required
-          aria-label="Country (Territory) Code"
-          defaultValue={address?.territoryCode ?? ""}
-        />
-        <input
-          className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-          id="phone"
-          name="phoneNumber"
-          type="tel"
-          autoComplete="tel"
-          placeholder="Phone"
-          aria-label="Phone"
-          defaultValue={address?.phoneNumber ?? ""}
-        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label htmlFor="firstName" className="mb-1 block">
+              First name
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="firstName"
+              name="firstName"
+              required
+              type="text"
+              autoComplete="given-name"
+              placeholder="First name"
+              aria-label="First name"
+              defaultValue={address?.firstName ?? ""}
+            />
+          </div>
+          <div>
+            <label htmlFor="lastName" className="mb-1 block">
+              Last name
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="lastName"
+              name="lastName"
+              required
+              type="text"
+              autoComplete="family-name"
+              placeholder="Last name"
+              aria-label="Last name"
+              defaultValue={address?.lastName ?? ""}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label htmlFor="company" className="mb-1 block">
+              Company
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="company"
+              name="company"
+              type="text"
+              autoComplete="organization"
+              placeholder="Company"
+              aria-label="Company"
+              defaultValue={address?.company ?? ""}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label htmlFor="address1" className="mb-1 block">
+              Address line 1
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="address1"
+              name="address1"
+              type="text"
+              autoComplete="address-line1"
+              placeholder="Address line 1*"
+              required
+              aria-label="Address line 1"
+              defaultValue={address?.address1 ?? ""}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label htmlFor="address2" className="mb-1 block">
+              Address line 2
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="address2"
+              name="address2"
+              type="text"
+              autoComplete="address-line2"
+              placeholder="Address line 2"
+              aria-label="Address line 2"
+              defaultValue={address?.address2 ?? ""}
+            />
+          </div>
+          <div>
+            <label htmlFor="city" className="mb-1 block">
+              City
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="city"
+              name="city"
+              type="text"
+              required
+              autoComplete="address-level2"
+              placeholder="City"
+              aria-label="City"
+              defaultValue={address?.city ?? ""}
+            />
+          </div>
+          <div>
+            <label htmlFor="zoneCode" className="mb-1 block">
+              State / Province
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="zoneCode"
+              name="zoneCode"
+              type="text"
+              autoComplete="address-level1"
+              placeholder="State / Province (zoneCode)"
+              required
+              aria-label="State / Province (zoneCode)"
+              defaultValue={address?.zoneCode ?? ""}
+            />
+          </div>
+          <div>
+            <label htmlFor="zip" className="mb-1 block">
+              Zip / Postal Code
+            </label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="zip"
+              name="zip"
+              type="text"
+              autoComplete="postal-code"
+              placeholder="Zip / Postal Code"
+              required
+              aria-label="Zip"
+              defaultValue={address?.zip ?? ""}
+            />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="territoryCode">Country</label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="territoryCode"
+              name="territoryCode"
+              type="text"
+              autoComplete="country"
+              placeholder="Country (Territory) Code"
+              required
+              aria-label="Country (Territory) Code"
+              defaultValue={address?.territoryCode ?? ""}
+            />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="phone">Phone</label>
+            <input
+              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              id="phone"
+              name="phoneNumber"
+              type="tel"
+              autoComplete="tel"
+              placeholder="Phone"
+              aria-label="Phone"
+              defaultValue={address?.phoneNumber ?? ""}
+            />
+          </div>
+        </div>
         <div className="flex items-center gap-2.5">
           <Checkbox.Root
             name="defaultAddress"
