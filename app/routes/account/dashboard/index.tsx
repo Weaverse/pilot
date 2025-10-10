@@ -1,19 +1,33 @@
 import { SignOutIcon } from "@phosphor-icons/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import { Suspense } from "react";
-import { Await, Form, useOutletContext } from "react-router";
+import { Await, Form, useLoaderData, useOutletContext } from "react-router";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as accountLoader } from "../layout";
 import { AccountDetails } from "./account-details";
-import { AccountAddressBook } from "./address-book";
-import { AccountOrderHistory } from "./orders";
+import { AddressBook } from "./address-book";
+import { OrdersHistory } from "./orders-history";
 
 export default function AccountDashboard() {
-  const { customer, heading, featuredProducts } =
+  const signOutUrl = usePrefixPathWithLocale("/account/logout");
+  const loaderData = useLoaderData<typeof accountLoader>();
+  const outletContext =
     useOutletContext<Awaited<ReturnType<typeof accountLoader>>["data"]>();
+
+  let { customer, heading, featuredProducts } = loaderData || {};
+  if (!customer) {
+    customer = outletContext?.customer;
+    heading = outletContext?.heading;
+    featuredProducts = outletContext?.featuredProducts;
+  }
+
+  if (!customer) {
+    return null;
+  }
+
   const orders = flattenConnection(customer.orders);
   const addresses = flattenConnection(customer.addresses);
 
@@ -25,7 +39,7 @@ export default function AccountDashboard() {
     >
       <div className="space-y-4">
         <h1 className="h4 font-medium">{heading}</h1>
-        <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
+        <Form method="post" action={signOutUrl}>
           <button
             type="submit"
             className="group flex items-center gap-2 text-body-subtle"
@@ -37,9 +51,9 @@ export default function AccountDashboard() {
           </button>
         </Form>
       </div>
-      {orders ? <AccountOrderHistory orders={orders} /> : null}
+      {orders ? <OrdersHistory orders={orders} /> : null}
       <AccountDetails customer={customer} />
-      <AccountAddressBook addresses={addresses} customer={customer} />
+      <AddressBook addresses={addresses} customer={customer} />
       {!orders.length && (
         <Suspense>
           <Await

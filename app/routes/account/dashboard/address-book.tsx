@@ -4,7 +4,7 @@ import { Form } from "react-router";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 
-export function AccountAddressBook({
+export function AddressBook({
   customer,
   addresses,
 }: {
