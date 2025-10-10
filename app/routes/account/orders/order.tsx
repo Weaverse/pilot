@@ -8,7 +8,7 @@ import type { MetaFunction } from "react-router";
 import { useLoaderData } from "react-router";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
-import { ORDER_STATUS } from "~/routes/account/dashboard/orders";
+import { ORDER_STATUS } from "~/routes/account/dashboard/orders-history";
 import { OrderLineItem } from "./order-line-item";
 import { CUSTOMER_ORDER_QUERY } from "./order-query";
 import { OrderSummary } from "./order-summary";
