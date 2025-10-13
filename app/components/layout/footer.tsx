@@ -95,7 +95,7 @@ export function Footer() {
     >
       <div
         className={cn(
-          "h-full w-full space-y-9 divide-y divide-line-subtle",
+          "h-full w-full space-y-9",
           variants({ width: footerWidth }),
         )}
       >
@@ -181,7 +181,7 @@ export function Footer() {
           </div>
           <FooterMenu />
         </div>
-        <div className="flex flex-col items-center justify-between gap-4 py-9 lg:flex-row">
+        <div className="flex flex-col border-t border-line-subtle items-center justify-between gap-4 py-9 lg:flex-row">
           <div className="flex gap-2">
             <CountrySelector />
           </div>
