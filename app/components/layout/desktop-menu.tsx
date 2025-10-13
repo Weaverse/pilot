@@ -60,6 +60,7 @@ export function DesktopMenu() {
                 </Menubar.Trigger>
                 {level > 1 && (
                   <Menubar.Content
+                    onCloseAutoFocus={(e) => e.preventDefault()}
                     className={cn([
                       "px-3 md:px-4 lg:px-6",
                       "bg-(--color-header-bg) shadow-lg",

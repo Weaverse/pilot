@@ -98,6 +98,7 @@ export function NewsletterPopup() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 [--fade-in-duration:150ms] data-[state=open]:animate-fade-in" />
         <Dialog.Content
+          onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn(
             "fixed inset-0 z-50 flex p-4 backdrop-blur-xs",
             "data-[state=open]:animate-slide-up",

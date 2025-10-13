@@ -62,6 +62,7 @@ export default function AccountLayout() {
               style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
             />
             <Dialog.Content
+              onCloseAutoFocus={(e) => e.preventDefault()}
               className={clsx([
                 "fixed inset-0 z-10 w-screen p-4",
                 "flex items-center justify-center",

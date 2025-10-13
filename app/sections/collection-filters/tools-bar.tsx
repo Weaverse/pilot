@@ -81,6 +81,7 @@ function FiltersDrawer({
           style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
         />
         <Dialog.Content
+          onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx([
             "fixed inset-y-0 z-10 w-full bg-(--color-background) py-4 md:w-[360px]",
             "-translate-x-full left-0 data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",

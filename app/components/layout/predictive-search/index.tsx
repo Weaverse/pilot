@@ -40,6 +40,7 @@ export function PredictiveSearchButton() {
           style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
         />
         <Dialog.Content
+          onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
             "fixed inset-x-0 top-0 z-10 bg-(--color-header-bg)",
             "-translate-y-full data-[state=open]:translate-y-0",

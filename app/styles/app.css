@@ -1,4 +1,4 @@
-@import "swiper/css" layer(base);
+@import "swiper/css/bundle" layer(base);
 @import "tailwindcss" source("../../app");
 @plugin "@tailwindcss/typography";
 
