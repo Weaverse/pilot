@@ -55,7 +55,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        "z-10 w-full",
+        "z-9999 w-full",
         "transition-all duration-300 ease-in-out",
         "bg-(--color-header-bg) hover:bg-(--color-header-bg)",
         "text-(--color-header-text) hover:text-(--color-header-text)",
