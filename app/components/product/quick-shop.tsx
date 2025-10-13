@@ -176,6 +176,7 @@ export function QuickShopTrigger({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50 [--fade-in-duration:150ms] data-[state=open]:animate-fade-in" />
         <Dialog.Content
+          onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx(
             "quick-shop-dialog-content",
             "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
