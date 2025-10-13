@@ -12,12 +12,14 @@ _Pilot is an innovative Shopify theme, powered by Hydrogen, React Router 7, and 
 
 ## Who is using Weaverse/Pilot on production?
 These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
-- [Entropy Home](https://www.entropyhome.com/) - curated home goods brand operated by Entropy Bright LLC.
+- [Huckleberry Roasters](https://www.huckleberryroasters.com/) - Crafting coffee in Colorado since 2011, Huckleberry Roasters delivers award-winning flavors with ethically sourced beans.
+- [Bubble Goods](https://bubblegoods.com/) - 2,000+ healthy food products shipped from small independent U.S. makers to your door.
 - [Karma and Luck](https://www.karmaandluck.com) - modern lifestyle brand rooted in timeless traditions and spiritual intention.
 - [Baltzar](https://baltzar.com/) - curated selection of menswear brands from world renowned specialists such as Frank Clegg, Albert Thurston and Astorflex.
 - [iROCKER](https://irockersup.com/) - provide life on the water to all, with gear that goes the extra mile.
 - [Roland (Brazil)](https://store.roland.com.br/) - electronic musical instruments, drums, digital pianos, synthesizers, and dance/DJ gears.
-- [Timothy](https://timothy.london/) - British brand of premium travel goods and accessories.
+- [Timothy London](https://timothy.london/) - British brand of premium travel goods and accessories.
+- [Vasuma Eyewear](https://vasuma.com/) - Vasuma creates eyewear for both men and women. From Stockholm, Sweden our eyewear are inspired by the best of the vintage eras of the 50s and 60s.
 - And many more...
 
 ## Links
