@@ -77,8 +77,10 @@ function FiltersDrawer({
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in"
-          style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
+          className={clsx(
+            "[--fade-in-duration:100ms] data-[state=open]:animate-fade-in",
+            "fixed inset-0 z-10 bg-black/50",
+          )}
         />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}

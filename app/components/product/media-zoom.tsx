@@ -104,21 +104,18 @@ export function ZoomModal({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 z-10 bg-white data-[state=open]:animate-fade-in"
-          style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
+          className={clsx(
+            "[--fade-in-duration:100ms] data-[state=open]:animate-fade-in",
+            "fixed inset-0 z-10 bg-white",
+          )}
         />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx([
-            "fixed inset-0 z-10 w-screen",
+            "[--slide-up-from:20px] [--slide-up-duration:300ms]",
             "data-[state=open]:animate-slide-up",
+            "fixed inset-0 z-10 w-screen",
           ])}
-          style={
-            {
-              "--slide-up-from": "20px",
-              "--slide-up-duration": "300ms",
-            } as React.CSSProperties
-          }
           aria-describedby={undefined}
         >
           <div className="relative flex h-full w-full items-center justify-center bg-(--color-background)">

@@ -215,18 +215,12 @@ function FooterMenu() {
             {["#", "/"].includes(to) ? title : <Link to={to}>{title}</Link>}
           </div>
           <Accordion.Content
-            style={
-              {
-                "--expand-duration": "0.15s",
-                "--expand-to": "var(--radix-accordion-content-height)",
-                "--collapse-duration": "0.15s",
-                "--collapse-from": "var(--radix-accordion-content-height)",
-              } as React.CSSProperties
-            }
             className={clsx([
-              "overflow-hidden",
+              "[--expand-duration:0.15s] [--expand-to:var(--radix-accordion-content-height)] ",
+              "[--collapse-duration:0.15s] [--collapse-from:var(--radix-accordion-content-height)]",
               "data-[state=closed]:animate-collapse",
               "data-[state=open]:animate-expand",
+              "overflow-hidden",
             ])}
           >
             <div className="flex flex-col gap-2 pb-4 lg:pt-6">

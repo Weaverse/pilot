@@ -101,6 +101,7 @@ export function NewsletterPopup() {
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn(
             "fixed inset-0 z-50 flex p-4 backdrop-blur-xs",
+            "[--slide-up-from:20px] [--slide-up-duration:300ms]",
             "data-[state=open]:animate-slide-up",
             newsletterPopupPosition === "center" &&
               "items-center justify-center",
@@ -114,12 +115,6 @@ export function NewsletterPopup() {
               "items-end justify-end",
           )}
           aria-describedby={undefined}
-          style={
-            {
-              "--slide-up-from": "20px",
-              "--slide-up-duration": "300ms",
-            } as React.CSSProperties
-          }
         >
           <div
             className={cn(

@@ -180,7 +180,9 @@ export function QuickShopTrigger({
           className={clsx(
             "quick-shop-dialog-content",
             "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
-            "backdrop-blur-xs data-[state=open]:animate-slide-up",
+            "backdrop-blur-xs",
+            "[--slide-up-from:20px] [--slide-up-duration:300ms]",
+            "data-[state=open]:animate-slide-up",
           )}
           onClick={(e) => {
             const target = e.target as HTMLElement;
@@ -188,12 +190,6 @@ export function QuickShopTrigger({
               setOpen(false);
             }
           }}
-          style={
-            {
-              "--slide-up-from": "20px",
-              "--slide-up-duration": "300ms",
-            } as React.CSSProperties
-          }
           aria-describedby={undefined}
         >
           <Dialog.Close asChild>
