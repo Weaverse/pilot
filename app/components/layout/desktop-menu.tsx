@@ -1,5 +1,5 @@
 import { CaretDownIcon } from "@phosphor-icons/react";
-import * as Menubar from "@radix-ui/react-menubar";
+import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
@@ -13,18 +13,13 @@ import { cn } from "~/utils/cn";
 export function DesktopMenu() {
   const { headerMenu } = useShopMenu();
   const { openMenuBy } = useThemeSettings();
-  const [value, setValue] = useState<string | null>(null);
+  const [value, setValue] = useState<string>("");
 
   if (headerMenu?.items?.length) {
     const items = headerMenu.items as unknown as SingleMenuItem[];
     return (
-      <Menubar.Root
-        asChild
-        value={value}
-        onValueChange={setValue}
-        onMouseLeave={() => setValue(null)}
-      >
-        <nav className="hidden h-full grow justify-center lg:flex">
+      <NavigationMenu.Root value={value} onValueChange={setValue}>
+        <NavigationMenu.List className="hidden h-full grow justify-center lg:flex">
           {items.map((menuItem) => {
             const { id, items: childItems = [], title, to } = menuItem;
             const level = getMaxDepth(menuItem);
@@ -33,9 +28,8 @@ export function DesktopMenu() {
               level === 2 &&
               childItems.every(({ resource }) => !resource?.image);
             return (
-              <Menubar.Menu key={id} value={id}>
-                <Menubar.Trigger
-                  asChild={!hasSubmenu}
+              <NavigationMenu.Item key={id} value={id}>
+                <NavigationMenu.Trigger
                   className={clsx([
                     "flex h-full cursor-pointer items-center gap-1.5 px-3 py-2",
                     'data-[state="open"]:[&>svg]:rotate-180',
@@ -53,18 +47,23 @@ export function DesktopMenu() {
                       <CaretDownIcon className="h-3.5 w-3.5 transition-transform" />
                     </>
                   ) : (
-                    <Link to={to} className="transition-none">
-                      {title}
-                    </Link>
+                    <NavigationMenu.Link asChild>
+                      <Link to={to} className="transition-none">
+                        {title}
+                      </Link>
+                    </NavigationMenu.Link>
                   )}
-                </Menubar.Trigger>
+                </NavigationMenu.Trigger>
                 {level > 1 && (
-                  <Menubar.Content
-                    onCloseAutoFocus={(e) => e.preventDefault()}
+                  <NavigationMenu.Content
                     className={cn([
+                      "absolute left-0 top-0 w-full",
                       "px-3 md:px-4 lg:px-6",
-                      "bg-(--color-header-bg) shadow-lg",
-                      isDropdown ? "py-6" : "w-screen py-8",
+                      isDropdown ? "py-6" : "py-8",
+                      // "data-[motion=from-end]:animate-enter-from-right",
+                      // "data-[motion=from-start]:animate-enter-from-left",
+                      // "data-[motion=to-end]:animate-exit-to-right",
+                      // "data-[motion=to-start]:animate-exit-to-left",
                     ])}
                   >
                     {isDropdown ? (
@@ -72,13 +71,23 @@ export function DesktopMenu() {
                     ) : (
                       <MegaMenu items={childItems} />
                     )}
-                  </Menubar.Content>
+                  </NavigationMenu.Content>
                 )}
-              </Menubar.Menu>
+              </NavigationMenu.Item>
             );
           })}
-        </nav>
-      </Menubar.Root>
+        </NavigationMenu.List>
+        <div className="absolute inset-x-0 top-full flex w-full justify-center shadow-header">
+          <NavigationMenu.Viewport
+            className={cn(
+              "relative origin-[top_center] overflow-hidden bg-(--color-header-bg)",
+              "data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in",
+              "transition-[width,_height] duration-200",
+              "h-[var(--radix-navigation-menu-viewport-height)] w-full",
+            )}
+          />
+        </div>
+      </NavigationMenu.Root>
     );
   }
   return null;
@@ -86,22 +95,22 @@ export function DesktopMenu() {
 
 function DropdownSubMenu({ items }: { items: SingleMenuItem[] }) {
   return (
-    <ul
-      className="animate-fade-in flex flex-col gap-1.5"
-      style={{ "--fade-in-duration": "150ms" } as React.CSSProperties}
-    >
+    <ul className="animate-fade-in flex flex-col gap-1.5">
       {items.map(({ id, to, title, isExternal }) => (
-        <Link
-          key={id}
-          to={to}
-          prefetch="intent"
-          className="transition-none items-center gap-2 group"
-        >
-          <RevealUnderline>{title}</RevealUnderline>
-          {isExternal && (
-            <span className="invisible group-hover:visible text-sm">↗</span>
-          )}
-        </Link>
+        <li key={id}>
+          <NavigationMenu.Link asChild>
+            <Link
+              to={to}
+              prefetch="intent"
+              className="transition-none items-center gap-2 group"
+            >
+              <RevealUnderline>{title}</RevealUnderline>
+              {isExternal && (
+                <span className="invisible group-hover:visible text-sm">↗</span>
+              )}
+            </Link>
+          </NavigationMenu.Link>
+        </li>
       ))}
     </ul>
   );
@@ -123,17 +132,19 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
               className="transition-transform duration-300 group-hover/item:scale-[1.03]"
               width={300}
             />
-            <Link
-              to={to}
-              prefetch="intent"
-              className={clsx([
-                "absolute inset-0 flex items-center justify-center p-2 text-center",
-                "bg-black/20 group-hover/item:bg-black/40",
-                "h6 text-body-inverse transition-all duration-300",
-              ])}
-            >
-              {title}
-            </Link>
+            <NavigationMenu.Link asChild>
+              <Link
+                to={to}
+                prefetch="intent"
+                className={clsx([
+                  "absolute inset-0 flex items-center justify-center p-2 text-center",
+                  "bg-black/20 group-hover/item:bg-black/40",
+                  "h6 text-body-inverse transition-all duration-300",
+                ])}
+              >
+                {title}
+              </Link>
+            </NavigationMenu.Link>
           </SlideIn>
         ) : (
           <SlideIn
@@ -141,28 +152,33 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
             className="max-w-72 grow space-y-4"
             style={{ "--idx": idx } as React.CSSProperties}
           >
-            <Link
-              to={to}
-              prefetch="intent"
-              className="uppercase transition-none"
-            >
-              <RevealUnderline>{title}</RevealUnderline>
-            </Link>
+            <NavigationMenu.Link asChild>
+              <Link
+                to={to}
+                prefetch="intent"
+                className="uppercase transition-none"
+              >
+                <RevealUnderline>{title}</RevealUnderline>
+              </Link>
+            </NavigationMenu.Link>
             <div className="flex flex-col gap-1.5">
               {children.map((cItem) => (
-                <Link
-                  key={cItem.id}
-                  to={cItem.to}
-                  prefetch="intent"
-                  className="relative transition-none items-center gap-2 group"
-                >
-                  <RevealUnderline>{cItem.title}</RevealUnderline>
-                  {cItem.isExternal && (
-                    <span className="invisible group-hover:visible text-sm">
-                      ↗
-                    </span>
-                  )}
-                </Link>
+                <div key={cItem.id}>
+                  <NavigationMenu.Link asChild>
+                    <Link
+                      to={cItem.to}
+                      prefetch="intent"
+                      className="relative transition-none items-center gap-2 group"
+                    >
+                      <RevealUnderline>{cItem.title}</RevealUnderline>
+                      {cItem.isExternal && (
+                        <span className="invisible group-hover:visible text-sm">
+                          ↗
+                        </span>
+                      )}
+                    </Link>
+                  </NavigationMenu.Link>
+                </div>
               ))}
             </div>
           </SlideIn>
@@ -181,16 +197,12 @@ function SlideIn(props: {
   return (
     <div
       className={cn(
-        "animate-slide-left opacity-0 [animation-delay:calc(var(--idx)*0.1s+0.1s)]",
+        "[animation-delay:calc(var(--idx)*0.1s+0.1s)]",
+        "[--slide-left-from:40px] [animation-duration:200ms] animate-slide-left",
+        "opacity-0",
         className,
       )}
-      style={
-        {
-          "--slide-left-from": "40px",
-          "--slide-left-duration": "300ms",
-          ...style,
-        } as React.CSSProperties
-      }
+      style={style}
     >
       {children}
     </div>

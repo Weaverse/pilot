@@ -16,7 +16,6 @@ import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 import { CartDrawer } from "./cart-drawer";
 import { DesktopMenu } from "./desktop-menu";
-import { NavigationMenuDemo } from "./desktop-menu2";
 import { Logo } from "./logo";
 import { MobileMenu } from "./mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
@@ -99,8 +98,7 @@ export function Header() {
           <MagnifyingGlassIcon className="h-5 w-5" />
         </Link>
         <Logo />
-        {/* <DesktopMenu /> */}
-        <NavigationMenuDemo />
+        <DesktopMenu />
         <div className="z-1 flex items-center gap-1">
           <PredictiveSearchButton />
           <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
