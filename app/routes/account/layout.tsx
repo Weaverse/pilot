@@ -57,18 +57,13 @@ export default function AccountLayout() {
       <>
         <Dialog.Root defaultOpen>
           <Dialog.Portal>
-            <Dialog.Overlay
-              className={clsx(
-                "[--fade-in-duration:100ms] data-[state=open]:animate-fade-in",
-                "fixed inset-0 z-10 bg-black/50",
-              )}
-            />
+            <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
             <Dialog.Content
               onCloseAutoFocus={(e) => e.preventDefault()}
               className={clsx([
                 "fixed inset-0 z-10 w-screen p-4",
                 "flex items-center justify-center",
-                "[--slide-up-from:20px] [--slide-up-duration:300ms]",
+                "[--slide-up-from:20px]",
                 "data-[state=open]:animate-slide-up",
               ])}
               aria-describedby={undefined}

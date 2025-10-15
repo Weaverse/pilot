@@ -216,8 +216,8 @@ function FooterMenu() {
           </div>
           <Accordion.Content
             className={clsx([
-              "[--expand-duration:0.15s] [--expand-to:var(--radix-accordion-content-height)] ",
-              "[--collapse-duration:0.15s] [--collapse-from:var(--radix-accordion-content-height)]",
+              "[--expand-to:var(--radix-accordion-content-height)] ",
+              "[--collapse-from:var(--radix-accordion-content-height)]",
               "data-[state=closed]:animate-collapse",
               "data-[state=open]:animate-expand",
               "overflow-hidden",

@@ -5,7 +5,6 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import clsx from "clsx";
 import { type RefObject, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import Link from "~/components/link";
@@ -36,16 +35,10 @@ export function PredictiveSearchButton() {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay
-          className={clsx([
-            "[--fade-in-duration:100ms] data-[state=open]:animate-fade-in",
-            "fixed inset-0 z-10 bg-black/50",
-          ])}
-        />
+        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
-            "[--enter-from-top-duration:200ms]",
             "-translate-y-full data-[state=open]:translate-y-0",
             "fixed inset-x-0 top-0 z-10 bg-(--color-header-bg)",
             "data-[state=open]:animate-enter-from-top",

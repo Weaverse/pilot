@@ -76,12 +76,7 @@ function FiltersDrawer({
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay
-          className={clsx(
-            "[--fade-in-duration:100ms] data-[state=open]:animate-fade-in",
-            "fixed inset-0 z-10 bg-black/50",
-          )}
-        />
+        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx([

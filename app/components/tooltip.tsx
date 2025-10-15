@@ -36,7 +36,7 @@ export function TooltipContent({
       <Content
         ref={ref}
         className={cn(
-          "[--slide-up-from:6px] [--slide-up-duration:0.3s] animate-slide-up",
+          "[--slide-up-from:6px] animate-slide-up",
           "z-1000 text-sm bg-body px-3 py-1 text-background shadow-xs",
           className,
         )}
