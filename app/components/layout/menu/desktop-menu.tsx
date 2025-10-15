@@ -1,6 +1,5 @@
 import { CaretDownIcon } from "@phosphor-icons/react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import { Image } from "~/components/image";
@@ -9,14 +8,15 @@ import { RevealUnderline } from "~/components/reveal-underline";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
+import { DropdownMenu } from "./dropdown-menu";
 
 export function DesktopMenu() {
   const { headerMenu } = useShopMenu();
-  const { openMenuBy } = useThemeSettings();
   const [value, setValue] = useState<string>("");
 
   if (headerMenu?.items?.length) {
     const items = headerMenu.items as unknown as SingleMenuItem[];
+
     return (
       <NavigationMenu.Root value={value} onValueChange={setValue}>
         <NavigationMenu.List className="hidden h-full grow justify-center lg:flex">
@@ -27,6 +27,12 @@ export function DesktopMenu() {
             const isDropdown =
               level === 2 &&
               childItems.every(({ resource }) => !resource?.image);
+
+            if (isDropdown) {
+              return <DropdownMenu key={id} menuItem={menuItem} />;
+            }
+
+            // Use NavigationMenu for mega menu items and items without submenu
             return (
               <NavigationMenu.Item key={id} value={id}>
                 <NavigationMenu.Trigger
@@ -35,11 +41,6 @@ export function DesktopMenu() {
                     'data-[state="open"]:[&>svg]:rotate-180',
                     "uppercase focus:outline-hidden",
                   ])}
-                  onMouseEnter={() => {
-                    if (openMenuBy === "hover" && value !== id) {
-                      setValue(id);
-                    }
-                  }}
                 >
                   {hasSubmenu ? (
                     <>
@@ -58,19 +59,10 @@ export function DesktopMenu() {
                   <NavigationMenu.Content
                     className={cn([
                       "absolute left-0 top-0 w-full",
-                      "px-3 md:px-4 lg:px-6",
-                      isDropdown ? "py-6" : "py-8",
-                      // "data-[motion=from-end]:animate-enter-from-right",
-                      // "data-[motion=from-start]:animate-enter-from-left",
-                      // "data-[motion=to-end]:animate-exit-to-right",
-                      // "data-[motion=to-start]:animate-exit-to-left",
+                      "px-3 md:px-4 lg:px-6 py-8",
                     ])}
                   >
-                    {isDropdown ? (
-                      <DropdownSubMenu items={childItems} />
-                    ) : (
-                      <MegaMenu items={childItems} />
-                    )}
+                    <MegaMenu items={childItems} />
                   </NavigationMenu.Content>
                 )}
               </NavigationMenu.Item>
@@ -83,7 +75,7 @@ export function DesktopMenu() {
               "relative origin-[top_center] overflow-hidden bg-(--color-header-bg)",
               "data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in",
               "transition-[width,_height] duration-200",
-              "h-[var(--radix-navigation-menu-viewport-height)] w-full",
+              "h-(--radix-navigation-menu-viewport-height) w-full",
             )}
           />
         </div>
@@ -91,29 +83,6 @@ export function DesktopMenu() {
     );
   }
   return null;
-}
-
-function DropdownSubMenu({ items }: { items: SingleMenuItem[] }) {
-  return (
-    <ul className="animate-fade-in flex flex-col gap-1.5">
-      {items.map(({ id, to, title, isExternal }) => (
-        <li key={id}>
-          <NavigationMenu.Link asChild>
-            <Link
-              to={to}
-              prefetch="intent"
-              className="transition-none items-center gap-2 group"
-            >
-              <RevealUnderline>{title}</RevealUnderline>
-              {isExternal && (
-                <span className="invisible group-hover:visible text-sm">↗</span>
-              )}
-            </Link>
-          </NavigationMenu.Link>
-        </li>
-      ))}
-    </ul>
-  );
 }
 
 function MegaMenu({ items }: { items: SingleMenuItem[] }) {
@@ -197,7 +166,7 @@ function SlideIn(props: {
   return (
     <div
       className={cn(
-        "[animation-delay:calc(var(--idx)*0.1s+0.1s)]",
+        "[animation-delay:calc(var(--idx)*100ms+100ms)]",
         "[--slide-left-from:40px] [animation-duration:200ms] animate-slide-left",
         "opacity-0",
         className,

@@ -193,10 +193,6 @@ export const themeSchema: HydrogenThemeSchema = {
           },
           defaultValue: 150,
         },
-        {
-          type: "heading",
-          label: "Menu",
-        },
       ],
     },
     {
