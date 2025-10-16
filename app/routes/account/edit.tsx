@@ -2,7 +2,8 @@ import type {
   Customer,
   CustomerUpdateInput,
 } from "@shopify/hydrogen/customer-account-api-types";
-import { type ActionFunction, data, redirect } from "@shopify/remix-oxygen";
+import { data, redirect } from "react-router";
+import type { ActionFunction } from "react-router";
 import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import {
   Form,

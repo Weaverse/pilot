@@ -28,7 +28,15 @@ interface FeaturedProductsProps
 }
 
 export default function FeaturedProducts(props: FeaturedProductsProps) {
-  const { ref, loaderData, children, ...rest } = props;
+  const {
+    ref,
+    loaderData,
+    selectionMethod,
+    collection,
+    products,
+    children,
+    ...rest
+  } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}

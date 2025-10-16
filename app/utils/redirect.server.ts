@@ -1,4 +1,4 @@
-import { redirect } from "@shopify/remix-oxygen";
+import { redirect } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import { isCombinedListing } from "~/utils/combined-listings";
 

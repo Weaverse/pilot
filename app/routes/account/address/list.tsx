@@ -3,7 +3,7 @@ import {
   type ActionFunctionArgs,
   data,
   type LoaderFunctionArgs,
-} from "@shopify/remix-oxygen";
+} from "react-router";
 import type {
   AddressPartialFragment,
   CustomerDetailsFragment,

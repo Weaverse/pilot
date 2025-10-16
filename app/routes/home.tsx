@@ -1,6 +1,6 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs } from "react-router";
 import type { PageType } from "@weaverse/hydrogen";
 import type { MetaFunction } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";

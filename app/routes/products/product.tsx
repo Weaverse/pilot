@@ -4,7 +4,7 @@ import {
   getSeoMeta,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import { useLoaderData } from "react-router";

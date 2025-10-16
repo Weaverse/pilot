@@ -5,7 +5,7 @@ import {
   getSeoMeta,
   Pagination,
 } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import { Form, useLoaderData } from "react-router";

@@ -3,7 +3,7 @@ import {
   type ActionFunctionArgs,
   data,
   type LoaderFunctionArgs,
-} from "@shopify/remix-oxygen";
+} from "react-router";
 import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import {
   Form,

@@ -3,7 +3,7 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
-import { type ActionFunction, data, redirect } from "@shopify/remix-oxygen";
+import type { ActionFunction } from "react-router";
 import clsx from "clsx";
 import type {
   CustomerAddressCreateMutation,
@@ -11,7 +11,9 @@ import type {
   CustomerAddressUpdateMutation,
 } from "customer-account-api.generated";
 import {
+  data,
   Form,
+  redirect,
   useActionData,
   useNavigation,
   useOutletContext,

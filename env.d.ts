@@ -5,7 +5,7 @@
 // Enhance TypeScript's built-in typings.
 import "@total-typescript/ts-reset";
 import type { HydrogenEnv, HydrogenSessionData } from "@shopify/hydrogen";
-import type { createAppLoadContext } from "./server";
+import type { createAppLoadContext } from "./lib/context";
 
 declare global {
   /**

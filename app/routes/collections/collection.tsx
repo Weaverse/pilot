@@ -8,12 +8,8 @@ import type {
   ProductCollectionSortKeys,
   ProductFilter,
 } from "@shopify/hydrogen/storefront-api-types";
-import {
-  type LoaderFunctionArgs,
-  type MetaArgs,
-  redirect,
-} from "@shopify/remix-oxygen";
-import { useLoaderData } from "react-router";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
+import { redirect, useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";

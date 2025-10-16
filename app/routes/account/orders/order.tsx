@@ -1,7 +1,8 @@
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
-import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
+import { redirect } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
 import clsx from "clsx";
 import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import type { MetaFunction } from "react-router";
