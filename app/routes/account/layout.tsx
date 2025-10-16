@@ -57,23 +57,15 @@ export default function AccountLayout() {
       <>
         <Dialog.Root defaultOpen>
           <Dialog.Portal>
-            <Dialog.Overlay
-              className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in"
-              style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
-            />
+            <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
             <Dialog.Content
               onCloseAutoFocus={(e) => e.preventDefault()}
               className={clsx([
                 "fixed inset-0 z-10 w-screen p-4",
                 "flex items-center justify-center",
+                "[--slide-up-from:20px]",
                 "data-[state=open]:animate-slide-up",
               ])}
-              style={
-                {
-                  "--slide-up-from": "20px",
-                  "--slide-up-duration": "300ms",
-                } as React.CSSProperties
-              }
               aria-describedby={undefined}
             >
               <div className="relative w-[500px] max-w-[90vw] bg-(--color-background) px-6 py-3">

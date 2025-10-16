@@ -50,17 +50,17 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
     return () => clearInterval(intervalId);
   }, [endTime]);
 
-  const timerStyle: CSSProperties = {
-    "--timer-color": textColor,
-  } as CSSProperties;
-
   return (
     <div
       ref={ref}
       {...rest}
       className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
       data-motion="fade-up"
-      style={timerStyle}
+      style={
+        {
+          "--timer-color": textColor,
+        } as CSSProperties
+      }
     >
       <div className="space-y-1">
         <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">

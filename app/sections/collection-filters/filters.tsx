@@ -62,16 +62,10 @@ export function Filters({ className }: { className?: string }) {
                 <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
               </Accordion.Trigger>
               <Accordion.Content
-                style={
-                  {
-                    "--expand-to": "var(--radix-accordion-content-height)",
-                    "--expand-duration": "0.15s",
-                    "--collapse-from": "var(--radix-accordion-content-height)",
-                    "--collapse-duration": "0.15s",
-                  } as React.CSSProperties
-                }
                 className={clsx([
                   "overflow-hidden",
+                  "[--expand-to:var(--radix-accordion-content-height)] ",
+                  "[--collapse-from:var(--radix-accordion-content-height)]",
                   "data-[state=closed]:animate-collapse",
                   "data-[state=open]:animate-expand",
                 ])}

@@ -15,9 +15,9 @@ import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 import { CartDrawer } from "./cart-drawer";
-import { DesktopMenu } from "./desktop-menu";
 import { Logo } from "./logo";
-import { MobileMenu } from "./mobile-menu";
+import { DesktopMenu } from "./menu/desktop-menu";
+import { MobileMenu } from "./menu/mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
 
 const variants = cva("", {
