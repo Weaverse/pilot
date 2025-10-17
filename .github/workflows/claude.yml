@@ -1,9 +1,6 @@
 name: Claude Code
 
 on:
-  # Automatic PR reviews
-  pull_request:
-    types: [opened, synchronize]
   # Manual triggers via @claude mentions
   issue_comment:
     types: [created]
@@ -15,57 +12,6 @@ on:
     types: [submitted]
 
 jobs:
-  # Automatic PR review job
-  claude-review:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      issues: write
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Run Claude Code Review
-        id: claude-review
-        uses: anthropics/claude-code-action@beta
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-
-          # Direct prompt for automated review
-          direct_prompt: |
-            You are reviewing a PR for Pilot, a Shopify Hydrogen theme powered by Weaverse. This project uses:
-            - React Router 7, TypeScript, and Tailwind CSS v4
-            - Weaverse for visual page building
-            - Biome for linting/formatting (not ESLint/Prettier)
-            - GraphQL with code generation
-            - Parallel data loading patterns
-
-            Please review this pull request and provide feedback on:
-            - Code quality and adherence to project conventions (check CLAUDE.md for guidelines)
-            - Weaverse section implementation (must use ref as a prop and export schema)
-            - GraphQL usage and type safety
-            - Performance considerations (especially parallel data loading)
-            - Biome linting compliance
-            - Test coverage (Playwright E2E tests)
-            - Security concerns
-            - Proper TypeScript typing (avoid `any`)
-
-            Key areas to check:
-            - Routes should follow `($locale).{route}.tsx` pattern
-            - Weaverse sections must be registered in `/app/weaverse/components.ts`
-            - Use `Promise.all()` for parallel data fetching
-            - Follow the project's code conventions (camelCase, double quotes, semicolons)
-
-            Be constructive and helpful in your feedback.
-
-          # Use sticky comments to update the same comment
-          use_sticky_comment: true
-
   # Manual trigger job for @claude mentions
   claude-mention:
     if: |
