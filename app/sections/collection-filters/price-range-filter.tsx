@@ -5,7 +5,8 @@ import clsx from "clsx";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
-import { FILTER_URL_PREFIX, filterInputToParams } from "~/utils/filter";
+import { FILTER_URL_PREFIX } from "~/utils/const";
+import { filterInputToParams } from "./filter-utils";
 
 export function PriceRangeFilter({
   collection,

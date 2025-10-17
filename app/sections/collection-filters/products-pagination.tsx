@@ -15,12 +15,13 @@ import type {
 } from "storefront-api.generated";
 import Link, { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
+import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
 import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import { type AppliedFilter, getAppliedFilterLink } from "~/utils/filter";
+import { getAppliedFilterLink } from "./filter-utils";
 
 export function ProductsPagination({
   gridSizeDesktop: desktopCols = 3,
