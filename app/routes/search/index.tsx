@@ -5,9 +5,9 @@ import {
   getSeoMeta,
   Pagination,
 } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { Form, useLoaderData } from "react-router";
 import type { SearchQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";

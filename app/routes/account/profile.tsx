@@ -1,12 +1,10 @@
 import type { CustomerUpdateInput } from "@shopify/hydrogen/customer-account-api-types";
+import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import {
   type ActionFunctionArgs,
   data,
-  type LoaderFunctionArgs,
-} from "react-router";
-import type { CustomerUpdateMutation } from "customer-account-api.generated";
-import {
   Form,
+  type LoaderFunctionArgs,
   type MetaFunction,
   useActionData,
   useNavigation,

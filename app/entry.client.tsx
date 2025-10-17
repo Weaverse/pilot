@@ -5,9 +5,8 @@ import { HydratedRouter } from "react-router/dom";
 
 if (!window.location.origin.includes("webcache.googleusercontent.com")) {
   startTransition(() => {
-    const existingNonce = document
-      .querySelector<HTMLScriptElement>("script[nonce]")
-      ?.nonce;
+    const existingNonce =
+      document.querySelector<HTMLScriptElement>("script[nonce]")?.nonce;
 
     hydrateRoot(
       document,

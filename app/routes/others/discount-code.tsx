@@ -1,5 +1,5 @@
-import { redirect } from "react-router";
 import type { LoaderFunctionArgs } from "react-router";
+import { redirect } from "react-router";
 
 /**
  * Automatically applies a discount found on the url
