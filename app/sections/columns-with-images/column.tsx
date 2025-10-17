@@ -9,7 +9,7 @@ import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 
 const variants = cva("", {

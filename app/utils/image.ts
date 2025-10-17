@@ -1,4 +1,4 @@
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 
 const DEFAULT_GRID_IMG_LOAD_EAGER_COUNT = 4;
 const ATTR_LOADING_EAGER = "eager";

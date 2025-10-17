@@ -1,16 +1,14 @@
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
-import {
-  type ActionFunctionArgs,
-  data,
-  type LoaderFunctionArgs,
-} from "@shopify/remix-oxygen";
 import type {
   AddressPartialFragment,
   CustomerDetailsFragment,
 } from "customer-account-api.generated";
 import {
+  type ActionFunctionArgs,
+  data,
   type Fetcher,
   Form,
+  type LoaderFunctionArgs,
   type MetaFunction,
   useActionData,
   useNavigation,

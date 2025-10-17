@@ -4,32 +4,30 @@ import {
   getPaginationVariables,
   getSeoMeta,
 } from "@shopify/hydrogen";
-import type {
-  ProductCollectionSortKeys,
-  ProductFilter,
-} from "@shopify/hydrogen/storefront-api-types";
-import {
-  type LoaderFunctionArgs,
-  type MetaArgs,
-  redirect,
-} from "@shopify/remix-oxygen";
-import { useLoaderData } from "react-router";
+import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
+import { redirect, useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/locale";
+import type { SortParam } from "~/types/others";
 import { routeHeaders } from "~/utils/cache";
-import { FILTER_URL_PREFIX, type SortParam } from "~/utils/filter";
+import { FILTER_URL_PREFIX } from "~/utils/const";
 import { redirectIfHandleIsLocalized } from "~/utils/redirect.server";
 import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
+import { COLLECTION_QUERY } from "./collection-query";
+import { getSortValuesFromParam, parseAsCurrency } from "./utils";
+
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
+  );
+};
 
 export const headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
-  const paginationVariables = getPaginationVariables(request, {
-    pageBy: 16,
-  });
+  const pagingVariables = getPaginationVariables(request, { pageBy: 16 });
   const { collectionHandle } = params;
   const { storefront, env } = context;
   const locale = storefront.i18n;
@@ -59,7 +57,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     storefront
       .query<CollectionQuery>(COLLECTION_QUERY, {
         variables: {
-          ...paginationVariables,
+          ...pagingVariables,
           handle: collectionHandle,
           filters,
           sortKey,
@@ -72,7 +70,10 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         },
       })
       .catch((_e) => {
-        return { collection: null, collections: [] };
+        return {
+          collection: null,
+          collections: [],
+        } as unknown as CollectionQuery;
       }),
     context.weaverse.loadPage({
       type: "COLLECTION",
@@ -81,8 +82,10 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   ]);
 
   if (!collection) {
-    // @ts-expect-error
-    if (paginationVariables.startCursor || paginationVariables.endCursor) {
+    if (
+      ("startCursor" in pagingVariables && pagingVariables.startCursor) ||
+      ("endCursor" in pagingVariables && pagingVariables.endCursor)
+    ) {
       // remove the cursor from the url
       const url = new URL(request.url);
       url.searchParams.delete("cursor");
@@ -97,7 +100,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   });
 
   const seo = seoPayload.collection({ collection, url: request.url });
-
   const allFilterValues = collection.products.filters.flatMap(
     (filter) => filter.values,
   );
@@ -132,33 +134,20 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
           : "";
         const label = min && max ? `${min} - ${max}` : "Price";
 
-        return {
-          filter,
-          label,
-        };
+        return { filter, label };
       }
-      return {
-        filter,
-        label: foundValue.label,
-      };
+      return { filter, label: foundValue.label };
     })
     .filter((filter): filter is NonNullable<typeof filter> => filter !== null);
 
   return {
     collection,
     appliedFilters,
-    // @ts-expect-error
     collections: flattenConnection(collections),
     seo,
     weaverseData,
   };
 }
-
-export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(
-    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
-  );
-};
 
 export default function Collection() {
   const { collection } = useLoaderData<typeof loader>();
@@ -176,170 +165,3 @@ export default function Collection() {
     </>
   );
 }
-
-function getSortValuesFromParam(sortParam: SortParam | null): {
-  sortKey: ProductCollectionSortKeys;
-  reverse: boolean;
-} {
-  switch (sortParam) {
-    case "price-high-low":
-      return {
-        sortKey: "PRICE",
-        reverse: true,
-      };
-    case "price-low-high":
-      return {
-        sortKey: "PRICE",
-        reverse: false,
-      };
-    case "best-selling":
-      return {
-        sortKey: "BEST_SELLING",
-        reverse: false,
-      };
-    case "newest":
-      return {
-        sortKey: "CREATED",
-        reverse: true,
-      };
-    case "featured":
-      return {
-        sortKey: "MANUAL",
-        reverse: false,
-      };
-    default:
-      return {
-        sortKey: "RELEVANCE",
-        reverse: false,
-      };
-  }
-}
-
-function parseAsCurrency(value: number, locale: I18nLocale) {
-  return new Intl.NumberFormat(`${locale.language}-${locale.country}`, {
-    style: "currency",
-    currency: locale.currency,
-  }).format(value);
-}
-
-const COLLECTION_QUERY = `#graphql
-  query collection(
-    $handle: String!
-    $country: CountryCode
-    $language: LanguageCode
-    $filters: [ProductFilter!]
-    $sortKey: ProductCollectionSortKeys!
-    $reverse: Boolean
-    $first: Int
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-    $customBannerNamespace: String!
-    $customBannerKey: String!
-  ) @inContext(country: $country, language: $language) {
-    collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      seo {
-        description
-        title
-      }
-      metafield(namespace: $customBannerNamespace, key: $customBannerKey) {
-        id
-        type
-        description
-        value
-        reference {
-          ... on MediaImage {
-            image {
-              id
-              url
-            }
-          }
-        }
-      }
-      image {
-        id
-        url
-        width
-        height
-        altText
-      }
-      products(
-        first: $first,
-        last: $last,
-        before: $startCursor,
-        after: $endCursor,
-        filters: $filters,
-        sortKey: $sortKey,
-        reverse: $reverse
-      ) {
-        filters {
-          id
-          label
-          type
-          values {
-            id
-            label
-            count
-            input
-          }
-        }
-        nodes {
-          ...ProductCard
-        }
-        pageInfo {
-          hasPreviousPage
-          hasNextPage
-          endCursor
-          startCursor
-        }
-      }
-      highestPriceProduct: products(first: 1, sortKey: PRICE, reverse: true) {
-        nodes {
-          id
-          title
-          handle
-          priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
-            }
-            maxVariantPrice {
-              amount
-              currencyCode
-            }
-          }
-        }
-      }
-      lowestPriceProduct: products(first: 1, sortKey: PRICE) {
-        nodes {
-          id
-          title
-          handle
-          priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
-            }
-            maxVariantPrice {
-              amount
-              currencyCode
-            }
-          }
-        }
-      }
-    }
-    collections(first: 100) {
-      edges {
-        node {
-          title
-          handle
-        }
-      }
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;

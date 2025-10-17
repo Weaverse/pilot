@@ -13,7 +13,7 @@ import Link, { type LinkStyles, linkStylesInputs } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
 

@@ -1,4 +1,5 @@
-import { type LoaderFunctionArgs, redirect } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs } from "react-router";
+import { redirect } from "react-router";
 
 /**
  * Automatically creates a new cart based on the URL and redirects straight to checkout.

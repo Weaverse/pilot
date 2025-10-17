@@ -3,13 +3,9 @@ import "@fontsource-variable/cabin";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
-import type {
-  LinksFunction,
-  LoaderFunctionArgs,
-  MetaArgs,
-} from "@shopify/remix-oxygen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
+import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
   isRouteErrorResponse,
   Links,

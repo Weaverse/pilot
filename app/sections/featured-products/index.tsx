@@ -12,7 +12,7 @@ import type {
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/locale";
+import type { I18nLocale } from "~/types/others";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 interface FeaturedProductsSectionData {
@@ -28,7 +28,15 @@ interface FeaturedProductsProps
 }
 
 export default function FeaturedProducts(props: FeaturedProductsProps) {
-  const { ref, loaderData, children, ...rest } = props;
+  const {
+    ref,
+    loaderData,
+    selectionMethod,
+    collection,
+    products,
+    children,
+    ...rest
+  } = props;
   return (
     <Section ref={ref} {...rest}>
       {children}

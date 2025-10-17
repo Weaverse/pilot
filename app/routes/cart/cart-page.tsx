@@ -10,11 +10,12 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import {
   type ActionFunctionArgs,
+  Await,
   data,
   type LoaderFunctionArgs,
   redirect,
-} from "@shopify/remix-oxygen";
-import { Await, useRouteLoaderData } from "react-router";
+  useRouteLoaderData,
+} from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { Cart } from "~/components/cart/cart";

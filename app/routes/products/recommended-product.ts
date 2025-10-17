@@ -2,7 +2,7 @@ import type { Storefront } from "@shopify/hydrogen";
 import type { ProductRecommendationsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/locale";
+import type { I18nLocale } from "~/types/others";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 export async function getRecommendedProducts(

@@ -9,9 +9,9 @@ import {
 } from "react-router";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import type { RootLoader } from "~/root";
+import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
-import type { AppliedFilter } from "~/utils/filter";
-import { getAppliedFilterLink, getFilterLink } from "~/utils/filter";
+import { getAppliedFilterLink, getFilterLink } from "./filter-utils";
 
 type FilterDisplayAs = "swatch" | "button" | "list-item";
 

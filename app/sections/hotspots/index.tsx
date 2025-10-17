@@ -8,7 +8,7 @@ import { Image } from "~/components/image";
 import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 
 interface HotspotsProps

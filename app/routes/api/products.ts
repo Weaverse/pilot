@@ -1,6 +1,7 @@
 import { flattenConnection } from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
-import { data, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { LoaderFunctionArgs } from "react-router";
+import { data } from "react-router";
 import type { ApiAllProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";

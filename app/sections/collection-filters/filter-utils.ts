@@ -1,20 +1,7 @@
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import type { Location, useLocation } from "react-router";
-
-export const FILTER_URL_PREFIX = "filter.";
-
-export type AppliedFilter = {
-  label: string;
-  filter: ProductFilter;
-};
-
-export type SortParam =
-  | "price-low-high"
-  | "price-high-low"
-  | "best-selling"
-  | "newest"
-  | "featured"
-  | "relevance";
+import type { AppliedFilter } from "~/types/others";
+import { FILTER_URL_PREFIX } from "~/utils/const";
 
 export function getAppliedFilterLink(
   { filter }: AppliedFilter,

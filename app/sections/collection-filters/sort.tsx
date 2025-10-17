@@ -2,8 +2,8 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useLocation, useSearchParams } from "react-router";
 import Link from "~/components/link";
+import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
-import type { SortParam } from "~/utils/filter";
 
 const SORT_LIST: { label: string; key: SortParam }[] = [
   { label: "Featured", key: "featured" },
