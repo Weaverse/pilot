@@ -1,6 +1,5 @@
 import type { ProductCollectionSortKeys } from "@shopify/hydrogen/storefront-api-types";
-import type { I18nLocale } from "~/types/locale";
-import type { SortParam } from "~/types/others";
+import type { I18nLocale, SortParam } from "~/types/others";
 
 export function getSortValuesFromParam(sortParam: SortParam | null): {
   sortKey: ProductCollectionSortKeys;

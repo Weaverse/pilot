@@ -12,7 +12,7 @@ import type {
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/locale";
+import type { I18nLocale } from "~/types/others";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 interface FeaturedProductsSectionData {

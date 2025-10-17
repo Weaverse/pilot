@@ -7,7 +7,7 @@ import {
 } from "@shopify/remix-oxygen";
 import { WeaverseClient } from "@weaverse/hydrogen";
 import { CART_QUERY_FRAGMENT } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/locale";
+import type { I18nLocale } from "~/types/others";
 import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";

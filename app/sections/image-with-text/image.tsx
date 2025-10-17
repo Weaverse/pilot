@@ -7,7 +7,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { Image } from "~/components/image";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 
 const variants = cva("h-auto w-full", {

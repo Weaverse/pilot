@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 
 interface CollectionCardProps extends OverlayProps {

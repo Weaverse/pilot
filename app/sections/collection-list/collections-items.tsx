@@ -5,7 +5,7 @@ import { useLoaderData } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
 import { type OverlayProps, overlayInputs } from "~/components/overlay";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { getImageLoadingPriority } from "~/utils/image";
 import { CollectionCard } from "./collection-card";
