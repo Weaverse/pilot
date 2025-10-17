@@ -1,11 +1,11 @@
 import type { HydrogenSession } from "@shopify/hydrogen";
 import { createHydrogenContext } from "@shopify/hydrogen";
+import { WeaverseClient } from "@weaverse/hydrogen";
 import {
   createCookieSessionStorage,
   type Session,
   type SessionStorage,
-} from "@shopify/remix-oxygen";
-import { WeaverseClient } from "@weaverse/hydrogen";
+} from "react-router";
 import { CART_QUERY_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/others";
 import { COUNTRIES } from "~/utils/const";
