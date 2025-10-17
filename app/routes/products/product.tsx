@@ -4,9 +4,9 @@ import {
   getSeoMeta,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";

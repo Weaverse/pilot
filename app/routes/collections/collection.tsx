@@ -128,15 +128,9 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
           : "";
         const label = min && max ? `${min} - ${max}` : "Price";
 
-        return {
-          filter,
-          label,
-        };
+        return { filter, label };
       }
-      return {
-        filter,
-        label: foundValue.label,
-      };
+      return { filter, label: foundValue.label };
     })
     .filter((filter): filter is NonNullable<typeof filter> => filter !== null);
 
