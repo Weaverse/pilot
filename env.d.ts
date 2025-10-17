@@ -5,7 +5,9 @@
 // Enhance TypeScript's built-in typings.
 import "@total-typescript/ts-reset";
 import type { HydrogenEnv, HydrogenSessionData } from "@shopify/hydrogen";
-import type { createAppLoadContext } from "./lib/context";
+import type { WeaverseClient } from "@weaverse/hydrogen";
+import type { createHydrogenRouterContext } from "./app/.server/context";
+import type { I18nLocale } from "./app/types/locale";
 
 declare global {
   /**
@@ -28,9 +30,17 @@ declare global {
 }
 
 declare module "react-router" {
+  import type { Storefront as StorefrontBase } from "@shopify/hydrogen";
+
   interface AppLoadContext
-    extends Awaited<ReturnType<typeof createAppLoadContext>> {
-    // to change context type, change the return of createAppLoadContext() instead
+    extends Awaited<ReturnType<typeof createHydrogenRouterContext>> {
+    // to change context type, change the return of createHydrogenRouterContext() instead
+    // Override storefront type to use I18nLocale instead of I18nBase
+    storefront: Omit<StorefrontBase, "i18n"> & {
+      i18n: I18nLocale;
+    };
+    weaverse: WeaverseClient;
+    additionalContext: HydrogenAdditionalContext;
   }
 
   // TODO: remove this once we've migrated our loaders to `Route.LoaderArgs`
