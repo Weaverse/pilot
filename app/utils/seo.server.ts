@@ -2,14 +2,16 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import type {
   Article,
   Blog,
-  Collection,
-  Image,
   Page,
   Product,
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
-import type { ProductQuery, ShopFragment } from "storefront-api.generated";
+import type {
+  CollectionsQuery,
+  ProductQuery,
+  ShopFragment,
+} from "storefront-api.generated";
 
 function root({
   shop,
@@ -173,15 +175,22 @@ function product({
   };
 }
 
-type CollectionRequiredFields = Omit<
-  Collection,
-  "products" | "descriptionHtml" | "metafields" | "image" | "updatedAt"
-> & {
+type CollectionRequiredFields = {
+  id: string;
+  handle: string;
+  title: string;
+  description?: string;
+  seo: {
+    title?: string;
+    description?: string;
+  };
+  image?: {
+    url: string;
+    height?: number;
+    width?: number;
+    altText?: string;
+  } | null;
   products: { nodes: Pick<Product, "handle">[] };
-  image?: null | Pick<Image, "url" | "height" | "width" | "altText">;
-  descriptionHtml?: null | Collection["descriptionHtml"];
-  updatedAt?: null | Collection["updatedAt"];
-  metafields?: null | Collection["metafields"];
 };
 
 function collectionJsonLd({
@@ -261,9 +270,7 @@ function collection({
   };
 }
 
-type CollectionListRequiredFields = {
-  nodes: Omit<CollectionRequiredFields, "products">[];
-};
+type CollectionListRequiredFields = CollectionsQuery["collections"];
 
 function collectionsJsonLd({
   url,

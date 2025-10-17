@@ -35,15 +35,12 @@ export async function loader({
       id: "all-products",
       title: "All Products",
       handle: "products",
-      descriptionHtml: "All the store products",
       description: "All the store products",
       seo: {
         title: "All Products",
         description: "All the store products",
       },
-      metafields: [],
       products: data.products,
-      updatedAt: "",
     },
   });
 
