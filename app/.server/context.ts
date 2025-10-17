@@ -37,7 +37,6 @@ export async function createHydrogenRouterContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
-  // Type augmentation is declared at module level below
   const hydrogenContext = createHydrogenContext(
     {
       env,
@@ -46,12 +45,11 @@ export async function createHydrogenRouterContext(
       waitUntil,
       session,
       i18n: getLocaleFromRequest(request),
-      cart: {
-        queryFragment: CART_QUERY_FRAGMENT,
-      },
+      cart: { queryFragment: CART_QUERY_FRAGMENT },
     },
     additionalContext,
   );
+
   const weaverse = new WeaverseClient({
     ...hydrogenContext,
     request,
@@ -59,8 +57,10 @@ export async function createHydrogenRouterContext(
     themeSchema,
     components,
   });
-  // @ts-expect-error
-  hydrogenContext.weaverse = weaverse;
+
+  // Add weaverse directly to the hydrogenContext instance
+  // This preserves the RouterContextProvider class instance
+  Object.assign(hydrogenContext, { weaverse });
 
   return hydrogenContext;
 }
