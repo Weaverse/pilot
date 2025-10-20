@@ -21,6 +21,7 @@ const ORDER_ITEM_FRAGMENT = `#graphql
       currencyCode
     }
     financialStatus
+    fulfillmentStatus
     fulfillments(first: 1) {
       nodes {
         status

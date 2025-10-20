@@ -109,6 +109,7 @@ const CUSTOMER_DETAILS_QUERY = `#graphql
     number
     processedAt
     financialStatus
+    fulfillmentStatus
     fulfillments(first: 1) {
       nodes {
         status
