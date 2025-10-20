@@ -21,7 +21,8 @@
       "nursery": {
         "useConsistentTypeDefinitions": "off",
         "useConsistentArrowReturn": "off",
-        "noUnnecessaryConditions": "off"
+        "noUnnecessaryConditions": "off",
+        "noFloatingPromises": "error"
       },
       "correctness": {
         "noUnusedVariables": "off",
