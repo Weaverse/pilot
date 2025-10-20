@@ -1,5 +1,4 @@
 /// <reference types="vite/client" />
-/// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
 // Enhance TypeScript's built-in typings.
@@ -7,7 +6,7 @@ import "@total-typescript/ts-reset";
 import type { HydrogenEnv, HydrogenSessionData } from "@shopify/hydrogen";
 import type { WeaverseClient } from "@weaverse/hydrogen";
 import type { createHydrogenRouterContext } from "./app/.server/context";
-import type { I18nLocale } from "./app/types/locale";
+import type { I18nLocale } from "./app/types/others";
 
 declare global {
   /**
