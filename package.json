@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "shopify hydrogen build --codegen",
-    "dev": "react-router typegen --watch & shopify hydrogen dev --codegen --port 3456",
+    "dev": "react-router typegen && shopify hydrogen dev --codegen --port 3456",
     "dev:ca": "shopify hydrogen dev --codegen --port 3456 --customer-account-push",
     "preview": "shopify hydrogen preview --build",
     "start": "shopify hydrogen preview",
