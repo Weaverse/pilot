@@ -5,7 +5,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
 

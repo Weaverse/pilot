@@ -1,7 +1,10 @@
-import { createContentSecurityPolicy } from "@shopify/hydrogen";
+import {
+  createContentSecurityPolicy,
+  type HydrogenRouterContextProvider,
+} from "@shopify/hydrogen";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
-import type { AppLoadContext, EntryContext } from "react-router";
+import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
 
 import { getWeaverseCsp } from "~/weaverse/csp";
@@ -11,7 +14,7 @@ export default async function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   reactRouterContext: EntryContext,
-  context: AppLoadContext,
+  context: HydrogenRouterContextProvider,
 ) {
   const { nonce, header, NonceProvider } = createContentSecurityPolicy({
     ...getWeaverseCsp(request, context),

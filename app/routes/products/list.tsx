@@ -1,7 +1,6 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getPaginationVariables, getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import type { MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { routeHeaders } from "~/utils/cache";
@@ -36,15 +35,12 @@ export async function loader({
       id: "all-products",
       title: "All Products",
       handle: "products",
-      descriptionHtml: "All the store products",
       description: "All the store products",
       seo: {
         title: "All Products",
         description: "All the store products",
       },
-      metafields: [],
       products: data.products,
-      updatedAt: "",
     },
   });
 

@@ -4,12 +4,12 @@ import {
   Money,
   Pagination,
 } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type {
   CustomerOrdersFragment,
   OrderItemFragment,
 } from "customer-account-api.generated";
 import type * as React from "react";
+import type { LoaderFunctionArgs } from "react-router";
 import { Link, type MetaFunction, useLoaderData } from "react-router";
 import { Section } from "~/components/section";
 
@@ -21,6 +21,7 @@ const ORDER_ITEM_FRAGMENT = `#graphql
       currencyCode
     }
     financialStatus
+    fulfillmentStatus
     fulfillments(first: 1) {
       nodes {
         status

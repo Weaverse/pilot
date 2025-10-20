@@ -1,8 +1,7 @@
 import { FileTextIcon } from "@phosphor-icons/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
-import type { MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { useLoaderData } from "react-router";
 import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -57,16 +56,15 @@ export default function Policies() {
         {policies.map((policy) => {
           if (policy) {
             return (
-              policy && (
-                <Link
-                  variant="underline"
-                  className="w-fit gap-2"
-                  to={`/policies/${policy.handle}`}
-                >
-                  <FileTextIcon className="h-5 w-5" />
-                  <span>{policy.title}</span>
-                </Link>
-              )
+              <Link
+                key={policy.id}
+                variant="underline"
+                className="w-fit gap-2"
+                to={`/policies/${policy.handle}`}
+              >
+                <FileTextIcon className="h-5 w-5" />
+                <span>{policy.title}</span>
+              </Link>
             );
           }
           return null;

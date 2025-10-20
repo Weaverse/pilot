@@ -1,11 +1,12 @@
 /// <reference types="vite/client" />
-/// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
 // Enhance TypeScript's built-in typings.
 import "@total-typescript/ts-reset";
 import type { HydrogenEnv, HydrogenSessionData } from "@shopify/hydrogen";
-import type { createAppLoadContext } from "./server";
+import type { WeaverseClient } from "@weaverse/hydrogen";
+import type { createHydrogenRouterContext } from "./app/.server/context";
+import type { I18nLocale } from "./app/types/others";
 
 declare global {
   /**
@@ -19,8 +20,6 @@ declare global {
     JUDGEME_PRIVATE_API_TOKEN: string;
     CUSTOM_COLLECTION_BANNER_METAFIELD: string;
     METAOBJECT_COLORS_TYPE: string;
-    METAOBJECT_COLOR_NAME_KEY: string;
-    METAOBJECT_COLOR_VALUE_KEY: string;
     KLAVIYO_PRIVATE_API_TOKEN: string;
     PUBLIC_SHOPIFY_INBOX_SHOP_ID: string;
     WEAVERSE_HOST?: string;
@@ -28,12 +27,20 @@ declare global {
 }
 
 declare module "react-router" {
+  import type { Storefront as StorefrontBase } from "@shopify/hydrogen";
+
   interface AppLoadContext
-    extends Awaited<ReturnType<typeof createAppLoadContext>> {
-    // to change context type, change the return of createAppLoadContext() instead
+    extends Awaited<ReturnType<typeof createHydrogenRouterContext>> {
+    // to change context type, change the return of createHydrogenRouterContext() instead
+    // Override storefront type to use I18nLocale instead of I18nBase
+    storefront: Omit<StorefrontBase, "i18n"> & {
+      i18n: I18nLocale;
+    };
+    weaverse: WeaverseClient;
+    additionalContext: HydrogenAdditionalContext;
   }
 
-  // TODO: remove this once we've migrated our loaders to `Route.LoaderArgs`
+  // TODO: remove this once we've migrated our loaders to `Route.ActionArgs`
   interface LoaderFunctionArgs {
     context: AppLoadContext;
   }

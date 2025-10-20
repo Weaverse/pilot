@@ -1,6 +1,9 @@
-import type { AppLoadContext } from "react-router";
+import type { HydrogenRouterContextProvider } from "@shopify/hydrogen";
 
-export function getWeaverseCsp(request: Request, context: AppLoadContext) {
+export function getWeaverseCsp(
+  request: Request,
+  context: HydrogenRouterContextProvider,
+) {
   const url = new URL(request.url);
   // Get weaverse host from query params
   const weaverseHost =

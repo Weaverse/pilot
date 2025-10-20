@@ -2,10 +2,10 @@ import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { CacheNone, generateCacheControlHeader } from "@shopify/hydrogen";
-import { data, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import { clsx } from "clsx";
 import type { CustomerDetailsQuery } from "customer-account-api.generated";
-import { Outlet, useLoaderData, useMatches } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
+import { data, Outlet, useLoaderData, useMatches } from "react-router";
 import Link from "~/components/link";
 import { routeHeaders } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
@@ -18,6 +18,11 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const { data: d, errors } =
     await context.customerAccount.query<CustomerDetailsQuery>(
       CUSTOMER_DETAILS_QUERY,
+      {
+        variables: {
+          language: context.customerAccount.i18n.language,
+        },
+      },
     );
 
   /**
@@ -94,7 +99,7 @@ export default function AccountLayout() {
 }
 
 const CUSTOMER_DETAILS_QUERY = `#graphql
-  query CustomerDetails {
+  query CustomerDetails($language: LanguageCode) @inContext(language: $language) {
     customer {
       ...CustomerDetails
     }
@@ -104,6 +109,7 @@ const CUSTOMER_DETAILS_QUERY = `#graphql
     number
     processedAt
     financialStatus
+    fulfillmentStatus
     fulfillments(first: 1) {
       nodes {
         status
