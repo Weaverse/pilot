@@ -18,6 +18,11 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const { data: d, errors } =
     await context.customerAccount.query<CustomerDetailsQuery>(
       CUSTOMER_DETAILS_QUERY,
+      {
+        variables: {
+          language: context.customerAccount.i18n.language,
+        },
+      },
     );
 
   /**
@@ -94,7 +99,7 @@ export default function AccountLayout() {
 }
 
 const CUSTOMER_DETAILS_QUERY = `#graphql
-  query CustomerDetails {
+  query CustomerDetails($language: LanguageCode) @inContext(language: $language) {
     customer {
       ...CustomerDetails
     }
