@@ -17,7 +17,8 @@ import { Section } from "~/components/section";
 export const CUSTOMER_UPDATE_MUTATION = `#graphql
   mutation customerUpdate(
     $customer: CustomerUpdateInput!
-  ){
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     customerUpdate(input: $customer) {
       customer {
         firstName
@@ -80,6 +81,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       {
         variables: {
           customer,
+          language: customerAccount.i18n.language,
         },
       },
     );
