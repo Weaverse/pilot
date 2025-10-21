@@ -10,7 +10,6 @@ import { hydrogenRoutes } from "@shopify/hydrogen";
 // Manual route definitions can be added to this array, in addition to or instead of using the `flatRoutes` file-based routing convention.
 // See https://remix.run/docs/en/main/guides/routing for more details
 export default hydrogenRoutes([
-  route("/graphiql", "routes/debug/graphiql.ts"),
   route("robots.txt", "routes/seo/robots.ts"),
   ...prefix(":locale?", [
     index("routes/home.tsx"),
