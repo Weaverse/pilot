@@ -5,11 +5,11 @@ import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { useLoaderData } from "react-router";
 import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
+import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import { routeHeaders } from "~/utils/cache";
-import { seoPayload } from "~/utils/seo.server";
 
 export const headers = routeHeaders;
 

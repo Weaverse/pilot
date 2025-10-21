@@ -3,8 +3,8 @@ import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
 import type { PageType } from "@weaverse/hydrogen";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
+import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
-import { seoPayload } from "~/utils/seo.server";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;

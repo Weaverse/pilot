@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { Form, useLoaderData } from "react-router";
 import type { SearchQuery } from "storefront-api.generated";
+import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
@@ -17,7 +18,6 @@ import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { cn } from "~/utils/cn";
 import { getFeaturedProducts } from "~/utils/featured-products";
-import { seoPayload } from "~/utils/seo.server";
 import { NoResults } from "./no-results";
 import { PopularKeywords } from "./popular-searches";
 

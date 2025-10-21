@@ -4,9 +4,9 @@ import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { data } from "react-router";
 import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
+import { redirectIfHandleIsLocalized } from "~/.server/redirect";
+import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
-import { redirectIfHandleIsLocalized } from "~/utils/redirect.server";
-import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
