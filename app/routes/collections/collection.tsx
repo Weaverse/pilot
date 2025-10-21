@@ -27,7 +27,7 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 export const headers = routeHeaders;
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
-  const pagingVariables = getPaginationVariables(request, { pageBy: 16 });
+  const pagingVariables = getPaginationVariables(request, { pageBy: 12 });
   const { collectionHandle } = params;
   const { storefront, env } = context;
   const locale = storefront.i18n;
