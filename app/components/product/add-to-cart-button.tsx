@@ -13,7 +13,7 @@ import { useEffect, useMemo } from "react";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
-import { toggleCartDrawer } from "~/components/layout/cart-drawer";
+import { useCartDrawerStore } from "~/components/cart/store";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -34,6 +34,8 @@ export function AddToCartButton({
   analytics?: unknown;
   [key: string]: any;
 }) {
+  const { toggle: toggleCartDrawer } = useCartDrawerStore();
+
   return (
     <CartForm
       route="/cart"
@@ -75,7 +77,9 @@ function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
     for (const match of matches) {
       const eventData = match?.data as Record<string, unknown>;
       if (eventData) {
-        eventData.analytics && Object.assign(data, eventData.analytics);
+        if (eventData.analytics) {
+          Object.assign(data, eventData.analytics);
+        }
         const selectedLocale =
           (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
         Object.assign(data, {
