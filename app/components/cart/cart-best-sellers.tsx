@@ -3,7 +3,7 @@ import type {
   ProductSortKeys,
 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
-import { useEffect, useId, useMemo } from "react";
+import { useEffect, useId } from "react";
 import { useFetcher } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
@@ -13,7 +13,6 @@ import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 interface CartBestSellersProps {
   count: number;
   heading: string;
-  layout?: "drawer" | "page";
   query?: string;
   reverse?: boolean;
   sortKey: ProductSortKeys;
@@ -32,20 +31,20 @@ interface CartBestSellersProps {
 export function CartBestSellers({
   count = 4,
   heading = "Shop Best Sellers",
-  layout = "drawer",
   query,
   reverse,
   sortKey = "BEST_SELLING",
 }: CartBestSellersProps) {
   const { load, data } = useFetcher<{ products: Product[] }>();
-  const queryString = useMemo(
-    () =>
-      Object.entries({ count: count * 2, sortKey, query, reverse })
-        .map(([key, val]) => (val ? `${key}=${val}` : null))
-        .filter(Boolean)
-        .join("&"),
-    [count, sortKey, query, reverse],
-  );
+  const queryString = Object.entries({
+    count: count * 2,
+    sortKey,
+    query,
+    reverse,
+  })
+    .map(([key, val]) => (val ? `${key}=${val}` : null))
+    .filter(Boolean)
+    .join("&");
   const productsApiPath = usePrefixPathWithLocale(
     `/api/products?${queryString}`,
   );
@@ -56,16 +55,12 @@ export function CartBestSellers({
 
   return (
     <>
-      <h5
-        className={clsx(layout === "page" && "mt-4 mb-2 text-center lg:mb-6")}
-      >
-        {heading}
-      </h5>
+      <h5 className="mt-4 mb-2 text-center lg:mb-6">{heading}</h5>
       <div
         className={clsx([
           "grid grid-cols-2 gap-x-6 gap-y-8",
           "[&_.bundle-badge,&_.new-badge,&_.best-seller-badge]:hidden",
-          layout === "page" ? "sm:grid-cols-4 md:grid-cols-4" : "",
+          "sm:grid-cols-4 md:grid-cols-4",
         ])}
       >
         <CartBestSellersContent

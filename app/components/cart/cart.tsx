@@ -22,8 +22,8 @@ import { RevealUnderline } from "~/components/reveal-underline";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
 import { calculateAspectRatio } from "~/utils/image";
-import { toggleCartDrawer } from "../layout/cart-drawer";
 import { CartBestSellers } from "./cart-best-sellers";
+import { useCartDrawerStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 type Layouts = "page" | "drawer";
@@ -264,6 +264,7 @@ type OptimisticData = {
 };
 
 function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
+  const { toggle: toggleCartDrawer } = useCartDrawerStore();
   const optimisticData = useOptimisticData<OptimisticData>(line?.id);
 
   if (!line?.id) {
@@ -319,8 +320,8 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
               {product?.handle ? (
                 <Link
                   to={url}
-                  onClick={() => toggleCartDrawer(false)}
                   className="inline-block"
+                  onClick={() => toggleCartDrawer(false)}
                 >
                   <RevealUnderline>{product?.title || ""}</RevealUnderline>
                 </Link>
@@ -509,7 +510,7 @@ function CartEmpty({
       ref={scrollRef}
       className={clsx(
         layout === "drawer" && [
-          "h-screen-dynamic w-[400px] content-start space-y-12 overflow-y-scroll px-5 pb-5 transition",
+          "h-screen-dynamic w-[400px] flex flex-col justify-center text-center content-start space-y-12 overflow-y-scroll px-5 pb-5 transition",
           y > 0 && "border-t",
         ],
         layout === "page" && [
@@ -525,7 +526,7 @@ function CartEmpty({
         </p>
         <Link
           variant="outline"
-          to={layout === "page" ? "/products" : ""}
+          to="/products"
           className={clsx(
             layout === "drawer" ? "w-full" : "min-w-48",
             "justify-center",
@@ -535,19 +536,18 @@ function CartEmpty({
           Start Shopping
         </Link>
       </div>
-      <Section
-        width={layout === "drawer" ? "full" : "fixed"}
-        verticalPadding="medium"
-      >
-        <div className="grid gap-4">
-          <CartBestSellers
-            count={4}
-            heading="Shop Best Sellers"
-            layout={layout}
-            sortKey="BEST_SELLING"
-          />
-        </div>
-      </Section>
+      {layout === "page" && (
+        <Section width="fixed" verticalPadding="medium">
+          <div className="grid gap-4">
+            <CartBestSellers
+              count={4}
+              heading="Shop Best Sellers"
+              sortKey="BEST_SELLING"
+            />
+          </div>
+        </Section>
+      )}
+      s
     </div>
   );
 }
