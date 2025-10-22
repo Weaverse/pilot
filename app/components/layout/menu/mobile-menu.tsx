@@ -23,21 +23,16 @@ export function MobileMenu() {
         <MenuTrigger />
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay
-          className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in"
-          style={{ "--fade-in-duration": "100ms" } as React.CSSProperties}
-        />
+        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
+            "-translate-x-full left-0",
+            "data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",
             "fixed inset-0 z-10 h-screen-no-topbar bg-(--color-header-bg) pt-4 pb-2",
-            "-translate-x-full left-0 data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",
             "focus-visible:outline-hidden",
             "uppercase",
           ])}
-          style={
-            { "--enter-from-left-duration": "200ms" } as React.CSSProperties
-          }
           aria-describedby={undefined}
         >
           <Dialog.Title asChild>

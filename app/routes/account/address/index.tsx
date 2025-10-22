@@ -3,15 +3,17 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
-import { type ActionFunction, data, redirect } from "@shopify/remix-oxygen";
 import clsx from "clsx";
 import type {
   CustomerAddressCreateMutation,
   CustomerAddressDeleteMutation,
   CustomerAddressUpdateMutation,
 } from "customer-account-api.generated";
+import type { ActionFunction } from "react-router";
 import {
+  data,
   Form,
+  redirect,
   useActionData,
   useNavigation,
   useOutletContext,
@@ -63,7 +65,12 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       const { data: deleteData, errors } =
         await customerAccount.mutate<CustomerAddressDeleteMutation>(
           DELETE_ADDRESS_MUTATION,
-          { variables: { addressId } },
+          {
+            variables: {
+              addressId,
+              language: customerAccount.i18n.language,
+            },
+          },
         );
 
       invariant(!errors?.length, errors?.[0]?.message);
@@ -102,7 +109,13 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       const { data: createData, errors } =
         await customerAccount.mutate<CustomerAddressCreateMutation>(
           CREATE_ADDRESS_MUTATION,
-          { variables: { address, defaultAddress } },
+          {
+            variables: {
+              address,
+              defaultAddress,
+              language: customerAccount.i18n.language,
+            },
+          },
         );
 
       invariant(!errors?.length, errors?.[0]?.message);
@@ -136,6 +149,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
               address,
               addressId,
               defaultAddress,
+              language: customerAccount.i18n.language,
             },
           },
         );

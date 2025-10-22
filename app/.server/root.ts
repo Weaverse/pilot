@@ -7,7 +7,7 @@ import type {
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import type { EnhancedMenu } from "~/types/menu";
-import { seoPayload } from "~/utils/seo.server";
+import { seoPayload } from "./seo";
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data

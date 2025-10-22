@@ -12,7 +12,7 @@ import {
   useSubmit,
 } from "react-router";
 import type { RootLoader } from "~/root";
-import type { I18nLocale, Localizations } from "~/types/locale";
+import type { I18nLocale, Localizations } from "~/types/others";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {

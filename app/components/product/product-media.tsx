@@ -15,7 +15,7 @@ import type {
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import { Image } from "~/components/image";
-import type { ImageAspectRatio } from "~/types/image";
+import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
 import { ZoomButton, ZoomModal } from "./media-zoom";

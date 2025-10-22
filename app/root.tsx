@@ -3,13 +3,9 @@ import "@fontsource-variable/cabin";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
-import type {
-  LinksFunction,
-  LoaderFunctionArgs,
-  MetaArgs,
-} from "@shopify/remix-oxygen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
+import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
   isRouteErrorResponse,
   Links,
@@ -20,6 +16,7 @@ import {
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
+import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
@@ -33,7 +30,6 @@ import {
 import { NotFound } from "./components/root/not-found";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
-import { loadCriticalData, loadDeferredData } from "./utils/root.server";
 import { GlobalStyle } from "./weaverse/style";
 
 export type RootLoader = typeof loader;

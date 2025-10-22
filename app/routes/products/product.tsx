@@ -4,23 +4,23 @@ import {
   getSeoMeta,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
+import {
+  redirectIfCombinedListing,
+  redirectIfHandleIsLocalized,
+} from "~/.server/redirect";
+import { seoPayload } from "~/.server/seo";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
 import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import {
-  redirectIfCombinedListing,
-  redirectIfHandleIsLocalized,
-} from "~/utils/redirect.server";
-import { seoPayload } from "~/utils/seo.server";
 import { WeaverseContent } from "~/weaverse";
 import { getRecommendedProducts } from "./recommended-product";
 

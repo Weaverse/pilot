@@ -4,7 +4,8 @@ export const UPDATE_ADDRESS_MUTATION = `#graphql
     $address: CustomerAddressInput!
     $addressId: ID!
     $defaultAddress: Boolean
- ) {
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     customerAddressUpdate(
       address: $address
       addressId: $addressId
@@ -22,8 +23,9 @@ export const UPDATE_ADDRESS_MUTATION = `#graphql
 // NOTE: https://shopify.dev/docs/api/customer/latest/mutations/customerAddressDelete
 export const DELETE_ADDRESS_MUTATION = `#graphql
   mutation customerAddressDelete(
-    $addressId: ID!,
-  ) {
+    $addressId: ID!
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     customerAddressDelete(addressId: $addressId) {
       deletedAddressId
       userErrors {
@@ -40,7 +42,8 @@ export const CREATE_ADDRESS_MUTATION = `#graphql
   mutation customerAddressCreate(
     $address: CustomerAddressInput!
     $defaultAddress: Boolean
-  ) {
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     customerAddressCreate(
       address: $address
       defaultAddress: $defaultAddress

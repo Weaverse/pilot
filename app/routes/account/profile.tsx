@@ -1,12 +1,10 @@
 import type { CustomerUpdateInput } from "@shopify/hydrogen/customer-account-api-types";
+import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import {
   type ActionFunctionArgs,
   data,
-  type LoaderFunctionArgs,
-} from "@shopify/remix-oxygen";
-import type { CustomerUpdateMutation } from "customer-account-api.generated";
-import {
   Form,
+  type LoaderFunctionArgs,
   type MetaFunction,
   useActionData,
   useNavigation,
@@ -19,7 +17,8 @@ import { Section } from "~/components/section";
 export const CUSTOMER_UPDATE_MUTATION = `#graphql
   mutation customerUpdate(
     $customer: CustomerUpdateInput!
-  ){
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     customerUpdate(input: $customer) {
       customer {
         firstName
@@ -82,6 +81,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       {
         variables: {
           customer,
+          language: customerAccount.i18n.language,
         },
       },
     );

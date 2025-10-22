@@ -101,6 +101,7 @@ export function ReviewItem({
                     }
                     alt={`Review image ${ind + 1}`}
                     className="h-16 w-16 object-cover transition-transform duration-200"
+                    sizes="(min-width: 45em) 50vw, 100vw"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-200 group-hover/image:bg-black/50">
                     <span className="font-medium text-white text-xs opacity-0 transition-opacity duration-200 group-hover/image:opacity-100">
@@ -192,6 +193,7 @@ export function ReviewImagesModal({
             className="max-h-[85vh] max-w-[85vw] object-contain"
             width="auto"
             height="auto"
+            sizes="(min-width: 45em) 50vw, 100vw"
           />
 
           {/* Next button */}
