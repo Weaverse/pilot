@@ -264,7 +264,7 @@ type OptimisticData = {
 };
 
 function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
-  const { toggle: toggleCartDrawer } = useCartDrawerStore();
+  const { close: closeCartDrawer } = useCartDrawerStore();
   const optimisticData = useOptimisticData<OptimisticData>(line?.id);
 
   if (!line?.id) {
@@ -321,7 +321,7 @@ function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
                 <Link
                   to={url}
                   className="inline-block"
-                  onClick={() => toggleCartDrawer(false)}
+                  onClick={closeCartDrawer}
                 >
                   <RevealUnderline>{product?.title || ""}</RevealUnderline>
                 </Link>

@@ -34,7 +34,7 @@ export function AddToCartButton({
   analytics?: unknown;
   [key: string]: any;
 }) {
-  const { toggle: toggleCartDrawer } = useCartDrawerStore();
+  const { open: openCartDrawer } = useCartDrawerStore();
 
   return (
     <CartForm
@@ -57,7 +57,7 @@ export function AddToCartButton({
                 className,
               )}
               disabled={disabled ?? fetcher.state !== "idle"}
-              onClick={() => toggleCartDrawer(true)}
+              onClick={openCartDrawer}
               {...props}
             >
               {children || "Add to cart"}

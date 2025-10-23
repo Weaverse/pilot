@@ -12,13 +12,17 @@ import { useCartDrawerStore } from "./store";
 export function CartDrawer() {
   const rootData = useRouteLoaderData<RootLoader>("root");
   const { publish } = useAnalytics();
-  const { isOpen, toggle } = useCartDrawerStore();
+  const {
+    isOpen,
+    close: closeCartDrawer,
+    toggle: toggleCartDrawer,
+  } = useCartDrawerStore();
   const location = useLocation();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
   useEffect(() => {
-    toggle(false);
-  }, [location.pathname, toggle]);
+    closeCartDrawer();
+  }, [location.pathname, closeCartDrawer]);
 
   return (
     <Suspense
@@ -33,7 +37,7 @@ export function CartDrawer() {
     >
       <Await resolve={rootData?.cart}>
         {(cart) => (
-          <Dialog.Root open={isOpen} onOpenChange={toggle}>
+          <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>
             <Dialog.Trigger
               onClick={() => publish("custom_sidecart_viewed", { cart })}
               className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
