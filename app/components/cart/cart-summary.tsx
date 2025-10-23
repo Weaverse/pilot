@@ -3,16 +3,19 @@ import clsx from "clsx";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
+import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
 
 export function CartSummary({
   cost,
   layout,
   children = null,
+  isOptimistic,
 }: {
   children?: React.ReactNode;
   cost: CartApiQueryFragment["cost"];
   layout: CartLayoutType;
+  isOptimistic?: boolean;
 }) {
   return (
     <div
@@ -28,13 +31,17 @@ export function CartSummary({
       <dl className="grid">
         <div className="flex items-center justify-between font-medium">
           <dt>Subtotal</dt>
-          <dd>
-            {cost?.subtotalAmount?.amount ? (
-              <Money data={cost?.subtotalAmount} />
-            ) : (
-              "-"
-            )}
-          </dd>
+          {isOptimistic ? (
+            <Skeleton className="h-4 w-20 rounded" />
+          ) : (
+            <dd>
+              {cost?.subtotalAmount?.amount ? (
+                <Money data={cost?.subtotalAmount} />
+              ) : (
+                "-"
+              )}
+            </dd>
+          )}
         </div>
       </dl>
       {children}

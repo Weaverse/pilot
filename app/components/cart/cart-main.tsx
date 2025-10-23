@@ -56,7 +56,11 @@ function CartDetails({
     >
       <CartLines lines={cart?.lines?.nodes ?? []} layout={layout} />
       {cartHasItems && (
-        <CartSummary cost={cart.cost} layout={layout}>
+        <CartSummary
+          cost={cart.cost}
+          layout={layout}
+          isOptimistic={cart?.isOptimistic}
+        >
           <CartDiscounts discountCodes={cart.discountCodes} />
           <CartCheckoutActions checkoutUrl={cart.checkoutUrl} layout={layout} />
         </CartSummary>
