@@ -97,11 +97,7 @@ function AddToCartButtonContent({
         <span className={cn(isLoading && "invisible")}>
           {children || "Add to cart"}
         </span>
-        {isLoading && (
-          <Spinner className="z-0">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-          </Spinner>
-        )}
+        {isLoading && <Spinner className="z-0" size={20} duration={400} />}
       </Button>
     </AddToCartAnalytics>
   );
