@@ -60,13 +60,20 @@ export function CartDrawer() {
               )}
             </Dialog.Trigger>
             <Dialog.Portal>
-              <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
+              <Dialog.Overlay
+                className={clsx(
+                  "fixed inset-0 z-10 bg-black/50",
+                  "data-[state=open]:animate-[fade-in_150ms_ease-out]",
+                  "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
+                )}
+              />
               <Dialog.Content
                 onCloseAutoFocus={(e) => e.preventDefault()}
-                className={clsx([
+                className={clsx(
                   "fixed inset-y-0 right-0 z-10 w-screen max-w-[400px] bg-background py-4",
-                  "data-[state=open]:animate-enter-from-right",
-                ])}
+                  "data-[state=open]:animate-[enter-from-right_200ms_ease-out]",
+                  "data-[state=closed]:animate-[exit-to-right_200ms_ease-in]",
+                )}
                 aria-describedby={undefined}
               >
                 <div className="flex h-full flex-col space-y-6">
