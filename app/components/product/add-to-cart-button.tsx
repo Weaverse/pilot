@@ -9,7 +9,7 @@ import {
   getClientBrowserParameters,
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
@@ -34,46 +34,75 @@ export function AddToCartButton({
   analytics?: unknown;
   [key: string]: any;
 }) {
-  const { open: openCartDrawer } = useCartDrawerStore();
-
   return (
     <CartForm
       route="/cart"
       inputs={{ lines }}
       action={CartForm.ACTIONS.LinesAdd}
     >
-      {(fetcher: FetcherWithComponents<any>) => {
-        const isLoading = fetcher.state !== "idle";
-        return (
-          <AddToCartAnalytics fetcher={fetcher}>
-            <input
-              type="hidden"
-              name="analytics"
-              value={JSON.stringify(analytics)}
-            />
-            <Button
-              type="submit"
-              className={cn(
-                "relative hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
-                className,
-              )}
-              disabled={disabled ?? isLoading}
-              onClick={openCartDrawer}
-              {...props}
-            >
-              <span className={cn(isLoading && "invisible")}>
-                {children || "Add to cart"}
-              </span>
-              {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                </div>
-              )}
-            </Button>
-          </AddToCartAnalytics>
-        );
-      }}
+      {(fetcher: FetcherWithComponents<any>) => (
+        <AddToCartButtonContent
+          fetcher={fetcher}
+          disabled={disabled}
+          className={className}
+          analytics={analytics}
+          {...props}
+        >
+          {children}
+        </AddToCartButtonContent>
+      )}
     </CartForm>
+  );
+}
+
+function AddToCartButtonContent({
+  fetcher,
+  children,
+  disabled,
+  className,
+  analytics,
+  ...props
+}: {
+  fetcher: FetcherWithComponents<any>;
+  children: React.ReactNode;
+  disabled?: boolean;
+  className?: string;
+  analytics?: unknown;
+  [key: string]: any;
+}) {
+  const { open: openCartDrawer } = useCartDrawerStore();
+  const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
+  const isLoading = fetcher.state !== "idle";
+
+  useEffect(() => {
+    if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
+      openCartDrawer();
+    }
+    prevStateRef.current = fetcher.state;
+  }, [fetcher.state, openCartDrawer]);
+
+  return (
+    <AddToCartAnalytics fetcher={fetcher}>
+      <input type="hidden" name="analytics" value={JSON.stringify(analytics)} />
+      <Button
+        type="submit"
+        className={cn(
+          "relative hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
+          className,
+        )}
+        disabled={disabled ?? isLoading}
+        {...props}
+      >
+        <span className={cn(isLoading && "invisible")}>
+          {children || "Add to cart"}
+        </span>
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+          </div>
+        )}
+      </Button>
+    </AddToCartAnalytics>
   );
 }
 
