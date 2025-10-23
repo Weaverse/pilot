@@ -43,6 +43,7 @@ export function AddToCartButton({
       action={CartForm.ACTIONS.LinesAdd}
     >
       {(fetcher: FetcherWithComponents<any>) => {
+        const isLoading = fetcher.state !== "idle";
         return (
           <AddToCartAnalytics fetcher={fetcher}>
             <input
@@ -53,14 +54,21 @@ export function AddToCartButton({
             <Button
               type="submit"
               className={cn(
-                "hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
+                "relative hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
                 className,
               )}
-              disabled={disabled ?? fetcher.state !== "idle"}
+              disabled={disabled ?? isLoading}
               onClick={openCartDrawer}
               {...props}
             >
-              {children || "Add to cart"}
+              <span className={cn(isLoading && "invisible")}>
+                {children || "Add to cart"}
+              </span>
+              {isLoading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                </div>
+              )}
             </Button>
           </AddToCartAnalytics>
         );
