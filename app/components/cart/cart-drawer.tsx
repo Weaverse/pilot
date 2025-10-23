@@ -4,7 +4,7 @@ import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { Suspense, useEffect } from "react";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
-import { Cart } from "~/components/cart/cart";
+import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import { useCartDrawerStore } from "./store";
@@ -93,7 +93,7 @@ export function CartDrawer() {
                       </button>
                     </Dialog.Close>
                   </div>
-                  <Cart layout="drawer" cart={cart as CartReturn} />
+                  <CartMain layout="drawer" cart={cart as CartReturn} />
                   {/* <CartMain layout="aside" cart={cart as CartReturn} /> */}
                 </div>
               </Dialog.Content>
