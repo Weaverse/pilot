@@ -6,19 +6,20 @@ import {
   OptimisticInput,
   useOptimisticData,
 } from "@shopify/hydrogen";
-import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
+import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
+import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
 import { useCartDrawerStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
-type OptimisticData = {
+export type CartLineOptimisticData = {
   action?: string;
   quantity?: number;
 };
@@ -31,13 +32,17 @@ export function CartLineItem({
   layout: CartLayoutType;
 }) {
   const { close: closeCartDrawer } = useCartDrawerStore();
-  const optimisticData = useOptimisticData<OptimisticData>(line?.id);
+  const optimisticData = useOptimisticData<CartLineOptimisticData>(line?.id);
 
   if (!line?.id) {
     return null;
   }
 
-  const { id, quantity, merchandise } = line;
+  const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
+  const isOptimistic =
+    lineOptimistic === undefined
+      ? JSON.stringify(optimisticData) !== "{}"
+      : lineOptimistic;
 
   if (typeof quantity === "undefined" || !merchandise?.product) {
     return null;
@@ -111,7 +116,7 @@ export function CartLineItem({
         >
           <CartLineQuantityAdjust line={line} />
           {layout === "page" && <ItemRemoveButton lineId={id} />}
-          <CartLinePrice line={line} as="span" />
+          <CartLinePrice line={line} isOptimistic={isOptimistic} />
         </div>
       </div>
     </li>
@@ -139,91 +144,9 @@ function ItemRemoveButton({
         type="submit"
       >
         <span className="sr-only">Remove</span>
-        <TrashIcon aria-hidden="true" className="h-4 w-4" />
+        <TrashIcon aria-hidden="true" className="size-4.5" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />
-    </CartForm>
-  );
-}
-
-function CartLineQuantityAdjust({ line }: { line: CartLine }) {
-  const optimisticId = line?.id;
-  const optimisticData = useOptimisticData<OptimisticData>(optimisticId);
-
-  if (!line || typeof line?.quantity === "undefined") {
-    return null;
-  }
-
-  const optimisticQuantity = optimisticData?.quantity || line.quantity;
-
-  const { id: lineId, isOptimistic } = line;
-  const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
-  const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
-
-  return (
-    <>
-      <label htmlFor={`quantity-${lineId}`} className="sr-only">
-        Quantity, {optimisticQuantity}
-      </label>
-      <div className="flex items-center border border-line-subtle">
-        <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
-          <button
-            type="submit"
-            name="decrease-quantity"
-            aria-label="Decrease quantity"
-            className="h-9 w-9 transition disabled:cursor-not-allowed disabled:text-body-subtle"
-            value={prevQuantity}
-            disabled={optimisticQuantity <= 1 || isOptimistic}
-          >
-            <span>&#8722;</span>
-            <OptimisticInput
-              id={optimisticId}
-              data={{ quantity: prevQuantity }}
-            />
-          </button>
-        </UpdateCartButton>
-
-        <div className="px-2 text-center" data-test="item-quantity">
-          {optimisticQuantity}
-        </div>
-
-        <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
-          <button
-            type="submit"
-            className="h-9 w-9 transition disabled:cursor-not-allowed disabled:text-body-subtle"
-            name="increase-quantity"
-            value={nextQuantity}
-            aria-label="Increase quantity"
-            disabled={isOptimistic}
-          >
-            <span>&#43;</span>
-            <OptimisticInput
-              id={optimisticId}
-              data={{ quantity: nextQuantity }}
-            />
-          </button>
-        </UpdateCartButton>
-      </div>
-    </>
-  );
-}
-
-function UpdateCartButton({
-  children,
-  lines,
-}: {
-  children: React.ReactNode;
-  lines: CartLineUpdateInput[];
-}) {
-  return (
-    <CartForm
-      route="/cart"
-      action={CartForm.ACTIONS.LinesUpdate}
-      inputs={{
-        lines,
-      }}
-    >
-      {children}
     </CartForm>
   );
 }
@@ -231,11 +154,11 @@ function UpdateCartButton({
 function CartLinePrice({
   line,
   priceType = "regular",
-  ...passthroughProps
+  isOptimistic,
 }: {
   line: CartLine;
   priceType?: "regular" | "compareAt";
-  [key: string]: any;
+  isOptimistic?: boolean;
 }) {
   if (!(line?.cost?.amountPerQuantity && line?.cost?.totalAmount)) {
     return null;
@@ -250,12 +173,10 @@ function CartLinePrice({
     return null;
   }
 
+  if (isOptimistic) {
+    return <Skeleton as="span" className="h-4 w-16 rounded ml-auto" />;
+  }
   return (
-    <Money
-      withoutTrailingZeros
-      {...passthroughProps}
-      data={moneyV2}
-      className="ml-auto text-sm"
-    />
+    <Money withoutTrailingZeros as="span" data={moneyV2} className="ml-auto" />
   );
 }
