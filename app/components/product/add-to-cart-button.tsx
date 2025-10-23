@@ -14,6 +14,7 @@ import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { useCartDrawerStore } from "~/components/cart/store";
+import { SpinnerIcon } from "~/components/spinner";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -98,7 +99,7 @@ function AddToCartButtonContent({
         </span>
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            <SpinnerIcon size="md" />
           </div>
         )}
       </Button>
