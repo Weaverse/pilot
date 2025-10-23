@@ -2,28 +2,31 @@ import { cn } from "~/utils/cn";
 
 export function Spinner({
   className,
-  size = "md",
+  size = 32,
+  duration = 500,
 }: {
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: number;
+  duration?: number;
 }) {
-  const sizeClasses = {
-    sm: "size-4 border-2",
-    md: "size-8 border-2",
-    lg: "size-12 border-[3px]",
-  };
-
   return (
     <div
       className={cn(
         "absolute inset-0 z-10 flex items-center justify-center",
         className,
       )}
+      style={
+        {
+          "--spinner-size": `${size}px`,
+          "--spinner-duration": `${duration}ms`,
+        } as React.CSSProperties
+      }
     >
       <div
         className={cn(
-          "animate-spin rounded-full border-gray-300 border-t-gray-600",
-          sizeClasses[size],
+          "[animation-duration:var(--spinner-duration)] animate-spin",
+          "size-(--spinner-size) rounded-full",
+          "border-2 border-gray-300 border-t-gray-600",
         )}
       />
     </div>
