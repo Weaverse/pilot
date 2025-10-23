@@ -67,12 +67,11 @@ function CartDetails({
 
 function CartLines({
   layout = "drawer",
-  lines: cartLines,
+  lines,
 }: {
   layout: CartLayoutType;
   lines: CartLine[];
 }) {
-  const currentLines = cartLines;
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
 
@@ -97,7 +96,7 @@ function CartLines({
             layout === "drawer" && "gap-5",
           )}
         >
-          {currentLines.map((line) => (
+          {lines.map((line) => (
             <CartLineItem key={line.id} line={line} layout={layout} />
           ))}
         </ul>
