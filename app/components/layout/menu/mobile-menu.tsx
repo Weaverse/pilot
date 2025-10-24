@@ -33,11 +33,10 @@ export function MobileMenu() {
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
-            "fixed inset-0 z-10 h-screen-no-topbar bg-(--color-header-bg) pt-4 pb-2",
+            "fixed inset-0 z-10 h-screen bg-(--color-header-bg) pt-4 pb-2",
             "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
             "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
             "focus-visible:outline-hidden",
-            "uppercase",
           ])}
           aria-describedby={undefined}
         >
@@ -86,11 +85,11 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
           type="button"
           className='flex w-full items-center justify-between gap-4 py-3 data-[state="open"]:[&>svg]:rotate-90'
         >
-          <span className="uppercase">{title}</span>
+          <span>{title}</span>
           <CaretRightIcon className="h-4 w-4" />
         </button>
       </Collapsible.Trigger>
-      <Collapsible.Content className="border-gray-300 border-l pl-4">
+      <Collapsible.Content className="border-gray-300 border-l pl-4 flex flex-col">
         {items.map((childItem) => (
           <CollapsibleMenuItem key={childItem.id} item={childItem} />
         ))}
