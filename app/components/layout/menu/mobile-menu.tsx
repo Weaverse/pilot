@@ -23,13 +23,19 @@ export function MobileMenu() {
         <MenuTrigger />
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
+        <Dialog.Overlay
+          className={cn(
+            "fixed inset-0 z-10 bg-black/50",
+            "data-[state=open]:animate-[fade-in_150ms_ease-out]",
+            "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
+          )}
+        />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
-            "-translate-x-full left-0",
-            "data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",
             "fixed inset-0 z-10 h-screen-no-topbar bg-(--color-header-bg) pt-4 pb-2",
+            "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
+            "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
             "focus-visible:outline-hidden",
             "uppercase",
           ])}

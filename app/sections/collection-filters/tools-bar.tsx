@@ -76,13 +76,20 @@ function FiltersDrawer({
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
+        <Dialog.Overlay
+          className={clsx(
+            "fixed inset-0 z-10 bg-black/50",
+            "data-[state=open]:animate-[fade-in_150ms_ease-out]",
+            "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
+          )}
+        />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className={clsx([
-            "fixed inset-y-0 z-10 w-full bg-(--color-background) py-4 md:w-[360px]",
-            "-translate-x-full left-0 data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",
-          ])}
+          className={clsx(
+            "fixed inset-y-0 left-0 z-10 w-full bg-(--color-background) py-4 md:w-[360px]",
+            "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
+            "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
+          )}
           aria-describedby={undefined}
         >
           <div className="space-y-1">

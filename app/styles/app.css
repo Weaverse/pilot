@@ -76,22 +76,15 @@
   --animate-enter-from-top: enter-from-top 200ms ease-out forwards;
   --animate-exit-to-left: exit-to-left 300ms ease forwards;
   --animate-exit-to-right: exit-to-right 300ms ease forwards;
+  --animate-exit-to-top: exit-to-top 200ms ease forwards;
 
   @keyframes fade-in {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+    0% { opacity: 0; }
+    100% { opacity: 1; }
   }
   @keyframes fade-out {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
+    0% { opacity: 1; }
+    100% { opacity: 0; }
   }
   @keyframes scale-in {
     0% {
@@ -114,20 +107,12 @@
     }
   }
   @keyframes expand {
-    0% {
-      height: 0;
-    }
-    100% {
-      height: var(--expand-to);
-    }
+    0% { height: 0; }
+    100% { height: var(--expand-to); }
   }
   @keyframes collapse {
-    0% {
-      height: var(--collapse-from);
-    }
-    100% {
-      height: 0;
-    }
+    0% { height: var(--collapse-from); }
+    100% { height: 0; }
   }
   @keyframes slide-left {
     0% {
@@ -187,6 +172,14 @@
     }
     100% {
       transform: translateY(0);
+    }
+  }
+  @keyframes exit-to-top {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
     }
   }
   @keyframes marquee {

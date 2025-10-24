@@ -35,15 +35,21 @@ export function PredictiveSearchButton() {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
+        <Dialog.Overlay
+          className={cn(
+            "fixed inset-0 z-10 bg-black/50",
+            "data-[state=open]:animate-[fade-in_150ms_ease-out]",
+            "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
+          )}
+        />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className={cn([
-            "-translate-y-full data-[state=open]:translate-y-0",
+          className={cn(
             "fixed inset-x-0 top-0 z-10 bg-(--color-header-bg)",
-            "data-[state=open]:animate-enter-from-top",
+            "data-[state=open]:animate-[enter-from-top_200ms_ease-out]",
+            "data-[state=closed]:animate-[exit-to-top_200ms_ease-in]",
             "focus-visible:outline-hidden",
-          ])}
+          )}
           aria-describedby={undefined}
         >
           <VisuallyHidden.Root asChild>
