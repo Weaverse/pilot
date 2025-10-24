@@ -8,8 +8,10 @@ import type {
   CartLineInput,
   CartLineUpdateInput,
 } from "@shopify/hydrogen/storefront-api-types";
+import { Suspense } from "react";
 import {
   type ActionFunctionArgs,
+  Await,
   data,
   type LoaderFunctionArgs,
   redirect,
@@ -17,7 +19,10 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
+import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
+import { Swimlane } from "~/components/swimlane";
+import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart } = context;
@@ -82,21 +87,50 @@ export async function action({ request, context }: ActionFunctionArgs) {
 }
 
 export async function loader({ context }: LoaderFunctionArgs) {
-  const { cart } = context;
-  return await cart.get();
+  const { cart, storefront } = context;
+
+  return {
+    cart: await cart.get(),
+    featuredProducts: getFeaturedProducts(storefront),
+  };
 }
 
 export default function CartRoute() {
-  const cart = useLoaderData<typeof loader>();
+  const { cart, featuredProducts } = useLoaderData<typeof loader>();
 
   return (
-    <Section width="fixed" verticalPadding="medium">
-      <h1 className="h2 mb-8 text-center md:mb-16">
-        Cart ({cart?.totalQuantity || 0})
-      </h1>
-      <CartMain layout="page" cart={cart} />
-      <Analytics.CartView />
-    </Section>
+    <>
+      <Section width="fixed" verticalPadding="medium">
+        <h1 className="h2 mb-8 text-center md:mb-16">
+          Cart ({cart?.totalQuantity || 0})
+        </h1>
+        <CartMain layout="page" cart={cart} />
+        <Analytics.CartView />
+      </Section>
+      <Suspense fallback={null}>
+        <Await resolve={featuredProducts}>
+          {({ featuredProducts: products }) => {
+            if (!products?.nodes?.length) {
+              return null;
+            }
+            return (
+              <Section width="fixed" verticalPadding="large" gap={32}>
+                <h2 className="h4 text-center">More from our best sellers</h2>
+                <Swimlane className="gap-4">
+                  {products.nodes.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      className="w-80 snap-start"
+                    />
+                  ))}
+                </Swimlane>
+              </Section>
+            );
+          }}
+        </Await>
+      </Suspense>
+    </>
   );
 }
 
