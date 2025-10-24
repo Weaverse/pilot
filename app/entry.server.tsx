@@ -24,6 +24,7 @@ export default async function handleRequest(
       storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
     },
   });
+
   const body = await renderToReadableStream(
     <NonceProvider>
       <ServerRouter
@@ -35,7 +36,8 @@ export default async function handleRequest(
     {
       nonce,
       signal: request.signal,
-      onError(_error) {
+      onError(error) {
+        console.error(error);
         responseStatusCode = 500;
       },
     },
@@ -48,6 +50,7 @@ export default async function handleRequest(
   responseHeaders.set("Content-Type", "text/html");
   // TODO: change to Content-Security-Policy when you ready with your CSP configs.
   responseHeaders.set("Content-Security-Policy-Report-Only", header);
+
   return new Response(body, {
     headers: responseHeaders,
     status: responseStatusCode,
