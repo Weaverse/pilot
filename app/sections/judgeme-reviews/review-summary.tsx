@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Button } from "~/components/button";
 import { Skeleton } from "~/components/skeleton";
 import { StarRating } from "~/components/star-rating";
-import { useJudgemeStore } from ".";
 import { RatingProgressBar } from "./rating-progress-bar";
 import { ReviewForm } from "./review-form";
+import { useJudgemeStore } from "./store";
 
 interface JudgemeReviewSummaryProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;

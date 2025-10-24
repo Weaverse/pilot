@@ -2,41 +2,12 @@ import { createSchema } from "@weaverse/hydrogen";
 import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
-import { create } from "zustand";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import type { JudgemeReviewsData } from "~/types/judgeme";
 import { constructURL } from "~/utils/misc";
-
-type JudgemePagination = {
-  currentPage: number;
-  perPage: number;
-};
-type JudgemeStatus =
-  | "idle"
-  | "initial-loading"
-  | "page-loading"
-  | "error"
-  | "ok";
-type JudgemeStore = {
-  status: JudgemeStatus;
-  paging: JudgemePagination;
-  data: JudgemeReviewsData | null;
-  setStatus: (status: JudgemeStatus) => void;
-  setData: (data: JudgemeReviewsData | null) => void;
-  setPaging: (newPaging: JudgemePagination) => void;
-};
-
-export const useJudgemeStore = create<JudgemeStore>()((set) => ({
-  status: "idle",
-  paging: { currentPage: 1, perPage: 5 },
-  data: null,
-  setStatus: (status: JudgemeStatus) => set({ status }),
-  setData: (data: JudgemeReviewsData | null) => set({ data }),
-  setPaging: (newPaging: JudgemePagination) =>
-    set((state) => ({ paging: { ...state.paging, ...newPaging } })),
-}));
+import { useJudgemeStore } from "./store";
 
 interface JudgemeReviewSectionProps extends SectionProps {
   ref: React.Ref<HTMLElement>;

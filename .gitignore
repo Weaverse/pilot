@@ -20,5 +20,5 @@ pnpm-lock.yaml
 .github/copilot-instructions.md
 memory/
 scripts/
-templates/
 specs/
+templates/

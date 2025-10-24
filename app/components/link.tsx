@@ -179,7 +179,7 @@ export function Link(props: LinkProps) {
       viewTransition={enableViewTransition}
       to={href}
       style={style}
-      className={cn(variants({ variant, className }))}
+      className={cn(variants({ variant }), className)}
       target={target !== undefined ? target : isExternal ? "_blank" : undefined}
       {...rest}
     >

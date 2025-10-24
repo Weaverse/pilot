@@ -8,18 +8,21 @@ import type {
   CartLineInput,
   CartLineUpdateInput,
 } from "@shopify/hydrogen/storefront-api-types";
+import { Suspense } from "react";
 import {
   type ActionFunctionArgs,
   Await,
   data,
   type LoaderFunctionArgs,
   redirect,
-  useRouteLoaderData,
+  useLoaderData,
 } from "react-router";
-import type { CartApiQueryFragment } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { Cart } from "~/components/cart/cart";
-import type { RootLoader } from "~/root";
+import { CartMain } from "~/components/cart/cart-main";
+import { ProductCard } from "~/components/product/product-card";
+import { Section } from "~/components/section";
+import { Swimlane } from "~/components/swimlane";
+import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart } = context;
@@ -66,7 +69,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  const headers = cart.setCartId(result.cart.id);
+  let headers = {};
+  if (result?.cart?.id) {
+    headers = cart.setCartId(result.cart.id);
+  }
 
   const redirectTo = formData.get("redirectTo") ?? null;
   if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
@@ -77,36 +83,53 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   const { cart: cartResult, errors, userErrors } = result;
 
-  return data(
-    {
-      cart: cartResult,
-      userErrors,
-      errors,
-    },
-    { status, headers },
-  );
+  return data({ cart: cartResult, userErrors, errors }, { status, headers });
 }
 
 export async function loader({ context }: LoaderFunctionArgs) {
-  const { cart } = context;
-  return await cart.get();
+  const { cart, storefront } = context;
+
+  return {
+    cart: await cart.get(),
+    featuredProducts: getFeaturedProducts(storefront),
+  };
 }
 
 export default function CartRoute() {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  if (!rootData) {
-    return null;
-  }
+  const { cart, featuredProducts } = useLoaderData<typeof loader>();
 
   return (
     <>
-      <div className="space-y-6 px-3 py-6 md:space-y-12 md:px-10 md:py-20 lg:px-16">
-        <h3 className="text-center">Cart</h3>
-        <Await resolve={rootData?.cart}>
-          {(cart) => <Cart layout="page" cart={cart as CartApiQueryFragment} />}
+      <Section width="fixed" verticalPadding="medium">
+        <h1 className="h3 mb-8 text-center md:mb-16">
+          Cart ({cart?.totalQuantity || 0})
+        </h1>
+        <CartMain layout="page" cart={cart} />
+        <Analytics.CartView />
+      </Section>
+      <Suspense fallback={null}>
+        <Await resolve={featuredProducts}>
+          {({ featuredProducts: products }) => {
+            if (!products?.nodes?.length) {
+              return null;
+            }
+            return (
+              <Section width="fixed" verticalPadding="large" gap={32}>
+                <h2 className="h4 text-center">More from our best sellers</h2>
+                <Swimlane className="gap-4">
+                  {products.nodes.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      className="w-80 snap-start"
+                    />
+                  ))}
+                </Swimlane>
+              </Section>
+            );
+          }}
         </Await>
-      </div>
-      <Analytics.CartView />
+      </Suspense>
     </>
   );
 }

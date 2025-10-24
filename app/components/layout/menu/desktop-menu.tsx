@@ -74,7 +74,7 @@ export function DesktopMenu() {
             className={cn(
               "relative origin-[top_center] overflow-hidden bg-(--color-header-bg)",
               "data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in",
-              "transition-[width,_height] duration-200",
+              "transition-[width,height] duration-200",
               "h-(--radix-navigation-menu-viewport-height) w-full",
             )}
           />
