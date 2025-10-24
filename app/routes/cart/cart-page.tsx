@@ -10,16 +10,14 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import {
   type ActionFunctionArgs,
-  Await,
   data,
   type LoaderFunctionArgs,
   redirect,
-  useRouteLoaderData,
+  useLoaderData,
 } from "react-router";
-import type { CartApiQueryFragment } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
-import type { RootLoader } from "~/root";
+import { Section } from "~/components/section";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart } = context;
@@ -89,23 +87,16 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function CartRoute() {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  if (!rootData) {
-    return null;
-  }
+  const cart = useLoaderData<typeof loader>();
 
   return (
-    <>
-      <div className="space-y-6 px-3 py-6 md:space-y-12 md:px-10 md:py-20 lg:px-16">
-        <h3 className="text-center">Cart</h3>
-        <Await resolve={rootData?.cart}>
-          {(cart) => (
-            <CartMain layout="page" cart={cart as CartApiQueryFragment} />
-          )}
-        </Await>
-      </div>
+    <Section width="fixed" verticalPadding="medium">
+      <h1 className="h2 mb-8 text-center md:mb-16">
+        Cart ({cart?.totalQuantity || 0})
+      </h1>
+      <CartMain layout="page" cart={cart} />
       <Analytics.CartView />
-    </>
+    </Section>
   );
 }
 
