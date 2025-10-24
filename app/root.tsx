@@ -13,6 +13,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
@@ -93,12 +94,18 @@ export function ErrorBoundary({ error }: { error: Error }) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { topbarHeight, topbarText } = useThemeSettings();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
-
+  if (
+    location.pathname === "/subrequest-profiler" ||
+    location.pathname === "/graphiql"
+  ) {
+    return children;
+  }
   return (
     <html lang={locale.language}>
       <head>
