@@ -39,6 +39,12 @@ export function CartLineItem({
   }
 
   const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
+  /**
+   * Determines if the current line item is in an optimistic state.
+   * Note: The isOptimistic field on the line does not update as documented
+   * in https://shopify.dev/docs/api/hydrogen/latest/hooks/useoptimisticcart#useOptimisticCart-returns,
+   * so we manually check it via the optimisticData object when lineOptimistic is undefined.
+   */
   const isOptimistic =
     lineOptimistic === undefined
       ? JSON.stringify(optimisticData) !== "{}"
