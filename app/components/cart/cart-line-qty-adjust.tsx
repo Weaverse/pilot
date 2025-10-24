@@ -43,7 +43,6 @@ export function CartLineQuantityAdjust({
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
-            {/* <span>&#8722;</span> */}
             <MinusIcon />
             <OptimisticInput
               id={optimisticId}
@@ -52,7 +51,7 @@ export function CartLineQuantityAdjust({
           </button>
         </UpdateCartButton>
 
-        <div className="px-2 text-center" data-test="item-quantity">
+        <div className="px-2 text-center min-w-8" data-test="item-quantity">
           {optimisticQuantity}
         </div>
 
@@ -65,7 +64,6 @@ export function CartLineQuantityAdjust({
             aria-label="Increase quantity"
             disabled={isOptimistic}
           >
-            {/* <span>&#43;</span> */}
             <PlusIcon />
             <OptimisticInput
               id={optimisticId}

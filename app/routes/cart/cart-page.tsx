@@ -66,7 +66,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  const headers = cart.setCartId(result.cart.id);
+  let headers = {};
+  if (result?.cart?.id) {
+    headers = cart.setCartId(result.cart.id);
+  }
 
   const redirectTo = formData.get("redirectTo") ?? null;
   if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
@@ -77,14 +80,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   const { cart: cartResult, errors, userErrors } = result;
 
-  return data(
-    {
-      cart: cartResult,
-      userErrors,
-      errors,
-    },
-    { status, headers },
-  );
+  return data({ cart: cartResult, userErrors, errors }, { status, headers });
 }
 
 export async function loader({ context }: LoaderFunctionArgs) {
