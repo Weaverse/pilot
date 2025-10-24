@@ -110,7 +110,7 @@ export function ProductCard({
             className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
           >
             {/* Loading skeleton overlay */}
-            {isImageLoading && <Spinner />}
+            {isImageLoading && <Spinner className="bg-gray-100" />}
             <Image
               className={clsx([
                 "absolute inset-0",

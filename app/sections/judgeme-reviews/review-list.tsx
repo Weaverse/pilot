@@ -7,8 +7,8 @@ import {
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import { cn } from "~/utils/cn";
-import { useJudgemeStore } from ".";
 import { ReviewItem, type ReviewItemProps } from "./review-item";
+import { useJudgemeStore } from "./store";
 
 function getVisiblePages(
   currentPage: number,
