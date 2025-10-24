@@ -452,6 +452,11 @@
     -webkit-appearance: none;
   }
 
+  input::placeholder,
+  textarea::placeholder {
+    opacity: 0.5;
+  }
+
   a.active {
     @apply border-b;
   }
