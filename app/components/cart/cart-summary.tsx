@@ -29,7 +29,12 @@ export function CartSummary({
         Order summary
       </h2>
       <dl className="grid">
-        <div className="flex items-center justify-between font-medium text-lg">
+        <div
+          className={clsx(
+            "flex items-center justify-between font-medium",
+            layout === "page" && "text-lg",
+          )}
+        >
           <dt>Subtotal</dt>
           {isOptimistic ? (
             <Skeleton className="h-4 w-20 rounded" />
