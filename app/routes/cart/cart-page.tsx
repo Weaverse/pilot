@@ -101,7 +101,7 @@ export default function CartRoute() {
   return (
     <>
       <Section width="fixed" verticalPadding="medium">
-        <h1 className="h2 mb-8 text-center md:mb-16">
+        <h1 className="h3 mb-8 text-center md:mb-16">
           Cart ({cart?.totalQuantity || 0})
         </h1>
         <CartMain layout="page" cart={cart} />

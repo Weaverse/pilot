@@ -38,12 +38,7 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
   });
 
   const seo = seoPayload.page({ page, url: request.url });
-
-  return {
-    page,
-    seo,
-    weaverseData,
-  };
+  return { page, seo, weaverseData };
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
