@@ -1,6 +1,7 @@
 import { TrashIcon } from "@phosphor-icons/react";
 import { CartForm } from "@shopify/hydrogen";
 import type { Cart as CartType } from "@shopify/hydrogen/storefront-api-types";
+import { useFetcher } from "react-router";
 import { Button } from "~/components/button";
 
 /**
@@ -39,39 +40,76 @@ export function CartDiscounts({
       </dl>
 
       {/* Show an input to apply a discount */}
-      <UpdateDiscountForm discountCodes={codes}>
-        <div className="flex items-center gap-3">
-          <input
-            className="grow rounded-none border border-line p-3 leading-tight!"
-            type="text"
-            name="discountCode"
-            placeholder="Discount code"
-          />
-          <Button type="submit" variant="outline" className="leading-tight!">
-            Apply
-          </Button>
-        </div>
-      </UpdateDiscountForm>
+      <UpdateDiscountForm discountCodes={codes} />
     </>
   );
 }
 
-function UpdateDiscountForm({
+export function UpdateDiscountForm({
   discountCodes,
   children,
 }: {
   discountCodes?: string[];
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
+  const fetcher = useFetcher();
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const discountCode = formData.get("discountCode") as string;
+    const updatedCodes = discountCode
+      ? [...(discountCodes || []), discountCode]
+      : discountCodes || [];
+
+    fetcher.submit(
+      {
+        [CartForm.INPUT_NAME]: JSON.stringify({
+          action: CartForm.ACTIONS.DiscountCodesUpdate,
+          inputs: { discountCodes: updatedCodes },
+        }),
+      },
+      { method: "POST", action: "/cart" },
+    );
+
+    // Reset the input field after submission
+    event.currentTarget.reset();
+  }
+
+  // If children are provided, render the remove discount button
+  if (children) {
+    return (
+      <CartForm
+        route="/cart"
+        action={CartForm.ACTIONS.DiscountCodesUpdate}
+        inputs={{ discountCodes: discountCodes || [] }}
+      >
+        {children}
+      </CartForm>
+    );
+  }
+
+  // Otherwise, render the apply discount form with fetcher
   return (
-    <CartForm
-      route="/cart"
-      action={CartForm.ACTIONS.DiscountCodesUpdate}
-      inputs={{
-        discountCodes: discountCodes || [],
-      }}
-    >
-      {children}
-    </CartForm>
+    <form onSubmit={handleSubmit}>
+      <div className="flex items-center gap-3">
+        <input
+          className="grow rounded-none border border-line p-3 leading-tight!"
+          type="text"
+          name="discountCode"
+          placeholder="Discount code"
+          required
+        />
+        <Button
+          type="submit"
+          variant="outline"
+          className="leading-tight!"
+          loading={fetcher.state !== "idle"}
+          disabled={fetcher.state !== "idle"}
+        >
+          Apply
+        </Button>
+      </div>
+    </form>
   );
 }
