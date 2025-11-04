@@ -4,6 +4,7 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
+import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
@@ -200,14 +201,14 @@ export function NewsletterPopup() {
                 </fetcher.Form>
 
                 {error && (
-                  <div className="mt-4 bg-red-200 px-3 py-2 text-center text-red-700 text-sm">
+                  <Banner variant="error" className="mt-4">
                     {error}
-                  </div>
+                  </Banner>
                 )}
                 {message && (
-                  <div className="mt-4 bg-green-50 px-3 py-2 text-center text-green-700 text-sm">
+                  <Banner variant="success" className="mt-4">
                     {message}
-                  </div>
+                  </Banner>
                 )}
 
                 {newsletterPopupAllowDismiss && (

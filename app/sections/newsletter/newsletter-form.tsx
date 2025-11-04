@@ -27,6 +27,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
   const fetcher = useFetcher();
   const { state, Form } = fetcher;
   const data = fetcher.data as CustomerApiPlayLoad;
+  const submitted = state === "idle" && data;
   const { ok, errorMessage } = data || {};
 
   return (
@@ -62,13 +63,9 @@ function NewsLetterForm(props: NewsLetterInputProps) {
           dangerouslySetInnerHTML={{ __html: helpText }}
         />
       )}
-      {ok ? (
-        <Banner variant="success" className="mt-4">
-          {successText || "🎉 Thank you for subscribing!"}
-        </Banner>
-      ) : (
-        <Banner variant="error" className="mt-4">
-          {errorMessage || "Something went wrong. Please try again."}
+      {submitted && (
+        <Banner variant={ok ? "success" : "error"} className="mt-4">
+          {ok ? successText : errorMessage || "Something went wrong"}
         </Banner>
       )}
     </div>

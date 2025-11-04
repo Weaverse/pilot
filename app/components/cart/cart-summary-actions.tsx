@@ -4,9 +4,9 @@ import { CartForm } from "@shopify/hydrogen";
 import { useRef, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
-import { Banner } from "../banner";
 
 export function CartSummaryActions({
   discountCodes,
