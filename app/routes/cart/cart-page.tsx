@@ -2,6 +2,7 @@ import {
   Analytics,
   CartForm,
   type CartQueryDataReturn,
+  cartAttributesUpdateDefault,
 } from "@shopify/hydrogen";
 import type {
   CartBuyerIdentityInput,
@@ -25,9 +26,10 @@ import { Swimlane } from "~/components/swimlane";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
-  const { cart } = context;
+  const { cart, storefront } = context;
   const formData = await request.formData();
   const { action: cartFormAction, inputs } = CartForm.getFormInput(formData);
+
   invariant(cartFormAction, "No cartAction defined");
 
   const status = 200;
@@ -43,6 +45,17 @@ export async function action({ request, context }: ActionFunctionArgs) {
     case CartForm.ACTIONS.LinesRemove:
       result = await cart.removeLines(inputs.lineIds as string[]);
       break;
+    case "CustomCartNoteUpdate": {
+      const cartNote = inputs.cartNote as string;
+      if (cartNote) {
+        const cartAttributes = cartAttributesUpdateDefault({
+          storefront,
+          getCartId: cart.getCartId,
+        });
+        result = await cartAttributes([{ key: "note", value: cartNote }]);
+      }
+      break;
+    }
     case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
 

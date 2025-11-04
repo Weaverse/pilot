@@ -10,8 +10,10 @@ import { cn } from "~/utils/cn";
 
 export function CartSummaryActions({
   discountCodes,
+  cartNote,
 }: {
   discountCodes: CartApiQueryFragment["discountCodes"];
+  cartNote: string;
 }) {
   const [noteDialogOpen, setNoteDialogOpen] = useState(false);
   const [discountDialogOpen, setDiscountDialogOpen] = useState(false);
@@ -22,7 +24,7 @@ export function CartSummaryActions({
         <Dialog.Trigger asChild>
           <Button variant="underline">Add a note</Button>
         </Dialog.Trigger>
-        <NoteDialog onOpenChange={setNoteDialogOpen} />
+        <NoteDialog cartNote={cartNote} onOpenChange={setNoteDialogOpen} />
       </Dialog.Root>
       <span>/</span>
       <Dialog.Root
@@ -43,9 +45,33 @@ export function CartSummaryActions({
 
 function NoteDialog({
   onOpenChange,
+  cartNote: currentNote,
 }: {
   onOpenChange: (open: boolean) => void;
+  cartNote: string;
 }) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fetcher = useFetcher();
+  const cartNote = textareaRef.current?.value || "";
+  const submitted = cartNote && fetcher.state === "idle" && fetcher.data;
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const note = formData.get("cartNote") as string;
+    if (note) {
+      fetcher.submit(
+        {
+          [CartForm.INPUT_NAME]: JSON.stringify({
+            action: "CustomCartNoteUpdate",
+            inputs: { cartNote: note },
+          }),
+        },
+        { method: "POST", action: "/cart" },
+      );
+    }
+  }
+
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
@@ -73,12 +99,18 @@ function NoteDialog({
             Add a note
           </Dialog.Title>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <textarea
-              className="w-full rounded-sm border border-line p-3 min-h-20 resize-none"
+              ref={textareaRef}
+              className="w-full p-3 min-h-20 resize-none"
               placeholder="Add any special instructions or notes for your order..."
               rows={4}
+              name="cartNote"
+              defaultValue={currentNote}
             />
+            {submitted && (
+              <Banner variant="success">Cart note saved successfully 🎉</Banner>
+            )}
             <div className="flex items-center justify-end gap-3">
               <Button
                 variant="custom"
@@ -87,8 +119,13 @@ function NoteDialog({
               >
                 Cancel
               </Button>
-              <Button type="submit" className="leading-tight! w-24">
-                Save Note
+              <Button
+                type="submit"
+                loading={fetcher.state !== "idle"}
+                disabled={fetcher.state !== "idle"}
+                className="leading-tight! w-24 [--spinner-duration:400ms]"
+              >
+                Save note
               </Button>
             </div>
           </form>

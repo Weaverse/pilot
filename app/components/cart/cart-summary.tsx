@@ -15,7 +15,8 @@ export function CartSummary({
   cart: OptimisticCart<CartApiQueryFragment>;
   layout: CartLayoutType;
 }) {
-  const { cost, discountCodes, isOptimistic, checkoutUrl } = cart;
+  const { cost, discountCodes, isOptimistic, checkoutUrl, attributes } = cart;
+  const cartNote = attributes?.find((attr) => attr.key === "note")?.value;
   return (
     <div
       className={clsx(
@@ -99,7 +100,7 @@ export function CartSummary({
         </Link>{" "}
         calculated at checkout.
       </div>
-      <CartSummaryActions discountCodes={discountCodes} />
+      <CartSummaryActions discountCodes={discountCodes} cartNote={cartNote} />
       {checkoutUrl && (
         <div className="flex flex-col gap-3 mt-8">
           <a href={checkoutUrl} target="_self">
