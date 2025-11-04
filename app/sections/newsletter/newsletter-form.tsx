@@ -1,7 +1,7 @@
 import { EnvelopeSimpleIcon } from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { useFetcher } from "react-router";
+import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import type { CustomerApiPlayLoad } from "~/routes/api/customer";
 
@@ -44,7 +44,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
             type="email"
             required
             placeholder={placeholder}
-            className="w-full bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:outline-hidden"
+            className="w-full bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:outline-hidden border-none focus:ring-0"
           />
         </div>
         <Button
@@ -62,15 +62,15 @@ function NewsLetterForm(props: NewsLetterInputProps) {
           dangerouslySetInnerHTML={{ __html: helpText }}
         />
       )}
-      <div
-        className={clsx(
-          "mx-auto mt-4 text-center font-medium",
-          state === "idle" && data ? "visible" : "invisible",
-          ok ? "text-green-700" : "text-red-700",
-        )}
-      >
-        {ok ? successText : errorMessage || "Something went wrong"}
-      </div>
+      {ok ? (
+        <Banner variant="success" className="mt-4">
+          {successText || "🎉 Thank you for subscribing!"}
+        </Banner>
+      ) : (
+        <Banner variant="error" className="mt-4">
+          {errorMessage || "Something went wrong. Please try again."}
+        </Banner>
+      )}
     </div>
   );
 }

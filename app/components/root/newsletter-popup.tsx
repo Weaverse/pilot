@@ -188,7 +188,7 @@ export function NewsletterPopup() {
                     type="email"
                     required
                     placeholder="Enter your email"
-                    className="w-full border border-gray-300 px-4 py-2.5 focus:border-gray-500 focus:outline-hidden"
+                    className="w-full px-4 py-2.5"
                   />
                   <Button
                     type="submit"

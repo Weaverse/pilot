@@ -81,7 +81,7 @@ export function PredictiveSearchButton() {
                       placeholder="Enter a keyword"
                       ref={inputRef}
                       autoComplete="off"
-                      className="h-full w-full py-4 focus-visible:outline-hidden"
+                      className="h-full w-full py-4 focus-visible:outline-hidden focus:outline-hidden border-none focus:ring-0"
                     />
                     <button
                       type="button"
