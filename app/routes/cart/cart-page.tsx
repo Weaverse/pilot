@@ -58,16 +58,29 @@ export async function action({ request, context }: ActionFunctionArgs) {
     }
     case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
-
       // User inputted discount code
       const discountCodes = (
         formDiscountCode ? [formDiscountCode] : []
       ) as string[];
-
       // Combine discount codes already applied on cart
       discountCodes.push(...(inputs.discountCodes as string[]));
-
       result = await cart.updateDiscountCodes(discountCodes);
+      break;
+    }
+    case CartForm.ACTIONS.GiftCardCodesUpdate: {
+      const formGiftCardCode = inputs.giftCardCode;
+      // User inputted gift card code
+      const giftCardCodes = (
+        formGiftCardCode ? [formGiftCardCode] : []
+      ) as string[];
+      // Combine gift card codes already applied on cart
+      giftCardCodes.push(...inputs.giftCardCodes);
+      result = await cart.updateGiftCardCodes(giftCardCodes);
+      break;
+    }
+    case CartForm.ACTIONS.GiftCardCodesRemove: {
+      const giftCardIds = inputs.giftCardCodes as string[];
+      result = await cart.removeGiftCardCodes(giftCardIds);
       break;
     }
     case CartForm.ACTIONS.BuyerIdentityUpdate:
@@ -94,7 +107,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     return redirect(redirectTo);
   }
 
-  const { cart: cartResult, errors, userErrors } = result;
+  const { cart: cartResult, errors, userErrors } = result || {};
 
   return data({ cart: cartResult, userErrors, errors }, { status, headers });
 }
