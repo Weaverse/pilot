@@ -1,4 +1,5 @@
-import { TagIcon, XIcon } from "@phosphor-icons/react";
+import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import clsx from "clsx";
 import type { CartApiQueryFragment } from "storefront-api.generated";
@@ -6,7 +7,11 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
-import { CartSummaryActions } from "./cart-summary-actions";
+import {
+  DiscountDialog,
+  GiftCardDialog,
+  NoteDialog,
+} from "./cart-summary-actions";
 
 export function CartSummary({
   cart,
@@ -15,21 +20,65 @@ export function CartSummary({
   cart: OptimisticCart<CartApiQueryFragment>;
   layout: CartLayoutType;
 }) {
-  const { cost, discountCodes, isOptimistic, checkoutUrl, attributes } = cart;
+  const {
+    cost,
+    discountCodes,
+    isOptimistic,
+    checkoutUrl,
+    attributes,
+    appliedGiftCards,
+  } = cart;
   const cartNote = attributes?.find((attr) => attr.key === "note")?.value;
   return (
     <div
       className={clsx(
         layout === "drawer" && "grid border-line-subtle border-t pt-4",
         layout === "page" &&
-          "sticky top-(--height-nav) grid w-full rounded-sm py-4 lg:py-0 md:translate-y-4 md:px-6",
+          "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
         Order summary
       </h2>
-      {discountCodes && discountCodes.length > 0 && (
-        <div className="flex flex-wrap justify-end gap-2 mb-4">
+      {appliedGiftCards?.length > 0 && (
+        <div className="mb-4 flex flex-wrap justify-end gap-2">
+          {appliedGiftCards.map((giftCard) => (
+            <div
+              key={giftCard.id}
+              className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
+            >
+              <GiftIcon className="h-4.5 w-4.5" aria-hidden="true" />
+              <div className="flex items-center gap-1 leading-normal">
+                <span>***{giftCard.lastCharacters}</span>
+                <span className="inline-flex items-center">
+                  (-{<Money data={giftCard.amountUsed} />})
+                </span>
+              </div>
+              <CartForm
+                route="/cart"
+                action={CartForm.ACTIONS.GiftCardCodesRemove}
+                inputs={{
+                  giftCardCodes: [giftCard.id],
+                }}
+              >
+                <button
+                  type="submit"
+                  className="ml-1 transition-colors hover:text-red-600"
+                  aria-label={`Remove gift card code ${giftCard.id}`}
+                >
+                  <XIcon
+                    className="h-4 w-4"
+                    weight="regular"
+                    aria-hidden="true"
+                  />
+                </button>
+              </CartForm>
+            </div>
+          ))}
+        </div>
+      )}
+      {discountCodes?.length > 0 && (
+        <div className="mb-4 flex flex-wrap justify-end gap-2">
           {discountCodes
             .filter((discount) => discount.applicable)
             .map((discount) => {
@@ -41,9 +90,9 @@ export function CartSummary({
               return (
                 <div
                   key={discount.code}
-                  className="flex items-center justify-center gap-2 bg-gray-200 px-2 py-1.5 rounded-md [&>form]:flex"
+                  className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
                 >
-                  <TagIcon className="h-4 w-4" aria-hidden="true" />
+                  <TagIcon className="h-4.5 w-4.5" aria-hidden="true" />
                   <span className="leading-normal">{discount.code}</span>
                   <CartForm
                     route="/cart"
@@ -67,7 +116,7 @@ export function CartSummary({
             })}
         </div>
       )}
-      <dl className="grid mb-4">
+      <dl className="mb-4 grid">
         <div
           className={clsx(
             "flex items-center justify-between font-medium",
@@ -88,7 +137,7 @@ export function CartSummary({
           )}
         </div>
       </dl>
-      <div className="text-body-subtle text-right mb-2">
+      <div className="mb-2 text-right text-body-subtle">
         Taxes, discounts and{" "}
         <Link
           target="_blank"
@@ -100,9 +149,30 @@ export function CartSummary({
         </Link>{" "}
         calculated at checkout.
       </div>
-      <CartSummaryActions discountCodes={discountCodes} cartNote={cartNote} />
+      <div className="flex items-center justify-end gap-2">
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <Button variant="underline">Add a note</Button>
+          </Dialog.Trigger>
+          <NoteDialog cartNote={cartNote} />
+        </Dialog.Root>
+        <span>/</span>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <Button variant="underline">Apply a discount</Button>
+          </Dialog.Trigger>
+          <DiscountDialog discountCodes={discountCodes} />
+        </Dialog.Root>
+        <span>/</span>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <Button variant="underline">Redeem a gift card</Button>
+          </Dialog.Trigger>
+          <GiftCardDialog appliedGiftCards={appliedGiftCards} />
+        </Dialog.Root>
+      </div>
       {checkoutUrl && (
-        <div className="flex flex-col gap-3 mt-8">
+        <div className="mt-8 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
             <Button className="w-full">Continue to Checkout</Button>
           </a>
