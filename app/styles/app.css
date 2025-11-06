@@ -250,7 +250,7 @@
   }
 
   mark {
-    @apply bg-transparent font-medium;
+    @apply font-medium;
   }
 
   model-viewer::part(default-progress-mask) {
