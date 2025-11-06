@@ -145,7 +145,7 @@ function normalizePredictiveSearchResults(
         //   `q=${encodeURIComponent(query.text)}`,
         // );
 
-        totalResults++;
+        totalResults += 1;
         return {
           __typename: query.__typename,
           handle: "",
@@ -170,7 +170,7 @@ function normalizePredictiveSearchResults(
           );
           const firstVariantParams = new URLSearchParams(optionsObject);
 
-          totalResults++;
+          totalResults += 1;
           const trackingParams = applyTrackingParams(product);
           return {
             __typename: product.__typename,
@@ -194,7 +194,7 @@ function normalizePredictiveSearchResults(
       // @ts-expect-error
       items: predictiveSearch.collections.map(
         (collection: PredictiveCollectionFragment) => {
-          totalResults++;
+          totalResults += 1;
           const trackingParams = applyTrackingParams(collection);
           return {
             __typename: collection.__typename,
@@ -214,7 +214,7 @@ function normalizePredictiveSearchResults(
       type: "pages",
       // @ts-expect-error
       items: predictiveSearch.pages.map((page: PredictivePageFragment) => {
-        totalResults++;
+        totalResults += 1;
         const trackingParams = applyTrackingParams(page);
         return {
           __typename: page.__typename,
@@ -234,7 +234,7 @@ function normalizePredictiveSearchResults(
       // @ts-expect-error
       items: predictiveSearch.articles.map(
         (article: PredictiveArticleFragment) => {
-          totalResults++;
+          totalResults += 1;
           const trackingParams = applyTrackingParams(article);
           return {
             __typename: article.__typename,

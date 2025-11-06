@@ -103,7 +103,7 @@ export function ZoomModal({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-white" />
+        <Dialog.Overlay className="fixed inset-0 z-10 bg-white data-[state=open]:animate-fade-in" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx([

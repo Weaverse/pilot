@@ -89,7 +89,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
           <CaretRightIcon className="h-4 w-4" />
         </button>
       </Collapsible.Trigger>
-      <Collapsible.Content className="border-gray-300 border-l pl-4 flex flex-col">
+      <Collapsible.Content className="flex flex-col border-gray-300 border-l pl-4">
         {items.map((childItem) => (
           <CollapsibleMenuItem key={childItem.id} item={childItem} />
         ))}

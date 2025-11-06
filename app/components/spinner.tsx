@@ -24,7 +24,7 @@ export function Spinner({
     >
       <div
         className={cn(
-          "[animation-duration:var(--spinner-duration)] animate-spin",
+          "animate-spin [animation-duration:var(--spinner-duration)]",
           "size-(--spinner-size) rounded-full",
           "border-2 border-gray-300 border-t-gray-600",
         )}

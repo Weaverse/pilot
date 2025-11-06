@@ -50,7 +50,7 @@ function Orders({ orders }: OrderCardsProps) {
             >
               {lineItems[0].image && (
                 <Link
-                  className="shrink-0 w-36"
+                  className="w-36 shrink-0"
                   to={orderLink}
                   prefetch="intent"
                 >

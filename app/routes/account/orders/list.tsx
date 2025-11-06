@@ -151,7 +151,7 @@ function PaginatedOrders<NodesType>({
 
         return (
           <div className="space-y-6">
-            <PreviousLink className="inline-block text-sm text-primary underline-offset-4 hover:underline">
+            <PreviousLink className="inline-block text-primary text-sm underline-offset-4 hover:underline">
               {isLoading ? "Loading..." : <span>↑ Load previous</span>}
             </PreviousLink>
             {resourcesClassName ? (
@@ -159,7 +159,7 @@ function PaginatedOrders<NodesType>({
             ) : (
               <div className="space-y-4">{resourcesMarkup}</div>
             )}
-            <NextLink className="inline-block text-sm text-primary underline-offset-4 hover:underline">
+            <NextLink className="inline-block text-primary text-sm underline-offset-4 hover:underline">
               {isLoading ? "Loading..." : <span>Load more ↓</span>}
             </NextLink>
           </div>
@@ -178,31 +178,31 @@ function OrderItem({ order }: { order: OrderItemFragment }) {
         <div className="space-y-2">
           <Link
             to={`/account/orders/${orderId}`}
-            className="text-lg font-medium hover:underline"
+            className="font-medium text-lg hover:underline"
           >
             Order #{order.number}
           </Link>
-          <p className="text-sm text-body-subtle">
+          <p className="text-body-subtle text-sm">
             {new Date(order.processedAt).toDateString()}
           </p>
           <div className="flex gap-2 text-sm">
-            <span className="rounded-md bg-gray-500 text-white px-2 py-1">
+            <span className="rounded-md bg-gray-500 px-2 py-1 text-white">
               {order.financialStatus}
             </span>
             {fulfillmentStatus && (
-              <span className="rounded-md bg-gray-500 text-white px-2 py-1">
+              <span className="rounded-md bg-gray-500 px-2 py-1 text-white">
                 {fulfillmentStatus}
               </span>
             )}
           </div>
         </div>
         <div className="flex flex-col items-start gap-3 sm:items-end">
-          <div className="text-lg font-medium">
+          <div className="font-medium text-lg">
             <Money data={order.totalPrice} />
           </div>
           <Link
             to={`/account/orders/${orderId}`}
-            className="text-sm text-primary underline-offset-4 hover:underline"
+            className="text-primary text-sm underline-offset-4 hover:underline"
           >
             View Order →
           </Link>

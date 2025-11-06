@@ -54,10 +54,10 @@ export function CartLineItem({
     return null;
   }
 
-  let { image, title, product, selectedOptions } = merchandise;
+  const { image, title, product, selectedOptions } = merchandise;
   let url = `/products/${product.handle}`;
   if (selectedOptions?.length) {
-    let params = new URLSearchParams();
+    const params = new URLSearchParams();
     for (const option of selectedOptions) {
       params.append(option.name, option.value);
     }
@@ -180,7 +180,7 @@ function CartLinePrice({
   }
 
   if (isOptimistic) {
-    return <Skeleton as="span" className="h-4 w-16 rounded ml-auto" />;
+    return <Skeleton as="span" className="ml-auto h-4 w-16 rounded" />;
   }
   return (
     <Money withoutTrailingZeros as="span" data={moneyV2} className="ml-auto" />

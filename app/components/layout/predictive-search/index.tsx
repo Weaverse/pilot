@@ -58,7 +58,7 @@ export function PredictiveSearchButton() {
           <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
-                <div className="mx-auto w-[560px] max-w-[90vw] py-6 space-y-2">
+                <div className="mx-auto w-[560px] max-w-[90vw] space-y-2 py-6">
                   <div className="flex items-center gap-3 border border-line-subtle px-3">
                     <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                     <input
@@ -81,7 +81,7 @@ export function PredictiveSearchButton() {
                       placeholder="Enter a keyword"
                       ref={inputRef}
                       autoComplete="off"
-                      className="h-full w-full py-4 focus-visible:outline-hidden focus:outline-hidden border-none focus:ring-0"
+                      className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
                     />
                     <button
                       type="button"

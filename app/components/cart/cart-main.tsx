@@ -27,7 +27,7 @@ function CartEmpty({
       ref={scrollRef}
       className={clsx(
         layout === "drawer" && [
-          "h-screen-dynamic w-[400px] flex flex-col justify-center text-center content-start space-y-12 overflow-y-scroll px-5 pb-5 transition",
+          "flex h-screen-dynamic w-[400px] flex-col content-start justify-center space-y-12 overflow-y-scroll px-5 pb-5 text-center transition",
           y > 0 && "border-t",
         ],
         layout === "page" && [
@@ -92,7 +92,7 @@ export function CartMain({
             "grid grow grid-cols-1 grid-rows-[1fr_auto] px-4",
           layout === "page" && [
             "mx-auto w-full max-w-(--page-width) pb-12",
-            "grid lg:grid-cols-[1fr_480px] md:items-start",
+            "grid md:items-start lg:grid-cols-[1fr_480px]",
             "gap-8 md:gap-8 lg:gap-12",
           ],
         )}

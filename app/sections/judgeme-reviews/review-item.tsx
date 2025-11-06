@@ -44,12 +44,12 @@ export function ReviewItem({
   return (
     <div
       className={cn(
-        "group flex flex-col md:flex-row gap-4 md:gap-6",
+        "group flex flex-col gap-4 md:flex-row md:gap-6",
         className,
       )}
     >
       {/* Left column - Reviewer info */}
-      <div className="space-y-3 w-full flex-shrink-0 md:w-1/4">
+      <div className="w-full flex-shrink-0 space-y-3 md:w-1/4">
         <StarRating rating={review.rating} className="[&>svg]:size-4.5" />
         <div className="space-y-1">
           {showReviewerName && (
@@ -114,7 +114,7 @@ export function ReviewItem({
           </div>
         )}
         {showReviewDate && (
-          <p className="flex-shrink-0 text-gray-500 text-sm truncate">
+          <p className="flex-shrink-0 truncate text-gray-500 text-sm">
             {formatDate(review.created_at)}
           </p>
         )}
@@ -160,7 +160,7 @@ export function ReviewImagesModal({
           <Button
             variant="outline"
             onClick={() => setSelectedImageIndex(null)}
-            className="absolute top-6 right-6 p-2 text-white border-white"
+            className="absolute top-6 right-6 border-white p-2 text-white"
             aria-label="Close image"
           >
             <XIcon className="h-5 w-5" />

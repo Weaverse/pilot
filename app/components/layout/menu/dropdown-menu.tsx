@@ -27,7 +27,7 @@ export function DropdownMenu({ menuItem }: { menuItem: SingleMenuItem }) {
         </Trigger>
         <Content
           align="start"
-          className="flex min-w-48 flex-col gap-1.5 bg-(--color-header-bg) p-6 shadow-lg animate-fade-in"
+          className="flex min-w-48 animate-fade-in flex-col gap-1.5 bg-(--color-header-bg) p-6 shadow-lg"
           onCloseAutoFocus={(e) => e.preventDefault()}
         >
           {childItems.map(
@@ -36,11 +36,11 @@ export function DropdownMenu({ menuItem }: { menuItem: SingleMenuItem }) {
                 <Link
                   to={itemTo}
                   prefetch="intent"
-                  className="transition-none items-center gap-2 group outline-hidden"
+                  className="group items-center gap-2 outline-hidden transition-none"
                 >
                   <RevealUnderline>{itemTitle}</RevealUnderline>
                   {isExternal && (
-                    <span className="invisible group-hover:visible text-sm">
+                    <span className="invisible text-sm group-hover:visible">
                       ↗
                     </span>
                   )}

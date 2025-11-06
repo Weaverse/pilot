@@ -165,7 +165,7 @@ export default function AccountProfile() {
             </div>
           </fieldset>
           {actionData?.error && (
-            <p className="text-sm text-red-600">{actionData.error}</p>
+            <p className="text-red-600 text-sm">{actionData.error}</p>
           )}
           <Button type="submit" disabled={state !== "idle"} variant="primary">
             {state !== "idle" ? "Updating..." : "Update Profile"}

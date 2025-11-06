@@ -62,12 +62,12 @@ export function ReviewsPagination() {
   const visiblePages = getVisiblePages(currentPage, totalPage);
 
   return (
-    <div className="flex items-center justify-center gap-1.5 mt-6">
+    <div className="mt-6 flex items-center justify-center gap-1.5">
       <button
         type="button"
         onClick={() => handlePageChange(1)}
         disabled={currentPage === 1}
-        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <CaretDoubleLeftIcon className="h-4 w-4" />
       </button>
@@ -76,7 +76,7 @@ export function ReviewsPagination() {
         type="button"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <CaretLeftIcon className="h-4 w-4" />
       </button>
@@ -92,9 +92,9 @@ export function ReviewsPagination() {
             type="button"
             onClick={() => handlePageChange(page as number)}
             className={cn(
-              "p-2 underline-offset-4 leading-4",
+              "p-2 leading-4 underline-offset-4",
               currentPage === page
-                ? "underline font-semibold"
+                ? "font-semibold underline"
                 : "hover:underline",
             )}
           >
@@ -107,7 +107,7 @@ export function ReviewsPagination() {
         type="button"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPage}
-        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <CaretRightIcon className="h-4 w-4" />
       </button>
@@ -116,7 +116,7 @@ export function ReviewsPagination() {
         type="button"
         onClick={() => handlePageChange(totalPage)}
         disabled={currentPage === totalPage}
-        className="py-2 px-1 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <CaretDoubleRightIcon className="h-4 w-4" />
       </button>
@@ -155,7 +155,7 @@ export default function ReviewList(props: ReviewListProps) {
     return (
       <div ref={ref} {...rest}>
         <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
-          <div className="space-y-8 divide-y divide-gray-200 relative">
+          <div className="relative space-y-8 divide-y divide-gray-200">
             {data.reviews.map((review) => (
               <ReviewItem
                 key={review.id}
@@ -169,7 +169,7 @@ export default function ReviewList(props: ReviewListProps) {
               />
             ))}
             {status === "page-loading" && (
-              <div className="absolute inset-0 bg-white/80 z-10" />
+              <div className="absolute inset-0 z-10 bg-white/80" />
             )}
           </div>
           <ReviewsPagination />

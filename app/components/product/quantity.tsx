@@ -32,7 +32,7 @@ export function Quantity(props: QuantityProps) {
           <span>&#8722;</span>
         </button>
         <input
-          className="w-12 px-1 py-2.5 text-center focus:outline-hidden border-none focus:ring-0"
+          className="w-12 border-none px-1 py-2.5 text-center focus:outline-hidden focus:ring-0"
           value={value}
           onKeyDown={handleKeyDown}
           onChange={(e) => onChange(Number(e.currentTarget.value))}

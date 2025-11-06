@@ -17,7 +17,8 @@
 
 @theme inline {
   --spacing-screen-no-topbar: calc(
-    var(--screen-height, 100vh) - var(--initial-topbar-height)
+    var(--screen-height, 100vh) -
+    var(--initial-topbar-height)
   );
 
   --color-body: var(--color-text);
@@ -28,11 +29,12 @@
   --color-line-subtle: var(--color-line-subtle);
 
   --text-scale: calc(
-    var(--min-size-px) + (var(--max-size) - var(--min-size)) *
-      (
-        (100vw - var(--wv-min-viewport-size, 320) * 1px) /
-          (var(--wv-max-viewport-size, 1920) - var(--wv-min-viewport-size, 320))
-      )
+    var(--min-size-px) +
+    (var(--max-size) - var(--min-size)) *
+    (
+      (100vw - var(--wv-min-viewport-size, 320) * 1px) /
+      (var(--wv-max-viewport-size, 1920) - var(--wv-min-viewport-size, 320))
+    )
   );
   --text-scale--line-height: 1;
   --text-xs: calc(var(--body-base-size) * 0.75);
@@ -69,7 +71,8 @@
   --animate-scale-out: scale-out 200ms ease forwards;
   --animate-expand: expand 200ms cubic-bezier(0.87, 0, 0.13, 1) forwards;
   --animate-collapse: collapse 200ms cubic-bezier(0.87, 0, 0.13, 1) forwards;
-  --animate-slide-left: slide-left 300ms cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  --animate-slide-left: slide-left 300ms cubic-bezier(0.165, 0.84, 0.44, 1)
+    forwards;
   --animate-slide-up: slide-up 300ms cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
   --animate-enter-from-left: enter-from-left 200ms ease-out forwards;
   --animate-enter-from-right: enter-from-right 300ms ease-out forwards;
@@ -79,12 +82,20 @@
   --animate-exit-to-top: exit-to-top 200ms ease forwards;
 
   @keyframes fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
   @keyframes fade-out {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
   @keyframes scale-in {
     0% {
@@ -107,12 +118,20 @@
     }
   }
   @keyframes expand {
-    0% { height: 0; }
-    100% { height: var(--expand-to); }
+    0% {
+      height: 0;
+    }
+    100% {
+      height: var(--expand-to);
+    }
   }
   @keyframes collapse {
-    0% { height: var(--collapse-from); }
-    100% { height: 0; }
+    0% {
+      height: var(--collapse-from);
+    }
+    100% {
+      height: 0;
+    }
   }
   @keyframes slide-left {
     0% {
@@ -261,7 +280,8 @@
     -webkit-appearance: none;
   }
 
-  input, textarea {
+  input,
+  textarea {
     @apply rounded-none border border-gray-600 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-gray-600;
   }
 
@@ -392,8 +412,9 @@
 
 @utility h-screen-dynamic {
   height: calc(
-    var(--screen-height, 100vh) - var(--height-nav) -
-      var(--initial-topbar-height)
+    var(--screen-height, 100vh) -
+    var(--height-nav) -
+    var(--initial-topbar-height)
   );
 }
 

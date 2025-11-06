@@ -272,15 +272,15 @@ export default function Addresses() {
     >
       <div className="space-y-8">
         <div className="space-y-4">
-          <h1 className="h4 ">Addresses</h1>
+          <h1 className="h4">Addresses</h1>
         </div>
         {addresses.edges.length ? (
           <div className="space-y-8">
             <div className="space-y-4">
-              <h3 className="text-lg ">Add New Address</h3>
+              <h3 className="text-lg">Add New Address</h3>
               <NewAddressForm />
             </div>
-            <div className="border-t border-border" />
+            <div className="border-border border-t" />
             <ExistingAddresses
               addresses={addresses}
               defaultAddress={defaultAddress}
@@ -339,7 +339,7 @@ function ExistingAddresses({
 }: Pick<CustomerDetailsFragment, "addresses" | "defaultAddress">) {
   return (
     <div className="space-y-6">
-      <h3 className="text-lg ">Saved Addresses</h3>
+      <h3 className="text-lg">Saved Addresses</h3>
       <div className="grid gap-6 md:grid-cols-2">
         {addresses.edges.map(({ node: address }) => (
           <AddressForm
@@ -398,7 +398,7 @@ export function AddressForm({
         <input type="hidden" name="addressId" defaultValue={addressId} />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="firstName" className="mb-1 ">
+            <label htmlFor="firstName" className="mb-1">
               First name*
             </label>
             <input
@@ -410,11 +410,11 @@ export function AddressForm({
               placeholder="First name"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2 "
+              className="w-full border border-border bg-background px-3 py-2"
             />
           </div>
           <div>
-            <label htmlFor="lastName" className="mb-1 ">
+            <label htmlFor="lastName" className="mb-1">
               Last name*
             </label>
             <input
@@ -426,12 +426,12 @@ export function AddressForm({
               placeholder="Last name"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2 "
+              className="w-full border border-border bg-background px-3 py-2"
             />
           </div>
         </div>
         <div>
-          <label htmlFor="company" className="mb-1 ">
+          <label htmlFor="company" className="mb-1">
             Company
           </label>
           <input
@@ -442,11 +442,11 @@ export function AddressForm({
             name="company"
             placeholder="Company"
             type="text"
-            className="w-full border border-border bg-background px-3 py-2 "
+            className="w-full border border-border bg-background px-3 py-2"
           />
         </div>
         <div>
-          <label htmlFor="address1" className="mb-1 ">
+          <label htmlFor="address1" className="mb-1">
             Address line*
           </label>
           <input
@@ -458,11 +458,11 @@ export function AddressForm({
             placeholder="Address line 1*"
             required
             type="text"
-            className="w-full border border-border bg-background px-3 py-2 "
+            className="w-full border border-border bg-background px-3 py-2"
           />
         </div>
         <div>
-          <label htmlFor="address2" className="mb-1 ">
+          <label htmlFor="address2" className="mb-1">
             Address line 2
           </label>
           <input
@@ -473,12 +473,12 @@ export function AddressForm({
             name="address2"
             placeholder="Address line 2"
             type="text"
-            className="w-full border border-border bg-background px-3 py-2 "
+            className="w-full border border-border bg-background px-3 py-2"
           />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="city" className="mb-1 ">
+            <label htmlFor="city" className="mb-1">
               City*
             </label>
             <input
@@ -490,11 +490,11 @@ export function AddressForm({
               placeholder="City"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2 "
+              className="w-full border border-border bg-background px-3 py-2"
             />
           </div>
           <div>
-            <label htmlFor="zoneCode" className="mb-1 ">
+            <label htmlFor="zoneCode" className="mb-1">
               State / Province*
             </label>
             <input
@@ -506,13 +506,13 @@ export function AddressForm({
               placeholder="State / Province"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2 "
+              className="w-full border border-border bg-background px-3 py-2"
             />
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="zip" className="mb-1 ">
+            <label htmlFor="zip" className="mb-1">
               Zip / Postal Code*
             </label>
             <input
@@ -524,11 +524,11 @@ export function AddressForm({
               placeholder="Zip / Postal Code"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2 "
+              className="w-full border border-border bg-background px-3 py-2"
             />
           </div>
           <div>
-            <label htmlFor="territoryCode" className="mb-1 ">
+            <label htmlFor="territoryCode" className="mb-1">
               Country Code*
             </label>
             <input
@@ -541,12 +541,12 @@ export function AddressForm({
               required
               type="text"
               maxLength={2}
-              className="w-full border border-border bg-background px-3 py-2 "
+              className="w-full border border-border bg-background px-3 py-2"
             />
           </div>
         </div>
         <div>
-          <label htmlFor="phoneNumber" className="mb-1 ">
+          <label htmlFor="phoneNumber" className="mb-1">
             Phone
           </label>
           <input
@@ -558,7 +558,7 @@ export function AddressForm({
             placeholder="+16135551111"
             pattern="^\+?[1-9]\d{3,14}$"
             type="tel"
-            className="w-full border border-border bg-background px-3 py-2 "
+            className="w-full border border-border bg-background px-3 py-2"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -573,7 +573,7 @@ export function AddressForm({
             Set as default address
           </label>
         </div>
-        {error && <p className=" text-red-600">{error}</p>}
+        {error && <p className="text-red-600">{error}</p>}
         {children({
           stateForMethod: (method) => (formMethod === method ? state : "idle"),
         })}

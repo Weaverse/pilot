@@ -62,7 +62,7 @@ export default function AccountLayout() {
       <>
         <Dialog.Root defaultOpen>
           <Dialog.Portal>
-            <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
+            <Dialog.Overlay className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in" />
             <Dialog.Content
               onCloseAutoFocus={(e) => e.preventDefault()}
               className={clsx([
