@@ -10,7 +10,7 @@ export function Spinner({
   duration?: number;
 }) {
   return (
-    <div
+    <span
       className={cn(
         "absolute inset-0 z-10 flex items-center justify-center",
         className,
@@ -22,13 +22,13 @@ export function Spinner({
         } as React.CSSProperties
       }
     >
-      <div
+      <span
         className={cn(
           "animate-spin [animation-duration:var(--spinner-duration)]",
-          "size-(--spinner-size) rounded-full",
+          "inline-block size-(--spinner-size) rounded-full",
           "border-2 border-gray-300 border-t-gray-600",
         )}
       />
-    </div>
+    </span>
   );
 }
