@@ -100,7 +100,7 @@ export default function Search() {
       >
         <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
         <input
-          className="h-full w-full py-4 focus-visible:outline-hidden"
+          className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
           name="q"
