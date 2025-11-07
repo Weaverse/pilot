@@ -8,10 +8,11 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { useFetcher } from "react-router";
+import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/utils/cn";
-import Link from "../link";
 import { CountrySelector } from "./country-selector";
 import { FooterMenu } from "./menu/footer-menu";
 
@@ -160,16 +161,15 @@ export function Footer() {
                   </div>
                 </fetcher.Form>
                 <div className="h-8">
-                  {error && (
-                    <div className="mb-6 flex w-fit gap-1 bg-red-100 px-2 py-1 text-red-700">
-                      <p className="font-semibold">ERROR:</p>
-                      <p>{error}</p>
-                    </div>
-                  )}
                   {message && (
-                    <div className="mb-6 w-fit py-1 text-green-500">
+                    <Banner variant="success" className="mb-6">
                       {message}
-                    </div>
+                    </Banner>
+                  )}
+                  {error && (
+                    <Banner variant="error" className="mb-6">
+                      {error}
+                    </Banner>
                   )}
                 </div>
               </div>
@@ -177,7 +177,7 @@ export function Footer() {
           </div>
           <FooterMenu />
         </div>
-        <div className="flex flex-col border-t border-line-subtle items-center justify-between gap-4 py-9 lg:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 border-line-subtle border-t py-9 lg:flex-row">
           <div className="flex gap-2">
             <CountrySelector />
           </div>

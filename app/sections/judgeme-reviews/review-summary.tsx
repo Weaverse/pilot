@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Button } from "~/components/button";
 import { Skeleton } from "~/components/skeleton";
 import { StarRating } from "~/components/star-rating";
-import { useJudgemeStore } from ".";
 import { RatingProgressBar } from "./rating-progress-bar";
 import { ReviewForm } from "./review-form";
+import { useJudgemeStore } from "./store";
 
 interface JudgemeReviewSummaryProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;
@@ -37,7 +37,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
     errorText = "Error loading reviews.",
     ...rest
   } = props;
-  let { status, data } = useJudgemeStore();
+  const { status, data } = useJudgemeStore();
   const [showForm, setShowForm] = useState(false);
 
   return (
@@ -59,7 +59,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
             <div className="border-gray-200 border-r border-l px-8 py-2">
               <div className="w-full space-y-4">
                 {[...new Array(5)].map((_, i) => (
-                  <div key={i} className="flex items-center gap-3 w-full">
+                  <div key={i} className="flex w-full items-center gap-3">
                     <Skeleton className="size-6 rounded" />
                     <Skeleton className="h-2.5 flex-1 rounded" />
                     <Skeleton className="h-4 w-20 rounded" />
@@ -70,7 +70,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
 
             {/* Column 3 - Write Review Button Skeleton */}
             <div className="flex items-center justify-center px-6">
-              <Skeleton className="bg-gray-200 h-10 w-full rounded" />
+              <Skeleton className="h-10 w-full rounded bg-gray-200" />
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
             </div>
 
             {/* Column 2 - Ratings Breakdown */}
-            <div className="border-gray-200 md:border-x px-8 md:px-12 py-2">
+            <div className="border-gray-200 px-8 py-2 md:border-x md:px-12">
               <div className="w-full space-y-0.5">
                 {data.ratingDistribution.map(
                   ({ rating, frequency, percentage }) => (
@@ -135,7 +135,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
       ) : (
         // No reviews state
         <div className="space-y-12 pt-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 divide-x divide-gray-200">
+          <div className="grid grid-cols-1 gap-6 divide-x divide-gray-200 md:grid-cols-2">
             {/* Column 1 - Empty Star Rating */}
             <div className="flex items-center justify-end space-y-3 pr-14">
               <div className="flex flex-col gap-2">

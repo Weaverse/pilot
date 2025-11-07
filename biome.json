@@ -1,14 +1,19 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite", "./node_modules/@weaverse/biome/biome.json"],
+  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
+  "extends": ["ultracite/core", "ultracite/react", "ultracite/remix"],
   "linter": {
     "rules": {
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
       "style": {
         "useThrowNewError": "warn",
         "useFilenamingConvention": "off",
         "useNamingConvention": "off",
         "noParameterAssign": "off",
         "noMagicNumbers": "off",
+        "noDescendingSpecificity": "off",
+        "useConsistentTypeDefinitions": "off",
         "noNestedTernary": "off"
       },
       "suspicious": {
@@ -19,7 +24,6 @@
         "noArrayIndexKey": "off"
       },
       "nursery": {
-        "useConsistentTypeDefinitions": "off",
         "useConsistentArrowReturn": "off",
         "noUnnecessaryConditions": "off"
       },
@@ -41,7 +45,9 @@
         "noExcessiveLinesPerFunction": "off"
       },
       "a11y": {
-        "noNoninteractiveElementInteractions": "off"
+        "noNoninteractiveElementInteractions": "off",
+        "useKeyWithClickEvents": "off",
+        "noStaticElementInteractions": "off"
       }
     }
   },

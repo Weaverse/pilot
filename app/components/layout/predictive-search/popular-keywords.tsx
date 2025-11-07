@@ -24,7 +24,7 @@ export function PopularKeywords({
             key={keyword}
             type="button"
             onClick={() => onKeywordClick(keyword)}
-            className="py-1 text-gray-700 transition-colors focus-visible:outline-hidden hover:underline underline-offset-4"
+            className="py-1 text-gray-700 underline-offset-4 transition-colors hover:underline focus-visible:outline-hidden"
           >
             {keyword}
             {index < popularKeywords.length - 1 && ","}

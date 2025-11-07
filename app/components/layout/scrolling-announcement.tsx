@@ -53,7 +53,7 @@ export function ScrollingAnnouncement() {
       {new Array(10).fill("").map((_, idx) => {
         return (
           <div
-            className="animate-marquee [animation-duration:var(--marquee-duration)] px-[calc(var(--gap)/2)]"
+            className="animate-marquee px-[calc(var(--gap)/2)] [animation-duration:var(--marquee-duration)]"
             key={idx}
           >
             <div

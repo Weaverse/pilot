@@ -2,21 +2,27 @@ import { HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { Suspense, useState } from "react";
-import { Await, useRouteLoaderData } from "react-router";
-import { Cart } from "~/components/cart/cart";
+import { Suspense, useEffect } from "react";
+import { Await, useLocation, useRouteLoaderData } from "react-router";
+import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
-
-export let toggleCartDrawer = (_open: boolean) => {
-  /* */
-};
+import { useCartDrawerStore } from "./store";
 
 export function CartDrawer() {
   const rootData = useRouteLoaderData<RootLoader>("root");
   const { publish } = useAnalytics();
-  const [open, setOpen] = useState(false);
-  toggleCartDrawer = setOpen;
+  const {
+    isOpen,
+    close: closeCartDrawer,
+    toggle: toggleCartDrawer,
+  } = useCartDrawerStore();
+  const location = useLocation();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
+  useEffect(() => {
+    closeCartDrawer();
+  }, [location.pathname, closeCartDrawer]);
 
   return (
     <Suspense
@@ -31,7 +37,7 @@ export function CartDrawer() {
     >
       <Await resolve={rootData?.cart}>
         {(cart) => (
-          <Dialog.Root open={open} onOpenChange={setOpen}>
+          <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>
             <Dialog.Trigger
               onClick={() => publish("custom_sidecart_viewed", { cart })}
               className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
@@ -54,19 +60,28 @@ export function CartDrawer() {
               )}
             </Dialog.Trigger>
             <Dialog.Portal>
-              <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
+              <Dialog.Overlay
+                className={clsx(
+                  "fixed inset-0 z-10 bg-black/50",
+                  "data-[state=open]:animate-[fade-in_150ms_ease-out]",
+                  "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
+                )}
+              />
               <Dialog.Content
                 onCloseAutoFocus={(e) => e.preventDefault()}
-                className={clsx([
-                  "fixed inset-y-0 right-0 z-10 w-screen max-w-[400px] bg-background py-4",
-                  "data-[state=open]:animate-enter-from-right",
-                ])}
+                className={clsx(
+                  "fixed inset-y-0 right-0 z-10 w-screen max-w-[480px] bg-background py-4",
+                  "data-[state=open]:animate-[enter-from-right_200ms_ease-out]",
+                  "data-[state=closed]:animate-[exit-to-right_200ms_ease-in]",
+                )}
                 aria-describedby={undefined}
               >
                 <div className="flex h-full flex-col space-y-6">
                   <div className="flex items-center justify-between gap-2 px-4">
                     <Dialog.Title asChild className="text-base">
-                      <span className="font-bold">Cart</span>
+                      <span className="font-bold">
+                        Cart ({cart?.totalQuantity || 0})
+                      </span>
                     </Dialog.Title>
                     <Dialog.Close asChild>
                       <button
@@ -78,7 +93,8 @@ export function CartDrawer() {
                       </button>
                     </Dialog.Close>
                   </div>
-                  <Cart layout="drawer" cart={cart as CartReturn} />
+                  <CartMain layout="drawer" cart={cart as CartReturn} />
+                  {/* <CartMain layout="aside" cart={cart as CartReturn} /> */}
                 </div>
               </Dialog.Content>
             </Dialog.Portal>

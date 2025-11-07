@@ -110,7 +110,7 @@ export function ProductCard({
             className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
           >
             {/* Loading skeleton overlay */}
-            {isImageLoading && <Spinner />}
+            {isImageLoading && <Spinner className="bg-gray-100" />}
             <Image
               className={clsx([
                 "absolute inset-0",
@@ -207,7 +207,7 @@ export function ProductCard({
           <Link
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
-            className="font-bold"
+            className="inline-block font-bold"
           >
             <RevealUnderline className="bg-position-[left_calc(1em+3px)] leading-normal">
               {product.title}

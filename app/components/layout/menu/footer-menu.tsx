@@ -30,7 +30,7 @@ export function FooterMenu() {
           </div>
           <Accordion.Content
             className={clsx([
-              "[--expand-to:var(--radix-accordion-content-height)] ",
+              "[--expand-to:var(--radix-accordion-content-height)]",
               "[--collapse-from:var(--radix-accordion-content-height)]",
               "data-[state=closed]:animate-collapse",
               "data-[state=open]:animate-expand",
@@ -42,13 +42,13 @@ export function FooterMenu() {
                 <Link
                   to={child.to}
                   key={child.id}
-                  className="relative items-center gap-2 group"
+                  className="group relative items-center gap-2"
                 >
                   <RevealUnderline className="[--underline-color:var(--color-footer-text)]">
                     {child.title}
                   </RevealUnderline>
                   {child.isExternal && (
-                    <span className="invisible group-hover:visible text-sm">
+                    <span className="invisible text-sm group-hover:visible">
                       ↗
                     </span>
                   )}

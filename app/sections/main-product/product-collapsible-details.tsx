@@ -58,7 +58,7 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
             <Accordion.Content
               className={clsx([
                 "overflow-hidden",
-                "[--expand-to:var(--radix-accordion-content-height)] ",
+                "[--expand-to:var(--radix-accordion-content-height)]",
                 "[--collapse-from:var(--radix-accordion-content-height)]",
                 "data-[state=closed]:animate-collapse",
                 "data-[state=open]:animate-expand",

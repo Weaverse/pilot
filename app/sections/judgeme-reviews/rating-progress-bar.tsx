@@ -9,7 +9,7 @@ export function RatingProgressBar({
   return (
     <div className="grid grid-cols-[30px_1fr_80px] gap-4 py-1 transition-colors">
       {/* Star icon */}
-      <div className="flex items-center flex-shrink-0 gap-1">
+      <div className="flex flex-shrink-0 items-center gap-1">
         <span className="text-gray-700">{rating}</span>
         <StarIcon
           weight="fill"

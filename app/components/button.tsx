@@ -146,13 +146,9 @@ export function Button(props: ButtonProps) {
 }
 
 function Spinner() {
-  const style = { "--duration": "500ms" } as React.CSSProperties;
   return (
-    <span
-      className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 [&~*]:invisible"
-      style={style}
-    >
-      <CircleNotchIcon className="h-5 w-5 animate-spin" />
+    <span className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 [&~*]:invisible">
+      <CircleNotchIcon className="h-5 w-5 animate-spin [animation-duration:var(--spinner-duration,500ms)]" />
     </span>
   );
 }

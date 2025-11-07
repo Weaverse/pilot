@@ -65,6 +65,7 @@ function LayoutList(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
+      <title>List View</title>
       <rect width="22" height="22" />
     </svg>
   );
@@ -80,6 +81,7 @@ function TwoColumns(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
+      <title>Two Columns</title>
       <rect width="10" height="22" />
       <rect x="12" width="10" height="22" />
     </svg>
@@ -96,6 +98,7 @@ function ThreeColumns(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
+      <title>Three Columns</title>
       <rect width="6" height="22" />
       <rect x="8" width="6" height="22" />
       <rect x="16" width="6" height="22" />
@@ -113,6 +116,7 @@ function FourColumns(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
+      <title>Four Columns</title>
       <rect width="4" height="22" />
       <rect x="6" width="4" height="22" />
       <rect x="12" width="4" height="22" />
@@ -131,6 +135,7 @@ function FiveColumns(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
+      <title>Five Columns</title>
       <rect width="2.8" height="22" />
       <rect x="4.7998" width="2.8" height="22" />
       <rect x="9.6001" width="2.8" height="22" />

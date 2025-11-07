@@ -108,7 +108,7 @@ export function PriceRangeFilter({
               setMinPrice(newMinPrice);
             }}
             onBlur={handleFilter}
-            className="w-full bg-transparent py-3 text-right focus-visible:outline-hidden"
+            className="w-full border-none bg-transparent py-3 text-right focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
           />
         </div>
         <span>To</span>
@@ -133,7 +133,7 @@ export function PriceRangeFilter({
               setMaxPrice(newMaxPrice);
             }}
             onBlur={handleFilter}
-            className="w-full bg-transparent py-3 text-right focus-visible:outline-hidden"
+            className="w-full border-none bg-transparent py-3 text-right focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
           />
         </div>
       </div>

@@ -58,8 +58,8 @@ export function DesktopMenu() {
                 {level > 1 && (
                   <NavigationMenu.Content
                     className={cn([
-                      "absolute left-0 top-0 w-full",
-                      "px-3 md:px-4 lg:px-6 py-8",
+                      "absolute top-0 left-0 w-full",
+                      "px-3 py-8 md:px-4 lg:px-6",
                     ])}
                   >
                     <MegaMenu items={childItems} />
@@ -74,7 +74,7 @@ export function DesktopMenu() {
             className={cn(
               "relative origin-[top_center] overflow-hidden bg-(--color-header-bg)",
               "data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in",
-              "transition-[width,_height] duration-200",
+              "transition-[width,height] duration-200",
               "h-(--radix-navigation-menu-viewport-height) w-full",
             )}
           />
@@ -137,11 +137,11 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
                     <Link
                       to={cItem.to}
                       prefetch="intent"
-                      className="relative transition-none items-center gap-2 group"
+                      className="group relative items-center gap-2 transition-none"
                     >
                       <RevealUnderline>{cItem.title}</RevealUnderline>
                       {cItem.isExternal && (
-                        <span className="invisible group-hover:visible text-sm">
+                        <span className="invisible text-sm group-hover:visible">
                           ↗
                         </span>
                       )}
@@ -167,7 +167,7 @@ function SlideIn(props: {
     <div
       className={cn(
         "[animation-delay:calc(var(--idx)*100ms+100ms)]",
-        "[--slide-left-from:40px] [animation-duration:200ms] animate-slide-left",
+        "animate-slide-left [--slide-left-from:40px] [animation-duration:200ms]",
         "opacity-0",
         className,
       )}

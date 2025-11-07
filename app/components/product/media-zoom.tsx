@@ -103,7 +103,7 @@ export function ZoomModal({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-white" />
+        <Dialog.Overlay className="fixed inset-0 z-10 bg-white data-[state=open]:animate-fade-in" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx([
@@ -113,7 +113,7 @@ export function ZoomModal({
           ])}
           aria-describedby={undefined}
         >
-          <div className="relative flex h-full w-full items-center justify-center bg-(--color-background)">
+          <div className="relative flex h-full w-full items-center justify-center bg-background">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>

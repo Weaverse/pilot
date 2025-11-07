@@ -120,7 +120,7 @@ export default function AccountDetailsEdit() {
           </div>
         )}
         <div>
-          <label htmlFor="firstName" className="block mb-1">
+          <label htmlFor="firstName" className="mb-1 block">
             First name
           </label>
           <input
@@ -135,7 +135,7 @@ export default function AccountDetailsEdit() {
           />
         </div>
         <div>
-          <label htmlFor="lastName" className="block mb-1">
+          <label htmlFor="lastName" className="mb-1 block">
             Last name
           </label>
           <input

@@ -35,15 +35,21 @@ export function PredictiveSearchButton() {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-black/50" />
+        <Dialog.Overlay
+          className={cn(
+            "fixed inset-0 z-10 bg-black/50",
+            "data-[state=open]:animate-[fade-in_150ms_ease-out]",
+            "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
+          )}
+        />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className={cn([
-            "-translate-y-full data-[state=open]:translate-y-0",
+          className={cn(
             "fixed inset-x-0 top-0 z-10 bg-(--color-header-bg)",
-            "data-[state=open]:animate-enter-from-top",
+            "data-[state=open]:animate-[enter-from-top_200ms_ease-out]",
+            "data-[state=closed]:animate-[exit-to-top_200ms_ease-in]",
             "focus-visible:outline-hidden",
-          ])}
+          )}
           aria-describedby={undefined}
         >
           <VisuallyHidden.Root asChild>
@@ -52,7 +58,7 @@ export function PredictiveSearchButton() {
           <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
-                <div className="mx-auto w-[560px] max-w-[90vw] py-6 space-y-2">
+                <div className="mx-auto w-[560px] max-w-[90vw] space-y-2 py-6">
                   <div className="flex items-center gap-3 border border-line-subtle px-3">
                     <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                     <input
@@ -75,7 +81,7 @@ export function PredictiveSearchButton() {
                       placeholder="Enter a keyword"
                       ref={inputRef}
                       autoComplete="off"
-                      className="h-full w-full py-4 focus-visible:outline-hidden"
+                      className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
                     />
                     <button
                       type="button"
