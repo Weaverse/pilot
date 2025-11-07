@@ -1,7 +1,7 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm } from "@shopify/hydrogen";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
@@ -9,27 +9,31 @@ import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [note, setNote] = useState(currentNote);
+  const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
-  const cartNote = textareaRef.current?.value || "";
-  const submitted = Boolean(
-    cartNote && fetcher.state === "idle" && fetcher.data,
-  );
+
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data) {
+      setSubmitted(true);
+    }
+  }, [fetcher]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const note = formData.get("cartNote") as string;
-    if (note) {
+    const formCartNote = formData.get("cartNote") as string;
+    if (formCartNote) {
       fetcher.submit(
         {
           [CartForm.INPUT_NAME]: JSON.stringify({
             action: CartForm.ACTIONS.NoteUpdate,
-            inputs: { cartNote: note },
+            inputs: { cartNote: formCartNote },
           }),
         },
         { method: "POST", action: "/cart" },
       );
+      setNote(formCartNote);
     }
   }
 
@@ -37,7 +41,11 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
       <Dialog.Content
-        onCloseAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          setNote(currentNote);
+          setSubmitted(false);
+        }}
         className={cn(
           "fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xs",
           "[--slide-up-from:20px]",
@@ -62,12 +70,15 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <textarea
-              ref={textareaRef}
               className="min-h-20 w-full resize-none p-3"
               placeholder="Add any special instructions or notes for your order..."
               rows={4}
               name="cartNote"
-              defaultValue={currentNote}
+              value={note}
+              onChange={(e) => {
+                setNote(e.target.value);
+                setSubmitted(false);
+              }}
             />
             {submitted && (
               <Banner variant="success">Cart note saved successfully 🎉</Banner>
