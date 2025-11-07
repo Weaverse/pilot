@@ -34,8 +34,8 @@ export function CartSummary({
     discountCodes,
     isOptimistic,
     checkoutUrl,
-    attributes,
     appliedGiftCards,
+    note,
   } = cart;
 
   // Show loading state for optimistic line item changes or pending cart actions
@@ -43,7 +43,6 @@ export function CartSummary({
     isOptimistic ||
     dcRemoveFetcher.state !== "idle" ||
     gcRemoveFetcher.state !== "idle";
-  const cartNote = attributes?.find((attr) => attr.key === "note")?.value;
   return (
     <div
       className={clsx(
@@ -192,7 +191,7 @@ export function CartSummary({
           <Dialog.Trigger asChild>
             <Button variant="underline">Add a note</Button>
           </Dialog.Trigger>
-          <NoteDialog cartNote={cartNote} />
+          <NoteDialog cartNote={note} />
         </Dialog.Root>
         <span>/</span>
         <Dialog.Root>

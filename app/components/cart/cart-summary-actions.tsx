@@ -24,7 +24,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
       fetcher.submit(
         {
           [CartForm.INPUT_NAME]: JSON.stringify({
-            action: "CustomCartNoteUpdate",
+            action: CartForm.ACTIONS.NoteUpdate,
             inputs: { cartNote: note },
           }),
         },
