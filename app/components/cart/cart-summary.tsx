@@ -1,6 +1,7 @@
 import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import { useFetcher } from "react-router";
@@ -23,6 +24,15 @@ export function CartSummary({
   cart: OptimisticCart<CartApiQueryFragment>;
   layout: CartLayoutType;
 }) {
+  const {
+    enableCartNote,
+    cartNoteButtonText,
+    enableDiscountCode,
+    discountCodeButtonText,
+    enableGiftCard,
+    giftCardButtonText,
+    checkoutButtonText,
+  } = useThemeSettings();
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
   >(null);
@@ -186,32 +196,52 @@ export function CartSummary({
         </Link>{" "}
         calculated at checkout.
       </div>
-      <div className="flex items-center justify-end gap-2">
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <Button variant="underline">Add a note</Button>
-          </Dialog.Trigger>
-          <NoteDialog cartNote={note} />
-        </Dialog.Root>
-        <span>/</span>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <Button variant="underline">Apply a discount</Button>
-          </Dialog.Trigger>
-          <DiscountDialog discountCodes={discountCodes} />
-        </Dialog.Root>
-        <span>/</span>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <Button variant="underline">Redeem a gift card</Button>
-          </Dialog.Trigger>
-          <GiftCardDialog appliedGiftCards={appliedGiftCards} />
-        </Dialog.Root>
-      </div>
+      {(enableCartNote || enableDiscountCode || enableGiftCard) && (
+        <div className="mb-4 flex items-center justify-end gap-2">
+          {enableCartNote && (
+            <>
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <Button variant="underline">
+                    {cartNoteButtonText || "Add a note"}
+                  </Button>
+                </Dialog.Trigger>
+                <NoteDialog cartNote={note} />
+              </Dialog.Root>
+              {(enableDiscountCode || enableGiftCard) && <span>/</span>}
+            </>
+          )}
+          {enableDiscountCode && (
+            <>
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <Button variant="underline">
+                    {discountCodeButtonText || "Add a discount code"}
+                  </Button>
+                </Dialog.Trigger>
+                <DiscountDialog discountCodes={discountCodes} />
+              </Dialog.Root>
+              {enableGiftCard && <span>/</span>}
+            </>
+          )}
+          {enableGiftCard && (
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <Button variant="underline">
+                  {giftCardButtonText || "Redeem a gift card"}
+                </Button>
+              </Dialog.Trigger>
+              <GiftCardDialog appliedGiftCards={appliedGiftCards} />
+            </Dialog.Root>
+          )}
+        </div>
+      )}
       {checkoutUrl && (
-        <div className="mt-8 flex flex-col gap-3">
+        <div className="mt-4 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
-            <Button className="w-full">Continue to Checkout</Button>
+            <Button className="w-full">
+              {checkoutButtonText || "Continue to Checkout"}
+            </Button>
           </a>
           {/* @todo: <CartShopPayButton cart={cart} /> */}
           {layout === "drawer" && (
