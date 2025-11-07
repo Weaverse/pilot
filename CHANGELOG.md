@@ -2,6 +2,44 @@
 
 All notable changes to **Pilot** - a production-ready Shopify Hydrogen theme built with Weaverse.
 
+## v7.1.1 - 2025-11-07
+
+### Patch Changes
+
+- **Cart Component Enhancements**:
+  - Refactored cart component for improved clarity and structure
+  - Created Zustand store to manage cart drawer state with open/close methods
+  - Added loading state with spinner to add-to-cart button
+  - Fixed cart drawer animation timing and added exit animations
+  - Enhanced cart line quantity adjustment with icon and error handling
+  - Improved UX when adjusting cart with optimistic updates
+  - Updated cart page layout to use cart data from route loader
+  - Increased cart drawer width for better content display
+- **Cart Summary Improvements**:
+  - Integrated discount code functionality with loading state
+  - Added gift card code handling and redemption functionality
+  - Enhanced with detailed discount codes and actions display
+  - Added cart note functionality for customer messages
+  - Show skeleton loading in cart summary during updates
+- **Cart Page Features**:
+  - Added featured products section with suspense handling
+  - Display cart best seller products only on cart page
+  - Added global theme settings for cart configuration
+- **UI/UX Enhancements**:
+  - Added shared Banner component for consistent messaging
+  - Enhanced placeholder visibility in input and textarea elements
+  - Restructured CSS with default styles for inputs and textareas
+  - Fixed product card background styling
+  - Updated Spinner component with size prop (sm/md/lg) and numeric size/duration options
+  - Refactored to use shared SpinnerIcon component
+- **Updates**:
+  - Updated Judge.me review store by [@hta218](https://github.com/hta218)
+  - Updated PredictiveSearchButton input placeholder color
+  - Enhanced biome configuration for improved linter rules
+  - Updated dependencies
+
+**Full Changelog**: [v7.1.0...v7.1.1](https://github.com/Weaverse/pilot/compare/v7.1.0...v7.1.1)
+
 ## v7.1.0 - 2025-10-22
 
 ### Patch Changes
