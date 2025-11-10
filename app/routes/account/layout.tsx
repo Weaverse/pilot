@@ -73,7 +73,7 @@ export default function AccountLayout() {
               ])}
               aria-describedby={undefined}
             >
-              <div className="relative w-[500px] max-w-[90vw] bg-(--color-background) px-6 py-3">
+              <div className="relative w-[500px] max-w-[90vw] bg-background px-6 py-3">
                 <VisuallyHidden.Root asChild>
                   <Dialog.Title>Account modal</Dialog.Title>
                 </VisuallyHidden.Root>
