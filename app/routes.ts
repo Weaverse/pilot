@@ -69,6 +69,6 @@ export default hydrogenRoutes([
         route("*", "routes/account/catch-all.ts"),
       ]),
     ]),
-    // route("*", "routes/catch-all.tsx"),
+    route("*", "routes/catch-all.tsx"),
   ]),
 ]) satisfies RouteConfig;
