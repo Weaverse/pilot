@@ -72,13 +72,19 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
         }
         throw new Error("Response not ok");
       })
-      .then((d: JudgemeStarsRatingData) => {
-        setData(d);
-        setStatus("ok");
+      .then((d: JudgemeStarsRatingData | null) => {
+        if (d) {
+          setData(d);
+          setStatus("ok");
+        } else {
+          setStatus("error");
+          setData(null);
+        }
       })
       .catch((err) => {
         console.error("Error fetching Judge.me stars rating data:", err);
         setStatus("error");
+        setData(null);
       });
   }, [handle, inView]);
 

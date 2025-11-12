@@ -25,7 +25,7 @@ export function ReviewForm({
   const [formState, setFormState] = useState<FormState>("idle");
   const formRef = useRef<HTMLFormElement>(null);
   const submitReviewAPI = usePrefixPathWithLocale(
-    `/api/product/${product.handle}/reviews`,
+    `/api/product/${product?.handle || ""}/reviews`,
   );
 
   function resetForm() {
@@ -36,6 +36,11 @@ export function ReviewForm({
 
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
+
+    if (!product?.handle) {
+      setFormState("error");
+      return;
+    }
 
     // Check if rating is selected first
     if (rating === 0) {
@@ -57,9 +62,15 @@ export function ReviewForm({
         if (!res.ok) {
           throw new Error("Response not ok");
         }
-        return res.json();
+        return res.json() as Promise<{ review: unknown } | null>;
       })
-      .then(() => setFormState("success"))
+      .then((data) => {
+        if (data?.review) {
+          setFormState("success");
+        } else {
+          throw new Error("Review submission failed");
+        }
+      })
       .catch((err) => {
         console.error("Error submitting review:", err);
         setFormState("error");
@@ -142,11 +153,13 @@ export function ReviewForm({
         </div>
 
         {/* Hidden product ID input */}
-        <input
-          type="hidden"
-          name="id"
-          value={Number(product.id.split("/").pop())}
-        />
+        {product?.id && (
+          <input
+            type="hidden"
+            name="id"
+            value={Number(product.id.split("/").pop())}
+          />
+        )}
 
         {/* Rating */}
         <RatingInput
