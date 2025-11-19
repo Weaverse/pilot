@@ -1,7 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "react-router";
 import { data } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
-import invariant from "tiny-invariant";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import type {
   JudgeMeReviewType,
@@ -23,17 +22,31 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     const { searchParams, pathname } = url;
     const { productHandle } = params;
 
-    invariant(productHandle, "Missing product handle.");
+    if (!productHandle) {
+      return data({ shop: null, product: null, storeDomain: null });
+    }
 
     // Handle reviews endpoint
     if (pathname.endsWith("/reviews")) {
       const { fetchWithCache } = weaverse;
       const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
 
-      invariant(
-        JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN,
-        "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.",
-      );
+      if (!JUDGEME_PRIVATE_API_TOKEN) {
+        return {
+          reviews: [],
+          totalPage: 0,
+          currentPage: 1,
+          perPage: 5,
+        };
+      }
+      if (!PUBLIC_STORE_DOMAIN) {
+        return {
+          reviews: [],
+          totalPage: 0,
+          currentPage: 1,
+          perPage: 5,
+        };
+      }
 
       const type = searchParams.get("type");
       // Fetching product rating stars
@@ -49,7 +62,9 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
           }),
         );
 
-        invariant(badgeResponse?.badge, "No badge returned from Judge.me");
+        if (!badgeResponse?.badge) {
+          return null;
+        }
         return parseBadgeHtml(badgeResponse.badge);
       }
 
@@ -63,7 +78,12 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         }),
       );
       if (!judgemeProductRes?.product?.id) {
-        throw new Error("Product not found in Judge.me database.");
+        return {
+          reviews: [],
+          totalPage: 0,
+          currentPage: 1,
+          perPage: 5,
+        };
       }
 
       const page = Number.parseInt(searchParams.get("page") || "1", 10);
@@ -91,7 +111,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         );
       }
 
-      const { current_page, reviews } = await fetchWithCache<{
+      const reviewsData = await fetchWithCache<{
         reviews: JudgeMeReviewType[];
         current_page: number;
         per_page: number;
@@ -105,33 +125,39 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         }),
       );
       return {
-        reviews,
+        reviews: reviewsData?.reviews || [],
         totalPage,
-        currentPage: current_page,
-        perPage: per_page,
+        currentPage: reviewsData?.current_page || 1,
+        perPage: reviewsData?.per_page || per_page || 5,
         ...reviewSummary,
       };
     }
 
     // Handle product endpoint (default)
-    const { product, shop } = await storefront.query<ProductQuery>(
-      PRODUCT_QUERY,
-      {
+    const result = await storefront
+      .query<ProductQuery>(PRODUCT_QUERY, {
         variables: {
           handle: productHandle,
           selectedOptions: [],
           language: storefront.i18n.language,
           country: storefront.i18n.country,
         },
-      },
-    );
-    return data({ shop, product, storeDomain: shop.primaryDomain.url });
+      })
+      .catch(() => null);
+
+    if (!result) {
+      return data({ shop: null, product: null, storeDomain: null });
+    }
+
+    const { product, shop } = result;
+    return data({
+      shop,
+      product,
+      storeDomain: shop?.primaryDomain?.url || null,
+    });
   } catch (err) {
     console.error("[Error in product API loader]", err);
-    return data(
-      { error: err?.message || err?.toString() || "Unknown API error" },
-      { status: 500 },
-    );
+    return data({ shop: null, product: null, storeDomain: null });
   }
 };
 
@@ -140,14 +166,18 @@ export const action: ActionFunction = async ({ request, context, params }) => {
     const { env } = context;
     const { productHandle } = params;
 
-    invariant(productHandle, "Missing product handle.");
+    if (!productHandle) {
+      return data({ review: null });
+    }
 
     const { JUDGEME_PRIVATE_API_TOKEN, PUBLIC_STORE_DOMAIN } = env;
 
-    invariant(
-      JUDGEME_PRIVATE_API_TOKEN && PUBLIC_STORE_DOMAIN,
-      "JUDGEME_PRIVATE_API_TOKEN or PUBLIC_STORE_DOMAIN is not configured.",
-    );
+    if (!JUDGEME_PRIVATE_API_TOKEN) {
+      return data({ review: null });
+    }
+    if (!PUBLIC_STORE_DOMAIN) {
+      return data({ review: null });
+    }
 
     const formData = await request.formData();
     const response = await fetch(
@@ -169,9 +199,6 @@ export const action: ActionFunction = async ({ request, context, params }) => {
     return data({ review: payload }, { status: 201 });
   } catch (err) {
     console.error("[Error in product API action]", err);
-    return data(
-      { error: err?.message || err?.toString() || "Unknown API error" },
-      { status: 500 },
-    );
+    return data({ review: null });
   }
 };

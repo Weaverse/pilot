@@ -69,9 +69,22 @@ export default function JudgemeReviewSection(props: JudgemeReviewSectionProps) {
             }
             throw new Error(`Failed to fetch reviews: ${res.status}`);
           })
-          .then((d: JudgemeReviewsData) => {
-            setData(d);
-            setStatus("ok");
+          .then((d: JudgemeReviewsData | null) => {
+            if (d) {
+              setData(d);
+              setStatus("ok");
+            } else {
+              setData({
+                reviews: [],
+                totalPage: 0,
+                currentPage: 1,
+                perPage: paging.perPage,
+                averageRating: 0,
+                totalReviews: 0,
+                ratingDistribution: [],
+              });
+              setStatus("ok");
+            }
           })
           .catch((err) => {
             console.error("Error fetching Judge.me reviews:", err);
