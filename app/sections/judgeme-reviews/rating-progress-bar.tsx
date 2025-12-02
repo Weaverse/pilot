@@ -9,7 +9,7 @@ export function RatingProgressBar({
   return (
     <div className="grid grid-cols-[30px_1fr_80px] gap-4 py-1 transition-colors">
       {/* Star icon */}
-      <div className="flex flex-shrink-0 items-center gap-1">
+      <div className="flex shrink-0 items-center gap-1">
         <span className="text-gray-700">{rating}</span>
         <StarIcon
           weight="fill"
@@ -32,7 +32,7 @@ export function RatingProgressBar({
       </div>
 
       {/* Count */}
-      <div className="min-w-[3rem] flex-shrink-0 text-gray-600">
+      <div className="min-w-12 shrink-0 text-gray-600">
         {frequency} {frequency === 1 ? "review" : "reviews"}
       </div>
     </div>
