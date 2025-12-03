@@ -61,7 +61,7 @@ export function ScrollArea({
             "relative flex-1 shadow-intense",
             "bg-gray-500 dark:bg-gray-500",
             "before:-translate-x-1/2 before:-translate-y-1/2 before:absolute before:top-1/2 before:left-1/2 before:content-['']",
-            "before:h-full before:min-h-[20px] before:w-full before:min-w-[20px]",
+            "before:h-full before:min-h-5 before:w-full before:min-w-5",
             thumbClassName,
           )}
         />
