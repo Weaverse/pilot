@@ -49,7 +49,7 @@ export function ReviewItem({
       )}
     >
       {/* Left column - Reviewer info */}
-      <div className="w-full flex-shrink-0 space-y-3 md:w-1/4">
+      <div className="w-full shrink-0 space-y-3 md:w-1/4">
         <StarRating rating={review.rating} className="[&>svg]:size-4.5" />
         <div className="space-y-1">
           {showReviewerName && (
@@ -114,7 +114,7 @@ export function ReviewItem({
           </div>
         )}
         {showReviewDate && (
-          <p className="flex-shrink-0 truncate text-gray-500 text-sm">
+          <p className="shrink-0 truncate text-gray-500 text-sm">
             {formatDate(review.created_at)}
           </p>
         )}

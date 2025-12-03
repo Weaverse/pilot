@@ -86,7 +86,7 @@ function FiltersDrawer({
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx(
-            "fixed inset-y-0 left-0 z-10 w-full bg-(--color-background) py-4 md:w-[360px]",
+            "fixed inset-y-0 left-0 z-10 w-full bg-background py-4 md:w-[360px]",
             "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
             "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
           )}
