@@ -1,6 +1,6 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
-  "extends": ["ultracite/core", "ultracite/react", "ultracite/remix"],
+  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+  "extends": ["@weaverse/biome"],
   "linter": {
     "rules": {
       "security": {
