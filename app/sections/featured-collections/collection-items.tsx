@@ -93,7 +93,8 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
   const parent = useParentInstance();
   let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
   if (!collections?.length) {
-    collections = new Array(Number(gridSize)).fill(COLLECTION_PLACEHOLDER);
+    let placeholderCount = Number(gridSize) || 5;
+    collections = new Array(placeholderCount).fill(COLLECTION_PLACEHOLDER);
   }
   return (
     <div
