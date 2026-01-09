@@ -1,5 +1,24 @@
 # Changelog
 
+## 7.2.0
+
+### Minor Changes
+
+- bump version
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/hydrogen@5.9.0
+
+## 7.1.3
+
+### Patch Changes
+
+- bump new version
+- Updated dependencies
+  - @weaverse/hydrogen@5.8.9
+
 All notable changes to **Pilot** - a production-ready Shopify Hydrogen theme built with Weaverse.
 
 ## v7.1.1 - 2025-11-07
