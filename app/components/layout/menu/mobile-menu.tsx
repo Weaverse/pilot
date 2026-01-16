@@ -71,7 +71,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
   if (!items?.length) {
     return (
       <Dialog.Close asChild>
-        <Link to={to} className="py-3">
+        <Link to={to} className="py-3 block">
           {title}
         </Link>
       </Dialog.Close>
