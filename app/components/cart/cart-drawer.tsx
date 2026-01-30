@@ -6,6 +6,7 @@ import { Suspense, useEffect } from "react";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
+import { useTranslation } from "~/hooks/use-translation";
 import type { RootLoader } from "~/root";
 import { useCartDrawerStore } from "./store";
 
@@ -18,6 +19,7 @@ export function CartDrawer() {
     toggle: toggleCartDrawer,
   } = useCartDrawerStore();
   const location = useLocation();
+  const { t } = useTranslation();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
   useEffect(() => {
@@ -80,14 +82,14 @@ export function CartDrawer() {
                   <div className="flex items-center justify-between gap-2 px-4">
                     <Dialog.Title asChild className="text-base">
                       <span className="font-bold">
-                        Cart ({cart?.totalQuantity || 0})
+                        {t("cart.title")} ({cart?.totalQuantity || 0})
                       </span>
                     </Dialog.Title>
                     <Dialog.Close asChild>
                       <button
                         type="button"
                         className="translate-x-2 p-2"
-                        aria-label="Close cart drawer"
+                        aria-label={t("accessibility.closeCartDrawer")}
                       >
                         <XIcon className="h-4 w-4" />
                       </button>

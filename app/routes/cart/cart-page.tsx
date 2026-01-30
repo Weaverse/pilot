@@ -22,10 +22,12 @@ import { CartMain } from "~/components/cart/cart-main";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import { useTranslation } from "~/hooks/use-translation";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart } = context;
+
   const formData = await request.formData();
   const { action: cartFormAction, inputs } = CartForm.getFormInput(formData);
 
@@ -118,12 +120,13 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
 export default function CartRoute() {
   const { cart, featuredProducts } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
 
   return (
     <>
       <Section width="fixed" verticalPadding="medium">
         <h1 className="h3 mb-8 text-center md:mb-16">
-          Cart ({cart?.totalQuantity || 0})
+          {t("cart.title")} ({cart?.totalQuantity || 0})
         </h1>
         <CartMain layout="page" cart={cart} />
         <Analytics.CartView />
@@ -136,7 +139,7 @@ export default function CartRoute() {
             }
             return (
               <Section width="fixed" verticalPadding="large" gap={32}>
-                <h2 className="h4 text-center">More from our best sellers</h2>
+                <h2 className="h4 text-center">{t("cart.bestSellers")}</h2>
                 <Swimlane className="gap-4">
                   {products.nodes.map((product) => (
                     <ProductCard

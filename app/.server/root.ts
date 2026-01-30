@@ -17,12 +17,14 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
-    getLayoutData(context),
-    getSwatchesConfigs(context),
-    // Add other queries here, so that they are loaded in parallel
-    context.weaverse.loadThemeSettings(),
-  ]);
+  const [layout, swatchesConfigs, weaverseTheme, translations] =
+    await Promise.all([
+      getLayoutData(context),
+      getSwatchesConfigs(context),
+      // Add other queries here, so that they are loaded in parallel
+      context.weaverse.loadThemeSettings(),
+      fetchTranslations(context),
+    ]);
 
   const seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
@@ -46,6 +48,7 @@ export async function loadCriticalData({
     weaverseTheme,
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     swatchesConfigs,
+    translations,
   };
 }
 
@@ -106,6 +109,49 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
 
   return { shop: data.shop, headerMenu, footerMenu };
 }
+
+/**
+ * Fetch translations from Weaverse multilingual manager API
+ */
+async function fetchTranslations(
+  context: AppLoadContext,
+): Promise<Record<string, unknown> | null> {
+  const { env, storefront } = context;
+  const { WEAVERSE_HOST, WEAVERSE_PROJECT_ID } = env;
+
+  if (!WEAVERSE_HOST || !WEAVERSE_PROJECT_ID) {
+    console.warn(
+      "WEAVERSE_HOST or WEAVERSE_PROJECT_ID not configured. Translations will use default fallback.",
+    );
+    return null;
+  }
+
+  try {
+    const locale = `${storefront.i18n.language}-${storefront.i18n.country}`;
+    const url = `${WEAVERSE_HOST}/api/translation/static?projectId=${WEAVERSE_PROJECT_ID}&locale=${locale}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.error(
+        `Failed to fetch translations: ${response.status} ${response.statusText}`,
+      );
+      return null;
+    }
+
+    const translations =
+      (await response.json()) as Record<string, unknown>;
+    return translations;
+  } catch (error) {
+    console.error("Error fetching translations:", error);
+    return null;
+  }
+}
+
 
 type Swatch = {
   id: string;

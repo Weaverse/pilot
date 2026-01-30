@@ -23,6 +23,7 @@ declare global {
     KLAVIYO_PRIVATE_API_TOKEN: string;
     PUBLIC_SHOPIFY_INBOX_SHOP_ID: string;
     WEAVERSE_HOST?: string;
+    WEAVERSE_PROJECT_ID?: string;
   }
 }
 

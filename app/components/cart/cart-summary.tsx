@@ -10,6 +10,7 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
+import { useTranslation } from "~/hooks/use-translation";
 import type { CartLayoutType } from "~/types/others";
 import {
   DiscountDialog,
@@ -33,6 +34,7 @@ export function CartSummary({
     giftCardButtonText,
     checkoutButtonText,
   } = useThemeSettings();
+  const { t } = useTranslation();
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
   >(null);
@@ -62,7 +64,7 @@ export function CartSummary({
       )}
     >
       <h2 id="summary-heading" className="sr-only">
-        Order summary
+        {t("cart.summary.orderSummary")}
       </h2>
       {appliedGiftCards?.length > 0 && (
         <div className="mb-4 flex flex-wrap justify-end gap-2">
@@ -170,7 +172,7 @@ export function CartSummary({
             layout === "page" && "text-xl",
           )}
         >
-          <dt>Estimated total:</dt>
+          <dt>{t("cart.summary.estimatedTotal")}</dt>
           {isCartUpdating ? (
             <Skeleton className="h-4 w-20 rounded" />
           ) : (
@@ -185,16 +187,16 @@ export function CartSummary({
         </div>
       </dl>
       <div className="mb-2 text-right text-body-subtle">
-        Taxes, discounts and{" "}
+        {t("cart.summary.taxesDiscountsShipping", { link: "" }).split("{{link}}")[0]}
         <Link
           target="_blank"
           to="/policies/shipping-policy"
           variant="underline"
           className="text-current after:bg-current"
         >
-          shipping
-        </Link>{" "}
-        calculated at checkout.
+          {t("cart.summary.shipping")}
+        </Link>
+        {t("cart.summary.taxesDiscountsShipping", { link: "" }).split("{{link}}")[1]}
       </div>
       {(enableCartNote || enableDiscountCode || enableGiftCard) && (
         <div className="mb-4 flex items-center justify-end gap-2">
@@ -203,7 +205,7 @@ export function CartSummary({
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <Button variant="underline">
-                    {cartNoteButtonText || "Add a note"}
+                    {cartNoteButtonText || t("cart.actions.addNote")}
                   </Button>
                 </Dialog.Trigger>
                 <NoteDialog cartNote={note} />
@@ -216,7 +218,7 @@ export function CartSummary({
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <Button variant="underline">
-                    {discountCodeButtonText || "Add a discount code"}
+                    {discountCodeButtonText || t("cart.actions.discountCode")}
                   </Button>
                 </Dialog.Trigger>
                 <DiscountDialog discountCodes={discountCodes} />
@@ -228,7 +230,7 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <Button variant="underline">
-                  {giftCardButtonText || "Redeem a gift card"}
+                  {giftCardButtonText || t("cart.actions.giftCard")}
                 </Button>
               </Dialog.Trigger>
               <GiftCardDialog appliedGiftCards={appliedGiftCards} />
@@ -246,7 +248,7 @@ export function CartSummary({
           {/* @todo: <CartShopPayButton cart={cart} /> */}
           {layout === "drawer" && (
             <Link variant="underline" to="/cart" className="mx-auto w-fit">
-              View cart
+              {t("cart.summary.viewCart")}
             </Link>
           )}
         </div>

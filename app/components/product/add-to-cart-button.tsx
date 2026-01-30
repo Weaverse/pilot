@@ -15,6 +15,7 @@ import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { useCartDrawerStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
+import { useTranslation } from "~/hooks/use-translation";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -72,6 +73,7 @@ function AddToCartButtonContent({
   [key: string]: any;
 }) {
   const { open: openCartDrawer } = useCartDrawerStore();
+  const { t } = useTranslation();
   const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
   const isLoading = fetcher.state !== "idle";
 
@@ -95,7 +97,7 @@ function AddToCartButtonContent({
         {...props}
       >
         <span className={cn(isLoading && "invisible")}>
-          {children || "Add to cart"}
+          {children || t("product.addToCart")}
         </span>
         {isLoading && <Spinner className="z-0" size={20} duration={400} />}
       </Button>

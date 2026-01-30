@@ -6,12 +6,14 @@ import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { useTranslation } from "~/hooks/use-translation";
 import { cn } from "~/utils/cn";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);
   const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
@@ -58,20 +60,20 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
             <button
               type="button"
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-              aria-label="Close"
+              aria-label={t("accessibility.close")}
             >
               <XIcon size={16} />
             </button>
           </Dialog.Close>
 
           <Dialog.Title className="mb-4 font-medium text-lg">
-            Add a note
+            {t("cart.actions.addNote")}
           </Dialog.Title>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <textarea
               className="min-h-20 w-full resize-none p-3"
-              placeholder="Add any special instructions or notes for your order..."
+              placeholder={t("cart.placeholder.note")}
               rows={4}
               name="cartNote"
               value={note}
@@ -81,12 +83,12 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
               }}
             />
             {submitted && (
-              <Banner variant="success">Cart note saved successfully 🎉</Banner>
+              <Banner variant="success">{t("cart.messages.noteSaved")}</Banner>
             )}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">
-                  Cancel
+                  {t("cart.actions.cancel")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -95,7 +97,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
                 disabled={fetcher.state !== "idle"}
                 className="w-24 leading-tight! [--spinner-duration:400ms]"
               >
-                Save note
+                {t("cart.actions.saveNote")}
               </Button>
             </div>
           </form>
@@ -112,6 +114,7 @@ export function DiscountDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
+  const { t } = useTranslation();
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted && discountCodes?.find((d) => d.code === code && d.applicable),
@@ -159,14 +162,14 @@ export function DiscountDialog({
             <button
               type="button"
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-              aria-label="Close"
+              aria-label={t("accessibility.close")}
             >
               <XIcon size={16} />
             </button>
           </Dialog.Close>
 
           <Dialog.Title className="mb-4 font-medium text-xl">
-            Apply a discount code
+            {t("cart.actions.discountCode")}
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -179,19 +182,19 @@ export function DiscountDialog({
               className="w-full p-3"
               type="text"
               name="discountCode"
-              placeholder="Discount code"
+              placeholder={t("cart.placeholder.discountCode")}
               required
             />
             {success && (
               <Banner variant="success">
-                Discount applied successfully 🎉
+                {t("cart.messages.discountApplied")}
               </Banner>
             )}
-            {error && <Banner variant="error">Invalid discount code.</Banner>}
+            {error && <Banner variant="error">{t("cart.messages.discountInvalid")}</Banner>}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">
-                  Cancel
+                  {t("cart.actions.cancel")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -200,7 +203,7 @@ export function DiscountDialog({
                 loading={fetcher.state !== "idle"}
                 disabled={fetcher.state !== "idle"}
               >
-                Apply
+                {t("cart.actions.apply")}
               </Button>
             </div>
           </form>
@@ -218,6 +221,7 @@ export function GiftCardDialog({
   const appliedGiftCardCodes = useRef<string[]>([]);
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
+  const { t } = useTranslation();
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted &&
@@ -276,14 +280,14 @@ export function GiftCardDialog({
             <button
               type="button"
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-              aria-label="Close"
+              aria-label={t("accessibility.close")}
             >
               <XIcon size={16} />
             </button>
           </Dialog.Close>
 
           <Dialog.Title className="mb-4 font-medium text-xl">
-            Redeem a gift card
+            {t("cart.actions.giftCard")}
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -291,7 +295,7 @@ export function GiftCardDialog({
               className="w-full p-3"
               type="text"
               name="giftCardCode"
-              placeholder="Gift card code"
+              placeholder={t("cart.placeholder.giftCardCode")}
               value={code}
               onChange={(e) => {
                 setCode(e.target.value);
@@ -301,14 +305,14 @@ export function GiftCardDialog({
             />
             {success && (
               <Banner variant="success">
-                Gift card applied successfully 🎉
+                {t("cart.messages.giftCardApplied")}
               </Banner>
             )}
-            {error && <Banner variant="error">Invalid gift card code.</Banner>}
+            {error && <Banner variant="error">{t("cart.messages.giftCardInvalid")}</Banner>}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">
-                  Cancel
+                  {t("cart.actions.cancel")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -317,7 +321,7 @@ export function GiftCardDialog({
                 loading={fetcher.state !== "idle"}
                 disabled={fetcher.state !== "idle"}
               >
-                Redeem
+                {t("cart.actions.redeem")}
               </Button>
             </div>
           </form>

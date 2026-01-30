@@ -12,6 +12,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
+import { useTranslation } from "~/hooks/use-translation";
 import type { CartLayoutType } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
@@ -136,6 +137,7 @@ function ItemRemoveButton({
   lineId: CartLine["id"];
   className?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <CartForm
       route="/cart"
@@ -149,7 +151,7 @@ function ItemRemoveButton({
         )}
         type="submit"
       >
-        <span className="sr-only">Remove</span>
+        <span className="sr-only">{t("product.remove")}</span>
         <TrashIcon aria-hidden="true" className="size-4.5" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />

@@ -1,0 +1,79 @@
+{
+  "cart": {
+    "title": "Cart",
+    "empty": {
+      "message": "Looks like you haven't added anything yet, let's get you started!",
+      "startShopping": "Start Shopping",
+      "shopBestSellers": "Shop Best Sellers"
+    },
+    "summary": {
+      "orderSummary": "Order summary",
+      "estimatedTotal": "Estimated total:",
+      "taxesDiscountsShipping": "Taxes, discounts and {{link}} calculated at checkout.",
+      "shipping": "shipping",
+      "viewCart": "View cart"
+    },
+    "actions": {
+      "addNote": "Add a note",
+      "discountCode": "Add a discount code",
+      "giftCard": "Redeem a gift card",
+      "cancel": "Cancel",
+      "saveNote": "Save note",
+      "apply": "Apply",
+      "redeem": "Redeem"
+    },
+    "messages": {
+      "noteSaved": "Cart note saved successfully 🎉",
+      "discountApplied": "Discount applied successfully 🎉",
+      "discountInvalid": "Invalid discount code.",
+      "giftCardApplied": "Gift card applied successfully 🎉",
+      "giftCardInvalid": "Invalid gift card code."
+    },
+    "placeholder": {
+      "note": "Add any special instructions or notes for your order...",
+      "discountCode": "Discount code",
+      "giftCardCode": "Gift card code"
+    },
+    "bestSellers": "More from our best sellers"
+  },
+  "product": {
+    "addToCart": "Add to cart",
+    "soldOut": "Sold out",
+    "from": "From",
+    "viewFullDetails": "View full details →",
+    "quickShop": "Quick shop",
+    "add": "Add",
+    "remove": "Remove",
+    "pictureOf": "Picture of {{name}}",
+    "secondPictureOf": "Second picture of {{name}}"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search our store...",
+    "enterKeyword": "Enter a keyword",
+    "viewAllResults": "View all results",
+    "noResults": "No results for \"{{term}}\", try a different search.",
+    "noResultsShort": "No results found for",
+    "trendingProducts": "Trending Products",
+    "problemLoadingProducts": "There was a problem loading related products"
+  },
+  "pagination": {
+    "loading": "Loading...",
+    "loadPrevious": "↑ Load previous",
+    "loadMore": "↓ Load more"
+  },
+  "footer": {
+    "email": "Email:",
+    "newsletterSuccess": "Thank you for signing up! 🎉",
+    "newsletterError": "An error occurred while signing up."
+  },
+  "accessibility": {
+    "closeCartDrawer": "Close cart drawer",
+    "close": "Close",
+    "removeGiftCard": "Remove gift card code {{code}}",
+    "removeDiscount": "Remove discount code {{code}}",
+    "predictiveSearch": "Predictive search",
+    "quickShopModal": "Quick shop modal",
+    "skipToContent": "Skip to content"
+  }
+}

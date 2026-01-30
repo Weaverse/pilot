@@ -6,6 +6,7 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
+import { useTranslation } from "~/hooks/use-translation";
 import type { CartLayoutType } from "~/types/others";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
@@ -22,6 +23,8 @@ function CartEmpty({
 }) {
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
+  const { t } = useTranslation();
+
   return (
     <div
       ref={scrollRef}
@@ -37,10 +40,7 @@ function CartEmpty({
       hidden={hidden}
     >
       <div className={clsx(layout === "page" && "text-center")}>
-        <p className="mb-4">
-          Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
-          started!
-        </p>
+        <p className="mb-4">{t("cart.empty.message")}</p>
         <Link
           variant="outline"
           to="/products"
@@ -50,7 +50,7 @@ function CartEmpty({
           )}
           onClick={onClose}
         >
-          Start Shopping
+          {t("cart.empty.startShopping")}
         </Link>
       </div>
       {layout === "page" && (
@@ -58,7 +58,7 @@ function CartEmpty({
           <div className="grid gap-4">
             <CartBestSellers
               count={4}
-              heading="Shop Best Sellers"
+              heading={t("cart.empty.shopBestSellers")}
               sortKey="BEST_SELLING"
             />
           </div>
