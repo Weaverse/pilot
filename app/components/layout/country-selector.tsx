@@ -9,7 +9,6 @@ import {
   useFetcher,
   useLocation,
   useRouteLoaderData,
-  useSubmit,
 } from "react-router";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
@@ -17,7 +16,6 @@ import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {
   const fetcher = useFetcher();
-  const submit = useSubmit();
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   const { pathname, search } = useLocation();
@@ -58,16 +56,27 @@ export function CountrySelector() {
     redirectTo: string;
     buyerIdentity: CartBuyerIdentityInput;
   }) {
-    submit(
-      {
-        redirectTo,
-        cartFormInput: JSON.stringify({
-          action: CartForm.ACTIONS.BuyerIdentityUpdate,
-          inputs: { buyerIdentity },
-        }),
-      },
-      { method: "POST", action: "/cart" },
-    );
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/cart";
+
+    const redirectToInput = document.createElement("input");
+    redirectToInput.type = "hidden";
+    redirectToInput.name = "redirectTo";
+    redirectToInput.value = redirectTo;
+    form.appendChild(redirectToInput);
+
+    const cartFormInput = document.createElement("input");
+    cartFormInput.type = "hidden";
+    cartFormInput.name = "cartFormInput";
+    cartFormInput.value = JSON.stringify({
+      action: CartForm.ACTIONS.BuyerIdentityUpdate,
+      inputs: { buyerIdentity },
+    });
+    form.appendChild(cartFormInput);
+
+    document.body.appendChild(form);
+    form.submit();
   }
 
   return (

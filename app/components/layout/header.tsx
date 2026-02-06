@@ -15,6 +15,7 @@ import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
+import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { MobileMenu } from "./menu/mobile-menu";
@@ -101,6 +102,7 @@ export function Header() {
         <DesktopMenu />
         <div className="z-1 flex items-center gap-1">
           <PredictiveSearchButton />
+          <LanguageSwitcher />
           <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
           <CartDrawer />
         </div>

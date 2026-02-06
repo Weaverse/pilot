@@ -67,12 +67,18 @@ export function loadDeferredData({ context }: LoaderFunctionArgs) {
 }
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
+  console.log("🚀 ~ language:", storefront.i18n.language);
+  let lang = storefront.i18n.language;
+  if (lang === "ZH") {
+    lang = "ZH_CN";
+  }
+
   const data = await storefront
     .query<LayoutQuery>(LAYOUT_QUERY, {
       variables: {
         headerMenuHandle: "main-menu",
         footerMenuHandle: "footer",
-        language: storefront.i18n.language,
+        language: lang,
       },
     })
     .catch(console.error);
@@ -145,6 +151,7 @@ async function fetchTranslations(
 
     const translations =
       (await response.json()) as Record<string, unknown>;
+    console.log("🚀 ~ fetchTranslations ~ translations:", translations)
     return translations;
   } catch (error) {
     console.error("Error fetching translations:", error);

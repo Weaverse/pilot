@@ -205,7 +205,7 @@ export function CartSummary({
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <Button variant="underline">
-                    {cartNoteButtonText || t("cart.actions.addNote")}
+                    {t("cart.actions.addNote")}
                   </Button>
                 </Dialog.Trigger>
                 <NoteDialog cartNote={note} />
@@ -218,7 +218,7 @@ export function CartSummary({
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <Button variant="underline">
-                    {discountCodeButtonText || t("cart.actions.discountCode")}
+                    {t("cart.actions.discountCode")}
                   </Button>
                 </Dialog.Trigger>
                 <DiscountDialog discountCodes={discountCodes} />
@@ -230,7 +230,7 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <Button variant="underline">
-                  {giftCardButtonText || t("cart.actions.giftCard")}
+                  {t("cart.actions.giftCard")}
                 </Button>
               </Dialog.Trigger>
               <GiftCardDialog appliedGiftCards={appliedGiftCards} />
@@ -242,7 +242,7 @@ export function CartSummary({
         <div className="mt-4 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
             <Button className="w-full">
-              {checkoutButtonText || "Continue to Checkout"}
+              {checkoutButtonText || t("cart.actions.checkout")}
             </Button>
           </a>
           {/* @todo: <CartShopPayButton cart={cart} /> */}
