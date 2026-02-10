@@ -6,7 +6,7 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
-import { useTranslation } from "~/hooks/use-translation";
+import { useWeaverseT } from "@weaverse/i18n";
 import type { CartLayoutType } from "~/types/others";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
@@ -23,7 +23,7 @@ function CartEmpty({
 }) {
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
 
   return (
     <div
@@ -89,7 +89,7 @@ export function CartMain({
       <div
         className={clsx(
           layout === "drawer" &&
-            "grid grow grid-cols-1 grid-rows-[1fr_auto] px-4",
+          "grid grow grid-cols-1 grid-rows-[1fr_auto] px-4",
           layout === "page" && [
             "mx-auto w-full max-w-(--page-width) pb-12",
             "grid md:items-start lg:grid-cols-[1fr_480px]",

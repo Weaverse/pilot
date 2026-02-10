@@ -6,14 +6,14 @@ import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
-import { useTranslation } from "~/hooks/use-translation";
+import { useWeaverseT } from "@weaverse/i18n";
 import { cn } from "~/utils/cn";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);
   const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
@@ -114,7 +114,7 @@ export function DiscountDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted && discountCodes?.find((d) => d.code === code && d.applicable),
@@ -221,13 +221,13 @@ export function GiftCardDialog({
   const appliedGiftCardCodes = useRef<string[]>([]);
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted &&
-      appliedGiftCards?.find((gc) =>
-        code.toLowerCase().endsWith(gc.lastCharacters),
-      ),
+    appliedGiftCards?.find((gc) =>
+      code.toLowerCase().endsWith(gc.lastCharacters),
+    ),
   );
   const error = submitted && !success;
 

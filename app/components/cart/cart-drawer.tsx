@@ -6,7 +6,7 @@ import { Suspense, useEffect } from "react";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
-import { useTranslation } from "~/hooks/use-translation";
+import { useWeaverseT } from "@weaverse/i18n";
 import type { RootLoader } from "~/root";
 import { useCartDrawerStore } from "./store";
 
@@ -19,7 +19,7 @@ export function CartDrawer() {
     toggle: toggleCartDrawer,
   } = useCartDrawerStore();
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
   useEffect(() => {

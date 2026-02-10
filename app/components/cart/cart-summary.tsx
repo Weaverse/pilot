@@ -10,7 +10,7 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
-import { useTranslation } from "~/hooks/use-translation";
+import { useWeaverseT } from "@weaverse/i18n";
 import type { CartLayoutType } from "~/types/others";
 import {
   DiscountDialog,
@@ -34,7 +34,7 @@ export function CartSummary({
     giftCardButtonText,
     checkoutButtonText,
   } = useThemeSettings();
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
   >(null);
@@ -60,7 +60,7 @@ export function CartSummary({
       className={clsx(
         layout === "drawer" && "grid border-line-subtle border-t pt-4",
         layout === "page" &&
-          "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
+        "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
       )}
     >
       <h2 id="summary-heading" className="sr-only">

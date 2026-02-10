@@ -32,6 +32,7 @@ import { NotFound } from "./components/root/not-found";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
 import { GlobalStyle } from "./weaverse/style";
+import { WeaverseI18nProvider } from "@weaverse/i18n";
 
 export type RootLoader = typeof loader;
 
@@ -97,17 +98,32 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
-  const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  const locale = data?.locale ?? DEFAULT_LOCALE.language.toLowerCase();
   const { topbarHeight, topbarText } = useThemeSettings();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
+  const i18nData = (data as any)?.i18nData;
+  // Create a client-side i18next instance from the serialized data
+
   if (
     location.pathname === "/subrequest-profiler" ||
     location.pathname === "/graphiql"
   ) {
     return children;
   }
+
+  const content = (
+    <>
+      <ScrollingAnnouncement />
+      <Header />
+      <main id="mainContent" className="grow">
+        {children}
+      </main>
+      <Footer />
+    </>
+  );
+
   return (
-    <html lang={locale.language}>
+    <html lang={locale}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -134,19 +150,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <TooltipProvider disableHoverableContent>
               <div
                 className="flex min-h-screen flex-col"
-                key={`${locale.language}-${locale.country}`}
+                key={locale}
               >
                 <div className="">
                   <a href="#mainContent" className="sr-only">
                     Skip to content
                   </a>
                 </div>
-                <ScrollingAnnouncement />
-                <Header />
-                <main id="mainContent" className="grow">
-                  {children}
-                </main>
-                <Footer />
+                <WeaverseI18nProvider data={i18nData}>
+                  {content}
+                </WeaverseI18nProvider>
               </div>
               {shouldShowNewsletterPopup && <NewsletterPopup />}
             </TooltipProvider>
@@ -159,7 +172,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
-    </html>
+    </html >
   );
 }
 

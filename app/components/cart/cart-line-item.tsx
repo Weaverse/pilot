@@ -12,7 +12,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
-import { useTranslation } from "~/hooks/use-translation";
+import { useWeaverseT } from "@weaverse/i18n";
 import type { CartLayoutType } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
@@ -137,7 +137,7 @@ function ItemRemoveButton({
   lineId: CartLine["id"];
   className?: string;
 }) {
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
   return (
     <CartForm
       route="/cart"

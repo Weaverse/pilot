@@ -22,7 +22,7 @@ import { CartMain } from "~/components/cart/cart-main";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { useTranslation } from "~/hooks/use-translation";
+import { useWeaverseT } from "@weaverse/i18n";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
@@ -120,7 +120,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
 export default function CartRoute() {
   const { cart, featuredProducts } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
+  const { t } = useWeaverseT("common");
 
   return (
     <>

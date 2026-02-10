@@ -8,6 +8,8 @@ import type {
 import invariant from "tiny-invariant";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "./seo";
+import { i18nServer } from "~/lib/i18n.server";
+import type { WeaverseI18nData } from "@weaverse/i18n";
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
@@ -17,13 +19,15 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  const [layout, swatchesConfigs, weaverseTheme, translations] =
+  const locale = i18nServer.getLocale(request);
+  const i18nData = await i18nServer.getI18nData(request)
+
+  const [layout, swatchesConfigs, weaverseTheme] =
     await Promise.all([
       getLayoutData(context),
       getSwatchesConfigs(context),
       // Add other queries here, so that they are loaded in parallel
       context.weaverse.loadThemeSettings(),
-      fetchTranslations(context),
     ]);
 
   const seo = seoPayload.root({ shop: layout.shop, url: request.url });
@@ -48,7 +52,8 @@ export async function loadCriticalData({
     weaverseTheme,
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     swatchesConfigs,
-    translations,
+    i18nData,
+    locale: i18nData?.locale ?? storefront.i18n.language.toLowerCase(),
   };
 }
 
@@ -97,67 +102,26 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
 
   const headerMenu = data?.headerMenu
     ? parseMenu(
-        data.headerMenu,
-        data.shop.primaryDomain.url,
-        env,
-        customPrefixes,
-      )
+      data.headerMenu,
+      data.shop.primaryDomain.url,
+      env,
+      customPrefixes,
+    )
     : undefined;
 
   const footerMenu = data?.footerMenu
     ? parseMenu(
-        data.footerMenu,
-        data.shop.primaryDomain.url,
-        env,
-        customPrefixes,
-      )
+      data.footerMenu,
+      data.shop.primaryDomain.url,
+      env,
+      customPrefixes,
+    )
     : undefined;
 
   return { shop: data.shop, headerMenu, footerMenu };
 }
 
-/**
- * Fetch translations from Weaverse multilingual manager API
- */
-async function fetchTranslations(
-  context: AppLoadContext,
-): Promise<Record<string, unknown> | null> {
-  const { env, storefront } = context;
-  const { WEAVERSE_HOST, WEAVERSE_PROJECT_ID } = env;
 
-  if (!WEAVERSE_HOST || !WEAVERSE_PROJECT_ID) {
-    console.warn(
-      "WEAVERSE_HOST or WEAVERSE_PROJECT_ID not configured. Translations will use default fallback.",
-    );
-    return null;
-  }
-
-  try {
-    const locale = `${storefront.i18n.language}-${storefront.i18n.country}`;
-    const url = `${WEAVERSE_HOST}/api/translation/static?projectId=${WEAVERSE_PROJECT_ID}&locale=${locale}`;
-
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      console.error(
-        `Failed to fetch translations: ${response.status} ${response.statusText}`,
-      );
-      return null;
-    }
-
-    const translations =
-      (await response.json()) as Record<string, unknown>;
-    console.log("🚀 ~ fetchTranslations ~ translations:", translations)
-    return translations;
-  } catch (error) {
-    console.error("Error fetching translations:", error);
-    return null;
-  }
-}
 
 
 type Swatch = {
@@ -241,19 +205,19 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
       host === new URL(primaryDomain).host || host === env.PUBLIC_STORE_DOMAIN;
     const parsedItem = isInternalLink
       ? // internal links
-        {
-          ...item,
-          isExternal: false,
-          target: "_self",
-          to: resolveToFromType({ type: item.type, customPrefixes, pathname }),
-        }
+      {
+        ...item,
+        isExternal: false,
+        target: "_self",
+        to: resolveToFromType({ type: item.type, customPrefixes, pathname }),
+      }
       : // external links
-        {
-          ...item,
-          isExternal: true,
-          target: "_blank",
-          to: item.url,
-        };
+      {
+        ...item,
+        isExternal: true,
+        target: "_blank",
+        to: item.url,
+      };
 
     if ("items" in item) {
       return {
@@ -277,8 +241,8 @@ function resolveToFromType(
     pathname?: string;
     type?: string;
   } = {
-    customPrefixes: {},
-  },
+      customPrefixes: {},
+    },
 ) {
   if (!(pathname && type)) {
     return "";
