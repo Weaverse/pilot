@@ -7,18 +7,6 @@ export const COUNTRIES: Localizations = {
     country: "US",
     currency: "USD",
   },
-    "/vi-us": {
-    label: "Vietnamese (USD $)",
-    language: "VI",
-    country: "US",
-    currency: "USD",
-  },
-   "/zh-us": {
-    label: "Chinese (USD $)",
-    language: "ZH",
-    country: "US",
-    currency: "USD",
-  },
   "/en-au": {
     label: "Australia (AUD $)",
     language: "EN",
