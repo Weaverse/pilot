@@ -6,10 +6,9 @@ import type {
   SwatchesQuery,
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
+import { getI18nServer } from "~/lib/i18n.server";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "./seo";
-import { i18nServer } from "~/lib/i18n.server";
-import type { WeaverseI18nData } from "@weaverse/i18n";
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
@@ -19,16 +18,15 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  const locale = i18nServer.getLocale(request);
-  const i18nData = await i18nServer.getI18nData(request)
+  const i18nServer = getI18nServer(context.env);
+  const i18nData = await i18nServer.getI18nData(request);
 
-  const [layout, swatchesConfigs, weaverseTheme] =
-    await Promise.all([
-      getLayoutData(context),
-      getSwatchesConfigs(context),
-      // Add other queries here, so that they are loaded in parallel
-      context.weaverse.loadThemeSettings(),
-    ]);
+  const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
+    getLayoutData(context),
+    getSwatchesConfigs(context),
+    // Add other queries here, so that they are loaded in parallel
+    context.weaverse.loadThemeSettings(),
+  ]);
 
   const seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
@@ -72,7 +70,6 @@ export function loadDeferredData({ context }: LoaderFunctionArgs) {
 }
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  console.log("🚀 ~ language:", storefront.i18n.language);
   let lang = storefront.i18n.language;
   if (lang === "ZH") {
     lang = "ZH_CN";
@@ -102,27 +99,24 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
 
   const headerMenu = data?.headerMenu
     ? parseMenu(
-      data.headerMenu,
-      data.shop.primaryDomain.url,
-      env,
-      customPrefixes,
-    )
+        data.headerMenu,
+        data.shop.primaryDomain.url,
+        env,
+        customPrefixes,
+      )
     : undefined;
 
   const footerMenu = data?.footerMenu
     ? parseMenu(
-      data.footerMenu,
-      data.shop.primaryDomain.url,
-      env,
-      customPrefixes,
-    )
+        data.footerMenu,
+        data.shop.primaryDomain.url,
+        env,
+        customPrefixes,
+      )
     : undefined;
 
   return { shop: data.shop, headerMenu, footerMenu };
 }
-
-
-
 
 type Swatch = {
   id: string;
@@ -205,19 +199,19 @@ function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
       host === new URL(primaryDomain).host || host === env.PUBLIC_STORE_DOMAIN;
     const parsedItem = isInternalLink
       ? // internal links
-      {
-        ...item,
-        isExternal: false,
-        target: "_self",
-        to: resolveToFromType({ type: item.type, customPrefixes, pathname }),
-      }
+        {
+          ...item,
+          isExternal: false,
+          target: "_self",
+          to: resolveToFromType({ type: item.type, customPrefixes, pathname }),
+        }
       : // external links
-      {
-        ...item,
-        isExternal: true,
-        target: "_blank",
-        to: item.url,
-      };
+        {
+          ...item,
+          isExternal: true,
+          target: "_blank",
+          to: item.url,
+        };
 
     if ("items" in item) {
       return {
@@ -241,8 +235,8 @@ function resolveToFromType(
     pathname?: string;
     type?: string;
   } = {
-      customPrefixes: {},
-    },
+    customPrefixes: {},
+  },
 ) {
   if (!(pathname && type)) {
     return "";
