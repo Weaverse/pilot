@@ -1,9 +1,9 @@
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 import Link from "~/components/link";
 
 export function PopularKeywords() {
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;

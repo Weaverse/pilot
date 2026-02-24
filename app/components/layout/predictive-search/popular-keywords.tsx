@@ -1,11 +1,11 @@
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 
 export function PopularKeywords({
   onKeywordClick,
 }: {
   onKeywordClick: (keyword: string) => void;
 }) {
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;

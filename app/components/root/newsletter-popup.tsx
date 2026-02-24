@@ -2,7 +2,7 @@ import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
@@ -38,7 +38,7 @@ export function NewsletterPopup() {
     newsletterPopupImagePosition = "left",
     newsletterPopupPosition = "center",
   } = useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();

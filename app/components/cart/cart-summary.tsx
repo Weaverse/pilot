@@ -2,7 +2,7 @@ import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import { useState } from "react";
 import { useFetcher } from "react-router";
@@ -27,7 +27,7 @@ export function CartSummary({
 }) {
   const { enableCartNote, enableDiscountCode, enableGiftCard } =
     useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
   >(null);

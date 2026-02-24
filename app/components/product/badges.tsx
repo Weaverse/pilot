@@ -1,7 +1,7 @@
 import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import { colord } from "colord";
 import type {
@@ -44,7 +44,7 @@ export function NewBadge({
   className?: string;
 }) {
   const { newBadgeColor, newBadgeDaysOld } = useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
@@ -59,7 +59,7 @@ export function NewBadge({
 
 export function BestSellerBadge({ className }: { className?: string }) {
   const { bestSellerBadgeColor } = useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   return (
     <Badge
       text={t("badge.bestSeller")}
@@ -71,7 +71,7 @@ export function BestSellerBadge({ className }: { className?: string }) {
 
 export function SoldOutBadge({ className }: { className?: string }) {
   const { soldOutBadgeColor } = useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   return (
     <Badge
       text={t("badge.soldOut")}
@@ -83,7 +83,7 @@ export function SoldOutBadge({ className }: { className?: string }) {
 
 export function BundleBadge({ className }: { className?: string }) {
   const { bundleBadgeColor } = useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   return (
     <Badge
       text={t("badge.bundle")}
@@ -103,7 +103,7 @@ export function SaleBadge({
   className?: string;
 }) {
   const { saleBadgeColor } = useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   const saleBadgeText = t("badge.sale");
   const { amount, percentage } = calculateDiscount(price, compareAtPrice);
   const discountAmount = useMoney({ amount, currencyCode: price.currencyCode });

@@ -15,7 +15,7 @@ import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { useCartDrawerStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -73,7 +73,7 @@ function AddToCartButtonContent({
   [key: string]: any;
 }) {
   const { open: openCartDrawer } = useCartDrawerStore();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
   const isLoading = fetcher.state !== "idle";
 

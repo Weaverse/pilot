@@ -6,7 +6,7 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 import type { CartLayoutType } from "~/types/others";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
@@ -23,7 +23,7 @@ function CartEmpty({
 }) {
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
 
   return (
     <div

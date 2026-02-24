@@ -6,7 +6,7 @@ import {
 } from "@phosphor-icons/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { useWeaverseT } from "@weaverse/i18n";
+import { useTranslation } from "react-i18next";
 import { cva } from "class-variance-authority";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
@@ -43,7 +43,7 @@ export function Footer() {
     footerLogoData,
     footerLogoWidth,
   } = useThemeSettings();
-  const { t } = useWeaverseT("common");
+  const { t } = useTranslation("common");
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
 
   // Compute message and error from fetcher data
