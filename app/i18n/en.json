@@ -1,4 +1,11 @@
 {
+  "badge": {
+    "bestSeller": "Best Seller",
+    "new": "New",
+    "bundle": "Bundle",
+    "soldOut": "Sold out",
+    "sale": "-[percentage]% Off"
+  },
   "cart": {
     "title": "Cart",
     "empty": {
@@ -17,6 +24,7 @@
       "addNote": "Add a note",
       "discountCode": "Add a discount code",
       "giftCard": "Redeem a gift card",
+      "checkout": "Continue to Checkout",
       "cancel": "Cancel",
       "saveNote": "Save note",
       "apply": "Apply",
@@ -47,6 +55,13 @@
     "pictureOf": "Picture of {{name}}",
     "secondPictureOf": "Second picture of {{name}}"
   },
+  "newsletter": {
+    "popup": {
+      "heading": "Stay in the loop!",
+      "description": "Subscribe to our newsletter and get exclusive offers, new product updates, and more.",
+      "buttonText": "Get 15% Off Your First Order"
+    }
+  },
   "search": {
     "title": "Search",
     "placeholder": "Search our store...",
@@ -55,17 +70,27 @@
     "noResults": "No results for \"{{term}}\", try a different search.",
     "noResultsShort": "No results found for",
     "trendingProducts": "Trending Products",
-    "problemLoadingProducts": "There was a problem loading related products"
+    "problemLoadingProducts": "There was a problem loading related products",
+    "popularKeywords": "sunglasses, hats, jackets, shoes"
+  },
+  "footer": {
+    "bio": "<p>We are a team of designers, developers, and creatives who are passionate about creating beautiful and functional products.</p>",
+    "addressTitle": "OUR SHOP",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canada",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "STAY IN TOUCH",
+    "newsletterDescription": "News and inspiration in your inbox, every week.",
+    "newsletterPlaceholder": "Please enter your email",
+    "newsletterButtonText": "Send",
+    "copyright": "© 2024 Weaverse. All rights reserved.",
+    "email": "Email:",
+    "newsletterSuccess": "Thank you for signing up! 🎉",
+    "newsletterError": "An error occurred while signing up."
   },
   "pagination": {
     "loading": "Loading...",
     "loadPrevious": "↑ Load previous",
     "loadMore": "↓ Load more"
-  },
-  "footer": {
-    "email": "Email:",
-    "newsletterSuccess": "Thank you for signing up! 🎉",
-    "newsletterError": "An error occurred while signing up."
   },
   "accessibility": {
     "closeCartDrawer": "Close cart drawer",

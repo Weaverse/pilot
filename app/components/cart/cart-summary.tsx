@@ -2,6 +2,7 @@ import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { useWeaverseT } from "@weaverse/i18n";
 import clsx from "clsx";
 import { useState } from "react";
 import { useFetcher } from "react-router";
@@ -10,7 +11,6 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
-import { useWeaverseT } from "@weaverse/i18n";
 import type { CartLayoutType } from "~/types/others";
 import {
   DiscountDialog,
@@ -25,15 +25,8 @@ export function CartSummary({
   cart: OptimisticCart<CartApiQueryFragment>;
   layout: CartLayoutType;
 }) {
-  const {
-    enableCartNote,
-    cartNoteButtonText,
-    enableDiscountCode,
-    discountCodeButtonText,
-    enableGiftCard,
-    giftCardButtonText,
-    checkoutButtonText,
-  } = useThemeSettings();
+  const { enableCartNote, enableDiscountCode, enableGiftCard } =
+    useThemeSettings();
   const { t } = useWeaverseT("common");
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
@@ -60,7 +53,7 @@ export function CartSummary({
       className={clsx(
         layout === "drawer" && "grid border-line-subtle border-t pt-4",
         layout === "page" &&
-        "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
+          "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
@@ -187,7 +180,11 @@ export function CartSummary({
         </div>
       </dl>
       <div className="mb-2 text-right text-body-subtle">
-        {t("cart.summary.taxesDiscountsShipping", { link: "" }).split("{{link}}")[0]}
+        {
+          t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
+            "{{link}}",
+          )[0]
+        }
         <Link
           target="_blank"
           to="/policies/shipping-policy"
@@ -196,7 +193,11 @@ export function CartSummary({
         >
           {t("cart.summary.shipping")}
         </Link>
-        {t("cart.summary.taxesDiscountsShipping", { link: "" }).split("{{link}}")[1]}
+        {
+          t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
+            "{{link}}",
+          )[1]
+        }
       </div>
       {(enableCartNote || enableDiscountCode || enableGiftCard) && (
         <div className="mb-4 flex items-center justify-end gap-2">
@@ -242,7 +243,7 @@ export function CartSummary({
         <div className="mt-4 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
             <Button className="w-full">
-              {checkoutButtonText || t("cart.actions.checkout")}
+              {t("cart.actions.checkout")}
             </Button>
           </a>
           {/* @todo: <CartShopPayButton cart={cart} /> */}

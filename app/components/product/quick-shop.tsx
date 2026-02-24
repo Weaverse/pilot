@@ -7,6 +7,7 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ShopPayButton } from "@shopify/hydrogen";
+import { useWeaverseT } from "@weaverse/i18n";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
@@ -127,7 +128,7 @@ export function QuickShopTrigger({
   productHandle,
   showOnHover = true,
   buttonType = "icon",
-  buttonText = "Quick shop",
+  buttonText,
   panelType = "modal",
 }: {
   productHandle: string;
@@ -136,6 +137,8 @@ export function QuickShopTrigger({
   buttonText?: string;
   panelType?: "modal" | "drawer";
 }) {
+  const { t } = useWeaverseT("common");
+  const resolvedButtonText = buttonText || t("product.quickShop");
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 
@@ -165,11 +168,11 @@ export function QuickShopTrigger({
             <>
               <HandbagSimpleIcon size={16} className="h-4 w-4" />
               <span className="w-0 overflow-hidden pl-0 text-base transition-all group-hover/quick-shop:w-9.5 group-hover/quick-shop:pl-2">
-                Add
+                {t("product.add")}
               </span>
             </>
           ) : (
-            <span className="px-2">{buttonText}</span>
+            <span className="px-2">{resolvedButtonText}</span>
           )}
         </Button>
       </Dialog.Trigger>

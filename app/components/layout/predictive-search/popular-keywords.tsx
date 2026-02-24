@@ -1,11 +1,12 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useWeaverseT } from "@weaverse/i18n";
 
 export function PopularKeywords({
   onKeywordClick,
 }: {
   onKeywordClick: (keyword: string) => void;
 }) {
-  const { popularSearchKeywords } = useThemeSettings();
+  const { t } = useWeaverseT("common");
+  const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;
   }

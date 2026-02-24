@@ -517,20 +517,6 @@ export const themeSchema: HydrogenThemeSchema = {
           defaultValue: "Uppercase",
         },
         {
-          type: "text",
-          label: "Best Seller / Hot text",
-          name: "bestSellerBadgeText",
-          defaultValue: "Best Seller",
-          placeholder: "Best Seller",
-        },
-        {
-          type: "text",
-          label: "New text",
-          name: "newBadgeText",
-          defaultValue: "New",
-          placeholder: "New",
-        },
-        {
           type: "range",
           label: "Days old",
           name: "newBadgeDaysOld",
@@ -542,32 +528,6 @@ export const themeSchema: HydrogenThemeSchema = {
           defaultValue: 30,
           helpText:
             "The <strong>New</strong> badge will be shown if the product is published within the last days.",
-        },
-        {
-          type: "text",
-          label: "Bundle text",
-          name: "bundleBadgeText",
-          defaultValue: "Bundle",
-          placeholder: "Bundle",
-        },
-        {
-          type: "text",
-          label: "Sold out text",
-          name: "soldOutBadgeText",
-          defaultValue: "Sold out",
-          placeholder: "Sold out",
-        },
-        {
-          type: "textarea",
-          label: "Sale badge text",
-          name: "saleBadgeText",
-          defaultValue: "-[percentage]% Off",
-          placeholder: "-[percentage]% Off, Saved [amount], or Sale",
-          helpText: [
-            "<p class='mb-1'>- Use <strong>[percentage]</strong> to display the discount percentage.</p>",
-            "<p class='mb-1'>- Use <strong>[amount]</strong> to display the discount amount.</p>",
-            "<p>E.g. <strong>-[percentage]% Off</strong>, <strong>Saved [amount]</strong>, or <strong>Sale</strong>.</p>",
-          ].join(""),
         },
       ],
     },
@@ -733,19 +693,7 @@ export const themeSchema: HydrogenThemeSchema = {
           defaultValue: "icon",
           condition: (theme) => theme.pcardEnableQuickShop === true,
         },
-        {
-          type: "text",
-          label: "Quick shop button text",
-          name: "pcardQuickShopButtonText",
-          defaultValue: "Quick shop",
-          placeholder: "Quick shop",
-          condition: (theme) => {
-            return (
-              theme.pcardEnableQuickShop === true &&
-              theme.pcardQuickShopButtonType === "text"
-            );
-          },
-        },
+
         {
           type: "select",
           label: "Quick shop panel type",
@@ -873,31 +821,7 @@ export const themeSchema: HydrogenThemeSchema = {
           condition: (theme) =>
             theme.newsletterPopupEnabled === true && theme.newsletterPopupImage,
         },
-        {
-          type: "text",
-          label: "Heading",
-          name: "newsletterPopupHeading",
-          defaultValue: "Stay in the loop!",
-          placeholder: "Stay in the loop!",
-          condition: (theme) => theme.newsletterPopupEnabled === true,
-        },
-        {
-          type: "textarea",
-          label: "Description",
-          name: "newsletterPopupDescription",
-          defaultValue:
-            "Subscribe to our newsletter and get exclusive offers, new product updates, and more.",
-          placeholder: "Subscribe to our newsletter...",
-          condition: (theme) => theme.newsletterPopupEnabled === true,
-        },
-        {
-          type: "text",
-          label: "Button text",
-          name: "newsletterPopupButtonText",
-          defaultValue: "Get 15% Off Your First Order",
-          placeholder: "Subscribe",
-          condition: (theme) => theme.newsletterPopupEnabled === true,
-        },
+
         {
           type: "select",
           label: "Popup position",
@@ -916,20 +840,7 @@ export const themeSchema: HydrogenThemeSchema = {
         },
       ],
     },
-    {
-      group: "Search",
-      inputs: [
-        {
-          type: "textarea",
-          name: "popularSearchKeywords",
-          label: "Popular search keywords",
-          defaultValue: "sunglasses, hats, jackets, shoes",
-          placeholder: "sunglasses, hats, jackets, shoes",
-          helpText:
-            "Enter popular search keywords separated by commas. E.g. <strong>sunglasses, hats, jackets, shoes</strong>",
-        },
-      ],
-    },
+
     {
       group: "Cart",
       inputs: [
@@ -940,47 +851,16 @@ export const themeSchema: HydrogenThemeSchema = {
           defaultValue: true,
         },
         {
-          type: "text",
-          label: "Cart note button text",
-          name: "cartNoteButtonText",
-          defaultValue: "Add a note",
-          placeholder: "Add a note",
-          condition: (theme) => theme.enableCartNote === true,
-        },
-        {
           type: "switch",
           label: "Enable discount code",
           name: "enableDiscountCode",
           defaultValue: true,
         },
         {
-          type: "text",
-          label: "Discount code button text",
-          name: "discountCodeButtonText",
-          defaultValue: "Add a discount code",
-          placeholder: "Add a discount code",
-          condition: (theme) => theme.enableDiscountCode === true,
-        },
-        {
           type: "switch",
           label: "Enable gift card",
           name: "enableGiftCard",
           defaultValue: true,
-        },
-        {
-          type: "text",
-          label: "Gift card button text",
-          name: "giftCardButtonText",
-          defaultValue: "Redeem a gift card",
-          placeholder: "Redeem a gift card",
-          condition: (theme) => theme.enableGiftCard === true,
-        },
-        {
-          type: "text",
-          label: "Checkout button text",
-          name: "checkoutButtonText",
-          defaultValue: "Continue to Checkout",
-          placeholder: "Continue to Checkout",
         },
       ],
     },
@@ -1019,13 +899,6 @@ export const themeSchema: HydrogenThemeSchema = {
           defaultValue: 80,
         },
         {
-          type: "richtext",
-          name: "bio",
-          label: "Store bio",
-          defaultValue:
-            "<p>We are a team of designers, developers, and creatives who are passionate about creating beautiful and functional products.</p>",
-        },
-        {
           type: "heading",
           label: "Social links",
         },
@@ -1052,68 +925,6 @@ export const themeSchema: HydrogenThemeSchema = {
           name: "socialFacebook",
           label: "Facebook",
           defaultValue: "https://www.facebook.com/weaverse",
-        },
-        {
-          type: "heading",
-          label: "Store information",
-        },
-        {
-          type: "text",
-          name: "addressTitle",
-          label: "Title",
-          defaultValue: "OUR SHOP",
-          placeholder: "Our shop",
-        },
-        {
-          type: "text",
-          name: "storeAddress",
-          label: "Address",
-          defaultValue: "301 Front St W, Toronto, ON M5V 2T6, Canada",
-          placeholder: "301 Front St W, Toronto, ON M5V 2T6, Canada",
-        },
-        {
-          type: "text",
-          name: "storeEmail",
-          label: "Email",
-          defaultValue: "contact@my-store.com",
-          placeholder: "contact@my-store.com",
-        },
-        {
-          type: "heading",
-          label: "Newsletter",
-        },
-        {
-          type: "text",
-          name: "newsletterTitle",
-          label: "Title",
-          defaultValue: "STAY IN TOUCH",
-          placeholder: "Stay in touch",
-        },
-        {
-          type: "text",
-          name: "newsletterDescription",
-          label: "Description",
-          defaultValue: "News and inspiration in your inbox, every week.",
-        },
-        {
-          type: "text",
-          name: "newsletterPlaceholder",
-          label: "Input placeholder",
-          defaultValue: "Please enter your email",
-          placeholder: "Please enter your email",
-        },
-        {
-          type: "text",
-          name: "newsletterButtonText",
-          label: "Button text",
-          defaultValue: "Send",
-          placeholder: "Send",
-        },
-        {
-          type: "richtext",
-          name: "copyright",
-          label: "Copyright text",
-          defaultValue: "© 2024 Weaverse. All rights reserved.",
         },
       ],
     },

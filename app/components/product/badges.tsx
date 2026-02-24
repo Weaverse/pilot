@@ -1,6 +1,7 @@
 import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { useWeaverseT } from "@weaverse/i18n";
 import clsx from "clsx";
 import { colord } from "colord";
 import type {
@@ -42,11 +43,12 @@ export function NewBadge({
   publishedAt: string;
   className?: string;
 }) {
-  const { newBadgeText, newBadgeColor, newBadgeDaysOld } = useThemeSettings();
+  const { newBadgeColor, newBadgeDaysOld } = useThemeSettings();
+  const { t } = useWeaverseT("common");
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
-        text={newBadgeText}
+        text={t("badge.new")}
         backgroundColor={newBadgeColor}
         className={clsx("new-badge", className)}
       />
@@ -56,10 +58,11 @@ export function NewBadge({
 }
 
 export function BestSellerBadge({ className }: { className?: string }) {
-  const { bestSellerBadgeText, bestSellerBadgeColor } = useThemeSettings();
+  const { bestSellerBadgeColor } = useThemeSettings();
+  const { t } = useWeaverseT("common");
   return (
     <Badge
-      text={bestSellerBadgeText}
+      text={t("badge.bestSeller")}
       backgroundColor={bestSellerBadgeColor}
       className={clsx("best-seller-badge", className)}
     />
@@ -67,10 +70,11 @@ export function BestSellerBadge({ className }: { className?: string }) {
 }
 
 export function SoldOutBadge({ className }: { className?: string }) {
-  const { soldOutBadgeText, soldOutBadgeColor } = useThemeSettings();
+  const { soldOutBadgeColor } = useThemeSettings();
+  const { t } = useWeaverseT("common");
   return (
     <Badge
-      text={soldOutBadgeText}
+      text={t("badge.soldOut")}
       backgroundColor={soldOutBadgeColor}
       className={clsx("sold-out-badge", className)}
     />
@@ -78,10 +82,11 @@ export function SoldOutBadge({ className }: { className?: string }) {
 }
 
 export function BundleBadge({ className }: { className?: string }) {
-  const { bundleBadgeText, bundleBadgeColor } = useThemeSettings();
+  const { bundleBadgeColor } = useThemeSettings();
+  const { t } = useWeaverseT("common");
   return (
     <Badge
-      text={bundleBadgeText}
+      text={t("badge.bundle")}
       backgroundColor={bundleBadgeColor}
       className={clsx("bundle-badge", className)}
     />
@@ -97,7 +102,9 @@ export function SaleBadge({
   compareAtPrice: MoneyV2;
   className?: string;
 }) {
-  const { saleBadgeText = "Sale", saleBadgeColor } = useThemeSettings();
+  const { saleBadgeColor } = useThemeSettings();
+  const { t } = useWeaverseT("common");
+  const saleBadgeText = t("badge.sale");
   const { amount, percentage } = calculateDiscount(price, compareAtPrice);
   const discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
   const text = saleBadgeText

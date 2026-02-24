@@ -2,6 +2,7 @@ import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { useWeaverseT } from "@weaverse/i18n";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
@@ -35,21 +36,19 @@ export function NewsletterPopup() {
     newsletterPopupAllowDismiss,
     newsletterPopupImage,
     newsletterPopupImagePosition = "left",
-    newsletterPopupHeading,
-    newsletterPopupDescription,
-    newsletterPopupButtonText,
     newsletterPopupPosition = "center",
   } = useThemeSettings();
+  const { t } = useWeaverseT("common");
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
   const isDesignMode = useWeaverseStudioCheck();
 
   // Compute message and error from fetcher data
-  const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
+  const message = fetcher.data?.ok ? t("footer.newsletterSuccess") : "";
   const error =
     fetcher.data && !fetcher.data.ok
-      ? fetcher.data.error || "An error occurred while signing up."
+      ? fetcher.data.error || t("footer.newsletterError")
       : "";
 
   // Close popup after successful submission
@@ -88,9 +87,6 @@ export function NewsletterPopup() {
     newsletterPopupAllowDismiss,
     newsletterPopupImage,
     newsletterPopupImagePosition,
-    newsletterPopupHeading,
-    newsletterPopupDescription,
-    newsletterPopupButtonText,
     newsletterPopupPosition,
   ]);
 
@@ -172,10 +168,10 @@ export function NewsletterPopup() {
                 )}
               >
                 <h3 className="mb-4 font-semibold text-2xl">
-                  {newsletterPopupHeading}
+                  {t("newsletter.popup.heading")}
                 </h3>
                 <p className="mb-6 text-body-subtle">
-                  {newsletterPopupDescription}
+                  {t("newsletter.popup.description")}
                 </p>
 
                 <fetcher.Form
@@ -196,7 +192,7 @@ export function NewsletterPopup() {
                     className="w-full"
                     loading={fetcher.state === "submitting"}
                   >
-                    {newsletterPopupButtonText}
+                    {t("newsletter.popup.buttonText")}
                   </Button>
                 </fetcher.Form>
 

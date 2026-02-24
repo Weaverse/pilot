@@ -1,9 +1,10 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useWeaverseT } from "@weaverse/i18n";
 import { Fragment } from "react";
 import Link from "~/components/link";
 
 export function PopularKeywords() {
-  const { popularSearchKeywords } = useThemeSettings();
+  const { t } = useWeaverseT("common");
+  const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;
   }

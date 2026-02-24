@@ -6,6 +6,7 @@ import {
 } from "@phosphor-icons/react";
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { useWeaverseT } from "@weaverse/i18n";
 import { cva } from "class-variance-authority";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
@@ -41,23 +42,15 @@ export function Footer() {
     socialX,
     footerLogoData,
     footerLogoWidth,
-    bio,
-    copyright,
-    addressTitle,
-    storeAddress,
-    storeEmail,
-    newsletterTitle,
-    newsletterDescription,
-    newsletterPlaceholder,
-    newsletterButtonText,
   } = useThemeSettings();
+  const { t } = useWeaverseT("common");
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
 
   // Compute message and error from fetcher data
-  const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
+  const message = fetcher.data?.ok ? t("footer.newsletterSuccess") : "";
   const error =
     fetcher.data && !fetcher.data.ok
-      ? fetcher.data.error || "An error occurred while signing up."
+      ? fetcher.data.error || t("footer.newsletterError")
       : "";
 
   const SOCIAL_ACCOUNTS = [
@@ -113,7 +106,7 @@ export function Footer() {
                   {shopName}
                 </div>
               )}
-              {bio ? <div dangerouslySetInnerHTML={{ __html: bio }} /> : null}
+              {t("footer.bio") ? <div dangerouslySetInnerHTML={{ __html: t("footer.bio") }} /> : null}
               <div className="flex gap-4">
                 {SOCIAL_ACCOUNTS.map(({ to, name, Icon }) => (
                   <Link
@@ -128,16 +121,16 @@ export function Footer() {
               </div>
             </div>
             <div className="flex flex-col gap-6">
-              <div className="text-base">{addressTitle}</div>
+              <div className="text-base">{t("footer.addressTitle")}</div>
               <div className="space-y-2">
-                <p>{storeAddress}</p>
-                <p>Email: {storeEmail}</p>
+                <p>{t("footer.storeAddress")}</p>
+                <p>{t("footer.email")} {t("footer.storeEmail")}</p>
               </div>
             </div>
             <div className="flex flex-col gap-6">
-              <div className="text-base">{newsletterTitle}</div>
+              <div className="text-base">{t("footer.newsletterTitle")}</div>
               <div className="space-y-2">
-                <p>{newsletterDescription}</p>
+                <p>{t("footer.newsletterDescription")}</p>
                 <fetcher.Form
                   action="/api/klaviyo"
                   method="POST"
@@ -148,7 +141,7 @@ export function Footer() {
                       name="email"
                       type="email"
                       required
-                      placeholder={newsletterPlaceholder}
+                      placeholder={t("footer.newsletterPlaceholder")}
                       className="grow border border-gray-100 px-3 focus-visible:outline-hidden"
                     />
                     <Button
@@ -156,7 +149,7 @@ export function Footer() {
                       type="submit"
                       loading={fetcher.state === "submitting"}
                     >
-                      {newsletterButtonText}
+                      {t("footer.newsletterButtonText")}
                     </Button>
                   </div>
                 </fetcher.Form>
@@ -181,7 +174,7 @@ export function Footer() {
           <div className="flex gap-2">
             <CountrySelector />
           </div>
-          <p>{copyright}</p>
+          <p>{t("footer.copyright")}</p>
         </div>
       </div>
     </footer>
