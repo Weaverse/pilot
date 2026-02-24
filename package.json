@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/pilot",
-  "version": "7.1.2",
+  "version": "7.2.0",
   "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
   "keywords": [
     "shopify",
@@ -62,7 +62,7 @@
     "@react-router/dev": "7.9.2",
     "@shopify/hydrogen": "^2025.7.0",
     "@tailwindcss/vite": "^4.1.17",
-    "@weaverse/hydrogen": "^5.8.7",
+    "@weaverse/hydrogen": "^5.9.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.9.3",
@@ -97,7 +97,7 @@
     "@total-typescript/ts-reset": "0.6.1",
     "@types/react": "19.2.6",
     "@types/react-dom": "19.2.3",
-    "@weaverse/biome": "5.6.2",
+    "@weaverse/biome": "5.7.1",
     "cross-env": "10.1.0",
     "tailwindcss": "^4.1.17",
     "ts-node": "10.9.2",
