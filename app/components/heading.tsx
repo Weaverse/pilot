@@ -124,9 +124,6 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
       "--max-size": maxSize,
     } as CSSProperties;
   }
-  if (animate) {
-    rest["data-motion"] = "fade-up";
-  }
   return (
     <Tag
       ref={ref}
@@ -134,6 +131,7 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
       style={style}
       className={cn(
         size === "custom" && fontSizeVariants({ mobileSize, desktopSize }),
+        animate && "animate-fade-up",
         variants({ size, weight, letterSpacing, alignment, className }),
       )}
     >

@@ -128,7 +128,7 @@ export function Button(props: ButtonProps) {
   }
 
   if (animate) {
-    rest["data-motion"] = "fade-up";
+    className = cn(className, "animate-fade-up");
   }
 
   return (

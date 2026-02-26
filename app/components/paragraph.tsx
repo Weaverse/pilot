@@ -60,10 +60,9 @@ function Paragraph(props: ParagraphProps) {
   return (
     <Tag
       ref={ref}
-      data-motion="fade-up"
       {...rest}
       style={{ color }}
-      className={clsx(variants({ textSize, width, alignment, className }))}
+      className={clsx("animate-fade-up", variants({ textSize, width, alignment, className }))}
       suppressHydrationWarning
       dangerouslySetInnerHTML={{ __html: content }}
     />

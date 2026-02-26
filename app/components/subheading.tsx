@@ -51,9 +51,8 @@ function SubHeading(props: SubHeadingProps) {
     <Tag
       ref={ref}
       {...rest}
-      data-motion="fade-up"
       style={{ color }}
-      className={cn(variants({ size, weight, alignment, className }))}
+      className={cn("animate-fade-up", variants({ size, weight, alignment, className }))}
     >
       {content}
     </Tag>

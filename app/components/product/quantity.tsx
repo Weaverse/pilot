@@ -18,7 +18,7 @@ export function Quantity(props: QuantityProps) {
     }
   };
   return (
-    <div className="space-y-1.5" data-motion="fade-up">
+    <div className="animate-fade-up space-y-1.5">
       <legend className="font-bold leading-tight">{label}</legend>
       <div className="w-fit border border-line">
         <button
