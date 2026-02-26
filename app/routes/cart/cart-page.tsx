@@ -66,7 +66,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       break;
     }
     case CartForm.ACTIONS.GiftCardCodesUpdate: {
-      // Legacy support - redirects to Add
+      // Just keep this for backward compatibility, same as add gift card codes
       const giftCardCodes = (inputs.giftCardCodes as string[]) || [];
       result = await cart.addGiftCardCodes(giftCardCodes);
       break;
