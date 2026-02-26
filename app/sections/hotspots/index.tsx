@@ -73,8 +73,7 @@ function Hotspots(props: HotspotsProps) {
         <Image
           data={imageData}
           sizes="auto"
-          className="z-0"
-          data-motion="zoom-in"
+          className="animate-zoom-in z-0"
         />
         {children}
       </div>

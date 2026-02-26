@@ -112,8 +112,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
       {collections.map((collection, ind) => (
         <div
           key={collection.id + ind}
-          className="group group/overlay relative w-[67vw] md:w-auto"
-          data-motion="slide-in"
+          className="animate-slide-in group group/overlay relative w-[67vw] md:w-auto"
         >
           {collection?.image && (
             <div

@@ -6,6 +6,7 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import { cn } from "~/utils/cn";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
@@ -57,8 +58,7 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
     <div
       ref={ref}
       {...rest}
-      data-motion="slide-in"
-      className={variants({ size, hideOnMobile })}
+      className={cn("animate-slide-in", variants({ size, hideOnMobile }))}
       style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
     >
       <Image

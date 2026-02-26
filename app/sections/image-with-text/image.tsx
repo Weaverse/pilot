@@ -80,10 +80,9 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
     <div ref={ref} {...rest} className={cn(variants({ width }))}>
       <Image
         data={imageData}
-        data-motion="slide-in"
         sizes="auto"
         aspectRatio={aspRt}
-        className={cn("h-auto w-full", variants({ objectFit, borderRadius }))}
+        className={cn("animate-slide-in h-auto w-full", variants({ objectFit, borderRadius }))}
       />
     </div>
   );

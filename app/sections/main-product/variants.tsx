@@ -19,7 +19,7 @@ export function ProductVariants({
   const selectedOptions = selectedVariant?.selectedOptions || [];
 
   return (
-    <div className="space-y-5" data-motion="fade-up">
+    <div className="animate-fade-up space-y-5">
       <div className="product-form space-y-5">
         {productOptions.map((option) => {
           const { name } = option;

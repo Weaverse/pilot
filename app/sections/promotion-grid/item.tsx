@@ -9,6 +9,7 @@ import { cva } from "class-variance-authority";
 import { BackgroundImage } from "~/components/background-image";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { cn } from "~/utils/cn";
 
 const variants = cva(
   [
@@ -83,8 +84,7 @@ function PromotionGridItem(props: PromotionItemProps) {
     <div
       ref={ref}
       {...rest}
-      data-motion="slide-in"
-      className={variants({ contentPosition, borderRadius })}
+      className={cn("animate-slide-in", variants({ contentPosition, borderRadius }))}
     >
       <BackgroundImage backgroundImage={backgroundImage} />
       <Overlay

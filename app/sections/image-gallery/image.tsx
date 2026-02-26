@@ -57,8 +57,7 @@ function ImageGalleryItem(props: ImageGalleryItemProps) {
     <Image
       ref={ref}
       {...rest}
-      className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
-      data-motion="slide-in"
+      className={clsx("animate-slide-in", variants({ columnSpan, borderRadius, hideOnMobile }))}
       loading="lazy"
       data={data}
       width={1000}

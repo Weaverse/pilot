@@ -54,8 +54,7 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
     <div
       ref={ref}
       {...rest}
-      className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
-      data-motion="fade-up"
+      className="animate-fade-up countdown--timer flex py-3 text-(--timer-color) sm:py-0"
       style={
         {
           "--timer-color": textColor,

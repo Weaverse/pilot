@@ -68,7 +68,7 @@ export default function SingleProduct(props: SingleProductProps) {
             />
             <div className="flex flex-col items-start justify-start gap-4">
               <SoldOutBadge />
-              <h3 data-motion="fade-up" className="tracking-tight">
+              <h3 className="animate-fade-up tracking-tight">
                 EXAMPLE PRODUCT TITLE
               </h3>
               <Money
@@ -129,8 +129,7 @@ export default function SingleProduct(props: SingleProductProps) {
             showThumbnails={showThumbnails}
           />
           <div
-            className="flex flex-col justify-start space-y-5"
-            data-motion="slide-in"
+            className="animate-slide-in flex flex-col justify-start space-y-5"
           >
             <div className="space-y-4">
               <ProductBadges
@@ -138,7 +137,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 selectedVariant={selectedVariant}
                 className="[&_span:nth-child(n+3)]:hidden"
               />
-              <h3 data-motion="fade-up" className="tracking-tight">
+              <h3 className="animate-fade-up tracking-tight">
                 {product?.title}
               </h3>
               <VariantPrices variant={selectedVariant} />

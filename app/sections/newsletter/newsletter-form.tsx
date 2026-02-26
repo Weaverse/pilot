@@ -35,8 +35,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
       <Form
         method="POST"
         action="/api/customer"
-        className="flex w-full items-center"
-        data-motion="fade-up"
+        className="animate-fade-up flex w-full items-center"
       >
         <div className="flex grow items-center border-y border-r-0 border-l">
           <EnvelopeSimpleIcon className="mr-1.5 ml-3 h-5 w-5 shrink-0" />
@@ -58,8 +57,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
       </Form>
       {helpText && (
         <div
-          className="mt-2 text-body-subtle"
-          data-motion="fade-up"
+          className="animate-fade-up mt-2 text-body-subtle"
           dangerouslySetInnerHTML={{ __html: helpText }}
         />
       )}

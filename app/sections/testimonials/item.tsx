@@ -33,8 +33,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
     <div
       ref={ref}
       {...rest}
-      data-motion="slide-in"
-      className={clsx(hideOnMobile && "hidden sm:block")}
+      className={clsx("animate-slide-in", hideOnMobile && "hidden sm:block")}
     >
       <figure className="rounded-sm bg-gray-50 p-6">
         <blockquote>
