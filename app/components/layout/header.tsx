@@ -104,7 +104,7 @@ export function Header() {
           <PredictiveSearchButton />
           <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
           <CartDrawer />
-          {true && <HeaderCountrySelector />}
+          {showHeaderCountrySelector && <HeaderCountrySelector />}
         </div>
       </div>
     </header>
