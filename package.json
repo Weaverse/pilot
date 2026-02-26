@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/pilot",
-  "version": "7.2.0",
+  "version": "8.0.0",
   "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
   "keywords": [
     "shopify",
