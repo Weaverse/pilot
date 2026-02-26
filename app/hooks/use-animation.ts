@@ -1,52 +1,55 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { animate, inView, useAnimate } from "framer-motion";
-import { type ForwardedRef, useEffect } from "react";
+import { type ForwardedRef, useEffect, useRef } from "react";
 
-export type MotionType = "fade-up" | "zoom-in" | "slide-in";
+const ANIMATION_SELECTOR = ".animate-fade-up,.animate-zoom-in,.animate-slide-in";
 
-const ANIMATIONS: Record<MotionType, any> = {
-  "fade-up": { opacity: [0, 1], y: [20, 0] },
-  "zoom-in": { opacity: [0, 1], scale: [0.8, 1], y: [20, 0] },
-  "slide-in": { opacity: [0, 1], x: [20, 0] },
-};
-
-// TODO prevent already-in-view elements from triggering the animation
 export function useAnimation(ref?: ForwardedRef<any>) {
   const { revealElementsOnScroll } = useThemeSettings();
-  const [scope] = useAnimate();
+  const scope = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!(scope.current && ref)) {
-      return;
+    if (scope.current && ref) {
+      Object.assign(ref, { current: scope.current });
     }
-    Object.assign(ref, { current: scope.current });
   }, [scope, ref]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
-    if (!revealElementsOnScroll) {
+    if (!revealElementsOnScroll || !scope.current) {
       return;
     }
-    if (scope.current) {
-      scope.current.classList.add("animated-scope");
-      const elems = scope.current.querySelectorAll("[data-motion]");
-      elems.forEach((elem: HTMLElement, idx: number) => {
-        inView(
-          elem,
-          (element: Element) => {
-            const { motion, delay } = elem.dataset;
-            animate(element, ANIMATIONS[motion || "fade-up"], {
-              delay: Number(delay) || idx * 0.15,
-              duration: 0.5,
-            });
-            if (idx === elems.length - 1) {
-              scope.current.classList.remove("animated-scope");
-            }
-          },
-          { amount: 0.3 },
-        );
-      });
-    }
+
+    scope.current.classList.add("animated-scope");
+    const elems =
+      scope.current.querySelectorAll<HTMLElement>(ANIMATION_SELECTOR);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    elems.forEach((elem, idx) => {
+      elem.style.setProperty("--motion-delay", `${idx * 0.15}s`);
+      observer.observe(elem);
+    });
+
+    // Remove animated-scope after last element would have finished animating
+    const totalDuration = (elems.length - 1) * 0.15 + 0.5;
+    const timeout = setTimeout(() => {
+      scope.current?.classList.remove("animated-scope");
+    }, totalDuration * 1000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
   }, []);
 
   return [scope] as const;
