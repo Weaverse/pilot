@@ -1,7 +1,7 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm } from "@shopify/hydrogen";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
@@ -215,7 +215,6 @@ export function GiftCardDialog({
 }: {
   appliedGiftCards: CartApiQueryFragment["appliedGiftCards"];
 }) {
-  const appliedGiftCardCodes = useRef<string[]>([]);
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
@@ -227,13 +226,6 @@ export function GiftCardDialog({
   );
   const error = submitted && !success;
 
-  function saveAppliedCode(gcCode: string) {
-    const formattedCode = gcCode.replace(/\s/g, ""); // Remove spaces
-    if (!appliedGiftCardCodes.current.includes(formattedCode)) {
-      appliedGiftCardCodes.current.push(formattedCode);
-    }
-  }
-
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -242,16 +234,14 @@ export function GiftCardDialog({
       fetcher.submit(
         {
           [CartForm.INPUT_NAME]: JSON.stringify({
-            action: CartForm.ACTIONS.GiftCardCodesUpdate,
+            action: CartForm.ACTIONS.GiftCardCodesAdd,
             inputs: {
-              giftCardCode,
-              giftCardCodes: appliedGiftCardCodes.current,
+              giftCardCodes: [giftCardCode.trim()],
             },
           }),
         },
         { method: "POST", action: "/cart" },
       );
-      saveAppliedCode(giftCardCode);
     }
   }
 

@@ -33,7 +33,7 @@ export function MobileMenu() {
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
-            "fixed inset-0 z-10 h-screen bg-(--color-header-bg) pt-4 pb-2",
+            "fixed inset-0 z-10 h-screen bg-(--color-header-bg) text-(--color-header-text) pt-4 pb-2",
             "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
             "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
             "focus-visible:outline-hidden",
@@ -71,7 +71,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
   if (!items?.length) {
     return (
       <Dialog.Close asChild>
-        <Link to={to} className="py-3">
+        <Link to={to} className="py-3 block">
           {title}
         </Link>
       </Dialog.Close>

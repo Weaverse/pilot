@@ -53,24 +53,22 @@ export async function action({ request, context }: ActionFunctionArgs) {
     }
     case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
-      // User inputted discount code
       const discountCodes = (
         formDiscountCode ? [formDiscountCode] : []
       ) as string[];
-      // Combine discount codes already applied on cart
       discountCodes.push(...(inputs.discountCodes as string[]));
       result = await cart.updateDiscountCodes(discountCodes);
       break;
     }
+    case CartForm.ACTIONS.GiftCardCodesAdd: {
+      const giftCardCodes = (inputs.giftCardCodes as string[]) || [];
+      result = await cart.addGiftCardCodes(giftCardCodes);
+      break;
+    }
     case CartForm.ACTIONS.GiftCardCodesUpdate: {
-      const formGiftCardCode = inputs.giftCardCode;
-      // User inputted gift card code
-      const giftCardCodes = (
-        formGiftCardCode ? [formGiftCardCode] : []
-      ) as string[];
-      // Combine gift card codes already applied on cart
-      giftCardCodes.push(...inputs.giftCardCodes);
-      result = await cart.updateGiftCardCodes(giftCardCodes);
+      // Just keep this for backward compatibility, same as add gift card codes
+      const giftCardCodes = (inputs.giftCardCodes as string[]) || [];
+      result = await cart.addGiftCardCodes(giftCardCodes);
       break;
     }
     case CartForm.ACTIONS.GiftCardCodesRemove: {
@@ -84,12 +82,11 @@ export async function action({ request, context }: ActionFunctionArgs) {
       });
       break;
     default:
+      console.error("Unknown cart action:", cartFormAction);
+      console.error("Available actions:", Object.keys(CartForm.ACTIONS));
       invariant(false, `${cartFormAction} cart action is not defined`);
   }
 
-  /**
-   * The Cart ID may change after each mutation. We need to update it each time in the session.
-   */
   let headers = {};
   if (result?.cart?.id) {
     headers = cart.setCartId(result.cart.id);
@@ -97,8 +94,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   const redirectTo = formData.get("redirectTo") ?? null;
   if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
-    // status = 303;
-    // headers.set("Location", redirectTo);
     return redirect(redirectTo);
   }
 
@@ -155,22 +150,11 @@ export default function CartRoute() {
   );
 }
 
-/**
- * Validates that a url is local
- * @param url
- * @returns `true` if local `false`if external domain
- */
 function isLocalPath(url: string) {
   try {
-    // We don't want to redirect cross domain,
-    // doing so could create fishing vulnerability
-    // If `new URL()` succeeds, it's a fully qualified
-    // url which is cross domain. If it fails, it's just
-    // a path, which will be the current domain.
     new URL(url);
   } catch (e) {
     return true;
   }
-
   return false;
 }
