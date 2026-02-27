@@ -82,21 +82,20 @@ function PromotionGridItem(props: PromotionItemProps) {
     ...rest
   } = props;
   return (
-    <ScrollReveal animation="slide-in">
-      <div
-        ref={ref}
-        {...rest}
-        className={cn(variants({ contentPosition, borderRadius }))}
-      >
-        <BackgroundImage backgroundImage={backgroundImage} />
-        <Overlay
-          enableOverlay={enableOverlay}
-          overlayColor={overlayColor}
-          overlayColorHover={overlayColorHover}
-          overlayOpacity={overlayOpacity}
-        />
-        {children}
-      </div>
+    <ScrollReveal
+      animation="slide-in"
+      ref={ref}
+      {...rest}
+      className={cn(variants({ contentPosition, borderRadius }))}
+    >
+      <BackgroundImage backgroundImage={backgroundImage} />
+      <Overlay
+        enableOverlay={enableOverlay}
+        overlayColor={overlayColor}
+        overlayColorHover={overlayColorHover}
+        overlayOpacity={overlayOpacity}
+      />
+      {children}
     </ScrollReveal>
   );
 }

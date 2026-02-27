@@ -109,10 +109,11 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
       )}
     >
       {collections.map((collection, ind) => (
-        <ScrollReveal key={collection.id + ind} animation="slide-in">
-          <div
-            className="group group/overlay relative w-[67vw] md:w-auto"
-          >
+        <ScrollReveal
+          key={collection.id + ind}
+          animation="slide-in"
+          className="group group/overlay relative w-[67vw] md:w-auto"
+        >
           {collection?.image && (
             <div
               className={clsx("overflow-hidden", variants({ borderRadius }))}
@@ -175,7 +176,6 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
                 </Link>
               )}
             </div>
-          </div>
           </div>
         </ScrollReveal>
       ))}

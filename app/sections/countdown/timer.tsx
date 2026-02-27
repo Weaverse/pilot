@@ -52,17 +52,16 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
   }, [endTime]);
 
   return (
-    <ScrollReveal>
-      <div
-        ref={ref}
-        {...rest}
-        className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
-        style={
-          {
-            "--timer-color": textColor,
-          } as CSSProperties
-        }
-      >
+    <ScrollReveal
+      ref={ref}
+      {...rest}
+      className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
+      style={
+        {
+          "--timer-color": textColor,
+        } as CSSProperties
+      }
+    >
       <div className="space-y-1">
         <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
           <div className="px-6">{remainingTime?.days || 0}</div>
@@ -94,7 +93,6 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
           seconds
         </div>
       </div>
-    </div>
     </ScrollReveal>
   );
 }

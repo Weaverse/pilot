@@ -20,27 +20,23 @@ export function ProductVariants({
   const selectedOptions = selectedVariant?.selectedOptions || [];
 
   return (
-    <ScrollReveal>
-      <div className="space-y-5">
-      <div className="product-form space-y-5">
-        {productOptions.map((option) => {
-          const { name } = option;
-          const selected = selectedOptions.find((opt) => opt.name === name);
-          return (
-            <div className="product-options space-y-2" key={name}>
-              <legend className="leading-tight">
-                <span className="font-bold">{name}</span>
-                {selected?.value && <span>: {selected.value}</span>}
-              </legend>
-              <ProductOptionValues
-                option={option}
-                combinedListing={combinedListing}
-              />
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <ScrollReveal className="product-form space-y-5">
+      {productOptions.map((option) => {
+        const { name } = option;
+        const selected = selectedOptions.find((opt) => opt.name === name);
+        return (
+          <div className="product-options space-y-2" key={name}>
+            <legend className="leading-tight">
+              <span className="font-bold">{name}</span>
+              {selected?.value && <span>: {selected.value}</span>}
+            </legend>
+            <ProductOptionValues
+              option={option}
+              combinedListing={combinedListing}
+            />
+          </div>
+        );
+      })}
     </ScrollReveal>
   );
 }

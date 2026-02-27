@@ -33,12 +33,12 @@ function NewsLetterForm(props: NewsLetterInputProps) {
 
   return (
     <div ref={ref} {...rest} className="mx-auto max-w-full" style={{ width }}>
-      <ScrollReveal>
-        <Form
-          method="POST"
-          action="/api/customer"
-          className="flex w-full items-center"
-        >
+      <ScrollReveal
+        as={Form}
+        method="POST"
+        action="/api/customer"
+        className="flex w-full items-center"
+      >
         <div className="flex grow items-center border-y border-r-0 border-l">
           <EnvelopeSimpleIcon className="mr-1.5 ml-3 h-5 w-5 shrink-0" />
           <input
@@ -56,15 +56,12 @@ function NewsLetterForm(props: NewsLetterInputProps) {
         >
           {buttonText}
         </Button>
-        </Form>
       </ScrollReveal>
       {helpText && (
-        <ScrollReveal>
-          <div
-            className="mt-2 text-body-subtle"
-            dangerouslySetInnerHTML={{ __html: helpText }}
-          />
-        </ScrollReveal>
+        <ScrollReveal
+          className="mt-2 text-body-subtle"
+          dangerouslySetInnerHTML={{ __html: helpText }}
+        />
       )}
       {submitted && (
         <Banner variant={ok ? "success" : "error"} className="mt-4">

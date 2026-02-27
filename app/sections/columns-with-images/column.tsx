@@ -56,13 +56,13 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
   } = props;
 
   return (
-    <ScrollReveal animation="slide-in">
-      <div
-        ref={ref}
-        {...rest}
-        className={cn(variants({ size, hideOnMobile }))}
-        style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
-      >
+    <ScrollReveal
+      animation="slide-in"
+      ref={ref}
+      {...rest}
+      className={cn(variants({ size, hideOnMobile }))}
+      style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
+    >
       <Image
         data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}
         sizes="auto"
@@ -77,7 +77,6 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
             {text}
           </Link>
         )}
-      </div>
       </div>
     </ScrollReveal>
   );

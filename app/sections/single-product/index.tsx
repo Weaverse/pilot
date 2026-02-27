@@ -127,10 +127,10 @@ export default function SingleProduct(props: SingleProductProps) {
             selectedVariant={selectedVariant}
             showThumbnails={showThumbnails}
           />
-          <ScrollReveal animation="slide-in">
-            <div
-              className="flex flex-col justify-start space-y-5"
-            >
+          <ScrollReveal
+            animation="slide-in"
+            className="flex flex-col justify-start space-y-5"
+          >
             <div className="space-y-4">
               <ProductBadges
                 product={product}
@@ -147,7 +147,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 errorText=""
               />
               <p
-                className="fade-up line-clamp-5 leading-relaxed"
+                className="line-clamp-5 leading-relaxed"
                 suppressHydrationWarning
                 dangerouslySetInnerHTML={{ __html: product?.summary }}
               />
@@ -202,7 +202,6 @@ export default function SingleProduct(props: SingleProductProps) {
             >
               View full details →
             </Link>
-          </div>
           </ScrollReveal>
         </div>
       </div>
