@@ -2,6 +2,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 export interface ParagraphProps
   extends VariantProps<typeof variants>,
@@ -58,14 +59,16 @@ function Paragraph(props: ParagraphProps) {
     ...rest
   } = props;
   return (
-    <Tag
-      ref={ref}
-      {...rest}
-      style={{ color }}
-      className={clsx("animate-fade-up", variants({ textSize, width, alignment, className }))}
-      suppressHydrationWarning
-      dangerouslySetInnerHTML={{ __html: content }}
-    />
+    <ScrollReveal>
+      <Tag
+        ref={ref}
+        {...rest}
+        style={{ color }}
+        className={clsx(variants({ textSize, width, alignment, className }))}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    </ScrollReveal>
   );
 }
 
