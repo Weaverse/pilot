@@ -36,7 +36,7 @@ function getSharedObserver(): IntersectionObserver {
   return sharedObserver;
 }
 
-function observe(element: Element, callback: ObserverCallback): () => void {
+export function observe(element: Element, callback: ObserverCallback): () => void {
   let observer = getSharedObserver();
   callbacks.set(element, callback);
   observer.observe(element);
