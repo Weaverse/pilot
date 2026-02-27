@@ -24,7 +24,7 @@ import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
-import { useAnimation } from "~/hooks/use-animation";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
 
 interface SingleProductData {
@@ -48,7 +48,6 @@ export default function SingleProduct(props: SingleProductProps) {
     useState<ProductVariantFragment | null>(
       product?.selectedOrFirstAvailableVariant,
     );
-  const [scope] = useAnimation();
 
   if (!product) {
     return (
@@ -68,7 +67,7 @@ export default function SingleProduct(props: SingleProductProps) {
             />
             <div className="flex flex-col items-start justify-start gap-4">
               <SoldOutBadge />
-              <h3 className="animate-fade-up tracking-tight">
+              <h3 className="tracking-tight">
                 EXAMPLE PRODUCT TITLE
               </h3>
               <Money
@@ -119,8 +118,8 @@ export default function SingleProduct(props: SingleProductProps) {
 
   return (
     <Section ref={ref} {...rest}>
-      <div ref={scope}>
-        <div className="fade-up grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
+      <div>
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
           <ProductMedia
             mediaLayout="slider"
             imageAspectRatio="adapt"
@@ -128,16 +127,17 @@ export default function SingleProduct(props: SingleProductProps) {
             selectedVariant={selectedVariant}
             showThumbnails={showThumbnails}
           />
-          <div
-            className="animate-slide-in flex flex-col justify-start space-y-5"
-          >
+          <ScrollReveal animation="slide-in">
+            <div
+              className="flex flex-col justify-start space-y-5"
+            >
             <div className="space-y-4">
               <ProductBadges
                 product={product}
                 selectedVariant={selectedVariant}
                 className="[&_span:nth-child(n+3)]:hidden"
               />
-              <h3 className="animate-fade-up tracking-tight">
+              <h3 className="tracking-tight">
                 {product?.title}
               </h3>
               <VariantPrices variant={selectedVariant} />
@@ -203,6 +203,7 @@ export default function SingleProduct(props: SingleProductProps) {
               View full details →
             </Link>
           </div>
+          </ScrollReveal>
         </div>
       </div>
     </Section>

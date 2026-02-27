@@ -2,6 +2,7 @@ import type { MappedProductOptions } from "@shopify/hydrogen";
 import type { ProductVariantFragment } from "storefront-api.generated";
 import { ProductOptionValues } from "~/components/product/product-option-values";
 import { hasOnlyDefaultVariant } from "~/utils/product";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 export function ProductVariants({
   productOptions,
@@ -19,7 +20,8 @@ export function ProductVariants({
   const selectedOptions = selectedVariant?.selectedOptions || [];
 
   return (
-    <div className="animate-fade-up space-y-5">
+    <ScrollReveal>
+      <div className="space-y-5">
       <div className="product-form space-y-5">
         {productOptions.map((option) => {
           const { name } = option;
@@ -39,5 +41,6 @@ export function ProductVariants({
         })}
       </div>
     </div>
+    </ScrollReveal>
   );
 }

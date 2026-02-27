@@ -4,6 +4,7 @@ import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import type { CustomerApiPlayLoad } from "~/routes/api/customer";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {
   width: number;
@@ -32,11 +33,12 @@ function NewsLetterForm(props: NewsLetterInputProps) {
 
   return (
     <div ref={ref} {...rest} className="mx-auto max-w-full" style={{ width }}>
-      <Form
-        method="POST"
-        action="/api/customer"
-        className="animate-fade-up flex w-full items-center"
-      >
+      <ScrollReveal>
+        <Form
+          method="POST"
+          action="/api/customer"
+          className="flex w-full items-center"
+        >
         <div className="flex grow items-center border-y border-r-0 border-l">
           <EnvelopeSimpleIcon className="mr-1.5 ml-3 h-5 w-5 shrink-0" />
           <input
@@ -54,12 +56,15 @@ function NewsLetterForm(props: NewsLetterInputProps) {
         >
           {buttonText}
         </Button>
-      </Form>
+        </Form>
+      </ScrollReveal>
       {helpText && (
-        <div
-          className="animate-fade-up mt-2 text-body-subtle"
-          dangerouslySetInnerHTML={{ __html: helpText }}
-        />
+        <ScrollReveal>
+          <div
+            className="mt-2 text-body-subtle"
+            dangerouslySetInnerHTML={{ __html: helpText }}
+          />
+        </ScrollReveal>
       )}
       {submitted && (
         <Banner variant={ok ? "success" : "error"} className="mt-4">

@@ -3,6 +3,7 @@ import {
   type HydrogenComponentProps,
   useParentInstance,
 } from "@weaverse/hydrogen";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { StarRating } from "~/components/star-rating";
 import type { AliReviewsLoaderData } from ".";
 import { ReviewBar } from "./review-bar";
@@ -51,7 +52,8 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
         {...rest}
         className="space-y-8 md:flex md:gap-16 md:space-y-0"
       >
-        <div className="animate-slide-in my-6 shrink-0 space-y-6 md:my-8">
+        <ScrollReveal animation="slide-in">
+        <div className="my-6 shrink-0 space-y-6 md:my-8">
           <div className="flex shrink-0 gap-4">
             {showAvgRating && (
               <div className="font-bold text-6xl leading-none">
@@ -81,9 +83,11 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
             </div>
           )}
         </div>
-        <div
-          className="animate-slide-in mt-6 grow divide-y divide-gray-200"
-        >
+        </ScrollReveal>
+        <ScrollReveal animation="slide-in">
+          <div
+            className="mt-6 grow divide-y divide-gray-200"
+          >
           {reviewsToRender.map((review) => (
             <ReviewItem
               key={review.id}
@@ -96,6 +100,7 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
             />
           ))}
         </div>
+        </ScrollReveal>
       </div>
     );
   }

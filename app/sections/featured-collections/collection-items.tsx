@@ -12,7 +12,7 @@ import { Image } from "~/components/image";
 import Link, { type LinkStyles, linkStylesInputs } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
-import { useAnimation } from "~/hooks/use-animation";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
@@ -88,7 +88,6 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
     borderColorHover,
     ...rest
   } = props;
-  const [scope] = useAnimation(ref);
 
   const parent = useParentInstance();
   let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
@@ -98,7 +97,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
   }
   return (
     <div
-      ref={scope}
+      ref={ref}
       {...rest}
       className={clsx(
         [
@@ -110,10 +109,10 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
       )}
     >
       {collections.map((collection, ind) => (
-        <div
-          key={collection.id + ind}
-          className="animate-slide-in group group/overlay relative w-[67vw] md:w-auto"
-        >
+        <ScrollReveal key={collection.id + ind} animation="slide-in">
+          <div
+            className="group group/overlay relative w-[67vw] md:w-auto"
+          >
           {collection?.image && (
             <div
               className={clsx("overflow-hidden", variants({ borderRadius }))}
@@ -177,7 +176,8 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
               )}
             </div>
           </div>
-        </div>
+          </div>
+        </ScrollReveal>
       ))}
     </div>
   );

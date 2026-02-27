@@ -6,6 +6,7 @@ import {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Image } from "~/components/image";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;
@@ -30,39 +31,41 @@ export default function TestimonialItem(props: TestimonialItemProps) {
   } = props;
 
   return (
-    <div
-      ref={ref}
-      {...rest}
-      className={clsx("animate-slide-in", hideOnMobile && "hidden sm:block")}
-    >
-      <figure className="rounded-sm bg-gray-50 p-6">
-        <blockquote>
-          <div className="text-xl md:text-2xl">{heading}</div>
-          <p
-            className="my-4 text-gray-500"
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-        </blockquote>
-        <figcaption className="flex items-center space-x-3">
-          <Image
-            className="h-9 w-9 rounded-full"
-            data={
-              typeof authorImage === "object"
-                ? authorImage
-                : { url: authorImage, altText: authorName }
-            }
-            alt={authorName}
-            width={36}
-            sizes="auto"
-          />
-          <div className="space-y-0.5">
-            <div className="font-medium">{authorName}</div>
-            <div className="text-gray-500 text-sm">{authorTitle}</div>
-          </div>
-        </figcaption>
-      </figure>
-    </div>
+    <ScrollReveal animation="slide-in">
+      <div
+        ref={ref}
+        {...rest}
+        className={clsx(hideOnMobile && "hidden sm:block")}
+      >
+        <figure className="rounded-sm bg-gray-50 p-6">
+          <blockquote>
+            <div className="text-xl md:text-2xl">{heading}</div>
+            <p
+              className="my-4 text-gray-500"
+              suppressHydrationWarning
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </blockquote>
+          <figcaption className="flex items-center space-x-3">
+            <Image
+              className="h-9 w-9 rounded-full"
+              data={
+                typeof authorImage === "object"
+                  ? authorImage
+                  : { url: authorImage, altText: authorName }
+              }
+              alt={authorName}
+              width={36}
+              sizes="auto"
+            />
+            <div className="space-y-0.5">
+              <div className="font-medium">{authorName}</div>
+              <div className="text-gray-500 text-sm">{authorTitle}</div>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </ScrollReveal>
   );
 }
 

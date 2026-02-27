@@ -7,6 +7,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { cn } from "~/utils/cn";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
@@ -55,12 +56,13 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
   } = props;
 
   return (
-    <div
-      ref={ref}
-      {...rest}
-      className={cn("animate-slide-in", variants({ size, hideOnMobile }))}
-      style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
-    >
+    <ScrollReveal animation="slide-in">
+      <div
+        ref={ref}
+        {...rest}
+        className={cn(variants({ size, hideOnMobile }))}
+        style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
+      >
       <Image
         data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}
         sizes="auto"
@@ -76,7 +78,8 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
           </Link>
         )}
       </div>
-    </div>
+      </div>
+    </ScrollReveal>
   );
 }
 

@@ -10,6 +10,7 @@ import { BackgroundImage } from "~/components/background-image";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { cn } from "~/utils/cn";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 const variants = cva(
   [
@@ -81,20 +82,22 @@ function PromotionGridItem(props: PromotionItemProps) {
     ...rest
   } = props;
   return (
-    <div
-      ref={ref}
-      {...rest}
-      className={cn("animate-slide-in", variants({ contentPosition, borderRadius }))}
-    >
-      <BackgroundImage backgroundImage={backgroundImage} />
-      <Overlay
-        enableOverlay={enableOverlay}
-        overlayColor={overlayColor}
-        overlayColorHover={overlayColorHover}
-        overlayOpacity={overlayOpacity}
-      />
-      {children}
-    </div>
+    <ScrollReveal animation="slide-in">
+      <div
+        ref={ref}
+        {...rest}
+        className={cn(variants({ contentPosition, borderRadius }))}
+      >
+        <BackgroundImage backgroundImage={backgroundImage} />
+        <Overlay
+          enableOverlay={enableOverlay}
+          overlayColor={overlayColor}
+          overlayColorHover={overlayColorHover}
+          overlayOpacity={overlayOpacity}
+        />
+        {children}
+      </div>
+    </ScrollReveal>
   );
 }
 

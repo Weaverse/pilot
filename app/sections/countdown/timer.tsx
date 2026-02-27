@@ -1,6 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 const ONE_SEC = 1000;
 const ONE_MIN = ONE_SEC * 60;
@@ -51,16 +52,17 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
   }, [endTime]);
 
   return (
-    <div
-      ref={ref}
-      {...rest}
-      className="animate-fade-up countdown--timer flex py-3 text-(--timer-color) sm:py-0"
-      style={
-        {
-          "--timer-color": textColor,
-        } as CSSProperties
-      }
-    >
+    <ScrollReveal>
+      <div
+        ref={ref}
+        {...rest}
+        className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
+        style={
+          {
+            "--timer-color": textColor,
+          } as CSSProperties
+        }
+      >
       <div className="space-y-1">
         <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
           <div className="px-6">{remainingTime?.days || 0}</div>
@@ -93,6 +95,7 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
         </div>
       </div>
     </div>
+    </ScrollReveal>
   );
 }
 

@@ -7,6 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { Image } from "~/components/image";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 const variants = cva("h-(--image-height)", {
   variants: {
@@ -54,15 +55,17 @@ function ImageGalleryItem(props: ImageGalleryItemProps) {
   const { src, columnSpan, borderRadius, hideOnMobile, ref, ...rest } = props;
   const data = typeof src === "object" ? src : { url: src, altText: src };
   return (
-    <Image
-      ref={ref}
-      {...rest}
-      className={clsx("animate-slide-in", variants({ columnSpan, borderRadius, hideOnMobile }))}
-      loading="lazy"
-      data={data}
-      width={1000}
-      sizes="(min-width: 45em) 50vw, 100vw"
-    />
+    <ScrollReveal animation="slide-in">
+      <Image
+        ref={ref}
+        {...rest}
+        className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
+        loading="lazy"
+        data={data}
+        width={1000}
+        sizes="(min-width: 45em) 50vw, 100vw"
+      />
+    </ScrollReveal>
   );
 }
 
