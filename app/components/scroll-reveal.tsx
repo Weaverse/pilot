@@ -1,5 +1,5 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
 
 /**
@@ -73,14 +73,17 @@ const ANIMATION_CLASSES: Record<
 };
 
 interface ScrollRevealProps extends React.HTMLAttributes<HTMLElement> {
+  ref?: React.Ref<HTMLElement>;
   as?: React.ElementType;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   animation?: AnimationType;
   duration?: number;
   delay?: number;
+  [key: string]: unknown;
 }
 
 export function ScrollReveal({
+  ref: externalRef,
   as: Component = "div",
   children,
   animation = "fade-up",
@@ -92,14 +95,28 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   let { revealElementsOnScroll } = useThemeSettings();
   let [isVisible, setIsVisible] = useState(false);
-  let ref = useRef<HTMLElement>(null);
+  let internalRef = useRef<HTMLElement>(null);
+
+  let setRefs = useCallback(
+    (node: HTMLElement | null) => {
+      (internalRef as React.MutableRefObject<HTMLElement | null>).current =
+        node;
+      if (typeof externalRef === "function") {
+        externalRef(node);
+      } else if (externalRef && "current" in externalRef) {
+        (externalRef as React.MutableRefObject<HTMLElement | null>).current =
+          node;
+      }
+    },
+    [externalRef],
+  );
 
   useEffect(() => {
-    if (!revealElementsOnScroll || !ref.current) {
+    if (!revealElementsOnScroll || !internalRef.current) {
       return;
     }
 
-    let cleanup = observe(ref.current, (isIntersecting) => {
+    let cleanup = observe(internalRef.current, (isIntersecting) => {
       if (isIntersecting) {
         setIsVisible(true);
       }
@@ -109,14 +126,18 @@ export function ScrollReveal({
   }, [revealElementsOnScroll]);
 
   if (!revealElementsOnScroll) {
-    return children;
+    return (
+      <Component ref={setRefs} className={className} style={style} {...rest}>
+        {children}
+      </Component>
+    );
   }
 
   let classes = ANIMATION_CLASSES[animation];
 
   return (
     <Component
-      ref={ref}
+      ref={setRefs}
       className={cn(
         "transition-all will-change-transform",
         isVisible ? classes.visible : classes.hidden,
