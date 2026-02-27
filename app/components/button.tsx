@@ -127,9 +127,23 @@ export function Button(props: ButtonProps) {
   } else {
     content = children;
   }
+  if (animate) {
+    return (
+      <ScrollReveal
+        as="button"
+        ref={ref}
+        style={style}
+        type={type}
+        {...rest}
+        className={cn(variants({ variant, className }))}
+      >
+        {loading && <Spinner />}
+        {content}
+      </ScrollReveal>
+    );
+  }
 
-
-  let button = (
+  return (
     <button
       ref={ref}
       style={style}
@@ -141,12 +155,6 @@ export function Button(props: ButtonProps) {
       {content}
     </button>
   );
-
-  if (animate) {
-    return <ScrollReveal>{button}</ScrollReveal>;
-  }
-
-  return button;
 }
 
 function Spinner() {

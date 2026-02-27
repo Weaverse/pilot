@@ -59,16 +59,15 @@ function Paragraph(props: ParagraphProps) {
     ...rest
   } = props;
   return (
-    <ScrollReveal>
-      <Tag
-        ref={ref}
-        {...rest}
-        style={{ color }}
-        className={clsx(variants({ textSize, width, alignment, className }))}
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-    </ScrollReveal>
+    <ScrollReveal
+      as={Tag}
+      ref={ref}
+      {...rest}
+      style={{ color }}
+      className={clsx(variants({ textSize, width, alignment, className }))}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
   );
 }
 

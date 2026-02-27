@@ -49,15 +49,14 @@ function SubHeading(props: SubHeadingProps) {
     ...rest
   } = props;
   return (
-    <ScrollReveal>
-      <Tag
-        ref={ref}
-        {...rest}
-        style={{ color }}
-        className={cn(variants({ size, weight, alignment, className }))}
-      >
-        {content}
-      </Tag>
+    <ScrollReveal
+      as={Tag}
+      ref={ref}
+      {...rest}
+      style={{ color }}
+      className={cn(variants({ size, weight, alignment, className }))}
+    >
+      {content}
     </ScrollReveal>
   );
 }

@@ -125,7 +125,24 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
       "--max-size": maxSize,
     } as CSSProperties;
   }
-  let heading = (
+  if (animate) {
+    return (
+      <ScrollReveal
+        as={Tag}
+        ref={ref}
+        {...rest}
+        style={style}
+        className={cn(
+          size === "custom" && fontSizeVariants({ mobileSize, desktopSize }),
+          variants({ size, weight, letterSpacing, alignment, className }),
+        )}
+      >
+        {content}
+      </ScrollReveal>
+    );
+  }
+
+  return (
     <Tag
       ref={ref}
       {...rest}
@@ -138,13 +155,6 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
       {content}
     </Tag>
   );
-
-  if (animate) {
-    return <ScrollReveal>{heading}</ScrollReveal>;
-  }
-
-  return heading;
-
 }
 export default Heading;
 
