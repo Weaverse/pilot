@@ -60,7 +60,7 @@
     "@radix-ui/react-tooltip": "1.2.8",
     "@radix-ui/react-visually-hidden": "1.2.4",
     "@react-router/dev": "7.12.0",
-    "@shopify/hydrogen": "^2026.1.0",
+    "@shopify/hydrogen": "^2026.1.1",
     "@shopify/hydrogen-react": "^2026.1.1",
     "@tailwindcss/vite": "^4.1.17",
     "@weaverse/hydrogen": "^5.9.1",
