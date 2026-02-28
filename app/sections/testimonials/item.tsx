@@ -6,6 +6,7 @@ import {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Image } from "~/components/image";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;
@@ -30,10 +31,10 @@ export default function TestimonialItem(props: TestimonialItemProps) {
   } = props;
 
   return (
-    <div
+    <ScrollReveal
+      animation="slide-in"
       ref={ref}
       {...rest}
-      data-motion="slide-in"
       className={clsx(hideOnMobile && "hidden sm:block")}
     >
       <figure className="rounded-sm bg-gray-50 p-6">
@@ -63,7 +64,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
           </div>
         </figcaption>
       </figure>
-    </div>
+    </ScrollReveal>
   );
 }
 

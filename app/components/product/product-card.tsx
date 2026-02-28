@@ -148,8 +148,8 @@ export function ProductCard({
           {isBundle && pcardShowBundleBadge && <BundleBadge />}
           {pcardShowSaleBadge && (
             <SaleBadge
-              price={minVariantPrice as MoneyV2}
-              compareAtPrice={maxVariantPrice as MoneyV2}
+              price={(selectedVariant || firstVariant)?.price as MoneyV2}
+              compareAtPrice={(selectedVariant || firstVariant)?.compareAtPrice as MoneyV2}
             />
           )}
           {pcardShowBestSellerBadge && isBestSellerProduct && (

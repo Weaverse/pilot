@@ -9,6 +9,8 @@ import { cva } from "class-variance-authority";
 import { BackgroundImage } from "~/components/background-image";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { cn } from "~/utils/cn";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 const variants = cva(
   [
@@ -80,11 +82,11 @@ function PromotionGridItem(props: PromotionItemProps) {
     ...rest
   } = props;
   return (
-    <div
+    <ScrollReveal
+      animation="slide-in"
       ref={ref}
       {...rest}
-      data-motion="slide-in"
-      className={variants({ contentPosition, borderRadius })}
+      className={cn(variants({ contentPosition, borderRadius }))}
     >
       <BackgroundImage backgroundImage={backgroundImage} />
       <Overlay
@@ -94,7 +96,7 @@ function PromotionGridItem(props: PromotionItemProps) {
         overlayOpacity={overlayOpacity}
       />
       {children}
-    </div>
+    </ScrollReveal>
   );
 }
 

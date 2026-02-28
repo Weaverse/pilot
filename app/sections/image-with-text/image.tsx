@@ -7,6 +7,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { Image } from "~/components/image";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 
@@ -78,13 +79,14 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
 
   return (
     <div ref={ref} {...rest} className={cn(variants({ width }))}>
-      <Image
-        data={imageData}
-        data-motion="slide-in"
-        sizes="auto"
-        aspectRatio={aspRt}
-        className={cn("h-auto w-full", variants({ objectFit, borderRadius }))}
-      />
+      <ScrollReveal animation="slide-in">
+        <Image
+          data={imageData}
+          sizes="auto"
+          aspectRatio={aspRt}
+          className={cn("h-auto w-full", variants({ objectFit, borderRadius }))}
+        />
+      </ScrollReveal>
     </div>
   );
 }

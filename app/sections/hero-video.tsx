@@ -11,7 +11,6 @@ import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
-import { useAnimation } from "~/hooks/use-animation";
 
 const SECTION_HEIGHTS = {
   small: {
@@ -144,7 +143,6 @@ export default function HeroVideo(props: HeroVideoProps) {
     };
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
-  const [scope] = useAnimation();
 
   return (
     <section
@@ -183,7 +181,7 @@ export default function HeroVideo(props: HeroVideoProps) {
           overlayOpacity={overlayOpacity}
           className="z-0"
         />
-        <div ref={scope} className={clsx(variants({ gap }))}>
+        <div className={clsx(variants({ gap }))}>
           {children}
         </div>
       </div>

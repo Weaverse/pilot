@@ -2,6 +2,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { cn } from "~/utils/cn";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 const variants = cva("subheading", {
   variants: {
@@ -48,15 +49,15 @@ function SubHeading(props: SubHeadingProps) {
     ...rest
   } = props;
   return (
-    <Tag
+    <ScrollReveal
+      as={Tag}
       ref={ref}
       {...rest}
-      data-motion="fade-up"
       style={{ color }}
       className={cn(variants({ size, weight, alignment, className }))}
     >
       {content}
-    </Tag>
+    </ScrollReveal>
   );
 }
 

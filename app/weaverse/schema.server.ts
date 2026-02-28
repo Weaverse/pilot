@@ -193,6 +193,12 @@ export const themeSchema: HydrogenThemeSchema = {
           },
           defaultValue: 150,
         },
+        {
+          type: "switch",
+          label: "Show country selector",
+          name: "showHeaderCountrySelector",
+          defaultValue: false,
+        },
       ],
     },
     {

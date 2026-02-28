@@ -3,6 +3,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { cn } from "~/utils/cn";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 export const variants = cva(
   [
@@ -126,9 +127,20 @@ export function Button(props: ButtonProps) {
   } else {
     content = children;
   }
-
   if (animate) {
-    rest["data-motion"] = "fade-up";
+    return (
+      <ScrollReveal
+        as="button"
+        ref={ref}
+        style={style}
+        type={type}
+        {...rest}
+        className={cn(variants({ variant, className }))}
+      >
+        {loading && <Spinner />}
+        {content}
+      </ScrollReveal>
+    );
   }
 
   return (

@@ -10,7 +10,6 @@ import { overlayInputs } from "~/components/overlay";
 import type { OverlayAndBackgroundProps } from "~/components/overlay-and-background";
 import { OverlayAndBackground } from "~/components/overlay-and-background";
 import { layoutInputs } from "~/components/section";
-import { useAnimation } from "~/hooks/use-animation";
 
 const variants = cva("flex h-full w-full flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
@@ -86,10 +85,9 @@ export default function Slide(props: SlideProps) {
     children,
     ...rest
   } = props;
-  const [scope] = useAnimation(ref);
 
   return (
-    <div ref={scope} {...rest} className="h-full w-full">
+    <div ref={ref} {...rest} className="h-full w-full">
       <OverlayAndBackground
         backgroundImage={backgroundImage}
         backgroundFit={backgroundFit}

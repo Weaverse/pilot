@@ -22,3 +22,4 @@ memory/
 scripts/
 specs/
 templates/
+.plans/

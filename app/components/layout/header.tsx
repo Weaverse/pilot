@@ -19,6 +19,7 @@ import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { MobileMenu } from "./menu/mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
+import { HeaderCountrySelector } from "./country-selector";
 
 const variants = cva("", {
   variants: {
@@ -43,7 +44,7 @@ function useIsHomeCheck() {
 }
 
 export function Header() {
-  const { enableTransparentHeader, headerWidth } = useThemeSettings();
+  const { enableTransparentHeader, headerWidth, showHeaderCountrySelector } = useThemeSettings();
   const isHome = useIsHomeCheck();
   const { y } = useWindowScroll();
   const routeError = useRouteError();
@@ -103,6 +104,7 @@ export function Header() {
           <PredictiveSearchButton />
           <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
           <CartDrawer />
+          {showHeaderCountrySelector && <HeaderCountrySelector />}
         </div>
       </div>
     </header>

@@ -5,6 +5,7 @@ import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-ty
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useInView } from "react-intersection-observer";
+import { ScrollArea } from "~/components/scroll-area";
 import {
   useFetcher,
   useLocation,
@@ -90,7 +91,11 @@ export function CountrySelector() {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content>
-            <div className="my-2 max-h-40 w-80 overflow-auto bg-neutral-800 py-2">
+            <ScrollArea
+              size="sm"
+              style={{ maxHeight: 160, width: 320 }}
+              rootClassName="my-2 bg-neutral-800 py-2"
+            >
               {countries &&
                 Object.keys(countries).map((countryPath) => {
                   const countryLocale = countries[countryPath];
@@ -115,7 +120,7 @@ export function CountrySelector() {
                           },
                         })
                       }
-                      className="flex w-full cursor-pointer items-center gap-2 bg-neutral-800 p-2 px-4 py-2 text-left text-sm text-white transition hover:bg-neutral-600"
+                      className="flex w-full cursor-pointer items-center gap-2 bg-neutral-800 p-2 px-4 py-2 text-left text-white transition hover:bg-neutral-600"
                     >
                       <ReactCountryFlag
                         svg
@@ -131,7 +136,7 @@ export function CountrySelector() {
                     </Popover.Close>
                   );
                 })}
-            </div>
+            </ScrollArea>
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
@@ -154,4 +159,132 @@ function getCountryUrlPath({
     countryPrefixPath = `/${countryLocalePrefix.toLowerCase()}`;
   }
   return `${countryPrefixPath}${pathWithoutLocale}`;
+}
+
+export function HeaderCountrySelector() {
+  const fetcher = useFetcher();
+  const submit = useSubmit();
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  const { pathname, search } = useLocation();
+  const pathWithoutLocale = `${pathname.replace(
+    selectedLocale.pathPrefix,
+    "",
+  )}${search}`;
+
+  const countries = (fetcher.data ?? {}) as Localizations;
+  const defaultLocale = countries?.default;
+  const defaultLocalePrefix = defaultLocale
+    ? `${defaultLocale?.language}-${defaultLocale?.country}`
+    : "";
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+    triggerOnce: true,
+  });
+
+  const observerRef = useRef(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
+  useEffect(() => {
+    ref(observerRef.current);
+  }, [ref, observerRef]);
+
+  // Get available countries list when in view
+  useEffect(() => {
+    if (!inView || fetcher.data || fetcher.state === "loading") {
+      return;
+    }
+    fetcher.load("/api/countries");
+  }, [inView, fetcher]);
+
+  function handleLocaleChange({
+    redirectTo,
+    buyerIdentity,
+  }: {
+    redirectTo: string;
+    buyerIdentity: CartBuyerIdentityInput;
+  }) {
+    submit(
+      {
+        redirectTo,
+        cartFormInput: JSON.stringify({
+          action: CartForm.ACTIONS.BuyerIdentityUpdate,
+          inputs: { buyerIdentity },
+        }),
+      },
+      { method: "POST", action: "/cart" },
+    );
+  }
+
+  return (
+    <div ref={observerRef}>
+      <Popover.Root>
+        <Popover.Trigger asChild>
+          <button
+            type="button"
+            className="ml-1 flex cursor-pointer items-center gap-1 p-1.5 outline-hidden"
+            aria-label="Select country"
+          >
+            <ReactCountryFlag
+              svg
+              countryCode={selectedLocale.country}
+              style={{ width: "24px", height: "16px" }}
+            />
+            <span className="">{selectedLocale.country}</span>
+            <CaretDownIcon className="h-3 w-3" />
+          </button>
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Content align="center" sideOffset={8} className="z-50">
+            <ScrollArea
+              size="sm"
+              style={{ maxHeight: 240, width: 256 }}
+              rootClassName="border border-line-subtle bg-white py-2 shadow-lg"
+            >
+              {countries &&
+                Object.keys(countries).map((countryPath) => {
+                  const countryLocale = countries[countryPath];
+                  const isSelected =
+                    countryLocale.language === selectedLocale.language &&
+                    countryLocale.country === selectedLocale.country;
+
+                  return (
+                    <Popover.Close
+                      aria-label={`Select ${countryLocale.label} country`}
+                      key={countryPath}
+                      type="button"
+                      onClick={() =>
+                        handleLocaleChange({
+                          redirectTo: getCountryUrlPath({
+                            countryLocale,
+                            defaultLocalePrefix,
+                            pathWithoutLocale,
+                          }),
+                          buyerIdentity: {
+                            countryCode: countryLocale.country,
+                          },
+                        })
+                      }
+                      className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-body transition hover:bg-neutral-100"
+                    >
+                      <ReactCountryFlag
+                        svg
+                        countryCode={countryLocale.country}
+                        style={{ width: "20px", height: "12px" }}
+                      />
+                      <span>{countryLocale.label}</span>
+                      {isSelected ? (
+                        <span className="ml-auto">
+                          <CheckCircleIcon className="size-5" />
+                        </span>
+                      ) : null}
+                    </Popover.Close>
+                  );
+                })}
+            </ScrollArea>
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
+    </div>
+  );
 }

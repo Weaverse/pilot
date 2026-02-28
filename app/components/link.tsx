@@ -13,6 +13,7 @@ import {
 } from "react-router";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 export const variants = cva(["inline-flex transition-colors"], {
   variants: {
@@ -84,6 +85,7 @@ export interface LinkProps
     Partial<Omit<HydrogenComponentProps, "children">>,
     LinkData {
   ref?: React.Ref<HTMLAnchorElement>;
+  animate?: boolean;
 }
 
 function checkExternal(to: LinkProps["to"]) {
@@ -150,6 +152,7 @@ export function Link(props: LinkProps) {
     borderColorHover,
     children,
     target,
+    animate = true,
     ...rest
   } = props;
   const { enableViewTransition } = useThemeSettings();
@@ -172,17 +175,25 @@ export function Link(props: LinkProps) {
   }
 
   const isExternal = checkExternal(href);
+  const linkProps = {
+    viewTransition: enableViewTransition,
+    to: href,
+    style,
+    className: cn(variants({ variant }), className),
+    target: target !== undefined ? target : isExternal ? "_blank" : undefined,
+    ...rest,
+  };
+
+  if (animate) {
+    return (
+      <ScrollReveal as={RemixLink} ref={ref} {...linkProps}>
+        {children || text}
+      </ScrollReveal>
+    );
+  }
 
   return (
-    <RemixLink
-      ref={ref}
-      viewTransition={enableViewTransition}
-      to={href}
-      style={style}
-      className={cn(variants({ variant }), className)}
-      target={target !== undefined ? target : isExternal ? "_blank" : undefined}
-      {...rest}
-    >
+    <RemixLink ref={ref} {...linkProps}>
       {children || text}
     </RemixLink>
   );

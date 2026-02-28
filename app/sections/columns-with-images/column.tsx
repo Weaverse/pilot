@@ -6,6 +6,8 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import { cn } from "~/utils/cn";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
@@ -54,11 +56,11 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
   } = props;
 
   return (
-    <div
+    <ScrollReveal
+      animation="slide-in"
       ref={ref}
       {...rest}
-      data-motion="slide-in"
-      className={variants({ size, hideOnMobile })}
+      className={cn(variants({ size, hideOnMobile }))}
       style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
     >
       <Image
@@ -76,7 +78,7 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
           </Link>
         )}
       </div>
-    </div>
+    </ScrollReveal>
   );
 }
 
