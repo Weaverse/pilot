@@ -55,7 +55,7 @@ export function observe(element: Element, callback: ObserverCallback): () => voi
 
 export type AnimationType = "fade-up" | "zoom-in" | "slide-in";
 
-const revealVariants = cva("transition-all will-change-transform", {
+const revealVariants = cva("transition-all duration-500", {
   variants: {
     animation: {
       "fade-up": "",

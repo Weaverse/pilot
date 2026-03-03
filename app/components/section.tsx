@@ -150,10 +150,10 @@ export function Section(props: SectionProps) {
           !isBgForContent &&
           "rounded-(--section-radius) bg-(--section-bg-color)",
         revealElementsOnScroll && [
-          "transition-all duration-700 will-change-[filter,opacity,transform]",
+          "transition-all duration-700",
           isVisible
-            ? "translate-y-0 opacity-100 blur-none"
-            : "translate-y-6 opacity-0 blur-sm",
+            ? "translate-y-0 opacity-100"
+            : "translate-y-6 opacity-0",
         ],
       )}
     >
