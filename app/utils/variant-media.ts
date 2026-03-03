@@ -30,13 +30,12 @@ interface VariantGroupedMediaParams {
 /**
  * Filter product media based on the selected variant's option value.
  *
- * Collects all variant image URLs that share the same option value
- * (e.g., all "Black" variants), then partitions media into:
- * - matched: media whose previewImage URL matches a variant image
- * - unmatched: everything else (shared/lifestyle media)
+ * Algorithm:
+ * 1. Group product images by option value (lowercase) - { "black": [url1, url2], "cream": [url3] }
+ * 2. Collect ALL variant image URLs to identify ungrouped/shared media
+ * 3. Return: matched images (for selected option value) + ungrouped images
  *
- * Returns [...matched, ...unmatched], or all media as fallback
- * when no matches are found.
+ * Re-runs on every variant change.
  */
 function getVariantGroupedMedia({
   allMedia,
@@ -53,60 +52,68 @@ function getVariantGroupedMedia({
     return allMedia;
   }
 
-  // 2. Collect all variant image URLs for this option value
-  let variantImageUrls = new Set<string>();
+  // Normalize for comparison
+  let selectedOptionValueLower = selectedOptionValue.toLowerCase();
 
-  // From selectedVariant
-  if (selectedVariant.image?.url) {
-    variantImageUrls.add(normalizeImageUrl(selectedVariant.image.url));
-  }
-
-  // From product.options → optionValues → firstSelectableVariant
-  let matchingOption = product.options.find(
-    (opt) => opt.name === groupByOption,
-  );
-  if (matchingOption) {
-    for (let optionValue of matchingOption.optionValues) {
-      if (optionValue.name === selectedOptionValue) {
-        let imageUrl = optionValue.firstSelectableVariant?.image?.url;
-        if (imageUrl) {
-          variantImageUrls.add(normalizeImageUrl(imageUrl));
-        }
-      }
-    }
-  }
+  // 2. Build groups: option value (lowercase) → Set of image URLs
+  let groupedUrls: Map<string, Set<string>> = new Map();
+  let allVariantUrls: Set<string> = new Set(); // To identify ungrouped media
 
   // From all variants
   if (product.variants?.nodes) {
     for (let variant of product.variants.nodes) {
-      let hasMatchingOption = variant.selectedOptions.some(
-        (opt) => opt.name === groupByOption && opt.value === selectedOptionValue,
+      let option = variant.selectedOptions.find(
+        (opt) => opt.name === groupByOption,
       );
-      if (hasMatchingOption && variant.image?.url) {
-        variantImageUrls.add(normalizeImageUrl(variant.image.url));
+      if (option?.value && variant.image?.url) {
+        let optionValueLower = option.value.toLowerCase();
+        let normalizedUrl = normalizeImageUrl(variant.image.url);
+
+        // Add to group
+        if (!groupedUrls.has(optionValueLower)) {
+          groupedUrls.set(optionValueLower, new Set());
+        }
+        groupedUrls.get(optionValueLower)!.add(normalizedUrl);
+
+        // Track all variant URLs
+        allVariantUrls.add(normalizedUrl);
       }
     }
   }
 
-  // 3. Partition media into matched and unmatched
+  // 3. Get URLs for selected option value
+  let selectedGroupUrls = groupedUrls.get(selectedOptionValueLower) || new Set();
+
+  // 4. Partition media into matched, ungrouped
   let matched: MediaFragment[] = [];
-  let unmatched: MediaFragment[] = [];
+  let ungrouped: MediaFragment[] = [];
 
   for (let media of allMedia) {
     let mediaUrl = media.previewImage?.url;
-    if (mediaUrl && variantImageUrls.has(normalizeImageUrl(mediaUrl))) {
-      matched.push(media);
-    } else {
-      unmatched.push(media);
+    if (!mediaUrl) {
+      // Media without preview image goes to ungrouped
+      ungrouped.push(media);
+      continue;
     }
+
+    let normalizedMediaUrl = normalizeImageUrl(mediaUrl);
+
+    // Check if this media matches the selected option value
+    if (selectedGroupUrls.has(normalizedMediaUrl)) {
+      matched.push(media);
+    } else if (!allVariantUrls.has(normalizedMediaUrl)) {
+      // Media that doesn't match ANY variant → ungrouped (shared)
+      ungrouped.push(media);
+    }
+    // else: media matches a DIFFERENT option value → exclude
   }
 
-  // 4. Fallback: if no matches, show all media
+  // 5. Fallback: if no matches, show all media
   if (matched.length === 0) {
     return allMedia;
   }
 
-  return [...matched, ...unmatched];
+  return [...matched, ...ungrouped];
 }
 
 export { getVariantGroupedMedia, normalizeImageUrl };
