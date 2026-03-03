@@ -32,7 +32,6 @@ function extractOptionValueFromUrl(
     const filename = pathname.split("/").pop() || "";
     const nameWithoutExt = filename.replace(/\.[^.]+$/, "").toLowerCase();
 
-    console.log("[VariantMedia] extractOptionValueFromUrl:", nameWithoutExt);
 
     // Check if any known option value appears in the filename
     for (let optionValue of knownOptionValues) {
@@ -79,21 +78,14 @@ function getVariantGroupedMedia({
   product,
   groupByOption,
 }: VariantGroupedMediaParams): MediaFragment[] {
-  console.log("[VariantMedia] === START ===");
-  console.log("[VariantMedia] groupByOption:", groupByOption);
-  console.log("[VariantMedia] allMedia count:", allMedia.length);
-  console.log("[VariantMedia] selectedVariant:", selectedVariant?.title, selectedVariant?.id);
 
   // 1. Find the selected option value for the grouping option
   let selectedOptionValue = selectedVariant.selectedOptions.find(
     (opt) => opt.name === groupByOption,
   )?.value;
 
-  console.log("[VariantMedia] selectedOptionValue:", selectedOptionValue);
-  console.log("[VariantMedia] selectedVariant.selectedOptions:", selectedVariant.selectedOptions);
 
   if (!selectedOptionValue) {
-    console.log("[VariantMedia] No selectedOptionValue found, returning allMedia");
     return allMedia;
   }
 
@@ -108,7 +100,6 @@ function getVariantGroupedMedia({
   if (matchingOption) {
     knownOptionValues = matchingOption.optionValues.map((ov) => ov.name);
   }
-  console.log("[VariantMedia] knownOptionValues:", knownOptionValues);
 
   // 3. Group media by option value extracted from filename
   let groupedMedia: Map<string, MediaFragment[]> = new Map();
@@ -122,7 +113,6 @@ function getVariantGroupedMedia({
     }
 
     let optionValue = extractOptionValueFromUrl(mediaUrl, knownOptionValues);
-    console.log("[VariantMedia] media:", media.alt, "→ extracted:", optionValue);
 
     if (optionValue) {
       if (!groupedMedia.has(optionValue)) {
@@ -134,26 +124,15 @@ function getVariantGroupedMedia({
     }
   }
 
-  console.log("[VariantMedia] groupedMedia keys:", Array.from(groupedMedia.keys()));
-  console.log(
-    "[VariantMedia] groupedMedia:",
-    Object.fromEntries(
-      Array.from(groupedMedia.entries()).map(([k, v]) => [k, v.length]),
-    ),
-  );
 
   // 4. Get matched media for selected option value
   let matched = groupedMedia.get(selectedOptionValueLower) || [];
-  console.log("[VariantMedia] matched count for", selectedOptionValueLower, ":", matched.length);
-  console.log("[VariantMedia] ungrouped count:", ungrouped.length);
 
   // 5. Fallback: if no matches, show all media
   if (matched.length === 0) {
-    console.log("[VariantMedia] No matches, returning allMedia as fallback");
     return allMedia;
   }
 
-  console.log("[VariantMedia] === END: returning", matched.length + ungrouped.length, "items ===");
   return [...matched, ...ungrouped];
 }
 

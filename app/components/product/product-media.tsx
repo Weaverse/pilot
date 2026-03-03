@@ -71,23 +71,14 @@ export function ProductMedia(props: ProductMediaProps) {
     product,
   } = props;
 
-  console.log("[ProductMedia] groupMediaByVariant:", groupMediaByVariant);
-  console.log("[ProductMedia] groupByOption:", groupByOption);
-  console.log("[ProductMedia] product exists:", !!product);
-  console.log("[ProductMedia] media count:", media?.length);
-
   let displayMedia = media;
   if (groupMediaByVariant && product && groupByOption) {
-    console.log("[ProductMedia] Calling getVariantGroupedMedia...");
     displayMedia = getVariantGroupedMedia({
       allMedia: media,
       selectedVariant,
       product,
       groupByOption,
     });
-    console.log("[ProductMedia] displayMedia result count:", displayMedia.length);
-  } else {
-    console.log("[ProductMedia] Skipping grouping - conditions not met");
   }
 
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
