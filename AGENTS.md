@@ -127,8 +127,8 @@ The project extends from `ultracite` and `@weaverse/biome` configurations with t
 
 - Use `const` for constants with `ALL_CAPS` naming and `let` for everything else
 - Use `cn()` utility for dynamic classes, never template strings
-- Use function declarations `function foo()` not arrow expressions
-- Named exports only, no default exports (except for must-use cases like Route components)
+- Use function declarations `function foo()` not arrow expressions (exception: route `meta`/`loader`/`action` exports follow React Router conventions)
+- Named exports only, no default exports (exceptions: Route components, Weaverse sections, and Weaverse-registered components)
 - No `useMemo` or `useCallback` (React 19 compiler handles it)
 
 ### File Organization
