@@ -217,12 +217,12 @@ export function HeaderCountrySelector() {
   }
 
   return (
-    <div ref={observerRef}>
+    <div className="flex items-center gap-1.5" ref={observerRef}>
       <Popover.Root>
         <Popover.Trigger asChild>
           <button
             type="button"
-            className="ml-1 flex cursor-pointer items-center gap-1 p-1.5 outline-hidden"
+            className="flex cursor-pointer items-center gap-1 p-1.5 outline-hidden"
             aria-label="Select country"
           >
             <ReactCountryFlag
@@ -285,6 +285,7 @@ export function HeaderCountrySelector() {
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
+      <div className="w-1 h-4 border-l border-gray-300" />
     </div>
   );
 }

@@ -101,10 +101,10 @@ export function Header() {
         <Logo />
         <DesktopMenu />
         <div className="z-1 flex items-center gap-1">
+          {showHeaderCountrySelector && <HeaderCountrySelector />}
           <PredictiveSearchButton />
           <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
           <CartDrawer />
-          {showHeaderCountrySelector && <HeaderCountrySelector />}
         </div>
       </div>
     </header>
