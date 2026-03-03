@@ -18,6 +18,42 @@ function normalizeImageUrl(url: string): string {
   }
 }
 
+/**
+ * Extract option value from image filename using known option values.
+ * e.g., filename "24b_xxx_black.jpg" with options ["Black", "Cream"] → "black"
+ */
+function extractOptionValueFromUrl(
+  url: string,
+  knownOptionValues: string[],
+): string | null {
+  try {
+    const parsed = new URL(url);
+    const pathname = parsed.pathname;
+    const filename = pathname.split("/").pop() || "";
+    const nameWithoutExt = filename.replace(/\.[^.]+$/, "").toLowerCase();
+
+    console.log("[VariantMedia] extractOptionValueFromUrl:", nameWithoutExt);
+
+    // Check if any known option value appears in the filename
+    for (let optionValue of knownOptionValues) {
+      let optionLower = optionValue.toLowerCase();
+      // Check for _option, -option, or option at end
+      if (
+        nameWithoutExt.endsWith("_" + optionLower) ||
+        nameWithoutExt.endsWith("-" + optionLower) ||
+        nameWithoutExt.includes("_" + optionLower + "_") ||
+        nameWithoutExt.includes("-" + optionLower + "-") ||
+        nameWithoutExt.endsWith(optionLower)
+      ) {
+        return optionLower;
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 type Product = NonNullable<ProductQuery["product"]>;
 
 interface VariantGroupedMediaParams {
@@ -31,8 +67,8 @@ interface VariantGroupedMediaParams {
  * Filter product media based on the selected variant's option value.
  *
  * Algorithm:
- * 1. Group product images by option value (lowercase) - { "black": [url1, url2], "cream": [url3] }
- * 2. Collect ALL variant image URLs to identify ungrouped/shared media
+ * 1. Get all known option values from product.options (e.g., "Black", "Cream")
+ * 2. Group media by extracting option value from filename (e.g., "24b_xxx_black.jpg" → "black")
  * 3. Return: matched images (for selected option value) + ungrouped images
  *
  * Re-runs on every variant change.
@@ -64,71 +100,51 @@ function getVariantGroupedMedia({
   // Normalize for comparison
   let selectedOptionValueLower = selectedOptionValue.toLowerCase();
 
-  // 2. Build groups: option value (lowercase) → Set of image URLs
-  let groupedUrls: Map<string, Set<string>> = new Map();
-  let allVariantUrls: Set<string> = new Set(); // To identify ungrouped media
-
-  // From all variants
-  console.log("[VariantMedia] product.variants?.nodes count:", product.variants?.nodes?.length);
-  if (product.variants?.nodes) {
-    for (let variant of product.variants.nodes) {
-      let option = variant.selectedOptions.find(
-        (opt) => opt.name === groupByOption,
-      );
-      if (option?.value && variant.image?.url) {
-        let optionValueLower = option.value.toLowerCase();
-        let normalizedUrl = normalizeImageUrl(variant.image.url);
-
-        // Add to group
-        if (!groupedUrls.has(optionValueLower)) {
-          groupedUrls.set(optionValueLower, new Set());
-        }
-        groupedUrls.get(optionValueLower)!.add(normalizedUrl);
-
-        // Track all variant URLs
-        allVariantUrls.add(normalizedUrl);
-      }
-    }
+  // 2. Get all known option values from product.options
+  let knownOptionValues: string[] = [];
+  let matchingOption = product.options.find(
+    (opt) => opt.name === groupByOption,
+  );
+  if (matchingOption) {
+    knownOptionValues = matchingOption.optionValues.map((ov) => ov.name);
   }
+  console.log("[VariantMedia] knownOptionValues:", knownOptionValues);
 
-  console.log("[VariantMedia] groupedUrls keys:", Array.from(groupedUrls.keys()));
-  console.log("[VariantMedia] groupedUrls:", Object.fromEntries(
-    Array.from(groupedUrls.entries()).map(([k, v]) => [k, Array.from(v)])
-  ));
-  console.log("[VariantMedia] allVariantUrls:", Array.from(allVariantUrls));
-
-  // 3. Get URLs for selected option value
-  let selectedGroupUrls = groupedUrls.get(selectedOptionValueLower) || new Set();
-  console.log("[VariantMedia] selectedGroupUrls for", selectedOptionValueLower, ":", Array.from(selectedGroupUrls));
-
-  // 4. Partition media into matched, ungrouped
-  let matched: MediaFragment[] = [];
+  // 3. Group media by option value extracted from filename
+  let groupedMedia: Map<string, MediaFragment[]> = new Map();
   let ungrouped: MediaFragment[] = [];
 
   for (let media of allMedia) {
     let mediaUrl = media.previewImage?.url;
     if (!mediaUrl) {
-      // Media without preview image goes to ungrouped
       ungrouped.push(media);
       continue;
     }
 
-    let normalizedMediaUrl = normalizeImageUrl(mediaUrl);
+    let optionValue = extractOptionValueFromUrl(mediaUrl, knownOptionValues);
+    console.log("[VariantMedia] media:", media.alt, "→ extracted:", optionValue);
 
-    // Check if this media matches the selected option value
-    if (selectedGroupUrls.has(normalizedMediaUrl)) {
-      matched.push(media);
-      console.log("[VariantMedia] MATCHED:", media.alt, "→", normalizedMediaUrl);
-    } else if (!allVariantUrls.has(normalizedMediaUrl)) {
-      // Media that doesn't match ANY variant → ungrouped (shared)
-      ungrouped.push(media);
-      console.log("[VariantMedia] UNGROUPED:", media.alt, "→", normalizedMediaUrl);
+    if (optionValue) {
+      if (!groupedMedia.has(optionValue)) {
+        groupedMedia.set(optionValue, []);
+      }
+      groupedMedia.get(optionValue)!.push(media);
     } else {
-      console.log("[VariantMedia] EXCLUDED (other group):", media.alt, "→", normalizedMediaUrl);
+      ungrouped.push(media);
     }
   }
 
-  console.log("[VariantMedia] matched count:", matched.length);
+  console.log("[VariantMedia] groupedMedia keys:", Array.from(groupedMedia.keys()));
+  console.log(
+    "[VariantMedia] groupedMedia:",
+    Object.fromEntries(
+      Array.from(groupedMedia.entries()).map(([k, v]) => [k, v.length]),
+    ),
+  );
+
+  // 4. Get matched media for selected option value
+  let matched = groupedMedia.get(selectedOptionValueLower) || [];
+  console.log("[VariantMedia] matched count for", selectedOptionValueLower, ":", matched.length);
   console.log("[VariantMedia] ungrouped count:", ungrouped.length);
 
   // 5. Fallback: if no matches, show all media
