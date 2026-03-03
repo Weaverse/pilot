@@ -6,7 +6,7 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { HTMLAttributes } from "react";
 import { cn } from "~/utils/cn";
 import type { BackgroundImageProps } from "./background-image";
@@ -109,18 +109,15 @@ export function Section(props: SectionProps) {
   let [isVisible, setIsVisible] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
 
-  let setRefs = useCallback(
-    (node: HTMLElement | null) => {
-      (internalRef as React.MutableRefObject<HTMLElement | null>).current =
-        node;
-      if (typeof ref === "function") {
-        ref(node);
-      } else if (ref && "current" in ref) {
-        (ref as React.MutableRefObject<HTMLElement | null>).current = node;
-      }
-    },
-    [ref],
-  );
+  let setRefs = (node: HTMLElement | null) => {
+    (internalRef as React.MutableRefObject<HTMLElement | null>).current =
+      node;
+    if (typeof ref === "function") {
+      ref(node);
+    } else if (ref && "current" in ref) {
+      (ref as React.MutableRefObject<HTMLElement | null>).current = node;
+    }
+  };
 
   useEffect(() => {
     if (!revealElementsOnScroll || !internalRef.current) {

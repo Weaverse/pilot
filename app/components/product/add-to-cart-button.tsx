@@ -106,28 +106,26 @@ function AddToCartButtonContent({
 function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
   const matches = useMatches();
 
-  return useMemo(() => {
-    const data: Record<string, unknown> = {};
-    for (const match of matches) {
-      const eventData = match?.data as Record<string, unknown>;
-      if (eventData) {
-        if (eventData.analytics) {
-          Object.assign(data, eventData.analytics);
-        }
-        const selectedLocale =
-          (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
-        Object.assign(data, {
-          currency: selectedLocale.currency,
-          acceptedLanguage: selectedLocale.language,
-        });
+  const data: Record<string, unknown> = {};
+  for (const match of matches) {
+    const eventData = match?.data as Record<string, unknown>;
+    if (eventData) {
+      if (eventData.analytics) {
+        Object.assign(data, eventData.analytics);
       }
+      const selectedLocale =
+        (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
+      Object.assign(data, {
+        currency: selectedLocale.currency,
+        acceptedLanguage: selectedLocale.language,
+      });
     }
+  }
 
-    return {
-      ...data,
-      hasUserConsent,
-    } as unknown as ShopifyPageViewPayload;
-  }, [matches, hasUserConsent]);
+  return {
+    ...data,
+    hasUserConsent,
+  } as unknown as ShopifyPageViewPayload;
 }
 
 function AddToCartAnalytics({

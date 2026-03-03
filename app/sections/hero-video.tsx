@@ -7,7 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
@@ -115,20 +115,16 @@ export default function HeroVideo(props: HeroVideoProps) {
     triggerOnce: true,
   });
 
-  // Use `useCallback` so we don't recreate the function on each render
-  const setRefs = useCallback(
-    (node: HTMLElement) => {
-      // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
-      inViewRef(node);
-      // Handle ref prop
-      if (typeof ref === "function") {
-        ref(node);
-      } else if (ref && "current" in ref) {
-        ref.current = node;
-      }
-    },
-    [inViewRef, ref],
-  );
+  const setRefs = (node: HTMLElement) => {
+    // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
+    inViewRef(node);
+    // Handle ref prop
+    if (typeof ref === "function") {
+      ref(node);
+    } else if (ref && "current" in ref) {
+      ref.current = node;
+    }
+  };
 
   function handleResize() {
     setSize(getPlayerSize(id));

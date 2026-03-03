@@ -1,5 +1,6 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { cva } from "class-variance-authority";
 import { cn } from "~/utils/cn";
 
 /**
@@ -54,23 +55,27 @@ export function observe(element: Element, callback: ObserverCallback): () => voi
 
 export type AnimationType = "fade-up" | "zoom-in" | "slide-in";
 
-const ANIMATION_CLASSES: Record<
-  AnimationType,
-  { hidden: string; visible: string }
-> = {
-  "fade-up": {
-    hidden: "opacity-0 translate-y-5",
-    visible: "opacity-100 translate-y-0",
+const revealVariants = cva("transition-all will-change-transform", {
+  variants: {
+    animation: {
+      "fade-up": "",
+      "zoom-in": "",
+      "slide-in": "",
+    },
+    visible: {
+      true: "",
+      false: "",
+    },
   },
-  "zoom-in": {
-    hidden: "opacity-0 scale-80 translate-y-5",
-    visible: "opacity-100 scale-100 translate-y-0",
-  },
-  "slide-in": {
-    hidden: "opacity-0 translate-x-5",
-    visible: "opacity-100 translate-x-0",
-  },
-};
+  compoundVariants: [
+    { animation: "fade-up", visible: false, class: "opacity-0 translate-y-5" },
+    { animation: "fade-up", visible: true, class: "opacity-100 translate-y-0" },
+    { animation: "zoom-in", visible: false, class: "opacity-0 scale-80 translate-y-5" },
+    { animation: "zoom-in", visible: true, class: "opacity-100 scale-100 translate-y-0" },
+    { animation: "slide-in", visible: false, class: "opacity-0 translate-x-5" },
+    { animation: "slide-in", visible: true, class: "opacity-100 translate-x-0" },
+  ],
+});
 
 interface ScrollRevealProps extends React.HTMLAttributes<HTMLElement> {
   ref?: React.Ref<HTMLElement>;
@@ -97,19 +102,16 @@ export function ScrollReveal({
   let [isVisible, setIsVisible] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
 
-  let setRefs = useCallback(
-    (node: HTMLElement | null) => {
-      (internalRef as React.MutableRefObject<HTMLElement | null>).current =
+  let setRefs = (node: HTMLElement | null) => {
+    (internalRef as React.MutableRefObject<HTMLElement | null>).current =
+      node;
+    if (typeof externalRef === "function") {
+      externalRef(node);
+    } else if (externalRef && "current" in externalRef) {
+      (externalRef as React.MutableRefObject<HTMLElement | null>).current =
         node;
-      if (typeof externalRef === "function") {
-        externalRef(node);
-      } else if (externalRef && "current" in externalRef) {
-        (externalRef as React.MutableRefObject<HTMLElement | null>).current =
-          node;
-      }
-    },
-    [externalRef],
-  );
+    }
+  };
 
   useEffect(() => {
     if (!revealElementsOnScroll || !internalRef.current) {
@@ -133,14 +135,11 @@ export function ScrollReveal({
     );
   }
 
-  let classes = ANIMATION_CLASSES[animation];
-
   return (
     <Component
       ref={setRefs}
       className={cn(
-        "transition-all will-change-transform",
-        isVisible ? classes.visible : classes.hidden,
+        revealVariants({ animation, visible: isVisible }),
         className,
       )}
       style={{
