@@ -31,6 +31,8 @@ interface SingleProductData {
   productsCount: number;
   product: WeaverseProduct;
   showThumbnails: boolean;
+  groupMediaByVariant?: boolean;
+  groupByOption?: string;
 }
 
 type SingleProductProps = HydrogenComponentProps<
@@ -41,7 +43,7 @@ type SingleProductProps = HydrogenComponentProps<
   };
 
 export default function SingleProduct(props: SingleProductProps) {
-  const { ref, loaderData, product: _product, showThumbnails, ...rest } = props;
+  const { ref, loaderData, product: _product, showThumbnails, groupMediaByVariant, groupByOption, ...rest } = props;
   const { storeDomain, product } = loaderData || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
@@ -126,6 +128,9 @@ export default function SingleProduct(props: SingleProductProps) {
             media={product?.media.nodes}
             selectedVariant={selectedVariant}
             showThumbnails={showThumbnails}
+            groupMediaByVariant={groupMediaByVariant}
+            groupByOption={groupByOption}
+            product={product}
           />
           <ScrollReveal
             animation="slide-in"
@@ -261,6 +266,25 @@ export const schema = createSchema({
           name: "showThumbnails",
           type: "switch",
           defaultValue: false,
+        },
+        {
+          label: "Group media by variant",
+          name: "groupMediaByVariant",
+          type: "switch",
+          defaultValue: false,
+          helpText:
+            "When enabled, only images matching the selected variant option will be displayed",
+        },
+        {
+          type: "text",
+          name: "groupByOption",
+          label: "Group by option name",
+          defaultValue: "Color",
+          placeholder: "Color",
+          helpText:
+            "The product option name used to group media (e.g., Color, Colour)",
+          condition: (data: SingleProductData) =>
+            data.groupMediaByVariant === true,
         },
       ],
     },

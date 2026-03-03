@@ -10,6 +10,7 @@ import type {
   Media_MediaImage_Fragment,
   Media_Video_Fragment,
   MediaFragment,
+  ProductQuery,
   ProductVariantFragment,
 } from "storefront-api.generated";
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
@@ -19,6 +20,7 @@ import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
 import { ZoomButton, ZoomModal } from "./media-zoom";
+import { getVariantGroupedMedia } from "~/utils/variant-media";
 
 const variants = cva(
   [
@@ -48,6 +50,9 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
   enableZoom?: boolean;
   zoomTrigger?: "image" | "button" | "both";
   zoomButtonVisibility?: "always" | "hover";
+  groupMediaByVariant?: boolean;
+  groupByOption?: string;
+  product?: NonNullable<ProductQuery["product"]>;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -61,7 +66,20 @@ export function ProductMedia(props: ProductMediaProps) {
     enableZoom,
     zoomTrigger = "button",
     zoomButtonVisibility = "hover",
+    groupMediaByVariant,
+    groupByOption,
+    product,
   } = props;
+
+  let displayMedia = media;
+  if (groupMediaByVariant && product && groupByOption) {
+    displayMedia = getVariantGroupedMedia({
+      allMedia: media,
+      selectedVariant,
+      product,
+      groupByOption,
+    });
+  }
 
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -71,7 +89,7 @@ export function ProductMedia(props: ProductMediaProps) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
     if (selectedVariant && swiper) {
-      const index = getSelectedVariantMediaIndex(media, selectedVariant);
+      const index = getSelectedVariantMediaIndex(displayMedia, selectedVariant);
       if (index !== swiper.activeIndex) {
         swiper.slideTo(index);
       }
@@ -80,7 +98,7 @@ export function ProductMedia(props: ProductMediaProps) {
 
   let mediaLayout = initialMediaLayout;
   let gridSize = initialGridSize;
-  if (media.length === 1) {
+  if (displayMedia.length === 1) {
     mediaLayout = "grid";
     gridSize = "1x1";
   }
@@ -94,7 +112,7 @@ export function ProductMedia(props: ProductMediaProps) {
     return (
       <>
         <div className={variants({ gridSize })}>
-          {media.map((med, idx) => {
+          {displayMedia.map((med, idx) => {
             return (
               <div
                 key={med.id}
@@ -144,7 +162,7 @@ export function ProductMedia(props: ProductMediaProps) {
         </div>
         {enableZoom && (
           <ZoomModal
-            media={media}
+            media={displayMedia}
             zoomMediaId={zoomMediaId}
             setZoomMediaId={setZoomMediaId}
             open={zoomModalOpen}
@@ -185,7 +203,7 @@ export function ProductMedia(props: ProductMediaProps) {
               }}
               modules={[Navigation, Thumbs, FreeMode]}
             >
-              {media.map(({ id, previewImage, alt, mediaContentType }) => {
+              {displayMedia.map(({ id, previewImage, alt, mediaContentType }) => {
                 return (
                   <SwiperSlide
                     key={id}
@@ -233,7 +251,7 @@ export function ProductMedia(props: ProductMediaProps) {
             modules={[Pagination, Navigation, Thumbs]}
             className="overflow-visible pb-10 md:overflow-hidden md:pb-0 md:[&_.swiper-pagination]:hidden"
           >
-            {media.map((med, idx) => {
+            {displayMedia.map((med, idx) => {
               return (
                 <SwiperSlide key={med.id} className="group bg-gray-100">
                   <div
@@ -292,7 +310,7 @@ export function ProductMedia(props: ProductMediaProps) {
       </div>
       {enableZoom && (
         <ZoomModal
-          media={media}
+          media={displayMedia}
           zoomMediaId={zoomMediaId}
           setZoomMediaId={setZoomMediaId}
           open={zoomModalOpen}
