@@ -11,6 +11,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 const SECTION_HEIGHTS = {
   small: {
@@ -141,7 +142,7 @@ export default function HeroVideo(props: HeroVideoProps) {
 
 
   return (
-    <section
+    <ScrollReveal as="section"
       ref={setRefs}
       {...rest}
       className="h-full w-full overflow-hidden"
@@ -181,7 +182,7 @@ export default function HeroVideo(props: HeroVideoProps) {
           {children}
         </div>
       </div>
-    </section>
+    </ScrollReveal>
   );
 }
 

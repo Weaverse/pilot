@@ -71,7 +71,7 @@ function Hotspots(props: HotspotsProps) {
         className="relative"
         style={{ aspectRatio: calculateAspectRatio(imageData, aspectRatio) }}
       >
-        <ScrollReveal animation="zoom-in">
+        <ScrollReveal animation="zoom-in" className="h-full w-full">
           <Image
             data={imageData}
             sizes="auto"
