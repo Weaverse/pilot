@@ -50,6 +50,11 @@ export const PRODUCT_QUERY = `#graphql
       adjacentVariants(selectedOptions: $selectedOptions) {
         ...ProductVariant
       }
+      variants(first: 100) {
+        nodes {
+          ...ProductVariant
+        }
+      }
       # Check if the product is a bundle
       isBundle: selectedOrFirstAvailableVariant(ignoreUnknownOptions: true, selectedOptions: { name: "", value: ""}) {
         ...on ProductVariant {

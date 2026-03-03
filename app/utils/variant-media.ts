@@ -76,9 +76,9 @@ function getVariantGroupedMedia({
     }
   }
 
-  // From adjacentVariants
-  if (product.adjacentVariants) {
-    for (let variant of product.adjacentVariants) {
+  // From all variants
+  if (product.variants?.nodes) {
+    for (let variant of product.variants.nodes) {
       let hasMatchingOption = variant.selectedOptions.some(
         (opt) => opt.name === groupByOption && opt.value === selectedOptionValue,
       );
