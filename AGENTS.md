@@ -162,3 +162,30 @@ The project extends from `ultracite` and `@weaverse/biome` configurations with t
 7. **Type Safety**: Avoid `any` type when possible, use `unknown` if escape hatch needed, properly type all Weaverse section props
 8. **Combined Listings**: Use utility functions from `/app/utils/combined-listings.ts` for product filtering and grouping logic
 9. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
+
+## Spec-Driven Development
+
+The spec is the source of truth for a feature, not the code. Every feature must have a spec folder.
+
+### Spec Structure
+
+All specs live in `.specs/` at the project root. Each feature gets its own subfolder:
+
+```
+{index}--{kebab-case-title}--{YYYY-MM-DD}
+```
+
+- `index`: 3-digit zero-padded (001, 002, ...)
+- `title`: kebab-case feature name
+- `YYYY-MM-DD`: creation date (fixed)
+- Separators: double dashes `--`
+
+Each folder contains:
+- **README.md** (required): Status (`draft`/`in-progress`/`completed`/`on-hold`/`deprecated`), owner, dates, original prompt (verbatim, never paraphrased), and 2-3 sentence summary
+- **plan.md** (required): Implementation plan under 500 lines, must list all files/folders the feature touches
+- **work-logs.md** (optional): Append-only timeline of work done
+
+### Rules
+
+1. **New feature?** Create a spec folder before writing any code.
+2. **Existing feature?** Read the spec first. Update it if your changes affect the plan, status, or scope.
