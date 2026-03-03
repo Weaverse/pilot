@@ -43,12 +43,21 @@ function getVariantGroupedMedia({
   product,
   groupByOption,
 }: VariantGroupedMediaParams): MediaFragment[] {
+  console.log("[VariantMedia] === START ===");
+  console.log("[VariantMedia] groupByOption:", groupByOption);
+  console.log("[VariantMedia] allMedia count:", allMedia.length);
+  console.log("[VariantMedia] selectedVariant:", selectedVariant?.title, selectedVariant?.id);
+
   // 1. Find the selected option value for the grouping option
   let selectedOptionValue = selectedVariant.selectedOptions.find(
     (opt) => opt.name === groupByOption,
   )?.value;
 
+  console.log("[VariantMedia] selectedOptionValue:", selectedOptionValue);
+  console.log("[VariantMedia] selectedVariant.selectedOptions:", selectedVariant.selectedOptions);
+
   if (!selectedOptionValue) {
+    console.log("[VariantMedia] No selectedOptionValue found, returning allMedia");
     return allMedia;
   }
 
@@ -60,6 +69,7 @@ function getVariantGroupedMedia({
   let allVariantUrls: Set<string> = new Set(); // To identify ungrouped media
 
   // From all variants
+  console.log("[VariantMedia] product.variants?.nodes count:", product.variants?.nodes?.length);
   if (product.variants?.nodes) {
     for (let variant of product.variants.nodes) {
       let option = variant.selectedOptions.find(
@@ -81,8 +91,15 @@ function getVariantGroupedMedia({
     }
   }
 
+  console.log("[VariantMedia] groupedUrls keys:", Array.from(groupedUrls.keys()));
+  console.log("[VariantMedia] groupedUrls:", Object.fromEntries(
+    Array.from(groupedUrls.entries()).map(([k, v]) => [k, Array.from(v)])
+  ));
+  console.log("[VariantMedia] allVariantUrls:", Array.from(allVariantUrls));
+
   // 3. Get URLs for selected option value
   let selectedGroupUrls = groupedUrls.get(selectedOptionValueLower) || new Set();
+  console.log("[VariantMedia] selectedGroupUrls for", selectedOptionValueLower, ":", Array.from(selectedGroupUrls));
 
   // 4. Partition media into matched, ungrouped
   let matched: MediaFragment[] = [];
@@ -101,18 +118,26 @@ function getVariantGroupedMedia({
     // Check if this media matches the selected option value
     if (selectedGroupUrls.has(normalizedMediaUrl)) {
       matched.push(media);
+      console.log("[VariantMedia] MATCHED:", media.alt, "→", normalizedMediaUrl);
     } else if (!allVariantUrls.has(normalizedMediaUrl)) {
       // Media that doesn't match ANY variant → ungrouped (shared)
       ungrouped.push(media);
+      console.log("[VariantMedia] UNGROUPED:", media.alt, "→", normalizedMediaUrl);
+    } else {
+      console.log("[VariantMedia] EXCLUDED (other group):", media.alt, "→", normalizedMediaUrl);
     }
-    // else: media matches a DIFFERENT option value → exclude
   }
+
+  console.log("[VariantMedia] matched count:", matched.length);
+  console.log("[VariantMedia] ungrouped count:", ungrouped.length);
 
   // 5. Fallback: if no matches, show all media
   if (matched.length === 0) {
+    console.log("[VariantMedia] No matches, returning allMedia as fallback");
     return allMedia;
   }
 
+  console.log("[VariantMedia] === END: returning", matched.length + ungrouped.length, "items ===");
   return [...matched, ...ungrouped];
 }
 
