@@ -7,6 +7,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SlideshowArrowsProps } from "./arrows";
@@ -85,7 +86,8 @@ export default function Slideshow(
   const { enableTransparentHeader } = useThemeSettings();
 
   return (
-    <section
+    <ScrollReveal
+      as="section"
       key={Object.values(rest)
         .filter((v) => typeof v !== "object")
         .join("-")}
@@ -139,7 +141,7 @@ export default function Slideshow(
         )}
         {showDots && <Dots dotsPosition={dotsPosition} dotsColor={dotsColor} />}
       </Swiper>
-    </section>
+    </ScrollReveal>
   );
 }
 
