@@ -10,7 +10,7 @@ import type { loader as productRouteLoader } from "~/routes/products/product";
 import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductInformationData
-  extends Omit<ProductMediaProps, "selectedVariant" | "media"> {
+  extends Omit<ProductMediaProps, "selectedVariant" | "media" | "product"> {
   ref: React.Ref<HTMLDivElement>;
 }
 
@@ -27,6 +27,8 @@ export default function ProductInformation(
     enableZoom,
     zoomTrigger,
     zoomButtonVisibility,
+    groupMediaByVariant,
+    groupByOption,
     ...rest
   } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
@@ -70,6 +72,9 @@ export default function ProductInformation(
             enableZoom={enableZoom}
             zoomTrigger={zoomTrigger}
             zoomButtonVisibility={zoomButtonVisibility}
+            groupMediaByVariant={groupMediaByVariant}
+            groupByOption={groupByOption}
+            product={product}
           />
           <div>
             <div
@@ -207,6 +212,25 @@ export const schema = createSchema({
           condition: (data: ProductInformationData) =>
             data.enableZoom === true &&
             (data.zoomTrigger === "button" || data.zoomTrigger === "both"),
+        },
+        {
+          label: "Group media by variant",
+          name: "groupMediaByVariant",
+          type: "switch",
+          defaultValue: false,
+          helpText:
+            "When enabled, only images matching the selected variant option will be displayed",
+        },
+        {
+          type: "text",
+          name: "groupByOption",
+          label: "Group by option name",
+          defaultValue: "Color",
+          placeholder: "Color",
+          helpText:
+            "The product option name used to group media (e.g., Color, Colour)",
+          condition: (data: ProductInformationData) =>
+            data.groupMediaByVariant === true,
         },
       ],
     },

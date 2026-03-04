@@ -1,0 +1,40 @@
+# Variant Media Grouping
+
+Groups product media by variant option (e.g., Color). When a visitor selects "Black", only images with "black" in the filename are shown, plus shared/ungrouped images. Falls back to all media if no matches.
+
+## How It Works
+
+1. Get the selected option value from `selectedVariant.selectedOptions` (e.g., "Black")
+2. Get all known option values from `product.options` for the grouping option (e.g., ["Black", "Cream"])
+3. For each media item, extract the option value from the image filename URL (checks for `_black`, `-black`, etc.)
+4. Group media into a `Map<string, MediaFragment[]>` keyed by option value. Media not matching any option goes to `ungrouped[]`
+5. Return `[...matched, ...ungrouped]`. If no matches, return all media as fallback
+
+## Files
+
+| File | Role |
+|------|------|
+| `app/utils/variant-media.ts` | Core logic: `getVariantGroupedMedia()` and `extractOptionValueFromUrl()` |
+| `app/components/product/product-media.tsx` | Calls the utility when `groupMediaByVariant` is enabled. Uses `displayMedia` instead of `media` for rendering |
+| `app/sections/main-product/index.tsx` | Weaverse schema settings + passes props to `ProductMedia` |
+| `app/sections/single-product/index.tsx` | Same as above |
+
+## Weaverse Settings (in both sections)
+
+- **Group media by variant** — switch, default `false`
+- **Group by option name** — text, default `"Color"`, conditional on switch being `true`
+
+## Props Added to ProductMedia
+
+```ts
+groupMediaByVariant?: boolean;
+groupByOption?: string;
+product?: NonNullable<ProductQuery["product"]>;
+```
+
+## To Remove
+
+1. Delete `app/utils/variant-media.ts`
+2. In `app/components/product/product-media.tsx`: remove the import, the 3 props above, the `displayMedia` logic block, and revert `displayMedia` references back to `media`
+3. In both `app/sections/main-product/index.tsx` and `app/sections/single-product/index.tsx`: remove the `groupMediaByVariant` and `groupByOption` schema settings, interface fields, destructured props, and the 3 extra props on `<ProductMedia>`
+4. Run `npm run codegen`
