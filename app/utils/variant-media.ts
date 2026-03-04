@@ -72,7 +72,7 @@ interface VariantGroupedMediaParams {
  *
  * Re-runs on every variant change.
  */
-function getVariantGroupedMedia({
+export function getVariantGroupedMedia({
   allMedia,
   selectedVariant,
   product,
@@ -135,6 +135,3 @@ function getVariantGroupedMedia({
 
   return [...matched, ...ungrouped];
 }
-
-export { getVariantGroupedMedia, normalizeImageUrl };
-export type { VariantGroupedMediaParams };
