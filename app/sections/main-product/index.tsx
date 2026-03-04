@@ -29,6 +29,9 @@ export default function ProductInformation(
     zoomButtonVisibility,
     groupMediaByVariant,
     groupByOption,
+    initialMediaCount,
+    showMoreText,
+    showLessText,
     ...rest
   } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
@@ -75,6 +78,9 @@ export default function ProductInformation(
             groupMediaByVariant={groupMediaByVariant}
             groupByOption={groupByOption}
             product={product}
+            initialMediaCount={initialMediaCount}
+            showMoreText={showMoreText}
+            showLessText={showLessText}
           />
           <div>
             <div
@@ -231,6 +237,41 @@ export const schema = createSchema({
             "The product option name used to group media (e.g., Color, Colour)",
           condition: (data: ProductInformationData) =>
             data.groupMediaByVariant === true,
+        },
+        {
+          type: "range",
+          name: "initialMediaCount",
+          label: "Initial media to show",
+          defaultValue: 0,
+          configs: {
+            min: 0,
+            max: 20,
+            step: 1,
+          },
+          helpText:
+            "Number of media items visible before 'Show more'. Set to 0 to show all.",
+          condition: (data: ProductInformationData) =>
+            data.mediaLayout === "grid",
+        },
+        {
+          type: "text",
+          name: "showMoreText",
+          label: "Show more button text",
+          defaultValue: "Show more",
+          placeholder: "Show more",
+          condition: (data: ProductInformationData) =>
+            data.mediaLayout === "grid" &&
+            (data.initialMediaCount ?? 0) > 0,
+        },
+        {
+          type: "text",
+          name: "showLessText",
+          label: "Show less button text",
+          defaultValue: "Show less",
+          placeholder: "Show less",
+          condition: (data: ProductInformationData) =>
+            data.mediaLayout === "grid" &&
+            (data.initialMediaCount ?? 0) > 0,
         },
       ],
     },

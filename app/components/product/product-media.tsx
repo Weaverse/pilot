@@ -1,6 +1,8 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  CaretDownIcon,
+  CaretUpIcon,
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -53,6 +55,9 @@ export interface ProductMediaProps extends VariantProps<typeof variants> {
   groupMediaByVariant?: boolean;
   groupByOption?: string;
   product?: NonNullable<ProductQuery["product"]>;
+  initialMediaCount?: number;
+  showMoreText?: string;
+  showLessText?: string;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -69,6 +74,9 @@ export function ProductMedia(props: ProductMediaProps) {
     groupMediaByVariant,
     groupByOption,
     product,
+    initialMediaCount = 0,
+    showMoreText = "Show more",
+    showLessText = "Show less",
   } = props;
 
   let displayMedia = media;
@@ -85,6 +93,7 @@ export function ProductMedia(props: ProductMediaProps) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
@@ -94,6 +103,11 @@ export function ProductMedia(props: ProductMediaProps) {
         swiper.slideTo(index);
       }
     }
+  }, [selectedVariant]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
+  useEffect(() => {
+    setExpanded(false);
   }, [selectedVariant]);
 
   let mediaLayout = initialMediaLayout;
@@ -109,64 +123,100 @@ export function ProductMedia(props: ProductMediaProps) {
     enableZoom && (zoomTrigger === "image" || zoomTrigger === "both");
 
   if (mediaLayout === "grid") {
+    const shouldLimitMedia =
+      initialMediaCount > 0 && displayMedia.length > initialMediaCount;
+    const visibleMedia =
+      shouldLimitMedia && !expanded
+        ? displayMedia.slice(0, initialMediaCount)
+        : displayMedia;
+    const hiddenCount = displayMedia.length - visibleMedia.length;
+
     return (
       <>
-        <div className={variants({ gridSize })}>
-          {displayMedia.map((med, idx) => {
-            const isLast = idx === displayMedia.length - 1;
-            return (
-              <div
-                key={med.id}
-                className={clsx(
-                  "group relative",
-                  gridSize === "2x2" &&
-                    isLast &&
-                    displayMedia.length % 2 === 1 &&
-                    "2xl:col-span-2",
-                  gridSize === "mix" &&
-                    (idx % 3 === 0 ||
-                      (isLast && idx % 3 === 1)) &&
-                    "lg:col-span-2",
-                )}
-              >
+        <div className="relative">
+          <div className={variants({ gridSize })}>
+            {visibleMedia.map((med, idx) => {
+              const isLast = idx === visibleMedia.length - 1;
+              return (
                 <div
-                  onClick={
-                    canClickImage
-                      ? () => {
-                          setZoomMediaId(med.id);
-                          setZoomModalOpen(true);
-                        }
-                      : undefined
-                  }
-                  className={canClickImage ? "cursor-zoom-in" : ""}
+                  key={med.id}
+                  className={clsx(
+                    "group relative",
+                    gridSize === "2x2" &&
+                      isLast &&
+                      visibleMedia.length % 2 === 1 &&
+                      "2xl:col-span-2",
+                    gridSize === "mix" &&
+                      (idx % 3 === 0 ||
+                        (isLast && idx % 3 === 1)) &&
+                      "lg:col-span-2",
+                  )}
                 >
-                  <Media
-                    media={med}
-                    imageAspectRatio={imageAspectRatio}
-                    index={idx}
-                    className={cn(
-                      "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
-                      idx === 0 &&
-                        "[&_img]:[view-transition-name:image-expand]",
-                    )}
-                  />
+                  <div
+                    onClick={
+                      canClickImage
+                        ? () => {
+                            setZoomMediaId(med.id);
+                            setZoomModalOpen(true);
+                          }
+                        : undefined
+                    }
+                    className={canClickImage ? "cursor-zoom-in" : ""}
+                  >
+                    <Media
+                      media={med}
+                      imageAspectRatio={imageAspectRatio}
+                      index={idx}
+                      className={cn(
+                        "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
+                        idx === 0 &&
+                          "[&_img]:[view-transition-name:image-expand]",
+                      )}
+                    />
+                  </div>
+                  {shouldShowButton && (
+                    <ZoomButton
+                      className={clsx(
+                        "absolute top-2 right-2 md:top-4 md:right-4",
+                        zoomButtonVisibility === "hover" &&
+                          "opacity-0 group-hover:opacity-100",
+                      )}
+                      onClick={() => {
+                        setZoomMediaId(med.id);
+                        setZoomModalOpen(true);
+                      }}
+                    />
+                  )}
                 </div>
-                {shouldShowButton && (
-                  <ZoomButton
-                    className={clsx(
-                      "absolute top-2 right-2 md:top-4 md:right-4",
-                      zoomButtonVisibility === "hover" &&
-                        "opacity-0 group-hover:opacity-100",
-                    )}
-                    onClick={() => {
-                      setZoomMediaId(med.id);
-                      setZoomModalOpen(true);
-                    }}
-                  />
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+          {shouldLimitMedia && !expanded && (
+            <button
+              type="button"
+              className="absolute right-0 bottom-0 left-0 flex cursor-pointer items-end justify-center bg-gradient-to-t from-white/90 via-white/50 to-transparent pt-32 pb-6 text-sm font-medium text-body transition-opacity"
+              onClick={() => setExpanded(true)}
+              aria-label={`${showMoreText} (+${hiddenCount})`}
+            >
+              <span className="flex flex-col items-center gap-1">
+                <CaretDownIcon className="h-4 w-4" />
+                {`${showMoreText} (+${hiddenCount})`}
+              </span>
+            </button>
+          )}
+          {shouldLimitMedia && expanded && (
+            <button
+              type="button"
+              className="mt-2 flex w-full cursor-pointer items-center justify-center gap-1 py-2 text-sm font-medium text-body-subtle underline transition-colors hover:text-body lg:mt-1"
+              onClick={() => setExpanded(false)}
+              aria-label={showLessText}
+            >
+              <span className="flex flex-col items-center gap-1">
+                <CaretUpIcon className="h-4 w-4" />
+                {showLessText}
+              </span>
+            </button>
+          )}
         </div>
         {enableZoom && (
           <ZoomModal
