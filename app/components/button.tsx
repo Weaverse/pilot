@@ -2,8 +2,8 @@ import { CircleNotchIcon } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
-import { cn } from "~/utils/cn";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { cn } from "~/utils/cn";
 
 export const variants = cva(
   [

@@ -1,4 +1,5 @@
 import { ScrollReveal } from "~/components/scroll-reveal";
+
 interface QuantityProps {
   value: number;
   onChange: (value: number) => void;

@@ -15,11 +15,11 @@ import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
+import { HeaderCountrySelector } from "./country-selector";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { MobileMenu } from "./menu/mobile-menu";
 import { PredictiveSearchButton } from "./predictive-search";
-import { HeaderCountrySelector } from "./country-selector";
 
 const variants = cva("", {
   variants: {
@@ -44,7 +44,8 @@ function useIsHomeCheck() {
 }
 
 export function Header() {
-  const { enableTransparentHeader, headerWidth, showHeaderCountrySelector } = useThemeSettings();
+  const { enableTransparentHeader, headerWidth, showHeaderCountrySelector } =
+    useThemeSettings();
   const isHome = useIsHomeCheck();
   const { y } = useWindowScroll();
   const routeError = useRouteError();

@@ -6,8 +6,8 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
-import { cn } from "~/utils/cn";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { cn } from "~/utils/cn";
 
 const fontSizeVariants = cva("", {
   variants: {

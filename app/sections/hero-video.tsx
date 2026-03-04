@@ -140,9 +140,9 @@ export default function HeroVideo(props: HeroVideoProps) {
     };
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
-
   return (
-    <ScrollReveal as="section"
+    <ScrollReveal
+      as="section"
       ref={setRefs}
       {...rest}
       className="h-full w-full overflow-hidden"
@@ -178,9 +178,7 @@ export default function HeroVideo(props: HeroVideoProps) {
           overlayOpacity={overlayOpacity}
           className="z-0"
         />
-        <div className={clsx(variants({ gap }))}>
-          {children}
-        </div>
+        <div className={clsx(variants({ gap }))}>{children}</div>
       </div>
     </ScrollReveal>
   );

@@ -6,12 +6,12 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { cn } from "~/utils/cn";
-import { ScrollReveal } from "~/components/scroll-reveal";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { ImageAspectRatio } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
 
 const variants = cva("", {

@@ -3,8 +3,8 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
-import type { CustomerApiPlayLoad } from "~/routes/api/customer";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import type { CustomerApiPlayLoad } from "~/routes/api/customer";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {
   width: number;

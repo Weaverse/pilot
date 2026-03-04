@@ -19,8 +19,8 @@ import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
-import { ZoomButton, ZoomModal } from "./media-zoom";
 import { getVariantGroupedMedia } from "~/utils/variant-media";
+import { ZoomButton, ZoomModal } from "./media-zoom";
 
 const variants = cva(
   [
@@ -203,35 +203,37 @@ export function ProductMedia(props: ProductMediaProps) {
               }}
               modules={[Navigation, Thumbs, FreeMode]}
             >
-              {displayMedia.map(({ id, previewImage, alt, mediaContentType }) => {
-                return (
-                  <SwiperSlide
-                    key={id}
-                    className={cn(
-                      "relative",
-                      "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
-                      "[&.swiper-slide-thumb-active]:border-line",
-                    )}
-                  >
-                    <Image
-                      data={{
-                        ...previewImage,
-                        altText: alt || "Product image",
-                      }}
-                      loading="lazy"
-                      width={200}
-                      aspectRatio="1/1"
-                      className="h-auto w-full object-cover"
-                      sizes="auto"
-                    />
-                    {mediaContentType === "VIDEO" && (
-                      <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                        <VideoCameraIcon className="h-4 w-4" />
-                      </div>
-                    )}
-                  </SwiperSlide>
-                );
-              })}
+              {displayMedia.map(
+                ({ id, previewImage, alt, mediaContentType }) => {
+                  return (
+                    <SwiperSlide
+                      key={id}
+                      className={cn(
+                        "relative",
+                        "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
+                        "[&.swiper-slide-thumb-active]:border-line",
+                      )}
+                    >
+                      <Image
+                        data={{
+                          ...previewImage,
+                          altText: alt || "Product image",
+                        }}
+                        loading="lazy"
+                        width={200}
+                        aspectRatio="1/1"
+                        className="h-auto w-full object-cover"
+                        sizes="auto"
+                      />
+                      {mediaContentType === "VIDEO" && (
+                        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+                          <VideoCameraIcon className="h-4 w-4" />
+                        </div>
+                      )}
+                    </SwiperSlide>
+                  );
+                },
+              )}
             </Swiper>
           </div>
         )}

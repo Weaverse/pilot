@@ -21,7 +21,7 @@ function getVisiblePages(
   for (
     let i = Math.max(2, currentPage - DELTA);
     i <= Math.min(lastPage - 1, currentPage + DELTA);
-    i++
+    i += 1
   ) {
     range.push(i);
   }

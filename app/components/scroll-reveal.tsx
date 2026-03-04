@@ -37,7 +37,10 @@ function getSharedObserver(): IntersectionObserver {
   return sharedObserver;
 }
 
-export function observe(element: Element, callback: ObserverCallback): () => void {
+export function observe(
+  element: Element,
+  callback: ObserverCallback,
+): () => void {
   let observer = getSharedObserver();
   callbacks.set(element, callback);
   observer.observe(element);
@@ -70,10 +73,22 @@ const revealVariants = cva("transition-all duration-500", {
   compoundVariants: [
     { animation: "fade-up", visible: false, class: "opacity-0 translate-y-5" },
     { animation: "fade-up", visible: true, class: "opacity-100 translate-y-0" },
-    { animation: "zoom-in", visible: false, class: "opacity-0 scale-80 translate-y-5" },
-    { animation: "zoom-in", visible: true, class: "opacity-100 scale-100 translate-y-0" },
+    {
+      animation: "zoom-in",
+      visible: false,
+      class: "opacity-0 scale-80 translate-y-5",
+    },
+    {
+      animation: "zoom-in",
+      visible: true,
+      class: "opacity-100 scale-100 translate-y-0",
+    },
     { animation: "slide-in", visible: false, class: "opacity-0 translate-x-5" },
-    { animation: "slide-in", visible: true, class: "opacity-100 translate-x-0" },
+    {
+      animation: "slide-in",
+      visible: true,
+      class: "opacity-100 translate-x-0",
+    },
   ],
 });
 
@@ -103,8 +118,7 @@ export function ScrollReveal({
   let internalRef = useRef<HTMLElement>(null);
 
   let setRefs = (node: HTMLElement | null) => {
-    (internalRef as React.MutableRefObject<HTMLElement | null>).current =
-      node;
+    (internalRef as React.MutableRefObject<HTMLElement | null>).current = node;
     if (typeof externalRef === "function") {
       externalRef(node);
     } else if (externalRef && "current" in externalRef) {

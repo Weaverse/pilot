@@ -5,8 +5,8 @@ import Heading, {
   headingInputs,
 } from "~/components/heading";
 import { Image } from "~/components/image";
-import { ScrollReveal } from "~/components/scroll-reveal";
 import Paragraph from "~/components/paragraph";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
 import type { ImageAspectRatio } from "~/types/others";
@@ -72,11 +72,7 @@ function Hotspots(props: HotspotsProps) {
         style={{ aspectRatio: calculateAspectRatio(imageData, aspectRatio) }}
       >
         <ScrollReveal animation="zoom-in" className="h-full w-full">
-          <Image
-            data={imageData}
-            sizes="auto"
-            className="z-0"
-          />
+          <Image data={imageData} sizes="auto" className="z-0" />
         </ScrollReveal>
         {children}
       </div>

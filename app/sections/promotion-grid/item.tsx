@@ -9,8 +9,8 @@ import { cva } from "class-variance-authority";
 import { BackgroundImage } from "~/components/background-image";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
-import { cn } from "~/utils/cn";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { cn } from "~/utils/cn";
 
 const variants = cva(
   [

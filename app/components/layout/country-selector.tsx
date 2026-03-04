@@ -5,13 +5,13 @@ import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-ty
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useInView } from "react-intersection-observer";
-import { ScrollArea } from "~/components/scroll-area";
 import {
   useFetcher,
   useLocation,
   useRouteLoaderData,
   useSubmit,
 } from "react-router";
+import { ScrollArea } from "~/components/scroll-area";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
 import { DEFAULT_LOCALE } from "~/utils/const";

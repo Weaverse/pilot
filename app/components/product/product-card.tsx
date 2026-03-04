@@ -149,7 +149,9 @@ export function ProductCard({
           {pcardShowSaleBadge && (
             <SaleBadge
               price={(selectedVariant || firstVariant)?.price as MoneyV2}
-              compareAtPrice={(selectedVariant || firstVariant)?.compareAtPrice as MoneyV2}
+              compareAtPrice={
+                (selectedVariant || firstVariant)?.compareAtPrice as MoneyV2
+              }
             />
           )}
           {pcardShowBestSellerBadge && isBestSellerProduct && (

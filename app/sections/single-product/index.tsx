@@ -22,9 +22,9 @@ import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
-import { ScrollReveal } from "~/components/scroll-reveal";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
 
 interface SingleProductData {
@@ -43,7 +43,15 @@ type SingleProductProps = HydrogenComponentProps<
   };
 
 export default function SingleProduct(props: SingleProductProps) {
-  const { ref, loaderData, product: _product, showThumbnails, groupMediaByVariant, groupByOption, ...rest } = props;
+  const {
+    ref,
+    loaderData,
+    product: _product,
+    showThumbnails,
+    groupMediaByVariant,
+    groupByOption,
+    ...rest
+  } = props;
   const { storeDomain, product } = loaderData || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
@@ -69,9 +77,7 @@ export default function SingleProduct(props: SingleProductProps) {
             />
             <div className="flex flex-col items-start justify-start gap-4">
               <SoldOutBadge />
-              <h3 className="tracking-tight">
-                EXAMPLE PRODUCT TITLE
-              </h3>
+              <h3 className="tracking-tight">EXAMPLE PRODUCT TITLE</h3>
               <Money
                 withoutTrailingZeros
                 data={{ amount: "19.99", currencyCode: "USD" }}
@@ -142,9 +148,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 selectedVariant={selectedVariant}
                 className="[&_span:nth-child(n+3)]:hidden"
               />
-              <h3 className="tracking-tight">
-                {product?.title}
-              </h3>
+              <h3 className="tracking-tight">{product?.title}</h3>
               <VariantPrices variant={selectedVariant} />
               <JudgemeStarsRating
                 productHandle={product.handle}
