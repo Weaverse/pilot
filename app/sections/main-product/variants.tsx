@@ -1,8 +1,8 @@
 import type { MappedProductOptions } from "@shopify/hydrogen";
 import type { ProductVariantFragment } from "storefront-api.generated";
 import { ProductOptionValues } from "~/components/product/product-option-values";
-import { hasOnlyDefaultVariant } from "~/utils/product";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { hasOnlyDefaultVariant } from "~/utils/product";
 
 export function ProductVariants({
   productOptions,
