@@ -21,12 +21,15 @@ function extractOptionValueFromUrl(
     // Check if any known option value appears in the filename
     for (let optionValue of knownOptionValues) {
       let optionLower = optionValue.toLowerCase();
-      // Check for _option, -option, or option at end
+      // Simple delimiter-based matching (_, -). Covers common naming conventions
+      // but won't catch every pattern (e.g., no delimiters). Adjust if needed.
       if (
-        nameWithoutExt.endsWith("_" + optionLower) ||
-        nameWithoutExt.endsWith("-" + optionLower) ||
-        nameWithoutExt.includes("_" + optionLower + "_") ||
-        nameWithoutExt.includes("-" + optionLower + "-") ||
+        nameWithoutExt.startsWith(`${optionLower}_`) ||
+        nameWithoutExt.startsWith(`${optionLower}-`) ||
+        nameWithoutExt.endsWith(`_${optionLower}`) ||
+        nameWithoutExt.endsWith(`-${optionLower}`) ||
+        nameWithoutExt.includes(`_${optionLower}_`) ||
+        nameWithoutExt.includes(`-${optionLower}-`) ||
         nameWithoutExt.endsWith(optionLower)
       ) {
         return optionLower;
