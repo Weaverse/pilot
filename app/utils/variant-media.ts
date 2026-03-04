@@ -5,20 +5,6 @@ import type {
 } from "storefront-api.generated";
 
 /**
- * Normalize a Shopify CDN image URL for comparison by stripping query params.
- * e.g., "https://cdn.shopify.com/s/.../image.jpg?width=200&v=123"
- *     → "cdn.shopify.com/s/.../image.jpg"
- */
-function normalizeImageUrl(url: string): string {
-  try {
-    const parsed = new URL(url);
-    return parsed.hostname + parsed.pathname;
-  } catch {
-    return url;
-  }
-}
-
-/**
  * Extract option value from image filename using known option values.
  * e.g., filename "24b_xxx_black.jpg" with options ["Black", "Cream"] → "black"
  */
@@ -31,7 +17,6 @@ function extractOptionValueFromUrl(
     const pathname = parsed.pathname;
     const filename = pathname.split("/").pop() || "";
     const nameWithoutExt = filename.replace(/\.[^.]+$/, "").toLowerCase();
-
 
     // Check if any known option value appears in the filename
     for (let optionValue of knownOptionValues) {
@@ -78,12 +63,10 @@ export function getVariantGroupedMedia({
   product,
   groupByOption,
 }: VariantGroupedMediaParams): MediaFragment[] {
-
   // 1. Find the selected option value for the grouping option
   let selectedOptionValue = selectedVariant.selectedOptions.find(
     (opt) => opt.name === groupByOption,
   )?.value;
-
 
   if (!selectedOptionValue) {
     return allMedia;
@@ -118,12 +101,11 @@ export function getVariantGroupedMedia({
       if (!groupedMedia.has(optionValue)) {
         groupedMedia.set(optionValue, []);
       }
-      groupedMedia.get(optionValue)!.push(media);
+      groupedMedia.get(optionValue)?.push(media);
     } else {
       ungrouped.push(media);
     }
   }
-
 
   // 4. Get matched media for selected option value
   let matched = groupedMedia.get(selectedOptionValueLower) || [];
