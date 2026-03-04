@@ -6,8 +6,8 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
 import type { HTMLAttributes } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
@@ -32,6 +32,7 @@ export interface SectionProps<T = any>
   borderRadius?: number;
   containerClassName?: string;
   children?: React.ReactNode;
+  animate?: boolean;
 }
 
 const variants = cva("relative", {
@@ -102,6 +103,7 @@ export function Section(props: SectionProps) {
     children,
     containerClassName,
     style = {},
+    animate = true,
     ...rest
   } = props;
 
@@ -110,17 +112,16 @@ export function Section(props: SectionProps) {
   let internalRef = useRef<HTMLElement>(null);
 
   let setRefs = (node: HTMLElement | null) => {
-    (internalRef as React.MutableRefObject<HTMLElement | null>).current =
-      node;
+    (internalRef as React.RefObject<HTMLElement | null>).current = node;
     if (typeof ref === "function") {
       ref(node);
     } else if (ref && "current" in ref) {
-      (ref as React.MutableRefObject<HTMLElement | null>).current = node;
+      (ref as React.RefObject<HTMLElement | null>).current = node;
     }
   };
 
   useEffect(() => {
-    if (!revealElementsOnScroll || !internalRef.current) {
+    if (!animate || !revealElementsOnScroll || !internalRef.current) {
       return;
     }
     return observe(internalRef.current, (isIntersecting) => {
@@ -128,7 +129,7 @@ export function Section(props: SectionProps) {
         setIsVisible(true);
       }
     });
-  }, [revealElementsOnScroll]);
+  }, [animate, revealElementsOnScroll]);
 
   style = {
     ...style,
@@ -149,12 +150,11 @@ export function Section(props: SectionProps) {
         hasBackground &&
           !isBgForContent &&
           "rounded-(--section-radius) bg-(--section-bg-color)",
-        revealElementsOnScroll && [
-          "transition-all duration-700",
-          isVisible
-            ? "translate-y-0 opacity-100"
-            : "translate-y-6 opacity-0",
-        ],
+        animate &&
+          revealElementsOnScroll && [
+            "transition-all duration-700",
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+          ],
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}

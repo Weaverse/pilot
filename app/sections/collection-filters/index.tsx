@@ -82,7 +82,7 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
       ? collection.metafield.reference.image
       : collection.image;
     return (
-      <Section ref={ref} {...rest} overflow="unset">
+      <Section ref={ref} {...rest} overflow="unset" animate={false}>
         <div className="py-10">
           {showBreadcrumb && (
             <BreadCrumb page={collection.title} className="mb-2.5" />

@@ -21,7 +21,7 @@ export default function AllProducts(props: AllProductsProps) {
   const { products } = useLoaderData<AllProductsQuery>();
 
   return (
-    <Section ref={ref} {...rest} overflow="unset">
+    <Section ref={ref} {...rest} overflow="unset" animate={false}>
       <BreadCrumb page={heading} className="mb-4 justify-center" />
       <h4 className="mb-8 text-center font-medium lg:mb-20">{heading}</h4>
       <Pagination connection={products}>

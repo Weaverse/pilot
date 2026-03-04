@@ -39,7 +39,7 @@ export default function ProductInformation(
     const { handle } = product;
 
     return (
-      <Section ref={ref} {...rest} overflow="unset">
+      <Section ref={ref} {...rest} overflow="unset" animate={false}>
         <div
           className={clsx([
             "space-y-5 lg:grid lg:space-y-0",

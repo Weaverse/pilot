@@ -11,9 +11,9 @@ import {
   type LinkProps as RemixLinkProps,
   useRouteLoaderData,
 } from "react-router";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
-import { ScrollReveal } from "~/components/scroll-reveal";
 
 export const variants = cva(["inline-flex transition-colors"], {
   variants: {
