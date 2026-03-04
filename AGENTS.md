@@ -172,17 +172,20 @@ The spec is the source of truth for a feature, not the code. Every feature must 
 All specs live in `.specs/` at the project root. Each feature gets its own subfolder:
 
 ```
-{index}--{kebab-case-title}--{YYYY-MM-DD}
+{YYYY-MM-DD}--{kebab-case-title}
 ```
 
-- `index`: 3-digit zero-padded (001, 002, ...)
+- `YYYY-MM-DD`: creation date (ISO format, fixed at spec creation time)
 - `title`: kebab-case feature name
-- `YYYY-MM-DD`: creation date (fixed)
 - Separators: double dashes `--`
 
+Examples:
+- `2026-03-01--user-authentication`
+- `2026-03-05--billing-integration`
+
 Each folder contains:
-- **README.md** (required): Status (`draft`/`in-progress`/`completed`/`on-hold`/`deprecated`), owner, dates, original prompt (verbatim, never paraphrased), and 2-3 sentence summary
-- **plan.md** (required): Implementation plan under 500 lines, must list all files/folders the feature touches
+- **README.md** (required): Status (`draft`/`in-progress`/`completed`/`on-hold`/`deprecated`), owner, created/last-updated dates, original prompt (verbatim, never paraphrased), and 2-3 sentence summary
+- **plan.md** (required): Implementation plan under 500 lines, must list all files/folders the feature touches. Does NOT contain status or metadata — those live in README.md
 - **work-logs.md** (optional): Append-only timeline of work done
 
 ### Rules
