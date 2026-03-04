@@ -147,8 +147,7 @@ export function ProductMedia(props: ProductMediaProps) {
                       visibleMedia.length % 2 === 1 &&
                       "2xl:col-span-2",
                     gridSize === "mix" &&
-                      (idx % 3 === 0 ||
-                        (isLast && idx % 3 === 1)) &&
+                      (idx % 3 === 0 || (isLast && idx % 3 === 1)) &&
                       "lg:col-span-2",
                   )}
                 >
@@ -194,26 +193,30 @@ export function ProductMedia(props: ProductMediaProps) {
           {shouldLimitMedia && !expanded && (
             <button
               type="button"
-              className="absolute right-0 bottom-0 left-0 flex cursor-pointer items-end justify-center bg-gradient-to-t from-white/90 via-white/50 to-transparent pt-32 pb-6 text-sm font-medium text-body transition-opacity"
+              className="absolute right-0 bottom-0 left-0 flex cursor-pointer items-end justify-center bg-linear-to-t from-white/80 via-white/60 to-transparent pt-50 pb-10 font-medium text-body transition-opacity"
               onClick={() => setExpanded(true)}
               aria-label={`${showMoreText} (+${hiddenCount})`}
             >
               <span className="flex flex-col items-center gap-1">
                 <CaretDownIcon className="h-4 w-4" />
-                {`${showMoreText} (+${hiddenCount})`}
+                <span className="underline underline-offset-4">
+                  {`${showMoreText} (+${hiddenCount})`}
+                </span>
               </span>
             </button>
           )}
           {shouldLimitMedia && expanded && (
             <button
               type="button"
-              className="mt-2 flex w-full cursor-pointer items-center justify-center gap-1 py-2 text-sm font-medium text-body-subtle underline transition-colors hover:text-body lg:mt-1"
+              className="mt-6 flex w-full cursor-pointer items-center justify-center gap-1 py-2 font-medium lg:mt-2"
               onClick={() => setExpanded(false)}
               aria-label={showLessText}
             >
               <span className="flex flex-col items-center gap-1">
                 <CaretUpIcon className="h-4 w-4" />
-                {showLessText}
+                <span className="underline underline-offset-4">
+                  {showLessText}
+                </span>
               </span>
             </button>
           )}
@@ -243,7 +246,7 @@ export function ProductMedia(props: ProductMediaProps) {
           <div
             className={clsx(
               "hidden shrink-0 md:block",
-              "h-[450px] w-[calc(var(--thumbs-width,0px)-1rem)]",
+              "h-112.5 w-[calc(var(--thumbs-width,0px)-1rem)]",
               "opacity-0 transition-opacity duration-300",
             )}
           >
@@ -411,7 +414,7 @@ function Media({
       <video
         controls
         aria-label={mediaVideo.alt || "Product video"}
-        className={cn("h-auto w-full object-cover", className)}
+        className={cn("h-auto lg:aspect-video w-full object-cover", className)}
         style={{ aspectRatio: imageAspectRatio }}
         onError={console.error}
       >
