@@ -113,12 +113,20 @@ export function ProductMedia(props: ProductMediaProps) {
       <>
         <div className={variants({ gridSize })}>
           {displayMedia.map((med, idx) => {
+            const isLast = idx === displayMedia.length - 1;
             return (
               <div
                 key={med.id}
                 className={clsx(
                   "group relative",
-                  gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
+                  gridSize === "2x2" &&
+                    isLast &&
+                    displayMedia.length % 2 === 1 &&
+                    "2xl:col-span-2",
+                  gridSize === "mix" &&
+                    (idx % 3 === 0 ||
+                      (isLast && idx % 3 === 1)) &&
+                    "lg:col-span-2",
                 )}
               >
                 <div
