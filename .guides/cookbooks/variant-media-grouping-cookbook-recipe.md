@@ -18,7 +18,6 @@ Groups product media by variant option (e.g., Color). When a visitor selects "Bl
 | `app/components/product/product-media.tsx` | Calls the utility when `groupMediaByVariant` is enabled. Uses `displayMedia` instead of `media` for rendering |
 | `app/sections/main-product/index.tsx` | Weaverse schema settings + passes props to `ProductMedia` |
 | `app/sections/single-product/index.tsx` | Same as above |
-| `app/graphql/queries.ts` | `variants(first: 100)` added to `PRODUCT_QUERY` |
 
 ## Weaverse Settings (in both sections)
 
@@ -38,5 +37,4 @@ product?: NonNullable<ProductQuery["product"]>;
 1. Delete `app/utils/variant-media.ts`
 2. In `app/components/product/product-media.tsx`: remove the import, the 3 props above, the `displayMedia` logic block, and revert `displayMedia` references back to `media`
 3. In both `app/sections/main-product/index.tsx` and `app/sections/single-product/index.tsx`: remove the `groupMediaByVariant` and `groupByOption` schema settings, interface fields, destructured props, and the 3 extra props on `<ProductMedia>`
-4. In `app/graphql/queries.ts`: remove `variants(first: 100) { nodes { ...ProductVariant } }` from `PRODUCT_QUERY` (only if no other feature uses it)
-5. Run `npm run codegen`
+4. Run `npm run codegen`
