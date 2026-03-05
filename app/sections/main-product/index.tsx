@@ -1,46 +1,18 @@
 import { createSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useLoaderData } from "react-router";
-import {
-  ProductMedia,
-  type ProductMediaProps,
-} from "~/components/product/product-media";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { isCombinedListing } from "~/utils/combined-listings";
 
-interface ProductInformationData
-  extends Omit<ProductMediaProps, "selectedVariant" | "media" | "product"> {
+interface MainProductProps extends SectionProps {
   ref: React.Ref<HTMLDivElement>;
 }
 
-export default function ProductInformation(
-  props: ProductInformationData & SectionProps,
-) {
-  const {
-    ref,
-    mediaLayout,
-    gridSize,
-    imageAspectRatio,
-    showThumbnails,
-    children,
-    enableZoom,
-    zoomTrigger,
-    zoomButtonVisibility,
-    groupMediaByVariant,
-    groupByOption,
-    initialMediaCount,
-    showMoreText,
-    showLessText,
-    ...rest
-  } = props;
+export default function MainProduct(props: MainProductProps) {
+  const { ref, children, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
-  const combinedListing = isCombinedListing(product);
-
   if (product) {
-    const { handle } = product;
-
     return (
       <Section ref={ref} {...rest} overflow="unset" animate={false}>
         <div
@@ -50,46 +22,7 @@ export default function ProductInformation(
             "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
           ])}
         >
-          <ProductMedia
-            key={handle}
-            mediaLayout={mediaLayout}
-            gridSize={gridSize}
-            imageAspectRatio={imageAspectRatio}
-            media={
-              combinedListing && product?.featuredImage
-                ? [
-                    {
-                      __typename: "MediaImage",
-                      id: product.featuredImage.id,
-                      mediaContentType: "IMAGE",
-                      alt: product.featuredImage.altText,
-                      previewImage: product.featuredImage,
-                      image: product.featuredImage,
-                    },
-                    ...(product?.media?.nodes || []),
-                  ]
-                : product?.media?.nodes || []
-            }
-            selectedVariant={product?.selectedOrFirstAvailableVariant}
-            showThumbnails={showThumbnails}
-            enableZoom={enableZoom}
-            zoomTrigger={zoomTrigger}
-            zoomButtonVisibility={zoomButtonVisibility}
-            groupMediaByVariant={groupMediaByVariant}
-            groupByOption={groupByOption}
-            product={product}
-            initialMediaCount={initialMediaCount}
-            showMoreText={showMoreText}
-            showLessText={showLessText}
-          />
-          <div>
-            <div
-              className="sticky flex flex-col justify-start gap-5"
-              style={{ top: "calc(var(--height-nav) + 20px)" }}
-            >
-              {children}
-            </div>
-          </div>
+          {children}
         </div>
       </Section>
     );
@@ -104,229 +37,19 @@ export default function ProductInformation(
 export const schema = createSchema({
   type: "main-product",
   title: "Main product",
-  childTypes: [
-    "mp--breadcrumb",
-    "mp--badges",
-    "mp--vendor",
-    "mp--title",
-    "mp--prices",
-    "judgeme-stars-rating",
-    "mp--summary",
-    "mp--bundled-variants",
-    "mp--variant-selector",
-    "mp--quantity-selector",
-    "mp--atc-buttons",
-    "mp--collapsible-details",
-  ],
+  childTypes: ["mp--media", "mp--info"],
   limit: 1,
   enabledOn: {
     pages: ["PRODUCT"],
   },
-  settings: [
-    { group: "Layout", inputs: layoutInputs },
-    {
-      group: "Product Media",
-      inputs: [
-        {
-          type: "select",
-          name: "imageAspectRatio",
-          label: "Aspect ratio",
-          defaultValue: "adapt",
-          configs: {
-            options: [
-              { value: "adapt", label: "Adapt to image" },
-              { value: "1/1", label: "Square (1/1)" },
-              { value: "3/4", label: "Portrait (3/4)" },
-              { value: "4/3", label: "Landscape (4/3)" },
-            ],
-          },
-        },
-        {
-          type: "toggle-group",
-          name: "mediaLayout",
-          label: "Layout",
-          configs: {
-            options: [
-              {
-                label: "Grid",
-                value: "grid",
-                icon: "grid-2x2",
-              },
-              {
-                label: "Slider",
-                value: "slider",
-                icon: "slideshow-outline",
-              },
-            ],
-          },
-          defaultValue: "grid",
-        },
-        {
-          type: "select",
-          name: "gridSize",
-          label: "Grid size",
-          defaultValue: "2x2",
-          configs: {
-            options: [
-              { label: "1x1", value: "1x1" },
-              { label: "2x2", value: "2x2" },
-              { label: "Mix", value: "mix" },
-            ],
-          },
-          condition: (data: ProductInformationData) =>
-            data.mediaLayout === "grid",
-        },
-        {
-          label: "Show thumbnails",
-          name: "showThumbnails",
-          type: "switch",
-          defaultValue: true,
-          condition: (data: ProductInformationData) =>
-            data.mediaLayout === "slider",
-        },
-        {
-          label: "Enable zoom",
-          name: "enableZoom",
-          type: "switch",
-          defaultValue: true,
-        },
-        {
-          type: "select",
-          name: "zoomTrigger",
-          label: "Zoom trigger",
-          defaultValue: "both",
-          configs: {
-            options: [
-              { value: "image", label: "Click on image" },
-              { value: "button", label: "Click on zoom button" },
-              { value: "both", label: "Both" },
-            ],
-          },
-          condition: (data: ProductInformationData) => data.enableZoom === true,
-        },
-        {
-          type: "select",
-          name: "zoomButtonVisibility",
-          label: "When to show zoom button",
-          defaultValue: "hover",
-          configs: {
-            options: [
-              { value: "always", label: "Always" },
-              { value: "hover", label: "On hover" },
-            ],
-          },
-          condition: (data: ProductInformationData) =>
-            data.enableZoom === true &&
-            (data.zoomTrigger === "button" || data.zoomTrigger === "both"),
-        },
-        {
-          label: "Group media by variant",
-          name: "groupMediaByVariant",
-          type: "switch",
-          defaultValue: false,
-          helpText:
-            "When enabled, only images matching the selected variant option will be displayed",
-        },
-        {
-          type: "text",
-          name: "groupByOption",
-          label: "Group by option name",
-          defaultValue: "Color",
-          placeholder: "Color",
-          helpText:
-            "The product option name used to group media (e.g., Color, Colour)",
-          condition: (data: ProductInformationData) =>
-            data.groupMediaByVariant === true,
-        },
-        {
-          type: "range",
-          name: "initialMediaCount",
-          label: "Initial media to show",
-          defaultValue: 0,
-          configs: {
-            min: 0,
-            max: 20,
-            step: 1,
-          },
-          helpText:
-            "Number of media items visible before 'Show more'. Set to 0 to show all.",
-          condition: (data: ProductInformationData) =>
-            data.mediaLayout === "grid",
-        },
-        {
-          type: "text",
-          name: "showMoreText",
-          label: "Show more button text",
-          defaultValue: "Show more",
-          placeholder: "Show more",
-          condition: (data: ProductInformationData) =>
-            data.mediaLayout === "grid" &&
-            (data.initialMediaCount ?? 0) > 0,
-        },
-        {
-          type: "text",
-          name: "showLessText",
-          label: "Show less button text",
-          defaultValue: "Show less",
-          placeholder: "Show less",
-          condition: (data: ProductInformationData) =>
-            data.mediaLayout === "grid" &&
-            (data.initialMediaCount ?? 0) > 0,
-        },
-      ],
-    },
-  ],
+  settings: [{ group: "Layout", inputs: layoutInputs }],
   presets: {
-    mediaLayout: "grid",
-    gridSize: "2x2",
     children: [
       {
-        type: "mp--breadcrumb",
-        homeText: "Home",
+        type: "mp--media",
       },
       {
-        type: "mp--badges",
-      },
-      {
-        type: "mp--vendor",
-      },
-      {
-        type: "mp--title",
-        headingTag: "h1",
-      },
-      {
-        type: "mp--prices",
-        showCompareAtPrice: true,
-      },
-      {
-        type: "judgeme-stars-rating",
-      },
-      {
-        type: "mp--summary",
-      },
-      {
-        type: "mp--bundled-variants",
-        headingText: "Bundled Products",
-        headingClassName: "text-2xl",
-      },
-      {
-        type: "mp--variant-selector",
-      },
-      {
-        type: "mp--quantity-selector",
-      },
-      {
-        type: "mp--atc-buttons",
-        addToCartText: "Add to cart",
-        addBundleToCartText: "Add bundle to cart",
-        soldOutText: "Sold out",
-        showShopPayButton: true,
-        buttonClassName: "w-full uppercase",
-      },
-      {
-        type: "mp--collapsible-details",
-        showShippingPolicy: true,
-        showRefundPolicy: true,
+        type: "mp--info",
       },
     ],
   },
