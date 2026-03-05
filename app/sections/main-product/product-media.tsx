@@ -58,7 +58,15 @@ export default function ProductMediaComponent(
       : product?.media?.nodes || [];
 
   return (
-    <div ref={ref} {...rest} className="relative min-w-0">
+    <div
+      ref={ref}
+      {...rest}
+      className="relative min-w-0"
+      style={{
+        "--thumbs-width":
+          mediaLayout === "slider" && showThumbnails ? "8rem" : "0px",
+      } as React.CSSProperties}
+    >
       <ProductMedia
         key={product.handle}
         mediaLayout={mediaLayout}
