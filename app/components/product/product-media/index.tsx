@@ -68,6 +68,7 @@ export function ProductMedia(props: ProductMediaProps) {
   if (mediaLayout === "grid") {
     return (
       <MediaGrid
+        allMedia={media}
         displayMedia={displayMedia}
         gridSize={gridSize}
         imageAspectRatio={imageAspectRatio}
@@ -84,6 +85,7 @@ export function ProductMedia(props: ProductMediaProps) {
 
   return (
     <MediaSlider
+      allMedia={media}
       displayMedia={displayMedia}
       selectedVariant={selectedVariant}
       showThumbnails={showThumbnails}

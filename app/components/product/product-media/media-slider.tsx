@@ -19,6 +19,7 @@ import { ZoomButton, ZoomModal } from "./media-zoom";
 import { getSelectedVariantMediaIndex } from "./utils";
 
 interface MediaSliderProps {
+  allMedia: MediaFragment[];
   displayMedia: MediaFragment[];
   selectedVariant: ProductVariantFragment;
   showThumbnails: boolean;
@@ -29,6 +30,7 @@ interface MediaSliderProps {
 }
 
 export function MediaSlider({
+  allMedia,
   displayMedia,
   selectedVariant,
   showThumbnails,
@@ -196,7 +198,7 @@ export function MediaSlider({
       </div>
       {enableZoom && (
         <ZoomModal
-          media={displayMedia}
+          media={allMedia}
           zoomMediaId={zoomMediaId}
           setZoomMediaId={setZoomMediaId}
           open={zoomModalOpen}

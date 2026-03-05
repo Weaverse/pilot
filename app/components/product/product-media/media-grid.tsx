@@ -12,6 +12,7 @@ import { ZoomButton, ZoomModal } from "./media-zoom";
 import { mediaGridVariants } from "./utils";
 
 interface MediaGridProps {
+  allMedia: MediaFragment[];
   displayMedia: MediaFragment[];
   gridSize: "1x1" | "2x2" | "mix";
   imageAspectRatio?: ImageAspectRatio;
@@ -25,6 +26,7 @@ interface MediaGridProps {
 }
 
 export function MediaGrid({
+  allMedia,
   displayMedia,
   gridSize,
   imageAspectRatio,
@@ -150,7 +152,7 @@ export function MediaGrid({
       </div>
       {enableZoom && (
         <ZoomModal
-          media={displayMedia}
+          media={allMedia}
           zoomMediaId={zoomMediaId}
           setZoomMediaId={setZoomMediaId}
           open={zoomModalOpen}
