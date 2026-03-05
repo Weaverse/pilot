@@ -4,8 +4,11 @@ import {
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { useState } from "react";
-import type { MediaFragment } from "storefront-api.generated";
+import { useEffect, useState } from "react";
+import type {
+  MediaFragment,
+  ProductVariantFragment,
+} from "storefront-api.generated";
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import { Image } from "~/components/image";
@@ -13,31 +16,41 @@ import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { MediaItem } from "./media-item";
 import { ZoomButton, ZoomModal } from "./media-zoom";
+import { getSelectedVariantMediaIndex } from "./utils";
 
 interface MediaSliderProps {
   displayMedia: MediaFragment[];
+  selectedVariant: ProductVariantFragment;
   showThumbnails: boolean;
   imageAspectRatio?: ImageAspectRatio;
   enableZoom?: boolean;
   zoomTrigger?: "image" | "button" | "both";
   zoomButtonVisibility?: "always" | "hover";
-  swiper: SwiperClass | null;
-  setSwiper: (swiper: SwiperClass) => void;
 }
 
 export function MediaSlider({
   displayMedia,
+  selectedVariant,
   showThumbnails,
   imageAspectRatio,
   enableZoom,
   zoomTrigger = "button",
   zoomButtonVisibility = "hover",
-  swiper,
-  setSwiper,
 }: MediaSliderProps) {
+  const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: sync slide to selected variant
+  useEffect(() => {
+    if (selectedVariant && swiper) {
+      const index = getSelectedVariantMediaIndex(displayMedia, selectedVariant);
+      if (index !== swiper.activeIndex) {
+        swiper.slideTo(index);
+      }
+    }
+  }, [selectedVariant]);
 
   const shouldShowButton =
     enableZoom && (zoomTrigger === "button" || zoomTrigger === "both");

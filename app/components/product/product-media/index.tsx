@@ -1,16 +1,14 @@
 import type { VariantProps } from "class-variance-authority";
-import { useEffect, useState } from "react";
 import type {
   MediaFragment,
   ProductQuery,
   ProductVariantFragment,
 } from "storefront-api.generated";
-import type { SwiperClass } from "swiper/react";
 import type { ImageAspectRatio } from "~/types/others";
 import { getVariantGroupedMedia } from "~/utils/variant-media";
 import { MediaGrid } from "./media-grid";
 import { MediaSlider } from "./media-slider";
-import { getSelectedVariantMediaIndex, type mediaGridVariants } from "./utils";
+import type { mediaGridVariants } from "./utils";
 
 export interface ProductMediaProps
   extends VariantProps<typeof mediaGridVariants> {
@@ -59,23 +57,6 @@ export function ProductMedia(props: ProductMediaProps) {
     });
   }
 
-  const [swiper, setSwiper] = useState<SwiperClass | null>(null);
-  const [expanded, setExpanded] = useState(false);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
-  useEffect(() => {
-    if (selectedVariant && swiper) {
-      const index = getSelectedVariantMediaIndex(displayMedia, selectedVariant);
-      if (index !== swiper.activeIndex) {
-        swiper.slideTo(index);
-      }
-    }
-  }, [selectedVariant]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
-  useEffect(() => {
-    setExpanded(false);
-  }, [selectedVariant]);
 
   let mediaLayout = initialMediaLayout;
   let gridSize = initialGridSize;
@@ -93,11 +74,10 @@ export function ProductMedia(props: ProductMediaProps) {
         enableZoom={enableZoom}
         zoomTrigger={zoomTrigger}
         zoomButtonVisibility={zoomButtonVisibility}
+        selectedVariant={selectedVariant}
         initialMediaCount={initialMediaCount}
         showMoreText={showMoreText}
         showLessText={showLessText}
-        expanded={expanded}
-        setExpanded={setExpanded}
       />
     );
   }
@@ -105,13 +85,12 @@ export function ProductMedia(props: ProductMediaProps) {
   return (
     <MediaSlider
       displayMedia={displayMedia}
+      selectedVariant={selectedVariant}
       showThumbnails={showThumbnails}
       imageAspectRatio={imageAspectRatio}
       enableZoom={enableZoom}
       zoomTrigger={zoomTrigger}
       zoomButtonVisibility={zoomButtonVisibility}
-      swiper={swiper}
-      setSwiper={setSwiper}
     />
   );
 }

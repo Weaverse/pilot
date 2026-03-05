@@ -1,7 +1,10 @@
 import { CaretDownIcon, CaretUpIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { useState } from "react";
-import type { MediaFragment } from "storefront-api.generated";
+import { useEffect, useState } from "react";
+import type {
+  MediaFragment,
+  ProductVariantFragment,
+} from "storefront-api.generated";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { MediaItem } from "./media-item";
@@ -15,11 +18,10 @@ interface MediaGridProps {
   enableZoom?: boolean;
   zoomTrigger?: "image" | "button" | "both";
   zoomButtonVisibility?: "always" | "hover";
+  selectedVariant: ProductVariantFragment;
   initialMediaCount?: number;
   showMoreText?: string;
   showLessText?: string;
-  expanded: boolean;
-  setExpanded: (expanded: boolean) => void;
 }
 
 export function MediaGrid({
@@ -29,14 +31,19 @@ export function MediaGrid({
   enableZoom,
   zoomTrigger = "button",
   zoomButtonVisibility = "hover",
+  selectedVariant,
   initialMediaCount = 0,
   showMoreText = "Show more",
   showLessText = "Show less",
-  expanded,
-  setExpanded,
 }: MediaGridProps) {
+  const [expanded, setExpanded] = useState(false);
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset expanded state on variant change
+  useEffect(() => {
+    setExpanded(false);
+  }, [selectedVariant]);
 
   const shouldShowButton =
     enableZoom && (zoomTrigger === "button" || zoomTrigger === "both");
