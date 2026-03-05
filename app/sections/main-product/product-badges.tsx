@@ -31,7 +31,7 @@ export default function ProductBadgesComponent(
     <div
       ref={ref}
       {...rest}
-      className="flex items-center gap-2 text-sm empty:hidden"
+      className="absolute top-2 left-2 z-1 flex items-center gap-2 text-sm empty:hidden md:top-4 md:left-[calc(var(--thumbs-width,0px)+1rem)]"
     >
       <ProductBadges
         as={Fragment}
