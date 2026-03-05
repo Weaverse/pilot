@@ -58,7 +58,7 @@ export default function ProductMediaComponent(
       : product?.media?.nodes || [];
 
   return (
-    <div ref={ref} {...rest} className="relative">
+    <div ref={ref} {...rest} className="relative min-w-0">
       <ProductMedia
         key={product.handle}
         mediaLayout={mediaLayout}
@@ -153,6 +153,29 @@ export const schema = createSchema({
         },
         {
           type: "heading",
+          label: "Media group",
+        },
+        {
+          label: "Group media by variant",
+          name: "groupMediaByVariant",
+          type: "switch",
+          defaultValue: false,
+          helpText:
+            "When enabled, only images matching the selected variant option will be displayed",
+        },
+        {
+          type: "text",
+          name: "groupByOption",
+          label: "Group by option name",
+          defaultValue: "Color",
+          placeholder: "Color",
+          helpText:
+            "The product option name used to group media (e.g., Color, Colour)",
+          condition: (data: ProductMediaComponentProps) =>
+            data.groupMediaByVariant === true,
+        },
+        {
+          type: "heading",
           label: "Zoom settings",
         },
         {
@@ -212,26 +235,6 @@ export const schema = createSchema({
           condition: (data: ProductMediaComponentProps) =>
             data.mediaLayout === "grid",
         },
-        {
-          label: "Group media by variant",
-          name: "groupMediaByVariant",
-          type: "switch",
-          defaultValue: false,
-          helpText:
-            "When enabled, only images matching the selected variant option will be displayed",
-        },
-        {
-          type: "text",
-          name: "groupByOption",
-          label: "Group by option name",
-          defaultValue: "Color",
-          placeholder: "Color",
-          helpText:
-            "The product option name used to group media (e.g., Color, Colour)",
-          condition: (data: ProductMediaComponentProps) =>
-            data.groupMediaByVariant === true,
-        },
-
         {
           type: "text",
           name: "showMoreText",
