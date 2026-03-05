@@ -130,8 +130,9 @@ export function MediaSlider({
             thumbs={{ swiper: thumbsSwiper }}
             slidesPerView={1}
             spaceBetween={4}
+            breakpointsBase="container"
             breakpoints={{
-              1700: {
+              700: {
                 slidesPerView: 2,
                 spaceBetween: 4,
               },
@@ -148,7 +149,10 @@ export function MediaSlider({
           >
             {displayMedia.map((med, idx) => {
               return (
-                <SwiperSlide key={med.id} className="group bg-gray-100">
+                <SwiperSlide
+                  key={med.id}
+                  className="group bg-gray-100"
+                >
                   <div
                     onClick={
                       canClickImage
