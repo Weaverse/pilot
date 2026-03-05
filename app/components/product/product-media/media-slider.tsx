@@ -129,6 +129,12 @@ export function MediaSlider({
             thumbs={{ swiper: thumbsSwiper }}
             slidesPerView={1}
             spaceBetween={4}
+            breakpoints={{
+              1700: {
+                slidesPerView: 2,
+                spaceBetween: 4,
+              },
+            }}
             autoHeight
             loop
             navigation={{
