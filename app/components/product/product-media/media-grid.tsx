@@ -64,8 +64,10 @@ export function MediaGrid({
     <>
       <div className="relative">
         <div className={mediaGridVariants({ gridSize })}>
-          {visibleMedia.map((med, idx) => {
+          {displayMedia.map((med, idx) => {
             const isLast = idx === visibleMedia.length - 1;
+            const isHiddenOnDesktop =
+              shouldLimitMedia && !expanded && idx >= initialMediaCount;
             return (
               <div
                 key={med.id}
@@ -78,6 +80,7 @@ export function MediaGrid({
                   gridSize === "mix" &&
                     (idx % 3 === 0 || (isLast && idx % 3 === 1)) &&
                     "lg:col-span-2",
+                  isHiddenOnDesktop && "lg:hidden",
                 )}
               >
                 <div
@@ -122,7 +125,7 @@ export function MediaGrid({
         {shouldLimitMedia && !expanded && (
           <button
             type="button"
-            className="absolute right-0 bottom-0 left-0 flex cursor-pointer items-end justify-center bg-linear-to-t from-white/80 via-white/60 to-transparent pt-50 pb-10 font-medium text-body transition-opacity"
+            className="absolute right-0 bottom-0 left-0 hidden cursor-pointer items-end justify-center bg-linear-to-t from-white/80 via-white/60 to-transparent pt-50 pb-10 font-medium text-body transition-opacity lg:flex"
             onClick={() => setExpanded(true)}
             aria-label={`${showMoreText} (+${hiddenCount})`}
           >
@@ -137,7 +140,7 @@ export function MediaGrid({
         {shouldLimitMedia && expanded && (
           <button
             type="button"
-            className="mt-6 flex w-full cursor-pointer items-center justify-center gap-1 py-2 font-medium lg:mt-2"
+            className="mt-6 hidden w-full cursor-pointer items-center justify-center gap-1 py-2 font-medium lg:mt-2 lg:flex"
             onClick={() => setExpanded(false)}
             aria-label={showLessText}
           >
