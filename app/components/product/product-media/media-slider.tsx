@@ -16,7 +16,6 @@ import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { MediaItem } from "./media-item";
 import { ZoomButton, ZoomModal } from "./media-zoom";
-import { getSelectedVariantMediaIndex } from "./utils";
 
 interface MediaSliderProps {
   allMedia: MediaFragment[];
@@ -32,7 +31,6 @@ interface MediaSliderProps {
 export function MediaSlider({
   allMedia,
   displayMedia,
-  selectedVariant,
   showThumbnails,
   imageAspectRatio,
   enableZoom,
@@ -45,15 +43,13 @@ export function MediaSlider({
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: sync slide to selected variant
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset to first slide when display media changes
   useEffect(() => {
-    if (selectedVariant && swiper) {
-      const index = getSelectedVariantMediaIndex(displayMedia, selectedVariant);
-      if (index !== swiper.activeIndex) {
-        swiper.slideTo(index);
-      }
+    setActiveIndex(0);
+    if (swiper) {
+      swiper.slideToLoop(0, 0);
     }
-  }, [selectedVariant]);
+  }, [displayMedia]);
 
   const shouldShowButton =
     enableZoom && (zoomTrigger === "button" || zoomTrigger === "both");
@@ -102,6 +98,7 @@ export function MediaSlider({
                           ? "border-line"
                           : "border-transparent",
                       )}
+                      onClick={() => swiper?.slideToLoop(idx)}
                     >
                       <Image
                         data={{
