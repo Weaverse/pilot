@@ -41,6 +41,7 @@ export function MediaSlider({
 }: MediaSliderProps) {
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
 
@@ -90,14 +91,16 @@ export function MediaSlider({
               modules={[Navigation, Thumbs, FreeMode]}
             >
               {displayMedia.map(
-                ({ id, previewImage, alt, mediaContentType }) => {
+                ({ id, previewImage, alt, mediaContentType }, idx) => {
                   return (
                     <SwiperSlide
                       key={id}
                       className={cn(
                         "relative",
-                        "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
-                        "[&.swiper-slide-thumb-active]:border-line",
+                        "h-auto! cursor-pointer border p-1 transition-colors",
+                        idx === activeIndex
+                          ? "border-line"
+                          : "border-transparent",
                       )}
                     >
                       <Image
@@ -126,6 +129,7 @@ export function MediaSlider({
         <div className="relative w-[calc(100%-var(--thumbs-width,0px))]">
           <Swiper
             onSwiper={setSwiper}
+            onSlideChange={(sw) => setActiveIndex(sw.realIndex)}
             thumbs={{ swiper: thumbsSwiper }}
             slidesPerView={1}
             spaceBetween={4}
