@@ -19,5 +19,4 @@ pnpm-lock.yaml
 .claude/
 .github/copilot-instructions.md
 .rules/
-.specs/
 .plans/

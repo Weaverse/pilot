@@ -177,7 +177,7 @@ The project extends from `ultracite` and `@weaverse/biome` configurations with t
 
 ### Spec Structure
 
-All specs live in a `.specs/` folder at the project root. Each feature gets its own subfolder inside `.specs/`.
+All specs live in a `.weaverse/specs/` folder at the project root. Each feature gets its own subfolder inside `.weaverse/specs/`.
 
 #### Folder Naming Pattern
 
@@ -199,14 +199,16 @@ Examples:
 
 ```
 project-root/
-├── .specs/
-│   ├── 2026-03-01--user-authentication/
-│   │   ├── README.md          📋 Status, owner, original prompt
-│   │   ├── plan.md            🗺️ Agent-generated implementation plan
-│   │   └── work-logs.md       📝 Timeline & change history (optional)
-│   │
-│   ├── 2026-03-05--billing-integration/
-│       └── ...
+├── .weaverse/
+│   ├── README.md              📄 Explains this folder's purpose
+│   └── specs/
+│       ├── 2026-03-01--user-authentication/
+│       │   ├── README.md          📋 Status, owner, original prompt
+│       │   ├── plan.md            🗺️ Agent-generated implementation plan
+│       │   └── work-logs.md       📝 Timeline & change history (optional)
+│       │
+│       ├── 2026-03-05--billing-integration/
+│           └── ...
 │
 ├── src/                        ← your codebase (untouched by this convention)
 └── ...
