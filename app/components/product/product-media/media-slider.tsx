@@ -58,12 +58,7 @@ export function MediaSlider({
 
   return (
     <div className="product-media-slider overflow-hidden">
-      <div
-        className={clsx(
-          "flex items-start gap-4 overflow-hidden [--thumbs-width:0px]",
-          showThumbnails && "md:[--thumbs-width:8rem]",
-        )}
-      >
+      <div className="flex items-start gap-4 overflow-hidden">
         {showThumbnails && (
           <div
             className={clsx(
@@ -149,10 +144,7 @@ export function MediaSlider({
           >
             {displayMedia.map((med, idx) => {
               return (
-                <SwiperSlide
-                  key={med.id}
-                  className="group bg-gray-100"
-                >
+                <SwiperSlide key={med.id} className="group bg-gray-100">
                   <div
                     onClick={
                       canClickImage

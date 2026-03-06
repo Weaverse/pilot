@@ -17,6 +17,7 @@ export default function MainProduct(props: MainProductProps) {
       <Section ref={ref} {...rest} overflow="unset" animate={false}>
         <div
           className={clsx([
+            "@container/main-product",
             "space-y-5 lg:grid lg:space-y-0",
             "lg:gap-[clamp(30px,5%,60px)]",
             "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",

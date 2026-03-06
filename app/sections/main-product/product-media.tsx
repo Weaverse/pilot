@@ -5,6 +5,7 @@ import {
   type ProductMediaProps,
 } from "~/components/product/product-media";
 import type { loader as productRouteLoader } from "~/routes/products/product";
+import { cn } from "~/utils/cn";
 import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductMediaComponentProps
@@ -61,11 +62,12 @@ export default function ProductMediaComponent(
     <div
       ref={ref}
       {...rest}
-      className="relative min-w-0"
-      style={{
-        "--thumbs-width":
-          mediaLayout === "slider" && showThumbnails ? "8rem" : "0px",
-      } as React.CSSProperties}
+      className={cn(
+        "relative min-w-0",
+        mediaLayout === "slider" &&
+          showThumbnails &&
+          "[--thumbs-width:7rem] @min-[1600px]/main-product:[--thumbs-width:8rem]",
+      )}
     >
       <ProductMedia
         key={product.handle}
