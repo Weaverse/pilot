@@ -5,10 +5,9 @@ import type {
   ProductVariantFragment,
 } from "storefront-api.generated";
 import type { ImageAspectRatio } from "~/types/others";
-import { getVariantGroupedMedia } from "~/utils/variant-media";
-import { MediaGrid } from "./media-grid";
+import { MediaGrid, type mediaGridVariants } from "./media-grid";
 import { MediaSlider } from "./media-slider";
-import type { mediaGridVariants } from "./utils";
+import { getVariantGroupedMedia } from "./variant-media-group";
 
 export interface ProductMediaProps
   extends VariantProps<typeof mediaGridVariants> {

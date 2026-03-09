@@ -1,4 +1,5 @@
 import { CaretDownIcon, CaretUpIcon } from "@phosphor-icons/react";
+import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import type {
@@ -9,7 +10,25 @@ import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { MediaItem } from "./media-item";
 import { ZoomButton, ZoomModal } from "./media-zoom";
-import { mediaGridVariants } from "./utils";
+
+export const mediaGridVariants = cva(
+  [
+    "grid w-full justify-start gap-2 lg:gap-1",
+    "lg:grid-cols-1",
+    "grid-flow-col lg:grid-flow-row",
+    "scroll-px-6 overflow-x-scroll md:overflow-x-auto",
+    "snap-x snap-mandatory",
+  ],
+  {
+    variants: {
+      gridSize: {
+        "1x1": "",
+        "2x2": "2xl:grid-cols-2",
+        mix: "2xl:grid-cols-2",
+      },
+    },
+  },
+);
 
 interface MediaGridProps {
   allMedia: MediaFragment[];

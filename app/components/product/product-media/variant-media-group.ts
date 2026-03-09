@@ -4,6 +4,20 @@ import type {
   ProductVariantFragment,
 } from "storefront-api.generated";
 
+type Product = NonNullable<ProductQuery["product"]>;
+
+interface VariantGroupedMediaParams {
+  allMedia: MediaFragment[];
+  selectedVariant: ProductVariantFragment;
+  product: Product;
+  groupByOption: string;
+}
+
+interface VariantGroupedMediaResult {
+  media: MediaFragment[];
+  isGrouped: boolean;
+}
+
 /**
  * Extract option value from image filename using known option values.
  * e.g., filename "24b_xxx_black.jpg" with options ["Black", "Cream"] → "black"
@@ -39,20 +53,6 @@ function extractOptionValueFromUrl(
   } catch {
     return null;
   }
-}
-
-type Product = NonNullable<ProductQuery["product"]>;
-
-interface VariantGroupedMediaParams {
-  allMedia: MediaFragment[];
-  selectedVariant: ProductVariantFragment;
-  product: Product;
-  groupByOption: string;
-}
-
-interface VariantGroupedMediaResult {
-  media: MediaFragment[];
-  isGrouped: boolean;
 }
 
 /**
