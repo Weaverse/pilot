@@ -50,6 +50,11 @@ interface VariantGroupedMediaParams {
   groupByOption: string;
 }
 
+interface VariantGroupedMediaResult {
+  media: MediaFragment[];
+  isGrouped: boolean;
+}
+
 /**
  * Filter product media based on the selected variant's option value.
  *
@@ -65,14 +70,14 @@ export function getVariantGroupedMedia({
   selectedVariant,
   product,
   groupByOption,
-}: VariantGroupedMediaParams): MediaFragment[] {
+}: VariantGroupedMediaParams): VariantGroupedMediaResult {
   // 1. Find the selected option value for the grouping option
   let selectedOptionValue = selectedVariant.selectedOptions.find(
     (opt) => opt.name === groupByOption,
   )?.value;
 
   if (!selectedOptionValue) {
-    return allMedia;
+    return { media: allMedia, isGrouped: false };
   }
 
   // Normalize for comparison
@@ -115,8 +120,8 @@ export function getVariantGroupedMedia({
 
   // 5. Fallback: if no matches, show all media
   if (matched.length === 0) {
-    return allMedia;
+    return { media: allMedia, isGrouped: false };
   }
 
-  return [...matched, ...ungrouped];
+  return { media: [...matched, ...ungrouped], isGrouped: true };
 }

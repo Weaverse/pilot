@@ -48,13 +48,16 @@ export function ProductMedia(props: ProductMediaProps) {
   } = props;
 
   let displayMedia = media;
+  let isMediaGrouped = false;
   if (groupMediaByVariant && product && groupByOption) {
-    displayMedia = getVariantGroupedMedia({
+    let result = getVariantGroupedMedia({
       allMedia: media,
       selectedVariant,
       product,
       groupByOption,
     });
+    displayMedia = result.media;
+    isMediaGrouped = result.isGrouped;
   }
 
   let mediaLayout = initialMediaLayout;
@@ -92,7 +95,7 @@ export function ProductMedia(props: ProductMediaProps) {
       enableZoom={enableZoom}
       zoomTrigger={zoomTrigger}
       zoomButtonVisibility={zoomButtonVisibility}
-      groupMediaByVariant={groupMediaByVariant}
+      groupMediaByVariant={isMediaGrouped}
     />
   );
 }
