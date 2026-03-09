@@ -16,7 +16,7 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
+import { ProductBadges } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
@@ -76,7 +76,9 @@ export default function SingleProduct(props: SingleProductProps) {
               sizes="auto"
             />
             <div className="flex flex-col items-start justify-start gap-4">
-              <SoldOutBadge />
+              <span className="sold-out-badge px-1.5 py-1 text-sm uppercase">
+                Sold out
+              </span>
               <h3 className="tracking-tight">EXAMPLE PRODUCT TITLE</h3>
               <Money
                 withoutTrailingZeros
