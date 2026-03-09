@@ -57,7 +57,6 @@ export function ProductMedia(props: ProductMediaProps) {
     });
   }
 
-
   let mediaLayout = initialMediaLayout;
   let gridSize = initialGridSize;
   if (displayMedia.length === 1) {
@@ -93,6 +92,7 @@ export function ProductMedia(props: ProductMediaProps) {
       enableZoom={enableZoom}
       zoomTrigger={zoomTrigger}
       zoomButtonVisibility={zoomButtonVisibility}
+      groupMediaByVariant={groupMediaByVariant}
     />
   );
 }

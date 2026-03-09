@@ -26,16 +26,19 @@ interface MediaSliderProps {
   enableZoom?: boolean;
   zoomTrigger?: "image" | "button" | "both";
   zoomButtonVisibility?: "always" | "hover";
+  groupMediaByVariant?: boolean;
 }
 
 export function MediaSlider({
   allMedia,
   displayMedia,
+  selectedVariant,
   showThumbnails,
   imageAspectRatio,
   enableZoom,
   zoomTrigger = "button",
   zoomButtonVisibility = "hover",
+  groupMediaByVariant,
 }: MediaSliderProps) {
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -43,13 +46,30 @@ export function MediaSlider({
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: reset to first slide when display media changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: change the slide when selectedVariant changes
   useEffect(() => {
-    setActiveIndex(0);
-    if (swiper) {
-      swiper.slideToLoop(0, 0);
+    if (!swiper) {
+      return;
     }
-  }, [displayMedia]);
+
+    if (groupMediaByVariant) {
+      // When variant grouping is enabled, reset to first slide
+      setActiveIndex(0);
+      swiper.slideToLoop(0, 0);
+    } else {
+      // When variant grouping is off, navigate to the selected variant's image
+      let variantImageUrl = selectedVariant.image?.url;
+      if (variantImageUrl) {
+        let targetIndex = displayMedia.findIndex(
+          (med) => med.previewImage?.url === variantImageUrl,
+        );
+        if (targetIndex !== -1) {
+          setActiveIndex(targetIndex);
+          swiper.slideToLoop(targetIndex, 0);
+        }
+      }
+    }
+  }, [selectedVariant]);
 
   const shouldShowButton =
     enableZoom && (zoomTrigger === "button" || zoomTrigger === "both");
