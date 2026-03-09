@@ -23,7 +23,7 @@ interface VariantGroupedMediaResult {
  * e.g., filename "24b_xxx_black.jpg" with options ["Black", "Cream"] → "black"
  *
  * Handles multi-word option values by checking transformed versions:
- * - "Slate Brown" matches "slate-brown", "slate_brown", "slatebrown"
+ * - "Slate Brown" matches "slate-brown", "slate_brown"
  */
 function extractOptionValueFromUrl(
   url: string,
@@ -36,16 +36,20 @@ function extractOptionValueFromUrl(
     const nameWithoutExt = filename.replace(/\.[^.]+$/, "").toLowerCase();
 
     // Check if any known option value appears in the filename
-    for (let optionValue of knownOptionValues) {
+    // Sort by length descending to match longer (more specific) values first
+    // e.g., "Gray Eucalyptus" should match before "Gray"
+    let sortedOptionValues = [...knownOptionValues].sort(
+      (a, b) => b.length - a.length,
+    );
+    for (let optionValue of sortedOptionValues) {
       let optionLower = optionValue.toLowerCase();
 
       // Generate transformed versions for multi-word option values
-      // e.g., "Slate Brown" → "slate-brown", "slate_brown", "slatebrown"
+      // e.g., "Slate Brown" → "slate-brown", "slate_brown"
       let transformations = [optionLower];
       if (optionLower.includes(" ")) {
         transformations.push(optionLower.replace(/\s+/g, "-")); // space → dash
         transformations.push(optionLower.replace(/\s+/g, "_")); // space → underscore
-        transformations.push(optionLower.replace(/\s+/g, "")); // remove spaces
       }
 
       // Check each transformation against the filename
@@ -55,8 +59,6 @@ function extractOptionValueFromUrl(
           nameWithoutExt.startsWith(`${transformed}-`) ||
           nameWithoutExt.endsWith(`_${transformed}`) ||
           nameWithoutExt.endsWith(`-${transformed}`) ||
-          nameWithoutExt.includes(`_${transformed}_`) ||
-          nameWithoutExt.includes(`-${transformed}-`) ||
           nameWithoutExt.endsWith(transformed)
         ) {
           return optionLower;
