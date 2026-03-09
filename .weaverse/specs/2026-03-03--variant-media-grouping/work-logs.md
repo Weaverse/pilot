@@ -42,3 +42,33 @@ This provides better UX by showing the selected variant's image when all media i
 - `app/components/product/product-media/variant-media-group.ts` — New location for utility
 - `app/utils/variant-media.ts` — Deleted
 - `app/components/product/product-media/utils.ts` — Deleted
+
+## 2026-03-09 — @hta218
+
+### Multi-Word Option Value Support
+
+Enhanced the filename matching logic to support multi-word option values like "Slate Brown" or "Rose Blush".
+
+#### Problem
+Option values with multiple words (e.g., "Slate Brown") weren't being matched because the logic only checked for exact matches with spaces. Most merchants use dashes, underscores, or no spaces in filenames.
+
+#### Solution
+Modified `extractOptionValueFromUrl()` to generate transformed versions of multi-word option values:
+
+```typescript
+// "Slate Brown" generates:
+["slate brown", "slate-brown", "slate_brown", "slatebrown"]
+```
+
+Each transformation is checked against the filename using the existing delimiter-based patterns.
+
+#### Example Matches
+| Option Value | Filename | Matches? |
+|--------------|----------|----------|
+| Slate Brown | product_slate-brown.jpg | Yes |
+| Slate Brown | product_slate_brown.jpg | Yes |
+| Slate Brown | product_slatebrown.jpg | Yes |
+| Rose Blush | rose-blush_detail.jpg | Yes |
+
+#### Files Modified
+- `app/components/product/product-media/variant-media-group.ts` — Updated `extractOptionValueFromUrl()` function

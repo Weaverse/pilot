@@ -21,6 +21,9 @@ interface VariantGroupedMediaResult {
 /**
  * Extract option value from image filename using known option values.
  * e.g., filename "24b_xxx_black.jpg" with options ["Black", "Cream"] → "black"
+ *
+ * Handles multi-word option values by checking transformed versions:
+ * - "Slate Brown" matches "slate-brown", "slate_brown", "slatebrown"
  */
 function extractOptionValueFromUrl(
   url: string,
@@ -35,18 +38,29 @@ function extractOptionValueFromUrl(
     // Check if any known option value appears in the filename
     for (let optionValue of knownOptionValues) {
       let optionLower = optionValue.toLowerCase();
-      // Simple delimiter-based matching (_, -). Covers common naming conventions
-      // but won't catch every pattern (e.g., no delimiters). Adjust if needed.
-      if (
-        nameWithoutExt.startsWith(`${optionLower}_`) ||
-        nameWithoutExt.startsWith(`${optionLower}-`) ||
-        nameWithoutExt.endsWith(`_${optionLower}`) ||
-        nameWithoutExt.endsWith(`-${optionLower}`) ||
-        nameWithoutExt.includes(`_${optionLower}_`) ||
-        nameWithoutExt.includes(`-${optionLower}-`) ||
-        nameWithoutExt.endsWith(optionLower)
-      ) {
-        return optionLower;
+
+      // Generate transformed versions for multi-word option values
+      // e.g., "Slate Brown" → "slate-brown", "slate_brown", "slatebrown"
+      let transformations = [optionLower];
+      if (optionLower.includes(" ")) {
+        transformations.push(optionLower.replace(/\s+/g, "-")); // space → dash
+        transformations.push(optionLower.replace(/\s+/g, "_")); // space → underscore
+        transformations.push(optionLower.replace(/\s+/g, "")); // remove spaces
+      }
+
+      // Check each transformation against the filename
+      for (let transformed of transformations) {
+        if (
+          nameWithoutExt.startsWith(`${transformed}_`) ||
+          nameWithoutExt.startsWith(`${transformed}-`) ||
+          nameWithoutExt.endsWith(`_${transformed}`) ||
+          nameWithoutExt.endsWith(`-${transformed}`) ||
+          nameWithoutExt.includes(`_${transformed}_`) ||
+          nameWithoutExt.includes(`-${transformed}-`) ||
+          nameWithoutExt.endsWith(transformed)
+        ) {
+          return optionLower;
+        }
       }
     }
     return null;

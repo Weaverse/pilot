@@ -6,9 +6,13 @@ Groups product media by variant option (e.g., Color). When a visitor selects "Bl
 
 1. Get the selected option value from `selectedVariant.selectedOptions` (e.g., "Black")
 2. Get all known option values from `product.options` for the grouping option (e.g., ["Black", "Cream"])
-3. For each media item, extract the option value from the image filename URL (checks for `_black`, `-black`, etc.)
-4. Group media into a `Map<string, MediaFragment[]>` keyed by option value. Media not matching any option goes to `ungrouped[]`
-5. Return `{ media: [...matched, ...ungrouped], isGrouped: true }`. If no matches, return `{ media: allMedia, isGrouped: false }` as fallback
+3. For each media item, extract the option value from the image filename URL
+4. **Filename matching** supports:
+   - Single-word values: `_black`, `-black`, `black_`, `black-`, `black` (end)
+   - Multi-word values: space is replaced with `_`, `-`, or removed
+     - "Slate Brown" matches `slate-brown`, `slate_brown`, `slatebrown`
+5. Group media into a `Map<string, MediaFragment[]>` keyed by option value. Media not matching any option goes to `ungrouped[]`
+6. Return `{ media: [...matched, ...ungrouped], isGrouped: true }`. If no matches, return `{ media: allMedia, isGrouped: false }` as fallback
 
 ## Files
 

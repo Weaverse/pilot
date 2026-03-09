@@ -290,8 +290,8 @@ Same two settings as main-product:
 
 Media is grouped by extracting option values from image filenames using delimiter-based pattern matching (`_`, `-`). The matching checks for the option value at the start, middle, or end of the filename, bounded by delimiters.
 
+**Single-word option values** (e.g., "black"):
 ```
-Covered patterns (e.g., option value "black"):
   black_xxx.jpg       (start + _)
   black-xxx.jpg       (start + -)
   xxx_black.jpg       (end + _)
@@ -299,12 +299,18 @@ Covered patterns (e.g., option value "black"):
   xxx_black_yyy.jpg   (middle + _)
   xxx-black-yyy.jpg   (middle + -)
   xxxblack.jpg        (end, no delimiter)
-
-NOT covered:
-  xxxblackyyy.jpg     (middle, no delimiters)
 ```
 
-This is intentionally conservative to avoid false positives with short option values (e.g., "red" matching "featured").
+**Multi-word option values** (e.g., "Slate Brown") are matched against transformed versions:
+```
+  slate-brown_xxx.jpg     (space → dash)
+  slate_brown_xxx.jpg     (space → underscore)
+  slatebrown_xxx.jpg      (space removed)
+  xxx_slate-brown.jpg     (end + dash)
+  xxx_slate_brown.jpg     (end + underscore)
+```
+
+This handles common filename conventions while avoiding false positives.
 
 ---
 
