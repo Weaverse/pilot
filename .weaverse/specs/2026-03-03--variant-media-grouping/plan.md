@@ -288,7 +288,9 @@ Same two settings as main-product:
 
 ## 7. Filename Matching Strategy
 
-Media is grouped by extracting option values from image filenames using delimiter-based pattern matching (`_`, `-`). The matching checks for the option value at the start, middle, or end of the filename, bounded by delimiters.
+Media is grouped by extracting option values from image filenames using delimiter-based pattern matching (`_`, `-`). The matching checks for the option value at the start or end of the filename, bounded by delimiters.
+
+**Priority Matching**: Option values are sorted by length (descending) so longer, more specific values match first. This prevents "Gray" from matching before "Gray Eucalyptus".
 
 **Single-word option values** (e.g., "black"):
 ```
@@ -296,8 +298,6 @@ Media is grouped by extracting option values from image filenames using delimite
   black-xxx.jpg       (start + -)
   xxx_black.jpg       (end + _)
   xxx-black.jpg       (end + -)
-  xxx_black_yyy.jpg   (middle + _)
-  xxx-black-yyy.jpg   (middle + -)
   xxxblack.jpg        (end, no delimiter)
 ```
 
@@ -305,12 +305,11 @@ Media is grouped by extracting option values from image filenames using delimite
 ```
   slate-brown_xxx.jpg     (space → dash)
   slate_brown_xxx.jpg     (space → underscore)
-  slatebrown_xxx.jpg      (space removed)
   xxx_slate-brown.jpg     (end + dash)
   xxx_slate_brown.jpg     (end + underscore)
 ```
 
-This handles common filename conventions while avoiding false positives.
+Note: Middle-of-filename matching and space-removed transformations (e.g., "slatebrown") were removed to reduce false positives.
 
 ---
 
