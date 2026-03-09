@@ -15,6 +15,7 @@ import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
+import { HeaderCountrySelector } from "./country-selector";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { MobileMenu } from "./menu/mobile-menu";
@@ -43,7 +44,8 @@ function useIsHomeCheck() {
 }
 
 export function Header() {
-  const { enableTransparentHeader, headerWidth } = useThemeSettings();
+  const { enableTransparentHeader, headerWidth, showHeaderCountrySelector } =
+    useThemeSettings();
   const isHome = useIsHomeCheck();
   const { y } = useWindowScroll();
   const routeError = useRouteError();
@@ -100,6 +102,7 @@ export function Header() {
         <Logo />
         <DesktopMenu />
         <div className="z-1 flex items-center gap-1">
+          {showHeaderCountrySelector && <HeaderCountrySelector />}
           <PredictiveSearchButton />
           <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
           <CartDrawer />

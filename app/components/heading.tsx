@@ -6,6 +6,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { cn } from "~/utils/cn";
 
 const fontSizeVariants = cva("", {
@@ -125,8 +126,22 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
     } as CSSProperties;
   }
   if (animate) {
-    rest["data-motion"] = "fade-up";
+    return (
+      <ScrollReveal
+        as={Tag}
+        ref={ref}
+        {...rest}
+        style={style}
+        className={cn(
+          size === "custom" && fontSizeVariants({ mobileSize, desktopSize }),
+          variants({ size, weight, letterSpacing, alignment, className }),
+        )}
+      >
+        {content}
+      </ScrollReveal>
+    );
   }
+
   return (
     <Tag
       ref={ref}
@@ -141,7 +156,6 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
     </Tag>
   );
 }
-
 export default Heading;
 
 export const headingInputs: InspectorGroup["inputs"] = [
