@@ -34,12 +34,14 @@ export function MediaItem({
   }
   if (media.mediaContentType === "VIDEO") {
     const mediaVideo = media as Media_Video_Fragment;
+    const aspectRatio =
+      imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
     return (
       <video
         controls
         aria-label={mediaVideo.alt || "Product video"}
-        className={cn("h-auto lg:aspect-video w-full object-cover", className)}
-        style={{ aspectRatio: imageAspectRatio }}
+        className={cn("h-auto w-full object-cover", className)}
+        style={{ aspectRatio }}
         onError={console.error}
       >
         <track
