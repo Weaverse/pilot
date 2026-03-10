@@ -63,7 +63,12 @@ export function QuickShop({
             className="absolute top-4 left-4 z-10"
           />
         </div>
-        <div className="flex flex-col justify-start gap-5 py-6 pr-5">
+        <div
+          className={clsx(
+            "flex flex-col justify-start gap-5",
+            panelType === "drawer" ? "pb-5 px-5" : "py-6 pr-5",
+          )}
+        >
           <div className="space-y-4">
             <div className="flex flex-col gap-2">
               <h5>{product.title}</h5>
@@ -182,10 +187,11 @@ export function QuickShopTrigger({
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx(
             "quick-shop-dialog-content",
-            "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
+            "fixed inset-0 z-10 flex items-center overflow-x-hidden",
             "backdrop-blur-xs",
             "[--slide-up-from:20px]",
             "data-[state=open]:animate-slide-up",
+            panelType !== "drawer" && "px-4",
           )}
           onClick={(e) => {
             const target = e.target as HTMLElement;
@@ -195,23 +201,26 @@ export function QuickShopTrigger({
           }}
           aria-describedby={undefined}
         >
-          <Dialog.Close asChild>
-            <Button
-              className="absolute top-3 right-3 rounded-full p-2"
-              variant="secondary"
-            >
-              <XIcon size={18} />
-            </Button>
-          </Dialog.Close>
           <div
             style={{ maxHeight: "90vh" }}
             className={clsx(
-              "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) overflow-hidden",
+              "relative h-auto w-full overflow-hidden",
               "animate-slide-up bg-white shadow-sm",
-              panelType === "drawer" &&
-                "mr-0 ml-auto min-h-screen max-w-md p-4",
+              panelType === "drawer"
+                ? "mr-0 ml-auto min-h-screen max-w-md"
+                : "mx-auto max-w-(--breakpoint-xl)",
             )}
           >
+            {panelType !== "drawer" && (
+              <Dialog.Close asChild>
+                <Button
+                  className="absolute top-3 right-3 z-20 rounded-full p-2"
+                  variant="secondary"
+                >
+                  <XIcon size={18} />
+                </Button>
+              </Dialog.Close>
+            )}
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Quick shop modal</Dialog.Title>
             </VisuallyHidden.Root>
