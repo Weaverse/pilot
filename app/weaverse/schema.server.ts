@@ -767,6 +767,32 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "heading",
+          label: "Variant media grouping",
+          condition: (theme) => theme.pcardEnableQuickShop === true,
+        },
+        {
+          type: "switch",
+          label: "Group media by variant in quick shop",
+          name: "quickShopGroupMediaByVariant",
+          defaultValue: true,
+          helpText:
+            "When enabled, only images matching the selected variant option will be displayed in the quick shop modal/drawer",
+          condition: (theme) => theme.pcardEnableQuickShop === true,
+        },
+        {
+          type: "text",
+          label: "Group by option name",
+          name: "quickShopGroupByOption",
+          defaultValue: "Color",
+          placeholder: "Color",
+          helpText:
+            "The product option name used to group media (e.g., Color, Colour)",
+          condition: (theme) =>
+            theme.pcardEnableQuickShop === true &&
+            theme.quickShopGroupMediaByVariant === true,
+        },
+        {
+          type: "heading",
           label: "Badges",
         },
         {

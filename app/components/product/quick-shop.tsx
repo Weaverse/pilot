@@ -7,6 +7,7 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ShopPayButton } from "@shopify/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
@@ -30,17 +31,19 @@ interface QuickViewData {
   storeDomain: string;
 }
 
-export function QuickShop({
-  data,
-  panelType = "modal",
-}: {
+interface QuickShopProps {
   data: QuickViewData;
   panelType?: "modal" | "drawer";
-}) {
+}
+
+export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
   const { product, storeDomain } = data || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
+
+  const { quickShopGroupMediaByVariant, quickShopGroupByOption } =
+    useThemeSettings();
 
   return (
     <div className="bg-background">
@@ -56,6 +59,9 @@ export function QuickShop({
             media={product?.media.nodes}
             selectedVariant={selectedVariant}
             showThumbnails={false}
+            groupMediaByVariant={quickShopGroupMediaByVariant}
+            groupByOption={quickShopGroupByOption}
+            product={product}
           />
           <ProductBadges
             product={product}
@@ -131,19 +137,21 @@ export function QuickShop({
   );
 }
 
+interface QuickShopTriggerProps {
+  productHandle: string;
+  showOnHover?: boolean;
+  buttonType?: "icon" | "text";
+  buttonText?: string;
+  panelType?: "modal" | "drawer";
+}
+
 export function QuickShopTrigger({
   productHandle,
   showOnHover = true,
   buttonType = "icon",
   buttonText = "Quick shop",
   panelType = "modal",
-}: {
-  productHandle: string;
-  showOnHover?: boolean;
-  buttonType?: "icon" | "text";
-  buttonText?: string;
-  panelType?: "modal" | "drawer";
-}) {
+}: QuickShopTriggerProps) {
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 
