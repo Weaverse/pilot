@@ -50,18 +50,21 @@ export function QuickShop({
           panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
         )}
       >
-        <ProductMedia
-          mediaLayout="slider"
-          media={product?.media.nodes}
-          selectedVariant={selectedVariant}
-          showThumbnails={false}
-        />
+        <div className="relative min-w-0">
+          <ProductMedia
+            mediaLayout="slider"
+            media={product?.media.nodes}
+            selectedVariant={selectedVariant}
+            showThumbnails={false}
+          />
+          <ProductBadges
+            product={product}
+            selectedVariant={selectedVariant}
+            className="absolute top-4 left-4 z-10"
+          />
+        </div>
         <div className="flex flex-col justify-start gap-5 py-6 pr-5">
           <div className="space-y-4">
-            <ProductBadges
-              product={product}
-              selectedVariant={selectedVariant}
-            />
             <div className="flex flex-col gap-2">
               <h5>{product.title}</h5>
             </div>
