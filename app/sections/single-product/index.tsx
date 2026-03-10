@@ -130,26 +130,28 @@ export default function SingleProduct(props: SingleProductProps) {
     <Section ref={ref} {...rest}>
       <div>
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-          <ProductMedia
-            mediaLayout="slider"
-            imageAspectRatio="adapt"
-            media={product?.media.nodes}
-            selectedVariant={selectedVariant}
-            showThumbnails={showThumbnails}
-            groupMediaByVariant={groupMediaByVariant}
-            groupByOption={groupByOption}
-            product={product}
-          />
+          <div className="relative min-w-0">
+            <ProductMedia
+              mediaLayout="slider"
+              imageAspectRatio="adapt"
+              media={product?.media.nodes}
+              selectedVariant={selectedVariant}
+              showThumbnails={showThumbnails}
+              groupMediaByVariant={groupMediaByVariant}
+              groupByOption={groupByOption}
+              product={product}
+            />
+            <ProductBadges
+              product={product}
+              selectedVariant={selectedVariant}
+              className="absolute top-4 left-4 z-10"
+            />
+          </div>
           <ScrollReveal
             animation="slide-in"
             className="flex flex-col justify-start space-y-5"
           >
             <div className="space-y-4">
-              <ProductBadges
-                product={product}
-                selectedVariant={selectedVariant}
-                className="[&_span:nth-child(n+3)]:hidden"
-              />
               <h3 className="tracking-tight">{product?.title}</h3>
               <VariantPrices variant={selectedVariant} />
               <JudgemeStarsRating
