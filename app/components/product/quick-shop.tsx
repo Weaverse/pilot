@@ -42,8 +42,11 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
 
-  const { quickShopGroupMediaByVariant, quickShopGroupByOption } =
-    useThemeSettings();
+  const {
+    quickShopGroupMediaByVariant,
+    quickShopGroupByOption,
+    pcardImageRatio,
+  } = useThemeSettings();
 
   return (
     <div className="bg-background">
@@ -62,6 +65,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
             groupMediaByVariant={quickShopGroupMediaByVariant}
             groupByOption={quickShopGroupByOption}
             product={product}
+            imageAspectRatio={pcardImageRatio}
           />
           <ProductBadges
             product={product}
