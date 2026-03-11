@@ -6,7 +6,7 @@ import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/utils/cn";
-import { Filters } from "./filters";
+import { Filters, type FiltersProps } from "./filters";
 import { LayoutSwitcher, type LayoutSwitcherProps } from "./layout-switcher";
 import { Sort } from "./sort";
 
@@ -15,8 +15,7 @@ interface ToolsBarProps extends LayoutSwitcherProps {
   showProductsCount: boolean;
   enableFilter: boolean;
   filtersPosition: "sidebar" | "drawer";
-  expandFilters: boolean;
-  showFiltersCount: boolean;
+  drawerFilterSettings?: FiltersProps;
 }
 
 export function ToolsBar({
@@ -27,6 +26,7 @@ export function ToolsBar({
   gridSizeDesktop,
   gridSizeMobile,
   onGridSizeChange,
+  drawerFilterSettings,
 }: ToolsBarProps) {
   const { collection } = useLoaderData<CollectionQuery>();
   return (
@@ -46,7 +46,10 @@ export function ToolsBar({
           <div className="flex gap-2">
             {enableSort && <Sort />}
             {enableFilter && (
-              <FiltersDrawer filtersPosition={filtersPosition} />
+              <FiltersDrawer
+                filtersPosition={filtersPosition}
+                filterSettings={drawerFilterSettings}
+              />
             )}
           </div>
         )}
@@ -57,8 +60,10 @@ export function ToolsBar({
 
 function FiltersDrawer({
   filtersPosition,
+  filterSettings,
 }: {
   filtersPosition: ToolsBarProps["filtersPosition"];
+  filterSettings?: FiltersProps;
 }) {
   return (
     <Dialog.Root>
@@ -108,7 +113,7 @@ function FiltersDrawer({
               </Dialog.Close>
             </div>
             <ScrollArea className="max-h-[calc(100vh-4.5rem)]" size="sm">
-              <Filters className="px-4" />
+              <Filters className="px-4" {...filterSettings} />
             </ScrollArea>
           </div>
         </Dialog.Content>

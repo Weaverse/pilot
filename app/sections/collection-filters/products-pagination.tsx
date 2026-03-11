@@ -1,5 +1,6 @@
 import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
@@ -21,19 +22,28 @@ import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
+import { useCollectionFiltersContext } from "./collection-filters-context";
 import { getAppliedFilterLink } from "./filter-utils";
 
-export function ProductsPagination({
-  gridSizeDesktop: desktopCols = 3,
-  gridSizeMobile: mobileCols = 1,
-  loadPrevText,
-  loadMoreText,
-}: {
-  gridSizeDesktop: number;
-  gridSizeMobile: number;
+interface ProductsPaginationData {
   loadPrevText: string;
   loadMoreText: string;
-}) {
+}
+
+interface ProductsPaginationProps
+  extends HydrogenComponentProps,
+    ProductsPaginationData {
+  ref: React.Ref<HTMLDivElement>;
+}
+
+function ProductsPagination(props: ProductsPaginationProps) {
+  const { ref, loadPrevText, loadMoreText, ...rest } = props;
+  const {
+    gridSizeDesktop: desktopCols,
+    gridSizeMobile: mobileCols,
+    filtersPosition,
+    enableFilter,
+  } = useCollectionFiltersContext();
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -43,10 +53,18 @@ export function ProductsPagination({
   const [params] = useSearchParams();
   const location = useLocation();
   const { pathname } = location;
-  const { ref, inView } = useInView();
+  const { ref: inViewRef, inView } = useInView();
+  const showSidebar = enableFilter && filtersPosition === "sidebar";
 
   return (
-    <div className="grow space-y-6">
+    <div
+      ref={ref}
+      {...rest}
+      className={cn(
+        "space-y-6 pt-6 pb-8 lg:pt-6 lg:pb-20",
+        showSidebar && "lg:overflow-hidden",
+      )}
+    >
       {appliedFilters.length > 0 ? (
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-2">
@@ -115,6 +133,7 @@ export function ProductsPagination({
               />
               {hasNextPage && (
                 <NextLink
+                  ref={inViewRef}
                   className={cn("mx-auto", variants({ variant: "outline" }))}
                 >
                   {isLoading ? "Loading..." : loadMoreText}
@@ -132,6 +151,8 @@ export function ProductsPagination({
     </div>
   );
 }
+
+export default ProductsPagination;
 
 interface ProductsLoadedOnScrollProps {
   nodes: any;
@@ -176,3 +197,29 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
     </div>
   );
 }
+
+export const schema = createSchema({
+  type: "cf--product-pagination",
+  title: "Product pagination",
+  settings: [
+    {
+      group: "Products grid",
+      inputs: [
+        {
+          type: "text",
+          name: "loadPrevText",
+          label: "Load previous text",
+          defaultValue: "↑ Load previous",
+          placeholder: "↑ Load previous",
+        },
+        {
+          type: "text",
+          name: "loadMoreText",
+          label: "Load more text",
+          defaultValue: "Load more ↓",
+          placeholder: "Load more ↓",
+        },
+      ],
+    },
+  ],
+});

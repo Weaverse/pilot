@@ -1,0 +1,78 @@
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { useCollectionFiltersContext } from "./collection-filters-context";
+import { ToolsBar } from "./tools-bar";
+
+interface CollectionToolbarData {
+  enableSort: boolean;
+  showProductsCount: boolean;
+  enableFilter: boolean;
+}
+
+interface CollectionToolbarProps
+  extends HydrogenComponentProps,
+    CollectionToolbarData {
+  ref: React.Ref<HTMLDivElement>;
+}
+
+function CollectionToolbar(props: CollectionToolbarProps) {
+  const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
+  const {
+    filtersPosition,
+    gridSizeDesktop,
+    gridSizeMobile,
+    setGridSizeDesktop,
+    setGridSizeMobile,
+  } = useCollectionFiltersContext();
+
+  return (
+    <div ref={ref} {...rest}>
+      <ToolsBar
+        enableSort={enableSort}
+        showProductsCount={showProductsCount}
+        enableFilter={enableFilter}
+        filtersPosition={filtersPosition}
+        gridSizeDesktop={gridSizeDesktop}
+        gridSizeMobile={gridSizeMobile}
+        onGridSizeChange={(v) => {
+          if (v > 2) {
+            setGridSizeDesktop(v);
+          } else {
+            setGridSizeMobile(v);
+          }
+        }}
+      />
+    </div>
+  );
+}
+
+export default CollectionToolbar;
+
+export const schema = createSchema({
+  type: "cf--toolbar",
+  title: "Collection toolbar",
+  settings: [
+    {
+      group: "Toolbar",
+      inputs: [
+        {
+          type: "switch",
+          name: "enableSort",
+          label: "Enable sorting",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showProductsCount",
+          label: "Show products count",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "enableFilter",
+          label: "Enable filtering",
+          defaultValue: true,
+        },
+      ],
+    },
+  ],
+});

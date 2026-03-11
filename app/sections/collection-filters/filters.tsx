@@ -1,31 +1,37 @@
 import { CaretRightIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { OPTIONS_AS_SWATCH } from "~/components/product/product-option-values";
 import { ScrollArea } from "~/components/scroll-area";
-import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
 import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
-import type { CollectionFiltersData } from ".";
+import { useCollectionFiltersContext } from "./collection-filters-context";
 import { FilterItem } from "./filter-item";
 import { PriceRangeFilter } from "./price-range-filter";
 
-export function Filters({ className }: { className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const parentInstance = useClosestWeaverseItem(ref);
-  const parentData = parentInstance.data as unknown as CollectionFiltersData;
-  const {
-    expandFilters,
-    showFiltersCount,
-    enableSwatches,
-    displayAsButtonFor,
-    filterItemsLimit,
-  } = parentData;
+export interface FiltersProps {
+  className?: string;
+  expandFilters?: boolean;
+  showFiltersCount?: boolean;
+  enableSwatches?: boolean;
+  displayAsButtonFor?: string;
+  filterItemsLimit?: number;
+}
+
+export function Filters({
+  className,
+  expandFilters = true,
+  showFiltersCount = true,
+  enableSwatches = true,
+  displayAsButtonFor = "Size, More filters",
+  filterItemsLimit = 10,
+}: FiltersProps) {
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -55,7 +61,6 @@ export function Filters({ className }: { className?: string }) {
           return (
             <Accordion.Item
               key={filter.id}
-              ref={ref}
               value={filter.id}
               className="w-full py-6"
             >
@@ -162,3 +167,99 @@ function FilterValues({
     </>
   );
 }
+
+// Weaverse child component wrapper
+interface CollectionFiltersChildProps
+  extends HydrogenComponentProps,
+    Omit<FiltersProps, "className"> {
+  ref: React.Ref<HTMLDivElement>;
+}
+
+function CollectionFiltersChild(props: CollectionFiltersChildProps) {
+  const {
+    ref,
+    expandFilters,
+    showFiltersCount,
+    enableSwatches,
+    displayAsButtonFor,
+    filterItemsLimit,
+    ...rest
+  } = props;
+  const { filtersPosition, enableFilter } = useCollectionFiltersContext();
+
+  // This child only renders as sidebar; drawer mode is handled by the toolbar
+  if (!enableFilter || filtersPosition !== "sidebar") {
+    return null;
+  }
+
+  return (
+    <div
+      ref={ref}
+      {...rest}
+      className="hidden w-72 pt-6 lg:float-left lg:block lg:pb-20"
+    >
+      <div className="sticky top-[calc(var(--height-nav)+40px)] space-y-4 pr-5">
+        <div className="font-bold">Filters</div>
+        <Filters
+          expandFilters={expandFilters}
+          showFiltersCount={showFiltersCount}
+          enableSwatches={enableSwatches}
+          displayAsButtonFor={displayAsButtonFor}
+          filterItemsLimit={filterItemsLimit}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default CollectionFiltersChild;
+
+export const schema = createSchema({
+  type: "cf--filters",
+  title: "Collection filters",
+  settings: [
+    {
+      group: "Filters",
+      inputs: [
+        {
+          type: "switch",
+          name: "expandFilters",
+          label: "Expand filters",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "showFiltersCount",
+          label: "Show filters count",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "enableSwatches",
+          label: "Enable color/image swatches",
+          defaultValue: true,
+        },
+        {
+          type: "text",
+          name: "displayAsButtonFor",
+          label: "Display as button for:",
+          defaultValue: "Size, More filters",
+          helpText: "Comma-separated list of filters to display as buttons",
+        },
+        {
+          type: "range",
+          name: "filterItemsLimit",
+          label: "Max visible filter items",
+          defaultValue: 10,
+          configs: {
+            min: 3,
+            max: 30,
+            step: 1,
+          },
+          helpText:
+            'Items beyond this limit are hidden behind a "Show more" toggle',
+        },
+      ],
+    },
+  ],
+});

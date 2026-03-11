@@ -7,6 +7,10 @@ import * as AllProducts from "~/sections/all-products";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
 import * as CollectionFilters from "~/sections/collection-filters";
+import * as CollectionFiltersBanner from "~/sections/collection-filters/banner";
+import * as CollectionFiltersChild from "~/sections/collection-filters/filters";
+import * as CollectionProductPagination from "~/sections/collection-filters/products-pagination";
+import * as CollectionToolbar from "~/sections/collection-filters/toolbar";
 import * as CollectionList from "~/sections/collection-list";
 import * as CollectionListItems from "~/sections/collection-list/collections-items";
 import * as ColumnsWithImages from "~/sections/columns-with-images";
@@ -128,6 +132,10 @@ export const components: HydrogenComponent[] = [
   RelatedProducts,
   RelatedArticles,
   CollectionFilters,
+  CollectionFiltersBanner,
+  CollectionToolbar,
+  CollectionFiltersChild,
+  CollectionProductPagination,
   CollectionList,
   CollectionListItems,
   SingleProduct,
