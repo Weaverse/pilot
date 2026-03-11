@@ -25,6 +25,7 @@ export interface CollectionFiltersData {
   showFiltersCount: boolean;
   enableSwatches: boolean;
   displayAsButtonFor: string;
+  filterItemsLimit: number;
   productsPerRowDesktop: number;
   productsPerRowMobile: number;
   loadPrevText: string;
@@ -52,6 +53,7 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
     showProductsCount,
     enableSwatches,
     displayAsButtonFor,
+    filterItemsLimit,
     productsPerRowDesktop,
     productsPerRowMobile,
     loadPrevText,
@@ -285,6 +287,20 @@ export const schema = createSchema({
           defaultValue: "Size, More filters",
           condition: (data: CollectionFiltersData) => data.enableFilter,
           helpText: "Comma-separated list of filters to display as buttons",
+        },
+        {
+          type: "range",
+          name: "filterItemsLimit",
+          label: "Max visible filter items",
+          defaultValue: 10,
+          configs: {
+            min: 3,
+            max: 30,
+            step: 1,
+          },
+          condition: (data: CollectionFiltersData) => data.enableFilter,
+          helpText:
+            'Items beyond this limit are hidden behind a "Show more" toggle',
         },
       ],
     },

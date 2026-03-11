@@ -2,9 +2,10 @@ import { CaretRightIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
+import { Button } from "~/components/button";
 import { OPTIONS_AS_SWATCH } from "~/components/product/product-option-values";
 import { ScrollArea } from "~/components/scroll-area";
 import { useClosestWeaverseItem } from "~/hooks/use-closest-weaverse-item";
@@ -23,6 +24,7 @@ export function Filters({ className }: { className?: string }) {
     showFiltersCount,
     enableSwatches,
     displayAsButtonFor,
+    filterItemsLimit,
   } = parentData;
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
@@ -83,21 +85,15 @@ export function Filters({ className }: { className?: string }) {
                       collection={collection as CollectionQuery["collection"]}
                     />
                   ) : (
-                    filter.values?.map((option) => (
-                      <FilterItem
-                        key={option.id}
-                        displayAs={
-                          asSwatch
-                            ? "swatch"
-                            : asButton
-                              ? "button"
-                              : "list-item"
-                        }
-                        appliedFilters={appliedFilters as AppliedFilter[]}
-                        option={option}
-                        showFiltersCount={showFiltersCount}
-                      />
-                    ))
+                    <FilterValues
+                      options={filter.values}
+                      displayAs={
+                        asSwatch ? "swatch" : asButton ? "button" : "list-item"
+                      }
+                      appliedFilters={appliedFilters as AppliedFilter[]}
+                      showFiltersCount={showFiltersCount}
+                      limit={filterItemsLimit || 10}
+                    />
                   )}
                 </div>
               </Accordion.Content>
@@ -106,5 +102,63 @@ export function Filters({ className }: { className?: string }) {
         })}
       </Accordion.Root>
     </ScrollArea>
+  );
+}
+
+function FilterValues({
+  options,
+  displayAs,
+  appliedFilters,
+  showFiltersCount,
+  limit,
+}: {
+  options: Filter["values"];
+  displayAs: "swatch" | "button" | "list-item";
+  appliedFilters: AppliedFilter[];
+  showFiltersCount: boolean;
+  limit: number;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const hasMore = options.length > limit;
+
+  // Always show applied/checked items even if beyond the limit
+  const visibleOptions = expanded
+    ? options
+    : options.filter((option, index) => {
+        if (index < limit) {
+          return true;
+        }
+        // Keep applied filters visible even beyond limit
+        return appliedFilters.some(
+          (flt) => JSON.stringify(flt.filter) === option.input,
+        );
+      });
+
+  return (
+    <>
+      {visibleOptions.map((option) => (
+        <FilterItem
+          key={option.id}
+          displayAs={displayAs}
+          appliedFilters={appliedFilters}
+          option={option}
+          showFiltersCount={showFiltersCount}
+        />
+      ))}
+      {hasMore && (
+        <div className="w-full">
+          <Button
+            variant="underline"
+            animate={false}
+            className="mt-2 text-sm"
+            onClick={() => setExpanded(!expanded)}
+          >
+            {expanded
+              ? "Show less"
+              : `Show more (${options.length - visibleOptions.length})`}
+          </Button>
+        </div>
+      )}
+    </>
   );
 }
