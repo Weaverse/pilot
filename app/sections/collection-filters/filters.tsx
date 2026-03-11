@@ -38,10 +38,10 @@ export function Filters({ className }: { className?: string }) {
   const filters = collection.products.filters as Filter[];
 
   return (
-    <ScrollArea className="h-[calc(100vh-var(--height-nav)-100px)]">
+    <ScrollArea className="h-[calc(100vh-var(--height-nav)-100px)]" size="sm">
       <Accordion.Root
         type="multiple"
-        className={cn("divide-y divide-line-subtle pr-3", className)}
+        className={cn("divide-y divide-gray-300 pr-3", className)}
         key={
           collection.id + appliedFiltersKeys + expandFilters + showFiltersCount
         }
@@ -57,10 +57,10 @@ export function Filters({ className }: { className?: string }) {
               key={filter.id}
               ref={ref}
               value={filter.id}
-              className="w-full pt-7 pb-6"
+              className="w-full py-6"
             >
               <Accordion.Trigger className="flex w-full items-center justify-between data-[state=open]:[&>svg]:rotate-90">
-                <span>{filter.label}</span>
+                <span className="uppercase">{filter.label}</span>
                 <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
               </Accordion.Trigger>
               <Accordion.Content
@@ -74,10 +74,10 @@ export function Filters({ className }: { className?: string }) {
               >
                 <div
                   className={clsx(
-                    "flex pt-8",
+                    "flex pt-4",
                     asSwatch || asButton
                       ? "flex-wrap gap-1.5"
-                      : "flex-col gap-5",
+                      : "flex-col gap-2",
                   )}
                 >
                   {filter.type === "PRICE_RANGE" ? (
@@ -155,7 +155,7 @@ function FilterValues({
           >
             {expanded
               ? "Show less"
-              : `Show more (${options.length - visibleOptions.length})`}
+              : `Show more (+${options.length - visibleOptions.length})`}
           </Button>
         </div>
       )}
