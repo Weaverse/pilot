@@ -40,7 +40,10 @@ export function MediaItem({
       <video
         controls
         aria-label={mediaVideo.alt || "Product video"}
-        className={cn("h-auto w-full object-cover", className)}
+        className={cn(
+          "h-auto max-h-[80vh] w-full bg-black object-contain",
+          className,
+        )}
         style={{ aspectRatio }}
         onError={console.error}
       >
