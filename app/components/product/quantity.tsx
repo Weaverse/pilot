@@ -1,3 +1,4 @@
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface QuantityProps {
@@ -22,16 +23,16 @@ export function Quantity(props: QuantityProps) {
   return (
     <ScrollReveal className="space-y-1.5">
       <legend className="font-bold leading-tight">{label}</legend>
-      <div className="w-fit border border-line">
+      <div className="flex w-fit items-center border border-line">
         <button
           type="button"
           name="decrease-quantity"
           aria-label="Decrease quantity"
-          className="h-10 w-10 transition"
+          className="flex h-10 w-10 items-center justify-center transition"
           disabled={value <= 1}
           onClick={() => onChange(value - 1)}
         >
-          <span>&#8722;</span>
+          <MinusIcon size={18} />
         </button>
         <input
           className="w-12 border-none px-1 py-2.5 text-center focus:outline-hidden focus:ring-0"
@@ -41,12 +42,12 @@ export function Quantity(props: QuantityProps) {
         />
         <button
           type="button"
-          className="h-10 w-10 text-body transition hover:text-body"
+          className="flex h-10 w-10 items-center justify-center text-body transition hover:text-body"
           name="increase-quantity"
           aria-label="Increase quantity"
           onClick={() => onChange(value + 1)}
         >
-          <span>&#43;</span>
+          <PlusIcon size={18} />
         </button>
       </div>
     </ScrollReveal>
