@@ -1,6 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useCollectionFiltersContext } from "./collection-filters-context";
-import { ToolsBar } from "./tools-bar";
+import { useMainCollectionContext } from "../main-collection-context";
+import { Toolbar } from "./toolbar";
 
 interface CollectionToolbarData {
   enableSort: boolean;
@@ -22,11 +22,11 @@ function CollectionToolbar(props: CollectionToolbarProps) {
     gridSizeMobile,
     setGridSizeDesktop,
     setGridSizeMobile,
-  } = useCollectionFiltersContext();
+  } = useMainCollectionContext();
 
   return (
-    <div ref={ref} {...rest}>
-      <ToolsBar
+    <div ref={ref} {...rest} className="col-span-full">
+      <Toolbar
         enableSort={enableSort}
         showProductsCount={showProductsCount}
         enableFilter={enableFilter}
@@ -48,8 +48,8 @@ function CollectionToolbar(props: CollectionToolbarProps) {
 export default CollectionToolbar;
 
 export const schema = createSchema({
-  type: "cf--toolbar",
-  title: "Collection toolbar",
+  type: "mc--toolbar",
+  title: "Toolbar",
   settings: [
     {
       group: "Toolbar",

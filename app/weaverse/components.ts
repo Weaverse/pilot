@@ -6,11 +6,6 @@ import * as SubHeading from "~/components/subheading";
 import * as AllProducts from "~/sections/all-products";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
-import * as CollectionFilters from "~/sections/collection-filters";
-import * as CollectionFiltersBanner from "~/sections/collection-filters/banner";
-import * as CollectionFiltersChild from "~/sections/collection-filters/filters";
-import * as CollectionProductPagination from "~/sections/collection-filters/products-pagination";
-import * as CollectionToolbar from "~/sections/collection-filters/toolbar";
 import * as CollectionList from "~/sections/collection-list";
 import * as CollectionListItems from "~/sections/collection-list/collections-items";
 import * as ColumnsWithImages from "~/sections/columns-with-images";
@@ -35,6 +30,11 @@ import * as ImageWithTextImage from "~/sections/image-with-text/image";
 import * as JudgemeReview from "~/sections/judgeme-reviews";
 import * as JudgemeReviewList from "~/sections/judgeme-reviews/review-list";
 import * as JudgemeReviewSummary from "~/sections/judgeme-reviews/review-summary";
+import * as MainCollection from "~/sections/main-collection";
+import * as CollectionHeader from "~/sections/main-collection/collection-header";
+import * as CollectionFilters from "~/sections/main-collection/filters";
+import * as ProductGrid from "~/sections/main-collection/product-grid";
+import * as CollectionToolbar from "~/sections/main-collection/toolbar";
 import * as MainProduct from "~/sections/main-product";
 import * as JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
@@ -131,11 +131,11 @@ export const components: HydrogenComponent[] = [
   ProductCollapsibleDetails,
   RelatedProducts,
   RelatedArticles,
-  CollectionFilters,
-  CollectionFiltersBanner,
+  MainCollection,
+  CollectionHeader,
   CollectionToolbar,
-  CollectionFiltersChild,
-  CollectionProductPagination,
+  CollectionFilters,
+  ProductGrid,
   CollectionList,
   CollectionListItems,
   SingleProduct,

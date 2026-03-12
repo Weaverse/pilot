@@ -22,28 +22,26 @@ import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import { useCollectionFiltersContext } from "./collection-filters-context";
-import { getAppliedFilterLink } from "./filter-utils";
+import { getAppliedFilterLink } from "../filters/filter-utils";
+import { useMainCollectionContext } from "../main-collection-context";
 
-interface ProductsPaginationData {
+interface ProductGridData {
   loadPrevText: string;
   loadMoreText: string;
 }
 
-interface ProductsPaginationProps
-  extends HydrogenComponentProps,
-    ProductsPaginationData {
+interface ProductGridProps extends HydrogenComponentProps, ProductGridData {
   ref: React.Ref<HTMLDivElement>;
 }
 
-function ProductsPagination(props: ProductsPaginationProps) {
+function ProductGrid(props: ProductGridProps) {
   const { ref, loadPrevText, loadMoreText, ...rest } = props;
   const {
     gridSizeDesktop: desktopCols,
     gridSizeMobile: mobileCols,
     filtersPosition,
     enableFilter,
-  } = useCollectionFiltersContext();
+  } = useMainCollectionContext();
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -152,7 +150,7 @@ function ProductsPagination(props: ProductsPaginationProps) {
   );
 }
 
-export default ProductsPagination;
+export default ProductGrid;
 
 interface ProductsLoadedOnScrollProps {
   nodes: any;
@@ -199,8 +197,8 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
 }
 
 export const schema = createSchema({
-  type: "cf--product-pagination",
-  title: "Product pagination",
+  type: "mc--product-grid",
+  title: "Products grid",
   settings: [
     {
       group: "Products grid",

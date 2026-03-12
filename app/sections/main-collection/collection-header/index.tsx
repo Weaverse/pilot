@@ -5,7 +5,7 @@ import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Image } from "~/components/image";
 
-interface CollectionBannerData {
+interface CollectionHeaderData {
   showBreadcrumb: boolean;
   showDescription: boolean;
   showBanner: boolean;
@@ -14,13 +14,13 @@ interface CollectionBannerData {
   bannerBorderRadius: number;
 }
 
-interface CollectionBannerProps
+interface CollectionHeaderProps
   extends HydrogenComponentProps,
-    CollectionBannerData {
+    CollectionHeaderData {
   ref: React.Ref<HTMLDivElement>;
 }
 
-function CollectionBanner(props: CollectionBannerProps) {
+function CollectionHeader(props: CollectionHeaderProps) {
   const {
     ref,
     showBreadcrumb,
@@ -47,7 +47,7 @@ function CollectionBanner(props: CollectionBannerProps) {
     : collection.image;
 
   return (
-    <div ref={ref} {...rest} className="py-10">
+    <div ref={ref} {...rest} className="col-span-full py-10">
       {showBreadcrumb && (
         <BreadCrumb page={collection.title} className="mb-2.5" />
       )}
@@ -77,14 +77,14 @@ function CollectionBanner(props: CollectionBannerProps) {
   );
 }
 
-export default CollectionBanner;
+export default CollectionHeader;
 
 export const schema = createSchema({
-  type: "cf--banner",
-  title: "Collection banner",
+  type: "mc--header",
+  title: "Header",
   settings: [
     {
-      group: "Banner",
+      group: "Header",
       inputs: [
         {
           type: "switch",
@@ -116,7 +116,7 @@ export const schema = createSchema({
             max: 600,
             step: 1,
           },
-          condition: (data: CollectionBannerData) => data.showBanner,
+          condition: (data: CollectionHeaderData) => data.showBanner,
         },
         {
           type: "range",
@@ -128,7 +128,7 @@ export const schema = createSchema({
             max: 400,
             step: 1,
           },
-          condition: (data: CollectionBannerData) => data.showBanner,
+          condition: (data: CollectionHeaderData) => data.showBanner,
         },
         {
           type: "range",
@@ -141,7 +141,7 @@ export const schema = createSchema({
             unit: "px",
           },
           defaultValue: 0,
-          condition: (data: CollectionBannerData) => data.showBanner,
+          condition: (data: CollectionHeaderData) => data.showBanner,
         },
       ],
     },

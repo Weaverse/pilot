@@ -1,6 +1,6 @@
 import { createContext, use, useEffect, useState } from "react";
 
-interface CollectionFiltersContextValue {
+interface MainCollectionContextValue {
   filtersPosition: "sidebar" | "drawer";
   enableFilter: boolean;
   gridSizeDesktop: number;
@@ -9,10 +9,11 @@ interface CollectionFiltersContextValue {
   setGridSizeMobile: (size: number) => void;
 }
 
-const CollectionFiltersContext =
-  createContext<CollectionFiltersContextValue | null>(null);
+const MainCollectionContext = createContext<MainCollectionContextValue | null>(
+  null,
+);
 
-export function CollectionFiltersProvider({
+export function MainCollectionProvider({
   filtersPosition,
   enableFilter,
   productsPerRowDesktop,
@@ -38,7 +39,7 @@ export function CollectionFiltersProvider({
   }, [productsPerRowDesktop, productsPerRowMobile]);
 
   return (
-    <CollectionFiltersContext
+    <MainCollectionContext
       value={{
         filtersPosition,
         enableFilter,
@@ -49,15 +50,15 @@ export function CollectionFiltersProvider({
       }}
     >
       {children}
-    </CollectionFiltersContext>
+    </MainCollectionContext>
   );
 }
 
-export function useCollectionFiltersContext() {
-  const context = use(CollectionFiltersContext);
+export function useMainCollectionContext() {
+  const context = use(MainCollectionContext);
   if (!context) {
     throw new Error(
-      "useCollectionFiltersContext must be used within a CollectionFiltersProvider",
+      "useMainCollectionContext must be used within a MainCollectionProvider",
     );
   }
   return context;

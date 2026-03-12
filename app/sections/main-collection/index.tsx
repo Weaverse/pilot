@@ -2,20 +2,21 @@ import { createSchema } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
-import { CollectionFiltersProvider } from "./collection-filters-context";
+import { cn } from "~/utils/cn";
+import { MainCollectionProvider } from "./main-collection-context";
 
-interface CollectionFiltersData {
+interface MainCollectionData {
   filtersPosition: "sidebar" | "drawer";
   enableFilter: boolean;
   productsPerRowDesktop: number;
   productsPerRowMobile: number;
 }
 
-interface CollectionFiltersProps extends SectionProps, CollectionFiltersData {
+interface MainCollectionProps extends SectionProps, MainCollectionData {
   ref: React.Ref<HTMLElement>;
 }
 
-export default function CollectionFilters(props: CollectionFiltersProps) {
+export default function MainCollection(props: MainCollectionProps) {
   const {
     ref,
     children,
@@ -35,14 +36,23 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
   if (collection?.products && collections) {
     return (
       <Section ref={ref} {...rest} overflow="unset" animate={false}>
-        <CollectionFiltersProvider
+        <MainCollectionProvider
           filtersPosition={filtersPosition}
           enableFilter={enableFilter}
           productsPerRowDesktop={Number(productsPerRowDesktop) || 3}
           productsPerRowMobile={Number(productsPerRowMobile) || 1}
         >
-          <div className="space-y-0">{children}</div>
-        </CollectionFiltersProvider>
+          <div
+            className={cn(
+              "grid gap-5",
+              enableFilter && filtersPosition === "sidebar"
+                ? "lg:grid-cols-[288px_1fr]"
+                : "grid-cols-1",
+            )}
+          >
+            {children}
+          </div>
+        </MainCollectionProvider>
       </Section>
     );
   }
@@ -50,18 +60,13 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
 }
 
 export const schema = createSchema({
-  type: "collection-filters",
-  title: "Collection filters",
+  type: "main-collection",
+  title: "Main collection",
   limit: 1,
   enabledOn: {
     pages: ["COLLECTION"],
   },
-  childTypes: [
-    "cf--banner",
-    "cf--toolbar",
-    "cf--filters",
-    "cf--product-pagination",
-  ],
+  childTypes: ["mc--header", "mc--toolbar", "mc--filters", "mc--product-grid"],
   settings: [
     {
       group: "Layout",
@@ -86,7 +91,7 @@ export const schema = createSchema({
             ],
           },
           defaultValue: "sidebar",
-          condition: (data: CollectionFiltersData) => data.enableFilter,
+          condition: (data: MainCollectionData) => data.enableFilter,
         },
         {
           type: "select",
@@ -118,10 +123,10 @@ export const schema = createSchema({
   ],
   presets: {
     children: [
-      { type: "cf--banner" },
-      { type: "cf--toolbar" },
-      { type: "cf--filters" },
-      { type: "cf--product-pagination" },
+      { type: "mc--header" },
+      { type: "mc--toolbar" },
+      { type: "mc--filters" },
+      { type: "mc--product-grid" },
     ],
   },
 });
