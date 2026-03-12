@@ -1,8 +1,6 @@
 import { createContext, use, useEffect, useState } from "react";
 
 interface MainCollectionContextValue {
-  filtersPosition: "sidebar" | "drawer";
-  enableFilter: boolean;
   gridSizeDesktop: number;
   gridSizeMobile: number;
   setGridSizeDesktop: (size: number) => void;
@@ -14,14 +12,10 @@ const MainCollectionContext = createContext<MainCollectionContextValue | null>(
 );
 
 export function MainCollectionProvider({
-  filtersPosition,
-  enableFilter,
   productsPerRowDesktop,
   productsPerRowMobile,
   children,
 }: {
-  filtersPosition: "sidebar" | "drawer";
-  enableFilter: boolean;
   productsPerRowDesktop: number;
   productsPerRowMobile: number;
   children: React.ReactNode;
@@ -41,8 +35,6 @@ export function MainCollectionProvider({
   return (
     <MainCollectionContext
       value={{
-        filtersPosition,
-        enableFilter,
         gridSizeDesktop,
         gridSizeMobile,
         setGridSizeDesktop,

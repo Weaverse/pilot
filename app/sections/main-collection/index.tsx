@@ -2,12 +2,9 @@ import { createSchema } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
-import { cn } from "~/utils/cn";
 import { MainCollectionProvider } from "./main-collection-context";
 
 interface MainCollectionData {
-  filtersPosition: "sidebar" | "drawer";
-  enableFilter: boolean;
   productsPerRowDesktop: number;
   productsPerRowMobile: number;
 }
@@ -20,8 +17,6 @@ export default function MainCollection(props: MainCollectionProps) {
   const {
     ref,
     children,
-    filtersPosition,
-    enableFilter,
     productsPerRowDesktop,
     productsPerRowMobile,
     ...rest
@@ -37,21 +32,10 @@ export default function MainCollection(props: MainCollectionProps) {
     return (
       <Section ref={ref} {...rest} overflow="unset" animate={false}>
         <MainCollectionProvider
-          filtersPosition={filtersPosition}
-          enableFilter={enableFilter}
           productsPerRowDesktop={Number(productsPerRowDesktop) || 3}
           productsPerRowMobile={Number(productsPerRowMobile) || 1}
         >
-          <div
-            className={cn(
-              "grid gap-5",
-              enableFilter && filtersPosition === "sidebar"
-                ? "lg:grid-cols-[288px_1fr]"
-                : "grid-cols-1",
-            )}
-          >
-            {children}
-          </div>
+          <div className="space-y-0">{children}</div>
         </MainCollectionProvider>
       </Section>
     );
@@ -66,7 +50,7 @@ export const schema = createSchema({
   enabledOn: {
     pages: ["COLLECTION"],
   },
-  childTypes: ["mc--header", "mc--toolbar", "mc--filters", "mc--product-grid"],
+  childTypes: ["mc--header", "mc--toolbar", "mc--content"],
   settings: [
     {
       group: "Layout",
@@ -74,25 +58,6 @@ export const schema = createSchema({
         ...layoutInputs.filter((inp) => {
           return inp.name !== "borderRadius" && inp.name !== "gap";
         }),
-        {
-          type: "switch",
-          name: "enableFilter",
-          label: "Enable filtering",
-          defaultValue: true,
-        },
-        {
-          type: "select",
-          name: "filtersPosition",
-          label: "Filters position",
-          configs: {
-            options: [
-              { value: "sidebar", label: "Sidebar" },
-              { value: "drawer", label: "Drawer" },
-            ],
-          },
-          defaultValue: "sidebar",
-          condition: (data: MainCollectionData) => data.enableFilter,
-        },
         {
           type: "select",
           name: "productsPerRowDesktop",
@@ -125,8 +90,7 @@ export const schema = createSchema({
     children: [
       { type: "mc--header" },
       { type: "mc--toolbar" },
-      { type: "mc--filters" },
-      { type: "mc--product-grid" },
+      { type: "mc--content" },
     ],
   },
 });

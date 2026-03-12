@@ -32,6 +32,7 @@ import * as JudgemeReviewList from "~/sections/judgeme-reviews/review-list";
 import * as JudgemeReviewSummary from "~/sections/judgeme-reviews/review-summary";
 import * as MainCollection from "~/sections/main-collection";
 import * as CollectionHeader from "~/sections/main-collection/collection-header";
+import * as CollectionContent from "~/sections/main-collection/content";
 import * as CollectionFilters from "~/sections/main-collection/filters";
 import * as ProductGrid from "~/sections/main-collection/product-grid";
 import * as CollectionToolbar from "~/sections/main-collection/toolbar";
@@ -134,6 +135,7 @@ export const components: HydrogenComponent[] = [
   MainCollection,
   CollectionHeader,
   CollectionToolbar,
+  CollectionContent,
   CollectionFilters,
   ProductGrid,
   CollectionList,

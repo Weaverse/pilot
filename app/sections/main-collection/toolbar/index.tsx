@@ -17,7 +17,6 @@ interface CollectionToolbarProps
 function CollectionToolbar(props: CollectionToolbarProps) {
   const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
   const {
-    filtersPosition,
     gridSizeDesktop,
     gridSizeMobile,
     setGridSizeDesktop,
@@ -30,7 +29,6 @@ function CollectionToolbar(props: CollectionToolbarProps) {
         enableSort={enableSort}
         showProductsCount={showProductsCount}
         enableFilter={enableFilter}
-        filtersPosition={filtersPosition}
         gridSizeDesktop={gridSizeDesktop}
         gridSizeMobile={gridSizeMobile}
         onGridSizeChange={(v) => {

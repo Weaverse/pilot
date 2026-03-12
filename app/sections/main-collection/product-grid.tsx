@@ -22,8 +22,8 @@ import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
 } from "~/utils/combined-listings";
-import { getAppliedFilterLink } from "../filters/filter-utils";
-import { useMainCollectionContext } from "../main-collection-context";
+import { getAppliedFilterLink } from "./filters/filter-utils";
+import { useMainCollectionContext } from "./main-collection-context";
 
 interface ProductGridData {
   loadPrevText: string;
@@ -36,12 +36,8 @@ interface ProductGridProps extends HydrogenComponentProps, ProductGridData {
 
 function ProductGrid(props: ProductGridProps) {
   const { ref, loadPrevText, loadMoreText, ...rest } = props;
-  const {
-    gridSizeDesktop: desktopCols,
-    gridSizeMobile: mobileCols,
-    filtersPosition,
-    enableFilter,
-  } = useMainCollectionContext();
+  const { gridSizeDesktop: desktopCols, gridSizeMobile: mobileCols } =
+    useMainCollectionContext();
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -52,16 +48,12 @@ function ProductGrid(props: ProductGridProps) {
   const location = useLocation();
   const { pathname } = location;
   const { ref: inViewRef, inView } = useInView();
-  const showSidebar = enableFilter && filtersPosition === "sidebar";
 
   return (
     <div
       ref={ref}
       {...rest}
-      className={cn(
-        "space-y-6 pt-6 pb-8 lg:pt-6 lg:pb-20",
-        showSidebar && "lg:overflow-hidden",
-      )}
+      className="grow space-y-6 pt-6 pb-8 lg:pt-6 lg:pb-20 overflow-hidden"
     >
       {appliedFilters.length > 0 ? (
         <div className="flex flex-wrap items-center gap-6">

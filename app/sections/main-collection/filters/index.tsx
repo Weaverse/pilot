@@ -1,8 +1,8 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useMainCollectionContext } from "../main-collection-context";
 import { Filters } from "./filters";
 
 interface CollectionFiltersData {
+  sidebarWidth: number;
   expandFilters: boolean;
   showFiltersCount: boolean;
   enableSwatches: boolean;
@@ -19,6 +19,7 @@ interface CollectionFiltersProps
 function CollectionFilters(props: CollectionFiltersProps) {
   const {
     ref,
+    sidebarWidth,
     expandFilters,
     showFiltersCount,
     enableSwatches,
@@ -26,15 +27,14 @@ function CollectionFilters(props: CollectionFiltersProps) {
     filterItemsLimit,
     ...rest
   } = props;
-  const { filtersPosition, enableFilter } = useMainCollectionContext();
-
-  // This child only renders as sidebar; drawer mode is handled by the toolbar
-  if (!enableFilter || filtersPosition !== "sidebar") {
-    return null;
-  }
 
   return (
-    <div ref={ref} {...rest} className="hidden h-full pt-6 lg:block lg:pb-20">
+    <div
+      ref={ref}
+      {...rest}
+      className="hidden h-full shrink-0 pt-6 lg:block lg:pb-20"
+      style={{ width: `${sidebarWidth}px` }}
+    >
       <div className="sticky top-[calc(var(--height-nav)+20px)] flex h-[calc(100vh-var(--height-nav)-40px)] flex-col gap-4 pr-5">
         <div className="font-bold">Filters</div>
         <Filters
@@ -58,6 +58,18 @@ export const schema = createSchema({
     {
       group: "Filters",
       inputs: [
+        {
+          type: "range",
+          name: "sidebarWidth",
+          label: "Sidebar width",
+          defaultValue: 288,
+          configs: {
+            min: 200,
+            max: 400,
+            step: 8,
+            unit: "px",
+          },
+        },
         {
           type: "switch",
           name: "expandFilters",

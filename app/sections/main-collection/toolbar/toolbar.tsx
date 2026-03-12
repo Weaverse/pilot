@@ -5,27 +5,17 @@ import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
-import { cn } from "~/utils/cn";
 import { Filters, type FiltersProps } from "../filters/filters";
 import { LayoutSwitcher, type LayoutSwitcherProps } from "./layout-switcher";
 import { Sort } from "./sort";
 
-function FiltersDrawer({
-  filtersPosition,
-  filterSettings,
-}: {
-  filtersPosition: ToolbarProps["filtersPosition"];
-  filterSettings?: FiltersProps;
-}) {
+function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <Button
           variant="outline"
-          className={cn(
-            "flex h-12 items-center gap-1.5 border py-2",
-            filtersPosition === "sidebar" && "lg:hidden",
-          )}
+          className="flex h-12 items-center gap-1.5 border py-2"
           animate={false}
         >
           <SlidersIcon size={18} />
@@ -78,14 +68,12 @@ interface ToolbarProps extends LayoutSwitcherProps {
   enableSort: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
-  filtersPosition: "sidebar" | "drawer";
   drawerFilterSettings?: FiltersProps;
 }
 
 export function Toolbar({
   enableSort,
   enableFilter,
-  filtersPosition,
   showProductsCount,
   gridSizeDesktop,
   gridSizeMobile,
@@ -106,14 +94,11 @@ export function Toolbar({
             {collection?.products.nodes.length} products
           </span>
         )}
-        {(enableSort || (enableFilter && filtersPosition === "drawer")) && (
+        {(enableSort || enableFilter) && (
           <div className="flex gap-2">
             {enableSort && <Sort />}
             {enableFilter && (
-              <FiltersDrawer
-                filtersPosition={filtersPosition}
-                filterSettings={drawerFilterSettings}
-              />
+              <FiltersDrawer filterSettings={drawerFilterSettings} />
             )}
           </div>
         )}
