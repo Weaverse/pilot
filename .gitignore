@@ -27,3 +27,4 @@ autoperf/baseline.json
 autoperf/results.json
 autoperf/exp_*.json
 autoperf/baseline_*.json
+.wrangler/
