@@ -28,6 +28,7 @@ import { useGridSizeStore } from "./store";
 interface ProductGridData {
   productsPerRowDesktop: number;
   productsPerRowMobile: number;
+  loadMoreBehavior: "infinite-scroll" | "button-click";
   loadPrevText: string;
   loadMoreText: string;
 }
@@ -41,6 +42,7 @@ function ProductGrid(props: ProductGridProps) {
     ref,
     productsPerRowDesktop,
     productsPerRowMobile,
+    loadMoreBehavior,
     loadPrevText,
     loadMoreText,
     ...rest
@@ -67,6 +69,7 @@ function ProductGrid(props: ProductGridProps) {
   const location = useLocation();
   const { pathname } = location;
   const { ref: inViewRef, inView } = useInView();
+  const isInfiniteScroll = loadMoreBehavior === "infinite-scroll";
 
   return (
     <div
@@ -135,17 +138,17 @@ function ProductGrid(props: ProductGridProps) {
               )}
               <ProductsLoadedOnScroll
                 nodes={nodes}
-                inView={inView}
+                inView={isInfiniteScroll && inView}
                 nextPageUrl={nextPageUrl}
                 hasNextPage={hasNextPage}
                 state={state}
               />
               {hasNextPage && (
                 <NextLink
-                  ref={inViewRef}
+                  ref={isInfiniteScroll ? inViewRef : undefined}
                   className={cn("mx-auto", variants({ variant: "outline" }))}
                 >
-                  {isLoading ? "Loading..." : loadMoreText}
+                  {isInfiniteScroll || isLoading ? "Loading..." : loadMoreText}
                 </NextLink>
               )}
             </div>
@@ -240,6 +243,18 @@ export const schema = createSchema({
           defaultValue: "1",
         },
         {
+          type: "select",
+          name: "loadMoreBehavior",
+          label: "Load more behavior",
+          configs: {
+            options: [
+              { value: "infinite-scroll", label: "Infinite scroll" },
+              { value: "button-click", label: "Button click" },
+            ],
+          },
+          defaultValue: "infinite-scroll",
+        },
+        {
           type: "text",
           name: "loadPrevText",
           label: "Load previous text",
@@ -252,6 +267,8 @@ export const schema = createSchema({
           label: "Load more text",
           defaultValue: "Load more ↓",
           placeholder: "Load more ↓",
+          condition: (data: ProductGridData) =>
+            data.loadMoreBehavior === "button-click",
         },
       ],
     },
