@@ -55,7 +55,7 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
               </Dialog.Close>
             </div>
             <ScrollArea className="max-h-[calc(100vh-4.5rem)]" size="sm">
-              <Filters className="px-4" {...filterSettings} />
+              <Filters className="px-4 pb-4" {...filterSettings} />
             </ScrollArea>
           </div>
         </Dialog.Content>
