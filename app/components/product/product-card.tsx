@@ -31,9 +31,11 @@ import { VariantPrices } from "./variant-prices";
 export function ProductCard({
   product,
   className,
+  index,
 }: {
   product: ProductCardFragment;
   className?: string;
+  index?: number;
 }) {
   let {
     pcardBorderRadius,
@@ -147,7 +149,7 @@ export function ProductCard({
               data={image}
               width={700}
               alt={image.altText || `Picture of ${product.title}`}
-              loading="lazy"
+              loading={index !== undefined && index < 4 ? "eager" : "lazy"}
               onLoad={() => setIsImageLoading(false)}
             />
             {pcardShowImageOnHover && secondImage && (

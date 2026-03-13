@@ -23,6 +23,7 @@ export function Logo() {
             <Image
               data={logoData}
               sizes="auto"
+              loading="eager"
               className={clsx(
                 "main-logo",
                 "mx-auto h-full max-w-full object-contain",
