@@ -36,8 +36,8 @@ log "=== autoperf starting ==="
 log "Dir: $PILOT_DIR"
 log "Max experiments: $MAX_EXPERIMENTS"
 
-# Ensure clean git state
-if [[ -n "$(git status --porcelain)" ]]; then
+# Ensure clean git state (tracked files only)
+if [[ -n "$(git diff --name-only HEAD)" ]]; then
   die "Working directory not clean. Commit or stash changes first."
 fi
 
