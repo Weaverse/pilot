@@ -66,5 +66,19 @@ export const headerSettings: InspectorGroup = {
       name: "showHeaderCountrySelector",
       defaultValue: false,
     },
+    {
+      type: "select",
+      label: "Country name display",
+      name: "countryNameDisplay",
+      configs: {
+        options: [
+          { value: "short", label: "Short (e.g. US)" },
+          { value: "full", label: "Full (e.g. United States)" },
+        ],
+      },
+      defaultValue: "short",
+      condition: (theme: { showHeaderCountrySelector: boolean }) =>
+        theme.showHeaderCountrySelector,
+    },
   ],
 };
