@@ -1,5 +1,5 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useMainCollectionContext } from "../main-collection-context";
+import { useGridSizeStore } from "../store";
 import { Toolbar } from "./toolbar";
 
 interface CollectionToolbarData {
@@ -16,12 +16,9 @@ interface CollectionToolbarProps
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
-  const {
-    gridSizeDesktop,
-    gridSizeMobile,
-    setGridSizeDesktop,
-    setGridSizeMobile,
-  } = useMainCollectionContext();
+  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
+  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
+  const setGridSize = useGridSizeStore((state) => state.setGridSize);
 
   return (
     <div ref={ref} {...rest} className="col-span-full">
@@ -31,13 +28,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
         enableFilter={enableFilter}
         gridSizeDesktop={gridSizeDesktop}
         gridSizeMobile={gridSizeMobile}
-        onGridSizeChange={(v) => {
-          if (v > 2) {
-            setGridSizeDesktop(v);
-          } else {
-            setGridSizeMobile(v);
-          }
-        }}
+        onGridSizeChange={setGridSize}
       />
     </div>
   );

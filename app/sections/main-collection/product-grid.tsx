@@ -23,9 +23,11 @@ import {
   isCombinedListing,
 } from "~/utils/combined-listings";
 import { getAppliedFilterLink } from "./filters/filter-utils";
-import { useMainCollectionContext } from "./main-collection-context";
+import { useGridSizeStore } from "./store";
 
 interface ProductGridData {
+  productsPerRowDesktop: number;
+  productsPerRowMobile: number;
   loadPrevText: string;
   loadMoreText: string;
 }
@@ -35,9 +37,26 @@ interface ProductGridProps extends HydrogenComponentProps, ProductGridData {
 }
 
 function ProductGrid(props: ProductGridProps) {
-  const { ref, loadPrevText, loadMoreText, ...rest } = props;
-  const { gridSizeDesktop: desktopCols, gridSizeMobile: mobileCols } =
-    useMainCollectionContext();
+  const {
+    ref,
+    productsPerRowDesktop,
+    productsPerRowMobile,
+    loadPrevText,
+    loadMoreText,
+    ...rest
+  } = props;
+
+  const initialize = useGridSizeStore((state) => state.initialize);
+  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
+  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
+
+  useEffect(() => {
+    initialize(
+      Number(productsPerRowDesktop) || 3,
+      Number(productsPerRowMobile) || 1,
+    );
+  }, [productsPerRowDesktop, productsPerRowMobile, initialize]);
+
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
       collections: Array<{ handle: string; title: string }>;
@@ -53,7 +72,7 @@ function ProductGrid(props: ProductGridProps) {
     <div
       ref={ref}
       {...rest}
-      className="grow space-y-6 pt-6 pb-8 lg:pt-6 lg:pb-20 overflow-hidden"
+      className="grow space-y-6 overflow-hidden pt-6 pb-8 lg:pt-6 lg:pb-20"
     >
       {appliedFilters.length > 0 ? (
         <div className="flex flex-wrap items-center gap-6">
@@ -102,8 +121,8 @@ function ProductGrid(props: ProductGridProps) {
               className="flex w-full flex-col items-center gap-8"
               style={
                 {
-                  "--cols-mobile": `repeat(${mobileCols}, minmax(0, 1fr))`,
-                  "--cols-desktop": `repeat(${desktopCols}, minmax(0, 1fr))`,
+                  "--cols-mobile": `repeat(${gridSizeMobile}, minmax(0, 1fr))`,
+                  "--cols-desktop": `repeat(${gridSizeDesktop}, minmax(0, 1fr))`,
                 } as React.CSSProperties
               }
             >
@@ -195,6 +214,31 @@ export const schema = createSchema({
     {
       group: "Products grid",
       inputs: [
+        {
+          type: "select",
+          name: "productsPerRowDesktop",
+          label: "Products per row (desktop)",
+          configs: {
+            options: [
+              { value: "3", label: "3" },
+              { value: "4", label: "4" },
+              { value: "5", label: "5" },
+            ],
+          },
+          defaultValue: "3",
+        },
+        {
+          type: "select",
+          name: "productsPerRowMobile",
+          label: "Products per row (mobile)",
+          configs: {
+            options: [
+              { value: "1", label: "1" },
+              { value: "2", label: "2" },
+            ],
+          },
+          defaultValue: "1",
+        },
         {
           type: "text",
           name: "loadPrevText",
