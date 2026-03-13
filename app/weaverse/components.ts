@@ -44,6 +44,8 @@ import * as ProductSummary from "~/sections/main-product/product-summary";
 import * as ProductTitle from "~/sections/main-product/product-title";
 import * as ProductVariantSelector from "~/sections/main-product/product-variant-selector";
 import * as ProductVendor from "~/sections/main-product/product-vendor";
+import * as ProductInfoSection from "~/sections/main-product/product-info";
+import * as ProductMediaSection from "~/sections/main-product/product-media";
 import * as MapSection from "~/sections/map";
 import * as NewsLetter from "~/sections/newsletter";
 import * as NewsLetterForm from "~/sections/newsletter/newsletter-form";
@@ -110,6 +112,8 @@ export const components: HydrogenComponent[] = [
   ImageGalleryItems,
   ImageGalleryItem,
   MainProduct,
+  ProductMediaSection,
+  ProductInfoSection,
   ProductBreadcrumb,
   ProductBadges,
   ProductVendor,

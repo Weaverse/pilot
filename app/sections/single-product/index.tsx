@@ -22,15 +22,17 @@ import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_QUERY } from "~/graphql/queries";
-import { useAnimation } from "~/hooks/use-animation";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
 
 interface SingleProductData {
   productsCount: number;
   product: WeaverseProduct;
   showThumbnails: boolean;
+  groupMediaByVariant?: boolean;
+  groupByOption?: string;
 }
 
 type SingleProductProps = HydrogenComponentProps<
@@ -41,14 +43,21 @@ type SingleProductProps = HydrogenComponentProps<
   };
 
 export default function SingleProduct(props: SingleProductProps) {
-  const { ref, loaderData, product: _product, showThumbnails, ...rest } = props;
+  const {
+    ref,
+    loaderData,
+    product: _product,
+    showThumbnails,
+    groupMediaByVariant,
+    groupByOption,
+    ...rest
+  } = props;
   const { storeDomain, product } = loaderData || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(
       product?.selectedOrFirstAvailableVariant,
     );
-  const [scope] = useAnimation();
 
   if (!product) {
     return (
@@ -70,9 +79,7 @@ export default function SingleProduct(props: SingleProductProps) {
               <span className="sold-out-badge px-1.5 py-1 text-sm uppercase">
                 Sold out
               </span>
-              <h3 data-motion="fade-up" className="tracking-tight">
-                EXAMPLE PRODUCT TITLE
-              </h3>
+              <h3 className="tracking-tight">EXAMPLE PRODUCT TITLE</h3>
               <Money
                 withoutTrailingZeros
                 data={{ amount: "19.99", currencyCode: "USD" }}
@@ -121,18 +128,21 @@ export default function SingleProduct(props: SingleProductProps) {
 
   return (
     <Section ref={ref} {...rest}>
-      <div ref={scope}>
-        <div className="fade-up grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
+      <div>
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
           <ProductMedia
             mediaLayout="slider"
             imageAspectRatio="adapt"
             media={product?.media.nodes}
             selectedVariant={selectedVariant}
             showThumbnails={showThumbnails}
+            groupMediaByVariant={groupMediaByVariant}
+            groupByOption={groupByOption}
+            product={product}
           />
-          <div
+          <ScrollReveal
+            animation="slide-in"
             className="flex flex-col justify-start space-y-5"
-            data-motion="slide-in"
           >
             <div className="space-y-4">
               <ProductBadges
@@ -140,9 +150,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 selectedVariant={selectedVariant}
                 className="[&_span:nth-child(n+3)]:hidden"
               />
-              <h3 data-motion="fade-up" className="tracking-tight">
-                {product?.title}
-              </h3>
+              <h3 className="tracking-tight">{product?.title}</h3>
               <VariantPrices variant={selectedVariant} />
               <JudgemeStarsRating
                 productHandle={product.handle}
@@ -150,7 +158,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 errorText=""
               />
               <p
-                className="fade-up line-clamp-5 leading-relaxed"
+                className="line-clamp-5 leading-relaxed"
                 suppressHydrationWarning
                 dangerouslySetInnerHTML={{ __html: product?.summary }}
               />
@@ -205,7 +213,7 @@ export default function SingleProduct(props: SingleProductProps) {
             >
               View full details →
             </Link>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </Section>
@@ -264,6 +272,25 @@ export const schema = createSchema({
           name: "showThumbnails",
           type: "switch",
           defaultValue: false,
+        },
+        {
+          label: "Group media by variant",
+          name: "groupMediaByVariant",
+          type: "switch",
+          defaultValue: false,
+          helpText:
+            "When enabled, only images matching the selected variant option will be displayed",
+        },
+        {
+          type: "text",
+          name: "groupByOption",
+          label: "Group by option name",
+          defaultValue: "Color",
+          placeholder: "Color",
+          helpText:
+            "The product option name used to group media (e.g., Color, Colour)",
+          condition: (data: SingleProductData) =>
+            data.groupMediaByVariant === true,
         },
       ],
     },

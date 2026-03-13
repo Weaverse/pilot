@@ -100,12 +100,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { topbarHeight, topbarText } = useThemeSettings();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
+
+  // Bypass Weaverse theme layout for Hydrogen dev tools
+  // See: https://github.com/Weaverse/pilot/issues/321
   if (
     location.pathname === "/subrequest-profiler" ||
     location.pathname === "/graphiql"
   ) {
     return children;
   }
+
   return (
     <html lang={locale.language}>
       <head>

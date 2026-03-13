@@ -1,3 +1,5 @@
+import { ScrollReveal } from "~/components/scroll-reveal";
+
 interface QuantityProps {
   value: number;
   onChange: (value: number) => void;
@@ -18,7 +20,7 @@ export function Quantity(props: QuantityProps) {
     }
   };
   return (
-    <div className="space-y-1.5" data-motion="fade-up">
+    <ScrollReveal className="space-y-1.5">
       <legend className="font-bold leading-tight">{label}</legend>
       <div className="w-fit border border-line">
         <button
@@ -47,6 +49,6 @@ export function Quantity(props: QuantityProps) {
           <span>&#43;</span>
         </button>
       </div>
-    </div>
+    </ScrollReveal>
   );
 }

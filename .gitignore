@@ -29,3 +29,5 @@ autoperf/exp_*.json
 autoperf/baseline_*.json
 .wrangler/
 autoperf/wrangler.toml
+.rules/
+.plans/

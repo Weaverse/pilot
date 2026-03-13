@@ -2,16 +2,19 @@ import type {
   HydrogenComponentProps,
   InspectorGroup,
 } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type React from "react";
 import type { HTMLAttributes } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
 import type { OverlayProps } from "./overlay";
 import { overlayInputs } from "./overlay";
 import { OverlayAndBackground } from "./overlay-and-background";
+import { observe } from "./scroll-reveal";
 
 export type BackgroundProps = BackgroundImageProps & {
   backgroundFor: "section" | "content";
@@ -29,6 +32,7 @@ export interface SectionProps<T = any>
   borderRadius?: number;
   containerClassName?: string;
   children?: React.ReactNode;
+  animate?: boolean;
 }
 
 const variants = cva("relative", {
@@ -99,8 +103,33 @@ export function Section(props: SectionProps) {
     children,
     containerClassName,
     style = {},
+    animate = true,
     ...rest
   } = props;
+
+  let { revealElementsOnScroll } = useThemeSettings();
+  let [isVisible, setIsVisible] = useState(false);
+  let internalRef = useRef<HTMLElement>(null);
+
+  let setRefs = (node: HTMLElement | null) => {
+    (internalRef as React.RefObject<HTMLElement | null>).current = node;
+    if (typeof ref === "function") {
+      ref(node);
+    } else if (ref && "current" in ref) {
+      (ref as React.RefObject<HTMLElement | null>).current = node;
+    }
+  };
+
+  useEffect(() => {
+    if (!animate || !revealElementsOnScroll || !internalRef.current) {
+      return;
+    }
+    return observe(internalRef.current, (isIntersecting) => {
+      if (isIntersecting) {
+        setIsVisible(true);
+      }
+    });
+  }, [animate, revealElementsOnScroll]);
 
   style = {
     ...style,
@@ -113,7 +142,7 @@ export function Section(props: SectionProps) {
 
   return (
     <Component
-      ref={ref}
+      ref={setRefs}
       {...rest}
       style={style}
       className={cn(
@@ -121,6 +150,11 @@ export function Section(props: SectionProps) {
         hasBackground &&
           !isBgForContent &&
           "rounded-(--section-radius) bg-(--section-bg-color)",
+        animate &&
+          revealElementsOnScroll && [
+            "transition-all duration-700",
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+          ],
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
