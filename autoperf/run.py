@@ -83,15 +83,48 @@ def build() -> tuple[bool, int]:
 
 # ── Server (wrangler dev) ────────────────────────────────────────────
 
+def generate_wrangler_toml():
+    """Generate autoperf/wrangler.toml from .env with deduplication."""
+    header = '''name = "pilot-preview"
+compatibility_date = "2025-04-01"
+main = "../dist/server/index.js"
+
+[assets]
+directory = "../dist/client"
+
+[vars]
+'''
+    env_vars = {}
+    env_file = PILOT_DIR / ".env"
+    if env_file.exists():
+        for line in env_file.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            env_vars[key] = value
+
+    toml = header
+    for k, v in env_vars.items():
+        toml += f'{k} = "{v}"\n'
+
+    toml_path = AUTOPERF_DIR / "wrangler.toml"
+    toml_path.write_text(toml)
+    log(f"Generated wrangler.toml with {len(env_vars)} env vars")
+    return toml_path
+
+
 def start_server(port: int) -> bool:
     global SERVER_PROC
+    toml_path = generate_wrangler_toml()
     log(f"Starting wrangler SSR server on port {port}...")
     SERVER_PROC = subprocess.Popen(
         [
-            "npx", "wrangler", "dev", "dist/server/index.js",
+            "npx", "wrangler", "dev",
+            "--config", str(toml_path),
             "--port", str(port),
-            "--site", "dist/client",
-            "--compatibility-date", "2025-04-01",
             "--no-bundle",
         ],
         cwd=PILOT_DIR,
@@ -126,11 +159,12 @@ def kill_server():
     global SERVER_PROC
     if SERVER_PROC and SERVER_PROC.poll() is None:
         log(f"Killing server (pid {SERVER_PROC.pid})")
-        os.killpg(os.getpgid(SERVER_PROC.pid), signal.SIGTERM)
         try:
+            SERVER_PROC.terminate()
             SERVER_PROC.wait(timeout=10)
         except Exception:
             SERVER_PROC.kill()
+            SERVER_PROC.wait(timeout=5)
     SERVER_PROC = None
 
 

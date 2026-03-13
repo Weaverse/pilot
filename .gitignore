@@ -28,3 +28,4 @@ autoperf/results.json
 autoperf/exp_*.json
 autoperf/baseline_*.json
 .wrangler/
+autoperf/wrangler.toml
