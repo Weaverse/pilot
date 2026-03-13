@@ -24,10 +24,13 @@ import { ScrollingAnnouncement } from "./components/layout/scrolling-announcemen
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
-import {
-  NewsletterPopup,
-  useShouldRenderNewsletterPopup,
-} from "./components/root/newsletter-popup";
+import { lazy, Suspense } from "react";
+import { useShouldRenderNewsletterPopup } from "./components/root/newsletter-popup";
+const NewsletterPopup = lazy(() =>
+  import("./components/root/newsletter-popup").then((m) => ({
+    default: m.NewsletterPopup,
+  })),
+);
 import { NotFound } from "./components/root/not-found";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
@@ -44,6 +47,14 @@ export const links: LinksFunction = () => {
     {
       rel: "preconnect",
       href: "https://shop.app",
+    },
+    {
+      rel: "dns-prefetch",
+      href: "https://cdn.jsdelivr.net",
+    },
+    {
+      rel: "dns-prefetch",
+      href: "https://www.googletagmanager.com",
     },
     { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
   ];
@@ -148,7 +159,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </main>
                 <Footer />
               </div>
-              {shouldShowNewsletterPopup && <NewsletterPopup />}
+              {shouldShowNewsletterPopup && (
+                <Suspense fallback={null}>
+                  <NewsletterPopup />
+                </Suspense>
+              )}
             </TooltipProvider>
             <CustomAnalytics />
           </Analytics.Provider>

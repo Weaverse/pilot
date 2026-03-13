@@ -4,7 +4,6 @@ import {
   type CartUpdatePayload,
   type PageViewPayload,
   type ProductViewPayload,
-  Script,
   useAnalytics,
   useNonce,
 } from "@shopify/hydrogen";
@@ -83,7 +82,7 @@ export function CustomAnalytics() {
 
   return (
     <>
-      {/* Initialize GTM container */}
+      {/* Initialize GTM container — deferred to reduce main-thread blocking */}
       <script
         nonce={nonce}
         suppressHydrationWarning
@@ -98,12 +97,24 @@ export function CustomAnalytics() {
               gtag('js', new Date());
               gtag({'gtm.start': new Date().getTime(),event:'gtm.js'})
               gtag('config', "${id}");
+
+              // Defer GTM script loading until after main content
+              (function(){
+                var load = function() {
+                  var s = document.createElement('script');
+                  s.async = true;
+                  s.src = 'https://www.googletagmanager.com/gtm.js?id=${id}';
+                  document.head.appendChild(s);
+                };
+                if ('requestIdleCallback' in window) {
+                  requestIdleCallback(load, {timeout: 3000});
+                } else {
+                  setTimeout(load, 2000);
+                }
+              })();
           `,
         }}
       />
-
-      {/* Load GTM script */}
-      <Script async src={`https://www.googletagmanager.com/gtm.js?id=${id}`} />
     </>
   );
 }
