@@ -32,10 +32,13 @@ function CollectionFilters(props: CollectionFiltersProps) {
     <div
       ref={ref}
       {...rest}
-      className="hidden h-full shrink-0 pt-6 lg:block lg:pb-20"
+      className="hidden shrink-0 lg:block"
       style={{ width: `${sidebarWidth}px` }}
     >
-      <div className="sticky top-[calc(var(--height-nav)+20px)] flex h-[calc(100vh-var(--height-nav)-40px)] flex-col gap-4 pr-5">
+      <div
+        className="sticky flex h-[calc(100vh-var(--height-nav)-20px)] flex-col gap-4 pt-6 pr-5"
+        style={{ top: "calc(var(--height-nav))" }}
+      >
         <div className="font-bold">Filters</div>
         <Filters
           expandFilters={expandFilters}
