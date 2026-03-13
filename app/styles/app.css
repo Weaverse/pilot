@@ -2,6 +2,12 @@
 @import "tailwindcss" source("../../app");
 @plugin "@tailwindcss/typography";
 
+@font-face {
+  font-family: "Cabin Variable";
+  font-display: swap;
+  src: local("");
+}
+
 @theme {
   --font-cabin: Cabin Variable, ui-sans-serif, system-ui, sans-serif;
   --font-serif: Arial, IBMPlexSerif, Palatino, ui-serif;

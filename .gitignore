@@ -18,5 +18,16 @@ pnpm-lock.yaml
 .react-router
 .claude/
 .github/copilot-instructions.md
+memory/
+scripts/
+specs/
+templates/
+autoperf/run.log
+autoperf/baseline.json
+autoperf/results.json
+autoperf/exp_*.json
+autoperf/baseline_*.json
+.wrangler/
+autoperf/wrangler.toml
 .rules/
 .plans/

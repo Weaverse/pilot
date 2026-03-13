@@ -170,8 +170,8 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
               isCombinedListing(product)
             ),
         )
-        .map((product: ProductCardFragment) => (
-          <ProductCard key={product.id} product={product} />
+        .map((product: ProductCardFragment, index: number) => (
+          <ProductCard key={product.id} product={product} index={index} />
         ))}
     </div>
   );
