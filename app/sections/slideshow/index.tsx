@@ -1,3 +1,4 @@
+import "swiper/css/bundle";
 import {
   createSchema,
   type HydrogenComponentProps,

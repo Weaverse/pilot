@@ -12,6 +12,7 @@ import type {
   MediaFragment,
   ProductVariantFragment,
 } from "storefront-api.generated";
+import "swiper/css/bundle";
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import { Image } from "~/components/image";
