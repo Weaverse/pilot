@@ -10,7 +10,7 @@ RESULTS_FILE="$AUTOPERF_DIR/results.json"
 BASELINE_FILE="$AUTOPERF_DIR/baseline.json"
 LOG_FILE="$AUTOPERF_DIR/run.log"
 MAX_EXPERIMENTS=50
-PORT=3457  # Different from dev port
+PORT=3458  # Different from dev port
 LIGHTHOUSE_TIMEOUT=60
 BUILD_TIMEOUT=180
 PAGES=("http://localhost:$PORT/" "http://localhost:$PORT/products/pack-it-down-vest?Color=Slate+Brown&Size=XS" "http://localhost:$PORT/collections/all")
