@@ -47,7 +47,7 @@ export function LayoutSwitcher({
               col > 2 ? "hidden lg:flex" : "flex lg:hidden",
             )}
           >
-            <Icon className="h-[22px] w-[22px]" />
+            <Icon className="size-5.5" />
           </button>
         );
       })}

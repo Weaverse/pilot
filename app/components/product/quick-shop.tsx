@@ -7,6 +7,7 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ShopPayButton } from "@shopify/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
@@ -30,17 +31,22 @@ interface QuickViewData {
   storeDomain: string;
 }
 
-export function QuickShop({
-  data,
-  panelType = "modal",
-}: {
+interface QuickShopProps {
   data: QuickViewData;
   panelType?: "modal" | "drawer";
-}) {
+}
+
+export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
   const { product, storeDomain } = data || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
+
+  const {
+    quickShopGroupMediaByVariant,
+    quickShopGroupByOption,
+    pcardImageRatio,
+  } = useThemeSettings();
 
   return (
     <div className="bg-background">
@@ -50,18 +56,30 @@ export function QuickShop({
           panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
         )}
       >
-        <ProductMedia
-          mediaLayout="slider"
-          media={product?.media.nodes}
-          selectedVariant={selectedVariant}
-          showThumbnails={false}
-        />
-        <div className="flex flex-col justify-start gap-5 py-6 pr-5">
+        <div className="relative min-w-0">
+          <ProductMedia
+            mediaLayout="slider"
+            media={product?.media.nodes}
+            selectedVariant={selectedVariant}
+            showThumbnails={false}
+            groupMediaByVariant={quickShopGroupMediaByVariant}
+            groupByOption={quickShopGroupByOption}
+            product={product}
+            imageAspectRatio={pcardImageRatio}
+          />
+          <ProductBadges
+            product={product}
+            selectedVariant={selectedVariant}
+            className="absolute top-4 left-4 z-10"
+          />
+        </div>
+        <div
+          className={clsx(
+            "flex flex-col justify-start gap-5",
+            panelType === "drawer" ? "pb-5 px-5" : "py-6 pr-5",
+          )}
+        >
           <div className="space-y-4">
-            <ProductBadges
-              product={product}
-              selectedVariant={selectedVariant}
-            />
             <div className="flex flex-col gap-2">
               <h5>{product.title}</h5>
             </div>
@@ -123,19 +141,21 @@ export function QuickShop({
   );
 }
 
+interface QuickShopTriggerProps {
+  productHandle: string;
+  showOnHover?: boolean;
+  buttonType?: "icon" | "text";
+  buttonText?: string;
+  panelType?: "modal" | "drawer";
+}
+
 export function QuickShopTrigger({
   productHandle,
   showOnHover = true,
   buttonType = "icon",
   buttonText = "Quick shop",
   panelType = "modal",
-}: {
-  productHandle: string;
-  showOnHover?: boolean;
-  buttonType?: "icon" | "text";
-  buttonText?: string;
-  panelType?: "modal" | "drawer";
-}) {
+}: QuickShopTriggerProps) {
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 
@@ -179,10 +199,11 @@ export function QuickShopTrigger({
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx(
             "quick-shop-dialog-content",
-            "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
+            "fixed inset-0 z-10 flex items-center overflow-x-hidden",
             "backdrop-blur-xs",
             "[--slide-up-from:20px]",
             "data-[state=open]:animate-slide-up",
+            panelType !== "drawer" && "px-4",
           )}
           onClick={(e) => {
             const target = e.target as HTMLElement;
@@ -192,23 +213,26 @@ export function QuickShopTrigger({
           }}
           aria-describedby={undefined}
         >
-          <Dialog.Close asChild>
-            <Button
-              className="absolute top-3 right-3 rounded-full p-2"
-              variant="secondary"
-            >
-              <XIcon size={18} />
-            </Button>
-          </Dialog.Close>
           <div
             style={{ maxHeight: "90vh" }}
             className={clsx(
-              "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) overflow-hidden",
+              "relative h-auto w-full overflow-hidden",
               "animate-slide-up bg-white shadow-sm",
-              panelType === "drawer" &&
-                "mr-0 ml-auto min-h-screen max-w-md p-4",
+              panelType === "drawer"
+                ? "mr-0 ml-auto min-h-screen max-w-md"
+                : "mx-auto max-w-(--breakpoint-xl)",
             )}
           >
+            {panelType !== "drawer" && (
+              <Dialog.Close asChild>
+                <Button
+                  className="absolute top-3 right-3 z-20 rounded-full p-2"
+                  variant="secondary"
+                >
+                  <XIcon size={18} />
+                </Button>
+              </Dialog.Close>
+            )}
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Quick shop modal</Dialog.Title>
             </VisuallyHidden.Root>
