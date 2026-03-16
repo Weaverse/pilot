@@ -234,8 +234,8 @@ export function HeaderCountrySelector() {
             />
             {countryNameDisplay === "full" ? (
               <>
-                <span className="hidden lg:inline">{selectedLocale.label}</span>
-                <span className="lg:hidden">{selectedLocale.country}</span>
+                <span className="hidden xl:inline">{selectedLocale.label}</span>
+                <span className="xl:hidden">{selectedLocale.country}</span>
               </>
             ) : (
               <span>{selectedLocale.country}</span>
