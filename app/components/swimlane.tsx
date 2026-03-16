@@ -12,7 +12,7 @@ export function Swimlane({
       className={cn([
         "grid w-full grid-flow-col justify-start gap-4",
         "snap-x snap-mandatory",
-        "hidden-scroll scroll-px-6 overflow-x-scroll",
+        "hidden-scroll scroll-px-6 overflow-x-scroll overflow-y-hidden",
         className,
       ])}
     >
