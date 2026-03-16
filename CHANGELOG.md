@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026.3.16
+
+- [feature] Switch versioning from semver to datetime-based (`YYYY.M.D`)
+- [feature] Extract reviews API into separate route file
+- [fix] Return zero-state rating instead of null to prevent layout shift
+- [feature] Persist grid size preference to localStorage
+- [fix] Prevent vertical scrolling in swimlane component
+- [feature] Add country name display setting (short/full) to header
+
+---
+
+> Versioning switched from semver to datetime-based (YYYY.M.D) on 2026.3.16.
+> Entries below this line use the previous format.
+
+---
+
 ## 7.2.0
 
 ### Minor Changes
