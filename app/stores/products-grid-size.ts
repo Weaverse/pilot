@@ -12,7 +12,7 @@ interface GridSizeStore {
   initialize: (desktop: number, mobile: number) => void;
 }
 
-export const useGridSizeStore = create<GridSizeStore>()(
+export const useProductsGridSizeStore = create<GridSizeStore>()(
   persist(
     (set, get) => ({
       gridSizeDesktop: 3,

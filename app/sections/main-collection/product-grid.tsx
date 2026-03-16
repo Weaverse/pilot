@@ -7,10 +7,10 @@ import { useLoaderData, useLocation, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import Link, { variants } from "~/components/link";
 import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
+import { useProductsGridSizeStore } from "~/stores/products-grid-size";
 import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { getAppliedFilterLink } from "./filters/filter-utils";
-import { useGridSizeStore } from "./store";
 
 interface ProductGridData {
   productsPerRowDesktop: number;
@@ -35,9 +35,13 @@ function ProductGrid(props: ProductGridProps) {
     ...rest
   } = props;
 
-  const initialize = useGridSizeStore((state) => state.initialize);
-  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
-  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
+  const initialize = useProductsGridSizeStore((state) => state.initialize);
+  const gridSizeDesktop = useProductsGridSizeStore(
+    (state) => state.gridSizeDesktop,
+  );
+  const gridSizeMobile = useProductsGridSizeStore(
+    (state) => state.gridSizeMobile,
+  );
 
   useEffect(() => {
     initialize(

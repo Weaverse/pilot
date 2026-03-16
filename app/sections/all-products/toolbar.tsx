@@ -1,8 +1,8 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
-import { useGridSizeStore } from "~/sections/main-collection/store";
 import { LayoutSwitcher } from "~/sections/main-collection/toolbar/layout-switcher";
+import { useProductsGridSizeStore } from "~/stores/products-grid-size";
 
 interface AllProductsToolbarData {
   showProductsCount: boolean;
@@ -17,9 +17,13 @@ interface AllProductsToolbarProps
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { ref, showProductsCount, ...rest } = props;
   const { products } = useLoaderData<AllProductsQuery>();
-  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
-  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
-  const setGridSize = useGridSizeStore((state) => state.setGridSize);
+  const gridSizeDesktop = useProductsGridSizeStore(
+    (state) => state.gridSizeDesktop,
+  );
+  const gridSizeMobile = useProductsGridSizeStore(
+    (state) => state.gridSizeMobile,
+  );
+  const setGridSize = useProductsGridSizeStore((state) => state.setGridSize);
 
   return (
     <div ref={ref} {...rest}>

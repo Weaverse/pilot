@@ -6,8 +6,8 @@ import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
+import { useProductsGridSizeStore } from "~/stores/products-grid-size";
 import { Filters, type FiltersProps } from "../filters/filters";
-import { useGridSizeStore } from "../store";
 import { LayoutSwitcher } from "./layout-switcher";
 import { Sort } from "./sort";
 
@@ -81,9 +81,13 @@ interface CollectionToolbarProps
 function CollectionToolbar(props: CollectionToolbarProps) {
   const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
   const { collection } = useLoaderData<CollectionQuery>();
-  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
-  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
-  const setGridSize = useGridSizeStore((state) => state.setGridSize);
+  const gridSizeDesktop = useProductsGridSizeStore(
+    (state) => state.gridSizeDesktop,
+  );
+  const gridSizeMobile = useProductsGridSizeStore(
+    (state) => state.gridSizeMobile,
+  );
+  const setGridSize = useProductsGridSizeStore((state) => state.setGridSize);
 
   return (
     <div ref={ref} {...rest} className="col-span-full">

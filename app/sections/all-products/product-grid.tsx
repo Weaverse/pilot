@@ -6,7 +6,7 @@ import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
 import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
-import { useGridSizeStore } from "~/sections/main-collection/store";
+import { useProductsGridSizeStore } from "~/stores/products-grid-size";
 import { cn } from "~/utils/cn";
 
 interface AllProductsGridData {
@@ -34,9 +34,13 @@ function AllProductsGrid(props: AllProductsGridProps) {
     ...rest
   } = props;
 
-  const initialize = useGridSizeStore((state) => state.initialize);
-  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
-  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
+  const initialize = useProductsGridSizeStore((state) => state.initialize);
+  const gridSizeDesktop = useProductsGridSizeStore(
+    (state) => state.gridSizeDesktop,
+  );
+  const gridSizeMobile = useProductsGridSizeStore(
+    (state) => state.gridSizeMobile,
+  );
 
   useEffect(() => {
     initialize(
