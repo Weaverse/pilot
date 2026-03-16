@@ -2,8 +2,6 @@ import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useLoaderData } from "react-router";
-import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
 import { useProductsGridSizeStore } from "~/stores/products-grid-size";
@@ -80,7 +78,6 @@ interface CollectionToolbarProps
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
-  const { collection } = useLoaderData<CollectionQuery>();
   const gridSizeDesktop = useProductsGridSizeStore(
     (state) => state.gridSizeDesktop,
   );
@@ -88,6 +85,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
     (state) => state.gridSizeMobile,
   );
   const setGridSize = useProductsGridSizeStore((state) => state.setGridSize);
+  const visibleCount = useProductsGridSizeStore((state) => state.visibleCount);
 
   return (
     <div ref={ref} {...rest} className="col-span-full">
@@ -98,9 +96,9 @@ function CollectionToolbar(props: CollectionToolbarProps) {
             gridSizeMobile={gridSizeMobile}
             onGridSizeChange={setGridSize}
           />
-          {showProductsCount && (
+          {showProductsCount && visibleCount > 0 && (
             <span className="hidden text-center md:inline">
-              {collection?.products.nodes.length} products
+              {visibleCount} products
             </span>
           )}
           {(enableSort || enableFilter) && (

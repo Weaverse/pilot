@@ -1,6 +1,4 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useLoaderData } from "react-router";
-import type { AllProductsQuery } from "storefront-api.generated";
 import { LayoutSwitcher } from "~/sections/main-collection/toolbar/layout-switcher";
 import { useProductsGridSizeStore } from "~/stores/products-grid-size";
 
@@ -16,7 +14,6 @@ interface AllProductsToolbarProps
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { ref, showProductsCount, ...rest } = props;
-  const { products } = useLoaderData<AllProductsQuery>();
   const gridSizeDesktop = useProductsGridSizeStore(
     (state) => state.gridSizeDesktop,
   );
@@ -24,6 +21,7 @@ function AllProductsToolbar(props: AllProductsToolbarProps) {
     (state) => state.gridSizeMobile,
   );
   const setGridSize = useProductsGridSizeStore((state) => state.setGridSize);
+  const visibleCount = useProductsGridSizeStore((state) => state.visibleCount);
 
   return (
     <div ref={ref} {...rest}>
@@ -34,9 +32,9 @@ function AllProductsToolbar(props: AllProductsToolbarProps) {
             gridSizeMobile={gridSizeMobile}
             onGridSizeChange={setGridSize}
           />
-          {showProductsCount && (
+          {showProductsCount && visibleCount > 0 && (
             <span className="hidden text-center md:inline">
-              {products?.nodes.length} products
+              {visibleCount} products
             </span>
           )}
         </div>
