@@ -14,7 +14,6 @@ import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
-import { calculateAspectRatio } from "~/utils/image";
 import { MediaItem } from "./media-item";
 import { ZoomButton, ZoomModal } from "./media-zoom";
 
@@ -153,13 +152,8 @@ export function MediaSlider({
                 spaceBetween: 4,
               },
             }}
+            autoHeight
             loop
-            style={{
-              aspectRatio: calculateAspectRatio(
-                displayMedia[0]?.previewImage,
-                imageAspectRatio,
-              ),
-            }}
             navigation={{
               nextEl: ".media_slider__next",
               prevEl: ".media_slider__prev",

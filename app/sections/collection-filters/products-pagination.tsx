@@ -171,7 +171,7 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
             ),
         )
         .map((product: ProductCardFragment, index: number) => (
-          <ProductCard key={product.id} product={product} index={index} />
+          <ProductCard key={product.id} product={product} aboveTheFold={index < 4} />
         ))}
     </div>
   );
