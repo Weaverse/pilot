@@ -28,19 +28,32 @@ export const schema = createSchema({
   enabledOn: {
     pages: ["ALL_PRODUCTS"],
   },
-  childTypes: ["ap--toolbar", "ap--product-grid"],
+  childTypes: ["heading", "paragraph", "ap--toolbar", "ap--product-grid"],
   settings: [
     {
       group: "Layout",
       inputs: layoutInputs.filter(
-        (inp) =>
-          inp.name !== "divider" &&
-          inp.name !== "borderRadius" &&
-          inp.name !== "gap",
+        (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
       ),
     },
   ],
   presets: {
-    children: [{ type: "ap--toolbar" }, { type: "ap--product-grid" }],
+    children: [
+      {
+        type: "heading",
+        content: "All Products",
+        as: "h3",
+        weight: "500",
+        alignment: "center",
+      },
+      {
+        type: "paragraph",
+        content: "Explore our full catalog of products.",
+        alignment: "center",
+        width: "narrow",
+      },
+      { type: "ap--toolbar" },
+      { type: "ap--product-grid" },
+    ],
   },
 });
