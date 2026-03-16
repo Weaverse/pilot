@@ -4,6 +4,8 @@ import * as Link from "~/components/link";
 import * as Paragraph from "~/components/paragraph";
 import * as SubHeading from "~/components/subheading";
 import * as AllProducts from "~/sections/all-products";
+import * as AllProductsGrid from "~/sections/all-products/product-grid";
+import * as AllProductsToolbar from "~/sections/all-products/toolbar";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
 import * as CollectionList from "~/sections/collection-list";
@@ -80,6 +82,8 @@ export const components: HydrogenComponent[] = [
   // AliReview,
   // AliReviewList,
   AllProducts,
+  AllProductsToolbar,
+  AllProductsGrid,
   FeaturedCollections,
   FeaturedCollectionItems,
   BlogPost,
@@ -107,7 +111,6 @@ export const components: HydrogenComponent[] = [
   NewsLetterForm,
   Blogs,
   BlogPost,
-  AllProducts,
   FeaturedProducts,
   FeaturedProductItems,
   Testimonial,
