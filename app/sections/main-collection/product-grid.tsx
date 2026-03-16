@@ -1,27 +1,14 @@
 import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import {
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router";
-import type {
-  CollectionQuery,
-  ProductCardFragment,
-} from "storefront-api.generated";
+import { useLoaderData, useLocation, useSearchParams } from "react-router";
+import type { CollectionQuery } from "storefront-api.generated";
 import Link, { variants } from "~/components/link";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
 import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
-import {
-  COMBINED_LISTINGS_CONFIGS,
-  isCombinedListing,
-} from "~/utils/combined-listings";
 import { getAppliedFilterLink } from "./filters/filter-utils";
 import { useGridSizeStore } from "./store";
 
@@ -120,15 +107,7 @@ function ProductGrid(props: ProductGridProps) {
             NextLink,
             state,
           }) => (
-            <div
-              className="flex w-full flex-col items-center gap-8"
-              style={
-                {
-                  "--cols-mobile": `repeat(${gridSizeMobile}, minmax(0, 1fr))`,
-                  "--cols-desktop": `repeat(${gridSizeDesktop}, minmax(0, 1fr))`,
-                } as React.CSSProperties
-              }
-            >
+            <div className="flex w-full flex-col items-center gap-8">
               {hasPreviousPage && (
                 <PreviousLink
                   className={cn("mx-auto", variants({ variant: "outline" }))}
@@ -142,6 +121,8 @@ function ProductGrid(props: ProductGridProps) {
                 nextPageUrl={nextPageUrl}
                 hasNextPage={hasNextPage}
                 state={state}
+                gridColsDesktop={gridSizeDesktop}
+                gridColsMobile={gridSizeMobile}
               />
               {hasNextPage && (
                 <NextLink
@@ -165,50 +146,6 @@ function ProductGrid(props: ProductGridProps) {
 }
 
 export default ProductGrid;
-
-interface ProductsLoadedOnScrollProps {
-  nodes: any;
-  inView: boolean;
-  nextPageUrl: string;
-  hasNextPage: boolean;
-  state: any;
-}
-
-function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
-  const { nodes, inView, nextPageUrl, hasNextPage, state } = props;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      navigate(nextPageUrl, {
-        replace: true,
-        preventScrollReset: true,
-        state,
-      });
-    }
-  }, [inView, navigate, state, nextPageUrl, hasNextPage]);
-
-  return (
-    <div
-      className={clsx([
-        "w-full gap-x-4 gap-y-6 lg:gap-y-10",
-        "grid grid-cols-(--cols-mobile) lg:grid-cols-(--cols-desktop)",
-      ])}
-    >
-      {nodes
-        .filter(
-          (product: ProductCardFragment) =>
-            !(
-              COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList &&
-              isCombinedListing(product)
-            ),
-        )
-        .map((product: ProductCardFragment) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-    </div>
-  );
-}
 
 export const schema = createSchema({
   type: "mc--product-grid",
