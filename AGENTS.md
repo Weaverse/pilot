@@ -302,6 +302,27 @@ Append-only format:
 > Build Shopify Hydrogen storefronts with Weaverse visual page builder.
 > Docs: https://docs.weaverse.io | GitHub: https://github.com/Weaverse/pilot
 
+**This section covers the most common patterns inline.** For the full, always-up-to-date reference (including advanced features, migration guides, and copy-paste examples), see the [Weaverse Hydrogen Skills repo](https://github.com/Weaverse/skills):
+
+```
+references/01-project-structure.md     — Project structure & file anatomy
+references/02-creating-components.md   — Component creation & registration
+references/03-component-schema.md      — createSchema(), settings, childTypes, presets
+references/04-input-settings.md        — All input types & configurations
+references/05-data-fetching.md         — Loaders, Storefront API, caching
+references/06-styling-theming.md       — Tailwind, theme settings, CVA, CSS variables
+references/07-react-router-7.md        — React Router v7 conventions
+references/08-hydrogen-fundamentals.md — Hydrogen framework essentials
+references/09-deployment.md            — Oxygen, Docker, env vars
+references/10-weaverse-api.md          — All hooks & WeaverseClient API
+references/11-advanced-features.md     — Localization, data connectors, CSP
+references/12-pilot-theme.md           — Pilot-specific patterns & conventions
+references/13-migration-v5.md          — Remix → React Router v7 migration
+```
+
+> **Tip for agents:** If anything below is insufficient or outdated, fetch the relevant file directly from:
+> `https://raw.githubusercontent.com/Weaverse/skills/main/references/<filename>`
+
 ### Component Anatomy
 
 Every Weaverse section has up to 3 exports from `app/sections/<name>/index.tsx`:
