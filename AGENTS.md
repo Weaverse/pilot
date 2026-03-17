@@ -292,3 +292,27 @@ Append-only format:
 
 1. **New feature?** Create a spec folder following the convention above before writing any code.
 2. **Existing feature?** Read the spec first. Update it if your changes affect the plan, status, or scope.
+
+---
+
+## AI Skills (Extended Reference)
+
+For deep-dive Weaverse + Hydrogen patterns, install the Weaverse AI Skills:
+
+```bash
+bash install-ai-skills.sh
+```
+
+This clones [github.com/Weaverse/skills](https://github.com/Weaverse/skills) into `.weaverse-skills/` (gitignored).
+
+**Key reference docs after install:**
+
+| File | Contents |
+|------|----------|
+| `.weaverse-skills/SKILL.md` | Core patterns cheat sheet |
+| `.weaverse-skills/references/02-creating-components.md` | Component creation guide |
+| `.weaverse-skills/references/03-component-schema.md` | All schema input types |
+| `.weaverse-skills/references/05-data-fetching.md` | Component loaders & caching |
+| `.weaverse-skills/references/06-styling-theming.md` | Theme schema & CSS variables |
+| `.weaverse-skills/references/10-weaverse-api.md` | Full Weaverse API reference |
+| `.weaverse-skills/references/12-pilot-theme.md` | Pilot-specific patterns |
