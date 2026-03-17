@@ -24,13 +24,7 @@ These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
 
 ## AI Coding Agent Support
 
-Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Copilot) out of the box via `AGENTS.md`.
-
-Install the [Weaverse AI Skills](https://github.com/Weaverse/skills) for deep-dive patterns and schema references:
-
-```bash
-bash install-ai-skills.sh
-```
+Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Copilot) via `AGENTS.md`, which includes inline Weaverse component patterns, schema reference, input types, loader patterns, and common pitfalls.
 
 ## Links
 

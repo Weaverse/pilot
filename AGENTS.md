@@ -295,24 +295,238 @@ Append-only format:
 
 ---
 
-## AI Skills (Extended Reference)
+---
 
-For deep-dive Weaverse + Hydrogen patterns, install the Weaverse AI Skills:
+## Weaverse Component Development Guide
 
-```bash
-bash install-ai-skills.sh
+> Build Shopify Hydrogen storefronts with Weaverse visual page builder.
+> Docs: https://docs.weaverse.io | GitHub: https://github.com/Weaverse/pilot
+
+### Component Anatomy
+
+Every Weaverse section has up to 3 exports from `app/sections/<name>/index.tsx`:
+
+```tsx
+// 1. Default export — React component
+function MySection(props: MySectionProps) { ... }
+export default MySection;
+
+// 2. Schema export — editor configuration
+export let schema = createSchema({ ... });
+
+// 3. Loader export (optional) — server-side data fetching
+export let loader = async (args: ComponentLoaderArgs<DataType>) => { ... };
 ```
 
-This clones [github.com/Weaverse/skills](https://github.com/Weaverse/skills) into `.weaverse-skills/` (gitignored).
+**Key rules:**
+- **Spread `{...rest}`** on root element — required for Weaverse Studio interaction
+- **Render `{children}`** if the component accepts child components
+- **`type` must be unique**, use kebab-case (e.g., `hero-banner`)
+- **React 19**: use `ref` prop directly — `forwardRef` is deprecated
+- **Register** every new section in `app/weaverse/components.ts` using `import * as MySection from '~/sections/my-section'`
 
-**Key reference docs after install:**
+### Minimal Section Example
 
-| File | Contents |
-|------|----------|
-| `.weaverse-skills/SKILL.md` | Core patterns cheat sheet |
-| `.weaverse-skills/references/02-creating-components.md` | Component creation guide |
-| `.weaverse-skills/references/03-component-schema.md` | All schema input types |
-| `.weaverse-skills/references/05-data-fetching.md` | Component loaders & caching |
-| `.weaverse-skills/references/06-styling-theming.md` | Theme schema & CSS variables |
-| `.weaverse-skills/references/10-weaverse-api.md` | Full Weaverse API reference |
-| `.weaverse-skills/references/12-pilot-theme.md` | Pilot-specific patterns |
+```tsx
+import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+
+interface BannerProps extends HydrogenComponentProps {
+  heading: string;
+  description: string;
+}
+
+function Banner({ heading, description, children, ...rest }: BannerProps) {
+  return (
+    <section {...rest} className="py-16 px-4 text-center">
+      <h2 className="text-3xl font-bold">{heading}</h2>
+      <p className="mt-4 text-lg text-gray-600">{description}</p>
+      {children}
+    </section>
+  );
+}
+export default Banner;
+
+export let schema = createSchema({
+  type: 'banner',
+  title: 'Banner',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        { type: 'text', name: 'heading', label: 'Heading', defaultValue: 'Hello World' },
+        { type: 'textarea', name: 'description', label: 'Description' },
+      ],
+    },
+  ],
+  presets: { heading: 'Hello World' },
+});
+```
+
+### Component Registration (`app/weaverse/components.ts`)
+
+```tsx
+// MUST use namespace imports — NOT default imports
+import * as MySection from '~/sections/my-section';
+import * as HeroBanner from '~/sections/hero-banner';
+
+export let components: HydrogenComponent[] = [
+  HeroBanner,
+  MySection,
+  // ...
+];
+```
+
+### Schema Quick Reference
+
+```tsx
+export let schema = createSchema({
+  type: 'my-component',        // Unique kebab-case ID
+  title: 'My Component',       // Studio display name
+  limit: 1,                    // Max instances per page (optional)
+  enabledOn: {                 // Restrict to page types (optional)
+    pages: ['PRODUCT', 'COLLECTION'],
+    // Page types: INDEX | PRODUCT | ALL_PRODUCTS | COLLECTION |
+    //             COLLECTION_LIST | PAGE | BLOG | ARTICLE | CUSTOM
+  },
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        { type: 'text',         name: 'heading',     label: 'Heading', defaultValue: 'Title' },
+        { type: 'richtext',     name: 'body',        label: 'Body' },
+        { type: 'image',        name: 'image',       label: 'Image' },
+        { type: 'switch',       name: 'fullWidth',   label: 'Full Width', defaultValue: false },
+        { type: 'range',        name: 'gap',         label: 'Gap',
+          configs: { min: 0, max: 40, step: 4, unit: 'px' }, defaultValue: 16 },
+        { type: 'select',       name: 'layout',      label: 'Layout',
+          configs: { options: [{ value: 'grid', label: 'Grid' }, { value: 'list', label: 'List' }] },
+          defaultValue: 'grid' },
+        { type: 'color',        name: 'bgColor',     label: 'Background' },
+      ],
+    },
+  ],
+  childTypes: ['product-card'],  // Allowed child component types
+  presets: {
+    heading: 'Title',
+    children: [{ type: 'product-card' }, { type: 'product-card' }],
+  },
+});
+```
+
+**Note:** `inspector` is deprecated — always use `settings`.
+
+### Input Types
+
+| Type | Returns | Use For |
+|------|---------|---------|
+| `text` | `string` | Single-line text |
+| `textarea` | `string` | Multi-line text |
+| `richtext` | `string` (HTML) | Rich text |
+| `url` | `string` | URLs/links |
+| `image` | `WeaverseImage` | Image picker |
+| `video` | `WeaverseVideo` | Video picker |
+| `color` | `string` (#hex) | Color picker |
+| `range` | `number` | Slider |
+| `switch` | `boolean` | Toggle |
+| `select` | `string` | Dropdown |
+| `toggle-group` | `string` | Button group |
+| `datepicker` | `number` (timestamp) | Date/time |
+| `product` | Shopify product | Product picker |
+| `collection` | Shopify collection | Collection picker |
+| `product-list` | `product[]` | Multi-product picker |
+| `collection-list` | `collection[]` | Multi-collection picker |
+| `metaobject` | Shopify metaobject | Metaobject picker |
+
+### Data Fetching with Loaders
+
+```tsx
+import type { ComponentLoaderArgs, HydrogenComponentProps } from '@weaverse/hydrogen';
+
+type MyData = { collectionHandle: string };
+
+export let loader = async ({ weaverse, data }: ComponentLoaderArgs<MyData>) => {
+  let { storefront } = weaverse;
+  return await storefront.query(COLLECTION_QUERY, {
+    variables: { handle: data.collectionHandle },
+  });
+};
+
+// Derive props type from loader return
+type Props = HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & MyData;
+
+function MyComponent({ loaderData, collectionHandle, ...rest }: Props) {
+  let collection = loaderData?.collection;
+  return <section {...rest}>{collection?.title}</section>;
+}
+export default MyComponent;
+```
+
+**Key patterns:**
+- `weaverse.storefront.query()` — Shopify Storefront API
+- `weaverse.fetchWithCache(url, options)` — External APIs with caching
+- Add `shouldRevalidate: true` on schema inputs that affect the loader
+
+### Weaverse API Reference
+
+| API | Purpose |
+|-----|---------|
+| `createSchema()` | Define component schema |
+| `WeaverseClient` | Server-side client (initialized in `server.ts`) |
+| `weaverse.loadPage({ type, handle })` | Load page data in route loaders |
+| `weaverse.loadThemeSettings()` | Load global theme settings |
+| `weaverse.fetchWithCache(url)` | Cached external API fetching |
+| `withWeaverse(App)` | HOC wrapping root `App` in `root.tsx` |
+| `useThemeSettings()` | Access global theme settings in components |
+| `useWeaverse()` | Access global Weaverse instance |
+| `useItemInstance()` | Access a specific component instance |
+| `useParentInstance()` | Access parent component instance |
+
+### Theme Settings Pattern
+
+```tsx
+// app/components/GlobalStyle.tsx
+import { useThemeSettings } from '@weaverse/hydrogen';
+
+export function GlobalStyle() {
+  let settings = useThemeSettings();
+  if (!settings) return null;
+  return (
+    <style dangerouslySetInnerHTML={{ __html: `
+      :root {
+        --color-primary: ${settings.colorPrimary};
+        --body-base-size: ${settings.bodyBaseSize}px;
+      }
+    `}} />
+  );
+}
+```
+
+### Route Loader Pattern
+
+```tsx
+export async function loader({ context, params }: LoaderFunctionArgs) {
+  const { storefront, weaverse } = context;
+
+  const [shopifyData, weaverseData] = await Promise.all([
+    storefront.query(PRODUCT_QUERY, { variables: { handle: params.productHandle } }),
+    weaverse.loadPage({ type: 'PRODUCT', handle: params.productHandle }),
+  ]);
+
+  if (!shopifyData.product) throw new Response('Not found', { status: 404 });
+
+  return data({ shopifyData, weaverseData });
+}
+```
+
+### Common Mistakes to Avoid
+
+| ❌ Wrong | ✅ Correct |
+|---------|-----------|
+| `import MySection from '~/sections/...'` | `import * as MySection from '~/sections/...'` |
+| Using `inspector` in schema | Use `settings` |
+| Missing `{...rest}` on root element | Always spread rest props |
+| Skipping `{children}` for parent components | Render children |
+| `forwardRef` in React 19 | Use `ref` prop directly |
+| Import from `'react-router-dom'` | Import from `'react-router'` |
+| Forgetting to register in `components.ts` | Always register new sections |
+| Multiple `Promise` calls in loader | Use `Promise.all([...])` |
