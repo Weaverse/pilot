@@ -8,10 +8,7 @@ interface GridSizeStore {
   gridSizeMobile: number;
   /** Whether the user has explicitly changed the grid size */
   userOverride: boolean;
-  /** Number of currently visible products (updates as pages load) */
-  visibleCount: number;
   setGridSize: (size: number) => void;
-  setVisibleCount: (count: number) => void;
   initialize: (desktop: number, mobile: number) => void;
 }
 
@@ -21,14 +18,12 @@ export const useProductsGridSizeStore = create<GridSizeStore>()(
       gridSizeDesktop: 3,
       gridSizeMobile: 1,
       userOverride: false,
-      visibleCount: 0,
       setGridSize: (size) =>
         set((state) => ({
           userOverride: true,
           gridSizeDesktop: size > 2 ? size : state.gridSizeDesktop,
           gridSizeMobile: size <= 2 ? size : state.gridSizeMobile,
         })),
-      setVisibleCount: (count) => set({ visibleCount: count }),
       initialize: (desktop, mobile) => {
         // Only apply defaults if the user hasn't made a choice
         if (!get().userOverride) {
@@ -41,11 +36,17 @@ export const useProductsGridSizeStore = create<GridSizeStore>()(
     }),
     {
       name: STORAGE_KEY,
-      partialize: (state) => ({
-        gridSizeDesktop: state.gridSizeDesktop,
-        gridSizeMobile: state.gridSizeMobile,
-        userOverride: state.userOverride,
-      }),
     },
   ),
 );
+
+/** Separate non-persisted store for visible product count — avoids persist rehydration issues */
+interface VisibleCountStore {
+  visibleCount: number;
+  setVisibleCount: (count: number) => void;
+}
+
+export const useVisibleCountStore = create<VisibleCountStore>()((set) => ({
+  visibleCount: 0,
+  setVisibleCount: (count) => set({ visibleCount: count }),
+}));
