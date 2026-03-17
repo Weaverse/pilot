@@ -22,6 +22,10 @@ These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
 - [Vasuma Eyewear](https://vasuma.com/) - Vasuma creates eyewear for both men and women. From Stockholm, Sweden our eyewear are inspired by the best of the vintage eras of the 50s and 60s.
 - And many more...
 
+## AI Coding Agent Support
+
+Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Copilot) via `AGENTS.md`, which includes inline Weaverse component patterns, schema reference, input types, loader patterns, and common pitfalls.
+
 ## Links
 
 - Live store: https://pilot.weaverse.dev

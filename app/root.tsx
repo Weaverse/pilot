@@ -45,6 +45,10 @@ export const links: LinksFunction = () => {
       rel: "preconnect",
       href: "https://shop.app",
     },
+    {
+      rel: "preconnect",
+      href: "https://www.googletagmanager.com",
+    },
     { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
   ];
 };
