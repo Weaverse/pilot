@@ -4,7 +4,10 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
-import { useProductsGridSizeStore } from "~/stores/products-grid-size";
+import {
+  useProductsGridSizeStore,
+  useVisibleCountStore,
+} from "~/stores/products-grid-size";
 import { Filters, type FiltersProps } from "../filters/filters";
 import { LayoutSwitcher } from "./layout-switcher";
 import { Sort } from "./sort";
@@ -78,18 +81,13 @@ interface CollectionToolbarProps
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
-  const gridSizeDesktop = useProductsGridSizeStore(
-    (state) => state.gridSizeDesktop,
-  );
-  const gridSizeMobile = useProductsGridSizeStore(
-    (state) => state.gridSizeMobile,
-  );
-  const setGridSize = useProductsGridSizeStore((state) => state.setGridSize);
-  const visibleCount = useProductsGridSizeStore((state) => state.visibleCount);
+  const { gridSizeDesktop, gridSizeMobile, setGridSize } =
+    useProductsGridSizeStore();
+  const { visibleCount } = useVisibleCountStore();
 
   return (
     <div ref={ref} {...rest} className="col-span-full">
-      <div className="border-line-subtle border-y py-4">
+      <div className="border-gray-300 border-y py-4">
         <div className="flex w-full items-center justify-between gap-4 md:gap-8">
           <LayoutSwitcher
             gridSizeDesktop={gridSizeDesktop}

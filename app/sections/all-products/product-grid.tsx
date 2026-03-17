@@ -34,13 +34,8 @@ function AllProductsGrid(props: AllProductsGridProps) {
     ...rest
   } = props;
 
-  const initialize = useProductsGridSizeStore((state) => state.initialize);
-  const gridSizeDesktop = useProductsGridSizeStore(
-    (state) => state.gridSizeDesktop,
-  );
-  const gridSizeMobile = useProductsGridSizeStore(
-    (state) => state.gridSizeMobile,
-  );
+  const { initialize, gridSizeDesktop, gridSizeMobile } =
+    useProductsGridSizeStore();
 
   useEffect(() => {
     initialize(
@@ -67,7 +62,6 @@ function AllProductsGrid(props: AllProductsGridProps) {
           state,
         }) => (
           <div className="flex w-full flex-col items-center gap-8">
-            <VisibleCountSync count={nodes.length} />
             {hasPreviousPage && (
               <PreviousLink
                 className={cn("mx-auto", variants({ variant: "outline" }))}
@@ -100,17 +94,6 @@ function AllProductsGrid(props: AllProductsGridProps) {
 }
 
 export default AllProductsGrid;
-
-/** Syncs the accumulated Pagination node count into the store so the toolbar stays up to date. */
-function VisibleCountSync({ count }: { count: number }) {
-  const setVisibleCount = useProductsGridSizeStore(
-    (state) => state.setVisibleCount,
-  );
-  useEffect(() => {
-    setVisibleCount(count);
-  }, [count, setVisibleCount]);
-  return null;
-}
 
 export const schema = createSchema({
   type: "ap--product-grid",

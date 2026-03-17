@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
+import { useVisibleCountStore } from "~/stores/products-grid-size";
 import { cn } from "~/utils/cn";
 import {
   COMBINED_LISTINGS_CONFIGS,
@@ -28,6 +29,11 @@ export function ProductsLoadedOnScroll({
   gridColsMobile,
 }: ProductsLoadedOnScrollProps) {
   const navigate = useNavigate();
+  const { setVisibleCount } = useVisibleCountStore();
+
+  useEffect(() => {
+    setVisibleCount(nodes.length);
+  }, [nodes.length, setVisibleCount]);
 
   useEffect(() => {
     if (inView && hasNextPage) {

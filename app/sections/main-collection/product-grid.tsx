@@ -35,16 +35,8 @@ function ProductGrid(props: ProductGridProps) {
     ...rest
   } = props;
 
-  const initialize = useProductsGridSizeStore((state) => state.initialize);
-  const setVisibleCount = useProductsGridSizeStore(
-    (state) => state.setVisibleCount,
-  );
-  const gridSizeDesktop = useProductsGridSizeStore(
-    (state) => state.gridSizeDesktop,
-  );
-  const gridSizeMobile = useProductsGridSizeStore(
-    (state) => state.gridSizeMobile,
-  );
+  const { initialize, gridSizeDesktop, gridSizeMobile } =
+    useProductsGridSizeStore();
 
   useEffect(() => {
     initialize(
@@ -60,11 +52,6 @@ function ProductGrid(props: ProductGridProps) {
     }
   >();
 
-  // Seed the visible count from loader data so the toolbar shows
-  // the correct initial value before Pagination mounts
-  useEffect(() => {
-    setVisibleCount(collection.products.nodes.length);
-  }, [collection.products.nodes.length, setVisibleCount]);
   const [params] = useSearchParams();
   const location = useLocation();
   const { pathname } = location;
@@ -121,7 +108,6 @@ function ProductGrid(props: ProductGridProps) {
             state,
           }) => (
             <div className="flex w-full flex-col items-center gap-8">
-              <VisibleCountSync count={nodes.length} />
               {hasPreviousPage && (
                 <PreviousLink
                   className={cn("mx-auto", variants({ variant: "outline" }))}
@@ -160,17 +146,6 @@ function ProductGrid(props: ProductGridProps) {
 }
 
 export default ProductGrid;
-
-/** Syncs the accumulated Pagination node count into the store so the toolbar stays up to date. */
-function VisibleCountSync({ count }: { count: number }) {
-  const setVisibleCount = useProductsGridSizeStore(
-    (state) => state.setVisibleCount,
-  );
-  useEffect(() => {
-    setVisibleCount(count);
-  }, [count, setVisibleCount]);
-  return null;
-}
 
 export const schema = createSchema({
   type: "mc--product-grid",

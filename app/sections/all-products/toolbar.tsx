@@ -1,6 +1,9 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { LayoutSwitcher } from "~/sections/main-collection/toolbar/layout-switcher";
-import { useProductsGridSizeStore } from "~/stores/products-grid-size";
+import {
+  useProductsGridSizeStore,
+  useVisibleCountStore,
+} from "~/stores/products-grid-size";
 
 interface AllProductsToolbarData {
   showProductsCount: boolean;
@@ -14,18 +17,13 @@ interface AllProductsToolbarProps
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { ref, showProductsCount, ...rest } = props;
-  const gridSizeDesktop = useProductsGridSizeStore(
-    (state) => state.gridSizeDesktop,
-  );
-  const gridSizeMobile = useProductsGridSizeStore(
-    (state) => state.gridSizeMobile,
-  );
-  const setGridSize = useProductsGridSizeStore((state) => state.setGridSize);
-  const visibleCount = useProductsGridSizeStore((state) => state.visibleCount);
+  const { gridSizeDesktop, gridSizeMobile, setGridSize } =
+    useProductsGridSizeStore();
+  const { visibleCount } = useVisibleCountStore();
 
   return (
     <div ref={ref} {...rest}>
-      <div className="border-line-subtle border-y py-4">
+      <div className="border-gray-400 border-b py-4">
         <div className="flex w-full items-center justify-between gap-4 md:gap-8">
           <LayoutSwitcher
             gridSizeDesktop={gridSizeDesktop}
