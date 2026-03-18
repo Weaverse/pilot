@@ -1,20 +1,19 @@
 import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData, useLocation, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import Link, { variants } from "~/components/link";
 import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
-import { useProductsGridSizeStore } from "~/stores/products-grid-size";
 import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { getAppliedFilterLink } from "./filters/filter-utils";
 
 interface ProductGridData {
-  productsPerRowDesktop: number;
-  productsPerRowMobile: number;
+  minCardWidth: number;
+  gapX: number;
+  gapY: number;
   loadMoreBehavior: "infinite-scroll" | "button-click";
   loadPrevText: string;
   loadMoreText: string;
@@ -27,23 +26,14 @@ interface ProductGridProps extends HydrogenComponentProps, ProductGridData {
 function ProductGrid(props: ProductGridProps) {
   const {
     ref,
-    productsPerRowDesktop,
-    productsPerRowMobile,
+    minCardWidth,
+    gapX,
+    gapY,
     loadMoreBehavior,
     loadPrevText,
     loadMoreText,
     ...rest
   } = props;
-
-  const { initialize, gridSizeDesktop, gridSizeMobile } =
-    useProductsGridSizeStore();
-
-  useEffect(() => {
-    initialize(
-      Number(productsPerRowDesktop) || 3,
-      Number(productsPerRowMobile) || 1,
-    );
-  }, [productsPerRowDesktop, productsPerRowMobile, initialize]);
 
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
@@ -121,8 +111,9 @@ function ProductGrid(props: ProductGridProps) {
                 nextPageUrl={nextPageUrl}
                 hasNextPage={hasNextPage}
                 state={state}
-                gridColsDesktop={gridSizeDesktop}
-                gridColsMobile={gridSizeMobile}
+                minCardWidth={minCardWidth || 400}
+                gapX={gapX || 16}
+                gapY={gapY || 24}
               />
               {hasNextPage && (
                 <NextLink
@@ -155,29 +146,45 @@ export const schema = createSchema({
       group: "Products grid",
       inputs: [
         {
-          type: "select",
-          name: "productsPerRowDesktop",
-          label: "Products per row (desktop)",
+          type: "range",
+          name: "minCardWidth",
+          label: "Minimum card width",
+          defaultValue: 400,
           configs: {
-            options: [
-              { value: "3", label: "3" },
-              { value: "4", label: "4" },
-              { value: "5", label: "5" },
-            ],
+            min: 200,
+            max: 600,
+            step: 20,
+            unit: "px",
           },
-          defaultValue: "3",
+          helpText:
+            "Cards automatically span to fill gaps while staying close to this minimum width",
         },
         {
-          type: "select",
-          name: "productsPerRowMobile",
-          label: "Products per row (mobile)",
+          type: "range",
+          name: "gapX",
+          label: "Horizontal gap",
+          defaultValue: 16,
           configs: {
-            options: [
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
-            ],
+            min: 0,
+            max: 64,
+            step: 4,
+            unit: "px",
           },
-          defaultValue: "1",
+          helpText:
+            "Gap between cards horizontally (applies to lg screens and above)",
+        },
+        {
+          type: "range",
+          name: "gapY",
+          label: "Vertical gap",
+          defaultValue: 24,
+          configs: {
+            min: 0,
+            max: 64,
+            step: 4,
+            unit: "px",
+          },
+          helpText: "Gap between cards vertically",
         },
         {
           type: "select",

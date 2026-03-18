@@ -1,17 +1,16 @@
 import { Pagination } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
 import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
-import { useProductsGridSizeStore } from "~/stores/products-grid-size";
 import { cn } from "~/utils/cn";
 
 interface AllProductsGridData {
-  productsPerRowDesktop: number;
-  productsPerRowMobile: number;
+  minCardWidth: number;
+  gapX: number;
+  gapY: number;
   loadMoreBehavior: "infinite-scroll" | "button-click";
   loadPrevText: string;
   loadMoreText: string;
@@ -26,23 +25,14 @@ interface AllProductsGridProps
 function AllProductsGrid(props: AllProductsGridProps) {
   const {
     ref,
-    productsPerRowDesktop,
-    productsPerRowMobile,
+    minCardWidth,
+    gapX,
+    gapY,
     loadMoreBehavior,
     loadPrevText,
     loadMoreText,
     ...rest
   } = props;
-
-  const { initialize, gridSizeDesktop, gridSizeMobile } =
-    useProductsGridSizeStore();
-
-  useEffect(() => {
-    initialize(
-      Number(productsPerRowDesktop) || 4,
-      Number(productsPerRowMobile) || 2,
-    );
-  }, [productsPerRowDesktop, productsPerRowMobile, initialize]);
 
   const { products } = useLoaderData<AllProductsQuery>();
   const { ref: inViewRef, inView } = useInView();
@@ -75,8 +65,9 @@ function AllProductsGrid(props: AllProductsGridProps) {
               nextPageUrl={nextPageUrl}
               hasNextPage={hasNextPage}
               state={state}
-              gridColsDesktop={gridSizeDesktop}
-              gridColsMobile={gridSizeMobile}
+              minCardWidth={minCardWidth || 400}
+              gapX={gapX || 16}
+              gapY={gapY || 24}
             />
             {hasNextPage && (
               <NextLink
@@ -103,29 +94,45 @@ export const schema = createSchema({
       group: "Products grid",
       inputs: [
         {
-          type: "select",
-          name: "productsPerRowDesktop",
-          label: "Products per row (desktop)",
+          type: "range",
+          name: "minCardWidth",
+          label: "Minimum card width",
+          defaultValue: 400,
           configs: {
-            options: [
-              { value: "3", label: "3" },
-              { value: "4", label: "4" },
-              { value: "5", label: "5" },
-            ],
+            min: 200,
+            max: 600,
+            step: 20,
+            unit: "px",
           },
-          defaultValue: "4",
+          helpText:
+            "Cards automatically span to fill gaps while staying close to this minimum width",
         },
         {
-          type: "select",
-          name: "productsPerRowMobile",
-          label: "Products per row (mobile)",
+          type: "range",
+          name: "gapX",
+          label: "Horizontal gap",
+          defaultValue: 16,
           configs: {
-            options: [
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
-            ],
+            min: 0,
+            max: 64,
+            step: 4,
+            unit: "px",
           },
-          defaultValue: "2",
+          helpText:
+            "Gap between cards horizontally (applies to lg screens and above)",
+        },
+        {
+          type: "range",
+          name: "gapY",
+          label: "Vertical gap",
+          defaultValue: 24,
+          configs: {
+            min: 0,
+            max: 64,
+            step: 4,
+            unit: "px",
+          },
+          helpText: "Gap between cards vertically",
         },
         {
           type: "select",

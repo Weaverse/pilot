@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
-import { useVisibleCountStore } from "~/stores/products-grid-size";
-import { cn } from "~/utils/cn";
 import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
@@ -15,8 +13,9 @@ interface ProductsLoadedOnScrollProps {
   nextPageUrl: string;
   hasNextPage: boolean;
   state: any;
-  gridColsDesktop: number;
-  gridColsMobile: number;
+  minCardWidth: number;
+  gapX: number;
+  gapY: number;
 }
 
 export function ProductsLoadedOnScroll({
@@ -25,15 +24,18 @@ export function ProductsLoadedOnScroll({
   nextPageUrl,
   hasNextPage,
   state,
-  gridColsDesktop,
-  gridColsMobile,
+  minCardWidth,
+  gapX,
+  gapY,
 }: ProductsLoadedOnScrollProps) {
   const navigate = useNavigate();
-  const { setVisibleCount } = useVisibleCountStore();
 
   useEffect(() => {
-    setVisibleCount(nodes.length);
-  }, [nodes.length, setVisibleCount]);
+    let el = document.querySelector("[data-products-count]");
+    if (el) {
+      el.textContent = `${nodes.length} products`;
+    }
+  }, [nodes.length]);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -47,16 +49,14 @@ export function ProductsLoadedOnScroll({
 
   return (
     <div
-      className={cn(
-        "w-full gap-x-4 gap-y-6 lg:gap-y-10",
-        "grid grid-cols-(--cols-mobile) lg:grid-cols-(--cols-desktop)",
-      )}
       style={
         {
-          "--cols-mobile": `repeat(${gridColsMobile}, minmax(0, 1fr))`,
-          "--cols-desktop": `repeat(${gridColsDesktop}, minmax(0, 1fr))`,
+          "--min-card-width": `${minCardWidth}px`,
+          rowGap: `${gapY}px`,
+          columnGap: `${gapX}px`,
         } as React.CSSProperties
       }
+      className="w-full grid grid-cols-[repeat(auto-fit,minmax(var(--min-card-width),1fr))]"
     >
       {nodes
         .filter(
