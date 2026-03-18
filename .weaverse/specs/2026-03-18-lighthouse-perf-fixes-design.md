@@ -206,6 +206,19 @@ export function loadDeferredData({ context }: LoaderFunctionArgs) {
 }
 ```
 
+**Consumer update required:** `app/sections/collection-filters/filter-item.tsx` (line 32) reads `swatchesConfigs` synchronously via `useRouteLoaderData`. Once deferred, this becomes a Promise. Update the consumer to use React 19's `use()` hook with a `<Suspense>` boundary:
+
+```tsx
+// filter-item.tsx
+import { use, Suspense } from "react";
+
+// Inside FilterItem, when displayAs === "swatch":
+const { swatchesConfigs: swatchesConfigsPromise } = useRouteLoaderData<RootLoader>("root");
+const swatchesConfigs = use(swatchesConfigsPromise);
+```
+
+Wrap the swatch rendering path in `<Suspense>` at the call site or within the component — swatches will show a placeholder until the deferred data resolves. The `"button"` and `"list-item"` display modes don't use `swatchesConfigs` and are unaffected.
+
 **Note:** `weaverseTheme` (loadThemeSettings) stays in critical path per explicit decision — it controls visible layout properties (topbar height, colors).
 
 **Expected savings:** ~100-200ms off critical path TTFB (one fewer API call blocking before child route loaders can start).
