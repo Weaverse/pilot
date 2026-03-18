@@ -4,12 +4,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
-import {
-  useProductsGridSizeStore,
-  useVisibleCountStore,
-} from "~/stores/products-grid-size";
 import { Filters, type FiltersProps } from "../filters/filters";
-import { LayoutSwitcher } from "./layout-switcher";
 import { Sort } from "./sort";
 
 function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
@@ -81,23 +76,16 @@ interface CollectionToolbarProps
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
-  const { gridSizeDesktop, gridSizeMobile, setGridSize } =
-    useProductsGridSizeStore();
-  const { visibleCount } = useVisibleCountStore();
 
   return (
     <div ref={ref} {...rest} className="col-span-full">
       <div className="border-gray-300 border-y py-4">
         <div className="flex w-full items-center justify-between gap-4 md:gap-8">
-          <LayoutSwitcher
-            gridSizeDesktop={gridSizeDesktop}
-            gridSizeMobile={gridSizeMobile}
-            onGridSizeChange={setGridSize}
-          />
-          {showProductsCount && visibleCount > 0 && (
-            <span className="hidden text-center md:inline">
-              {visibleCount} products
-            </span>
+          {showProductsCount && (
+            <span
+              data-products-count
+              className="hidden text-center md:inline"
+            />
           )}
           {(enableSort || enableFilter) && (
             <div className="flex gap-2">
