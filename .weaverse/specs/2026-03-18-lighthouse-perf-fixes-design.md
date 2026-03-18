@@ -55,7 +55,11 @@ if (isbot(request.headers.get("user-agent"))) {
 
 **Why it exists:** Prevents flash of unstyled content during Weaverse Studio design mode editing.
 
-**Fix:** Apply `opacity: 0` only when in Weaverse design mode. Check for design mode via the Weaverse context or `?weaverse` URL parameter.
+**Fix:** Apply `opacity: 0` only when in Weaverse design mode. The `isDesignMode` flag is available server-side on `context.weaverse.configs.isDesignMode` (parsed from URL query params by the Weaverse SDK client). Pass it from `loadCriticalData` through the root loader, then read it in `Layout` via `useRouteLoaderData`.
+
+**Data path:**
+1. In `loadCriticalData` (`app/.server/root.ts`): add `isDesignMode: context.weaverse.configs.isDesignMode` to the return object
+2. In `Layout` (`app/root.tsx`): read `const isDesignMode = data?.isDesignMode ?? false`
 
 ```tsx
 <body
@@ -67,7 +71,7 @@ if (isbot(request.headers.get("user-agent"))) {
 >
 ```
 
-**Implementation note:** Determine how `withWeaverse` or `useThemeSettings` exposes design mode state. If no flag is available from the SDK, fall back to checking for `weaverseHost` or `weaverseVersion` search params on the request URL (these are present when Studio loads the preview iframe).
+**Why this approach:** The `Layout` component renders outside the Weaverse context provider (it wraps `<Outlet>`), so `useWeaverse()` would return undefined. Using `useRouteLoaderData` is SSR-safe and avoids hydration mismatches that would occur from reading `window.location.search` directly.
 
 **Risk:** Low. Production visitors never have the Weaverse query params. Design mode users still get the opacity transition.
 
@@ -98,6 +102,7 @@ useEffect(() => {
 
     const script = document.createElement("script");
     script.async = true;
+    script.nonce = nonce; // preserve CSP nonce for future CSP enforcement
     script.src = `https://www.googletagmanager.com/gtm.js?id=${id}`;
     document.head.appendChild(script);
   };
