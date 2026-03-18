@@ -71,6 +71,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
         footerMenuHandle: "footer",
         language: storefront.i18n.language,
       },
+      cache: storefront.CacheLong(),
     })
     .catch(console.error);
 
@@ -120,7 +121,7 @@ async function getSwatchesConfigs(context: AppLoadContext) {
   }
   const { metaobjects } = await context.storefront.query<SwatchesQuery>(
     SWATCHES_QUERY,
-    { variables: { type } },
+    { variables: { type }, cache: context.storefront.CacheLong() },
   );
   const colors: Swatch[] = [];
   const images: Swatch[] = [];
