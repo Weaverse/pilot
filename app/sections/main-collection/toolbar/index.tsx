@@ -2,6 +2,9 @@ import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import { useLoaderData } from "react-router";
+import type { CollectionQuery } from "storefront-api.generated";
+import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
 import { Filters, type FiltersProps } from "../filters/filters";
@@ -64,6 +67,7 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
 
 interface CollectionToolbarData {
   enableSort: boolean;
+  showBreadcrumb: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
 }
@@ -75,18 +79,26 @@ interface CollectionToolbarProps
 }
 
 function CollectionToolbar(props: CollectionToolbarProps) {
-  const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
+  const {
+    ref,
+    enableSort,
+    showBreadcrumb,
+    showProductsCount,
+    enableFilter,
+    ...rest
+  } = props;
+  const { collection } = useLoaderData<CollectionQuery>();
 
   return (
     <div ref={ref} {...rest} className="col-span-full">
       <div className="border-gray-300 border-y py-4">
         <div className="flex w-full items-center justify-between gap-4 md:gap-8">
-          {showProductsCount && (
-            <span
-              data-products-count
-              className="hidden text-center md:inline"
-            />
-          )}
+          <div className="hidden items-center gap-2 md:flex">
+            {showBreadcrumb && <BreadCrumb page={collection.title} />}
+            {showProductsCount && (
+              <span data-products-count className="text-foreground/60" />
+            )}
+          </div>
           {(enableSort || enableFilter) && (
             <div className="flex gap-2">
               {enableSort && <Sort />}
@@ -110,14 +122,20 @@ export const schema = createSchema({
       inputs: [
         {
           type: "switch",
-          name: "enableSort",
-          label: "Enable sorting",
+          name: "showBreadcrumb",
+          label: "Show breadcrumb",
           defaultValue: true,
         },
         {
           type: "switch",
           name: "showProductsCount",
           label: "Show products count",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
+          name: "enableSort",
+          label: "Enable sorting",
           defaultValue: true,
         },
         {

@@ -33,7 +33,7 @@ export function ProductsLoadedOnScroll({
   useEffect(() => {
     let el = document.querySelector("[data-products-count]");
     if (el) {
-      el.textContent = `${nodes.length} products`;
+      el.textContent = `(${nodes.length} products)`;
     }
   }, [nodes.length]);
 
