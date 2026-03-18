@@ -53,27 +53,20 @@ if (isbot(request.headers.get("user-agent"))) {
 
 **Problem:** The `<body>` has `style={{ opacity: 0 }}` inline, overridden by Tailwind `opacity-100!` class after CSS loads. This causes a blank page until JS hydrates, inflating FCP and LCP by 1-2s.
 
-**Why it exists:** Prevents flash of unstyled content during Weaverse Studio design mode editing.
+**Why it exists:** A FOUC workaround — the inline `opacity: 0` is overridden by Tailwind's `opacity-100!` once CSS loads, creating a fade-in. No longer needed.
 
-**Fix:** Apply `opacity: 0` only when in Weaverse design mode. The `isDesignMode` flag is available server-side on `context.weaverse.configs.isDesignMode` (parsed from URL query params by the Weaverse SDK client). Pass it from `loadCriticalData` through the root loader, then read it in `Layout` via `useRouteLoaderData`.
-
-**Data path:**
-1. In `loadCriticalData` (`app/.server/root.ts`): add `isDesignMode: context.weaverse.configs.isDesignMode` to the return object
-2. In `Layout` (`app/root.tsx`): read `const isDesignMode = data?.isDesignMode ?? false`
+**Fix:** Remove `opacity: 0` from the inline style and remove the now-unnecessary `opacity-100!` and `transition-opacity duration-300` from the className.
 
 ```tsx
 <body
   style={{
-    ...(isDesignMode ? { opacity: 0 } : {}),
     "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
   } as CSSProperties}
-  className="bg-background text-body antialiased opacity-100! transition-opacity duration-300"
+  className="bg-background text-body antialiased"
 >
 ```
 
-**Why this approach:** The `Layout` component renders outside the Weaverse context provider (it wraps `<Outlet>`), so `useWeaverse()` would return undefined. Using `useRouteLoaderData` is SSR-safe and avoids hydration mismatches that would occur from reading `window.location.search` directly.
-
-**Risk:** Low. Production visitors never have the Weaverse query params. Design mode users still get the opacity transition.
+**Risk:** Low. May introduce a brief FOUC on slow connections, but the trade-off is worth it — users see content immediately instead of a blank white page. A minor FOUC is far less harmful than a 1-2s blank screen.
 
 ---
 
