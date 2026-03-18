@@ -5,36 +5,18 @@ import Link from "~/components/link";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 
-const SORT_LIST: { label: string; key: SortParam }[] = [
-  { label: "Featured", key: "featured" },
-  {
-    label: "Relevance",
-    key: "relevance",
-  },
-  {
-    label: "Price, (low to high)",
-    key: "price-low-high",
-  },
-  {
-    label: "Price, (high to low)",
-    key: "price-high-low",
-  },
-  {
-    label: "Best selling",
-    key: "best-selling",
-  },
-  {
-    label: "Newest",
-    key: "newest",
-  },
-];
+interface SortDropdownProps {
+  options: Array<{
+    label: string;
+    key: SortParam;
+  }>;
+}
 
-export function Sort() {
+export function SortDropdown({ options }: SortDropdownProps) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const currentSort =
-    SORT_LIST.find(({ key }) => key === searchParams.get("sort")) ||
-    SORT_LIST[0];
+    options.find(({ key }) => key === searchParams.get("sort")) || options[0];
   const params = new URLSearchParams(searchParams);
 
   return (
@@ -52,7 +34,7 @@ export function Sort() {
           align="end"
           className="flex h-fit w-44 flex-col gap-2 border border-gray-400 bg-background p-5 shadow"
         >
-          {SORT_LIST.map(({ key, label }) => {
+          {options.map(({ key, label }) => {
             params.set("sort", key);
             return (
               <DropdownMenu.Item key={key} asChild>

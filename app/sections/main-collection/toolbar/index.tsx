@@ -7,8 +7,18 @@ import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
+import { SortDropdown } from "~/components/sort-dropdown";
+import type { SortParam } from "~/types/others";
 import { Filters, type FiltersProps } from "../filters/filters";
-import { Sort } from "./sort";
+
+const SORT_OPTIONS: Array<{ label: string; key: SortParam }> = [
+  { label: "Featured", key: "featured" },
+  { label: "Relevance", key: "relevance" },
+  { label: "Price, (low to high)", key: "price-low-high" },
+  { label: "Price, (high to low)", key: "price-high-low" },
+  { label: "Best selling", key: "best-selling" },
+  { label: "Newest", key: "newest" },
+];
 
 function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
   return (
@@ -101,7 +111,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
           </div>
           {(enableSort || enableFilter) && (
             <div className="flex gap-2">
-              {enableSort && <Sort />}
+              {enableSort && <SortDropdown options={SORT_OPTIONS} />}
               {enableFilter && <FiltersDrawer />}
             </div>
           )}

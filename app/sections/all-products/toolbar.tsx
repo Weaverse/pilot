@@ -1,7 +1,18 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { BreadCrumb } from "~/components/breadcrumb";
+import { SortDropdown } from "~/components/sort-dropdown";
+import type { SortParam } from "~/types/others";
+
+const SORT_OPTIONS: Array<{ label: string; key: SortParam }> = [
+  { label: "Relevance", key: "relevance" },
+  { label: "Price, (low to high)", key: "price-low-high" },
+  { label: "Price, (high to low)", key: "price-high-low" },
+  { label: "Best selling", key: "best-selling" },
+  { label: "Newest", key: "newest" },
+];
 
 interface AllProductsToolbarData {
+  enableSort: boolean;
   showBreadcrumb: boolean;
   showProductsCount: boolean;
 }
@@ -13,7 +24,7 @@ interface AllProductsToolbarProps
 }
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
-  const { ref, showBreadcrumb, showProductsCount, ...rest } = props;
+  const { ref, enableSort, showBreadcrumb, showProductsCount, ...rest } = props;
 
   return (
     <div ref={ref} {...rest}>
@@ -25,6 +36,7 @@ function AllProductsToolbar(props: AllProductsToolbarProps) {
               <span data-products-count className="text-foreground/60" />
             )}
           </div>
+          {enableSort && <SortDropdown options={SORT_OPTIONS} />}
         </div>
       </div>
     </div>
@@ -40,6 +52,12 @@ export const schema = createSchema({
     {
       group: "Toolbar",
       inputs: [
+        {
+          type: "switch",
+          name: "enableSort",
+          label: "Enable sorting",
+          defaultValue: true,
+        },
         {
           type: "switch",
           name: "showBreadcrumb",
