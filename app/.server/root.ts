@@ -17,10 +17,8 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
+  const [layout, weaverseTheme] = await Promise.all([
     getLayoutData(context),
-    getSwatchesConfigs(context),
-    // Add other queries here, so that they are loaded in parallel
     context.weaverse.loadThemeSettings(),
   ]);
 
@@ -45,7 +43,6 @@ export async function loadCriticalData({
     selectedLocale: storefront.i18n,
     weaverseTheme,
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
-    swatchesConfigs,
   };
 }
 
@@ -60,6 +57,7 @@ export function loadDeferredData({ context }: LoaderFunctionArgs) {
   return {
     isLoggedIn: customerAccount.isLoggedIn(),
     cart: cart.get(),
+    swatchesConfigs: getSwatchesConfigs(context),
   };
 }
 
