@@ -17,7 +17,6 @@ export function SortDropdown({ options }: SortDropdownProps) {
   const location = useLocation();
   const currentSort =
     options.find(({ key }) => key === searchParams.get("sort")) || options[0];
-  const params = new URLSearchParams(searchParams);
 
   return (
     <DropdownMenu.Root>
@@ -35,7 +34,11 @@ export function SortDropdown({ options }: SortDropdownProps) {
           className="flex h-fit w-44 flex-col gap-2 border border-gray-400 bg-background p-5 shadow"
         >
           {options.map(({ key, label }) => {
+            const params = new URLSearchParams(searchParams);
+            params.delete("cursor");
+            params.delete("direction");
             params.set("sort", key);
+
             return (
               <DropdownMenu.Item key={key} asChild>
                 <Link
