@@ -12,7 +12,7 @@ import { DropdownMenu } from "./dropdown-menu";
 
 export function DesktopMenu() {
   const { headerMenu } = useShopMenu();
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(headerMenu?.items?.[0]?.id || "");
 
   if (headerMenu?.items?.length) {
     const items = headerMenu.items as unknown as SingleMenuItem[];
@@ -125,7 +125,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
               <Link
                 to={to}
                 prefetch="intent"
-                className="uppercase transition-none"
+                className="inline-block uppercase transition-none"
               >
                 <RevealUnderline>{title}</RevealUnderline>
               </Link>
@@ -137,7 +137,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
                     <Link
                       to={cItem.to}
                       prefetch="intent"
-                      className="group relative items-center gap-2 transition-none"
+                      className="inline-block group relative items-center gap-2 transition-none"
                     >
                       <RevealUnderline>{cItem.title}</RevealUnderline>
                       {cItem.isExternal && (
