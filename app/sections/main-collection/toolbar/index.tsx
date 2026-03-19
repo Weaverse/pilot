@@ -116,7 +116,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
         {enableSort && (
           <SortDropdown options={SORT_OPTIONS} className="md:ml-auto md:mr-4" />
         )}
-        <div className={cn("ml-auto md:ml-0", enableFilter ? "" : "lg:hidden")}>
+        <div className={cn("ml-auto md:ml-0", !enableFilter && "lg:hidden")}>
           <FiltersDrawer />
         </div>
       </div>
