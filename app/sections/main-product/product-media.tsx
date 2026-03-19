@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router";
 import {
   ProductMedia,
   type ProductMediaProps,
-} from "~/components/product/product-media";
+} from "~/components/product-media";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 import { isCombinedListing } from "~/utils/combined-listings";
