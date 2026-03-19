@@ -66,8 +66,12 @@ export function ProductsLoadedOnScroll({
               isCombinedListing(product)
             ),
         )
-        .map((product) => (
-          <ProductCard key={product.id} product={product} />
+        .map((product, index) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            aboveTheFold={index < 4}
+          />
         ))}
     </div>
   );
