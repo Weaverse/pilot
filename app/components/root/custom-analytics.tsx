@@ -32,6 +32,12 @@ export function CustomAnalytics() {
         product_url: data.products?.[0]?.url,
       });
     });
+    subscribe(AnalyticsEvent.COLLECTION_VIEWED, (data) => {
+      window.dataLayer?.push({
+        event: "collection_viewed",
+        collection_handle: data.collection?.handle,
+      });
+    });
     subscribe(AnalyticsEvent.CART_UPDATED, (data: CartUpdatePayload) => {
       window.dataLayer?.push({
         event: "cart_updated",
@@ -39,6 +45,15 @@ export function CustomAnalytics() {
         cart_total: data.cart?.cost?.totalAmount?.amount,
         cart_total_quantity: data.cart?.totalQuantity,
       });
+    });
+    subscribe(AnalyticsEvent.PRODUCT_ADD_TO_CART, (data) => {
+      window.dataLayer?.push({ event: "add_to_cart" });
+    });
+    subscribe(AnalyticsEvent.PRODUCT_REMOVED_FROM_CART, (data) => {
+      window.dataLayer?.push({ event: "remove_from_cart" });
+    });
+    subscribe(AnalyticsEvent.SEARCH_VIEWED, (data) => {
+      window.dataLayer?.push({ event: "search_viewed" });
     });
   }, [subscribe]);
 
