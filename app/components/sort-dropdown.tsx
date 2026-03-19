@@ -10,9 +10,10 @@ interface SortDropdownProps {
     label: string;
     key: SortParam;
   }>;
+  className?: string;
 }
 
-export function SortDropdown({ options }: SortDropdownProps) {
+export function SortDropdown({ options, className }: SortDropdownProps) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const currentSort =
@@ -20,7 +21,12 @@ export function SortDropdown({ options }: SortDropdownProps) {
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger className="flex h-12 items-center gap-1.5 border px-4 py-2.5 focus-visible:outline-hidden">
+      <DropdownMenu.Trigger
+        className={cn(
+          "flex h-12 items-center gap-1.5 border px-4 py-2.5 focus-visible:outline-hidden",
+          className,
+        )}
+      >
         <span className="hidden lg:inline">
           Sort by: <span className="font-semibold">{currentSort.label}</span>
         </span>
