@@ -10,12 +10,6 @@ import type {
 } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
-import { RevealUnderline } from "~/components/reveal-underline";
-import { Spinner } from "~/components/spinner";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
-import { isCombinedListing } from "~/utils/combined-listings";
-import { calculateAspectRatio } from "~/utils/image";
 import {
   type BadgeStyleSettings,
   BestSellerBadge,
@@ -23,10 +17,16 @@ import {
   NewBadge,
   SaleBadge,
   SoldOutBadge,
-} from "./badges";
+} from "~/components/product/badges";
+import { VariantPrices } from "~/components/product/variant-prices";
+import { RevealUnderline } from "~/components/reveal-underline";
+import { Spinner } from "~/components/spinner";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
+import { isCombinedListing } from "~/utils/combined-listings";
+import { calculateAspectRatio } from "~/utils/image";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
-import { VariantPrices } from "./variant-prices";
 
 export function ProductCard({
   product,

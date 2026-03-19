@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductCard } from "~/components/product-card";
 import {
   COMBINED_LISTINGS_CONFIGS,
   isCombinedListing,
