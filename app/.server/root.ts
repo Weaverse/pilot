@@ -117,27 +117,33 @@ async function getSwatchesConfigs(context: AppLoadContext) {
   if (!type) {
     return { colors: [], images: [] };
   }
-  const { metaobjects } = await context.storefront.query<SwatchesQuery>(
-    SWATCHES_QUERY,
-    { variables: { type }, cache: context.storefront.CacheLong() },
-  );
-  const colors: Swatch[] = [];
-  const images: Swatch[] = [];
-  for (const { id, fields } of metaobjects.nodes) {
-    const { value: color } = fields.find(({ key }) => key === "color") || {};
-    const { reference: imageRef } =
-      fields.find(({ key }) => key === "image") || {};
-    const { value: name } = fields.find(({ key }) => key === "label") || {};
-    if (imageRef) {
-      const url = imageRef?.image?.url;
-      if (url) {
-        images.push({ id, name, value: url });
+  try {
+    const { metaobjects } = await context.storefront.query<SwatchesQuery>(
+      SWATCHES_QUERY,
+      { variables: { type }, cache: context.storefront.CacheLong() },
+    );
+    const colors: Swatch[] = [];
+    const images: Swatch[] = [];
+    for (const { id, fields } of metaobjects.nodes) {
+      const { value: color } =
+        fields.find(({ key }) => key === "color") || {};
+      const { reference: imageRef } =
+        fields.find(({ key }) => key === "image") || {};
+      const { value: name } =
+        fields.find(({ key }) => key === "label") || {};
+      if (imageRef) {
+        const url = imageRef?.image?.url;
+        if (url) {
+          images.push({ id, name, value: url });
+        }
+      } else if (color) {
+        colors.push({ id, name, value: color });
       }
-    } else if (color) {
-      colors.push({ id, name, value: color });
     }
+    return { colors, images };
+  } catch {
+    return { colors: [], images: [] };
   }
-  return { colors, images };
 }
 
 /*
