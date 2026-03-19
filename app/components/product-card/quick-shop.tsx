@@ -19,10 +19,10 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
-import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
+import { ProductMedia } from "~/components/product-media";
 import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 
