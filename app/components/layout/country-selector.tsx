@@ -219,7 +219,7 @@ export function HeaderCountrySelector() {
   }
 
   return (
-    <div className="flex items-center gap-1.5" ref={observerRef}>
+    <div className="hidden md:flex items-center gap-1.5" ref={observerRef}>
       <Popover.Root>
         <Popover.Trigger asChild>
           <button
