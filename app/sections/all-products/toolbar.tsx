@@ -1,6 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { BreadCrumb } from "~/components/breadcrumb";
-import { SortDropdown } from "~/components/sort-dropdown";
+import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import type { SortParam } from "~/types/others";
 
 const SORT_OPTIONS: Array<{ label: string; key: SortParam }> = [

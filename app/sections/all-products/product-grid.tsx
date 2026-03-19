@@ -4,7 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
-import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
+import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import { cn } from "~/utils/cn";
 
 interface AllProductsGridData {

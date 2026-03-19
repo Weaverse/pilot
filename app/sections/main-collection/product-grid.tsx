@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { useLoaderData, useLocation, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import Link, { variants } from "~/components/link";
-import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
+import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { getAppliedFilterLink } from "./filters/filter-utils";
