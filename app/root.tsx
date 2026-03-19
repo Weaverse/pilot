@@ -45,6 +45,10 @@ export const links: LinksFunction = () => {
       rel: "preconnect",
       href: "https://shop.app",
     },
+    {
+      rel: "preconnect",
+      href: "https://www.googletagmanager.com",
+    },
     { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
   ];
 };
@@ -123,11 +127,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body
         style={
           {
-            opacity: 0,
             "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
           } as CSSProperties
         }
-        className="bg-background text-body antialiased opacity-100! transition-opacity duration-300"
+        className="bg-background text-body antialiased"
       >
         {data ? (
           <Analytics.Provider

@@ -1,6 +1,6 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
-import { useState } from "react";
+import { Suspense, use, useState } from "react";
 import {
   useLocation,
   useNavigate,
@@ -29,7 +29,7 @@ export function FilterItem({
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const location = useLocation();
-  const { swatchesConfigs } = useRouteLoaderData<RootLoader>("root");
+  let rootData = useRouteLoaderData<RootLoader>("root");
 
   const filter = appliedFilters.find(
     (flt) => JSON.stringify(flt.filter) === option.input,
@@ -49,41 +49,20 @@ export function FilterItem({
   }
 
   if (displayAs === "swatch") {
-    const { colors, images } = swatchesConfigs;
-    const swatchImage = images.find(({ name }) => name === option.label);
-    const swatchColor = colors.find(({ name }) => name === option.label);
-
     return (
-      <Tooltip>
-        <TooltipTrigger>
-          <button
-            type="button"
-            className={cn(
-              "h-10 w-10 disabled:cursor-not-allowed",
-              "border hover:border-body",
-              checked ? "border-line p-1" : "border-line-subtle",
-              option.count === 0 && "diagonal",
-            )}
-            onClick={() => handleCheckedChange(!checked)}
-            disabled={option.count === 0}
-          >
-            <span
-              className="inline-block h-full w-full"
-              style={{
-                backgroundImage: swatchImage?.value
-                  ? `url(${swatchImage?.value})`
-                  : undefined,
-                backgroundSize: "cover",
-                backgroundColor:
-                  swatchColor?.value || option.label.toLowerCase(),
-              }}
-            />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <FilterLabel option={option} showFiltersCount={showFiltersCount} />
-        </TooltipContent>
-      </Tooltip>
+      <Suspense
+        fallback={
+          <span className="h-10 w-10 animate-pulse border border-line-subtle bg-background" />
+        }
+      >
+        <SwatchFilterItem
+          option={option}
+          checked={checked}
+          showFiltersCount={showFiltersCount}
+          onCheckedChange={handleCheckedChange}
+          swatchesConfigsPromise={rootData.swatchesConfigs}
+        />
+      </Suspense>
     );
   }
 
@@ -129,6 +108,56 @@ export function FilterItem({
       </Checkbox.Root>
       <FilterLabel option={option} showFiltersCount={showFiltersCount} />
     </div>
+  );
+}
+function SwatchFilterItem({
+  option,
+  checked,
+  showFiltersCount,
+  onCheckedChange,
+  swatchesConfigsPromise,
+}: {
+  option: Filter["values"][0];
+  checked: boolean;
+  showFiltersCount: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  swatchesConfigsPromise: Promise<{ colors: any[]; images: any[] }>;
+}) {
+  let { colors, images } = use(swatchesConfigsPromise);
+  let swatchImage = images.find(({ name }) => name === option.label);
+  let swatchColor = colors.find(({ name }) => name === option.label);
+
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <button
+          type="button"
+          className={cn(
+            "h-10 w-10 disabled:cursor-not-allowed",
+            "border hover:border-body",
+            checked ? "border-line p-1" : "border-line-subtle",
+            option.count === 0 && "diagonal",
+          )}
+          onClick={() => onCheckedChange(!checked)}
+          disabled={option.count === 0}
+        >
+          <span
+            className="inline-block h-full w-full"
+            style={{
+              backgroundImage: swatchImage?.value
+                ? `url(${swatchImage?.value})`
+                : undefined,
+              backgroundSize: "cover",
+              backgroundColor:
+                swatchColor?.value || option.label.toLowerCase(),
+            }}
+          />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <FilterLabel option={option} showFiltersCount={showFiltersCount} />
+      </TooltipContent>
+    </Tooltip>
   );
 }
 function FilterLabel({

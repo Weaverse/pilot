@@ -44,7 +44,10 @@ export default async function handleRequest(
   );
 
   if (isbot(request.headers.get("user-agent"))) {
-    await body.allReady;
+    await Promise.race([
+      body.allReady,
+      new Promise((resolve) => setTimeout(resolve, 2000)),
+    ]);
   }
 
   responseHeaders.set("Content-Type", "text/html");
