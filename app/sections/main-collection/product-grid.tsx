@@ -1,33 +1,19 @@
 import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import clsx from "clsx";
-import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import {
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router";
-import type {
-  CollectionQuery,
-  ProductCardFragment,
-} from "storefront-api.generated";
+import { useLoaderData, useLocation, useSearchParams } from "react-router";
+import type { CollectionQuery } from "storefront-api.generated";
 import Link, { variants } from "~/components/link";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductsLoadedOnScroll } from "~/components/product/products-loaded-on-scroll";
 import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
-import {
-  COMBINED_LISTINGS_CONFIGS,
-  isCombinedListing,
-} from "~/utils/combined-listings";
 import { getAppliedFilterLink } from "./filters/filter-utils";
-import { useGridSizeStore } from "./store";
 
 interface ProductGridData {
-  productsPerRowDesktop: number;
-  productsPerRowMobile: number;
+  minCardWidth: number;
+  gapX: number;
+  gapY: number;
   loadMoreBehavior: "infinite-scroll" | "button-click";
   loadPrevText: string;
   loadMoreText: string;
@@ -40,24 +26,14 @@ interface ProductGridProps extends HydrogenComponentProps, ProductGridData {
 function ProductGrid(props: ProductGridProps) {
   const {
     ref,
-    productsPerRowDesktop,
-    productsPerRowMobile,
+    minCardWidth,
+    gapX,
+    gapY,
     loadMoreBehavior,
     loadPrevText,
     loadMoreText,
     ...rest
   } = props;
-
-  const initialize = useGridSizeStore((state) => state.initialize);
-  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
-  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
-
-  useEffect(() => {
-    initialize(
-      Number(productsPerRowDesktop) || 3,
-      Number(productsPerRowMobile) || 1,
-    );
-  }, [productsPerRowDesktop, productsPerRowMobile, initialize]);
 
   const { collection, appliedFilters } = useLoaderData<
     CollectionQuery & {
@@ -65,6 +41,7 @@ function ProductGrid(props: ProductGridProps) {
       appliedFilters: AppliedFilter[];
     }
   >();
+
   const [params] = useSearchParams();
   const location = useLocation();
   const { pathname } = location;
@@ -120,15 +97,7 @@ function ProductGrid(props: ProductGridProps) {
             NextLink,
             state,
           }) => (
-            <div
-              className="flex w-full flex-col items-center gap-8"
-              style={
-                {
-                  "--cols-mobile": `repeat(${gridSizeMobile}, minmax(0, 1fr))`,
-                  "--cols-desktop": `repeat(${gridSizeDesktop}, minmax(0, 1fr))`,
-                } as React.CSSProperties
-              }
-            >
+            <div className="flex w-full flex-col items-center gap-8">
               {hasPreviousPage && (
                 <PreviousLink
                   className={cn("mx-auto", variants({ variant: "outline" }))}
@@ -142,6 +111,9 @@ function ProductGrid(props: ProductGridProps) {
                 nextPageUrl={nextPageUrl}
                 hasNextPage={hasNextPage}
                 state={state}
+                minCardWidth={minCardWidth || 400}
+                gapX={gapX || 16}
+                gapY={gapY || 24}
               />
               {hasNextPage && (
                 <NextLink
@@ -166,50 +138,6 @@ function ProductGrid(props: ProductGridProps) {
 
 export default ProductGrid;
 
-interface ProductsLoadedOnScrollProps {
-  nodes: any;
-  inView: boolean;
-  nextPageUrl: string;
-  hasNextPage: boolean;
-  state: any;
-}
-
-function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
-  const { nodes, inView, nextPageUrl, hasNextPage, state } = props;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      navigate(nextPageUrl, {
-        replace: true,
-        preventScrollReset: true,
-        state,
-      });
-    }
-  }, [inView, navigate, state, nextPageUrl, hasNextPage]);
-
-  return (
-    <div
-      className={clsx([
-        "w-full gap-x-4 gap-y-6 lg:gap-y-10",
-        "grid grid-cols-(--cols-mobile) lg:grid-cols-(--cols-desktop)",
-      ])}
-    >
-      {nodes
-        .filter(
-          (product: ProductCardFragment) =>
-            !(
-              COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList &&
-              isCombinedListing(product)
-            ),
-        )
-        .map((product: ProductCardFragment) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-    </div>
-  );
-}
-
 export const schema = createSchema({
   type: "mc--product-grid",
   title: "Products grid",
@@ -218,29 +146,45 @@ export const schema = createSchema({
       group: "Products grid",
       inputs: [
         {
-          type: "select",
-          name: "productsPerRowDesktop",
-          label: "Products per row (desktop)",
+          type: "range",
+          name: "minCardWidth",
+          label: "Minimum card width",
+          defaultValue: 400,
           configs: {
-            options: [
-              { value: "3", label: "3" },
-              { value: "4", label: "4" },
-              { value: "5", label: "5" },
-            ],
+            min: 200,
+            max: 600,
+            step: 20,
+            unit: "px",
           },
-          defaultValue: "3",
+          helpText:
+            "Cards automatically span to fill gaps while staying close to this minimum width",
         },
         {
-          type: "select",
-          name: "productsPerRowMobile",
-          label: "Products per row (mobile)",
+          type: "range",
+          name: "gapX",
+          label: "Horizontal gap",
+          defaultValue: 16,
           configs: {
-            options: [
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
-            ],
+            min: 0,
+            max: 64,
+            step: 4,
+            unit: "px",
           },
-          defaultValue: "1",
+          helpText:
+            "Gap between cards horizontally (applies to lg screens and above)",
+        },
+        {
+          type: "range",
+          name: "gapY",
+          label: "Vertical gap",
+          defaultValue: 24,
+          configs: {
+            min: 0,
+            max: 64,
+            step: 4,
+            unit: "px",
+          },
+          helpText: "Gap between cards vertically",
         },
         {
           type: "select",

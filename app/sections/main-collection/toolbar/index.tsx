@@ -4,12 +4,22 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
+import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
 import { ScrollArea } from "~/components/scroll-area";
+import { SortDropdown } from "~/components/sort-dropdown";
+import type { SortParam } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { Filters, type FiltersProps } from "../filters/filters";
-import { useGridSizeStore } from "../store";
-import { LayoutSwitcher } from "./layout-switcher";
-import { Sort } from "./sort";
+
+const SORT_OPTIONS: Array<{ label: string; key: SortParam }> = [
+  { label: "Featured", key: "featured" },
+  { label: "Relevance", key: "relevance" },
+  { label: "Price, (low to high)", key: "price-low-high" },
+  { label: "Price, (high to low)", key: "price-high-low" },
+  { label: "Best selling", key: "best-selling" },
+  { label: "Newest", key: "newest" },
+];
 
 function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
   return (
@@ -68,6 +78,7 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
 
 interface CollectionToolbarData {
   enableSort: boolean;
+  showBreadcrumb: boolean;
   showProductsCount: boolean;
   enableFilter: boolean;
 }
@@ -79,32 +90,37 @@ interface CollectionToolbarProps
 }
 
 function CollectionToolbar(props: CollectionToolbarProps) {
-  const { ref, enableSort, showProductsCount, enableFilter, ...rest } = props;
+  const {
+    ref,
+    enableSort,
+    showBreadcrumb,
+    showProductsCount,
+    enableFilter = true,
+    ...rest
+  } = props;
   const { collection } = useLoaderData<CollectionQuery>();
-  const gridSizeDesktop = useGridSizeStore((state) => state.gridSizeDesktop);
-  const gridSizeMobile = useGridSizeStore((state) => state.gridSizeMobile);
-  const setGridSize = useGridSizeStore((state) => state.setGridSize);
 
   return (
-    <div ref={ref} {...rest} className="col-span-full">
-      <div className="border-line-subtle border-y py-4">
-        <div className="flex w-full items-center justify-between gap-4 md:gap-8">
-          <LayoutSwitcher
-            gridSizeDesktop={gridSizeDesktop}
-            gridSizeMobile={gridSizeMobile}
-            onGridSizeChange={setGridSize}
-          />
+    <div
+      ref={ref}
+      {...rest}
+      className="col-span-full border-gray-300 border-y py-4"
+    >
+      <div className="flex w-full items-center">
+        <div className="hidden items-center gap-2 md:flex">
+          {showBreadcrumb && <BreadCrumb page={collection.title} />}
           {showProductsCount && (
-            <span className="hidden text-center md:inline">
-              {collection?.products.nodes.length} products
-            </span>
+            <span data-products-count className="text-foreground/60" />
           )}
-          {(enableSort || enableFilter) && (
-            <div className="flex gap-2">
-              {enableSort && <Sort />}
-              {enableFilter && <FiltersDrawer />}
-            </div>
-          )}
+        </div>
+        {enableSort && (
+          <SortDropdown
+            options={SORT_OPTIONS}
+            className={cn("md:ml-auto", enableFilter && "md:mr-4")}
+          />
+        )}
+        <div className={cn("ml-auto md:ml-0", !enableFilter && "lg:hidden")}>
+          <FiltersDrawer />
         </div>
       </div>
     </div>
@@ -122,8 +138,8 @@ export const schema = createSchema({
       inputs: [
         {
           type: "switch",
-          name: "enableSort",
-          label: "Enable sorting",
+          name: "showBreadcrumb",
+          label: "Show breadcrumb",
           defaultValue: true,
         },
         {
@@ -134,9 +150,17 @@ export const schema = createSchema({
         },
         {
           type: "switch",
+          name: "enableSort",
+          label: "Enable sorting",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
           name: "enableFilter",
-          label: "Enable filtering",
+          label: "Show filter drawer on desktop",
           defaultValue: false,
+          helpText:
+            "Filter drawer button always shows on mobile. Enable this to also show it on desktop.",
         },
       ],
     },

@@ -5,41 +5,28 @@ import Link from "~/components/link";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 
-const SORT_LIST: { label: string; key: SortParam }[] = [
-  { label: "Featured", key: "featured" },
-  {
-    label: "Relevance",
-    key: "relevance",
-  },
-  {
-    label: "Price, (low to high)",
-    key: "price-low-high",
-  },
-  {
-    label: "Price, (high to low)",
-    key: "price-high-low",
-  },
-  {
-    label: "Best selling",
-    key: "best-selling",
-  },
-  {
-    label: "Newest",
-    key: "newest",
-  },
-];
+interface SortDropdownProps {
+  options: Array<{
+    label: string;
+    key: SortParam;
+  }>;
+  className?: string;
+}
 
-export function Sort() {
+export function SortDropdown({ options, className }: SortDropdownProps) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const currentSort =
-    SORT_LIST.find(({ key }) => key === searchParams.get("sort")) ||
-    SORT_LIST[0];
-  const params = new URLSearchParams(searchParams);
+    options.find(({ key }) => key === searchParams.get("sort")) || options[0];
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger className="flex h-12 items-center gap-1.5 border px-4 py-2.5 focus-visible:outline-hidden">
+      <DropdownMenu.Trigger
+        className={cn(
+          "flex h-12 items-center gap-1.5 border px-4 py-2.5 focus-visible:outline-hidden",
+          className,
+        )}
+      >
         <span className="hidden lg:inline">
           Sort by: <span className="font-semibold">{currentSort.label}</span>
         </span>
@@ -50,10 +37,14 @@ export function Sort() {
         <DropdownMenu.Content
           sideOffset={8}
           align="end"
-          className="flex h-fit w-44 flex-col gap-2 border border-line-subtle bg-background p-5"
+          className="flex h-fit w-44 flex-col gap-2 border border-gray-400 bg-background p-5 shadow"
         >
-          {SORT_LIST.map(({ key, label }) => {
+          {options.map(({ key, label }) => {
+            const params = new URLSearchParams(searchParams);
+            params.delete("cursor");
+            params.delete("direction");
             params.set("sort", key);
+
             return (
               <DropdownMenu.Item key={key} asChild>
                 <Link
