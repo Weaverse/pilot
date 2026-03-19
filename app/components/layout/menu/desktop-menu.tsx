@@ -12,7 +12,7 @@ import { DropdownMenu } from "./dropdown-menu";
 
 export function DesktopMenu() {
   const { headerMenu } = useShopMenu();
-  const [value, setValue] = useState<string>(headerMenu?.items?.[0]?.id || "");
+  const [value, setValue] = useState<string>("");
 
   if (headerMenu?.items?.length) {
     const items = headerMenu.items as unknown as SingleMenuItem[];
