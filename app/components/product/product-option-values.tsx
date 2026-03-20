@@ -3,7 +3,6 @@ import * as Select from "@radix-ui/react-select";
 import { Image, type MappedProductOptions } from "@shopify/hydrogen";
 import type { ButtonHTMLAttributes } from "react";
 import { useNavigate } from "react-router";
-import type { ProductVariantFragment } from "storefront-api.generated";
 import Link, { type LinkProps } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
@@ -30,11 +29,11 @@ const OPTIONS_AS_DROPDOWN: string[] = [];
 
 export function ProductOptionValues({
   option,
-  onVariantChange,
+  onOptionChange,
   combinedListing,
 }: {
   option: MappedProductOptions;
-  onVariantChange?: (variant: ProductVariantFragment) => void;
+  onOptionChange?: (optionName: string, value: string) => void;
   combinedListing?: boolean;
 }) {
   const navigate = useNavigate();
@@ -52,8 +51,8 @@ export function ProductOptionValues({
         onValueChange={(v) => {
           const found = optionValues.find(({ name: value }) => value === v);
           if (found) {
-            if (onVariantChange && found.firstSelectableVariant) {
-              onVariantChange(found.firstSelectableVariant);
+            if (onOptionChange) {
+              onOptionChange(optionName, v);
             } else {
               const to = found.isDifferentProduct
                 ? `/products/${found.handle}?${found.variantUriQuery}`
@@ -124,7 +123,7 @@ export function ProductOptionValues({
                 <OptionValue
                   optionName={optionName}
                   value={optionValue}
-                  onVariantChange={onVariantChange}
+                  onOptionChange={onOptionChange}
                   combinedListing={combinedListing}
                 />
               </div>
@@ -144,12 +143,12 @@ export function ProductOptionValues({
 function OptionValue({
   optionName,
   value,
-  onVariantChange,
+  onOptionChange,
   combinedListing,
 }: {
   optionName: string;
   value: MappedProductOptions["optionValues"][number];
-  onVariantChange?: (variant: ProductVariantFragment) => void;
+  onOptionChange?: (optionName: string, value: string) => void;
   combinedListing?: boolean;
 }) {
   const navigate = useNavigate();
@@ -178,8 +177,8 @@ function OptionValue({
     type: "button" as const,
     disabled: !exists,
     onClick: () => {
-      if (onVariantChange && firstSelectableVariant) {
-        onVariantChange(firstSelectableVariant);
+      if (onOptionChange) {
+        onOptionChange(optionName, name);
       } else if (!selected && exists) {
         navigate(to, { replace: true });
       }
@@ -187,19 +186,19 @@ function OptionValue({
   };
 
   /*
-   * - When onVariantChange is provided, which mean the variant is being managed by the parent component,
+   * - When onOptionChange is provided, which means the variant is being managed by the parent component,
    * we always render as a button.
    * - When the variant is a combined listing child product that leads to a different URL,
    * we need to render it as an anchor tag.
    * - When the variant is an update to the search param, render it as a button with JavaScript navigating to
    * the variant so that SEO bots do not index these as duplicated links.
    */
-  const Component = onVariantChange
+  const Component = onOptionChange
     ? "button"
     : isDifferentProduct
       ? Link
       : "button";
-  const componentProps = onVariantChange
+  const componentProps = onOptionChange
     ? buttonProps
     : isDifferentProduct
       ? linkProps
