@@ -1,4 +1,8 @@
-import { MEDIA_FRAGMENT, PRODUCT_OPTION_FRAGMENT } from "~/graphql/fragments";
+import {
+  MEDIA_FRAGMENT,
+  PRODUCT_OPTION_FRAGMENT,
+  PRODUCT_VARIANT_FRAGMENT,
+} from "~/graphql/fragments";
 
 export const PRODUCT_QUERY = `#graphql
   query product(
@@ -96,4 +100,21 @@ export const PRODUCT_QUERY = `#graphql
   }
   ${MEDIA_FRAGMENT}
   ${PRODUCT_OPTION_FRAGMENT}
+` as const;
+
+export const PRODUCT_VARIANTS_QUERY = `#graphql
+  query productVariants(
+    $country: CountryCode
+    $language: LanguageCode
+    $handle: String!
+  ) @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      variants(first: 250) {
+        nodes {
+          ...ProductVariant
+        }
+      }
+    }
+  }
+  ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
