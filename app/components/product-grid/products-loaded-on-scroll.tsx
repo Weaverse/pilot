@@ -2,10 +2,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product-card";
-import {
-  COMBINED_LISTINGS_CONFIGS,
-  isCombinedListing,
-} from "~/utils/combined-listings";
 
 interface ProductsLoadedOnScrollProps {
   nodes: ProductCardFragment[];
@@ -58,21 +54,13 @@ export function ProductsLoadedOnScroll({
       }
       className="w-full grid grid-cols-[repeat(auto-fit,minmax(var(--min-card-width),1fr))]"
     >
-      {nodes
-        .filter(
-          (product) =>
-            !(
-              COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList &&
-              isCombinedListing(product)
-            ),
-        )
-        .map((product, index) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            aboveTheFold={index < 4}
-          />
-        ))}
+      {nodes.map((product, index) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          aboveTheFold={index < 4}
+        />
+      ))}
     </div>
   );
 }

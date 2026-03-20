@@ -6,7 +6,6 @@ import {
 } from "~/components/product-media";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
-import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductMediaComponentProps
   extends Omit<ProductMediaProps, "selectedVariant" | "media" | "product">,
@@ -42,21 +41,7 @@ export default function ProductMediaComponent(
     return null;
   }
 
-  const combinedListing = isCombinedListing(product);
-  const media =
-    combinedListing && product?.featuredImage
-      ? [
-          {
-            __typename: "MediaImage" as const,
-            id: product.featuredImage.id,
-            mediaContentType: "IMAGE" as const,
-            alt: product.featuredImage.altText,
-            previewImage: product.featuredImage,
-            image: product.featuredImage,
-          },
-          ...(product?.media?.nodes || []),
-        ]
-      : product?.media?.nodes || [];
+  const media = product?.media?.nodes || [];
 
   return (
     <div

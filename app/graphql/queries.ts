@@ -22,7 +22,6 @@ export const PRODUCT_QUERY = `#graphql
       summary: description(truncateAt: 200)
       encodedVariantExistence
       encodedVariantAvailability
-      tags
       featuredImage {
         id
         url

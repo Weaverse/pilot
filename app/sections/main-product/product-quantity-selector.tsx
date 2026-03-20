@@ -3,7 +3,6 @@ import { useLoaderData } from "react-router";
 import { create } from "zustand";
 import { Quantity } from "~/components/product/quantity";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { isCombinedListing } from "~/utils/combined-listings";
 
 export const useProductQtyStore = create<{
   quantity: number;
@@ -25,9 +24,7 @@ export default function ProductQuantitySelector(
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity, setQuantity } = useProductQtyStore();
 
-  const combinedListing = isCombinedListing(product);
-
-  if (!product || combinedListing) {
+  if (!product) {
     return null;
   }
 

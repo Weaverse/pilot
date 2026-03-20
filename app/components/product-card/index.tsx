@@ -23,7 +23,6 @@ import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
-import { isCombinedListing } from "~/utils/combined-listings";
 import { calculateAspectRatio } from "~/utils/image";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
@@ -267,16 +266,10 @@ export function ProductCard({
               {product.title}
             </RevealUnderline>
           </Link>
-          {pcardShowLowestPrice || isCombinedListing(product) ? (
+          {pcardShowLowestPrice ? (
             <div className="flex gap-1">
               <span>From</span>
               <Money withoutTrailingZeros data={minVariantPrice} />
-              {isCombinedListing(product) && (
-                <>
-                  <span>–</span>
-                  <Money withoutTrailingZeros data={maxVariantPrice} />
-                </>
-              )}
             </div>
           ) : (
             <VariantPrices
