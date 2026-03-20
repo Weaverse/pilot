@@ -28,6 +28,7 @@ import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
+  variants: ProductVariantFragment[];
   storeDomain: string;
 }
 
@@ -37,7 +38,7 @@ interface QuickShopProps {
 }
 
 export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
-  const { product, storeDomain } = data || {};
+  const { product, variants, storeDomain } = data || {};
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
@@ -96,6 +97,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
               product={product}
               selectedVariant={selectedVariant}
               setSelectedVariant={setSelectedVariant}
+              variants={variants}
             />
           </div>
           <Quantity value={quantity} onChange={setQuantity} />
