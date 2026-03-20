@@ -28,14 +28,52 @@ const OPTIONS_AS_BUTTON: string[] = ["Size"];
 const OPTIONS_AS_IMAGE: string[] = [];
 const OPTIONS_AS_DROPDOWN: string[] = [];
 
+/**
+ * Resolves the correct variant when an option value is clicked.
+ * Looks up the variant matching all currently selected options with only the
+ * clicked option changed. Falls back to firstSelectableVariant if no match.
+ */
+function resolveVariant({
+  optionName,
+  clickedValue,
+  variantMap,
+  selectedOptions,
+  fallback,
+}: {
+  optionName: string;
+  clickedValue: string;
+  variantMap?: Map<string, ProductVariantFragment>;
+  selectedOptions?: Array<{ name: string; value: string }>;
+  fallback?: ProductVariantFragment;
+}): ProductVariantFragment | undefined {
+  if (variantMap?.size && selectedOptions?.length) {
+    const targetOptions = selectedOptions.map((o) =>
+      o.name === optionName ? { ...o, value: clickedValue } : o,
+    );
+    const key = targetOptions
+      .map((o) => `${o.name}=${o.value}`)
+      .sort()
+      .join("&");
+    const resolved = variantMap.get(key);
+    if (resolved) {
+      return resolved;
+    }
+  }
+  return fallback;
+}
+
 export function ProductOptionValues({
   option,
   onVariantChange,
   combinedListing,
+  variantMap,
+  selectedOptions,
 }: {
   option: MappedProductOptions;
   onVariantChange?: (variant: ProductVariantFragment) => void;
   combinedListing?: boolean;
+  variantMap?: Map<string, ProductVariantFragment>;
+  selectedOptions?: Array<{ name: string; value: string }>;
 }) {
   const navigate = useNavigate();
   const { name: optionName, optionValues } = option || {};
@@ -52,8 +90,17 @@ export function ProductOptionValues({
         onValueChange={(v) => {
           const found = optionValues.find(({ name: value }) => value === v);
           if (found) {
-            if (onVariantChange && found.firstSelectableVariant) {
-              onVariantChange(found.firstSelectableVariant);
+            if (onVariantChange) {
+              const variant = resolveVariant({
+                optionName,
+                clickedValue: v,
+                variantMap,
+                selectedOptions,
+                fallback: found.firstSelectableVariant,
+              });
+              if (variant) {
+                onVariantChange(variant);
+              }
             } else {
               const to = found.isDifferentProduct
                 ? `/products/${found.handle}?${found.variantUriQuery}`
@@ -126,6 +173,8 @@ export function ProductOptionValues({
                   value={optionValue}
                   onVariantChange={onVariantChange}
                   combinedListing={combinedListing}
+                  variantMap={variantMap}
+                  selectedOptions={selectedOptions}
                 />
               </div>
             </TooltipTrigger>
@@ -146,11 +195,15 @@ function OptionValue({
   value,
   onVariantChange,
   combinedListing,
+  variantMap,
+  selectedOptions,
 }: {
   optionName: string;
   value: MappedProductOptions["optionValues"][number];
   onVariantChange?: (variant: ProductVariantFragment) => void;
   combinedListing?: boolean;
+  variantMap?: Map<string, ProductVariantFragment>;
+  selectedOptions?: Array<{ name: string; value: string }>;
 }) {
   const navigate = useNavigate();
   const {
@@ -178,8 +231,17 @@ function OptionValue({
     type: "button" as const,
     disabled: !exists,
     onClick: () => {
-      if (onVariantChange && firstSelectableVariant) {
-        onVariantChange(firstSelectableVariant);
+      if (onVariantChange) {
+        const variant = resolveVariant({
+          optionName,
+          clickedValue: name,
+          variantMap,
+          selectedOptions,
+          fallback: firstSelectableVariant,
+        });
+        if (variant) {
+          onVariantChange(variant);
+        }
       } else if (!selected && exists) {
         navigate(to, { replace: true });
       }

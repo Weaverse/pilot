@@ -10,10 +10,12 @@ export function VariantSelector({
   product,
   selectedVariant,
   setSelectedVariant,
+  variants,
 }: {
   product: NonNullable<ProductQuery["product"]>;
   selectedVariant: ProductVariantFragment;
   setSelectedVariant: (variant: ProductVariantFragment) => void;
+  variants?: ProductVariantFragment[];
 }) {
   const productOptions = getProductOptions({
     ...product,
@@ -22,6 +24,18 @@ export function VariantSelector({
 
   if (productOptions.length === 0 || hasOnlyDefaultVariant(productOptions)) {
     return null;
+  }
+
+  // Build a lookup map from all variants for correct option resolution
+  const variantMap = new Map<string, ProductVariantFragment>();
+  if (variants) {
+    for (const v of variants) {
+      const key = v.selectedOptions
+        .map((o) => `${o.name}=${o.value}`)
+        .sort()
+        .join("&");
+      variantMap.set(key, v);
+    }
   }
 
   const selectedOptions = selectedVariant?.selectedOptions || [];
@@ -42,6 +56,8 @@ export function VariantSelector({
               onVariantChange={(newVariant: ProductVariantFragment) => {
                 setSelectedVariant(newVariant);
               }}
+              variantMap={variantMap}
+              selectedOptions={selectedOptions}
             />
           </div>
         );
