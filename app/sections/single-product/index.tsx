@@ -1,30 +1,28 @@
-import { Money, ShopPayButton } from "@shopify/hydrogen";
+import { ImageIcon, ShoppingCartIcon } from "@phosphor-icons/react";
+import { ShopPayButton } from "@shopify/hydrogen";
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import {
-  type ComponentLoaderArgs,
   createSchema,
   type HydrogenComponentProps,
-  IMAGES_PLACEHOLDERS,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import type {
   ProductQuery,
   ProductVariantFragment,
 } from "storefront-api.generated";
-import { Button } from "~/components/button";
-import { Image } from "~/components/image";
 import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
-import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
+import { ProductMedia } from "~/components/product-media";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import { layoutInputs, Section } from "~/components/section";
-import { PRODUCT_QUERY } from "~/graphql/queries";
+import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
 
 interface SingleProductData {
@@ -35,80 +33,91 @@ interface SingleProductData {
   groupByOption?: string;
 }
 
-type SingleProductProps = HydrogenComponentProps<
-  Awaited<ReturnType<typeof loader>>
-> &
+interface FetchedProductData {
+  product: NonNullable<ProductQuery["product"]> | null;
+  variants: ProductVariantFragment[];
+  storeDomain: string | null;
+}
+
+type SingleProductProps = HydrogenComponentProps &
   SingleProductData & {
     ref: React.Ref<HTMLElement>;
   };
 
 export default function SingleProduct(props: SingleProductProps) {
   const {
-    ref,
-    loaderData,
+    ref: weaverseRef,
     product: _product,
     showThumbnails,
     groupMediaByVariant,
     groupByOption,
     ...rest
   } = props;
-  const { storeDomain, product } = loaderData || {};
+
+  const productHandle = _product?.handle;
+  const { ref: inViewRef, inView } = useInView({ triggerOnce: true });
+  const [fetchedData, setFetchedData] = useState<FetchedProductData | null>(
+    null,
+  );
   const [quantity, setQuantity] = useState<number>(1);
+
+  const product = fetchedData?.product;
+  const variants = fetchedData?.variants ?? [];
+  const storeDomain = fetchedData?.storeDomain;
+
   const [selectedVariant, setSelectedVariant] =
-    useState<ProductVariantFragment | null>(
-      product?.selectedOrFirstAvailableVariant,
-    );
+    useState<ProductVariantFragment | null>(null);
+
+  // Fetch product data when section scrolls into view
+  useEffect(() => {
+    if (inView && productHandle && !fetchedData) {
+      fetch(`/api/product/${productHandle}`)
+        .then((res) => res.json())
+        .then((data: FetchedProductData) => {
+          setFetchedData(data);
+          if (data.product?.selectedOrFirstAvailableVariant) {
+            setSelectedVariant(data.product.selectedOrFirstAvailableVariant);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [inView, productHandle, fetchedData]);
+
+  // Combine refs: inViewRef for intersection observer + weaverseRef for Weaverse Studio
+  const setRefs = (node: HTMLElement) => {
+    inViewRef(node);
+    if (typeof weaverseRef === "function") {
+      weaverseRef(node);
+    } else if (weaverseRef && "current" in weaverseRef) {
+      (weaverseRef as React.RefObject<HTMLElement | null>).current = node;
+    }
+  };
 
   if (!product) {
     return (
-      <Section ref={ref} {...rest}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
-            <Image
-              data={{
-                url: IMAGES_PLACEHOLDERS.product_2,
-                width: 1660,
-                height: 1660,
-              }}
-              loading="lazy"
-              width={1660}
-              aspectRatio="1/1"
-              sizes="auto"
-            />
-            <div className="flex flex-col items-start justify-start gap-4">
-              <span className="sold-out-badge px-1.5 py-1 text-sm uppercase">
-                Sold out
-              </span>
-              <h3 className="tracking-tight">EXAMPLE PRODUCT TITLE</h3>
-              <Money
-                withoutTrailingZeros
-                data={{ amount: "19.99", currencyCode: "USD" }}
-                as="span"
-                className="text-lg"
-              />
-              <p className="text-body-subtle">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <Button
-                type="button"
-                className="w-full cursor-not-allowed"
-                disabled
-              >
-                SOLD OUT
-              </Button>
-              <Link
-                to="#"
-                prefetch="intent"
-                variant="underline"
-                className="w-fit cursor-not-allowed"
-                onClick={(e) => e.preventDefault()}
-              >
-                View full details →
-              </Link>
+      <Section ref={setRefs} {...rest}>
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
+          <Skeleton className="flex aspect-square items-center justify-center">
+            <ImageIcon className="h-16 w-16 text-body-subtle" />
+          </Skeleton>
+          <div className="flex flex-col justify-start gap-5">
+            <Skeleton className="h-8 w-2/3" />
+            <Skeleton className="h-6 w-1/4" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+            <div className="flex gap-3">
+              <Skeleton className="h-9 w-9 rounded-full" />
+              <Skeleton className="h-9 w-9 rounded-full" />
             </div>
+            <div className="flex gap-3">
+              <Skeleton className="h-10 w-14" />
+              <Skeleton className="h-10 w-14" />
+              <Skeleton className="h-10 w-14" />
+            </div>
+            <Skeleton className="flex h-12 w-full items-center justify-center">
+              <ShoppingCartIcon className="h-5 w-5 text-body-subtle" />
+            </Skeleton>
           </div>
         </div>
       </Section>
@@ -127,29 +136,31 @@ export default function SingleProduct(props: SingleProductProps) {
   }
 
   return (
-    <Section ref={ref} {...rest}>
+    <Section ref={setRefs} {...rest}>
       <div>
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-          <ProductMedia
-            mediaLayout="slider"
-            imageAspectRatio="adapt"
-            media={product?.media.nodes}
-            selectedVariant={selectedVariant}
-            showThumbnails={showThumbnails}
-            groupMediaByVariant={groupMediaByVariant}
-            groupByOption={groupByOption}
-            product={product}
-          />
+          <div className="relative min-w-0">
+            <ProductMedia
+              mediaLayout="slider"
+              imageAspectRatio="adapt"
+              media={product?.media.nodes}
+              selectedVariant={selectedVariant}
+              showThumbnails={showThumbnails}
+              groupMediaByVariant={groupMediaByVariant}
+              groupByOption={groupByOption}
+              product={product}
+            />
+            <ProductBadges
+              product={product}
+              selectedVariant={selectedVariant}
+              className="absolute top-4 left-4 z-10"
+            />
+          </div>
           <ScrollReveal
             animation="slide-in"
             className="flex flex-col justify-start space-y-5"
           >
             <div className="space-y-4">
-              <ProductBadges
-                product={product}
-                selectedVariant={selectedVariant}
-                className="[&_span:nth-child(n+3)]:hidden"
-              />
               <h3 className="tracking-tight">{product?.title}</h3>
               <VariantPrices variant={selectedVariant} />
               <JudgemeStarsRating
@@ -174,6 +185,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 product={product}
                 selectedVariant={selectedVariant}
                 setSelectedVariant={setSelectedVariant}
+                variants={variants}
               />
             </div>
             <Quantity value={quantity} onChange={setQuantity} />
@@ -219,31 +231,6 @@ export default function SingleProduct(props: SingleProductProps) {
     </Section>
   );
 }
-
-export const loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
-  const { weaverse, data } = args;
-  const { storefront } = weaverse;
-  if (!data.product) {
-    return null;
-  }
-  const productHandle = data.product.handle;
-  const { product, shop } = await storefront.query<ProductQuery>(
-    PRODUCT_QUERY,
-    {
-      variables: {
-        handle: productHandle,
-        selectedOptions: [],
-        language: storefront.i18n.language,
-        country: storefront.i18n.country,
-      },
-    },
-  );
-
-  return {
-    product,
-    storeDomain: shop.primaryDomain.url,
-  };
-};
 
 export const schema = createSchema({
   type: "single-product",

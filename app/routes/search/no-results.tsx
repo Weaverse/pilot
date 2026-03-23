@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Await } from "react-router";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductCard } from "~/components/product-card";
 import { Swimlane } from "~/components/swimlane";
 import type { FeaturedProductsData } from "~/utils/featured-products";
 

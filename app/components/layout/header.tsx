@@ -24,9 +24,9 @@ import { PredictiveSearchButton } from "./predictive-search";
 const variants = cva("", {
   variants: {
     width: {
-      full: "h-full w-full",
-      stretch: "h-full w-full",
-      fixed: "mx-auto h-full w-full max-w-(--page-width)",
+      full: "w-full",
+      stretch: "w-full",
+      fixed: "mx-auto w-full max-w-(--page-width)",
     },
     padding: {
       full: "",

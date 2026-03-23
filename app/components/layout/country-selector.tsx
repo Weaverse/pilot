@@ -2,6 +2,7 @@ import { CaretDownIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import * as Popover from "@radix-ui/react-popover";
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useInView } from "react-intersection-observer";
@@ -166,6 +167,7 @@ export function HeaderCountrySelector() {
   const submit = useSubmit();
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  const { countryNameDisplay } = useThemeSettings();
   const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
@@ -217,7 +219,7 @@ export function HeaderCountrySelector() {
   }
 
   return (
-    <div className="flex items-center gap-1.5" ref={observerRef}>
+    <div className="hidden md:flex items-center gap-1.5" ref={observerRef}>
       <Popover.Root>
         <Popover.Trigger asChild>
           <button
@@ -230,7 +232,14 @@ export function HeaderCountrySelector() {
               countryCode={selectedLocale.country}
               style={{ width: "24px", height: "16px" }}
             />
-            <span className="">{selectedLocale.country}</span>
+            {countryNameDisplay === "full" ? (
+              <>
+                <span className="hidden xl:inline">{selectedLocale.label}</span>
+                <span className="xl:hidden">{selectedLocale.country}</span>
+              </>
+            ) : (
+              <span>{selectedLocale.country}</span>
+            )}
             <CaretDownIcon className="h-3 w-3" />
           </button>
         </Popover.Trigger>
@@ -239,7 +248,7 @@ export function HeaderCountrySelector() {
             <ScrollArea
               size="sm"
               style={{ maxHeight: 240, width: 256 }}
-              rootClassName="border border-line-subtle bg-white py-2 shadow-lg"
+              rootClassName="border border-gray-300 bg-white py-2 shadow-lg"
             >
               {countries &&
                 Object.keys(countries).map((countryPath) => {

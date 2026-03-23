@@ -13,7 +13,7 @@ import type { SearchQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { variants } from "~/components/link";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { cn } from "~/utils/cn";

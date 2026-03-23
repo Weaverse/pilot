@@ -6,7 +6,7 @@ import Heading, {
   type HeadingProps,
   headingInputs,
 } from "~/components/heading";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductCard } from "~/components/product-card";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 

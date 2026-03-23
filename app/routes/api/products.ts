@@ -5,7 +5,6 @@ import { data } from "react-router";
 import type { ApiAllProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 /**
  * Fetch a given set of products from the storefront API
@@ -46,16 +45,12 @@ export async function loader({
     // noop
   }
 
-  const combinedQuery = [maybeFilterOutCombinedListingsQuery, query]
-    .filter(Boolean)
-    .join(" ");
-
   const { products } = await storefront.query<ApiAllProductsQuery>(
     API_ALL_PRODUCTS_QUERY,
     {
       variables: {
         count,
-        query: combinedQuery,
+        query,
         reverse,
         sortKey,
         country: storefront.i18n.country,

@@ -7,11 +7,9 @@ import { hasOnlyDefaultVariant } from "~/utils/product";
 export function ProductVariants({
   productOptions,
   selectedVariant,
-  combinedListing,
 }: {
   productOptions: MappedProductOptions[];
   selectedVariant: ProductVariantFragment;
-  combinedListing?: boolean;
 }) {
   if (hasOnlyDefaultVariant(productOptions)) {
     return null;
@@ -32,7 +30,6 @@ export function ProductVariants({
             </legend>
             <ProductOptionValues
               option={option}
-              combinedListing={combinedListing}
             />
           </div>
         );

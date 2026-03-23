@@ -2,7 +2,7 @@ import { createSchema, useParentInstance } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { FeaturedProductsQuery } from "storefront-api.generated";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductCard } from "~/components/product-card";
 import { Swimlane } from "~/components/swimlane";
 
 const variants = cva("", {

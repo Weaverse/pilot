@@ -30,7 +30,8 @@ export default hydrogenRoutes([
       route("predictive-search", "routes/api/predictive-search.ts"),
       route("products", "routes/api/products.ts"),
       route(":version/graphql.json", "routes/api/graphql.json.ts"),
-      route("product/:productHandle/reviews?", "routes/api/product.ts"),
+      route("product/:productHandle", "routes/api/product.ts"),
+      route("product/:productHandle/reviews", "routes/api/reviews.ts"),
     ]),
     ...prefix("blogs", [
       route(":blogHandle", "routes/blogs/blog.tsx"),
