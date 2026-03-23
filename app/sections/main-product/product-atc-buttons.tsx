@@ -7,7 +7,6 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { isCombinedListing } from "~/utils/combined-listings";
 import { useProductQtyStore } from "./product-quantity-selector";
 
 interface ProductATCButtonsProps extends HydrogenComponentProps {
@@ -35,10 +34,9 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     getAdjacentAndFirstAvailableVariants(product),
   );
 
-  const combinedListing = isCombinedListing(product);
   const isBundle = Boolean(product?.isBundle?.requiresComponents);
 
-  if (!product || combinedListing) {
+  if (!product) {
     return null;
   }
 

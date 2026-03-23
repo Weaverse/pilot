@@ -10,17 +10,10 @@ import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import {
-  redirectIfCombinedListing,
-  redirectIfHandleIsLocalized,
-} from "~/.server/redirect";
+import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
-import {
-  COMBINED_LISTINGS_CONFIGS,
-  isCombinedListing,
-} from "~/utils/combined-listings";
 import { WeaverseContent } from "~/weaverse";
 import { getRecommendedProducts } from "./recommended-product";
 
@@ -51,10 +44,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }
   redirectIfHandleIsLocalized(request, { handle, data: product });
 
-  if (COMBINED_LISTINGS_CONFIGS.redirectToFirstVariant) {
-    redirectIfCombinedListing(request, product);
-  }
-
   // Use Hydrogen/Remix streaming for recommended products
   const recommended = getRecommendedProducts(storefront, product.id);
 
@@ -77,7 +66,6 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
-  const combinedListing = isCombinedListing(product);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -88,7 +76,7 @@ export default function Product() {
   // Sets the search param to the selected variant without navigation
   // when no search params are set or when variant options don't match
   useEffect(() => {
-    if (!selectedVariant?.selectedOptions || combinedListing) {
+    if (!selectedVariant?.selectedOptions) {
       return;
     }
 
@@ -127,7 +115,7 @@ export default function Product() {
         );
       }
     }
-  }, [selectedVariant?.selectedOptions, combinedListing]);
+  }, [selectedVariant?.selectedOptions]);
 
   return (
     <>
