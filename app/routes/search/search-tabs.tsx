@@ -1,9 +1,10 @@
-import { Link, useSearchParams } from "react-router";
 import { cn } from "~/utils/cn";
 import type { SearchCounts, SearchType } from "./types";
 
 interface SearchTabsProps {
   counts: SearchCounts;
+  activeTab: SearchType;
+  onTabChange: (type: SearchType) => void;
 }
 
 const tabs: { type: SearchType; label: string }[] = [
@@ -13,20 +14,21 @@ const tabs: { type: SearchType; label: string }[] = [
   { type: "collections", label: "Collections" },
 ];
 
-export function SearchTabs({ counts }: SearchTabsProps) {
-  const [searchParams] = useSearchParams();
-  const searchTerm = searchParams.get("q") || "";
-  const activeTab = (searchParams.get("type") as SearchType) || "products";
-
+export function SearchTabs({
+  counts,
+  activeTab,
+  onTabChange,
+}: SearchTabsProps) {
   return (
     <div className="border-b border-line-subtle">
       <div className="flex gap-8">
         {tabs.map(({ type, label }) => (
-          <Link
+          <button
             key={type}
-            to={`/search?q=${encodeURIComponent(searchTerm)}&type=${type}`}
+            type="button"
+            onClick={() => onTabChange(type)}
             className={cn(
-              "relative py-3 text-sm font-medium transition-colors",
+              "relative py-3 font-medium transition-colors cursor-pointer",
               activeTab === type
                 ? "text-foreground"
                 : "text-body-subtle hover:text-foreground",
@@ -35,7 +37,7 @@ export function SearchTabs({ counts }: SearchTabsProps) {
             <span>{label}</span>
             <span
               className={cn(
-                "ml-1.5 text-xs",
+                "ml-1.5",
                 activeTab === type ? "text-foreground" : "text-body-subtle",
               )}
             >
@@ -44,7 +46,7 @@ export function SearchTabs({ counts }: SearchTabsProps) {
             {activeTab === type && (
               <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground" />
             )}
-          </Link>
+          </button>
         ))}
       </div>
     </div>
