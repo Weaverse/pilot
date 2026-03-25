@@ -148,8 +148,7 @@ function SwatchFilterItem({
                 ? `url(${swatchImage?.value})`
                 : undefined,
               backgroundSize: "cover",
-              backgroundColor:
-                swatchColor?.value || option.label.toLowerCase(),
+              backgroundColor: swatchColor?.value || option.label.toLowerCase(),
             }}
           />
         </button>

@@ -28,9 +28,7 @@ export function ProductVariants({
               <span className="font-bold">{name}</span>
               {selected?.value && <span>: {selected.value}</span>}
             </legend>
-            <ProductOptionValues
-              option={option}
-            />
+            <ProductOptionValues option={option} />
           </div>
         );
       })}

@@ -125,12 +125,10 @@ async function getSwatchesConfigs(context: AppLoadContext) {
     const colors: Swatch[] = [];
     const images: Swatch[] = [];
     for (const { id, fields } of metaobjects.nodes) {
-      const { value: color } =
-        fields.find(({ key }) => key === "color") || {};
+      const { value: color } = fields.find(({ key }) => key === "color") || {};
       const { reference: imageRef } =
         fields.find(({ key }) => key === "image") || {};
-      const { value: name } =
-        fields.find(({ key }) => key === "label") || {};
+      const { value: name } = fields.find(({ key }) => key === "label") || {};
       if (imageRef) {
         const url = imageRef?.image?.url;
         if (url) {
