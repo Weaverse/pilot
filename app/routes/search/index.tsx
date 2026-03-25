@@ -35,7 +35,7 @@ export async function loader({
   if (searchTerm) {
     const data = await storefront.query<SearchQuery>(SEARCH_QUERY, {
       variables: {
-        searchTerm,
+        searchTerm: `title:*${searchTerm}*`,
         ...getPaginationVariables(request, { pageBy: 16 }),
         country: storefront.i18n.country,
         language: storefront.i18n.language,
