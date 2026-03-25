@@ -1,6 +1,7 @@
 import { Pagination } from "@shopify/hydrogen";
 import { useInView } from "react-intersection-observer";
 import type { SearchPageQuery } from "storefront-api.generated";
+import { Button } from "~/components/button";
 import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import { TabNoResults } from "./tab-no-results";
 
@@ -35,7 +36,11 @@ export function ProductsTab({
             gapX={16}
             gapY={24}
           />
-          {hasNextPage && <div ref={inViewRef} className="h-4" />}
+          {hasNextPage && (
+            <div ref={inViewRef} className="flex justify-center mt-8">
+              <Button variant="outline">Loading...</Button>
+            </div>
+          )}
         </>
       )}
     </Pagination>
