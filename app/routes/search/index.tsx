@@ -3,15 +3,13 @@ import {
   Analytics,
   getPaginationVariables,
   getSeoMeta,
-  Pagination,
 } from "@shopify/hydrogen";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { data, Form, useLoaderData } from "react-router";
 import type { SearchPageQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
-import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { getFeaturedProducts } from "~/utils/featured-products";
@@ -20,6 +18,7 @@ import { CollectionsGrid } from "./collections-grid";
 import { NoResults } from "./no-results";
 import { PagesList } from "./pages-list";
 import { PopularKeywords } from "./popular-searches";
+import { ProductsTab } from "./products-tab";
 import { SearchTabs } from "./search-tabs";
 import { TabNoResults } from "./tab-no-results";
 import type { SearchCounts, SearchType } from "./types";
@@ -30,7 +29,6 @@ export async function loader({
 }: LoaderFunctionArgs) {
   const { searchParams } = new URL(request.url);
   const searchTerm = searchParams.get("q") || "";
-  const activeTab = (searchParams.get("type") as SearchType) || "products";
 
   let products: SearchPageQuery["products"] = {
     nodes: [],
@@ -92,7 +90,6 @@ export async function loader({
       },
     }),
     searchTerm,
-    activeTab,
     products,
     articles: articles?.nodes || [],
     pages: pages?.nodes || [],
@@ -113,7 +110,6 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 export default function Search() {
   const {
     searchTerm,
-    activeTab,
     products,
     articles,
     pages,
@@ -122,6 +118,7 @@ export default function Search() {
     recommendations,
   } = useLoaderData<typeof loader>();
   const [searchKey, setSearchKey] = useState(searchTerm);
+  const [activeTab, setActiveTab] = useState<SearchType>("products");
 
   useEffect(() => {
     setSearchKey(searchTerm);
@@ -131,54 +128,16 @@ export default function Search() {
     counts.products + counts.articles + counts.pages + counts.collections;
   const hasAnyResults = totalResults > 0;
 
-  function ProductsTab() {
-    const loadMoreRef = useRef<HTMLDivElement>(null);
-    const [inView, setInView] = useState(false);
-
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          setInView(entry.isIntersecting);
-        },
-        { threshold: 0 },
-      );
-
-      if (loadMoreRef.current) {
-        observer.observe(loadMoreRef.current);
-      }
-
-      return () => observer.disconnect();
-    }, []);
-
-    if (counts.products === 0) {
-      return <TabNoResults type="products" searchTerm={searchTerm} />;
-    }
-
-    return (
-      <Pagination connection={products}>
-        {({ nodes, state, hasNextPage, nextPageUrl }) => (
-          <>
-            <ProductsLoadedOnScroll
-              nodes={nodes}
-              inView={inView}
-              nextPageUrl={nextPageUrl}
-              hasNextPage={hasNextPage}
-              state={state}
-              minCardWidth={280}
-              gapX={16}
-              gapY={24}
-            />
-            <div ref={loadMoreRef} className="h-4" />
-          </>
-        )}
-      </Pagination>
-    );
-  }
-
   function renderTabContent() {
     switch (activeTab) {
       case "products":
-        return <ProductsTab />;
+        return (
+          <ProductsTab
+            products={products}
+            productsCount={counts.products}
+            searchTerm={searchTerm}
+          />
+        );
 
       case "articles":
         if (counts.articles === 0) {
@@ -220,7 +179,6 @@ export default function Search() {
           placeholder="Search our store..."
           type="search"
         />
-        <input type="hidden" name="type" value={activeTab} />
         <button
           type="button"
           className="shrink-0 p-1 text-gray-500"
@@ -233,7 +191,11 @@ export default function Search() {
 
       {hasAnyResults ? (
         <div className="mt-8 space-y-8">
-          <SearchTabs counts={counts} />
+          <SearchTabs
+            counts={counts}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
           <div className="min-h-100">{renderTabContent()}</div>
         </div>
       ) : (
