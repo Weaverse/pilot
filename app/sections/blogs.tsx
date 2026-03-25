@@ -1,4 +1,4 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
@@ -8,6 +8,7 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
+import { formatDate } from "~/utils/misc";
 
 interface BlogsProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
@@ -69,6 +70,13 @@ export interface ArticleCardProps {
   className?: string;
 }
 
+const PLACEHOLDER_IMAGE = {
+  url: IMAGES_PLACEHOLDERS.image,
+  altText: "Placeholder image",
+  width: 800,
+  height: 600,
+};
+
 export function ArticleCard({
   blogHandle,
   article,
@@ -80,22 +88,22 @@ export function ArticleCard({
   imageAspectRatio,
   className,
 }: ArticleCardProps) {
+  const image = article.image || PLACEHOLDER_IMAGE;
+
   return (
     <div className={cn("flex flex-col gap-5", className)}>
-      {article.image && (
-        <Link
-          to={`/blogs/${blogHandle}/${article.handle}`}
-          className="flex flex-col gap-5"
-        >
-          <Image
-            alt={article.image.altText || article.title}
-            data={article.image}
-            aspectRatio={calculateAspectRatio(article.image, imageAspectRatio)}
-            loading={loading}
-            sizes="(min-width: 768px) 50vw, 100vw"
-          />
-        </Link>
-      )}
+      <Link
+        to={`/blogs/${blogHandle}/${article.handle}`}
+        className="flex flex-col gap-5"
+      >
+        <Image
+          alt={image.altText || article.title}
+          data={image}
+          aspectRatio={calculateAspectRatio(image, imageAspectRatio)}
+          loading={loading}
+          sizes="(min-width: 768px) 50vw, 100vw"
+        />
+      </Link>
       <div className="space-y-2.5">
         <Link
           to={`/blogs/${blogHandle}/${article.handle}`}
@@ -106,14 +114,14 @@ export function ArticleCard({
           </RevealUnderline>
         </Link>
         <div className="flex items-center gap-2 text-gray-600 empty:hidden">
-          {showDate && <span className="block">{article.publishedAt}</span>}
+          {showDate && (
+            <span className="block">{formatDate(article.publishedAt)}</span>
+          )}
           {showDate && showAuthor && <span>•</span>}
           {showAuthor && <span className="block">{article.author?.name}</span>}
         </div>
         {showExcerpt && (
-          <div className="line-clamp-2 text-gray-700 lg:line-clamp-4">
-            {article.excerpt}
-          </div>
+          <div className="line-clamp-2 text-gray-700">{article.excerpt}</div>
         )}
         {showReadmore && (
           <div>
