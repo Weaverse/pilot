@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 import { routeHeaders } from "~/utils/cache";
+import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export let headers = routeHeaders;
 
