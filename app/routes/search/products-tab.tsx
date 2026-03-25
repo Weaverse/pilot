@@ -24,8 +24,23 @@ export function ProductsTab({
 
   return (
     <Pagination connection={products}>
-      {({ nodes, state, hasNextPage, nextPageUrl }) => (
+      {({
+        nodes,
+        state,
+        hasNextPage,
+        hasPreviousPage,
+        nextPageUrl,
+        isLoading,
+        PreviousLink,
+      }) => (
         <>
+          {hasPreviousPage && (
+            <PreviousLink className="flex justify-center mb-8">
+              <Button variant="outline">
+                {isLoading ? "Loading..." : "↑ Load previous"}
+              </Button>
+            </PreviousLink>
+          )}
           <ProductsLoadedOnScroll
             nodes={nodes}
             inView={inView}
@@ -38,7 +53,9 @@ export function ProductsTab({
           />
           {hasNextPage && (
             <div ref={inViewRef} className="flex justify-center mt-8">
-              <Button variant="outline">Loading...</Button>
+              <Button variant="outline">
+                {isLoading ? "Loading..." : "Loading..."}
+              </Button>
             </div>
           )}
         </>

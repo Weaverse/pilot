@@ -251,6 +251,7 @@ const SEARCH_PAGE_QUERY = `#graphql
         }
         publishedAt
         excerpt
+        contentHtml
         blog {
           handle
           title
