@@ -242,7 +242,8 @@ function ZoomMedia({
     return (
       <ModelViewer
         data={media3d}
-        className="h-auto max-h-[80vh] w-full md:h-full"
+        alt={media3d.alt || "3D model of product"}
+        className="h-[60vh] w-full md:h-[80vh]"
       />
     );
   }

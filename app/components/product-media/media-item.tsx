@@ -64,7 +64,11 @@ export function MediaItem({
   if (media.mediaContentType === "MODEL_3D") {
     const media3d = media as Media_Model3d_Fragment;
     return (
-      <ModelViewer data={media3d} className={cn("h-auto w-full", className)} />
+      <ModelViewer
+        data={media3d}
+        alt={media3d.alt || "3D model of product"}
+        className={cn("h-[500px] w-full lg:h-[600px]", className)}
+      />
     );
   }
   return null;
