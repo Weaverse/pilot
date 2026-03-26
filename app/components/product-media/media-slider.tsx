@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  CubeIcon,
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -131,6 +132,11 @@ export function MediaSlider({
                           <VideoCameraIcon className="h-4 w-4" />
                         </div>
                       )}
+                      {mediaContentType === "MODEL_3D" && (
+                        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+                          <CubeIcon className="h-4 w-4" />
+                        </div>
+                      )}
                     </SwiperSlide>
                   );
                 },
@@ -167,14 +173,14 @@ export function MediaSlider({
                 <SwiperSlide key={med.id} className="group bg-gray-100">
                   <div
                     onClick={
-                      canClickImage
+                      canClickImage && med.mediaContentType !== "MODEL_3D"
                         ? () => {
                             setZoomMediaId(med.id);
                             setZoomModalOpen(true);
                           }
                         : undefined
                     }
-                    className={canClickImage ? "cursor-zoom-in" : ""}
+                    className={canClickImage && med.mediaContentType !== "MODEL_3D" ? "cursor-zoom-in" : ""}
                   >
                     <MediaItem
                       media={med}

@@ -1,5 +1,8 @@
+import { ExternalVideo, ModelViewer } from "@shopify/hydrogen";
 import type {
+  Media_ExternalVideo_Fragment,
   Media_MediaImage_Fragment,
+  Media_Model3d_Fragment,
   Media_Video_Fragment,
   MediaFragment,
 } from "storefront-api.generated";
@@ -7,6 +10,7 @@ import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
+import { getModel3dData } from "./model-utils";
 
 export function MediaItem({
   media,
@@ -57,6 +61,29 @@ export function MediaItem({
         />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
+    );
+  }
+  if (media.mediaContentType === "MODEL_3D") {
+    let model3d = media as Media_Model3d_Fragment;
+    let { data, iosSrc } = getModel3dData(model3d);
+    let aspectRatio =
+      imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
+    return (
+      <ModelViewer
+        data={data}
+        iosSrc={iosSrc}
+        className={cn("w-full", className)}
+        style={{ aspectRatio, height: aspectRatio ? undefined : "500px" }}
+      />
+    );
+  }
+  if (media.mediaContentType === "EXTERNAL_VIDEO") {
+    let externalVideo = media as Media_ExternalVideo_Fragment;
+    return (
+      <ExternalVideo
+        data={externalVideo}
+        className={cn("aspect-video h-auto w-full", className)}
+      />
     );
   }
   return null;

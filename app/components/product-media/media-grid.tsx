@@ -104,14 +104,14 @@ export function MediaGrid({
               >
                 <div
                   onClick={
-                    canClickImage
+                    canClickImage && med.mediaContentType !== "MODEL_3D"
                       ? () => {
                           setZoomMediaId(med.id);
                           setZoomModalOpen(true);
                         }
                       : undefined
                   }
-                  className={canClickImage ? "cursor-zoom-in" : ""}
+                  className={canClickImage && med.mediaContentType !== "MODEL_3D" ? "cursor-zoom-in" : ""}
                 >
                   <MediaItem
                     media={med}
