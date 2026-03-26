@@ -63,11 +63,22 @@ export function MediaItem({
   }
   if (media.mediaContentType === "MODEL_3D") {
     const media3d = media as Media_Model3d_Fragment;
+    console.log("[ModelViewer] Rendering MODEL_3D media:", {
+      id: media3d.id,
+      alt: media3d.alt,
+      sourcesCount: media3d.sources?.length,
+      sources: media3d.sources,
+      previewImage: media3d.previewImage,
+    });
     return (
       <ModelViewer
         data={media3d}
         alt={media3d.alt || "3D model of product"}
         className={cn("h-[500px] w-full lg:h-[600px]", className)}
+        onLoad={(event) => console.log("[ModelViewer] Model loaded:", event)}
+        onError={(event) =>
+          console.error("[ModelViewer] Error loading model:", event)
+        }
       />
     );
   }

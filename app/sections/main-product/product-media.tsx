@@ -43,6 +43,16 @@ export default function ProductMediaComponent(
 
   const media = product?.media?.nodes || [];
 
+  console.log(
+    "[ProductMediaSection] Product media from loader:",
+    media?.map((m) => ({
+      id: m.id,
+      type: m.mediaContentType,
+      alt: m.alt,
+      typename: m.__typename,
+    })),
+  );
+
   return (
     <div
       ref={ref}
