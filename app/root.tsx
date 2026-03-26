@@ -162,17 +162,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         ) : (
           children
         )}
-        {/* --- DEBUG START --- */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof window !== 'undefined') {
-                window.__debug_logs = [];
-              }
-            `,
-          }}
-        />
-        {/* --- DEBUG END --- */}
         <GlobalLoading />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />

@@ -43,7 +43,6 @@ export default function ProductMediaComponent(
 
   const media = product?.media?.nodes || [];
 
-
   return (
     <div
       ref={ref}
