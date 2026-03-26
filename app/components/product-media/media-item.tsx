@@ -1,5 +1,7 @@
+import { ModelViewer } from "@shopify/hydrogen";
 import type {
   Media_MediaImage_Fragment,
+  Media_Model3d_Fragment,
   Media_Video_Fragment,
   MediaFragment,
 } from "storefront-api.generated";
@@ -57,6 +59,12 @@ export function MediaItem({
         />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
+    );
+  }
+  if (media.mediaContentType === "MODEL_3D") {
+    const media3d = media as Media_Model3d_Fragment;
+    return (
+      <ModelViewer data={media3d} className={cn("h-auto w-full", className)} />
     );
   }
   return null;
