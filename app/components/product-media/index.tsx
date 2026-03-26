@@ -46,11 +46,6 @@ export function ProductMedia(props: ProductMediaProps) {
     showLessText = "Show less",
   } = props;
 
-  console.log(
-    "[ProductMedia] Raw media from props:",
-    media?.map((m) => ({ id: m.id, type: m.mediaContentType, alt: m.alt })),
-  );
-
   let displayMedia = media;
   let isMediaGrouped = false;
   if (groupMediaByVariant && product && groupByOption) {

@@ -57,18 +57,6 @@ export function MediaGrid({
   showMoreText = "Show more",
   showLessText = "Show less",
 }: MediaGridProps) {
-  console.log(
-    "[MediaGrid] All media:",
-    allMedia?.map((m) => ({ id: m.id, type: m.mediaContentType, alt: m.alt })),
-  );
-  console.log(
-    "[MediaGrid] Display media:",
-    displayMedia?.map((m) => ({
-      id: m.id,
-      type: m.mediaContentType,
-      alt: m.alt,
-    })),
-  );
   const [expanded, setExpanded] = useState(false);
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
