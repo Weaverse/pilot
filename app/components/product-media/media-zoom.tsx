@@ -1,19 +1,17 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  CubeIcon,
   MagnifyingGlassPlusIcon,
   VideoCameraIcon,
   XIcon,
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { ModelViewer, parseGid } from "@shopify/hydrogen";
+import { parseGid } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import type {
   Media_MediaImage_Fragment,
-  Media_Model3d_Fragment,
   Media_Video_Fragment,
   MediaFragment,
 } from "storefront-api.generated";
@@ -154,11 +152,6 @@ export function ZoomModal({
                             <VideoCameraIcon className="h-4 w-4" />
                           </div>
                         )}
-                        {mediaContentType === "MODEL_3D" && (
-                          <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                            <CubeIcon className="h-4 w-4" />
-                          </div>
-                        )}
                       </div>
                     );
                   })}
@@ -235,16 +228,6 @@ function ZoomMedia({
         <track kind="captions" />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
-    );
-  }
-  if (media.mediaContentType === "MODEL_3D") {
-    const media3d = media as Media_Model3d_Fragment;
-    return (
-      <ModelViewer
-        data={media3d}
-        alt={media3d.alt || "3D model of product"}
-        className="h-[60vh] w-full md:h-[80vh]"
-      />
     );
   }
   return null;

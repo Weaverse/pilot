@@ -79,24 +79,6 @@ export function MediaGrid({
       : displayMedia;
   const hiddenCount = displayMedia.length - visibleMedia.length;
 
-  // --- DEBUG START ---
-  if (typeof window !== "undefined" && window.__debug_logs) {
-    window.__debug_logs.push({
-      timestamp: Date.now(),
-      key: "media_grid_display_media",
-      totalMedia: displayMedia.length,
-      mediaTypes: displayMedia.map((m) => ({
-        id: m.id,
-        type: m.mediaContentType,
-        alt: m.alt,
-      })),
-      model3dCount: displayMedia.filter(
-        (m) => m.mediaContentType === "MODEL_3D",
-      ).length,
-    });
-  }
-  // --- DEBUG END ---
-
   return (
     <>
       <div className="relative">

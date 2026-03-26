@@ -1,7 +1,6 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  CubeIcon,
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -130,11 +129,6 @@ export function MediaSlider({
                       {mediaContentType === "VIDEO" && (
                         <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
                           <VideoCameraIcon className="h-4 w-4" />
-                        </div>
-                      )}
-                      {mediaContentType === "MODEL_3D" && (
-                        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                          <CubeIcon className="h-4 w-4" />
                         </div>
                       )}
                     </SwiperSlide>

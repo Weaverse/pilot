@@ -43,24 +43,6 @@ export default function ProductMediaComponent(
 
   const media = product?.media?.nodes || [];
 
-  // --- DEBUG START ---
-  if (typeof window !== "undefined" && window.__debug_logs) {
-    window.__debug_logs.push({
-      timestamp: Date.now(),
-      key: "section_product_media",
-      productHandle: product.handle,
-      totalMedia: media.length,
-      mediaTypes: media.map((m) => ({
-        id: m.id,
-        type: m.mediaContentType,
-        alt: m.alt,
-        typename: m.__typename,
-      })),
-      model3dCount: media.filter((m) => m.mediaContentType === "MODEL_3D")
-        .length,
-    });
-  }
-  // --- DEBUG END ---
 
   return (
     <div
