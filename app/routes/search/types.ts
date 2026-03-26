@@ -24,6 +24,7 @@ export interface PageSearchResult {
   id: string;
   title: string;
   handle: string;
+  body?: string;
 }
 
 export interface CollectionSearchResult {

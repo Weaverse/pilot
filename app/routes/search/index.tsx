@@ -264,6 +264,7 @@ const SEARCH_PAGE_QUERY = `#graphql
         id
         title
         handle
+        body
       }
     }
 
