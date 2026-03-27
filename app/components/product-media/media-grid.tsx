@@ -121,6 +121,13 @@ export function MediaGrid({
                     media={med}
                     imageAspectRatio={imageAspectRatio}
                     index={idx}
+                    sizes={
+                      gridSize === "2x2"
+                        ? "(min-width: 1536px) 25vw, (min-width: 1024px) 50vw, 80vw"
+                        : gridSize === "mix"
+                          ? "(min-width: 1024px) 66vw, 80vw"
+                          : "(min-width: 1024px) 50vw, 80vw"
+                    }
                     className={cn(
                       "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
                       idx === 0 &&
