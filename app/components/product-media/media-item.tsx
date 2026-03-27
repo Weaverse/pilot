@@ -1,3 +1,4 @@
+import { CubeIcon, VideoCameraIcon } from "@phosphor-icons/react";
 import { ExternalVideo, ModelViewer } from "@shopify/hydrogen";
 import type {
   Media_ExternalVideo_Fragment,
@@ -42,25 +43,27 @@ export function MediaItem({
     const aspectRatio =
       imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
     return (
-      <video
-        controls
-        aria-label={mediaVideo.alt || "Product video"}
-        className={cn(
-          "h-auto max-h-[80vh] w-full bg-black object-contain",
-          className,
-        )}
-        style={{ aspectRatio }}
-        onError={console.error}
-      >
-        <track
-          kind="captions"
-          src={mediaVideo.sources[0].url}
-          label="English"
-          srcLang="en"
-          default
-        />
-        <source src={mediaVideo.sources[0].url} type="video/mp4" />
-      </video>
+      <div className={cn("relative", className)}>
+        <video
+          controls
+          aria-label={mediaVideo.alt || "Product video"}
+          className="h-auto max-h-[80vh] w-full bg-black object-contain"
+          style={{ aspectRatio }}
+          onError={console.error}
+        >
+          <track
+            kind="captions"
+            src={mediaVideo.sources[0].url}
+            label="English"
+            srcLang="en"
+            default
+          />
+          <source src={mediaVideo.sources[0].url} type="video/mp4" />
+        </video>
+        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+          <VideoCameraIcon className="h-4 w-4" />
+        </div>
+      </div>
     );
   }
   if (media.mediaContentType === "MODEL_3D") {
@@ -69,12 +72,17 @@ export function MediaItem({
     let aspectRatio =
       imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
     return (
-      <ModelViewer
-        data={data}
-        iosSrc={iosSrc}
-        className={cn("w-full", className)}
-        style={{ aspectRatio, height: aspectRatio ? undefined : "500px" }}
-      />
+      <div className={cn("relative", className)}>
+        <ModelViewer
+          data={data}
+          iosSrc={iosSrc}
+          className="w-full"
+          style={{ aspectRatio, height: aspectRatio ? undefined : "500px" }}
+        />
+        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+          <CubeIcon className="size-6" />
+        </div>
+      </div>
     );
   }
   if (media.mediaContentType === "EXTERNAL_VIDEO") {

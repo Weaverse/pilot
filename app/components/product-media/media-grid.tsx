@@ -111,7 +111,11 @@ export function MediaGrid({
                         }
                       : undefined
                   }
-                  className={canClickImage && med.mediaContentType !== "MODEL_3D" ? "cursor-zoom-in" : ""}
+                  className={
+                    canClickImage && med.mediaContentType !== "MODEL_3D"
+                      ? "cursor-zoom-in"
+                      : ""
+                  }
                 >
                   <MediaItem
                     media={med}

@@ -11,11 +11,6 @@ export function getModel3dData(model3d: Media_Model3d_Fragment) {
   let glbSource = model3d.sources.find((s) => s.mimeType === GLB_MIME);
   let usdzSource = model3d.sources.find((s) => s.mimeType === USDZ_MIME);
 
-  // Debug: log what sources Shopify is returning
-  console.log("[ModelViewer] raw sources:", JSON.stringify(model3d.sources, null, 2));
-  console.log("[ModelViewer] glbSource:", glbSource);
-  console.log("[ModelViewer] usdzSource:", usdzSource);
-
   // Put GLB first so ModelViewer uses it as src
   let sortedSources = [
     ...(glbSource ? [glbSource] : []),
@@ -24,8 +19,6 @@ export function getModel3dData(model3d: Media_Model3d_Fragment) {
     ),
     ...(usdzSource ? [usdzSource] : []),
   ];
-
-  console.log("[ModelViewer] sortedSources[0] (will be used as src):", sortedSources[0]);
 
   return {
     data: {
