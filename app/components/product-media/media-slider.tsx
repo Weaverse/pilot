@@ -125,7 +125,7 @@ export function MediaSlider({
                         width={200}
                         aspectRatio="1/1"
                         className="h-auto w-full object-cover"
-                        sizes="auto"
+                        sizes="100px"
                       />
                       {mediaContentType === "VIDEO" && (
                         <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
@@ -160,6 +160,7 @@ export function MediaSlider({
             }}
             autoHeight
             loop
+            noSwipingSelector="model-viewer"
             navigation={{
               nextEl: ".media_slider__next",
               prevEl: ".media_slider__prev",
@@ -190,6 +191,7 @@ export function MediaSlider({
                       media={med}
                       imageAspectRatio={imageAspectRatio}
                       index={idx}
+                      sizes="(min-width: 1024px) 50vw, 100vw"
                       className={
                         idx === 0 &&
                         "[&_img]:[view-transition-name:image-expand]"

@@ -243,11 +243,9 @@ function ZoomMedia({
     let model3d = media as Media_Model3d_Fragment;
     let { data, iosSrc } = getModel3dData(model3d);
     return (
-      <ModelViewer
-        data={data}
-        iosSrc={iosSrc}
-        style={{ width: "min(80vw, 80vh)", height: "80vh" }}
-      />
+      <div style={{ width: "min(80vw, 80vh)", height: "80vh" }}>
+        <ModelViewer data={data} iosSrc={iosSrc} className="h-full w-full" />
+      </div>
     );
   }
   if (media.mediaContentType === "EXTERNAL_VIDEO") {
