@@ -25,6 +25,7 @@ export interface ProductMediaProps
   initialMediaCount?: number;
   showMoreText?: string;
   showLessText?: string;
+  fixedHeight?: boolean;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -44,6 +45,7 @@ export function ProductMedia(props: ProductMediaProps) {
     initialMediaCount = 0,
     showMoreText = "Show more",
     showLessText = "Show less",
+    fixedHeight,
   } = props;
 
   let displayMedia = media;
@@ -95,6 +97,7 @@ export function ProductMedia(props: ProductMediaProps) {
       zoomTrigger={zoomTrigger}
       zoomButtonVisibility={zoomButtonVisibility}
       groupMediaByVariant={isMediaGrouped}
+      fixedHeight={fixedHeight}
     />
   );
 }
