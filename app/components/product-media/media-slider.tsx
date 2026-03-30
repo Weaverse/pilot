@@ -194,6 +194,7 @@ export function MediaSlider({
                       imageAspectRatio={imageAspectRatio}
                       index={idx}
                       sizes="(min-width: 1024px) 50vw, 100vw"
+                      mediaLayout="slider"
                       className={
                         idx === 0 &&
                         "[&_img]:[view-transition-name:image-expand]"

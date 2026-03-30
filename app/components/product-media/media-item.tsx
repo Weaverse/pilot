@@ -25,12 +25,14 @@ export function MediaItem({
   index,
   className,
   sizes = "(min-width: 1024px) 50vw, 80vw",
+  mediaLayout = "grid",
 }: {
   media: MediaFragment;
   imageAspectRatio: ImageAspectRatio;
   index: number;
   className?: string;
   sizes?: string;
+  mediaLayout?: "grid" | "slider";
 }) {
   if (media.mediaContentType === "IMAGE") {
     const { image, alt } = media as Media_MediaImage_Fragment;
@@ -79,7 +81,12 @@ export function MediaItem({
     let { data, iosSrc } = getModel3dData(model3d);
     let aspectRatio =
       imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
-    let modelStyle = { aspectRatio, height: aspectRatio ? undefined : "600px" };
+
+    // Grid: fill the cell; Slider: match the featured image's aspect ratio via CSS var
+    let modelStyle: React.CSSProperties =
+      mediaLayout === "grid"
+        ? { aspectRatio, height: aspectRatio ? undefined : "100%" }
+        : { aspectRatio: aspectRatio || "var(--featured-media-aspect-ratio)" };
 
     // Preload the GLB asset for the hero model
     if (index === 0) {
