@@ -47,7 +47,7 @@ function CollectionHeader(props: CollectionHeaderProps) {
     : collection.image;
 
   return (
-    <div ref={ref} {...rest} className="col-span-full py-10">
+    <div {...rest} className="col-span-full py-10">
       {showBreadcrumb && (
         <BreadCrumb page={collection.title} className="mb-2.5" />
       )}

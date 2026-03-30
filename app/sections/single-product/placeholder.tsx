@@ -3,12 +3,9 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Section, type SectionProps } from "~/components/section";
 
-export function SingleProductPlaceholder({
-  ref,
-  ...rest
-}: SectionProps & { ref: React.Ref<HTMLElement> }) {
+export function SingleProductPlaceholder({ ...rest }: SectionProps) {
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
         <div className="aspect-square bg-background-subtle-1">
           <Image

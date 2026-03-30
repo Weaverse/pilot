@@ -22,8 +22,7 @@ export default function Spacer(props: SpacerData) {
 
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className="flex h-(--mobile-height) w-full items-center justify-center md:h-(--desktop-height)"
       style={
         {

@@ -8,17 +8,17 @@ interface AllProductsProps extends SectionProps {
 }
 
 export default function AllProducts(props: AllProductsProps) {
-  const { ref, children, ...rest } = props;
+  const { children, ...rest } = props;
   const { products } = useLoaderData<AllProductsQuery>();
 
   if (products) {
     return (
-      <Section ref={ref} {...rest} overflow="unset" animate={false}>
+      <Section {...rest} overflow="unset" animate={false}>
         {children}
       </Section>
     );
   }
-  return <Section ref={ref} {...rest} />;
+  return <Section {...rest} />;
 }
 
 export const schema = createSchema({

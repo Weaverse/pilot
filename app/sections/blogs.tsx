@@ -35,7 +35,7 @@ export default function Blogs(props: BlogsProps) {
 
   if (blog) {
     return (
-      <Section ref={ref} {...rest}>
+      <Section {...rest}>
         <h4 className="text-center font-medium">{blog.title}</h4>
         <div className="grid grid-cols-1 gap-x-4 gap-y-12 lg:grid-cols-3">
           {articles.map((article, i) => (
@@ -55,7 +55,7 @@ export default function Blogs(props: BlogsProps) {
       </Section>
     );
   }
-  return <Section ref={ref} {...rest} />;
+  return <Section {...rest} />;
 }
 
 export interface ArticleCardProps {

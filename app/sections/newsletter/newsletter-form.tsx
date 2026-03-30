@@ -32,7 +32,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
   const { ok, errorMessage } = data || {};
 
   return (
-    <div ref={ref} {...rest} className="mx-auto max-w-full" style={{ width }}>
+    <div {...rest} className="mx-auto max-w-full" style={{ width }}>
       <ScrollReveal
         as={Form}
         method="POST"

@@ -9,12 +9,12 @@ interface PageProps extends SectionProps {
 }
 
 export default function Page(props: PageProps) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   const { page } = useLoaderData<PageDetailsQuery>();
 
   if (page) {
     return (
-      <Section ref={ref} {...rest}>
+      <Section {...rest}>
         <div className="mb-4 flex items-center justify-center gap-2 text-body-subtle">
           <Link to="/" className="underline-offset-4 hover:underline">
             Home
@@ -33,7 +33,7 @@ export default function Page(props: PageProps) {
       </Section>
     );
   }
-  return <Section ref={ref} {...rest} />;
+  return <Section {...rest} />;
 }
 
 export const schema = createSchema({

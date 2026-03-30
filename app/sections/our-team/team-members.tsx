@@ -28,15 +28,14 @@ interface TeamMembersProps extends HydrogenComponentProps {
 }
 
 function TeamMembers(props: TeamMembersProps) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   const parent = useParentInstance();
   const { metaobjects }: OurTeamQuery = parent.data?.loaderData || {};
   if (metaobjects?.nodes?.length) {
     const members = metaobjects.nodes;
     return (
       <div
-        ref={ref}
-        {...rest}
+                {...rest}
         className="mb-6 grid gap-8 pt-4 md:grid-cols-2 lg:mb-16"
       >
         {members.map(({ id, fields }) => {
@@ -108,7 +107,7 @@ function TeamMembers(props: TeamMembersProps) {
     );
   }
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <div className="p-8 text-center">No members data available</div>
     </div>
   );

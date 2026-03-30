@@ -8,12 +8,11 @@ interface CollectionContentProps
 }
 
 function CollectionContent(props: CollectionContentProps) {
-  const { ref, children, ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className="col-span-full flex flex-col gap-5 lg:flex-row"
     >
       {children}

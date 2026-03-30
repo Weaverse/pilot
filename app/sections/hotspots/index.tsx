@@ -48,7 +48,7 @@ function Hotspots(props: HotspotsProps) {
       : image;
 
   return (
-    <Section ref={ref} {...rest} overflow="unset">
+    <Section {...rest} overflow="unset">
       {content && (
         <Heading
           content={content}

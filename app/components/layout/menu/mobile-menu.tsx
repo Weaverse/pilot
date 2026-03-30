@@ -101,9 +101,9 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
 function MenuTrigger(
   props: Dialog.DialogTriggerProps & { ref?: React.Ref<HTMLButtonElement> },
 ) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   return (
-    <button ref={ref} type="button" {...rest}>
+    <button type="button" {...rest}>
       <ListIcon className="h-5 w-5" />
     </button>
   );

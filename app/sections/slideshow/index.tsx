@@ -91,8 +91,7 @@ export default function Slideshow(
       key={Object.values(rest)
         .filter((v) => typeof v !== "object")
         .join("-")}
-      ref={ref}
-      {...rest}
+            {...rest}
       className={variants({ height, enableTransparentHeader })}
     >
       <Swiper

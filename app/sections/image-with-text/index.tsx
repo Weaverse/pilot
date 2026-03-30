@@ -8,12 +8,11 @@ interface ImageWithTextProps extends SectionProps {
 }
 
 function ImageWithText(props: ImageWithTextProps) {
-  const { children, ref, ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
     <Section
-      ref={ref}
-      {...rest}
+            {...rest}
       containerClassName="flex flex-col md:flex-row px-0 sm:px-0"
     >
       {children}

@@ -48,8 +48,7 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
 
     return (
       <div
-        ref={ref}
-        {...rest}
+                {...rest}
         className="space-y-8 md:flex md:gap-16 md:space-y-0"
       >
         <ScrollReveal
@@ -105,7 +104,7 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
     );
   }
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <div className="p-8 text-center">No reviews available</div>
     </div>
   );

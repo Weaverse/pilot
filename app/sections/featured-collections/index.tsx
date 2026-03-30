@@ -18,9 +18,9 @@ interface FeaturedCollectionsProps
 }
 
 export default function FeaturedCollections(props: FeaturedCollectionsProps) {
-  const { ref, loaderData, children, ...rest } = props;
+  const { loaderData, children, ...rest } = props;
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       {children}
     </Section>
   );

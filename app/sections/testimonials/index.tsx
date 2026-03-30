@@ -7,10 +7,10 @@ interface TestimonialsProps extends SectionProps {
 }
 
 function Testimonials(props: TestimonialsProps) {
-  const { children, ref, ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       {children}
     </Section>
   );

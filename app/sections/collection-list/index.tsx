@@ -6,9 +6,9 @@ interface CollectionListProps extends SectionProps {
 }
 
 function CollectionList(props: CollectionListProps) {
-  const { children, ref, ...rest } = props;
+  const { children, ...rest } = props;
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       {children}
     </Section>
   );

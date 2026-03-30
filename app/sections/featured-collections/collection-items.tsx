@@ -97,8 +97,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
   }
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className={clsx(
         [
           "snap-x snap-mandatory",

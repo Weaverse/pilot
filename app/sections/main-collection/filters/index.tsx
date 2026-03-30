@@ -30,8 +30,7 @@ function CollectionFilters(props: CollectionFiltersProps) {
 
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className="hidden shrink-0 lg:block"
       style={{ width: `${sidebarWidth}px` }}
     >

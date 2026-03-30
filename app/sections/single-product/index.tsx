@@ -60,7 +60,7 @@ export default function SingleProduct(props: SingleProductProps) {
     );
 
   if (!product) {
-    return <SingleProductPlaceholder ref={ref} {...rest} />;
+    return <SingleProductPlaceholder {...rest} />;
   }
 
   let isBundle = Boolean(product?.isBundle?.requiresComponents);
@@ -75,7 +75,7 @@ export default function SingleProduct(props: SingleProductProps) {
   }
 
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       <div>
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
           <div

@@ -7,9 +7,9 @@ interface NewsLetterProps extends SectionProps {
 }
 
 function NewsLetter(props: NewsLetterProps) {
-  const { children, ref, ...rest } = props;
+  const { children, ...rest } = props;
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       {children}
     </Section>
   );

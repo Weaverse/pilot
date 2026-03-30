@@ -102,8 +102,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
 
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className="col-span-full border-gray-300 border-y py-4"
     >
       <div className="flex w-full items-center">

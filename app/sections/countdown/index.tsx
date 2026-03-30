@@ -21,9 +21,9 @@ interface CountdownProps extends VariantProps<typeof variants>, SectionProps {
 }
 
 function Countdown(props: CountdownProps) {
-  const { children, alignment, ref, ...rest } = props;
+  const { children, alignment, ...rest } = props;
   return (
-    <Section ref={ref} {...rest} containerClassName={variants({ alignment })}>
+    <Section {...rest} containerClassName={variants({ alignment })}>
       {children}
     </Section>
   );
