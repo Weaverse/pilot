@@ -111,11 +111,12 @@ export function MediaGrid({
                         }
                       : undefined
                   }
-                  className={
-                    canClickImage && med.mediaContentType !== "MODEL_3D"
-                      ? "cursor-zoom-in"
-                      : ""
-                  }
+                  className={cn(
+                    "h-full",
+                    canClickImage &&
+                      med.mediaContentType !== "MODEL_3D" &&
+                      "cursor-zoom-in",
+                  )}
                 >
                   <MediaItem
                     media={med}
@@ -129,7 +130,7 @@ export function MediaGrid({
                           : "(min-width: 1024px) 50vw, 80vw"
                     }
                     className={cn(
-                      "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
+                      "w-[80vw] max-w-none object-cover lg:size-full",
                       idx === 0 &&
                         "[&_img]:[view-transition-name:image-expand]",
                     )}

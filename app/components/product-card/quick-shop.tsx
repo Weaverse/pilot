@@ -67,7 +67,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
             groupByOption={quickShopGroupByOption}
             product={product}
             imageAspectRatio={pcardImageRatio}
-            fixedHeight
+            autoHeight={false}
           />
           <ProductBadges
             product={product}

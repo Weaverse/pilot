@@ -1,4 +1,4 @@
-import { CubeIcon, VideoCameraIcon } from "@phosphor-icons/react";
+import { VideoCameraIcon } from "@phosphor-icons/react";
 import { ExternalVideo } from "@shopify/hydrogen";
 import { lazy, Suspense } from "react";
 import { preload } from "react-dom";
@@ -79,7 +79,7 @@ export function MediaItem({
     let { data, iosSrc } = getModel3dData(model3d);
     let aspectRatio =
       imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
-    let modelStyle = { aspectRatio, height: aspectRatio ? undefined : "500px" };
+    let modelStyle = { aspectRatio, height: aspectRatio ? undefined : "600px" };
 
     // Preload the GLB asset for the hero model
     if (index === 0) {
@@ -97,9 +97,6 @@ export function MediaItem({
             className="h-full w-full"
           />
         </Suspense>
-        <div className="absolute top-2 right-2 bg-gray-900 p-0.5 text-white">
-          <CubeIcon className="size-6" />
-        </div>
       </div>
     );
   }

@@ -28,7 +28,7 @@ interface MediaSliderProps {
   zoomTrigger?: "image" | "button" | "both";
   zoomButtonVisibility?: "always" | "hover";
   groupMediaByVariant?: boolean;
-  fixedHeight?: boolean;
+  autoHeight?: boolean;
 }
 
 export function MediaSlider({
@@ -41,7 +41,7 @@ export function MediaSlider({
   zoomTrigger = "button",
   zoomButtonVisibility = "hover",
   groupMediaByVariant,
-  fixedHeight,
+  autoHeight = true,
 }: MediaSliderProps) {
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -160,7 +160,7 @@ export function MediaSlider({
                 spaceBetween: 4,
               },
             }}
-            autoHeight={!fixedHeight}
+            autoHeight={autoHeight}
             loop
             noSwipingSelector="model-viewer"
             navigation={{

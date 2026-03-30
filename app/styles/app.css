@@ -253,14 +253,6 @@
     @apply font-medium;
   }
 
-  model-viewer::part(default-progress-mask) {
-    display: none;
-  }
-
-  model-viewer::part(default-progress-bar) {
-    display: none;
-  }
-
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
