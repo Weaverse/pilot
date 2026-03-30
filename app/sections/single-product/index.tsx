@@ -16,6 +16,7 @@ import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { ProductMedia } from "~/components/product-media";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { cn } from "~/utils/cn";
 import { layoutInputs, Section } from "~/components/section";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
 import type { SingleProductLoaderData } from "./loader";
@@ -77,7 +78,12 @@ export default function SingleProduct(props: SingleProductProps) {
     <Section ref={ref} {...rest}>
       <div>
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-          <div className="relative min-w-0">
+          <div
+            className={cn(
+              "relative min-w-0",
+              showThumbnails && "[--thumbs-width:7rem]",
+            )}
+          >
             <ProductMedia
               mediaLayout="slider"
               imageAspectRatio="adapt"
