@@ -20,7 +20,6 @@
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
     "types": [
       "@shopify/oxygen-workers-types",
       "react-router",
@@ -28,9 +27,11 @@
       "vite/client"
     ],
     "paths": {
-      "~/*": ["app/*"],
-      "react": ["node_modules/@types/react"],
-      "react-dom": ["node_modules/@types/react-dom"]
+      "~/*": ["./app/*"],
+      "react": ["./node_modules/@types/react"],
+      "react-dom": ["./node_modules/@types/react-dom"],
+      "storefront-api.generated": ["./storefront-api.generated.d.ts"],
+      "customer-account-api.generated": ["./customer-account-api.generated.d.ts"]
     },
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
