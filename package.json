@@ -89,7 +89,7 @@
     "@playwright/test": "1.58.2",
     "@shopify/cli": "^3.92.1",
     "@shopify/hydrogen-codegen": "0.3.3",
-    "@shopify/mini-oxygen": "^4.0.1",
+    "@shopify/mini-oxygen": "^4.0.2",
     "@shopify/oxygen-workers-types": "4.2.0",
     "@tailwindcss/forms": "0.5.11",
     "@tailwindcss/typography": "0.5.19",
