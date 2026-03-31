@@ -210,7 +210,7 @@ export const schema = createSchema({
               { label: "Full email address", value: "full" },
             ],
           },
-          condition: "showReviewerEmail.eq.true",
+          condition: (data) => data.showReviewerEmail, // Only show if showReviewerEmail is true
         },
         {
           type: "switch",
