@@ -8,7 +8,7 @@ import { useLoaderData, useRouteLoaderData } from "react-router";
 import {
   FacebookShareButton,
   PinterestShareButton,
-  TwitterShareButton,
+  XShareButton,
 } from "react-share";
 import type { ArticleQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
@@ -80,9 +80,9 @@ export default function BlogPost(props: BlogPostProps) {
                   <PinterestShareButton url={articleUrl} media={image?.url}>
                     <PinterestLogoIcon size={24} />
                   </PinterestShareButton>
-                  <TwitterShareButton url={articleUrl} title={title}>
+                  <XShareButton url={articleUrl} title={title}>
                     <XLogoIcon size={24} />
-                  </TwitterShareButton>
+                  </XShareButton>
                 </div>
               )}
             </div>

@@ -46,26 +46,28 @@ export function CustomAnalytics() {
         cart_total_quantity: data.cart?.totalQuantity,
       });
     });
-    subscribe(AnalyticsEvent.PRODUCT_ADD_TO_CART, (data) => {
+    subscribe(AnalyticsEvent.PRODUCT_ADD_TO_CART, (_data) => {
       window.dataLayer?.push({ event: "add_to_cart" });
     });
-    subscribe(AnalyticsEvent.PRODUCT_REMOVED_FROM_CART, (data) => {
+    subscribe(AnalyticsEvent.PRODUCT_REMOVED_FROM_CART, (_data) => {
       window.dataLayer?.push({ event: "remove_from_cart" });
     });
-    subscribe(AnalyticsEvent.SEARCH_VIEWED, (data) => {
+    subscribe(AnalyticsEvent.SEARCH_VIEWED, (_data) => {
       window.dataLayer?.push({ event: "search_viewed" });
     });
   }, [subscribe]);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      return;
+    }
     let init = () => {
       window.dataLayer = window.dataLayer || [];
       function gtag(...args: any[]) {
         window.dataLayer.push(args);
       }
       gtag("js", new Date());
-      gtag({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+      gtag({ "gtm.start": Date.now(), event: "gtm.js" });
       gtag("config", id);
 
       let script = document.createElement("script");
