@@ -48,7 +48,7 @@ export function Image({ ref, className, onLoad, ...rest }: ImageProps) {
   return (
     <div
       ref={ref}
-      className={cn(
+            className={cn(
         "h-full w-full overflow-hidden",
         !loaded && "animate-pulse [animation-duration:4s]",
         className,

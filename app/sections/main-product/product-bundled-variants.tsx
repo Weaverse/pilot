@@ -12,7 +12,7 @@ interface ProductBundledVariantsProps extends HydrogenComponentProps {
 export default function ProductBundledVariants(
   props: ProductBundledVariantsProps,
 ) {
-  const { ref, headingText, ...rest } = props;
+  const { headingText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const isBundle = Boolean(product?.isBundle?.requiresComponents);
@@ -20,14 +20,14 @@ export default function ProductBundledVariants(
 
   if (!(product && isBundle && bundledVariants)) {
     return (
-      <div ref={ref} {...rest}>
+      <div {...rest}>
         <span className="hidden">No bundle data available</span>
       </div>
     );
   }
 
   return (
-    <div ref={ref} {...rest} className="space-y-3 empty:hidden">
+    <div {...rest} className="space-y-3 empty:hidden">
       <h4 className="text-2xl">{headingText}</h4>
       <BundledVariants
         variants={bundledVariants as ProductVariantComponent[]}

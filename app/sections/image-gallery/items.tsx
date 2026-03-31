@@ -38,12 +38,11 @@ interface ImageGalleyItemsProps
 }
 
 function ImageGalleyItems(props: ImageGalleyItemsProps) {
-  const { children, gap, height, ref, ...rest } = props;
+  const { children, gap, height, ...rest } = props;
 
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className={variants({ gap })}
       style={{ "--image-height": `${height}px` } as CSSProperties}
     >

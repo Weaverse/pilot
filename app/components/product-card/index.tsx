@@ -1,6 +1,6 @@
 import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { IMAGES_PLACEHOLDERS, useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import { useViewTransitionState } from "react-router";
@@ -115,6 +115,16 @@ export function ProductCard({
     }
   }
 
+  // Use placeholder if no image exists
+  if (!image) {
+    image = {
+      url: IMAGES_PLACEHOLDERS.image,
+      altText: `Picture of ${product.title}`,
+      width: 800,
+      height: 600,
+    };
+  }
+
   return (
     <div
       className={clsx("rounded-(--pcard-radius)", className)}
@@ -127,47 +137,42 @@ export function ProductCard({
       }
     >
       <div className="group relative">
-        {image && (
-          <Link
-            to={`/products/${product.handle}?${params.toString()}`}
-            prefetch="intent"
-            className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
-          >
-            {/* Loading skeleton overlay */}
-            {isImageLoading && <Spinner className="bg-gray-100" />}
+        <Link
+          to={`/products/${product.handle}?${params.toString()}`}
+          prefetch="intent"
+          className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
+        >
+          {/* Loading skeleton overlay */}
+          {isImageLoading && <Spinner className="bg-gray-100" />}
+          <Image
+            className={clsx([
+              "absolute inset-0",
+              pcardShowImageOnHover &&
+                secondImage &&
+                "transition-opacity duration-300 group-hover:opacity-50",
+              isTransitioning && "[&_img]:[view-transition-name:image-expand]",
+            ])}
+            sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
+            data={image}
+            width={700}
+            alt={image.altText || `Picture of ${product.title}`}
+            loading={aboveTheFold ? "eager" : "lazy"}
+            onLoad={() => setIsImageLoading(false)}
+          />
+          {pcardShowImageOnHover && secondImage && (
             <Image
               className={clsx([
                 "absolute inset-0",
-                pcardShowImageOnHover &&
-                  secondImage &&
-                  "transition-opacity duration-300 group-hover:opacity-50",
-                isTransitioning &&
-                  "[&_img]:[view-transition-name:image-expand]",
+                "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
               ])}
-              sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
-              data={image}
+              sizes="auto"
               width={700}
-              alt={image.altText || `Picture of ${product.title}`}
-              loading={aboveTheFold ? "eager" : "lazy"}
-              onLoad={() => setIsImageLoading(false)}
+              data={secondImage}
+              alt={secondImage.altText || `Second picture of ${product.title}`}
+              loading="lazy"
             />
-            {pcardShowImageOnHover && secondImage && (
-              <Image
-                className={clsx([
-                  "absolute inset-0",
-                  "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
-                ])}
-                sizes="auto"
-                width={700}
-                data={secondImage}
-                alt={
-                  secondImage.altText || `Second picture of ${product.title}`
-                }
-                loading="lazy"
-              />
-            )}
-          </Link>
-        )}
+          )}
+        </Link>
         <div className="absolute top-2.5 right-2.5 flex gap-1">
           {isBundle && pcardShowBundleBadge && (
             <BundleBadge

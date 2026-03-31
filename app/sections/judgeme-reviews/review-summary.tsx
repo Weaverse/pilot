@@ -41,7 +41,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div ref={ref} {...rest} className="py-4">
+    <div {...rest} className="py-4">
       {status === "initial-loading" || status === "idle" ? (
         // Loading skeleton
         <div className="space-y-8">

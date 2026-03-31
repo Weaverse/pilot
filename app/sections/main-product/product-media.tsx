@@ -45,8 +45,7 @@ export default function ProductMediaComponent(
 
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className={cn(
         "relative min-w-0",
         mediaLayout === "slider" &&

@@ -29,7 +29,7 @@ interface CountDownTimerData {
 }
 
 function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
-  const { textColor, endTime, ref, ...rest } = props;
+  const { textColor, endTime, ...rest } = props;
   const [remainingTime, setRemainingTime] = useState(
     calculateRemainingTime(endTime),
   );
@@ -53,8 +53,7 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
 
   return (
     <ScrollReveal
-      ref={ref}
-      {...rest}
+            {...rest}
       className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
       style={
         {

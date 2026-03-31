@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  CubeIcon,
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -27,6 +28,7 @@ interface MediaSliderProps {
   zoomTrigger?: "image" | "button" | "both";
   zoomButtonVisibility?: "always" | "hover";
   groupMediaByVariant?: boolean;
+  autoHeight?: boolean;
 }
 
 export function MediaSlider({
@@ -39,6 +41,7 @@ export function MediaSlider({
   zoomTrigger = "button",
   zoomButtonVisibility = "hover",
   groupMediaByVariant,
+  autoHeight = true,
 }: MediaSliderProps) {
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -124,11 +127,16 @@ export function MediaSlider({
                         width={200}
                         aspectRatio="1/1"
                         className="h-auto w-full object-cover"
-                        sizes="auto"
+                        sizes="100px"
                       />
                       {mediaContentType === "VIDEO" && (
                         <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
                           <VideoCameraIcon className="h-4 w-4" />
+                        </div>
+                      )}
+                      {mediaContentType === "MODEL_3D" && (
+                        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+                          <CubeIcon className="h-4 w-4" />
                         </div>
                       )}
                     </SwiperSlide>
@@ -152,8 +160,9 @@ export function MediaSlider({
                 spaceBetween: 4,
               },
             }}
-            autoHeight
+            autoHeight={autoHeight}
             loop
+            noSwipingSelector="model-viewer"
             navigation={{
               nextEl: ".media_slider__next",
               prevEl: ".media_slider__prev",
@@ -167,19 +176,25 @@ export function MediaSlider({
                 <SwiperSlide key={med.id} className="group bg-gray-100">
                   <div
                     onClick={
-                      canClickImage
+                      canClickImage && med.mediaContentType !== "MODEL_3D"
                         ? () => {
                             setZoomMediaId(med.id);
                             setZoomModalOpen(true);
                           }
                         : undefined
                     }
-                    className={canClickImage ? "cursor-zoom-in" : ""}
+                    className={
+                      canClickImage && med.mediaContentType !== "MODEL_3D"
+                        ? "cursor-zoom-in"
+                        : ""
+                    }
                   >
                     <MediaItem
                       media={med}
                       imageAspectRatio={imageAspectRatio}
                       index={idx}
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      mediaLayout="slider"
                       className={
                         idx === 0 &&
                         "[&_img]:[view-transition-name:image-expand]"

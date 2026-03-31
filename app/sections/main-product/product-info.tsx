@@ -5,10 +5,10 @@ interface ProductInfoProps extends HydrogenComponentProps {
 }
 
 export default function ProductInfo(props: ProductInfoProps) {
-  const { ref, children, ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <div
         className="sticky flex flex-col justify-start gap-5"
         style={{ top: "calc(var(--height-nav) + 20px)" }}

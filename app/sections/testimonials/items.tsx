@@ -24,10 +24,10 @@ interface TestimonialsItemsProps
 }
 
 function TestimonialsItems(props: TestimonialsItemsProps) {
-  const { gap, children, ref, ...rest } = props;
+  const { gap, children, ...rest } = props;
 
   return (
-    <div ref={ref} {...rest} className={clsx(variants({ gap }))}>
+    <div {...rest} className={clsx(variants({ gap }))}>
       <div className="space-y-6">{children?.filter((_, i) => i % 3 === 0)}</div>
       <div className="space-y-6">{children?.filter((_, i) => i % 3 === 1)}</div>
       <div className="space-y-6">{children?.filter((_, i) => i % 3 === 2)}</div>

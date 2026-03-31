@@ -22,7 +22,7 @@ interface BlogPostProps extends SectionProps {
 }
 
 export default function BlogPost(props: BlogPostProps) {
-  const { ref, showTags, showShareButtons, ...rest } = props;
+  const { showTags, showShareButtons, ...rest } = props;
   const { layout } = useRouteLoaderData<RootLoader>("root");
   const { article, blog, formattedDate } = useLoaderData<{
     article: ArticleQuery["blog"]["articleByHandle"];
@@ -41,7 +41,7 @@ export default function BlogPost(props: BlogPostProps) {
     const { handle: blogHandle } = blog;
     const articleUrl = `${domain}/blogs/${blogHandle}/${handle}`;
     return (
-      <Section ref={ref} {...rest}>
+      <Section {...rest}>
         {image && (
           <div className="h-[520px]">
             <Image data={image} sizes="90vw" />
@@ -91,7 +91,7 @@ export default function BlogPost(props: BlogPostProps) {
       </Section>
     );
   }
-  return <Section ref={ref} {...rest} />;
+  return <Section {...rest} />;
 }
 
 export const schema = createSchema({

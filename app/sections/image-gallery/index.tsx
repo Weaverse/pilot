@@ -7,9 +7,9 @@ interface ImageGalleryProps extends SectionProps {
 }
 
 function ImageGallery(props: ImageGalleryProps) {
-  const { children, ref, ...rest } = props;
+  const { children, ...rest } = props;
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       {children}
     </Section>
   );

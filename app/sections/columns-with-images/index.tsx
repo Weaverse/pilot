@@ -7,9 +7,9 @@ interface ColumnsWithImagesProps extends SectionProps {
 }
 
 function ColumnsWithImages(props: ColumnsWithImagesProps) {
-  const { children, ref, ...rest } = props;
+  const { children, ...rest } = props;
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       {children}
     </Section>
   );

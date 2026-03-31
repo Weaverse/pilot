@@ -38,7 +38,7 @@ export default function FeaturedProducts(props: FeaturedProductsProps) {
     ...rest
   } = props;
   return (
-    <Section ref={ref} {...rest}>
+    <Section {...rest}>
       {children}
     </Section>
   );

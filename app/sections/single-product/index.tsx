@@ -1,4 +1,3 @@
-import { ImageIcon, ShoppingCartIcon } from "@phosphor-icons/react";
 import { ShopPayButton } from "@shopify/hydrogen";
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import {
@@ -6,12 +5,8 @@ import {
   type HydrogenComponentProps,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
-import { useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
-import type {
-  ProductQuery,
-  ProductVariantFragment,
-} from "storefront-api.generated";
+import { useState } from "react";
+import type { ProductVariantFragment } from "storefront-api.generated";
 import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
@@ -21,11 +16,15 @@ import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { ProductMedia } from "~/components/product-media";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { cn } from "~/utils/cn";
 import { layoutInputs, Section } from "~/components/section";
-import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
+import type { SingleProductLoaderData } from "./loader";
+import { SingleProductPlaceholder } from "./placeholder";
 
-interface SingleProductData {
+export { loader } from "./loader";
+
+export interface SingleProductData {
   productsCount: number;
   product: WeaverseProduct;
   showThumbnails: boolean;
@@ -33,20 +32,16 @@ interface SingleProductData {
   groupByOption?: string;
 }
 
-interface FetchedProductData {
-  product: NonNullable<ProductQuery["product"]> | null;
-  variants: ProductVariantFragment[];
-  storeDomain: string | null;
+interface SingleProductProps
+  extends HydrogenComponentProps<SingleProductLoaderData>,
+    SingleProductData {
+  ref: React.Ref<HTMLElement>;
 }
 
-type SingleProductProps = HydrogenComponentProps &
-  SingleProductData & {
-    ref: React.Ref<HTMLElement>;
-  };
-
 export default function SingleProduct(props: SingleProductProps) {
-  const {
-    ref: weaverseRef,
+  let {
+    ref,
+    loaderData,
     product: _product,
     showThumbnails,
     groupMediaByVariant,
@@ -54,78 +49,22 @@ export default function SingleProduct(props: SingleProductProps) {
     ...rest
   } = props;
 
-  const productHandle = _product?.handle;
-  const { ref: inViewRef, inView } = useInView({ triggerOnce: true });
-  const [fetchedData, setFetchedData] = useState<FetchedProductData | null>(
-    null,
-  );
-  const [quantity, setQuantity] = useState<number>(1);
+  let product = loaderData?.product;
+  let variants = loaderData?.variants ?? [];
+  let storeDomain = loaderData?.storeDomain;
 
-  const product = fetchedData?.product;
-  const variants = fetchedData?.variants ?? [];
-  const storeDomain = fetchedData?.storeDomain;
-
-  const [selectedVariant, setSelectedVariant] =
-    useState<ProductVariantFragment | null>(null);
-
-  // Fetch product data when section scrolls into view
-  useEffect(() => {
-    if (inView && productHandle && !fetchedData) {
-      fetch(`/api/product/${productHandle}`)
-        .then((res) => res.json())
-        .then((data: FetchedProductData) => {
-          setFetchedData(data);
-          if (data.product?.selectedOrFirstAvailableVariant) {
-            setSelectedVariant(data.product.selectedOrFirstAvailableVariant);
-          }
-        })
-        .catch(console.error);
-    }
-  }, [inView, productHandle, fetchedData]);
-
-  // Combine refs: inViewRef for intersection observer + weaverseRef for Weaverse Studio
-  const setRefs = (node: HTMLElement) => {
-    inViewRef(node);
-    if (typeof weaverseRef === "function") {
-      weaverseRef(node);
-    } else if (weaverseRef && "current" in weaverseRef) {
-      (weaverseRef as React.RefObject<HTMLElement | null>).current = node;
-    }
-  };
+  let [quantity, setQuantity] = useState<number>(1);
+  let [selectedVariant, setSelectedVariant] =
+    useState<ProductVariantFragment | null>(
+      product?.selectedOrFirstAvailableVariant ?? null,
+    );
 
   if (!product) {
-    return (
-      <Section ref={setRefs} {...rest}>
-        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-          <Skeleton className="flex aspect-square items-center justify-center">
-            <ImageIcon className="h-16 w-16 text-body-subtle" />
-          </Skeleton>
-          <div className="flex flex-col justify-start gap-5">
-            <Skeleton className="h-8 w-2/3" />
-            <Skeleton className="h-6 w-1/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <div className="flex gap-3">
-              <Skeleton className="h-9 w-9 rounded-full" />
-              <Skeleton className="h-9 w-9 rounded-full" />
-            </div>
-            <div className="flex gap-3">
-              <Skeleton className="h-10 w-14" />
-              <Skeleton className="h-10 w-14" />
-              <Skeleton className="h-10 w-14" />
-            </div>
-            <Skeleton className="flex h-12 w-full items-center justify-center">
-              <ShoppingCartIcon className="h-5 w-5 text-body-subtle" />
-            </Skeleton>
-          </div>
-        </div>
-      </Section>
-    );
+    return <SingleProductPlaceholder {...rest} />;
   }
 
-  const isBundle = Boolean(product?.isBundle?.requiresComponents);
-  const bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
+  let isBundle = Boolean(product?.isBundle?.requiresComponents);
+  let bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
   let atcText = "Add to Cart";
   if (selectedVariant?.availableForSale) {
     atcText = isBundle ? "Add bundle to cart" : "Add to Cart";
@@ -136,10 +75,15 @@ export default function SingleProduct(props: SingleProductProps) {
   }
 
   return (
-    <Section ref={setRefs} {...rest}>
+    <Section {...rest}>
       <div>
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-          <div className="relative min-w-0">
+          <div
+            className={cn(
+              "relative min-w-0",
+              showThumbnails && "[--thumbs-width:7rem]",
+            )}
+          >
             <ProductMedia
               mediaLayout="slider"
               imageAspectRatio="adapt"

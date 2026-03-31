@@ -6,9 +6,9 @@ interface ButtonItemsProps extends HydrogenComponentProps {
 }
 
 function PromotionItemButtons(props: ButtonItemsProps) {
-  const { gap, children, ref, ...rest } = props;
+  const { gap, children, ...rest } = props;
   return (
-    <div ref={ref} {...rest} className="mt-3 flex" style={{ gap: `${gap}px` }}>
+    <div {...rest} className="mt-3 flex" style={{ gap: `${gap}px` }}>
       {children}
     </div>
   );

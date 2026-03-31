@@ -8,7 +8,7 @@ interface ProductTitleProps extends HydrogenComponentProps {
 }
 
 export default function ProductTitle(props: ProductTitleProps) {
-  const { ref, headingTag: Tag, ...rest } = props;
+  const { headingTag: Tag, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   if (!product) {
@@ -16,7 +16,7 @@ export default function ProductTitle(props: ProductTitleProps) {
   }
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <Tag className="h3 tracking-tight!">{product.title}</Tag>
     </div>
   );

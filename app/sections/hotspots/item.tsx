@@ -60,8 +60,7 @@ export default function HotspotsItem(props: HotspotsItemProps) {
 
   return (
     <div
-      ref={ref}
-      {...rest}
+            {...rest}
       className="-translate-x-1/2 -translate-y-1/2 absolute hover:z-1"
       style={
         {

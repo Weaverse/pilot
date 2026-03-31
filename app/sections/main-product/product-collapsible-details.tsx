@@ -18,7 +18,7 @@ interface CollapsibleDetailsProps extends HydrogenComponentProps {
 }
 
 export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
-  const { ref, showShippingPolicy, showRefundPolicy, ...rest } = props;
+  const { showShippingPolicy, showRefundPolicy, ...rest } = props;
   const { shop, product } = useLoaderData<typeof productLoader>();
   const { description } = product;
   const { shippingPolicy, refundPolicy } = shop;
@@ -39,7 +39,7 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
   ].filter(Boolean);
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <Accordion.Root type="multiple">
         {details.map(({ title, content, learnMore }) => (
           <Accordion.Item key={title} value={title}>

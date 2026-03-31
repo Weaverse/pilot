@@ -32,7 +32,7 @@ export default function RelatedArticles(props: RelatedArticlesProps) {
 
   if (relatedArticles.length > 0) {
     return (
-      <Section ref={ref} {...rest}>
+      <Section {...rest}>
         <Heading content={heading} animate={false} />
         <Swimlane>
           {relatedArticles.map((article, i) => (
@@ -53,7 +53,7 @@ export default function RelatedArticles(props: RelatedArticlesProps) {
       </Section>
     );
   }
-  return <section ref={ref} />;
+  return <section />;
 }
 
 export const schema = createSchema({

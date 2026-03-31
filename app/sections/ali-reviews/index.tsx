@@ -15,9 +15,9 @@ interface AliReviewsProps
 }
 
 function AliReviewSection(props: AliReviewsProps) {
-  const { children, loaderData, aliReviewsApiKey, ref, ...rest } = props;
+  const { children, loaderData, aliReviewsApiKey, ...rest } = props;
   return (
-    <Section ref={ref} {...rest} overflow="unset">
+    <Section {...rest} overflow="unset">
       {children}
     </Section>
   );

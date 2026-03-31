@@ -52,11 +52,10 @@ interface VideoItemProps
 }
 
 export default function VideoEmbedItem(props: VideoItemProps) {
-  const { ref, video, videoUrl, size, borderRadius, ...rest } = props;
+  const { video, videoUrl, size, borderRadius, ...rest } = props;
   return (
     <iframe
-      ref={ref}
-      {...rest}
+            {...rest}
       className={variants({ size, borderRadius })}
       src={video?.url || videoUrl}
       allowFullScreen

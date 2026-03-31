@@ -24,10 +24,10 @@ interface AllProductsToolbarProps
 }
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
-  const { ref, enableSort, showBreadcrumb, showProductsCount, ...rest } = props;
+  const { enableSort, showBreadcrumb, showProductsCount, ...rest } = props;
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <div className="border-gray-400 border-b py-4">
         <div className="flex w-full items-center justify-between gap-4 md:gap-8">
           <div className="hidden items-center gap-2 md:flex">

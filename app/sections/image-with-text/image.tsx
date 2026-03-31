@@ -78,7 +78,7 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
   }
 
   return (
-    <div ref={ref} {...rest} className={cn(variants({ width }))}>
+    <div {...rest} className={cn(variants({ width }))}>
       <ScrollReveal animation="slide-in">
         <Image
           data={imageData}

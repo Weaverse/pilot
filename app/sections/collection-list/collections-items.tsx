@@ -33,7 +33,7 @@ function CollectionsItems(props: CollectionsItemsProps) {
     ...rest
   } = props;
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <Pagination connection={collections}>
         {({
           nodes,

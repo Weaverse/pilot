@@ -48,7 +48,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
   }
 
   return (
-    <div ref={ref} {...rest} className="space-y-2 empty:hidden">
+    <div {...rest} className="space-y-2 empty:hidden">
       <AddToCartButton
         disabled={!selectedVariant?.availableForSale}
         lines={[

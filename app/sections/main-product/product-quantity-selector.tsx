@@ -20,7 +20,7 @@ interface ProductQuantitySelectorProps extends HydrogenComponentProps {
 export default function ProductQuantitySelector(
   props: ProductQuantitySelectorProps,
 ) {
-  const { ref, labelText, ...rest } = props;
+  const { labelText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity, setQuantity } = useProductQtyStore();
 
@@ -29,7 +29,7 @@ export default function ProductQuantitySelector(
   }
 
   return (
-    <div ref={ref} {...rest} className="empty:hidden">
+    <div {...rest} className="empty:hidden">
       <Quantity value={quantity} onChange={setQuantity} label={labelText} />
     </div>
   );

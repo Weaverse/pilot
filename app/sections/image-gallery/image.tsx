@@ -52,13 +52,12 @@ interface ImageGalleryItemProps
 }
 
 function ImageGalleryItem(props: ImageGalleryItemProps) {
-  const { src, columnSpan, borderRadius, hideOnMobile, ref, ...rest } = props;
+  const { src, columnSpan, borderRadius, hideOnMobile, ...rest } = props;
   const data = typeof src === "object" ? src : { url: src, altText: src };
   return (
     <ScrollReveal
       animation="slide-in"
-      ref={ref}
-      {...rest}
+            {...rest}
       className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
     >
       <Image

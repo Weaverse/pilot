@@ -1,5 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
 import type {
+  Media_MediaImage_Fragment,
   MediaFragment,
   ProductQuery,
   ProductVariantFragment,
@@ -8,6 +9,23 @@ import type { ImageAspectRatio } from "~/types/others";
 import { MediaGrid, type mediaGridVariants } from "./media-grid";
 import { MediaSlider } from "./media-slider";
 import { getVariantGroupedMedia } from "./variant-media-group";
+
+function getFeaturedMediaAspectRatio(
+  media: MediaFragment[],
+  imageAspectRatio: ImageAspectRatio,
+) {
+  if (imageAspectRatio !== "adapt") {
+    return imageAspectRatio;
+  }
+  let featured = media.find((m) => m.mediaContentType === "IMAGE");
+  if (featured) {
+    let { width, height } = (featured as Media_MediaImage_Fragment).image ?? {};
+    if (width && height) {
+      return `${width}/${height}`;
+    }
+  }
+  return undefined;
+}
 
 export interface ProductMediaProps
   extends VariantProps<typeof mediaGridVariants> {
@@ -25,6 +43,7 @@ export interface ProductMediaProps
   initialMediaCount?: number;
   showMoreText?: string;
   showLessText?: string;
+  autoHeight?: boolean;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -44,6 +63,7 @@ export function ProductMedia(props: ProductMediaProps) {
     initialMediaCount = 0,
     showMoreText = "Show more",
     showLessText = "Show less",
+    autoHeight,
   } = props;
 
   let displayMedia = media;
@@ -66,9 +86,18 @@ export function ProductMedia(props: ProductMediaProps) {
     gridSize = "1x1";
   }
 
+  let featuredAspectRatio = getFeaturedMediaAspectRatio(
+    displayMedia,
+    imageAspectRatio,
+  );
+  let cssVars = featuredAspectRatio
+    ? ({ "--featured-media-aspect-ratio": featuredAspectRatio } as React.CSSProperties)
+    : undefined;
+
   if (mediaLayout === "grid") {
     return (
-      <MediaGrid
+      <div style={cssVars}>
+        <MediaGrid
         allMedia={media}
         displayMedia={displayMedia}
         gridSize={gridSize}
@@ -81,11 +110,13 @@ export function ProductMedia(props: ProductMediaProps) {
         showMoreText={showMoreText}
         showLessText={showLessText}
       />
+      </div>
     );
   }
 
   return (
-    <MediaSlider
+    <div style={cssVars}>
+      <MediaSlider
       allMedia={media}
       displayMedia={displayMedia}
       selectedVariant={selectedVariant}
@@ -95,6 +126,8 @@ export function ProductMedia(props: ProductMediaProps) {
       zoomTrigger={zoomTrigger}
       zoomButtonVisibility={zoomButtonVisibility}
       groupMediaByVariant={isMediaGrouped}
+      autoHeight={autoHeight}
     />
+    </div>
   );
 }

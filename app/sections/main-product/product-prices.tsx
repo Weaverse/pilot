@@ -13,7 +13,7 @@ interface ProductPricesProps extends HydrogenComponentProps {
 }
 
 export default function ProductPrices(props: ProductPricesProps) {
-  const { ref, showCompareAtPrice, ...rest } = props;
+  const { showCompareAtPrice, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const selectedVariant = useOptimisticVariant(
@@ -26,7 +26,7 @@ export default function ProductPrices(props: ProductPricesProps) {
   }
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <VariantPrices
         variant={selectedVariant}
         showCompareAtPrice={showCompareAtPrice}

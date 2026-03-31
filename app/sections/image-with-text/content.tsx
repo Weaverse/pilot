@@ -26,9 +26,9 @@ interface ImageWithTextContentProps
 }
 
 function ImageWithTextContent(props: ImageWithTextContentProps) {
-  const { alignment, children, ref, ...rest } = props;
+  const { alignment, children, ...rest } = props;
   return (
-    <div ref={ref} {...rest} className={clsx(variants({ alignment }))}>
+    <div {...rest} className={clsx(variants({ alignment }))}>
       {children}
     </div>
   );

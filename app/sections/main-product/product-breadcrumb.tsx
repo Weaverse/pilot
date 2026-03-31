@@ -9,7 +9,7 @@ interface ProductBreadcrumbProps extends HydrogenComponentProps {
 }
 
 export default function ProductBreadcrumb(props: ProductBreadcrumbProps) {
-  const { ref, homeText, ...rest } = props;
+  const { homeText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   if (!product) {
@@ -17,7 +17,7 @@ export default function ProductBreadcrumb(props: ProductBreadcrumbProps) {
   }
 
   return (
-    <div ref={ref} {...rest} className="flex items-center gap-1.5">
+    <div {...rest} className="flex items-center gap-1.5">
       <Link
         to="/"
         className="text-body-subtle underline-offset-4 hover:underline"

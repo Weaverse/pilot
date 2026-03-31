@@ -39,7 +39,7 @@ export default function RelatedProducts(props: RelatedProductsProps) {
 
   if (recommended) {
     return (
-      <Section ref={ref} {...rest} overflow="unset">
+      <Section {...rest} overflow="unset">
         {content && (
           <Heading
             content={content}
@@ -78,7 +78,7 @@ export default function RelatedProducts(props: RelatedProductsProps) {
       </Section>
     );
   }
-  return <section ref={ref} {...rest} />;
+  return <section {...rest} />;
 }
 
 export const schema = createSchema({

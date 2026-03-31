@@ -8,7 +8,7 @@ interface MainCollectionProps extends SectionProps {
 }
 
 export default function MainCollection(props: MainCollectionProps) {
-  const { ref, children, ...rest } = props;
+  const { children, ...rest } = props;
 
   const { collection, collections } = useLoaderData<
     CollectionQuery & {
@@ -18,12 +18,12 @@ export default function MainCollection(props: MainCollectionProps) {
 
   if (collection?.products && collections) {
     return (
-      <Section ref={ref} {...rest} overflow="unset" animate={false}>
+      <Section {...rest} overflow="unset" animate={false}>
         {children}
       </Section>
     );
   }
-  return <Section ref={ref} {...rest} />;
+  return <Section {...rest} />;
 }
 
 export const schema = createSchema({

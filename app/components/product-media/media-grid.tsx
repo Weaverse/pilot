@@ -104,21 +104,33 @@ export function MediaGrid({
               >
                 <div
                   onClick={
-                    canClickImage
+                    canClickImage && med.mediaContentType !== "MODEL_3D"
                       ? () => {
                           setZoomMediaId(med.id);
                           setZoomModalOpen(true);
                         }
                       : undefined
                   }
-                  className={canClickImage ? "cursor-zoom-in" : ""}
+                  className={cn(
+                    "h-full",
+                    canClickImage &&
+                      med.mediaContentType !== "MODEL_3D" &&
+                      "cursor-zoom-in",
+                  )}
                 >
                   <MediaItem
                     media={med}
                     imageAspectRatio={imageAspectRatio}
                     index={idx}
+                    sizes={
+                      gridSize === "2x2"
+                        ? "(min-width: 1536px) 25vw, (min-width: 1024px) 50vw, 80vw"
+                        : gridSize === "mix"
+                          ? "(min-width: 1024px) 66vw, 80vw"
+                          : "(min-width: 1024px) 50vw, 80vw"
+                    }
                     className={cn(
-                      "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
+                      "w-[80vw] max-w-none object-cover lg:size-full",
                       idx === 0 &&
                         "[&_img]:[view-transition-name:image-expand]",
                     )}

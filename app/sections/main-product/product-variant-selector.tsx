@@ -15,7 +15,7 @@ interface ProductVariantSelectorProps extends HydrogenComponentProps {
 export default function ProductVariantSelector(
   props: ProductVariantSelectorProps,
 ) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const selectedVariant = useOptimisticVariant(
@@ -33,7 +33,7 @@ export default function ProductVariantSelector(
   }
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <ProductVariants
         productOptions={productOptions}
         selectedVariant={selectedVariant}

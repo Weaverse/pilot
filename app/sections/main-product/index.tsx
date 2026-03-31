@@ -9,12 +9,12 @@ interface MainProductProps extends SectionProps {
 }
 
 export default function MainProduct(props: MainProductProps) {
-  const { ref, children, ...rest } = props;
+  const { children, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   if (product) {
     return (
-      <Section ref={ref} {...rest} overflow="unset" animate={false}>
+      <Section {...rest} overflow="unset" animate={false}>
         <div
           className={clsx([
             "@container/main-product",
@@ -29,7 +29,7 @@ export default function MainProduct(props: MainProductProps) {
     );
   }
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       No product data...
     </div>
   );

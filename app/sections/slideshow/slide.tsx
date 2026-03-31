@@ -87,7 +87,7 @@ export default function Slide(props: SlideProps) {
   } = props;
 
   return (
-    <div ref={ref} {...rest} className="h-full w-full">
+    <div {...rest} className="h-full w-full">
       <OverlayAndBackground
         backgroundImage={backgroundImage}
         backgroundFit={backgroundFit}
