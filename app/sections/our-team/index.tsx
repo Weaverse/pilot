@@ -19,13 +19,8 @@ interface OurTeamProps
 }
 
 function OurTeam(props: OurTeamProps) {
-  const { loaderData, metaobject, membersCount, children, ...rest } =
-    props;
-  return (
-    <Section {...rest}>
-      {children}
-    </Section>
-  );
+  const { loaderData, metaobject, membersCount, children, ...rest } = props;
+  return <Section {...rest}>{children}</Section>;
 }
 
 export const loader = async (args: ComponentLoaderArgs<OurTeamData>) => {

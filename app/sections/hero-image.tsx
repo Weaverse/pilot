@@ -61,7 +61,7 @@ export default function HeroImage(props: HeroImageProps & SectionProps) {
   const { enableTransparentHeader } = useThemeSettings();
   return (
     <Section
-            {...rest}
+      {...rest}
       containerClassName={variants({
         contentPosition,
         height,

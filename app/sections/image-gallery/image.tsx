@@ -57,7 +57,7 @@ function ImageGalleryItem(props: ImageGalleryItemProps) {
   return (
     <ScrollReveal
       animation="slide-in"
-            {...rest}
+      {...rest}
       className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
     >
       <Image

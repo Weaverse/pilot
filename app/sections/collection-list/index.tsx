@@ -7,11 +7,7 @@ interface CollectionListProps extends SectionProps {
 
 function CollectionList(props: CollectionListProps) {
   const { children, ...rest } = props;
-  return (
-    <Section {...rest}>
-      {children}
-    </Section>
-  );
+  return <Section {...rest}>{children}</Section>;
 }
 
 export default CollectionList;

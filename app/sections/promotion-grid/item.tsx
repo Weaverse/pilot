@@ -84,7 +84,7 @@ function PromotionGridItem(props: PromotionItemProps) {
   return (
     <ScrollReveal
       animation="slide-in"
-            {...rest}
+      {...rest}
       className={cn(variants({ contentPosition, borderRadius }))}
     >
       <BackgroundImage backgroundImage={backgroundImage} />

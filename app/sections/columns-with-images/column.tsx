@@ -58,7 +58,7 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
   return (
     <ScrollReveal
       animation="slide-in"
-            {...rest}
+      {...rest}
       className={cn(variants({ size, hideOnMobile }))}
       style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
     >

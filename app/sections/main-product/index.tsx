@@ -28,11 +28,7 @@ export default function MainProduct(props: MainProductProps) {
       </Section>
     );
   }
-  return (
-    <div {...rest}>
-      No product data...
-    </div>
-  );
+  return <div {...rest}>No product data...</div>;
 }
 
 export const schema = createSchema({

@@ -19,11 +19,7 @@ interface FeaturedCollectionsProps
 
 export default function FeaturedCollections(props: FeaturedCollectionsProps) {
   const { loaderData, children, ...rest } = props;
-  return (
-    <Section {...rest}>
-      {children}
-    </Section>
-  );
+  return <Section {...rest}>{children}</Section>;
 }
 
 const COLLECTIONS_QUERY = `#graphql

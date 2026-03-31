@@ -11,10 +11,7 @@ function CollectionContent(props: CollectionContentProps) {
   const { children, ...rest } = props;
 
   return (
-    <div
-            {...rest}
-      className="col-span-full flex flex-col gap-5 lg:flex-row"
-    >
+    <div {...rest} className="col-span-full flex flex-col gap-5 lg:flex-row">
       {children}
     </div>
   );

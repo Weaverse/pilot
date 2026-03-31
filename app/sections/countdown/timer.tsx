@@ -53,7 +53,7 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
 
   return (
     <ScrollReveal
-            {...rest}
+      {...rest}
       className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
       style={
         {

@@ -75,7 +75,7 @@ export default function MapSection(props: MapSectionProps) {
 
   return (
     <Section
-            {...rest}
+      {...rest}
       containerClassName={clsx(
         "flex items-start p-6 md:p-12",
         variants({ height, alignment }),

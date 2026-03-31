@@ -33,7 +33,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
   return (
     <ScrollReveal
       animation="slide-in"
-            {...rest}
+      {...rest}
       className={clsx(hideOnMobile && "hidden sm:block")}
     >
       <figure className="rounded-sm bg-gray-50 p-6">

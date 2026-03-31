@@ -12,7 +12,7 @@ function ImageWithText(props: ImageWithTextProps) {
 
   return (
     <Section
-            {...rest}
+      {...rest}
       containerClassName="flex flex-col md:flex-row px-0 sm:px-0"
     >
       {children}
