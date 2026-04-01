@@ -1,91 +1,164 @@
-# Plan: Global Border Radius System
+# Plan: Global Border Radius System (v2)
 
 ## Approach
 
-Single `radiusBase` setting in Weaverse theme config, injected as `--radius` CSS variable on `:root` via `GlobalStyle`. All components use `rounded-(--radius)` instead of hardcoded `rounded-none` / `rounded-sm` / etc.
+Single `radiusBase` setting in Weaverse theme config, injected as `--radius` on `:root` via `GlobalStyle`. All Tailwind radius variables (`--radius-sm`, `--radius-md`, `--radius-lg`, etc.) are **calculated from the base** in `@theme inline`, so changing one value scales proportionally everywhere.
 
-No component-specific overrides for now — one base value controls everything. Component-level overrides (product cards, badges, sections) that already exist will **fall back** to the global value when their own setting is `0`.
+Components use **semantic Tailwind classes** (`rounded-sm`, `rounded-md`, `rounded-lg`, etc.) — NOT a single `rounded-(--radius)` everywhere. Different elements get different radius scales:
 
-**Why single value?** The issue asks for "a global config for corner radius that applies consistently across all components." Component overrides can be added later if needed.
+| Element type | Class | Reasoning |
+|--------------|-------|-----------|
+| Badges | `rounded-sm` | Subtle, small elements |
+| Tooltips | `rounded-md` | Small floating elements |
+| Buttons, links | `rounded-md` | Standard interactive elements |
+| Inputs / textareas / selects | `rounded-md` | Match buttons |
+| Product cards | `rounded-md` | Cards, medium elements |
+| Images / videos | `rounded-md` | Match cards |
+| Option buttons (size, etc.) | `rounded-md` | Small interactive |
+| Quantity selector | `rounded-md` | Input-like |
+| Sort dropdown trigger | `rounded-md` | Button-like |
+| Slideshow arrows | `rounded-md` | Button-like |
+| Testimonial cards | `rounded-md` | Card elements |
+| Sections (with bg) | `rounded-lg` | Larger containers need more radius |
+| Popups / modals / dialogs | `rounded-lg` | Prominent overlays |
+| Dropdown/popover content | `rounded-lg` | Floating panels |
+| Select dropdown content | `rounded-lg` | Floating panels |
+| Collection banners | `rounded-lg` | Large visual containers |
+| Newsletter form (outer wrap) | `rounded-md` | Combined input+button, inner elements use `rounded-none` |
+| Shop Pay button | `var(--radius)` | Third-party, uses base value |
+
+**All per-component border radius settings are removed.** No more product card radius, badge radius, section radius, collection banner radius, map box radius, image radius, etc. Global config only.
+
+## How Tailwind Scaling Works
+
+Tailwind v4 defines individual `--radius-*` variables in its theme (default `--radius: 0.25rem`). We override them in `@theme inline` to scale from the dynamic `--radius` set by Weaverse:
+
+```css
+@theme inline {
+  --radius-xs: calc(var(--radius) * 0.5);
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
+  --radius-2xl: calc(var(--radius) * 3);
+  --radius-3xl: calc(var(--radius) * 4);
+  --radius-4xl: calc(var(--radius) * 5);
+}
+```
+
+When `radiusBase = 8px`:
+- `rounded-sm` → 6px, `rounded` / `rounded-md` → 8px, `rounded-lg` → 12px, `rounded-xl` → 16px
+When `radiusBase = 0`:
+- Everything → 0px (fully square)
 
 ## Files Touched
 
-### Create
+### Keep (from v1)
 
-| File | Purpose |
+| File | Changes |
 |------|---------|
-| `app/weaverse/settings/border-radius.ts` | New settings group with `radiusBase` range input |
+| `app/weaverse/settings/border-radius.ts` | No changes — keep as-is |
+| `app/weaverse/schema.server.ts` | No changes — keep as-is |
+| `app/weaverse/style.tsx` | No changes — `--radius` injection stays |
 
 ### Modify
 
 | File | Changes |
 |------|---------|
-| `app/weaverse/schema.server.ts` | Import and add `borderRadiusSettings` to the settings array |
-| `app/weaverse/style.tsx` | Extract `radiusBase` from settings, inject `--radius` CSS variable |
-| `app/components/button.tsx` | `rounded-none` → `rounded-(--radius)` in cva base classes |
-| `app/styles/app.css` | `input, textarea` → `rounded-(--radius)` instead of `rounded-none`; wire up `--shop-pay-button-border-radius` and `--option-swatch-radius` to `var(--radius)` |
-| `app/components/product-card/index.tsx` | Fall back `--pcard-radius` to `var(--radius)` when `pcardBorderRadius` is 0 |
-| `app/components/product/badges.tsx` | Fall back `badgeBorderRadius` to `var(--radius)` when 0 |
-| `app/components/section.tsx` | Fall back `--section-radius` to `var(--radius)` when `borderRadius` is 0 |
+| `app/styles/app.css` | Add `--radius-*` overrides in `@theme inline`; update `input, textarea` from `rounded-(--radius)` to `rounded`; keep shop-pay and swatch token wiring |
+| `app/components/button.tsx` | `rounded-(--radius)` → `rounded` |
+| `app/components/section.tsx` | Remove `borderRadius` prop entirely; remove `--section-radius` CSS var; remove `borderRadius` from `layoutInputs`; use `rounded-lg` on section bg container |
+| `app/components/product-card/index.tsx` | Remove `pcardBorderRadius` fallback logic; use `rounded` class directly |
+| `app/components/product-card/quick-shop.tsx` | `rounded-(--radius)` → `rounded-lg` on the popup panel |
+| `app/components/product/badges.tsx` | Remove `badgeBorderRadius` inline style; use `rounded-sm` class |
+| `app/components/root/newsletter-popup.tsx` | `rounded-(--radius)` → `rounded-lg` on the popup |
+| `app/sections/columns-with-images/column.tsx` | Remove `imageBorderRadius` prop & `--radius` local var; use `rounded` on image |
+| `app/sections/featured-collections/collection-items.tsx` | Remove `borderRadius` CVA variant; use `rounded` class directly |
+| `app/sections/image-gallery/image.tsx` | Remove `borderRadius` CVA variant; use `rounded` class directly |
+| `app/sections/image-with-text/image.tsx` | Remove `borderRadius` CVA variant; use `rounded` class directly |
+| `app/sections/promotion-grid/item.tsx` | Remove `borderRadius` CVA variant; use `rounded` class directly |
+| `app/sections/video-embed/video.tsx` | Remove `borderRadius` CVA variant; use `rounded` class directly |
+| `app/sections/testimonials/item.tsx` | `rounded-(--radius)` → `rounded` |
+| `app/sections/main-collection/collection-header/index.tsx` | Remove `bannerBorderRadius` prop & `--banner-border-radius` var; use `rounded-lg` class |
+| `app/sections/map.tsx` | Remove `boxBorderRadius` inline style; use `rounded-lg` class |
+| `app/sections/countdown/index.tsx` | Remove `borderRadius` setting from inspector inputs |
+
+### Sections that filter out `borderRadius` from `layoutInputs` (no code changes needed once `layoutInputs` drops it)
+
+These sections already filter `borderRadius` out, so they only need the filter removed (or left as-is — filtering a non-existent input is harmless):
+- `app/sections/featured-collections/index.tsx`
+- `app/sections/featured-products/index.tsx`
+- `app/sections/collection-list/index.tsx`
+- `app/sections/page.tsx`
+- `app/sections/hero-image.tsx`
+- `app/sections/slideshow/slide.tsx`
+- `app/sections/ali-reviews/index.tsx`
+- `app/sections/judgeme-reviews/index.tsx`
+- `app/sections/related-products.tsx`
+- `app/sections/our-team/index.tsx`
+- `app/sections/blog-post.tsx`
+- `app/sections/main-collection/index.tsx`
 
 ## Implementation Steps
 
-### Step 1: Create `app/weaverse/settings/border-radius.ts`
+### Step 1: Wire up Tailwind theme scaling in `app.css`
 
-```ts
-import type { InspectorGroup } from "@weaverse/hydrogen";
-
-export const borderRadiusSettings: InspectorGroup = {
-  group: "Border radius",
-  inputs: [
-    {
-      type: "range",
-      name: "radiusBase",
-      label: "Base radius",
-      configs: {
-        min: 0,
-        max: 40,
-        step: 2,
-        unit: "px",
-      },
-      defaultValue: 0,
-      helpText: "Global border radius applied to buttons, inputs, cards, modals, and badges. Set to 0 for square corners.",
-    },
-  ],
-};
-```
-
-### Step 2: Register in `schema.server.ts`
-
-Import `borderRadiusSettings` and add it to the `settings` array after `typographySettings` (logical placement — layout, colors, typography, then border radius).
-
-### Step 3: Inject CSS variable in `style.tsx`
-
-Extract `radiusBase` from `useThemeSettings()`, add to the `:root` CSS block:
+Add to `@theme inline` block:
 ```css
---radius: ${radiusBase || 0}px;
+--radius-xs: calc(var(--radius) * 0.5);
+--radius-sm: calc(var(--radius) * 0.75);
+--radius-md: var(--radius);
+--radius-lg: calc(var(--radius) * 1.5);
+--radius-xl: calc(var(--radius) * 2);
+--radius-2xl: calc(var(--radius) * 3);
+--radius-3xl: calc(var(--radius) * 4);
+--radius-4xl: calc(var(--radius) * 5);
 ```
 
-### Step 4: Update `button.tsx`
+Update `input, textarea` rule: `rounded-(--radius)` → `rounded`.
 
-In the `cva` base array, replace `rounded-none` with `rounded-(--radius)`.
+### Step 2: Remove `borderRadius` from `layoutInputs` in `section.tsx`
 
-### Step 5: Update `app.css`
+Remove the `borderRadius` range input from `layoutInputs` array.
+Remove `borderRadius` prop from `SectionProps`.
+Remove `--section-radius` CSS variable logic.
+Add `rounded-lg` to the section background container when it has a background.
 
-- `input, textarea` rule: `rounded-none` → `rounded-(--radius)`
-- `:root` tokens: `--shop-pay-button-border-radius: var(--radius);`
+### Step 3: Update all components to use semantic classes
 
-### Step 6: Wire existing component radius settings to fall back to global
+Replace `rounded-(--radius)` with the appropriate Tailwind class:
+- `button.tsx` → `rounded`
+- `quick-shop.tsx` popup → `rounded-lg`
+- `newsletter-popup.tsx` → `rounded-lg`
+- `testimonials/item.tsx` → `rounded`
 
-For `product-card/index.tsx`, `product/badges.tsx`, and `section.tsx`:
-- When their own radius setting is `0` (default), use `var(--radius)` so the global value applies
-- When explicitly set to a non-zero value, use that component-specific value
+### Step 4: Remove per-component border radius settings
 
-This ensures backward compatibility: existing stores with custom per-component radius keep their values, while new stores get the global value everywhere.
+For each component with its own `borderRadius` inspector input:
+- Remove the setting from the inspector schema
+- Remove the prop from the component
+- Remove any CSS variable / inline style logic
+- Apply the appropriate static `rounded-*` class
+
+Components: `product-card/index.tsx`, `product/badges.tsx`, `columns-with-images/column.tsx`, `collection-header/index.tsx`, `map.tsx`, `countdown/index.tsx`
+
+### Step 5: Remove CVA `borderRadius` variants
+
+For each section with a `borderRadius` CVA variant:
+- Remove the variant from the CVA definition
+- Remove the prop destructuring
+- Remove from schema inputs
+- Add the appropriate static `rounded-*` class to the element
+
+Components: `featured-collections/collection-items.tsx`, `image-gallery/image.tsx`, `image-with-text/image.tsx`, `promotion-grid/item.tsx`, `video-embed/video.tsx`
+
+### Step 6: Clean up sections that filter `borderRadius`
+
+Remove `.filter((i) => i.name !== "borderRadius")` from sections that no longer need it (since `layoutInputs` won't have it anymore). This is optional cleanup — the filter is harmless.
 
 ## Not Changing
 
-These components use `rounded-full` intentionally for circular/pill shapes and should NOT inherit from the global radius:
+These components use `rounded-full` intentionally for circular/pill shapes:
 - Color swatches (`product-card-options.tsx`) — circular by design
 - Cart count badge (`cart-drawer.tsx`) — circular badge
 - Spinner (`spinner.tsx`) — circular animation
@@ -96,6 +169,7 @@ These components use `rounded-full` intentionally for circular/pill shapes and s
 
 1. `nr typecheck` — types compile
 2. `nr format && nr fix` — lint passes
-3. Set `radiusBase` to `0` → all elements are square
-4. Set `radiusBase` to `8` → buttons, inputs, cards, sections all show 8px radius
-5. Override product card radius to `16` while global is `8` → card shows 16px, everything else 8px
+3. Set `radiusBase` to `0` → all elements are fully square
+4. Set `radiusBase` to `8` → buttons/inputs show 8px, sections/popups show 12px, badges show 6px
+5. Set `radiusBase` to `20` → visually confirm proportional scaling across all element types
+6. Confirm no per-component radius settings appear in Weaverse editor
