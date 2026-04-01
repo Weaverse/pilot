@@ -15,7 +15,7 @@ import { ScrollReveal } from "~/components/scroll-reveal";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 
-export const variants = cva(["inline-flex transition-colors"], {
+export const variants = cva(["inline-flex rounded-md transition-colors"], {
   variants: {
     variant: {
       primary: [
