@@ -29,12 +29,15 @@ function Badge({
 }) {
   let { colorText, colorTextInverse, badgeBorderRadius, badgeTextTransform } =
     badgeStyle;
+  let resolvedRadius = badgeBorderRadius
+    ? `${badgeBorderRadius}px`
+    : "var(--radius, 0px)";
   return (
     <span
       style={{
         backgroundColor,
         color: colord(backgroundColor).isDark() ? colorTextInverse : colorText,
-        borderRadius: `${badgeBorderRadius}px`,
+        borderRadius: resolvedRadius,
         textTransform: badgeTextTransform,
       }}
       className={cn("px-1.5 py-1 text-sm uppercase", className)}

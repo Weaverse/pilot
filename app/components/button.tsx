@@ -7,7 +7,7 @@ import { cn } from "~/utils/cn";
 
 export const variants = cva(
   [
-    "relative inline-flex items-center justify-center rounded-none",
+    "relative inline-flex items-center justify-center rounded-(--radius)",
     "whitespace-nowrap font-normal text-base leading-tight",
     "focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50!",
     "transition-colors",

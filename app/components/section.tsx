@@ -134,7 +134,9 @@ export function Section(props: SectionProps) {
   style = {
     ...style,
     "--section-bg-color": backgroundColor,
-    "--section-radius": `${borderRadius || 0}px`,
+    "--section-radius": borderRadius
+      ? `${borderRadius}px`
+      : "var(--radius, 0px)",
   } as React.CSSProperties;
 
   const isBgForContent = backgroundFor === "content";

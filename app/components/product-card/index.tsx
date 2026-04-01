@@ -131,7 +131,9 @@ export function ProductCard({
       style={
         {
           backgroundColor: pcardBackgroundColor,
-          "--pcard-radius": `${pcardBorderRadius}px`,
+          "--pcard-radius": pcardBorderRadius
+            ? `${pcardBorderRadius}px`
+            : "var(--radius, 0px)",
           "--pcard-image-ratio": calculateAspectRatio(image, pcardImageRatio),
         } as React.CSSProperties
       }
