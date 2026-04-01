@@ -92,14 +92,14 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
         resource?.image && children.length === 0 ? (
           <SlideIn
             key={id}
-            className="group/item relative aspect-square w-72 max-w-72 grow overflow-hidden bg-gray-100"
+            className="group/item relative aspect-square w-72 max-w-72 grow overflow-hidden rounded-md"
             style={{ "--idx": idx } as React.CSSProperties}
           >
             <Image
               sizes="auto"
               data={resource.image}
               className="transition-transform duration-300 group-hover/item:scale-[1.03]"
-              width={300}
+              width={600}
             />
             <NavigationMenu.Link asChild>
               <Link

@@ -59,7 +59,7 @@ export function PredictiveSearchButton() {
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
                 <div className="mx-auto w-[560px] max-w-[90vw] space-y-2 py-6">
-                  <div className="flex items-center gap-3 border border-line-subtle px-3">
+                  <div className="flex items-center gap-3 border border-line-subtle px-3 rounded-lg">
                     <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                     <input
                       name="q"

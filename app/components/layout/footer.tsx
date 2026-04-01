@@ -143,17 +143,18 @@ export function Footer() {
                   method="POST"
                   encType="multipart/form-data"
                 >
-                  <div className="flex">
+                  <div className="flex overflow-hidden rounded-md border border-gray-100">
                     <input
                       name="email"
                       type="email"
                       required
                       placeholder={newsletterPlaceholder}
-                      className="grow border border-gray-100 px-3 focus-visible:outline-hidden"
+                      className="grow rounded-none px-3 focus-visible:outline-hidden border-none focus:ring-0"
                     />
                     <Button
                       variant="custom"
                       type="submit"
+                      className="rounded-none border-y-0 border-r-0"
                       loading={fetcher.state === "submitting"}
                     >
                       {newsletterButtonText}
