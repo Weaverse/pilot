@@ -36,7 +36,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
       {...rest}
       className={clsx(hideOnMobile && "hidden sm:block")}
     >
-      <figure className="rounded-sm bg-gray-50 p-6">
+      <figure className="rounded-(--radius) bg-gray-50 p-6">
         <blockquote>
           <div className="text-xl md:text-2xl">{heading}</div>
           <p

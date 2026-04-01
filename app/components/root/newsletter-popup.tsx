@@ -119,7 +119,7 @@ export function NewsletterPopup() {
         >
           <div
             className={cn(
-              "relative w-full max-w-md overflow-hidden bg-white shadow-xl",
+              "relative w-full max-w-md overflow-hidden rounded-(--radius) bg-white shadow-xl",
               newsletterPopupImage && "lg:max-w-2xl",
             )}
           >

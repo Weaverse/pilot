@@ -14,7 +14,7 @@ const variants = cva("mx-auto aspect-video w-full", {
       large: "",
     },
     borderRadius: {
-      0: "",
+      0: "rounded-(--radius)",
       2: "rounded-xs",
       4: "rounded-sm",
       6: "rounded-md",

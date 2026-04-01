@@ -220,7 +220,7 @@ export function QuickShopTrigger({
             style={{ maxHeight: "90vh" }}
             className={clsx(
               "relative h-auto w-full overflow-hidden",
-              "animate-slide-up bg-white shadow-sm",
+              "animate-slide-up rounded-(--radius) bg-white shadow-sm",
               panelType === "drawer"
                 ? "mr-0 ml-auto min-h-screen max-w-md"
                 : "mx-auto max-w-(--breakpoint-xl)",

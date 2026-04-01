@@ -91,7 +91,9 @@ export default function MapSection(props: MapSectionProps) {
         style={{
           backgroundColor: boxBgColor,
           color: boxTextColor,
-          borderRadius: `${boxBorderRadius}px`,
+          borderRadius: boxBorderRadius
+            ? `${boxBorderRadius}px`
+            : "var(--radius, 0px)",
         }}
       >
         {heading && <Heading content={heading} as="h6" alignment="left" />}

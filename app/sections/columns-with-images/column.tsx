@@ -60,7 +60,13 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
       animation="slide-in"
       {...rest}
       className={cn(variants({ size, hideOnMobile }))}
-      style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
+      style={
+        {
+          "--radius": imageBorderRadius
+            ? `${imageBorderRadius}px`
+            : "var(--radius, 0px)",
+        } as CSSProperties
+      }
     >
       <Image
         data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}

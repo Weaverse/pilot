@@ -23,7 +23,7 @@ const variants = cva("h-auto w-full", {
       contain: "object-contain",
     },
     borderRadius: {
-      0: "",
+      0: "rounded-(--radius)",
       2: "rounded-xs",
       4: "rounded-sm",
       6: "rounded-md",

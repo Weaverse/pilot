@@ -34,7 +34,7 @@ const variants = cva(
         "bottom right": "items-end justify-end [&_.paragraph]:text-right",
       },
       borderRadius: {
-        0: "",
+        0: "rounded-(--radius)",
         2: "rounded-xs",
         4: "rounded-sm",
         6: "rounded-md",

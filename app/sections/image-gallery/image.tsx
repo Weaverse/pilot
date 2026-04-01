@@ -18,7 +18,7 @@ const variants = cva("h-(--image-height)", {
       4: "col-span-4",
     },
     borderRadius: {
-      0: "",
+      0: "rounded-(--radius)",
       2: "rounded-xs",
       4: "rounded-sm",
       6: "rounded-md",

@@ -66,7 +66,9 @@ function CollectionHeader(props: CollectionHeaderProps) {
             {
               "--banner-height-desktop": `${bannerHeightDesktop}px`,
               "--banner-height-mobile": `${bannerHeightMobile}px`,
-              "--banner-border-radius": `${bannerBorderRadius}px`,
+              "--banner-border-radius": bannerBorderRadius
+                ? `${bannerBorderRadius}px`
+                : "var(--radius, 0px)",
             } as React.CSSProperties
           }
         >

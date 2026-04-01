@@ -35,7 +35,7 @@ const variants = cva("", {
       32: "md:gap-8",
     },
     borderRadius: {
-      0: "",
+      0: "rounded-(--radius)",
       2: "rounded-xs",
       4: "rounded-sm",
       6: "rounded-md",
