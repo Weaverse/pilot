@@ -180,7 +180,7 @@ function CartLinePrice({
   }
 
   if (isOptimistic) {
-    return <Skeleton as="span" className="ml-auto h-4 w-16 rounded" />;
+    return <Skeleton as="span" className="ml-auto h-4 w-16 rounded-md" />;
   }
   return (
     <Money withoutTrailingZeros as="span" data={moneyV2} className="ml-auto" />

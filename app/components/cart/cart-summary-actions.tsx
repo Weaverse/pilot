@@ -53,7 +53,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
         )}
         aria-describedby={undefined}
       >
-        <div className="relative w-full max-w-md overflow-hidden bg-white p-6 shadow-xl">
+        <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
               type="button"
@@ -154,7 +154,7 @@ export function DiscountDialog({
         )}
         aria-describedby={undefined}
       >
-        <div className="relative w-full max-w-md overflow-hidden bg-white p-6 shadow-xl">
+        <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
               type="button"
@@ -261,7 +261,7 @@ export function GiftCardDialog({
         )}
         aria-describedby={undefined}
       >
-        <div className="relative w-full max-w-md overflow-hidden bg-white p-6 shadow-xl">
+        <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
               type="button"

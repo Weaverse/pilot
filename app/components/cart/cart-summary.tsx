@@ -172,7 +172,7 @@ export function CartSummary({
         >
           <dt>Estimated total:</dt>
           {isCartUpdating ? (
-            <Skeleton className="h-4 w-20 rounded" />
+            <Skeleton className="h-4 w-20 rounded-md" />
           ) : (
             <dd>
               {cost?.totalAmount?.amount ? (
