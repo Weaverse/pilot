@@ -10,18 +10,6 @@ export const productCardsSettings: InspectorGroup = {
       defaultValue: "",
     },
     {
-      type: "range",
-      name: "pcardBorderRadius",
-      label: "Border radius",
-      configs: {
-        min: 0,
-        max: 40,
-        step: 2,
-        unit: "px",
-      },
-      defaultValue: 0,
-    },
-    {
       type: "heading",
       label: "Image",
     },

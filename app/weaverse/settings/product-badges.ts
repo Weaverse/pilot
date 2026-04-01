@@ -4,18 +4,6 @@ export const productBadgesSettings: InspectorGroup = {
   group: "Product badges",
   inputs: [
     {
-      type: "range",
-      label: "Border radius",
-      name: "badgeBorderRadius",
-      configs: {
-        min: 0,
-        max: 10,
-        step: 2,
-        unit: "px",
-      },
-      defaultValue: 0,
-    },
-    {
       type: "select",
       label: "Text transform",
       name: "badgeTextTransform",
