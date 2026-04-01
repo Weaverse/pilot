@@ -21,6 +21,16 @@
     var(--initial-topbar-height)
   );
 
+  /* Border radius — scaled from --radius (set dynamically by Weaverse) */
+  --radius-xs: calc(var(--radius) * 0.5);
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
+  --radius-2xl: calc(var(--radius) * 3);
+  --radius-3xl: calc(var(--radius) * 4);
+  --radius-4xl: calc(var(--radius) * 5);
+
   --color-body: var(--color-text);
   --color-body-subtle: var(--color-text-subtle);
   --color-body-inverse: var(--color-text-inverse);
@@ -273,8 +283,9 @@
   }
 
   input,
-  textarea {
-    @apply rounded-(--radius) border border-gray-600 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-gray-600;
+  textarea,
+  select {
+    @apply rounded-md border border-gray-600 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-gray-600;
   }
 
   input::placeholder,
