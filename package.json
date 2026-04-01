@@ -63,7 +63,7 @@
     "@shopify/hydrogen": "^2026.1.2",
     "@shopify/hydrogen-react": "^2026.1.1",
     "@tailwindcss/vite": "^4.2.2",
-    "@weaverse/hydrogen": "^5.10.1",
+    "@weaverse/hydrogen": "^5.11.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.9.3",
