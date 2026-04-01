@@ -12,7 +12,6 @@ import { cn } from "~/utils/cn";
 export interface BadgeStyleSettings {
   colorText: string;
   colorTextInverse: string;
-  badgeBorderRadius: number;
   badgeTextTransform: string;
 }
 
@@ -27,20 +26,15 @@ function Badge({
   badgeStyle: BadgeStyleSettings;
   className?: string;
 }) {
-  let { colorText, colorTextInverse, badgeBorderRadius, badgeTextTransform } =
-    badgeStyle;
-  let resolvedRadius = badgeBorderRadius
-    ? `${badgeBorderRadius}px`
-    : "var(--radius, 0px)";
+  let { colorText, colorTextInverse, badgeTextTransform } = badgeStyle;
   return (
     <span
       style={{
         backgroundColor,
         color: colord(backgroundColor).isDark() ? colorTextInverse : colorText,
-        borderRadius: resolvedRadius,
         textTransform: badgeTextTransform,
       }}
-      className={cn("px-1.5 py-1 text-sm uppercase", className)}
+      className={cn("rounded-sm px-1.5 py-1 text-sm uppercase", className)}
     >
       {text}
     </span>
@@ -209,7 +203,6 @@ export function ProductBadges({
   let {
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
     newBadgeText,
     newBadgeColor,
@@ -227,7 +220,6 @@ export function ProductBadges({
   let badgeStyle: BadgeStyleSettings = {
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
   };
 

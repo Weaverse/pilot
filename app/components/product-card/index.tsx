@@ -37,7 +37,6 @@ export function ProductCard({
   aboveTheFold?: boolean;
 }) {
   let {
-    pcardBorderRadius,
     pcardBackgroundColor,
     pcardShowImageOnHover,
     pcardImageRatio,
@@ -59,7 +58,6 @@ export function ProductCard({
     pcardShowOutOfStockBadge,
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
     newBadgeText,
     newBadgeColor,
@@ -77,7 +75,6 @@ export function ProductCard({
   let badgeStyle: BadgeStyleSettings = {
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
   };
 
@@ -127,13 +124,10 @@ export function ProductCard({
 
   return (
     <div
-      className={clsx("rounded-(--pcard-radius)", className)}
+      className={clsx("rounded-md", className)}
       style={
         {
           backgroundColor: pcardBackgroundColor,
-          "--pcard-radius": pcardBorderRadius
-            ? `${pcardBorderRadius}px`
-            : "var(--radius, 0px)",
           "--pcard-image-ratio": calculateAspectRatio(image, pcardImageRatio),
         } as React.CSSProperties
       }
@@ -142,7 +136,7 @@ export function ProductCard({
         <Link
           to={`/products/${product.handle}?${params.toString()}`}
           prefetch="intent"
-          className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
+          className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t bg-gray-100"
         >
           {/* Loading skeleton overlay */}
           {isImageLoading && <Spinner className="bg-gray-100" />}

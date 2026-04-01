@@ -136,7 +136,7 @@ export function ZoomModal({
                         id={`zoom-media--${mediaId}`}
                         className={cn(
                           "relative bg-gray-100",
-                          "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
+                          "h-auto! cursor-pointer border border-transparent p-1 transition-colors rounded-lg overflow-hidden",
                           zoomMediaId === id && "border-line",
                         )}
                         onClick={() => setZoomMediaId(id)}
@@ -279,7 +279,7 @@ export function ZoomButton({ className, ...props }: ZoomButtonProps) {
     <button
       type="button"
       className={clsx(
-        "rounded-full border border-transparent p-2 text-center",
+        "rounded-xl border border-transparent p-2 text-center",
         "transition-all duration-200",
         "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
         className,

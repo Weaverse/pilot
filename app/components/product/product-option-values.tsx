@@ -65,7 +65,7 @@ export function ProductOptionValues({
         }}
       >
         <Select.Trigger
-          className="inline-flex h-10 items-center justify-center gap-3 border border-line bg-white py-3 pr-3 pl-4 outline-hidden"
+          className="inline-flex h-10 items-center justify-center gap-3 rounded-md border border-line bg-white py-3 pr-3 pl-4 outline-hidden"
           aria-label={optionName}
         >
           <Select.Value />
@@ -74,7 +74,7 @@ export function ProductOptionValues({
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
-          <Select.Content className="overflow-hidden bg-white shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)]">
+          <Select.Content className="overflow-hidden rounded-lg bg-white shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)]">
             <Select.ScrollUpButton className="flex cursor-pointer items-center justify-center hover:bg-gray-100">
               <CaretUpIcon size={16} />
             </Select.ScrollUpButton>
@@ -243,7 +243,7 @@ function OptionValue({
       <Component
         {...componentProps}
         className={cn(
-          "border border-line-subtle px-4 py-2.5 text-center transition-colors",
+          "border border-line-subtle rounded-md px-4 py-2.5 text-center transition-colors",
           !exists && "cursor-not-allowed",
           selected
             ? [
@@ -265,7 +265,7 @@ function OptionValue({
       <Component
         {...componentProps}
         className={cn(
-          "flex h-auto w-(--option-image-width) items-center justify-center p-1",
+          "flex h-auto w-(--option-image-width) items-center justify-center rounded-md p-1",
           "border border-line-subtle text-center transition-colors",
           !exists && "cursor-not-allowed",
           selected
