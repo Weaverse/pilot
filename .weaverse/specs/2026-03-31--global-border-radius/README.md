@@ -4,8 +4,10 @@
 | ---------------- | -------------- |
 | **Status**       | in-progress    |
 | **Owner**        | @hta218        |
+| **Issue**        | [#364](https://github.com/Weaverse/pilot/issues/364) |
+| **Branch**       | `feat/global-border-radius` |
 | **Created**      | 2026-03-31     |
-| **Last Updated** | 2026-03-31     |
+| **Last Updated** | 2026-04-01     |
 
 ## Original Prompt
 
