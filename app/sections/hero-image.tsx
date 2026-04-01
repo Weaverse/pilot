@@ -99,9 +99,7 @@ export const schema = createSchema({
           label: "Content position",
           defaultValue: "center center",
         },
-        ...layoutInputs.filter(
-          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
-        ),
+        ...layoutInputs.filter((inp) => inp.name !== "divider"),
       ],
     },
     {

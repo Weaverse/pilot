@@ -39,7 +39,6 @@ interface MapSectionProps
   buttonText: LinkProps["children"];
   boxBgColor: string;
   boxTextColor: string;
-  boxBorderRadius: number;
 }
 
 export default function MapSection(props: MapSectionProps) {
@@ -52,7 +51,6 @@ export default function MapSection(props: MapSectionProps) {
     address,
     boxBgColor,
     boxTextColor,
-    boxBorderRadius,
     buttonText,
     variant,
     backgroundColor,
@@ -87,13 +85,10 @@ export default function MapSection(props: MapSectionProps) {
         src={`https://maps.google.com/maps?t=m&q=${address}&ie=UTF8&&output=embed`}
       />
       <div
-        className="w-80 max-w-full space-y-3 p-8 shadow-2xl md:space-y-6"
+        className="w-80 max-w-full space-y-3 rounded-lg p-8 shadow-2xl md:space-y-6"
         style={{
           backgroundColor: boxBgColor,
           color: boxTextColor,
-          borderRadius: boxBorderRadius
-            ? `${boxBorderRadius}px`
-            : "var(--radius, 0px)",
         }}
       >
         {heading && <Heading content={heading} as="h6" alignment="left" />}
@@ -185,18 +180,6 @@ export const schema = createSchema({
           type: "color",
           name: "boxTextColor",
           label: "Text color",
-        },
-        {
-          type: "range",
-          name: "boxBorderRadius",
-          label: "Border radius",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
         },
         {
           type: "heading",

@@ -11,7 +11,6 @@ interface CollectionHeaderData {
   showBanner: boolean;
   bannerHeightDesktop: number;
   bannerHeightMobile: number;
-  bannerBorderRadius: number;
 }
 
 interface CollectionHeaderProps
@@ -28,7 +27,6 @@ function CollectionHeader(props: CollectionHeaderProps) {
     showBanner,
     bannerHeightDesktop,
     bannerHeightMobile,
-    bannerBorderRadius,
     ...rest
   } = props;
 
@@ -58,17 +56,13 @@ function CollectionHeader(props: CollectionHeaderProps) {
       {showBanner && banner && (
         <div
           className={clsx([
-            "mt-6 overflow-hidden bg-gray-100",
-            "rounded-(--banner-border-radius)",
+            "mt-6 overflow-hidden rounded-lg bg-gray-100",
             "h-(--banner-height-mobile) lg:h-(--banner-height-desktop)",
           ])}
           style={
             {
               "--banner-height-desktop": `${bannerHeightDesktop}px`,
               "--banner-height-mobile": `${bannerHeightMobile}px`,
-              "--banner-border-radius": bannerBorderRadius
-                ? `${bannerBorderRadius}px`
-                : "var(--radius, 0px)",
             } as React.CSSProperties
           }
         >
@@ -130,19 +124,6 @@ export const schema = createSchema({
             max: 400,
             step: 1,
           },
-          condition: (data: CollectionHeaderData) => data.showBanner,
-        },
-        {
-          type: "range",
-          name: "bannerBorderRadius",
-          label: "Banner border radius",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
           condition: (data: CollectionHeaderData) => data.showBanner,
         },
       ],

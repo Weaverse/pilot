@@ -120,9 +120,7 @@ export const schema = createSchema({
           name: "contentPosition",
           defaultValue: "center center",
         },
-        ...layoutInputs.filter(
-          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
-        ),
+        ...layoutInputs.filter((inp) => inp.name !== "divider"),
       ],
     },
     {

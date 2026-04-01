@@ -46,9 +46,7 @@ export const schema = createSchema({
   settings: [
     {
       group: "Layout",
-      inputs: layoutInputs.filter(
-        (input) => input.name !== "gap" && input.name !== "borderRadius",
-      ),
+      inputs: layoutInputs.filter((input) => input.name !== "gap"),
     },
   ],
 });

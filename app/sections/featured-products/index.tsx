@@ -160,7 +160,7 @@ export const schema = createSchema({
     },
     {
       group: "Layout",
-      inputs: layoutInputs.filter((i) => i.name !== "borderRadius"),
+      inputs: layoutInputs,
     },
   ],
   presets: {

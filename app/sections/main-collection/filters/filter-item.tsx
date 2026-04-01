@@ -71,7 +71,7 @@ export function FilterItem({
       <button
         type="button"
         className={cn(
-          "border px-3 py-1.5 text-center disabled:cursor-not-allowed",
+          "border px-3 py-1.5 rounded-md text-center disabled:cursor-not-allowed",
           option.count === 0 && "diagonal text-body-subtle",
           checked
             ? "border-line bg-body text-background"
@@ -97,7 +97,7 @@ export function FilterItem({
         onCheckedChange={handleCheckedChange}
         disabled={option.count === 0}
         className={cn(
-          "h-5 w-5 shrink-0",
+          "h-5 w-5 shrink-0 rounded-sm",
           "border border-line focus-visible:outline-hidden",
           "disabled:cursor-not-allowed disabled:opacity-50",
         )}
@@ -133,7 +133,7 @@ function SwatchFilterItem({
         <button
           type="button"
           className={cn(
-            "h-10 w-10 disabled:cursor-not-allowed",
+            "h-10 w-10 rounded-md overflow-hidden disabled:cursor-not-allowed",
             "border hover:border-body",
             checked ? "border-line p-1" : "border-line-subtle",
             option.count === 0 && "diagonal",
@@ -142,7 +142,7 @@ function SwatchFilterItem({
           disabled={option.count === 0}
         >
           <span
-            className="inline-block h-full w-full"
+            className="inline-block h-full w-full rounded-sm"
             style={{
               backgroundImage: swatchImage?.value
                 ? `url(${swatchImage?.value})`

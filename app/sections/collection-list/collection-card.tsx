@@ -54,7 +54,7 @@ export function CollectionCard({
         } as CSSProperties
       }
     >
-      <div className="group relative flex aspect-(--aspect-ratio) items-center justify-center overflow-hidden">
+      <div className="group relative flex aspect-(--aspect-ratio) items-center justify-center overflow-hidden rounded-md">
         {collectionImage ? (
           <Image
             data={collectionImage}
