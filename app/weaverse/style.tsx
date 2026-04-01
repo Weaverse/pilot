@@ -42,6 +42,7 @@ export function GlobalStyle() {
       navHeightDesktop,
       navHeightTablet,
       pageWidth,
+      radiusBase,
     } = settings;
 
     return (
@@ -54,6 +55,9 @@ export function GlobalStyle() {
               /* Layout */
               --height-nav: ${settings.navHeightMobile}rem;
               --page-width: ${pageWidth}px;
+
+              /* Border radius */
+              --radius: ${radiusBase || 0}px;
 
               /* Colors (general) */
               --color-background: ${colorBackground};

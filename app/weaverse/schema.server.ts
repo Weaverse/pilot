@@ -3,6 +3,7 @@ import { COUNTRIES } from "~/utils/const";
 import { version } from "../../package.json";
 import { animationsSettings } from "./settings/animations";
 import { announcementSettings } from "./settings/announcements";
+import { borderRadiusSettings } from "./settings/border-radius";
 import { cartSettings } from "./settings/cart";
 import { colorSettings } from "./settings/colors";
 import { footerSettings } from "./settings/footer";
@@ -50,6 +51,7 @@ export const themeSchema: HydrogenThemeSchema = {
     headerSettings,
     colorSettings,
     typographySettings,
+    borderRadiusSettings,
     productBadgesSettings,
     productCardsSettings,
     animationsSettings,

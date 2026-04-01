@@ -274,7 +274,7 @@
 
   input,
   textarea {
-    @apply rounded-none border border-gray-600 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-gray-600;
+    @apply rounded-(--radius) border border-gray-600 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-gray-600;
   }
 
   input::placeholder,
@@ -384,11 +384,11 @@
   /* Tokens */
   :root {
     --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
-    --shop-pay-button-border-radius: 0;
+    --shop-pay-button-border-radius: var(--radius, 0);
     --screen-height: 100vh;
 
     /* Product options */
-    --option-swatch-radius: 0;
+    --option-swatch-radius: var(--radius, 0);
     --option-swatch-size: 2.25rem;
     --option-image-width: 4rem;
 
