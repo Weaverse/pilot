@@ -567,7 +567,7 @@ export function AddressForm({
             id="defaultAddress"
             name="defaultAddress"
             type="checkbox"
-            className="h-4 w-4 rounded border-border"
+            className="h-4 w-4 rounded-md border-border"
           />
           <label htmlFor="defaultAddress" className="">
             Set as default address
