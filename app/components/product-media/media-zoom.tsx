@@ -1,8 +1,8 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ArrowsOutSimpleIcon,
   CubeIcon,
-  MagnifyingGlassPlusIcon,
   VideoCameraIcon,
   XIcon,
 } from "@phosphor-icons/react";
@@ -287,7 +287,7 @@ export function ZoomButton({ className, ...props }: ZoomButtonProps) {
       aria-label="Zoom product media"
       {...props}
     >
-      <MagnifyingGlassPlusIcon className="h-5 w-5" />
+      <ArrowsOutSimpleIcon className="h-5 w-5" />
     </button>
   );
 }
