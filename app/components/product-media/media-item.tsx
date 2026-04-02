@@ -70,9 +70,6 @@ export function MediaItem({
           />
           <source src={mediaVideo.sources[0].url} type="video/mp4" />
         </video>
-        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-          <VideoCameraIcon className="h-4 w-4" />
-        </div>
       </div>
     );
   }
