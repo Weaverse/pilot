@@ -117,21 +117,21 @@ export function NewsletterPopup() {
           )}
           aria-describedby={undefined}
         >
+          <Dialog.Close asChild>
+            <button
+              type="button"
+              className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+              aria-label="Close"
+            >
+              <XIcon size={16} />
+            </button>
+          </Dialog.Close>
           <div
             className={cn(
               "relative w-full max-w-md overflow-hidden rounded-lg bg-white shadow-xl",
               newsletterPopupImage && "lg:max-w-2xl",
             )}
           >
-            <Dialog.Close asChild>
-              <button
-                type="button"
-                className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-                aria-label="Close"
-              >
-                <XIcon size={16} />
-              </button>
-            </Dialog.Close>
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Newsletter Signup</Dialog.Title>
             </VisuallyHidden.Root>
@@ -182,7 +182,7 @@ export function NewsletterPopup() {
                   action="/api/klaviyo"
                   method="POST"
                   encType="multipart/form-data"
-                  className="space-y-4"
+                  className="space-y-3"
                 >
                   <input
                     name="email"
