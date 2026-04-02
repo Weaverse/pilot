@@ -122,8 +122,8 @@ export const footerSettings: InspectorGroup = {
       type: "text",
       name: "newsletterButtonText",
       label: "Button text",
-      defaultValue: "Send",
-      placeholder: "Send",
+      defaultValue: "Subscribe",
+      placeholder: "Subscribe",
     },
     {
       type: "richtext",
