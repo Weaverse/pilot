@@ -108,6 +108,10 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
    ];
    ```
 
+### Customer Account Local Development
+
+See [`.weaverse/customer-account-local-dev.md`](.weaverse/customer-account-local-dev.md) for the full guide on running locally with Customer Account API support (`nr dev:ca`).
+
 ### Environment Configuration
 
 Required environment variables are defined in `env.d.ts`. The project uses `@shopify/hydrogen` and `@shopify/remix-oxygen` for environment handling.
