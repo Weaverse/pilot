@@ -1,14 +1,12 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
 import { COUNTRIES } from "~/utils/const";
 import { version } from "../../package.json";
-import { animationsSettings } from "./settings/animations";
 import { announcementSettings } from "./settings/announcements";
-import { borderRadiusSettings } from "./settings/border-radius";
 import { cartSettings } from "./settings/cart";
-import { colorSettings } from "./settings/colors";
 import { footerSettings } from "./settings/footer";
+import { generalSettings } from "./settings/general";
 import { headerSettings } from "./settings/header";
-import { layoutSettings } from "./settings/layout";
+import { linksButtonsSettings } from "./settings/links-buttons";
 import { newsletterSettings } from "./settings/newsletter";
 import { productBadgesSettings } from "./settings/product-badges";
 import { productCardsSettings } from "./settings/product-cards";
@@ -46,15 +44,13 @@ export const themeSchema: HydrogenThemeSchema = {
     ),
   },
   settings: [
-    layoutSettings,
+    generalSettings,
+    typographySettings,
+    linksButtonsSettings,
     announcementSettings,
     headerSettings,
-    colorSettings,
-    typographySettings,
-    borderRadiusSettings,
     productBadgesSettings,
     productCardsSettings,
-    animationsSettings,
     newsletterSettings,
     searchSettings,
     cartSettings,

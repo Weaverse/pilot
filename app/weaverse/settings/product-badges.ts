@@ -70,5 +70,39 @@ export const productBadgesSettings: InspectorGroup = {
         "<p>E.g. <strong>-[percentage]% Off</strong>, <strong>Saved [amount]</strong>, or <strong>Sale</strong>.</p>",
       ].join(""),
     },
+    {
+      type: "heading",
+      label: "Colors",
+    },
+    {
+      type: "color",
+      label: "Discounts",
+      name: "saleBadgeColor",
+      defaultValue: "#c6512c",
+    },
+    {
+      type: "color",
+      label: "New",
+      name: "newBadgeColor",
+      defaultValue: "#67785d",
+    },
+    {
+      type: "color",
+      label: "Best seller / Hot",
+      name: "bestSellerBadgeColor",
+      defaultValue: "#000000",
+    },
+    {
+      type: "color",
+      label: "Bundle",
+      name: "bundleBadgeColor",
+      defaultValue: "#10804c",
+    },
+    {
+      type: "color",
+      label: "Sold out / unavailable",
+      name: "soldOutBadgeColor",
+      defaultValue: "#d4d4d4",
+    },
   ],
 };

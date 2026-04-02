@@ -131,5 +131,21 @@ export const footerSettings: InspectorGroup = {
       label: "Copyright text",
       defaultValue: "© 2024 Weaverse. All rights reserved.",
     },
+    {
+      type: "heading",
+      label: "Colors",
+    },
+    {
+      type: "color",
+      label: "Background",
+      name: "footerBgColor",
+      defaultValue: "#000000",
+    },
+    {
+      type: "color",
+      label: "Text",
+      name: "footerText",
+      defaultValue: "#ffffff",
+    },
   ],
 };

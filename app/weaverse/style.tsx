@@ -27,9 +27,9 @@ export function GlobalStyle() {
       buttonSecondaryColor,
       buttonOutlineTextAndBorder,
       comparePriceTextColor,
-      discountBadge,
-      newBadge,
-      bestSellerBadge,
+      saleBadgeColor,
+      newBadgeColor,
+      bestSellerBadgeColor,
       bundleBadgeColor,
       soldOutBadgeColor,
       productReviewsColor,
@@ -85,9 +85,9 @@ export function GlobalStyle() {
 
               /* Colors (product) */
               --color-compare-price-text: ${comparePriceTextColor};
-              --color-discount: ${discountBadge};
-              --color-new-badge: ${newBadge};
-              --color-best-seller: ${bestSellerBadge};
+              --color-discount: ${saleBadgeColor};
+              --color-new-badge: ${newBadgeColor};
+              --color-best-seller: ${bestSellerBadgeColor};
               --color-bundle-badge: ${bundleBadgeColor};
               --color-sold-out-and-unavailable: ${soldOutBadgeColor};
               --color-product-reviews: ${productReviewsColor};
