@@ -173,7 +173,7 @@ function OrderItem({ order }: { order: OrderItemFragment }) {
   const fulfillmentStatus = flattenConnection(order.fulfillments)[0]?.status;
   const orderId = order.id.split("/").pop();
   return (
-    <div className="border border-border p-6">
+    <div className="border border-border rounded-lg p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-2">
           <Link
