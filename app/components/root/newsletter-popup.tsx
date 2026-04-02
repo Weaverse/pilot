@@ -31,6 +31,7 @@ export function useShouldRenderNewsletterPopup() {
 
 export function NewsletterPopup() {
   const {
+    newsletterPopupType = "popup",
     newsletterPopupDelay,
     newsletterPopupAllowDismiss,
     newsletterPopupImage,
@@ -38,12 +39,13 @@ export function NewsletterPopup() {
     newsletterPopupHeading,
     newsletterPopupDescription,
     newsletterPopupButtonText,
-    newsletterPopupPosition = "center",
+    newsletterPopupPosition = "bottom-right",
   } = useThemeSettings();
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
   const isDesignMode = useWeaverseStudioCheck();
+  const isModal = newsletterPopupType === "modal";
 
   // Compute message and error from fetcher data
   const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
@@ -84,6 +86,7 @@ export function NewsletterPopup() {
       setOpen(true);
     }
   }, [
+    newsletterPopupType,
     newsletterPopupDelay,
     newsletterPopupAllowDismiss,
     newsletterPopupImage,
@@ -94,138 +97,177 @@ export function NewsletterPopup() {
     newsletterPopupPosition,
   ]);
 
+  let popupContent = (
+    <div
+      className={cn(
+        "relative w-full overflow-hidden rounded-lg bg-white shadow-xl",
+        isModal
+          ? cn("max-w-md", newsletterPopupImage && "lg:max-w-2xl")
+          : cn(
+              "max-w-sm border border-gray-300",
+              newsletterPopupImage && "lg:max-w-lg",
+            ),
+      )}
+    >
+      <VisuallyHidden.Root asChild>
+        <Dialog.Title>Newsletter Signup</Dialog.Title>
+      </VisuallyHidden.Root>
+
+      <Dialog.Close asChild>
+        <button
+          type="button"
+          className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+          aria-label="Close"
+        >
+          <XIcon size={14} />
+        </button>
+      </Dialog.Close>
+
+      <div
+        className={cn(
+          "flex",
+          newsletterPopupImagePosition === "top"
+            ? "flex-col"
+            : "flex-col md:flex-row",
+          newsletterPopupImagePosition === "right" && "md:flex-row-reverse",
+        )}
+      >
+        {newsletterPopupImage && (
+          <div
+            className={cn(
+              "relative",
+              newsletterPopupImagePosition === "top"
+                ? "h-48 w-full"
+                : "h-48 w-full md:h-auto md:w-1/2",
+              !isModal &&
+                newsletterPopupImagePosition === "top" &&
+                "h-36 lg:h-48",
+            )}
+          >
+            <Image
+              data={newsletterPopupImage}
+              sizes={
+                isModal
+                  ? "(max-width: 768px) 100vw, 50vw"
+                  : "(max-width: 768px) 100vw, 25vw"
+              }
+            />
+          </div>
+        )}
+        <div
+          className={cn(
+            "flex flex-col justify-center p-6",
+            !isModal && "p-5",
+            newsletterPopupImage
+              ? newsletterPopupImagePosition === "top"
+                ? "w-full"
+                : "md:w-1/2"
+              : "w-full",
+          )}
+        >
+          <h3
+            className={cn(
+              "mb-4 font-semibold text-2xl",
+              !isModal && "mb-3 text-xl",
+            )}
+          >
+            {newsletterPopupHeading}
+          </h3>
+          <p
+            className={cn("mb-6 text-body-subtle", !isModal && "mb-4 text-sm")}
+          >
+            {newsletterPopupDescription}
+          </p>
+
+          <fetcher.Form
+            action="/api/klaviyo"
+            method="POST"
+            encType="multipart/form-data"
+            className="space-y-3"
+          >
+            <input
+              name="email"
+              type="email"
+              required
+              placeholder="Enter your email"
+              className="w-full px-4 py-2.5"
+            />
+            <Button
+              type="submit"
+              className="w-full"
+              loading={fetcher.state === "submitting"}
+            >
+              {newsletterPopupButtonText}
+            </Button>
+          </fetcher.Form>
+
+          {error && (
+            <Banner variant="error" className="mt-4">
+              {error}
+            </Banner>
+          )}
+          {message && (
+            <Banner variant="success" className="mt-4">
+              {message}
+            </Banner>
+          )}
+
+          {newsletterPopupAllowDismiss && (
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.setItem(POPUP_DISMISSED_KEY, "true");
+                setOpen(false);
+              }}
+              className="mt-4 text-body-subtle text-sm underline underline-offset-4 hover:text-body"
+            >
+              Don't show this again
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isModal) {
+    return (
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+          <Dialog.Content
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            className={cn(
+              "fixed inset-0 z-50 flex items-center justify-center p-4",
+              "[--slide-up-from:20px]",
+              "data-[state=open]:animate-slide-up",
+            )}
+            aria-describedby={undefined}
+          >
+            {popupContent}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    );
+  }
+
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={setOpen} modal={false}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
+          onInteractOutside={(e) => e.preventDefault()}
           className={cn(
-            "fixed inset-0 z-50 flex p-4 backdrop-blur-xs",
-            "[--slide-up-from:20px]",
+            "fixed z-50 p-8",
+            "[--slide-up-from:12px]",
             "data-[state=open]:animate-slide-up",
-            newsletterPopupPosition === "center" &&
-              "items-center justify-center",
-            newsletterPopupPosition === "top-left" &&
-              "items-start justify-start",
-            newsletterPopupPosition === "top-right" &&
-              "items-start justify-end",
-            newsletterPopupPosition === "bottom-left" &&
-              "items-end justify-start",
-            newsletterPopupPosition === "bottom-right" &&
-              "items-end justify-end",
+            newsletterPopupPosition === "top-left" && "top-0 left-0",
+            newsletterPopupPosition === "top-right" && "top-0 right-0",
+            newsletterPopupPosition === "bottom-left" && "bottom-0 left-0",
+            newsletterPopupPosition === "bottom-right" && "bottom-0 right-0",
           )}
           aria-describedby={undefined}
         >
-          <Dialog.Close asChild>
-            <button
-              type="button"
-              className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-              aria-label="Close"
-            >
-              <XIcon size={16} />
-            </button>
-          </Dialog.Close>
-          <div
-            className={cn(
-              "relative w-full max-w-md overflow-hidden rounded-lg bg-white shadow-xl",
-              newsletterPopupImage && "lg:max-w-2xl",
-            )}
-          >
-            <VisuallyHidden.Root asChild>
-              <Dialog.Title>Newsletter Signup</Dialog.Title>
-            </VisuallyHidden.Root>
-
-            <div
-              className={cn(
-                "flex",
-                newsletterPopupImagePosition === "top"
-                  ? "flex-col"
-                  : "flex-col md:flex-row",
-                newsletterPopupImagePosition === "right" &&
-                  "md:flex-row-reverse",
-              )}
-            >
-              {newsletterPopupImage && (
-                <div
-                  className={cn(
-                    "relative",
-                    newsletterPopupImagePosition === "top"
-                      ? "h-64 w-full"
-                      : "h-64 w-full md:h-auto md:w-1/2",
-                  )}
-                >
-                  <Image
-                    data={newsletterPopupImage}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-              )}
-              <div
-                className={cn(
-                  "flex flex-col justify-center p-6",
-                  newsletterPopupImage
-                    ? newsletterPopupImagePosition === "top"
-                      ? "w-full"
-                      : "md:w-1/2"
-                    : "w-full",
-                )}
-              >
-                <h3 className="mb-4 font-semibold text-2xl">
-                  {newsletterPopupHeading}
-                </h3>
-                <p className="mb-6 text-body-subtle">
-                  {newsletterPopupDescription}
-                </p>
-
-                <fetcher.Form
-                  action="/api/klaviyo"
-                  method="POST"
-                  encType="multipart/form-data"
-                  className="space-y-3"
-                >
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="Enter your email"
-                    className="w-full px-4 py-2.5"
-                  />
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    loading={fetcher.state === "submitting"}
-                  >
-                    {newsletterPopupButtonText}
-                  </Button>
-                </fetcher.Form>
-
-                {error && (
-                  <Banner variant="error" className="mt-4">
-                    {error}
-                  </Banner>
-                )}
-                {message && (
-                  <Banner variant="success" className="mt-4">
-                    {message}
-                  </Banner>
-                )}
-
-                {newsletterPopupAllowDismiss && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      localStorage.setItem(POPUP_DISMISSED_KEY, "true");
-                      setOpen(false);
-                    }}
-                    className="mt-4 text-body-subtle text-sm underline underline-offset-4 hover:text-body"
-                  >
-                    Don't show this again
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+          {popupContent}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
