@@ -25,6 +25,7 @@ import { VariantSelector } from "~/components/product/variant-selector";
 import { ProductMedia } from "~/components/product-media";
 import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
+import type { ThemeSettings } from "~/types/weaverse";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -47,7 +48,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
     quickShopGroupMediaByVariant,
     quickShopGroupByOption,
     pcardImageRatio,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
 
   return (
     <div className="bg-background">

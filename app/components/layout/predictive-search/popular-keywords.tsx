@@ -1,11 +1,12 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
+import type { ThemeSettings } from "~/types/weaverse";
 
 export function PopularKeywords({
   onKeywordClick,
 }: {
   onKeywordClick: (keyword: string) => void;
 }) {
-  const { popularSearchKeywords } = useThemeSettings();
+  const { popularSearchKeywords } = useThemeSettings<ThemeSettings>();
   if (!popularSearchKeywords?.length) {
     return null;
   }

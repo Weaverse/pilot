@@ -13,6 +13,7 @@ import useWindowScroll from "react-use/esm/useWindowScroll";
 import { CartDrawer } from "~/components/cart/cart-drawer";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 import { HeaderCountrySelector } from "./country-selector";
@@ -45,7 +46,7 @@ function useIsHomeCheck() {
 
 export function Header() {
   const { enableTransparentHeader, headerWidth, showHeaderCountrySelector } =
-    useThemeSettings();
+    useThemeSettings<ThemeSettings>();
   const isHome = useIsHomeCheck();
   const { y } = useWindowScroll();
   const routeError = useRouteError();

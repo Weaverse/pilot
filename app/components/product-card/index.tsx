@@ -23,6 +23,7 @@ import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
+import type { ThemeSettings } from "~/types/weaverse";
 import { calculateAspectRatio } from "~/utils/image";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
@@ -70,7 +71,7 @@ export function ProductCard({
     bundleBadgeColor,
     saleBadgeText,
     saleBadgeColor,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
 
   let badgeStyle: BadgeStyleSettings = {
     colorText,

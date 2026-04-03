@@ -1,11 +1,12 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { extend } from "colord";
 import namesPlugin from "colord/plugins/names";
+import type { ThemeSettings } from "~/types/weaverse";
 
 extend([namesPlugin]);
 
 export function GlobalStyle() {
-  const settings = useThemeSettings();
+  const settings = useThemeSettings<ThemeSettings>();
   if (settings) {
     const {
       colorBackground,

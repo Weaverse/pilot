@@ -12,6 +12,7 @@ import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { CountrySelector } from "./country-selector";
 import { FooterMenu } from "./menu/footer-menu";
@@ -50,7 +51,7 @@ export function Footer() {
     newsletterDescription,
     newsletterPlaceholder,
     newsletterButtonText,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
 
   // Compute message and error from fetcher data

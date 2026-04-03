@@ -5,6 +5,7 @@ import type {
   ProductCardFragment,
   ProductVariantFragment,
 } from "storefront-api.generated";
+import type { ThemeSettings } from "~/types/weaverse";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { OPTIONS_AS_SWATCH } from "~/components/product/product-option-values";
@@ -25,7 +26,7 @@ export function ProductCardOptions({
   className?: string;
 }) {
   const { pcardShowOptionValues, pcardOptionToShow, pcardMaxOptionValues } =
-    useThemeSettings();
+    useThemeSettings<ThemeSettings>();
   const { handle, options } = product;
   const { optionValues } =
     options.find(({ name }) => name === pcardOptionToShow) || {};

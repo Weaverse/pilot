@@ -13,6 +13,7 @@ import {
 } from "react-router";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import type { RootLoader } from "~/root";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
 export const variants = cva(["inline-flex rounded-md transition-colors"], {
@@ -155,7 +156,7 @@ export function Link(props: LinkProps) {
     animate = true,
     ...rest
   } = props;
-  const { enableViewTransition } = useThemeSettings();
+  const { enableViewTransition } = useThemeSettings<ThemeSettings>();
   const href = useHrefWithLocale(to);
 
   if (variant === "custom") {

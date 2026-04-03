@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import type { ThemeSettings } from "~/types/weaverse";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
@@ -32,7 +33,7 @@ export function CartSummary({
     enableGiftCard,
     giftCardButtonText,
     checkoutButtonText,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
   >(null);

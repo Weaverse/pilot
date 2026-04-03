@@ -15,6 +15,7 @@ import {
 import { ScrollArea } from "~/components/scroll-area";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
+import type { ThemeSettings } from "~/types/weaverse";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {
@@ -169,7 +170,7 @@ export function HeaderCountrySelector() {
   const submit = useSubmit();
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const { countryNameDisplay } = useThemeSettings();
+  const { countryNameDisplay } = useThemeSettings<ThemeSettings>();
   const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,

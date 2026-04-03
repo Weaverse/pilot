@@ -7,6 +7,7 @@ import type {
   ProductQuery,
   ProductVariantFragment,
 } from "storefront-api.generated";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
 export interface BadgeStyleSettings {
@@ -215,7 +216,7 @@ export function ProductBadges({
     bundleBadgeColor,
     saleBadgeText,
     saleBadgeColor,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
 
   let badgeStyle: BadgeStyleSettings = {
     colorText,

@@ -10,6 +10,7 @@ import clsx from "clsx";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import type { ThemeSettings } from "~/types/weaverse";
 import type { SlideshowArrowsProps } from "./arrows";
 import { Arrows } from "./arrows";
 import type { SlideshowDotsProps } from "./dots";
@@ -83,7 +84,7 @@ export default function Slideshow(
     ...rest
   } = props;
 
-  const { enableTransparentHeader } = useThemeSettings();
+  const { enableTransparentHeader } = useThemeSettings<ThemeSettings>();
 
   return (
     <ScrollReveal

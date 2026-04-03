@@ -9,6 +9,7 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -19,7 +20,7 @@ export function useShouldRenderNewsletterPopup() {
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { newsletterPopupEnabled, newsletterPopupHomeOnly } =
-    useThemeSettings();
+    useThemeSettings<ThemeSettings>();
   const pathParts = location.pathname.split("/").filter(Boolean);
   const isHomePage =
     pathParts.length === 0 ||
@@ -40,7 +41,7 @@ export function NewsletterPopup() {
     newsletterPopupDescription,
     newsletterPopupButtonText,
     newsletterPopupPosition = "bottom-right",
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();

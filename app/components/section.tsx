@@ -8,6 +8,7 @@ import { cva } from "class-variance-authority";
 import type React from "react";
 import type { HTMLAttributes } from "react";
 import { useEffect, useRef, useState } from "react";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
@@ -105,7 +106,7 @@ export function Section(props: SectionProps) {
     ...rest
   } = props;
 
-  let { revealElementsOnScroll } = useThemeSettings();
+  let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
   let [isVisible, setIsVisible] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
 
