@@ -124,11 +124,11 @@ export function NewsletterPopup() {
         >
           <div
             className={cn(
-              "relative w-full overflow-hidden rounded-lg bg-white shadow-xl",
+              "relative w-full overflow-hidden rounded-lg bg-white",
               isModal
                 ? cn("max-w-md", newsletterPopupImage && "lg:max-w-2xl")
                 : cn(
-                    "max-w-sm border border-gray-300",
+                    "border border-gray-300 shadow-2xl",
                     newsletterPopupImage && "lg:max-w-lg",
                   ),
             )}
