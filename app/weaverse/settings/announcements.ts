@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const announcementSettings: InspectorGroup = {
+export const announcementSettings = {
   group: "Scrolling announcements",
   inputs: [
     {
@@ -62,4 +62,4 @@ export const announcementSettings: InspectorGroup = {
       defaultValue: "#000000",
     },
   ],
-};
+} as const satisfies InspectorGroup;

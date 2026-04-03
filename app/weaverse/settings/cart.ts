@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const cartSettings: InspectorGroup = {
+export const cartSettings = {
   group: "Cart",
   inputs: [
     {
@@ -53,4 +53,4 @@ export const cartSettings: InspectorGroup = {
       placeholder: "Continue to Checkout",
     },
   ],
-};
+} as const satisfies InspectorGroup;

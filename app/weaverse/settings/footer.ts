@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const footerSettings: InspectorGroup = {
+export const footerSettings = {
   group: "Footer",
   inputs: [
     {
@@ -148,4 +148,4 @@ export const footerSettings: InspectorGroup = {
       defaultValue: "#ffffff",
     },
   ],
-};
+} as const satisfies InspectorGroup;

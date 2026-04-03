@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const newsletterSettings: InspectorGroup = {
+export const newsletterSettings = {
   group: "Newsletter Popup",
   inputs: [
     {
@@ -121,4 +121,4 @@ export const newsletterSettings: InspectorGroup = {
       condition: (theme) => theme.newsletterPopupEnabled === true,
     },
   ],
-};
+} as const satisfies InspectorGroup;

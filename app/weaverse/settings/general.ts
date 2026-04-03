@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const generalSettings: InspectorGroup = {
+export const generalSettings = {
   group: "General",
   inputs: [
     {
@@ -148,4 +148,4 @@ export const generalSettings: InspectorGroup = {
       defaultValue: "#108474",
     },
   ],
-};
+} as const satisfies InspectorGroup;

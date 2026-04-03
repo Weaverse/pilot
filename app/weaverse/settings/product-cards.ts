@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const productCardsSettings: InspectorGroup = {
+export const productCardsSettings = {
   group: "Product cards",
   inputs: [
     {
@@ -237,4 +237,4 @@ export const productCardsSettings: InspectorGroup = {
       defaultValue: false,
     },
   ],
-};
+} as const satisfies InspectorGroup;

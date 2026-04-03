@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const productBadgesSettings: InspectorGroup = {
+export const productBadgesSettings = {
   group: "Product badges",
   inputs: [
     {
@@ -105,4 +105,4 @@ export const productBadgesSettings: InspectorGroup = {
       defaultValue: "#d4d4d4",
     },
   ],
-};
+} as const satisfies InspectorGroup;

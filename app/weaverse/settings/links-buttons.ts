@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const linksButtonsSettings: InspectorGroup = {
+export const linksButtonsSettings = {
   group: "Links & buttons",
   inputs: [
     {
@@ -46,4 +46,4 @@ export const linksButtonsSettings: InspectorGroup = {
       defaultValue: "#000000",
     },
   ],
-};
+} as const satisfies InspectorGroup;
