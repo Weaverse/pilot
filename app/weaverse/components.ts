@@ -48,6 +48,7 @@ import * as ProductCollapsibleDetails from "~/sections/main-product/product-coll
 import * as ProductInfoSection from "~/sections/main-product/product-info";
 import * as ProductMediaSection from "~/sections/main-product/product-media";
 import * as ProductPrices from "~/sections/main-product/product-prices";
+import * as ProductPromoText from "~/sections/main-product/product-promo-text";
 import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
 import * as ProductSummary from "~/sections/main-product/product-summary";
 import * as ProductTitle from "~/sections/main-product/product-title";
@@ -127,6 +128,7 @@ export const components: HydrogenComponent[] = [
   ProductVendor,
   ProductTitle,
   ProductPrices,
+  ProductPromoText,
   ProductSummary,
   ProductBundledVariants,
   ProductVariantSelector,

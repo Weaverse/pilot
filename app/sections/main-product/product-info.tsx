@@ -25,6 +25,7 @@ export const schema = createSchema({
   limit: 1,
   childTypes: [
     "mp--breadcrumb",
+    "mp--promo-text",
     "mp--vendor",
     "mp--title",
     "mp--prices",
@@ -44,6 +45,9 @@ export const schema = createSchema({
       {
         type: "mp--breadcrumb",
         homeText: "Home",
+      },
+      {
+        type: "mp--promo-text",
       },
       {
         type: "mp--vendor",
