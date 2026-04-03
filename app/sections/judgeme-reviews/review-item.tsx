@@ -88,7 +88,7 @@ export function ReviewItem({
                 <button
                   type="button"
                   key={image.urls.small}
-                  className="group/image relative overflow-hidden border border-gray-200 transition-all duration-200 hover:border-gray-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  className="group/image relative overflow-hidden transition-all duration-200 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                   onClick={() => {
                     setSelectedImageIndex(ind);
                   }}
@@ -100,14 +100,11 @@ export function ReviewItem({
                       image.urls.original
                     }
                     alt={`Review image ${ind + 1}`}
-                    className="h-16 w-16 object-cover transition-transform duration-200"
+                    className="size-32 hover:brightness-75 transition-all brightness-100"
                     sizes="(min-width: 45em) 50vw, 100vw"
+                    width={500}
+                    height={500}
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-200 group-hover/image:bg-black/50">
-                    <span className="font-medium text-white text-xs opacity-0 transition-opacity duration-200 group-hover/image:opacity-100">
-                      View
-                    </span>
-                  </div>
                 </button>
               ))}
             </div>
