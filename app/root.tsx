@@ -4,6 +4,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import type { ThemeSettings } from "~/types/weaverse";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
@@ -97,7 +98,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-export const Layout = withWeaverse(function Layout({
+export const Layout = withWeaverse(function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -106,7 +107,7 @@ export const Layout = withWeaverse(function Layout({
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-  const { topbarHeight, topbarText } = useThemeSettings();
+  const { topbarHeight, topbarText } = useThemeSettings<ThemeSettings>();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
 
   // Bypass Weaverse theme layout for Hydrogen dev tools
