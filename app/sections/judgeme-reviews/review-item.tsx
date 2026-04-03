@@ -146,7 +146,9 @@ export function ReviewImagesModal({
     <Dialog.Root
       open={open}
       onOpenChange={(isOpen) => {
-        if (!isOpen) setSelectedImageIndex(null);
+        if (!isOpen) {
+          setSelectedImageIndex(null);
+        }
       }}
     >
       <Dialog.Portal>
@@ -176,9 +178,7 @@ export function ReviewImagesModal({
               <button
                 type="button"
                 onClick={() =>
-                  goTo(
-                    (selectedImageIndex! - 1 + images.length) % images.length,
-                  )
+                  goTo((selectedImageIndex - 1 + images.length) % images.length)
                 }
                 className="-translate-y-1/2 absolute top-1/2 left-4 z-1 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
                 aria-label="Previous image"
@@ -207,7 +207,7 @@ export function ReviewImagesModal({
             {images.length > 1 && (
               <button
                 type="button"
-                onClick={() => goTo((selectedImageIndex! + 1) % images.length)}
+                onClick={() => goTo((selectedImageIndex + 1) % images.length)}
                 className="-translate-y-1/2 absolute top-1/2 right-4 z-1 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
                 aria-label="Next image"
               >
@@ -218,7 +218,7 @@ export function ReviewImagesModal({
             {/* Image counter */}
             {images.length > 1 && (
               <div className="-translate-x-1/2 absolute bottom-4 left-1/2 rounded-full bg-black/50 px-3 py-1 text-white text-sm">
-                {selectedImageIndex! + 1} / {images.length}
+                {selectedImageIndex + 1} / {images.length}
               </div>
             )}
           </div>
