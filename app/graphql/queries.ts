@@ -77,6 +77,12 @@ export const PRODUCT_QUERY = `#graphql
           ...Media
         }
       }
+      collections(first: 5) {
+        nodes {
+          title
+          handle
+        }
+      }
       seo {
         description
         title
