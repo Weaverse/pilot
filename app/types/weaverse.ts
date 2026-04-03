@@ -1,3 +1,10 @@
+import type {
+  WeaverseBlog,
+  WeaverseCollection,
+  WeaverseImage,
+  WeaverseProduct,
+  WeaverseVideo,
+} from "@weaverse/hydrogen";
 import type { announcementSettings } from "~/weaverse/settings/announcements";
 import type { cartSettings } from "~/weaverse/settings/cart";
 import type { footerSettings } from "~/weaverse/settings/footer";
@@ -21,6 +28,10 @@ type ExtractOptionValues<T> = T extends {
     : string
   : string;
 
+type WeaverseResource = WeaverseProduct | WeaverseCollection | WeaverseBlog;
+
+type WeaverseMedia = WeaverseImage | WeaverseVideo;
+
 /**
  * Maps a Weaverse input entry to its TypeScript value type.
  * For select/toggle-group, extracts the literal union from configs.options.
@@ -29,21 +40,29 @@ type InputEntryValueType<T> = T extends { type: "switch" }
   ? boolean
   : T extends { type: "range" }
     ? number
-    : T extends { type: "color" | "text" | "richtext" | "textarea" | "url" }
+    : T extends {
+          type:
+            | "color"
+            | "text"
+            | "richtext"
+            | "textarea"
+            | "url"
+            | "map-autocomplete"
+            | "datepicker"
+            | "position";
+        }
       ? string
-      : T extends { type: "image" }
-        ? {
-            id: string;
-            url: string;
-            altText?: string;
-            width?: number;
-            height?: number;
-          }
+      : T extends { type: "image" | "video" }
+        ? WeaverseMedia
         : T extends { type: "select" | "toggle-group" }
           ? ExtractOptionValues<T>
-          : T extends { type: "position" | "datepicker" }
-            ? string
-            : unknown;
+          : T extends { type: "product" | "collection" | "blog" | "metaobject" }
+            ? WeaverseResource
+            : T extends { type: "product-list" | "collection-list" }
+              ? WeaverseResource[]
+              : T extends { type: "heading" }
+                ? never
+                : unknown;
 
 /**
  * Walks the inputs tuple, filters to entries with a `name`, and maps each
