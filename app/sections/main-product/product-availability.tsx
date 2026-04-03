@@ -34,20 +34,23 @@ export default function ProductAvailability(props: ProductAvailabilityProps) {
 
   return (
     <div {...rest} className={cn("flex items-center gap-2 text-sm")}>
-      {/* <span
-        className="size-2.5 rounded-full animate-ping"
-        style={{ backgroundColor: color }}
-      /> */}
-      <span className="relative flex size-3">
+      {available ? (
+        <span className="relative flex size-3 mb-0.5">
+          <span
+            className="absolute inline-flex h-full w-full animate-ping opacity-75"
+            style={{ backgroundColor: color, borderRadius: "99px" }}
+          />
+          <span
+            className="relative inline-flex size-3"
+            style={{ backgroundColor: color, borderRadius: "99px" }}
+          />
+        </span>
+      ) : (
         <span
-          className="absolute inline-flex h-full w-full animate-ping opacity-75"
+          className="size-3 mb-0.5"
           style={{ backgroundColor: color, borderRadius: "99px" }}
         />
-        <span
-          className="relative inline-flex size-3"
-          style={{ backgroundColor: color, borderRadius: "99px" }}
-        />
-      </span>
+      )}
       <span style={{ color }}>{available ? inStockText : outOfStockText}</span>
     </div>
   );
