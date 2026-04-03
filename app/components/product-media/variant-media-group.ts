@@ -108,11 +108,27 @@ export function getVariantGroupedMedia({
     knownOptionValues = matchingOption.optionValues.map((ov) => ov.name);
   }
 
-  // 3. Group media by option value extracted from filename
+  // 3. Separate non-image media (3D models, videos) — always shown for all variants
+  let alwaysVisible: MediaFragment[] = [];
+  let imageMedia: MediaFragment[] = [];
+
+  for (let media of allMedia) {
+    if (
+      media.mediaContentType === "MODEL_3D" ||
+      media.mediaContentType === "VIDEO" ||
+      media.mediaContentType === "EXTERNAL_VIDEO"
+    ) {
+      alwaysVisible.push(media);
+    } else {
+      imageMedia.push(media);
+    }
+  }
+
+  // 4. Group image media by option value extracted from filename
   let groupedMedia: Map<string, MediaFragment[]> = new Map();
   let ungrouped: MediaFragment[] = [];
 
-  for (let media of allMedia) {
+  for (let media of imageMedia) {
     let mediaUrl = media.previewImage?.url;
     if (!mediaUrl) {
       ungrouped.push(media);
@@ -131,13 +147,13 @@ export function getVariantGroupedMedia({
     }
   }
 
-  // 4. Get matched media for selected option value
+  // 5. Get matched media for selected option value
   let matched = groupedMedia.get(selectedOptionValueLower) || [];
 
-  // 5. Fallback: if no matches, show all media
+  // 6. Fallback: if no matches, show all media
   if (matched.length === 0) {
     return { media: allMedia, isGrouped: false };
   }
 
-  return { media: [...matched, ...ungrouped], isGrouped: true };
+  return { media: [...matched, ...ungrouped, ...alwaysVisible], isGrouped: true };
 }

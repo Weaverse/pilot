@@ -85,6 +85,12 @@ export function MediaGrid({
         <div className={mediaGridVariants({ gridSize })}>
           {displayMedia.map((med, idx) => {
             const isLast = idx === visibleMedia.length - 1;
+            const isFullWidth =
+              (gridSize === "2x2" &&
+                isLast &&
+                visibleMedia.length % 2 === 1) ||
+              (gridSize === "mix" &&
+                (idx % 3 === 0 || (isLast && idx % 3 === 1)));
             const isHiddenOnDesktop =
               shouldLimitMedia && !expanded && idx >= initialMediaCount;
             return (
@@ -92,14 +98,15 @@ export function MediaGrid({
                 key={med.id}
                 className={clsx(
                   "group relative",
-                  gridSize === "2x2" &&
-                    isLast &&
-                    visibleMedia.length % 2 === 1 &&
+                  isFullWidth &&
+                    gridSize === "2x2" &&
                     "2xl:col-span-2",
-                  gridSize === "mix" &&
-                    (idx % 3 === 0 || (isLast && idx % 3 === 1)) &&
+                  isFullWidth &&
+                    gridSize === "mix" &&
                     "lg:col-span-2",
-                  med.mediaContentType === "MODEL_3D" && "aspect-video",
+                  isFullWidth &&
+                    med.mediaContentType === "MODEL_3D" &&
+                    "aspect-video",
                   isHiddenOnDesktop && "lg:hidden",
                 )}
               >
