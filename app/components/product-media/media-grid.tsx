@@ -99,6 +99,7 @@ export function MediaGrid({
                   gridSize === "mix" &&
                     (idx % 3 === 0 || (isLast && idx % 3 === 1)) &&
                     "lg:col-span-2",
+                  med.mediaContentType === "MODEL_3D" && "aspect-video",
                   isHiddenOnDesktop && "lg:hidden",
                 )}
               >
