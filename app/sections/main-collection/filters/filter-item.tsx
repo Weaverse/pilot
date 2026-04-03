@@ -103,7 +103,7 @@ export function FilterItem({
         )}
       >
         <Checkbox.Indicator className="flex items-center justify-center text-current">
-          <span className="inline-block h-3 w-3 bg-body" />
+          <span className="inline-block h-3 w-3 bg-body rounded-sm" />
         </Checkbox.Indicator>
       </Checkbox.Root>
       <FilterLabel option={option} showFiltersCount={showFiltersCount} />
