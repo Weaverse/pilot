@@ -41,6 +41,7 @@ import * as CollectionToolbar from "~/sections/main-collection/toolbar";
 import * as MainProduct from "~/sections/main-product";
 import * as JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
+import * as ProductAvailability from "~/sections/main-product/product-availability";
 import * as ProductBadges from "~/sections/main-product/product-badges";
 import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
 import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
@@ -124,6 +125,7 @@ export const components: HydrogenComponent[] = [
   ProductMediaSection,
   ProductInfoSection,
   ProductBreadcrumb,
+  ProductAvailability,
   ProductBadges,
   ProductVendor,
   ProductTitle,

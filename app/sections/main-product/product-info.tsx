@@ -26,6 +26,7 @@ export const schema = createSchema({
   childTypes: [
     "mp--breadcrumb",
     "mp--promo-text",
+    "mp--availability",
     "mp--vendor",
     "mp--title",
     "mp--prices",
@@ -47,9 +48,6 @@ export const schema = createSchema({
         homeText: "Home",
       },
       {
-        type: "mp--promo-text",
-      },
-      {
         type: "mp--vendor",
       },
       {
@@ -65,6 +63,12 @@ export const schema = createSchema({
       },
       {
         type: "mp--summary",
+      },
+      {
+        type: "mp--promo-text",
+      },
+      {
+        type: "mp--availability",
       },
       {
         type: "mp--bundled-variants",
