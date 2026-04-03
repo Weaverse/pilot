@@ -61,7 +61,7 @@ export function Header() {
         "transition-all duration-300 ease-in-out",
         "bg-(--color-header-bg) hover:bg-(--color-header-bg)",
         "text-(--color-header-text) hover:text-(--color-header-text)",
-        "border-line-subtle border-b",
+        "border-gray-200 border-b",
         variants({ padding: headerWidth }),
         scrolled ? "shadow-header" : "shadow-none",
         enableTransparent
@@ -91,17 +91,29 @@ export function Header() {
     >
       <div
         className={cn(
-          "flex h-(--height-nav) items-center justify-between gap-2 py-1.5 lg:gap-8 lg:py-3",
+          "grid h-(--height-nav) grid-cols-[1fr_auto_1fr] items-center gap-2 overflow-hidden py-1.5 lg:gap-8 lg:py-3",
           variants({ width: headerWidth }),
         )}
       >
-        <MobileMenu />
-        <Link to="/search" className="p-1.5 lg:hidden">
-          <MagnifyingGlassIcon className="h-5 w-5" />
-        </Link>
-        <Logo />
-        <DesktopMenu />
-        <div className="z-1 flex items-center gap-1">
+        {/* Left: hamburger + search on mobile, logo on desktop */}
+        <div className="flex items-center gap-1">
+          <MobileMenu />
+          <Link to="/search" className="p-1.5 lg:hidden">
+            <MagnifyingGlassIcon className="h-5 w-5" />
+          </Link>
+          <div className="hidden lg:block">
+            <Logo />
+          </div>
+        </div>
+        {/* Center: logo on mobile, desktop menu on desktop */}
+        <div className="flex items-center justify-center">
+          <div className="lg:hidden h-[calc(var(--height-nav)-0.75rem)]">
+            <Logo />
+          </div>
+          <DesktopMenu />
+        </div>
+        {/* Right: icons */}
+        <div className="z-1 flex items-center justify-end gap-1">
           {showHeaderCountrySelector && <HeaderCountrySelector />}
           <PredictiveSearchButton />
           <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
