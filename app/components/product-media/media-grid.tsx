@@ -86,9 +86,7 @@ export function MediaGrid({
           {displayMedia.map((med, idx) => {
             const isLast = idx === visibleMedia.length - 1;
             const isFullWidth =
-              (gridSize === "2x2" &&
-                isLast &&
-                visibleMedia.length % 2 === 1) ||
+              (gridSize === "2x2" && isLast && visibleMedia.length % 2 === 1) ||
               (gridSize === "mix" &&
                 (idx % 3 === 0 || (isLast && idx % 3 === 1)));
             const isHiddenOnDesktop =
@@ -98,12 +96,8 @@ export function MediaGrid({
                 key={med.id}
                 className={clsx(
                   "group relative",
-                  isFullWidth &&
-                    gridSize === "2x2" &&
-                    "2xl:col-span-2",
-                  isFullWidth &&
-                    gridSize === "mix" &&
-                    "lg:col-span-2",
+                  isFullWidth && gridSize === "2x2" && "2xl:col-span-2",
+                  isFullWidth && gridSize === "mix" && "lg:col-span-2",
                   isFullWidth &&
                     med.mediaContentType === "MODEL_3D" &&
                     "aspect-video",

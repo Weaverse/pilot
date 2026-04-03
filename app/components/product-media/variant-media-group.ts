@@ -155,5 +155,8 @@ export function getVariantGroupedMedia({
     return { media: allMedia, isGrouped: false };
   }
 
-  return { media: [...matched, ...ungrouped, ...alwaysVisible], isGrouped: true };
+  return {
+    media: [...matched, ...ungrouped, ...alwaysVisible],
+    isGrouped: true,
+  };
 }
