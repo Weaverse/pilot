@@ -92,7 +92,7 @@ export function Header() {
     >
       <div
         className={cn(
-          "grid h-(--height-nav) grid-cols-[1fr_auto_1fr] items-center gap-2 overflow-hidden py-1.5 lg:gap-8 lg:py-3",
+          "grid h-(--height-nav) grid-cols-[1fr_auto_1fr] items-center gap-2 py-1.5 lg:gap-8 lg:py-3",
           variants({ width: headerWidth }),
         )}
       >
