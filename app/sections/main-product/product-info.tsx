@@ -36,6 +36,8 @@ export const schema = createSchema({
     "mp--variant-selector",
     "mp--quantity-selector",
     "mp--atc-buttons",
+    "mp--estimated-delivery",
+    "mp--highlights",
     "mp--collapsible-details",
   ],
   enabledOn: {
@@ -88,6 +90,12 @@ export const schema = createSchema({
         soldOutText: "Sold out",
         showShopPayButton: true,
         buttonClassName: "w-full uppercase",
+      },
+      {
+        type: "mp--estimated-delivery",
+      },
+      {
+        type: "mp--highlights",
       },
       {
         type: "mp--collapsible-details",

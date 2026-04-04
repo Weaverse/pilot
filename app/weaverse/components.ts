@@ -46,6 +46,9 @@ import * as ProductBadges from "~/sections/main-product/product-badges";
 import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
 import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
 import * as ProductCollapsibleDetails from "~/sections/main-product/product-collapsible-details";
+import * as ProductEstimatedDelivery from "~/sections/main-product/product-estimated-delivery";
+import * as ProductHighlightItem from "~/sections/main-product/product-highlight-item";
+import * as ProductHighlights from "~/sections/main-product/product-highlights";
 import * as ProductInfoSection from "~/sections/main-product/product-info";
 import * as ProductMediaSection from "~/sections/main-product/product-media";
 import * as ProductPrices from "~/sections/main-product/product-prices";
@@ -137,6 +140,9 @@ export const components: HydrogenComponent[] = [
   ProductQuantitySelector,
   ProductATCButtons,
   ProductCollapsibleDetails,
+  ProductEstimatedDelivery,
+  ProductHighlights,
+  ProductHighlightItem,
   RelatedProducts,
   RelatedArticles,
   MainCollection,
