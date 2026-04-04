@@ -13,6 +13,7 @@ import {
 import { cn } from "~/utils/cn";
 
 let ICONS = {
+  none: null,
   gift: GiftIcon,
   tag: TagIcon,
   megaphone: MegaphoneIcon,
@@ -42,9 +43,7 @@ export default function ProductPromoText(props: ProductPromoTextProps) {
   return (
     <div
       {...rest}
-      className={cn(
-        "flex items-center gap-2 rounded-md px-4 py-3 text-sm font-medium",
-      )}
+      className={cn("flex items-center gap-2 rounded-md px-4 py-3 font-medium")}
       style={{ color: textColor, backgroundColor }}
     >
       {customIcon?.url ? (
@@ -57,7 +56,7 @@ export default function ProductPromoText(props: ProductPromoTextProps) {
       ) : IconComponent ? (
         <IconComponent className="size-5 shrink-0" />
       ) : null}
-      {text}
+      <div dangerouslySetInnerHTML={{ __html: text }} />
     </div>
   );
 }
@@ -65,7 +64,6 @@ export default function ProductPromoText(props: ProductPromoTextProps) {
 export let schema = createSchema({
   type: "mp--promo-text",
   title: "Promo text",
-  limit: 1,
   enabledOn: {
     pages: ["PRODUCT"],
   },
@@ -74,7 +72,7 @@ export let schema = createSchema({
       group: "General",
       inputs: [
         {
-          type: "text",
+          type: "richtext",
           label: "Text",
           name: "text",
           defaultValue: "Holidays Sale: Up To 20% OFF Sitewide!",
@@ -86,6 +84,7 @@ export let schema = createSchema({
           name: "icon",
           configs: {
             options: [
+              { value: "none", label: "None" },
               { value: "gift", label: "Gift" },
               { value: "tag", label: "Tag" },
               { value: "megaphone", label: "Megaphone" },
