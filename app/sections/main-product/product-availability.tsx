@@ -33,7 +33,7 @@ export default function ProductAvailability(props: ProductAvailabilityProps) {
   let color = available ? inStockColor : outOfStockColor;
 
   return (
-    <div {...rest} className={cn("flex items-center gap-2 text-sm")}>
+    <div {...rest} className={cn("flex items-center gap-2")}>
       {available ? (
         <span className="relative flex size-3 mb-0.5">
           <span
