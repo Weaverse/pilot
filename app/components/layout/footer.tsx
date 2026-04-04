@@ -10,6 +10,7 @@ import { cva } from "class-variance-authority";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Image as PaymentIcon } from "~/components/image";
 import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -51,6 +52,7 @@ export function Footer() {
     newsletterDescription,
     newsletterPlaceholder,
     newsletterButtonText,
+    paymentMethodIcons,
   } = useThemeSettings<ThemeSettings>();
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
 
@@ -60,6 +62,13 @@ export function Footer() {
     fetcher.data && !fetcher.data.ok
       ? fetcher.data.error || "An error occurred while signing up."
       : "";
+
+  let paymentIcons = paymentMethodIcons
+    ? paymentMethodIcons
+        .split(",")
+        .map((url: string) => url.trim())
+        .filter(Boolean)
+    : [];
 
   const SOCIAL_ACCOUNTS = [
     {
@@ -179,11 +188,25 @@ export function Footer() {
           </div>
           <FooterMenu />
         </div>
-        <div className="flex flex-col items-center justify-between gap-4 border-line-subtle border-t py-9 lg:flex-row">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-line-subtle border-t py-9">
           <div className="flex gap-2">
             <CountrySelector />
           </div>
           <p>{copyright}</p>
+          {paymentIcons.length > 0 ? (
+            <div className="flex items-center justify-end gap-1.5">
+              {paymentIcons.map((url) => (
+                <PaymentIcon
+                  key={url}
+                  data={{ url, altText: "Payment method" }}
+                  className="h-7 w-11 border border-gray-200 rounded-[2px] bg-gray-50 p-0.5"
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          ) : (
+            <div />
+          )}
         </div>
       </div>
     </footer>

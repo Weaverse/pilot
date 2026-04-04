@@ -133,6 +133,19 @@ export const footerSettings = {
     },
     {
       type: "heading",
+      label: "Payment methods",
+    },
+    {
+      type: "textarea",
+      name: "paymentMethodIcons",
+      label: "Icon URLs",
+      helpText: "Comma-separated URLs to SVG icons for payment methods.",
+      defaultValue: "",
+      placeholder:
+        "https://example.com/visa.svg, https://example.com/mastercard.svg",
+    },
+    {
+      type: "heading",
       label: "Colors",
     },
     {
