@@ -128,6 +128,12 @@ export const Layout = withWeaverse(function RootLayout({
         <Meta />
         <Links />
         <GlobalStyle />
+        <script
+          type="module"
+          src="https://cdn.shopify.com/storefront/web-components/account.js"
+          async
+          nonce={nonce}
+        />
       </head>
       <body
         style={

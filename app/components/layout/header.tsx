@@ -1,7 +1,6 @@
 import { MagnifyingGlassIcon, UserIcon } from "@phosphor-icons/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import { Suspense } from "react";
 import {
   Await,
@@ -117,7 +116,7 @@ export function Header() {
         <div className="z-1 flex items-center justify-end gap-1">
           {showHeaderCountrySelector && <HeaderCountrySelector />}
           <PredictiveSearchButton />
-          <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
+          <ShopifyAccountButton />
           <CartDrawer />
         </div>
       </div>
@@ -125,26 +124,27 @@ export function Header() {
   );
 }
 
-function AccountLink({ className }: { className?: string }) {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const isLoggedIn = rootData?.isLoggedIn;
+function ShopifyAccountButton() {
+  let rootData = useRouteLoaderData<RootLoader>("root");
+  let publicStoreDomain = rootData?.publicStoreDomain;
+  let publicAccessToken = rootData?.consent?.storefrontAccessToken;
 
   return (
-    <Link to="/account" className={clsx("transition-none", className)}>
-      <Suspense fallback={<UserIcon className="h-5 w-5" />}>
-        <Await
-          resolve={isLoggedIn}
-          errorElement={<UserIcon className="h-5 w-5" />}
-        >
-          {(loggedIn) =>
-            loggedIn ? (
-              <UserIcon className="h-5 w-5" />
-            ) : (
-              <UserIcon className="h-5 w-5" />
-            )
-          }
-        </Await>
-      </Suspense>
-    </Link>
+    <Suspense fallback={<UserIcon className="h-5 w-5" />}>
+      <Await
+        resolve={rootData?.customerAccessToken}
+        errorElement={<UserIcon className="h-5 w-5" />}
+      >
+        {(customerAccessToken) => (
+          <shopify-store
+            store-domain={publicStoreDomain}
+            public-access-token={publicAccessToken}
+            customer-access-token={customerAccessToken || undefined}
+          >
+            <shopify-account sign-in-url="/account/login" />
+          </shopify-store>
+        )}
+      </Await>
+    </Suspense>
   );
 }
