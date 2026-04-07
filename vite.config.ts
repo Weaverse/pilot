@@ -41,26 +41,7 @@ export default defineConfig(({ isSsrBuild }) => ({
   },
   ssr: {
     optimizeDeps: {
-      include: [
-        "deepmerge",
-        "@radix-ui/react-primitive",
-        "jsonp",
-        "classnames",
-        "react-share",
-        "typographic-trademark",
-        "typographic-single-spaces",
-        "typographic-registered-trademark",
-        "typographic-math-symbols",
-        "typographic-en-dashes",
-        "typographic-em-dashes",
-        "typographic-ellipses",
-        "typographic-currency",
-        "typographic-copyright",
-        "typographic-apostrophes-for-possessive-plurals",
-        "typographic-quotes",
-        "typographic-apostrophes",
-        "textr",
-      ],
+      include: ["react-share"],
     },
   },
 }));
