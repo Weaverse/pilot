@@ -61,7 +61,7 @@ export default hydrogenRoutes([
         index("routes/account/dashboard/index.tsx"),
         route("profile", "routes/account/profile.tsx"),
         route("edit", "routes/account/edit.tsx"),
-        route("addresses", "routes/account/address/list.tsx"),
+        route("addr", "routes/account/address/list.tsx"),
         route("address/:id", "routes/account/address/index.tsx"),
         ...prefix("orders", [
           index("routes/account/orders/list.tsx"),
