@@ -392,6 +392,24 @@
     --option-swatch-size: 2.25rem;
     --option-image-width: 4rem;
 
+    /* Heading scale (derived from dynamic --h1-base-size set by GlobalStyle) */
+    --h1-base-size: 60px;
+    --heading-scale-ratio: 1.2;
+    --heading-mobile-scale-ratio: 1.1;
+
+    --h2-base-size: round(calc(var(--h1-base-size) / var(--heading-scale-ratio)), 1px);
+    --h3-base-size: round(calc(var(--h2-base-size) / var(--heading-scale-ratio)), 1px);
+    --h4-base-size: round(calc(var(--h3-base-size) / var(--heading-scale-ratio)), 1px);
+    --h5-base-size: round(calc(var(--h4-base-size) / var(--heading-scale-ratio)), 1px);
+    --h6-base-size: round(calc(var(--h5-base-size) / var(--heading-scale-ratio)), 1px);
+
+    --h1-mobile-size: round(calc(var(--h1-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+    --h2-mobile-size: round(calc(var(--h2-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+    --h3-mobile-size: round(calc(var(--h3-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+    --h4-mobile-size: round(calc(var(--h4-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+    --h5-mobile-size: round(calc(var(--h5-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+    --h6-mobile-size: round(calc(var(--h6-base-size) / var(--heading-mobile-scale-ratio)), 1px);
+
     @supports (height: 100svh) {
       --screen-height: 100svh;
     }

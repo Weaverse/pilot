@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   plugins: [
     hydrogen(),
     oxygen(),
@@ -14,9 +14,20 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
-    // Allow a strict Content-Security-Policy
-    // without inlining assets as base64:
     assetsInlineLimit: 0,
+    ...(!isSsrBuild && {
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (id.includes("react-player")) return "vendor-media";
+            if (id.includes("swiper")) return "vendor-media";
+            if (id.includes("react-share")) return "vendor-social";
+            if (id.includes("@phosphor-icons")) return "vendor-icons";
+            if (id.includes("@radix-ui")) return "vendor-radix";
+          },
+        },
+      },
+    }),
   },
   server: {
     warmup: {
@@ -35,6 +46,7 @@ export default defineConfig({
         "@radix-ui/react-primitive",
         "jsonp",
         "classnames",
+        "react-share",
         "typographic-trademark",
         "typographic-single-spaces",
         "typographic-registered-trademark",
@@ -51,4 +63,4 @@ export default defineConfig({
       ],
     },
   },
-});
+}));

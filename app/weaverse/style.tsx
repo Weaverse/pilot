@@ -93,25 +93,10 @@ export function GlobalStyle() {
               --body-base-spacing: ${bodyBaseSpacing};
               --body-base-line-height: ${bodyBaseLineHeight};
 
-              --heading-scale-ratio: 1.2;
-              --heading-mobile-scale-ratio: 1.1;
-
               --h1-base-size: ${h1BaseSize}px;
-              --h2-base-size: round(calc(var(--h1-base-size) / var(--heading-scale-ratio)), 1px);
-              --h3-base-size: round(calc(var(--h2-base-size) / var(--heading-scale-ratio)), 1px);
-              --h4-base-size: round(calc(var(--h3-base-size) / var(--heading-scale-ratio)), 1px);
-              --h5-base-size: round(calc(var(--h4-base-size) / var(--heading-scale-ratio)), 1px);
-              --h6-base-size: round(calc(var(--h5-base-size) / var(--heading-scale-ratio)), 1px);
-
-              --h1-mobile-size: round(calc(var(--h1-base-size) / var(--heading-mobile-scale-ratio)), 1px);
-              --h2-mobile-size: round(calc(var(--h2-base-size) / var(--heading-mobile-scale-ratio)), 1px);
-              --h3-mobile-size: round(calc(var(--h3-base-size) / var(--heading-mobile-scale-ratio)), 1px);
-              --h4-mobile-size: round(calc(var(--h4-base-size) / var(--heading-mobile-scale-ratio)), 1px);
-              --h5-mobile-size: round(calc(var(--h5-base-size) / var(--heading-mobile-scale-ratio)), 1px);
-              --h6-mobile-size: round(calc(var(--h6-base-size) / var(--heading-mobile-scale-ratio)), 1px);
-
               --heading-base-spacing: ${headingBaseSpacing};
               --heading-base-line-height: ${headingBaseLineHeight};
+            }
 
             @media (min-width: 32em) {
               body {
