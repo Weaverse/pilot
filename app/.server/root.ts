@@ -43,6 +43,7 @@ export async function loadCriticalData({
     selectedLocale: storefront.i18n,
     weaverseTheme,
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
+    publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
   };
 }
 
@@ -55,9 +56,9 @@ export function loadDeferredData({ context }: LoaderFunctionArgs) {
   const { cart, customerAccount } = context;
 
   return {
-    isLoggedIn: customerAccount.isLoggedIn(),
     cart: cart.get(),
     swatchesConfigs: getSwatchesConfigs(context),
+    customerAccessToken: customerAccount.getAccessToken(),
   };
 }
 
