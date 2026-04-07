@@ -112,7 +112,7 @@ export function Footer() {
           </div>
           <FooterMenu />
         </div>
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-line-subtle border-t py-9">
+        <div className="flex flex-col justify-center lg:grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-line-subtle border-t py-9">
           <div className="flex gap-2">
             <CountrySelector />
           </div>
