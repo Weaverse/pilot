@@ -1,4 +1,4 @@
-import { HandbagIcon, XIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon, HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
@@ -79,9 +79,14 @@ export function CartDrawer() {
                 <div className="flex h-full flex-col space-y-6">
                   <div className="flex items-center justify-between gap-2 px-4">
                     <Dialog.Title asChild className="text-base">
-                      <span className="font-bold">
+                      <Link
+                        to="/cart"
+                        className="group/cart-title flex items-center gap-1.5 font-bold hover:underline"
+                        onClick={closeCartDrawer}
+                      >
                         Cart ({cart?.totalQuantity || 0})
-                      </span>
+                        <ArrowRightIcon className="size-4 transition-transform group-hover/cart-title:translate-x-0.5" />
+                      </Link>
                     </Dialog.Title>
                     <Dialog.Close asChild>
                       <button

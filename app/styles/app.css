@@ -256,7 +256,7 @@
 
   button,
   a {
-    @apply cursor-pointer;
+    @apply cursor-pointer underline-offset-4;
   }
 
   mark {
