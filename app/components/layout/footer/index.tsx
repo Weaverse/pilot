@@ -73,7 +73,7 @@ export function Footer() {
           footerVariants({ width: footerWidth }),
         )}
       >
-        <div className="space-y-9">
+        <div className="space-y-2 lg:space-y-9">
           <div className="grid w-full gap-8 lg:grid-cols-3">
             <div className="flex flex-col gap-6">
               {footerLogoData ? (

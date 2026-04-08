@@ -26,7 +26,9 @@ export function SocialLinks({
     { name: "Facebook", to: socialFacebook, Icon: FacebookLogoIcon },
   ].filter((acc) => acc.to && acc.to.trim() !== "");
 
-  if (accounts.length === 0) return null;
+  if (accounts.length === 0) {
+    return null;
+  }
 
   return (
     <div className="flex gap-4">
@@ -37,7 +39,7 @@ export function SocialLinks({
           target="_blank"
           className="flex items-center gap-2 text-lg"
         >
-          <Icon className="h-5 w-5" />
+          <Icon className="size-6" />
         </Link>
       ))}
     </div>
