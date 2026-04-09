@@ -137,6 +137,9 @@ export function PaymentMethods({
           data={{ url, altText, width: 40, height: 24 }}
           className="h-6 w-10 rounded-none"
           loading="lazy"
+          width={100}
+          height={50}
+          sizes="auto"
           style={{ borderRadius: "2px" }}
         />
       ))}
