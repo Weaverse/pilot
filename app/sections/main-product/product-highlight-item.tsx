@@ -10,7 +10,12 @@ import {
   SmileyIcon,
   StarIcon,
 } from "@phosphor-icons/react";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  useParentInstance,
+} from "@weaverse/hydrogen";
+import { cn } from "~/utils/cn";
 
 let ICONS = {
   globe: GlobeIcon,
@@ -35,6 +40,8 @@ interface HighlightItemProps extends HydrogenComponentProps {
 
 export default function ProductHighlightItem(props: HighlightItemProps) {
   let { icon, text, ...rest } = props;
+  let parent = useParentInstance();
+  let isGrid = parent.data?.layout === "grid";
 
   if (!text) {
     return null;
@@ -43,7 +50,15 @@ export default function ProductHighlightItem(props: HighlightItemProps) {
   let IconComponent = ICONS[icon];
 
   return (
-    <div {...rest} className="flex items-center gap-3">
+    <div
+      {...rest}
+      className={cn(
+        "flex gap-3",
+        isGrid
+          ? "flex-col items-center text-center rounded-lg border border-gray-300 px-2 py-3"
+          : "items-center",
+      )}
+    >
       {IconComponent && (
         <IconComponent className="size-6 shrink-0 text-slate-700" />
       )}

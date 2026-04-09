@@ -1,22 +1,56 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  type InspectorGroup,
+} from "@weaverse/hydrogen";
+import { cn } from "~/utils/cn";
+
+type ProductHighlightsLayout = "list" | "grid";
 
 interface ProductHighlightsProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;
+  layout: ProductHighlightsLayout;
 }
 
 export default function ProductHighlights(props: ProductHighlightsProps) {
-  let { children, ...rest } = props;
+  let { layout, children, ...rest } = props;
 
   return (
     <div {...rest}>
-      <div className="flex flex-col gap-3">{children}</div>
+      <div
+        className={cn(
+          "gap-3",
+          layout === "grid" ? "grid grid-cols-2" : "flex flex-col",
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }
 
+let layoutGroup: InspectorGroup = {
+  group: "Layout",
+  inputs: [
+    {
+      type: "toggle-group",
+      name: "layout",
+      label: "Layout",
+      configs: {
+        options: [
+          { value: "list", label: "List" },
+          { value: "grid", label: "Grid" },
+        ],
+      },
+      defaultValue: "list",
+    },
+  ],
+};
+
 export let schema = createSchema({
   type: "mp--highlights",
   title: "Product highlights",
+  inspector: [layoutGroup],
   childTypes: ["mp--highlight-item"],
   enabledOn: {
     pages: ["PRODUCT"],
