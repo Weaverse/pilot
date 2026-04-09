@@ -15,6 +15,12 @@ export const linksButtonsSettings = {
     },
     {
       type: "color",
+      label: "Background color (hover)",
+      name: "buttonPrimaryBgHover",
+      defaultValue: "#404040",
+    },
+    {
+      type: "color",
       label: "Text color",
       name: "buttonPrimaryColor",
       defaultValue: "#ffffff",
@@ -31,6 +37,12 @@ export const linksButtonsSettings = {
     },
     {
       type: "color",
+      label: "Background color (hover)",
+      name: "buttonSecondaryBgHover",
+      defaultValue: "#f5f5f5",
+    },
+    {
+      type: "color",
       label: "Text color",
       name: "buttonSecondaryColor",
       defaultValue: "#000000",
@@ -44,6 +56,12 @@ export const linksButtonsSettings = {
       label: "Text and border",
       name: "buttonOutlineTextAndBorder",
       defaultValue: "#000000",
+    },
+    {
+      type: "color",
+      label: "Background color (hover)",
+      name: "buttonOutlineBgHover",
+      defaultValue: "#f5f5f5",
     },
   ],
 } as const satisfies InspectorGroup;

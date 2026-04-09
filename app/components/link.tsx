@@ -16,54 +16,53 @@ import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
-export const variants = cva(["inline-flex rounded-md transition-colors"], {
-  variants: {
-    variant: {
-      primary: [
-        "border px-4 py-3",
-        "text-(--btn-primary-text)",
-        "bg-(--btn-primary-bg)",
-        "border-(--btn-primary-bg)",
-        "hover:text-(--btn-primary-bg)",
-        "hover:bg-(--btn-primary-text)",
-        "hover:border-(--btn-primary-bg)",
-      ],
-      secondary: [
-        "border px-4 py-3",
-        "text-(--btn-secondary-text)",
-        "bg-(--btn-secondary-bg)",
-        "border-(--btn-secondary-bg)",
-        "hover:bg-(--btn-secondary-text)",
-        "hover:text-(--btn-secondary-bg)",
-        "hover:border-(--btn-secondary-text)",
-      ],
-      outline: [
-        "border px-4 py-3",
-        "text-(--btn-outline-text)",
-        "bg-transparent",
-        "border-(--btn-outline-text)",
-        "hover:bg-(--btn-outline-text)",
-        "hover:text-background",
-        "hover:border-(--btn-outline-text)",
-      ],
-      custom: [
-        "border px-4 py-3",
-        "text-(--btn-text)",
-        "bg-(--btn-bg)",
-        "border-(--btn-border)",
-        "hover:text-(--btn-text-hover)",
-        "hover:bg-(--btn-bg-hover)",
-        "hover:border-(--btn-border-hover)",
-      ],
-      underline: [
-        "relative bg-transparent pb-1 text-body",
-        "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
-        "after:origin-right after:scale-x-100 after:transition-transform",
-        "hover:after:origin-left hover:after:animate-underline-toggle",
-      ],
+export const variants = cva(
+  ["inline-flex rounded-md transition-colors"],
+  {
+    variants: {
+      variant: {
+        primary: [
+          "border-2 px-4 py-3",
+          "text-(--btn-primary-text)",
+          "bg-(--btn-primary-bg)",
+          "border-(--btn-primary-bg)",
+          "hover:bg-(--btn-primary-bg-hover)",
+          "hover:border-(--btn-primary-bg-hover)",
+        ],
+        secondary: [
+          "border-2 px-4 py-3",
+          "text-(--btn-secondary-text)",
+          "bg-(--btn-secondary-bg)",
+          "border-(--btn-secondary-bg)",
+          "hover:bg-(--btn-secondary-bg-hover)",
+          "hover:border-(--btn-secondary-bg-hover)",
+        ],
+        outline: [
+          "border px-4 py-3",
+          "text-(--btn-outline-text)",
+          "bg-transparent",
+          "border-(--btn-outline-text)",
+          "hover:bg-(--btn-outline-bg-hover)",
+        ],
+        custom: [
+          "border px-4 py-3",
+          "text-(--btn-text)",
+          "bg-(--btn-bg)",
+          "border-(--btn-border)",
+          "hover:text-(--btn-text-hover)",
+          "hover:bg-(--btn-bg-hover)",
+          "hover:border-(--btn-border-hover)",
+        ],
+        underline: [
+          "relative bg-transparent pb-1 text-body",
+          "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
+          "after:origin-right after:scale-x-100 after:transition-transform",
+          "hover:after:origin-left hover:after:animate-underline-toggle",
+        ],
+      },
     },
   },
-});
+);
 
 export interface LinkStyles {
   backgroundColor: string;

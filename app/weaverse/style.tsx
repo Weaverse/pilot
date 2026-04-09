@@ -23,10 +23,13 @@ export function GlobalStyle() {
       footerBgColor,
       footerText,
       buttonPrimaryBg,
+      buttonPrimaryBgHover,
       buttonPrimaryColor,
       buttonSecondaryBg,
+      buttonSecondaryBgHover,
       buttonSecondaryColor,
       buttonOutlineTextAndBorder,
+      buttonOutlineBgHover,
       comparePriceTextColor,
       saleBadgeColor,
       newBadgeColor,
@@ -79,10 +82,13 @@ export function GlobalStyle() {
 
               /* Colors (buttons & links) */
               --btn-primary-bg: ${buttonPrimaryBg};
+              --btn-primary-bg-hover: ${buttonPrimaryBgHover};
               --btn-primary-text: ${buttonPrimaryColor};
               --btn-secondary-bg: ${buttonSecondaryBg};
+              --btn-secondary-bg-hover: ${buttonSecondaryBgHover};
               --btn-secondary-text: ${buttonSecondaryColor};
               --btn-outline-text: ${buttonOutlineTextAndBorder};
+              --btn-outline-bg-hover: ${buttonOutlineBgHover};
 
               /* Colors (product) */
               --color-compare-price-text: ${comparePriceTextColor};
