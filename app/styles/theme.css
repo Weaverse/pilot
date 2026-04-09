@@ -88,6 +88,20 @@
   --animate-exit-to-top: exit-to-top 200ms ease forwards;
 }
 
+shopify-account {
+  /* Shopify account component */
+  --shopify-account-font-body: var(--font-cabin);
+  --shopify-account-font-heading: var(--font-cabin);
+  --shopify-account-color-background: var(--color-background);
+  --shopify-account-color-text: var(--color-text);
+  --shopify-account-color-accent: var(--btn-primary-bg);
+  --shopify-account-color-accent-hover: var(--btn-primary-bg-hover);
+  --shopify-account-color-accent-text: var(--btn-primary-text);
+  --shopify-account-radius-base: var(--radius, 0);
+  --shopify-account-avatar-size: 32px;
+  --shopify-account-signed-in-avatar-size: 32px;
+}
+
 /* Tokens */
 :root {
   --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */

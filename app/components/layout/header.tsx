@@ -141,7 +141,11 @@ function ShopifyAccountButton() {
             public-access-token={publicAccessToken}
             customer-access-token={customerAccessToken || undefined}
           >
-            <shopify-account sign-in-url="/account/login" />
+            <shopify-account sign-in-url="/account/login">
+              <span slot="signed-out-avatar">
+                <UserIcon className="h-5 w-5" />
+              </span>
+            </shopify-account>
           </shopify-store>
         )}
       </Await>
