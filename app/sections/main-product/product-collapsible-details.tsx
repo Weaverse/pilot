@@ -73,11 +73,7 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                   dangerouslySetInnerHTML={{ __html: content }}
                 />
                 {learnMore && (
-                  <Link
-                    variant="underline"
-                    to={learnMore}
-                    className="float-right"
-                  >
+                  <Link variant="underline" to={learnMore}>
                     Learn more →
                   </Link>
                 )}

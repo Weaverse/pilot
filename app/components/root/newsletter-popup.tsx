@@ -141,7 +141,7 @@ export function NewsletterPopup() {
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+                className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-2xl bg-white/80 border border-gray-300 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
                 aria-label="Close"
               >
                 <XIcon size={14} />

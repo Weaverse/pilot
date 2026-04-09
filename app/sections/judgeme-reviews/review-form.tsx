@@ -81,14 +81,14 @@ export function ReviewForm({
     <div
       className={cn(
         "w-full space-y-6 border border-gray-200 p-6 shadow rounded-2xl transition-all duration-200 md:p-8",
-        showForm ? "block" : "hidden",
+        // showForm ? "block" : "hidden",
         className,
       )}
     >
       <div
         className={cn(
           "space-y-4 py-4 text-center",
-          formState === "success" ? "block" : "hidden",
+          // formState === "success" ? "block" : "hidden",
         )}
         role="alert"
         aria-live="polite"

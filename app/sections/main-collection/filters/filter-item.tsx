@@ -169,8 +169,7 @@ function FilterLabel({
   if (showFiltersCount) {
     return (
       <span>
-        {option.label}{" "}
-        <span className="text-body-subtle">({option.count})</span>
+        {option.label} <span className="text-gray-400">({option.count})</span>
       </span>
     );
   }

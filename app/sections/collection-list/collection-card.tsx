@@ -69,7 +69,7 @@ export function CollectionCard({
             )}
           />
         ) : null}
-        <h5 style={{ color: collectionNameColor }} className="z-1">
+        <h5 style={{ color: collectionNameColor }} className="z-1 text-center">
           {collection.title}
         </h5>
         <Overlay

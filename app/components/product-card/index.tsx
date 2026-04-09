@@ -137,7 +137,7 @@ export function ProductCard({
         <Link
           to={`/products/${product.handle}?${params.toString()}`}
           prefetch="intent"
-          className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t"
+          className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-md"
         >
           {/* Loading skeleton overlay */}
           {isImageLoading && <Spinner className="bg-gray-100" />}

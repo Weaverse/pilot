@@ -1,9 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  CubeFocusIcon,
   CubeIcon,
-  ThreeDIcon,
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
