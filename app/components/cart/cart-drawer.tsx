@@ -4,9 +4,9 @@ import { useAnalytics, useOptimisticCart } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { Suspense, useEffect } from "react";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
+import type { CartApiQueryFragment } from "storefront-api.generated";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
-import type { CartApiQueryFragment } from "storefront-api.generated";
 import type { RootLoader } from "~/root";
 import { useCartDrawerStore } from "./store";
 

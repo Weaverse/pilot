@@ -19,7 +19,6 @@ import { useCartDrawerStore } from "./store";
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
 export type CartLineOptimisticData = {
-  action?: string;
   quantity?: number;
 };
 
@@ -38,16 +37,10 @@ export function CartLineItem({
   }
 
   const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
-  /**
-   * Determines if the current line item is in an optimistic state.
-   * Note: The isOptimistic field on the line does not update as documented
-   * in https://shopify.dev/docs/api/hydrogen/latest/hooks/useoptimisticcart#useOptimisticCart-returns,
-   * so we manually check it via the optimisticData object when lineOptimistic is undefined.
-   */
+  // Workaround: line.isOptimistic is only set for newly added lines (Hydrogen limitation),
+  // so fall back to checking whether useOptimisticData has pending data (e.g. quantity change).
   const isOptimistic =
-    lineOptimistic === undefined
-      ? JSON.stringify(optimisticData) !== "{}"
-      : lineOptimistic;
+    lineOptimistic ?? Object.keys(optimisticData).length > 0;
 
   if (typeof quantity === "undefined" || !merchandise?.product) {
     return null;
