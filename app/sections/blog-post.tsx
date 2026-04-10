@@ -43,7 +43,7 @@ export default function BlogPost(props: BlogPostProps) {
     return (
       <Section {...rest}>
         {image && (
-          <div className="h-[520px]">
+          <div className="h-130">
             <Image data={image} sizes="90vw" />
           </div>
         )}
@@ -57,7 +57,7 @@ export default function BlogPost(props: BlogPostProps) {
           )}
         </div>
         <div className="mx-auto w-1/3 border-line-subtle border-t" />
-        <article className="prose mx-auto py-4 lg:max-w-4xl lg:py-10">
+        <article className="prose prose-img:mx-auto mx-auto py-4 lg:max-w-5xl lg:py-10">
           <div className="mx-auto space-y-8 md:space-y-16">
             <div
               suppressHydrationWarning
@@ -65,12 +65,6 @@ export default function BlogPost(props: BlogPostProps) {
             />
             <div className="mx-auto w-1/3 border-line-subtle border-t" />
             <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
-              {showTags && (
-                <div>
-                  <strong>Tags:</strong>
-                  <span className="ml-2">{tags.join(", ")}</span>
-                </div>
-              )}
               {showShareButtons && (
                 <div className="flex items-center gap-2">
                   <strong>Share:</strong>
@@ -83,6 +77,12 @@ export default function BlogPost(props: BlogPostProps) {
                   <XShareButton url={articleUrl} title={title}>
                     <XLogoIcon size={24} />
                   </XShareButton>
+                </div>
+              )}
+              {showTags && tags?.length > 0 && (
+                <div>
+                  <strong>Tags:</strong>
+                  <span className="ml-2">{tags.join(", ")}</span>
                 </div>
               )}
             </div>
