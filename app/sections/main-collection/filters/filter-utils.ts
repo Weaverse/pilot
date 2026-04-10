@@ -2,6 +2,11 @@ import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import type { Location, useLocation } from "react-router";
 import type { AppliedFilter } from "~/types/others";
 import { FILTER_URL_PREFIX } from "~/utils/const";
+export function clearPaginationParams(params: URLSearchParams) {
+  params.delete("cursor");
+  params.delete("direction");
+  return params;
+}
 
 export function getAppliedFilterLink(
   { filter }: AppliedFilter,
@@ -12,6 +17,7 @@ export function getAppliedFilterLink(
   for (const [k, v] of Object.entries(filter)) {
     paramsClone.delete(FILTER_URL_PREFIX + k, JSON.stringify(v));
   }
+  clearPaginationParams(paramsClone);
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
@@ -22,6 +28,7 @@ export function getFilterLink(
 ) {
   const paramsClone = new URLSearchParams(params);
   const newParams = filterInputToParams(input, paramsClone);
+  clearPaginationParams(newParams);
   return `${location.pathname}?${newParams.toString()}`;
 }
 
