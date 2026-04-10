@@ -89,7 +89,6 @@
 }
 
 shopify-account {
-  /* Shopify account component */
   --shopify-account-font-body: var(--font-cabin);
   --shopify-account-font-heading: var(--font-cabin);
   --shopify-account-color-background: var(--color-background);
