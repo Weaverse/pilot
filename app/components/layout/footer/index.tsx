@@ -45,6 +45,7 @@ export function Footer() {
     newsletterDescription,
     newsletterPlaceholder,
     newsletterButtonText,
+    newsletterInputWidth,
     showPaymentMethods,
     showAmazonPay,
     showPayPal,
@@ -108,6 +109,7 @@ export function Footer() {
               description={newsletterDescription}
               placeholder={newsletterPlaceholder}
               buttonText={newsletterButtonText}
+              inputWidth={newsletterInputWidth}
             />
           </div>
           <FooterMenu />
