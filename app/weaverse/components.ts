@@ -41,13 +41,18 @@ import * as CollectionToolbar from "~/sections/main-collection/toolbar";
 import * as MainProduct from "~/sections/main-product";
 import * as JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
+import * as ProductAvailability from "~/sections/main-product/product-availability";
 import * as ProductBadges from "~/sections/main-product/product-badges";
 import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
 import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
 import * as ProductCollapsibleDetails from "~/sections/main-product/product-collapsible-details";
+import * as ProductEstimatedDelivery from "~/sections/main-product/product-estimated-delivery";
+import * as ProductHighlightItem from "~/sections/main-product/product-highlight-item";
+import * as ProductHighlights from "~/sections/main-product/product-highlights";
 import * as ProductInfoSection from "~/sections/main-product/product-info";
 import * as ProductMediaSection from "~/sections/main-product/product-media";
 import * as ProductPrices from "~/sections/main-product/product-prices";
+import * as ProductPromoText from "~/sections/main-product/product-promo-text";
 import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
 import * as ProductSummary from "~/sections/main-product/product-summary";
 import * as ProductTitle from "~/sections/main-product/product-title";
@@ -123,16 +128,21 @@ export const components: HydrogenComponent[] = [
   ProductMediaSection,
   ProductInfoSection,
   ProductBreadcrumb,
+  ProductAvailability,
   ProductBadges,
   ProductVendor,
   ProductTitle,
   ProductPrices,
+  ProductPromoText,
   ProductSummary,
   ProductBundledVariants,
   ProductVariantSelector,
   ProductQuantitySelector,
   ProductATCButtons,
   ProductCollapsibleDetails,
+  ProductEstimatedDelivery,
+  ProductHighlights,
+  ProductHighlightItem,
   RelatedProducts,
   RelatedArticles,
   MainCollection,

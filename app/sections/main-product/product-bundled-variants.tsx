@@ -19,11 +19,7 @@ export default function ProductBundledVariants(
   const bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
 
   if (!(product && isBundle && bundledVariants)) {
-    return (
-      <div {...rest}>
-        <span className="hidden">No bundle data available</span>
-      </div>
-    );
+    return null;
   }
 
   return (

@@ -2,6 +2,7 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useLocation, useSearchParams } from "react-router";
 import Link from "~/components/link";
+import { clearPaginationParams } from "~/sections/main-collection/filters/filter-utils";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 
@@ -23,7 +24,7 @@ export function SortDropdown({ options, className }: SortDropdownProps) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         className={cn(
-          "flex h-12 items-center gap-1.5 border px-4 py-2.5 focus-visible:outline-hidden",
+          "flex h-12 items-center gap-1.5 rounded-md border px-4 py-2.5 focus-visible:outline-hidden",
           className,
         )}
       >
@@ -37,12 +38,11 @@ export function SortDropdown({ options, className }: SortDropdownProps) {
         <DropdownMenu.Content
           sideOffset={8}
           align="end"
-          className="flex h-fit w-44 flex-col gap-2 border border-gray-400 bg-background p-5 shadow"
+          className="flex h-fit w-44 flex-col gap-2 rounded-lg border border-gray-400 bg-background p-5 shadow"
         >
           {options.map(({ key, label }) => {
             const params = new URLSearchParams(searchParams);
-            params.delete("cursor");
-            params.delete("direction");
+            clearPaginationParams(params);
             params.set("sort", key);
 
             return (

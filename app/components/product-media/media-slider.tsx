@@ -111,7 +111,7 @@ export function MediaSlider({
                       key={id}
                       className={cn(
                         "relative",
-                        "h-auto! cursor-pointer border p-1 transition-colors",
+                        "h-auto! cursor-pointer rounded-md border p-1 transition-colors",
                         idx === activeIndex
                           ? "border-line"
                           : "border-transparent",
@@ -130,13 +130,13 @@ export function MediaSlider({
                         sizes="100px"
                       />
                       {mediaContentType === "VIDEO" && (
-                        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                          <VideoCameraIcon className="h-4 w-4" />
+                        <div className="absolute right-2 bottom-2 rounded-sm bg-gray-800 p-1 text-white">
+                          <VideoCameraIcon className="size-5" />
                         </div>
                       )}
                       {mediaContentType === "MODEL_3D" && (
-                        <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                          <CubeIcon className="h-4 w-4" />
+                        <div className="absolute right-2 bottom-2 rounded-sm bg-gray-800 p-1 text-white">
+                          <CubeIcon className="size-5" />
                         </div>
                       )}
                     </SwiperSlide>
@@ -173,7 +173,10 @@ export function MediaSlider({
           >
             {displayMedia.map((med, idx) => {
               return (
-                <SwiperSlide key={med.id} className="group bg-gray-100">
+                <SwiperSlide
+                  key={med.id}
+                  className="group bg-gray-100 rounded-lg"
+                >
                   <div
                     onClick={
                       canClickImage && med.mediaContentType !== "MODEL_3D"
@@ -221,15 +224,15 @@ export function MediaSlider({
           <div className="absolute right-6 bottom-6 z-1 hidden items-center gap-2 md:flex">
             <button
               type="button"
-              className="media_slider__prev left-6 border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__prev left-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowLeftIcon className="h-4.5 w-4.5" />
+              <ArrowLeftIcon className="size-6" />
             </button>
             <button
               type="button"
-              className="media_slider__next right-6 border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__next right-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowRightIcon className="h-4.5 w-4.5" />
+              <ArrowRightIcon className="size-6" />
             </button>
           </div>
         </div>

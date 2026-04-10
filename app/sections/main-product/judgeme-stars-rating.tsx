@@ -96,8 +96,8 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
     return (
       <div {...rest} ref={setRefs} className="flex">
         <div className="inline-flex items-center gap-1">
-          <Skeleton className="h-4 w-20 rounded" />
-          <Skeleton className="h-4 w-8 rounded" />
+          <Skeleton className="h-4 w-20 rounded-md" />
+          <Skeleton className="h-4 w-8 rounded-md" />
         </div>
       </div>
     );

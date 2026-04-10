@@ -33,10 +33,10 @@ export default function TestimonialItem(props: TestimonialItemProps) {
   return (
     <ScrollReveal
       animation="slide-in"
-            {...rest}
+      {...rest}
       className={clsx(hideOnMobile && "hidden sm:block")}
     >
-      <figure className="rounded-sm bg-gray-50 p-6">
+      <figure className="rounded-md bg-gray-50 p-6">
         <blockquote>
           <div className="text-xl md:text-2xl">{heading}</div>
           <p
@@ -47,7 +47,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
         </blockquote>
         <figcaption className="flex items-center space-x-3">
           <Image
-            className="h-9 w-9 rounded-full"
+            className="h-9 w-9 rounded-lg"
             data={
               typeof authorImage === "object"
                 ? authorImage

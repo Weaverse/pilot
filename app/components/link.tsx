@@ -13,37 +13,34 @@ import {
 } from "react-router";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import type { RootLoader } from "~/root";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
-export const variants = cva(["inline-flex transition-colors"], {
+export const variants = cva(["inline-flex rounded-md transition-colors"], {
   variants: {
     variant: {
       primary: [
-        "border px-4 py-3",
+        "border-2 px-4 py-3",
         "text-(--btn-primary-text)",
         "bg-(--btn-primary-bg)",
         "border-(--btn-primary-bg)",
-        "hover:text-(--btn-primary-bg)",
-        "hover:bg-(--btn-primary-text)",
-        "hover:border-(--btn-primary-bg)",
+        "hover:bg-(--btn-primary-bg-hover)",
+        "hover:border-(--btn-primary-bg-hover)",
       ],
       secondary: [
-        "border px-4 py-3",
+        "border-2 px-4 py-3",
         "text-(--btn-secondary-text)",
         "bg-(--btn-secondary-bg)",
         "border-(--btn-secondary-bg)",
-        "hover:bg-(--btn-secondary-text)",
-        "hover:text-(--btn-secondary-bg)",
-        "hover:border-(--btn-secondary-text)",
+        "hover:bg-(--btn-secondary-bg-hover)",
+        "hover:border-(--btn-secondary-bg-hover)",
       ],
       outline: [
         "border px-4 py-3",
         "text-(--btn-outline-text)",
         "bg-transparent",
         "border-(--btn-outline-text)",
-        "hover:bg-(--btn-outline-text)",
-        "hover:text-background",
-        "hover:border-(--btn-outline-text)",
+        "hover:bg-(--btn-outline-bg-hover)",
       ],
       custom: [
         "border px-4 py-3",
@@ -155,7 +152,7 @@ export function Link(props: LinkProps) {
     animate = true,
     ...rest
   } = props;
-  const { enableViewTransition } = useThemeSettings();
+  const { enableViewTransition } = useThemeSettings<ThemeSettings>();
   const href = useHrefWithLocale(to);
 
   if (variant === "custom") {

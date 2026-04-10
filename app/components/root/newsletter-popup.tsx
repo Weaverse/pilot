@@ -9,6 +9,7 @@ import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -19,7 +20,7 @@ export function useShouldRenderNewsletterPopup() {
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { newsletterPopupEnabled, newsletterPopupHomeOnly } =
-    useThemeSettings();
+    useThemeSettings<ThemeSettings>();
   const pathParts = location.pathname.split("/").filter(Boolean);
   const isHomePage =
     pathParts.length === 0 ||
@@ -31,6 +32,7 @@ export function useShouldRenderNewsletterPopup() {
 
 export function NewsletterPopup() {
   const {
+    newsletterPopupType = "popup",
     newsletterPopupDelay,
     newsletterPopupAllowDismiss,
     newsletterPopupImage,
@@ -38,12 +40,13 @@ export function NewsletterPopup() {
     newsletterPopupHeading,
     newsletterPopupDescription,
     newsletterPopupButtonText,
-    newsletterPopupPosition = "center",
-  } = useThemeSettings();
+    newsletterPopupPosition = "bottom-right",
+  } = useThemeSettings<ThemeSettings>();
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
   const isDesignMode = useWeaverseStudioCheck();
+  const isModal = newsletterPopupType === "modal";
 
   // Compute message and error from fetcher data
   const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
@@ -84,6 +87,7 @@ export function NewsletterPopup() {
       setOpen(true);
     }
   }, [
+    newsletterPopupType,
     newsletterPopupDelay,
     newsletterPopupAllowDismiss,
     newsletterPopupImage,
@@ -95,46 +99,54 @@ export function NewsletterPopup() {
   ]);
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={setOpen} modal={isModal}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+        {isModal && (
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+        )}
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
+          onInteractOutside={!isModal ? (e) => e.preventDefault() : undefined}
           className={cn(
-            "fixed inset-0 z-50 flex p-4 backdrop-blur-xs",
-            "[--slide-up-from:20px]",
-            "data-[state=open]:animate-slide-up",
-            newsletterPopupPosition === "center" &&
-              "items-center justify-center",
-            newsletterPopupPosition === "top-left" &&
-              "items-start justify-start",
-            newsletterPopupPosition === "top-right" &&
-              "items-start justify-end",
-            newsletterPopupPosition === "bottom-left" &&
-              "items-end justify-start",
-            newsletterPopupPosition === "bottom-right" &&
-              "items-end justify-end",
+            "fixed z-50 data-[state=open]:animate-slide-up",
+            isModal
+              ? "inset-0 flex items-center justify-center p-4 [--slide-up-from:20px]"
+              : cn(
+                  "p-8 [--slide-up-from:12px]",
+                  newsletterPopupPosition === "top-left" && "top-0 left-0",
+                  newsletterPopupPosition === "top-right" && "top-0 right-0",
+                  newsletterPopupPosition === "bottom-left" &&
+                    "bottom-0 left-0",
+                  newsletterPopupPosition === "bottom-right" &&
+                    "bottom-0 right-0",
+                ),
           )}
           aria-describedby={undefined}
         >
           <div
             className={cn(
-              "relative w-full max-w-md overflow-hidden bg-white shadow-xl",
-              newsletterPopupImage && "lg:max-w-2xl",
+              "relative w-full overflow-hidden rounded-lg bg-white",
+              isModal
+                ? cn("max-w-md", newsletterPopupImage && "lg:max-w-2xl")
+                : cn(
+                    "border border-gray-300 shadow-2xl",
+                    newsletterPopupImage && "lg:max-w-lg",
+                  ),
             )}
           >
-            <Dialog.Close asChild>
-              <button
-                type="button"
-                className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-                aria-label="Close"
-              >
-                <XIcon size={16} />
-              </button>
-            </Dialog.Close>
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Newsletter Signup</Dialog.Title>
             </VisuallyHidden.Root>
+
+            <Dialog.Close asChild>
+              <button
+                type="button"
+                className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-2xl bg-white/80 border border-gray-300 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+                aria-label="Close"
+              >
+                <XIcon size={14} />
+              </button>
+            </Dialog.Close>
 
             <div
               className={cn(
@@ -151,19 +163,27 @@ export function NewsletterPopup() {
                   className={cn(
                     "relative",
                     newsletterPopupImagePosition === "top"
-                      ? "h-64 w-full"
-                      : "h-64 w-full md:h-auto md:w-1/2",
+                      ? "h-48 w-full"
+                      : "h-48 w-full md:h-auto md:w-1/2",
+                    !isModal &&
+                      newsletterPopupImagePosition === "top" &&
+                      "h-36 lg:h-48",
                   )}
                 >
                   <Image
                     data={newsletterPopupImage}
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes={
+                      isModal
+                        ? "(max-width: 768px) 100vw, 50vw"
+                        : "(max-width: 768px) 100vw, 25vw"
+                    }
                   />
                 </div>
               )}
               <div
                 className={cn(
                   "flex flex-col justify-center p-6",
+                  !isModal && "p-5",
                   newsletterPopupImage
                     ? newsletterPopupImagePosition === "top"
                       ? "w-full"
@@ -171,10 +191,20 @@ export function NewsletterPopup() {
                     : "w-full",
                 )}
               >
-                <h3 className="mb-4 font-semibold text-2xl">
+                <h3
+                  className={cn(
+                    "mb-4 font-semibold text-2xl",
+                    !isModal && "mb-3 text-xl",
+                  )}
+                >
                   {newsletterPopupHeading}
                 </h3>
-                <p className="mb-6 text-body-subtle">
+                <p
+                  className={cn(
+                    "mb-6 text-body-subtle",
+                    !isModal && "mb-4 text-sm",
+                  )}
+                >
                   {newsletterPopupDescription}
                 </p>
 
@@ -182,7 +212,7 @@ export function NewsletterPopup() {
                   action="/api/klaviyo"
                   method="POST"
                   encType="multipart/form-data"
-                  className="space-y-4"
+                  className="space-y-3"
                 >
                   <input
                     name="email"

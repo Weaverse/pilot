@@ -15,6 +15,7 @@ import {
 import { ScrollArea } from "~/components/scroll-area";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
+import type { ThemeSettings } from "~/types/weaverse";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function CountrySelector() {
@@ -78,12 +79,13 @@ export function CountrySelector() {
         <Popover.Trigger asChild>
           <button
             type="button"
-            className="flex w-full cursor-pointer items-center gap-2 overflow-clip border border-line-subtle px-4 py-3 text-left outline-hidden"
+            className="flex w-full cursor-pointer items-center gap-2 overflow-clip rounded-md border border-line-subtle px-4 py-3 text-left outline-hidden"
             aria-label="Select country"
           >
             <ReactCountryFlag
               svg
               countryCode={selectedLocale.country}
+              className="rounded-xs"
               style={{ width: "24px", height: "14px" }}
             />
             <span>{selectedLocale.label}</span>
@@ -95,7 +97,7 @@ export function CountrySelector() {
             <ScrollArea
               size="sm"
               style={{ maxHeight: 160, width: 320 }}
-              rootClassName="my-2 bg-neutral-800 py-2"
+              rootClassName="my-2 rounded-lg bg-neutral-800 py-2"
             >
               {countries &&
                 Object.keys(countries).map((countryPath) => {
@@ -126,6 +128,7 @@ export function CountrySelector() {
                       <ReactCountryFlag
                         svg
                         countryCode={countryLocale.country}
+                        className="rounded-xs"
                         style={{ width: "24px", height: "14px" }}
                       />
                       <span>{countryLocale.label}</span>
@@ -167,7 +170,7 @@ export function HeaderCountrySelector() {
   const submit = useSubmit();
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const { countryNameDisplay } = useThemeSettings();
+  const { countryNameDisplay } = useThemeSettings<ThemeSettings>();
   const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
@@ -230,6 +233,7 @@ export function HeaderCountrySelector() {
             <ReactCountryFlag
               svg
               countryCode={selectedLocale.country}
+              className="rounded-xs"
               style={{ width: "24px", height: "16px" }}
             />
             {countryNameDisplay === "full" ? (
@@ -248,7 +252,7 @@ export function HeaderCountrySelector() {
             <ScrollArea
               size="sm"
               style={{ maxHeight: 240, width: 256 }}
-              rootClassName="border border-gray-300 bg-white py-2 shadow-lg"
+              rootClassName="border border-gray-300 rounded-lg bg-white py-2 shadow-lg"
             >
               {countries &&
                 Object.keys(countries).map((countryPath) => {
@@ -279,6 +283,7 @@ export function HeaderCountrySelector() {
                       <ReactCountryFlag
                         svg
                         countryCode={countryLocale.country}
+                        className="rounded-xs"
                         style={{ width: "20px", height: "12px" }}
                       />
                       <span>{countryLocale.label}</span>

@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const searchSettings: InspectorGroup = {
+export const searchSettings = {
   group: "Search",
   inputs: [
     {
@@ -13,4 +13,4 @@ export const searchSettings: InspectorGroup = {
         "Enter popular search keywords separated by commas. E.g. <strong>sunglasses, hats, jackets, shoes</strong>",
     },
   ],
-};
+} as const satisfies InspectorGroup;

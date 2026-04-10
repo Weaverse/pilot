@@ -34,10 +34,7 @@ function TeamMembers(props: TeamMembersProps) {
   if (metaobjects?.nodes?.length) {
     const members = metaobjects.nodes;
     return (
-      <div
-                {...rest}
-        className="mb-6 grid gap-8 pt-4 md:grid-cols-2 lg:mb-16"
-      >
+      <div {...rest} className="mb-6 grid gap-8 pt-4 md:grid-cols-2 lg:mb-16">
         {members.map(({ id, fields }) => {
           const member: Partial<MemberType> = {};
           for (const { key, value, reference } of fields) {

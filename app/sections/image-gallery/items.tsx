@@ -42,7 +42,7 @@ function ImageGalleyItems(props: ImageGalleyItemsProps) {
 
   return (
     <div
-            {...rest}
+      {...rest}
       className={variants({ gap })}
       style={{ "--image-height": `${height}px` } as CSSProperties}
     >

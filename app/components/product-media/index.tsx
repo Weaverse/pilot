@@ -91,25 +91,27 @@ export function ProductMedia(props: ProductMediaProps) {
     imageAspectRatio,
   );
   let cssVars = featuredAspectRatio
-    ? ({ "--featured-media-aspect-ratio": featuredAspectRatio } as React.CSSProperties)
+    ? ({
+        "--featured-media-aspect-ratio": featuredAspectRatio,
+      } as React.CSSProperties)
     : undefined;
 
   if (mediaLayout === "grid") {
     return (
       <div style={cssVars}>
         <MediaGrid
-        allMedia={media}
-        displayMedia={displayMedia}
-        gridSize={gridSize}
-        imageAspectRatio={imageAspectRatio}
-        enableZoom={enableZoom}
-        zoomTrigger={zoomTrigger}
-        zoomButtonVisibility={zoomButtonVisibility}
-        selectedVariant={selectedVariant}
-        initialMediaCount={initialMediaCount}
-        showMoreText={showMoreText}
-        showLessText={showLessText}
-      />
+          allMedia={media}
+          displayMedia={displayMedia}
+          gridSize={gridSize}
+          imageAspectRatio={imageAspectRatio}
+          enableZoom={enableZoom}
+          zoomTrigger={zoomTrigger}
+          zoomButtonVisibility={zoomButtonVisibility}
+          selectedVariant={selectedVariant}
+          initialMediaCount={initialMediaCount}
+          showMoreText={showMoreText}
+          showLessText={showLessText}
+        />
       </div>
     );
   }
@@ -117,17 +119,17 @@ export function ProductMedia(props: ProductMediaProps) {
   return (
     <div style={cssVars}>
       <MediaSlider
-      allMedia={media}
-      displayMedia={displayMedia}
-      selectedVariant={selectedVariant}
-      showThumbnails={showThumbnails}
-      imageAspectRatio={imageAspectRatio}
-      enableZoom={enableZoom}
-      zoomTrigger={zoomTrigger}
-      zoomButtonVisibility={zoomButtonVisibility}
-      groupMediaByVariant={isMediaGrouped}
-      autoHeight={autoHeight}
-    />
+        allMedia={media}
+        displayMedia={displayMedia}
+        selectedVariant={selectedVariant}
+        showThumbnails={showThumbnails}
+        imageAspectRatio={imageAspectRatio}
+        enableZoom={enableZoom}
+        zoomTrigger={zoomTrigger}
+        zoomButtonVisibility={zoomButtonVisibility}
+        groupMediaByVariant={isMediaGrouped}
+        autoHeight={autoHeight}
+      />
     </div>
   );
 }

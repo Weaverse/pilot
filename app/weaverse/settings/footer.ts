@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const footerSettings: InspectorGroup = {
+export const footerSettings = {
   group: "Footer",
   inputs: [
     {
@@ -122,8 +122,8 @@ export const footerSettings: InspectorGroup = {
       type: "text",
       name: "newsletterButtonText",
       label: "Button text",
-      defaultValue: "Send",
-      placeholder: "Send",
+      defaultValue: "Subscribe",
+      placeholder: "Subscribe",
     },
     {
       type: "richtext",
@@ -131,5 +131,115 @@ export const footerSettings: InspectorGroup = {
       label: "Copyright text",
       defaultValue: "© 2024 Weaverse. All rights reserved.",
     },
+    {
+      type: "heading",
+      label: "Payment methods",
+    },
+    {
+      type: "switch",
+      name: "showPaymentMethods",
+      label: "Show payment method icons",
+      defaultValue: false,
+    },
+    {
+      type: "switch",
+      name: "showAmazonPay",
+      label: "Amazon Pay",
+      defaultValue: true,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showPayPal",
+      label: "PayPal",
+      defaultValue: true,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showKlarna",
+      label: "Klarna",
+      defaultValue: false,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showGooglePay",
+      label: "Google Pay",
+      defaultValue: true,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showApplePay",
+      label: "Apple Pay",
+      defaultValue: true,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showJCB",
+      label: "JCB",
+      defaultValue: false,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showAmericanExpress",
+      label: "American Express",
+      defaultValue: true,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showVisa",
+      label: "Visa",
+      defaultValue: true,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showMastercard",
+      label: "Mastercard",
+      defaultValue: true,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showDiners",
+      label: "Diners Club",
+      defaultValue: false,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showDiscover",
+      label: "Discover",
+      defaultValue: false,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "switch",
+      name: "showAlipay",
+      label: "Alipay",
+      defaultValue: false,
+      condition: (data) => data.showPaymentMethods === true,
+    },
+    {
+      type: "heading",
+      label: "Colors",
+    },
+    {
+      type: "color",
+      label: "Background",
+      name: "footerBgColor",
+      defaultValue: "#000000",
+    },
+    {
+      type: "color",
+      label: "Text",
+      name: "footerText",
+      defaultValue: "#ffffff",
+    },
   ],
-};
+} as const satisfies InspectorGroup;

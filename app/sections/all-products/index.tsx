@@ -32,9 +32,7 @@ export const schema = createSchema({
   settings: [
     {
       group: "Layout",
-      inputs: layoutInputs.filter(
-        (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
-      ),
+      inputs: layoutInputs.filter((inp) => inp.name !== "divider"),
     },
   ],
   presets: {

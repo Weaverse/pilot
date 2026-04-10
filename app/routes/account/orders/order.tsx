@@ -127,7 +127,7 @@ export default function OrderDetails() {
                 <div
                   className={clsx(
                     "mt-3 inline-block w-auto px-2.5 py-1 text-sm",
-                    "bg-body-subtle text-body-inverse",
+                    "bg-body-subtle text-body-inverse rounded",
                   )}
                 >
                   {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}

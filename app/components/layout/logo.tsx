@@ -3,10 +3,12 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Link } from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
+import type { ThemeSettings } from "~/types/weaverse";
 
 export function Logo() {
   const { shopName } = useShopMenu();
-  const { logoData, transparentLogoData, logoWidth } = useThemeSettings();
+  const { logoData, transparentLogoData, logoWidth } =
+    useThemeSettings<ThemeSettings>();
 
   return (
     <Link

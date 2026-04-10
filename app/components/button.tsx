@@ -7,7 +7,7 @@ import { cn } from "~/utils/cn";
 
 export const variants = cva(
   [
-    "relative inline-flex items-center justify-center rounded-none",
+    "relative inline-flex items-center justify-center rounded-md",
     "whitespace-nowrap font-normal text-base leading-tight",
     "focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50!",
     "transition-colors",
@@ -16,31 +16,27 @@ export const variants = cva(
     variants: {
       variant: {
         primary: [
-          "border px-4 py-3",
+          "border-2 px-4 py-3",
           "text-(--btn-primary-text)",
           "bg-(--btn-primary-bg)",
           "border-(--btn-primary-bg)",
-          "hover:text-(--btn-primary-bg)",
-          "hover:bg-(--btn-primary-text)",
-          "hover:border-(--btn-primary-bg)",
+          "hover:bg-(--btn-primary-bg-hover)",
+          "hover:border-(--btn-primary-bg-hover)",
         ],
         secondary: [
-          "border px-4 py-3",
+          "border-2 px-4 py-3",
           "text-(--btn-secondary-text)",
           "bg-(--btn-secondary-bg)",
           "border-(--btn-secondary-bg)",
-          "hover:bg-(--btn-secondary-text)",
-          "hover:text-(--btn-secondary-bg)",
-          "hover:border-(--btn-secondary-text)",
+          "hover:bg-(--btn-secondary-bg-hover)",
+          "hover:border-(--btn-secondary-bg-hover)",
         ],
         outline: [
           "border px-4 py-3",
           "text-(--btn-outline-text)",
           "bg-transparent",
           "border-(--btn-outline-text)",
-          "hover:bg-(--btn-outline-text)",
-          "hover:text-background",
-          "hover:border-(--btn-outline-text)",
+          "hover:bg-(--btn-outline-bg-hover)",
         ],
         custom: [
           "border px-4 py-3",

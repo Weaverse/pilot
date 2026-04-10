@@ -23,6 +23,7 @@ import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
+import type { ThemeSettings } from "~/types/weaverse";
 import { calculateAspectRatio } from "~/utils/image";
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
@@ -37,7 +38,6 @@ export function ProductCard({
   aboveTheFold?: boolean;
 }) {
   let {
-    pcardBorderRadius,
     pcardBackgroundColor,
     pcardShowImageOnHover,
     pcardImageRatio,
@@ -59,7 +59,6 @@ export function ProductCard({
     pcardShowOutOfStockBadge,
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
     newBadgeText,
     newBadgeColor,
@@ -72,12 +71,11 @@ export function ProductCard({
     bundleBadgeColor,
     saleBadgeText,
     saleBadgeColor,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
 
   let badgeStyle: BadgeStyleSettings = {
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
   };
 
@@ -127,11 +125,10 @@ export function ProductCard({
 
   return (
     <div
-      className={clsx("rounded-(--pcard-radius)", className)}
+      className={clsx("rounded-md", className)}
       style={
         {
           backgroundColor: pcardBackgroundColor,
-          "--pcard-radius": `${pcardBorderRadius}px`,
           "--pcard-image-ratio": calculateAspectRatio(image, pcardImageRatio),
         } as React.CSSProperties
       }
@@ -140,7 +137,7 @@ export function ProductCard({
         <Link
           to={`/products/${product.handle}?${params.toString()}`}
           prefetch="intent"
-          className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
+          className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-md"
         >
           {/* Loading skeleton overlay */}
           {isImageLoading && <Spinner className="bg-gray-100" />}

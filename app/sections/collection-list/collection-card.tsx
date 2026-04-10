@@ -54,7 +54,7 @@ export function CollectionCard({
         } as CSSProperties
       }
     >
-      <div className="group relative flex aspect-(--aspect-ratio) items-center justify-center overflow-hidden">
+      <div className="group relative flex aspect-(--aspect-ratio) items-center justify-center overflow-hidden rounded-md">
         {collectionImage ? (
           <Image
             data={collectionImage}
@@ -69,7 +69,7 @@ export function CollectionCard({
             )}
           />
         ) : null}
-        <h5 style={{ color: collectionNameColor }} className="z-1">
+        <h5 style={{ color: collectionNameColor }} className="z-1 text-center">
           {collection.title}
         </h5>
         <Overlay

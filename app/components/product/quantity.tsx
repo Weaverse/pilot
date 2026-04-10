@@ -23,7 +23,7 @@ export function Quantity(props: QuantityProps) {
   return (
     <ScrollReveal className="space-y-1.5">
       <legend className="font-bold leading-tight">{label}</legend>
-      <div className="flex w-fit items-center border border-line">
+      <div className="flex w-fit items-center rounded-md border border-line">
         <button
           type="button"
           name="decrease-quantity"

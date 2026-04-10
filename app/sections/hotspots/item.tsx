@@ -60,7 +60,7 @@ export default function HotspotsItem(props: HotspotsItemProps) {
 
   return (
     <div
-            {...rest}
+      {...rest}
       className="-translate-x-1/2 -translate-y-1/2 absolute hover:z-1"
       style={
         {
@@ -74,10 +74,10 @@ export default function HotspotsItem(props: HotspotsItemProps) {
     >
       <div className="relative flex cursor-pointer">
         <span
-          className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gray-700 opacity-75"
+          className="absolute inline-flex h-full w-full animate-ping rounded-md bg-gray-700 opacity-75"
           style={{ animationDuration: "1500ms" }}
         />
-        <span className="group relative inline-flex rounded-full bg-white p-2">
+        <span className="group relative inline-flex rounded-md bg-white p-2">
           <Icon style={{ width: iconSize, height: iconSize }} />
           <ProductPopup
             product={loaderData?.product}

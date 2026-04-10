@@ -14,7 +14,7 @@ function ColumnsWithImagesItems(props: ColumnsWithImagesItemsProps) {
 
   return (
     <div
-            {...rest}
+      {...rest}
       className="flex flex-col sm:grid sm:grid-cols-12"
       style={{ gap: `${gap}px` }}
     >

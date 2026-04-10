@@ -1,6 +1,7 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { useEffect, useRef, useState } from "react";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
 /**
@@ -113,7 +114,7 @@ export function ScrollReveal({
   style,
   ...rest
 }: ScrollRevealProps) {
-  let { revealElementsOnScroll } = useThemeSettings();
+  let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
   let [isVisible, setIsVisible] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
 

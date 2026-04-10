@@ -101,10 +101,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
   const { collection } = useLoaderData<CollectionQuery>();
 
   return (
-    <div
-            {...rest}
-      className="col-span-full border-gray-300 border-y py-4"
-    >
+    <div {...rest} className="col-span-full border-gray-300 border-y py-4">
       <div className="flex w-full items-center">
         <div className="hidden items-center gap-2 md:flex">
           {showBreadcrumb && <BreadCrumb page={collection.title} />}

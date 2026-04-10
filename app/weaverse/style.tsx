@@ -1,11 +1,12 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { extend } from "colord";
 import namesPlugin from "colord/plugins/names";
+import type { ThemeSettings } from "~/types/weaverse";
 
 extend([namesPlugin]);
 
 export function GlobalStyle() {
-  const settings = useThemeSettings();
+  const settings = useThemeSettings<ThemeSettings>();
   if (settings) {
     const {
       colorBackground,
@@ -22,14 +23,17 @@ export function GlobalStyle() {
       footerBgColor,
       footerText,
       buttonPrimaryBg,
+      buttonPrimaryBgHover,
       buttonPrimaryColor,
       buttonSecondaryBg,
+      buttonSecondaryBgHover,
       buttonSecondaryColor,
       buttonOutlineTextAndBorder,
+      buttonOutlineBgHover,
       comparePriceTextColor,
-      discountBadge,
-      newBadge,
-      bestSellerBadge,
+      saleBadgeColor,
+      newBadgeColor,
+      bestSellerBadgeColor,
       bundleBadgeColor,
       soldOutBadgeColor,
       productReviewsColor,
@@ -42,6 +46,7 @@ export function GlobalStyle() {
       navHeightDesktop,
       navHeightTablet,
       pageWidth,
+      radiusBase,
     } = settings;
 
     return (
@@ -54,6 +59,9 @@ export function GlobalStyle() {
               /* Layout */
               --height-nav: ${settings.navHeightMobile}rem;
               --page-width: ${pageWidth}px;
+
+              /* Border radius */
+              --radius: ${radiusBase || 0}px;
 
               /* Colors (general) */
               --color-background: ${colorBackground};
@@ -74,16 +82,19 @@ export function GlobalStyle() {
 
               /* Colors (buttons & links) */
               --btn-primary-bg: ${buttonPrimaryBg};
+              --btn-primary-bg-hover: ${buttonPrimaryBgHover};
               --btn-primary-text: ${buttonPrimaryColor};
               --btn-secondary-bg: ${buttonSecondaryBg};
+              --btn-secondary-bg-hover: ${buttonSecondaryBgHover};
               --btn-secondary-text: ${buttonSecondaryColor};
               --btn-outline-text: ${buttonOutlineTextAndBorder};
+              --btn-outline-bg-hover: ${buttonOutlineBgHover};
 
               /* Colors (product) */
               --color-compare-price-text: ${comparePriceTextColor};
-              --color-discount: ${discountBadge};
-              --color-new-badge: ${newBadge};
-              --color-best-seller: ${bestSellerBadge};
+              --color-discount: ${saleBadgeColor};
+              --color-new-badge: ${newBadgeColor};
+              --color-best-seller: ${bestSellerBadgeColor};
               --color-bundle-badge: ${bundleBadgeColor};
               --color-sold-out-and-unavailable: ${soldOutBadgeColor};
               --color-product-reviews: ${productReviewsColor};

@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const productCardsSettings: InspectorGroup = {
+export const productCardsSettings = {
   group: "Product cards",
   inputs: [
     {
@@ -8,18 +8,6 @@ export const productCardsSettings: InspectorGroup = {
       name: "pcardBackgroundColor",
       label: "Background color",
       defaultValue: "",
-    },
-    {
-      type: "range",
-      name: "pcardBorderRadius",
-      label: "Border radius",
-      configs: {
-        min: 0,
-        max: 40,
-        step: 2,
-        unit: "px",
-      },
-      defaultValue: 0,
     },
     {
       type: "heading",
@@ -249,4 +237,4 @@ export const productCardsSettings: InspectorGroup = {
       defaultValue: false,
     },
   ],
-};
+} as const satisfies InspectorGroup;

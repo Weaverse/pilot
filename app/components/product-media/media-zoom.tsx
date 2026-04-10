@@ -1,8 +1,8 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ArrowsOutSimpleIcon,
   CubeIcon,
-  MagnifyingGlassPlusIcon,
   VideoCameraIcon,
   XIcon,
 } from "@phosphor-icons/react";
@@ -136,7 +136,7 @@ export function ZoomModal({
                         id={`zoom-media--${mediaId}`}
                         className={cn(
                           "relative bg-gray-100",
-                          "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
+                          "h-auto! cursor-pointer border border-transparent p-1 transition-colors rounded-lg overflow-hidden",
                           zoomMediaId === id && "border-line",
                         )}
                         onClick={() => setZoomMediaId(id)}
@@ -152,13 +152,13 @@ export function ZoomModal({
                           sizes="auto"
                         />
                         {mediaContentType === "VIDEO" && (
-                          <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                            <VideoCameraIcon className="h-4 w-4" />
+                          <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
+                            <VideoCameraIcon className="size-5" />
                           </div>
                         )}
                         {mediaContentType === "MODEL_3D" && (
-                          <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                            <CubeIcon className="h-4 w-4" />
+                          <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
+                            <CubeIcon className="size-5" />
                           </div>
                         )}
                       </div>
@@ -279,7 +279,7 @@ export function ZoomButton({ className, ...props }: ZoomButtonProps) {
     <button
       type="button"
       className={clsx(
-        "rounded-full border border-transparent p-2 text-center",
+        "rounded-xl border border-transparent p-2 text-center",
         "transition-all duration-200",
         "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",
         className,
@@ -287,7 +287,7 @@ export function ZoomButton({ className, ...props }: ZoomButtonProps) {
       aria-label="Zoom product media"
       {...props}
     >
-      <MagnifyingGlassPlusIcon className="h-5 w-5" />
+      <ArrowsOutSimpleIcon className="h-5 w-5" />
     </button>
   );
 }

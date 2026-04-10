@@ -48,10 +48,10 @@ function Address({
   defaultAddress?: boolean;
 }) {
   return (
-    <div className="flex flex-col border border-line-subtle p-5">
+    <div className="flex flex-col border border-line-subtle rounded-xl p-5">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="bg-body-subtle px-3 py-1 font-medium text-body-inverse text-sm">
+          <span className="bg-body-subtle rounded px-3 py-1 font-medium text-body-inverse text-sm">
             Default
           </span>
         </div>

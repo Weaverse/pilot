@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const newsletterSettings: InspectorGroup = {
+export const newsletterSettings = {
   group: "Newsletter Popup",
   inputs: [
     {
@@ -8,6 +8,19 @@ export const newsletterSettings: InspectorGroup = {
       label: "Enable newsletter popup",
       name: "newsletterPopupEnabled",
       defaultValue: true,
+    },
+    {
+      type: "select",
+      label: "Popup type",
+      name: "newsletterPopupType",
+      configs: {
+        options: [
+          { value: "popup", label: "Popup" },
+          { value: "modal", label: "Modal" },
+        ],
+      },
+      defaultValue: "popup",
+      condition: (theme) => theme.newsletterPopupEnabled === true,
     },
     {
       type: "range",
@@ -37,10 +50,33 @@ export const newsletterSettings: InspectorGroup = {
       condition: (theme) => theme.newsletterPopupEnabled === true,
     },
     {
+      type: "select",
+      label: "Popup position",
+      name: "newsletterPopupPosition",
+      configs: {
+        options: [
+          { value: "top-left", label: "Top Left" },
+          { value: "top-right", label: "Top Right" },
+          { value: "bottom-left", label: "Bottom Left" },
+          { value: "bottom-right", label: "Bottom Right" },
+        ],
+      },
+      defaultValue: "bottom-right",
+      condition: (theme) =>
+        theme.newsletterPopupEnabled === true &&
+        theme.newsletterPopupType === "popup",
+    },
+    {
       type: "image",
       label: "Image",
       name: "newsletterPopupImage",
-      defaultValue: "",
+      defaultValue: {
+        id: "gid://shopify/MediaImage/0",
+        altText: "Newsletter signup",
+        url: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        width: 600,
+        height: 800,
+      },
       condition: (theme) => theme.newsletterPopupEnabled === true,
     },
     {
@@ -84,21 +120,5 @@ export const newsletterSettings: InspectorGroup = {
       placeholder: "Subscribe",
       condition: (theme) => theme.newsletterPopupEnabled === true,
     },
-    {
-      type: "select",
-      label: "Popup position",
-      name: "newsletterPopupPosition",
-      configs: {
-        options: [
-          { value: "center", label: "Center" },
-          { value: "top-left", label: "Top Left" },
-          { value: "top-right", label: "Top Right" },
-          { value: "bottom-left", label: "Bottom Left" },
-          { value: "bottom-right", label: "Bottom Right" },
-        ],
-      },
-      defaultValue: "center",
-      condition: (theme) => theme.newsletterPopupEnabled === true,
-    },
   ],
-};
+} as const satisfies InspectorGroup;

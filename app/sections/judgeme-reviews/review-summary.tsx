@@ -50,7 +50,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
             <div className="flex flex-col items-center justify-center space-y-3">
               <div className="flex gap-3">
                 {[...new Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="size-10 rounded" />
+                  <Skeleton key={i} className="size-10 rounded-md" />
                 ))}
               </div>
             </div>
@@ -60,9 +60,9 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
               <div className="w-full space-y-4">
                 {[...new Array(5)].map((_, i) => (
                   <div key={i} className="flex w-full items-center gap-3">
-                    <Skeleton className="size-6 rounded" />
-                    <Skeleton className="h-2.5 flex-1 rounded" />
-                    <Skeleton className="h-4 w-20 rounded" />
+                    <Skeleton className="size-6 rounded-md" />
+                    <Skeleton className="h-2.5 flex-1 rounded-md" />
+                    <Skeleton className="h-4 w-20 rounded-md" />
                   </div>
                 ))}
               </div>
@@ -70,7 +70,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
 
             {/* Column 3 - Write Review Button Skeleton */}
             <div className="flex items-center justify-center px-6">
-              <Skeleton className="h-10 w-full rounded bg-gray-200" />
+              <Skeleton className="h-10 w-full rounded-md bg-gray-200" />
             </div>
           </div>
         </div>

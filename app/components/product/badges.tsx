@@ -7,12 +7,12 @@ import type {
   ProductQuery,
   ProductVariantFragment,
 } from "storefront-api.generated";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
 export interface BadgeStyleSettings {
   colorText: string;
   colorTextInverse: string;
-  badgeBorderRadius: number;
   badgeTextTransform: string;
 }
 
@@ -27,17 +27,15 @@ function Badge({
   badgeStyle: BadgeStyleSettings;
   className?: string;
 }) {
-  let { colorText, colorTextInverse, badgeBorderRadius, badgeTextTransform } =
-    badgeStyle;
+  let { colorText, colorTextInverse, badgeTextTransform } = badgeStyle;
   return (
     <span
       style={{
         backgroundColor,
         color: colord(backgroundColor).isDark() ? colorTextInverse : colorText,
-        borderRadius: `${badgeBorderRadius}px`,
         textTransform: badgeTextTransform,
       }}
-      className={cn("px-1.5 py-1 text-sm uppercase", className)}
+      className={cn("rounded-sm px-1.5 py-1 text-sm uppercase", className)}
     >
       {text}
     </span>
@@ -206,7 +204,6 @@ export function ProductBadges({
   let {
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
     newBadgeText,
     newBadgeColor,
@@ -219,12 +216,11 @@ export function ProductBadges({
     bundleBadgeColor,
     saleBadgeText,
     saleBadgeColor,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
 
   let badgeStyle: BadgeStyleSettings = {
     colorText,
     colorTextInverse,
-    badgeBorderRadius,
     badgeTextTransform,
   };
 

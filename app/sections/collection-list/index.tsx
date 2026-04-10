@@ -7,11 +7,7 @@ interface CollectionListProps extends SectionProps {
 
 function CollectionList(props: CollectionListProps) {
   const { children, ...rest } = props;
-  return (
-    <Section {...rest}>
-      {children}
-    </Section>
-  );
+  return <Section {...rest}>{children}</Section>;
 }
 
 export default CollectionList;
@@ -27,7 +23,7 @@ export const schema = createSchema({
   settings: [
     {
       group: "Layout",
-      inputs: layoutInputs.filter((input) => input.name !== "borderRadius"),
+      inputs: layoutInputs,
     },
   ],
   presets: {

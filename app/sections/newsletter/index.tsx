@@ -8,11 +8,7 @@ interface NewsLetterProps extends SectionProps {
 
 function NewsLetter(props: NewsLetterProps) {
   const { children, ...rest } = props;
-  return (
-    <Section {...rest}>
-      {children}
-    </Section>
-  );
+  return <Section {...rest}>{children}</Section>;
 }
 
 export default NewsLetter;

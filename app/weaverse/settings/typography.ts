@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const typographySettings: InspectorGroup = {
+export const typographySettings = {
   group: "Typography",
   inputs: [
     {
@@ -100,4 +100,4 @@ export const typographySettings: InspectorGroup = {
       defaultValue: 1.5,
     },
   ],
-};
+} as const satisfies InspectorGroup;

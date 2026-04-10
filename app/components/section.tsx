@@ -8,6 +8,7 @@ import { cva } from "class-variance-authority";
 import type React from "react";
 import type { HTMLAttributes } from "react";
 import { useEffect, useRef, useState } from "react";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
@@ -29,7 +30,6 @@ export interface SectionProps<T = any>
     Partial<OverlayProps> {
   ref?: React.Ref<HTMLElement>;
   as?: React.ElementType;
-  borderRadius?: number;
   containerClassName?: string;
   children?: React.ReactNode;
   animate?: boolean;
@@ -89,7 +89,6 @@ export function Section(props: SectionProps) {
     gap,
     overflow,
     verticalPadding,
-    borderRadius,
     backgroundColor,
     backgroundFor,
     backgroundImage,
@@ -107,7 +106,7 @@ export function Section(props: SectionProps) {
     ...rest
   } = props;
 
-  let { revealElementsOnScroll } = useThemeSettings();
+  let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
   let [isVisible, setIsVisible] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
 
@@ -134,11 +133,10 @@ export function Section(props: SectionProps) {
   style = {
     ...style,
     "--section-bg-color": backgroundColor,
-    "--section-radius": `${borderRadius || 0}px`,
   } as React.CSSProperties;
 
   const isBgForContent = backgroundFor === "content";
-  const hasBackground = backgroundColor || backgroundImage || borderRadius > 0;
+  const hasBackground = backgroundColor || backgroundImage;
 
   return (
     <Component
@@ -149,7 +147,7 @@ export function Section(props: SectionProps) {
         variants({ padding: width, overflow, className }),
         hasBackground &&
           !isBgForContent &&
-          "rounded-(--section-radius) bg-(--section-bg-color)",
+          "rounded-lg bg-(--section-bg-color)",
         animate &&
           revealElementsOnScroll && [
             "transition-all duration-700",
@@ -163,7 +161,7 @@ export function Section(props: SectionProps) {
           variants({ gap, width, verticalPadding, overflow }),
           hasBackground &&
             isBgForContent && [
-              "rounded-(--section-radius) bg-(--section-bg-color)",
+              "rounded-lg bg-(--section-bg-color)",
               "px-4 sm:px-8",
             ],
           containerClassName,
@@ -215,19 +213,6 @@ export const layoutInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "medium",
-  },
-  {
-    type: "range",
-    name: "borderRadius",
-    label: "Border radius",
-    configs: {
-      min: 0,
-      max: 40,
-      step: 2,
-      unit: "px",
-    },
-    defaultValue: 0,
-    helpText: "Should be used in combination with background image or color",
   },
 ];
 

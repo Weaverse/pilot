@@ -38,7 +38,7 @@ export const schema = createSchema({
     {
       group: "Layout",
       inputs: layoutInputs.filter((inp) => {
-        return inp.name !== "borderRadius" && inp.name !== "gap";
+        return inp.name !== "gap";
       }),
     },
   ],

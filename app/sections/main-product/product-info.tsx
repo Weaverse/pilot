@@ -25,6 +25,8 @@ export const schema = createSchema({
   limit: 1,
   childTypes: [
     "mp--breadcrumb",
+    "mp--promo-text",
+    "mp--availability",
     "mp--vendor",
     "mp--title",
     "mp--prices",
@@ -34,6 +36,8 @@ export const schema = createSchema({
     "mp--variant-selector",
     "mp--quantity-selector",
     "mp--atc-buttons",
+    "mp--estimated-delivery",
+    "mp--highlights",
     "mp--collapsible-details",
   ],
   enabledOn: {
@@ -63,6 +67,12 @@ export const schema = createSchema({
         type: "mp--summary",
       },
       {
+        type: "mp--promo-text",
+      },
+      {
+        type: "mp--availability",
+      },
+      {
         type: "mp--bundled-variants",
         headingText: "Bundled Products",
         headingClassName: "text-2xl",
@@ -80,6 +90,12 @@ export const schema = createSchema({
         soldOutText: "Sold out",
         showShopPayButton: true,
         buttonClassName: "w-full uppercase",
+      },
+      {
+        type: "mp--estimated-delivery",
+      },
+      {
+        type: "mp--highlights",
       },
       {
         type: "mp--collapsible-details",

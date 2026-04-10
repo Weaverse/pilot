@@ -28,11 +28,7 @@ export default function MainProduct(props: MainProductProps) {
       </Section>
     );
   }
-  return (
-    <div {...rest}>
-      No product data...
-    </div>
-  );
+  return <div {...rest}>No product data...</div>;
 }
 
 export const schema = createSchema({
@@ -45,6 +41,8 @@ export const schema = createSchema({
   },
   settings: [{ group: "Layout", inputs: layoutInputs }],
   presets: {
+    width: "stretch",
+    verticalPadding: "small",
     children: [
       {
         type: "mp--media",

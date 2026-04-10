@@ -87,10 +87,7 @@ function AddToCartButtonContent({
       <input type="hidden" name="analytics" value={JSON.stringify(analytics)} />
       <Button
         type="submit"
-        className={cn(
-          "relative hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
-          className,
-        )}
+        className={cn("relative", className)}
         disabled={disabled ?? isLoading}
         {...props}
       >

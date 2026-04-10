@@ -107,7 +107,7 @@ export function CartMain({
           ])}
         >
           <ScrollArea
-            className={clsx(layout === "drawer" && "max-h-[calc(100vh-312px)]")}
+            className={clsx(layout === "drawer" && "max-h-[calc(100vh-260px)]")}
             size="sm"
           >
             <ul

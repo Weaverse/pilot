@@ -17,6 +17,7 @@ import {
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
+import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
@@ -97,12 +98,16 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-export const Layout = withWeaverse(function Layout({ children }: { children: React.ReactNode }) {
+export const Layout = withWeaverse(function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-  const { topbarHeight, topbarText } = useThemeSettings();
+  const { topbarHeight, topbarText } = useThemeSettings<ThemeSettings>();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
 
   // Bypass Weaverse theme layout for Hydrogen dev tools

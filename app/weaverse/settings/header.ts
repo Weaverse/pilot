@@ -1,6 +1,6 @@
 import type { InspectorGroup } from "@weaverse/hydrogen";
 
-export const headerSettings: InspectorGroup = {
+export const headerSettings = {
   group: "Header",
   inputs: [
     {
@@ -80,5 +80,27 @@ export const headerSettings: InspectorGroup = {
       condition: (theme: { showHeaderCountrySelector: boolean }) =>
         theme.showHeaderCountrySelector,
     },
+    {
+      type: "heading",
+      label: "Colors",
+    },
+    {
+      type: "color",
+      label: "Background",
+      name: "headerBgColor",
+      defaultValue: "#ffffff",
+    },
+    {
+      type: "color",
+      label: "Text",
+      name: "headerText",
+      defaultValue: "#000000",
+    },
+    {
+      type: "color",
+      label: "Transparent header text",
+      name: "transparentHeaderText",
+      defaultValue: "#ffffff",
+    },
   ],
-};
+} as const satisfies InspectorGroup;

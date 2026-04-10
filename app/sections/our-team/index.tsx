@@ -19,13 +19,8 @@ interface OurTeamProps
 }
 
 function OurTeam(props: OurTeamProps) {
-  const { loaderData, metaobject, membersCount, children, ...rest } =
-    props;
-  return (
-    <Section {...rest}>
-      {children}
-    </Section>
-  );
+  const { loaderData, metaobject, membersCount, children, ...rest } = props;
+  return <Section {...rest}>{children}</Section>;
 }
 
 export const loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
@@ -101,7 +96,7 @@ export const schema = createSchema({
     },
     {
       group: "Layout",
-      inputs: layoutInputs.filter((inp) => inp.name !== "borderRadius"),
+      inputs: layoutInputs,
     },
     {
       group: "Background",

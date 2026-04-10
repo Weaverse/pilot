@@ -94,18 +94,6 @@ export const schema = createSchema({
           },
           defaultValue: "medium",
         },
-        {
-          type: "range",
-          name: "borderRadius",
-          label: "Border radius",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
-        },
       ],
     },
     { group: "Background", inputs: backgroundInputs },

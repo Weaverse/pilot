@@ -46,7 +46,7 @@ function Orders({ orders }: OrderCardsProps) {
           return (
             <li
               key={order.id}
-              className="flex items-center gap-5 border border-line-subtle p-5 text-center"
+              className="flex items-center gap-5 border border-line-subtle rounded-xl p-5 text-center"
             >
               {lineItems[0].image && (
                 <Link

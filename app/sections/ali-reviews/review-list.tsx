@@ -47,10 +47,7 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
     reviewsToRender = reviewsToRender.slice(0, reviewsToShow);
 
     return (
-      <div
-                {...rest}
-        className="space-y-8 md:flex md:gap-16 md:space-y-0"
-      >
+      <div {...rest} className="space-y-8 md:flex md:gap-16 md:space-y-0">
         <ScrollReveal
           animation="slide-in"
           className="my-6 shrink-0 space-y-6 md:my-8"

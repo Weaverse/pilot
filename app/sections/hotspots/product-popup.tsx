@@ -89,7 +89,7 @@ export function ProductPopup({
         } as CSSProperties
       }
     >
-      <div className="flex flex-col gap-3 bg-white p-2.5 shadow-lg sm:flex-row">
+      <div className="flex flex-col gap-3 bg-white rounded-lg p-2.5 shadow-lg sm:flex-row">
         {featuredImage && (
           <div className="h-auto w-full sm:w-28">
             <Image data={featuredImage} alt={product.title} sizes="auto" />

@@ -25,6 +25,7 @@ import { VariantSelector } from "~/components/product/variant-selector";
 import { ProductMedia } from "~/components/product-media";
 import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
+import type { ThemeSettings } from "~/types/weaverse";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -47,7 +48,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
     quickShopGroupMediaByVariant,
     quickShopGroupByOption,
     pcardImageRatio,
-  } = useThemeSettings();
+  } = useThemeSettings<ThemeSettings>();
 
   return (
     <div className="bg-background">
@@ -178,7 +179,7 @@ export function QuickShopTrigger({
           className={clsx(
             "group/quick-shop absolute bottom-4 h-10.5 p-3 leading-4",
             buttonType === "icon"
-              ? "right-4 rounded-full shadow-xl"
+              ? "right-4 rounded-xl shadow-xl"
               : "inset-x-4 shadow-xs",
             showOnHover &&
               "opacity-0 transition-opacity group-hover:opacity-100",
@@ -220,7 +221,7 @@ export function QuickShopTrigger({
             style={{ maxHeight: "90vh" }}
             className={clsx(
               "relative h-auto w-full overflow-hidden",
-              "animate-slide-up bg-white shadow-sm",
+              "animate-slide-up rounded-lg bg-white shadow-sm",
               panelType === "drawer"
                 ? "mr-0 ml-auto min-h-screen max-w-md"
                 : "mx-auto max-w-(--breakpoint-xl)",

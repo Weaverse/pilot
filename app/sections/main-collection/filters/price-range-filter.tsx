@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { FILTER_URL_PREFIX } from "~/utils/const";
-import { filterInputToParams } from "./filter-utils";
+import { clearPaginationParams, filterInputToParams } from "./filter-utils";
 
 export function PriceRangeFilter({
   collection,
@@ -36,6 +36,7 @@ export function PriceRangeFilter({
       paramsClone = filterInputToParams({ price }, paramsClone);
     }
     if (params.toString() !== paramsClone.toString()) {
+      clearPaginationParams(paramsClone);
       navigate(`${location.pathname}?${paramsClone.toString()}`, {
         preventScrollReset: true,
       });
@@ -87,7 +88,7 @@ export function PriceRangeFilter({
         ))}
       </Slider.Root>
       <div className="flex items-center gap-4">
-        <div className="flex shrink items-center gap-1 border border-line-subtle bg-gray-50 px-4">
+        <div className="flex shrink items-center gap-1 rounded-md border border-line-subtle bg-gray-50 px-4">
           <VisuallyHidden.Root asChild>
             <label htmlFor="minPrice" aria-label="Min price">
               Min price
@@ -112,7 +113,7 @@ export function PriceRangeFilter({
           />
         </div>
         <span>To</span>
-        <div className="flex items-center gap-1 border border-line-subtle bg-gray-50 px-4">
+        <div className="flex items-center gap-1 rounded-md border border-line-subtle bg-gray-50 px-4">
           <VisuallyHidden.Root asChild>
             <label htmlFor="maxPrice" aria-label="Max price">
               Max price

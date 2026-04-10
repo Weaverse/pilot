@@ -45,7 +45,7 @@ export default function ProductMediaComponent(
 
   return (
     <div
-            {...rest}
+      {...rest}
       className={cn(
         "relative min-w-0",
         mediaLayout === "slider" &&
@@ -153,7 +153,7 @@ export const schema = createSchema({
           label: "Group media by variant",
           name: "groupMediaByVariant",
           type: "switch",
-          defaultValue: false,
+          defaultValue: true,
           helpText:
             "When enabled, only images matching the selected variant option will be displayed",
         },

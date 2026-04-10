@@ -8,11 +8,7 @@ interface VideoEmbedProps extends SectionProps {
 
 function VideoEmbed(props: VideoEmbedProps) {
   const { children, ...rest } = props;
-  return (
-    <Section {...rest}>
-      {children}
-    </Section>
-  );
+  return <Section {...rest}>{children}</Section>;
 }
 
 export default VideoEmbed;
