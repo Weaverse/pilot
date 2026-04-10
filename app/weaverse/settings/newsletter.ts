@@ -1,4 +1,4 @@
-import type { InspectorGroup } from "@weaverse/hydrogen";
+import { IMAGES_PLACEHOLDERS, type InspectorGroup } from "@weaverse/hydrogen";
 
 export const newsletterSettings = {
   group: "Newsletter Popup",
@@ -61,7 +61,7 @@ export const newsletterSettings = {
           { value: "bottom-right", label: "Bottom Right" },
         ],
       },
-      defaultValue: "bottom-right",
+      defaultValue: "bottom-left",
       condition: (theme) =>
         theme.newsletterPopupEnabled === true &&
         theme.newsletterPopupType === "popup",
@@ -73,7 +73,7 @@ export const newsletterSettings = {
       defaultValue: {
         id: "gid://shopify/MediaImage/0",
         altText: "Newsletter signup",
-        url: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+        url: IMAGES_PLACEHOLDERS.banner_1,
         width: 600,
         height: 800,
       },
@@ -90,7 +90,7 @@ export const newsletterSettings = {
           { value: "right", label: "Right" },
         ],
       },
-      defaultValue: "left",
+      defaultValue: "top",
       helpText: "Image position for desktop devices only",
       condition: (theme) =>
         theme.newsletterPopupEnabled === true && theme.newsletterPopupImage,
