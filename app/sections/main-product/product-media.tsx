@@ -153,7 +153,7 @@ export const schema = createSchema({
           label: "Group media by variant",
           name: "groupMediaByVariant",
           type: "switch",
-          defaultValue: false,
+          defaultValue: true,
           helpText:
             "When enabled, only images matching the selected variant option will be displayed",
         },

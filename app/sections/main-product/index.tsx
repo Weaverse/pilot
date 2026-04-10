@@ -41,6 +41,8 @@ export const schema = createSchema({
   },
   settings: [{ group: "Layout", inputs: layoutInputs }],
   presets: {
+    width: "stretch",
+    verticalPadding: "small",
     children: [
       {
         type: "mp--media",
