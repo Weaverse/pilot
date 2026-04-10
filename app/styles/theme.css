@@ -98,7 +98,7 @@ shopify-account {
   --shopify-account-color-accent-text: var(--btn-primary-text);
   --shopify-account-radius-base: var(--radius, 0);
   --shopify-account-avatar-size: 32px;
-  --shopify-account-signed-in-avatar-size: 32px;
+  --shopify-account-signed-in-avatar-size: 16px;
 }
 
 /* Tokens */
