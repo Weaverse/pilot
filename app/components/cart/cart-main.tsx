@@ -1,4 +1,4 @@
-import { useOptimisticCart } from "@shopify/hydrogen";
+import type { OptimisticCart } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
@@ -71,15 +71,14 @@ function CartEmpty({
 export function CartMain({
   layout,
   onClose,
-  cart: originalCart,
+  cart,
 }: {
   layout: CartLayoutType;
   onClose?: () => void;
-  cart: CartApiQueryFragment;
+  cart: OptimisticCart<CartApiQueryFragment | null>;
 }) {
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
-  const cart = useOptimisticCart<CartApiQueryFragment>(originalCart);
   const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
   const cartHasItems = Boolean(cart) && cart.totalQuantity > 0;
 
