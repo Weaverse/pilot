@@ -3,7 +3,6 @@ import {
   CartForm,
   Money,
   type OptimisticCart,
-  OptimisticInput,
   useOptimisticData,
 } from "@shopify/hydrogen";
 import clsx from "clsx";
@@ -70,14 +69,7 @@ export function CartLineItem({
   }
 
   return (
-    <li
-      className="flex gap-4"
-      style={{
-        // Hide the line item if the optimistic data action is remove
-        // Do not remove the form from the DOM
-        display: optimisticData?.action === "remove" ? "none" : "flex",
-      }}
-    >
+    <li className="flex gap-4">
       <div className="relative shrink-0">
         {image && (
           <Image
@@ -152,7 +144,6 @@ function ItemRemoveButton({
         <span className="sr-only">Remove</span>
         <TrashIcon aria-hidden="true" className="size-4.5" />
       </button>
-      <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>
   );
 }
