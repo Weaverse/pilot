@@ -47,7 +47,6 @@ Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Co
 - [Radix-UI](https://www.radix-ui.com/) for accessible/reusable UI components
 - [class-variance-authority](https://cva.style/) (cva) for component variants
 - [Swiper](https://swiperjs.com/) for carousels/sliders
-- [Framer Motion](https://www.framer.com/motion/) for animations
 - [Judge.me](https://judge.me/) reviews integration
 - [Klaviyo](https://www.klaviyo.com/) integration for email marketing
 - Full-featured setup of components and routes
@@ -63,7 +62,7 @@ Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Co
 **Requirements:**
 
 - Node.js version 20.0.0 or higher
-- `npm` or `pnpm` package manager
+- `npm` package manager
 
 **Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:**
 
@@ -99,54 +98,48 @@ npm run e2e
 
 Pilot uses parallel data loading for optimal performance. Every route loads Weaverse data alongside GraphQL queries using `Promise.all()`:
 
-```ts:routes/($locale)._index.tsx
-import { data } from '@shopify/remix-oxygen';
-import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+```ts:app/routes/home.tsx
+import type { LoaderFunctionArgs } from 'react-router';
 
 export async function loader({ context }: LoaderFunctionArgs) {
   const { storefront, weaverse } = context;
 
   // Parallel data loading for best performance
-  const [collections, weaverseData] = await Promise.all([
-    storefront.query(COLLECTIONS_QUERY),
+  const [weaverseData, { shop }] = await Promise.all([
     weaverse.loadPage({ type: 'INDEX' }),
+    storefront.query(SHOP_QUERY),
   ]);
 
-  return data({
-    collections,
+  return {
     weaverseData,
-  });
+    shop,
+  };
 }
 ```
 
 `weaverse` is an `WeaverseClient` instance that has been injected into the app context by Weaverse. It provides a set of methods to interact with the Weaverse API.
 
-```ts:app/lib/context.ts
-// app/lib/context.ts
-
+```ts:app/.server/context.ts
 const hydrogenContext = createHydrogenContext({
-    env,
-    request,
-    cache,
-    waitUntil,
-    session,
-    i18n: getLocaleFromRequest(request),
-    cart: {
-      queryFragment: CART_QUERY_FRAGMENT,
-    },
-  });
+  env,
+  request,
+  cache,
+  waitUntil,
+  session,
+  i18n: getLocaleFromRequest(request),
+  cart: { queryFragment: CART_QUERY_FRAGMENT },
+});
 
-  return {
-    ...hydrogenContext,
-    // declare additional Remix loader context
-    weaverse: new WeaverseClient({
-      ...hydrogenContext,
-      request,
-      cache,
-      themeSchema,
-      components,
-    }),
-  };
+const weaverse = new WeaverseClient({
+  ...hydrogenContext,
+  request,
+  cache,
+  themeSchema,
+  components,
+});
+
+Object.assign(hydrogenContext, { weaverse });
+return hydrogenContext;
 ```
 
 ### Rendering page content
@@ -171,7 +164,7 @@ export function WeaverseContent() {
 
 And in your route:
 
-```tsx:routes/($locale)/_index.tsx
+```tsx:app/routes/home.tsx
 export default function Homepage() {
   return <WeaverseContent />;
 }
@@ -183,12 +176,14 @@ Dead simple, right?
 
 Weaverse global theme settings is loaded in the `root`'s loader with `context.weaverse.loadThemeSettings` function.
 
-```tsx:root.tsx
-export async function loader({request, context}: RouteLoaderArgs) {
-  return defer({
-    // App data...
-    weaverseTheme: await context.weaverse.loadThemeSettings(),
-  });
+```tsx:app/root.tsx
+export async function loader(args: LoaderFunctionArgs) {
+  const deferredData = loadDeferredData(args);
+  const criticalData = await loadCriticalData(args);
+  return {
+    ...deferredData,
+    ...criticalData,
+  };
 }
 ```
 
@@ -210,15 +205,11 @@ function Logo() {
 
 The `App` component is wrapped with `withWeaverse` HoC in order to SSR the theme settings.
 
-```tsx:root.tsx
+```tsx:app/root.tsx
 import { withWeaverse } from '@weaverse/hydrogen';
 
 function App() {
-  return (
-    <html lang={locale.language}>
-      // App markup
-    </html>
-  );
+  return <Outlet />;
 }
 
 export default withWeaverse(App);
@@ -228,7 +219,7 @@ export default withWeaverse(App);
 
 To create a section, you need to create a new file in [`app/sections`](app/sections) directory and register it in [`app/weaverse/components.ts`](app/weaverse/components.ts) file.
 
-**Important:** All Weaverse sections must include `ref` as a prop (or use `forwardRef` with React prior to v19) and extend `HydrogenComponentProps`.
+**Important:** All Weaverse sections must include `ref` as a prop and extend `HydrogenComponentProps`.
 
 ```tsx:app/sections/video/index.tsx
 import type { HydrogenComponentProps } from '@weaverse/hydrogen';
@@ -261,7 +252,7 @@ export default function Video(props: VideoProps) {
       </div>
     </section>
   );
-});
+}
 ```
 
 Export a `schema` object from the file to define the component's schema with default data and settings to be used in the **Weaverse Studio**.
