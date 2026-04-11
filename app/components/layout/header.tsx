@@ -15,7 +15,7 @@ import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
-import { HeaderCountrySelector } from "./country-selector";
+import { HeaderCountrySelector } from "./country-selector/header-country-selector";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { MobileMenu } from "./menu/mobile-menu";
