@@ -146,7 +146,7 @@ export function MediaSlider({
             </Swiper>
           </div>
         )}
-        <div className="relative w-[calc(100%-var(--thumbs-width,0px))]">
+        <div className="relative w-[calc(100%-var(--thumbs-width,0px))] max-h-[90vh]">
           <Swiper
             onSwiper={setSwiper}
             onSlideChange={(sw) => setActiveIndex(sw.realIndex)}
