@@ -226,13 +226,13 @@ export function MediaSlider({
               type="button"
               className="media_slider__prev left-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowLeftIcon className="size-6" />
+              <ArrowLeftIcon className="size-5" />
             </button>
             <button
               type="button"
               className="media_slider__next right-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowRightIcon className="size-6" />
+              <ArrowRightIcon className="size-5" />
             </button>
           </div>
         </div>
