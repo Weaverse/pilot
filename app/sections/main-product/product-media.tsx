@@ -53,25 +53,30 @@ export default function ProductMediaComponent(
           "[--thumbs-width:7rem] @min-[1600px]/main-product:[--thumbs-width:8rem]",
       )}
     >
-      <ProductMedia
-        key={product.handle}
-        mediaLayout={mediaLayout}
-        gridSize={gridSize}
-        imageAspectRatio={imageAspectRatio}
-        media={media}
-        selectedVariant={selectedVariant}
-        showThumbnails={showThumbnails}
-        enableZoom={enableZoom}
-        zoomTrigger={zoomTrigger}
-        zoomButtonVisibility={zoomButtonVisibility}
-        groupMediaByVariant={groupMediaByVariant}
-        groupByOption={groupByOption}
-        product={product}
-        initialMediaCount={initialMediaCount}
-        showMoreText={showMoreText}
-        showLessText={showLessText}
-      />
-      {children}
+      <div
+        className="sticky"
+        style={{ top: "calc(var(--height-nav) + 20px)" }}
+      >
+        <ProductMedia
+          key={product.handle}
+          mediaLayout={mediaLayout}
+          gridSize={gridSize}
+          imageAspectRatio={imageAspectRatio}
+          media={media}
+          selectedVariant={selectedVariant}
+          showThumbnails={showThumbnails}
+          enableZoom={enableZoom}
+          zoomTrigger={zoomTrigger}
+          zoomButtonVisibility={zoomButtonVisibility}
+          groupMediaByVariant={groupMediaByVariant}
+          groupByOption={groupByOption}
+          product={product}
+          initialMediaCount={initialMediaCount}
+          showMoreText={showMoreText}
+          showLessText={showLessText}
+        />
+        {children}
+      </div>
     </div>
   );
 }
