@@ -36,19 +36,19 @@ Styling:
 - Slide-up/down animation via Tailwind `translate-y` + `transition`
 - Background with border-top for visual separation
 
-### 3. Mount in product route
+### 3. Render from ATC buttons component with toggle setting
 
-**File**: `app/routes/products/product.tsx`
+**File**: `app/sections/main-product/product-atc-buttons.tsx`
 
-Add `<StickyATCBar />` alongside `<WeaverseContent />` and `<Analytics.ProductView />`.
+Add a `showStickyBar` switch to the schema settings. When enabled, render `<StickyATCBar />` inside the `ProductATCButtons` component, passing the configured button text props (`addToCartText`, `addBundleToCartText`). This makes the sticky bar a merchant-configurable setting in the Weaverse editor rather than a hardcoded route-level component.
 
 ## Files touched
 
 | File | Action |
 |------|--------|
-| `app/sections/main-product/product-atc-buttons.tsx` | Modify — add IntersectionObserver + export visibility store |
-| `app/components/product/sticky-atc-bar.tsx` | Create — new sticky bar component |
-| `app/routes/products/product.tsx` | Modify — mount sticky bar |
+| `app/sections/main-product/product-atc-buttons.tsx` | Modify — add IntersectionObserver + export visibility store + `showStickyBar` toggle + render `StickyATCBar` |
+| `app/components/product/sticky-atc-bar.tsx` | Create — new sticky bar component (accepts text props) |
+| `app/routes/products/product.tsx` | No longer modified — sticky bar moved to ATC buttons component |
 
 ## Reusable components/utilities
 

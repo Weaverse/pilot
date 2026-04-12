@@ -2,12 +2,12 @@
 
 | Field            | Value                                                    |
 | ---------------- | -------------------------------------------------------- |
-| **Status**       | draft                                                    |
+| **Status**       | in-progress                                              |
 | **Owner**        | @hta218                                                  |
 | **Issue**        | N/A                                                      |
 | **Branch**       | `feat/sticky-atc-bar`                                    |
 | **Created**      | 2026-04-11                                               |
-| **Last Updated** | 2026-04-11                                               |
+| **Last Updated** | 2026-04-12                                               |
 
 ## Original Prompt
 
