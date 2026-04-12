@@ -11,7 +11,15 @@ import { useATCVisibilityStore } from "~/sections/main-product/product-atc-butto
 import { useProductQtyStore } from "~/sections/main-product/product-quantity-selector";
 import { cn } from "~/utils/cn";
 
-export function StickyATCBar() {
+interface StickyATCBarProps {
+  addToCartText?: string;
+  addBundleToCartText?: string;
+}
+
+export function StickyATCBar({
+  addToCartText = "Add to cart",
+  addBundleToCartText = "Add bundle to cart",
+}: StickyATCBarProps) {
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity } = useProductQtyStore();
   const { inView } = useATCVisibilityStore();
@@ -64,7 +72,7 @@ export function StickyATCBar() {
           ]}
           className="shrink-0 whitespace-nowrap uppercase"
         >
-          {isBundle ? "Add bundle to cart" : "Add to cart"}
+          {isBundle ? addBundleToCartText : addToCartText}
         </AddToCartButton>
       </div>
     </div>

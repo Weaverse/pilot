@@ -9,6 +9,7 @@ import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import { create } from "zustand";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import { StickyATCBar } from "~/components/product/sticky-atc-bar";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { useProductQtyStore } from "./product-quantity-selector";
 
@@ -26,6 +27,7 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
   addBundleToCartText: string;
   soldOutText: string;
   showShopPayButton: boolean;
+  showStickyBar: boolean;
 }
 
 export default function ProductATCButtons(props: ProductATCButtonsProps) {
@@ -35,6 +37,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     addBundleToCartText,
     soldOutText,
     showShopPayButton,
+    showStickyBar,
     ...rest
   } = props;
   const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
@@ -105,6 +108,12 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
           storeDomain={storeDomain}
         />
       )}
+      {showStickyBar && (
+        <StickyATCBar
+          addToCartText={addToCartText}
+          addBundleToCartText={addBundleToCartText}
+        />
+      )}
     </div>
   );
 }
@@ -148,6 +157,14 @@ export const schema = createSchema({
           label: "Show Shop Pay button",
           name: "showShopPayButton",
           defaultValue: true,
+        },
+        {
+          type: "switch",
+          label: "Show sticky add-to-cart bar",
+          name: "showStickyBar",
+          defaultValue: true,
+          helpText:
+            "Display a fixed bottom bar with the Add to Cart button when the main button scrolls out of view.",
         },
       ],
     },
