@@ -11,9 +11,7 @@ import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 import type { ThemeSettings } from "~/types/weaverse";
 
-export interface HeroImageProps extends VariantProps<typeof variants> {
-  ref: React.Ref<HTMLElement>;
-}
+export interface HeroImageProps extends VariantProps<typeof variants> {}
 
 const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
   variants: {

@@ -19,13 +19,10 @@ interface ProductGridData {
   loadMoreText: string;
 }
 
-interface ProductGridProps extends HydrogenComponentProps, ProductGridData {
-  ref: React.Ref<HTMLDivElement>;
-}
+interface ProductGridProps extends HydrogenComponentProps, ProductGridData {}
 
 function ProductGrid(props: ProductGridProps) {
   const {
-    ref,
     minCardWidth,
     gapX,
     gapY,
@@ -50,7 +47,6 @@ function ProductGrid(props: ProductGridProps) {
 
   return (
     <div
-      ref={ref}
       {...rest}
       className="grow space-y-6 overflow-hidden pt-6 pb-8 lg:pt-6 lg:pb-20"
     >

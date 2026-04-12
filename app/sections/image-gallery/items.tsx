@@ -34,7 +34,6 @@ interface ImageGalleyItemsProps
   extends HydrogenComponentProps,
     VariantProps<typeof variants> {
   height: number;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ImageGalleyItems(props: ImageGalleyItemsProps) {

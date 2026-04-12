@@ -16,7 +16,6 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { RootLoader } from "~/root";
 
 interface BlogPostProps extends SectionProps {
-  ref: React.Ref<HTMLElement>;
   showTags: boolean;
   showShareButtons: boolean;
 }

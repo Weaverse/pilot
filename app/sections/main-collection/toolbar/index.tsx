@@ -85,13 +85,10 @@ interface CollectionToolbarData {
 
 interface CollectionToolbarProps
   extends HydrogenComponentProps,
-    CollectionToolbarData {
-  ref: React.Ref<HTMLDivElement>;
-}
+    CollectionToolbarData {}
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const {
-    ref,
     enableSort,
     showBreadcrumb,
     showProductsCount,

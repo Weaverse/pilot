@@ -87,7 +87,6 @@ const variants = cva("heading", {
 export interface HeadingProps
   extends VariantProps<typeof variants>,
     VariantProps<typeof fontSizeVariants> {
-  ref?: React.Ref<HTMLHeadingElement>;
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   content: string;
   color?: string;
@@ -99,7 +98,6 @@ export interface HeadingProps
 
 function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
   const {
-    ref,
     as: Tag = "h4",
     content,
     size,
@@ -129,7 +127,6 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
     return (
       <ScrollReveal
         as={Tag}
-        ref={ref}
         {...rest}
         style={style}
         className={cn(
@@ -144,7 +141,6 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
 
   return (
     <Tag
-      ref={ref}
       {...rest}
       style={style}
       className={cn(

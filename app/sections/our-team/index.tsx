@@ -15,7 +15,6 @@ type OurTeamData = {
 interface OurTeamProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
     OurTeamData {
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function OurTeam(props: OurTeamProps) {

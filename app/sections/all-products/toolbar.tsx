@@ -19,9 +19,7 @@ interface AllProductsToolbarData {
 
 interface AllProductsToolbarProps
   extends HydrogenComponentProps,
-    AllProductsToolbarData {
-  ref: React.Ref<HTMLDivElement>;
-}
+    AllProductsToolbarData {}
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { enableSort, showBreadcrumb, showProductsCount, ...rest } = props;

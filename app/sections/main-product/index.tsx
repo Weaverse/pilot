@@ -5,7 +5,6 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface MainProductProps extends SectionProps {
-  ref: React.Ref<HTMLDivElement>;
 }
 
 export default function MainProduct(props: MainProductProps) {
@@ -28,7 +27,7 @@ export default function MainProduct(props: MainProductProps) {
       </Section>
     );
   }
-  return <div {...rest}>No product data...</div>;
+  return <div>No product data...</div>;
 }
 
 export const schema = createSchema({

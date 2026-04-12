@@ -15,7 +15,6 @@ interface CollectionsItemsProps extends OverlayProps {
   nextButtonText: string;
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function CollectionsItems(props: CollectionsItemsProps) {
@@ -29,7 +28,6 @@ function CollectionsItems(props: CollectionsItemsProps) {
     overlayColor,
     overlayColorHover,
     overlayOpacity,
-    ref,
     ...rest
   } = props;
   return (

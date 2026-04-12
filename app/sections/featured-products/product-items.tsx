@@ -22,9 +22,7 @@ const variants = cva("", {
   },
 });
 
-interface ProductItemsProps extends VariantProps<typeof variants> {
-  ref?: React.Ref<HTMLDivElement>;
-}
+interface ProductItemsProps extends VariantProps<typeof variants> {}
 
 function ProductItems(props: ProductItemsProps) {
   const { gap, ...rest } = props;

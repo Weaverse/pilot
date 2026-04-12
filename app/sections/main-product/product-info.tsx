@@ -1,7 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 
 interface ProductInfoProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
 }
 
 export default function ProductInfo(props: ProductInfoProps) {

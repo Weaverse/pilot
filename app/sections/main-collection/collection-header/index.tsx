@@ -15,13 +15,10 @@ interface CollectionHeaderData {
 
 interface CollectionHeaderProps
   extends HydrogenComponentProps,
-    CollectionHeaderData {
-  ref: React.Ref<HTMLDivElement>;
-}
+    CollectionHeaderData {}
 
 function CollectionHeader(props: CollectionHeaderProps) {
   const {
-    ref,
     showBreadcrumb,
     showDescription,
     showBanner,

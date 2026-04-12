@@ -24,7 +24,6 @@ type MemberType = {
 };
 
 interface TeamMembersProps extends HydrogenComponentProps {
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function TeamMembers(props: TeamMembersProps) {

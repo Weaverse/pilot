@@ -9,7 +9,6 @@ import { ProductBadges } from "~/components/product/badges";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBadgesComponentProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
 }
 
 export default function ProductBadgesComponent(

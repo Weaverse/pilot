@@ -3,7 +3,6 @@ import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductSummaryProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
 }
 
 export default function ProductSummary(props: ProductSummaryProps) {

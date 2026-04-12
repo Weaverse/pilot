@@ -10,14 +10,12 @@ import { cn } from "~/utils/cn";
 interface ProductMediaComponentProps
   extends Omit<ProductMediaProps, "selectedVariant" | "media" | "product">,
     HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
 }
 
 export default function ProductMediaComponent(
   props: ProductMediaComponentProps,
 ) {
   const {
-    ref,
     children,
     mediaLayout,
     gridSize,

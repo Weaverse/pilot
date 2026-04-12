@@ -4,7 +4,6 @@ import { Link } from "~/components/link";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBreadcrumbProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   homeText: string;
   excludeCollections: string;
 }

@@ -10,7 +10,6 @@ import { ArticleCard, type ArticleCardProps } from "./blogs";
 interface RelatedArticlesProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
     SectionProps {
-  ref: React.Ref<HTMLElement>;
   heading: string;
 }
 

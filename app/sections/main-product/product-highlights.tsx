@@ -8,7 +8,6 @@ import { cn } from "~/utils/cn";
 type ProductHighlightsLayout = "list" | "grid";
 
 interface ProductHighlightsProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   layout: ProductHighlightsLayout;
 }
 

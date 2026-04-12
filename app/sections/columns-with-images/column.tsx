@@ -34,7 +34,6 @@ interface ColumnWithImageItemProps
   imageAspectRatio: ImageAspectRatio;
   heading: string;
   content: string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ColumnWithImageItem(props: ColumnWithImageItemProps) {
@@ -48,7 +47,6 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
     variant,
     hideOnMobile,
     size,
-    ref,
     ...rest
   } = props;
 

@@ -9,7 +9,6 @@ import type { loader as productRouteLoader } from "~/routes/products/product";
 import { ProductVariants } from "./variants";
 
 interface ProductVariantSelectorProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
 }
 
 export default function ProductVariantSelector(

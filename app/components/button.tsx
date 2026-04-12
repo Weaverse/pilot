@@ -74,7 +74,6 @@ export interface ButtonProps
   extends VariantProps<typeof variants>,
     Omit<HTMLAttributes<HTMLButtonElement>, "type">,
     Partial<ButtonStyleProps> {
-  ref?: React.Ref<HTMLButtonElement>;
   type?: "button" | "reset" | "submit";
   className?: string;
   disabled?: boolean;
@@ -85,7 +84,6 @@ export interface ButtonProps
 
 export function Button(props: ButtonProps) {
   let {
-    ref,
     type = "button",
     variant,
     loading,
@@ -127,7 +125,6 @@ export function Button(props: ButtonProps) {
     return (
       <ScrollReveal
         as="button"
-        ref={ref}
         style={style}
         type={type}
         {...rest}
@@ -141,7 +138,6 @@ export function Button(props: ButtonProps) {
 
   return (
     <button
-      ref={ref}
       style={style}
       type={type}
       {...rest}

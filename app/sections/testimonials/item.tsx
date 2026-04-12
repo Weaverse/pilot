@@ -9,7 +9,6 @@ import { Image } from "~/components/image";
 import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   heading: string;
   content: string;
   authorImage: WeaverseImage;
@@ -20,7 +19,6 @@ interface TestimonialItemProps extends HydrogenComponentProps {
 
 export default function TestimonialItem(props: TestimonialItemProps) {
   const {
-    ref,
     heading,
     content,
     authorImage,

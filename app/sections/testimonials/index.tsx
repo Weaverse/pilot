@@ -3,7 +3,6 @@ import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
 interface TestimonialsProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
 }
 
 function Testimonials(props: TestimonialsProps) {

@@ -12,7 +12,6 @@ interface NewsLetterInputProps extends HydrogenComponentProps {
   buttonText: string;
   helpText: string;
   successText?: string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function NewsLetterForm(props: NewsLetterInputProps) {
@@ -22,7 +21,6 @@ function NewsLetterForm(props: NewsLetterInputProps) {
     placeholder,
     helpText,
     successText,
-    ref,
     ...rest
   } = props;
   const fetcher = useFetcher();

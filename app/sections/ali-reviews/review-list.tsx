@@ -16,7 +16,6 @@ interface AliReviewsData extends ReviewItemData {
   showReviewsProgressBar: boolean;
   reviewsToShow: number;
   showReviewWithMediaOnly: boolean;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
@@ -32,7 +31,6 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
     showVerifiedBadge,
     verifiedBadgeText,
     showStar,
-    ref,
     ...rest
   } = props;
   const parent = useParentInstance();

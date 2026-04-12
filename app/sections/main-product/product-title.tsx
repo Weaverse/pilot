@@ -3,7 +3,6 @@ import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductTitleProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 

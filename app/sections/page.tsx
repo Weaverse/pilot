@@ -4,9 +4,7 @@ import type { PageDetailsQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-interface PageProps extends SectionProps {
-  ref: React.Ref<HTMLElement>;
-}
+interface PageProps extends SectionProps {}
 
 export default function Page(props: PageProps) {
   const { ...rest } = props;

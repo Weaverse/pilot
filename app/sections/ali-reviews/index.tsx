@@ -11,7 +11,6 @@ interface AliReviewsData {
 interface AliReviewsProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
     AliReviewsData {
-  ref?: React.Ref<HTMLElement>;
 }
 
 function AliReviewSection(props: AliReviewsProps) {

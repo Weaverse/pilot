@@ -13,9 +13,7 @@ interface FeaturedCollectionsData {
 
 interface FeaturedCollectionsProps
   extends SectionProps<FeaturedCollectionsLoaderData>,
-    FeaturedCollectionsData {
-  ref: React.Ref<HTMLElement>;
-}
+    FeaturedCollectionsData {}
 
 export default function FeaturedCollections(props: FeaturedCollectionsProps) {
   const { loaderData, children, ...rest } = props;

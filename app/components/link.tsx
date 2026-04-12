@@ -81,7 +81,6 @@ export interface LinkProps
   extends HTMLAttributes<HTMLAnchorElement>,
     Partial<Omit<HydrogenComponentProps, "children">>,
     LinkData {
-  ref?: React.Ref<HTMLAnchorElement>;
   animate?: boolean;
 }
 
@@ -135,7 +134,6 @@ function useHrefWithLocale(href: LinkProps["to"]) {
  */
 export function Link(props: LinkProps) {
   let {
-    ref,
     to,
     text,
     variant,
@@ -183,14 +181,14 @@ export function Link(props: LinkProps) {
 
   if (animate) {
     return (
-      <ScrollReveal as={RemixLink} ref={ref} {...linkProps}>
+      <ScrollReveal as={RemixLink} {...linkProps}>
         {children || text}
       </ScrollReveal>
     );
   }
 
   return (
-    <RemixLink ref={ref} {...linkProps}>
+    <RemixLink {...linkProps}>
       {children || text}
     </RemixLink>
   );

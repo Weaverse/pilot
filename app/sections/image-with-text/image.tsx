@@ -30,7 +30,6 @@ interface ImageWithTextImageProps
     HydrogenComponentProps {
   image: WeaverseImage | string;
   imageAspectRatio: ImageAspectRatio;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ImageWithTextImage(props: ImageWithTextImageProps) {
@@ -39,7 +38,6 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
     width,
     imageAspectRatio,
     objectFit,
-    ref,
     ...rest
   } = props;
   const imageData: Partial<WeaverseImage> =

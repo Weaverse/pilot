@@ -35,12 +35,10 @@ export interface SingleProductData {
 interface SingleProductProps
   extends HydrogenComponentProps<SingleProductLoaderData>,
     SingleProductData {
-  ref: React.Ref<HTMLElement>;
 }
 
 export default function SingleProduct(props: SingleProductProps) {
   let {
-    ref,
     loaderData,
     product: _product,
     showThumbnails,

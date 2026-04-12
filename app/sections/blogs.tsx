@@ -13,7 +13,6 @@ import { formatDate } from "~/utils/misc";
 interface BlogsProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
     SectionProps {
-  ref: React.Ref<HTMLElement>;
   layout: "blog" | "default";
 }
 

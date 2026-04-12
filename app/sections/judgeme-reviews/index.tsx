@@ -10,7 +10,6 @@ import { constructURL } from "~/utils/misc";
 import { useJudgemeStore } from "./store";
 
 interface JudgemeReviewSectionProps extends SectionProps {
-  ref: React.Ref<HTMLElement>;
   sectionId?: string;
 }
 
