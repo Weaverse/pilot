@@ -4,10 +4,21 @@ import {
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
+import { create } from "zustand";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { useProductQtyStore } from "./product-quantity-selector";
+
+export const useATCVisibilityStore = create<{
+  inView: boolean;
+  setInView: (value: boolean) => void;
+}>()((set) => ({
+  inView: true,
+  setInView: (value: boolean) => set({ inView: value }),
+}));
 
 interface ProductATCButtonsProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;
@@ -19,7 +30,7 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
 
 export default function ProductATCButtons(props: ProductATCButtonsProps) {
   const {
-    ref,
+    ref: weaverseRef,
     addToCartText,
     addBundleToCartText,
     soldOutText,
@@ -28,6 +39,13 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
   } = props;
   const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
   const { quantity } = useProductQtyStore();
+  const { setInView } = useATCVisibilityStore();
+
+  const { ref: inViewRef, inView } = useInView({ threshold: 0 });
+
+  useEffect(() => {
+    setInView(inView);
+  }, [inView, setInView]);
 
   const selectedVariant = useOptimisticVariant(
     product?.selectedOrFirstAvailableVariant,
@@ -48,7 +66,19 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
   }
 
   return (
-    <div {...rest} className="space-y-2 empty:hidden">
+    <div
+      {...rest}
+      ref={(node) => {
+        inViewRef(node);
+        if (typeof weaverseRef === "function") {
+          weaverseRef(node);
+        } else if (weaverseRef) {
+          (weaverseRef as React.RefObject<HTMLDivElement | null>).current =
+            node;
+        }
+      }}
+      className="space-y-2 empty:hidden"
+    >
       <AddToCartButton
         disabled={!selectedVariant?.availableForSale}
         lines={[

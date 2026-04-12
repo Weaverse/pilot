@@ -12,6 +12,7 @@ import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
+import { StickyATCBar } from "~/components/product/sticky-atc-bar";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
 import { WeaverseContent } from "~/weaverse";
@@ -120,6 +121,7 @@ export default function Product() {
   return (
     <>
       <WeaverseContent />
+      <StickyATCBar />
       {selectedVariant && (
         <Analytics.ProductView
           data={{
