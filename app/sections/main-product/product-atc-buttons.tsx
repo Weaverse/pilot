@@ -28,6 +28,10 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
   soldOutText: string;
   showShopPayButton: boolean;
   showStickyBar: boolean;
+  stickyBarWidth: "full" | "narrow";
+  showStickyBarImage: boolean;
+  showBuyNowButton: boolean;
+  buyNowText: string;
 }
 
 export default function ProductATCButtons(props: ProductATCButtonsProps) {
@@ -38,6 +42,10 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     soldOutText,
     showShopPayButton,
     showStickyBar,
+    stickyBarWidth,
+    showStickyBarImage,
+    showBuyNowButton,
+    buyNowText,
     ...rest
   } = props;
   const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
@@ -112,6 +120,10 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
         <StickyATCBar
           addToCartText={addToCartText}
           addBundleToCartText={addBundleToCartText}
+          barWidth={stickyBarWidth}
+          showImage={showStickyBarImage}
+          showBuyNowButton={showBuyNowButton}
+          buyNowText={buyNowText}
         />
       )}
     </div>
@@ -158,13 +170,54 @@ export const schema = createSchema({
           name: "showShopPayButton",
           defaultValue: true,
         },
+      ],
+    },
+    {
+      group: "Sticky bar",
+      inputs: [
         {
           type: "switch",
-          label: "Show sticky add-to-cart bar",
+          label: "Show sticky bar",
           name: "showStickyBar",
           defaultValue: true,
           helpText:
             "Display a fixed bottom bar with the Add to Cart button when the main button scrolls out of view.",
+        },
+        {
+          type: "select",
+          label: "Bar width",
+          name: "stickyBarWidth",
+          defaultValue: "narrow",
+          condition: (data: ProductATCButtonsProps) => data.showStickyBar,
+          configs: {
+            options: [
+              { value: "narrow", label: "Narrow" },
+              { value: "full", label: "Full width" },
+            ],
+          },
+        },
+        {
+          type: "switch",
+          label: "Show product image",
+          name: "showStickyBarImage",
+          defaultValue: true,
+          condition: (data: ProductATCButtonsProps) => data.showStickyBar,
+        },
+        {
+          type: "switch",
+          label: "Show Buy Now button",
+          name: "showBuyNowButton",
+          defaultValue: false,
+          condition: (data: ProductATCButtonsProps) => data.showStickyBar,
+        },
+        {
+          type: "text",
+          label: "Buy now text",
+          name: "buyNowText",
+          defaultValue: "Buy now",
+          placeholder: "Buy now",
+          condition: (data: ProductATCButtonsProps) =>
+            data.showStickyBar && data.showBuyNowButton,
         },
       ],
     },
