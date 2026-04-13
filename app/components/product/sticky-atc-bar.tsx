@@ -4,10 +4,10 @@ import * as Select from "@radix-ui/react-select";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import {
   getAdjacentAndFirstAvailableVariants,
-  Image,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { useLoaderData, useNavigate } from "react-router";
+import { Image } from "~/components/image";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/products/product";
@@ -87,15 +87,17 @@ export function StickyATCBar({
 
   return (
     <Dialog.Root open={show} modal={false}>
-      <Dialog.Portal>
+      <Dialog.Portal forceMount>
         <Dialog.Content
+          forceMount
           onInteractOutside={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn(
             "fixed z-9",
-            "bg-background border border-gray-200 shadow-[0_-6px_30px_rgba(0,0,0,0.15)]",
+            "bg-background border border-gray-200 shadow-[0_-6px_20px_rgba(0,0,0,0.15)]",
             "transition-transform duration-300 ease-in-out",
             "data-[state=open]:translate-y-0 data-[state=closed]:translate-y-[200%]",
+            "data-[state=closed]:pointer-events-none",
             barWidth === "narrow"
               ? "bottom-3 left-1/2 -translate-x-1/2 w-fit rounded-md"
               : "bottom-0 left-0 right-0",
@@ -103,21 +105,21 @@ export function StickyATCBar({
           aria-describedby={undefined}
         >
           <VisuallyHidden.Root asChild>
-            <Dialog.Title>Add to cart</Dialog.Title>
+            <Dialog.Title>Sticky add to cart bar</Dialog.Title>
           </VisuallyHidden.Root>
           <div className="flex items-center gap-3 px-4 py-2.5">
             {showImage && variantImage && (
               <Image
                 data={variantImage}
-                width={48}
-                height={48}
-                className="hidden shrink-0 rounded-md object-cover sm:block"
-                sizes="48px"
+                width={200}
+                height={200}
+                className="hidden shrink-0 rounded-md object-cover sm:block size-16"
+                sizes="auto"
               />
             )}
-            <div className="min-w-0 flex-1 mr-30">
-              <p className="truncate text-sm font-medium">{product.title}</p>
-              <VariantPrices variant={selectedVariant} className="text-xs" />
+            <div className="min-w-0 flex-1 mr-50">
+              <p className="truncate font-medium mb-1">{product.title}</p>
+              <VariantPrices variant={selectedVariant} className="text-sm" />
             </div>
             {hasMultipleVariants && (
               <div className="hidden shrink-0 sm:block">
@@ -128,7 +130,7 @@ export function StickyATCBar({
                   <Select.Trigger
                     className={cn(
                       "inline-flex items-center justify-center gap-2",
-                      "rounded-md border border-line-subtle bg-background px-2.5 py-2 text-sm",
+                      "rounded-md border border-line-subtle bg-background px-2.5 py-2",
                       "outline-hidden",
                     )}
                     aria-label="Select variant"
@@ -144,7 +146,7 @@ export function StickyATCBar({
                       side="top"
                       sideOffset={8}
                       className={cn(
-                        "z-50 overflow-hidden rounded-lg bg-background",
+                        "z-50 overflow-hidden rounded-md bg-background",
                         "shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)]",
                       )}
                     >
@@ -163,7 +165,7 @@ export function StickyATCBar({
                               disabled={!variant.availableForSale}
                               className={cn(
                                 "flex cursor-pointer select-none items-center justify-between gap-3",
-                                "rounded px-3 py-1.5 text-xs outline-hidden",
+                                "rounded-sm px-3 py-1.5 outline-hidden",
                                 "data-highlighted:bg-gray-100",
                                 !variant.availableForSale &&
                                   "text-body-subtle line-through",
@@ -198,7 +200,7 @@ export function StickyATCBar({
                     selectedVariant,
                   },
                 ]}
-                className="whitespace-nowrap px-3 py-2 text-sm"
+                className="whitespace-nowrap px-3 py-2"
               >
                 {isBundle ? addBundleToCartText : addToCartText}
               </AddToCartButton>
