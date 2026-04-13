@@ -1,7 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 
-interface ProductInfoProps extends HydrogenComponentProps {
-}
+interface ProductInfoProps extends HydrogenComponentProps {}
 
 export default function ProductInfo(props: ProductInfoProps) {
   const { children, ...rest } = props;
@@ -44,63 +43,20 @@ export const schema = createSchema({
   },
   presets: {
     children: [
-      {
-        type: "mp--breadcrumb",
-        homeText: "Home",
-      },
-      {
-        type: "mp--vendor",
-      },
-      {
-        type: "mp--title",
-        headingTag: "h1",
-      },
-      {
-        type: "mp--prices",
-        showCompareAtPrice: true,
-      },
-      {
-        type: "judgeme-stars-rating",
-      },
-      {
-        type: "mp--summary",
-      },
-      {
-        type: "mp--promo-text",
-      },
-      {
-        type: "mp--availability",
-      },
-      {
-        type: "mp--bundled-variants",
-        headingText: "Bundled Products",
-        headingClassName: "text-2xl",
-      },
-      {
-        type: "mp--variant-selector",
-      },
-      {
-        type: "mp--quantity-selector",
-      },
-      {
-        type: "mp--atc-buttons",
-        addToCartText: "Add to cart",
-        addBundleToCartText: "Add bundle to cart",
-        soldOutText: "Sold out",
-        showShopPayButton: true,
-        buttonClassName: "w-full uppercase",
-      },
-      {
-        type: "mp--estimated-delivery",
-      },
-      {
-        type: "mp--highlights",
-      },
-      {
-        type: "mp--collapsible-details",
-        showShippingPolicy: true,
-        showRefundPolicy: true,
-      },
+      { type: "mp--vendor" },
+      { type: "mp--title" },
+      { type: "mp--prices" },
+      { type: "judgeme-stars-rating" },
+      { type: "mp--summary" },
+      { type: "mp--promo-text" },
+      { type: "mp--availability" },
+      { type: "mp--bundled-variants" },
+      { type: "mp--variant-selector" },
+      { type: "mp--quantity-selector" },
+      { type: "mp--atc-buttons" },
+      { type: "mp--estimated-delivery" },
+      { type: "mp--highlights" },
+      { type: "mp--collapsible-details" },
     ],
   },
 });

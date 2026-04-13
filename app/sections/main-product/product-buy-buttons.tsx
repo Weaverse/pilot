@@ -177,7 +177,7 @@ export const schema = createSchema({
           type: "select",
           label: "Text casing",
           name: "textCasing",
-          defaultValue: "none",
+          defaultValue: "uppercase",
           configs: {
             options: [
               { value: "none", label: "None" },
