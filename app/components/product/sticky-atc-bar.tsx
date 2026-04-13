@@ -4,6 +4,7 @@ import {
   getAdjacentAndFirstAvailableVariants,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Image } from "~/components/image";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
@@ -20,6 +21,11 @@ interface StickyATCBarProps {
   showImage?: boolean;
 }
 
+// Distance from bottom of page to trigger sticky bar (in pixels)
+const BOTTOM_TRIGGER_DISTANCE = 300;
+// Mobile breakpoint (matches Tailwind's sm breakpoint)
+const MOBILE_BREAKPOINT = 640;
+
 export function StickyATCBar({
   addToCartText = "Add to cart",
   addBundleToCartText = "Add bundle to cart",
@@ -29,6 +35,34 @@ export function StickyATCBar({
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity } = useProductQtyStore();
   const { inView } = useATCVisibilityStore();
+  const [isNearBottom, setIsNearBottom] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Track scroll position and screen size
+  useEffect(() => {
+    function handleScroll() {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const clientHeight = window.innerHeight;
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+      setIsNearBottom(distanceFromBottom < BOTTOM_TRIGGER_DISTANCE);
+    }
+
+    function handleResize() {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    handleScroll();
+    handleResize();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const allVariants = getAdjacentAndFirstAvailableVariants(product);
   const selectedVariant = useOptimisticVariant(
@@ -43,7 +77,9 @@ export function StickyATCBar({
   const isBundle = Boolean(product.isBundle?.requiresComponents);
   const variantImage =
     selectedVariant.image || product.media?.nodes?.[0]?.previewImage;
-  let show = !inView && selectedVariant.availableForSale;
+  // Show sticky bar when: main ATC is out of view AND (on desktop OR near bottom on mobile)
+  let show =
+    !inView && (!isMobile || isNearBottom) && selectedVariant.availableForSale;
 
   let hasMultipleVariants =
     allVariants.length > 1 ||
@@ -76,7 +112,7 @@ export function StickyATCBar({
             "transition-transform duration-300 ease-in-out",
             "data-[state=open]:translate-y-0 data-[state=closed]:translate-y-[200%]",
             "data-[state=closed]:pointer-events-none",
-            barWidth === "narrow" ? "pb-3 px-3" : "",
+            barWidth === "narrow" ? "sm:pb-3 sm:px-3" : "",
           )}
           aria-describedby={undefined}
         >
@@ -86,10 +122,10 @@ export function StickyATCBar({
           <div
             onClick={handleBarClick}
             className={cn(
-              "cursor-pointer",
-              "bg-background border border-gray-200 shadow-[0_-6px_20px_rgba(0,0,0,0.15)]",
-              "flex items-center justify-between gap-30 px-4 py-2.5",
-              barWidth === "narrow" ? "w-fit rounded-md" : "w-full",
+              "cursor-pointer w-full",
+              "bg-background border-t sm:border border-gray-200 shadow-[0_-6px_20px_rgba(0,0,0,0.15)]",
+              "md:flex items-center justify-between gap-30 px-4 py-2.5 space-y-2 sm:space-y-0",
+              barWidth === "narrow" ? "sm:w-fit sm:rounded-md" : "",
             )}
           >
             <div className="flex min-w-0 items-center gap-3">
@@ -102,13 +138,11 @@ export function StickyATCBar({
                   sizes="auto"
                 />
               )}
-              <div className="min-w-0">
+              <div className="min-w-0 flex flex-wrap sm:block gap-3 text-lg">
                 <p className="truncate font-medium">{product.title}</p>
+                <span className="text-body-subtle">·</span>
                 <div className="flex items-center gap-1.5">
-                  <VariantPrices
-                    variant={selectedVariant}
-                    className="text-base"
-                  />
+                  <VariantPrices variant={selectedVariant} />
                   {hasMultipleVariants && (
                     <>
                       <span className="text-body-subtle">·</span>
@@ -128,7 +162,7 @@ export function StickyATCBar({
                     selectedVariant,
                   },
                 ]}
-                className="whitespace-nowrap px-16"
+                className="whitespace-nowrap px-3 md:px-16"
               >
                 {isBundle ? addBundleToCartText : addToCartText}
               </AddToCartButton>
