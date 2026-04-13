@@ -21,10 +21,8 @@ interface StickyATCBarProps {
   showImage?: boolean;
 }
 
-// Distance from bottom of page to trigger sticky bar (in pixels)
-const BOTTOM_TRIGGER_DISTANCE = 300;
-// Mobile breakpoint (matches Tailwind's sm breakpoint)
-const MOBILE_BREAKPOINT = 640;
+// Mobile breakpoint (matches Tailwind's md breakpoint)
+const MOBILE_BREAKPOINT = 768;
 
 export function StickyATCBar({
   addToCartText = "Add to cart",
@@ -34,32 +32,19 @@ export function StickyATCBar({
 }: StickyATCBarProps) {
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity } = useProductQtyStore();
-  const { inView } = useATCVisibilityStore();
-  const [isNearBottom, setIsNearBottom] = useState(false);
+  const { inView, scrolledPast } = useATCVisibilityStore();
   const [isMobile, setIsMobile] = useState(false);
 
-  // Track scroll position and screen size
+  // Track screen size
   useEffect(() => {
-    function handleScroll() {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const clientHeight = window.innerHeight;
-      const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-
-      setIsNearBottom(distanceFromBottom < BOTTOM_TRIGGER_DISTANCE);
-    }
-
     function handleResize() {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     }
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
-    handleScroll();
     handleResize();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -77,9 +62,9 @@ export function StickyATCBar({
   const isBundle = Boolean(product.isBundle?.requiresComponents);
   const variantImage =
     selectedVariant.image || product.media?.nodes?.[0]?.previewImage;
-  // Show sticky bar when: main ATC is out of view AND (on desktop OR near bottom on mobile)
+  // Show sticky bar when: main ATC is out of view AND (on desktop OR scrolled past ATC on mobile)
   let show =
-    !inView && (!isMobile || isNearBottom) && selectedVariant.availableForSale;
+    !inView && (!isMobile || scrolledPast) && selectedVariant.availableForSale;
 
   let hasMultipleVariants =
     allVariants.length > 1 ||
@@ -138,10 +123,10 @@ export function StickyATCBar({
                   sizes="auto"
                 />
               )}
-              <div className="min-w-0 flex flex-wrap sm:block gap-3 text-lg">
+              <div className="min-w-0 flex flex-wrap sm:block gap-2 text-lg md:text-base">
                 <p className="truncate font-medium">{product.title}</p>
-                <span className="text-body-subtle">·</span>
-                <div className="flex items-center gap-1.5">
+                <span className="text-body-subtle sm:hidden">·</span>
+                <div className="flex items-center gap-2">
                   <VariantPrices variant={selectedVariant} />
                   {hasMultipleVariants && (
                     <>
@@ -152,7 +137,7 @@ export function StickyATCBar({
                 </div>
               </div>
             </div>
-            <div className="flex shrink-0 items-center gap-3">
+            <div className="shrink-0">
               <AddToCartButton
                 disabled={!selectedVariant.availableForSale}
                 lines={[

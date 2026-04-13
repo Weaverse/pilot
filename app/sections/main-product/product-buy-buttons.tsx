@@ -16,9 +16,13 @@ import { useProductQtyStore } from "./product-quantity-selector";
 export const useATCVisibilityStore = create<{
   inView: boolean;
   setInView: (value: boolean) => void;
+  scrolledPast: boolean;
+  setScrolledPast: (value: boolean) => void;
 }>()((set) => ({
   inView: true,
   setInView: (value: boolean) => set({ inView: value }),
+  scrolledPast: false,
+  setScrolledPast: (value: boolean) => set({ scrolledPast: value }),
 }));
 
 interface ProductATCButtonsProps extends HydrogenComponentProps {
@@ -52,13 +56,16 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
   } = props;
   const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
   const { quantity } = useProductQtyStore();
-  const { setInView } = useATCVisibilityStore();
-
-  const { ref: inViewRef, inView } = useInView({ threshold: 0 });
+  const { setInView, setScrolledPast } = useATCVisibilityStore();
+  const { ref: inViewRef, inView, entry } = useInView({ threshold: 0 });
 
   useEffect(() => {
     setInView(inView);
-  }, [inView, setInView]);
+    if (!inView && entry) {
+      // Element is above viewport when its bottom edge is above the viewport top
+      setScrolledPast(entry.boundingClientRect.bottom < 0);
+    }
+  }, [inView, entry, setInView, setScrolledPast]);
 
   const selectedVariant = useOptimisticVariant(
     product?.selectedOrFirstAvailableVariant,
