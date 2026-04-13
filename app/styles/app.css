@@ -61,6 +61,7 @@
   }
 
   .prose {
+    @apply max-w-full!;
     h1,
     h2,
     h3,
@@ -70,6 +71,12 @@
       &:first-child {
         @apply mt-0;
       }
+    }
+    img {
+      @apply mx-auto;
+    }
+    video, iframe {
+      @apply aspect-video;
     }
   }
 }

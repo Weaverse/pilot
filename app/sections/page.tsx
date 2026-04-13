@@ -23,11 +23,13 @@ export default function Page(props: PageProps) {
           <span>{page.title}</span>
         </div>
         <h1 className="h2 mb-8 text-center md:mb-16">{page.title}</h1>
-        <div
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: page.body }}
-          className="prose mx-auto max-w-3xl border-line-subtle border-t"
-        />
+        <div className="mx-auto max-w-3xl">
+          <div
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: page.body }}
+            className="prose border-gray-200 border-t"
+          />
+        </div>
       </Section>
     );
   }
