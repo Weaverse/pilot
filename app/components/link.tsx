@@ -20,7 +20,7 @@ export const variants = cva(["inline-flex rounded-md transition-colors"], {
   variants: {
     variant: {
       primary: [
-        "border-2 px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-primary-text)",
         "bg-(--btn-primary-bg)",
         "border-(--btn-primary-bg)",
@@ -28,7 +28,7 @@ export const variants = cva(["inline-flex rounded-md transition-colors"], {
         "hover:border-(--btn-primary-bg-hover)",
       ],
       secondary: [
-        "border-2 px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-secondary-text)",
         "bg-(--btn-secondary-bg)",
         "border-(--btn-secondary-bg)",
@@ -36,14 +36,14 @@ export const variants = cva(["inline-flex rounded-md transition-colors"], {
         "hover:border-(--btn-secondary-bg-hover)",
       ],
       outline: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-outline-text)",
         "bg-transparent",
         "border-(--btn-outline-text)",
         "hover:bg-(--btn-outline-bg-hover)",
       ],
       custom: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-text)",
         "bg-(--btn-bg)",
         "border-(--btn-border)",
@@ -187,11 +187,7 @@ export function Link(props: LinkProps) {
     );
   }
 
-  return (
-    <RemixLink {...linkProps}>
-      {children || text}
-    </RemixLink>
-  );
+  return <RemixLink {...linkProps}>{children || text}</RemixLink>;
 }
 
 export default Link;
