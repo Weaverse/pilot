@@ -31,8 +31,6 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
   showStickyBar: boolean;
   stickyBarWidth: "full" | "narrow";
   showStickyBarImage: boolean;
-  showBuyNowButton: boolean;
-  buyNowText: string;
 }
 
 export default function ProductATCButtons(props: ProductATCButtonsProps) {
@@ -46,8 +44,6 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     showStickyBar,
     stickyBarWidth,
     showStickyBarImage,
-    showBuyNowButton,
-    buyNowText,
     ...rest
   } = props;
   const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
@@ -125,8 +121,6 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
           addBundleToCartText={addBundleToCartText}
           barWidth={stickyBarWidth}
           showImage={showStickyBarImage}
-          showBuyNowButton={showBuyNowButton}
-          buyNowText={buyNowText}
         />
       )}
     </div>
@@ -219,22 +213,6 @@ export const schema = createSchema({
           name: "showStickyBarImage",
           defaultValue: true,
           condition: (data: ProductATCButtonsProps) => data.showStickyBar,
-        },
-        {
-          type: "switch",
-          label: "Show Buy Now button",
-          name: "showBuyNowButton",
-          defaultValue: false,
-          condition: (data: ProductATCButtonsProps) => data.showStickyBar,
-        },
-        {
-          type: "text",
-          label: "Buy now text",
-          name: "buyNowText",
-          defaultValue: "Buy now",
-          placeholder: "Buy now",
-          condition: (data: ProductATCButtonsProps) =>
-            data.showStickyBar && data.showBuyNowButton,
         },
       ],
     },
