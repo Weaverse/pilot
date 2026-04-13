@@ -4,8 +4,7 @@ import { useLoaderData } from "react-router";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface MainProductProps extends SectionProps {
-}
+interface MainProductProps extends SectionProps {}
 
 export default function MainProduct(props: MainProductProps) {
   const { children, ...rest } = props;

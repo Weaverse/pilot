@@ -10,8 +10,7 @@ interface AliReviewsData {
 
 interface AliReviewsProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
-    AliReviewsData {
-}
+    AliReviewsData {}
 
 function AliReviewSection(props: AliReviewsProps) {
   const { children, loaderData, aliReviewsApiKey, ...rest } = props;

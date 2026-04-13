@@ -8,8 +8,7 @@ import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { ProductVariants } from "./variants";
 
-interface ProductVariantSelectorProps extends HydrogenComponentProps {
-}
+interface ProductVariantSelectorProps extends HydrogenComponentProps {}
 
 export default function ProductVariantSelector(
   props: ProductVariantSelectorProps,

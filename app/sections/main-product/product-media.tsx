@@ -9,8 +9,7 @@ import { cn } from "~/utils/cn";
 
 interface ProductMediaComponentProps
   extends Omit<ProductMediaProps, "selectedVariant" | "media" | "product">,
-    HydrogenComponentProps {
-}
+    HydrogenComponentProps {}
 
 export default function ProductMediaComponent(
   props: ProductMediaComponentProps,
@@ -51,10 +50,7 @@ export default function ProductMediaComponent(
           "[--thumbs-width:7rem] @min-[1600px]/main-product:[--thumbs-width:8rem]",
       )}
     >
-      <div
-        className="sticky"
-        style={{ top: "calc(var(--height-nav) + 20px)" }}
-      >
+      <div className="sticky" style={{ top: "calc(var(--height-nav) + 20px)" }}>
         <ProductMedia
           key={product.handle}
           mediaLayout={mediaLayout}

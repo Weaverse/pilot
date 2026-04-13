@@ -39,8 +39,7 @@ export function CartLineItem({
   const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
   // Workaround: line.isOptimistic is only set for newly added lines (Hydrogen limitation),
   // so fall back to checking whether useOptimisticData has pending data (e.g. quantity change).
-  const isOptimistic =
-    lineOptimistic ?? Object.keys(optimisticData).length > 0;
+  const isOptimistic = lineOptimistic ?? Object.keys(optimisticData).length > 0;
 
   if (typeof quantity === "undefined" || !merchandise?.product) {
     return null;

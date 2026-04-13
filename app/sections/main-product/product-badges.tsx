@@ -8,8 +8,7 @@ import { useLoaderData } from "react-router";
 import { ProductBadges } from "~/components/product/badges";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductBadgesComponentProps extends HydrogenComponentProps {
-}
+interface ProductBadgesComponentProps extends HydrogenComponentProps {}
 
 export default function ProductBadgesComponent(
   props: ProductBadgesComponentProps,

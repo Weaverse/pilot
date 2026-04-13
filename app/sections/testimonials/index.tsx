@@ -2,8 +2,7 @@ import { createSchema } from "@weaverse/hydrogen";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-interface TestimonialsProps extends SectionProps {
-}
+interface TestimonialsProps extends SectionProps {}
 
 function Testimonials(props: TestimonialsProps) {
   const { children, ...rest } = props;

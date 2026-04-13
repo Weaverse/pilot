@@ -14,8 +14,7 @@ type OurTeamData = {
 
 interface OurTeamProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
-    OurTeamData {
-}
+    OurTeamData {}
 
 function OurTeam(props: OurTeamProps) {
   const { loaderData, metaobject, membersCount, children, ...rest } = props;

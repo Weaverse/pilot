@@ -34,8 +34,7 @@ export interface SingleProductData {
 
 interface SingleProductProps
   extends HydrogenComponentProps<SingleProductLoaderData>,
-    SingleProductData {
-}
+    SingleProductData {}
 
 export default function SingleProduct(props: SingleProductProps) {
   let {
@@ -141,7 +140,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 },
               ]}
               variant="primary"
-              className="-mt-2 w-full"
+              className="-mt-2"
               data-test="add-to-cart"
             >
               {atcText}

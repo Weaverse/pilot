@@ -2,8 +2,7 @@ import { createSchema } from "@weaverse/hydrogen";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-interface ColumnsWithImagesProps extends SectionProps {
-}
+interface ColumnsWithImagesProps extends SectionProps {}
 
 function ColumnsWithImages(props: ColumnsWithImagesProps) {
   const { children, ...rest } = props;

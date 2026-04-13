@@ -2,8 +2,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductSummaryProps extends HydrogenComponentProps {
-}
+interface ProductSummaryProps extends HydrogenComponentProps {}
 
 export default function ProductSummary(props: ProductSummaryProps) {
   const { ...rest } = props;

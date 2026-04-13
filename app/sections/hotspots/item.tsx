@@ -29,8 +29,7 @@ export interface HotspotsItemData {
 
 interface HotspotsItemProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>>,
-    HotspotsItemData {
-}
+    HotspotsItemData {}
 
 const ICONS = {
   circle: CircleIcon,
