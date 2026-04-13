@@ -27,6 +27,7 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
   addBundleToCartText: string;
   soldOutText: string;
   showShopPayButton: boolean;
+  textCasing: "none" | "uppercase" | "lowercase" | "capitalize";
   showStickyBar: boolean;
   stickyBarWidth: "full" | "narrow";
   showStickyBarImage: boolean;
@@ -41,6 +42,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     addBundleToCartText,
     soldOutText,
     showShopPayButton,
+    textCasing,
     showStickyBar,
     stickyBarWidth,
     showStickyBarImage,
@@ -101,6 +103,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
         ]}
         data-test="add-to-cart"
         className="w-full"
+        style={{ textTransform: textCasing }}
       >
         {atcButtonText}
       </AddToCartButton>
@@ -169,6 +172,20 @@ export const schema = createSchema({
           label: "Show Shop Pay button",
           name: "showShopPayButton",
           defaultValue: true,
+        },
+        {
+          type: "select",
+          label: "Text casing",
+          name: "textCasing",
+          defaultValue: "none",
+          configs: {
+            options: [
+              { value: "none", label: "None" },
+              { value: "uppercase", label: "UPPERCASE" },
+              { value: "lowercase", label: "lowercase" },
+              { value: "capitalize", label: "Capitalize" },
+            ],
+          },
         },
       ],
     },
