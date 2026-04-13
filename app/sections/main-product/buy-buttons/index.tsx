@@ -7,23 +7,11 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
-import { create } from "zustand";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import { StickyATCBar } from "~/components/product/sticky-atc-bar";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { useProductQtyStore } from "./product-quantity-selector";
-
-export const useATCVisibilityStore = create<{
-  inView: boolean;
-  setInView: (value: boolean) => void;
-  scrolledPast: boolean;
-  setScrolledPast: (value: boolean) => void;
-}>()((set) => ({
-  inView: true,
-  setInView: (value: boolean) => set({ inView: value }),
-  scrolledPast: false,
-  setScrolledPast: (value: boolean) => set({ scrolledPast: value }),
-}));
+import { useProductQtyStore } from "../product-quantity-selector";
+import { StickyATCBar } from "./sticky-atc-bar";
+import { useATCVisibilityStore } from "./store";
 
 interface ProductATCButtonsProps extends HydrogenComponentProps {
   ref: React.Ref<HTMLDivElement>;

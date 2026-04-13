@@ -10,9 +10,10 @@ import { Image } from "~/components/image";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { useATCVisibilityStore } from "~/sections/main-product/product-buy-buttons";
-import { useProductQtyStore } from "~/sections/main-product/product-quantity-selector";
 import { cn } from "~/utils/cn";
+import { hasOnlyDefaultVariant } from "~/utils/product";
+import { useProductQtyStore } from "../product-quantity-selector";
+import { useATCVisibilityStore } from "./store";
 
 interface StickyATCBarProps {
   addToCartText?: string;
@@ -66,11 +67,7 @@ export function StickyATCBar({
   let show =
     !inView && (!isMobile || scrolledPast) && selectedVariant.availableForSale;
 
-  let hasMultipleVariants =
-    allVariants.length > 1 ||
-    (product.options && product.options.length > 1) ||
-    (product.options?.length === 1 &&
-      (product.options[0]?.optionValues?.length ?? 0) > 1);
+  let hasMultipleVariants = !hasOnlyDefaultVariant(product.options);
 
   let selectedLabel = selectedVariant.selectedOptions
     .map((o) => o.value)

@@ -44,7 +44,7 @@ import * as ProductAvailability from "~/sections/main-product/product-availabili
 import * as ProductBadges from "~/sections/main-product/product-badges";
 import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
 import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
-import * as ProductBuyButtons from "~/sections/main-product/product-buy-buttons";
+import * as ProductBuyButtons from "~/sections/main-product/buy-buttons";
 import * as ProductCollapsibleDetails from "~/sections/main-product/product-collapsible-details";
 import * as ProductEstimatedDelivery from "~/sections/main-product/product-estimated-delivery";
 import * as ProductHighlightItem from "~/sections/main-product/product-highlight-item";
