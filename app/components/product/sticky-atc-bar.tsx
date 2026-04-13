@@ -103,17 +103,19 @@ export function StickyATCBar({
                 />
               )}
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <p className="truncate font-medium">{product.title}</p>
-                  <span className="shrink-0 text-body-subtle">·</span>
+                <p className="truncate font-medium">{product.title}</p>
+                <div className="flex items-center gap-1.5">
                   <VariantPrices
                     variant={selectedVariant}
-                    className="shrink-0"
+                    className="text-base"
                   />
+                  {hasMultipleVariants && (
+                    <>
+                      <span className="text-body-subtle">·</span>
+                      <span className="text-body-subtle">{selectedLabel}</span>
+                    </>
+                  )}
                 </div>
-                {hasMultipleVariants && (
-                  <p className="text-sm text-body-subtle">{selectedLabel}</p>
-                )}
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-3">
