@@ -109,7 +109,7 @@ export function StickyATCBar({
             className={cn(
               "cursor-pointer w-full",
               "bg-background border-t sm:border border-gray-200 shadow-[0_-6px_20px_rgba(0,0,0,0.15)]",
-              "md:flex items-center justify-between gap-30 px-4 py-2.5 space-y-2 sm:space-y-0",
+              "md:flex items-center justify-between gap-30 p-3 space-y-2 sm:space-y-0",
               barWidth === "narrow" ? "sm:w-fit sm:rounded-md" : "",
             )}
           >
@@ -119,7 +119,7 @@ export function StickyATCBar({
                   data={variantImage}
                   width={200}
                   height={200}
-                  className="hidden shrink-0 rounded-md object-cover sm:block size-16"
+                  className="hidden shrink-0 rounded-md object-cover sm:block size-15"
                   sizes="auto"
                 />
               )}
