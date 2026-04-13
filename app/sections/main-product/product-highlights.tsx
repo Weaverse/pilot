@@ -49,7 +49,7 @@ let layoutGroup: InspectorGroup = {
 export let schema = createSchema({
   type: "mp--highlights",
   title: "Product highlights",
-  inspector: [layoutGroup],
+  settings: [layoutGroup],
   childTypes: ["mp--highlight-item"],
   enabledOn: {
     pages: ["PRODUCT"],

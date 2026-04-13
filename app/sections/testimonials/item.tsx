@@ -36,7 +36,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
     >
       <figure className="rounded-md bg-gray-50 p-6">
         <blockquote>
-          <div className="text-xl md:text-2xl">{heading}</div>
+          <div className="text-xl md:text-2xl md:leading-[1.3]">{heading}</div>
           <p
             className="my-4 text-gray-500"
             suppressHydrationWarning
