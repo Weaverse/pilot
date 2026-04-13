@@ -40,11 +40,11 @@ import * as ProductGrid from "~/sections/main-collection/product-grid";
 import * as CollectionToolbar from "~/sections/main-collection/toolbar";
 import * as MainProduct from "~/sections/main-product";
 import * as JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
-import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
 import * as ProductAvailability from "~/sections/main-product/product-availability";
 import * as ProductBadges from "~/sections/main-product/product-badges";
 import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
 import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
+import * as ProductBuyButtons from "~/sections/main-product/product-buy-buttons";
 import * as ProductCollapsibleDetails from "~/sections/main-product/product-collapsible-details";
 import * as ProductEstimatedDelivery from "~/sections/main-product/product-estimated-delivery";
 import * as ProductHighlightItem from "~/sections/main-product/product-highlight-item";
@@ -138,7 +138,7 @@ export const components: HydrogenComponent[] = [
   ProductBundledVariants,
   ProductVariantSelector,
   ProductQuantitySelector,
-  ProductATCButtons,
+  ProductBuyButtons,
   ProductCollapsibleDetails,
   ProductEstimatedDelivery,
   ProductHighlights,

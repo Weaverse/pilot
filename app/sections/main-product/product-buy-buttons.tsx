@@ -100,7 +100,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
           },
         ]}
         data-test="add-to-cart"
-        className="w-full uppercase"
+        className="w-full"
       >
         {atcButtonText}
       </AddToCartButton>
