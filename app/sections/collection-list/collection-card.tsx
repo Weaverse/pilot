@@ -1,6 +1,6 @@
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
 import { clsx } from "clsx";
-import type { CSSProperties } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
@@ -24,6 +24,15 @@ export function CollectionCard({
   overlayColorHover,
   overlayOpacity,
 }: CollectionCardProps) {
+  let [productCount, setProductCount] = useState<string | number | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/collection/${collection.handle}/product-count`)
+      .then((res) => res.json())
+      .then((data: { count: number | string }) => setProductCount(data.count))
+      .catch(() => setProductCount(null));
+  }, [collection.handle]);
+
   if (collection.products.nodes.length === 0) {
     return null;
   }
@@ -69,9 +78,19 @@ export function CollectionCard({
             )}
           />
         ) : null}
-        <h5 style={{ color: collectionNameColor }} className="z-1 text-center">
-          {collection.title}
-        </h5>
+        <div className="z-1 flex flex-col items-center gap-1">
+          <h5 style={{ color: collectionNameColor }} className="text-center">
+            {collection.title}
+          </h5>
+          {productCount !== null && (
+            <span
+              style={{ color: collectionNameColor }}
+              className="text-center text-sm opacity-80"
+            >
+              {productCount} {typeof productCount === "number" && productCount === 1 ? "product" : "products"}
+            </span>
+          )}
+        </div>
         <Overlay
           enableOverlay={enableOverlay}
           overlayColor={overlayColor}
