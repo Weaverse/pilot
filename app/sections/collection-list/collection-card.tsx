@@ -10,6 +10,7 @@ import { calculateAspectRatio } from "~/utils/image";
 interface CollectionCardProps extends OverlayProps {
   collection: Collection;
   imageAspectRatio: ImageAspectRatio;
+  contentPosition: "over" | "below";
   collectionNameColor: string;
   showProductCount: boolean;
   loading?: HTMLImageElement["loading"];
@@ -18,6 +19,7 @@ interface CollectionCardProps extends OverlayProps {
 export function CollectionCard({
   collection,
   imageAspectRatio,
+  contentPosition,
   collectionNameColor,
   showProductCount,
   loading,
@@ -55,6 +57,38 @@ export function CollectionCard({
       }
     }
   }
+  let contentOver = contentPosition === "over";
+
+  let content = (
+    <div
+      className={clsx(
+        "flex flex-col gap-1",
+        contentOver ? "z-1 items-center" : "items-start",
+      )}
+    >
+      <h6
+        style={contentOver ? { color: collectionNameColor } : undefined}
+        className="text-center"
+      >
+        {collection.title}
+      </h6>
+      {showProductCount && productCount !== null && (
+        <span
+          style={contentOver ? { color: collectionNameColor } : undefined}
+          className={clsx(
+            "text-sm",
+            contentOver ? "text-center opacity-80" : "text-body-subtle",
+          )}
+        >
+          {productCount}{" "}
+          {typeof productCount === "number" && productCount === 1
+            ? "product"
+            : "products"}
+        </span>
+      )}
+    </div>
+  );
+
   return (
     <Link
       to={`/collections/${collection.handle}`}
@@ -83,22 +117,7 @@ export function CollectionCard({
             )}
           />
         ) : null}
-        <div className="z-1 flex flex-col items-center gap-1">
-          <h5 style={{ color: collectionNameColor }} className="text-center">
-            {collection.title}
-          </h5>
-          {showProductCount && productCount !== null && (
-            <span
-              style={{ color: collectionNameColor }}
-              className="text-center text-sm opacity-80"
-            >
-              {productCount}{" "}
-              {typeof productCount === "number" && productCount === 1
-                ? "product"
-                : "products"}
-            </span>
-          )}
-        </div>
+        {contentOver && content}
         <Overlay
           enableOverlay={enableOverlay}
           overlayColor={overlayColor}
@@ -107,6 +126,7 @@ export function CollectionCard({
           className="z-0"
         />
       </div>
+      {!contentOver && content}
     </Link>
   );
 }

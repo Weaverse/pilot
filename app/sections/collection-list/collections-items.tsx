@@ -14,6 +14,7 @@ interface CollectionsItemsProps extends OverlayProps {
   prevButtonText: string;
   nextButtonText: string;
   imageAspectRatio: ImageAspectRatio;
+  contentPosition: "over" | "below";
   collectionNameColor: string;
   showProductCount: boolean;
 }
@@ -24,6 +25,7 @@ function CollectionsItems(props: CollectionsItemsProps) {
     prevButtonText,
     nextButtonText,
     imageAspectRatio,
+    contentPosition,
     collectionNameColor,
     showProductCount,
     enableOverlay,
@@ -57,6 +59,7 @@ function CollectionsItems(props: CollectionsItemsProps) {
                   key={collection.id}
                   collection={collection as Collection}
                   imageAspectRatio={imageAspectRatio}
+                  contentPosition={contentPosition}
                   collectionNameColor={collectionNameColor}
                   showProductCount={showProductCount}
                   loading={getImageLoadingPriority(i, 2)}
@@ -110,10 +113,22 @@ export const schema = createSchema({
       group: "Collection card",
       inputs: [
         {
+          type: "select",
+          name: "contentPosition",
+          label: "Content position",
+          defaultValue: "below",
+          configs: {
+            options: [
+              { value: "over", label: "On top of image" },
+              { value: "below", label: "Below image" },
+            ],
+          },
+        },
+        {
           type: "switch",
           name: "showProductCount",
           label: "Show product count",
-          defaultValue: false,
+          defaultValue: true,
         },
         {
           type: "select",
