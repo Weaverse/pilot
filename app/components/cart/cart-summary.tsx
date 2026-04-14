@@ -65,7 +65,7 @@ export function CartSummary({
       className={clsx(
         layout === "drawer" && "border-gray-300 border-t pt-4",
         layout === "page" &&
-          "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
+          "sticky top-[calc(var(--height-nav)+20px)] w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
