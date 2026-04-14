@@ -35,6 +35,7 @@ export function StickyATCBar({
   const { quantity } = useProductQtyStore();
   const { inView, scrolledPast } = useATCVisibilityStore();
   const [isMobile, setIsMobile] = useState(false);
+  const [footerInView, setFooterInView] = useState(false);
 
   // Track screen size
   useEffect(() => {
@@ -50,6 +51,22 @@ export function StickyATCBar({
     };
   }, []);
 
+  // Hide sticky bar when footer is visible
+  useEffect(() => {
+    let footer = document.querySelector("footer");
+    if (!footer) {
+      return;
+    }
+
+    let observer = new IntersectionObserver(
+      ([entry]) => setFooterInView(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(footer);
+
+    return () => observer.disconnect();
+  }, []);
+
   const allVariants = getAdjacentAndFirstAvailableVariants(product);
   const selectedVariant = useOptimisticVariant(
     product?.selectedOrFirstAvailableVariant,
@@ -63,9 +80,11 @@ export function StickyATCBar({
   const isBundle = Boolean(product.isBundle?.requiresComponents);
   const variantImage =
     selectedVariant.image || product.media?.nodes?.[0]?.previewImage;
-  // Show sticky bar when: main ATC is out of view AND (on desktop OR scrolled past ATC on mobile)
   let show =
-    !inView && (!isMobile || scrolledPast) && selectedVariant.availableForSale;
+    !inView &&
+    !footerInView &&
+    (!isMobile || scrolledPast) &&
+    selectedVariant.availableForSale;
 
   let hasMultipleVariants = !hasOnlyDefaultVariant(product.options);
 
