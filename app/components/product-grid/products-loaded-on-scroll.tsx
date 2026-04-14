@@ -28,9 +28,12 @@ export function ProductsLoadedOnScroll({
 
   useEffect(() => {
     let el = document.querySelector("[data-products-count]");
-    if (el) {
-      el.textContent = `(${nodes.length} products)`;
+    if (el instanceof HTMLElement) {
+      el.dataset.loaded = String(nodes.length);
     }
+    window.dispatchEvent(
+      new CustomEvent("products-loaded-count", { detail: nodes.length }),
+    );
   }, [nodes.length]);
 
   useEffect(() => {
