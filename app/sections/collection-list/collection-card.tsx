@@ -11,6 +11,7 @@ interface CollectionCardProps extends OverlayProps {
   collection: Collection;
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
+  showProductCount: boolean;
   loading?: HTMLImageElement["loading"];
 }
 
@@ -18,6 +19,7 @@ export function CollectionCard({
   collection,
   imageAspectRatio,
   collectionNameColor,
+  showProductCount,
   loading,
   enableOverlay,
   overlayColor,
@@ -27,11 +29,14 @@ export function CollectionCard({
   let [productCount, setProductCount] = useState<string | number | null>(null);
 
   useEffect(() => {
+    if (!showProductCount) {
+      return;
+    }
     fetch(`/api/collection/${collection.handle}/product-count`)
       .then((res) => res.json())
       .then((data: { count: number | string }) => setProductCount(data.count))
       .catch(() => setProductCount(null));
-  }, [collection.handle]);
+  }, [collection.handle, showProductCount]);
 
   if (collection.products.nodes.length === 0) {
     return null;
@@ -82,12 +87,15 @@ export function CollectionCard({
           <h5 style={{ color: collectionNameColor }} className="text-center">
             {collection.title}
           </h5>
-          {productCount !== null && (
+          {showProductCount && productCount !== null && (
             <span
               style={{ color: collectionNameColor }}
               className="text-center text-sm opacity-80"
             >
-              {productCount} {typeof productCount === "number" && productCount === 1 ? "product" : "products"}
+              {productCount}{" "}
+              {typeof productCount === "number" && productCount === 1
+                ? "product"
+                : "products"}
             </span>
           )}
         </div>
