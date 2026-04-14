@@ -31,6 +31,10 @@ export default hydrogenRoutes([
       route("products", "routes/api/products.ts"),
       route(":version/graphql.json", "routes/api/graphql.json.ts"),
       route("product/:productHandle", "routes/api/product.ts"),
+      route(
+        "collection/:handle/product-count",
+        "routes/api/collection-product-count.ts",
+      ),
       route("product/:productHandle/reviews", "routes/api/reviews.ts"),
     ]),
     ...prefix("blogs", [
