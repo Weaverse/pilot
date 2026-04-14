@@ -14,7 +14,7 @@ import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
-import { useCartDrawerStore } from "./store";
+import { useCartStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
@@ -29,7 +29,7 @@ export function CartLineItem({
   line: CartLine;
   layout: CartLayoutType;
 }) {
-  const { close: closeCartDrawer } = useCartDrawerStore();
+  const { close: closeCartDrawer } = useCartStore();
   const optimisticData = useOptimisticData<CartLineOptimisticData>(line?.id);
 
   if (!line?.id) {

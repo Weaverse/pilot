@@ -13,7 +13,7 @@ import { useEffect, useRef } from "react";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
-import { useCartDrawerStore } from "~/components/cart/store";
+import { useCartStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
@@ -71,7 +71,7 @@ function AddToCartButtonContent({
   analytics?: unknown;
   [key: string]: any;
 }) {
-  const { open: openCartDrawer } = useCartDrawerStore();
+  const { open: openCartDrawer } = useCartStore();
   const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
   const isLoading = fetcher.state !== "idle";
 

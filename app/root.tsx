@@ -23,6 +23,7 @@ import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
 import { CustomAnalytics } from "./components/root/custom-analytics";
+import { CartStoreSync } from "./components/cart/store";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
 import {
@@ -149,6 +150,7 @@ export const Layout = withWeaverse(function RootLayout({
             shop={data.shop}
             consent={data.consent}
           >
+            <CartStoreSync />
             <TooltipProvider disableHoverableContent>
               <div
                 className="flex min-h-screen flex-col"

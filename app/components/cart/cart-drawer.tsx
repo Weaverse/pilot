@@ -1,67 +1,27 @@
 import { ArrowRightIcon, HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useAnalytics, useOptimisticCart } from "@shopify/hydrogen";
+import { useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { Suspense, useEffect } from "react";
-import { Await, useLocation, useRouteLoaderData } from "react-router";
-import type { CartApiQueryFragment } from "storefront-api.generated";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
-import type { RootLoader } from "~/root";
-import { useCartDrawerStore } from "./store";
+import { useCart, useCartStore } from "./store";
 
 export function CartDrawer() {
-  const rootData = useRouteLoaderData<RootLoader>("root");
+  const { publish } = useAnalytics();
+  const cart = useCart();
   const {
     isOpen,
     close: closeCartDrawer,
     toggle: toggleCartDrawer,
-  } = useCartDrawerStore();
+  } = useCartStore();
   const location = useLocation();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
   useEffect(() => {
     closeCartDrawer();
   }, [location.pathname, closeCartDrawer]);
-
-  return (
-    <Suspense
-      fallback={
-        <Link
-          to="/cart"
-          className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
-        >
-          <HandbagIcon className="h-5 w-5" />
-        </Link>
-      }
-    >
-      <Await resolve={rootData?.cart}>
-        {(cart) => (
-          <CartDrawerContent
-            cart={cart}
-            isOpen={isOpen}
-            toggleCartDrawer={toggleCartDrawer}
-            closeCartDrawer={closeCartDrawer}
-          />
-        )}
-      </Await>
-    </Suspense>
-  );
-}
-
-function CartDrawerContent({
-  cart: originalCart,
-  isOpen,
-  toggleCartDrawer,
-  closeCartDrawer,
-}: {
-  cart: CartApiQueryFragment | null;
-  isOpen: boolean;
-  toggleCartDrawer: () => void;
-  closeCartDrawer: () => void;
-}) {
-  const { publish } = useAnalytics();
-  const cart = useOptimisticCart(originalCart);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>

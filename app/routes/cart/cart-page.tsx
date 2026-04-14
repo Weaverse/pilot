@@ -2,7 +2,6 @@ import {
   Analytics,
   CartForm,
   type CartQueryDataReturn,
-  useOptimisticCart,
 } from "@shopify/hydrogen";
 import type {
   CartBuyerIdentityInput,
@@ -20,6 +19,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
+import { useCart } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
@@ -67,7 +67,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
       break;
     }
     case CartForm.ACTIONS.GiftCardCodesUpdate: {
-      // Just keep this for backward compatibility, same as add gift card codes
       const giftCardCodes = (inputs.giftCardCodes as string[]) || [];
       result = await cart.addGiftCardCodes(giftCardCodes);
       break;
@@ -83,8 +82,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
       });
       break;
     default:
-      console.error("Unknown cart action:", cartFormAction);
-      console.error("Available actions:", Object.keys(CartForm.ACTIONS));
       invariant(false, `${cartFormAction} cart action is not defined`);
   }
 
@@ -113,9 +110,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function CartRoute() {
-  const { cart: originalCart, featuredProducts } =
-    useLoaderData<typeof loader>();
-  const cart = useOptimisticCart(originalCart);
+  const { featuredProducts } = useLoaderData<typeof loader>();
+  const cart = useCart();
 
   return (
     <>
