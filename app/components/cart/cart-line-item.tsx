@@ -76,20 +76,14 @@ export function CartLineItem({
       </div>
       <div className="flex grow flex-col gap-3">
         <div className="flex justify-between gap-4">
-          <div>
-            <div>
-              {product?.handle ? (
-                <Link
-                  to={url}
-                  className="inline-block"
-                  onClick={closeCartDrawer}
-                >
-                  <RevealUnderline>{product?.title || ""}</RevealUnderline>
-                </Link>
-              ) : (
-                <p>{product?.title || ""}</p>
-              )}
-            </div>
+          <div className="flex flex-col gap-1">
+            {product?.handle ? (
+              <Link to={url} className="inline-block" onClick={closeCartDrawer}>
+                <RevealUnderline>{product?.title || ""}</RevealUnderline>
+              </Link>
+            ) : (
+              <p>{product?.title || ""}</p>
+            )}
             {!isDefaultVariant && (
               <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
             )}
