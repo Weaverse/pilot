@@ -110,7 +110,7 @@ export function StickyATCBar({
           className={cn(
             "fixed bottom-0 left-0 right-0 z-9",
             "flex justify-center",
-            "transition-transform duration-300 ease-in-out",
+            "transition-transform duration-500 ease-in-out",
             "data-[state=open]:translate-y-0 data-[state=closed]:translate-y-[200%]",
             "data-[state=closed]:pointer-events-none",
             barWidth === "narrow" ? "sm:pb-3 sm:px-3" : "",
