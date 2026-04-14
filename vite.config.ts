@@ -30,6 +30,7 @@ export default defineConfig(({ isSsrBuild }) => ({
     }),
   },
   server: {
+    hmr: process.env.HMR !== "false",
     warmup: {
       clientFiles: [
         "./app/routes/**/*",
