@@ -133,7 +133,7 @@ export default function CartRoute() {
               return null;
             }
             return (
-              <Section width="fixed" verticalPadding="large" gap={32}>
+              <Section width="stretch" verticalPadding="large" gap={32}>
                 <h2 className="h4 text-center">More from our best sellers</h2>
                 <Swimlane className="gap-4">
                   {products.nodes.map((product) => (
