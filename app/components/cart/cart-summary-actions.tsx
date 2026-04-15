@@ -7,11 +7,13 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
+import { useCartFetcherSync } from "./store";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);
   const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
+  useCartFetcherSync(fetcher);
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
@@ -112,6 +114,7 @@ export function DiscountDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
+  useCartFetcherSync(fetcher);
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted && discountCodes?.find((d) => d.code === code && d.applicable),
@@ -217,6 +220,7 @@ export function GiftCardDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
+  useCartFetcherSync(fetcher);
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted &&

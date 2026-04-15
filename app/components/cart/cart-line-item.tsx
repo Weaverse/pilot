@@ -6,6 +6,7 @@ import {
   useOptimisticData,
 } from "@shopify/hydrogen";
 import clsx from "clsx";
+import type { FetcherWithComponents } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
@@ -14,7 +15,7 @@ import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
-import { useCartStore } from "./store";
+import { useCartFetcherSync, useCartStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
@@ -40,7 +41,7 @@ export function CartLineItem({
   // Workaround: line.isOptimistic is only set for newly added lines (Hydrogen limitation),
   // so fall back to checking whether useOptimisticData has pending data (e.g. quantity change).
   const isOptimistic =
-    lineOptimistic ?? Object.keys(optimisticData).length > 0;
+    lineOptimistic ?? Object.keys(optimisticData ?? {}).length > 0;
 
   if (typeof quantity === "undefined" || !merchandise?.product) {
     return null;
@@ -127,17 +128,32 @@ function ItemRemoveButton({
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{ lineIds: [lineId] }}
     >
-      <button
-        className={clsx(
-          "flex h-8 w-8 items-center justify-center border-none",
-          className,
-        )}
-        type="submit"
-      >
-        <span className="sr-only">Remove</span>
-        <TrashIcon aria-hidden="true" className="size-4.5" />
-      </button>
+      {(fetcher: FetcherWithComponents<any>) => (
+        <ItemRemoveButtonInner fetcher={fetcher} className={className} />
+      )}
     </CartForm>
+  );
+}
+
+function ItemRemoveButtonInner({
+  fetcher,
+  className,
+}: {
+  fetcher: FetcherWithComponents<any>;
+  className?: string;
+}) {
+  useCartFetcherSync(fetcher);
+  return (
+    <button
+      className={clsx(
+        "flex h-8 w-8 items-center justify-center border-none",
+        className,
+      )}
+      type="submit"
+    >
+      <span className="sr-only">Remove</span>
+      <TrashIcon aria-hidden="true" className="size-4.5" />
+    </button>
   );
 }
 

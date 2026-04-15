@@ -22,6 +22,7 @@ import {
   GiftCardDialog,
   NoteDialog,
 } from "./cart-summary-actions";
+import { useCartFetcherSync } from "./store";
 
 export function CartSummary({
   cart,
@@ -45,6 +46,8 @@ export function CartSummary({
   const [removingGiftCard, setRemovingGiftCard] = useState<string | null>(null);
   const dcRemoveFetcher = useFetcher({ key: "discount-code-remove" });
   const gcRemoveFetcher = useFetcher({ key: "gift-card-remove" });
+  useCartFetcherSync(dcRemoveFetcher);
+  useCartFetcherSync(gcRemoveFetcher);
   const {
     cost,
     discountCodes,

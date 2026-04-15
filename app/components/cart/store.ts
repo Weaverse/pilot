@@ -1,5 +1,6 @@
 import { CartForm } from "@shopify/hydrogen";
 import { useEffect, useRef } from "react";
+import type { Fetcher } from "react-router";
 import { useFetchers, useRouteLoaderData } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import type { RootLoader } from "~/root";
@@ -28,20 +29,36 @@ type OptimisticLineNode = CartApiQueryFragment["lines"]["nodes"][number] & {
 
 type CartWithOptimistic = CartApiQueryFragment & { isOptimistic?: boolean };
 
-function findFreshestFetcherCart(
-  fetchers: ReturnType<typeof useFetchers>,
-): CartApiQueryFragment | null {
-  let freshest: CartApiQueryFragment | null = null;
-  for (const fetcher of fetchers) {
-    if (
-      fetcher.state === "idle" &&
-      fetcher.data?.cart?.id &&
-      fetcher.data?.cart?.lines
-    ) {
-      freshest = fetcher.data.cart as CartApiQueryFragment;
+/**
+ * Syncs cart data from a singular fetcher instance into zustand.
+ *
+ * WHY: `useFetchers()` (plural) reads from `state.fetchers` map which
+ * React Router deletes idle fetchers from on the same synchronous tick
+ * as completion. The singular `useFetcher()` preserves data via a
+ * `fetcherData` ref that survives cleanup. By syncing from individual
+ * fetcher instances, we reliably capture post-mutation cart state.
+ */
+export function useCartFetcherSync(fetcher: Fetcher<any>) {
+  const lastSyncedRef = useRef<string | null>(null);
+  useEffect(() => {
+    const cart = fetcher.data?.cart;
+    if (fetcher.state === "idle" && cart?.id && cart?.lines) {
+      // Deduplicate: only sync if updatedAt changed
+      const updatedAt = cart.updatedAt;
+      if (updatedAt !== lastSyncedRef.current) {
+        lastSyncedRef.current = updatedAt;
+        const fetcherCart = cart as CartApiQueryFragment;
+        const current = useCartStore.getState().serverCart;
+        const fetcherTime = new Date(fetcherCart.updatedAt).getTime();
+        const currentTime = current?.updatedAt
+          ? new Date(current.updatedAt).getTime()
+          : 0;
+        if (fetcherTime >= currentTime) {
+          useCartStore.setState({ serverCart: fetcherCart });
+        }
+      }
     }
-  }
-  return freshest;
+  }, [fetcher.state, fetcher.data]);
 }
 
 function applyOptimisticMutations(
@@ -53,7 +70,13 @@ function applyOptimisticMutations(
   );
   if (pendingFetchers.length === 0) return null;
 
-  const cart = structuredClone(baseline) as CartWithOptimistic & {
+  const nodes = [...baseline.lines.nodes] as OptimisticLineNode[];
+  const cart = {
+    ...baseline,
+    lines: { ...baseline.lines, nodes },
+    totalQuantity: baseline.totalQuantity,
+    isOptimistic: false,
+  } as CartWithOptimistic & {
     lines: { nodes: OptimisticLineNode[] };
     totalQuantity: number;
   };
@@ -66,13 +89,15 @@ function applyOptimisticMutations(
     if (action === CartForm.ACTIONS.LinesAdd) {
       for (const line of inputs?.lines ?? []) {
         if (!line.selectedVariant) continue;
-        const existing = nodes.find(
+        const existingIdx = nodes.findIndex(
           (n) => n.merchandise?.id === line.selectedVariant?.id,
         );
         mutated = true;
-        if (existing) {
-          existing.quantity = (existing.quantity || 1) + (line.quantity || 1);
-          (existing as OptimisticLineNode).isOptimistic = true;
+        if (existingIdx !== -1) {
+          const cloned = { ...nodes[existingIdx] } as OptimisticLineNode;
+          cloned.quantity = (cloned.quantity || 1) + (line.quantity || 1);
+          cloned.isOptimistic = true;
+          nodes[existingIdx] = cloned;
         } else {
           nodes.unshift({
             id: `optimistic-${crypto.randomUUID()}`,
@@ -92,11 +117,15 @@ function applyOptimisticMutations(
       }
     } else if (action === CartForm.ACTIONS.LinesUpdate) {
       for (const update of inputs?.lines ?? []) {
-        const node = nodes.find((n) => n.id === update.id);
-        if (node) {
-          node.quantity = update.quantity;
-          if (node.quantity === 0) {
-            nodes.splice(nodes.indexOf(node), 1);
+        const idx = nodes.findIndex((n) => n.id === update.id);
+        if (idx !== -1) {
+          const cloned = { ...nodes[idx] } as OptimisticLineNode;
+          cloned.quantity = update.quantity;
+          cloned.isOptimistic = true;
+          if (cloned.quantity === 0) {
+            nodes.splice(idx, 1);
+          } else {
+            nodes[idx] = cloned;
           }
           mutated = true;
         }
@@ -117,22 +146,11 @@ function applyOptimisticMutations(
 export function useCart(): CartWithOptimistic | null {
   const serverCart = useCartStore((s) => s.serverCart);
   const fetchers = useFetchers();
-  const fetcherCart = findFreshestFetcherCart(fetchers);
 
-  // Sync completed fetcher cart data to zustand store via effect
-  // so the next render has a fresh baseline after the fetcher is cleaned up.
-  const fetcherCartRef = useRef<CartApiQueryFragment | null>(null);
-  useEffect(() => {
-    if (fetcherCart && fetcherCart !== fetcherCartRef.current) {
-      fetcherCartRef.current = fetcherCart;
-      useCartStore.setState({ serverCart: fetcherCart });
-    }
-  }, [fetcherCart]);
+  if (!serverCart) return null;
 
-  const baseline = fetcherCart ?? serverCart;
-  if (!baseline) return null;
-
-  return applyOptimisticMutations(baseline, fetchers) ?? baseline;
+  const result = applyOptimisticMutations(serverCart, fetchers) ?? serverCart;
+  return result;
 }
 
 /**
@@ -148,20 +166,24 @@ export function CartStoreSync() {
   useEffect(() => {
     if (cartPromise && cartPromise !== promiseRef.current) {
       promiseRef.current = cartPromise;
-      Promise.resolve(cartPromise).then((resolved) => {
-        if (!resolved) {
-          useCartStore.setState({ serverCart: null });
-          return;
-        }
-        const current = useCartStore.getState().serverCart;
-        const resolvedTime = new Date(resolved.updatedAt).getTime();
-        const currentTime = current?.updatedAt
-          ? new Date(current.updatedAt).getTime()
-          : 0;
-        if (resolvedTime >= currentTime) {
-          useCartStore.setState({ serverCart: resolved });
-        }
-      });
+      Promise.resolve(cartPromise)
+        .then((resolved) => {
+          if (!resolved) {
+            useCartStore.setState({ serverCart: null });
+            return;
+          }
+          const current = useCartStore.getState().serverCart;
+          const resolvedTime = new Date(resolved.updatedAt).getTime();
+          const currentTime = current?.updatedAt
+            ? new Date(current.updatedAt).getTime()
+            : 0;
+          if (resolvedTime >= currentTime) {
+            useCartStore.setState({ serverCart: resolved });
+          }
+        })
+        .catch(() => {
+          // Cart fetch failed — leave current state as-is
+        });
     }
   }, [cartPromise]);
 
