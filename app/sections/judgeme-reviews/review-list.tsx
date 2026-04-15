@@ -127,13 +127,11 @@ export function ReviewsPagination() {
 interface ReviewListProps
   extends HydrogenComponentProps,
     Omit<ReviewItemProps, "review"> {
-  ref: React.Ref<HTMLDivElement>;
   reviewsPerPage?: number;
 }
 
 export default function ReviewList(props: ReviewListProps) {
   const {
-    ref,
     showReviewerName = true,
     showReviewerEmail = true,
     reviewerEmailFormat = "partial",

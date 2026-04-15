@@ -8,7 +8,6 @@ type Crop = "center" | "top" | "bottom" | "left" | "right";
 
 export interface ImageProps
   extends Omit<React.ComponentPropsWithRef<"img">, "ref"> {
-  ref?: React.Ref<HTMLDivElement>;
   aspectRatio?: string;
   crop?: "center" | "top" | "bottom" | "left" | "right";
   data?: Partial<
@@ -30,7 +29,7 @@ export interface ImageProps
   };
 }
 
-export function Image({ ref, className, onLoad, ...rest }: ImageProps) {
+export function Image({ className, onLoad, ...rest }: ImageProps) {
   /**
    * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
    * even when using ref prop for the outer div
@@ -47,7 +46,6 @@ export function Image({ ref, className, onLoad, ...rest }: ImageProps) {
 
   return (
     <div
-      ref={ref}
       className={cn(
         "h-full w-full overflow-hidden rounded-md",
         !loaded && "animate-pulse [animation-duration:4s]",

@@ -50,7 +50,6 @@ export interface SlideshowData
   extends VariantProps<typeof variants>,
     SlideshowArrowsProps,
     SlideshowDotsProps {
-  ref: React.Ref<HTMLDivElement>;
   effect?: "fade" | "slide";
   showArrows: boolean;
   showDots: boolean;
@@ -65,7 +64,6 @@ export default function Slideshow(
   props: SlideshowData & HydrogenComponentProps,
 ) {
   const {
-    ref,
     height,
     effect,
     showArrows,

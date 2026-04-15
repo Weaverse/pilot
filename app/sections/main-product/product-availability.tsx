@@ -8,7 +8,6 @@ import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 
 interface ProductAvailabilityProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   inStockText: string;
   outOfStockText: string;
   inStockColor: string;

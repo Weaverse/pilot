@@ -96,33 +96,6 @@
   );
 }
 
-@utility article {
-  @apply prose mx-auto mb-12 grid justify-center text-body;
-
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-body;
-  }
-  p,
-  ul,
-  li {
-    @apply mb-4 text-lg;
-  }
-  img {
-    @apply md:-mx-8 lg:-mx-16;
-    @media (min-width: 48em) {
-      width: calc(100% + 4rem);
-      max-width: 100vw;
-    }
-    @media (min-width: 64em) {
-      width: calc(100% + 8rem);
-    }
-  }
-}
-
 @utility hidden-scroll {
   scrollbar-width: none;
   &::-webkit-scrollbar {

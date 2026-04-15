@@ -48,12 +48,10 @@ interface CollectionItemsData
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
   buttonText: string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
   const {
-    ref,
     gridSize,
     gap,
     imageAspectRatio,

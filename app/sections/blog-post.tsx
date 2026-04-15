@@ -16,7 +16,6 @@ import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { RootLoader } from "~/root";
 
 interface BlogPostProps extends SectionProps {
-  ref: React.Ref<HTMLElement>;
   showTags: boolean;
   showShareButtons: boolean;
 }
@@ -57,9 +56,10 @@ export default function BlogPost(props: BlogPostProps) {
           )}
         </div>
         <div className="mx-auto w-1/3 border-line-subtle border-t" />
-        <article className="prose prose-img:mx-auto mx-auto py-4 lg:max-w-5xl lg:py-10">
+        <article className="mx-auto py-4 lg:max-w-5xl lg:py-10">
           <div className="mx-auto space-y-8 md:space-y-16">
             <div
+              className="prose"
               suppressHydrationWarning
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />

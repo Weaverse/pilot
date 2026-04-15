@@ -13,7 +13,6 @@ export const useProductQtyStore = create<{
 }));
 
 interface ProductQuantitySelectorProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   labelText: string;
 }
 

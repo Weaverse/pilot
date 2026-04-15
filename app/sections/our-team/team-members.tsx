@@ -23,9 +23,7 @@ type MemberType = {
   x_url: string;
 };
 
-interface TeamMembersProps extends HydrogenComponentProps {
-  ref?: React.Ref<HTMLDivElement>;
-}
+interface TeamMembersProps extends HydrogenComponentProps {}
 
 function TeamMembers(props: TeamMembersProps) {
   const { ...rest } = props;

@@ -19,7 +19,6 @@ interface HotspotsProps
   headingTagName?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   image: string;
   aspectRatio: ImageAspectRatio;
-  ref?: React.Ref<HTMLElement>;
 }
 
 function Hotspots(props: HotspotsProps) {

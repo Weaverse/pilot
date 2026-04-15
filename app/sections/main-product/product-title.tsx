@@ -3,7 +3,6 @@ import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductTitleProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
@@ -17,7 +16,7 @@ export default function ProductTitle(props: ProductTitleProps) {
 
   return (
     <div {...rest}>
-      <Tag className="h3 tracking-tight!">{product.title}</Tag>
+      <Tag className="h2 tracking-tight!">{product.title}</Tag>
     </div>
   );
 }

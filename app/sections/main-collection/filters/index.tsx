@@ -12,13 +12,10 @@ interface CollectionFiltersData {
 
 interface CollectionFiltersProps
   extends HydrogenComponentProps,
-    CollectionFiltersData {
-  ref: React.Ref<HTMLDivElement>;
-}
+    CollectionFiltersData {}
 
 function CollectionFilters(props: CollectionFiltersProps) {
   const {
-    ref,
     sidebarWidth,
     expandFilters,
     showFiltersCount,

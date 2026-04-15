@@ -3,7 +3,6 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { cn } from "~/utils/cn";
 
 interface EstimatedDeliveryProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   minDays: number;
   maxDays: number;
   textColor: string;

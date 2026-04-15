@@ -2,11 +2,13 @@ import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
+import { useProductGridStore } from "~/components/product-grid/store";
 import { ScrollArea } from "~/components/scroll-area";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
@@ -80,33 +82,53 @@ interface CollectionToolbarData {
   enableSort: boolean;
   showBreadcrumb: boolean;
   showProductsCount: boolean;
+  productsCountFormat: string;
   enableFilter: boolean;
 }
 
 interface CollectionToolbarProps
   extends HydrogenComponentProps,
-    CollectionToolbarData {
-  ref: React.Ref<HTMLDivElement>;
-}
+    CollectionToolbarData {}
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const {
-    ref,
     enableSort,
     showBreadcrumb,
     showProductsCount,
+    productsCountFormat,
     enableFilter = true,
     ...rest
   } = props;
   const { collection } = useLoaderData<CollectionQuery>();
+  let displayedCount = useProductGridStore((s) => s.displayedCount);
+  let [totalCount, setTotalCount] = useState<number | string | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/collection/${collection.handle}/product-count`)
+      .then((res) => res.json())
+      .then((data: { count: number | string }) => setTotalCount(data.count))
+      .catch(() => setTotalCount(null));
+  }, [collection.handle]);
+
+  let formattedCount = "";
+  if (displayedCount > 0 && totalCount !== null) {
+    formattedCount = productsCountFormat
+      .replace("{{displayed_products}}", String(displayedCount))
+      .replace("{{total}}", String(totalCount));
+  } else if (displayedCount > 0) {
+    formattedCount = `${displayedCount} products`;
+  }
 
   return (
     <div {...rest} className="col-span-full border-gray-300 border-y py-4">
       <div className="flex w-full items-center">
         <div className="hidden items-center gap-2 md:flex">
           {showBreadcrumb && <BreadCrumb page={collection.title} />}
-          {showProductsCount && (
-            <span data-products-count className="text-foreground/60" />
+          {showProductsCount && formattedCount && (
+            <>
+              <span className="text-foreground/60">·</span>
+              <span className="text-foreground/60">{formattedCount}</span>
+            </>
           )}
         </div>
         {enableSort && (
@@ -143,6 +165,15 @@ export const schema = createSchema({
           name: "showProductsCount",
           label: "Show products count",
           defaultValue: true,
+        },
+        {
+          type: "text",
+          name: "productsCountFormat",
+          label: "Products count format",
+          defaultValue: "{{displayed_products}} of {{total}} products",
+          helpText:
+            "Use {{displayed_products}} for displayed count and {{total}} for total count.",
+          condition: (data) => data.showProductsCount,
         },
         {
           type: "switch",

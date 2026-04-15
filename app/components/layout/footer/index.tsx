@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
-import { CountrySelector } from "../country-selector";
+import { FooterCountrySelector } from "../country-selector/footer-country-selector";
 import { FooterMenu } from "../menu/footer-menu";
 import { NewsletterForm } from "./newsletter-form";
 import { PaymentMethods } from "./payment-methods";
@@ -45,6 +45,7 @@ export function Footer() {
     newsletterDescription,
     newsletterPlaceholder,
     newsletterButtonText,
+    newsletterInputWidth,
     showPaymentMethods,
     showAmazonPay,
     showPayPal,
@@ -108,13 +109,14 @@ export function Footer() {
               description={newsletterDescription}
               placeholder={newsletterPlaceholder}
               buttonText={newsletterButtonText}
+              inputWidth={newsletterInputWidth}
             />
           </div>
           <FooterMenu />
         </div>
         <div className="flex flex-col justify-center lg:grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-line-subtle border-t py-9">
           <div className="flex gap-2">
-            <CountrySelector />
+            <FooterCountrySelector />
           </div>
           <p>{copyright}</p>
           <PaymentMethods

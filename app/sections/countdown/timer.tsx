@@ -25,7 +25,6 @@ function calculateRemainingTime(endTime: number) {
 interface CountDownTimerData {
   textColor: string;
   endTime: number;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {

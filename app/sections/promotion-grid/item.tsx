@@ -42,7 +42,6 @@ interface PromotionItemProps
     HydrogenComponentProps,
     OverlayProps {
   backgroundImage: WeaverseImage | string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function PromotionGridItem(props: PromotionItemProps) {
@@ -54,7 +53,6 @@ function PromotionGridItem(props: PromotionItemProps) {
     overlayColor,
     overlayColorHover,
     overlayOpacity,
-    ref,
     ...rest
   } = props;
   return (

@@ -17,6 +17,7 @@ import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import type { CartLayoutType } from "~/types/others";
 import type { ThemeSettings } from "~/types/weaverse";
+import { cn } from "~/utils/cn";
 import {
   DiscountDialog,
   GiftCardDialog,
@@ -67,7 +68,7 @@ export function CartSummary({
       className={clsx(
         layout === "drawer" && "border-gray-300 border-t pt-4",
         layout === "page" &&
-          "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
+          "sticky top-[calc(var(--height-nav)+20px)] w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
@@ -173,82 +174,66 @@ export function CartSummary({
         </div>
       )}
       {layout === "page" && (
-        <>
-          <dl className="mb-4 grid">
-            <div className="flex items-center justify-between text-xl font-medium">
-              <dt>Estimated total:</dt>
-              {isCartUpdating ? (
-                <Skeleton className="h-4 w-20 rounded-md" />
-              ) : (
-                <dd>
-                  {cost?.totalAmount?.amount ? (
-                    <Money data={cost?.totalAmount} />
-                  ) : (
-                    "-"
-                  )}
-                </dd>
-              )}
-            </div>
-          </dl>
-          <div className="mb-2 text-right text-body-subtle">
-            Taxes, discounts and{" "}
-            <Link
-              target="_blank"
-              to="/policies/shipping-policy"
-              variant="underline"
-              className="text-current after:bg-current"
-            >
-              shipping
-            </Link>{" "}
-            calculated at checkout.
+        <dl className="mb-4 grid">
+          <div className="flex items-center justify-between text-xl font-medium">
+            <dt>Estimated total:</dt>
+            {isCartUpdating ? (
+              <Skeleton className="h-4 w-20 rounded-md" />
+            ) : (
+              <dd>
+                {cost?.totalAmount?.amount ? (
+                  <Money data={cost?.totalAmount} />
+                ) : (
+                  "-"
+                )}
+              </dd>
+            )}
           </div>
-        </>
+        </dl>
       )}
       {(enableCartNote || enableDiscountCode || enableGiftCard) && (
-        <div className="mb-4 flex items-center justify-end gap-2">
+        <div className="mb-3 flex items-center justify-end gap-3">
           {enableCartNote && (
-            <>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <Button variant="underline" className="gap-2">
-                    <NotePencilIcon className="size-4" />
-                    {layout === "drawer"
-                      ? cartNoteButtonText || "Note"
-                      : cartNoteButtonText || "Add a note"}
-                  </Button>
-                </Dialog.Trigger>
-                <NoteDialog cartNote={note} />
-              </Dialog.Root>
-              {(enableDiscountCode || enableGiftCard) && (
-                <span className="text-gray-400">/</span>
-              )}
-            </>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button type="button" className="flex items-center gap-1.5">
+                  <NotePencilIcon className="size-4" />
+                  {layout === "drawer"
+                    ? cartNoteButtonText || "Note"
+                    : cartNoteButtonText || "Add a note"}
+                </button>
+              </Dialog.Trigger>
+              <NoteDialog cartNote={note} />
+            </Dialog.Root>
+          )}
+          {enableCartNote && (enableDiscountCode || enableGiftCard) && (
+            <span className="text-gray-400">/</span>
           )}
           {enableDiscountCode && (
-            <>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <Button variant="underline" className="gap-2">
-                    <TagIcon className="size-4" />
-                    {layout === "drawer"
-                      ? discountCodeButtonText || "Discount"
-                      : discountCodeButtonText || "Add a discount code"}
-                  </Button>
-                </Dialog.Trigger>
-                <DiscountDialog discountCodes={discountCodes} />
-              </Dialog.Root>
-              {enableGiftCard && <span className="text-gray-400">/</span>}
-            </>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button type="button" className="flex items-center gap-1.5">
+                  <TagIcon className="size-4" />
+                  {layout === "drawer"
+                    ? discountCodeButtonText || "Discount"
+                    : discountCodeButtonText || "Add a discount code"}
+                </button>
+              </Dialog.Trigger>
+              <DiscountDialog discountCodes={discountCodes} />
+            </Dialog.Root>
+          )}
+          {enableDiscountCode && enableGiftCard && (
+            <span className="text-gray-400">/</span>
           )}
           {enableGiftCard && (
             <Dialog.Root>
               <Dialog.Trigger asChild>
-                <Button variant="underline" className="gap-2">
+                <button type="button" className="flex items-center gap-1.5">
                   <GiftIcon className="size-4" />
                   {layout === "drawer"
                     ? giftCardButtonText || "Gift card"
                     : giftCardButtonText || "Redeem a gift card"}
-                </Button>
+                </button>
               </Dialog.Trigger>
               <GiftCardDialog appliedGiftCards={appliedGiftCards} />
             </Dialog.Root>
@@ -256,7 +241,7 @@ export function CartSummary({
         </div>
       )}
       {checkoutUrl && (
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-3 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
             <Button className="w-full">
               <span>{checkoutButtonText || "Continue to Checkout"}</span>
@@ -275,20 +260,23 @@ export function CartSummary({
             </Button>
           </a>
           {/* @todo: <CartShopPayButton cart={cart} /> */}
-          {layout === "drawer" && (
-            <div className="text-center text-body-subtle">
-              Taxes, discounts and{" "}
-              <Link
-                target="_blank"
-                to="/policies/shipping-policy"
-                variant="underline"
-                className="text-current after:bg-current"
-              >
-                shipping
-              </Link>{" "}
-              calculated at checkout.
-            </div>
-          )}
+          <div
+            className={cn(
+              "text-body-subtle text-sm",
+              layout === "page" && "text-right",
+            )}
+          >
+            * Taxes, discounts and{" "}
+            <Link
+              target="_blank"
+              to="/policies/shipping-policy"
+              variant="underline"
+              className="text-current after:bg-current"
+            >
+              shipping
+            </Link>{" "}
+            calculated at checkout.
+          </div>
         </div>
       )}
     </div>

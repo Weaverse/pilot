@@ -14,9 +14,7 @@ type OurTeamData = {
 
 interface OurTeamProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
-    OurTeamData {
-  ref?: React.Ref<HTMLDivElement>;
-}
+    OurTeamData {}
 
 function OurTeam(props: OurTeamProps) {
   const { loaderData, metaobject, membersCount, children, ...rest } = props;

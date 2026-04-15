@@ -30,7 +30,6 @@ interface MapSectionProps
   extends Omit<SectionProps, "backgroundColor">,
     VariantProps<typeof variants>,
     LinkStyles {
-  ref: React.Ref<HTMLElement>;
   address: string;
   heading: string;
   description: string;

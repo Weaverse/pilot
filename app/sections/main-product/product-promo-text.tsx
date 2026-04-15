@@ -23,7 +23,6 @@ let ICONS = {
 type IconOption = keyof typeof ICONS;
 
 interface ProductPromoTextProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   text: string;
   icon: IconOption;
   customIcon: WeaverseImage;

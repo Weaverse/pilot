@@ -22,7 +22,6 @@ export function AddToCartButton({
   children,
   lines,
   className = "",
-  width = "full",
   disabled,
   analytics,
   ...props
@@ -30,7 +29,6 @@ export function AddToCartButton({
   children: React.ReactNode;
   lines: OptimisticCartLineInput[];
   className?: string;
-  width?: "auto" | "full";
   disabled?: boolean;
   analytics?: unknown;
   [key: string]: any;
@@ -88,7 +86,7 @@ function AddToCartButtonContent({
       <input type="hidden" name="analytics" value={JSON.stringify(analytics)} />
       <Button
         type="submit"
-        className={cn("relative", className)}
+        className={cn("relative w-full", className)}
         disabled={disabled ?? isLoading}
         {...props}
       >

@@ -98,13 +98,14 @@ shopify-account {
   --shopify-account-color-accent-text: var(--btn-primary-text);
   --shopify-account-radius-base: var(--radius, 0);
   --shopify-account-avatar-size: 32px;
-  --shopify-account-signed-in-avatar-size: 32px;
+  --shopify-account-signed-in-avatar-size: 16px;
 }
 
 /* Tokens */
 :root {
   --shop-pay-button--width: 100%; /* Sets the width for the shop-pay-button web component */
-  --shop-pay-button-height: 46px; /* Sets the height for the shop-pay-button web component */
+  /* Match ATC button height: border (2px) + padding py-3 (24px) + font-size * line-height */
+  --shop-pay-button-height: calc(var(--body-base-size) * var(--body-base-line-height) + 26px);
   --shop-pay-button-border-radius: var(--radius, 0);
   --screen-height: 100vh;
 

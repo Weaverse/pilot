@@ -1,6 +1,6 @@
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
 import { clsx } from "clsx";
-import type { CSSProperties } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
@@ -10,20 +10,36 @@ import { calculateAspectRatio } from "~/utils/image";
 interface CollectionCardProps extends OverlayProps {
   collection: Collection;
   imageAspectRatio: ImageAspectRatio;
+  contentPosition: "over" | "below";
   collectionNameColor: string;
+  showProductCount: boolean;
   loading?: HTMLImageElement["loading"];
 }
 
 export function CollectionCard({
   collection,
   imageAspectRatio,
+  contentPosition,
   collectionNameColor,
+  showProductCount,
   loading,
   enableOverlay,
   overlayColor,
   overlayColorHover,
   overlayOpacity,
 }: CollectionCardProps) {
+  let [productCount, setProductCount] = useState<string | number | null>(null);
+
+  useEffect(() => {
+    if (!showProductCount) {
+      return;
+    }
+    fetch(`/api/collection/${collection.handle}/product-count`)
+      .then((res) => res.json())
+      .then((data: { count: number | string }) => setProductCount(data.count))
+      .catch(() => setProductCount(null));
+  }, [collection.handle, showProductCount]);
+
   if (collection.products.nodes.length === 0) {
     return null;
   }
@@ -41,6 +57,38 @@ export function CollectionCard({
       }
     }
   }
+  let contentOver = contentPosition === "over";
+
+  let content = (
+    <div
+      className={clsx(
+        "flex flex-col gap-1",
+        contentOver ? "z-1 items-center" : "items-start",
+      )}
+    >
+      <h6
+        style={contentOver ? { color: collectionNameColor } : undefined}
+        className="text-center"
+      >
+        {collection.title}
+      </h6>
+      {showProductCount && productCount !== null && (
+        <span
+          style={contentOver ? { color: collectionNameColor } : undefined}
+          className={clsx(
+            "text-sm",
+            contentOver ? "text-center opacity-80" : "text-body-subtle",
+          )}
+        >
+          {productCount}{" "}
+          {typeof productCount === "number" && productCount === 1
+            ? "product"
+            : "products"}
+        </span>
+      )}
+    </div>
+  );
+
   return (
     <Link
       to={`/collections/${collection.handle}`}
@@ -69,9 +117,7 @@ export function CollectionCard({
             )}
           />
         ) : null}
-        <h5 style={{ color: collectionNameColor }} className="z-1 text-center">
-          {collection.title}
-        </h5>
+        {contentOver && content}
         <Overlay
           enableOverlay={enableOverlay}
           overlayColor={overlayColor}
@@ -80,6 +126,7 @@ export function CollectionCard({
           className="z-0"
         />
       </div>
+      {!contentOver && content}
     </Link>
   );
 }

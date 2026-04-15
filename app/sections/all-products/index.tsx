@@ -3,9 +3,7 @@ import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-interface AllProductsProps extends SectionProps {
-  ref: React.Ref<HTMLElement>;
-}
+interface AllProductsProps extends SectionProps {}
 
 export default function AllProducts(props: AllProductsProps) {
   const { children, ...rest } = props;

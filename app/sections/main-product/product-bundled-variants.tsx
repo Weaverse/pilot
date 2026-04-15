@@ -5,7 +5,6 @@ import { BundledVariants } from "~/components/product/bundled-variants";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBundledVariantsProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   headingText: string;
 }
 

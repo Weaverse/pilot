@@ -7,7 +7,7 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ShopPayButton } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { IMAGES_PLACEHOLDERS, useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
@@ -50,6 +50,30 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
     pcardImageRatio,
   } = useThemeSettings<ThemeSettings>();
 
+  let hasMedia = product?.media.nodes?.length > 0;
+  let media = hasMedia
+    ? product.media.nodes
+    : [
+        {
+          __typename: "MediaImage" as const,
+          mediaContentType: "IMAGE" as const,
+          alt: product?.title || "Product placeholder",
+          previewImage: {
+            url: IMAGES_PLACEHOLDERS.product_1,
+            altText: product?.title || "Product placeholder",
+            width: 1000,
+            height: 1000,
+          },
+          id: "placeholder",
+          image: {
+            url: IMAGES_PLACEHOLDERS.product_1,
+            altText: product?.title || "Product placeholder",
+            width: 1000,
+            height: 1000,
+          },
+        },
+      ];
+
   return (
     <div className="bg-background">
       <div
@@ -61,7 +85,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
         <div className="relative min-w-0">
           <ProductMedia
             mediaLayout="slider"
-            media={product?.media.nodes}
+            media={media}
             selectedVariant={selectedVariant}
             showThumbnails={false}
             groupMediaByVariant={quickShopGroupMediaByVariant}

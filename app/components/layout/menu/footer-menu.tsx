@@ -13,7 +13,7 @@ export function FooterMenu() {
     <Accordion.Root
       type="multiple"
       defaultValue={items.map(({ id }) => id)}
-      className="grid w-full lg:grid-cols-3 lg:gap-8"
+      className="grid w-full lg:grid-cols-4 lg:gap-8"
     >
       {items.map(({ id, to, title, items: childItems }) => (
         <Accordion.Item key={id} value={id} className="flex flex-col">

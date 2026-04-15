@@ -33,7 +33,6 @@ let ICONS = {
 type IconOption = keyof typeof ICONS;
 
 interface HighlightItemProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   icon: IconOption;
   text: string;
 }

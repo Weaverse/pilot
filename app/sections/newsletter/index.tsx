@@ -2,9 +2,7 @@ import { createSchema } from "@weaverse/hydrogen";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-interface NewsLetterProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface NewsLetterProps extends SectionProps {}
 
 function NewsLetter(props: NewsLetterProps) {
   const { children, ...rest } = props;

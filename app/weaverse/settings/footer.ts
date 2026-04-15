@@ -126,6 +126,18 @@ export const footerSettings = {
       placeholder: "Subscribe",
     },
     {
+      type: "range",
+      name: "newsletterInputWidth",
+      label: "Input width",
+      configs: {
+        min: 200,
+        max: 480,
+        step: 10,
+        unit: "px",
+      },
+      defaultValue: 450,
+    },
+    {
       type: "richtext",
       name: "copyright",
       label: "Copyright text",

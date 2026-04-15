@@ -1,9 +1,7 @@
 import { createSchema } from "@weaverse/hydrogen";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-interface CollectionListProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface CollectionListProps extends SectionProps {}
 
 function CollectionList(props: CollectionListProps) {
   const { children, ...rest } = props;

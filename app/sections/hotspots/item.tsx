@@ -29,9 +29,7 @@ export interface HotspotsItemData {
 
 interface HotspotsItemProps
   extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>>,
-    HotspotsItemData {
-  ref: React.Ref<HTMLDivElement>;
-}
+    HotspotsItemData {}
 
 const ICONS = {
   circle: CircleIcon,
@@ -42,7 +40,6 @@ const ICONS = {
 
 export default function HotspotsItem(props: HotspotsItemProps) {
   const {
-    ref,
     icon,
     iconSize,
     offsetX,
