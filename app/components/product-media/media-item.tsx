@@ -1,4 +1,3 @@
-import { VideoCameraIcon } from "@phosphor-icons/react";
 import { ExternalVideo } from "@shopify/hydrogen";
 import { lazy, Suspense } from "react";
 import { preload } from "react-dom";
