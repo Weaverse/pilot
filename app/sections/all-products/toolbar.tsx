@@ -1,5 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { BreadCrumb } from "~/components/breadcrumb";
+import { useProductGridStore } from "~/components/product-grid/store";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import type { SortParam } from "~/types/others";
 
@@ -23,6 +24,7 @@ interface AllProductsToolbarProps
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { enableSort, showBreadcrumb, showProductsCount, ...rest } = props;
+  let displayedCount = useProductGridStore((s) => s.displayedCount);
 
   return (
     <div {...rest}>
@@ -30,8 +32,13 @@ function AllProductsToolbar(props: AllProductsToolbarProps) {
         <div className="flex w-full items-center justify-between gap-4 md:gap-8">
           <div className="hidden items-center gap-2 md:flex">
             {showBreadcrumb && <BreadCrumb page="All Products" />}
-            {showProductsCount && (
-              <span data-products-count className="text-foreground/60" />
+            {showProductsCount && displayedCount > 0 && (
+              <>
+                <span className="text-foreground/60">·</span>
+                <span className="text-foreground/60">
+                  {displayedCount} products
+                </span>
+              </>
             )}
           </div>
           {enableSort && <SortDropdown options={SORT_OPTIONS} />}

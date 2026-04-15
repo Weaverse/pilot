@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product-card";
+import { useProductGridStore } from "./store";
 
 interface ProductsLoadedOnScrollProps {
   nodes: ProductCardFragment[];
@@ -25,16 +26,11 @@ export function ProductsLoadedOnScroll({
   gapY,
 }: ProductsLoadedOnScrollProps) {
   const navigate = useNavigate();
+  let setDisplayedCount = useProductGridStore((s) => s.setDisplayedCount);
 
   useEffect(() => {
-    let el = document.querySelector("[data-products-count]");
-    if (el instanceof HTMLElement) {
-      el.dataset.loaded = String(nodes.length);
-    }
-    window.dispatchEvent(
-      new CustomEvent("products-loaded-count", { detail: nodes.length }),
-    );
-  }, [nodes.length]);
+    setDisplayedCount(nodes.length);
+  }, [nodes.length, setDisplayedCount]);
 
   useEffect(() => {
     if (inView && hasNextPage) {

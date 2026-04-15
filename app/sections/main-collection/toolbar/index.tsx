@@ -2,12 +2,13 @@ import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
+import { useProductGridStore } from "~/components/product-grid/store";
 import { ScrollArea } from "~/components/scroll-area";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
@@ -99,8 +100,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
     ...rest
   } = props;
   const { collection } = useLoaderData<CollectionQuery>();
-  let countRef = useRef<HTMLSpanElement>(null);
-  let [loadedCount, setLoadedCount] = useState(0);
+  let displayedCount = useProductGridStore((s) => s.displayedCount);
   let [totalCount, setTotalCount] = useState<number | string | null>(null);
 
   useEffect(() => {
@@ -110,26 +110,13 @@ function CollectionToolbar(props: CollectionToolbarProps) {
       .catch(() => setTotalCount(null));
   }, [collection.handle]);
 
-  useEffect(() => {
-    let el = countRef.current;
-    if (el?.dataset.loaded) {
-      setLoadedCount(Number(el.dataset.loaded));
-    }
-    function handleUpdate(e: Event) {
-      setLoadedCount((e as CustomEvent).detail);
-    }
-    window.addEventListener("products-loaded-count", handleUpdate);
-    return () =>
-      window.removeEventListener("products-loaded-count", handleUpdate);
-  }, []);
-
   let formattedCount = "";
-  if (loadedCount > 0 && totalCount !== null) {
+  if (displayedCount > 0 && totalCount !== null) {
     formattedCount = productsCountFormat
-      .replace("{{loaded}}", String(loadedCount))
+      .replace("{{displayed_products}}", String(displayedCount))
       .replace("{{total}}", String(totalCount));
-  } else if (loadedCount > 0) {
-    formattedCount = `${loadedCount} products`;
+  } else if (displayedCount > 0) {
+    formattedCount = `${displayedCount} products`;
   }
 
   return (
@@ -137,10 +124,11 @@ function CollectionToolbar(props: CollectionToolbarProps) {
       <div className="flex w-full items-center">
         <div className="hidden items-center gap-2 md:flex">
           {showBreadcrumb && <BreadCrumb page={collection.title} />}
-          {showProductsCount && (
-            <span ref={countRef} data-products-count className="text-foreground/60">
-              {formattedCount}
-            </span>
+          {showProductsCount && formattedCount && (
+            <>
+              <span className="text-foreground/60">·</span>
+              <span className="text-foreground/60">{formattedCount}</span>
+            </>
           )}
         </div>
         {enableSort && (
@@ -182,9 +170,9 @@ export const schema = createSchema({
           type: "text",
           name: "productsCountFormat",
           label: "Products count format",
-          defaultValue: "{{loaded}} of {{total}} products",
+          defaultValue: "{{displayed_products}} of {{total}} products",
           helpText:
-            "Use {{loaded}} for loaded count and {{total}} for total count.",
+            "Use {{displayed_products}} for displayed count and {{total}} for total count.",
           condition: (data) => data.showProductsCount,
         },
         {
