@@ -20,7 +20,7 @@ export const variants = cva(["inline-flex rounded-md transition-colors"], {
   variants: {
     variant: {
       primary: [
-        "border-2 px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-primary-text)",
         "bg-(--btn-primary-bg)",
         "border-(--btn-primary-bg)",
@@ -28,7 +28,7 @@ export const variants = cva(["inline-flex rounded-md transition-colors"], {
         "hover:border-(--btn-primary-bg-hover)",
       ],
       secondary: [
-        "border-2 px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-secondary-text)",
         "bg-(--btn-secondary-bg)",
         "border-(--btn-secondary-bg)",
@@ -36,14 +36,14 @@ export const variants = cva(["inline-flex rounded-md transition-colors"], {
         "hover:border-(--btn-secondary-bg-hover)",
       ],
       outline: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-outline-text)",
         "bg-transparent",
         "border-(--btn-outline-text)",
         "hover:bg-(--btn-outline-bg-hover)",
       ],
       custom: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-text)",
         "bg-(--btn-bg)",
         "border-(--btn-border)",
@@ -81,7 +81,6 @@ export interface LinkProps
   extends HTMLAttributes<HTMLAnchorElement>,
     Partial<Omit<HydrogenComponentProps, "children">>,
     LinkData {
-  ref?: React.Ref<HTMLAnchorElement>;
   animate?: boolean;
 }
 
@@ -135,7 +134,6 @@ function useHrefWithLocale(href: LinkProps["to"]) {
  */
 export function Link(props: LinkProps) {
   let {
-    ref,
     to,
     text,
     variant,
@@ -183,17 +181,13 @@ export function Link(props: LinkProps) {
 
   if (animate) {
     return (
-      <ScrollReveal as={RemixLink} ref={ref} {...linkProps}>
+      <ScrollReveal as={RemixLink} {...linkProps}>
         {children || text}
       </ScrollReveal>
     );
   }
 
-  return (
-    <RemixLink ref={ref} {...linkProps}>
-      {children || text}
-    </RemixLink>
-  );
+  return <RemixLink {...linkProps}>{children || text}</RemixLink>;
 }
 
 export default Link;

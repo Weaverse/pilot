@@ -22,7 +22,6 @@ const variants = cva("mx-auto aspect-video w-full rounded-md", {
 interface VideoItemProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
-  ref: React.Ref<HTMLIFrameElement>;
   video: WeaverseVideo;
   videoUrl: string;
 }

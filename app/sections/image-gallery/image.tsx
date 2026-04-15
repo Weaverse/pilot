@@ -32,7 +32,6 @@ interface ImageGalleryItemProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
   src: WeaverseImage;
-  ref?: React.Ref<HTMLImageElement>;
 }
 
 function ImageGalleryItem(props: ImageGalleryItemProps) {

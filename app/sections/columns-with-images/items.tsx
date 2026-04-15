@@ -6,7 +6,6 @@ import {
 
 interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
   gap: number;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ColumnsWithImagesItems(props: ColumnsWithImagesItemsProps) {

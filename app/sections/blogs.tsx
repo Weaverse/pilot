@@ -13,7 +13,6 @@ import { formatDate } from "~/utils/misc";
 interface BlogsProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
     SectionProps {
-  ref: React.Ref<HTMLElement>;
   layout: "blog" | "default";
 }
 
@@ -154,7 +153,7 @@ export const schema = createSchema({
           type: "select",
           name: "imageAspectRatio",
           label: "Image aspect ratio",
-          defaultValue: "adapt",
+          defaultValue: "1/1",
           configs: {
             options: [
               { value: "adapt", label: "Adapt to image" },
@@ -189,7 +188,7 @@ export const schema = createSchema({
           type: "switch",
           name: "showReadmore",
           label: "Show read more",
-          defaultValue: true,
+          defaultValue: false,
         },
       ],
     },

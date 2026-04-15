@@ -9,7 +9,6 @@ import { Image } from "~/components/image";
 import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   heading: string;
   content: string;
   authorImage: WeaverseImage;
@@ -20,7 +19,6 @@ interface TestimonialItemProps extends HydrogenComponentProps {
 
 export default function TestimonialItem(props: TestimonialItemProps) {
   const {
-    ref,
     heading,
     content,
     authorImage,
@@ -38,7 +36,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
     >
       <figure className="rounded-md bg-gray-50 p-6">
         <blockquote>
-          <div className="text-xl md:text-2xl">{heading}</div>
+          <div className="text-xl md:text-2xl md:leading-[1.3]">{heading}</div>
           <p
             className="my-4 text-gray-500"
             suppressHydrationWarning

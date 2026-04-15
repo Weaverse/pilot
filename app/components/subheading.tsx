@@ -30,7 +30,6 @@ const variants = cva("subheading", {
 interface SubHeadingProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
-  ref?: React.Ref<HTMLHeadingElement | HTMLParagraphElement | HTMLDivElement>;
   as?: "h4" | "h5" | "h6" | "div" | "p";
   color?: string;
   content: string;
@@ -38,7 +37,6 @@ interface SubHeadingProps
 
 function SubHeading(props: SubHeadingProps) {
   const {
-    ref,
     as: Tag = "p",
     content,
     color,
@@ -51,7 +49,6 @@ function SubHeading(props: SubHeadingProps) {
   return (
     <ScrollReveal
       as={Tag}
-      ref={ref}
       {...rest}
       style={{ color }}
       className={cn(variants({ size, weight, alignment, className }))}

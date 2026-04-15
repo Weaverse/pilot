@@ -1,11 +1,21 @@
-# Fix Optimistic Cart in Pilot Template
+# Feature: Fix Optimistic Cart in Pilot Template
 
-| Field | Value |
-|-------|-------|
-| **Status** | approved |
-| **Owner** | Paul Phan |
-| **Created** | 2026-04-10 |
-| **Branch** | `fix/optimistic-cart` |
+| Field            | Value                                                    |
+| ---------------- | -------------------------------------------------------- |
+| **Status**       | approved                                                 |
+| **Owner**        | Paul Phan                                                |
+| **Issue**        | N/A                                                      |
+| **Branch**       | `fix/optimistic-cart`                                    |
+| **Created**      | 2026-04-10                                               |
+| **Last Updated** | 2026-04-10                                               |
+
+## Original Prompt
+
+> Fix the optimistic cart issues in the Pilot template: cart badge not updating instantly when adding items, remove button flickering, and cart total being slow to update with skeleton state.
+
+## Summary
+
+Refactors the optimistic cart implementation by lifting `useOptimisticCart` from `CartMain` into parent components (`CartDrawer` and `CartRoute`), ensuring badge count, drawer title, and line items all share the same optimistic state. Removes the redundant dual-mechanism removal (CSS + hook) to eliminate flicker when removing items.
 
 ## Problem
 

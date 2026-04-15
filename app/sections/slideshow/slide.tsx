@@ -63,13 +63,11 @@ export interface SlideProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps,
     OverlayAndBackgroundProps {
-  ref: React.Ref<HTMLDivElement>;
   backgroundColor: string;
 }
 
 export default function Slide(props: SlideProps) {
   const {
-    ref,
     contentPosition,
     width,
     gap,

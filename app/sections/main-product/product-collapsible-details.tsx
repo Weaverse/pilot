@@ -13,7 +13,6 @@ function getExcerpt(text: string) {
 }
 
 interface CollapsibleDetailsProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
 }

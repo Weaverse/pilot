@@ -7,6 +7,7 @@ interface NewsletterFormProps {
   description: string;
   placeholder: string;
   buttonText: string;
+  inputWidth: number;
 }
 
 export function NewsletterForm({
@@ -14,6 +15,7 @@ export function NewsletterForm({
   description,
   placeholder,
   buttonText,
+  inputWidth,
 }: NewsletterFormProps) {
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
 
@@ -33,7 +35,10 @@ export function NewsletterForm({
           method="POST"
           encType="multipart/form-data"
         >
-          <div className="flex overflow-hidden rounded-md border border-gray-100">
+          <div
+            className="flex overflow-hidden rounded-md border border-gray-100"
+            style={{ maxWidth: inputWidth }}
+          >
             <input
               name="email"
               type="email"

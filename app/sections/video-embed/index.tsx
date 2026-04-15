@@ -2,9 +2,7 @@ import { createSchema } from "@weaverse/hydrogen";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-interface VideoEmbedProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface VideoEmbedProps extends SectionProps {}
 
 function VideoEmbed(props: VideoEmbedProps) {
   const { children, ...rest } = props;

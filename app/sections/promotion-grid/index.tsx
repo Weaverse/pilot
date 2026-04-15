@@ -8,9 +8,7 @@ import { layoutInputs, Section } from "~/components/section";
 
 interface PromotionGridProps
   extends VariantProps<typeof variants>,
-    SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+    SectionProps {}
 
 const variants = cva("flex flex-col sm:grid", {
   variants: {

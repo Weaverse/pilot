@@ -8,7 +8,6 @@ import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductPricesProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   showCompareAtPrice: boolean;
 }
 

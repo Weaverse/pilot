@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 
 interface CollectionContentProps
   extends Omit<HydrogenComponentProps, "children"> {
-  ref: React.Ref<HTMLDivElement>;
   children: ReactNode;
 }
 

@@ -24,17 +24,15 @@ export const TooltipTrigger = ({
 }: TooltipTriggerProps) => <Trigger asChild={asChild} {...rest} />;
 
 export function TooltipContent({
-  ref,
   children,
   className,
   sideOffset = 4,
   style,
   ...rest
-}: TooltipContentProps & { ref?: React.Ref<HTMLDivElement> }) {
+}: TooltipContentProps) {
   return (
     <Portal>
       <Content
-        ref={ref}
         className={cn(
           "animate-slide-up [--slide-up-from:6px]",
           "z-1000 rounded-md bg-body px-3 py-1 text-background text-sm shadow-xs",

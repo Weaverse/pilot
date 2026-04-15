@@ -1,7 +1,6 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 
 interface SpacerData extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   mobileHeight: number;
   desktopHeight: number;
   backgroundColor: string;
@@ -11,7 +10,6 @@ interface SpacerData extends HydrogenComponentProps {
 
 export default function Spacer(props: SpacerData) {
   const {
-    ref,
     mobileHeight,
     desktopHeight,
     backgroundColor,

@@ -2,9 +2,7 @@ import { createSchema } from "@weaverse/hydrogen";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-interface ImageGalleryProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface ImageGalleryProps extends SectionProps {}
 
 function ImageGallery(props: ImageGalleryProps) {
   const { children, ...rest } = props;

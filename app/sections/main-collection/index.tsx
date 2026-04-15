@@ -3,9 +3,7 @@ import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-interface MainCollectionProps extends SectionProps {
-  ref: React.Ref<HTMLElement>;
-}
+interface MainCollectionProps extends SectionProps {}
 
 export default function MainCollection(props: MainCollectionProps) {
   const { children, ...rest } = props;

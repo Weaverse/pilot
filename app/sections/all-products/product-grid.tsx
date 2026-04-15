@@ -18,13 +18,10 @@ interface AllProductsGridData {
 
 interface AllProductsGridProps
   extends HydrogenComponentProps,
-    AllProductsGridData {
-  ref: React.Ref<HTMLDivElement>;
-}
+    AllProductsGridData {}
 
 function AllProductsGrid(props: AllProductsGridProps) {
   const {
-    ref,
     minCardWidth,
     gapX,
     gapY,
@@ -39,7 +36,7 @@ function AllProductsGrid(props: AllProductsGridProps) {
   const isInfiniteScroll = loadMoreBehavior === "infinite-scroll";
 
   return (
-    <div ref={ref} {...rest} className="space-y-8 pt-6 pb-8 lg:pb-20">
+    <div {...rest} className="space-y-8 pt-6 pb-8 lg:pb-20">
       <Pagination connection={products}>
         {({
           nodes,

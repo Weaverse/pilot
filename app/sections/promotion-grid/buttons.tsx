@@ -2,7 +2,6 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 
 interface ButtonItemsProps extends HydrogenComponentProps {
   gap: number;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function PromotionItemButtons(props: ButtonItemsProps) {

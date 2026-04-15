@@ -8,7 +8,6 @@ import { ReviewForm } from "./review-form";
 import { useJudgemeStore } from "./store";
 
 interface JudgemeReviewSummaryProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   averageRatingText?: string;
   totalReviewsText?: string;
   writeReviewText?: string;
@@ -28,7 +27,6 @@ function parseTemplate(
 
 export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
   const {
-    ref,
     averageRatingText = "{{avgRating}} out of 5",
     totalReviewsText = "Based on {{totalReviews}} reviews",
     writeReviewText = "Write a Review",
