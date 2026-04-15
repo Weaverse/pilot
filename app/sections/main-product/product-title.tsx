@@ -16,7 +16,7 @@ export default function ProductTitle(props: ProductTitleProps) {
 
   return (
     <div {...rest}>
-      <Tag className="h2 tracking-tight!">{product.title}</Tag>
+      <Tag className="h2 leading-[1.1] tracking-tight!">{product.title}</Tag>
     </div>
   );
 }
