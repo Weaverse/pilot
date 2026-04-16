@@ -204,6 +204,7 @@ export function useCart(): CartWithOptimistic | null {
   const serverCart = useCartStore((s) => s.serverCart);
   const removedLineIds = useCartStore((s) => s.removedLineIds);
   const fetchers = useFetchers();
+  const lineIdsToMarkRef = useRef<string[]>([]);
 
   // Find freshest completed fetcher cart to use as baseline.
   // This handles the case where useCartFetcherSync hasn't fired yet
@@ -225,27 +226,32 @@ export function useCart(): CartWithOptimistic | null {
     }
   }
 
-  if (!baseline) return null;
-
-  // Filter out tombstoned lines to prevent flash-back
-  const filteredBaseline: CartApiQueryFragment = {
-    ...baseline,
-    lines: {
-      ...baseline.lines,
-      nodes: baseline.lines.nodes.filter((n) => !removedLineIds.has(n.id)),
-    },
-  };
+  const filteredBaseline = baseline
+    ? ({
+        ...baseline,
+        lines: {
+          ...baseline.lines,
+          nodes: baseline.lines.nodes.filter((n) => !removedLineIds.has(n.id)),
+        },
+      } as CartApiQueryFragment)
+    : null;
 
   const { cart: optimisticCart, lineIdsToMarkRemoved } =
-    applyOptimisticMutations(filteredBaseline, fetchers);
+    filteredBaseline && fetchers.length > 0
+      ? applyOptimisticMutations(filteredBaseline, fetchers)
+      : { cart: null, lineIdsToMarkRemoved: [] };
+
+  lineIdsToMarkRef.current = lineIdsToMarkRemoved;
 
   useEffect(() => {
-    if (lineIdsToMarkRemoved.length > 0) {
-      for (const lineId of lineIdsToMarkRemoved) {
+    if (lineIdsToMarkRef.current.length > 0) {
+      for (const lineId of lineIdsToMarkRef.current) {
         useCartStore.getState().markLineRemoved(lineId);
       }
     }
-  }, [lineIdsToMarkRemoved]);
+  }, [fetchers.length]);
+
+  if (!baseline || !filteredBaseline) return null;
 
   return optimisticCart ?? filteredBaseline;
 }
