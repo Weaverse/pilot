@@ -9,18 +9,46 @@ import { create } from "zustand";
 type CartStore = {
   isOpen: boolean;
   serverCart: CartApiQueryFragment | null;
+  /** Recently removed line IDs to prevent flash-back */
+  removedLineIds: Set<string>;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
+  markLineRemoved: (lineId: string) => void;
+  clearRemovedLine: (lineId: string) => void;
 };
+
+const REMOVED_LINE_TTL_MS = 5000; // Keep tombstones for 5 seconds
 
 export const useCartStore = create<CartStore>()((set) => ({
   isOpen: false,
   serverCart: null,
+  removedLineIds: new Set<string>(),
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
   toggle: (open) =>
     set((state) => ({ isOpen: open !== undefined ? open : !state.isOpen })),
+  markLineRemoved: (lineId: string) => {
+    set((state) => {
+      const removedLineIds = new Set(state.removedLineIds);
+      removedLineIds.add(lineId);
+      return { removedLineIds };
+    });
+    // Auto-expire tombstone after TTL
+    setTimeout(() => {
+      set((state) => {
+        const removedLineIds = new Set(state.removedLineIds);
+        removedLineIds.delete(lineId);
+        return { removedLineIds };
+      });
+    }, REMOVED_LINE_TTL_MS);
+  },
+  clearRemovedLine: (lineId: string) =>
+    set((state) => {
+      const removedLineIds = new Set(state.removedLineIds);
+      removedLineIds.delete(lineId);
+      return { removedLineIds };
+    }),
 }));
 
 type OptimisticLineNode = CartApiQueryFragment["lines"]["nodes"][number] & {
@@ -37,29 +65,44 @@ type CartWithOptimistic = CartApiQueryFragment & { isOptimistic?: boolean };
  * as completion. The singular `useFetcher()` preserves data via a
  * `fetcherData` ref that survives cleanup. By syncing from individual
  * fetcher instances, we reliably capture post-mutation cart state.
+ *
+ * SYNC DURING RENDER: We sync to zustand during render (not in useEffect)
+ * so that `useCart()` reads the fresh serverCart in the same render cycle.
+ * Without this, there's a 1-frame flash where optimistic mutations are
+ * cleared (fetcher is idle) but serverCart hasn't been updated yet.
+ * `queueMicrotask` is used to avoid React's "setState during render" warning.
  */
 export function useCartFetcherSync(fetcher: Fetcher<unknown>) {
   const lastSyncedRef = useRef<string | null>(null);
-  useEffect(() => {
-    const fetcherData = fetcher.data as Record<string, unknown> | undefined;
-    const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
-    if (fetcher.state === "idle" && cart?.id && cart?.lines) {
-      // Deduplicate: only sync if updatedAt changed
-      const updatedAt = cart.updatedAt;
-      if (updatedAt !== lastSyncedRef.current) {
-        lastSyncedRef.current = updatedAt;
-        const fetcherCart = cart as CartApiQueryFragment;
-        const current = useCartStore.getState().serverCart;
-        const fetcherTime = new Date(fetcherCart.updatedAt).getTime();
-        const currentTime = current?.updatedAt
-          ? new Date(current.updatedAt).getTime()
-          : 0;
-        if (fetcherTime >= currentTime) {
+  const fetcherData = fetcher.data as Record<string, unknown> | undefined;
+  const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
+  if (fetcher.state === "idle" && cart?.id && cart?.lines) {
+    const updatedAt = cart.updatedAt;
+    if (updatedAt !== lastSyncedRef.current) {
+      lastSyncedRef.current = updatedAt;
+      const fetcherCart = cart as CartApiQueryFragment;
+      const current = useCartStore.getState().serverCart;
+      const fetcherTime = new Date(fetcherCart.updatedAt).getTime();
+      const currentTime = current?.updatedAt
+        ? new Date(current.updatedAt).getTime()
+        : 0;
+      if (fetcherTime >= currentTime) {
+        queueMicrotask(() => {
           useCartStore.setState({ serverCart: fetcherCart });
-        }
+          // Clear tombstones for lines that are actually gone from server cart
+          const state = useCartStore.getState();
+          for (const lineId of state.removedLineIds) {
+            const stillExists = fetcherCart.lines.nodes.some(
+              (n) => n.id === lineId,
+            );
+            if (!stillExists) {
+              state.clearRemovedLine(lineId);
+            }
+          }
+        });
       }
     }
-  }, [fetcher.state, fetcher.data]);
+  }
 }
 
 function applyOptimisticMutations(
@@ -114,6 +157,8 @@ function applyOptimisticMutations(
         if (idx !== -1) {
           nodes.splice(idx, 1);
           mutated = true;
+          // Mark as removed to prevent flash-back if sync is missed
+          useCartStore.getState().markLineRemoved(lineId);
         }
       }
     } else if (action === CartForm.ACTIONS.LinesUpdate) {
@@ -148,11 +193,42 @@ function applyOptimisticMutations(
 
 export function useCart(): CartWithOptimistic | null {
   const serverCart = useCartStore((s) => s.serverCart);
+  const removedLineIds = useCartStore((s) => s.removedLineIds);
   const fetchers = useFetchers();
 
-  if (!serverCart) return null;
+  // Find freshest completed fetcher cart to use as baseline.
+  // This handles the case where useCartFetcherSync hasn't fired yet
+  // (component unmounted by optimistic remove, or effect not yet run).
+  let baseline = serverCart;
+  let baselineTime = serverCart?.updatedAt
+    ? new Date(serverCart.updatedAt).getTime()
+    : 0;
+  for (const fetcher of fetchers) {
+    if (fetcher.state === "idle" && fetcher.data?.cart?.id) {
+      const cart = fetcher.data.cart as CartApiQueryFragment;
+      if (cart.lines) {
+        const t = new Date(cart.updatedAt).getTime();
+        if (t > baselineTime) {
+          baseline = cart;
+          baselineTime = t;
+        }
+      }
+    }
+  }
 
-  const result = applyOptimisticMutations(serverCart, fetchers) ?? serverCart;
+  if (!baseline) return null;
+
+  // Filter out tombstoned lines to prevent flash-back
+  const filteredBaseline: CartApiQueryFragment = {
+    ...baseline,
+    lines: {
+      ...baseline.lines,
+      nodes: baseline.lines.nodes.filter((n) => !removedLineIds.has(n.id)),
+    },
+  };
+
+  const result =
+    applyOptimisticMutations(filteredBaseline, fetchers) ?? filteredBaseline;
   return result;
 }
 
