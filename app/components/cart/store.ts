@@ -57,6 +57,11 @@ type OptimisticLineNode = CartApiQueryFragment["lines"]["nodes"][number] & {
 
 type CartWithOptimistic = CartApiQueryFragment & { isOptimistic?: boolean };
 
+type ApplyMutationsResult = {
+  cart: CartWithOptimistic | null;
+  lineIdsToMarkRemoved: string[];
+};
+
 /**
  * Syncs cart data from a singular fetcher instance into zustand.
  *
@@ -108,11 +113,13 @@ export function useCartFetcherSync(fetcher: Fetcher<unknown>) {
 function applyOptimisticMutations(
   baseline: CartApiQueryFragment,
   fetchers: ReturnType<typeof useFetchers>,
-): CartWithOptimistic | null {
+): ApplyMutationsResult {
   const pendingFetchers = fetchers.filter(
     (f) => f.state !== "idle" && f.formData,
   );
-  if (pendingFetchers.length === 0) return null;
+  if (pendingFetchers.length === 0) {
+    return { cart: null, lineIdsToMarkRemoved: [] };
+  }
 
   const nodes = [...baseline.lines.nodes] as OptimisticLineNode[];
   const cart = {
@@ -125,6 +132,7 @@ function applyOptimisticMutations(
     totalQuantity: number;
   };
   let mutated = false;
+  const lineIdsToMarkRemoved: string[] = [];
 
   for (const fetcher of pendingFetchers) {
     const { action, inputs } = CartForm.getFormInput(fetcher.formData!);
@@ -157,8 +165,7 @@ function applyOptimisticMutations(
         if (idx !== -1) {
           nodes.splice(idx, 1);
           mutated = true;
-          // Mark as removed to prevent flash-back if sync is missed
-          useCartStore.getState().markLineRemoved(lineId);
+          lineIdsToMarkRemoved.push(lineId);
         }
       }
     } else if (action === CartForm.ACTIONS.LinesUpdate) {
@@ -181,14 +188,16 @@ function applyOptimisticMutations(
     }
   }
 
-  if (!mutated) return null;
+  if (!mutated) {
+    return { cart: null, lineIdsToMarkRemoved };
+  }
 
   cart.totalQuantity = cart.lines.nodes.reduce(
     (sum, line) => sum + line.quantity,
     0,
   );
   cart.isOptimistic = true;
-  return cart;
+  return { cart, lineIdsToMarkRemoved };
 }
 
 export function useCart(): CartWithOptimistic | null {
@@ -227,9 +236,18 @@ export function useCart(): CartWithOptimistic | null {
     },
   };
 
-  const result =
-    applyOptimisticMutations(filteredBaseline, fetchers) ?? filteredBaseline;
-  return result;
+  const { cart: optimisticCart, lineIdsToMarkRemoved } =
+    applyOptimisticMutations(filteredBaseline, fetchers);
+
+  useEffect(() => {
+    if (lineIdsToMarkRemoved.length > 0) {
+      for (const lineId of lineIdsToMarkRemoved) {
+        useCartStore.getState().markLineRemoved(lineId);
+      }
+    }
+  }, [lineIdsToMarkRemoved]);
+
+  return optimisticCart ?? filteredBaseline;
 }
 
 /**
