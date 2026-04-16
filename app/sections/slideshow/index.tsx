@@ -119,7 +119,7 @@ export default function Slideshow(
                 "h-2.5 w-2.5 rounded-full",
                 "outline-2 outline-solid outline-transparent outline-offset-3",
               ],
-              dotsStyle === "line" && "h-2.5 w-6 rounded-full",
+              dotsStyle === "line" && "h-2 w-6 rounded-full",
               dotsStyle === "dash" && "h-1 w-12 rounded-full",
             ),
             bulletActiveClass: "active",
