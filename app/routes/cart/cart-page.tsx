@@ -67,6 +67,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       break;
     }
     case CartForm.ACTIONS.GiftCardCodesUpdate: {
+      // Backward compatibility: same as add gift card codes
       const giftCardCodes = (inputs.giftCardCodes as string[]) || [];
       result = await cart.addGiftCardCodes(giftCardCodes);
       break;

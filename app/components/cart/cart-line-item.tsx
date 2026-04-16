@@ -38,6 +38,8 @@ export function CartLineItem({
   }
 
   const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
+  // Workaround: line.isOptimistic is only set for newly added lines,
+  // so fall back to checking whether useOptimisticData has pending data.
   const isOptimistic =
     lineOptimistic ?? Object.keys(optimisticData ?? {}).length > 0;
 

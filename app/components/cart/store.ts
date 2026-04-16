@@ -38,10 +38,11 @@ type CartWithOptimistic = CartApiQueryFragment & { isOptimistic?: boolean };
  * `fetcherData` ref that survives cleanup. By syncing from individual
  * fetcher instances, we reliably capture post-mutation cart state.
  */
-export function useCartFetcherSync(fetcher: Fetcher<any>) {
+export function useCartFetcherSync(fetcher: Fetcher<unknown>) {
   const lastSyncedRef = useRef<string | null>(null);
   useEffect(() => {
-    const cart = fetcher.data?.cart;
+    const fetcherData = fetcher.data as Record<string, unknown> | undefined;
+    const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
     if (fetcher.state === "idle" && cart?.id && cart?.lines) {
       // Deduplicate: only sync if updatedAt changed
       const updatedAt = cart.updatedAt;
@@ -130,6 +131,8 @@ function applyOptimisticMutations(
           mutated = true;
         }
       }
+    } else {
+      mutated = true;
     }
   }
 

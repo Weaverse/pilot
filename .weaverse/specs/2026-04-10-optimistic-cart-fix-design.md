@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | approved |
+| **Status** | superseded by `2026-04-13-optimistic-cart-split-design.md` |
 | **Owner** | Paul Phan |
 | **Created** | 2026-04-10 |
 | **Branch** | `fix/optimistic-cart` |
