@@ -1,5 +1,5 @@
+import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
 import {
-  createSchema,
   type HydrogenComponentProps,
   isBrowser,
 } from "@weaverse/hydrogen";
@@ -9,9 +9,13 @@ import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import type { OverlayProps } from "~/components/overlay";
-import { Overlay, overlayInputs } from "~/components/overlay";
+import {
+  Overlay,
+  type OverlayProps,
+} from "~/components/overlay";
 import { ScrollReveal } from "~/components/scroll-reveal";
+
+export { schema } from "./schema";
 
 const SECTION_HEIGHTS = {
   small: {
@@ -29,19 +33,26 @@ const SECTION_HEIGHTS = {
   custom: null,
 };
 
-interface HeroVideoData extends OverlayProps, VariantProps<typeof variants> {
+export interface HeroVideoData
+  extends OverlayProps,
+    VariantProps<typeof variants> {
   videoURL: string;
+  autoplay: boolean;
+  loop: boolean;
+  showPlayPauseButton: boolean;
   height: "small" | "medium" | "large" | "custom";
   heightOnDesktop: number;
   heightOnMobile: number;
 }
 
-export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {
+export interface HeroVideoProps
+  extends HeroVideoData,
+    HydrogenComponentProps {
   ref: React.Ref<HTMLElement>;
 }
 
-const variants = cva(
-  "absolute inset-0 z-10 mx-auto flex max-w-screen flex-col items-center justify-center px-3",
+export const variants = cva(
+  "absolute inset-0 z-10 mx-auto flex max-w-screen flex-col px-3 [&_.paragraph]:mx-[unset]",
   {
     variants: {
       gap: {
@@ -62,9 +73,33 @@ const variants = cva(
         56: "space-y-7 lg:space-y-14",
         60: "space-y-7 lg:space-y-[60px]",
       },
+      width: {
+        full: "w-full",
+        stretch: "w-full px-3 md:px-10 lg:px-16",
+        fixed: "w-full max-w-(--page-width) px-3 md:px-4 lg:px-6",
+      },
+      verticalPadding: {
+        none: "",
+        small: "py-4 md:py-6 lg:py-8",
+        medium: "py-8 md:py-12 lg:py-16",
+        large: "py-12 md:py-24 lg:py-32",
+      },
+      contentPosition: {
+        "top left": "items-start justify-start [&_.paragraph]:text-left",
+        "top center": "items-center justify-start [&_.paragraph]:text-center",
+        "top right": "items-end justify-start [&_.paragraph]:text-right",
+        "center left": "items-start justify-center [&_.paragraph]:text-left",
+        "center center":
+          "items-center justify-center [&_.paragraph]:text-center",
+        "center right": "items-end justify-center [&_.paragraph]:text-right",
+        "bottom left": "items-start justify-end [&_.paragraph]:text-left",
+        "bottom center": "items-center justify-end [&_.paragraph]:text-center",
+        "bottom right": "items-end justify-end [&_.paragraph]:text-right",
+      },
     },
     defaultVariants: {
       gap: 20,
+      contentPosition: "center center",
     },
   },
 );
@@ -89,7 +124,13 @@ export default function HeroVideo(props: HeroVideoProps) {
   const {
     ref,
     videoURL,
+    autoplay,
+    loop,
+    showPlayPauseButton,
     gap,
+    width,
+    verticalPadding,
+    contentPosition,
     height,
     heightOnDesktop,
     heightOnMobile,
@@ -103,6 +144,14 @@ export default function HeroVideo(props: HeroVideoProps) {
 
   const id = rest["data-wv-id"];
   const [size, setSize] = useState(() => getPlayerSize(id));
+  const [playing, setPlaying] = useState(autoplay !== false);
+  const [hovered, setHovered] = useState(false);
+
+  let contentVisible = !hovered || !playing;
+
+  function togglePlaying() {
+    setPlaying((prev) => !prev);
+  }
 
   const desktopHeight =
     SECTION_HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
@@ -117,9 +166,7 @@ export default function HeroVideo(props: HeroVideoProps) {
   });
 
   const setRefs = (node: HTMLElement) => {
-    // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
     inViewRef(node);
-    // Handle ref prop
     if (typeof ref === "function") {
       ref(node);
     } else if (ref && "current" in ref) {
@@ -149,6 +196,8 @@ export default function HeroVideo(props: HeroVideoProps) {
       style={sectionStyle}
     >
       <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         className={clsx(
           "relative flex items-center justify-center overflow-hidden",
           "h-(--mobile-height) sm:h-(--desktop-height)",
@@ -161,9 +210,9 @@ export default function HeroVideo(props: HeroVideoProps) {
           <Suspense fallback={null}>
             <ReactPlayer
               url={videoURL}
-              playing
+              playing={playing}
               muted
-              loop={true}
+              loop={loop !== false}
               width={size.width}
               height={size.height}
               controls={false}
@@ -175,119 +224,33 @@ export default function HeroVideo(props: HeroVideoProps) {
           enableOverlay={enableOverlay}
           overlayColor={overlayColor}
           overlayColorHover={overlayColorHover}
-          overlayOpacity={overlayOpacity}
-          className="z-0"
+          overlayOpacity={contentVisible ? overlayOpacity : 0}
+          className="z-0 transition-all"
         />
-        <div className={clsx(variants({ gap }))}>{children}</div>
+        <div
+          className={clsx(
+            variants({ gap, width, verticalPadding, contentPosition }),
+            "transition-opacity duration-300",
+            contentVisible ? "opacity-100" : "opacity-0",
+          )}
+        >
+          {children}
+        </div>
+        {showPlayPauseButton !== false && (
+          <button
+            type="button"
+            onClick={togglePlaying}
+            className="absolute right-6 bottom-6 z-20 flex p-3 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
+            aria-label={playing ? "Pause video" : "Play video"}
+          >
+            {playing ? (
+              <PauseIcon className="size-6" />
+            ) : (
+              <PlayIcon className="size-6" />
+            )}
+          </button>
+        )}
       </div>
     </ScrollReveal>
   );
 }
-
-export const schema = createSchema({
-  type: "hero-video",
-  title: "Hero video",
-  settings: [
-    {
-      group: "Video",
-      inputs: [
-        {
-          type: "text",
-          name: "videoURL",
-          label: "Video URL",
-          defaultValue: "https://www.youtube.com/watch?v=Su-x4Mo5xmU",
-          placeholder: "https://www.youtube.com/watch?v=Su-x4Mo5xmU",
-          helpText: "Support YouTube, Vimeo, MP4, WebM, and HLS streams.",
-        },
-        {
-          type: "heading",
-          label: "Layout",
-        },
-        {
-          type: "select",
-          name: "height",
-          label: "Section height",
-          configs: {
-            options: [
-              { value: "small", label: "Small" },
-              { value: "medium", label: "Medium" },
-              { value: "large", label: "Large" },
-              { value: "custom", label: "Custom" },
-            ],
-          },
-          defaultValue: "medium",
-        },
-        {
-          type: "range",
-          name: "heightOnDesktop",
-          label: "Height on desktop",
-          defaultValue: 650,
-          configs: {
-            min: 400,
-            max: 800,
-            step: 10,
-            unit: "px",
-          },
-          condition: (data: HeroVideoData) => data.height === "custom",
-        },
-        {
-          type: "range",
-          name: "heightOnMobile",
-          label: "Height on mobile",
-          defaultValue: 300,
-          configs: {
-            min: 250,
-            max: 500,
-            step: 10,
-            unit: "px",
-          },
-          condition: (data: HeroVideoData) => data.height === "custom",
-        },
-        {
-          type: "range",
-          name: "gap",
-          label: "Items spacing",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 4,
-            unit: "px",
-          },
-          defaultValue: 20,
-        },
-      ],
-    },
-    {
-      group: "Overlay",
-      inputs: overlayInputs,
-    },
-  ],
-  childTypes: ["subheading", "heading", "paragraph", "button"],
-  presets: {
-    enableOverlay: true,
-    overlayColor: "#000000",
-    overlayOpacity: 40,
-    videoURL: "https://www.youtube.com/watch?v=gbLmku5QACM",
-    height: "large",
-    gap: 20,
-    children: [
-      {
-        type: "subheading",
-        content: "Seamless hero videos",
-        color: "#fff",
-      },
-      {
-        type: "heading",
-        content: "Bring your brand to life.",
-        as: "h2",
-        color: "#fff",
-      },
-      {
-        type: "paragraph",
-        content:
-          "Pair large video with a compelling message to captivate your audience.",
-        color: "#fff",
-      },
-    ],
-  },
-});
