@@ -2,6 +2,7 @@ import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
 import {
   type HydrogenComponentProps,
   isBrowser,
+  type WeaverseVideo,
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -36,6 +37,7 @@ const SECTION_HEIGHTS = {
 export interface HeroVideoData
   extends OverlayProps,
     VariantProps<typeof variants> {
+  video: WeaverseVideo;
   videoURL: string;
   autoplay: boolean;
   loop: boolean;
@@ -123,6 +125,7 @@ const ReactPlayer = lazy(() => import("react-player/lazy"));
 export default function HeroVideo(props: HeroVideoProps) {
   const {
     ref,
+    video,
     videoURL,
     autoplay,
     loop,
@@ -192,7 +195,7 @@ export default function HeroVideo(props: HeroVideoProps) {
       as="section"
       ref={setRefs}
       {...rest}
-      className="h-full w-full overflow-hidden"
+      className="relative h-full w-full overflow-hidden"
       style={sectionStyle}
     >
       <div
@@ -209,7 +212,7 @@ export default function HeroVideo(props: HeroVideoProps) {
         {inView && (
           <Suspense fallback={null}>
             <ReactPlayer
-              url={videoURL}
+              url={video?.url || videoURL}
               playing={playing}
               muted
               loop={loop !== false}
@@ -236,21 +239,21 @@ export default function HeroVideo(props: HeroVideoProps) {
         >
           {children}
         </div>
-        {showPlayPauseButton !== false && (
-          <button
-            type="button"
-            onClick={togglePlaying}
-            className="absolute right-6 bottom-6 z-20 flex p-3 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
-            aria-label={playing ? "Pause video" : "Play video"}
-          >
-            {playing ? (
-              <PauseIcon className="size-6" />
-            ) : (
-              <PlayIcon className="size-6" />
-            )}
-          </button>
-        )}
       </div>
+      {showPlayPauseButton !== false && (
+        <button
+          type="button"
+          onClick={togglePlaying}
+          className="absolute right-4 bottom-4 z-20 flex p-3 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
+          aria-label={playing ? "Pause video" : "Play video"}
+        >
+          {playing ? (
+            <PauseIcon className="size-6" />
+          ) : (
+            <PlayIcon className="size-6" />
+          )}
+        </button>
+      )}
     </ScrollReveal>
   );
 }

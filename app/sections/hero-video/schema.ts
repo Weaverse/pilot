@@ -10,11 +10,20 @@ export const schema = createSchema({
       group: "Video",
       inputs: [
         {
+          type: "video",
+          name: "video",
+          label: "Video",
+          helpText:
+            "If no video is selected, the component will fallback to use the Video URL below.",
+        },
+        {
           type: "text",
           name: "videoURL",
           label: "Video URL",
-          defaultValue: "https://www.youtube.com/watch?v=Su-x4Mo5xmU",
-          placeholder: "https://www.youtube.com/watch?v=Su-x4Mo5xmU",
+          defaultValue:
+            "https://cdn.shopify.com/videos/c/o/v/9ebea5c50fc2425880c6b8d14eab8b11.mp4",
+          placeholder:
+            "https://cdn.shopify.com/videos/c/o/v/9ebea5c50fc2425880c6b8d14eab8b11.mp4",
           helpText: "Support YouTube, Vimeo, MP4, WebM, and HLS streams.",
         },
         {
@@ -135,9 +144,9 @@ export const schema = createSchema({
   presets: {
     enableOverlay: true,
     overlayColor: "#000000",
-    overlayOpacity: 40,
-    videoURL: "https://www.youtube.com/watch?v=gbLmku5QACM",
-    height: "small",
+    overlayOpacity: 20,
+    videoURL:
+      "https://cdn.shopify.com/videos/c/o/v/9ebea5c50fc2425880c6b8d14eab8b11.mp4",
     contentPosition: "bottom left",
     width: "stretch",
     verticalPadding: "small",
@@ -157,7 +166,7 @@ export const schema = createSchema({
       {
         type: "paragraph",
         content:
-          "Immerse your audience in a cinematic experience that moves them to act.",
+          "Immerse your audience in a cinematic experience that moves them to act. Let your visuals do the talking — bold imagery, seamless motion, and a story that stays with them long after they scroll past.",
         color: "#fff",
       },
     ],
