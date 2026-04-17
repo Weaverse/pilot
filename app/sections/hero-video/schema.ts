@@ -77,19 +77,6 @@ export const schema = createSchema({
         },
         {
           type: "range",
-          name: "heightOnMobile",
-          label: "Height on mobile",
-          defaultValue: 300,
-          configs: {
-            min: 250,
-            max: 500,
-            step: 10,
-            unit: "px",
-          },
-          condition: (data: HeroVideoData) => data.height === "custom",
-        },
-        {
-          type: "range",
           name: "gap",
           label: "Items spacing",
           configs: {

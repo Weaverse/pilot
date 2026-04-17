@@ -8,29 +8,17 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import {
-  Overlay,
-  type OverlayProps,
-} from "~/components/overlay";
+import { Overlay, type OverlayProps } from "~/components/overlay";
 import { ScrollReveal } from "~/components/scroll-reveal";
 
 export { schema } from "./schema";
 
 const SECTION_HEIGHTS = {
-  small: {
-    desktop: "40vh",
-    mobile: "50vh",
-  },
-  medium: {
-    desktop: "50vh",
-    mobile: "60vh",
-  },
-  large: {
-    desktop: "70vh",
-    mobile: "80vh",
-  },
+  small: "40vh",
+  medium: "50vh",
+  large: "70vh",
   custom: null,
 };
 
@@ -44,12 +32,9 @@ export interface HeroVideoData
   showPlayPauseButton: boolean;
   height: "small" | "medium" | "large" | "custom";
   heightOnDesktop: number;
-  heightOnMobile: number;
 }
 
-export interface HeroVideoProps
-  extends HeroVideoData,
-    HydrogenComponentProps {
+export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {
   ref: React.Ref<HTMLElement>;
 }
 
@@ -120,6 +105,22 @@ function getPlayerSize(id: string) {
   return { width: "100%", height: "auto" };
 }
 
+/**
+ * Calculate expected video height based on intrinsic dimensions and container width.
+ * This avoids layout shift by setting the correct height before the video renders.
+ */
+function calculateVideoHeight(
+  video: WeaverseVideo | undefined,
+  containerWidth: number,
+): number | null {
+  // Use WeaverseVideo intrinsic dimensions if available
+  if (video?.width && video?.height && containerWidth > 0) {
+    const aspectRatio = video.width / video.height;
+    return containerWidth / aspectRatio;
+  }
+  return null;
+}
+
 const ReactPlayer = lazy(() => import("react-player/lazy"));
 
 export default function HeroVideo(props: HeroVideoProps) {
@@ -136,7 +137,6 @@ export default function HeroVideo(props: HeroVideoProps) {
     contentPosition,
     height,
     heightOnDesktop,
-    heightOnMobile,
     enableOverlay,
     overlayColor,
     overlayColorHover,
@@ -146,9 +146,25 @@ export default function HeroVideo(props: HeroVideoProps) {
   } = props;
 
   const id = rest["data-wv-id"];
+  const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(() => getPlayerSize(id));
   const [playing, setPlaying] = useState(autoplay !== false);
   const [hovered, setHovered] = useState(false);
+
+  // Calculate initial video height from intrinsic dimensions
+  const [videoHeight, setVideoHeight] = useState<number | null>(() => {
+    if (isBrowser && containerRef.current) {
+      const containerWidth = containerRef.current.getBoundingClientRect().width;
+      return calculateVideoHeight(video, containerWidth);
+    }
+    // Fallback: calculate from video metadata if available
+    if (video?.width && video?.height) {
+      // Use viewport width as estimate for container width
+      const estimatedWidth = window.innerWidth;
+      return calculateVideoHeight(video, estimatedWidth);
+    }
+    return null;
+  });
 
   let contentVisible = !hovered || !playing;
 
@@ -156,12 +172,10 @@ export default function HeroVideo(props: HeroVideoProps) {
     setPlaying((prev) => !prev);
   }
 
-  const desktopHeight =
-    SECTION_HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
-  const mobileHeight = SECTION_HEIGHTS[height]?.mobile || `${heightOnMobile}px`;
+  const desktopHeight = SECTION_HEIGHTS[height] || `${heightOnDesktop}px`;
   const sectionStyle: CSSProperties = {
     "--desktop-height": desktopHeight,
-    "--mobile-height": mobileHeight,
+    ...(videoHeight ? { "--video-height": `${videoHeight}px` } : {}),
   } as CSSProperties;
 
   const { ref: inViewRef, inView } = useInView({
@@ -177,8 +191,52 @@ export default function HeroVideo(props: HeroVideoProps) {
     }
   };
 
+  /**
+   * Measure actual video element height and adjust container to match.
+   * This corrects any discrepancy between calculated and actual rendered height.
+   */
+  function syncVideoHeight() {
+    if (!containerRef.current) {
+      return;
+    }
+
+    // Find the actual video or iframe element inside ReactPlayer
+    const mediaEl = containerRef.current.querySelector(
+      "video, iframe",
+    ) as HTMLElement | null;
+
+    if (mediaEl) {
+      const actualHeight = mediaEl.getBoundingClientRect().height;
+      if (actualHeight > 0) {
+        // Only update if significantly different (> 2px) to avoid jitter
+        setVideoHeight((prev) => {
+          if (prev === null || Math.abs(prev - actualHeight) > 2) {
+            return actualHeight;
+          }
+          return prev;
+        });
+      }
+    }
+  }
+
+  /**
+   * Recalculate video height on resize using intrinsic dimensions.
+   * This ensures the container always matches the video's actual displayed size.
+   */
   function handleResize() {
     setSize(getPlayerSize(id));
+
+    // First, try intrinsic calculation
+    if (containerRef.current && video?.width && video?.height) {
+      const containerWidth = containerRef.current.getBoundingClientRect().width;
+      const calculatedHeight = calculateVideoHeight(video, containerWidth);
+      if (calculatedHeight) {
+        setVideoHeight(calculatedHeight);
+      }
+    }
+
+    // Then sync with actual video element after a brief delay
+    requestAnimationFrame(syncVideoHeight);
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
@@ -188,7 +246,7 @@ export default function HeroVideo(props: HeroVideoProps) {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [inView, height, heightOnDesktop, heightOnMobile]);
+  }, [inView, height, heightOnDesktop]);
 
   return (
     <ScrollReveal
@@ -199,14 +257,16 @@ export default function HeroVideo(props: HeroVideoProps) {
       style={sectionStyle}
     >
       <div
+        ref={containerRef}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         className={clsx(
-          "relative flex items-center justify-center overflow-hidden",
-          "h-(--mobile-height) sm:h-(--desktop-height)",
-          "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
-          "translate-x-[min(0px,calc((var(--mobile-height)/9*16-100vw)/-2))]",
-          "sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
+          "relative flex items-center justify-center overflow-hidden w-full",
+          videoHeight
+            ? "h-(--video-height) md:h-[min(var(--desktop-height),var(--video-height))]"
+            : "aspect-video md:aspect-auto md:h-(--desktop-height)",
+          "md:w-[max(var(--desktop-height)/9*16,100vw)]",
+          "md:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
         {inView && (
@@ -219,7 +279,11 @@ export default function HeroVideo(props: HeroVideoProps) {
               width={size.width}
               height={size.height}
               controls={false}
-              className="aspect-video"
+              // className="aspect-video"
+              onReady={() => {
+                // Sync container height with actual video element after render
+                requestAnimationFrame(syncVideoHeight);
+              }}
             />
           </Suspense>
         )}
@@ -228,12 +292,12 @@ export default function HeroVideo(props: HeroVideoProps) {
           overlayColor={overlayColor}
           overlayColorHover={overlayColorHover}
           overlayOpacity={contentVisible ? overlayOpacity : 0}
-          className="z-0 transition-all"
+          className="z-0 hidden transition-all md:block"
         />
         <div
           className={clsx(
             variants({ gap, width, verticalPadding, contentPosition }),
-            "transition-opacity duration-300",
+            "hidden transition-opacity duration-300 md:flex",
             contentVisible ? "opacity-100" : "opacity-0",
           )}
         >
