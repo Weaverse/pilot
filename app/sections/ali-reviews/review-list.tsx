@@ -52,9 +52,13 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
         >
           <div className="flex shrink-0 gap-4">
             {showAvgRating && (
-              <div className="font-bold text-6xl leading-none">
+              <span
+                className="font-bold text-6xl leading-none"
+                role="img"
+                aria-label={`Average rating: ${avgRating.toFixed(1)} out of 5`}
+              >
                 {avgRating.toFixed(1)}
-              </div>
+              </span>
             )}
             <div className="flex flex-col justify-center gap-1.5">
               <StarRating rating={avgRating} />

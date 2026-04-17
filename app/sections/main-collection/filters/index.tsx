@@ -35,7 +35,7 @@ function CollectionFilters(props: CollectionFiltersProps) {
         className="sticky flex h-[calc(100vh-var(--height-nav)-20px)] flex-col gap-4 pt-6 pr-5"
         style={{ top: "calc(var(--height-nav))" }}
       >
-        <div className="font-bold">Filters</div>
+        <h4 className="text-lg font-semibold">Filters</h4>
         <Filters
           expandFilters={expandFilters}
           showFiltersCount={showFiltersCount}
