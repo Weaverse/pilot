@@ -21,9 +21,7 @@ export function NotFound({ type = "page" }: { type?: string }) {
           removed, had its name changed, or is temporarily unavailable.
         </p>
         <div className="pt-10">
-          <div className="text-center font-medium text-xl">
-            What you can do?
-          </div>
+          <h5 className="text-center font-medium text-xl">What you can do?</h5>
           <div className="flex flex-col items-center justify-center gap-4 pt-4 md:flex-row">
             <Link variant="outline" to="/products">
               Shop our products

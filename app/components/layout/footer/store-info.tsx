@@ -11,7 +11,7 @@ export function StoreInfo({
 }: StoreInfoProps) {
   return (
     <div className="flex flex-col gap-6">
-      <div className="text-base">{addressTitle}</div>
+      <h3 className="text-base">{addressTitle}</h3>
       <div className="space-y-2">
         <p>{storeAddress}</p>
         <p>Email: {storeEmail}</p>

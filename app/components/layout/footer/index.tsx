@@ -87,9 +87,7 @@ export function Footer() {
                   />
                 </div>
               ) : (
-                <div className="font-medium text-base uppercase">
-                  {shopName}
-                </div>
+                <h3 className="font-medium text-base uppercase">{shopName}</h3>
               )}
               {bio ? <div dangerouslySetInnerHTML={{ __html: bio }} /> : null}
               <SocialLinks

@@ -82,7 +82,7 @@ export function CartLineItem({
                 <RevealUnderline>{product?.title || ""}</RevealUnderline>
               </Link>
             ) : (
-              <p>{product?.title || ""}</p>
+              <h5 className="text-base">{product?.title || ""}</h5>
             )}
             {!isDefaultVariant && (
               <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
