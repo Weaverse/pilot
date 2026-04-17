@@ -20,7 +20,7 @@ type OrderCardsProps = {
 export function OrdersHistory({ orders }: OrderCardsProps) {
   return (
     <div className="space-y-4">
-      <div className="font-bold">Orders</div>
+      <h2 className="font-bold text-base">Orders</h2>
       {orders?.length ? (
         <Orders orders={orders} />
       ) : (

@@ -20,48 +20,48 @@ export function OrderSummary({
     );
   }
   return (
-    <div className="ml-auto space-y-4">
+    <dl className="ml-auto space-y-4">
       <div className="flex justify-between gap-4">
-        <span className="font-bold">Subtotal</span>
-        <span>
+        <dt className="font-bold">Subtotal</dt>
+        <dd>
           <Money data={order.subtotal} />
-        </span>
+        </dd>
       </div>
       <div className="flex justify-between gap-4">
-        <span>Tax</span>
-        <span>
+        <dt>Tax</dt>
+        <dd>
           <Money data={order.totalTax} />
-        </span>
+        </dd>
       </div>
       <div className="flex justify-between gap-4">
-        <span>Shipping</span>
-        <span>
+        <dt>Shipping</dt>
+        <dd>
           <Money data={order.totalShipping} />
-        </span>
+        </dd>
       </div>
       <hr className="border-line-subtle border-t pb-2" />
       <div className="flex justify-between gap-4">
-        <span className="font-bold">Total</span>
-        <span className="text-xl">
+        <dt className="font-bold">Total</dt>
+        <dd className="text-xl">
           <Money data={order.totalPrice} />
-        </span>
+        </dd>
       </div>
       <div className="flex justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <dt className="flex items-center gap-2">
           <TagIcon className="h-4 w-4" />
           <span className="font-bold text-sm uppercase leading-none">
             Total savings
           </span>
-        </div>
-        <span>
+        </dt>
+        <dd>
           <Money
             data={{
               amount: totalDiscount.toString(),
               currencyCode: order.totalPrice?.currencyCode,
             }}
           />
-        </span>
+        </dd>
       </div>
-    </div>
+    </dl>
   );
 }

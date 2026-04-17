@@ -13,7 +13,7 @@ export function AddressBook({
 }) {
   return (
     <div className="space-y-4">
-      <div className="font-bold">Address Book</div>
+      <h2 className="font-bold text-base">Address Book</h2>
       <div className="space-y-3">
         {!addresses?.length && (
           <div>You haven&apos;t saved any addresses yet.</div>
