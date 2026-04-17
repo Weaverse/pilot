@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 import type { Fetcher } from "react-router";
 import { useFetchers, useRouteLoaderData } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
-import type { RootLoader } from "~/root";
 import { create } from "zustand";
+import type { RootLoader } from "~/root";
 
 type CartStore = {
   isOpen: boolean;
@@ -23,16 +23,19 @@ export const useCartStore = create<CartStore>()((set) => ({
     set((state) => ({ isOpen: open !== undefined ? open : !state.isOpen })),
 }));
 
-/**
- * Module-level ref to track the freshest completed fetcher cart.
- * This survives component unmounts, which is crucial for handling the
- * flash-back bug when the remove button component unmounts before
- * the fetcher completes.
- */
 const freshestFetcherCartRef = {
   cart: null as CartApiQueryFragment | null,
   updatedAt: "",
 };
+
+/**
+ * Module-level set of line IDs that have been optimistically removed.
+ * These are filtered from the baseline cart until the server cart
+ * confirms the lines are gone. This is necessary because React Router
+ * cleans up fetchers from unmounted components synchronously — the
+ * remove fetcher's response is never visible via useFetchers().
+ */
+const removedLineIds = new Set<string>();
 
 type OptimisticLineNode = CartApiQueryFragment["lines"]["nodes"][number] & {
   isOptimistic?: boolean;
@@ -45,7 +48,7 @@ function applyOptimisticMutations(
   fetchers: ReturnType<typeof useFetchers>,
 ): CartWithOptimistic | null {
   const pendingFetchers = fetchers.filter(
-    (f) => f.state !== "idle" && f.formData,
+    (f) => f.state === "submitting" && f.formData,
   );
   if (pendingFetchers.length === 0) {
     return null;
@@ -64,25 +67,33 @@ function applyOptimisticMutations(
   let mutated = false;
 
   for (const fetcher of pendingFetchers) {
-    const { action, inputs } = CartForm.getFormInput(fetcher.formData!);
-    const nodes = cart.lines.nodes;
+    const formData = fetcher.formData;
+    if (!formData) {
+      continue;
+    }
+    const { action, inputs } = CartForm.getFormInput(formData);
+    const lineNodes = cart.lines.nodes;
 
     if (action === CartForm.ACTIONS.LinesAdd) {
       for (const line of inputs?.lines ?? []) {
-        if (!line.selectedVariant) continue;
-        const existingIdx = nodes.findIndex(
-          (n) => n.merchandise?.id === line.selectedVariant?.id,
+        const selectedVariant =
+          line.selectedVariant as OptimisticLineNode["merchandise"];
+        if (!selectedVariant) {
+          continue;
+        }
+        const existingIdx = lineNodes.findIndex(
+          (n) => n.merchandise?.id === selectedVariant.id,
         );
         mutated = true;
         if (existingIdx !== -1) {
-          const cloned = { ...nodes[existingIdx] } as OptimisticLineNode;
+          const cloned = { ...lineNodes[existingIdx] } as OptimisticLineNode;
           cloned.quantity = (cloned.quantity || 1) + (line.quantity || 1);
           cloned.isOptimistic = true;
-          nodes[existingIdx] = cloned;
+          lineNodes[existingIdx] = cloned;
         } else {
-          nodes.unshift({
+          lineNodes.unshift({
             id: `optimistic-${crypto.randomUUID()}`,
-            merchandise: line.selectedVariant,
+            merchandise: selectedVariant,
             isOptimistic: true,
             quantity: line.quantity || 1,
           } as OptimisticLineNode);
@@ -90,23 +101,24 @@ function applyOptimisticMutations(
       }
     } else if (action === CartForm.ACTIONS.LinesRemove) {
       for (const lineId of (inputs?.lineIds as string[]) ?? []) {
-        const idx = nodes.findIndex((n) => n.id === lineId);
+        const idx = lineNodes.findIndex((n) => n.id === lineId);
         if (idx !== -1) {
-          nodes.splice(idx, 1);
+          lineNodes.splice(idx, 1);
           mutated = true;
         }
+        removedLineIds.add(lineId);
       }
     } else if (action === CartForm.ACTIONS.LinesUpdate) {
       for (const update of inputs?.lines ?? []) {
-        const idx = nodes.findIndex((n) => n.id === update.id);
+        const idx = lineNodes.findIndex((n) => n.id === update.id);
         if (idx !== -1) {
-          const cloned = { ...nodes[idx] } as OptimisticLineNode;
+          const cloned = { ...lineNodes[idx] } as OptimisticLineNode;
           cloned.quantity = update.quantity;
           cloned.isOptimistic = true;
           if (cloned.quantity === 0) {
-            nodes.splice(idx, 1);
+            lineNodes.splice(idx, 1);
           } else {
-            nodes[idx] = cloned;
+            lineNodes[idx] = cloned;
           }
           mutated = true;
         }
@@ -177,47 +189,87 @@ function getTimestampMs(dateString: string | undefined): number {
   return dateString ? new Date(dateString).getTime() : 0;
 }
 
-function findFreshestCart(
-  serverCart: CartApiQueryFragment | null,
-  fetchers: ReturnType<typeof useFetchers>,
-): CartApiQueryFragment | null {
-  let freshest = serverCart;
-  let freshestTime = getTimestampMs(serverCart?.updatedAt);
-
-  for (const fetcher of fetchers) {
-    const fetcherCart = fetcher.data?.cart as CartApiQueryFragment | undefined;
-    if (fetcher.state === "idle" && fetcherCart?.id && fetcherCart?.lines) {
-      const t = getTimestampMs(fetcherCart.updatedAt);
-      if (t > freshestTime) {
-        freshest = fetcherCart;
-        freshestTime = t;
-        freshestFetcherCartRef.cart = fetcherCart;
-        freshestFetcherCartRef.updatedAt = fetcherCart.updatedAt;
-      }
-    }
-  }
-
-  if (freshestFetcherCartRef.cart) {
-    const refTime = getTimestampMs(freshestFetcherCartRef.updatedAt);
-    if (refTime > freshestTime) {
-      freshest = freshestFetcherCartRef.cart;
-    }
-  }
-
-  return freshest;
-}
-
+/**
+ * Scans all sources (zustand, fetchers, module ref) and returns the
+ * freshest cart as baseline, then applies pending optimistic mutations.
+ *
+ * The fetcher scan here is critical: when a remove button's component
+ * unmounts before its fetcher completes, useCartFetcherSync never fires.
+ * Scanning useFetchers() in THIS hook (same render pass) catches those
+ * completed carts that would otherwise be lost.
+ *
+ * Only the SINGLE freshest completed cart is used as baseline — not
+ * accumulated across multiple fetchers — to avoid double-counting.
+ */
 export function useCart(): CartWithOptimistic | null {
   const serverCart = useCartStore((s) => s.serverCart);
   const fetchers = useFetchers();
-  const baseline = findFreshestCart(serverCart, fetchers);
+
+  let baseline = serverCart;
+  let baselineTime = getTimestampMs(serverCart?.updatedAt);
+  let baselineSource = "zustand";
+
+  const refTime = getTimestampMs(freshestFetcherCartRef.updatedAt);
+  if (freshestFetcherCartRef.cart && refTime > baselineTime) {
+    baseline = freshestFetcherCartRef.cart;
+    baselineTime = refTime;
+    baselineSource = "moduleRef";
+  }
+
+  for (const fetcher of fetchers) {
+    if (fetcher.state !== "idle") {
+      continue;
+    }
+    const fetcherData = fetcher.data as Record<string, unknown> | undefined;
+    const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
+    if (!cart?.id || !cart?.lines) {
+      continue;
+    }
+    const t = getTimestampMs(cart.updatedAt);
+    if (t > baselineTime) {
+      baseline = cart;
+      baselineTime = t;
+      baselineSource = `fetcher(${fetcher.key})`;
+      freshestFetcherCartRef.cart = cart;
+      freshestFetcherCartRef.updatedAt = cart.updatedAt;
+    }
+  }
+
+  if (!baseline) {
+    return null;
+  }
+
+  // Filter tombstoned lines from baseline — prevents flash-back when
+  // the remove fetcher's response is lost due to component unmount
+  if (removedLineIds.size > 0) {
+    const baselineLineIds = new Set(baseline.lines.nodes.map((n) => n.id));
+    const confirmedRemovals: string[] = [];
+    for (const id of removedLineIds) {
+      if (!baselineLineIds.has(id)) {
+        confirmedRemovals.push(id);
+      }
+    }
+    for (const id of confirmedRemovals) {
+      removedLineIds.delete(id);
+    }
+
+    if (removedLineIds.size > 0) {
+      const filteredNodes = baseline.lines.nodes.filter(
+        (n) => !removedLineIds.has(n.id),
+      );
+      baseline = {
+        ...baseline,
+        lines: { ...baseline.lines, nodes: filteredNodes },
+        totalQuantity: filteredNodes.reduce(
+          (sum, line) => sum + line.quantity,
+          0,
+        ),
+      };
+    }
+  }
 
   const optimisticCart =
-    baseline && fetchers.length > 0
-      ? applyOptimisticMutations(baseline, fetchers)
-      : null;
-
-  if (!baseline) return null;
+    fetchers.length > 0 ? applyOptimisticMutations(baseline, fetchers) : null;
 
   return optimisticCart ?? baseline;
 }
@@ -226,6 +278,7 @@ export function useCart(): CartWithOptimistic | null {
  * Syncs cart data from root loader's deferred promise into zustand.
  * Uses `updatedAt` to skip stale root loader data when a fetcher
  * already synced fresher post-mutation cart state.
+ *
  */
 export function CartStoreSync() {
   const rootData = useRouteLoaderData<RootLoader>("root");
