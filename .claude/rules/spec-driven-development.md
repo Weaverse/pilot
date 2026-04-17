@@ -14,6 +14,8 @@
 
 All specs live in a specs folder. The path can be configured in your project's `AGENTS.md` file (or similar project configuration). If not specified, the default location is `.specs/` at the project root.
 
+If no `.specs` folder exists at the project root and no path is specified in the agent file, search the project for an existing specs folder (e.g., `specs/`, `docs/specs/`, `.github/specs/`). If found, use that location; otherwise, create `.specs/` at the project root.
+
 **Configuration Example (in AGENTS.md):**
 ```markdown
 ## Spec-Driven Development (SDD) Directory
@@ -82,8 +84,6 @@ Template:
 | ---------------- | -------------------------------------------------------- |
 | **Status**       | status                                                   |
 | **Owner**        | @developer                                               |
-| **Issue**        | [#issue-number](link-to-issue) or N/A                    |
-| **Branch**       | `type/spec-name`                                         |
 | **Created**      | YYYY-MM-DD                                               |
 | **Last Updated** | YYYY-MM-DD                                               |
 
@@ -95,29 +95,6 @@ Template:
 
 [2-3 sentences. What this feature does and why it exists.]
 ```
-
-### Branch Naming Convention
-
-The branch name MUST follow the pattern `type/spec-name`, where:
-
-- **type**: the kind of work being done
-- **spec-name**: kebab-case name derived from the spec folder title
-
-Common types:
-
-| Type       | Use when                                      |
-| ---------- | --------------------------------------------- |
-| `feat`     | Adding new functionality                      |
-| `fix`      | Fixing a bug or error                         |
-| `update`   | Enhancing or changing existing features       |
-| `cleanup`  | Removing unused code, refactoring             |
-| `docs`     | Documentation-only changes                    |
-
-Examples:
-- `feat/build-abc`
-- `fix/error-on-checkout`
-- `cleanup/remove-legacy-api`
-- `update/change-abc-features`
 
 ### plan.md (required)
 
