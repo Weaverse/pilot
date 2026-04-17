@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@fontsource-variable/cabin": "^5.2.8",
+    "@fontsource-variable/playfair-display": "^5.2.8",
     "@graphql-codegen/cli": "6.3.0",
     "@phosphor-icons/react": "2.1.10",
     "@radix-ui/react-accordion": "1.2.12",
