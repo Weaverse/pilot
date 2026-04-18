@@ -1,7 +1,5 @@
-// Supports weights 400-700
-import "@fontsource-variable/cabin";
-// Supports weights 400-900
-import "@fontsource-variable/playfair-display";
+import "@fontsource-variable/cabin"; // Supports weights 400-700
+import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
