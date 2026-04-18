@@ -262,7 +262,7 @@ export function ProductCard({
           <Link
             to={`/products/${product.handle}?${params.toString()}`}
             prefetch="intent"
-            className="inline-block font-bold"
+            className="inline-block font-semibold"
           >
             <RevealUnderline className="leading-normal">
               {product.title}

@@ -138,7 +138,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
               },
             ]}
             data-test="add-to-cart"
-            className="w-full"
+            className="w-full uppercase"
           >
             {selectedVariant?.availableForSale ? "Add to cart" : "Sold out"}
           </AddToCartButton>

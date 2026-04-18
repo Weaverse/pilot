@@ -25,7 +25,7 @@ export function FooterMenu() {
             )}
             <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
           </Accordion.Trigger>
-          <h4 className="hidden font-medium text-lg lg:block">
+          <h4 className="hidden font-medium text-base lg:block">
             {["#", "/"].includes(to) ? title : <Link to={to}>{title}</Link>}
           </h4>
           <Accordion.Content

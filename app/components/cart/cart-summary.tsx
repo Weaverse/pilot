@@ -189,7 +189,7 @@ export function CartSummary({
         </dl>
       )}
       {(enableCartNote || enableDiscountCode || enableGiftCard) && (
-        <div className="mb-3 flex items-center justify-end gap-3">
+        <div className="mb-2 flex items-center justify-end gap-3">
           {enableCartNote && (
             <Dialog.Root>
               <Dialog.Trigger asChild>
@@ -238,7 +238,7 @@ export function CartSummary({
         </div>
       )}
       {checkoutUrl && (
-        <div className="mt-3 flex flex-col gap-3">
+        <div className="mt-2 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
             <Button className="w-full">
               <span>{checkoutButtonText || "Continue to Checkout"}</span>
