@@ -59,7 +59,10 @@ export default function ProductHighlightItem(props: HighlightItemProps) {
       )}
     >
       {IconComponent && (
-        <IconComponent className="size-6 shrink-0 text-slate-700" />
+        <IconComponent
+          className="size-6 shrink-0 text-slate-700"
+          weight="duotone"
+        />
       )}
       <span>{text}</span>
     </div>

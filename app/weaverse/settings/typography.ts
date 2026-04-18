@@ -26,7 +26,7 @@ export const typographySettings = {
           { label: "250", value: "0.25em" },
         ],
       },
-      defaultValue: "0.025em",
+      defaultValue: "0em",
     },
     {
       type: "range",
