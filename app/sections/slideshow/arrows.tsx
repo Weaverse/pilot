@@ -25,8 +25,7 @@ const variants = cva(
         dark: "bg-gray-900 text-gray-100 hover:bg-gray-800",
       },
       arrowsShape: {
-        square: "rounded-md",
-        rounded: "rounded-md",
+        auto: "rounded-md",
         circle: "rounded-full",
       },
       disabled: {

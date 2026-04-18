@@ -107,7 +107,7 @@ export default function OrderDetails() {
               <OrderSummary order={order} lineItems={lineItems} />
             </div>
             <div className="mt-4 shrink-0 pt-10 md:m-0 md:border-none md:pt-0">
-              <div className="font-bold">Shipping Address</div>
+              <h3 className="font-bold text-base">Shipping Address</h3>
               {order?.shippingAddress ? (
                 <ul className="mt-3">
                   <li>{order.shippingAddress.name}</li>
@@ -122,7 +122,7 @@ export default function OrderDetails() {
               ) : (
                 <p className="mt-3">No shipping address defined</p>
               )}
-              <div className="mt-6 font-bold">Status</div>
+              <h3 className="mt-6 font-bold text-base">Status</h3>
               {fulfillmentStatus && (
                 <div
                   className={clsx(

@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/pilot",
-  "version": "2026.4.15",
+  "version": "2026.4.18",
   "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
   "keywords": [
     "shopify",
@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@fontsource-variable/cabin": "^5.2.8",
+    "@fontsource-variable/newsreader": "^5.2.10",
     "@graphql-codegen/cli": "6.3.0",
     "@phosphor-icons/react": "2.1.10",
     "@radix-ui/react-accordion": "1.2.12",
@@ -60,8 +61,8 @@
     "@radix-ui/react-tooltip": "1.2.8",
     "@radix-ui/react-visually-hidden": "1.2.4",
     "@react-router/dev": "7.14.1",
-    "@shopify/hydrogen": "^2026.4.0",
-    "@shopify/hydrogen-react": "^2026.4.0",
+    "@shopify/hydrogen": "^2026.4.1",
+    "@shopify/hydrogen-react": "^2026.4.1",
     "@tailwindcss/vite": "^4.2.2",
     "@weaverse/hydrogen": "^5.12.0",
     "class-variance-authority": "0.7.1",
@@ -69,7 +70,7 @@
     "colord": "2.9.3",
     "graphql": "16.13.2",
     "graphql-tag": "2.12.6",
-    "isbot": "5.1.38",
+    "isbot": "^5.1.39",
     "react": "19.2.5",
     "react-country-flag": "3.1.0",
     "react-dom": "19.2.5",
@@ -100,7 +101,7 @@
     "cross-env": "10.1.0",
     "tailwindcss": "^4.2.2",
     "ts-node": "10.9.2",
-    "typescript": "6.0.2",
+    "typescript": "^6.0.3",
     "vite": "^6.4.1",
     "vite-tsconfig-paths": "6.1.1"
   },

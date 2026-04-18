@@ -95,9 +95,9 @@ export function ProductPopup({
             <Image data={featuredImage} alt={product.title} sizes="auto" />
           </div>
         )}
-        <div className="flex flex-col gap-2 py-2">
+        <div className="flex flex-col gap-2">
           <div className="space-y-1">
-            <div className="font-semibold">{product.title}</div>
+            <h5 className="font-medium text-xl">{product.title}</h5>
             {showPrice && (
               <div className="flex items-center gap-1.5">
                 {compareAtPrice && (
@@ -123,7 +123,7 @@ export function ProductPopup({
             <Link
               to={`/products/${product.handle}`}
               variant="underline"
-              className="w-fit text-sm"
+              className="w-fit"
             >
               {viewDetailsLinkText}
             </Link>

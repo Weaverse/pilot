@@ -54,9 +54,9 @@ export function ReviewItem({
         <StarRating rating={review.rating} className="[&>svg]:size-4.5" />
         <div className="space-y-1">
           {showReviewerName && (
-            <div className="font-semibold text-gray-900 text-lg/none">
+            <h5 className="font-semibold text-gray-900 text-lg/none">
               {review.reviewer.name}
-            </div>
+            </h5>
           )}
           {showReviewerEmail && (
             <div className="font-medium text-gray-500">

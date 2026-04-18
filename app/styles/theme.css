@@ -1,6 +1,6 @@
 @theme {
-  --font-cabin: Cabin Variable, ui-sans-serif, system-ui, sans-serif;
-  --font-serif: Arial, IBMPlexSerif, Palatino, ui-serif;
+  --font-sans: Cabin Variable, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Newsreader Variable, ui-serif, Georgia, serif;
 
   --breakpoint-sm: 32em;
   --breakpoint-md: 48em;
@@ -89,8 +89,8 @@
 }
 
 shopify-account {
-  --shopify-account-font-body: var(--font-cabin);
-  --shopify-account-font-heading: var(--font-cabin);
+  --shopify-account-font-body: var(--font-sans);
+  --shopify-account-font-heading: var(--font-serif);
   --shopify-account-color-background: var(--color-background);
   --shopify-account-color-text: var(--color-text);
   --shopify-account-color-accent: var(--btn-primary-bg);

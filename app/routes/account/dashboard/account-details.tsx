@@ -10,7 +10,7 @@ export function AccountDetails({
   const fullName = `${firstName || ""} ${lastName || ""}`.trim();
   return (
     <div className="space-y-4">
-      <div className="font-bold">Account</div>
+      <h2 className="font-bold text-base">Account</h2>
       <div className="space-y-4 border border-line-subtle rounded-xl p-5">
         <div className="space-y-1">
           <div className="text-body-subtle">Name</div>

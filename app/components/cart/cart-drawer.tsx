@@ -108,7 +108,7 @@ function CartDrawerContent({
               <Dialog.Title asChild className="text-base">
                 <Link
                   to="/cart"
-                  className="group/cart-title flex items-center gap-1.5 font-bold hover:underline"
+                  className="group/cart-title flex items-center gap-1.5 text-lg font-serif font-semibold hover:underline"
                   onClick={closeCartDrawer}
                 >
                   Cart ({cart?.totalQuantity || 0})

@@ -49,9 +49,9 @@ export function Logo() {
             )}
           </>
         ) : (
-          <div className="line-clamp-1 font-medium text-lg sm:text-2xl">
+          <h3 className="line-clamp-1 font-medium text-lg sm:text-2xl">
             {shopName}
-          </div>
+          </h3>
         )}
       </div>
     </Link>

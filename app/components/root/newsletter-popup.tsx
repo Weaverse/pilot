@@ -193,18 +193,13 @@ export function NewsletterPopup() {
               >
                 <h3
                   className={cn(
-                    "mb-4 font-semibold text-2xl",
-                    !isModal && "mb-3 text-xl",
+                    "mb-4 font-medium text-2xl",
+                    !isModal && "mb-3 text-2xl",
                   )}
                 >
                   {newsletterPopupHeading}
                 </h3>
-                <p
-                  className={cn(
-                    "mb-6 text-body-subtle",
-                    !isModal && "mb-4 text-sm",
-                  )}
-                >
+                <p className={cn("mb-6 text-body-subtle", !isModal && "mb-4")}>
                   {newsletterPopupDescription}
                 </p>
 

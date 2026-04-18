@@ -51,7 +51,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
       </ScrollReveal>
       {helpText && (
         <ScrollReveal
-          className="mt-2 text-body-subtle"
+          className="mt-3 text-body-subtle text-sm"
           dangerouslySetInnerHTML={{ __html: helpText }}
         />
       )}

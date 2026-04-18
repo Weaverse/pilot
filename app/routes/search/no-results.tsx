@@ -14,9 +14,9 @@ export function NoResults({
   return (
     <>
       {searchTerm && (
-        <div className="my-10 flex flex-col items-center justify-center text-xl lg:my-16">
+        <h3 className="my-10 flex flex-col items-center justify-center text-xl lg:my-16">
           No results for "{searchTerm}", try a different search.
-        </div>
+        </h3>
       )}
       <Suspense>
         <Await

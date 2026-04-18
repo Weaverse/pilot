@@ -19,7 +19,11 @@
     border-color: rgb(var(--color-border) / 0.15);
   }
   html {
-    @apply font-cabin scroll-pt-40;
+    @apply font-sans scroll-pt-40;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
   }
 
   button,

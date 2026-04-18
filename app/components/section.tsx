@@ -145,9 +145,7 @@ export function Section(props: SectionProps) {
       style={style}
       className={cn(
         variants({ padding: width, overflow, className }),
-        hasBackground &&
-          !isBgForContent &&
-          "rounded-lg bg-(--section-bg-color)",
+        hasBackground && !isBgForContent && "bg-(--section-bg-color)",
         animate &&
           revealElementsOnScroll && [
             "transition-all duration-700",
@@ -160,10 +158,7 @@ export function Section(props: SectionProps) {
         className={cn(
           variants({ gap, width, verticalPadding, overflow }),
           hasBackground &&
-            isBgForContent && [
-              "rounded-lg bg-(--section-bg-color)",
-              "px-4 sm:px-8",
-            ],
+            isBgForContent && ["bg-(--section-bg-color)", "px-4 sm:px-8"],
           containerClassName,
         )}
       >

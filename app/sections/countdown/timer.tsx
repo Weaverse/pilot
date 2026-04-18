@@ -61,22 +61,28 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
       }
     >
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.days || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.days || 0}
+          </h5>
           <div className="h-6 border-(--timer-color) border-r" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">Days</div>
       </div>
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.hours || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.hours || 0}
+          </h5>
           <div className="h-6 border-(--timer-color) border-r" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">hours</div>
       </div>
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.minutes || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.minutes || 0}
+          </h5>
           <div className="h-6 border-(--timer-color) border-r" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">
@@ -84,8 +90,10 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
         </div>
       </div>
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.seconds || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.seconds || 0}
+          </h5>
         </div>
         <div className="text-center text-sm capitalize md:text-base">
           seconds

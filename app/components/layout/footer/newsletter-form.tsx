@@ -27,7 +27,7 @@ export function NewsletterForm({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="text-base">{title}</div>
+      <h3 className="text-base font-medium">{title}</h3>
       <div className="space-y-2">
         <p>{description}</p>
         <fetcher.Form

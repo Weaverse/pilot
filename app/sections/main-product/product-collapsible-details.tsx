@@ -49,11 +49,11 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
           >
             <Accordion.Trigger
               className={cn(
-                "flex w-full items-center justify-between px-5 py-4 font-bold",
+                "flex w-full items-center justify-between px-5 py-4 font-semibold",
                 "data-[state=open]:[&>svg]:rotate-180",
               )}
             >
-              <span>{title}</span>
+              <h5 className="text-base">{title}</h5>
               <CaretDownIcon className="h-4 w-4 transition-transform duration-200" />
             </Accordion.Trigger>
             <Accordion.Content
