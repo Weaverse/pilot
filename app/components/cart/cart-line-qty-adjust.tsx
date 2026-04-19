@@ -6,8 +6,10 @@ import {
   useOptimisticData,
 } from "@shopify/hydrogen";
 import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
+import type { FetcherWithComponents } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import type { CartLineOptimisticData } from "./cart-line-item";
+import { useCartFetcherSync } from "./store";
 
 export function CartLineQuantityAdjust({
   line,
@@ -89,7 +91,22 @@ function UpdateCartButton({
       action={CartForm.ACTIONS.LinesUpdate}
       inputs={{ lines }}
     >
-      {children}
+      {(fetcher: FetcherWithComponents<any>) => (
+        <UpdateCartButtonInner fetcher={fetcher}>
+          {children}
+        </UpdateCartButtonInner>
+      )}
     </CartForm>
   );
+}
+
+function UpdateCartButtonInner({
+  fetcher,
+  children,
+}: {
+  fetcher: FetcherWithComponents<any>;
+  children: React.ReactNode;
+}) {
+  useCartFetcherSync(fetcher);
+  return <>{children}</>;
 }
