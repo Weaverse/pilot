@@ -81,8 +81,8 @@ export const schema = createSchema({
           label: "Items spacing",
           configs: {
             min: 0,
-            max: 40,
-            step: 4,
+            max: 60,
+            step: 2,
             unit: "px",
           },
           defaultValue: 20,

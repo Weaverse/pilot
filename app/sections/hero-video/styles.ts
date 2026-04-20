@@ -4,24 +4,6 @@ export const variants = cva(
   "absolute inset-0 z-10 mx-auto flex max-w-screen flex-col px-3 [&_.paragraph]:mx-[unset]",
   {
     variants: {
-      gap: {
-        0: "",
-        4: "space-y-1",
-        8: "space-y-2",
-        12: "space-y-3",
-        16: "space-y-4",
-        20: "space-y-5",
-        24: "space-y-3 lg:space-y-6",
-        28: "space-y-3.5 lg:space-y-7",
-        32: "space-y-4 lg:space-y-8",
-        36: "space-y-4 lg:space-y-9",
-        40: "space-y-5 lg:space-y-10",
-        44: "space-y-5 lg:space-y-11",
-        48: "space-y-6 lg:space-y-12",
-        52: "space-y-6 lg:space-y-[52px]",
-        56: "space-y-7 lg:space-y-14",
-        60: "space-y-7 lg:space-y-[60px]",
-      },
       width: {
         full: "w-full",
         stretch: "w-full px-3 md:px-10 lg:px-16",
@@ -47,7 +29,6 @@ export const variants = cva(
       },
     },
     defaultVariants: {
-      gap: 20,
       contentPosition: "center center",
     },
   },

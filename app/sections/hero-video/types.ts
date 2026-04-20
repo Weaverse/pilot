@@ -20,6 +20,7 @@ export interface HeroVideoData
   showPlayPauseButton: boolean;
   height: "small" | "medium" | "large" | "custom";
   heightOnDesktop: number;
+  gap?: number;
 }
 
 export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {

@@ -86,6 +86,8 @@ export default function HeroVideo(props: HeroVideoProps) {
   const sectionStyle: CSSProperties = {
     "--desktop-height": desktopHeight,
     ...(videoHeight ? { "--video-height": `${videoHeight}px` } : {}),
+    "--gap-desktop": `${gap ?? 0}px`,
+    "--gap-mobile": (gap ?? 0) <= 20 ? `${gap ?? 0}px` : `${(gap ?? 0) / 2}px`,
   } as CSSProperties;
 
   const { ref: inViewRef, inView } = useInView({
@@ -225,7 +227,8 @@ export default function HeroVideo(props: HeroVideoProps) {
         />
         <div
           className={clsx(
-            variants({ gap, width, verticalPadding, contentPosition }),
+            variants({ width, verticalPadding, contentPosition }),
+            "space-y-(--gap-mobile) lg:space-y-(--gap-desktop)",
             "hidden transition-opacity duration-300 md:flex",
             contentVisible ? "opacity-100" : "opacity-0",
           )}
