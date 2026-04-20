@@ -1,6 +1,6 @@
 import { createSchema } from "@weaverse/hydrogen";
 import { overlayInputs } from "~/components/overlay";
-import type { HeroVideoData } from "./index";
+import type { HeroVideoData } from "./types";
 
 export const schema = createSchema({
   type: "hero-video",
