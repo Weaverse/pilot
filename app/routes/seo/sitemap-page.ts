@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs } from "react-router";
 export async function loader({
   request,
   params,
-  context: { storefront, weaverse },
+  context: { storefront },
 }: LoaderFunctionArgs) {
   const response = await getSitemap({
     storefront,
