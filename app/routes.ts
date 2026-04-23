@@ -20,6 +20,7 @@ export default hydrogenRoutes([
     ),
     route("sitemap.xml", "routes/seo/sitemap.ts"),
     route("sitemap/:type/:page.xml", "routes/seo/sitemap-page.ts"),
+    route("sitemap-weaverse.xml", "routes/seo/sitemap-weaverse.xml.ts"),
     route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
     route("discount/:code", "routes/others/discount-code.tsx"),
     ...prefix("api", [
