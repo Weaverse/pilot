@@ -110,7 +110,7 @@ export function Swimlane({
           "grid w-full grid-flow-col justify-start gap-4",
           "snap-x snap-mandatory",
           "hidden-scroll scroll-px-6 overflow-x-scroll overflow-y-hidden",
-          "*:snap-start *:w-[38vw] *:lg:w-80",
+          "*:snap-start *:w-[80vw] *:lg:w-80",
           className,
         )}
         onScroll={withArrows ? handleScroll : rest.onScroll}
