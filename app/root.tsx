@@ -124,6 +124,16 @@ export const Layout = withWeaverse(function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <script
+          id="shopify-features"
+          type="application/json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              accessToken: data?.consent?.storefrontAccessToken ?? "",
+            }),
+          }}
+        />
         <link rel="stylesheet" href={styles} />
         <Meta />
         <Links />

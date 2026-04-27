@@ -35,7 +35,7 @@ export async function loadCriticalData({
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: false,
+      withPrivacyBanner: true,
       // localize the privacy banner
       country: storefront.i18n.country,
       language: storefront.i18n.language,
