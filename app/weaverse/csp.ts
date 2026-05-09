@@ -29,8 +29,14 @@ export function getWeaverseCsp(
       "*.alicdn.com",
       ...weaverseHosts,
     ],
-    connectSrc: ["vimeo.com", "*.google-analytics.com", ...weaverseHosts],
+    connectSrc: [
+      "vimeo.com",
+      "*.shopifysvc.com",
+      "*.google-analytics.com",
+      ...weaverseHosts,
+    ],
     styleSrc: weaverseHosts,
+    scriptSrc: ["https://cdn.shopify.com"],
   };
   if (isDesignMode) {
     updatedCsp.frameAncestors = ["*"];

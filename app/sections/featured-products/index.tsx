@@ -23,9 +23,7 @@ interface FeaturedProductsSectionData {
 
 interface FeaturedProductsProps
   extends SectionProps<FeaturedProductsLoaderData>,
-    FeaturedProductsSectionData {
-  ref: React.Ref<HTMLElement>;
-}
+    FeaturedProductsSectionData {}
 
 export default function FeaturedProducts(props: FeaturedProductsProps) {
   const {
@@ -37,11 +35,7 @@ export default function FeaturedProducts(props: FeaturedProductsProps) {
     children,
     ...rest
   } = props;
-  return (
-    <Section ref={ref} {...rest}>
-      {children}
-    </Section>
-  );
+  return <Section {...rest}>{children}</Section>;
 }
 
 const COLLECTION_PRODUCTS_QUERY = `#graphql
@@ -164,7 +158,7 @@ export const schema = createSchema({
     },
     {
       group: "Layout",
-      inputs: layoutInputs.filter((i) => i.name !== "borderRadius"),
+      inputs: layoutInputs,
     },
   ],
   presets: {

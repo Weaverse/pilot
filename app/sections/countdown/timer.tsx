@@ -1,6 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 const ONE_SEC = 1000;
 const ONE_MIN = ONE_SEC * 60;
@@ -24,11 +25,10 @@ function calculateRemainingTime(endTime: number) {
 interface CountDownTimerData {
   textColor: string;
   endTime: number;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
-  const { textColor, endTime, ref, ...rest } = props;
+  const { textColor, endTime, ...rest } = props;
   const [remainingTime, setRemainingTime] = useState(
     calculateRemainingTime(endTime),
   );
@@ -51,11 +51,9 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
   }, [endTime]);
 
   return (
-    <div
-      ref={ref}
+    <ScrollReveal
       {...rest}
       className="countdown--timer flex py-3 text-(--timer-color) sm:py-0"
-      data-motion="fade-up"
       style={
         {
           "--timer-color": textColor,
@@ -63,22 +61,28 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
       }
     >
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.days || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.days || 0}
+          </h5>
           <div className="h-6 border-(--timer-color) border-r" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">Days</div>
       </div>
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.hours || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.hours || 0}
+          </h5>
           <div className="h-6 border-(--timer-color) border-r" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">hours</div>
       </div>
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.minutes || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.minutes || 0}
+          </h5>
           <div className="h-6 border-(--timer-color) border-r" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">
@@ -86,14 +90,16 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
         </div>
       </div>
       <div className="space-y-1">
-        <div className="flex items-center font-medium text-4xl leading-tight md:text-5xl">
-          <div className="px-6">{remainingTime?.seconds || 0}</div>
+        <div className="flex items-center">
+          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+            {remainingTime?.seconds || 0}
+          </h5>
         </div>
         <div className="text-center text-sm capitalize md:text-base">
           seconds
         </div>
       </div>
-    </div>
+    </ScrollReveal>
   );
 }
 

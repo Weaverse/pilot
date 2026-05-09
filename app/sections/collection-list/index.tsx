@@ -1,17 +1,11 @@
 import { createSchema } from "@weaverse/hydrogen";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
-interface CollectionListProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface CollectionListProps extends SectionProps {}
 
 function CollectionList(props: CollectionListProps) {
-  const { children, ref, ...rest } = props;
-  return (
-    <Section ref={ref} {...rest}>
-      {children}
-    </Section>
-  );
+  const { children, ...rest } = props;
+  return <Section {...rest}>{children}</Section>;
 }
 
 export default CollectionList;
@@ -27,7 +21,7 @@ export const schema = createSchema({
   settings: [
     {
       group: "Layout",
-      inputs: layoutInputs.filter((input) => input.name !== "borderRadius"),
+      inputs: layoutInputs,
     },
   ],
   presets: {

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["@weaverse/biome"],
   "linter": {
     "rules": {
@@ -14,6 +14,7 @@
         "noMagicNumbers": "off",
         "noDescendingSpecificity": "off",
         "useConsistentTypeDefinitions": "off",
+        "useConsistentArrowReturn": "off",
         "noNestedTernary": "off"
       },
       "suspicious": {
@@ -24,7 +25,6 @@
         "noArrayIndexKey": "off"
       },
       "nursery": {
-        "useConsistentArrowReturn": "off",
         "noUnnecessaryConditions": "off"
       },
       "correctness": {

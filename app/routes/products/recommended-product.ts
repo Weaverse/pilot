@@ -3,7 +3,6 @@ import type { ProductRecommendationsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/others";
-import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 export async function getRecommendedProducts(
   storefront: Storefront<I18nLocale>,
@@ -15,7 +14,6 @@ export async function getRecommendedProducts(
       variables: {
         productId,
         count: 12,
-        query: maybeFilterOutCombinedListingsQuery,
       },
     },
   );

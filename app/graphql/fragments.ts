@@ -86,7 +86,6 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
     publishedAt
     handle
     vendor
-    tags
     images(first: 50) {
       nodes {
         id

@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "~/utils/cn";
 
-const variants = cva("w-full px-3 py-2 text-center", {
+const variants = cva("w-full px-3 py-2 text-center rounded-md", {
   variants: {
     variant: {
       info: "bg-gray-200 text-gray-800",

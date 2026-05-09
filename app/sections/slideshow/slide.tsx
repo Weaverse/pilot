@@ -10,7 +10,6 @@ import { overlayInputs } from "~/components/overlay";
 import type { OverlayAndBackgroundProps } from "~/components/overlay-and-background";
 import { OverlayAndBackground } from "~/components/overlay-and-background";
 import { layoutInputs } from "~/components/section";
-import { useAnimation } from "~/hooks/use-animation";
 
 const variants = cva("flex h-full w-full flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
@@ -64,13 +63,11 @@ export interface SlideProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps,
     OverlayAndBackgroundProps {
-  ref: React.Ref<HTMLDivElement>;
   backgroundColor: string;
 }
 
 export default function Slide(props: SlideProps) {
   const {
-    ref,
     contentPosition,
     width,
     gap,
@@ -86,10 +83,9 @@ export default function Slide(props: SlideProps) {
     children,
     ...rest
   } = props;
-  const [scope] = useAnimation(ref);
 
   return (
-    <div ref={scope} {...rest} className="h-full w-full">
+    <div {...rest} className="h-full w-full">
       <OverlayAndBackground
         backgroundImage={backgroundImage}
         backgroundFit={backgroundFit}
@@ -122,9 +118,7 @@ export const schema = createSchema({
           name: "contentPosition",
           defaultValue: "center center",
         },
-        ...layoutInputs.filter(
-          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
-        ),
+        ...layoutInputs.filter((inp) => inp.name !== "divider"),
       ],
     },
     {

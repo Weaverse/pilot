@@ -1,9 +1,10 @@
-import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
+import { CaretDownIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import clsx from "clsx";
-import { Link, useLoaderData } from "react-router";
+import { useLoaderData } from "react-router";
+import Link from "~/components/link";
 import type { loader as productLoader } from "~/routes/products/product";
+import { cn } from "~/utils/cn";
 
 function getExcerpt(text: string) {
   const regex = /<p.*>(.*?)<\/p>/;
@@ -12,13 +13,12 @@ function getExcerpt(text: string) {
 }
 
 interface CollapsibleDetailsProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
 }
 
 export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
-  const { ref, showShippingPolicy, showRefundPolicy, ...rest } = props;
+  const { showShippingPolicy, showRefundPolicy, ...rest } = props;
   const { shop, product } = useLoaderData<typeof productLoader>();
   const { description } = product;
   const { shippingPolicy, refundPolicy } = shop;
@@ -39,44 +39,44 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
   ].filter(Boolean);
 
   return (
-    <div ref={ref} {...rest}>
-      <Accordion.Root type="multiple">
+    <div {...rest}>
+      <Accordion.Root type="multiple" className="space-y-3">
         {details.map(({ title, content, learnMore }) => (
-          <Accordion.Item key={title} value={title}>
+          <Accordion.Item
+            key={title}
+            value={title}
+            className="rounded-md border border-gray-300"
+          >
             <Accordion.Trigger
-              className={clsx([
-                "flex w-full justify-between py-4 font-bold",
-                "border-line-subtle border-b",
-                "data-[state=open]:[&>.minus]:inline-block",
-                "data-[state=open]:[&>.plus]:hidden",
-              ])}
+              className={cn(
+                "flex w-full items-center justify-between px-5 py-4 font-semibold",
+                "data-[state=open]:[&>svg]:rotate-180",
+              )}
             >
-              <span>{title}</span>
-              <MinusIcon className="minus hidden h-4 w-4" />
-              <PlusIcon className="plus h-4 w-4" />
+              <h5 className="text-base">{title}</h5>
+              <CaretDownIcon className="h-4 w-4 transition-transform duration-200" />
             </Accordion.Trigger>
             <Accordion.Content
-              className={clsx([
+              className={cn(
                 "overflow-hidden",
                 "[--expand-to:var(--radix-accordion-content-height)]",
                 "[--collapse-from:var(--radix-accordion-content-height)]",
                 "data-[state=closed]:animate-collapse",
                 "data-[state=open]:animate-expand",
-              ])}
-            >
-              <div
-                suppressHydrationWarning
-                className="prose dark:prose-invert py-2.5"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-              {learnMore && (
-                <Link
-                  className="border-line-subtle border-b pb-px text-body-subtle"
-                  to={learnMore}
-                >
-                  Learn more
-                </Link>
               )}
+            >
+              <div className="space-y-4 px-5 pb-4">
+                <div
+                  suppressHydrationWarning
+                  className="prose"
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
+                {learnMore && (
+                  <Link variant="underline" to={learnMore}>
+                    Learn more →
+                  </Link>
+                )}
+              </div>
             </Accordion.Content>
           </Accordion.Item>
         ))}

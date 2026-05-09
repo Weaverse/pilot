@@ -8,9 +8,7 @@ import { layoutInputs, Section } from "~/components/section";
 
 interface PromotionGridProps
   extends VariantProps<typeof variants>,
-    SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+    Omit<SectionProps, "gap"> {}
 
 const variants = cva("flex flex-col sm:grid", {
   variants: {
@@ -33,9 +31,9 @@ const variants = cva("flex flex-col sm:grid", {
       40: "gap-5 lg:gap-10",
       44: "gap-5 lg:gap-11",
       48: "gap-6 lg:gap-12",
-      52: "gap-6 lg:gap-[52px]",
+      52: "gap-6 lg:gap-13",
       56: "gap-7 lg:gap-14",
-      60: "gap-7 lg:gap-[60px]",
+      60: "gap-7 lg:gap-15",
     },
   },
   defaultVariants: {
@@ -45,13 +43,9 @@ const variants = cva("flex flex-col sm:grid", {
 });
 
 function PromotionGrid(props: PromotionGridProps) {
-  const { children, gridSize, gap, ref, ...rest } = props;
+  const { children, gridSize, gap, ...rest } = props;
   return (
-    <Section
-      ref={ref}
-      {...rest}
-      containerClassName={variants({ gridSize, gap })}
-    >
+    <Section {...rest} containerClassName={variants({ gridSize, gap })}>
       {children}
     </Section>
   );
@@ -93,7 +87,10 @@ export const schema = createSchema({
         },
       ],
     },
-    { group: "Layout", inputs: layoutInputs },
+    {
+      group: "Layout",
+      inputs: layoutInputs.filter((input) => input.name !== "gap"),
+    },
     { group: "Background", inputs: backgroundInputs },
     { group: "Overlay", inputs: overlayInputs },
   ],

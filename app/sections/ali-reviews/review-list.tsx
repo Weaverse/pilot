@@ -3,6 +3,7 @@ import {
   type HydrogenComponentProps,
   useParentInstance,
 } from "@weaverse/hydrogen";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { StarRating } from "~/components/star-rating";
 import type { AliReviewsLoaderData } from ".";
 import { ReviewBar } from "./review-bar";
@@ -15,7 +16,6 @@ interface AliReviewsData extends ReviewItemData {
   showReviewsProgressBar: boolean;
   reviewsToShow: number;
   showReviewWithMediaOnly: boolean;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
@@ -31,7 +31,6 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
     showVerifiedBadge,
     verifiedBadgeText,
     showStar,
-    ref,
     ...rest
   } = props;
   const parent = useParentInstance();
@@ -46,17 +45,20 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
     reviewsToRender = reviewsToRender.slice(0, reviewsToShow);
 
     return (
-      <div
-        ref={ref}
-        {...rest}
-        className="space-y-8 md:flex md:gap-16 md:space-y-0"
-      >
-        <div className="my-6 shrink-0 space-y-6 md:my-8" data-motion="slide-in">
+      <div {...rest} className="space-y-8 md:flex md:gap-16 md:space-y-0">
+        <ScrollReveal
+          animation="slide-in"
+          className="my-6 shrink-0 space-y-6 md:my-8"
+        >
           <div className="flex shrink-0 gap-4">
             {showAvgRating && (
-              <div className="font-bold text-6xl leading-none">
+              <span
+                className="font-bold text-6xl leading-none"
+                role="img"
+                aria-label={`Average rating: ${avgRating.toFixed(1)} out of 5`}
+              >
                 {avgRating.toFixed(1)}
-              </div>
+              </span>
             )}
             <div className="flex flex-col justify-center gap-1.5">
               <StarRating rating={avgRating} />
@@ -80,10 +82,10 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
                 ))}
             </div>
           )}
-        </div>
-        <div
+        </ScrollReveal>
+        <ScrollReveal
+          animation="slide-in"
           className="mt-6 grow divide-y divide-gray-200"
-          data-motion="slide-in"
         >
           {reviewsToRender.map((review) => (
             <ReviewItem
@@ -96,12 +98,12 @@ function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
               showStar={showStar}
             />
           ))}
-        </div>
+        </ScrollReveal>
       </div>
     );
   }
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <div className="p-8 text-center">No reviews available</div>
     </div>
   );

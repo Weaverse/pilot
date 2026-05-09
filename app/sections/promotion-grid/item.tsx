@@ -9,12 +9,14 @@ import { cva } from "class-variance-authority";
 import { BackgroundImage } from "~/components/background-image";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { ScrollReveal } from "~/components/scroll-reveal";
+import { cn } from "~/utils/cn";
 
 const variants = cva(
   [
     "promotion-grid-item",
     "group/overlay",
-    "relative flex aspect-square flex-col gap-4 overflow-hidden p-4",
+    "relative flex aspect-square flex-col gap-4 overflow-hidden rounded-md p-4",
     "[&_.paragraph]:mx-[unset]",
   ],
   {
@@ -31,29 +33,6 @@ const variants = cva(
         "bottom center": "items-center justify-end [&_.paragraph]:text-center",
         "bottom right": "items-end justify-end [&_.paragraph]:text-right",
       },
-      borderRadius: {
-        0: "",
-        2: "rounded-xs",
-        4: "rounded-sm",
-        6: "rounded-md",
-        8: "rounded-lg",
-        10: "rounded-[10px]",
-        12: "rounded-xl",
-        14: "rounded-[14px]",
-        16: "rounded-2xl",
-        18: "rounded-[18px]",
-        20: "rounded-[20px]",
-        22: "rounded-[22px]",
-        24: "rounded-3xl",
-        26: "rounded-[26px]",
-        28: "rounded-[28px]",
-        30: "rounded-[30px]",
-        32: "rounded-[32px]",
-        34: "rounded-[34px]",
-        36: "rounded-[36px]",
-        38: "rounded-[38px]",
-        40: "rounded-[40px]",
-      },
     },
   },
 );
@@ -63,28 +42,24 @@ interface PromotionItemProps
     HydrogenComponentProps,
     OverlayProps {
   backgroundImage: WeaverseImage | string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function PromotionGridItem(props: PromotionItemProps) {
   const {
     contentPosition,
     backgroundImage,
-    borderRadius,
     children,
     enableOverlay,
     overlayColor,
     overlayColorHover,
     overlayOpacity,
-    ref,
     ...rest
   } = props;
   return (
-    <div
-      ref={ref}
+    <ScrollReveal
+      animation="slide-in"
       {...rest}
-      data-motion="slide-in"
-      className={variants({ contentPosition, borderRadius })}
+      className={cn(variants({ contentPosition }))}
     >
       <BackgroundImage backgroundImage={backgroundImage} />
       <Overlay
@@ -94,7 +69,7 @@ function PromotionGridItem(props: PromotionItemProps) {
         overlayOpacity={overlayOpacity}
       />
       {children}
-    </div>
+    </ScrollReveal>
   );
 }
 
@@ -112,18 +87,6 @@ export const schema = createSchema({
           label: "Content position",
           name: "contentPosition",
           defaultValue: "center center",
-        },
-        {
-          type: "range",
-          name: "borderRadius",
-          label: "Border radius",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
         },
       ],
     },

@@ -1,6 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { cn } from "~/utils/cn";
 
 const variants = cva("subheading", {
@@ -29,7 +30,6 @@ const variants = cva("subheading", {
 interface SubHeadingProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
-  ref?: React.Ref<HTMLHeadingElement | HTMLParagraphElement | HTMLDivElement>;
   as?: "h4" | "h5" | "h6" | "div" | "p";
   color?: string;
   content: string;
@@ -37,7 +37,6 @@ interface SubHeadingProps
 
 function SubHeading(props: SubHeadingProps) {
   const {
-    ref,
     as: Tag = "p",
     content,
     color,
@@ -48,15 +47,14 @@ function SubHeading(props: SubHeadingProps) {
     ...rest
   } = props;
   return (
-    <Tag
-      ref={ref}
+    <ScrollReveal
+      as={Tag}
       {...rest}
-      data-motion="fade-up"
       style={{ color }}
       className={cn(variants({ size, weight, alignment, className }))}
     >
       {content}
-    </Tag>
+    </ScrollReveal>
   );
 }
 

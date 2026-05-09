@@ -1,5 +1,5 @@
 node_modules
-/.DS_Store
+.DS_Store
 /.cache
 /build
 /dist
@@ -14,11 +14,12 @@ node_modules
 /playwright-report/
 /playwright/.cache/
 pnpm-lock.yaml
-.DS_Store
 .react-router
-.claude/
-.github/copilot-instructions.md
-memory/
-scripts/
-specs/
-templates/
+.wrangler/
+.weaverse/autoperf/run.log
+.weaverse/autoperf/baseline.json
+.weaverse/autoperf/results.json
+.weaverse/autoperf/exp_*.json
+.weaverse/autoperf/baseline_*.json
+.weaverse/autoperf/wrangler.toml
+.claude/settings.local.json

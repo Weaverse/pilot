@@ -6,15 +6,13 @@ import {
 
 interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
   gap: number;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ColumnsWithImagesItems(props: ColumnsWithImagesItemsProps) {
-  const { children, gap, ref, ...rest } = props;
+  const { children, gap, ...rest } = props;
 
   return (
     <div
-      ref={ref}
       {...rest}
       className="flex flex-col sm:grid sm:grid-cols-12"
       style={{ gap: `${gap}px` }}

@@ -1,5 +1,5 @@
-// Supports weights 400-700
-import "@fontsource-variable/cabin";
+import "@fontsource-variable/cabin"; // Supports weights 400-700
+import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
@@ -17,6 +17,7 @@ import {
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
+import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
@@ -45,6 +46,10 @@ export const links: LinksFunction = () => {
     {
       rel: "preconnect",
       href: "https://shop.app",
+    },
+    {
+      rel: "preconnect",
+      href: "https://www.googletagmanager.com",
     },
     { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
   ];
@@ -94,16 +99,21 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export const Layout = withWeaverse(function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.locale ?? DEFAULT_LOCALE.language.toLowerCase();
-  const { topbarHeight, topbarText } = useThemeSettings();
+  const { topbarHeight, topbarText } = useThemeSettings<ThemeSettings>();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
   const i18nData = (data as any)?.i18nData;
-  // Create a client-side i18next instance from the serialized data
 
+  // Bypass Weaverse theme layout for Hydrogen dev tools
+  // See: https://github.com/Weaverse/pilot/issues/321
   if (
     location.pathname === "/subrequest-profiler" ||
     location.pathname === "/graphiql"
@@ -127,19 +137,48 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <script
+          id="shopify-features"
+          type="application/json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              accessToken: data?.consent?.storefrontAccessToken ?? "",
+            }),
+          }}
+        />
+        {/*
+         * Pre-initialize window.Shopify as a configurable plain object BEFORE
+         * the Shopify account.js web component loads. account.js defines
+         * window.Shopify as non-configurable, which later breaks Hydrogen's
+         * <ShopifyAnalytics> when it calls Object.defineProperty(window, 'Shopify', ...).
+         * Setting it first via assignment ensures account.js reuses this object.
+         */}
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: "window.Shopify = window.Shopify || {};",
+          }}
+        />
         <link rel="stylesheet" href={styles} />
         <Meta />
         <Links />
         <GlobalStyle />
+        <script
+          type="module"
+          src="https://cdn.shopify.com/storefront/web-components/account.js"
+          async
+          nonce={nonce}
+        />
       </head>
       <body
         style={
           {
-            opacity: 0,
             "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
           } as CSSProperties
         }
-        className="bg-background text-body antialiased opacity-100! transition-opacity duration-300"
+        className="bg-background text-body antialiased"
       >
         {data ? (
           <Analytics.Provider
@@ -174,6 +213,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </body>
     </html >
   );
-}
+});
 
-export default withWeaverse(App);
+export default App;

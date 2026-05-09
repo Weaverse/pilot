@@ -89,15 +89,15 @@ export function ProductPopup({
         } as CSSProperties
       }
     >
-      <div className="flex flex-col gap-3 bg-white p-2.5 shadow-lg sm:flex-row">
+      <div className="flex flex-col gap-3 bg-white rounded-lg p-2.5 shadow-lg sm:flex-row">
         {featuredImage && (
           <div className="h-auto w-full sm:w-28">
             <Image data={featuredImage} alt={product.title} sizes="auto" />
           </div>
         )}
-        <div className="flex flex-col gap-2 py-2">
+        <div className="flex flex-col gap-2">
           <div className="space-y-1">
-            <div className="font-semibold">{product.title}</div>
+            <h5 className="font-medium text-xl">{product.title}</h5>
             {showPrice && (
               <div className="flex items-center gap-1.5">
                 {compareAtPrice && (
@@ -123,7 +123,7 @@ export function ProductPopup({
             <Link
               to={`/products/${product.handle}`}
               variant="underline"
-              className="w-fit text-sm"
+              className="w-fit"
             >
               {viewDetailsLinkText}
             </Link>

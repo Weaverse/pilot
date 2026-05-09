@@ -48,7 +48,7 @@ export function ScrollArea({
       </Viewport>
       <Scrollbar
         className={cn(
-          "flex touch-none select-none data-[orientation=horizontal]:flex-col",
+          "flex touch-none select-none data-[orientation=horizontal]:flex-col rounded-md",
           "bg-black/10 dark:bg-gray-700/50",
           "transition-colors duration-150 ease-out",
           variants({ size }),
@@ -58,7 +58,7 @@ export function ScrollArea({
       >
         <Thumb
           className={cn(
-            "relative flex-1 shadow-intense",
+            "relative flex-1 shadow-intense rounded-md",
             "bg-gray-500 dark:bg-gray-500",
             "before:-translate-x-1/2 before:-translate-y-1/2 before:absolute before:top-1/2 before:left-1/2 before:content-['']",
             "before:h-full before:min-h-5 before:w-full before:min-w-5",

@@ -2,7 +2,7 @@ import { createSchema, useParentInstance } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { FeaturedProductsQuery } from "storefront-api.generated";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductCard } from "~/components/product-card";
 import { Swimlane } from "~/components/swimlane";
 
 const variants = cva("", {
@@ -22,18 +22,16 @@ const variants = cva("", {
   },
 });
 
-interface ProductItemsProps extends VariantProps<typeof variants> {
-  ref?: React.Ref<HTMLDivElement>;
-}
+interface ProductItemsProps extends VariantProps<typeof variants> {}
 
 function ProductItems(props: ProductItemsProps) {
-  const { gap, ref, ...rest } = props;
+  const { gap, ...rest } = props;
   const parent = useParentInstance();
   const products: FeaturedProductsQuery["featuredProducts"] =
     parent.data?.loaderData?.products;
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <Swimlane className={variants({ gap })}>
         {products?.nodes?.map((product) => (
           <ProductCard

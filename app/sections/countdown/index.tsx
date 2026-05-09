@@ -16,14 +16,12 @@ const variants = cva("flex flex-col px-4 sm:px-16 [&_.paragraph]:mx-[unset]", {
   },
 });
 
-interface CountdownProps extends VariantProps<typeof variants>, SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface CountdownProps extends VariantProps<typeof variants>, SectionProps {}
 
 function Countdown(props: CountdownProps) {
-  const { children, alignment, ref, ...rest } = props;
+  const { children, alignment, ...rest } = props;
   return (
-    <Section ref={ref} {...rest} containerClassName={variants({ alignment })}>
+    <Section {...rest} containerClassName={variants({ alignment })}>
       {children}
     </Section>
   );
@@ -93,18 +91,6 @@ export const schema = createSchema({
             ],
           },
           defaultValue: "medium",
-        },
-        {
-          type: "range",
-          name: "borderRadius",
-          label: "Border radius",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
         },
       ],
     },

@@ -2,7 +2,6 @@ import type { LoaderFunctionArgs } from "react-router";
 import type { FeaturedProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 export async function getFeaturedProducts(
   storefront: LoaderFunctionArgs["context"]["storefront"],
@@ -14,7 +13,6 @@ export async function getFeaturedProducts(
         pageBy: 16,
         country: storefront.i18n.country,
         language: storefront.i18n.language,
-        query: maybeFilterOutCombinedListingsQuery,
       },
     },
   );
@@ -36,9 +34,8 @@ export const FEATURED_PRODUCTS_QUERY = `#graphql
     $country: CountryCode
     $language: LanguageCode
     $pageBy: Int = 16
-    $query: String
   ) @inContext(country: $country, language: $language) {
-    featuredProducts: products(first: $pageBy, sortKey: BEST_SELLING, query: $query) {
+    featuredProducts: products(first: $pageBy, sortKey: BEST_SELLING) {
       nodes {
         ...ProductCard
       }

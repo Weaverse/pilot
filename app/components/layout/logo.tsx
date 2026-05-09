@@ -3,10 +3,12 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Link } from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
+import type { ThemeSettings } from "~/types/weaverse";
 
 export function Logo() {
   const { shopName } = useShopMenu();
-  const { logoData, transparentLogoData, logoWidth } = useThemeSettings();
+  const { logoData, transparentLogoData, logoWidth } =
+    useThemeSettings<ThemeSettings>();
 
   return (
     <Link
@@ -23,6 +25,7 @@ export function Logo() {
             <Image
               data={logoData}
               sizes="auto"
+              loading="eager"
               className={clsx(
                 "main-logo",
                 "mx-auto h-full max-w-full object-contain",
@@ -46,9 +49,9 @@ export function Logo() {
             )}
           </>
         ) : (
-          <div className="line-clamp-1 font-medium text-lg sm:text-2xl">
+          <h3 className="line-clamp-1 font-medium text-lg sm:text-2xl">
             {shopName}
-          </div>
+          </h3>
         )}
       </div>
     </Link>

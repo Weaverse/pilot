@@ -58,8 +58,8 @@ export function PredictiveSearchButton() {
           <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
-                <div className="mx-auto w-[560px] max-w-[90vw] space-y-2 py-6">
-                  <div className="flex items-center gap-3 border border-line-subtle px-3">
+                <div className="mx-auto w-140 max-w-[90vw] space-y-2 py-6">
+                  <div className="flex items-center gap-3 border border-line-subtle px-3 rounded-lg">
                     <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                     <input
                       name="q"
@@ -130,7 +130,7 @@ function PredictiveSearchResults() {
   }
   return (
     <div className="-translate-x-1/2 absolute top-full left-1/2 z-10 flex w-fit items-center justify-center">
-      <div className="grid max-h-[80vh] w-screen min-w-[430px] max-w-[720px] grid-cols-1 gap-6 overflow-y-auto bg-(--color-header-bg) p-6 lg:grid-cols-[1fr_2fr]">
+      <div className="grid max-h-[80vh] w-screen min-w-107.5 max-w-180 grid-cols-1 gap-6 overflow-y-auto bg-(--color-header-bg) p-6 lg:grid-cols-[1fr_2fr] rounded-b-lg">
         <div className="space-y-8">
           <div className="flex flex-col gap-4 divide-y divide-line">
             <PredictiveSearchResult type="queries" items={queries?.items} />
@@ -167,7 +167,7 @@ function NoResults({ searchTerm }: { searchTerm: RefObject<string> }) {
     return null;
   }
   return (
-    <p className="w-[640px] bg-background p-6 shadow-header">
+    <p className="w-160 rounded-b-lg bg-background p-6 shadow-header">
       No results found for <q>{searchTerm.current}</q>
     </p>
   );

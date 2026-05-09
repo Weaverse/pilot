@@ -2,16 +2,20 @@ import type {
   HydrogenComponentProps,
   InspectorGroup,
 } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type React from "react";
 import type { HTMLAttributes } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import type { BackgroundImageProps } from "./background-image";
 import { backgroundInputs } from "./background-image";
 import type { OverlayProps } from "./overlay";
 import { overlayInputs } from "./overlay";
 import { OverlayAndBackground } from "./overlay-and-background";
+import { observe } from "./scroll-reveal";
 
 export type BackgroundProps = BackgroundImageProps & {
   backgroundFor: "section" | "content";
@@ -26,9 +30,10 @@ export interface SectionProps<T = any>
     Partial<OverlayProps> {
   ref?: React.Ref<HTMLElement>;
   as?: React.ElementType;
-  borderRadius?: number;
+  gap?: number;
   containerClassName?: string;
   children?: React.ReactNode;
+  animate?: boolean;
 }
 
 const variants = cva("relative", {
@@ -49,24 +54,6 @@ const variants = cva("relative", {
       medium: "py-8 md:py-12 lg:py-16",
       large: "py-12 md:py-24 lg:py-32",
     },
-    gap: {
-      0: "",
-      4: "space-y-1",
-      8: "space-y-2",
-      12: "space-y-3",
-      16: "space-y-4",
-      20: "space-y-5",
-      24: "space-y-3 lg:space-y-6",
-      28: "space-y-3.5 lg:space-y-7",
-      32: "space-y-4 lg:space-y-8",
-      36: "space-y-4 lg:space-y-9",
-      40: "space-y-5 lg:space-y-10",
-      44: "space-y-5 lg:space-y-11",
-      48: "space-y-6 lg:space-y-12",
-      52: "space-y-6 lg:space-y-[52px]",
-      56: "space-y-7 lg:space-y-14",
-      60: "space-y-7 lg:space-y-[60px]",
-    },
     overflow: {
       unset: "",
       hidden: "overflow-hidden",
@@ -85,7 +72,6 @@ export function Section(props: SectionProps) {
     gap,
     overflow,
     verticalPadding,
-    borderRadius,
     backgroundColor,
     backgroundFor,
     backgroundImage,
@@ -99,39 +85,66 @@ export function Section(props: SectionProps) {
     children,
     containerClassName,
     style = {},
+    animate = true,
     ...rest
   } = props;
+
+  let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
+  let [isVisible, setIsVisible] = useState(false);
+  let internalRef = useRef<HTMLElement>(null);
+
+  let setRefs = (node: HTMLElement | null) => {
+    (internalRef as React.RefObject<HTMLElement | null>).current = node;
+    if (typeof ref === "function") {
+      ref(node);
+    } else if (ref && "current" in ref) {
+      (ref as React.RefObject<HTMLElement | null>).current = node;
+    }
+  };
+
+  useEffect(() => {
+    if (!animate || !revealElementsOnScroll || !internalRef.current) {
+      return;
+    }
+    return observe(internalRef.current, (isIntersecting) => {
+      if (isIntersecting) {
+        setIsVisible(true);
+      }
+    });
+  }, [animate, revealElementsOnScroll]);
 
   style = {
     ...style,
     "--section-bg-color": backgroundColor,
-    "--section-radius": `${borderRadius || 0}px`,
+    "--gap-desktop": `${gap ?? 0}px`,
+    "--gap-mobile": (gap ?? 0) <= 20 ? `${gap ?? 0}px` : `${(gap ?? 0) / 2}px`,
   } as React.CSSProperties;
 
   const isBgForContent = backgroundFor === "content";
-  const hasBackground = backgroundColor || backgroundImage || borderRadius > 0;
+  const hasBackground = backgroundColor || backgroundImage;
 
   return (
     <Component
-      ref={ref}
+      ref={setRefs}
       {...rest}
       style={style}
       className={cn(
         variants({ padding: width, overflow, className }),
-        hasBackground &&
-          !isBgForContent &&
-          "rounded-(--section-radius) bg-(--section-bg-color)",
+        hasBackground && !isBgForContent && "bg-(--section-bg-color)",
+        animate &&
+          revealElementsOnScroll && [
+            "transition-all duration-700",
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+          ],
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
         className={cn(
-          variants({ gap, width, verticalPadding, overflow }),
+          variants({ width, verticalPadding, overflow }),
+          "space-y-(--gap-mobile) lg:space-y-(--gap-desktop)",
           hasBackground &&
-            isBgForContent && [
-              "rounded-(--section-radius) bg-(--section-bg-color)",
-              "px-4 sm:px-8",
-            ],
+            isBgForContent && ["bg-(--section-bg-color)", "px-4 sm:px-8"],
           containerClassName,
         )}
       >
@@ -163,7 +176,7 @@ export const layoutInputs: InspectorGroup["inputs"] = [
     configs: {
       min: 0,
       max: 60,
-      step: 4,
+      step: 2,
       unit: "px",
     },
     defaultValue: 20,
@@ -181,19 +194,6 @@ export const layoutInputs: InspectorGroup["inputs"] = [
       ],
     },
     defaultValue: "medium",
-  },
-  {
-    type: "range",
-    name: "borderRadius",
-    label: "Border radius",
-    configs: {
-      min: 0,
-      max: 40,
-      step: 2,
-      unit: "px",
-    },
-    defaultValue: 0,
-    helpText: "Should be used in combination with background image or color",
   },
 ];
 

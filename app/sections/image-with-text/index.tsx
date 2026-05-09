@@ -3,16 +3,13 @@ import { backgroundInputs } from "~/components/background-image";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 
-interface ImageWithTextProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface ImageWithTextProps extends SectionProps {}
 
 function ImageWithText(props: ImageWithTextProps) {
-  const { children, ref, ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
     <Section
-      ref={ref}
       {...rest}
       containerClassName="flex flex-col md:flex-row px-0 sm:px-0"
     >

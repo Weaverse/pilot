@@ -20,6 +20,7 @@ export default hydrogenRoutes([
     ),
     route("sitemap.xml", "routes/seo/sitemap.ts"),
     route("sitemap/:type/:page.xml", "routes/seo/sitemap-page.ts"),
+    route("sitemap-weaverse.xml", "routes/seo/sitemap-weaverse.xml.ts"),
     route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
     route("discount/:code", "routes/others/discount-code.tsx"),
     ...prefix("api", [
@@ -30,7 +31,12 @@ export default hydrogenRoutes([
       route("predictive-search", "routes/api/predictive-search.ts"),
       route("products", "routes/api/products.ts"),
       route(":version/graphql.json", "routes/api/graphql.json.ts"),
-      route("product/:productHandle/reviews?", "routes/api/product.ts"),
+      route("product/:productHandle", "routes/api/product.ts"),
+      route(
+        "collection/:handle/product-count",
+        "routes/api/collection-product-count.ts",
+      ),
+      route("product/:productHandle/reviews", "routes/api/reviews.ts"),
     ]),
     ...prefix("blogs", [
       route(":blogHandle", "routes/blogs/blog.tsx"),
@@ -60,7 +66,7 @@ export default hydrogenRoutes([
         index("routes/account/dashboard/index.tsx"),
         route("profile", "routes/account/profile.tsx"),
         route("edit", "routes/account/edit.tsx"),
-        route("addresses", "routes/account/address/list.tsx"),
+        route("addr", "routes/account/address/list.tsx"),
         route("address/:id", "routes/account/address/index.tsx"),
         ...prefix("orders", [
           index("routes/account/orders/list.tsx"),

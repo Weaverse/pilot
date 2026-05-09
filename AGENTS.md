@@ -6,75 +6,6 @@ This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) 
 
 This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting.
 
-## Quick Start
-
-### First Time Setup
-
-1. **Prerequisites**:
-   - Node.js 20.0.0 or higher
-   - npm (comes with Node.js)
-   - Shopify store credentials (for `.env` configuration)
-
-2. **Installation**:
-   ```bash
-   # Clone and install dependencies
-   npm install
-
-   # Copy environment template
-   cp .env.example .env
-
-   # Edit .env with your Shopify store credentials
-   # Required: PUBLIC_STORE_DOMAIN, SESSION_SECRET,
-   # PUBLIC_STOREFRONT_API_TOKEN, PRIVATE_STOREFRONT_API_TOKEN
-   ```
-
-3. **Start Development**:
-   ```bash
-   # Start dev server (runs on http://localhost:3456)
-   npm run dev
-
-   # In a separate terminal, run type checking
-   npm run typecheck
-   ```
-
-4. **Before First Commit**:
-   ```bash
-   # Always run these before committing
-   npm run biome:fix    # Fix formatting and linting
-   npm run typecheck    # Verify no type errors
-   npm run build        # Ensure production build works
-   ```
-
-### Development Ports
-- **Development server**: `http://localhost:3456` (via `npm run dev`)
-- **Preview server**: `http://localhost:3000` (via `npm run preview`)
-- **E2E tests**: Run against preview server on port 3000
-
-## Essential Commands
-
-### Development
-```bash
-npm run dev        # Start development server on port 3456
-npm run dev:ca     # Start with customer account push (unstable - for testing new Customer Account API features)
-npm run build      # Production build with GraphQL codegen
-npm run preview    # Preview production build
-npm start          # Start production server
-npm run clean      # Clean all build artifacts and dependencies
-```
-
-### Code Quality (Always run before committing)
-```bash
-npm run biome      # Check for linting/formatting errors
-npm run biome:fix  # Fix linting/formatting errors
-npm run format     # Format code with Biome
-npm run typecheck  # Run TypeScript type checking
-```
-
-### GraphQL
-```bash
-npm run codegen    # Generate TypeScript types from GraphQL
-```
-
 ## Architecture Overview
 
 ### Route Structure
@@ -131,14 +62,11 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 
 - **Weaverse**: Visual page builder - sections must be registered in `/app/weaverse/components.ts`
 - **Judge.me**: Product reviews integration via utilities in `/app/utils/judgeme.ts`
-- **Combined Listings**: Intelligent product grouping system via utilities in `/app/utils/combined-listings.ts`
-- **Analytics**: Shopify Analytics integrated throughout components
+- **Combined Listings**: Product grouping system via `/app/utils/combined-listings.ts`
 - **Customer Accounts**: New Shopify Customer Account API support (OAuth-based)
 - **Radix UI**: For accessible UI primitives (accordion, dialog, dropdown, etc.)
 - **Swiper**: For carousel/slideshow functionality
-- **Framer Motion**: For smooth animations and transitions
 - **Zustand**: For lightweight state management
-- **React Use**: Collection of React hooks for common use cases
 
 ### Weaverse Section Development
 
@@ -180,181 +108,9 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
    ];
    ```
 
-### Route Data Loading Pattern
+### Customer Account Local Development
 
-```typescript
-export async function loader({ params, request, context }: LoaderFunctionArgs) {
-  const { handle } = params;
-  invariant(handle, "Missing handle param");
-
-  const { storefront, weaverse } = context;
-
-  // Parallel data loading with error handling
-  const [shopifyData, weaverseData, thirdPartyData] = await Promise.all([
-    storefront.query(QUERY, { variables }).catch((error) => {
-      console.error('Storefront query failed:', error);
-      // Option 1: Return null for optional data
-      return null;
-      // Option 2: Throw for critical data
-      // throw new Response('Service unavailable', { status: 503 });
-    }),
-    weaverse.loadPage({ type: "PAGE_TYPE", handle }).catch((error) => {
-      console.error('Weaverse page load failed:', error);
-      return null; // Graceful degradation - page works without Weaverse data
-    }),
-    fetchThirdPartyData().catch((error) => {
-      console.error('Third party API failed:', error);
-      return { data: [] }; // Return empty fallback
-    }),
-  ]);
-
-  // Handle critical failures
-  if (!shopifyData?.resource) {
-    throw new Response("Not found", { status: 404 });
-  }
-
-  // Optional: Log missing non-critical data
-  if (!weaverseData) {
-    console.warn(`Weaverse data unavailable for ${handle}`);
-  }
-
-  return data({
-    shopifyData,
-    weaverseData,
-    thirdPartyData,
-  });
-}
-
-// Export headers for cache control
-export const headers = routeHeaders;
-```
-
-### Error Handling Patterns
-
-**1. Graceful Degradation**
-```typescript
-// Load optional data with fallbacks
-const [productData, reviews] = await Promise.all([
-  storefront.query(PRODUCT_QUERY, { variables }),
-  getJudgeMeProductReviews({ context, handle }).catch(() => {
-    return { reviews: [], rating: 0 }; // Fallback if reviews fail
-  }),
-]);
-
-// Component can still render without reviews
-```
-
-**2. Critical vs Non-Critical Failures**
-```typescript
-const [criticalData, optionalData] = await Promise.all([
-  // Critical: throw on failure
-  storefront.query(PRODUCT_QUERY, { variables }).catch((error) => {
-    console.error('Critical query failed:', error);
-    throw new Response('Product unavailable', { status: 503 });
-  }),
-  // Optional: return fallback on failure
-  loadOptionalData().catch((error) => {
-    console.error('Optional data failed:', error);
-    return null;
-  }),
-]);
-```
-
-**3. Retry Logic for Transient Failures**
-```typescript
-async function queryWithRetry<T>(
-  queryFn: () => Promise<T>,
-  maxRetries = 2,
-  delay = 1000,
-): Promise<T | null> {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await queryFn();
-    } catch (error) {
-      console.error(`Attempt ${attempt} failed:`, error);
-      if (attempt === maxRetries) {
-        return null; // Or throw depending on criticality
-      }
-      await new Promise(resolve => setTimeout(resolve, delay * attempt));
-    }
-  }
-  return null;
-}
-
-// Usage in loader
-const productData = await queryWithRetry(() =>
-  storefront.query(PRODUCT_QUERY, { variables })
-);
-```
-
-**4. Error Boundaries in Components**
-```typescript
-// Use React Router's error boundaries
-export function ErrorBoundary() {
-  const error = useRouteError();
-
-  if (isRouteErrorResponse(error)) {
-    return (
-      <div>
-        <h1>
-          {error.status} {error.statusText}
-        </h1>
-        <p>{error.data}</p>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <h1>Unexpected Error</h1>
-      <p>Something went wrong. Please try again later.</p>
-    </div>
-  );
-}
-```
-
-**5. Shopify API Rate Limiting**
-```typescript
-// Handle 429 (Too Many Requests) responses
-try {
-  const data = await storefront.query(QUERY, { variables });
-  return data;
-} catch (error) {
-  if (error?.response?.status === 429) {
-    // Wait for retry-after header or default delay
-    const retryAfter = error.response.headers.get('Retry-After') || 5;
-    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-    // Retry once
-    return await storefront.query(QUERY, { variables });
-  }
-  throw error;
-}
-```
-
-### Combined Listings Integration
-
-Combined Listings allow intelligent product grouping and filtering:
-
-```typescript
-// Use utility functions from app/utils/combined-listings.ts
-import { isCombinedListing, shouldFilterCombinedListings } from '~/utils/combined-listings';
-
-// In product queries and loaders
-const filteredProducts = products.filter(product =>
-  !shouldFilterCombinedListings(product, settings)
-);
-
-// In components
-if (isCombinedListing(product)) {
-  // Handle combined listing display differently
-}
-```
-
-Key integration points:
-- Product loaders filter combined listings based on settings
-- Cart functionality handles combined products specially
-- Product display components check for combined listing status
-- Featured products support both collection-based and manual selection
+See [`.weaverse/docs/customer-account-local-dev.md`](.weaverse/docs/customer-account-local-dev.md) for the full guide on running locally with Customer Account API support (`nr dev:ca`).
 
 ### Environment Configuration
 
@@ -371,153 +127,33 @@ The project extends from `ultracite` and `@weaverse/biome` configurations with t
 
 ## Code Conventions
 
-- **Naming**: camelCase for variables/functions, PascalCase for components, kebab-case for files, ALL_CAPS for constants
-- **Formatting**: 2 spaces indentation, double quotes, semicolons, trailing commas
-- **TypeScript**: Always type function parameters and returns, avoid `any`, use interfaces for data structures
-- **React**: Functional components with hooks only, small focused components, forwardRef for Weaverse sections
-- **Async**: Use async/await, proper error handling with try/catch
-- **Imports**: Use `~/` path alias for app directory imports
+### Critical Rules (Always Check)
 
-## Troubleshooting
+- Use `const` for constants with `ALL_CAPS` naming and `let` for everything else
+- Use `cn()` utility for dynamic classes, never template strings
+- Use function declarations `function foo()` not arrow expressions (exception: route `meta`/`loader`/`action` exports follow React Router conventions)
+- Named exports only, no default exports (exceptions: Route components, Weaverse sections, and Weaverse-registered components)
+- No `useMemo` or `useCallback` (React 19 compiler handles it)
 
-### Common Development Issues
+### File Organization
 
-**1. GraphQL Type Errors After Query Changes**
-```bash
-# Error: Property 'xyz' does not exist on type...
-# Solution: Regenerate TypeScript types from GraphQL schemas
-npm run codegen
-```
+- Co-locate related files (component, styles, types, utils)
+- No barrel exports (index.ts re-export files)
+- Use kebab-case for filenames: `product-card.tsx`
 
-**2. Dev Server Port Already in Use**
-```bash
-# Error: EADDRINUSE: address already in use :::3456
-# Solution: Kill the process using the port
-lsof -ti:3456 | xargs kill -9
-# Or use a different port
-npm run dev -- --port 3457
-```
+### Naming
 
-**3. Weaverse Section Not Appearing in Builder**
-- Check: Is the section registered in `/app/weaverse/components.ts`?
-- Check: Does the section export both default component and `schema`?
-- Check: Is the schema `type` property unique?
-- Solution: Restart dev server after registering new sections
+- Components: PascalCase (`ProductCard`)
+- Files: kebab-case (`product-card.tsx`)
+- Functions: camelCase (`getProduct`)
+- Constants: UPPER_SNAKE_CASE (`REVIEWS_PER_PAGE`)
+- Types: PascalCase (`Product`, `Cart`)
 
-**4. Shopify API Authentication Errors**
-```bash
-# Error: Storefront API authentication failed
-# Check .env file has correct values:
-# - PUBLIC_STORE_DOMAIN (format: yourstore.myshopify.com)
-# - PUBLIC_STOREFRONT_API_TOKEN (public token)
-# - PRIVATE_STOREFRONT_API_TOKEN (admin token)
-# Solution: Verify tokens in Shopify Admin > Settings > Apps and sales channels
-```
+### Styling
 
-**5. Build Fails But Dev Server Works**
-```bash
-# Error: Build fails with type errors or import issues
-# Causes:
-# - Missing GraphQL codegen
-# - Unused imports (Biome strict mode)
-# - Incorrect path aliases
-# Solutions:
-npm run codegen        # Regenerate types
-npm run biome:fix      # Fix linting issues
-npm run typecheck      # Find type errors
-```
-
-**6. Customer Account Routes Failing**
-```bash
-# Error: Customer account queries not working
-# Check:
-# - File naming: Must include 'account' (e.g., account.tsx, user.account.tsx)
-# - Import from correct generated types file
-# - Using customer account context, not storefront context
-# Solution: Use customer-account-api.generated.d.ts types in account routes
-```
-
-**7. Parallel Data Loading Failures**
-```typescript
-// Problem: One API call fails, entire loader fails
-// Solution: Add error handling to Promise.all()
-
-const [shopifyData, weaverseData, reviews] = await Promise.all([
-  storefront.query(QUERY).catch(err => {
-    console.error('Shopify query failed:', err);
-    return null; // Return fallback
-  }),
-  weaverse.loadPage({ type, handle }).catch(err => {
-    console.error('Weaverse load failed:', err);
-    return null;
-  }),
-  getJudgeMeProductReviews({ context, handle }).catch(err => {
-    console.error('Reviews failed:', err);
-    return { reviews: [] };
-  }),
-]);
-
-// Check for critical failures
-if (!shopifyData?.product) {
-  throw new Response("Product not found", { status: 404 });
-}
-```
-
-**8. E2E Tests Failing Locally**
-```bash
-# Error: Tests timeout or fail to connect
-# Cause: Preview server not running or wrong port
-# Solution: Tests auto-start preview server, but verify:
-npm run build          # Build first
-npm run preview        # Manually test preview server
-npm run e2e            # Run tests (auto-starts preview if needed)
-```
-
-**9. Biome Formatting Conflicts**
-```bash
-# Error: Biome reports formatting errors after formatting
-# Cause: Editor auto-format conflicts with Biome config
-# Solution: Disable other formatters (Prettier, ESLint) in IDE
-# Use only Biome for this project
-npm run biome:fix      # Let Biome fix everything
-```
-
-**10. Image Loading Issues in Development**
-```bash
-# Error: Images from Shopify CDN not loading
-# Cause: CSP (Content Security Policy) restrictions
-# Solution: Check vite.config.ts has correct image domains configured
-# Shopify CDN domains should be allowed in dev server
-```
-
-### Quick Diagnostic Commands
-
-```bash
-# Check current git status
-git status
-
-# Verify Node.js version (should be 20+)
-node --version
-
-# Check for syntax errors
-npm run biome
-
-# Verify all types are correct
-npm run typecheck
-
-# Test production build
-npm run build
-
-# Clear all caches and rebuild
-npm run clean && npm install && npm run build
-```
-
-### Getting Help
-
-- **GraphQL Issues**: Check Shopify's GraphQL Admin API documentation
-- **Weaverse Issues**: Check Weaverse documentation or contact support
-- **React Router Issues**: Check React Router v7 migration guide
-- **Hydrogen Issues**: Check @shopify/hydrogen changelog and GitHub issues
+- Use Tailwind CSS
+- Use `cn()` from `lib/cn` for conditional classes (No string templates)
+- Use `cva` for building component class variants, not objects or arrays
 
 ## Common Pitfalls to Avoid
 
@@ -531,17 +167,257 @@ npm run clean && npm install && npm run build
 8. **Combined Listings**: Use utility functions from `/app/utils/combined-listings.ts` for product filtering and grouping logic
 9. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
 
-## Development Setup Requirements
+## Weaverse Component Development Guide
 
-### Node.js and Dependencies
-- **Node.js**: Version 20.0.0 or higher required
-- **Package Manager**: npm (configured in package.json, don't use pnpm)
-- **Environment**: Copy `.env.example` to `.env` and configure Shopify store credentials
+> Build Shopify Hydrogen storefronts with Weaverse visual page builder.
+> Docs: https://docs.weaverse.io | GitHub: https://github.com/Weaverse/pilot
 
-### Key Configuration Files
-- **react-router.config.ts**: React Router v7 configuration (SSR enabled, app directory structure, Hydrogen preset)
-- **vite.config.ts**: Includes Hydrogen, Oxygen, Tailwind CSS v4, and development server warmup
-- **biome.json**: Code quality configuration extending from `ultracite` and `@weaverse/biome`
-- **codegen.ts**: GraphQL code generation for Shopify Storefront and Customer Account APIs
-- **tsconfig.json**: TypeScript config with `~/` path alias, strict mode disabled for compatibility
-- **.env.example**: Template for environment configuration (copy to `.env` for local development)
+**This section covers the most common patterns inline.** For the full, always-up-to-date reference (including advanced features, migration guides, and copy-paste examples), see the [Weaverse Hydrogen Skills repo](https://github.com/Weaverse/skills):
+
+```
+references/01-project-structure.md     — Project structure & file anatomy
+references/02-creating-components.md   — Component creation & registration
+references/03-component-schema.md      — createSchema(), settings, childTypes, presets
+references/04-input-settings.md        — All input types & configurations
+references/05-data-fetching.md         — Loaders, Storefront API, caching
+references/06-styling-theming.md       — Tailwind, theme settings, CVA, CSS variables
+references/07-react-router-7.md        — React Router v7 conventions
+references/08-hydrogen-fundamentals.md — Hydrogen framework essentials
+references/09-deployment.md            — Oxygen, Docker, env vars
+references/10-weaverse-api.md          — All hooks & WeaverseClient API
+references/11-advanced-features.md     — Localization, data connectors, CSP
+references/12-pilot-theme.md           — Pilot-specific patterns & conventions
+references/13-migration-v5.md          — Remix → React Router v7 migration
+```
+
+> **Tip for agents:** If anything below is insufficient or outdated, fetch the relevant file directly from:
+> `https://raw.githubusercontent.com/Weaverse/skills/main/references/<filename>`
+
+### Component Anatomy
+
+Every Weaverse section has up to 3 exports from `app/sections/<name>/index.tsx`:
+
+```tsx
+// 1. Default export — React component
+function MySection(props: MySectionProps) { ... }
+export default MySection;
+
+// 2. Schema export — editor configuration
+export let schema = createSchema({ ... });
+
+// 3. Loader export (optional) — server-side data fetching
+export let loader = async (args: ComponentLoaderArgs<DataType>) => { ... };
+```
+
+**Key rules:**
+- **Spread `{...rest}`** on root element — required for Weaverse Studio interaction
+- **Render `{children}`** if the component accepts child components
+- **`type` must be unique**, use kebab-case (e.g., `hero-banner`)
+- **React 19**: use `ref` prop directly — `forwardRef` is deprecated
+- **Register** every new section in `app/weaverse/components.ts` using `import * as MySection from '~/sections/my-section'`
+
+### Minimal Section Example
+
+```tsx
+import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+
+interface BannerProps extends HydrogenComponentProps {
+  heading: string;
+  description: string;
+}
+
+function Banner({ heading, description, children, ...rest }: BannerProps) {
+  return (
+    <section {...rest} className="py-16 px-4 text-center">
+      <h2 className="text-3xl font-bold">{heading}</h2>
+      <p className="mt-4 text-lg text-gray-600">{description}</p>
+      {children}
+    </section>
+  );
+}
+export default Banner;
+
+export let schema = createSchema({
+  type: 'banner',
+  title: 'Banner',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        { type: 'text', name: 'heading', label: 'Heading', defaultValue: 'Hello World' },
+        { type: 'textarea', name: 'description', label: 'Description' },
+      ],
+    },
+  ],
+  presets: { heading: 'Hello World' },
+});
+```
+
+### Component Registration (`app/weaverse/components.ts`)
+
+```tsx
+// MUST use namespace imports — NOT default imports
+import * as MySection from '~/sections/my-section';
+import * as HeroBanner from '~/sections/hero-banner';
+
+export let components: HydrogenComponent[] = [
+  HeroBanner,
+  MySection,
+  // ...
+];
+```
+
+### Schema Quick Reference
+
+```tsx
+export let schema = createSchema({
+  type: 'my-component',        // Unique kebab-case ID
+  title: 'My Component',       // Studio display name
+  limit: 1,                    // Max instances per page (optional)
+  enabledOn: {                 // Restrict to page types (optional)
+    pages: ['PRODUCT', 'COLLECTION'],
+    // Page types: INDEX | PRODUCT | ALL_PRODUCTS | COLLECTION |
+    //             COLLECTION_LIST | PAGE | BLOG | ARTICLE | CUSTOM
+  },
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        { type: 'text',         name: 'heading',     label: 'Heading', defaultValue: 'Title' },
+        { type: 'richtext',     name: 'body',        label: 'Body' },
+        { type: 'image',        name: 'image',       label: 'Image' },
+        { type: 'switch',       name: 'fullWidth',   label: 'Full Width', defaultValue: false },
+        { type: 'range',        name: 'gap',         label: 'Gap',
+          configs: { min: 0, max: 40, step: 4, unit: 'px' }, defaultValue: 16 },
+        { type: 'select',       name: 'layout',      label: 'Layout',
+          configs: { options: [{ value: 'grid', label: 'Grid' }, { value: 'list', label: 'List' }] },
+          defaultValue: 'grid' },
+        { type: 'color',        name: 'bgColor',     label: 'Background' },
+      ],
+    },
+  ],
+  childTypes: ['product-card'],  // Allowed child component types
+  presets: {
+    heading: 'Title',
+    children: [{ type: 'product-card' }, { type: 'product-card' }],
+  },
+});
+```
+
+**Note:** `inspector` is deprecated — always use `settings`.
+
+### Input Types
+
+| Type | Returns | Use For |
+|------|---------|---------|
+| `text` | `string` | Single-line text |
+| `textarea` | `string` | Multi-line text |
+| `richtext` | `string` (HTML) | Rich text |
+| `url` | `string` | URLs/links |
+| `image` | `WeaverseImage` | Image picker |
+| `video` | `WeaverseVideo` | Video picker |
+| `color` | `string` (#hex) | Color picker |
+| `range` | `number` | Slider |
+| `switch` | `boolean` | Toggle |
+| `select` | `string` | Dropdown |
+| `toggle-group` | `string` | Button group |
+| `datepicker` | `number` (timestamp) | Date/time |
+| `product` | Shopify product | Product picker |
+| `collection` | Shopify collection | Collection picker |
+| `product-list` | `product[]` | Multi-product picker |
+| `collection-list` | `collection[]` | Multi-collection picker |
+| `metaobject` | Shopify metaobject | Metaobject picker |
+
+### Data Fetching with Loaders
+
+```tsx
+import type { ComponentLoaderArgs, HydrogenComponentProps } from '@weaverse/hydrogen';
+
+type MyData = { collectionHandle: string };
+
+export let loader = async ({ weaverse, data }: ComponentLoaderArgs<MyData>) => {
+  let { storefront } = weaverse;
+  return await storefront.query(COLLECTION_QUERY, {
+    variables: { handle: data.collectionHandle },
+  });
+};
+
+// Derive props type from loader return
+type Props = HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & MyData;
+
+function MyComponent({ loaderData, collectionHandle, ...rest }: Props) {
+  let collection = loaderData?.collection;
+  return <section {...rest}>{collection?.title}</section>;
+}
+export default MyComponent;
+```
+
+**Key patterns:**
+- `weaverse.storefront.query()` — Shopify Storefront API
+- `weaverse.fetchWithCache(url, options)` — External APIs with caching
+- Add `shouldRevalidate: true` on schema inputs that affect the loader
+
+### Weaverse API Reference
+
+| API | Purpose |
+|-----|---------|
+| `createSchema()` | Define component schema |
+| `WeaverseClient` | Server-side client (initialized in `server.ts`) |
+| `weaverse.loadPage({ type, handle })` | Load page data in route loaders |
+| `weaverse.loadThemeSettings()` | Load global theme settings |
+| `weaverse.fetchWithCache(url)` | Cached external API fetching |
+| `withWeaverse(App)` | HOC wrapping root `App` in `root.tsx` |
+| `useThemeSettings()` | Access global theme settings in components |
+| `useWeaverse()` | Access global Weaverse instance |
+| `useItemInstance()` | Access a specific component instance |
+| `useParentInstance()` | Access parent component instance |
+
+### Theme Settings Pattern
+
+```tsx
+// app/components/GlobalStyle.tsx
+import { useThemeSettings } from '@weaverse/hydrogen';
+
+export function GlobalStyle() {
+  let settings = useThemeSettings();
+  if (!settings) return null;
+  return (
+    <style dangerouslySetInnerHTML={{ __html: `
+      :root {
+        --color-primary: ${settings.colorPrimary};
+        --body-base-size: ${settings.bodyBaseSize}px;
+      }
+    `}} />
+  );
+}
+```
+
+### Route Loader Pattern
+
+```tsx
+export async function loader({ context, params }: LoaderFunctionArgs) {
+  const { storefront, weaverse } = context;
+
+  const [shopifyData, weaverseData] = await Promise.all([
+    storefront.query(PRODUCT_QUERY, { variables: { handle: params.productHandle } }),
+    weaverse.loadPage({ type: 'PRODUCT', handle: params.productHandle }),
+  ]);
+
+  if (!shopifyData.product) throw new Response('Not found', { status: 404 });
+
+  return data({ shopifyData, weaverseData });
+}
+```
+
+### Common Mistakes to Avoid
+
+| ❌ Wrong | ✅ Correct |
+|---------|-----------|
+| `import MySection from '~/sections/...'` | `import * as MySection from '~/sections/...'` |
+| Using `inspector` in schema | Use `settings` |
+| Missing `{...rest}` on root element | Always spread rest props |
+| Skipping `{children}` for parent components | Render children |
+| `forwardRef` in React 19 | Use `ref` prop directly |
+| Import from `'react-router-dom'` | Import from `'react-router'` |
+| Forgetting to register in `components.ts` | Always register new sections |
+| Multiple `Promise` calls in loader | Use `Promise.all([...])` |

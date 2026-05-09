@@ -1,7 +1,9 @@
+import { CacheShort, generateCacheControlHeader } from "@shopify/hydrogen";
+
+let DEFAULT_CACHE = generateCacheControlHeader(CacheShort());
+
 export function routeHeaders({ loaderHeaders }: { loaderHeaders: Headers }) {
-  // Keep the same cache-control headers when loading the page directly
-  // versus when transitioning to the page from other areas in the app
   return {
-    "Cache-Control": loaderHeaders.get("Cache-Control"),
+    "Cache-Control": loaderHeaders.get("Cache-Control") || DEFAULT_CACHE,
   };
 }

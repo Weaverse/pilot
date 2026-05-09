@@ -10,7 +10,6 @@ import { ArticleCard, type ArticleCardProps } from "./blogs";
 interface RelatedArticlesProps
   extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
     SectionProps {
-  ref: React.Ref<HTMLElement>;
   heading: string;
 }
 
@@ -32,7 +31,7 @@ export default function RelatedArticles(props: RelatedArticlesProps) {
 
   if (relatedArticles.length > 0) {
     return (
-      <Section ref={ref} {...rest}>
+      <Section {...rest}>
         <Heading content={heading} animate={false} />
         <Swimlane>
           {relatedArticles.map((article, i) => (
@@ -53,7 +52,7 @@ export default function RelatedArticles(props: RelatedArticlesProps) {
       </Section>
     );
   }
-  return <section ref={ref} />;
+  return <section />;
 }
 
 export const schema = createSchema({
@@ -82,7 +81,7 @@ export const schema = createSchema({
           type: "select",
           name: "imageAspectRatio",
           label: "Image aspect ratio",
-          defaultValue: "adapt",
+          defaultValue: "1/1",
           configs: {
             options: [
               { value: "adapt", label: "Adapt to image" },
@@ -117,7 +116,7 @@ export const schema = createSchema({
           type: "switch",
           name: "showReadmore",
           label: "Show read more",
-          defaultValue: true,
+          defaultValue: false,
         },
       ],
     },

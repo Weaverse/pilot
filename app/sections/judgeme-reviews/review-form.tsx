@@ -80,7 +80,7 @@ export function ReviewForm({
   return (
     <div
       className={cn(
-        "w-full space-y-6 border border-gray-200 p-6 shadow transition-all duration-200 md:p-8",
+        "w-full space-y-6 border border-gray-200 p-6 shadow rounded-2xl transition-all duration-200 md:p-8",
         showForm ? "block" : "hidden",
         className,
       )}

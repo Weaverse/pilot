@@ -21,10 +21,8 @@ export async function loadCriticalData({
   const i18nServer = getI18nServer(context.env);
   const i18nData = await i18nServer.getI18nData(request);
 
-  const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
+  const [layout, weaverseTheme] = await Promise.all([
     getLayoutData(context),
-    getSwatchesConfigs(context),
-    // Add other queries here, so that they are loaded in parallel
     context.weaverse.loadThemeSettings(),
   ]);
 
@@ -41,7 +39,7 @@ export async function loadCriticalData({
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: false,
+      withPrivacyBanner: true,
       // localize the privacy banner
       country: storefront.i18n.country,
       language: storefront.i18n.language,
@@ -49,7 +47,7 @@ export async function loadCriticalData({
     selectedLocale: storefront.i18n,
     weaverseTheme,
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
-    swatchesConfigs,
+    publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     i18nData,
     locale: i18nData?.locale ?? storefront.i18n.language.toLowerCase(),
   };
@@ -64,8 +62,9 @@ export function loadDeferredData({ context }: LoaderFunctionArgs) {
   const { cart, customerAccount } = context;
 
   return {
-    isLoggedIn: customerAccount.isLoggedIn(),
     cart: cart.get(),
+    swatchesConfigs: getSwatchesConfigs(context),
+    customerAccessToken: customerAccount.getAccessToken(),
   };
 }
 
@@ -82,6 +81,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
         footerMenuHandle: "footer",
         language: lang,
       },
+      cache: storefront.CacheLong(),
     })
     .catch(console.error);
 
@@ -129,27 +129,31 @@ async function getSwatchesConfigs(context: AppLoadContext) {
   if (!type) {
     return { colors: [], images: [] };
   }
-  const { metaobjects } = await context.storefront.query<SwatchesQuery>(
-    SWATCHES_QUERY,
-    { variables: { type } },
-  );
-  const colors: Swatch[] = [];
-  const images: Swatch[] = [];
-  for (const { id, fields } of metaobjects.nodes) {
-    const { value: color } = fields.find(({ key }) => key === "color") || {};
-    const { reference: imageRef } =
-      fields.find(({ key }) => key === "image") || {};
-    const { value: name } = fields.find(({ key }) => key === "label") || {};
-    if (imageRef) {
-      const url = imageRef?.image?.url;
-      if (url) {
-        images.push({ id, name, value: url });
+  try {
+    const { metaobjects } = await context.storefront.query<SwatchesQuery>(
+      SWATCHES_QUERY,
+      { variables: { type }, cache: context.storefront.CacheLong() },
+    );
+    const colors: Swatch[] = [];
+    const images: Swatch[] = [];
+    for (const { id, fields } of metaobjects.nodes) {
+      const { value: color } = fields.find(({ key }) => key === "color") || {};
+      const { reference: imageRef } =
+        fields.find(({ key }) => key === "image") || {};
+      const { value: name } = fields.find(({ key }) => key === "label") || {};
+      if (imageRef) {
+        const url = imageRef?.image?.url;
+        if (url) {
+          images.push({ id, name, value: url });
+        }
+      } else if (color) {
+        colors.push({ id, name, value: color });
       }
-    } else if (color) {
-      colors.push({ id, name, value: color });
     }
+    return { colors, images };
+  } catch {
+    return { colors: [], images: [] };
   }
-  return { colors, images };
 }
 
 /*

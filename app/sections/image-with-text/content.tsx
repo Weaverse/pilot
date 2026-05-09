@@ -21,14 +21,12 @@ const variants = cva(
 
 interface ImageWithTextContentProps
   extends VariantProps<typeof variants>,
-    HydrogenComponentProps {
-  ref?: React.Ref<HTMLDivElement>;
-}
+    HydrogenComponentProps {}
 
 function ImageWithTextContent(props: ImageWithTextContentProps) {
-  const { alignment, children, ref, ...rest } = props;
+  const { alignment, children, ...rest } = props;
   return (
-    <div ref={ref} {...rest} className={clsx(variants({ alignment }))}>
+    <div {...rest} className={clsx(variants({ alignment }))}>
       {children}
     </div>
   );

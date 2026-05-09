@@ -7,6 +7,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { Image } from "~/components/image";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 
@@ -21,29 +22,6 @@ const variants = cva("h-auto w-full", {
       cover: "object-cover",
       contain: "object-contain",
     },
-    borderRadius: {
-      0: "",
-      2: "rounded-xs",
-      4: "rounded-sm",
-      6: "rounded-md",
-      8: "rounded-lg",
-      10: "rounded-[10px]",
-      12: "rounded-xl",
-      14: "rounded-[14px]",
-      16: "rounded-2xl",
-      18: "rounded-[18px]",
-      20: "rounded-[20px]",
-      22: "rounded-[22px]",
-      24: "rounded-3xl",
-      26: "rounded-[26px]",
-      28: "rounded-[28px]",
-      30: "rounded-[30px]",
-      32: "rounded-[32px]",
-      34: "rounded-[34px]",
-      36: "rounded-[36px]",
-      38: "rounded-[38px]",
-      40: "rounded-[40px]",
-    },
   },
 });
 
@@ -52,7 +30,6 @@ interface ImageWithTextImageProps
     HydrogenComponentProps {
   image: WeaverseImage | string;
   imageAspectRatio: ImageAspectRatio;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ImageWithTextImage(props: ImageWithTextImageProps) {
@@ -60,9 +37,7 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
     image = IMAGES_PLACEHOLDERS.image,
     width,
     imageAspectRatio,
-    borderRadius,
     objectFit,
-    ref,
     ...rest
   } = props;
   const imageData: Partial<WeaverseImage> =
@@ -77,14 +52,15 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
   }
 
   return (
-    <div ref={ref} {...rest} className={cn(variants({ width }))}>
-      <Image
-        data={imageData}
-        data-motion="slide-in"
-        sizes="auto"
-        aspectRatio={aspRt}
-        className={cn("h-auto w-full", variants({ objectFit, borderRadius }))}
-      />
+    <div {...rest} className={cn(variants({ width }))}>
+      <ScrollReveal animation="slide-in">
+        <Image
+          data={imageData}
+          sizes="auto"
+          aspectRatio={aspRt}
+          className={cn("h-auto w-full rounded-md", variants({ objectFit }))}
+        />
+      </ScrollReveal>
     </div>
   );
 }
@@ -135,18 +111,6 @@ export const schema = createSchema({
           },
         },
         {
-          type: "range",
-          name: "borderRadius",
-          label: "Border radius",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
-        },
-        {
           type: "select",
           name: "objectFit",
           label: "Object fit",
@@ -166,6 +130,5 @@ export const schema = createSchema({
     width: "medium",
     aspectRatio: "1/1",
     objectFit: "cover",
-    borderRadius: 0,
   },
 });

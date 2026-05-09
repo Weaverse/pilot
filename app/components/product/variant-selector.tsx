@@ -10,10 +10,12 @@ export function VariantSelector({
   product,
   selectedVariant,
   setSelectedVariant,
+  variants,
 }: {
   product: NonNullable<ProductQuery["product"]>;
   selectedVariant: ProductVariantFragment;
   setSelectedVariant: (variant: ProductVariantFragment) => void;
+  variants?: ProductVariantFragment[];
 }) {
   const productOptions = getProductOptions({
     ...product,
@@ -25,6 +27,26 @@ export function VariantSelector({
   }
 
   const selectedOptions = selectedVariant?.selectedOptions || [];
+
+  function handleOptionChange(optionName: string, value: string) {
+    const targetOptions = selectedOptions.map((o) =>
+      o.name === optionName ? { ...o, value } : o,
+    );
+    // Find the variant matching all current selections with the clicked option changed
+    const resolved = variants?.find((v) =>
+      v.selectedOptions.every((so) =>
+        targetOptions.some((t) => t.name === so.name && t.value === so.value),
+      ),
+    );
+    // Fall back to firstSelectableVariant from the option values
+    const fallback = productOptions
+      .find((o) => o.name === optionName)
+      ?.optionValues.find((v) => v.name === value)?.firstSelectableVariant;
+    const variant = resolved || fallback;
+    if (variant) {
+      setSelectedVariant(variant);
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -39,9 +61,7 @@ export function VariantSelector({
             </legend>
             <ProductOptionValues
               option={option}
-              onVariantChange={(newVariant: ProductVariantFragment) => {
-                setSelectedVariant(newVariant);
-              }}
+              onOptionChange={handleOptionChange}
             />
           </div>
         );

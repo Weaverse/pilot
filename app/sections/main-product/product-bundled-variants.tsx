@@ -5,14 +5,13 @@ import { BundledVariants } from "~/components/product/bundled-variants";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBundledVariantsProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   headingText: string;
 }
 
 export default function ProductBundledVariants(
   props: ProductBundledVariantsProps,
 ) {
-  const { ref, headingText, ...rest } = props;
+  const { headingText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const isBundle = Boolean(product?.isBundle?.requiresComponents);
@@ -23,7 +22,7 @@ export default function ProductBundledVariants(
   }
 
   return (
-    <div ref={ref} {...rest} className="space-y-3 empty:hidden">
+    <div {...rest} className="space-y-3 empty:hidden">
       <h4 className="text-2xl">{headingText}</h4>
       <BundledVariants
         variants={bundledVariants as ProductVariantComponent[]}

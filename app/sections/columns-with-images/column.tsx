@@ -6,10 +6,11 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { ImageAspectRatio } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
 
 const variants = cva("", {
@@ -31,17 +32,14 @@ interface ColumnWithImageItemProps
     HydrogenComponentProps {
   imageSrc: WeaverseImage;
   imageAspectRatio: ImageAspectRatio;
-  imageBorderRadius: number;
   heading: string;
   content: string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function ColumnWithImageItem(props: ColumnWithImageItemProps) {
   const {
     imageSrc,
     imageAspectRatio,
-    imageBorderRadius,
     heading,
     content,
     text,
@@ -49,22 +47,19 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
     variant,
     hideOnMobile,
     size,
-    ref,
     ...rest
   } = props;
 
   return (
-    <div
-      ref={ref}
+    <ScrollReveal
+      animation="slide-in"
       {...rest}
-      data-motion="slide-in"
-      className={variants({ size, hideOnMobile })}
-      style={{ "--radius": `${imageBorderRadius}px` } as CSSProperties}
+      className={cn(variants({ size, hideOnMobile }))}
     >
       <Image
         data={typeof imageSrc === "object" ? imageSrc : { url: imageSrc }}
         sizes="auto"
-        className="h-auto rounded-(--radius)"
+        className="h-auto rounded-md"
         aspectRatio={calculateAspectRatio(imageSrc, imageAspectRatio)}
       />
       <div className="mt-6 w-full space-y-3.5 text-center">
@@ -76,7 +71,7 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
           </Link>
         )}
       </div>
-    </div>
+    </ScrollReveal>
   );
 }
 
@@ -138,18 +133,6 @@ export const schema = createSchema({
           },
           helpText:
             'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
-        },
-        {
-          type: "range",
-          name: "imageBorderRadius",
-          label: "Image border radius",
-          configs: {
-            min: 0,
-            max: 40,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
         },
         {
           type: "heading",

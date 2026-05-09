@@ -3,6 +3,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { CustomerApiPlayLoad } from "~/routes/api/customer";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {
@@ -11,19 +12,11 @@ interface NewsLetterInputProps extends HydrogenComponentProps {
   buttonText: string;
   helpText: string;
   successText?: string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function NewsLetterForm(props: NewsLetterInputProps) {
-  const {
-    buttonText,
-    width,
-    placeholder,
-    helpText,
-    successText,
-    ref,
-    ...rest
-  } = props;
+  const { buttonText, width, placeholder, helpText, successText, ...rest } =
+    props;
   const fetcher = useFetcher();
   const { state, Form } = fetcher;
   const data = fetcher.data as CustomerApiPlayLoad;
@@ -31,35 +24,34 @@ function NewsLetterForm(props: NewsLetterInputProps) {
   const { ok, errorMessage } = data || {};
 
   return (
-    <div ref={ref} {...rest} className="mx-auto max-w-full" style={{ width }}>
-      <Form
+    <div {...rest} className="mx-auto max-w-full" style={{ width }}>
+      <ScrollReveal
+        as={Form}
         method="POST"
         action="/api/customer"
-        className="flex w-full items-center"
-        data-motion="fade-up"
+        className="flex w-full items-center overflow-hidden rounded-md border"
       >
-        <div className="flex grow items-center border-y border-r-0 border-l">
+        <div className="flex grow items-center">
           <EnvelopeSimpleIcon className="mr-1.5 ml-3 h-5 w-5 shrink-0" />
           <input
             name="email"
             type="email"
             required
             placeholder={placeholder}
-            className="w-full border-none bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:outline-hidden focus:ring-0"
+            className="w-full rounded-none border-none bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:outline-hidden focus:ring-0"
           />
         </div>
         <Button
           type="submit"
-          className="gap-3"
+          className="gap-3 rounded-none border-y-0 border-r-0"
           loading={state === "submitting"}
         >
           {buttonText}
         </Button>
-      </Form>
+      </ScrollReveal>
       {helpText && (
-        <div
-          className="mt-2 text-body-subtle"
-          data-motion="fade-up"
+        <ScrollReveal
+          className="mt-3 text-body-subtle text-sm"
           dangerouslySetInnerHTML={{ __html: helpText }}
         />
       )}

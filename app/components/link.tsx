@@ -11,41 +11,39 @@ import {
   type LinkProps as RemixLinkProps,
   useRouteLoaderData,
 } from "react-router";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { RootLoader } from "~/root";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
-export const variants = cva(["inline-flex transition-colors"], {
+export const variants = cva(["inline-flex rounded-md transition-colors"], {
   variants: {
     variant: {
       primary: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-primary-text)",
         "bg-(--btn-primary-bg)",
         "border-(--btn-primary-bg)",
-        "hover:text-(--btn-primary-bg)",
-        "hover:bg-(--btn-primary-text)",
-        "hover:border-(--btn-primary-bg)",
+        "hover:bg-(--btn-primary-bg-hover)",
+        "hover:border-(--btn-primary-bg-hover)",
       ],
       secondary: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-secondary-text)",
         "bg-(--btn-secondary-bg)",
         "border-(--btn-secondary-bg)",
-        "hover:bg-(--btn-secondary-text)",
-        "hover:text-(--btn-secondary-bg)",
-        "hover:border-(--btn-secondary-text)",
+        "hover:bg-(--btn-secondary-bg-hover)",
+        "hover:border-(--btn-secondary-bg-hover)",
       ],
       outline: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-outline-text)",
         "bg-transparent",
         "border-(--btn-outline-text)",
-        "hover:bg-(--btn-outline-text)",
-        "hover:text-background",
-        "hover:border-(--btn-outline-text)",
+        "hover:bg-(--btn-outline-bg-hover)",
       ],
       custom: [
-        "border px-4 py-3",
+        "border px-4 py-3 font-semibold",
         "text-(--btn-text)",
         "bg-(--btn-bg)",
         "border-(--btn-border)",
@@ -83,7 +81,7 @@ export interface LinkProps
   extends HTMLAttributes<HTMLAnchorElement>,
     Partial<Omit<HydrogenComponentProps, "children">>,
     LinkData {
-  ref?: React.Ref<HTMLAnchorElement>;
+  animate?: boolean;
 }
 
 function checkExternal(to: LinkProps["to"]) {
@@ -136,7 +134,6 @@ function useHrefWithLocale(href: LinkProps["to"]) {
  */
 export function Link(props: LinkProps) {
   let {
-    ref,
     to,
     text,
     variant,
@@ -150,9 +147,10 @@ export function Link(props: LinkProps) {
     borderColorHover,
     children,
     target,
+    animate = true,
     ...rest
   } = props;
-  const { enableViewTransition } = useThemeSettings();
+  const { enableViewTransition } = useThemeSettings<ThemeSettings>();
   const href = useHrefWithLocale(to);
 
   if (variant === "custom") {
@@ -172,20 +170,24 @@ export function Link(props: LinkProps) {
   }
 
   const isExternal = checkExternal(href);
+  const linkProps = {
+    viewTransition: enableViewTransition,
+    to: href,
+    style,
+    className: cn(variants({ variant }), className),
+    target: target !== undefined ? target : isExternal ? "_blank" : undefined,
+    ...rest,
+  };
 
-  return (
-    <RemixLink
-      ref={ref}
-      viewTransition={enableViewTransition}
-      to={href}
-      style={style}
-      className={cn(variants({ variant }), className)}
-      target={target !== undefined ? target : isExternal ? "_blank" : undefined}
-      {...rest}
-    >
-      {children || text}
-    </RemixLink>
-  );
+  if (animate) {
+    return (
+      <ScrollReveal as={RemixLink} {...linkProps}>
+        {children || text}
+      </ScrollReveal>
+    );
+  }
+
+  return <RemixLink {...linkProps}>{children || text}</RemixLink>;
 }
 
 export default Link;

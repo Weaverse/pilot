@@ -1,0 +1,351 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                   MEDIAGRID QUICK START - ONE PAGE REFERENCE                ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+THE ANSWER TO YOUR QUESTION
+════════════════════════════════════════════════════════════════════════════════
+
+Q: Where is MediaGrid used/imported?
+A: It's used indirectly through ProductMedia (the real parent component)
+
+Q: Who passes displayMedia and allMedia?
+A: ProductMedia component computes and passes both to MediaGrid
+
+Q: How is displayMedia computed?
+A: See "COMPUTATION" section below
+
+Q: How is variant-specific filtering done?
+A: See "VARIANT FILTERING" section below
+
+
+THE THREE PARENT CONTEXTS
+════════════════════════════════════════════════════════════════════════════════
+
+1. Main Product Section (Weaverse)
+   File: app/sections/main-product/product-media.tsx
+   Data source: useLoaderData<typeof productRouteLoader>()
+   Role: Configurable section with admin settings
+
+2. Single Product Page
+   File: app/sections/single-product/index.tsx
+   Data source: loaderData?.product + local state
+   Role: Full product page with variant selector
+
+3. Quick Shop Modal
+   File: app/components/product-card/quick-shop.tsx
+   Data source: props.data.product + local state
+   Role: Quick view dialog with variant selector
+
+All three → ProductMedia (index.tsx) → MediaGrid or MediaSlider
+
+
+COMPUTATION: HOW displayMedia IS CREATED
+════════════════════════════════════════════════════════════════════════════════
+
+Location: app/components/product-media/index.tsx (lines 69-114)
+
+Code:
+  let displayMedia = media;  // Start with all media
+  
+  if (groupMediaByVariant && product && groupByOption) {
+    let result = getVariantGroupedMedia({
+      allMedia: media,
+      selectedVariant,
+      product,
+      groupByOption,
+    });
+    displayMedia = result.media;  // Override with filtered
+  }
+  
+  <MediaGrid
+    allMedia={media}           // Always unfiltered
+    displayMedia={displayMedia} // Filtered or unfiltered
+    {...props}
+  />
+
+Key Point:
+  • displayMedia starts as media (all images)
+  • If filtering enabled (3 conditions), it becomes filtered
+  • allMedia is ALWAYS unfiltered
+  • Both passed to MediaGrid
+
+
+THE THREE FILTERING CONDITIONS
+════════════════════════════════════════════════════════════════════════════════
+
+For filtering to happen, ALL THREE must be true:
+
+1. groupMediaByVariant === true     (Feature enabled)
+2. product prop provided            (Needed for product.options)
+3. groupByOption specified          (e.g., "Color")
+
+If any is false: no filtering, displayMedia = media
+
+
+VARIANT FILTERING ALGORITHM
+════════════════════════════════════════════════════════════════════════════════
+
+Function: getVariantGroupedMedia() in variant-media-group.ts
+
+5 Steps:
+
+1. Extract selected option value
+   selectedVariant.selectedOptions.find(opt => opt.name === "Color")?.value
+   Result: "Black" → normalized to "black"
+
+2. Get known option values from product
+   product.options.find(opt => opt.name === "Color").optionValues
+   Result: ["Black", "Cream", "Slate Brown"]
+
+3. Extract option from each image filename (PATTERN MATCHING)
+   Patterns:
+   - "black_shirt.jpg" ✓
+   - "shirt_black.jpg" ✓
+   - "shirt-black.jpg" ✓
+   - "black-shirt.jpg" ✓
+   - "shirt.jpg" ✗
+   
+   Multi-word: "Slate Brown" matches:
+   - "slate-brown_shirt.jpg" ✓
+   - "slate_brown_shirt.jpg" ✓
+
+4. Group images by extracted option
+   {
+     "black": [black_shirt.jpg, ...],
+     "cream": [cream_shirt.jpg, ...],
+     ungrouped: [product.jpg, ...]
+   }
+
+5. Return matched images + ungrouped
+   matched = groupedMedia.get("black")
+   return [...matched, ...ungrouped]
+   
+   Fallback: If no matched images found, return all media
+
+
+EXAMPLE SCENARIO
+════════════════════════════════════════════════════════════════════════════════
+
+User selects: Black variant
+Product images:
+  • black_shirt.jpg
+  • cream_shirt.jpg
+  • product.jpg
+
+Processing:
+  1. Extract "black" from selected variant
+  2. Known options: ["Black", "Cream"]
+  3. Extract from filenames:
+     - black_shirt.jpg → "black" ✓
+     - cream_shirt.jpg → "cream" ✗
+     - product.jpg → nothing ✓ (ungrouped)
+  4. Group:
+     - black: [black_shirt.jpg]
+     - cream: [cream_shirt.jpg]
+     - ungrouped: [product.jpg]
+  5. Return: [black_shirt.jpg, product.jpg]
+
+Result:
+  Grid displays: black_shirt.jpg + product.jpg (cream hidden)
+  Zoom shows: All 3 images (unfiltered)
+
+
+CRITICAL PROP DISTINCTIONS
+════════════════════════════════════════════════════════════════════════════════
+
+allMedia
+├─ Type: MediaFragment[]
+├─ Always: Unfiltered complete media
+├─ Source: Directly from parent (product.media.nodes)
+├─ Used for: Zoom modal ONLY
+└─ Filtering: Never applied
+
+displayMedia
+├─ Type: MediaFragment[]
+├─ May be: Filtered by variant (if enabled)
+├─ Source: Computed from media (possibly filtered)
+├─ Used for: Main grid/slider rendering
+└─ Filtering: Applied if 3 conditions met
+
+visibleMedia (internal to MediaGrid)
+├─ Type: MediaFragment[]
+├─ Computed: displayMedia.slice(0, initialMediaCount)
+├─ Used for: "Show more" button calculations
+└─ Purpose: Show limited items initially
+
+
+MEDIAGRID PROPS (What It Receives)
+════════════════════════════════════════════════════════════════════════════════
+
+Required:
+  allMedia: MediaFragment[]          ← Unfiltered
+  displayMedia: MediaFragment[]      ← May be filtered
+  gridSize: "1x1" | "2x2" | "mix"
+  selectedVariant: ProductVariantFragment
+
+Optional:
+  initialMediaCount: number          ← For "Show more"
+  enableZoom: boolean
+  zoomTrigger: "image" | "button" | "both"
+  zoomButtonVisibility: "always" | "hover"
+  imageAspectRatio: ImageAspectRatio
+  showMoreText / showLessText: string
+
+
+WEAVERSE CONFIGURATION OPTIONS
+════════════════════════════════════════════════════════════════════════════════
+
+In app/sections/main-product/product-media.tsx schema:
+
+mediaLayout: "grid" | "slider"
+  Controls which component renders (MediaGrid vs MediaSlider)
+
+gridSize: "1x1" | "2x2" | "mix"
+  Grid layout (only if mediaLayout = "grid")
+
+groupMediaByVariant: true | false
+  Enable variant filtering (condition #1)
+
+groupByOption: string
+  Option name to filter by (condition #3), default "Color"
+
+initialMediaCount: number
+  Items to show before "Show more" button (0 = show all)
+
+showMoreText / showLessText: string
+  Button labels
+
+enableZoom: true | false
+  Whether to show zoom modal
+
+zoomTrigger: "image" | "button" | "both"
+  How to trigger zoom
+
+zoomButtonVisibility: "always" | "hover"
+  When to show zoom button
+
+
+COMPLETE CALL CHAIN
+════════════════════════════════════════════════════════════════════════════════
+
+Parent Component (gets product from loader)
+    ↓
+ProductMedia Component
+  Receives:
+    • media: product.media.nodes (raw)
+    • selectedVariant: selected variant
+    • groupMediaByVariant: true/false (config)
+    • groupByOption: "Color" (config)
+    • product: product object
+  
+  Computes:
+    • displayMedia = media
+    • IF (filtering conditions met):
+      displayMedia = getVariantGroupedMedia(...).media
+    ↓
+MediaGrid Component
+  Receives:
+    • allMedia: media (never filtered)
+    • displayMedia: computed above
+    • Other config props
+  
+  Renders:
+    • Grid items: from displayMedia
+    • Zoom modal: from allMedia
+    • Show more button: counts displayMedia
+
+
+COMMON MISTAKES & CORRECTIONS
+════════════════════════════════════════════════════════════════════════════════
+
+❌ "Zoom modal respects variant filtering"
+✅ Zoom modal ALWAYS shows allMedia (unfiltered)
+
+❌ "Filtering uses product variant assignments"
+✅ Filtering uses FILENAME PATTERN MATCHING
+
+❌ "displayMedia = media always"
+✅ displayMedia is COMPUTED (may differ from media)
+
+❌ "Show More counts all images"
+✅ Show More counts displayMedia (respects filtering)
+
+❌ "All 3 filtering conditions don't matter"
+✅ ALL 3 conditions must be true for filtering to work
+
+
+QUICK TESTING GUIDE
+════════════════════════════════════════════════════════════════════════════════
+
+Setup:
+  1. Enable in Weaverse: groupMediaByVariant = true
+  2. Set: groupByOption = "Color"
+  3. Product with images named:
+     - black_shirt.jpg, cream_shirt.jpg, product.jpg
+  4. Product has Color option: ["Black", "Cream"]
+
+Test:
+  1. Select Black variant
+  2. Grid should show: black_shirt.jpg + product.jpg
+  3. Click zoom: see all 3 images
+  4. Select Cream variant
+  5. Grid should show: cream_shirt.jpg + product.jpg
+  6. Zoom still shows: all 3 images
+  7. Try with no color in filename
+  8. Verify ungrouped always appear
+
+
+KEY FILES TO READ
+════════════════════════════════════════════════════════════════════════════════
+
+1. ProductMedia (the orchestrator)
+   app/components/product-media/index.tsx
+   Lines 69-114: displayMedia computation
+
+2. Variant filtering function
+   app/components/product-media/variant-media-group.ts
+   Function: getVariantGroupedMedia()
+
+3. MediaGrid component
+   app/components/product-media/media-grid.tsx
+   Uses allMedia + displayMedia
+
+4. Any of the 3 parents (start with main-product)
+   app/sections/main-product/product-media.tsx
+   See schema and loader usage
+
+
+ONE-LINER ANSWERS
+════════════════════════════════════════════════════════════════════════════════
+
+Q: What is MediaGrid?
+A: React component rendering product images in grid layout
+
+Q: Where is it imported?
+A: Through ProductMedia (app/components/product-media/index.tsx)
+
+Q: Who uses ProductMedia?
+A: Three contexts: Main Product Section, Single Product Page, Quick Shop Modal
+
+Q: How is displayMedia different from allMedia?
+A: displayMedia may be filtered by variant; allMedia is always complete
+
+Q: How does variant filtering work?
+A: By matching image filenames against selected variant's option value
+
+Q: What if no images match the selected variant?
+A: Shows all media (fallback behavior)
+
+Q: Does zoom modal respect filtering?
+A: No, it always shows allMedia (all images)
+
+Q: What triggers filtering?
+A: Three conditions: groupMediaByVariant=true, product prop, groupByOption specified
+
+
+════════════════════════════════════════════════════════════════════════════════
+For detailed info, see MEDIAGRID_ANALYSIS_SUMMARY.md in project root
+════════════════════════════════════════════════════════════════════════════════

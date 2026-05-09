@@ -11,9 +11,9 @@ export function ReviewBar(review: {
         {review.rating}
       </p>
       <StarIcon className="h-4 w-4 shrink-0" />
-      <div className="h-1.5 w-72 max-w-80 rounded-full bg-gray-200">
+      <div className="h-1.5 w-72 max-w-80 rounded-md bg-gray-200">
         <div
-          className="h-1.5 rounded-full bg-gray-800"
+          className="h-1.5 rounded-md bg-gray-800"
           style={{ width: `${review.avg * 100}%` }}
         />
       </div>

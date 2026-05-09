@@ -3,7 +3,6 @@ import { useLoaderData } from "react-router";
 import { create } from "zustand";
 import { Quantity } from "~/components/product/quantity";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { isCombinedListing } from "~/utils/combined-listings";
 
 export const useProductQtyStore = create<{
   quantity: number;
@@ -14,25 +13,22 @@ export const useProductQtyStore = create<{
 }));
 
 interface ProductQuantitySelectorProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   labelText: string;
 }
 
 export default function ProductQuantitySelector(
   props: ProductQuantitySelectorProps,
 ) {
-  const { ref, labelText, ...rest } = props;
+  const { labelText, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity, setQuantity } = useProductQtyStore();
 
-  const combinedListing = isCombinedListing(product);
-
-  if (!product || combinedListing) {
+  if (!product) {
     return null;
   }
 
   return (
-    <div ref={ref} {...rest} className="empty:hidden">
+    <div {...rest} className="empty:hidden">
       <Quantity value={quantity} onChange={setQuantity} label={labelText} />
     </div>
   );

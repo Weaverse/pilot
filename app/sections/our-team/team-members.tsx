@@ -23,22 +23,16 @@ type MemberType = {
   x_url: string;
 };
 
-interface TeamMembersProps extends HydrogenComponentProps {
-  ref?: React.Ref<HTMLDivElement>;
-}
+interface TeamMembersProps extends HydrogenComponentProps {}
 
 function TeamMembers(props: TeamMembersProps) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   const parent = useParentInstance();
   const { metaobjects }: OurTeamQuery = parent.data?.loaderData || {};
   if (metaobjects?.nodes?.length) {
     const members = metaobjects.nodes;
     return (
-      <div
-        ref={ref}
-        {...rest}
-        className="mb-6 grid gap-8 pt-4 md:grid-cols-2 lg:mb-16"
-      >
+      <div {...rest} className="mb-6 grid gap-8 pt-4 md:grid-cols-2 lg:mb-16">
         {members.map(({ id, fields }) => {
           const member: Partial<MemberType> = {};
           for (const { key, value, reference } of fields) {
@@ -58,9 +52,7 @@ function TeamMembers(props: TeamMembersProps) {
                 />
               )}
               <div className="p-5">
-                <div className="font-semibold text-xl tracking-tight">
-                  {name}
-                </div>
+                <h4 className="font-semibold text-xl tracking-tight">{name}</h4>
                 <span className="text-gray-600">{title}</span>
                 {bio && (
                   <p className="mt-3 mb-4 font-light text-gray-600">{bio}</p>
@@ -108,7 +100,7 @@ function TeamMembers(props: TeamMembersProps) {
     );
   }
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <div className="p-8 text-center">No members data available</div>
     </div>
   );

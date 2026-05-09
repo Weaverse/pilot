@@ -21,7 +21,7 @@ function getVisiblePages(
   for (
     let i = Math.max(2, currentPage - DELTA);
     i <= Math.min(lastPage - 1, currentPage + DELTA);
-    i++
+    i += 1
   ) {
     range.push(i);
   }
@@ -127,13 +127,11 @@ export function ReviewsPagination() {
 interface ReviewListProps
   extends HydrogenComponentProps,
     Omit<ReviewItemProps, "review"> {
-  ref: React.Ref<HTMLDivElement>;
   reviewsPerPage?: number;
 }
 
 export default function ReviewList(props: ReviewListProps) {
   const {
-    ref,
     showReviewerName = true,
     showReviewerEmail = true,
     reviewerEmailFormat = "partial",
@@ -153,7 +151,7 @@ export default function ReviewList(props: ReviewListProps) {
 
   if (data?.reviews?.length) {
     return (
-      <div ref={ref} {...rest}>
+      <div {...rest}>
         <div className="flex w-full flex-col gap-6 py-6 md:col-span-2">
           <div className="relative space-y-8 divide-y divide-gray-200">
             {data.reviews.map((review) => (
@@ -210,7 +208,7 @@ export const schema = createSchema({
               { label: "Full email address", value: "full" },
             ],
           },
-          condition: "showReviewerEmail.eq.true",
+          condition: (data) => data.showReviewerEmail, // Only show if showReviewerEmail is true
         },
         {
           type: "switch",

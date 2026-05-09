@@ -13,17 +13,11 @@ interface FeaturedCollectionsData {
 
 interface FeaturedCollectionsProps
   extends SectionProps<FeaturedCollectionsLoaderData>,
-    FeaturedCollectionsData {
-  ref: React.Ref<HTMLElement>;
-}
+    FeaturedCollectionsData {}
 
 export default function FeaturedCollections(props: FeaturedCollectionsProps) {
-  const { ref, loaderData, children, ...rest } = props;
-  return (
-    <Section ref={ref} {...rest}>
-      {children}
-    </Section>
-  );
+  const { loaderData, children, ...rest } = props;
+  return <Section {...rest}>{children}</Section>;
 }
 
 const COLLECTIONS_QUERY = `#graphql
@@ -96,7 +90,7 @@ export const schema = createSchema({
     },
     {
       group: "Layout",
-      inputs: layoutInputs.filter((i) => i.name !== "borderRadius"),
+      inputs: layoutInputs,
     },
   ],
   presets: {

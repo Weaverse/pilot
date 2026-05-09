@@ -7,29 +7,15 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { Image } from "~/components/image";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
-const variants = cva("h-(--image-height)", {
+const variants = cva("h-(--image-height) rounded-md", {
   variants: {
     columnSpan: {
       1: "col-span-1",
       2: "col-span-2",
       3: "col-span-3",
       4: "col-span-4",
-    },
-    borderRadius: {
-      0: "",
-      2: "rounded-xs",
-      4: "rounded-sm",
-      6: "rounded-md",
-      8: "rounded-lg",
-      10: "rounded-[10px]",
-      12: "rounded-xl",
-      14: "rounded-[14px]",
-      16: "rounded-2xl",
-      18: "rounded-[18px]",
-      20: "rounded-[20px]",
-      22: "rounded-[22px]",
-      24: "rounded-3xl",
     },
     hideOnMobile: {
       true: "hidden sm:block",
@@ -38,7 +24,6 @@ const variants = cva("h-(--image-height)", {
   },
   defaultVariants: {
     columnSpan: 1,
-    borderRadius: 8,
     hideOnMobile: false,
   },
 });
@@ -47,23 +32,24 @@ interface ImageGalleryItemProps
   extends VariantProps<typeof variants>,
     HydrogenComponentProps {
   src: WeaverseImage;
-  ref?: React.Ref<HTMLImageElement>;
 }
 
 function ImageGalleryItem(props: ImageGalleryItemProps) {
-  const { src, columnSpan, borderRadius, hideOnMobile, ref, ...rest } = props;
+  const { src, columnSpan, hideOnMobile, ...rest } = props;
   const data = typeof src === "object" ? src : { url: src, altText: src };
   return (
-    <Image
-      ref={ref}
+    <ScrollReveal
+      animation="slide-in"
       {...rest}
-      className={clsx(variants({ columnSpan, borderRadius, hideOnMobile }))}
-      data-motion="slide-in"
-      loading="lazy"
-      data={data}
-      width={1000}
-      sizes="(min-width: 45em) 50vw, 100vw"
-    />
+      className={clsx(variants({ columnSpan, hideOnMobile }))}
+    >
+      <Image
+        loading="lazy"
+        data={data}
+        width={1000}
+        sizes="(min-width: 45em) 50vw, 100vw"
+      />
+    </ScrollReveal>
   );
 }
 
@@ -93,18 +79,6 @@ export const schema = createSchema({
             step: 1,
           },
           defaultValue: 1,
-        },
-        {
-          type: "range",
-          label: "Border radius",
-          name: "borderRadius",
-          configs: {
-            min: 0,
-            max: 24,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
         },
         {
           type: "switch",

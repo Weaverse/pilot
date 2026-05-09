@@ -8,14 +8,12 @@ import { useLoaderData } from "react-router";
 import { ProductBadges } from "~/components/product/badges";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductBadgesComponentProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
-}
+interface ProductBadgesComponentProps extends HydrogenComponentProps {}
 
 export default function ProductBadgesComponent(
   props: ProductBadgesComponentProps,
 ) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const selectedVariant = useOptimisticVariant(
@@ -29,9 +27,8 @@ export default function ProductBadgesComponent(
 
   return (
     <div
-      ref={ref}
       {...rest}
-      className="flex items-center gap-2 text-sm empty:hidden"
+      className="absolute top-2 left-2 z-1 flex items-center gap-2 text-sm empty:hidden md:top-4 md:left-[calc(var(--thumbs-width,0px)+1rem)]"
     >
       <ProductBadges
         as={Fragment}

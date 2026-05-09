@@ -1,4 +1,9 @@
-import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
+import {
+  GiftIcon,
+  NotePencilIcon,
+  TagIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
@@ -12,6 +17,8 @@ import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import type { CartLayoutType } from "~/types/others";
+import type { ThemeSettings } from "~/types/weaverse";
+import { cn } from "~/utils/cn";
 import {
   DiscountDialog,
   GiftCardDialog,
@@ -25,8 +32,15 @@ export function CartSummary({
   cart: OptimisticCart<CartApiQueryFragment>;
   layout: CartLayoutType;
 }) {
-  const { enableCartNote, enableDiscountCode, enableGiftCard } =
-    useThemeSettings();
+  const {
+    enableCartNote,
+    cartNoteButtonText,
+    enableDiscountCode,
+    discountCodeButtonText,
+    enableGiftCard,
+    giftCardButtonText,
+    checkoutButtonText,
+  } = useThemeSettings<ThemeSettings>();
   const { t } = useTranslation("common");
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
@@ -51,9 +65,9 @@ export function CartSummary({
   return (
     <div
       className={clsx(
-        layout === "drawer" && "grid border-line-subtle border-t pt-4",
+        layout === "drawer" && "border-gray-300 border-t pt-4",
         layout === "page" &&
-          "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
+          "sticky top-[calc(var(--height-nav)+20px)] w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
       )}
     >
       <h2 id="summary-heading" className="sr-only">
@@ -158,81 +172,61 @@ export function CartSummary({
             })}
         </div>
       )}
-      <dl className="mb-4 grid">
-        <div
-          className={clsx(
-            "flex items-center justify-between font-medium",
-            layout === "page" && "text-xl",
-          )}
-        >
-          <dt>{t("cart.summary.estimatedTotal")}</dt>
-          {isCartUpdating ? (
-            <Skeleton className="h-4 w-20 rounded" />
-          ) : (
-            <dd>
-              {cost?.totalAmount?.amount ? (
-                <Money data={cost?.totalAmount} />
-              ) : (
-                "-"
-              )}
-            </dd>
-          )}
-        </div>
-      </dl>
-      <div className="mb-2 text-right text-body-subtle">
-        {
-          t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
-            "{{link}}",
-          )[0]
-        }
-        <Link
-          target="_blank"
-          to="/policies/shipping-policy"
-          variant="underline"
-          className="text-current after:bg-current"
-        >
-          {t("cart.summary.shipping")}
-        </Link>
-        {
-          t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
-            "{{link}}",
-          )[1]
-        }
-      </div>
+      {layout === "page" && (
+        <dl className="mb-4 grid">
+          <div className="flex items-center justify-between text-xl font-medium">
+            <dt>{t("cart.summary.estimatedTotal")}</dt>
+            {isCartUpdating ? (
+              <Skeleton className="h-4 w-20 rounded-md" />
+            ) : (
+              <dd>
+                {cost?.totalAmount?.amount ? (
+                  <Money data={cost?.totalAmount} />
+                ) : (
+                  "-"
+                )}
+              </dd>
+            )}
+          </div>
+        </dl>
+      )}
       {(enableCartNote || enableDiscountCode || enableGiftCard) && (
-        <div className="mb-4 flex items-center justify-end gap-2">
+        <div className="mb-2 flex items-center justify-end gap-3">
           {enableCartNote && (
-            <>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <Button variant="underline">
-                    {t("cart.actions.addNote")}
-                  </Button>
-                </Dialog.Trigger>
-                <NoteDialog cartNote={note} />
-              </Dialog.Root>
-              {(enableDiscountCode || enableGiftCard) && <span>/</span>}
-            </>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button type="button" className="flex items-center gap-1.5">
+                  <NotePencilIcon className="size-4" />
+                  {cartNoteButtonText || t("cart.actions.addNote")}
+                </button>
+              </Dialog.Trigger>
+              <NoteDialog cartNote={note} />
+            </Dialog.Root>
+          )}
+          {enableCartNote && (enableDiscountCode || enableGiftCard) && (
+            <span className="text-gray-400">/</span>
           )}
           {enableDiscountCode && (
-            <>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <Button variant="underline">
-                    {t("cart.actions.discountCode")}
-                  </Button>
-                </Dialog.Trigger>
-                <DiscountDialog discountCodes={discountCodes} />
-              </Dialog.Root>
-              {enableGiftCard && <span>/</span>}
-            </>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button type="button" className="flex items-center gap-1.5">
+                  <TagIcon className="size-4" />
+                  {discountCodeButtonText || t("cart.actions.discountCode")}
+                </button>
+              </Dialog.Trigger>
+              <DiscountDialog discountCodes={discountCodes} />
+            </Dialog.Root>
+          )}
+          {enableDiscountCode && enableGiftCard && (
+            <span className="text-gray-400">/</span>
           )}
           {enableGiftCard && (
             <Dialog.Root>
               <Dialog.Trigger asChild>
-                <Button variant="underline">
-                  {t("cart.actions.giftCard")}
-                </Button>
+                <button type="button" className="flex items-center gap-1.5">
+                  <GiftIcon className="size-4" />
+                  {giftCardButtonText || t("cart.actions.giftCard")}
+                </button>
               </Dialog.Trigger>
               <GiftCardDialog appliedGiftCards={appliedGiftCards} />
             </Dialog.Root>
@@ -240,18 +234,50 @@ export function CartSummary({
         </div>
       )}
       {checkoutUrl && (
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-2 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
             <Button className="w-full">
-              {t("cart.actions.checkout")}
+              <span>{checkoutButtonText || t("cart.actions.checkout")}</span>
+              {layout === "drawer" && (
+                <>
+                  <span className="mx-1.5">·</span>
+                  {isCartUpdating ? (
+                    <Skeleton className="h-4 w-16 rounded-md bg-white/30" />
+                  ) : cost?.totalAmount?.amount ? (
+                    <Money data={cost?.totalAmount} />
+                  ) : (
+                    "-"
+                  )}
+                </>
+              )}
             </Button>
           </a>
           {/* @todo: <CartShopPayButton cart={cart} /> */}
-          {layout === "drawer" && (
-            <Link variant="underline" to="/cart" className="mx-auto w-fit">
-              {t("cart.summary.viewCart")}
+          <div
+            className={cn(
+              "text-body-subtle text-sm",
+              layout === "page" && "text-right",
+            )}
+          >
+            {
+              t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
+                "{{link}}",
+              )[0]
+            }
+            <Link
+              target="_blank"
+              to="/policies/shipping-policy"
+              variant="underline"
+              className="text-current after:bg-current"
+            >
+              {t("cart.summary.shipping")}
             </Link>
-          )}
+            {
+              t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
+                "{{link}}",
+              )[1]
+            }
+          </div>
         </div>
       )}
     </div>

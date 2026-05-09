@@ -6,17 +6,14 @@ import {
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { isCombinedListing } from "~/utils/combined-listings";
 import { ProductVariants } from "./variants";
 
-interface ProductVariantSelectorProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
-}
+interface ProductVariantSelectorProps extends HydrogenComponentProps {}
 
 export default function ProductVariantSelector(
   props: ProductVariantSelectorProps,
 ) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   const selectedVariant = useOptimisticVariant(
@@ -29,18 +26,15 @@ export default function ProductVariantSelector(
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const combinedListing = isCombinedListing(product);
-
   if (!product) {
     return null;
   }
 
   return (
-    <div ref={ref} {...rest}>
+    <div {...rest}>
       <ProductVariants
         productOptions={productOptions}
         selectedVariant={selectedVariant}
-        combinedListing={combinedListing}
       />
     </div>
   );

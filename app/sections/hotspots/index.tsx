@@ -6,6 +6,7 @@ import Heading, {
 } from "~/components/heading";
 import { Image } from "~/components/image";
 import Paragraph from "~/components/paragraph";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
 import type { ImageAspectRatio } from "~/types/others";
@@ -18,7 +19,6 @@ interface HotspotsProps
   headingTagName?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   image: string;
   aspectRatio: ImageAspectRatio;
-  ref?: React.Ref<HTMLElement>;
 }
 
 function Hotspots(props: HotspotsProps) {
@@ -47,7 +47,7 @@ function Hotspots(props: HotspotsProps) {
       : image;
 
   return (
-    <Section ref={ref} {...rest} overflow="unset">
+    <Section {...rest} overflow="unset">
       {content && (
         <Heading
           content={content}
@@ -70,12 +70,9 @@ function Hotspots(props: HotspotsProps) {
         className="relative"
         style={{ aspectRatio: calculateAspectRatio(imageData, aspectRatio) }}
       >
-        <Image
-          data={imageData}
-          sizes="auto"
-          className="z-0"
-          data-motion="zoom-in"
-        />
+        <ScrollReveal animation="zoom-in" className="h-full w-full">
+          <Image data={imageData} sizes="auto" className="z-0" />
+        </ScrollReveal>
         {children}
       </div>
     </Section>

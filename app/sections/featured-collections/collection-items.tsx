@@ -12,7 +12,7 @@ import { Image } from "~/components/image";
 import Link, { type LinkStyles, linkStylesInputs } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
-import { useAnimation } from "~/hooks/use-animation";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
@@ -34,21 +34,6 @@ const variants = cva("", {
       28: "md:gap-7",
       32: "md:gap-8",
     },
-    borderRadius: {
-      0: "",
-      2: "rounded-xs",
-      4: "rounded-sm",
-      6: "rounded-md",
-      8: "rounded-lg",
-      10: "rounded-[10px]",
-      12: "rounded-xl",
-      14: "rounded-[14px]",
-      16: "rounded-2xl",
-      18: "rounded-[18px]",
-      20: "rounded-[20px]",
-      22: "rounded-[22px]",
-      24: "rounded-3xl",
-    },
     contentPosition: {
       over: "absolute inset-0 z-1 flex flex-col justify-center",
       below: "",
@@ -63,16 +48,13 @@ interface CollectionItemsData
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
   buttonText: string;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
   const {
-    ref,
     gridSize,
     gap,
     imageAspectRatio,
-    borderRadius,
     contentPosition,
     collectionNameColor,
     enableOverlay,
@@ -88,7 +70,6 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
     borderColorHover,
     ...rest
   } = props;
-  const [scope] = useAnimation(ref);
 
   const parent = useParentInstance();
   let collections: FeaturedCollectionsLoaderData = parent.data?.loaderData;
@@ -98,7 +79,6 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
   }
   return (
     <div
-      ref={scope}
       {...rest}
       className={clsx(
         [
@@ -110,14 +90,14 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
       )}
     >
       {collections.map((collection, ind) => (
-        <div
+        <ScrollReveal
           key={collection.id + ind}
+          animation="slide-in"
           className="group group/overlay relative w-[67vw] md:w-auto"
-          data-motion="slide-in"
         >
           {collection?.image && (
             <div
-              className={clsx("overflow-hidden", variants({ borderRadius }))}
+              className={clsx("overflow-hidden rounded-md", variants({}))}
               style={{
                 aspectRatio: calculateAspectRatio(
                   collection?.image || {},
@@ -143,7 +123,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
               overlayColor={overlayColor}
               overlayColorHover={overlayColorHover}
               overlayOpacity={overlayOpacity}
-              className={clsx("z-0", variants({ borderRadius }))}
+              className={clsx("z-0 rounded-md", variants({}))}
             />
           )}
           <div className={clsx("items-center", variants({ contentPosition }))}>
@@ -178,7 +158,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
               )}
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       ))}
     </div>
   );
@@ -257,18 +237,6 @@ export const schema = createSchema({
           },
           helpText:
             'Learn more about image <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio" target="_blank" rel="noopener noreferrer">aspect ratio</a> property.',
-        },
-        {
-          type: "range",
-          label: "Border radius",
-          name: "borderRadius",
-          configs: {
-            min: 0,
-            max: 24,
-            step: 2,
-            unit: "px",
-          },
-          defaultValue: 0,
         },
         {
           type: "heading",

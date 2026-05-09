@@ -10,14 +10,12 @@ interface AliReviewsData {
 
 interface AliReviewsProps
   extends SectionProps<Awaited<ReturnType<typeof loader>>>,
-    AliReviewsData {
-  ref?: React.Ref<HTMLElement>;
-}
+    AliReviewsData {}
 
 function AliReviewSection(props: AliReviewsProps) {
-  const { children, loaderData, aliReviewsApiKey, ref, ...rest } = props;
+  const { children, loaderData, aliReviewsApiKey, ...rest } = props;
   return (
-    <Section ref={ref} {...rest} overflow="unset">
+    <Section {...rest} overflow="unset">
       {children}
     </Section>
   );
@@ -73,7 +71,7 @@ export const schema = createSchema({
     },
     {
       group: "Layout",
-      inputs: layoutInputs.filter((inp) => inp.name !== "borderRadius"),
+      inputs: layoutInputs,
     },
     {
       group: "Background",

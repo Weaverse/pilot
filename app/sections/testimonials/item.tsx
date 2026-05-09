@@ -6,9 +6,9 @@ import {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Image } from "~/components/image";
+import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   heading: string;
   content: string;
   authorImage: WeaverseImage;
@@ -19,7 +19,6 @@ interface TestimonialItemProps extends HydrogenComponentProps {
 
 export default function TestimonialItem(props: TestimonialItemProps) {
   const {
-    ref,
     heading,
     content,
     authorImage,
@@ -30,15 +29,14 @@ export default function TestimonialItem(props: TestimonialItemProps) {
   } = props;
 
   return (
-    <div
-      ref={ref}
+    <ScrollReveal
+      animation="slide-in"
       {...rest}
-      data-motion="slide-in"
       className={clsx(hideOnMobile && "hidden sm:block")}
     >
-      <figure className="rounded-sm bg-gray-50 p-6">
+      <figure className="rounded-md bg-gray-50 p-6">
         <blockquote>
-          <div className="text-xl md:text-2xl">{heading}</div>
+          <h4 className="text-xl md:text-2xl md:leading-[1.3]">{heading}</h4>
           <p
             className="my-4 text-gray-500"
             suppressHydrationWarning
@@ -47,7 +45,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
         </blockquote>
         <figcaption className="flex items-center space-x-3">
           <Image
-            className="h-9 w-9 rounded-full"
+            className="h-9 w-9 rounded-lg"
             data={
               typeof authorImage === "object"
                 ? authorImage
@@ -63,7 +61,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
           </div>
         </figcaption>
       </figure>
-    </div>
+    </ScrollReveal>
   );
 }
 

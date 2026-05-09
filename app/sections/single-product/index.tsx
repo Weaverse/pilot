@@ -1,113 +1,67 @@
-import { Money, ShopPayButton } from "@shopify/hydrogen";
+import { ShopPayButton } from "@shopify/hydrogen";
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import {
-  type ComponentLoaderArgs,
   createSchema,
   type HydrogenComponentProps,
-  IMAGES_PLACEHOLDERS,
   type WeaverseProduct,
 } from "@weaverse/hydrogen";
 import { useState } from "react";
-import type {
-  ProductQuery,
-  ProductVariantFragment,
-} from "storefront-api.generated";
-import { Button } from "~/components/button";
-import { Image } from "~/components/image";
+import type { ProductVariantFragment } from "storefront-api.generated";
 import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
+import { ProductBadges } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
-import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
+import { ProductMedia } from "~/components/product-media";
+import { ScrollReveal } from "~/components/scroll-reveal";
 import { layoutInputs, Section } from "~/components/section";
-import { PRODUCT_QUERY } from "~/graphql/queries";
-import { useAnimation } from "~/hooks/use-animation";
+import { cn } from "~/utils/cn";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
+import type { SingleProductLoaderData } from "./loader";
+import { SingleProductPlaceholder } from "./placeholder";
 
-interface SingleProductData {
+export { loader } from "./loader";
+
+export interface SingleProductData {
   productsCount: number;
   product: WeaverseProduct;
   showThumbnails: boolean;
+  groupMediaByVariant?: boolean;
+  groupByOption?: string;
 }
 
-type SingleProductProps = HydrogenComponentProps<
-  Awaited<ReturnType<typeof loader>>
-> &
-  SingleProductData & {
-    ref: React.Ref<HTMLElement>;
-  };
+interface SingleProductProps
+  extends HydrogenComponentProps<SingleProductLoaderData>,
+    SingleProductData {}
 
 export default function SingleProduct(props: SingleProductProps) {
-  const { ref, loaderData, product: _product, showThumbnails, ...rest } = props;
-  const { storeDomain, product } = loaderData || {};
-  const [quantity, setQuantity] = useState<number>(1);
-  const [selectedVariant, setSelectedVariant] =
+  let {
+    loaderData,
+    product: _product,
+    showThumbnails,
+    groupMediaByVariant,
+    groupByOption,
+    ...rest
+  } = props;
+
+  let product = loaderData?.product;
+  let variants = loaderData?.variants ?? [];
+  let storeDomain = loaderData?.storeDomain;
+
+  let [quantity, setQuantity] = useState<number>(1);
+  let [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(
-      product?.selectedOrFirstAvailableVariant,
+      product?.selectedOrFirstAvailableVariant ?? null,
     );
-  const [scope] = useAnimation();
 
   if (!product) {
-    return (
-      <Section ref={ref} {...rest}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
-            <Image
-              data={{
-                url: IMAGES_PLACEHOLDERS.product_2,
-                width: 1660,
-                height: 1660,
-              }}
-              loading="lazy"
-              width={1660}
-              aspectRatio="1/1"
-              sizes="auto"
-            />
-            <div className="flex flex-col items-start justify-start gap-4">
-              <SoldOutBadge />
-              <h3 data-motion="fade-up" className="tracking-tight">
-                EXAMPLE PRODUCT TITLE
-              </h3>
-              <Money
-                withoutTrailingZeros
-                data={{ amount: "19.99", currencyCode: "USD" }}
-                as="span"
-                className="text-lg"
-              />
-              <p className="text-body-subtle">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <Button
-                type="button"
-                className="w-full cursor-not-allowed"
-                disabled
-              >
-                SOLD OUT
-              </Button>
-              <Link
-                to="#"
-                prefetch="intent"
-                variant="underline"
-                className="w-fit cursor-not-allowed"
-                onClick={(e) => e.preventDefault()}
-              >
-                View full details →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </Section>
-    );
+    return <SingleProductPlaceholder {...rest} />;
   }
 
-  const isBundle = Boolean(product?.isBundle?.requiresComponents);
-  const bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
+  let isBundle = Boolean(product?.isBundle?.requiresComponents);
+  let bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
   let atcText = "Add to Cart";
   if (selectedVariant?.availableForSale) {
     atcText = isBundle ? "Add bundle to cart" : "Add to Cart";
@@ -118,29 +72,37 @@ export default function SingleProduct(props: SingleProductProps) {
   }
 
   return (
-    <Section ref={ref} {...rest}>
-      <div ref={scope}>
-        <div className="fade-up grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-          <ProductMedia
-            mediaLayout="slider"
-            imageAspectRatio="adapt"
-            media={product?.media.nodes}
-            selectedVariant={selectedVariant}
-            showThumbnails={showThumbnails}
-          />
+    <Section {...rest}>
+      <div>
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
           <div
+            className={cn(
+              "relative min-w-0",
+              showThumbnails && "[--thumbs-width:7rem]",
+            )}
+          >
+            <ProductMedia
+              mediaLayout="slider"
+              imageAspectRatio="adapt"
+              media={product?.media.nodes}
+              selectedVariant={selectedVariant}
+              showThumbnails={showThumbnails}
+              groupMediaByVariant={groupMediaByVariant}
+              groupByOption={groupByOption}
+              product={product}
+            />
+            <ProductBadges
+              product={product}
+              selectedVariant={selectedVariant}
+              className="absolute top-4 left-4 z-10"
+            />
+          </div>
+          <ScrollReveal
+            animation="slide-in"
             className="flex flex-col justify-start space-y-5"
-            data-motion="slide-in"
           >
             <div className="space-y-4">
-              <ProductBadges
-                product={product}
-                selectedVariant={selectedVariant}
-                className="[&_span:nth-child(n+3)]:hidden"
-              />
-              <h3 data-motion="fade-up" className="tracking-tight">
-                {product?.title}
-              </h3>
+              <h3 className="tracking-tight">{product?.title}</h3>
               <VariantPrices variant={selectedVariant} />
               <JudgemeStarsRating
                 productHandle={product.handle}
@@ -148,7 +110,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 errorText=""
               />
               <p
-                className="fade-up line-clamp-5 leading-relaxed"
+                className="line-clamp-5 leading-relaxed"
                 suppressHydrationWarning
                 dangerouslySetInnerHTML={{ __html: product?.summary }}
               />
@@ -164,6 +126,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 product={product}
                 selectedVariant={selectedVariant}
                 setSelectedVariant={setSelectedVariant}
+                variants={variants}
               />
             </div>
             <Quantity value={quantity} onChange={setQuantity} />
@@ -177,7 +140,7 @@ export default function SingleProduct(props: SingleProductProps) {
                 },
               ]}
               variant="primary"
-              className="-mt-2 w-full"
+              className="-mt-2"
               data-test="add-to-cart"
             >
               {atcText}
@@ -203,37 +166,12 @@ export default function SingleProduct(props: SingleProductProps) {
             >
               View full details →
             </Link>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </Section>
   );
 }
-
-export const loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
-  const { weaverse, data } = args;
-  const { storefront } = weaverse;
-  if (!data.product) {
-    return null;
-  }
-  const productHandle = data.product.handle;
-  const { product, shop } = await storefront.query<ProductQuery>(
-    PRODUCT_QUERY,
-    {
-      variables: {
-        handle: productHandle,
-        selectedOptions: [],
-        language: storefront.i18n.language,
-        country: storefront.i18n.country,
-      },
-    },
-  );
-
-  return {
-    product,
-    storeDomain: shop.primaryDomain.url,
-  };
-};
 
 export const schema = createSchema({
   type: "single-product",
@@ -262,6 +200,25 @@ export const schema = createSchema({
           name: "showThumbnails",
           type: "switch",
           defaultValue: false,
+        },
+        {
+          label: "Group media by variant",
+          name: "groupMediaByVariant",
+          type: "switch",
+          defaultValue: false,
+          helpText:
+            "When enabled, only images matching the selected variant option will be displayed",
+        },
+        {
+          type: "text",
+          name: "groupByOption",
+          label: "Group by option name",
+          defaultValue: "Color",
+          placeholder: "Color",
+          helpText:
+            "The product option name used to group media (e.g., Color, Colour)",
+          condition: (data: SingleProductData) =>
+            data.groupMediaByVariant === true,
         },
       ],
     },

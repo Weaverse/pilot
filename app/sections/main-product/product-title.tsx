@@ -3,12 +3,11 @@ import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductTitleProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
   headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 export default function ProductTitle(props: ProductTitleProps) {
-  const { ref, headingTag: Tag, ...rest } = props;
+  const { headingTag: Tag, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   if (!product) {
@@ -16,8 +15,8 @@ export default function ProductTitle(props: ProductTitleProps) {
   }
 
   return (
-    <div ref={ref} {...rest}>
-      <Tag className="h3 tracking-tight!">{product.title}</Tag>
+    <div {...rest}>
+      <Tag className="h2 leading-[1.1] tracking-tight!">{product.title}</Tag>
     </div>
   );
 }

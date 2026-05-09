@@ -3,7 +3,6 @@ import {
   CartForm,
   Money,
   type OptimisticCart,
-  OptimisticInput,
   useOptimisticData,
 } from "@shopify/hydrogen";
 import clsx from "clsx";
@@ -21,7 +20,6 @@ import { useCartDrawerStore } from "./store";
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
 export type CartLineOptimisticData = {
-  action?: string;
   quantity?: number;
 };
 
@@ -40,16 +38,9 @@ export function CartLineItem({
   }
 
   const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
-  /**
-   * Determines if the current line item is in an optimistic state.
-   * Note: The isOptimistic field on the line does not update as documented
-   * in https://shopify.dev/docs/api/hydrogen/latest/hooks/useoptimisticcart#useOptimisticCart-returns,
-   * so we manually check it via the optimisticData object when lineOptimistic is undefined.
-   */
-  const isOptimistic =
-    lineOptimistic === undefined
-      ? JSON.stringify(optimisticData) !== "{}"
-      : lineOptimistic;
+  // Workaround: line.isOptimistic is only set for newly added lines (Hydrogen limitation),
+  // so fall back to checking whether useOptimisticData has pending data (e.g. quantity change).
+  const isOptimistic = lineOptimistic ?? Object.keys(optimisticData).length > 0;
 
   if (typeof quantity === "undefined" || !merchandise?.product) {
     return null;
@@ -71,14 +62,7 @@ export function CartLineItem({
   }
 
   return (
-    <li
-      className="flex gap-4"
-      style={{
-        // Hide the line item if the optimistic data action is remove
-        // Do not remove the form from the DOM
-        display: optimisticData?.action === "remove" ? "none" : "flex",
-      }}
-    >
+    <li className="flex gap-4">
       <div className="relative shrink-0">
         {image && (
           <Image
@@ -93,20 +77,14 @@ export function CartLineItem({
       </div>
       <div className="flex grow flex-col gap-3">
         <div className="flex justify-between gap-4">
-          <div>
-            <div>
-              {product?.handle ? (
-                <Link
-                  to={url}
-                  className="inline-block"
-                  onClick={closeCartDrawer}
-                >
-                  <RevealUnderline>{product?.title || ""}</RevealUnderline>
-                </Link>
-              ) : (
-                <p>{product?.title || ""}</p>
-              )}
-            </div>
+          <div className="flex flex-col gap-1">
+            {product?.handle ? (
+              <Link to={url} className="inline-block" onClick={closeCartDrawer}>
+                <RevealUnderline>{product?.title || ""}</RevealUnderline>
+              </Link>
+            ) : (
+              <h5 className="text-base">{product?.title || ""}</h5>
+            )}
             {!isDefaultVariant && (
               <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
             )}
@@ -154,7 +132,6 @@ function ItemRemoveButton({
         <span className="sr-only">{t("product.remove")}</span>
         <TrashIcon aria-hidden="true" className="size-4.5" />
       </button>
-      <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>
   );
 }
@@ -182,7 +159,7 @@ function CartLinePrice({
   }
 
   if (isOptimistic) {
-    return <Skeleton as="span" className="ml-auto h-4 w-16 rounded" />;
+    return <Skeleton as="span" className="ml-auto h-4 w-16 rounded-md" />;
   }
   return (
     <Money withoutTrailingZeros as="span" data={moneyV2} className="ml-auto" />

@@ -2,12 +2,10 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductSummaryProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
-}
+interface ProductSummaryProps extends HydrogenComponentProps {}
 
 export default function ProductSummary(props: ProductSummaryProps) {
-  const { ref, ...rest } = props;
+  const { ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
   if (!product?.summary) {
@@ -15,7 +13,7 @@ export default function ProductSummary(props: ProductSummaryProps) {
   }
 
   return (
-    <div ref={ref} {...rest} className="empty:hidden">
+    <div {...rest} className="empty:hidden">
       <p className="leading-relaxed">{product.summary}</p>
     </div>
   );

@@ -9,10 +9,9 @@ import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
+import type { ThemeSettings } from "~/types/weaverse";
 
-export interface HeroImageProps extends VariantProps<typeof variants> {
-  ref: React.Ref<HTMLElement>;
-}
+export interface HeroImageProps extends VariantProps<typeof variants> {}
 
 const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
@@ -57,11 +56,10 @@ const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
 });
 
 export default function HeroImage(props: HeroImageProps & SectionProps) {
-  const { ref, children, height, contentPosition, ...rest } = props;
-  const { enableTransparentHeader } = useThemeSettings();
+  const { children, height, contentPosition, ...rest } = props;
+  const { enableTransparentHeader } = useThemeSettings<ThemeSettings>();
   return (
     <Section
-      ref={ref}
       {...rest}
       containerClassName={variants({
         contentPosition,
@@ -100,9 +98,7 @@ export const schema = createSchema({
           label: "Content position",
           defaultValue: "center center",
         },
-        ...layoutInputs.filter(
-          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
-        ),
+        ...layoutInputs.filter((inp) => inp.name !== "divider"),
       ],
     },
     {

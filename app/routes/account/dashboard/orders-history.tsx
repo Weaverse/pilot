@@ -20,7 +20,7 @@ type OrderCardsProps = {
 export function OrdersHistory({ orders }: OrderCardsProps) {
   return (
     <div className="space-y-4">
-      <div className="font-bold">Orders</div>
+      <h2 className="font-bold text-base">Orders</h2>
       {orders?.length ? (
         <Orders orders={orders} />
       ) : (
@@ -46,7 +46,7 @@ function Orders({ orders }: OrderCardsProps) {
           return (
             <li
               key={order.id}
-              className="flex items-center gap-5 border border-line-subtle p-5 text-center"
+              className="flex items-center gap-5 border border-line-subtle rounded-xl p-5 text-center"
             >
               {lineItems[0].image && (
                 <Link

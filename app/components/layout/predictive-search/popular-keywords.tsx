@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import { useThemeSettings } from "@weaverse/hydrogen";
+import type { ThemeSettings } from "~/types/weaverse";
 
 export function PopularKeywords({
   onKeywordClick,
@@ -6,7 +8,8 @@ export function PopularKeywords({
   onKeywordClick: (keyword: string) => void;
 }) {
   const { t } = useTranslation("common");
-  const popularSearchKeywords = t("search.popularKeywords");
+  const { popularSearchKeywords: themeKeywords } = useThemeSettings<ThemeSettings>();
+  const popularSearchKeywords = themeKeywords || t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;
   }

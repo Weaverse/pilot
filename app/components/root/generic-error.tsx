@@ -4,14 +4,14 @@ import { Section } from "~/components/section";
 export function GenericError({
   error,
 }: {
-  error?: { message: string; stack?: string };
+  error: { message: string; stack?: string } | unknown;
 }) {
-  const heading = "Something’s wrong here.";
+  const heading = "Something's wrong here.";
   let description = "We found an error while loading this page.";
 
   // TODO hide error in prod?
-  if (error) {
-    description += `\n${error.message}`;
+  if (error && typeof error === "object" && "message" in error) {
+    description += `\n${(error as { message: string }).message}`;
     console.error(error);
   }
 
@@ -23,21 +23,24 @@ export function GenericError({
     >
       <h4 className="font-medium">{heading}</h4>
       <p>{description}</p>
-      {error?.stack && (
-        <pre
-          style={{
-            padding: "2rem",
-            background: "hsla(10, 50%, 50%, 0.1)",
-            color: "red",
-            overflow: "auto",
-            maxWidth: "100%",
-          }}
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: addLinksToStackTrace(error.stack),
-          }}
-        />
-      )}
+      {error &&
+        typeof error === "object" &&
+        "stack" in error &&
+        typeof (error as { stack?: string }).stack === "string" && (
+          <pre
+            style={{
+              padding: "2rem",
+              background: "hsla(10, 50%, 50%, 0.1)",
+              color: "red",
+              overflow: "auto",
+              maxWidth: "100%",
+            }}
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{
+              __html: addLinksToStackTrace((error as { stack: string }).stack),
+            }}
+          />
+        )}
       <Link variant="outline" to="/" className="w-fit">
         Take me to the home page
       </Link>

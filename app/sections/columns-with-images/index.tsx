@@ -2,17 +2,11 @@ import { createSchema } from "@weaverse/hydrogen";
 import type { SectionProps } from "~/components/section";
 import { Section, sectionSettings } from "~/components/section";
 
-interface ColumnsWithImagesProps extends SectionProps {
-  ref?: React.Ref<HTMLElement>;
-}
+interface ColumnsWithImagesProps extends SectionProps {}
 
 function ColumnsWithImages(props: ColumnsWithImagesProps) {
-  const { children, ref, ...rest } = props;
-  return (
-    <Section ref={ref} {...rest}>
-      {children}
-    </Section>
-  );
+  const { children, ...rest } = props;
+  return <Section {...rest}>{children}</Section>;
 }
 
 export default ColumnsWithImages;

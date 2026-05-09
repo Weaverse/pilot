@@ -369,7 +369,7 @@ export default function AccountEditAddressForm() {
             id="defaultAddress"
             defaultChecked={defaultAddress?.id === address?.id}
             className={clsx(
-              "h-5 w-5 shrink-0",
+              "h-5 w-5 shrink-0 rounded-sm",
               "border border-line focus-visible:outline-hidden",
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}

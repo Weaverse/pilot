@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useFetcher } from "react-router";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
-import { ProductCard } from "~/components/product/product-card";
+import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
@@ -21,9 +21,7 @@ export function NotFound({ type = "page" }: { type?: string }) {
           removed, had its name changed, or is temporarily unavailable.
         </p>
         <div className="pt-10">
-          <div className="text-center font-medium text-xl">
-            What you can do?
-          </div>
+          <h5 className="text-center font-medium text-xl">What you can do?</h5>
           <div className="flex flex-col items-center justify-center gap-4 pt-4 md:flex-row">
             <Link variant="outline" to="/products">
               Shop our products
