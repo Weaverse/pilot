@@ -9,13 +9,13 @@ import {
   getClientBrowserParameters,
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
+import { useThemeText } from "@weaverse/hydrogen";
 import { useEffect, useRef } from "react";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { useCartDrawerStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
-import { useTranslation } from "react-i18next";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -71,7 +71,7 @@ function AddToCartButtonContent({
   [key: string]: any;
 }) {
   const { open: openCartDrawer } = useCartDrawerStore();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
   const isLoading = fetcher.state !== "idle";
 

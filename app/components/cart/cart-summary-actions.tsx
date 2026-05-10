@@ -1,19 +1,19 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm } from "@shopify/hydrogen";
+import { useThemeText } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
-import { useTranslation } from "react-i18next";
 import { cn } from "~/utils/cn";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);
   const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
@@ -114,7 +114,7 @@ export function DiscountDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted && discountCodes?.find((d) => d.code === code && d.applicable),
@@ -190,7 +190,11 @@ export function DiscountDialog({
                 {t("cart.messages.discountApplied")}
               </Banner>
             )}
-            {error && <Banner variant="error">{t("cart.messages.discountInvalid")}</Banner>}
+            {error && (
+              <Banner variant="error">
+                {t("cart.messages.discountInvalid")}
+              </Banner>
+            )}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">
@@ -220,13 +224,13 @@ export function GiftCardDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted &&
-    appliedGiftCards?.find((gc) =>
-      code.toLowerCase().endsWith(gc.lastCharacters),
-    ),
+      appliedGiftCards?.find((gc) =>
+        code.toLowerCase().endsWith(gc.lastCharacters),
+      ),
   );
   const error = submitted && !success;
 
@@ -298,7 +302,11 @@ export function GiftCardDialog({
                 {t("cart.messages.giftCardApplied")}
               </Banner>
             )}
-            {error && <Banner variant="error">{t("cart.messages.giftCardInvalid")}</Banner>}
+            {error && (
+              <Banner variant="error">
+                {t("cart.messages.giftCardInvalid")}
+              </Banner>
+            )}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">

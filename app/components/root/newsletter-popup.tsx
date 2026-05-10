@@ -1,8 +1,7 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useThemeSettings } from "@weaverse/hydrogen";
-import { useTranslation } from "react-i18next";
+import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
@@ -43,7 +42,7 @@ export function NewsletterPopup() {
     newsletterPopupButtonText,
     newsletterPopupPosition = "bottom-right",
   } = useThemeSettings<ThemeSettings>();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
@@ -199,7 +198,8 @@ export function NewsletterPopup() {
                   {newsletterPopupHeading || t("newsletter.popup.heading")}
                 </h3>
                 <p className={cn("mb-6 text-body-subtle", !isModal && "mb-4")}>
-                  {newsletterPopupDescription || t("newsletter.popup.description")}
+                  {newsletterPopupDescription ||
+                    t("newsletter.popup.description")}
                 </p>
 
                 <fetcher.Form
@@ -220,7 +220,8 @@ export function NewsletterPopup() {
                     className="w-full"
                     loading={fetcher.state === "submitting"}
                   >
-                    {newsletterPopupButtonText || t("newsletter.popup.buttonText")}
+                    {newsletterPopupButtonText ||
+                      t("newsletter.popup.buttonText")}
                   </Button>
                 </fetcher.Form>
 

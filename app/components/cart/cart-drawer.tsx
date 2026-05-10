@@ -1,13 +1,13 @@
 import { ArrowRightIcon, HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useAnalytics, useOptimisticCart } from "@shopify/hydrogen";
+import { useThemeText } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { Suspense, useEffect } from "react";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
-import { useTranslation } from "react-i18next";
 import type { RootLoader } from "~/root";
 import { useCartDrawerStore } from "./store";
 
@@ -63,7 +63,7 @@ function CartDrawerContent({
 }) {
   const { publish } = useAnalytics();
   const cart = useOptimisticCart(originalCart);
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>

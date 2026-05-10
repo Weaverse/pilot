@@ -6,8 +6,7 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
-import { useTranslation } from "react-i18next";
+import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import { useFetcher } from "react-router";
@@ -41,7 +40,7 @@ export function CartSummary({
     giftCardButtonText,
     checkoutButtonText,
   } = useThemeSettings<ThemeSettings>();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
   >(null);

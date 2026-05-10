@@ -3,10 +3,10 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { Suspense } from "react";
 import {
-    Await,
-    useLocation,
-    useRouteError,
-    useRouteLoaderData,
+  Await,
+  useLocation,
+  useRouteError,
+  useRouteLoaderData,
 } from "react-router";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { CartDrawer } from "~/components/cart/cart-drawer";
@@ -15,8 +15,8 @@ import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
-import { LanguageSwitcher } from "./language-switcher";
 import { HeaderCountrySelector } from "./country-selector/header-country-selector";
+import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { MobileMenu } from "./menu/mobile-menu";
@@ -34,14 +34,14 @@ const variants = cva("", {
       stretch: "px-3 md:px-10 lg:px-16",
       fixed: "mx-auto px-3 md:px-4 lg:px-6",
     },
-    },
+  },
 });
 
 function useIsHomeCheck() {
-    const { pathname } = useLocation();
-    const rootData = useRouteLoaderData<RootLoader>("root");
-    const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-    return pathname.replace(selectedLocale.pathPrefix, "") === "/";
+  const { pathname } = useLocation();
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
+  return pathname.replace(selectedLocale.pathPrefix, "") === "/";
 }
 
 export function Header() {
@@ -51,9 +51,9 @@ export function Header() {
   const { y } = useWindowScroll();
   const routeError = useRouteError();
 
-    const scrolled = y >= 50;
-    const enableTransparent = enableTransparentHeader && isHome && !routeError;
-    const isTransparent = enableTransparent && !scrolled;
+  const scrolled = y >= 50;
+  const enableTransparent = enableTransparentHeader && isHome && !routeError;
+  const isTransparent = enableTransparent && !scrolled;
 
   return (
     <header

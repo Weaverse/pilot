@@ -9,6 +9,7 @@ import type {
   CartLineInput,
   CartLineUpdateInput,
 } from "@shopify/hydrogen/storefront-api-types";
+import { useThemeText } from "@weaverse/hydrogen";
 import { Suspense } from "react";
 import {
   type ActionFunctionArgs,
@@ -23,7 +24,6 @@ import { CartMain } from "~/components/cart/cart-main";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { useTranslation } from "react-i18next";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
@@ -115,9 +115,10 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function CartRoute() {
-  const { cart: originalCart, featuredProducts } = useLoaderData<typeof loader>();
+  const { cart: originalCart, featuredProducts } =
+    useLoaderData<typeof loader>();
   const cart = useOptimisticCart(originalCart);
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
 
   return (
     <>

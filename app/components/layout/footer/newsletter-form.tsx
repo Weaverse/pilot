@@ -1,5 +1,5 @@
+import { useThemeText } from "@weaverse/hydrogen";
 import { useFetcher } from "react-router";
-import { useTranslation } from "react-i18next";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 
@@ -19,7 +19,7 @@ export function NewsletterForm({
   inputWidth,
 }: NewsletterFormProps) {
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
 
   const message = fetcher.data?.ok ? t("footer.newsletterSuccess") : "";
   const error =

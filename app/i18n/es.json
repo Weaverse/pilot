@@ -1,105 +1,105 @@
 {
   "badge": {
-    "bestSeller": "Best Seller",
-    "new": "New",
-    "bundle": "Bundle",
-    "soldOut": "Sold out",
-    "sale": "-[percentage]% Off"
+    "bestSeller": "Más vendidos",
+    "new": "Nuevo",
+    "bundle": "Paquete",
+    "soldOut": "Agotado",
+    "sale": "-[percentage]%"
   },
   "cart": {
-    "title": "Cart",
+    "title": "Carrito",
     "empty": {
-      "message": "Looks like you haven't added anything yet, let's get you started!",
-      "startShopping": "Start Shopping",
-      "shopBestSellers": "Shop Best Sellers"
+      "message": "Parece que no has añadido nada todavía, ¡empecemos!",
+      "startShopping": "Empezar a comprar",
+      "shopBestSellers": "Comprar los más vendidos"
     },
     "summary": {
-      "orderSummary": "Order summary",
-      "estimatedTotal": "Estimated total:",
-      "taxesDiscountsShipping": "Taxes, discounts and {{link}} calculated at checkout.",
-      "shipping": "shipping",
-      "viewCart": "View cart"
+      "orderSummary": "Resumen de compra",
+      "estimatedTotal": "Total estimado:",
+      "taxesDiscountsShipping": "Los impuestos, descuentos y {{link}} se calculan en la pantalla de pago.",
+      "shipping": "envío",
+      "viewCart": "Ver carrito"
     },
     "actions": {
-      "addNote": "Add a note",
-      "discountCode": "Add a discount code",
-      "giftCard": "Redeem a gift card",
-      "checkout": "Continue to Checkout",
-      "cancel": "Cancel",
-      "saveNote": "Save note",
-      "apply": "Apply",
-      "redeem": "Redeem"
+      "addNote": "Añadir una nota",
+      "discountCode": "Añadir un código de descuento",
+      "giftCard": "Canjear una tarjeta de regalo",
+      "checkout": "Continuar con el pago",
+      "cancel": "Cancelar",
+      "saveNote": "Guardar nota",
+      "apply": "Aplicar",
+      "redeem": "Canjear"
     },
     "messages": {
-      "noteSaved": "Cart note saved successfully 🎉",
-      "discountApplied": "Discount applied successfully 🎉",
-      "discountInvalid": "Invalid discount code.",
-      "giftCardApplied": "Gift card applied successfully 🎉",
-      "giftCardInvalid": "Invalid gift card code."
+      "noteSaved": "Nota del carrito guardada con éxito 🎉",
+      "discountApplied": "Descuento aplicado con éxito 🎉",
+      "discountInvalid": "Código de descuento no válido.",
+      "giftCardApplied": "Tarjeta de regalo aplicada con éxito 🎉",
+      "giftCardInvalid": "Código de tarjeta de regalo no válido."
     },
     "placeholder": {
-      "note": "Add any special instructions or notes for your order...",
-      "discountCode": "Discount code",
-      "giftCardCode": "Gift card code"
+      "note": "Añade instrucciones especiales o notas para tu pedido...",
+      "discountCode": "Código de descuento",
+      "giftCardCode": "Código de tarjeta de regalo"
     },
-    "bestSellers": "More from our best sellers"
+    "bestSellers": "Más de nuestros productos más vendidos"
   },
   "product": {
-    "addToCart": "Add to cart",
-    "soldOut": "Sold out",
-    "from": "From",
-    "viewFullDetails": "View full details →",
-    "quickShop": "Quick shop",
-    "add": "Add",
-    "remove": "Remove",
-    "pictureOf": "Picture of {{name}}",
-    "secondPictureOf": "Second picture of {{name}}"
+    "addToCart": "Añadir al carrito",
+    "soldOut": "Agotado",
+    "from": "Desde",
+    "viewFullDetails": "Ver detalles completos →",
+    "quickShop": "Compra rápida",
+    "add": "Añadir",
+    "remove": "Eliminar",
+    "pictureOf": "Imagen de {{name}}",
+    "secondPictureOf": "Segunda imagen de {{name}}"
   },
   "newsletter": {
     "popup": {
-      "heading": "Stay in the loop!",
-      "description": "Subscribe to our newsletter and get exclusive offers, new product updates, and more.",
-      "buttonText": "Get 15% Off Your First Order"
+      "heading": "¡Mantente al día!",
+      "description": "Suscríbete a nuestro boletín y obtén ofertas exclusivas, actualizaciones de nuevos productos y más.",
+      "buttonText": "Obtén un 15% de descuento en tu primer pedido"
     }
   },
   "search": {
-    "title": "Search",
-    "placeholder": "Search our store...",
-    "enterKeyword": "Enter a keyword",
-    "viewAllResults": "View all results",
-    "noResults": "No results for \"{{term}}\", try a different search.",
-    "noResultsShort": "No results found for",
-    "trendingProducts": "Trending Products",
-    "problemLoadingProducts": "There was a problem loading related products",
-    "popularKeywords": "sunglasses, hats, jackets, shoes"
+    "title": "Búsqueda",
+    "placeholder": "Buscar en nuestra tienda...",
+    "enterKeyword": "Introduce una palabra clave",
+    "viewAllResults": "Ver todos los resultados",
+    "noResults": "No hay resultados para \"{{term}}\", prueba con otra búsqueda.",
+    "noResultsShort": "No se encontraron resultados para",
+    "trendingProducts": "Productos populares",
+    "problemLoadingProducts": "Hubo un problema al cargar productos relacionados",
+    "popularKeywords": "gafas de sol, sombreros, chaquetas, zapatos"
   },
   "footer": {
-    "bio": "<p>We are a team of designers, developers, and creatives who are passionate about creating beautiful and functional products.</p>",
-    "addressTitle": "OUR SHOP",
-    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canada",
+    "bio": "<p>Somos un equipo de diseñadores, desarrolladores y creativos apasionados por crear productos hermosos y funcionales.</p>",
+    "addressTitle": "NUESTRA TIENDA",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canadá",
     "storeEmail": "contact@my-store.com",
-    "newsletterTitle": "STAY IN TOUCH",
-    "newsletterDescription": "News and inspiration in your inbox, every week.",
-    "newsletterPlaceholder": "Please enter your email",
-    "newsletterButtonText": "Send",
-    "copyright": "© 2024 Weaverse. All rights reserved.",
-    "email": "Email:",
-    "newsletterSuccess": "Thank you for signing up! 🎉",
-    "newsletterError": "An error occurred while signing up."
+    "newsletterTitle": "MANTENTE EN CONTACTO",
+    "newsletterDescription": "Noticias e inspiración en tu bandeja de entrada, todas las semanas.",
+    "newsletterPlaceholder": "Por favor ingresa tu correo",
+    "newsletterButtonText": "Enviar",
+    "copyright": "© 2024 Weaverse. Todos los derechos reservados.",
+    "email": "Correo:",
+    "newsletterSuccess": "¡Gracias por suscribirte! 🎉",
+    "newsletterError": "Ocurrió un error al registrarse."
   },
   "pagination": {
-    "loading": "Loading...",
-    "loadPrevious": "↑ Load previous",
-    "loadMore": "↓ Load more"
+    "loading": "Cargando...",
+    "loadPrevious": "↑ Cargar anterior",
+    "loadMore": "↓ Cargar más"
   },
   "accessibility": {
-    "closeCartDrawer": "Close cart drawer",
-    "close": "Close",
-    "removeGiftCard": "Remove gift card code {{code}}",
-    "removeDiscount": "Remove discount code {{code}}",
-    "predictiveSearch": "Predictive search",
-    "quickShopModal": "Quick shop modal",
-    "skipToContent": "Skip to content"
+    "closeCartDrawer": "Cerrar carrito",
+    "close": "Cerrar",
+    "removeGiftCard": "Eliminar código de tarjeta de regalo {{code}}",
+    "removeDiscount": "Eliminar código de descuento {{code}}",
+    "predictiveSearch": "Búsqueda predictiva",
+    "quickShopModal": "Modal de compra rápida",
+    "skipToContent": "Saltar al contenido"
   },
   "account": {
     "signOut": "Sign out",

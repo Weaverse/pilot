@@ -1,0 +1,283 @@
+{
+  "badge": {
+    "bestSeller": "Bán chạy nhất",
+    "new": "Mới",
+    "bundle": "Combo",
+    "soldOut": "Hết hàng",
+    "sale": "Giảm -[percentage]%"
+  },
+  "cart": {
+    "title": "Giỏ hàng",
+    "empty": {
+      "message": "Có vẻ như bạn chưa thêm gì cả, hãy bắt đầu mua sắm nhé!",
+      "startShopping": "Bắt đầu mua sắm",
+      "shopBestSellers": "Xem sản phẩm bán chạy"
+    },
+    "summary": {
+      "orderSummary": "Tóm tắt đơn hàng",
+      "estimatedTotal": "Tổng dự kiến:",
+      "taxesDiscountsShipping": "Thuế, giảm giá và {{link}} được tính khi thanh toán.",
+      "shipping": "phí giao hàng",
+      "viewCart": "Xem giỏ hàng"
+    },
+    "actions": {
+      "addNote": "Thêm ghi chú",
+      "discountCode": "Thêm mã giảm giá",
+      "giftCard": "Đổi thẻ quà tặng",
+      "checkout": "Tiếp tục thanh toán",
+      "cancel": "Hủy",
+      "saveNote": "Lưu ghi chú",
+      "apply": "Áp dụng",
+      "redeem": "Sử dụng"
+    },
+    "messages": {
+      "noteSaved": "Ghi chú đã được lưu thành công 🎉",
+      "discountApplied": "Đã áp dụng mã giảm giá 🎉",
+      "discountInvalid": "Mã giảm giá không hợp lệ.",
+      "giftCardApplied": "Đã áp dụng thẻ quà tặng 🎉",
+      "giftCardInvalid": "Thẻ quà tặng không hợp lệ."
+    },
+    "placeholder": {
+      "note": "Thêm bất kỳ hướng dẫn hoặc ghi chú đặc biệt nào cho đơn hàng của bạn...",
+      "discountCode": "Mã giảm giá",
+      "giftCardCode": "Mã thẻ quà tặng"
+    },
+    "bestSellers": "Các sản phẩm bán chạy nhất"
+  },
+  "product": {
+    "addToCart": "Thêm vào giỏ",
+    "soldOut": "Hết hàng",
+    "from": "Từ",
+    "viewFullDetails": "Xem chi tiết →",
+    "quickShop": "Mua nhanh",
+    "add": "Thêm",
+    "remove": "Xóa",
+    "pictureOf": "Hình ảnh của {{name}}",
+    "secondPictureOf": "Hình ảnh thứ hai của {{name}}"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "Đừng bỏ lỡ!",
+      "description": "Đăng ký nhận bản tin của chúng tôi và nhận ưu đãi độc quyền, cập nhật sản phẩm mới và hơn thế nữa.",
+      "buttonText": "Nhận ưu đãi 15% cho đơn hàng đầu tiên"
+    }
+  },
+  "search": {
+    "title": "Tìm kiếm",
+    "placeholder": "Tìm kiếm cửa hàng...",
+    "enterKeyword": "Nhập từ khóa",
+    "viewAllResults": "Xem tất cả kết quả",
+    "noResults": "Không có kết quả cho \"{{term}}\", hãy thử tìm kiếm khác.",
+    "noResultsShort": "Không tìm thấy kết quả cho",
+    "trendingProducts": "Sản phẩm nổi bật",
+    "problemLoadingProducts": "Đã xảy ra sự cố khi tải các sản phẩm liên quan",
+    "popularKeywords": "kính râm, nón, áo khoác, giày"
+  },
+  "footer": {
+    "bio": "<p>Chúng tôi là đội ngũ thiết kế, lập trình và sáng tạo, đam mê làm ra những sản phẩm đẹp và hữu ích.</p>",
+    "addressTitle": "CỬA HÀNG",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canada",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "GIỮ LIÊN LẠC",
+    "newsletterDescription": "Tin tức và nguồn cảm hứng trong hộp thư của bạn mỗi tuần.",
+    "newsletterPlaceholder": "Vui lòng nhập email của bạn",
+    "newsletterButtonText": "Gửi",
+    "copyright": "© 2024 Weaverse. All rights reserved.",
+    "email": "Email:",
+    "newsletterSuccess": "Cảm ơn bạn đã đăng ký! 🎉",
+    "newsletterError": "Đã xảy ra lỗi khi đăng ký."
+  },
+  "pagination": {
+    "loading": "Đang tải...",
+    "loadPrevious": "↑ Tải thêm trang trước",
+    "loadMore": "↓ Tải thêm"
+  },
+  "accessibility": {
+    "closeCartDrawer": "Đóng giỏ hàng",
+    "close": "Đóng",
+    "removeGiftCard": "Xóa thẻ quà tặng {{code}}",
+    "removeDiscount": "Xóa mã giảm giá {{code}}",
+    "predictiveSearch": "Tìm kiếm dự đoán",
+    "quickShopModal": "Cửa sổ mua nhanh",
+    "skipToContent": "Chuyển đến nội dung"
+  },
+  "account": {
+    "signOut": "Đăng xuất",
+    "na": "Không có",
+    "details": {
+      "title": "Tài khoản",
+      "name": "Họ và tên",
+      "phone": "Số điện thoại",
+      "email": "Địa chỉ email",
+      "editLink": "Chỉnh sửa thông tin tài khoản"
+    },
+    "orders": {
+      "title": "Đơn hàng",
+      "empty": "Bạn chưa đặt đơn hàng nào.",
+      "orderImage": "Ảnh đơn hàng",
+      "more": "sản phẩm khác",
+      "orderId": "Mã đơn hàng",
+      "orderNo": "Đơn hàng số",
+      "orderDate": "Ngày đặt hàng",
+      "fulfillmentStatus": "Trạng thái giao hàng",
+      "viewDetails": "Xem chi tiết",
+      "startShopping": "Bắt đầu mua sắm →",
+      "loading": "Đang tải...",
+      "loadPrevious": "Tải trang trước",
+      "loadMore": "Tải thêm",
+      "viewOrder": "Xem đơn hàng →"
+    },
+    "address": {
+      "title": "Sổ địa chỉ",
+      "empty": "Bạn chưa lưu địa chỉ nào.",
+      "add": "Thêm địa chỉ",
+      "default": "Mặc định",
+      "edit": "Chỉnh sửa",
+      "remove": "Xóa"
+    },
+    "edit": {
+      "title": "Chỉnh sửa tài khoản",
+      "firstName": "Tên",
+      "lastName": "Họ",
+      "cancel": "Hủy",
+      "save": "Lưu",
+      "saving": "Đang lưu"
+    },
+    "addressForm": {
+      "titleAdd": "Thêm địa chỉ mới",
+      "titleEdit": "Chỉnh sửa địa chỉ",
+      "company": "Công ty",
+      "address1": "Địa chỉ dòng 1",
+      "address1Required": "Địa chỉ dòng 1*",
+      "address2": "Địa chỉ dòng 2",
+      "city": "Thành phố",
+      "state": "Tỉnh / Thành phố",
+      "statePlaceholder": "Tỉnh / Thành phố (mã vùng)",
+      "zip": "Mã bưu chính",
+      "country": "Quốc gia",
+      "countryPlaceholder": "Mã quốc gia",
+      "phone": "Số điện thoại",
+      "setDefault": "Đặt làm địa chỉ mặc định"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}} sản phẩm",
+    "filter": "Lọc",
+    "filters": "Bộ lọc",
+    "closeFilters": "Đóng ngăn bộ lọc",
+    "sortBy": "Sắp xếp theo:",
+    "sort": "Sắp xếp",
+    "sortOptions": {
+      "featured": "Nổi bật",
+      "relevance": "Phù hợp nhất",
+      "priceLowHigh": "Giá, (thấp đến cao)",
+      "priceHighLow": "Giá, (cao đến thấp)",
+      "bestSelling": "Bán chạy nhất",
+      "newest": "Mới nhất"
+    },
+    "clearAllFilters": "Xóa tất cả bộ lọc",
+    "clearAllFiltersAriaLabel": "Xóa tất cả bộ lọc đã áp dụng",
+    "noProductsMatchedFilters": "Không có sản phẩm nào phù hợp với bộ lọc của bạn.",
+    "priceRange": {
+      "minPrice": "Giá tối thiểu",
+      "maxPrice": "Giá tối đa",
+      "to": "Đến"
+    }
+  },
+  "productDetails": {
+    "description": "Mô tả",
+    "shipping": "Vận chuyển",
+    "returns": "Đổi trả",
+    "learnMore": "Tìm hiểu thêm"
+  },
+  "review": {
+    "writeYourReview": "Viết đánh giá của bạn",
+    "shareExperience": "Chia sẻ trải nghiệm của bạn với các khách hàng khác",
+    "rating": "Đánh giá",
+    "yourName": "Tên của bạn",
+    "enterName": "Nhập tên của bạn",
+    "emailAddress": "Địa chỉ email",
+    "enterEmail": "Nhập email của bạn",
+    "reviewTitle": "Tiêu đề đánh giá",
+    "giveTitle": "Đặt tiêu đề cho đánh giá của bạn",
+    "yourReview": "Đánh giá của bạn",
+    "shareExperienceProduct": "Chia sẻ trải nghiệm của bạn với sản phẩm này",
+    "cancel": "Hủy",
+    "submit": "Gửi đánh giá",
+    "submitting": "Đang gửi...",
+    "selectRating": "Vui lòng chọn đánh giá",
+    "successTitle": "Đánh giá đã được gửi thành công!",
+    "successMessage": "Cảm ơn phản hồi của bạn. Đánh giá của bạn đang được xử lý, sẽ được đăng sau vài phút.",
+    "writeAnother": "Viết đánh giá khác",
+    "errorTitle": "Gửi thất bại",
+    "errorMessage": "Đã xảy ra lỗi khi gửi đánh giá của bạn. Vui lòng thử lại.",
+    "tryAgain": "Thử lại",
+    "imageAlt": "Hình ảnh đánh giá {{index}}",
+    "imageView": "Xem",
+    "imageGalleryAriaLabel": "Bộ sưu tập hình ảnh đánh giá",
+    "closeImageAriaLabel": "Đóng hình ảnh",
+    "previousImageAriaLabel": "Hình ảnh trước",
+    "nextImageAriaLabel": "Hình ảnh tiếp theo",
+    "reviewImageAlt": "Hình ảnh đánh giá"
+  },
+  "nav": {
+    "waitingList": "Danh sách chờ",
+    "account": "Tài khoản",
+    "toggleMenu": "Chuyển đổi menu"
+  },
+  "contact": {
+    "phone": "Điện thoại:",
+    "email": "Email:",
+    "address": "Địa chỉ:"
+  },
+  "trackOrder": {
+    "errorEmpty": "Vui lòng nhập mã vận đơn của bạn.",
+    "errorLoading": "Dịch vụ tra cứu đang tải, vui lòng thử lại trong giây lát.",
+    "title": "Tra Cứu Đơn Hàng",
+    "description": "Nhập mã vận đơn của bạn để xem trạng thái và chi tiết giao hàng của đơn hàng SEGAI.",
+    "placeholder": "Nhập mã vận đơn",
+    "button": "TRA CỨU",
+    "howToTrack": "Cách Tra Cứu Đơn Hàng",
+    "step1Part1": "Tìm",
+    "step1Strong": "mã vận đơn",
+    "step1Part2": "trong email xác nhận đơn hàng của bạn",
+    "step2": "Nhập mã vận đơn vào ô tìm kiếm ở trên",
+    "step3Part1": "Nhấp",
+    "step3Strong": "TRA CỨU",
+    "step3Part2": "để theo dõi thời gian thực"
+  },
+  "affiliate": {
+    "title": "Hoa hồng cao",
+    "aov": "$300+ AOV",
+    "description": "SEGAI đang định nghĩa lại chăm sóc sức khỏe tình dục cao cấp. Đăng ký tham gia mạng lưới tiếp thị liên kết độc quyền của chúng tôi để nhận những phần thưởng hấp dẫn nhờ vào sự phát triển của bạn.",
+    "tieredStructure": "Cấu trúc Hoa hồng Theo Bậc",
+    "baseTier": "Bậc Cơ bản",
+    "baseCommission": "Hoa hồng 15%",
+    "milestone50": "Cột mốc 50+ Đơn hàng",
+    "milestone50Commission": "Hoa hồng 22%",
+    "milestone100": "Cột mốc 100+ Đơn hàng",
+    "milestone100Commission": "Hoa hồng 25%",
+    "elitePartnership": "Đối tác Ưu tú",
+    "elitePartnershipDesc": "Dành cho các đối tác & nhà sáng tạo được chọn lọc",
+    "eliteUpTo": "LÊN ĐẾN 40%",
+    "realTimeTracking": "Theo dõi Thời gian thực",
+    "realTimeTrackingDesc": "Tích hợp với GoAffPro cho dữ liệu chuyển đổi minh bạch 100% và quản lý thanh toán.",
+    "readyToStart": "Bạn đã sẵn sàng hỗ trợ?",
+    "readyToStartDesc": "Nếu bạn đã có khán giả và sẵn sàng quảng bá, hãy đăng ký trực tiếp trên cổng theo dõi của chúng tôi.",
+    "registerGoAffPro": "Đăng ký trên GoAffPro",
+    "applicationTitle": "Đơn Đăng ký Liên kết",
+    "applicationDesc": "Gửi thông tin của bạn để bắt đầu quá trình tham gia.",
+    "formFullName": "Họ và Tên / Tên Kênh *",
+    "formFullNamePlaceholder": "VD: Alex Reviews",
+    "formEmail": "Địa chỉ Email *",
+    "formEmailPlaceholder": "alex@example.com",
+    "formPhone": "Số Điện thoại",
+    "formPhonePlaceholder": "+1 234 567 890",
+    "formSocialLink": "Liên kết Mạng xã hội Chính",
+    "formSocialLinkPlaceholder": "https://youtube.com/yourchannel",
+    "formReach": "Lượng Tiếp cận / Lượt xem Hàng tháng *",
+    "formReachPlaceholder": "VD: Hơn 50k lượt xem/tháng",
+    "formSubmit": "Gửi Đơn đăng ký",
+    "poweredBy": "Được cung cấp bởi"
+  }
+}

@@ -5,13 +5,13 @@ import {
   type OptimisticCart,
   useOptimisticData,
 } from "@shopify/hydrogen";
+import { useThemeText } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
-import { useTranslation } from "react-i18next";
 import type { CartLayoutType } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
@@ -115,7 +115,7 @@ function ItemRemoveButton({
   lineId: CartLine["id"];
   className?: string;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   return (
     <CartForm
       route="/cart"

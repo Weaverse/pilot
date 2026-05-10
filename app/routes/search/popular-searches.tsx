@@ -1,12 +1,12 @@
-import { useTranslation } from "react-i18next";
+import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
 import { Fragment } from "react";
 import Link from "~/components/link";
-import { useThemeSettings } from "@weaverse/hydrogen";
 import type { ThemeSettings } from "~/types/weaverse";
 
 export function PopularKeywords() {
-  const { t } = useTranslation("common");
-  const { popularSearchKeywords: themeKeywords } = useThemeSettings<ThemeSettings>();
+  const { t } = useThemeText();
+  const { popularSearchKeywords: themeKeywords } =
+    useThemeSettings<ThemeSettings>();
   const popularSearchKeywords = themeKeywords || t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;

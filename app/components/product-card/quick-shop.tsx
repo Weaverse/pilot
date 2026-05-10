@@ -7,8 +7,11 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ShopPayButton } from "@shopify/hydrogen";
-import { useTranslation } from "react-i18next";
-import { IMAGES_PLACEHOLDERS, useThemeSettings } from "@weaverse/hydrogen";
+import {
+  IMAGES_PLACEHOLDERS,
+  useThemeSettings,
+  useThemeText,
+} from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
@@ -185,7 +188,7 @@ export function QuickShopTrigger({
   buttonText,
   panelType = "modal",
 }: QuickShopTriggerProps) {
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   const resolvedButtonText = buttonText || t("product.quickShop");
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();

@@ -8,11 +8,7 @@ import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
-import {
-  useFetcher,
-  useLocation,
-  useRouteLoaderData,
-} from "react-router";
+import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
 import { cn } from "~/utils/cn";
@@ -116,7 +112,7 @@ export function LanguageSwitcher() {
   };
 
   // Don't render if only one language is available
-  if (availableLanguages.length <= 1 && !!fetcher.data) {
+  if (availableLanguages.length <= 1 && fetcher.data) {
     return null;
   }
 

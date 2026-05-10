@@ -1,8 +1,7 @@
 import { Image } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import { useTranslation } from "react-i18next";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { FooterCountrySelector } from "../country-selector/footer-country-selector";
@@ -61,7 +60,7 @@ export function Footer() {
     showDiscover,
     showAlipay,
   } = useThemeSettings<ThemeSettings>();
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
 
   return (
     <footer
@@ -91,7 +90,11 @@ export function Footer() {
               ) : (
                 <h3 className="font-medium text-base uppercase">{shopName}</h3>
               )}
-              {(bio || t("footer.bio")) ? <div dangerouslySetInnerHTML={{ __html: bio || t("footer.bio") }} /> : null}
+              {bio || t("footer.bio") ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: bio || t("footer.bio") }}
+                />
+              ) : null}
               <SocialLinks
                 socialInstagram={socialInstagram}
                 socialX={socialX}
@@ -106,9 +109,15 @@ export function Footer() {
             />
             <NewsletterForm
               title={newsletterTitle || t("footer.newsletterTitle")}
-              description={newsletterDescription || t("footer.newsletterDescription")}
-              placeholder={newsletterPlaceholder || t("footer.newsletterPlaceholder")}
-              buttonText={newsletterButtonText || t("footer.newsletterButtonText")}
+              description={
+                newsletterDescription || t("footer.newsletterDescription")
+              }
+              placeholder={
+                newsletterPlaceholder || t("footer.newsletterPlaceholder")
+              }
+              buttonText={
+                newsletterButtonText || t("footer.newsletterButtonText")
+              }
               inputWidth={newsletterInputWidth}
             />
           </div>

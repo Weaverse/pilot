@@ -1,4 +1,5 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
+import staticContent from "~/i18n/en.json";
 import { COUNTRIES } from "~/utils/const";
 import { version } from "../../package.json";
 import { announcementSettings } from "./settings/announcements";
@@ -24,6 +25,8 @@ export const themeSchema: HydrogenThemeSchema = {
     supportUrl: "https://help.weaverse.io/",
   },
   i18n: {
+    translation: true,
+    staticContent,
     urlStructure: "url-path",
     defaultLocale: {
       pathPrefix: "",

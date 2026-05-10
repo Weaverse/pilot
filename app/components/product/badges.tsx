@@ -1,7 +1,6 @@
 import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { useThemeSettings } from "@weaverse/hydrogen";
-import { useTranslation } from "react-i18next";
+import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { colord } from "colord";
 import type {
@@ -58,7 +57,7 @@ export function NewBadge({
   newBadgeDaysOld: number;
   className?: string;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
@@ -83,7 +82,7 @@ export function BestSellerBadge({
   bestSellerBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   return (
     <Badge
       text={bestSellerBadgeText || t("badge.bestSeller")}
@@ -105,7 +104,7 @@ export function SoldOutBadge({
   soldOutBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   return (
     <Badge
       text={soldOutBadgeText || t("badge.soldOut")}
@@ -127,7 +126,7 @@ export function BundleBadge({
   bundleBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   return (
     <Badge
       text={bundleBadgeText || t("badge.bundle")}
@@ -153,7 +152,7 @@ export function SaleBadge({
   saleBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useThemeText();
   let resolvedSaleBadgeText = saleBadgeText || t("badge.sale");
   let { amount, percentage } = calculateDiscount(price, compareAtPrice);
   let discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
