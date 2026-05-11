@@ -16,7 +16,6 @@ import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 import { HeaderCountrySelector } from "./country-selector/header-country-selector";
-import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
 import { MobileMenu } from "./menu/mobile-menu";
@@ -116,7 +115,6 @@ export function Header() {
         {/* Right: icons */}
         <div className="z-1 flex items-center justify-end gap-1">
           {showHeaderCountrySelector && <HeaderCountrySelector />}
-          <LanguageSwitcher />
           <PredictiveSearchButton />
           <ShopifyAccountButton />
           <CartDrawer />

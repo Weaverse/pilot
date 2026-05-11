@@ -2,19 +2,13 @@ import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
-import {
-  useFetcher,
-  useLocation,
-  useRouteLoaderData,
-  useSubmit,
-} from "react-router";
+import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function useCountrySelector() {
   const fetcher = useFetcher();
-  const submit = useSubmit();
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   const { pathname, search } = useLocation();
@@ -54,16 +48,30 @@ export function useCountrySelector() {
     redirectTo: string;
     buyerIdentity: CartBuyerIdentityInput;
   }) {
-    submit(
-      {
-        redirectTo,
-        cartFormInput: JSON.stringify({
-          action: CartForm.ACTIONS.BuyerIdentityUpdate,
-          inputs: { buyerIdentity },
-        }),
-      },
-      { method: "POST", action: "/cart" },
-    );
+    // Use native form.submit() (full page reload) instead of react-router's
+    // submit() to ensure Weaverse section content is re-fetched for the new
+    // locale. Client-side navigation leaves stale section data on first switch.
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/cart";
+
+    const redirectToInput = document.createElement("input");
+    redirectToInput.type = "hidden";
+    redirectToInput.name = "redirectTo";
+    redirectToInput.value = redirectTo;
+    form.appendChild(redirectToInput);
+
+    const cartFormInput = document.createElement("input");
+    cartFormInput.type = "hidden";
+    cartFormInput.name = "cartFormInput";
+    cartFormInput.value = JSON.stringify({
+      action: CartForm.ACTIONS.BuyerIdentityUpdate,
+      inputs: { buyerIdentity },
+    });
+    form.appendChild(cartFormInput);
+
+    document.body.appendChild(form);
+    form.submit();
   }
 
   function getRedirectUrl(countryLocale: I18nLocale) {
