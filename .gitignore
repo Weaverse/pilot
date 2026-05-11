@@ -23,3 +23,4 @@ pnpm-lock.yaml
 .weaverse/autoperf/baseline_*.json
 .weaverse/autoperf/wrangler.toml
 .claude/settings.local.json
+.dev.vars

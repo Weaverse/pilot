@@ -41,9 +41,14 @@
     "biome": "biome check",
     "biome:fix": "biome check --write",
     "format": "biome format --write",
-    "format:check": "biome format"
+    "format:check": "biome format",
+    "cf-typegen": "wrangler types && react-router typegen",
+    "check": "tsc && react-router build && wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "cf-dev": "wrangler dev --port 8787"
   },
   "dependencies": {
+    "@cloudflare/vite-plugin": "^1.36.3",
     "@fontsource-variable/cabin": "^5.2.8",
     "@fontsource-variable/newsreader": "^5.2.10",
     "@graphql-codegen/cli": "6.3.0",

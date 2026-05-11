@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "pilot",
+  "main": "./server.ts",
+  "compatibility_date": "2025-10-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "keep_vars": true,
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "account_id": "a882db2b848873133068eef9451117c9"
+}
