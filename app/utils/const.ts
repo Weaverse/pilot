@@ -7,25 +7,13 @@ export const COUNTRIES: Localizations = {
     country: "US",
     currency: "USD",
   },
-  "/en-au": {
-    label: "Australia (AUD $)",
-    language: "EN",
-    country: "AU",
-    currency: "AUD",
-  },
-  "/en-ca": {
-    label: "Canada (CAD $)",
-    language: "EN",
-    country: "CA",
-    currency: "CAD",
-  },
-  "/en-cn": {
+  "/zh-cn": {
     label: "China (CNY ¥)",
     language: "ZH",
     country: "CN",
     currency: "CNY",
   },
-  "/en-de": {
+  "/de-de": {
     label: "Germany (EUR €)",
     language: "DE",
     country: "DE",
@@ -37,35 +25,17 @@ export const COUNTRIES: Localizations = {
     country: "ES",
     currency: "EUR",
   },
-  "/en-fr": {
+  "/fr-fr": {
     label: "France (EUR €)",
     language: "FR",
     country: "FR",
     currency: "EUR",
   },
-  "/en-gb": {
-    label: "United Kingdom (GBP £)",
-    language: "EN",
-    country: "GB",
-    currency: "GBP",
-  },
-  "/en-it": {
-    label: "Italy (EUR €)",
-    language: "IT",
-    country: "IT",
-    currency: "EUR",
-  },
-  "/en-jp": {
+  "/ja-jp": {
     label: "Japan (JPY ¥)",
     language: "JA",
     country: "JP",
     currency: "JPY",
-  },
-  "/en-nl": {
-    label: "Netherlands (EUR €)",
-    language: "NL",
-    country: "NL",
-    currency: "EUR",
   },
   "/vi-vn": {
     label: "Việt Nam (VND ₫)",
