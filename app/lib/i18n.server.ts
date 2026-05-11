@@ -1,5 +1,10 @@
 import { WeaverseI18nServer } from "@weaverse/i18n/server";
+import de from "~/i18n/de.json";
 import en from "~/i18n/en.json";
+import es from "~/i18n/es.json";
+import fr from "~/i18n/fr.json";
+import ja from "~/i18n/ja.json";
+import vi from "~/i18n/vi.json";
 import zh from "~/i18n/zh.json";
 import { COUNTRIES } from "~/utils/const";
 
@@ -20,6 +25,11 @@ export function getI18nServer(env: Env) {
       bundledResources: {
         en: { common: en },
         zh: { common: zh },
+        de: { common: de },
+        es: { common: es },
+        fr: { common: fr },
+        ja: { common: ja },
+        vi: { common: vi },
       } as any,
     });
   }
