@@ -43,14 +43,6 @@ export default defineConfig(({isSsrBuild}) => ({
     allowedHosts: true,
   },
   ssr: {
-    noExternal: [
-      "use-sync-external-store",
-      "void-elements",
-      "deepmerge",
-      "jsonp",
-      "classnames",
-      "react-share",
-    ],
     optimizeDeps: {
       include: [
         "use-sync-external-store/shim",

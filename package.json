@@ -26,7 +26,7 @@
     "url": "https://github.com/weaverse/pilot/issues"
   },
   "scripts": {
-    "build": "shopify hydrogen build --codegen",
+    "build": "shopify hydrogen codegen && react-router build",
     "dev": "react-router typegen && shopify hydrogen dev --codegen --port 3456",
     "dev:ca": "shopify hydrogen dev --codegen --port 3456 --customer-account-push",
     "preview": "shopify hydrogen preview --build",
