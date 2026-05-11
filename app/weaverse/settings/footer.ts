@@ -35,13 +35,6 @@ export const footerSettings = {
       defaultValue: 80,
     },
     {
-      type: "richtext",
-      name: "bio",
-      label: "Store bio",
-      defaultValue:
-        "<p>We are a team of designers, developers, and creatives who are passionate about creating beautiful and functional products.</p>",
-    },
-    {
       type: "heading",
       label: "Social links",
     },
@@ -71,59 +64,7 @@ export const footerSettings = {
     },
     {
       type: "heading",
-      label: "Store information",
-    },
-    {
-      type: "text",
-      name: "addressTitle",
-      label: "Title",
-      defaultValue: "OUR SHOP",
-      placeholder: "Our shop",
-    },
-    {
-      type: "text",
-      name: "storeAddress",
-      label: "Address",
-      defaultValue: "301 Front St W, Toronto, ON M5V 2T6, Canada",
-      placeholder: "301 Front St W, Toronto, ON M5V 2T6, Canada",
-    },
-    {
-      type: "text",
-      name: "storeEmail",
-      label: "Email",
-      defaultValue: "contact@my-store.com",
-      placeholder: "contact@my-store.com",
-    },
-    {
-      type: "heading",
       label: "Newsletter",
-    },
-    {
-      type: "text",
-      name: "newsletterTitle",
-      label: "Title",
-      defaultValue: "STAY IN TOUCH",
-      placeholder: "Stay in touch",
-    },
-    {
-      type: "text",
-      name: "newsletterDescription",
-      label: "Description",
-      defaultValue: "News and inspiration in your inbox, every week.",
-    },
-    {
-      type: "text",
-      name: "newsletterPlaceholder",
-      label: "Input placeholder",
-      defaultValue: "Please enter your email",
-      placeholder: "Please enter your email",
-    },
-    {
-      type: "text",
-      name: "newsletterButtonText",
-      label: "Button text",
-      defaultValue: "Subscribe",
-      placeholder: "Subscribe",
     },
     {
       type: "range",
@@ -136,12 +77,6 @@ export const footerSettings = {
         unit: "px",
       },
       defaultValue: 450,
-    },
-    {
-      type: "richtext",
-      name: "copyright",
-      label: "Copyright text",
-      defaultValue: "© 2024 Weaverse. All rights reserved.",
     },
     {
       type: "heading",

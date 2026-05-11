@@ -195,11 +195,10 @@ export function NewsletterPopup() {
                     !isModal && "mb-3 text-2xl",
                   )}
                 >
-                  {newsletterPopupHeading || t("newsletter.popup.heading")}
+                  {t("newsletter.popup.heading")}
                 </h3>
                 <p className={cn("mb-6 text-body-subtle", !isModal && "mb-4")}>
-                  {newsletterPopupDescription ||
-                    t("newsletter.popup.description")}
+                  {t("newsletter.popup.description")}
                 </p>
 
                 <fetcher.Form
@@ -212,7 +211,7 @@ export function NewsletterPopup() {
                     name="email"
                     type="email"
                     required
-                    placeholder="Enter your email"
+                    placeholder={t("newsletter.popup.placeholder")}
                     className="w-full px-4 py-2.5"
                   />
                   <Button
@@ -220,8 +219,7 @@ export function NewsletterPopup() {
                     className="w-full"
                     loading={fetcher.state === "submitting"}
                   >
-                    {newsletterPopupButtonText ||
-                      t("newsletter.popup.buttonText")}
+                    {t("newsletter.popup.buttonText")}
                   </Button>
                 </fetcher.Form>
 

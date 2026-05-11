@@ -1,5 +1,9 @@
 import { Pagination } from "@shopify/hydrogen";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  useThemeText,
+} from "@weaverse/hydrogen";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import type { AllProductsQuery } from "storefront-api.generated";
@@ -33,6 +37,7 @@ function AllProductsGrid(props: AllProductsGridProps) {
 
   const { products } = useLoaderData<AllProductsQuery>();
   const { ref: inViewRef, inView } = useInView();
+  const { t } = useThemeText();
   const isInfiniteScroll = loadMoreBehavior === "infinite-scroll";
 
   return (
@@ -53,7 +58,7 @@ function AllProductsGrid(props: AllProductsGridProps) {
               <PreviousLink
                 className={cn("mx-auto", variants({ variant: "outline" }))}
               >
-                {isLoading ? "Loading..." : loadPrevText}
+                {isLoading ? t("pagination.loading") : loadPrevText}
               </PreviousLink>
             )}
             <ProductsLoadedOnScroll
@@ -71,7 +76,9 @@ function AllProductsGrid(props: AllProductsGridProps) {
                 ref={isInfiniteScroll ? inViewRef : undefined}
                 className={cn("mx-auto", variants({ variant: "outline" }))}
               >
-                {isInfiniteScroll || isLoading ? "Loading..." : loadMoreText}
+                {isInfiniteScroll || isLoading
+                  ? t("pagination.loading")
+                  : loadMoreText}
               </NextLink>
             )}
           </div>

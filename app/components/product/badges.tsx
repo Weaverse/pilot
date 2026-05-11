@@ -61,7 +61,7 @@ export function NewBadge({
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
-        text={newBadgeText || t("badge.new")}
+        text={t("badge.new")}
         backgroundColor={newBadgeColor}
         badgeStyle={badgeStyle}
         className={clsx("new-badge", className)}
@@ -85,7 +85,7 @@ export function BestSellerBadge({
   const { t } = useThemeText();
   return (
     <Badge
-      text={bestSellerBadgeText || t("badge.bestSeller")}
+      text={t("badge.bestSeller")}
       backgroundColor={bestSellerBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("best-seller-badge", className)}
@@ -107,7 +107,7 @@ export function SoldOutBadge({
   const { t } = useThemeText();
   return (
     <Badge
-      text={soldOutBadgeText || t("badge.soldOut")}
+      text={t("badge.soldOut")}
       backgroundColor={soldOutBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("sold-out-badge", className)}
@@ -129,7 +129,7 @@ export function BundleBadge({
   const { t } = useThemeText();
   return (
     <Badge
-      text={bundleBadgeText || t("badge.bundle")}
+      text={t("badge.bundle")}
       backgroundColor={bundleBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("bundle-badge", className)}
@@ -153,7 +153,7 @@ export function SaleBadge({
   className?: string;
 }) {
   const { t } = useThemeText();
-  let resolvedSaleBadgeText = saleBadgeText || t("badge.sale");
+  let resolvedSaleBadgeText = t("badge.sale");
   let { amount, percentage } = calculateDiscount(price, compareAtPrice);
   let discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
   let text = resolvedSaleBadgeText

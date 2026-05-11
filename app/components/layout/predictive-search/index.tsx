@@ -5,6 +5,7 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { useThemeText } from "@weaverse/hydrogen";
 import { type RefObject, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import Link from "~/components/link";
@@ -18,6 +19,7 @@ export function PredictiveSearchButton() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const params = useParams();
+  const { t } = useThemeText();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: close the dialog when the location changes, aka when the user navigates to a search result page
   useEffect(() => {
@@ -53,7 +55,7 @@ export function PredictiveSearchButton() {
           aria-describedby={undefined}
         >
           <VisuallyHidden.Root asChild>
-            <Dialog.Title>Predictive search</Dialog.Title>
+            <Dialog.Title>{t("accessibility.predictiveSearch")}</Dialog.Title>
           </VisuallyHidden.Root>
           <div className="relative pt-(--topbar-height)">
             <PredictiveSearchForm>
@@ -78,7 +80,7 @@ export function PredictiveSearchButton() {
                           }
                         }
                       }}
-                      placeholder="Enter a keyword"
+                      placeholder={t("search.enterKeyword")}
                       ref={inputRef}
                       autoComplete="off"
                       className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
@@ -116,6 +118,7 @@ export function PredictiveSearchButton() {
 }
 
 function PredictiveSearchResults() {
+  const { t } = useThemeText();
   const { results, totalResults, searchTerm } = usePredictiveSearch();
   const queries = results?.find(({ type }) => type === "queries");
   const articles = results?.find(({ type }) => type === "articles");
@@ -151,7 +154,7 @@ function PredictiveSearchResults() {
                 variant="underline"
                 className="flex w-fit items-center gap-2"
               >
-                <span>View all results</span>
+                <span>{t("search.viewAllResults")}</span>
                 <ArrowRightIcon className="h-4 w-4" />
               </Link>
             </div>
@@ -163,12 +166,13 @@ function PredictiveSearchResults() {
 }
 
 function NoResults({ searchTerm }: { searchTerm: RefObject<string> }) {
+  const { t } = useThemeText();
   if (!searchTerm.current) {
     return null;
   }
   return (
     <p className="w-160 rounded-b-lg bg-background p-6 shadow-header">
-      No results found for <q>{searchTerm.current}</q>
+      {t("search.noResultsShort")} <q>{searchTerm.current}</q>
     </p>
   );
 }

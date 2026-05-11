@@ -4,13 +4,6 @@ export const announcementSettings = {
   group: "Scrolling announcements",
   inputs: [
     {
-      type: "richtext",
-      name: "topbarText",
-      label: "Content",
-      defaultValue:
-        "<p>Free shipping on orders over $50</p><p>New arrivals dropping every week</p><p>30-day hassle-free returns</p><p>Sign up and get 10% off your first order</p>",
-    },
-    {
       type: "range",
       label: "Content gap",
       name: "topbarScrollingGap",

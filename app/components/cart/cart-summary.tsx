@@ -196,7 +196,7 @@ export function CartSummary({
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
                   <NotePencilIcon className="size-4" />
-                  {cartNoteButtonText || t("cart.actions.addNote")}
+                  {t("cart.actions.addNote")}
                 </button>
               </Dialog.Trigger>
               <NoteDialog cartNote={note} />
@@ -210,7 +210,7 @@ export function CartSummary({
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
                   <TagIcon className="size-4" />
-                  {discountCodeButtonText || t("cart.actions.discountCode")}
+                  {t("cart.actions.discountCode")}
                 </button>
               </Dialog.Trigger>
               <DiscountDialog discountCodes={discountCodes} />
@@ -224,7 +224,7 @@ export function CartSummary({
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
                   <GiftIcon className="size-4" />
-                  {giftCardButtonText || t("cart.actions.giftCard")}
+                  {t("cart.actions.giftCard")}
                 </button>
               </Dialog.Trigger>
               <GiftCardDialog appliedGiftCards={appliedGiftCards} />
@@ -236,7 +236,7 @@ export function CartSummary({
         <div className="mt-2 flex flex-col gap-3">
           <a href={checkoutUrl} target="_self">
             <Button className="w-full">
-              <span>{checkoutButtonText || t("cart.actions.checkout")}</span>
+              <span>{t("cart.actions.checkout")}</span>
               {layout === "drawer" && (
                 <>
                   <span className="mx-1.5">·</span>

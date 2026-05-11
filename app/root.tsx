@@ -3,7 +3,7 @@ import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
-import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import { useThemeSettings, useThemeText, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
@@ -108,7 +108,9 @@ export const Layout = withWeaverse(function RootLayout({
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.locale ?? DEFAULT_LOCALE.language.toLowerCase();
-  const { topbarHeight, topbarText } = useThemeSettings<ThemeSettings>();
+  const { topbarHeight } = useThemeSettings<ThemeSettings>();
+  const { t } = useThemeText();
+  const topbarText = t("announcement.topbarText");
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
   const i18nData = (data as any)?.i18nData;
 

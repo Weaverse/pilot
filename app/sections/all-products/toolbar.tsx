@@ -1,16 +1,12 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type HydrogenComponentProps,
+  useThemeText,
+} from "@weaverse/hydrogen";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import { useProductGridStore } from "~/components/product-grid/store";
 import type { SortParam } from "~/types/others";
-
-const SORT_OPTIONS: Array<{ label: string; key: SortParam }> = [
-  { label: "Relevance", key: "relevance" },
-  { label: "Price, (low to high)", key: "price-low-high" },
-  { label: "Price, (high to low)", key: "price-high-low" },
-  { label: "Best selling", key: "best-selling" },
-  { label: "Newest", key: "newest" },
-];
 
 interface AllProductsToolbarData {
   enableSort: boolean;
@@ -24,7 +20,16 @@ interface AllProductsToolbarProps
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { enableSort, showBreadcrumb, showProductsCount, ...rest } = props;
+  const { t } = useThemeText();
   let displayedCount = useProductGridStore((s) => s.displayedCount);
+
+  const sortOptions: Array<{ label: string; key: SortParam }> = [
+    { label: t("collection.sortOptions.relevance"), key: "relevance" },
+    { label: t("collection.sortOptions.priceLowHigh"), key: "price-low-high" },
+    { label: t("collection.sortOptions.priceHighLow"), key: "price-high-low" },
+    { label: t("collection.sortOptions.bestSelling"), key: "best-selling" },
+    { label: t("collection.sortOptions.newest"), key: "newest" },
+  ];
 
   return (
     <div {...rest}>
@@ -36,12 +41,12 @@ function AllProductsToolbar(props: AllProductsToolbarProps) {
               <>
                 <span className="text-foreground/60">·</span>
                 <span className="text-foreground/60">
-                  {displayedCount} products
+                  {t("collection.productsCount", { count: displayedCount })}
                 </span>
               </>
             )}
           </div>
-          {enableSort && <SortDropdown options={SORT_OPTIONS} />}
+          {enableSort && <SortDropdown options={sortOptions} />}
         </div>
       </div>
     </div>

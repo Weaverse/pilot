@@ -189,7 +189,7 @@ export function QuickShopTrigger({
   panelType = "modal",
 }: QuickShopTriggerProps) {
   const { t } = useThemeText();
-  const resolvedButtonText = buttonText || t("product.quickShop");
+  const resolvedButtonText = t("product.quickShop");
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 

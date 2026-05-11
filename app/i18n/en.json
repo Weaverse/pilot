@@ -59,7 +59,8 @@
     "popup": {
       "heading": "Stay in the loop!",
       "description": "Subscribe to our newsletter and get exclusive offers, new product updates, and more.",
-      "buttonText": "Get 15% Off Your First Order"
+      "buttonText": "Get 15% Off Your First Order",
+      "placeholder": "Enter your email"
     }
   },
   "search": {
@@ -71,7 +72,8 @@
     "noResultsShort": "No results found for",
     "trendingProducts": "Trending Products",
     "problemLoadingProducts": "There was a problem loading related products",
-    "popularKeywords": "sunglasses, hats, jackets, shoes"
+    "popularKeywords": "sunglasses, hats, jackets, shoes",
+    "popularSearches": "Popular searches:"
   },
   "footer": {
     "bio": "<p>We are a team of designers, developers, and creatives who are passionate about creating beautiful and functional products.</p>",
@@ -86,6 +88,9 @@
     "email": "Email:",
     "newsletterSuccess": "Thank you for signing up! 🎉",
     "newsletterError": "An error occurred while signing up."
+  },
+  "announcement": {
+    "topbarText": "<p>Free shipping on orders over $50</p><p>New arrivals dropping every week</p><p>30-day hassle-free returns</p><p>Sign up and get 10% off your first order</p>"
   },
   "pagination": {
     "loading": "Loading...",

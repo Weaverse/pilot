@@ -71,7 +71,8 @@
     "noResultsShort": "Không tìm thấy kết quả cho",
     "trendingProducts": "Sản phẩm nổi bật",
     "problemLoadingProducts": "Đã xảy ra sự cố khi tải các sản phẩm liên quan",
-    "popularKeywords": "kính râm, nón, áo khoác, giày"
+    "popularKeywords": "kính râm, nón, áo khoác, giày",
+    "popularSearches": "Tìm kiếm phổ biến:"
   },
   "footer": {
     "bio": "<p>Chúng tôi là đội ngũ thiết kế, lập trình và sáng tạo, đam mê làm ra những sản phẩm đẹp và hữu ích.</p>",
@@ -86,6 +87,9 @@
     "email": "Email:",
     "newsletterSuccess": "Cảm ơn bạn đã đăng ký! 🎉",
     "newsletterError": "Đã xảy ra lỗi khi đăng ký."
+  },
+  "announcement": {
+    "topbarText": "<p>Miễn phí vận chuyển cho đơn từ $50</p><p>Hàng mới về mỗi tuần</p><p>Đổi trả không rắc rối trong 30 ngày</p><p>Đăng ký nhận giảm 10% cho đơn đầu tiên</p>"
   },
   "pagination": {
     "loading": "Đang tải...",

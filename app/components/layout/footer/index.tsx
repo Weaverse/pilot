@@ -36,15 +36,6 @@ export function Footer() {
     socialX,
     footerLogoData,
     footerLogoWidth,
-    bio,
-    copyright,
-    addressTitle,
-    storeAddress,
-    storeEmail,
-    newsletterTitle,
-    newsletterDescription,
-    newsletterPlaceholder,
-    newsletterButtonText,
     newsletterInputWidth,
     showPaymentMethods,
     showAmazonPay,
@@ -90,9 +81,9 @@ export function Footer() {
               ) : (
                 <h3 className="font-medium text-base uppercase">{shopName}</h3>
               )}
-              {bio || t("footer.bio") ? (
+              {t("footer.bio") ? (
                 <div
-                  dangerouslySetInnerHTML={{ __html: bio || t("footer.bio") }}
+                  dangerouslySetInnerHTML={{ __html: t("footer.bio") }}
                 />
               ) : null}
               <SocialLinks
@@ -103,21 +94,15 @@ export function Footer() {
               />
             </div>
             <StoreInfo
-              addressTitle={addressTitle || t("footer.addressTitle")}
-              storeAddress={storeAddress || t("footer.storeAddress")}
-              storeEmail={storeEmail || t("footer.storeEmail")}
+              addressTitle={t("footer.addressTitle")}
+              storeAddress={t("footer.storeAddress")}
+              storeEmail={t("footer.storeEmail")}
             />
             <NewsletterForm
-              title={newsletterTitle || t("footer.newsletterTitle")}
-              description={
-                newsletterDescription || t("footer.newsletterDescription")
-              }
-              placeholder={
-                newsletterPlaceholder || t("footer.newsletterPlaceholder")
-              }
-              buttonText={
-                newsletterButtonText || t("footer.newsletterButtonText")
-              }
+              title={t("footer.newsletterTitle")}
+              description={t("footer.newsletterDescription")}
+              placeholder={t("footer.newsletterPlaceholder")}
+              buttonText={t("footer.newsletterButtonText")}
               inputWidth={newsletterInputWidth}
             />
           </div>
@@ -127,7 +112,7 @@ export function Footer() {
           <div className="flex gap-2">
             <FooterCountrySelector />
           </div>
-          <p>{copyright || t("footer.copyright")}</p>
+          <p>{t("footer.copyright")}</p>
           <PaymentMethods
             showPaymentMethods={showPaymentMethods}
             showAmazonPay={showAmazonPay}

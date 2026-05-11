@@ -1,6 +1,6 @@
 import { Pagination } from "@shopify/hydrogen";
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema, useThemeText } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
@@ -21,6 +21,7 @@ interface CollectionsItemsProps extends OverlayProps {
 
 function CollectionsItems(props: CollectionsItemsProps) {
   const { collections } = useLoaderData<CollectionsQuery>();
+  const { t } = useThemeText();
   const {
     prevButtonText,
     nextButtonText,
@@ -50,7 +51,7 @@ function CollectionsItems(props: CollectionsItemsProps) {
               <PreviousLink
                 className={cn("mx-auto", variants({ variant: "outline" }))}
               >
-                {isLoading ? "Loading..." : prevButtonText}
+                {isLoading ? t("pagination.loading") : prevButtonText}
               </PreviousLink>
             )}
             <div className="grid w-full grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-2 lg:gap-y-12 xl:grid-cols-3">
@@ -74,7 +75,7 @@ function CollectionsItems(props: CollectionsItemsProps) {
               <NextLink
                 className={cn("mx-auto", variants({ variant: "outline" }))}
               >
-                {isLoading ? "Loading..." : nextButtonText}
+                {isLoading ? t("pagination.loading") : nextButtonText}
               </NextLink>
             )}
           </div>
