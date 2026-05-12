@@ -7,6 +7,7 @@ import {
   type SessionStorage,
 } from "react-router";
 import { CART_QUERY_FRAGMENT } from "~/graphql/fragments";
+import { readProjectIdFromCookie } from "~/lib/weaverse/resolve-project.server";
 import type { I18nLocale } from "~/types/others";
 import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
@@ -56,6 +57,13 @@ export async function createHydrogenRouterContext(
     cache,
     themeSchema,
     components,
+    // Multi-project resolution priority chain handled by the SDK:
+    //   1. ?weaverseProjectId=<id> query param (Studio iframe always sets this)
+    //   2. this function — reads a 24h cookie set by the response for
+    //      in-iframe navigation without the query string
+    //   3. env.WEAVERSE_PROJECT_ID (bare URL fallback)
+    // See app/lib/weaverse/resolve-project.server.ts and Phase 1.5c spec.
+    projectId: () => readProjectIdFromCookie(request),
   });
 
   // Add weaverse directly to the hydrogenContext instance

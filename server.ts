@@ -2,6 +2,7 @@ import * as remixBuild from "virtual:react-router/server-build"; // Virtual entr
 import { storefrontRedirect } from "@shopify/hydrogen";
 import { createRequestHandler } from "@shopify/hydrogen/oxygen";
 import { createHydrogenRouterContext } from "~/.server/context";
+import { maybeSetProjectIdCookie } from "~/lib/weaverse/resolve-project.server";
 
 /**
  * Export a fetch handler in module format.
@@ -37,6 +38,13 @@ export default {
           await hydrogenContext.session.commit(),
         );
       }
+
+      // Phase 1.5c: if URL had ?weaverseProjectId=<id>, persist for 24h so
+      // in-iframe navigation without the query string keeps the same project.
+      // Must run AFTER the session commit — that commit uses .set() (not
+      // .append()) on the Set-Cookie header, which would clobber a cookie
+      // appended earlier. .append() here preserves the session cookie above.
+      maybeSetProjectIdCookie(request, response);
 
       if (response.status === 404) {
         /**
