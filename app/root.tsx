@@ -154,7 +154,7 @@ export const Layout = withWeaverse(function RootLayout({
         <GlobalStyle />
         <script
           type="module"
-          src="https://cdn.shopify.com/storefront/web-components/account.js"
+          src="https://cdn.shopify.com/storefront/web-components.js"
           async
           nonce={nonce}
         />
