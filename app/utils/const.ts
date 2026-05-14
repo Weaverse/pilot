@@ -19,9 +19,21 @@ export const COUNTRIES: Localizations = {
     country: "CA",
     currency: "CAD",
   },
+  "/fr-ca": {
+    label: "Canada (CAD $)",
+    language: "FR",
+    country: "CA",
+    currency: "CAD",
+  },
   "/en-cn": {
     label: "China (CNY ¥)",
     language: "EN",
+    country: "CN",
+    currency: "CNY",
+  },
+  "/zh-cn": {
+    label: "China (CNY ¥)",
+    language: "ZH",
     country: "CN",
     currency: "CNY",
   },
@@ -31,15 +43,33 @@ export const COUNTRIES: Localizations = {
     country: "DE",
     currency: "EUR",
   },
+  "/de-de": {
+    label: "Germany (EUR €)",
+    language: "DE",
+    country: "DE",
+    currency: "EUR",
+  },
   "/en-es": {
     label: "Spain (EUR €)",
     language: "EN",
     country: "ES",
     currency: "EUR",
   },
+  "/es-es": {
+    label: "Spain (EUR €)",
+    language: "ES",
+    country: "ES",
+    currency: "EUR",
+  },
   "/en-fr": {
     label: "France (EUR €)",
     language: "EN",
+    country: "FR",
+    currency: "EUR",
+  },
+  "/fr-fr": {
+    label: "France (EUR €)",
+    language: "FR",
     country: "FR",
     currency: "EUR",
   },
@@ -55,9 +85,21 @@ export const COUNTRIES: Localizations = {
     country: "IT",
     currency: "EUR",
   },
+  "/it-it": {
+    label: "Italy (EUR €)",
+    language: "IT",
+    country: "IT",
+    currency: "EUR",
+  },
   "/en-jp": {
     label: "Japan (JPY ¥)",
     language: "EN",
+    country: "JP",
+    currency: "JPY",
+  },
+  "/ja-jp": {
+    label: "Japan (JPY ¥)",
+    language: "JA",
     country: "JP",
     currency: "JPY",
   },
@@ -82,3 +124,13 @@ export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
 });
 
 export const FILTER_URL_PREFIX = "filter.";
+
+export const LANGUAGE_LABELS: Record<string, string> = {
+  EN: "English",
+  DE: "Deutsch",
+  FR: "Français",
+  ES: "Español",
+  IT: "Italiano",
+  JA: "日本語",
+  ZH: "中文",
+};
