@@ -13,6 +13,18 @@ export const COUNTRIES: Localizations = {
     country: "AU",
     currency: "AUD",
   },
+  "/de-at": {
+    label: "Austria (EUR €)",
+    language: "DE",
+    country: "AT",
+    currency: "EUR",
+  },
+  "/fr-be": {
+    label: "Belgium (EUR €)",
+    language: "FR",
+    country: "BE",
+    currency: "EUR",
+  },
   "/en-ca": {
     label: "Canada (CAD $)",
     language: "EN",
@@ -37,30 +49,6 @@ export const COUNTRIES: Localizations = {
     country: "CN",
     currency: "CNY",
   },
-  "/en-de": {
-    label: "Germany (EUR €)",
-    language: "EN",
-    country: "DE",
-    currency: "EUR",
-  },
-  "/de-de": {
-    label: "Germany (EUR €)",
-    language: "DE",
-    country: "DE",
-    currency: "EUR",
-  },
-  "/en-es": {
-    label: "Spain (EUR €)",
-    language: "EN",
-    country: "ES",
-    currency: "EUR",
-  },
-  "/es-es": {
-    label: "Spain (EUR €)",
-    language: "ES",
-    country: "ES",
-    currency: "EUR",
-  },
   "/en-fr": {
     label: "France (EUR €)",
     language: "EN",
@@ -73,11 +61,29 @@ export const COUNTRIES: Localizations = {
     country: "FR",
     currency: "EUR",
   },
-  "/en-gb": {
-    label: "United Kingdom (GBP £)",
+  "/en-de": {
+    label: "Germany (EUR €)",
     language: "EN",
-    country: "GB",
-    currency: "GBP",
+    country: "DE",
+    currency: "EUR",
+  },
+  "/de-de": {
+    label: "Germany (EUR €)",
+    language: "DE",
+    country: "DE",
+    currency: "EUR",
+  },
+  "/en-hk": {
+    label: "Hong Kong (HKD $)",
+    language: "EN",
+    country: "HK",
+    currency: "HKD",
+  },
+  "/zh-hk": {
+    label: "Hong Kong (HKD $)",
+    language: "ZH",
+    country: "HK",
+    currency: "HKD",
   },
   "/en-it": {
     label: "Italy (EUR €)",
@@ -103,12 +109,59 @@ export const COUNTRIES: Localizations = {
     country: "JP",
     currency: "JPY",
   },
-
+  "/es-mx": {
+    label: "Mexico (MXN $)",
+    language: "ES",
+    country: "MX",
+    currency: "MXN",
+  },
   "/en-nl": {
     label: "Netherlands (EUR €)",
     language: "EN",
     country: "NL",
     currency: "EUR",
+  },
+  "/en-es": {
+    label: "Spain (EUR €)",
+    language: "EN",
+    country: "ES",
+    currency: "EUR",
+  },
+  "/es-es": {
+    label: "Spain (EUR €)",
+    language: "ES",
+    country: "ES",
+    currency: "EUR",
+  },
+  "/de-ch": {
+    label: "Switzerland (CHF Fr.)",
+    language: "DE",
+    country: "CH",
+    currency: "CHF",
+  },
+  "/fr-ch": {
+    label: "Switzerland (CHF Fr.)",
+    language: "FR",
+    country: "CH",
+    currency: "CHF",
+  },
+  "/it-ch": {
+    label: "Switzerland (CHF Fr.)",
+    language: "IT",
+    country: "CH",
+    currency: "CHF",
+  },
+  "/zh-tw": {
+    label: "Taiwan (TWD $)",
+    language: "ZH",
+    country: "TW",
+    currency: "TWD",
+  },
+  "/en-gb": {
+    label: "United Kingdom (GBP £)",
+    language: "EN",
+    country: "GB",
+    currency: "GBP",
   },
   "/en-vn": {
     label: "Vietnam (VND ₫)",
