@@ -14,11 +14,11 @@ export async function loader({
   const sitemapXml = await response.text();
   const url = new URL(request.url);
   const weaverseSitemapUrl = `${url.protocol}//${url.host}/sitemap-weaverse.xml`;
-  
+
   // Insert Weaverse sitemap before closing sitemapindex tag
   const modifiedXml = sitemapXml.replace(
     "</sitemapindex>",
-    `  <sitemap>\n    <loc>${weaverseSitemapUrl}</loc>\n  </sitemap>\n</sitemapindex>`
+    `  <sitemap>\n    <loc>${weaverseSitemapUrl}</loc>\n  </sitemap>\n</sitemapindex>`,
   );
 
   return new Response(modifiedXml, {

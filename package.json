@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/pilot",
-  "version": "2026.4.20",
+  "version": "2026.5.4",
   "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
   "keywords": [
     "shopify",
@@ -86,7 +86,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.13",
+    "@biomejs/biome": "^2.4.14",
     "@playwright/test": "1.59.1",
     "@shopify/cli": "^3.94.1",
     "@shopify/hydrogen-codegen": "0.3.3",
@@ -95,9 +95,9 @@
     "@tailwindcss/forms": "0.5.11",
     "@tailwindcss/typography": "0.5.19",
     "@total-typescript/ts-reset": "0.6.1",
-    "@types/react": "^18.3.28",
-    "@types/react-dom": "^18.3.7",
-    "@weaverse/biome": "5.7.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@weaverse/biome": "5.7.4",
     "cross-env": "10.1.0",
     "tailwindcss": "^4.2.4",
     "ts-node": "10.9.2",
