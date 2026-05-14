@@ -76,7 +76,7 @@ export const headerSettings = {
           { value: "full", label: "Full (e.g. United States)" },
         ],
       },
-      defaultValue: "short",
+      defaultValue: "full",
       condition: (theme: { showHeaderCountrySelector: boolean }) =>
         theme.showHeaderCountrySelector,
     },

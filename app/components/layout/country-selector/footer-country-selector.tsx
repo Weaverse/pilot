@@ -29,7 +29,7 @@ export function FooterCountrySelector() {
               svg
               countryCode={selectedLocale.country}
               className="rounded-xs"
-              style={{ width: "22px", height: "14px" }}
+              style={{ width: "24px", height: "16px" }}
             />
             <span>{selectedLocale.label}</span>
             <CaretDownIcon className="ml-auto h-4 w-4" />
@@ -64,7 +64,7 @@ export function FooterCountrySelector() {
                         svg
                         countryCode={locale.country}
                         className="rounded-xs shrink-0"
-                        style={{ width: "22px", height: "14px" }}
+                        style={{ width: "24px", height: "16px" }}
                       />
                       <span
                         className={cn(
@@ -88,7 +88,7 @@ export function FooterCountrySelector() {
                         svg
                         countryCode={group.country}
                         className="rounded-xs shrink-0"
-                        style={{ width: "22px", height: "14px" }}
+                        style={{ width: "24px", height: "16px" }}
                       />
                       <span
                         className={cn(
@@ -102,7 +102,7 @@ export function FooterCountrySelector() {
                         <CheckIcon className="ml-auto size-4 shrink-0" />
                       ) : null}
                     </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-7">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8">
                       {group.locales.map(({ path, locale }, i) => {
                         const isSelected =
                           locale.language === selectedLocale.language &&
@@ -121,7 +121,9 @@ export function FooterCountrySelector() {
                               onClick={() =>
                                 handleLocaleChange({
                                   redirectTo: getRedirectUrl(locale),
-                                  buyerIdentity: { countryCode: locale.country },
+                                  buyerIdentity: {
+                                    countryCode: locale.country,
+                                  },
                                 })
                               }
                               className={cn(

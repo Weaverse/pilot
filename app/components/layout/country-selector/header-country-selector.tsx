@@ -4,9 +4,9 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { ScrollArea } from "~/components/scroll-area";
+import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { LANGUAGE_LABELS } from "~/utils/const";
-import type { ThemeSettings } from "~/types/weaverse";
 import { useCountrySelector } from "./use-country-selector";
 
 export function HeaderCountrySelector() {
@@ -25,14 +25,14 @@ export function HeaderCountrySelector() {
         <Popover.Trigger asChild>
           <button
             type="button"
-            className="flex cursor-pointer items-center gap-1 p-1.5 outline-hidden"
+            className="flex cursor-pointer items-center gap-2 p-1.5 outline-hidden"
             aria-label="Select country"
           >
             <ReactCountryFlag
               svg
               countryCode={selectedLocale.country}
               className="rounded-xs"
-              style={{ width: "22px", height: "14px" }}
+              style={{ width: "24px", height: "16px" }}
             />
             {countryNameDisplay === "full" ? (
               <>
@@ -49,7 +49,7 @@ export function HeaderCountrySelector() {
           <Popover.Content align="center" sideOffset={8} className="z-50">
             <ScrollArea
               size="sm"
-              style={{ maxHeight: 360, width: 280 }}
+              style={{ maxHeight: 360, width: 300 }}
               rootClassName="border border-gray-300 rounded-lg bg-white py-2 shadow-lg"
             >
               {groupedCountries.map((group) => {
@@ -74,7 +74,7 @@ export function HeaderCountrySelector() {
                         svg
                         countryCode={locale.country}
                         className="rounded-xs shrink-0"
-                        style={{ width: "22px", height: "14px" }}
+                        style={{ width: "24px", height: "16px" }}
                       />
                       <span
                         className={cn(
@@ -98,7 +98,7 @@ export function HeaderCountrySelector() {
                         svg
                         countryCode={group.country}
                         className="rounded-xs shrink-0"
-                        style={{ width: "22px", height: "14px" }}
+                        style={{ width: "24px", height: "16px" }}
                       />
                       <span
                         className={cn(
@@ -112,7 +112,7 @@ export function HeaderCountrySelector() {
                         <CheckIcon className="ml-auto size-4 shrink-0" />
                       ) : null}
                     </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-7">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8">
                       {group.locales.map(({ path, locale }, i) => {
                         const isSelected =
                           locale.language === selectedLocale.language &&
@@ -131,7 +131,9 @@ export function HeaderCountrySelector() {
                               onClick={() =>
                                 handleLocaleChange({
                                   redirectTo: getRedirectUrl(locale),
-                                  buyerIdentity: { countryCode: locale.country },
+                                  buyerIdentity: {
+                                    countryCode: locale.country,
+                                  },
                                 })
                               }
                               className={cn(
