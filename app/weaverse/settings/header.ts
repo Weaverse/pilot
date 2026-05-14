@@ -14,7 +14,7 @@ export const headerSettings = {
           { value: "fixed", label: "Fixed" },
         ],
       },
-      defaultValue: "fixed",
+      defaultValue: "stretch",
     },
     {
       type: "switch",
@@ -64,7 +64,7 @@ export const headerSettings = {
       type: "switch",
       label: "Show country selector",
       name: "showHeaderCountrySelector",
-      defaultValue: false,
+      defaultValue: true,
     },
     {
       type: "select",
