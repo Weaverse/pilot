@@ -22,6 +22,7 @@ import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import { ConsentBanner } from "./components/root/consent-banner";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { CartStoreSync } from "./components/cart/store";
 import { GenericError } from "./components/root/generic-error";
@@ -221,6 +222,7 @@ export const Layout = withWeaverse(function RootLayout({
               </div>
               {shouldShowNewsletterPopup && <NewsletterPopup />}
             </TooltipProvider>
+            <ConsentBanner />
             <CustomAnalytics />
           </Analytics.Provider>
         ) : (
