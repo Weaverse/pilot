@@ -98,8 +98,12 @@ export function useCountrySelector() {
   }
   for (const group of groupedCountries) {
     group.locales.sort((a, b) => {
-      if (a.locale.language === "EN" && b.locale.language !== "EN") return 1;
-      if (a.locale.language !== "EN" && b.locale.language === "EN") return -1;
+      if (a.locale.language === "EN" && b.locale.language !== "EN") {
+        return 1;
+      }
+      if (a.locale.language !== "EN" && b.locale.language === "EN") {
+        return -1;
+      }
       return 0;
     });
   }
