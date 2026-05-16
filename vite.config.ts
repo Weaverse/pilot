@@ -3,16 +3,12 @@ import { hydrogen } from "@shopify/hydrogen/vite";
 import { oxygen } from "@shopify/mini-oxygen/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ isSsrBuild }) => ({
-  plugins: [
-    hydrogen(),
-    oxygen(),
-    reactRouter(),
-    tsconfigPaths(),
-    tailwindcss(),
-  ],
+  plugins: [hydrogen(), oxygen(), reactRouter(), tailwindcss()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   build: {
     assetsInlineLimit: 0,
     ...(!isSsrBuild && {

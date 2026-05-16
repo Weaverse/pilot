@@ -102,8 +102,7 @@
     "tailwindcss": "^4.3.0",
     "ts-node": "10.9.2",
     "typescript": "^6.0.3",
-    "vite": "^6.4.2",
-    "vite-tsconfig-paths": "6.1.1"
+    "vite": "^8.0.13"
   },
   "optionalDependencies": {
     "@esbuild/linux-x64": "0.28.0"
