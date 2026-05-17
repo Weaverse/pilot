@@ -77,7 +77,7 @@ export function Swimlane({
   return (
     <div className="relative">
       {showArrows && (
-        <div className="absolute -top-4 right-0 z-1 flex -translate-y-full gap-2 lg:-top-6">
+        <div className="absolute -top-3.5 right-0 z-1 flex -translate-y-full gap-2 lg:-top-6">
           <button
             type="button"
             disabled={!canScrollLeft}
