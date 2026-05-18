@@ -35,8 +35,27 @@ export async function loadCriticalData({
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: true,
-      // localize the privacy banner
+      // Shopify's hosted privacy banner (`storefront-banner.js`) has a
+      // URL-construction bug for Hydrogen storefronts with a checkout
+      // subdomain: it uses Hydrogen's dot-prefixed `storefrontRootDomain`
+      // (".mystore.com", intended only for cookie-Domain scoping) directly
+      // as a URL hostname, producing
+      // `https://.mystore.com/api/unstable/graphql.json`. DNS fails with
+      // ERR_NAME_NOT_RESOLVED, the SDK init crashes before installing
+      // `setTrackingConsent` / `currentVisitorConsent`, banner clicks
+      // record nothing, the `_tracking_consent` cookie never persists, and
+      // the banner reappears on every refresh (Google Consent Mode v2
+      // status reverts G111 → G100 on the second page view).
+      //
+      // With this flag `false`, Hydrogen loads only the core
+      // `consent-tracking-api.js` (no banner script). We render our own
+      // banner UI in `<ConsentBanner />` and write `_tracking_consent`
+      // ourselves in the exact format Shopify expects — the checkout
+      // reads the same cookie and honors it.
+      //
+      // When Shopify fixes the SDK upstream this can flip back to `true`
+      // and `app/components/root/consent-banner.tsx` can be deleted.
+      withPrivacyBanner: false,
       country: storefront.i18n.country,
       language: storefront.i18n.language,
     },
