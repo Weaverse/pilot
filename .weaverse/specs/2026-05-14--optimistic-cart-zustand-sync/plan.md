@@ -113,3 +113,32 @@ Manual QA per PR #375: rapid consecutive add-to-cart clicks update quantity
 correctly with no drop-back flash and no phantom `qty:0`; add/remove/quantity
 mutations no longer flash stale data; add-to-cart no longer throws the
 `$numCartLines` GraphQL error.
+
+---
+
+## Follow-up fixes (post-merge)
+
+### 2026-05-18 — Stale checkout total on line removal
+
+**Symptom:** removing a line item via the trash button did not update the
+checkout-button total in either the drawer or the page; it only refreshed on a
+subsequent add / quantity change.
+
+**Cause:** the remove `CartForm` used an anonymous fetcher. The component
+syncing its response (`ItemRemoveButtonInner`) unmounts the moment the line is
+optimistically spliced out, so React Router discards the fetcher and the
+authoritative post-remove cart (with correct `cost`) is lost. The `store.ts`
+fallbacks (`applyOptimisticMutations` and the `removedLineIds` tombstone
+filter) recompute `totalQuantity` but never `cost`.
+
+**Fix (no `store.ts` change):** the keyed-fetcher pattern already proven for
+discount-code / gift-card removal was extended to line removal.
+
+| File | Change |
+|------|--------|
+| `app/components/cart/cart-line-item.tsx` | `ItemRemoveButton` `CartForm` gets stable `fetcherKey="cart-line-remove"` |
+| `app/components/cart/cart-summary.tsx` | `useFetcher({ key: "cart-line-remove" })` + `useCartFetcherSync(...)` to capture the post-remove cart from the always-mounted summary; added to `isCartUpdating` so the total shows a skeleton during the transition |
+
+The server-computed cost is now used (correct with cart-level
+discounts/taxes — no client-side cost recomputation). The tombstone /
+`useCart()` design was unchanged; the gap was purely a missing keyed fetcher.

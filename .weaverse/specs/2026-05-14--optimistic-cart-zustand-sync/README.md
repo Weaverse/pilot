@@ -44,3 +44,8 @@ Shipped and merged in PR #375. Manually verified with rapid consecutive
 add-to-cart clicks — cart quantity updates correctly without drop-back flashes
 or phantom zeroing. Implementation details in [`plan.md`](./plan.md); the path
 from the abandoned attempts to this design is in [`work-logs.md`](./work-logs.md).
+
+**Follow-up (2026-05-18):** fixed a post-merge bug where removing a line item
+left the checkout-button total stale (no `store.ts` change required). See
+[`plan.md` → Follow-up fixes](./plan.md#follow-up-fixes-post-merge) and the
+[`work-logs.md`](./work-logs.md) entry.

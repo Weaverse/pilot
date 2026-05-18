@@ -36,3 +36,26 @@
   - Created this folder to document the shipped zustand approach.
   - Marked the stale `../2026-04-10--optimistic-cart-fix/` lift-approach folder
     `deprecated` (abandoned, never implemented).
+
+## 2026-05-18 — @hta218 (follow-up fix)
+- **Bug:** removing a line item via the trash button did not update the
+  checkout-button total (drawer and page). The total only refreshed on a
+  later add / quantity change.
+- **Root cause:** the remove `CartForm` used an anonymous fetcher, and the
+  only thing syncing its response (`ItemRemoveButtonInner`) unmounts the
+  instant the line is optimistically spliced out — so React Router discards
+  the fetcher and the authoritative post-remove cart (with the correct
+  `cost`) is lost. Both fallbacks in `store.ts` (`applyOptimisticMutations`
+  and the `removedLineIds` tombstone filter) recompute `totalQuantity` but
+  never `cost`.
+- **Fix:** gave the remove `CartForm` a stable `fetcherKey="cart-line-remove"`
+  and read it from the always-mounted `CartSummary` via
+  `useFetcher({ key: "cart-line-remove" })` + `useCartFetcherSync(...)`,
+  mirroring the existing discount-code / gift-card removal pattern. Also
+  added it to `isCartUpdating` so the total shows a skeleton during the
+  transition instead of flashing the stale value.
+- **No `store.ts` changes** — the tombstone / `useCart()` design held up; the
+  gap was purely a missing keyed fetcher. Server-computed cost is now used
+  (accurate with cart-level discounts/taxes — no client-side cost math).
+- Verified manually: removing a non-last item updates the total correctly in
+  both drawer and page; rapid multi-remove converges.
