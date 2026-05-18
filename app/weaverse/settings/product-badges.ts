@@ -15,7 +15,7 @@ export const productBadgesSettings = {
           { value: "capitalize", label: "Capitalize" },
         ],
       },
-      defaultValue: "Uppercase",
+      defaultValue: "none",
     },
     {
       type: "text",

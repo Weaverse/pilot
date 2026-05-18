@@ -12,6 +12,12 @@ import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
+export type CountryGroup = {
+  country: string;
+  label: string;
+  locales: Array<{ path: string; locale: I18nLocale }>;
+};
+
 export function useCountrySelector() {
   const fetcher = useFetcher();
   const submit = useSubmit();
@@ -75,9 +81,37 @@ export function useCountrySelector() {
     return `${countryPrefixPath}${pathWithoutLocale}`;
   }
 
+  const groupedCountries: CountryGroup[] = [];
+  const groupIndex: Record<string, number> = {};
+  for (const path of Object.keys(countries)) {
+    const locale = countries[path];
+    const key = locale.country;
+    if (groupIndex[key] === undefined) {
+      groupIndex[key] = groupedCountries.length;
+      groupedCountries.push({
+        country: locale.country,
+        label: locale.label,
+        locales: [],
+      });
+    }
+    groupedCountries[groupIndex[key]].locales.push({ path, locale });
+  }
+  for (const group of groupedCountries) {
+    group.locales.sort((a, b) => {
+      if (a.locale.language === "EN" && b.locale.language !== "EN") {
+        return 1;
+      }
+      if (a.locale.language !== "EN" && b.locale.language === "EN") {
+        return -1;
+      }
+      return 0;
+    });
+  }
+
   return {
     selectedLocale,
     countries,
+    groupedCountries,
     observerRef,
     handleLocaleChange,
     getRedirectUrl,

@@ -19,12 +19,12 @@ import {
 } from "react-router";
 import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
+import { CartStoreSync } from "./components/cart/store";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
 import { ConsentBanner } from "./components/root/consent-banner";
 import { CustomAnalytics } from "./components/root/custom-analytics";
-import { CartStoreSync } from "./components/cart/store";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
 import {

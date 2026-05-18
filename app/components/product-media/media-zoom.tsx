@@ -122,11 +122,7 @@ export function ZoomModal({
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
             <div className="absolute top-10 left-8 hidden lg:block">
-              <ScrollArea
-                ref={scrollAreaRef}
-                className="max-h-[700px]"
-                size="sm"
-              >
+              <ScrollArea ref={scrollAreaRef} className="max-h-175" size="sm">
                 <div className="w-24 space-y-2 pr-2">
                   {media.map(({ id, previewImage, alt, mediaContentType }) => {
                     const { id: mediaId } = parseGid(id);
@@ -167,7 +163,12 @@ export function ZoomModal({
                 </div>
               </ScrollArea>
             </div>
-            <div className="relative">
+            <div
+              className={cn(
+                "relative",
+                zoomMedia?.mediaContentType !== "IMAGE" && "h-full",
+              )}
+            >
               {isImageLoading && <Spinner />}
               <ZoomMedia
                 media={zoomMedia}
@@ -233,7 +234,7 @@ function ZoomMedia({
   if (media.mediaContentType === "VIDEO") {
     let mediaVideo = media as Media_Video_Fragment;
     return (
-      <video controls className="h-auto object-cover md:h-full">
+      <video controls className="h-auto object-cover md:h-full rounded-md">
         <track kind="captions" />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
@@ -243,7 +244,10 @@ function ZoomMedia({
     let model3d = media as Media_Model3d_Fragment;
     let { data, iosSrc } = getModel3dData(model3d);
     return (
-      <div style={{ width: "min(80vw, 80vh)", height: "80vh" }}>
+      <div
+        className="rounded-md overflow-hidden"
+        style={{ width: "min(80vw, 80vh)", height: "80vh" }}
+      >
         <ModelViewer data={data} iosSrc={iosSrc} className="h-full w-full" />
       </div>
     );
@@ -253,7 +257,7 @@ function ZoomMedia({
     return (
       <ExternalVideo
         data={externalVideo}
-        className="aspect-video h-auto w-auto md:h-full lg:max-w-[calc(100vw-16rem)]"
+        className="aspect-video rounded-md overflow-hidden h-auto w-auto md:h-full lg:max-w-[calc(100vw-16rem)]"
       />
     );
   }

@@ -48,8 +48,15 @@ export function CartSummary({
   const [removingGiftCard, setRemovingGiftCard] = useState<string | null>(null);
   const dcRemoveFetcher = useFetcher({ key: "discount-code-remove" });
   const gcRemoveFetcher = useFetcher({ key: "gift-card-remove" });
+  // Line removal submits with this stable fetcherKey. The CartLineItem that
+  // owns the trash button unmounts the moment the line is optimistically
+  // spliced out, so its own fetcher response would be lost. Reading the keyed
+  // fetcher here (CartSummary stays mounted while the cart has items) captures
+  // the authoritative post-remove cart — including the updated cost.
+  const lineRemoveFetcher = useFetcher({ key: "cart-line-remove" });
   useCartFetcherSync(dcRemoveFetcher);
   useCartFetcherSync(gcRemoveFetcher);
+  useCartFetcherSync(lineRemoveFetcher);
   const {
     cost,
     discountCodes,
@@ -83,7 +90,8 @@ export function CartSummary({
   const isCartUpdating =
     isOptimistic ||
     dcRemoveFetcher.state !== "idle" ||
-    gcRemoveFetcher.state !== "idle";
+    gcRemoveFetcher.state !== "idle" ||
+    lineRemoveFetcher.state !== "idle";
   return (
     <div
       className={clsx(

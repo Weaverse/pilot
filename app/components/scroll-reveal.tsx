@@ -32,7 +32,7 @@ function getSharedObserver(): IntersectionObserver {
           }
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0 },
     );
   }
   return sharedObserver;
@@ -119,12 +119,11 @@ export function ScrollReveal({
   let internalRef = useRef<HTMLElement>(null);
 
   let setRefs = (node: HTMLElement | null) => {
-    (internalRef as React.MutableRefObject<HTMLElement | null>).current = node;
+    (internalRef as React.RefObject<HTMLElement | null>).current = node;
     if (typeof externalRef === "function") {
       externalRef(node);
     } else if (externalRef && "current" in externalRef) {
-      (externalRef as React.MutableRefObject<HTMLElement | null>).current =
-        node;
+      (externalRef as React.RefObject<HTMLElement | null>).current = node;
     }
   };
 

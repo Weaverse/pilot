@@ -17,7 +17,7 @@ export const generalSettings = {
         step: 10,
         unit: "px",
       },
-      defaultValue: 1280,
+      defaultValue: 1440,
     },
     {
       type: "range",
@@ -69,7 +69,7 @@ export const generalSettings = {
         step: 2,
         unit: "px",
       },
-      defaultValue: 0,
+      defaultValue: 12,
       helpText:
         "Global border radius applied to buttons, inputs, cards, modals, and badges. Set to 0 for square corners.",
     },

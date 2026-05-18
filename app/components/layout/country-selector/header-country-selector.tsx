@@ -1,15 +1,18 @@
-import { CaretDownIcon, CheckCircleIcon } from "@phosphor-icons/react";
+import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import * as Popover from "@radix-ui/react-popover";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { ScrollArea } from "~/components/scroll-area";
 import type { ThemeSettings } from "~/types/weaverse";
+import { cn } from "~/utils/cn";
+import { LANGUAGE_LABELS } from "~/utils/const";
 import { useCountrySelector } from "./use-country-selector";
 
 export function HeaderCountrySelector() {
   const {
     selectedLocale,
-    countries,
+    groupedCountries,
     observerRef,
     handleLocaleChange,
     getRedirectUrl,
@@ -22,7 +25,7 @@ export function HeaderCountrySelector() {
         <Popover.Trigger asChild>
           <button
             type="button"
-            className="flex cursor-pointer items-center gap-1 p-1.5 outline-hidden"
+            className="flex cursor-pointer items-center gap-2 p-1.5 outline-hidden"
             aria-label="Select country"
           >
             <ReactCountryFlag
@@ -46,46 +49,110 @@ export function HeaderCountrySelector() {
           <Popover.Content align="center" sideOffset={8} className="z-50">
             <ScrollArea
               size="sm"
-              style={{ maxHeight: 240, width: 256 }}
+              style={{ maxHeight: 360, width: 300 }}
               rootClassName="border border-gray-300 rounded-lg bg-white py-2 shadow-lg"
             >
-              {countries &&
-                Object.keys(countries).map((countryPath) => {
-                  const countryLocale = countries[countryPath];
-                  const isSelected =
-                    countryLocale.language === selectedLocale.language &&
-                    countryLocale.country === selectedLocale.country;
-
+              {groupedCountries.map((group) => {
+                const isActiveCountry =
+                  group.country === selectedLocale.country;
+                if (group.locales.length === 1) {
+                  const { path, locale } = group.locales[0];
                   return (
                     <Popover.Close
-                      aria-label={`Select ${countryLocale.label} country`}
-                      key={countryPath}
+                      aria-label={`Select ${locale.label}`}
+                      key={path}
                       type="button"
                       onClick={() =>
                         handleLocaleChange({
-                          redirectTo: getRedirectUrl(countryLocale),
-                          buyerIdentity: {
-                            countryCode: countryLocale.country,
-                          },
+                          redirectTo: getRedirectUrl(locale),
+                          buyerIdentity: { countryCode: locale.country },
                         })
                       }
-                      className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-body transition hover:bg-neutral-100"
+                      className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left transition hover:bg-neutral-200"
                     >
                       <ReactCountryFlag
                         svg
-                        countryCode={countryLocale.country}
-                        className="rounded-xs"
-                        style={{ width: "20px", height: "12px" }}
+                        countryCode={locale.country}
+                        className="rounded-xs shrink-0"
+                        style={{ width: "24px", height: "16px" }}
                       />
-                      <span>{countryLocale.label}</span>
-                      {isSelected ? (
-                        <span className="ml-auto">
-                          <CheckCircleIcon className="size-5" />
-                        </span>
+                      <span
+                        className={cn(
+                          "truncate",
+                          isActiveCountry && "font-medium",
+                        )}
+                      >
+                        {locale.label}
+                      </span>
+                      {isActiveCountry ? (
+                        <CheckIcon className="ml-auto size-4 shrink-0" />
                       ) : null}
                     </Popover.Close>
                   );
-                })}
+                }
+
+                return (
+                  <div key={group.country} className="px-4 py-2">
+                    <div className="flex items-center gap-2">
+                      <ReactCountryFlag
+                        svg
+                        countryCode={group.country}
+                        className="rounded-xs shrink-0"
+                        style={{ width: "24px", height: "16px" }}
+                      />
+                      <span
+                        className={cn(
+                          "truncate",
+                          isActiveCountry && "font-medium",
+                        )}
+                      >
+                        {group.label}
+                      </span>
+                      {isActiveCountry ? (
+                        <CheckIcon className="ml-auto size-4 shrink-0" />
+                      ) : null}
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8">
+                      {group.locales.map(({ path, locale }, i) => {
+                        const isSelected =
+                          locale.language === selectedLocale.language &&
+                          locale.country === selectedLocale.country;
+                        return (
+                          <Fragment key={path}>
+                            {i > 0 ? (
+                              <span
+                                aria-hidden
+                                className="h-3.5 w-px bg-neutral-300"
+                              />
+                            ) : null}
+                            <Popover.Close
+                              aria-label={`Select ${locale.label} in ${locale.language}`}
+                              type="button"
+                              onClick={() =>
+                                handleLocaleChange({
+                                  redirectTo: getRedirectUrl(locale),
+                                  buyerIdentity: {
+                                    countryCode: locale.country,
+                                  },
+                                })
+                              }
+                              className={cn(
+                                "cursor-pointer underline-offset-4 transition",
+                                isSelected
+                                  ? "font-medium text-neutral-900 underline"
+                                  : "text-neutral-500 hover:text-neutral-900 hover:underline",
+                              )}
+                            >
+                              {LANGUAGE_LABELS[locale.language] ??
+                                locale.language}
+                            </Popover.Close>
+                          </Fragment>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </ScrollArea>
           </Popover.Content>
         </Popover.Portal>

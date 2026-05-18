@@ -77,7 +77,7 @@ export function Swimlane({
   return (
     <div className="relative">
       {showArrows && (
-        <div className="absolute -top-4 right-0 z-1 flex -translate-y-full gap-2 lg:-top-6">
+        <div className="absolute -top-3.5 right-0 z-1 flex -translate-y-full gap-2 lg:-top-6">
           <button
             type="button"
             disabled={!canScrollLeft}
@@ -110,7 +110,7 @@ export function Swimlane({
           "grid w-full grid-flow-col justify-start gap-4",
           "snap-x snap-mandatory",
           "hidden-scroll scroll-px-6 overflow-x-scroll overflow-y-hidden",
-          "*:snap-start *:w-[38vw] *:lg:w-80",
+          "*:snap-start *:w-[80vw] *:lg:w-80",
           className,
         )}
         onScroll={withArrows ? handleScroll : rest.onScroll}
