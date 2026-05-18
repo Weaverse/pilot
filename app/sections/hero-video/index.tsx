@@ -10,7 +10,10 @@ import { variants } from "./styles";
 import { type HeroVideoProps, SECTION_HEIGHTS } from "./types";
 import { calculateVideoHeight, getPlayerSize } from "./utils";
 
-const ReactPlayer = lazy(() => import("react-player/lazy"));
+// react-player v3 is ESM-only and lazy-loads individual players internally,
+// so a plain dynamic import resolves cleanly. React.lazy here only defers the
+// player until the section scrolls into view.
+const ReactPlayer = lazy(() => import("react-player"));
 
 export default function HeroVideo(props: HeroVideoProps) {
   const {
@@ -204,7 +207,7 @@ export default function HeroVideo(props: HeroVideoProps) {
         {inView && (
           <Suspense fallback={null}>
             <ReactPlayer
-              url={video?.url || videoURL}
+              src={video?.url || videoURL}
               playing={playing}
               muted
               loop={loop !== false}
