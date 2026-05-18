@@ -8,7 +8,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
@@ -17,6 +17,7 @@ import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import type { CartLayoutType } from "~/types/others";
 import type { ThemeSettings } from "~/types/weaverse";
+import { appendForwardedAttribution } from "~/utils/checkout-attribution";
 import { cn } from "~/utils/cn";
 import {
   DiscountDialog,
@@ -57,6 +58,26 @@ export function CartSummary({
     appliedGiftCards,
     note,
   } = cart;
+
+  // Append ad-attribution params from the current storefront URL onto
+  // the checkout URL so Shopify's built-in tracking on the checkout
+  // subdomain sees consistent last-click identifiers (gclid, fbclid,
+  // utm_*, …). The initial render uses the unmodified checkoutUrl so
+  // SSR + client first-paint match; once the browser hydrates we swap
+  // in the enhanced URL via state. Server-side direct redirects (the
+  // Buy-now flow in app/routes/cart/lines.tsx) handle this server-side
+  // and don't go through this component.
+  const [enhancedCheckoutUrl, setEnhancedCheckoutUrl] = useState(checkoutUrl);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: recompute whenever the underlying checkoutUrl changes
+  useEffect(() => {
+    if (typeof window === "undefined" || !checkoutUrl) {
+      setEnhancedCheckoutUrl(checkoutUrl);
+      return;
+    }
+    setEnhancedCheckoutUrl(
+      appendForwardedAttribution(checkoutUrl, window.location.search),
+    );
+  }, [checkoutUrl]);
 
   // Show loading state for optimistic line item changes or pending cart actions
   const isCartUpdating =
@@ -242,7 +263,7 @@ export function CartSummary({
       )}
       {checkoutUrl && (
         <div className="mt-2 flex flex-col gap-3">
-          <a href={checkoutUrl} target="_self">
+          <a href={enhancedCheckoutUrl} target="_self">
             <Button className="w-full">
               <span>{checkoutButtonText || "Continue to Checkout"}</span>
               {layout === "drawer" && (
