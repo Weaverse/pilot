@@ -121,6 +121,7 @@ function ItemRemoveButton({
       route="/cart"
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{ lineIds: [lineId] }}
+      fetcherKey="cart-line-remove"
     >
       {(fetcher: FetcherWithComponents<any>) => (
         <ItemRemoveButtonInner fetcher={fetcher} className={className} />
