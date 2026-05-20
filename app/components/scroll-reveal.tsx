@@ -116,6 +116,7 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
   let [isVisible, setIsVisible] = useState(false);
+  let [revealed, setRevealed] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
 
   let setRefs = (node: HTMLElement | null) => {
@@ -141,7 +142,26 @@ export function ScrollReveal({
     return cleanup;
   }, [revealElementsOnScroll]);
 
-  if (!revealElementsOnScroll) {
+  // Strip the reveal transition wrapper from the DOM once the animation
+  // finishes so subsequent re-renders don't keep paying for the inline
+  // transition/transform styles — and downstream hover/focus animations
+  // on the same element aren't fighting an active `transition-all`.
+  useEffect(() => {
+    if (!isVisible || !internalRef.current) {
+      return;
+    }
+    let el = internalRef.current;
+    function onEnd(e: TransitionEvent) {
+      // Only react to our own transitions (opacity always animates here).
+      if (e.target === el && e.propertyName === "opacity") {
+        setRevealed(true);
+      }
+    }
+    el.addEventListener("transitionend", onEnd);
+    return () => el.removeEventListener("transitionend", onEnd);
+  }, [isVisible]);
+
+  if (!revealElementsOnScroll || revealed) {
     return (
       <Component ref={setRefs} className={className} style={style} {...rest}>
         {children}
