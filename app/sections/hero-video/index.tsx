@@ -120,6 +120,25 @@ export default function HeroVideo(props: HeroVideoProps) {
       "video, iframe",
     ) as HTMLElement | null;
 
+    if (mediaEl instanceof HTMLVideoElement) {
+      mediaEl.muted = true;
+      mediaEl.defaultMuted = true;
+      mediaEl.playsInline = true;
+      mediaEl.setAttribute("muted", "");
+      mediaEl.setAttribute("playsinline", "");
+      mediaEl.setAttribute("webkit-playsinline", "");
+
+      if (playing) {
+        mediaEl.autoplay = true;
+        mediaEl.setAttribute("autoplay", "");
+      }
+
+      if (loop !== false) {
+        mediaEl.loop = true;
+        mediaEl.setAttribute("loop", "");
+      }
+    }
+
     if (mediaEl) {
       const actualHeight = mediaEl.getBoundingClientRect().height;
       if (actualHeight > 0) {
@@ -209,8 +228,10 @@ export default function HeroVideo(props: HeroVideoProps) {
             <ReactPlayer
               src={video?.url || videoURL}
               playing={playing}
+              autoPlay={playing}
               muted
               loop={loop !== false}
+              playsInline
               width={size.width}
               height={size.height}
               controls={false}
