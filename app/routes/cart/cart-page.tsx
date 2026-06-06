@@ -24,7 +24,7 @@ import { useCart } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { COUNTRIES } from "~/utils/const";
+import { COUNTRIES, getLocalePrefixFromPath } from "~/utils/const";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
@@ -208,8 +208,8 @@ function getCountryCodeFromUrl(url: string | null) {
 
   try {
     const { pathname } = new URL(url);
-    const firstPathPart = `/${pathname.substring(1).split("/")[0].toLowerCase()}`;
-    return COUNTRIES[firstPathPart]?.country as CountryCode | undefined;
+    const prefix = getLocalePrefixFromPath(pathname);
+    return COUNTRIES[prefix]?.country as CountryCode | undefined;
   } catch {
     return;
   }
