@@ -12,6 +12,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
@@ -116,9 +117,11 @@ function ItemRemoveButton({
   lineId: CartLine["id"];
   className?: string;
 }) {
+  const cartRoute = usePrefixPathWithLocale("/cart");
+
   return (
     <CartForm
-      route="/cart"
+      route={cartRoute}
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{ lineIds: [lineId] }}
       fetcherKey="cart-line-remove"

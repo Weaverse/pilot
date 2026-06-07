@@ -176,6 +176,17 @@ export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
   pathPrefix: "",
 });
 
+/**
+ * Extract the locale path prefix (e.g. `/en-ca`) from a pathname's first
+ * segment, validated against the known `COUNTRIES` map. Returns `""` for the
+ * default locale or any non-locale path (e.g. `/products/...`) so a regular
+ * page segment is never mistaken for a locale prefix.
+ */
+export function getLocalePrefixFromPath(pathname: string): string {
+  const firstPathPart = `/${pathname.substring(1).split("/")[0].toLowerCase()}`;
+  return COUNTRIES[firstPathPart] ? firstPathPart : "";
+}
+
 export const FILTER_URL_PREFIX = "filter.";
 
 export const LANGUAGE_LABELS: Record<string, string> = {
