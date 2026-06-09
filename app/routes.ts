@@ -48,6 +48,7 @@ export default hydrogenRoutes([
     ]),
     ...prefix("cart", [
       index("routes/cart/cart-page.tsx"),
+      route("checkout", "routes/cart/checkout.tsx"),
       route(":lines", "routes/cart/lines.tsx"),
     ]),
     ...prefix("collections", [

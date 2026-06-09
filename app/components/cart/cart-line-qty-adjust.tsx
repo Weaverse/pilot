@@ -8,6 +8,7 @@ import {
 import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
 import type { FetcherWithComponents } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLineOptimisticData } from "./cart-line-item";
 import { useCartFetcherSync } from "./store";
 
@@ -85,9 +86,11 @@ function UpdateCartButton({
   children: React.ReactNode;
   lines: CartLineUpdateInput[];
 }) {
+  const cartRoute = usePrefixPathWithLocale("/cart");
+
   return (
     <CartForm
-      route="/cart"
+      route={cartRoute}
       action={CartForm.ACTIONS.LinesUpdate}
       inputs={{ lines }}
     >

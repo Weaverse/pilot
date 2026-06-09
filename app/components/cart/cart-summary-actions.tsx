@@ -6,6 +6,7 @@ import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 import { useCartFetcherSync } from "./store";
 
@@ -14,6 +15,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
   useCartFetcherSync(fetcher);
+  const cartRoute = usePrefixPathWithLocale("/cart");
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
@@ -33,7 +35,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
             inputs: { cartNote: formCartNote },
           }),
         },
-        { method: "POST", action: "/cart" },
+        { method: "POST", action: cartRoute },
       );
       setNote(formCartNote);
     }
@@ -115,6 +117,7 @@ export function DiscountDialog({
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
   useCartFetcherSync(fetcher);
+  const cartRoute = usePrefixPathWithLocale("/cart");
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted && discountCodes?.find((d) => d.code === code && d.applicable),
@@ -136,7 +139,7 @@ export function DiscountDialog({
             },
           }),
         },
-        { method: "POST", action: "/cart" },
+        { method: "POST", action: cartRoute },
       );
     }
   }
@@ -221,6 +224,7 @@ export function GiftCardDialog({
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
   useCartFetcherSync(fetcher);
+  const cartRoute = usePrefixPathWithLocale("/cart");
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted &&
@@ -244,7 +248,7 @@ export function GiftCardDialog({
             },
           }),
         },
-        { method: "POST", action: "/cart" },
+        { method: "POST", action: cartRoute },
       );
     }
   }

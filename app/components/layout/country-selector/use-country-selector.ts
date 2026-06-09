@@ -8,6 +8,7 @@ import {
   useRouteLoaderData,
   useSubmit,
 } from "react-router";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
 import { DEFAULT_LOCALE } from "~/utils/const";
@@ -24,6 +25,7 @@ export function useCountrySelector() {
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   const { pathname, search } = useLocation();
+  const cartRoute = usePrefixPathWithLocale("/cart");
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
     "",
@@ -68,7 +70,7 @@ export function useCountrySelector() {
           inputs: { buyerIdentity },
         }),
       },
-      { method: "POST", action: "/cart" },
+      { method: "POST", action: cartRoute },
     );
   }
 

@@ -15,6 +15,7 @@ import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { useCartFetcherSync, useCartStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -33,9 +34,11 @@ export function AddToCartButton({
   analytics?: unknown;
   [key: string]: any;
 }) {
+  const cartRoute = usePrefixPathWithLocale("/cart");
+
   return (
     <CartForm
-      route="/cart"
+      route={cartRoute}
       inputs={{ lines }}
       action={CartForm.ACTIONS.LinesAdd}
     >
