@@ -1,15 +1,10 @@
 import { MagnifyingGlassIcon, UserIcon } from "@phosphor-icons/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import { Suspense } from "react";
-import {
-  Await,
-  useLocation,
-  useRouteError,
-  useRouteLoaderData,
-} from "react-router";
+import { useLocation, useRouteError, useRouteLoaderData } from "react-router";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { CartDrawer } from "~/components/cart/cart-drawer";
+import { useCartStore } from "~/components/cart/store";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -128,27 +123,22 @@ function ShopifyAccountButton() {
   let rootData = useRouteLoaderData<RootLoader>("root");
   let publicStoreDomain = rootData?.publicStoreDomain;
   let publicAccessToken = rootData?.consent?.storefrontAccessToken;
-
+  // Bootstrapped client-side via /api/cart (CartStoreSync) — the token must
+  // not be embedded in the SSR document, which stays anonymous so Oxygen
+  // can full-page cache it. Until it loads, the component renders the
+  // signed-out avatar — same as the previous Suspense fallback.
+  let customerAccessToken = useCartStore((state) => state.customerAccessToken);
   return (
-    <Suspense fallback={<UserIcon className="h-5 w-5" />}>
-      <Await
-        resolve={rootData?.customerAccessToken}
-        errorElement={<UserIcon className="h-5 w-5" />}
-      >
-        {(customerAccessToken) => (
-          <shopify-store
-            store-domain={publicStoreDomain}
-            public-access-token={publicAccessToken}
-            customer-access-token={customerAccessToken || undefined}
-          >
-            <shopify-account sign-in-url="/account/login">
-              <span slot="signed-out-avatar">
-                <UserIcon className="h-5 w-5" />
-              </span>
-            </shopify-account>
-          </shopify-store>
-        )}
-      </Await>
-    </Suspense>
+    <shopify-store
+      store-domain={publicStoreDomain}
+      public-access-token={publicAccessToken}
+      customer-access-token={customerAccessToken || undefined}
+    >
+      <shopify-account sign-in-url="/account/login">
+        <span slot="signed-out-avatar">
+          <UserIcon className="h-5 w-5" />
+        </span>
+      </shopify-account>
+    </shopify-store>
   );
 }

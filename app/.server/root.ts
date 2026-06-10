@@ -35,27 +35,8 @@ export async function loadCriticalData({
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      // Shopify's hosted privacy banner (`storefront-banner.js`) has a
-      // URL-construction bug for Hydrogen storefronts with a checkout
-      // subdomain: it uses Hydrogen's dot-prefixed `storefrontRootDomain`
-      // (".mystore.com", intended only for cookie-Domain scoping) directly
-      // as a URL hostname, producing
-      // `https://.mystore.com/api/unstable/graphql.json`. DNS fails with
-      // ERR_NAME_NOT_RESOLVED, the SDK init crashes before installing
-      // `setTrackingConsent` / `currentVisitorConsent`, banner clicks
-      // record nothing, the `_tracking_consent` cookie never persists, and
-      // the banner reappears on every refresh (Google Consent Mode v2
-      // status reverts G111 → G100 on the second page view).
-      //
-      // With this flag `false`, Hydrogen loads only the core
-      // `consent-tracking-api.js` (no banner script). We render our own
-      // banner UI in `<ConsentBanner />` and write `_tracking_consent`
-      // ourselves in the exact format Shopify expects — the checkout
-      // reads the same cookie and honors it.
-      //
-      // When Shopify fixes the SDK upstream this can flip back to `true`
-      // and `app/components/root/consent-banner.tsx` can be deleted.
-      withPrivacyBanner: false,
+      withPrivacyBanner: true,
+      // localize the privacy banner
       country: storefront.i18n.country,
       language: storefront.i18n.language,
     },
@@ -70,14 +51,15 @@ export async function loadCriticalData({
  * Load data for rendering content below the fold. This data is deferred and will be
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
+ *
+ * NOTE: keep this loader free of personalized data (cart, customer tokens).
+ * Deferred values stream into the HTML document, and the document must stay
+ * anonymous for Oxygen's full-page cache (see entry.server.tsx). Personalized
+ * state is bootstrapped client-side via /api/cart in CartStoreSync.
  */
-export function loadDeferredData({ context }: LoaderFunctionArgs) {
-  const { cart, customerAccount } = context;
-
+export function loadDeferredData(args: LoaderFunctionArgs) {
   return {
-    cart: cart.get(),
-    swatchesConfigs: getSwatchesConfigs(context),
-    customerAccessToken: customerAccount.getAccessToken(),
+    swatchesConfigs: getSwatchesConfigs(args.context),
   };
 }
 
