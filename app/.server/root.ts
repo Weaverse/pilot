@@ -51,14 +51,15 @@ export async function loadCriticalData({
  * Load data for rendering content below the fold. This data is deferred and will be
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
+ *
+ * NOTE: keep this loader free of personalized data (cart, customer tokens).
+ * Deferred values stream into the HTML document, and the document must stay
+ * anonymous for Oxygen's full-page cache (see entry.server.tsx). Personalized
+ * state is bootstrapped client-side via /api/cart in CartStoreSync.
  */
-export function loadDeferredData({ context }: LoaderFunctionArgs) {
-  const { cart, customerAccount } = context;
-
+export function loadDeferredData(args: LoaderFunctionArgs) {
   return {
-    cart: cart.get(),
-    swatchesConfigs: getSwatchesConfigs(context),
-    customerAccessToken: customerAccount.getAccessToken(),
+    swatchesConfigs: getSwatchesConfigs(args.context),
   };
 }
 
