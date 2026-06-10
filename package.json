@@ -46,7 +46,7 @@
   "dependencies": {
     "@fontsource-variable/cabin": "^5.2.8",
     "@fontsource-variable/newsreader": "^5.2.10",
-    "@graphql-codegen/cli": "6.3.1",
+    "@graphql-codegen/cli": "7.1.2",
     "@phosphor-icons/react": "2.1.10",
     "@radix-ui/react-accordion": "1.2.13",
     "@radix-ui/react-checkbox": "1.3.4",
@@ -88,7 +88,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
     "@playwright/test": "1.60.0",
-    "@shopify/cli": "^3.94.3",
+    "@shopify/cli": "^4.1.0",
     "@shopify/hydrogen-codegen": "0.3.3",
     "@shopify/mini-oxygen": "^4.1.0",
     "@shopify/oxygen-workers-types": "4.2.0",
@@ -108,6 +108,6 @@
     "@esbuild/linux-x64": "0.28.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12.0"
   }
 }
