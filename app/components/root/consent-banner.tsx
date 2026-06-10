@@ -117,8 +117,8 @@ function buildTrackingConsentCookieValue(grant: boolean): string {
     consent_id:
       typeof crypto?.randomUUID === "function"
         ? crypto.randomUUID()
-        // crypto.randomUUID requires a secure context. Fall back if absent.
-        : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2, 10)}`,
+        : // crypto.randomUUID requires a secure context. Fall back if absent.
+          `${Date.now().toString(16)}-${Math.random().toString(16).slice(2, 10)}`,
   };
   return encodeURIComponent(shopifyConsentSerialize(payload));
 }
