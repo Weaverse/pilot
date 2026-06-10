@@ -1,7 +1,7 @@
 import "@fontsource-variable/cabin"; // Supports weights 400-700
 import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import type { SeoConfig } from "@shopify/hydrogen";
+import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
@@ -19,7 +19,7 @@ import {
 } from "react-router";
 import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
-import { CartStoreSync } from "./components/cart/store";
+import { CartStoreSync, useCartStore } from "./components/cart/store";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
@@ -110,6 +110,10 @@ export const Layout = withWeaverse(function RootLayout({
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { topbarHeight, topbarText } = useThemeSettings<ThemeSettings>();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
+  // Cart is bootstrapped client-side (see CartStoreSync) so the SSR document
+  // stays anonymous and Oxygen can full-page cache it. The provider re-renders
+  // as the store updates, so cart_updated analytics still fire on mutations.
+  const serverCart = useCartStore((state) => state.serverCart);
 
   // Bypass Weaverse theme layout for Hydrogen dev tools
   // See: https://github.com/Weaverse/pilot/issues/321
@@ -197,7 +201,10 @@ export const Layout = withWeaverse(function RootLayout({
       >
         {data ? (
           <Analytics.Provider
-            cart={data.cart}
+            // CartApiQueryFragment is the same runtime shape cart.get()
+            // returned before (pilot's custom cart fragment) — the nominal
+            // CartReturn type just demands `metafields` we never query.
+            cart={serverCart as unknown as CartReturn}
             shop={data.shop}
             consent={data.consent}
           >
