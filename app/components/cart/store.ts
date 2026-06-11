@@ -16,6 +16,14 @@ type CartStore = {
    * the SSR document (see entry.server.tsx full-page cache notes).
    */
   customerAccessToken: string | null;
+  /**
+   * True once the first /api/cart bootstrap response has been applied.
+   * Components whose analytics need an authoritative cart (e.g. the cart
+   * page's <Analytics.CartView>, whose publish effect is keyed on URL and
+   * never replays when the cart context updates) must wait for this —
+   * otherwise direct landings emit events with a null cart.
+   */
+  cartBootstrapped: boolean;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
@@ -25,6 +33,7 @@ export const useCartStore = create<CartStore>()((set) => ({
   isOpen: false,
   serverCart: null,
   customerAccessToken: null,
+  cartBootstrapped: false,
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
   toggle: (open) =>
@@ -330,6 +339,7 @@ export function CartStoreSync() {
     }
     useCartStore.setState({
       customerAccessToken: payload.customerAccessToken,
+      cartBootstrapped: true,
     });
     const resolved = payload.cart;
     if (!resolved) {
