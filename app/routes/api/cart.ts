@@ -13,15 +13,21 @@ import { data } from "react-router";
  * `no-store`: this response IS personalized — it must never enter any
  * shared cache.
  */
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { cart, customerAccount } = context;
+  const url = new URL(request.url);
+  const cartRequestToken = url.searchParams.get("cartRequestToken") ?? "";
   const [cartData, customerAccessToken] = await Promise.all([
     cart.get(),
     customerAccount.getAccessToken().catch(() => null),
   ]);
 
   return data(
-    { cart: cartData, customerAccessToken: customerAccessToken ?? null },
+    {
+      cart: cartData,
+      customerAccessToken: customerAccessToken ?? null,
+      cartRequestToken,
+    },
     { headers: { "Cache-Control": "no-store" } },
   );
 }

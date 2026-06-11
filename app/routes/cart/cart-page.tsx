@@ -20,7 +20,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
-import { useCart } from "~/components/cart/store";
+import { useCart, useCartStore } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
@@ -54,7 +54,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   switch (cartFormAction) {
     case CartForm.ACTIONS.LinesAdd: {
-      const lines = inputs.lines as CartLineInput[];
+      const lines = getCartLineInputs(inputs.lines as CartLineInput[]);
       if (!cart.getCartId()) {
         result = await cart.create({
           lines,
@@ -153,7 +153,14 @@ export async function loader({ context }: LoaderFunctionArgs) {
 export default function CartRoute() {
   const { featuredProducts } = useLoaderData<typeof loader>();
   const cart = useCart();
-
+  // <Analytics.CartView> publishes once per URL and never replays when the
+  // provider's cart context updates later. Gate it on a unique bootstrap
+  // request token rather than React Router's history key: back/forward can
+  // revisit a previous key, but the cart must be revalidated for this visit.
+  const requestToken = useCartStore((s) => s.cartBootstrapRequestToken);
+  const responseToken = useCartStore((s) => s.cartBootstrapResponseToken);
+  const canPublishCartView =
+    requestToken !== null && responseToken === requestToken;
   return (
     <>
       <Section width="fixed" verticalPadding="medium" overflow="unset">
@@ -161,7 +168,7 @@ export default function CartRoute() {
           Cart ({cart?.totalQuantity || 0})
         </h1>
         <CartMain layout="page" cart={cart} />
-        <Analytics.CartView />
+        {canPublishCartView && <Analytics.CartView />}
       </Section>
       <Suspense fallback={null}>
         <Await resolve={featuredProducts}>
@@ -190,6 +197,17 @@ export default function CartRoute() {
   );
 }
 
+function getCartLineInputs(lines: CartLineInput[]): CartLineInput[] {
+  return lines.map(
+    ({ attributes, merchandiseId, parent, quantity, sellingPlanId }) => ({
+      attributes,
+      merchandiseId,
+      parent,
+      quantity,
+      sellingPlanId,
+    }),
+  );
+}
 function getCountryCodeFromRequestOrReferer(
   request: Request,
   fallbackCountryCode: CountryCode,

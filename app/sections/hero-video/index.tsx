@@ -139,18 +139,40 @@ export default function HeroVideo(props: HeroVideoProps) {
       }
     }
 
+    if (mediaEl instanceof HTMLVideoElement) {
+      // Derive height from the INTRINSIC video dimensions, never from the
+      // rendered box: the container height is set from this value, and the
+      // video fills the container, so committing a rendered measurement can
+      // deadlock a wrong value (e.g. the 300x150 default before metadata
+      // loads — observed as an intermittently squashed hero).
+      if (mediaEl.videoWidth > 0 && mediaEl.videoHeight > 0) {
+        const containerWidth =
+          containerRef.current.getBoundingClientRect().width;
+        const intrinsicHeight =
+          (containerWidth * mediaEl.videoHeight) / mediaEl.videoWidth;
+        commitVideoHeight(intrinsicHeight);
+      }
+      // Metadata not loaded yet — skip; loadedmetadata/ResizeObserver will
+      // re-trigger this sync.
+      return;
+    }
     if (mediaEl) {
+      // Iframe embeds (YouTube/Vimeo) size themselves via aspect-ratio
+      // styles — the rendered box is the only available signal.
       const actualHeight = mediaEl.getBoundingClientRect().height;
       if (actualHeight > 0) {
-        // Only update if significantly different (> 2px) to avoid jitter
-        setVideoHeight((prev) => {
-          if (prev === null || Math.abs(prev - actualHeight) > 2) {
-            return actualHeight;
-          }
-          return prev;
-        });
+        commitVideoHeight(actualHeight);
       }
     }
+  }
+  function commitVideoHeight(next: number) {
+    // Only update if significantly different (> 2px) to avoid jitter
+    setVideoHeight((prev) => {
+      if (prev === null || Math.abs(prev - next) > 2) {
+        return next;
+      }
+      return prev;
+    });
   }
 
   /**
@@ -159,7 +181,6 @@ export default function HeroVideo(props: HeroVideoProps) {
    */
   function handleResize() {
     setSize(getPlayerSize(id));
-
     // First, try intrinsic calculation
     if (containerRef.current && video?.width && video?.height) {
       const containerWidth = containerRef.current.getBoundingClientRect().width;
@@ -168,9 +189,53 @@ export default function HeroVideo(props: HeroVideoProps) {
         setVideoHeight(calculatedHeight);
       }
     }
-
     // Then sync with actual video element after a brief delay
     requestAnimationFrame(syncVideoHeight);
+  }
+  /**
+   * A single post-mount measurement is a race: if it lands before the video
+   * metadata loads, the <video> element reports the browser default 300x150
+   * and the container gets locked at ~150px (intermittent squashed hero).
+   * Watch for the media element (react-player mounts lazily) and keep the
+   * container in sync with a ResizeObserver — metadata load, player chrome,
+   * and breakpoint changes all resize the element and re-trigger the sync.
+   */
+  function watchMediaElement(): (() => void) | undefined {
+    if (!isBrowser || !containerRef.current) {
+      return undefined;
+    }
+    let observer: ResizeObserver | null = null;
+    let pollId: ReturnType<typeof setInterval> | null = null;
+    let attempts = 0;
+    const attach = () => {
+      const mediaEl = containerRef.current?.querySelector("video, iframe");
+      if (!mediaEl) {
+        // Lazy player chunk not mounted yet — retry briefly.
+        attempts += 1;
+        if (attempts > 100 && pollId) {
+          clearInterval(pollId);
+        }
+        return;
+      }
+      if (pollId) {
+        clearInterval(pollId);
+        pollId = null;
+      }
+      syncVideoHeight();
+      observer = new ResizeObserver(() => syncVideoHeight());
+      observer.observe(mediaEl);
+      if (mediaEl instanceof HTMLVideoElement) {
+        mediaEl.addEventListener("loadedmetadata", syncVideoHeight);
+      }
+    };
+    pollId = setInterval(attach, 100);
+    attach();
+    return () => {
+      if (pollId) {
+        clearInterval(pollId);
+      }
+      observer?.disconnect();
+    };
   }
 
   // Reset hideContent when video is paused (show content immediately)
@@ -197,8 +262,10 @@ export default function HeroVideo(props: HeroVideoProps) {
   useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
+    const stopWatching = inView ? watchMediaElement() : undefined;
     return () => {
       window.removeEventListener("resize", handleResize);
+      stopWatching?.();
     };
   }, [inView, height, heightOnDesktop]);
 
