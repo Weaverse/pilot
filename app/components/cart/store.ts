@@ -1,5 +1,5 @@
 import { CartForm } from "@shopify/hydrogen";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Fetcher } from "react-router";
 import { useFetcher, useFetchers, useLocation } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
@@ -17,14 +17,15 @@ type CartStore = {
    */
   customerAccessToken: string | null;
   /**
-   * Route navigation key whose /api/cart bootstrap response has been applied.
-   * Components whose analytics need an authoritative cart (e.g. the cart
-   * page's <Analytics.CartView>, whose publish effect is keyed on URL and
-   * never replays when the cart context updates) must wait until this equals
-   * the current `location.key` — a passive-effect boolean reset is too late
-   * to prevent child mount effects from publishing with the previous cart.
+   * Unique /api/cart bootstrap request token currently in flight, and the
+   * token whose response has been applied. Components whose analytics need an
+   * authoritative cart (e.g. <Analytics.CartView>, whose publish effect is
+   * keyed on URL and never replays when the cart context updates) must wait
+   * until these match. React Router history keys can be reused on back/forward
+   * navigation, so a per-request token is required.
    */
-  cartBootstrapKey: string | null;
+  cartBootstrapRequestToken: string | null;
+  cartBootstrapResponseToken: string | null;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
@@ -34,7 +35,8 @@ export const useCartStore = create<CartStore>()((set) => ({
   isOpen: false,
   serverCart: null,
   customerAccessToken: null,
-  cartBootstrapKey: null,
+  cartBootstrapRequestToken: null,
+  cartBootstrapResponseToken: null,
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
   toggle: (open) =>
@@ -52,6 +54,11 @@ const freshestFetcherCartRef = {
  * pre-cookie bootstrap would wipe a cart the shopper just created.
  */
 let cartMutationEpoch = 0;
+
+let cartBootstrapRequestSeq = 0;
+
+const useHydrationSafeLayoutEffect =
+  typeof document === "undefined" ? useEffect : useLayoutEffect;
 
 /**
  * Module-level set of line IDs that have been optimistically removed.
@@ -332,10 +339,13 @@ export function CartStoreSync() {
   const apiCartPath = usePrefixPathWithLocale("/api/cart");
   const location = useLocation();
   const epochAtLoadRef = useRef(0);
-  useEffect(() => {
+  useHydrationSafeLayoutEffect(() => {
     epochAtLoadRef.current = cartMutationEpoch;
+    cartBootstrapRequestSeq += 1;
+    const cartRequestToken = `${location.key}:${cartBootstrapRequestSeq}`;
+    useCartStore.setState({ cartBootstrapRequestToken: cartRequestToken });
     const url = new URL(apiCartPath, window.location.origin);
-    url.searchParams.set("cartRequestKey", location.key);
+    url.searchParams.set("cartRequestToken", cartRequestToken);
     load(url.pathname + url.search);
   }, [load, apiCartPath, location.key]);
   const payload = fetcher.data;
@@ -345,7 +355,7 @@ export function CartStoreSync() {
     }
     useCartStore.setState({
       customerAccessToken: payload.customerAccessToken,
-      cartBootstrapKey: payload.cartRequestKey ?? null,
+      cartBootstrapResponseToken: payload.cartRequestToken ?? null,
     });
     const resolved = payload.cart;
     if (!resolved) {
