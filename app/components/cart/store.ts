@@ -56,6 +56,30 @@ const freshestFetcherCartRef = {
 let cartMutationEpoch = 0;
 
 let cartBootstrapRequestSeq = 0;
+let currentCartBootstrapLocationKey = "";
+let currentCartBootstrapPath = "";
+let currentCartBootstrapRequestToken: string | null = null;
+const cartBootstrapEpochByToken = new Map<string, number>();
+
+function ensureCartBootstrapRequestToken(locationKey: string, path: string) {
+  if (typeof document === "undefined") {
+    return null;
+  }
+  if (
+    currentCartBootstrapLocationKey !== locationKey ||
+    currentCartBootstrapPath !== path
+  ) {
+    cartBootstrapRequestSeq += 1;
+    currentCartBootstrapLocationKey = locationKey;
+    currentCartBootstrapPath = path;
+    currentCartBootstrapRequestToken = `${locationKey}:${cartBootstrapRequestSeq}`;
+  }
+  return currentCartBootstrapRequestToken;
+}
+
+export function getCurrentCartBootstrapRequestToken() {
+  return currentCartBootstrapRequestToken;
+}
 
 const useHydrationSafeLayoutEffect =
   typeof document === "undefined" ? useEffect : useLayoutEffect;
@@ -338,30 +362,41 @@ export function CartStoreSync() {
   const load = fetcher.load;
   const apiCartPath = usePrefixPathWithLocale("/api/cart");
   const location = useLocation();
-  const epochAtLoadRef = useRef(0);
+  const cartRequestToken = ensureCartBootstrapRequestToken(
+    location.key,
+    apiCartPath,
+  );
   useHydrationSafeLayoutEffect(() => {
-    epochAtLoadRef.current = cartMutationEpoch;
-    cartBootstrapRequestSeq += 1;
-    const cartRequestToken = `${location.key}:${cartBootstrapRequestSeq}`;
+    if (!cartRequestToken) {
+      return;
+    }
+    cartBootstrapEpochByToken.set(cartRequestToken, cartMutationEpoch);
     useCartStore.setState({ cartBootstrapRequestToken: cartRequestToken });
     const url = new URL(apiCartPath, window.location.origin);
     url.searchParams.set("cartRequestToken", cartRequestToken);
     load(url.pathname + url.search);
-  }, [load, apiCartPath, location.key]);
+  }, [load, apiCartPath, cartRequestToken]);
   const payload = fetcher.data;
   useEffect(() => {
     if (!payload) {
       return;
     }
+    const responseToken = payload.cartRequestToken ?? null;
+    if (
+      !responseToken ||
+      responseToken !== getCurrentCartBootstrapRequestToken()
+    ) {
+      return;
+    }
     useCartStore.setState({
       customerAccessToken: payload.customerAccessToken,
-      cartBootstrapResponseToken: payload.cartRequestToken ?? null,
+      cartBootstrapResponseToken: responseToken,
     });
     const resolved = payload.cart;
     if (!resolved) {
       // Only clear when no mutation synced since this load was issued —
       // a slow pre-cookie bootstrap must not wipe a just-created cart.
-      if (cartMutationEpoch === epochAtLoadRef.current) {
+      if (cartMutationEpoch === cartBootstrapEpochByToken.get(responseToken)) {
         // Reset the module ref too: useCart() consults it before the store,
         // so a surviving entry would keep resurrecting a cart whose cookie
         // expired or was completed at checkout.

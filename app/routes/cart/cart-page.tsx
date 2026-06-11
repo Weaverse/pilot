@@ -20,7 +20,11 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
-import { useCart, useCartStore } from "~/components/cart/store";
+import {
+  getCurrentCartBootstrapRequestToken,
+  useCart,
+  useCartStore,
+} from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
@@ -154,10 +158,11 @@ export default function CartRoute() {
   const { featuredProducts } = useLoaderData<typeof loader>();
   const cart = useCart();
   // <Analytics.CartView> publishes once per URL and never replays when the
-  // provider's cart context updates later. Gate it on a unique bootstrap
-  // request token rather than React Router's history key: back/forward can
-  // revisit a previous key, but the cart must be revalidated for this visit.
-  const requestToken = useCartStore((s) => s.cartBootstrapRequestToken);
+  // provider's cart context updates later. CartStoreSync (rendered above the
+  // route tree) synchronously advances the current request token during
+  // render; this prevents a back/forward visit from reusing a previous
+  // matching token before effects run.
+  const requestToken = getCurrentCartBootstrapRequestToken();
   const responseToken = useCartStore((s) => s.cartBootstrapResponseToken);
   const canPublishCartView =
     requestToken !== null && responseToken === requestToken;
