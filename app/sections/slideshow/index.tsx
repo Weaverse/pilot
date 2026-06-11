@@ -5,6 +5,7 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import { cloneElement, isValidElement, type ReactElement } from "react";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ScrollReveal } from "~/components/scroll-reveal";
@@ -134,7 +135,13 @@ export default function Slideshow(
       >
         {children.map((child, idx) => (
           <SwiperSlide key={idx} className="bg-white">
-            {child}
+            {/* The first slide is the LCP element on slideshow-led pages —
+                its background must load eagerly with high priority. */}
+            {isValidElement(child) && idx === 0
+              ? cloneElement(child as ReactElement<{ loading?: string }>, {
+                  loading: "eager",
+                })
+              : child}
           </SwiperSlide>
         ))}
         {showArrows && (

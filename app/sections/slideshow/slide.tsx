@@ -74,6 +74,7 @@ export default function Slide(props: SlideProps) {
     verticalPadding,
     backgroundColor,
     backgroundImage,
+    loading,
     enableOverlay,
     overlayOpacity,
     overlayColor,
@@ -83,13 +84,13 @@ export default function Slide(props: SlideProps) {
     children,
     ...rest
   } = props;
-
   return (
     <div {...rest} className="h-full w-full">
       <OverlayAndBackground
         backgroundImage={backgroundImage}
         backgroundFit={backgroundFit}
         backgroundPosition={backgroundPosition}
+        loading={loading}
         enableOverlay={enableOverlay}
         overlayOpacity={overlayOpacity}
         overlayColor={overlayColor}
