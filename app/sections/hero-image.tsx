@@ -61,6 +61,9 @@ export default function HeroImage(props: HeroImageProps & SectionProps) {
   return (
     <Section
       {...rest}
+      // Hero backgrounds are above the fold — eager + high-priority fetch
+      // so the LCP image isn't deferred by the default lazy loading.
+      loading="eager"
       containerClassName={variants({
         contentPosition,
         height,
