@@ -1,7 +1,12 @@
 import { CartForm } from "@shopify/hydrogen";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Fetcher } from "react-router";
-import { useFetcher, useFetchers, useLocation } from "react-router";
+import {
+  useFetcher,
+  useFetchers,
+  useLocation,
+  useNavigation,
+} from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { create } from "zustand";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
@@ -26,6 +31,21 @@ type CartStore = {
    */
   cartBootstrapRequestToken: string | null;
   cartBootstrapResponseToken: string | null;
+  /**
+   * The locale-prefixed /api/cart path whose bootstrap response has been
+   * applied. Cart-presenting UI gates on this matching the ACTIVE locale's
+   * path: same-locale navigations keep it resolved (no flicker), while a
+   * market switch re-gates until the new market's cart/currency arrives.
+   */
+  cartBootstrapResolvedPath: string | null;
+  /**
+   * False while an auth-relevant (non-GET) navigation submission is in
+   * flight and until the next bootstrap response applies. The account web
+   * component must not stay mounted with a stale customerAccessToken across
+   * e.g. the logout redirect — matching the old root-loader behavior where
+   * actions revalidated the token promise and re-suspended the widget.
+   */
+  customerAccessTokenKnown: boolean;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
@@ -37,6 +57,8 @@ export const useCartStore = create<CartStore>()((set) => ({
   customerAccessToken: null,
   cartBootstrapRequestToken: null,
   cartBootstrapResponseToken: null,
+  cartBootstrapResolvedPath: null,
+  customerAccessTokenKnown: false,
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
   toggle: (open) =>
@@ -81,18 +103,28 @@ export function getCurrentCartBootstrapRequestToken() {
   return currentCartBootstrapRequestToken;
 }
 /**
- * True once ANY /api/cart bootstrap response has been applied this session.
- * Pre-bootstrap, `useCart()` returns null for returning shoppers too, so
- * cart-presenting UI (the drawer body) must not render its empty-cart state
- * yet — that matches the old root-loader behavior where those surfaces sat
- * behind a Suspense fallback until the deferred cart resolved, and the
- * resolved promise then persisted across navigations. (Per-navigation
- * freshness gates like <Analytics.CartView> use the request-token match
- * instead.)
+ * True once the ACTIVE locale's /api/cart bootstrap response has been
+ * applied. Pre-bootstrap, `useCart()` returns null for returning shoppers
+ * too, so cart-presenting UI (the drawer body) must not render its
+ * empty-cart state yet. Same-locale navigations stay resolved — matching
+ * the old root-loader behavior where the resolved cart promise persisted —
+ * while a market switch re-gates until the new market's cart/currency
+ * arrives. (Per-navigation freshness gates like <Analytics.CartView> use
+ * the request-token match instead.)
  */
 export function useCartBootstrapResolved() {
-  const responseToken = useCartStore((s) => s.cartBootstrapResponseToken);
-  return responseToken !== null;
+  const apiCartPath = usePrefixPathWithLocale("/api/cart");
+  const resolvedPath = useCartStore((s) => s.cartBootstrapResolvedPath);
+  return resolvedPath === apiCartPath;
+}
+
+/**
+ * True while the bootstrapped customerAccessToken can be trusted: at least
+ * one bootstrap response applied, and no auth-relevant (non-GET) navigation
+ * submission since. Gates the account web component (see header.tsx).
+ */
+export function useCustomerAccessTokenKnown() {
+  return useCartStore((s) => s.customerAccessTokenKnown);
 }
 
 const useHydrationSafeLayoutEffect =
@@ -376,6 +408,21 @@ export function CartStoreSync() {
   const load = fetcher.load;
   const apiCartPath = usePrefixPathWithLocale("/api/cart");
   const location = useLocation();
+  const navigation = useNavigation();
+  // Auth state can only change through non-GET navigation submissions
+  // (login/logout actions; cart mutations use fetchers). Distrust the
+  // bootstrapped customerAccessToken from the moment one starts until the
+  // next bootstrap response applies — the account widget must not stay
+  // active with a pre-logout token across the redirect.
+  const isAuthRelevantSubmission =
+    navigation.state !== "idle" &&
+    navigation.formMethod != null &&
+    navigation.formMethod !== "GET";
+  useEffect(() => {
+    if (isAuthRelevantSubmission) {
+      useCartStore.setState({ customerAccessTokenKnown: false });
+    }
+  }, [isAuthRelevantSubmission]);
   const cartRequestToken = ensureCartBootstrapRequestToken(
     location.key,
     apiCartPath,
@@ -410,6 +457,12 @@ export function CartStoreSync() {
     const updates: Partial<CartStore> = {
       customerAccessToken: payload.customerAccessToken,
       cartBootstrapResponseToken: responseToken,
+      // The matched response token implies currentCartBootstrapPath is the
+      // path this response was requested for.
+      cartBootstrapResolvedPath: currentCartBootstrapPath,
+      // Trust the fresh token — unless an auth-mutating submission is
+      // already in flight again (its redirect will trigger the next load).
+      customerAccessTokenKnown: !isAuthRelevantSubmission,
     };
     const resolved = payload.cart;
     if (resolved) {
@@ -434,6 +487,6 @@ export function CartStoreSync() {
       updates.serverCart = null;
     }
     useCartStore.setState(updates);
-  }, [payload]);
+  }, [payload, isAuthRelevantSubmission]);
   return null;
 }
