@@ -20,7 +20,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
-import { useCart } from "~/components/cart/store";
+import { useCart, useCartStore } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
@@ -153,7 +153,11 @@ export async function loader({ context }: LoaderFunctionArgs) {
 export default function CartRoute() {
   const { featuredProducts } = useLoaderData<typeof loader>();
   const cart = useCart();
-
+  // <Analytics.CartView> publishes once per URL and never replays when the
+  // provider's cart context updates later, so mounting it before the
+  // client-side cart bootstrap resolves would emit cart_viewed with a null
+  // cart on direct /cart landings.
+  const cartBootstrapped = useCartStore((s) => s.cartBootstrapped);
   return (
     <>
       <Section width="fixed" verticalPadding="medium" overflow="unset">
@@ -161,7 +165,7 @@ export default function CartRoute() {
           Cart ({cart?.totalQuantity || 0})
         </h1>
         <CartMain layout="page" cart={cart} />
-        <Analytics.CartView />
+        {cartBootstrapped && <Analytics.CartView />}
       </Section>
       <Suspense fallback={null}>
         <Await resolve={featuredProducts}>
