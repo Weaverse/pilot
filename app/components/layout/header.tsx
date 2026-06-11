@@ -137,7 +137,7 @@ function ShopifyAccountButton() {
   let cartBootstrapResolved = useCartBootstrapResolved();
   if (!cartBootstrapResolved) {
     return (
-      <span aria-label="Loading account">
+      <span aria-hidden="true">
         <UserIcon className="h-5 w-5" />
       </span>
     );
