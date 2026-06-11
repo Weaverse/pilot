@@ -330,6 +330,11 @@ export function CartStoreSync() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: location.key intentionally re-bootstraps after every navigation (auth redirects, cookie-setting GET redirects)
   useEffect(() => {
     epochAtLoadRef.current = cartMutationEpoch;
+    // Drop the "bootstrapped" gate while a navigation re-load is in flight:
+    // GET flows can mutate the cart before landing (e.g. /discount/:code
+    // redirecting to /cart), and <Analytics.CartView> must wait for the
+    // corrected cart rather than publish the pre-navigation one.
+    useCartStore.setState({ cartBootstrapped: false });
     load(apiCartPath);
   }, [load, apiCartPath, location.key]);
   const payload = fetcher.data;
@@ -346,6 +351,11 @@ export function CartStoreSync() {
       // Only clear when no mutation synced since this load was issued —
       // a slow pre-cookie bootstrap must not wipe a just-created cart.
       if (cartMutationEpoch === epochAtLoadRef.current) {
+        // Reset the module ref too: useCart() consults it before the store,
+        // so a surviving entry would keep resurrecting a cart whose cookie
+        // expired or was completed at checkout.
+        freshestFetcherCartRef.cart = null;
+        freshestFetcherCartRef.updatedAt = "";
         useCartStore.setState({ serverCart: null });
       }
       return;
