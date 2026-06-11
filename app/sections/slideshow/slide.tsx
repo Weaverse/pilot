@@ -5,11 +5,13 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import { useContext } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { OverlayAndBackgroundProps } from "~/components/overlay-and-background";
 import { OverlayAndBackground } from "~/components/overlay-and-background";
 import { layoutInputs } from "~/components/section";
+import { EagerSlideContext } from "./index";
 
 const variants = cva("flex h-full w-full flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
@@ -84,13 +86,15 @@ export default function Slide(props: SlideProps) {
     children,
     ...rest
   } = props;
+  // First slide of the slideshow loads its background eagerly (LCP).
+  const eagerSlide = useContext(EagerSlideContext);
   return (
     <div {...rest} className="h-full w-full">
       <OverlayAndBackground
         backgroundImage={backgroundImage}
         backgroundFit={backgroundFit}
         backgroundPosition={backgroundPosition}
-        loading={loading}
+        loading={eagerSlide ? "eager" : loading}
         enableOverlay={enableOverlay}
         overlayOpacity={overlayOpacity}
         overlayColor={overlayColor}
