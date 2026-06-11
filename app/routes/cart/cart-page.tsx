@@ -17,7 +17,6 @@ import {
   type LoaderFunctionArgs,
   redirect,
   useLoaderData,
-  useLocation,
 } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
@@ -154,14 +153,14 @@ export async function loader({ context }: LoaderFunctionArgs) {
 export default function CartRoute() {
   const { featuredProducts } = useLoaderData<typeof loader>();
   const cart = useCart();
-  const location = useLocation();
   // <Analytics.CartView> publishes once per URL and never replays when the
-  // provider's cart context updates later. Gate it on the bootstrap response
-  // for THIS navigation key — a store boolean flipped in a passive effect is
-  // too late to stop CartView's mount effect from publishing with the
-  // previous navigation's cart.
-  const cartBootstrapKey = useCartStore((s) => s.cartBootstrapKey);
-  const canPublishCartView = cartBootstrapKey === location.key;
+  // provider's cart context updates later. Gate it on a unique bootstrap
+  // request token rather than React Router's history key: back/forward can
+  // revisit a previous key, but the cart must be revalidated for this visit.
+  const requestToken = useCartStore((s) => s.cartBootstrapRequestToken);
+  const responseToken = useCartStore((s) => s.cartBootstrapResponseToken);
+  const canPublishCartView =
+    requestToken !== null && responseToken === requestToken;
   return (
     <>
       <Section width="fixed" verticalPadding="medium" overflow="unset">

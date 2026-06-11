@@ -16,7 +16,7 @@ import { data } from "react-router";
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const { cart, customerAccount } = context;
   const url = new URL(request.url);
-  const cartRequestKey = url.searchParams.get("cartRequestKey") ?? "";
+  const cartRequestToken = url.searchParams.get("cartRequestToken") ?? "";
   const [cartData, customerAccessToken] = await Promise.all([
     cart.get(),
     customerAccount.getAccessToken().catch(() => null),
@@ -26,7 +26,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     {
       cart: cartData,
       customerAccessToken: customerAccessToken ?? null,
-      cartRequestKey,
+      cartRequestToken,
     },
     { headers: { "Cache-Control": "no-store" } },
   );
