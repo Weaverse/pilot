@@ -26,7 +26,10 @@ export async function loader(args: LoaderFunctionArgs) {
   // Load async data in parallel for better performance
   const [weaverseData, { shop }] = await Promise.all([
     context.weaverse.loadPage({ type }),
-    context.storefront.query<ShopQuery>(SHOP_QUERY),
+    // Shop name/description only — effectively static content.
+    context.storefront.query<ShopQuery>(SHOP_QUERY, {
+      cache: context.storefront.CacheLong(),
+    }),
   ]);
 
   // Check weaverseData after parallel loading

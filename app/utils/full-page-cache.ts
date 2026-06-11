@@ -39,7 +39,8 @@ const WEAVERSE_PREVIEW_PARAMS = [
  * see CartStoreSync. Do not reintroduce personalized data into root/route
  * loaders without revisiting this.
  *
- * Freshness: 60s shared max-age bounds publish-to-live latency (Oxygen's
+ * Freshness: 300s shared max-age (matching the Weaverse SDK's Builder-data
+ * freshness — total worst-case publish-to-live is ~10 minutes; Oxygen's
  * full-page cache cannot be purged without a redeploy), while the 1-day
  * stale-while-revalidate keeps responses instant during background refresh.
  */
@@ -72,5 +73,5 @@ export function getFullPageCacheControl(
     return null;
   }
 
-  return "public, max-age=60, stale-while-revalidate=86400";
+  return "public, max-age=300, stale-while-revalidate=86400";
 }
