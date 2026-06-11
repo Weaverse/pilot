@@ -151,7 +151,6 @@ export function ProductCard({
             ])}
             sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
             data={image}
-            width={700}
             alt={image.altText || `Picture of ${product.title}`}
             loading={aboveTheFold ? "eager" : "lazy"}
             onLoad={() => setIsImageLoading(false)}
@@ -162,8 +161,7 @@ export function ProductCard({
                 "absolute inset-0",
                 "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
               ])}
-              sizes="auto"
-              width={700}
+              sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
               data={secondImage}
               alt={secondImage.altText || `Second picture of ${product.title}`}
               loading="lazy"
