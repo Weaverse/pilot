@@ -41,7 +41,6 @@ export function MediaItem({
         loading={index === 0 ? "eager" : "lazy"}
         fetchPriority={index === 0 ? "high" : undefined}
         className={cn("h-auto w-full object-cover", className)}
-        width={2048}
         aspectRatio={calculateAspectRatio(image, imageAspectRatio)}
         sizes={sizes}
       />
