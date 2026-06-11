@@ -5,8 +5,8 @@ import { useLocation, useRouteError, useRouteLoaderData } from "react-router";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { CartDrawer } from "~/components/cart/cart-drawer";
 import {
-  useCartBootstrapResolved,
   useCartStore,
+  useCustomerAccessTokenKnown,
 } from "~/components/cart/store";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
@@ -130,12 +130,14 @@ function ShopifyAccountButton() {
   // not be embedded in the SSR document, which stays anonymous so Oxygen
   // can full-page cache it.
   let customerAccessToken = useCartStore((state) => state.customerAccessToken);
-  // Until the first bootstrap response lands, the auth state is unknown —
-  // mounting an active <shopify-account> with a null token would open the
-  // signed-out/login flow for signed-in shoppers who click during that
-  // window. Render an inert icon instead (the old Suspense fallback).
-  let cartBootstrapResolved = useCartBootstrapResolved();
-  if (!cartBootstrapResolved) {
+  // Until the auth state is known — first bootstrap response, re-checked
+  // after auth-mutating navigations like the logout redirect — mounting an
+  // active <shopify-account> with a stale/null token would open the wrong
+  // flow for shoppers who click during that window. Render an inert icon
+  // instead (the old Suspense fallback, which also re-suspended after
+  // actions revalidated the root loader's token promise).
+  let customerAccessTokenKnown = useCustomerAccessTokenKnown();
+  if (!customerAccessTokenKnown) {
     return (
       <span aria-hidden="true">
         <UserIcon className="h-5 w-5" />
