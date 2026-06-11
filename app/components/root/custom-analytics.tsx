@@ -57,41 +57,31 @@ export function CustomAnalytics() {
     });
   }, [subscribe]);
 
-  if (!id) {
-    return null;
-  }
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    let init = () => {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(...args: any[]) {
+        window.dataLayer.push(args);
+      }
+      gtag("js", new Date());
+      gtag({ "gtm.start": Date.now(), event: "gtm.js" });
+      gtag("config", id);
 
-  return (
-    <>
-      {/* Main-thread queue only. Partytown forwards dataLayer.push into the
-          worker, but this guarantees early Hydrogen analytics events never
-          disappear before the worker bootstrap script runs. */}
-      <script
-        nonce={nonce}
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: "window.dataLayer = window.dataLayer || [];",
-        }}
-      />
-      <script
-        type="text/partytown"
-        nonce={nonce}
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = function gtag(){window.dataLayer.push(arguments);}
-            window.gtag('js', new Date());
-            window.dataLayer.push({'gtm.start': Date.now(), event: 'gtm.js'});
-            window.gtag('config', ${JSON.stringify(id)});
-          `,
-        }}
-      />
-      <script
-        type="text/partytown"
-        src={`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`}
-        nonce={nonce}
-      />
-    </>
-  );
+      let script = document.createElement("script");
+      script.async = true;
+      script.nonce = nonce;
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${id}`;
+      document.head.appendChild(script);
+    };
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(init);
+    } else {
+      setTimeout(init, 1000);
+    }
+  }, [id, nonce]);
+
+  return null;
 }
