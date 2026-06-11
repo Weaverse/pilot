@@ -139,18 +139,40 @@ export default function HeroVideo(props: HeroVideoProps) {
       }
     }
 
+    if (mediaEl instanceof HTMLVideoElement) {
+      // Derive height from the INTRINSIC video dimensions, never from the
+      // rendered box: the container height is set from this value, and the
+      // video fills the container, so committing a rendered measurement can
+      // deadlock a wrong value (e.g. the 300x150 default before metadata
+      // loads — observed as an intermittently squashed hero).
+      if (mediaEl.videoWidth > 0 && mediaEl.videoHeight > 0) {
+        const containerWidth =
+          containerRef.current.getBoundingClientRect().width;
+        const intrinsicHeight =
+          (containerWidth * mediaEl.videoHeight) / mediaEl.videoWidth;
+        commitVideoHeight(intrinsicHeight);
+      }
+      // Metadata not loaded yet — skip; loadedmetadata/ResizeObserver will
+      // re-trigger this sync.
+      return;
+    }
     if (mediaEl) {
+      // Iframe embeds (YouTube/Vimeo) size themselves via aspect-ratio
+      // styles — the rendered box is the only available signal.
       const actualHeight = mediaEl.getBoundingClientRect().height;
       if (actualHeight > 0) {
-        // Only update if significantly different (> 2px) to avoid jitter
-        setVideoHeight((prev) => {
-          if (prev === null || Math.abs(prev - actualHeight) > 2) {
-            return actualHeight;
-          }
-          return prev;
-        });
+        commitVideoHeight(actualHeight);
       }
     }
+  }
+  function commitVideoHeight(next: number) {
+    // Only update if significantly different (> 2px) to avoid jitter
+    setVideoHeight((prev) => {
+      if (prev === null || Math.abs(prev - next) > 2) {
+        return next;
+      }
+      return prev;
+    });
   }
 
   /**
