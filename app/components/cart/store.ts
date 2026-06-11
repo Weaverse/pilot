@@ -1,9 +1,10 @@
 import { CartForm } from "@shopify/hydrogen";
 import { useEffect, useRef } from "react";
 import type { Fetcher } from "react-router";
-import { useFetcher, useFetchers } from "react-router";
+import { useFetcher, useFetchers, useLocation } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { create } from "zustand";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as apiCartLoader } from "~/routes/api/cart";
 
 type CartStore = {
@@ -34,6 +35,13 @@ const freshestFetcherCartRef = {
   cart: null as CartApiQueryFragment | null,
   updatedAt: "",
 };
+/**
+ * Counts mutation-fetcher cart syncs. CartStoreSync snapshots this before
+ * each /api/cart load: a `cart: null` bootstrap response is only allowed to
+ * clear the store when no mutation landed in between — otherwise a slow
+ * pre-cookie bootstrap would wipe a cart the shopper just created.
+ */
+let cartMutationEpoch = 0;
 
 /**
  * Module-level set of line IDs that have been optimistically removed.
@@ -170,6 +178,7 @@ export function useCartFetcherSync(fetcher: Fetcher<unknown>) {
     const updatedAt = cart.updatedAt;
     if (updatedAt !== lastSyncedRef.current) {
       lastSyncedRef.current = updatedAt;
+      cartMutationEpoch += 1;
       const fetcherCart = cart as CartApiQueryFragment;
       const fetcherTime = new Date(fetcherCart.updatedAt).getTime();
       const refTime = freshestFetcherCartRef.updatedAt
@@ -290,16 +299,30 @@ export function useCart(): CartWithOptimistic | null {
  * and blocking Oxygen's full-page cache (see entry.server.tsx). Fetching
  * after hydration keeps the document anonymous.
  *
- * Post-mutation freshness is handled by `useCartFetcherSync`; the
- * `updatedAt` guard below only protects against this bootstrap racing a
- * faster mutation fetcher.
+ * The load is locale-prefixed so the cart query runs in the active market's
+ * i18n context (a bare `/api/cart` would price the cart in the default
+ * locale), and it re-runs on every navigation (`location.key`) — matching
+ * the old root-loader revalidation that refreshed the token after auth
+ * actions (e.g. logout redirect) and picked up carts mutated by GET-loader
+ * redirects (e.g. discount-code routes).
+ *
+ * Post-mutation freshness is handled by `useCartFetcherSync`. Two race
+ * guards protect against this bootstrap resolving after a faster mutation
+ * fetcher: the `updatedAt` comparison for non-empty carts, and the
+ * `cartMutationEpoch` snapshot for `cart: null` responses (which carry no
+ * timestamp to compare).
  */
 export function CartStoreSync() {
   const fetcher = useFetcher<typeof apiCartLoader>();
   const load = fetcher.load;
+  const apiCartPath = usePrefixPathWithLocale("/api/cart");
+  const location = useLocation();
+  const epochAtLoadRef = useRef(0);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: location.key intentionally re-bootstraps after every navigation (auth redirects, cookie-setting GET redirects)
   useEffect(() => {
-    load("/api/cart");
-  }, [load]);
+    epochAtLoadRef.current = cartMutationEpoch;
+    load(apiCartPath);
+  }, [load, apiCartPath, location.key]);
   const payload = fetcher.data;
   useEffect(() => {
     if (!payload) {
@@ -310,7 +333,11 @@ export function CartStoreSync() {
     });
     const resolved = payload.cart;
     if (!resolved) {
-      useCartStore.setState({ serverCart: null });
+      // Only clear when no mutation synced since this load was issued —
+      // a slow pre-cookie bootstrap must not wipe a just-created cart.
+      if (cartMutationEpoch === epochAtLoadRef.current) {
+        useCartStore.setState({ serverCart: null });
+      }
       return;
     }
     const current = useCartStore.getState().serverCart;
