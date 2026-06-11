@@ -80,6 +80,20 @@ function ensureCartBootstrapRequestToken(locationKey: string, path: string) {
 export function getCurrentCartBootstrapRequestToken() {
   return currentCartBootstrapRequestToken;
 }
+/**
+ * True once ANY /api/cart bootstrap response has been applied this session.
+ * Pre-bootstrap, `useCart()` returns null for returning shoppers too, so
+ * cart-presenting UI (the drawer body) must not render its empty-cart state
+ * yet — that matches the old root-loader behavior where those surfaces sat
+ * behind a Suspense fallback until the deferred cart resolved, and the
+ * resolved promise then persisted across navigations. (Per-navigation
+ * freshness gates like <Analytics.CartView> use the request-token match
+ * instead.)
+ */
+export function useCartBootstrapResolved() {
+  const responseToken = useCartStore((s) => s.cartBootstrapResponseToken);
+  return responseToken !== null;
+}
 
 const useHydrationSafeLayoutEffect =
   typeof document === "undefined" ? useEffect : useLayoutEffect;
