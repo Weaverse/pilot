@@ -6,11 +6,17 @@ import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
-import { useCart, useCartStore } from "./store";
+import { Spinner } from "~/components/spinner";
+import { useCart, useCartBootstrapResolved, useCartStore } from "./store";
 
 export function CartDrawer() {
   const { publish } = useAnalytics();
   const cart = useCart();
+  // Returning shoppers have a cart cookie but useCart() stays null until the
+  // /api/cart bootstrap responds — rendering CartMain then would show a
+  // false "empty cart". Hold a loading state until the first response lands
+  // (the old root-loader Await behaved the same way).
+  const cartBootstrapResolved = useCartBootstrapResolved();
   const {
     isOpen,
     close: closeCartDrawer,
@@ -71,7 +77,8 @@ export function CartDrawer() {
                   className="group/cart-title flex items-center gap-1.5 text-lg font-serif font-semibold hover:underline"
                   onClick={closeCartDrawer}
                 >
-                  Cart ({cart?.totalQuantity || 0})
+                  Cart
+                  {cartBootstrapResolved && ` (${cart?.totalQuantity || 0})`}
                   <ArrowRightIcon className="size-4 transition-transform group-hover/cart-title:translate-x-0.5" />
                 </Link>
               </Dialog.Title>
@@ -85,7 +92,17 @@ export function CartDrawer() {
                 </button>
               </Dialog.Close>
             </div>
-            <CartMain layout="drawer" cart={cart} />
+            {cartBootstrapResolved ? (
+              <CartMain layout="drawer" cart={cart} />
+            ) : (
+              <div
+                className="relative grow"
+                role="status"
+                aria-label="Loading cart"
+              >
+                <Spinner />
+              </div>
+            )}
           </div>
         </Dialog.Content>
       </Dialog.Portal>
