@@ -1,6 +1,6 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
-import type { PageType } from "@weaverse/hydrogen";
+import { getWeaverseSeoMeta, type PageType } from "@weaverse/hydrogen";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
@@ -20,8 +20,10 @@ export async function loader(args: LoaderFunctionArgs) {
     type = "CUSTOM";
   }
 
-  // Calculate seo payload synchronously
-  const seo = seoPayload.home();
+  // INDEX uses the code-defined homepage SEO; CUSTOM pages (root-level
+  // Weaverse handles served by this route) get their SEO from Weaverse
+  // via getWeaverseSeoMeta in the meta export below.
+  const seo = type === "INDEX" ? seoPayload.home() : null;
 
   // Load async data in parallel for better performance
   const [weaverseData, { shop }] = await Promise.all([
@@ -46,7 +48,12 @@ export async function loader(args: LoaderFunctionArgs) {
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data?.seo as SeoConfig);
+  // INDEX (real homepage) keeps the code-defined SEO — no Weaverse override.
+  // CUSTOM pages served by this route get their SEO from Weaverse.
+  if (data?.seo) {
+    return getSeoMeta(data.seo as SeoConfig);
+  }
+  return getWeaverseSeoMeta(data?.weaverseData);
 };
 export default function Homepage() {
   return <WeaverseContent />;
