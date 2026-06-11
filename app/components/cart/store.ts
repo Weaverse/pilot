@@ -1,14 +1,20 @@
 import { CartForm } from "@shopify/hydrogen";
 import { useEffect, useRef } from "react";
 import type { Fetcher } from "react-router";
-import { useFetchers, useRouteLoaderData } from "react-router";
+import { useFetcher, useFetchers } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { create } from "zustand";
-import type { RootLoader } from "~/root";
+import type { loader as apiCartLoader } from "~/routes/api/cart";
 
 type CartStore = {
   isOpen: boolean;
   serverCart: CartApiQueryFragment | null;
+  /**
+   * Customer Account API access token for the Shopify account web component.
+   * Bootstrapped client-side via /api/cart — it must never be embedded in
+   * the SSR document (see entry.server.tsx full-page cache notes).
+   */
+  customerAccessToken: string | null;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
@@ -17,6 +23,7 @@ type CartStore = {
 export const useCartStore = create<CartStore>()((set) => ({
   isOpen: false,
   serverCart: null,
+  customerAccessToken: null,
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
   toggle: (open) =>
@@ -275,39 +282,45 @@ export function useCart(): CartWithOptimistic | null {
 }
 
 /**
- * Syncs cart data from root loader's deferred promise into zustand.
- * Uses `updatedAt` to skip stale root loader data when a fetcher
- * already synced fresher post-mutation cart state.
+ * Bootstraps personalized state (cart + customer access token) client-side
+ * from /api/cart after hydration.
  *
+ * This data used to come from the root loader's deferred promise, but
+ * deferred values stream into the SSR document — personalizing every page
+ * and blocking Oxygen's full-page cache (see entry.server.tsx). Fetching
+ * after hydration keeps the document anonymous.
+ *
+ * Post-mutation freshness is handled by `useCartFetcherSync`; the
+ * `updatedAt` guard below only protects against this bootstrap racing a
+ * faster mutation fetcher.
  */
 export function CartStoreSync() {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const promiseRef = useRef<unknown>(null);
-  const cartPromise = rootData?.cart;
-
+  const fetcher = useFetcher<typeof apiCartLoader>();
+  const load = fetcher.load;
   useEffect(() => {
-    if (cartPromise && cartPromise !== promiseRef.current) {
-      promiseRef.current = cartPromise;
-      Promise.resolve(cartPromise)
-        .then((resolved) => {
-          if (!resolved) {
-            useCartStore.setState({ serverCart: null });
-            return;
-          }
-          const current = useCartStore.getState().serverCart;
-          const resolvedTime = new Date(resolved.updatedAt).getTime();
-          const currentTime = current?.updatedAt
-            ? new Date(current.updatedAt).getTime()
-            : 0;
-          if (resolvedTime >= currentTime) {
-            useCartStore.setState({ serverCart: resolved });
-          }
-        })
-        .catch(() => {
-          // Cart fetch failed — leave current state as-is
-        });
+    load("/api/cart");
+  }, [load]);
+  const payload = fetcher.data;
+  useEffect(() => {
+    if (!payload) {
+      return;
     }
-  }, [cartPromise]);
-
+    useCartStore.setState({
+      customerAccessToken: payload.customerAccessToken,
+    });
+    const resolved = payload.cart;
+    if (!resolved) {
+      useCartStore.setState({ serverCart: null });
+      return;
+    }
+    const current = useCartStore.getState().serverCart;
+    const resolvedTime = new Date(resolved.updatedAt).getTime();
+    const currentTime = current?.updatedAt
+      ? new Date(current.updatedAt).getTime()
+      : 0;
+    if (resolvedTime >= currentTime) {
+      useCartStore.setState({ serverCart: resolved as CartApiQueryFragment });
+    }
+  }, [payload]);
   return null;
 }
