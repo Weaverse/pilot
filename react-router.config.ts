@@ -6,13 +6,10 @@ export default {
   appDirectory: "app",
   buildDirectory: "dist",
   ssr: true,
-  // Silence the React Router v8 future-flag warnings without changing runtime
-  // behavior. The Hydrogen preset enables v8_middleware/v8_splitRouteModules but
-  // deliberately leaves these two unset, so we keep current (v7) behavior by
-  // pinning them to false. RR deep-merges this on top of the preset's `future`.
-  // Flip to true (and test) once Hydrogen validates v8 request handling.
+  // Silence the React Router future-flag warning without changing runtime
+  // behavior. RR 7.16 exposes this as an `unstable_` option; keep current
+  // trailing-slash data-request behavior until Hydrogen validates the v8 path.
   future: {
-    v8_passThroughRequests: false,
-    v8_trailingSlashAwareDataRequests: false,
+    unstable_trailingSlashAwareDataRequests: false,
   },
 } satisfies Config;
