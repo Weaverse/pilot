@@ -17,13 +17,14 @@ type CartStore = {
    */
   customerAccessToken: string | null;
   /**
-   * True once the first /api/cart bootstrap response has been applied.
+   * Route navigation key whose /api/cart bootstrap response has been applied.
    * Components whose analytics need an authoritative cart (e.g. the cart
    * page's <Analytics.CartView>, whose publish effect is keyed on URL and
-   * never replays when the cart context updates) must wait for this —
-   * otherwise direct landings emit events with a null cart.
+   * never replays when the cart context updates) must wait until this equals
+   * the current `location.key` — a passive-effect boolean reset is too late
+   * to prevent child mount effects from publishing with the previous cart.
    */
-  cartBootstrapped: boolean;
+  cartBootstrapKey: string | null;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
@@ -33,7 +34,7 @@ export const useCartStore = create<CartStore>()((set) => ({
   isOpen: false,
   serverCart: null,
   customerAccessToken: null,
-  cartBootstrapped: false,
+  cartBootstrapKey: null,
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
   toggle: (open) =>
@@ -257,6 +258,10 @@ export function useCart(): CartWithOptimistic | null {
       baselineSource = `fetcher(${fetcher.key})`;
       freshestFetcherCartRef.cart = cart;
       freshestFetcherCartRef.updatedAt = cart.updatedAt;
+      // This fallback scan is the only place that can see completed
+      // fetchers after React Router drops their components. Treat it as a
+      // real mutation sync for null-bootstrap race guards too.
+      cartMutationEpoch += 1;
     }
   }
 
@@ -327,15 +332,11 @@ export function CartStoreSync() {
   const apiCartPath = usePrefixPathWithLocale("/api/cart");
   const location = useLocation();
   const epochAtLoadRef = useRef(0);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: location.key intentionally re-bootstraps after every navigation (auth redirects, cookie-setting GET redirects)
   useEffect(() => {
     epochAtLoadRef.current = cartMutationEpoch;
-    // Drop the "bootstrapped" gate while a navigation re-load is in flight:
-    // GET flows can mutate the cart before landing (e.g. /discount/:code
-    // redirecting to /cart), and <Analytics.CartView> must wait for the
-    // corrected cart rather than publish the pre-navigation one.
-    useCartStore.setState({ cartBootstrapped: false });
-    load(apiCartPath);
+    const url = new URL(apiCartPath, window.location.origin);
+    url.searchParams.set("cartRequestKey", location.key);
+    load(url.pathname + url.search);
   }, [load, apiCartPath, location.key]);
   const payload = fetcher.data;
   useEffect(() => {
@@ -344,7 +345,7 @@ export function CartStoreSync() {
     }
     useCartStore.setState({
       customerAccessToken: payload.customerAccessToken,
-      cartBootstrapped: true,
+      cartBootstrapKey: payload.cartRequestKey ?? null,
     });
     const resolved = payload.cart;
     if (!resolved) {

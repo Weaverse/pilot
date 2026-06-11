@@ -17,6 +17,7 @@ import {
   type LoaderFunctionArgs,
   redirect,
   useLoaderData,
+  useLocation,
 } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
@@ -153,11 +154,14 @@ export async function loader({ context }: LoaderFunctionArgs) {
 export default function CartRoute() {
   const { featuredProducts } = useLoaderData<typeof loader>();
   const cart = useCart();
+  const location = useLocation();
   // <Analytics.CartView> publishes once per URL and never replays when the
-  // provider's cart context updates later, so mounting it before the
-  // client-side cart bootstrap resolves would emit cart_viewed with a null
-  // cart on direct /cart landings.
-  const cartBootstrapped = useCartStore((s) => s.cartBootstrapped);
+  // provider's cart context updates later. Gate it on the bootstrap response
+  // for THIS navigation key — a store boolean flipped in a passive effect is
+  // too late to stop CartView's mount effect from publishing with the
+  // previous navigation's cart.
+  const cartBootstrapKey = useCartStore((s) => s.cartBootstrapKey);
+  const canPublishCartView = cartBootstrapKey === location.key;
   return (
     <>
       <Section width="fixed" verticalPadding="medium" overflow="unset">
@@ -165,7 +169,7 @@ export default function CartRoute() {
           Cart ({cart?.totalQuantity || 0})
         </h1>
         <CartMain layout="page" cart={cart} />
-        {cartBootstrapped && <Analytics.CartView />}
+        {canPublishCartView && <Analytics.CartView />}
       </Section>
       <Suspense fallback={null}>
         <Await resolve={featuredProducts}>
