@@ -61,7 +61,7 @@ Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Co
 
 **Requirements:**
 
-- Node.js version 20.0.0 or higher
+- Node.js version 22.12.0 or higher
 - `npm` package manager
 
 **Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:**
