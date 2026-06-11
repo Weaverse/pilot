@@ -1,6 +1,5 @@
 import "@fontsource-variable/cabin"; // Supports weights 400-700
 import "@fontsource-variable/newsreader"; // Supports weights 200-900
-import { Partytown } from "@qwik.dev/partytown/react";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
@@ -158,7 +157,6 @@ export const Layout = withWeaverse(function RootLayout({
         <Meta />
         <Links />
         <GlobalStyle />
-        <Partytown nonce={nonce} forward={["dataLayer.push"]} />
         {/*
          * Shopify Storefront Web Components are large third-party bundles.
          * Do NOT load them in the document head: the header account button
