@@ -4,7 +4,10 @@ import { cva } from "class-variance-authority";
 import { useLocation, useRouteError, useRouteLoaderData } from "react-router";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { CartDrawer } from "~/components/cart/cart-drawer";
-import { useCartStore } from "~/components/cart/store";
+import {
+  useCartBootstrapResolved,
+  useCartStore,
+} from "~/components/cart/store";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -125,9 +128,20 @@ function ShopifyAccountButton() {
   let publicAccessToken = rootData?.consent?.storefrontAccessToken;
   // Bootstrapped client-side via /api/cart (CartStoreSync) — the token must
   // not be embedded in the SSR document, which stays anonymous so Oxygen
-  // can full-page cache it. Until it loads, the component renders the
-  // signed-out avatar — same as the previous Suspense fallback.
+  // can full-page cache it.
   let customerAccessToken = useCartStore((state) => state.customerAccessToken);
+  // Until the first bootstrap response lands, the auth state is unknown —
+  // mounting an active <shopify-account> with a null token would open the
+  // signed-out/login flow for signed-in shoppers who click during that
+  // window. Render an inert icon instead (the old Suspense fallback).
+  let cartBootstrapResolved = useCartBootstrapResolved();
+  if (!cartBootstrapResolved) {
+    return (
+      <span aria-label="Loading account">
+        <UserIcon className="h-5 w-5" />
+      </span>
+    );
+  }
   return (
     <shopify-store
       store-domain={publicStoreDomain}
