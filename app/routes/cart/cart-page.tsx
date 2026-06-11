@@ -54,7 +54,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   switch (cartFormAction) {
     case CartForm.ACTIONS.LinesAdd: {
-      const lines = inputs.lines as CartLineInput[];
+      const lines = getCartLineInputs(inputs.lines as CartLineInput[]);
       if (!cart.getCartId()) {
         result = await cart.create({
           lines,
@@ -197,6 +197,17 @@ export default function CartRoute() {
   );
 }
 
+function getCartLineInputs(lines: CartLineInput[]): CartLineInput[] {
+  return lines.map(
+    ({ attributes, merchandiseId, parent, quantity, sellingPlanId }) => ({
+      attributes,
+      merchandiseId,
+      parent,
+      quantity,
+      sellingPlanId,
+    }),
+  );
+}
 function getCountryCodeFromRequestOrReferer(
   request: Request,
   fallbackCountryCode: CountryCode,
