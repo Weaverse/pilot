@@ -402,32 +402,38 @@ export function CartStoreSync() {
     ) {
       return;
     }
-    useCartStore.setState({
+    // Apply the response token and the cart state in ONE store update:
+    // consumers gate on the token (drawer body, <Analytics.CartView>), so a
+    // split update could let them observe "bootstrap complete" while
+    // serverCart still holds a stale pre-bootstrap cart (e.g. a cart:null
+    // response after checkout completed) and publish/render from it.
+    const updates: Partial<CartStore> = {
       customerAccessToken: payload.customerAccessToken,
       cartBootstrapResponseToken: responseToken,
-    });
+    };
     const resolved = payload.cart;
-    if (!resolved) {
+    if (resolved) {
+      const current = useCartStore.getState().serverCart;
+      const resolvedTime = new Date(resolved.updatedAt).getTime();
+      const currentTime = current?.updatedAt
+        ? new Date(current.updatedAt).getTime()
+        : 0;
+      if (resolvedTime >= currentTime) {
+        updates.serverCart = resolved as CartApiQueryFragment;
+      }
+    } else if (
       // Only clear when no mutation synced since this load was issued —
       // a slow pre-cookie bootstrap must not wipe a just-created cart.
-      if (cartMutationEpoch === cartBootstrapEpochByToken.get(responseToken)) {
-        // Reset the module ref too: useCart() consults it before the store,
-        // so a surviving entry would keep resurrecting a cart whose cookie
-        // expired or was completed at checkout.
-        freshestFetcherCartRef.cart = null;
-        freshestFetcherCartRef.updatedAt = "";
-        useCartStore.setState({ serverCart: null });
-      }
-      return;
+      cartMutationEpoch === cartBootstrapEpochByToken.get(responseToken)
+    ) {
+      // Reset the module ref too: useCart() consults it before the store,
+      // so a surviving entry would keep resurrecting a cart whose cookie
+      // expired or was completed at checkout.
+      freshestFetcherCartRef.cart = null;
+      freshestFetcherCartRef.updatedAt = "";
+      updates.serverCart = null;
     }
-    const current = useCartStore.getState().serverCart;
-    const resolvedTime = new Date(resolved.updatedAt).getTime();
-    const currentTime = current?.updatedAt
-      ? new Date(current.updatedAt).getTime()
-      : 0;
-    if (resolvedTime >= currentTime) {
-      useCartStore.setState({ serverCart: resolved as CartApiQueryFragment });
-    }
+    useCartStore.setState(updates);
   }, [payload]);
   return null;
 }
