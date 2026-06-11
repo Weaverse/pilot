@@ -158,38 +158,11 @@ export const Layout = withWeaverse(function RootLayout({
         <Links />
         <GlobalStyle />
         {/*
-         * Shopify Storefront Web Components are split across two disjoint
-         * feature bundles (NOT umbrella vs per-component):
-         *   web-components.js          → <shopify-store>, <shopify-cart>,
-         *                                 <shopify-catalog>, <shopify-context>,
-         *                                 <shopify-data>, <shopify-media>, …
-         *   web-components/account.js  → <shopify-account>,
-         *                                 <shopify-customer-account-data>
-         *
-         * <shopify-account> is rendered inside <shopify-store> in this header
-         * so both bundles must be loaded. account.js does dynamic-import a
-         * chunked store-*.js to register <shopify-store>, but the chunk
-         * arrives AFTER <shopify-account>'s connectedCallback fires, which
-         * emits the visible warning
-         *   [shopify-account] <shopify-store> custom element is not registered
-         * and the account widget renders an empty slot.
-         *
-         * Use `defer` (not `async`): module scripts execute in document order
-         * with defer, which is required — if account.js runs before
-         * web-components.js, the same warning fires.
+         * Shopify Storefront Web Components are large third-party bundles.
+         * Do NOT load them in the document head: the header account button
+         * lazy-loads them on hover/focus/click instead, preserving the
+         * required script order (web-components.js before account.js).
          */}
-        <script
-          type="module"
-          src="https://cdn.shopify.com/storefront/web-components.js"
-          defer
-          nonce={nonce}
-        />
-        <script
-          type="module"
-          src="https://cdn.shopify.com/storefront/web-components/account.js"
-          defer
-          nonce={nonce}
-        />
       </head>
       <body
         style={
