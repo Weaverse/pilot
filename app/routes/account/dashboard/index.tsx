@@ -1,7 +1,7 @@
-import { SignOutIcon } from "@phosphor-icons/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import { Suspense } from "react";
 import { Await, Form, useLoaderData, useOutletContext } from "react-router";
+import { Icon } from "~/components/icon";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
@@ -44,7 +44,7 @@ export default function AccountDashboard() {
             type="submit"
             className="group flex items-center gap-2 text-body-subtle"
           >
-            <SignOutIcon className="h-4 w-4" />
+            <Icon name="sign-out" className="h-4 w-4" />
             <span className="underline-offset-4 group-hover:underline">
               Sign out
             </span>

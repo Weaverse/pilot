@@ -1,7 +1,7 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import clsx from "clsx";
 import { useState } from "react";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
@@ -45,7 +45,10 @@ export function DesktopMenu() {
                   {hasSubmenu ? (
                     <>
                       <span>{title}</span>
-                      <CaretDownIcon className="h-3.5 w-3.5 transition-transform" />
+                      <Icon
+                        name="caret-down"
+                        className="h-3.5 w-3.5 transition-transform"
+                      />
                     </>
                   ) : (
                     <NavigationMenu.Link asChild>

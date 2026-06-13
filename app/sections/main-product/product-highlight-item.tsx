@@ -1,33 +1,22 @@
 import {
-  ClockIcon,
-  GlobeIcon,
-  HeartIcon,
-  LeafIcon,
-  MapPinIcon,
-  PackageIcon,
-  PencilLineIcon,
-  ShieldCheckIcon,
-  SmileyIcon,
-  StarIcon,
-} from "@phosphor-icons/react";
-import {
   createSchema,
   type HydrogenComponentProps,
   useParentInstance,
 } from "@weaverse/hydrogen";
+import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
 let ICONS = {
-  globe: GlobeIcon,
-  "map-pin": MapPinIcon,
-  "pencil-line": PencilLineIcon,
-  smiley: SmileyIcon,
-  "shield-check": ShieldCheckIcon,
-  star: StarIcon,
-  heart: HeartIcon,
-  clock: ClockIcon,
-  leaf: LeafIcon,
-  package: PackageIcon,
+  globe: "globe-duotone",
+  "map-pin": "map-pin-duotone",
+  "pencil-line": "pencil-line-duotone",
+  smiley: "smiley-duotone",
+  "shield-check": "shield-check-duotone",
+  star: "star-duotone",
+  heart: "heart-duotone",
+  clock: "clock-duotone",
+  leaf: "leaf-duotone",
+  package: "package-duotone",
 } as const;
 
 type IconOption = keyof typeof ICONS;
@@ -46,7 +35,7 @@ export default function ProductHighlightItem(props: HighlightItemProps) {
     return null;
   }
 
-  let IconComponent = ICONS[icon];
+  let iconName = ICONS[icon];
 
   return (
     <div
@@ -58,11 +47,8 @@ export default function ProductHighlightItem(props: HighlightItemProps) {
           : "items-center",
       )}
     >
-      {IconComponent && (
-        <IconComponent
-          className="size-6 shrink-0 text-slate-700"
-          weight="duotone"
-        />
+      {iconName && (
+        <Icon name={iconName} className="size-6 shrink-0 text-slate-700" />
       )}
       <span>{text}</span>
     </div>

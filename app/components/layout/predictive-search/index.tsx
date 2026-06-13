@@ -1,12 +1,8 @@
-import {
-  ArrowRightIcon,
-  MagnifyingGlassIcon,
-  XIcon,
-} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { type RefObject, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { cn } from "~/utils/cn";
@@ -31,7 +27,7 @@ export function PredictiveSearchButton() {
         className="hidden h-8 w-8 items-center justify-center focus-visible:outline-hidden lg:flex"
       >
         <button type="button">
-          <MagnifyingGlassIcon className="h-5 w-5" />
+          <Icon name="magnifying-glass" className="h-5 w-5" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -60,7 +56,10 @@ export function PredictiveSearchButton() {
               {({ fetchResults, inputRef }) => (
                 <div className="mx-auto w-140 max-w-[90vw] space-y-2 py-6">
                   <div className="flex items-center gap-3 border border-line-subtle px-3 rounded-lg">
-                    <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
+                    <Icon
+                      name="magnifying-glass"
+                      className="h-5 w-5 shrink-0 text-gray-500"
+                    />
                     <input
                       name="q"
                       type="search"
@@ -93,7 +92,7 @@ export function PredictiveSearchButton() {
                         }
                       }}
                     >
-                      <XIcon className="h-5 w-5" />
+                      <Icon name="x" className="h-5 w-5" />
                     </button>
                   </div>
                   <PopularKeywords
@@ -152,7 +151,7 @@ function PredictiveSearchResults() {
                 className="flex w-fit items-center gap-2"
               >
                 <span>View all results</span>
-                <ArrowRightIcon className="h-4 w-4" />
+                <Icon name="arrow-right" className="h-4 w-4" />
               </Link>
             </div>
           )}

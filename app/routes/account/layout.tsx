@@ -1,4 +1,3 @@
-import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { CacheNone, generateCacheControlHeader } from "@shopify/hydrogen";
@@ -6,6 +5,7 @@ import { clsx } from "clsx";
 import type { CustomerDetailsQuery } from "customer-account-api.generated";
 import type { LoaderFunctionArgs } from "react-router";
 import { data, Outlet, useLoaderData, useMatches } from "react-router";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { routeHeaders } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
@@ -84,7 +84,7 @@ export default function AccountLayout() {
                     className="absolute top-5 right-4 p-2"
                     aria-label="Close account modal"
                   >
-                    <XIcon className="h-4 w-4" />
+                    <Icon name="x" className="h-4 w-4" />
                   </Link>
                 </Dialog.Close>
               </div>

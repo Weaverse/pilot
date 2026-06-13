@@ -1,11 +1,3 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ArrowsOutSimpleIcon,
-  CubeIcon,
-  VideoCameraIcon,
-  XIcon,
-} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ExternalVideo, ModelViewer, parseGid } from "@shopify/hydrogen";
@@ -19,6 +11,7 @@ import type {
   MediaFragment,
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { ScrollArea } from "~/components/scroll-area";
 import { Spinner } from "~/components/spinner";
@@ -149,12 +142,12 @@ export function ZoomModal({
                         />
                         {mediaContentType === "VIDEO" && (
                           <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
-                            <VideoCameraIcon className="size-5" />
+                            <Icon name="video-camera" className="size-5" />
                           </div>
                         )}
                         {mediaContentType === "MODEL_3D" && (
                           <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
-                            <CubeIcon className="size-5" />
+                            <Icon name="cube" className="size-5" />
                           </div>
                         )}
                       </div>
@@ -176,7 +169,7 @@ export function ZoomModal({
               />
             </div>
             <Dialog.Close className="absolute top-4 right-4 z-1">
-              <XIcon className="h-6 w-6" />
+              <Icon name="x" className="h-6 w-6" />
             </Dialog.Close>
             <div className="absolute right-10 bottom-10 left-10 flex items-center justify-center gap-2 md:left-auto">
               <Button
@@ -187,7 +180,7 @@ export function ZoomModal({
                   scrollToMedia(prevMedia.id);
                 }}
               >
-                <ArrowLeftIcon className="h-4.5 w-4.5" />
+                <Icon name="arrow-left" className="h-4.5 w-4.5" />
               </Button>
               <Button
                 variant="secondary"
@@ -197,7 +190,7 @@ export function ZoomModal({
                   scrollToMedia(nextMedia.id);
                 }}
               >
-                <ArrowRightIcon className="h-4.5 w-4.5" />
+                <Icon name="arrow-right" className="h-4.5 w-4.5" />
               </Button>
             </div>
           </div>
@@ -291,7 +284,7 @@ export function ZoomButton({ className, ...props }: ZoomButtonProps) {
       aria-label="Zoom product media"
       {...props}
     >
-      <ArrowsOutSimpleIcon className="h-5 w-5" />
+      <Icon name="arrows-out-simple" className="h-5 w-5" />
     </button>
   );
 }

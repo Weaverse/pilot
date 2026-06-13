@@ -1,5 +1,5 @@
-import { StarIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
 interface RatingInputProps {
@@ -47,8 +47,8 @@ export function RatingInput({
             aria-label={`Rate ${value} star${value !== 1 ? "s" : ""}`}
             aria-pressed={value === rating}
           >
-            <StarIcon
-              weight={value <= (hoverRating || rating) ? "fill" : "regular"}
+            <Icon
+              name={value <= (hoverRating || rating) ? "star-fill" : "star"}
               className="h-8 w-8"
             />
           </button>

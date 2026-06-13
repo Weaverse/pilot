@@ -1,7 +1,7 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import type { loader as productLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
@@ -54,7 +54,10 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
               )}
             >
               <h5 className="text-base">{title}</h5>
-              <CaretDownIcon className="h-4 w-4 transition-transform duration-200" />
+              <Icon
+                name="caret-down"
+                className="h-4 w-4 transition-transform duration-200"
+              />
             </Accordion.Trigger>
             <Accordion.Content
               className={cn(

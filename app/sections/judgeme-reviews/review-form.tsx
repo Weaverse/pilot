@@ -1,8 +1,8 @@
-import { CheckIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type React from "react";
 import { useRef, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
@@ -94,7 +94,7 @@ export function ReviewForm({
         aria-live="polite"
       >
         <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <CheckIcon className="h-8 w-8 text-green-600" />
+          <Icon name="check" className="h-8 w-8 text-green-600" />
         </div>
         <h3 className="mb-2 font-semibold text-green-900 text-xl">
           Review Submitted Successfully!
@@ -116,7 +116,7 @@ export function ReviewForm({
         aria-live="polite"
       >
         <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-          <WarningCircleIcon className="h-8 w-8 text-red-600" />
+          <Icon name="warning-circle" className="h-8 w-8 text-red-600" />
         </div>
         <h3 className="mb-2 font-semibold text-red-900 text-xl">
           Submission Failed

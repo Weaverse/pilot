@@ -1,4 +1,3 @@
-import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
@@ -7,6 +6,7 @@ import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import { useProductGridStore } from "~/components/product-grid/store";
 import { ScrollArea } from "~/components/scroll-area";
@@ -32,7 +32,7 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
           className="flex h-12 items-center gap-1.5 border py-2"
           animate={false}
         >
-          <SlidersIcon size={18} />
+          <Icon name="sliders" size={18} />
           <span>Filter</span>
         </Button>
       </Dialog.Trigger>
@@ -64,7 +64,7 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
                   className="translate-x-2 p-2"
                   aria-label="Close filters drawer"
                 >
-                  <XIcon className="h-4 w-4" />
+                  <Icon name="x" className="h-4 w-4" />
                 </button>
               </Dialog.Close>
             </div>

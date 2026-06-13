@@ -1,4 +1,4 @@
-import { StarIcon } from "@phosphor-icons/react";
+import { Icon } from "~/components/icon";
 import type { JudgemeRatingDistribution } from "~/types/judgeme";
 
 export function RatingProgressBar({
@@ -11,8 +11,8 @@ export function RatingProgressBar({
       {/* Star icon */}
       <div className="flex shrink-0 items-center gap-1">
         <span className="text-gray-700">{rating}</span>
-        <StarIcon
-          weight="fill"
+        <Icon
+          name="star-fill"
           className="h-4 w-4 text-(--color-product-reviews)"
         />
       </div>

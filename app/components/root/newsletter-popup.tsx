@@ -1,4 +1,3 @@
-import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
@@ -6,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
@@ -144,7 +144,7 @@ export function NewsletterPopup() {
                 className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-2xl bg-white/80 border border-gray-300 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
                 aria-label="Close"
               >
-                <XIcon size={14} />
+                <Icon name="x" size={14} />
               </button>
             </Dialog.Close>
 

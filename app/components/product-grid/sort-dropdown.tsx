@@ -1,6 +1,6 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useLocation, useSearchParams } from "react-router";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { clearPaginationParams } from "~/sections/main-collection/filters/filter-utils";
 import type { SortParam } from "~/types/others";
@@ -32,7 +32,7 @@ export function SortDropdown({ options, className }: SortDropdownProps) {
           Sort by: <span className="font-semibold">{currentSort.label}</span>
         </span>
         <span className="lg:hidden">Sort</span>
-        <CaretDownIcon />
+        <Icon name="caret-down" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content

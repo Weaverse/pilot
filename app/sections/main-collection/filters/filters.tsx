@@ -1,4 +1,3 @@
-import { CaretRightIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
@@ -6,6 +5,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { OPTIONS_AS_SWATCH } from "~/components/product/product-option-values";
 import { ScrollArea } from "~/components/scroll-area";
 import type { AppliedFilter } from "~/types/others";
@@ -64,7 +64,10 @@ export function Filters({
             >
               <Accordion.Trigger className="flex w-full items-center justify-between data-[state=open]:[&>svg]:rotate-90">
                 <span className="uppercase">{filter.label}</span>
-                <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
+                <Icon
+                  name="caret-right"
+                  className="h-4 w-4 rotate-0 transition-transform"
+                />
               </Accordion.Trigger>
               <Accordion.Content
                 className={clsx([

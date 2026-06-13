@@ -1,6 +1,6 @@
-import { TagIcon } from "@phosphor-icons/react";
 import { Money } from "@shopify/hydrogen";
 import type { OrderLineItemFullFragment } from "customer-account-api.generated";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 
 export function OrderLineItem({
@@ -39,7 +39,7 @@ export function OrderLineItem({
                 key={index}
                 className="flex w-fit items-center gap-1 border border-line-subtle rounded px-1.5 py-1 text-body-subtle text-sm"
               >
-                <TagIcon className="h-4 w-4" />
+                <Icon name="tag" className="h-4 w-4" />
                 <span>{discountTitle}</span>
                 <div className="inline-flex">
                   (<span>-</span>

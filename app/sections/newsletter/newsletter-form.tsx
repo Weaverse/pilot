@@ -1,8 +1,8 @@
-import { EnvelopeSimpleIcon } from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import type { CustomerApiPlayLoad } from "~/routes/api/customer";
 
@@ -32,7 +32,10 @@ function NewsLetterForm(props: NewsLetterInputProps) {
         className="flex w-full items-center overflow-hidden rounded-md border"
       >
         <div className="flex grow items-center">
-          <EnvelopeSimpleIcon className="mr-1.5 ml-3 h-5 w-5 shrink-0" />
+          <Icon
+            name="envelope-simple"
+            className="mr-1.5 ml-3 h-5 w-5 shrink-0"
+          />
           <input
             name="email"
             type="email"

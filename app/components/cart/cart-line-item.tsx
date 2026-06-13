@@ -1,4 +1,3 @@
-import { TrashIcon } from "@phosphor-icons/react";
 import {
   CartForm,
   Money,
@@ -8,6 +7,7 @@ import {
 import clsx from "clsx";
 import type { FetcherWithComponents } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
@@ -150,7 +150,7 @@ function ItemRemoveButtonInner({
       type="submit"
     >
       <span className="sr-only">Remove</span>
-      <TrashIcon aria-hidden="true" className="size-4.5" />
+      <Icon name="trash" aria-hidden="true" className="size-4.5" />
     </button>
   );
 }

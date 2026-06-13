@@ -1,4 +1,3 @@
-import { MagnifyingGlassIcon, UserIcon } from "@phosphor-icons/react";
 import { useNonce } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
@@ -10,6 +9,7 @@ import {
   useCartStore,
   useCustomerAccessTokenKnown,
 } from "~/components/cart/store";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -177,7 +177,7 @@ export function Header() {
         <div className="flex items-center gap-1">
           <MobileMenu />
           <Link to="/search" className="p-1.5 lg:hidden">
-            <MagnifyingGlassIcon className="h-5 w-5" />
+            <Icon name="magnifying-glass" className="h-5 w-5" />
           </Link>
           <div className="hidden lg:block">
             <Logo />
@@ -267,7 +267,7 @@ function ShopifyAccountButton() {
   if (!customerAccessTokenKnown) {
     return (
       <span aria-hidden="true">
-        <UserIcon className="h-5 w-5" />
+        <Icon name="user" className="h-5 w-5" />
       </span>
     );
   }
@@ -283,7 +283,7 @@ function ShopifyAccountButton() {
         onFocus={() => warmAccountComponents()}
         onPointerEnter={() => warmAccountComponents()}
       >
-        <UserIcon className="h-5 w-5" />
+        <Icon name="user" className="h-5 w-5" />
       </button>
     );
   }
@@ -296,7 +296,7 @@ function ShopifyAccountButton() {
     >
       <shopify-account ref={accountRef} sign-in-url="/account/login">
         <span slot="signed-out-avatar">
-          <UserIcon className="h-5 w-5" />
+          <Icon name="user" className="h-5 w-5" />
         </span>
       </shopify-account>
     </shopify-store>

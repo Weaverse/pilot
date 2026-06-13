@@ -1,9 +1,4 @@
-import {
-  FacebookLogoIcon,
-  InstagramLogoIcon,
-  LinkedinLogoIcon,
-  XLogoIcon,
-} from "@phosphor-icons/react";
+import { Icon, type IconName } from "~/components/icon";
 import Link from "~/components/link";
 
 interface SocialLinksProps {
@@ -20,11 +15,15 @@ export function SocialLinks({
   socialFacebook,
 }: SocialLinksProps) {
   const accounts = [
-    { name: "Instagram", to: socialInstagram, Icon: InstagramLogoIcon },
-    { name: "X", to: socialX, Icon: XLogoIcon },
-    { name: "LinkedIn", to: socialLinkedIn, Icon: LinkedinLogoIcon },
-    { name: "Facebook", to: socialFacebook, Icon: FacebookLogoIcon },
-  ].filter((acc) => acc.to && acc.to.trim() !== "");
+    { name: "Instagram", to: socialInstagram, icon: "instagram-logo" },
+    { name: "X", to: socialX, icon: "x-logo" },
+    { name: "LinkedIn", to: socialLinkedIn, icon: "linkedin-logo" },
+    { name: "Facebook", to: socialFacebook, icon: "facebook-logo" },
+  ].filter((acc) => acc.to && acc.to.trim() !== "") as {
+    name: string;
+    to: string;
+    icon: IconName;
+  }[];
 
   if (accounts.length === 0) {
     return null;
@@ -32,14 +31,14 @@ export function SocialLinks({
 
   return (
     <div className="flex gap-4">
-      {accounts.map(({ to, name, Icon }) => (
+      {accounts.map(({ to, name, icon }) => (
         <Link
           key={name}
           to={to}
           target="_blank"
           className="flex items-center gap-2 text-lg"
         >
-          <Icon className="size-6" />
+          <Icon name={icon} className="size-6" />
         </Link>
       ))}
     </div>

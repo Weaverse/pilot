@@ -1,4 +1,3 @@
-import { FileTextIcon } from "@phosphor-icons/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
@@ -7,6 +6,7 @@ import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
+import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import { routeHeaders } from "~/utils/cache";
@@ -62,7 +62,7 @@ export default function Policies() {
                 className="w-fit gap-2"
                 to={`/policies/${policy.handle}`}
               >
-                <FileTextIcon className="h-5 w-5" />
+                <Icon name="file-text" className="h-5 w-5" />
                 <span>{policy.title}</span>
               </Link>
             );

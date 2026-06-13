@@ -1,9 +1,9 @@
-import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData, useLocation, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import Link, { variants } from "~/components/link";
 import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import type { AppliedFilter } from "~/types/others";
@@ -64,7 +64,7 @@ function ProductGrid(props: ProductGridProps) {
                   preventScrollReset
                 >
                   <span>{label}</span>
-                  <XIcon className="h-4 w-4" />
+                  <Icon name="x" className="h-4 w-4" />
                 </Link>
               );
             })}
@@ -124,7 +124,7 @@ function ProductGrid(props: ProductGridProps) {
         </Pagination>
       ) : (
         <div className="flex flex-col items-center justify-center gap-3 pt-20">
-          <FunnelXIcon size={50} weight="light" />
+          <Icon name="funnel-x-light" size={50} />
           <div className="text-lg">No products matched your filters.</div>
         </div>
       )}

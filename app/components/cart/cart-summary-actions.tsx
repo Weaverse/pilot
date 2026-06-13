@@ -1,4 +1,3 @@
-import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm } from "@shopify/hydrogen";
 import { useEffect, useState } from "react";
@@ -6,6 +5,7 @@ import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 import { useCartFetcherSync } from "./store";
@@ -64,7 +64,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
               aria-label="Close"
             >
-              <XIcon size={16} />
+              <Icon name="x" size={16} />
             </button>
           </Dialog.Close>
 
@@ -167,7 +167,7 @@ export function DiscountDialog({
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
               aria-label="Close"
             >
-              <XIcon size={16} />
+              <Icon name="x" size={16} />
             </button>
           </Dialog.Close>
 
@@ -276,7 +276,7 @@ export function GiftCardDialog({
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
               aria-label="Close"
             >
-              <XIcon size={16} />
+              <Icon name="x" size={16} />
             </button>
           </Dialog.Close>
 
