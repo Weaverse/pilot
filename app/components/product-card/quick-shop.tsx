@@ -6,7 +6,6 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { ShopPayButton } from "@shopify/hydrogen";
 import { IMAGES_PLACEHOLDERS, useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -19,6 +18,7 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
+import { LazyShopPayButton } from "~/components/product/lazy-shop-pay-button";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
@@ -143,7 +143,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
             {selectedVariant?.availableForSale ? "Add to cart" : "Sold out"}
           </AddToCartButton>
           {selectedVariant?.availableForSale && (
-            <ShopPayButton
+            <LazyShopPayButton
               width="100%"
               variantIdsAndQuantities={[
                 {
