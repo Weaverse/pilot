@@ -1,8 +1,3 @@
-import {
-  FacebookLogoIcon,
-  PinterestLogoIcon,
-  XLogoIcon,
-} from "@phosphor-icons/react";
 import { createSchema, isBrowser } from "@weaverse/hydrogen";
 import { useLoaderData, useRouteLoaderData } from "react-router";
 import {
@@ -11,6 +6,7 @@ import {
   TwitterShareButton,
 } from "react-share";
 import type { ArticleQuery } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { RootLoader } from "~/root";
@@ -69,13 +65,13 @@ export default function BlogPost(props: BlogPostProps) {
                 <div className="flex items-center gap-2">
                   <strong>Share:</strong>
                   <FacebookShareButton url={articleUrl}>
-                    <FacebookLogoIcon size={24} />
+                    <Icon name="facebook-logo" size={24} />
                   </FacebookShareButton>
                   <PinterestShareButton url={articleUrl} media={image?.url}>
-                    <PinterestLogoIcon size={24} />
+                    <Icon name="pinterest-logo" size={24} />
                   </PinterestShareButton>
                   <TwitterShareButton url={articleUrl} title={title}>
-                    <XLogoIcon size={24} />
+                    <Icon name="x-logo" size={24} />
                   </TwitterShareButton>
                 </div>
               )}

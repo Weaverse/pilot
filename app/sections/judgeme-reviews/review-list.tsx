@@ -1,11 +1,6 @@
-import {
-  CaretDoubleLeftIcon,
-  CaretDoubleRightIcon,
-  CaretLeftIcon,
-  CaretRightIcon,
-} from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useEffect } from "react";
+import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 import { ReviewItem, type ReviewItemProps } from "./review-item";
 import { useJudgemeStore } from "./store";
@@ -69,7 +64,7 @@ export function ReviewsPagination() {
         disabled={currentPage === 1}
         className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <CaretDoubleLeftIcon className="h-4 w-4" />
+        <Icon name="caret-double-left" className="h-4 w-4" />
       </button>
 
       <button
@@ -78,7 +73,7 @@ export function ReviewsPagination() {
         disabled={currentPage === 1}
         className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <CaretLeftIcon className="h-4 w-4" />
+        <Icon name="caret-left" className="h-4 w-4" />
       </button>
 
       {visiblePages.map((page, index) =>
@@ -109,7 +104,7 @@ export function ReviewsPagination() {
         disabled={currentPage === totalPage}
         className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <CaretRightIcon className="h-4 w-4" />
+        <Icon name="caret-right" className="h-4 w-4" />
       </button>
 
       <button
@@ -118,7 +113,7 @@ export function ReviewsPagination() {
         disabled={currentPage === totalPage}
         className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <CaretDoubleRightIcon className="h-4 w-4" />
+        <Icon name="caret-double-right" className="h-4 w-4" />
       </button>
     </div>
   );

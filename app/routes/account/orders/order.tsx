@@ -1,10 +1,10 @@
-import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import clsx from "clsx";
 import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { redirect, useLoaderData } from "react-router";
+import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import { ORDER_STATUS } from "~/routes/account/dashboard/orders-history";
@@ -89,7 +89,7 @@ export default function OrderDetails() {
             className="w-fit items-center gap-2 text-body-subtle after:bg-body-subtle"
             variant="underline"
           >
-            <ArrowLeftIcon className="h-4 w-4" />
+            <Icon name="arrow-left" className="h-4 w-4" />
             <span>Return to My Account</span>
           </Link>
         </div>

@@ -1,9 +1,3 @@
-import {
-  GiftIcon,
-  NotePencilIcon,
-  TagIcon,
-  XIcon,
-} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
@@ -12,6 +6,7 @@ import { useState } from "react";
 import { useFetcher, useLocation } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
@@ -99,7 +94,7 @@ export function CartSummary({
                 key={giftCard.id}
                 className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
               >
-                <GiftIcon className="h-4.5 w-4.5" aria-hidden="true" />
+                <Icon name="gift" className="h-4.5 w-4.5" aria-hidden="true" />
                 <div className="flex items-center gap-1 leading-normal">
                   <span>***{giftCard.lastCharacters}</span>
                   <span className="inline-flex items-center">
@@ -123,11 +118,7 @@ export function CartSummary({
                     {isGCRemoving ? (
                       <Spinner size={16} />
                     ) : (
-                      <XIcon
-                        className="size-4"
-                        weight="regular"
-                        aria-hidden="true"
-                      />
+                      <Icon name="x" className="size-4" aria-hidden="true" />
                     )}
                   </button>
                 </CartForm>
@@ -156,7 +147,7 @@ export function CartSummary({
                   key={discount.code}
                   className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
                 >
-                  <TagIcon className="h-4.5 w-4.5" aria-hidden="true" />
+                  <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />
                   <span className="leading-normal">{discount.code}</span>
                   <CartForm
                     route={cartRoute}
@@ -173,11 +164,7 @@ export function CartSummary({
                       {isDCRemoving ? (
                         <Spinner size={16} />
                       ) : (
-                        <XIcon
-                          className="size-4"
-                          weight="regular"
-                          aria-hidden="true"
-                        />
+                        <Icon name="x" className="size-4" aria-hidden="true" />
                       )}
                     </button>
                   </CartForm>
@@ -210,7 +197,7 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
-                  <NotePencilIcon className="size-4" />
+                  <Icon name="note-pencil" className="size-4" />
                   {layout === "drawer"
                     ? cartNoteButtonText || "Note"
                     : cartNoteButtonText || "Add a note"}
@@ -226,7 +213,7 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
-                  <TagIcon className="size-4" />
+                  <Icon name="tag" className="size-4" />
                   {layout === "drawer"
                     ? discountCodeButtonText || "Discount"
                     : discountCodeButtonText || "Add a discount code"}
@@ -242,7 +229,7 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
-                  <GiftIcon className="size-4" />
+                  <Icon name="gift" className="size-4" />
                   {layout === "drawer"
                     ? giftCardButtonText || "Gift card"
                     : giftCardButtonText || "Redeem a gift card"}

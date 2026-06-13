@@ -1,10 +1,10 @@
-import { ArrowRightIcon, HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { Spinner } from "~/components/spinner";
 import { useCart, useCartBootstrapResolved, useCartStore } from "./store";
@@ -35,7 +35,7 @@ export function CartDrawer() {
         onClick={() => publish("custom_sidecart_viewed", { cart })}
         className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
       >
-        <HandbagIcon className="h-5 w-5" />
+        <Icon name="handbag" className="h-5 w-5" />
         {cart?.totalQuantity > 0 && (
           <div
             className={clsx(
@@ -79,7 +79,10 @@ export function CartDrawer() {
                 >
                   Cart
                   {cartBootstrapResolved && ` (${cart?.totalQuantity || 0})`}
-                  <ArrowRightIcon className="size-4 transition-transform group-hover/cart-title:translate-x-0.5" />
+                  <Icon
+                    name="arrow-right"
+                    className="size-4 transition-transform group-hover/cart-title:translate-x-0.5"
+                  />
                 </Link>
               </Dialog.Title>
               <Dialog.Close asChild>
@@ -88,7 +91,7 @@ export function CartDrawer() {
                   className="translate-x-2 p-2"
                   aria-label="Close cart drawer"
                 >
-                  <XIcon className="h-4 w-4" />
+                  <Icon name="x" className="h-4 w-4" />
                 </button>
               </Dialog.Close>
             </div>

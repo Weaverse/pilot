@@ -1,6 +1,6 @@
-import { CaretRightIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import clsx from "clsx";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { useShopMenu } from "~/hooks/use-shop-menu";
@@ -23,7 +23,10 @@ export function FooterMenu() {
             ) : (
               <Link to={to}>{title}</Link>
             )}
-            <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
+            <Icon
+              name="caret-right"
+              className="h-4 w-4 rotate-0 transition-transform"
+            />
           </Accordion.Trigger>
           <h4 className="hidden font-medium text-base lg:block">
             {["#", "/"].includes(to) ? title : <Link to={to}>{title}</Link>}

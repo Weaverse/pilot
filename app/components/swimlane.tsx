@@ -1,6 +1,6 @@
-import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import type { ComponentPropsWithRef } from "react";
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
 interface SwimlaneProps extends ComponentPropsWithRef<"div"> {
@@ -88,7 +88,7 @@ export function Swimlane({
             )}
             aria-label="Scroll left"
           >
-            <CaretLeftIcon size={24} />
+            <Icon name="caret-left" size={24} />
           </button>
           <button
             type="button"
@@ -100,7 +100,7 @@ export function Swimlane({
             )}
             aria-label="Scroll right"
           >
-            <CaretRightIcon size={24} />
+            <Icon name="caret-right" size={24} />
           </button>
         </div>
       )}

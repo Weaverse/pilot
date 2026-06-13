@@ -1,7 +1,7 @@
-import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import * as Popover from "@radix-ui/react-popover";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
+import { Icon } from "~/components/icon";
 import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/utils/cn";
 import { LANGUAGE_LABELS } from "~/utils/const";
@@ -32,7 +32,7 @@ export function FooterCountrySelector() {
               style={{ width: "24px", height: "16px" }}
             />
             <span>{selectedLocale.label}</span>
-            <CaretDownIcon className="ml-auto h-4 w-4" />
+            <Icon name="caret-down" className="ml-auto h-4 w-4" />
           </button>
         </Popover.Trigger>
         <Popover.Portal>
@@ -75,7 +75,10 @@ export function FooterCountrySelector() {
                         {locale.label}
                       </span>
                       {isActiveCountry ? (
-                        <CheckIcon className="ml-auto size-4 shrink-0" />
+                        <Icon
+                          name="check"
+                          className="ml-auto size-4 shrink-0"
+                        />
                       ) : null}
                     </Popover.Close>
                   );
@@ -99,7 +102,10 @@ export function FooterCountrySelector() {
                         {group.label}
                       </span>
                       {isActiveCountry ? (
-                        <CheckIcon className="ml-auto size-4 shrink-0" />
+                        <Icon
+                          name="check"
+                          className="ml-auto size-4 shrink-0"
+                        />
                       ) : null}
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8">

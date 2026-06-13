@@ -1,7 +1,7 @@
-import { CircleNotchIcon } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
+import { Icon } from "~/components/icon";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import { cn } from "~/utils/cn";
 
@@ -152,7 +152,10 @@ export function Button(props: ButtonProps) {
 function Spinner() {
   return (
     <span className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 [&~*]:invisible">
-      <CircleNotchIcon className="h-5 w-5 animate-spin [animation-duration:var(--spinner-duration,500ms)]" />
+      <Icon
+        name="circle-notch"
+        className="h-5 w-5 animate-spin [animation-duration:var(--spinner-duration,500ms)]"
+      />
     </span>
   );
 }

@@ -1,8 +1,8 @@
-import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import * as Popover from "@radix-ui/react-popover";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
+import { Icon } from "~/components/icon";
 import { ScrollArea } from "~/components/scroll-area";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
@@ -42,7 +42,7 @@ export function HeaderCountrySelector() {
             ) : (
               <span>{selectedLocale.country}</span>
             )}
-            <CaretDownIcon className="h-3 w-3" />
+            <Icon name="caret-down" className="h-3 w-3" />
           </button>
         </Popover.Trigger>
         <Popover.Portal>
@@ -85,7 +85,10 @@ export function HeaderCountrySelector() {
                         {locale.label}
                       </span>
                       {isActiveCountry ? (
-                        <CheckIcon className="ml-auto size-4 shrink-0" />
+                        <Icon
+                          name="check"
+                          className="ml-auto size-4 shrink-0"
+                        />
                       ) : null}
                     </Popover.Close>
                   );
@@ -109,7 +112,10 @@ export function HeaderCountrySelector() {
                         {group.label}
                       </span>
                       {isActiveCountry ? (
-                        <CheckIcon className="ml-auto size-4 shrink-0" />
+                        <Icon
+                          name="check"
+                          className="ml-auto size-4 shrink-0"
+                        />
                       ) : null}
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8">

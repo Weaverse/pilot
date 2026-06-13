@@ -45,7 +45,6 @@ export default defineConfig(({ isSsrBuild }) => ({
             if (id.includes("react-player")) return "vendor-media";
             if (id.includes("swiper")) return "vendor-media";
             if (id.includes("react-share")) return "vendor-social";
-            if (id.includes("@phosphor-icons")) return "vendor-icons";
             if (id.includes("@radix-ui")) return "vendor-radix";
           },
         },

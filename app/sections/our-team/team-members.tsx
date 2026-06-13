@@ -1,9 +1,4 @@
 import {
-  GithubLogoIcon,
-  LinkedinLogoIcon,
-  XLogoIcon,
-} from "@phosphor-icons/react";
-import {
   createSchema,
   type HydrogenComponentProps,
   useParentInstance,
@@ -11,6 +6,7 @@ import {
 } from "@weaverse/hydrogen";
 import { Link } from "react-router";
 import type { OurTeamQuery } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 
 type MemberType = {
@@ -65,7 +61,7 @@ function TeamMembers(props: TeamMembersProps) {
                         target="_blank"
                         className="text-gray-500 hover:text-gray-900"
                       >
-                        <LinkedinLogoIcon className="h-6 w-6" />
+                        <Icon name="linkedin-logo" className="h-6 w-6" />
                       </Link>
                     </li>
                   )}
@@ -76,7 +72,7 @@ function TeamMembers(props: TeamMembersProps) {
                         target="_blank"
                         className="text-gray-500 hover:text-gray-900"
                       >
-                        <GithubLogoIcon className="h-6 w-6" />
+                        <Icon name="github-logo" className="h-6 w-6" />
                       </Link>
                     </li>
                   )}
@@ -87,7 +83,7 @@ function TeamMembers(props: TeamMembersProps) {
                         target="_blank"
                         className="text-gray-500 hover:text-gray-900"
                       >
-                        <XLogoIcon className="h-6 w-6" />
+                        <Icon name="x-logo" className="h-6 w-6" />
                       </Link>
                     </li>
                   )}

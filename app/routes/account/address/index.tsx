@@ -1,4 +1,3 @@
-import { CheckIcon } from "@phosphor-icons/react";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import { flattenConnection } from "@shopify/hydrogen";
@@ -21,6 +20,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/account/edit";
 import { doLogout } from "../auth/logout";
@@ -375,7 +375,7 @@ export default function AccountEditAddressForm() {
             )}
           >
             <Checkbox.Indicator className="flex items-center justify-center text-current">
-              <CheckIcon className="h-4 w-4" weight="regular" />
+              <Icon name="check" className="h-4 w-4" />
             </Checkbox.Indicator>
           </Checkbox.Root>
           <label htmlFor="defaultAddress">Set as default address</label>

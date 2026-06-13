@@ -1,9 +1,3 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CubeIcon,
-  VideoCameraIcon,
-} from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import type {
@@ -12,6 +6,7 @@ import type {
 } from "storefront-api.generated";
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
@@ -131,12 +126,12 @@ export function MediaSlider({
                       />
                       {mediaContentType === "VIDEO" && (
                         <div className="absolute right-2 bottom-2 rounded-sm bg-gray-800 p-1 text-white">
-                          <VideoCameraIcon className="size-5" />
+                          <Icon name="video-camera" className="size-5" />
                         </div>
                       )}
                       {mediaContentType === "MODEL_3D" && (
                         <div className="absolute right-2 bottom-2 rounded-sm bg-gray-800 p-1 text-white">
-                          <CubeIcon className="size-5" />
+                          <Icon name="cube" className="size-5" />
                         </div>
                       )}
                     </SwiperSlide>
@@ -226,13 +221,13 @@ export function MediaSlider({
               type="button"
               className="media_slider__prev left-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowLeftIcon className="size-5" />
+              <Icon name="arrow-left" className="size-5" />
             </button>
             <button
               type="button"
               className="media_slider__next right-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
             >
-              <ArrowRightIcon className="size-5" />
+              <Icon name="arrow-right" className="size-5" />
             </button>
           </div>
         </div>

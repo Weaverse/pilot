@@ -1,9 +1,3 @@
-import {
-  HandbagSimpleIcon,
-  ImageIcon,
-  ShoppingCartIcon,
-  XIcon,
-} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { IMAGES_PLACEHOLDERS, useThemeSettings } from "@weaverse/hydrogen";
@@ -15,6 +9,7 @@ import type {
   ProductVariantFragment,
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
@@ -211,7 +206,7 @@ export function QuickShopTrigger({
         >
           {buttonType === "icon" ? (
             <>
-              <HandbagSimpleIcon size={16} className="h-4 w-4" />
+              <Icon name="handbag-simple" size={16} className="h-4 w-4" />
               <span className="w-0 overflow-hidden pl-0 text-base transition-all group-hover/quick-shop:w-9.5 group-hover/quick-shop:pl-2">
                 Add
               </span>
@@ -257,7 +252,7 @@ export function QuickShopTrigger({
                   className="absolute top-3 right-3 z-20 rounded-full p-2"
                   variant="secondary"
                 >
-                  <XIcon size={18} />
+                  <Icon name="x" size={18} />
                 </Button>
               </Dialog.Close>
             )}
@@ -274,7 +269,7 @@ export function QuickShopTrigger({
                 )}
               >
                 <Skeleton className="flex h-183 items-center justify-center">
-                  <ImageIcon className="h-16 w-16 text-body-subtle" />
+                  <Icon name="image" className="h-16 w-16 text-body-subtle" />
                 </Skeleton>
                 <div className="flex flex-col justify-start gap-5 py-6 pr-5">
                   <div className="flex gap-2">
@@ -289,7 +284,10 @@ export function QuickShopTrigger({
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="flex h-10 w-1/2 items-center justify-center">
-                    <ShoppingCartIcon className="h-5 w-5 text-body-subtle" />
+                    <Icon
+                      name="shopping-cart"
+                      className="h-5 w-5 text-body-subtle"
+                    />
                   </Skeleton>
                 </div>
               </div>

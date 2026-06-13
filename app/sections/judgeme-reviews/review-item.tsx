@@ -1,7 +1,7 @@
-import { ArrowLeftIcon, ArrowRightIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useState } from "react";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { StarRating } from "~/components/star-rating";
 import type { JudgeMeReviewType, JudgemeReviewImage } from "~/types/judgeme";
@@ -166,7 +166,7 @@ export function ReviewImagesModal({
 
           {/* Close button */}
           <Dialog.Close className="fixed top-4 right-4 z-10 rounded-md bg-white p-2 text-gray-900 transition-colors hover:bg-gray-100">
-            <XIcon className="h-5 w-5" />
+            <Icon name="x" className="h-5 w-5" />
           </Dialog.Close>
 
           <div
@@ -183,7 +183,7 @@ export function ReviewImagesModal({
                 className="-translate-y-1/2 absolute top-1/2 left-4 z-1 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
                 aria-label="Previous image"
               >
-                <ArrowLeftIcon className="h-5 w-5" />
+                <Icon name="arrow-left" className="h-5 w-5" />
               </button>
             )}
 
@@ -211,7 +211,7 @@ export function ReviewImagesModal({
                 className="-translate-y-1/2 absolute top-1/2 right-4 z-1 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
                 aria-label="Next image"
               >
-                <ArrowRightIcon className="h-5 w-5" />
+                <Icon name="arrow-right" className="h-5 w-5" />
               </button>
             )}
 

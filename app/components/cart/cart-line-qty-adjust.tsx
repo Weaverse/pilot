@@ -1,4 +1,3 @@
-import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import {
   CartForm,
   type OptimisticCart,
@@ -8,6 +7,7 @@ import {
 import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
 import type { FetcherWithComponents } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLineOptimisticData } from "./cart-line-item";
 import { useCartFetcherSync } from "./store";
@@ -46,7 +46,7 @@ export function CartLineQuantityAdjust({
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
-            <MinusIcon />
+            <Icon name="minus" />
             <OptimisticInput
               id={optimisticId}
               data={{ quantity: prevQuantity }}
@@ -67,7 +67,7 @@ export function CartLineQuantityAdjust({
             aria-label="Increase quantity"
             disabled={isOptimistic}
           >
-            <PlusIcon />
+            <Icon name="plus" />
             <OptimisticInput
               id={optimisticId}
               data={{ quantity: nextQuantity }}

@@ -1,9 +1,9 @@
-import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
 import { isBrowser } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { Icon } from "~/components/icon";
 import { Overlay } from "~/components/overlay";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import { variants } from "./styles";
@@ -235,9 +235,9 @@ export default function HeroVideo(props: HeroVideoProps) {
           aria-label={playing ? "Pause video" : "Play video"}
         >
           {playing ? (
-            <PauseIcon className="size-6" />
+            <Icon name="pause" className="size-6" />
           ) : (
-            <PlayIcon className="size-6" />
+            <Icon name="play" className="size-6" />
           )}
         </button>
       )}
