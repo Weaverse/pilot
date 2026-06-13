@@ -1,4 +1,3 @@
-import { ShopPayButton } from "@shopify/hydrogen";
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import {
   createSchema,
@@ -11,6 +10,7 @@ import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
+import { LazyShopPayButton } from "~/components/product/lazy-shop-pay-button";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
@@ -146,7 +146,7 @@ export default function SingleProduct(props: SingleProductProps) {
               {atcText}
             </AddToCartButton>
             {selectedVariant?.availableForSale && (
-              <ShopPayButton
+              <LazyShopPayButton
                 width="100%"
                 variantIdsAndQuantities={[
                   {
