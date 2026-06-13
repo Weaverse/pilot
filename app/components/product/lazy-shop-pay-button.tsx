@@ -12,22 +12,26 @@ type ShopPayButtonProps = ComponentProps<typeof ShopPayButton>;
  * page). Above-the-fold instances (the product buy box) still mount immediately
  * thanks to the 300px root margin, so accelerated checkout is unaffected.
  *
- * A reserved-height placeholder (matching `--shop-pay-button-height`) keeps the
- * layout stable, so swapping in the real button does not shift content (no CLS).
+ * The wrapper always reserves `--shop-pay-button-height` via `min-height`, so the
+ * space stays held both before the button mounts and while `shop-js` is still
+ * loading (Hydrogen's `ShopPayButton` renders an empty element until the script
+ * resolves). That keeps the layout stable end-to-end — no CLS.
  */
-export function LazyShopPayButton(props: ShopPayButtonProps) {
+export function LazyShopPayButton({
+  className,
+  width,
+  ...props
+}: ShopPayButtonProps) {
   const { ref, inView } = useInView({ triggerOnce: true, rootMargin: "300px" });
-
-  if (inView) {
-    return <ShopPayButton {...props} />;
-  }
 
   return (
     <div
       ref={ref}
-      aria-hidden="true"
-      className={props.className}
-      style={{ width: props.width, height: "var(--shop-pay-button-height)" }}
-    />
+      className={className}
+      aria-hidden={inView ? undefined : true}
+      style={{ width, minHeight: "var(--shop-pay-button-height)" }}
+    >
+      {inView ? <ShopPayButton width="100%" {...props} /> : null}
+    </div>
   );
 }
