@@ -8,7 +8,10 @@ import clsx from "clsx";
 import { createContext } from "react";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ScrollReveal } from "~/components/scroll-reveal";
+import {
+  RevealImmediateContext,
+  ScrollReveal,
+} from "~/components/scroll-reveal";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { ThemeSettings } from "~/types/weaverse";
 import type { SlideshowArrowsProps } from "./arrows";
@@ -144,7 +147,9 @@ export default function Slideshow(
         {children.map((child, idx) => (
           <SwiperSlide key={idx} className="bg-white">
             <EagerSlideContext.Provider value={idx === 0}>
-              {child}
+              <RevealImmediateContext.Provider value={idx === 0}>
+                {child}
+              </RevealImmediateContext.Provider>
             </EagerSlideContext.Provider>
           </SwiperSlide>
         ))}

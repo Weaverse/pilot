@@ -1,8 +1,15 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
+
+/**
+ * When true (via provider), descendant ScrollReveals render visible
+ * immediately. Provided by above-the-fold/LCP containers (e.g. the first
+ * slideshow slide) so hero text is not hidden until hydration runs.
+ */
+export const RevealImmediateContext = createContext(false);
 
 /**
  * Shared IntersectionObserver utility
@@ -123,6 +130,8 @@ export function ScrollReveal({
   ...rest
 }: ScrollRevealProps) {
   let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
+  let immediateFromContext = useContext(RevealImmediateContext);
+  let isImmediate = immediate || immediateFromContext;
   let [isVisible, setIsVisible] = useState(false);
   let [revealed, setRevealed] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
@@ -137,7 +146,7 @@ export function ScrollReveal({
   };
 
   useEffect(() => {
-    if (immediate || !revealElementsOnScroll || !internalRef.current) {
+    if (isImmediate || !revealElementsOnScroll || !internalRef.current) {
       return;
     }
 
@@ -148,7 +157,7 @@ export function ScrollReveal({
     });
 
     return cleanup;
-  }, [revealElementsOnScroll, immediate]);
+  }, [revealElementsOnScroll, isImmediate]);
 
   // Strip the reveal transition wrapper from the DOM once the animation
   // finishes so subsequent re-renders don't keep paying for the inline
@@ -169,7 +178,7 @@ export function ScrollReveal({
     return () => el.removeEventListener("transitionend", onEnd);
   }, [isVisible]);
 
-  if (immediate || !revealElementsOnScroll || revealed) {
+  if (isImmediate || !revealElementsOnScroll || revealed) {
     return (
       <Component ref={setRefs} className={className} style={style} {...rest}>
         {children}
