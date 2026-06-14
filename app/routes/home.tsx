@@ -20,11 +20,6 @@ export async function loader(args: LoaderFunctionArgs) {
     type = "CUSTOM";
   }
 
-  // INDEX uses the code-defined homepage SEO; CUSTOM pages (root-level
-  // Weaverse handles served by this route) get their SEO from Weaverse
-  // via getWeaverseSeoMeta in the meta export below.
-  const seo = type === "INDEX" ? seoPayload.home() : null;
-
   // Load async data in parallel for better performance
   const [weaverseData, { shop }] = await Promise.all([
     context.weaverse.loadPage({ type }),
@@ -36,6 +31,11 @@ export async function loader(args: LoaderFunctionArgs) {
 
   // Check weaverseData after parallel loading
   validateWeaverseData(weaverseData);
+
+  // INDEX uses the code-defined homepage SEO (now reflecting the shop name);
+  // CUSTOM pages (root-level Weaverse handles served by this route) get their
+  // SEO from Weaverse via getWeaverseSeoMeta in the meta export below.
+  const seo = type === "INDEX" ? seoPayload.home({ shop }) : null;
 
   return {
     shop,
