@@ -2,7 +2,15 @@
 
 Icons are [phosphor](https://phosphoricons.com) glyphs shipped as a single SVG
 **sprite** and rendered via `<use>`. There is **no per-icon JavaScript** — the
-whole set is one cached `sprite.svg`, so adding icons costs ~0 KB of JS.
+whole set is one `sprite.svg`, so adding icons costs ~0 KB of JS.
+
+The sprite is **inlined into the document** (hidden) once by `<IconSprite>` in
+the root layout, and `<Icon>` references symbols with a same-document
+`<use href="#name">`. This is deliberate: browsers block external SVG `<use>`
+references across origins, and on Oxygen the built `sprite.svg` is served from
+`cdn.shopify.com` while the storefront runs on its own domain — a URL-based
+`<use>` renders every icon empty in production (it only works in dev/preview,
+where assets are same-origin). Keep `<IconSprite />` mounted in `app/root.tsx`.
 
 ## Using an icon
 
@@ -61,6 +69,7 @@ Available suffixes: `-fill`, `-duotone`, `-light`, `-thin`, `-bold`
 | `other/build-icons.mjs`             | Generates the sprite + name union (`build:icons`) |
 | `app/components/icons/sprite.svg`   | **Generated** — one `<symbol>` per icon           |
 | `app/components/icons/name.d.ts`    | **Generated** — the `IconName` union              |
-| `app/components/icon.tsx`           | The `Icon` component                              |
+| `app/components/icon.tsx`           | The `Icon` component (`<use href="#name">`)       |
+| `app/components/icon-sprite.tsx`    | Inlines the sprite once; mount in the root layout |
 
 Do not hand-edit the generated files; rerun `npm run build:icons` instead.
