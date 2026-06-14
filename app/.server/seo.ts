@@ -22,7 +22,7 @@ function root({
 }): SeoConfig {
   return {
     title: shop?.name,
-    titleTemplate: "%s | Weaverse Hydrogen Demo Store",
+    titleTemplate: shop?.name ? `%s | ${shop.name}` : "%s",
     description: truncate(shop?.description ?? ""),
     handle: "@weaverse",
     url,
@@ -51,10 +51,10 @@ function root({
   };
 }
 
-function home(): SeoConfig {
+function home({ shop }: { shop?: Pick<ShopFragment, "name"> }): SeoConfig {
   return {
     title: "Home",
-    titleTemplate: "%s | Weaverse Hydrogen Demo Store",
+    titleTemplate: shop?.name ? `%s | ${shop.name}` : "%s",
     description: "The best Shopify Hydrogen Theme Customizer",
     robots: {
       noIndex: false,
@@ -420,12 +420,19 @@ function policy({
 
 function policies({
   policies: policiesData,
+  shop,
   url,
 }: {
   policies: Pick<ShopPolicy, "title" | "handle">[];
+  shop?: Pick<ShopFragment, "name">;
   url: Request["url"];
 }): SeoConfig {
   const origin = new URL(url).origin;
+  // Reflect the connected shop in policy SEO; fall back to a generic label only
+  // when the shop has no name configured.
+  const description = shop?.name
+    ? `${shop.name} store policies`
+    : "Store policies";
   const itemListElement: BreadcrumbList["itemListElement"] = policiesData
     .filter(Boolean)
     .map((pol, index) => {
@@ -439,7 +446,7 @@ function policies({
   return {
     title: "Policies",
     titleTemplate: "%s | Policies",
-    description: "Weaverse Hydrogen store policies",
+    description,
     jsonLd: [
       {
         "@context": "https://schema.org",
@@ -449,7 +456,7 @@ function policies({
       {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        description: "Weaverse Hydrogen store policies",
+        description,
         name: "Policies",
         url,
       },

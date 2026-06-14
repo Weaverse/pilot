@@ -25,15 +25,20 @@ export async function loader({
 
   invariant(data, "No data returned from Shopify API");
 
-  const policies = Object.values(
-    data.shop as NonNullableFields<typeof data.shop>,
-  ).filter(Boolean);
+  const { name, ...policyFields } = data.shop as NonNullableFields<
+    typeof data.shop
+  >;
+  const policies = Object.values(policyFields).filter(Boolean);
 
   if (policies.length === 0) {
     throw new Response("Not found", { status: 404 });
   }
 
-  const seo = seoPayload.policies({ policies, url: request.url });
+  const seo = seoPayload.policies({
+    policies,
+    shop: { name },
+    url: request.url,
+  });
 
   return {
     policies,
@@ -83,6 +88,7 @@ const POLICIES_QUERY = `#graphql
 
   query PoliciesIndex {
     shop {
+      name
       privacyPolicy {
         ...PolicyIndex
       }
