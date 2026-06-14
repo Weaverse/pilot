@@ -21,6 +21,31 @@ import {
 } from "./cart-summary-actions";
 import { useCartFetcherSync } from "./store";
 
+// Discount allocations live in two disjoint scopes: order-level discounts
+// ("X% off entire order") land in cart.discountAllocations, while line-scoped
+// codes ("X% off <collection/product>") allocate per line and leave the
+// cart-level array empty. Summing both is correct — they never overlap.
+function getCartDiscountTotal(cart: OptimisticCart<CartApiQueryFragment>) {
+  const allocations = [
+    ...(cart.discountAllocations ?? []),
+    ...(cart.lines?.nodes ?? []).flatMap(
+      (line) => line.discountAllocations ?? [],
+    ),
+  ];
+  const amount = allocations.reduce(
+    (sum, { discountedAmount }) =>
+      sum + Number.parseFloat(discountedAmount.amount),
+    0,
+  );
+  const currencyCode =
+    cart.cost?.subtotalAmount?.currencyCode ??
+    allocations[0]?.discountedAmount.currencyCode;
+  if (amount <= 0 || !currencyCode) {
+    return null;
+  }
+  return { amount: amount.toFixed(2), currencyCode };
+}
+
 export function CartSummary({
   cart,
   layout,
@@ -64,6 +89,7 @@ export function CartSummary({
     appliedGiftCards,
     note,
   } = cart;
+  const cartDiscount = getCartDiscountTotal(cart);
 
   // Show loading state for optimistic line item changes or pending cart actions
   const isCartUpdating =
@@ -171,6 +197,17 @@ export function CartSummary({
                 </div>
               );
             })}
+        </div>
+      )}
+      {cartDiscount && (
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <span className="flex items-center gap-1.5">
+            <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />
+            Discount
+          </span>
+          <span className="inline-flex items-center">
+            -<Money data={cartDiscount} />
+          </span>
         </div>
       )}
       {layout === "page" && (
