@@ -20,6 +20,7 @@ import {
 import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { CartStoreSync, useCartStore } from "./components/cart/store";
+import { IconSprite } from "./components/icon-sprite";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
@@ -172,6 +173,7 @@ export const Layout = withWeaverse(function RootLayout({
         }
         className="bg-background text-body antialiased"
       >
+        <IconSprite />
         {data ? (
           <Analytics.Provider
             // CartApiQueryFragment is the same runtime shape cart.get()

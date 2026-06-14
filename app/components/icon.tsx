@@ -1,6 +1,5 @@
 import type { ComponentProps } from "react";
 import type { IconName } from "./icons/name";
-import spriteHref from "./icons/sprite.svg";
 
 export type { IconName } from "./icons/name";
 
@@ -11,8 +10,9 @@ export type IconProps = {
 } & ComponentProps<"svg">;
 
 /**
- * Renders a phosphor icon from the generated SVG sprite via `<use>`.
- * Zero per-icon JS — the whole set ships as one cached `sprite.svg`.
+ * Renders a phosphor icon from the inlined SVG sprite via a same-document
+ * `<use href="#name">`. The sprite itself is injected once by `<IconSprite>`
+ * (in the root layout). Zero per-icon JS — the whole set ships as one sprite.
  */
 export function Icon({ name, size, ...props }: IconProps) {
   return (
@@ -23,7 +23,7 @@ export function Icon({ name, size, ...props }: IconProps) {
       aria-hidden={props["aria-label"] ? undefined : true}
       {...props}
     >
-      <use href={`${spriteHref}#${name}`} />
+      <use href={`#${name}`} />
     </svg>
   );
 }
