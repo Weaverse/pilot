@@ -42,7 +42,11 @@ export default defineConfig(({ isSsrBuild }) => ({
       rollupOptions: {
         output: {
           manualChunks(id: string) {
-            if (id.includes("react-player")) return "vendor-media";
+            // Do NOT force react-player into a manual chunk: it is
+            // lazy()-imported only by the hero-video section. Co-locating it
+            // with an eager dep (swiper, used by the homepage slideshow) drags
+            // its media stack (hls/mux/vimeo) onto every page and defeats the
+            // lazy boundary. Let Rollup split it with its dynamic import.
             if (id.includes("swiper")) return "vendor-media";
             if (id.includes("react-share")) return "vendor-social";
             if (id.includes("@radix-ui")) return "vendor-radix";
