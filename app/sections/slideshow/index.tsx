@@ -98,6 +98,7 @@ export default function Slideshow(
   return (
     <ScrollReveal
       as="section"
+      immediate
       key={Object.values(props)
         .filter((v) => typeof v !== "object")
         .join("-")}

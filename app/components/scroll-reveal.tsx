@@ -100,6 +100,13 @@ interface ScrollRevealProps extends React.HTMLAttributes<HTMLElement> {
   animation?: AnimationType;
   duration?: number;
   delay?: number;
+  /**
+   * Render visible immediately (no opacity-0 reveal gate, no observer).
+   * Required for above-the-fold/LCP sections: the default reveal hides
+   * content until hydration + IntersectionObserver fire, which delays the
+   * LCP element's paint until client JS runs.
+   */
+  immediate?: boolean;
   [key: string]: unknown;
 }
 
@@ -110,6 +117,7 @@ export function ScrollReveal({
   animation = "fade-up",
   duration = 0.5,
   delay = 0,
+  immediate = false,
   className,
   style,
   ...rest
@@ -129,7 +137,7 @@ export function ScrollReveal({
   };
 
   useEffect(() => {
-    if (!revealElementsOnScroll || !internalRef.current) {
+    if (immediate || !revealElementsOnScroll || !internalRef.current) {
       return;
     }
 
@@ -140,7 +148,7 @@ export function ScrollReveal({
     });
 
     return cleanup;
-  }, [revealElementsOnScroll]);
+  }, [revealElementsOnScroll, immediate]);
 
   // Strip the reveal transition wrapper from the DOM once the animation
   // finishes so subsequent re-renders don't keep paying for the inline
@@ -161,7 +169,7 @@ export function ScrollReveal({
     return () => el.removeEventListener("transitionend", onEnd);
   }, [isVisible]);
 
-  if (!revealElementsOnScroll || revealed) {
+  if (immediate || !revealElementsOnScroll || revealed) {
     return (
       <Component ref={setRefs} className={className} style={style} {...rest}>
         {children}
