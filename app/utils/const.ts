@@ -1,5 +1,10 @@
 import type { I18nLocale, Localizations } from "~/types/others";
 
+// The `default` entry is the single source of truth for the storefront's
+// default locale: `DEFAULT_LOCALE` (below) spreads it, and `themeSchema.i18n.
+// defaultLocale` reuses that — which is also what Weaverse Studio's Translation
+// Manager reads as the base language. Change `default` here (e.g. to en-CH) and
+// both the runtime locale and the Studio base language follow.
 export const COUNTRIES: Localizations = {
   default: {
     label: "United States (USD $)",
