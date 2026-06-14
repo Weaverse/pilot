@@ -107,9 +107,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
             >
               <Image
                 data={collection.image}
-                width={collection.image.width || 600}
-                height={collection.image.height || 400}
-                sizes="(max-width: 32em) 100vw, 45vw"
+                sizes="(min-width: 48em) 33vw, 67vw"
                 className={clsx([
                   "transition-all duration-300",
                   "scale-100 will-change-transform group-hover:scale-[1.05]",
