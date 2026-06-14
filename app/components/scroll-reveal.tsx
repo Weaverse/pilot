@@ -1,8 +1,15 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
+
+/**
+ * When true (via provider), descendant ScrollReveals render visible
+ * immediately. Provided by above-the-fold/LCP containers (e.g. the first
+ * slideshow slide) so hero text is not hidden until hydration runs.
+ */
+export const RevealImmediateContext = createContext(false);
 
 /**
  * Shared IntersectionObserver utility
@@ -100,6 +107,13 @@ interface ScrollRevealProps extends React.HTMLAttributes<HTMLElement> {
   animation?: AnimationType;
   duration?: number;
   delay?: number;
+  /**
+   * Render visible immediately (no opacity-0 reveal gate, no observer).
+   * Required for above-the-fold/LCP sections: the default reveal hides
+   * content until hydration + IntersectionObserver fire, which delays the
+   * LCP element's paint until client JS runs.
+   */
+  immediate?: boolean;
   [key: string]: unknown;
 }
 
@@ -110,11 +124,14 @@ export function ScrollReveal({
   animation = "fade-up",
   duration = 0.5,
   delay = 0,
+  immediate = false,
   className,
   style,
   ...rest
 }: ScrollRevealProps) {
   let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
+  let immediateFromContext = useContext(RevealImmediateContext);
+  let isImmediate = immediate || immediateFromContext;
   let [isVisible, setIsVisible] = useState(false);
   let [revealed, setRevealed] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
@@ -129,7 +146,7 @@ export function ScrollReveal({
   };
 
   useEffect(() => {
-    if (!revealElementsOnScroll || !internalRef.current) {
+    if (isImmediate || !revealElementsOnScroll || !internalRef.current) {
       return;
     }
 
@@ -140,7 +157,7 @@ export function ScrollReveal({
     });
 
     return cleanup;
-  }, [revealElementsOnScroll]);
+  }, [revealElementsOnScroll, isImmediate]);
 
   // Strip the reveal transition wrapper from the DOM once the animation
   // finishes so subsequent re-renders don't keep paying for the inline
@@ -161,7 +178,7 @@ export function ScrollReveal({
     return () => el.removeEventListener("transitionend", onEnd);
   }, [isVisible]);
 
-  if (!revealElementsOnScroll || revealed) {
+  if (isImmediate || !revealElementsOnScroll || revealed) {
     return (
       <Component ref={setRefs} className={className} style={style} {...rest}>
         {children}

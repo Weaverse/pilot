@@ -106,9 +106,7 @@ export function CollectionCard({
         {collectionImage ? (
           <Image
             data={collectionImage}
-            width={collectionImage.width || 600}
-            height={collectionImage.height || 400}
-            sizes="(max-width: 32em) 100vw, 45vw"
+            sizes="(min-width: 48em) 45vw, 100vw"
             loading={loading}
             className={clsx(
               "absolute inset-0 z-0",

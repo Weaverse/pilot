@@ -67,17 +67,38 @@ export function NewsletterPopup() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: just need to run once
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    if (!isDesignMode) {
-      const isDismissed = localStorage.getItem(POPUP_DISMISSED_KEY) === "true";
-      if (isDismissed) {
-        return;
-      }
-      timer = setTimeout(() => {
-        setOpen(true);
-      }, newsletterPopupDelay * 1000);
+    if (isDesignMode) {
+      return;
     }
-    return () => clearTimeout(timer);
+    if (localStorage.getItem(POPUP_DISMISSED_KEY) === "true") {
+      return;
+    }
+    // Defer the popup until the visitor first engages (scroll/pointer/key/
+    // touch), then honor the configured delay. A newsletter popup that covers
+    // the hero during the initial render is an intrusive interstitial: it hurts
+    // perceived load (the popup becomes the last-painted content) and is poor
+    // UX. Gating on first interaction mirrors the GTM defer in
+    // custom-analytics.tsx and only shows the popup to engaged visitors.
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const intentEvents = ["pointerdown", "keydown", "touchstart", "scroll"];
+    function start() {
+      cleanup();
+      timer = setTimeout(() => setOpen(true), newsletterPopupDelay * 1000);
+    }
+    function cleanup() {
+      for (const event of intentEvents) {
+        window.removeEventListener(event, start);
+      }
+    }
+    for (const event of intentEvents) {
+      window.addEventListener(event, start, { once: true, passive: true });
+    }
+    return () => {
+      cleanup();
+      if (timer) {
+        window.clearTimeout(timer);
+      }
+    };
   }, []);
 
   // Re-open popup when settings change in design mode
