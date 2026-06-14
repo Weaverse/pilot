@@ -1,5 +1,5 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-import { COUNTRIES } from "~/utils/const";
+import { COUNTRIES, DEFAULT_LOCALE } from "~/utils/const";
 import { version } from "../../package.json";
 import { announcementSettings } from "./settings/announcements";
 import { cartSettings } from "./settings/cart";
@@ -25,13 +25,7 @@ export const themeSchema: HydrogenThemeSchema = {
   },
   i18n: {
     urlStructure: "url-path",
-    defaultLocale: {
-      pathPrefix: "",
-      label: "United States (USD $)",
-      language: "EN",
-      country: "US",
-      currency: "USD",
-    },
+    defaultLocale: DEFAULT_LOCALE,
     shopLocales: Object.entries(COUNTRIES).map(
       ([pathPrefix, { label, language, country }]) => {
         return {
