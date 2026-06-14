@@ -25,13 +25,15 @@ import { useCartFetcherSync } from "./store";
 // ("X% off entire order") land in cart.discountAllocations, while line-scoped
 // codes ("X% off <collection/product>") allocate per line and leave the
 // cart-level array empty. Summing both is correct — they never overlap.
+// SHIPPING_LINE allocations (free-shipping discounts) are excluded: the summary
+// renders no shipping charge, so a shipping discount here wouldn't reconcile.
 function getCartDiscountTotal(cart: OptimisticCart<CartApiQueryFragment>) {
   const allocations = [
     ...(cart.discountAllocations ?? []),
     ...(cart.lines?.nodes ?? []).flatMap(
       (line) => line.discountAllocations ?? [],
     ),
-  ];
+  ].filter(({ targetType }) => targetType === "LINE_ITEM");
   const amount = allocations.reduce(
     (sum, { discountedAmount }) =>
       sum + Number.parseFloat(discountedAmount.amount),
@@ -43,7 +45,13 @@ function getCartDiscountTotal(cart: OptimisticCart<CartApiQueryFragment>) {
   if (amount <= 0 || !currencyCode) {
     return null;
   }
-  return { amount: amount.toFixed(2), currencyCode };
+  // Round to the currency's minor-unit precision (3-decimal KWD/BHD/TND,
+  // 0-decimal JPY, …) so the summed float matches how <Money> formats it.
+  const decimals = new Intl.NumberFormat("en", {
+    style: "currency",
+    currency: currencyCode,
+  }).resolvedOptions().maximumFractionDigits;
+  return { amount: amount.toFixed(decimals), currencyCode };
 }
 
 export function CartSummary({
@@ -199,7 +207,7 @@ export function CartSummary({
             })}
         </div>
       )}
-      {cartDiscount && (
+      {cartDiscount && !isCartUpdating && (
         <div className="mb-4 flex items-center justify-between gap-2">
           <span className="flex items-center gap-1.5">
             <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />

@@ -202,6 +202,7 @@ export const CART_QUERY_FRAGMENT = `#graphql
       discountedAmount {
         ...Money
       }
+      targetType
     }
     sellingPlanAllocation {
       sellingPlan {
@@ -263,6 +264,7 @@ export const CART_QUERY_FRAGMENT = `#graphql
       discountedAmount {
         ...Money
       }
+      targetType
     }
     merchandise {
       ... on ProductVariant {
@@ -359,6 +361,7 @@ export const CART_QUERY_FRAGMENT = `#graphql
       discountedAmount {
         ...Money
       }
+      targetType
     }
     note
     attributes {
