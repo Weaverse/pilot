@@ -108,7 +108,7 @@ import { openShopifyInbox } from "~/components/shopify-inbox";
 </button>;
 ```
 
-`openShopifyInbox()` clicks Shopify's bubble button (`#dummy-chat-button`, inside the same-origin `#dummy-chat-button-iframe`) and returns `true` when the button existed and was clicked, `false` otherwise (the loader has not rendered the button yet, or Inbox is not configured). Those element ids are **Shopify-internal and undocumented** — they can change when Shopify updates the chat loader.
+`openShopifyInbox()` opens the widget whatever state it is in: it clicks the loader's placeholder bubble (`#dummy-chat-button`, inside the same-origin `#dummy-chat-button-iframe`) for first-time visitors, or the `[data-spec="toggle-button"]` launcher inside the `<inbox-online-store-chat>` web component's shadow root once the full widget has loaded (skipping the click when the chat is already open, since that launcher toggles). It returns `true` when a launcher was found and clicked or the chat is already open, `false` otherwise (the widget has not rendered yet, or Inbox is not configured). These selectors are **Shopify-internal and undocumented** — they can change when Shopify updates the chat widget.
 
 ## Limitations
 
