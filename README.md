@@ -49,6 +49,7 @@ Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Co
 - [Swiper](https://swiperjs.com/) for carousels/sliders
 - [Judge.me](https://judge.me/) reviews integration
 - [Klaviyo](https://www.klaviyo.com/) integration for email marketing
+- [Shopify Inbox](https://apps.shopify.com/inbox) chat integration ([setup guide](.weaverse/docs/shopify-inbox.md))
 - Full-featured setup of components and routes
 - Fully customizable inside [Weaverse Studio](https://weaverse.io)
 

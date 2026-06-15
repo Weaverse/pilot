@@ -1,0 +1,92 @@
+# Shopify Inbox (Chat) Integration
+
+Pilot can render the [Shopify Inbox](https://apps.shopify.com/inbox) chat widget on every storefront page, giving shoppers real-time support without leaving the store.
+
+The widget is **opt-in**: it only renders when `PUBLIC_SHOPIFY_INBOX_SHOP_ID` is set, and degrades gracefully (renders nothing) otherwise.
+
+## How it works
+
+- [`app/utils/env.ts`](../../app/utils/env.ts) — `getPublicEnv()` filters the server `Env` down to its `PUBLIC_*` keys so private credentials are never sent to the browser.
+- [`app/root.tsx`](../../app/root.tsx) — the root `loader` returns `publicEnv: getPublicEnv(args.context.env)`, and the `Layout` renders `<ShopifyInbox>` when `publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID` is present.
+- [`app/components/shopify-inbox.tsx`](../../app/components/shopify-inbox.tsx) — loads the chat via Hydrogen's `<Script>` component (async, nonce applied automatically from the CSP provider).
+
+### Global loader — no app-extension UUID required
+
+The component renders the **store-agnostic** loader:
+
+```
+https://cdn.shopify.com/shopifycloud/shopify_chat/storefront/shopifyChatV1.js?...&shop_id=<id>&shop=<domain>
+```
+
+This loader reads `shop_id`/`shop` from its own `<script>` tag and resolves the
+store's widget bundle (`.../storefront/shopifyChatV1Widget.js`) at runtime. It is
+the same tag a Liquid Online Store injects into its `<head>`.
+
+> **Do not** hardcode the theme-app-extension URL
+> (`cdn.shopify.com/extensions/<uuid>/inbox-<version>/assets/shopifyChatV1Widget.js`).
+> That path embeds a store-specific UUID and a pinned version (`inbox-1274`, …)
+> that change per store and per app update. The global loader above has no such
+> dependency.
+
+## Setup
+
+### 1. Enable Shopify Inbox
+
+1. Install the [Shopify Inbox](https://apps.shopify.com/inbox) app in your Shopify admin.
+2. Enable the chat for the **Online Store** sales channel.
+
+### 2. Find your Inbox shop id
+
+1. Open the published Liquid theme preview for your store.
+2. Inspect the `<head>` and find the `shopifyChatV1.js` script tag.
+3. Copy the value of its `shop_id` query parameter.
+
+(See the [reference walkthrough](https://github.com/juanpprieto/hydrogen-chat-inbox?tab=readme-ov-file#1-find-your-shopify-inbox-shop-id) for screenshots.)
+
+### 3. Configure the environment variable
+
+Add the id to `.env`:
+
+```env
+PUBLIC_SHOPIFY_INBOX_SHOP_ID=your-shopify-inbox-shop-id
+```
+
+`shop.domain` is sent as the Inbox `shop` parameter and uses `PUBLIC_STORE_DOMAIN` (your store's `*.myshopify.com` domain) — the same value Shopify's injected Inbox tag carries — so no additional variable is required.
+
+## Configuration options
+
+By default the widget uses a black icon button anchored bottom-right. To customize it, pass a `button` prop to `<ShopifyInbox>` in [`app/root.tsx`](../../app/root.tsx):
+
+```tsx
+<ShopifyInbox
+  shop={{ domain: publicEnv.PUBLIC_STORE_DOMAIN, id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID }}
+  button={{ color: "#000000", style: "icon", position: "bottom_right", verticalPosition: "lowest", text: "chat_with_us", icon: "chat_bubble" }}
+/>
+```
+
+| Option | Default | Values |
+| --- | --- | --- |
+| `color` | `#000000` | Any hex color (e.g. `#202a36`) |
+| `style` | `icon` | `icon`, `text` |
+| `position` | `bottom_right` | `bottom_left`, `bottom_right` |
+| `verticalPosition` | `lowest` | `lowest`, `higher`, `highest` |
+| `text` | `chat_with_us` | `chat_with_us`, `assistance`, `contact`, `help`, `support`, `live_chat`, `message_us`, `need_help`, `no_text` |
+| `icon` | `chat_bubble` | `chat_bubble`, `agent`, `speech_bubble`, `text_message`, `email`, `hand_wave`, `lifebuoy`, `paper_plane`, `service_bell`, `smiley_face`, `question_mark`, `team`, `no_icon` |
+
+## Limitations
+
+- **Localhost:** Shopify's bot protection blocks the widget on `localhost`. The `<script id="shopify-inbox">` tag still renders, but the chat UI will not initialize. Verify on a deployed (staging/production) domain.
+
+## Content Security Policy
+
+No CSP changes are required for the default setup:
+
+- Pilot ships CSP in **report-only** mode (`app/entry.server.tsx`), so violations are logged but never block.
+- The script loads from `cdn.shopify.com`, already allow-listed in `scriptSrc` (`app/weaverse/csp.ts`).
+- The widget's iframe/network calls target `*.shopify.com` / `*.myshopify.com`, already covered by `defaultSrc`/`connectSrc`.
+
+If you switch to an enforcing `Content-Security-Policy` header, keep those Shopify domains allow-listed.
+
+## Security
+
+Only `PUBLIC_*` environment variables reach the client. `getPublicEnv()` strips everything else (e.g. `SESSION_SECRET`, `*_PRIVATE_API_TOKEN`) before the loader serializes data to the browser.
