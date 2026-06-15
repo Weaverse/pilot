@@ -855,6 +855,7 @@ export type CartApiQueryFragment = Pick<
           };
         })
     >;
+    pageInfo: Pick<StorefrontAPI.PageInfo, 'hasNextPage'>;
   };
   cost: {
     subtotalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;

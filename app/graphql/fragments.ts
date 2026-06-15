@@ -342,6 +342,9 @@ export const CART_QUERY_FRAGMENT = `#graphql
       nodes {
         ...CartLineComponent
       }
+      pageInfo {
+        hasNextPage
+      }
     }
     cost {
       subtotalAmount {

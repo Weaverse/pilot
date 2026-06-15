@@ -14,6 +14,7 @@ import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
+import { lineDiscountTotal, toMoney } from "~/utils/cart";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
 import { useCartFetcherSync, useCartStore } from "./store";
@@ -180,6 +181,30 @@ function CartLinePrice({
   if (isOptimistic) {
     return <Skeleton as="span" className="ml-auto h-4 w-16 rounded-md" />;
   }
+
+  // Item-level discount: when a line carries a LINE_ITEM allocation, cost.totalAmount
+  // already reflects the reduced price, which on its own just looks like a cheaper
+  // item. Show the pre-discount total struck through next to it so the saving is
+  // explained at the product line, not only in the cart summary.
+  const lineDiscount = priceType === "regular" ? lineDiscountTotal(line) : 0;
+  if (lineDiscount > 0) {
+    const original = toMoney(
+      Number.parseFloat(line.cost.totalAmount.amount) + lineDiscount,
+      line.cost.totalAmount.currencyCode,
+    );
+    return (
+      <span className="ml-auto flex flex-col items-end gap-0.5 leading-tight">
+        <Money
+          withoutTrailingZeros
+          as="span"
+          data={original}
+          className="text-gray-500 text-sm line-through"
+        />
+        <Money withoutTrailingZeros as="span" data={line.cost.totalAmount} />
+      </span>
+    );
+  }
+
   return (
     <Money withoutTrailingZeros as="span" data={moneyV2} className="ml-auto" />
   );

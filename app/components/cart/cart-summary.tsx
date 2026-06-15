@@ -13,6 +13,7 @@ import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import type { ThemeSettings } from "~/types/weaverse";
+import { cartDiscountTotal } from "~/utils/cart";
 import { cn } from "~/utils/cn";
 import {
   DiscountDialog,
@@ -20,39 +21,6 @@ import {
   NoteDialog,
 } from "./cart-summary-actions";
 import { useCartFetcherSync } from "./store";
-
-// Discount allocations live in two disjoint scopes: order-level discounts
-// ("X% off entire order") land in cart.discountAllocations, while line-scoped
-// codes ("X% off <collection/product>") allocate per line and leave the
-// cart-level array empty. Summing both is correct — they never overlap.
-// SHIPPING_LINE allocations (free-shipping discounts) are excluded: the summary
-// renders no shipping charge, so a shipping discount here wouldn't reconcile.
-function getCartDiscountTotal(cart: OptimisticCart<CartApiQueryFragment>) {
-  const allocations = [
-    ...(cart.discountAllocations ?? []),
-    ...(cart.lines?.nodes ?? []).flatMap(
-      (line) => line.discountAllocations ?? [],
-    ),
-  ].filter(({ targetType }) => targetType === "LINE_ITEM");
-  const amount = allocations.reduce(
-    (sum, { discountedAmount }) =>
-      sum + Number.parseFloat(discountedAmount.amount),
-    0,
-  );
-  const currencyCode =
-    cart.cost?.subtotalAmount?.currencyCode ??
-    allocations[0]?.discountedAmount.currencyCode;
-  if (amount <= 0 || !currencyCode) {
-    return null;
-  }
-  // Round to the currency's minor-unit precision (3-decimal KWD/BHD/TND,
-  // 0-decimal JPY, …) so the summed float matches how <Money> formats it.
-  const decimals = new Intl.NumberFormat("en", {
-    style: "currency",
-    currency: currencyCode,
-  }).resolvedOptions().maximumFractionDigits;
-  return { amount: amount.toFixed(decimals), currencyCode };
-}
 
 export function CartSummary({
   cart,
@@ -97,7 +65,7 @@ export function CartSummary({
     appliedGiftCards,
     note,
   } = cart;
-  const cartDiscount = getCartDiscountTotal(cart);
+  const cartDiscount = cartDiscountTotal(cart);
 
   // Show loading state for optimistic line item changes or pending cart actions
   const isCartUpdating =
