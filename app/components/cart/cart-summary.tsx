@@ -13,6 +13,7 @@ import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import type { ThemeSettings } from "~/types/weaverse";
+import { cartDiscountTotal } from "~/utils/cart";
 import { cn } from "~/utils/cn";
 import {
   DiscountDialog,
@@ -64,6 +65,7 @@ export function CartSummary({
     appliedGiftCards,
     note,
   } = cart;
+  const cartDiscount = cartDiscountTotal(cart);
 
   // Show loading state for optimistic line item changes or pending cart actions
   const isCartUpdating =
@@ -171,6 +173,17 @@ export function CartSummary({
                 </div>
               );
             })}
+        </div>
+      )}
+      {cartDiscount && !isCartUpdating && (
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <span className="flex items-center gap-1.5">
+            <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />
+            Discount
+          </span>
+          <span className="inline-flex items-center">
+            -<Money data={cartDiscount} />
+          </span>
         </div>
       )}
       {layout === "page" && (

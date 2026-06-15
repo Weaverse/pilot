@@ -589,6 +589,26 @@ export type CartLineFragment = Pick<
       Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
     >;
   };
+  discountAllocations: Array<
+    | (Pick<StorefrontAPI.CartAutomaticDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+    | (Pick<StorefrontAPI.CartCodeDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+    | (Pick<StorefrontAPI.CartCustomDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+  >;
   sellingPlanAllocation?: StorefrontAPI.Maybe<{
     sellingPlan: Pick<StorefrontAPI.SellingPlan, 'name'>;
   }>;
@@ -622,6 +642,26 @@ export type CartLineComponentFragment = Pick<
       Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
     >;
   };
+  discountAllocations: Array<
+    | (Pick<StorefrontAPI.CartAutomaticDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+    | (Pick<StorefrontAPI.CartCodeDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+    | (Pick<StorefrontAPI.CartCustomDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+  >;
   merchandise: Pick<
     StorefrontAPI.ProductVariant,
     | 'id'
@@ -687,6 +727,32 @@ export type CartApiQueryFragment = Pick<
               Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
             >;
           };
+          discountAllocations: Array<
+            | (Pick<
+                StorefrontAPI.CartAutomaticDiscountAllocation,
+                'targetType'
+              > & {
+                discountedAmount: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'currencyCode' | 'amount'
+                >;
+              })
+            | (Pick<StorefrontAPI.CartCodeDiscountAllocation, 'targetType'> & {
+                discountedAmount: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'currencyCode' | 'amount'
+                >;
+              })
+            | (Pick<
+                StorefrontAPI.CartCustomDiscountAllocation,
+                'targetType'
+              > & {
+                discountedAmount: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'currencyCode' | 'amount'
+                >;
+              })
+          >;
           sellingPlanAllocation?: StorefrontAPI.Maybe<{
             sellingPlan: Pick<StorefrontAPI.SellingPlan, 'name'>;
           }>;
@@ -725,6 +791,32 @@ export type CartApiQueryFragment = Pick<
               Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
             >;
           };
+          discountAllocations: Array<
+            | (Pick<
+                StorefrontAPI.CartAutomaticDiscountAllocation,
+                'targetType'
+              > & {
+                discountedAmount: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'currencyCode' | 'amount'
+                >;
+              })
+            | (Pick<StorefrontAPI.CartCodeDiscountAllocation, 'targetType'> & {
+                discountedAmount: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'currencyCode' | 'amount'
+                >;
+              })
+            | (Pick<
+                StorefrontAPI.CartCustomDiscountAllocation,
+                'targetType'
+              > & {
+                discountedAmount: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'currencyCode' | 'amount'
+                >;
+              })
+          >;
           merchandise: Pick<
             StorefrontAPI.ProductVariant,
             | 'id'
@@ -763,6 +855,7 @@ export type CartApiQueryFragment = Pick<
           };
         })
     >;
+    pageInfo: Pick<StorefrontAPI.PageInfo, 'hasNextPage'>;
   };
   cost: {
     subtotalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
@@ -774,6 +867,26 @@ export type CartApiQueryFragment = Pick<
       Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
     >;
   };
+  discountAllocations: Array<
+    | (Pick<StorefrontAPI.CartAutomaticDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+    | (Pick<StorefrontAPI.CartCodeDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+    | (Pick<StorefrontAPI.CartCustomDiscountAllocation, 'targetType'> & {
+        discountedAmount: Pick<
+          StorefrontAPI.MoneyV2,
+          'currencyCode' | 'amount'
+        >;
+      })
+  >;
   attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>;
   discountCodes: Array<
     Pick<StorefrontAPI.CartDiscountCode, 'code' | 'applicable'>

@@ -198,6 +198,12 @@ export const CART_QUERY_FRAGMENT = `#graphql
         ...Money
       }
     }
+    discountAllocations {
+      discountedAmount {
+        ...Money
+      }
+      targetType
+    }
     sellingPlanAllocation {
       sellingPlan {
         name
@@ -253,6 +259,12 @@ export const CART_QUERY_FRAGMENT = `#graphql
       compareAtAmountPerQuantity {
         ...Money
       }
+    }
+    discountAllocations {
+      discountedAmount {
+        ...Money
+      }
+      targetType
     }
     merchandise {
       ... on ProductVariant {
@@ -330,6 +342,9 @@ export const CART_QUERY_FRAGMENT = `#graphql
       nodes {
         ...CartLineComponent
       }
+      pageInfo {
+        hasNextPage
+      }
     }
     cost {
       subtotalAmount {
@@ -344,6 +359,12 @@ export const CART_QUERY_FRAGMENT = `#graphql
       totalTaxAmount {
         ...Money
       }
+    }
+    discountAllocations {
+      discountedAmount {
+        ...Money
+      }
+      targetType
     }
     note
     attributes {
