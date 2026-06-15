@@ -68,11 +68,15 @@ const LOADER_BASE_URL =
 
 const SCRIPT_ID = "shopify-inbox";
 
-// Shopify renders the chat bubble as a `<button>` inside a same-origin
-// `about:blank` iframe. These ids are Shopify-internal (undocumented) and could
-// change if Shopify updates the chat loader.
+// Shopify-internal (undocumented) selectors for the chat launcher; they could
+// change if Shopify updates the chat widget. Before the widget bundle loads the
+// launcher is a `<button>` inside a same-origin `about:blank` iframe; once it
+// loads the launcher is a `[data-spec="toggle-button"]` in the open shadow root
+// of the `<inbox-online-store-chat>` web component.
 const BUBBLE_IFRAME_ID = "dummy-chat-button-iframe";
 const BUBBLE_BUTTON_ID = "dummy-chat-button";
+const WIDGET_TAG = "inbox-online-store-chat";
+const TOGGLE_SELECTOR = '[data-spec="toggle-button"]';
 
 /**
  * Loads the Shopify Inbox (Shopify Chat) widget via the global loader script.
@@ -144,9 +148,17 @@ export function ShopifyInbox({
 }
 
 /**
- * Opens (toggles) the Shopify Inbox chat by clicking its bubble button. Returns
- * `true` when the button exists and was clicked, `false` otherwise (e.g. the
- * loader has not rendered the button yet, or Inbox is not configured).
+ * Opens the Shopify Inbox chat from your own UI (e.g. a "Message us" button).
+ * Returns `true` when a launcher was found and clicked, or the chat is already
+ * open; `false` otherwise (the widget has not rendered yet, or Inbox is not
+ * configured).
+ *
+ * Handles both widget states with Shopify-internal selectors:
+ * 1. Before the widget bundle loads, Shopify renders a placeholder bubble in a
+ *    same-origin iframe — clicking it lazy-loads and opens the full widget.
+ * 2. Once loaded (e.g. for returning visitors), the widget is an
+ *    `<inbox-online-store-chat>` web component whose launcher lives in an open
+ *    shadow root. The launcher toggles, so the click is skipped when open.
  *
  * There is no supported Shopify API to send or pre-fill a message from the
  * storefront — the chat composer runs in a Shopify-hosted, cross-origin context
@@ -156,14 +168,32 @@ export function openShopifyInbox(): boolean {
   if (typeof document === "undefined") {
     return false;
   }
+
+  // 1. Placeholder bubble inside the loader's same-origin iframe.
   const iframe = document.getElementById(
     BUBBLE_IFRAME_ID,
   ) as HTMLIFrameElement | null;
-  const button =
+  const bubbleButton =
     iframe?.contentWindow?.document?.getElementById(BUBBLE_BUTTON_ID);
-  if (button) {
-    button.click();
+  if (bubbleButton) {
+    bubbleButton.click();
     return true;
   }
+
+  // 2. Loaded web component: open it via the launcher in its shadow root,
+  //    unless the chat window is already open (the launcher toggles).
+  const widget = document.querySelector(WIDGET_TAG);
+  if (widget) {
+    if (widget.getAttribute("is-open") === "true") {
+      return true;
+    }
+    const launcher =
+      widget.shadowRoot?.querySelector<HTMLElement>(TOGGLE_SELECTOR);
+    if (launcher) {
+      launcher.click();
+      return true;
+    }
+  }
+
   return false;
 }
