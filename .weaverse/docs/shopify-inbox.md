@@ -51,7 +51,7 @@ Add the id to `.env`:
 PUBLIC_SHOPIFY_INBOX_SHOP_ID=your-shopify-inbox-shop-id
 ```
 
-The chat binds to the domain configured in the Shopify Inbox app (its `data-shop` value). The component sends `PUBLIC_CHECKOUT_DOMAIN` for this — falling back to `PUBLIC_STORE_DOMAIN` — so make sure `PUBLIC_CHECKOUT_DOMAIN` matches the store's primary/checkout domain that Inbox is set up for.
+`shop.domain` is sent as the Inbox `shop` parameter and uses `PUBLIC_STORE_DOMAIN` (your store's `*.myshopify.com` domain) — the same value Shopify's injected Inbox tag carries — so no additional variable is required.
 
 ## Configuration options
 
@@ -59,7 +59,7 @@ By default the widget uses a black icon button anchored bottom-right. To customi
 
 ```tsx
 <ShopifyInbox
-  shop={{ domain: publicEnv.PUBLIC_CHECKOUT_DOMAIN || publicEnv.PUBLIC_STORE_DOMAIN, id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID }}
+  shop={{ domain: publicEnv.PUBLIC_STORE_DOMAIN, id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID }}
   button={{ color: "#000000", style: "icon", position: "bottom_right", verticalPosition: "lowest", text: "chat_with_us", icon: "chat_bubble" }}
 />
 ```

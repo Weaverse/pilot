@@ -218,9 +218,7 @@ export const Layout = withWeaverse(function RootLayout({
         {publicEnv?.PUBLIC_SHOPIFY_INBOX_SHOP_ID && (
           <ShopifyInbox
             shop={{
-              domain:
-                publicEnv.PUBLIC_CHECKOUT_DOMAIN ||
-                publicEnv.PUBLIC_STORE_DOMAIN,
+              domain: publicEnv.PUBLIC_STORE_DOMAIN,
               id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID,
             }}
           />
