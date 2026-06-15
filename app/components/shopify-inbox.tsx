@@ -68,6 +68,12 @@ const LOADER_BASE_URL =
 
 const SCRIPT_ID = "shopify-inbox";
 
+// Shopify renders the chat bubble as a `<button>` inside a same-origin
+// `about:blank` iframe. These ids are Shopify-internal (undocumented) and could
+// change if Shopify updates the chat loader.
+const BUBBLE_IFRAME_ID = "dummy-chat-button-iframe";
+const BUBBLE_BUTTON_ID = "dummy-chat-button";
+
 /**
  * Loads the Shopify Inbox (Shopify Chat) widget via the global loader script.
  * Renders nothing unless a shop domain and id are provided, so it degrades
@@ -135,4 +141,29 @@ export function ShopifyInbox({
   }, [src]);
 
   return null;
+}
+
+/**
+ * Opens (toggles) the Shopify Inbox chat by clicking its bubble button. Returns
+ * `true` when the button exists and was clicked, `false` otherwise (e.g. the
+ * loader has not rendered the button yet, or Inbox is not configured).
+ *
+ * There is no supported Shopify API to send or pre-fill a message from the
+ * storefront — the chat composer runs in a Shopify-hosted, cross-origin context
+ * — so opening the widget is the only durable programmatic action.
+ */
+export function openShopifyInbox(): boolean {
+  if (typeof document === "undefined") {
+    return false;
+  }
+  const iframe = document.getElementById(
+    BUBBLE_IFRAME_ID,
+  ) as HTMLIFrameElement | null;
+  const button =
+    iframe?.contentWindow?.document?.getElementById(BUBBLE_BUTTON_ID);
+  if (button) {
+    button.click();
+    return true;
+  }
+  return false;
 }
