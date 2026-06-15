@@ -1,4 +1,4 @@
-import { Script } from "@shopify/hydrogen";
+import { useEffect } from "react";
 
 type ShopifyInboxButton = {
   /** Button color as a hex value, e.g. `#000000`. */
@@ -66,10 +66,20 @@ const BUTTON_PARAM_KEYS: Record<keyof ShopifyInboxButton, string> = {
 const LOADER_BASE_URL =
   "https://cdn.shopify.com/shopifycloud/shopify_chat/storefront";
 
+const SCRIPT_ID = "shopify-inbox";
+
 /**
  * Loads the Shopify Inbox (Shopify Chat) widget via the global loader script.
  * Renders nothing unless a shop domain and id are provided, so it degrades
  * gracefully when the store has not configured `PUBLIC_SHOPIFY_INBOX_SHOP_ID`.
+ *
+ * The loader is injected on the client only after the window `load` event.
+ * Shopify's script assigns `window.onload` and immediately self-invokes it; if
+ * it runs before the page finishes loading, the browser fires that handler a
+ * second time on the real `load` event, which re-mounts the chat iframe and
+ * wipes the freshly rendered button (leaving an empty `#shopify-chat-dummy`,
+ * i.e. no visible bubble). Deferring injection until after `load` keeps the
+ * handler to a single invocation so the button persists.
  *
  * Note: the widget is blocked by Shopify's bot protection on localhost — verify
  * on a deployed (staging/production) domain.
@@ -80,25 +90,49 @@ export function ShopifyInbox({
   env = "production",
   version = "V1",
 }: ShopifyInboxProps) {
-  if (!(shop?.domain && shop?.id)) {
-    console.error(
-      "ShopifyInbox: `shop.domain` and `shop.id` are required. Find them in the Shopify Inbox app settings.",
-    );
-    return null;
+  const isConfigured = Boolean(shop?.domain && shop?.id);
+
+  let src = "";
+  if (isConfigured) {
+    const mergedButton = { ...DEFAULT_BUTTON, ...button };
+    const params = new URLSearchParams({
+      v: version.replace(/^V/i, ""),
+      api_env: env,
+      shop_id: shop.id,
+      shop: shop.domain,
+    });
+    for (const [key, paramKey] of Object.entries(BUTTON_PARAM_KEYS)) {
+      params.set(paramKey, mergedButton[key as keyof ShopifyInboxButton]);
+    }
+    src = `${LOADER_BASE_URL}/shopifyChat${version}.js?${params}`;
   }
 
-  const mergedButton = { ...DEFAULT_BUTTON, ...button };
-  const params = new URLSearchParams({
-    v: version.replace(/^V/i, ""),
-    api_env: env,
-    shop_id: shop.id,
-    shop: shop.domain,
-  });
-  for (const [key, paramKey] of Object.entries(BUTTON_PARAM_KEYS)) {
-    params.set(paramKey, mergedButton[key as keyof ShopifyInboxButton]);
-  }
+  useEffect(() => {
+    if (!src) {
+      console.error(
+        "ShopifyInbox: `shop.domain` and `shop.id` are required. Find them in the Shopify Inbox app settings.",
+      );
+      return;
+    }
 
-  const src = `${LOADER_BASE_URL}/shopifyChat${version}.js?${params}`;
+    function injectLoader() {
+      if (document.getElementById(SCRIPT_ID)) {
+        return;
+      }
+      const script = document.createElement("script");
+      script.id = SCRIPT_ID;
+      script.async = true;
+      script.src = src;
+      document.head.appendChild(script);
+    }
 
-  return <Script async id="shopify-inbox" src={src} suppressHydrationWarning />;
+    if (document.readyState === "complete") {
+      injectLoader();
+      return;
+    }
+    window.addEventListener("load", injectLoader, { once: true });
+    return () => window.removeEventListener("load", injectLoader);
+  }, [src]);
+
+  return null;
 }

@@ -8,11 +8,11 @@ The widget is **opt-in**: it only renders when `PUBLIC_SHOPIFY_INBOX_SHOP_ID` is
 
 - [`app/utils/env.ts`](../../app/utils/env.ts) — `getPublicEnv()` filters the server `Env` down to its `PUBLIC_*` keys so private credentials are never sent to the browser.
 - [`app/root.tsx`](../../app/root.tsx) — the root `loader` returns `publicEnv: getPublicEnv(args.context.env)`, and the `Layout` renders `<ShopifyInbox>` when `publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID` is present.
-- [`app/components/shopify-inbox.tsx`](../../app/components/shopify-inbox.tsx) — loads the chat via Hydrogen's `<Script>` component (async, nonce applied automatically from the CSP provider).
+- [`app/components/shopify-inbox.tsx`](../../app/components/shopify-inbox.tsx) — injects the loader `<script>` on the client **after the window `load` event** (see [Why the loader is injected after `load`](#why-the-loader-is-injected-after-load)). The script loads from `cdn.shopify.com`, which the CSP already allow-lists by host, so no nonce is required.
 
 ### Global loader — no app-extension UUID required
 
-The component renders the **store-agnostic** loader:
+The component injects the **store-agnostic** loader:
 
 ```
 https://cdn.shopify.com/shopifycloud/shopify_chat/storefront/shopifyChatV1.js?...&shop_id=<id>&shop=<domain>
@@ -27,6 +27,27 @@ the same tag a Liquid Online Store injects into its `<head>`.
 > That path embeds a store-specific UUID and a pinned version (`inbox-1274`, …)
 > that change per store and per app update. The global loader above has no such
 > dependency.
+
+### Why the loader is injected after `load`
+
+Shopify's loader bootstraps with `window.onload = handler; window.onload()` — it
+**overwrites** `window.onload` and invokes it once immediately. The handler
+mounts an `about:blank` bubble iframe and writes the chat button into it.
+
+If the loader runs **before** the page's real `load` event (e.g. as an SSR
+`<script async>` or any script that executes during initial load), the browser
+fires that reassigned `window.onload` a **second** time on real `load`. The
+second invocation re-mounts the bubble iframe, which resets its document and
+**wipes the freshly written button** — leaving an empty `#shopify-chat-dummy`
+and no visible chat bubble.
+
+Injecting the loader only after `load` (when `document.readyState === "complete"`,
+otherwise on the one-shot `load` listener) keeps `window.onload` to a single
+invocation, so the button renders and persists.
+
+> **Do not** revert this to an SSR `<Script async>` / `defer` tag, or to
+> `waitForHydration` — hydration can finish before `load` on image-heavy pages,
+> which re-introduces the double-invocation and the empty button.
 
 ## Setup
 
@@ -75,7 +96,7 @@ By default the widget uses a black icon button anchored bottom-right. To customi
 
 ## Limitations
 
-- **Localhost:** Shopify's bot protection blocks the widget on `localhost`. The `<script id="shopify-inbox">` tag still renders, but the chat UI will not initialize. Verify on a deployed (staging/production) domain.
+- **Localhost:** Shopify's bot protection blocks the widget on `localhost`. The loader `<script>` is still injected (after `load`), but the chat UI will not initialize. Verify on a deployed (staging/production) domain.
 
 ## Content Security Policy
 
