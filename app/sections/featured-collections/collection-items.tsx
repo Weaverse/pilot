@@ -77,6 +77,51 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
     let placeholderCount = Number(gridSize) || 5;
     collections = new Array(placeholderCount).fill(COLLECTION_PLACEHOLDER);
   }
+
+  function renderCollectionImage(collection: FeaturedCollectionsLoaderData[0]) {
+    if (!collection?.image) {
+      return null;
+    }
+
+    const collectionPath = `/collections/${collection.handle}`;
+    const imageStyle = {
+      aspectRatio: calculateAspectRatio(collection.image, imageAspectRatio),
+    };
+    const image = (
+      <Image
+        data={collection.image}
+        sizes="(min-width: 48em) 33vw, 67vw"
+        className={clsx([
+          "transition-all duration-300",
+          "scale-100 will-change-transform group-hover:scale-[1.05]",
+        ])}
+      />
+    );
+
+    if (contentPosition === "below") {
+      return (
+        <Link
+          to={collectionPath}
+          animate={false}
+          aria-label={`View ${collection.title} collection`}
+          className={clsx("block overflow-hidden rounded-md", variants({}))}
+          style={imageStyle}
+        >
+          {image}
+        </Link>
+      );
+    }
+
+    return (
+      <div
+        className={clsx("overflow-hidden rounded-md", variants({}))}
+        style={imageStyle}
+      >
+        {image}
+      </div>
+    );
+  }
+
   return (
     <div
       {...rest}
@@ -95,26 +140,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
           animation="slide-in"
           className="group group/overlay relative w-[67vw] md:w-auto"
         >
-          {collection?.image && (
-            <div
-              className={clsx("overflow-hidden rounded-md", variants({}))}
-              style={{
-                aspectRatio: calculateAspectRatio(
-                  collection?.image || {},
-                  imageAspectRatio,
-                ),
-              }}
-            >
-              <Image
-                data={collection.image}
-                sizes="(min-width: 48em) 33vw, 67vw"
-                className={clsx([
-                  "transition-all duration-300",
-                  "scale-100 will-change-transform group-hover:scale-[1.05]",
-                ])}
-              />
-            </div>
-          )}
+          {renderCollectionImage(collection)}
           {contentPosition === "over" && (
             <Overlay
               enableOverlay={enableOverlay}
