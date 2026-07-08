@@ -21,12 +21,15 @@ export function useShouldRenderNewsletterPopup() {
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { newsletterPopupEnabled, newsletterPopupHomeOnly } =
     useThemeSettings<ThemeSettings>();
+  const isDesignMode = useWeaverseStudioCheck();
   const pathParts = location.pathname.split("/").filter(Boolean);
   const isHomePage =
     pathParts.length === 0 ||
     (pathParts.length === 1 && pathParts[0] === locale.pathPrefix.slice(1));
   return (
-    newsletterPopupEnabled && (newsletterPopupHomeOnly ? isHomePage : true)
+    !isDesignMode &&
+    newsletterPopupEnabled &&
+    (newsletterPopupHomeOnly ? isHomePage : true)
   );
 }
 
@@ -104,24 +107,6 @@ export function NewsletterPopup() {
       }
     };
   }, []);
-
-  // Re-open popup when settings change in design mode
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to track all settings changes in design mode
-  useEffect(() => {
-    if (isDesignMode) {
-      setOpen(true);
-    }
-  }, [
-    newsletterPopupType,
-    newsletterPopupDelay,
-    newsletterPopupAllowDismiss,
-    newsletterPopupImage,
-    newsletterPopupImagePosition,
-    newsletterPopupHeading,
-    newsletterPopupDescription,
-    newsletterPopupButtonText,
-    newsletterPopupPosition,
-  ]);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen} modal={isModal}>
