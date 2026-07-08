@@ -30,9 +30,7 @@
         "useAwait": "off",
         "noConsole": "off",
         "noAlert": "off",
-        "noArrayIndexKey": "off"
-      },
-      "nursery": {
+        "noArrayIndexKey": "off",
         "noUnnecessaryConditions": "off"
       },
       "correctness": {
