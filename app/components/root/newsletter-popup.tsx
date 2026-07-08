@@ -13,7 +13,7 @@ import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
-const POPUP_DISMISSED_KEY = "newsletter-popup-dismissed";
+const POPUP_SEEN_KEY = "newsletter-popup-dismissed";
 
 export function useShouldRenderNewsletterPopup() {
   const location = useLocation();
@@ -70,7 +70,7 @@ export function NewsletterPopup() {
     if (isDesignMode) {
       return;
     }
-    if (localStorage.getItem(POPUP_DISMISSED_KEY) === "true") {
+    if (localStorage.getItem(POPUP_SEEN_KEY) === "true") {
       return;
     }
     // Defer the popup until the visitor first engages (scroll/pointer/key/
@@ -81,20 +81,24 @@ export function NewsletterPopup() {
     // custom-analytics.tsx and only shows the popup to engaged visitors.
     let timer: ReturnType<typeof setTimeout> | null = null;
     const intentEvents = ["pointerdown", "keydown", "touchstart", "scroll"];
+    const controller = new AbortController();
     function start() {
-      cleanup();
-      timer = setTimeout(() => setOpen(true), newsletterPopupDelay * 1000);
-    }
-    function cleanup() {
-      for (const event of intentEvents) {
-        window.removeEventListener(event, start);
-      }
+      // First interaction wins: abort() drops the remaining intent listeners
+      // so the timer is scheduled exactly once.
+      controller.abort();
+      timer = setTimeout(() => {
+        localStorage.setItem(POPUP_SEEN_KEY, "true");
+        setOpen(true);
+      }, newsletterPopupDelay * 1000);
     }
     for (const event of intentEvents) {
-      window.addEventListener(event, start, { once: true, passive: true });
+      window.addEventListener(event, start, {
+        passive: true,
+        signal: controller.signal,
+      });
     }
     return () => {
-      cleanup();
+      controller.abort();
       if (timer) {
         window.clearTimeout(timer);
       }
@@ -261,7 +265,7 @@ export function NewsletterPopup() {
                   <button
                     type="button"
                     onClick={() => {
-                      localStorage.setItem(POPUP_DISMISSED_KEY, "true");
+                      localStorage.setItem(POPUP_SEEN_KEY, "true");
                       setOpen(false);
                     }}
                     className="mt-4 text-body-subtle text-sm underline underline-offset-4 hover:text-body"
