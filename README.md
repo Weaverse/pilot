@@ -1,264 +1,220 @@
-<h1 align="center">Pilot - Production-ready Shopify Hydrogen Theme</h1>
+<h1 align="center">Pilot — Production-ready Shopify Hydrogen theme</h1>
 
 <div align="center">
 
-📚 [Read the docs](https://weaverse.io/docs) | 🗣 [Join our community on Slack](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg) | 🐞 [Report a bug](https://github.com/weaverse/pilot/issues)
+A lightning-fast, fully-customizable Shopify storefront built with **Hydrogen**, **React Router 7**, and **Weaverse**.
+
+📚 [Docs](https://weaverse.io/docs) · 🚀 [Live demo](https://pilot.weaverse.dev) · 🎨 [Customize in Weaverse Studio](https://studio.weaverse.io/demo?theme=pilot) · 🗣 [Slack community](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg) · 🐞 [Report a bug](https://github.com/weaverse/pilot/issues)
 
 </div>
 
 ![Weaverse + Hydrogen + Shopify](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse-x-hydrogen-x-shopify.png?v=1755245801)
 
-_Pilot is an innovative Shopify theme, powered by Hydrogen, React Router 7, and Weaverse, designed to create lightning-fast storefronts with exceptional performance. This theme combines a collection of powerful tools and features to streamline your Shopify development experience._
+Pilot pairs a hand-tuned Hydrogen storefront (SSR, streaming, edge-ready) with **Weaverse Studio**, so developers keep full control of the code while merchants edit every page visually — no redeploys. It ships with the routes, sections, and integrations a real store needs on day one.
 
-## Who is using Weaverse/Pilot on production?
-These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
-- [Huckleberry Roasters](https://www.huckleberryroasters.com/) - Crafting coffee in Colorado since 2011, Huckleberry Roasters delivers award-winning flavors with ethically sourced beans.
-- [Bubble Goods](https://bubblegoods.com/) - 2,000+ healthy food products shipped from small independent U.S. makers to your door.
-- [Karma and Luck](https://www.karmaandluck.com) - modern lifestyle brand rooted in timeless traditions and spiritual intention.
-- [Baltzar](https://baltzar.com/) - curated selection of menswear brands from world renowned specialists such as Frank Clegg, Albert Thurston and Astorflex.
-- [iROCKER](https://irockersup.com/) - provide life on the water to all, with gear that goes the extra mile.
-- [Roland (Brazil)](https://store.roland.com.br/) - electronic musical instruments, drums, digital pianos, synthesizers, and dance/DJ gears.
-- [Timothy London](https://timothy.london/) - British brand of premium travel goods and accessories.
-- [Vasuma Eyewear](https://vasuma.com/) - Vasuma creates eyewear for both men and women. From Stockholm, Sweden our eyewear are inspired by the best of the vintage eras of the 50s and 60s.
-- And many more...
+---
 
-## AI Coding Agent Support
+## Quick start
 
-Pilot supports AI coding agents (Cursor, Claude Code, Windsurf, Codex, GitHub Copilot) via `AGENTS.md`, which includes inline Weaverse component patterns, schema reference, input types, loader patterns, and common pitfalls.
+Pick the path that fits you. All three end at a running storefront on **http://localhost:3456**.
 
-## Links
+### Option A — Let your AI coding agent do it (fastest)
 
-- Live store: https://pilot.weaverse.dev
-- Customizing Pilot on Weaverse Studio: https://studio.weaverse.io/demo?theme=pilot
-  ![pilot.weaverse.dev](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pilot.weavverse.dev_0b0b2f77-b79e-4524-8cf5-bc22d6ec4ba9.png?v=1744963684)
+Pilot is built to be set up by an agent (Cursor, Claude Code, Codex, opencode, …). Add the Weaverse skills, then ask your agent to set up the project:
+
+```bash
+npx skills add Weaverse/shopify-hydrogen-skills
+```
+
+> "Use the `setup-weaverse-project` skill to set up this Weaverse Hydrogen storefront."
+
+The agent boots a **live preview on the bundled demo store first** (≈2 minutes, zero credentials), then helps you swap in your own store and project. See [AI coding agent support](#ai-coding-agent-support) below.
+
+### Option B — Weaverse Studio (no code)
+
+1. Install the [Weaverse Hydrogen Customizer](https://apps.shopify.com/weaverse) from the Shopify App Store.
+2. Create a new Hydrogen storefront in Weaverse and pick **Pilot**.
+3. Follow the in-Studio instructions to initialize the project locally with `@weaverse/cli`.
+4. Open **Weaverse Studio** and start customizing.
+
+### Option C — Clone and run it yourself
+
+```bash
+git clone https://github.com/weaverse/pilot my-storefront
+cd my-storefront
+cp .env.example .env   # ships working demo-store tokens + a demo WEAVERSE_PROJECT_ID
+npm install
+npm run dev            # → http://localhost:3456
+```
+
+`.env.example` contains a live demo store's tokens, so the storefront runs immediately. Swap in your own values (see [Environment](#environment)) when you're ready to make it yours.
+
+---
+
+## Requirements
+
+- **Node.js** ≥ 22.12.0
+- **npm** (the repo ships a `package-lock.json`)
+- A **Shopify** store and the [Weaverse app](https://apps.shopify.com/weaverse) to customize visually and get a `WEAVERSE_PROJECT_ID`
+
+---
+
+## AI coding agent support
+
+Pilot is designed to be developed *with* an agent:
+
+- **`AGENTS.md`** — committed to the repo with inline Weaverse component patterns, the schema/input-type reference, loader patterns, and common pitfalls. Cursor, Claude Code, Windsurf, Codex, and GitHub Copilot read it automatically.
+- **Weaverse MCP** — give your agent first-class access to your Weaverse account (search the docs, list projects/pages, read a page as Portable Text, theme settings, locales) over the read-only Content API:
+
+  ```bash
+  npx -y @weaverse/mcp
+  ```
+
+  Docs search needs no key; account tools use `WEAVERSE_API_KEY` (account tools require `@weaverse/mcp` ≥ 2.2.0). Per-client setup (Cursor, Claude Code, Codex, opencode, VS Code, …): **https://weaverse.io/docs/developer-tools/weaverse-mcp**
+- **`setup-weaverse-project` skill** — the demo-first onboarding flow used in Option A, from [`Weaverse/shopify-hydrogen-skills`](https://github.com/Weaverse/shopify-hydrogen-skills).
+
+---
 
 ## What's included
 
-- Shopify Hydrogen / Oxygen / CLI
-- Shopify Basic/Plus features support:
-  - New [Shopify Customer Account API](https://www.shopify.com/partners/blog/introducing-customer-account-api-for-headless-stores) (OAuth-based)
-  - [Combined Listings](https://shopify.dev/docs/apps/build/product-merchandising/combined-listings)
-  - [Product bundles](https://help.shopify.com/en/manual/products/bundles)
-- [React Router 7](https://reactrouter.com/) for routing/SSR/data loading
-- [Biome](https://biomejs.dev/) code linter/formatter
-- TypeScript with strict configuration
-- GraphQL code generator
-- Styled with [TailwindCSS](https://tailwindcss.com/) (v4)
-- [Radix-UI](https://www.radix-ui.com/) for accessible/reusable UI components
-- [class-variance-authority](https://cva.style/) (cva) for component variants
-- [Swiper](https://swiperjs.com/) for carousels/sliders
-- [Judge.me](https://judge.me/) reviews integration
-- [Klaviyo](https://www.klaviyo.com/) integration for email marketing
-- [Shopify Inbox](https://apps.shopify.com/inbox) chat integration ([setup guide](.weaverse/docs/shopify-inbox.md))
-- Full-featured setup of components and routes
-- Fully customizable inside [Weaverse Studio](https://weaverse.io)
+**Stack**
+- [Shopify Hydrogen](https://hydrogen.shopify.dev/) on Oxygen, with the Shopify CLI
+- [React Router 7](https://reactrouter.com/) — routing, SSR, and data loading
+- [TailwindCSS v4](https://tailwindcss.com/) + [Radix UI](https://www.radix-ui.com/) + [class-variance-authority](https://cva.style/)
+- TypeScript (strict) and GraphQL codegen
+- [Biome](https://biomejs.dev/) for linting/formatting
+- [Swiper](https://swiperjs.com/) carousels, [Playwright](https://playwright.dev/) E2E tests
 
-## Deployment
+**Commerce features**
+- [Customer Account API](https://www.shopify.com/partners/blog/introducing-customer-account-api-for-headless-stores) (OAuth-based login)
+- [Combined Listings](https://shopify.dev/docs/apps/build/product-merchandising/combined-listings) and [product bundles](https://help.shopify.com/en/manual/products/bundles)
+- Predictive search, cart, markets/localization, SEO, and analytics
+- [Judge.me](https://judge.me/) reviews, [Klaviyo](https://www.klaviyo.com/) email, and [Shopify Inbox](https://apps.shopify.com/inbox) chat ([setup guide](.weaverse/docs/shopify-inbox.md))
 
-- [Deploy to Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen)
-- [Deploy to Vercel](https://wvse.cc/deploy-pilot-to-vercel)
+**And** every section is editable in [Weaverse Studio](https://weaverse.io) — no redeploy to change content or layout.
 
-## Getting started
+---
 
-**Requirements:**
-
-- Node.js version 22.12.0 or higher
-- `npm` package manager
-
-**Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:**
-
-1. Install [Weaverse Hydrogen Customizer](https://apps.shopify.com/weaverse) from Shopify App Store.
-2. Create new Hydrogen storefront inside Weaverse.
-3. Initialize the project and start a local dev server with `@weaverse/cli` tool as instructed in the Weaverse Studio.
-   ![Create new Weaverse Shopify Hydrogen project](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/new_hydrogen_project.png?v=1735008500)
-4. Open **Weaverse Studio** to start customizing and tailoring your storefront according to your preferences.
-
-## Quick Start Commands
+## Commands
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server on port 3456
-npm run dev
-
-# Run code quality checks before committing
-npm run biome:fix
-npm run typecheck
-
-# Build for production
-npm run build
-
-# Run E2E tests
-npm run e2e
+npm run dev          # dev server + codegen on http://localhost:3456
+npm run build        # production build (shopify hydrogen build --codegen)
+npm run preview      # build, then preview the production bundle
+npm run typecheck    # tsc --noEmit
+npm run biome:fix    # lint + format (write)
+npm run e2e          # Playwright end-to-end tests
 ```
 
-## Features overview
+Run `npm run biome:fix && npm run typecheck` before committing.
 
-### Fetching page data with parallel loading
+---
 
-Pilot uses parallel data loading for optimal performance. Every route loads Weaverse data alongside GraphQL queries using `Promise.all()`:
+## Environment
 
-```ts:app/routes/home.tsx
+The minimum variables needed to render a storefront (the rest are feature-complete extras):
+
+| Variable | Required | Source |
+|---|---|---|
+| `SESSION_SECRET` | yes | any random string |
+| `PUBLIC_STORE_DOMAIN` | yes | Shopify (Hydrogen sales channel / Headless app) |
+| `PUBLIC_STOREFRONT_API_TOKEN` | yes | Shopify (Hydrogen sales channel / Headless app) |
+| `WEAVERSE_PROJECT_ID` | yes | Weaverse Studio (or the agent handshake) |
+| `SHOP_ID`, customer-account, checkout, analytics, reviews | no | Shopify / integrations, add after first success |
+
+If your store is already linked to a Hydrogen channel, `npx shopify hydrogen env pull` fills these in. See [`.env.example`](.env.example) for the full list.
+
+---
+
+## Project structure
+
+```
+app/
+├── components/   # Reusable UI components
+├── sections/     # Weaverse sections (visually editable)
+├── routes/       # React Router routes (locale-prefixed)
+├── graphql/      # GraphQL queries & fragments
+├── hooks/        # Shared React hooks
+├── utils/        # Helpers
+├── weaverse/     # Weaverse client, component registry, theme schema
+└── .server/      # Server-only context (Hydrogen + Weaverse client)
+```
+
+Key config: `react-router.config.ts`, `vite.config.ts`, `codegen.ts`, `biome.json`, `AGENTS.md`.
+
+---
+
+## Developer guide
+
+### Load page data in parallel
+
+Every route loads Weaverse data alongside its Storefront queries with `Promise.all()`:
+
+```tsx
+// app/routes/home.tsx
 import type { LoaderFunctionArgs } from 'react-router';
 
 export async function loader({ context }: LoaderFunctionArgs) {
   const { storefront, weaverse } = context;
-
-  // Parallel data loading for best performance
   const [weaverseData, { shop }] = await Promise.all([
     weaverse.loadPage({ type: 'INDEX' }),
     storefront.query(SHOP_QUERY),
   ]);
-
-  return {
-    weaverseData,
-    shop,
-  };
+  return { weaverseData, shop };
 }
 ```
 
-`weaverse` is an `WeaverseClient` instance that has been injected into the app context by Weaverse. It provides a set of methods to interact with the Weaverse API.
+`context.weaverse` is a `WeaverseClient` injected in `app/.server/context.ts` (`new WeaverseClient({ ...hydrogenContext, request, cache, themeSchema, components })`).
 
-```ts:app/.server/context.ts
-const hydrogenContext = createHydrogenContext({
-  env,
-  request,
-  cache,
-  waitUntil,
-  session,
-  i18n: getLocaleFromRequest(request),
-  cart: { queryFragment: CART_QUERY_FRAGMENT },
-});
+### Render a page
 
-const weaverse = new WeaverseClient({
-  ...hydrogenContext,
-  request,
-  cache,
-  themeSchema,
-  components,
-});
+```tsx
+// app/routes/home.tsx
+import { WeaverseContent } from '~/weaverse';
 
-Object.assign(hydrogenContext, { weaverse });
-return hydrogenContext;
-```
-
-### Rendering page content
-
-Weaverse pages is rendered using `<WeaverseContent />` component.
-
-```tsx:app/weaverse/index.tsx
-import { WeaverseHydrogenRoot } from '@weaverse/hydrogen';
-import { GenericError } from '~/components/generic-error';
-import { components } from './components';
-
-export function WeaverseContent() {
-  return (
-    <WeaverseHydrogenRoot
-      components={components}
-      errorComponent={GenericError}
-    />
-  );
-}
-
-```
-
-And in your route:
-
-```tsx:app/routes/home.tsx
 export default function Homepage() {
   return <WeaverseContent />;
 }
 ```
 
-Dead simple, right?
+`WeaverseContent` wraps `WeaverseHydrogenRoot` from `@weaverse/hydrogen` with the project's component registry.
 
-### Global theme settings
+### Use global theme settings
 
-Weaverse global theme settings is loaded in the `root`'s loader with `context.weaverse.loadThemeSettings` function.
+Theme settings load in `root.tsx` and are read anywhere with `useThemeSettings`:
 
-```tsx:app/root.tsx
-export async function loader(args: LoaderFunctionArgs) {
-  const deferredData = loadDeferredData(args);
-  const criticalData = await loadCriticalData(args);
-  return {
-    ...deferredData,
-    ...criticalData,
-  };
-}
-```
-
-And then you can use it in your components with `useThemeSettings` hook.
-
-```tsx:app/weaverse/components/logo.tsx
+```tsx
 import { useThemeSettings } from '@weaverse/hydrogen';
 
 function Logo() {
-  let {logo} = useThemeSettings();
-
-  return (
-    <div className="flex items-center">
-      <img src={logo} alt="Logo" />
-    </div>
-  );
+  const { logo } = useThemeSettings();
+  return <img src={logo} alt="Logo" />;
 }
 ```
 
-The `App` component is wrapped with `withWeaverse` HoC in order to SSR the theme settings.
+### Create a section
 
-```tsx:app/root.tsx
-import { withWeaverse } from '@weaverse/hydrogen';
+Add a file under `app/sections/`, export a component (it **must** accept `ref` and extend `HydrogenComponentProps`) and a `schema`, then register it in `app/weaverse/components.ts`.
 
-function App() {
-  return <Outlet />;
-}
-
-export default withWeaverse(App);
-```
-
-### Create a Weaverse section
-
-To create a section, you need to create a new file in [`app/sections`](app/sections) directory and register it in [`app/weaverse/components.ts`](app/weaverse/components.ts) file.
-
-**Important:** All Weaverse sections must include `ref` as a prop and extend `HydrogenComponentProps`.
-
-```tsx:app/sections/video/index.tsx
-import type { HydrogenComponentProps } from '@weaverse/hydrogen';
+```tsx
+// app/sections/video/index.tsx
+import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
 
 interface VideoProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLElement>
+  ref: React.Ref<HTMLElement>;
   heading: string;
-  description: string;
   videoUrl: string;
 }
 
-export default function Video(props: VideoProps) {
-  const { ref, heading, description, videoUrl, ...rest } = props;
+export default function Video({ ref, heading, videoUrl, ...rest }: VideoProps) {
   return (
     <section ref={ref} {...rest}>
-      <div className="mx-auto max-w-7xl px-4 py-8 lg:px-12 lg:py-16 sm:text-center">
-        <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900">
-          {heading}
-        </h2>
-        <p className="font-light text-gray-500 sm:text-lg md:px-20 lg:px-38 xl:px-48">
-          {description}
-        </p>
-        <iframe
-          className="mx-auto mt-8 h-64 w-full max-w-2xl rounded-lg lg:mt-12 sm:h-96"
-          src={videoUrl}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
+      <h2>{heading}</h2>
+      <iframe src={videoUrl} title="Video" allowFullScreen />
     </section>
   );
 }
-```
 
-Export a `schema` object from the file to define the component's schema with default data and settings to be used in the **Weaverse Studio**.
-
-```tsx:app/sections/video/index.tsx (continued)
 export const schema = createSchema({
   type: 'video',
   title: 'Video',
@@ -266,110 +222,73 @@ export const schema = createSchema({
     {
       group: 'Video',
       inputs: [
-        {
-          type: 'text',
-          name: 'heading',
-          label: 'Heading',
-          defaultValue: 'Learn More About Our Products',
-          placeholder: 'Learn More About Our Products',
-        },
-        {
-          type: 'textarea',
-          name: 'description',
-          label: 'Description',
-          defaultValue: `Watch these short videos to see our products in action. Learn how to use them and what makes them special. See demos of our products being used in real-life situations. The videos provide extra details and showcase the full capabilities of what we offer. If you're interested in learning more before you buy, be sure to check out these informative product videos.`,
-          placeholder: 'Video description',
-        },
-        {
-          type: 'text',
-          name: 'videoUrl',
-          label: 'Video URL',
-          defaultValue: 'https://www.youtube.com/embed/-akQyQN8rYM',
-          placeholder: 'https://www.youtube.com/embed/-akQyQN8rYM',
-        },
+        { type: 'text', name: 'heading', label: 'Heading', defaultValue: 'Learn more' },
+        { type: 'text', name: 'videoUrl', label: 'Video URL', defaultValue: 'https://www.youtube.com/embed/-akQyQN8rYM' },
       ],
     },
   ],
 });
 ```
 
-What if your component needs to fetch data from Shopify API or any third-party API?
+Need data from Shopify or a third-party API? Export a **server-side** `loader` from the section and read it via `Component.props.loaderData`:
 
-**Weaverse** provide a powerful `loader` function to fetch data from _any_ API, and it's run on the **server-side** 🤯😎.
-
-Just export a `loader` function from your component:
-
-```tsx:app/sections/video/index.tsx (loader example)
+```tsx
 import type { ComponentLoaderArgs } from '@weaverse/hydrogen';
 
 export const loader = async ({ weaverse, data }: ComponentLoaderArgs) => {
-  const result = await weaverse.storefront.query<SeoCollectionContentQuery>(
-    HOMEPAGE_SEO_QUERY,
-    {
-      variables: { handle: data.collection.handle || 'frontpage' },
-    },
-  );
+  const result = await weaverse.storefront.query(HOMEPAGE_SEO_QUERY, {
+    variables: { handle: data.collection?.handle || 'frontpage' },
+  });
   return result.data;
 };
 ```
 
-And then you can use the data in your component with `Component.props.loaderData` 🤗
-
-Don't forget to register your new section in `app/weaverse/components.ts`:
-
-```typescript
-import * as Video from "~/sections/video";
-
-export const components: HydrogenComponent[] = [
-  // ... existing components
-  Video,
-];
+```ts
+// app/weaverse/components.ts
+import * as Video from '~/sections/video';
+export const components: HydrogenComponent[] = [/* …existing, */ Video];
 ```
 
-### Manage content and style your pages within Weaverse Studio
+### Dev tools
 
-Weaverse provides a convenient way to customize your theme inside the **Weaverse Studio**. You can add new sections, customize existing ones, and change the theme settings.
-
-![Pilot in Weaverse Studio](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pilot-in-weaverse-studio.png?v=1755247352)
-
-### Project Structure
-
-```
-app/
-├── components/     # Reusable UI components
-├── sections/       # Weaverse sections/components
-├── routes/         # React Router routes (with locale prefix)
-├── graphql/        # GraphQL queries and fragments
-├── utils/          # Helper functions
-└── weaverse/       # Weaverse configuration
-
-Key configuration files:
-- biome.json                  # Code formatting and linting
-- codegen.ts                  # GraphQL code generation
-- react-router.config.ts      # React Router configuration
-- vite.config.ts              # Vite bundler configuration
-```
-
-### Development Tools
-
-- **Development server**: http://localhost:3456
-- **GraphiQL API browser**: http://localhost:3456/graphiql
-- **Network inspector**: http://localhost:3456/debug-network
-- **Weaverse Studio**: Access through your Shopify admin
-
-## References
-
-- [Weaverse docs](https://weaverse.io/docs)
-- [Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
-- [React Router](https://reactrouter.com/)
-- [Tailwind CSS v4](https://tailwindcss.com/)
-- [Radix UI](https://www.radix-ui.com/)
-- [Biome](https://biomejs.dev/)
-
-## License
-
-This project is provided under the [MIT License](LICENSE).
+- Storefront: http://localhost:3456
+- GraphiQL: http://localhost:3456/graphiql
+- Network inspector: http://localhost:3456/debug-network
 
 ---
 
-Let **Weaverse** & **Pilot** empower your Shopify store with top-notch performance and unmatched customization possibilities! 🚀
+## Deployment
+
+- [Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen) (recommended)
+- [Vercel](https://wvse.cc/deploy-pilot-to-vercel)
+
+---
+
+## Who's using Pilot
+
+These **Shopify (Plus)** brands run on Weaverse/Pilot in production:
+
+- [Huckleberry Roasters](https://www.huckleberryroasters.com/) — award-winning Colorado coffee, ethically sourced since 2011.
+- [Bubble Goods](https://bubblegoods.com/) — 2,000+ healthy foods from independent U.S. makers.
+- [Karma and Luck](https://www.karmaandluck.com) — lifestyle brand rooted in timeless traditions.
+- [Baltzar](https://baltzar.com/) — curated menswear from world-renowned specialists.
+- [iROCKER](https://irockersup.com/) — premium paddle boards and water gear.
+- [Roland (Brazil)](https://store.roland.com.br/) — electronic musical instruments.
+- [Timothy London](https://timothy.london/) — premium British travel goods.
+- [Vasuma Eyewear](https://vasuma.com/) — Stockholm eyewear inspired by the 50s–60s.
+
+…and many more.
+
+---
+
+## References
+
+- [Weaverse docs](https://weaverse.io/docs) · [Weaverse MCP](https://weaverse.io/docs/developer-tools/weaverse-mcp)
+- [Hydrogen](https://shopify.dev/custom-storefronts/hydrogen) · [React Router 7](https://reactrouter.com/)
+- [Tailwind CSS v4](https://tailwindcss.com/) · [Radix UI](https://www.radix-ui.com/) · [Biome](https://biomejs.dev/)
+
+Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under [MIT](LICENSE.md).
+
+---
+
+Let **Weaverse** & **Pilot** power your Shopify store with top-tier performance and unmatched customization. 🚀
