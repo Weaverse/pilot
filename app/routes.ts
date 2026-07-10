@@ -43,6 +43,8 @@ export default hydrogenRoutes([
       route(":blogHandle", "routes/blogs/blog.tsx"),
       route(":blogHandle/:articleHandle", "routes/blogs/article.tsx"),
     ]),
+    // Redirect legacy article URLs emitted by Hydrogen's default sitemap.
+    route("articles/:articleHandle", "routes/blogs/article-redirect.tsx"),
     ...prefix("policies", [
       index("routes/policies/list.tsx"),
       route(":policyHandle", "routes/policies/policy.tsx"),
