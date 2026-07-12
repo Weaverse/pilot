@@ -4,6 +4,7 @@ import { type RefObject, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { cn } from "~/utils/cn";
 import { PopularKeywords } from "./popular-keywords";
@@ -48,6 +49,7 @@ export function PredictiveSearchButton() {
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <VisuallyHidden.Root asChild>
             <Dialog.Title>Predictive search</Dialog.Title>
           </VisuallyHidden.Root>

@@ -14,6 +14,7 @@ import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { ScrollArea } from "~/components/scroll-area";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Spinner } from "~/components/spinner";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
@@ -110,6 +111,7 @@ export function ZoomModal({
           ])}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div className="relative flex h-full w-full items-center justify-center bg-background">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>

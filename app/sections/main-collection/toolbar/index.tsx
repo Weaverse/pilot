@@ -10,6 +10,7 @@ import { Icon } from "~/components/icon";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import { useProductGridStore } from "~/components/product-grid/store";
 import { ScrollArea } from "~/components/scroll-area";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { Filters, type FiltersProps } from "../filters/filters";
@@ -53,6 +54,7 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div className="space-y-1">
             <div className="flex items-center justify-between gap-2 px-4">
               <Dialog.Title asChild className="py-2.5 font-bold">
