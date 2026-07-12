@@ -6,6 +6,19 @@
 @import "./keyframes.css";
 @import "./utilities.css";
 
+html[data-shopify-inbox-hidden] #shopify-chat-dummy,
+html[data-shopify-inbox-hidden] #dummy-chat-button-iframe,
+html[data-shopify-inbox-hidden] #shopify-chat {
+  display: none !important;
+}
+
+/* Shopify's shadow CSS forces `:host { display: block !important; }`, so
+ * `display: none` from the light DOM cannot hide a standalone loaded host. */
+html[data-shopify-inbox-hidden] inbox-online-store-chat {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 @layer base {
   *,
   ::after,
