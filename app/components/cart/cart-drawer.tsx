@@ -6,6 +6,7 @@ import { useLocation } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Spinner } from "~/components/spinner";
 import { useCart, useCartBootstrapResolved, useCartStore } from "./store";
 
@@ -69,6 +70,7 @@ export function CartDrawer() {
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div className="flex h-full flex-col space-y-6">
             <div className="flex items-center justify-between gap-2 px-4">
               <Dialog.Title asChild className="text-base">

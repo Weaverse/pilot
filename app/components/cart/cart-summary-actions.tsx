@@ -6,6 +6,7 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 import { useCartFetcherSync } from "./store";
@@ -57,6 +58,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
         )}
         aria-describedby={undefined}
       >
+        <ShopifyInboxOverlayGuard />
         <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
@@ -160,6 +162,7 @@ export function DiscountDialog({
         )}
         aria-describedby={undefined}
       >
+        <ShopifyInboxOverlayGuard />
         <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
@@ -269,6 +272,7 @@ export function GiftCardDialog({
         )}
         aria-describedby={undefined}
       >
+        <ShopifyInboxOverlayGuard />
         <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button

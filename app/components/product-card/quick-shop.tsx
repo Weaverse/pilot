@@ -18,6 +18,7 @@ import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { ProductMedia } from "~/components/product-media";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -236,6 +237,7 @@ export function QuickShopTrigger({
           }}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div
             style={{ maxHeight: "90vh" }}
             className={clsx(

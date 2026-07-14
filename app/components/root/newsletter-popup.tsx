@@ -7,6 +7,7 @@ import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -133,6 +134,7 @@ export function NewsletterPopup() {
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div
             className={cn(
               "relative w-full overflow-hidden rounded-lg bg-white",

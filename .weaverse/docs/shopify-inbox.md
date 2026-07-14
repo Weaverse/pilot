@@ -110,6 +110,53 @@ import { openShopifyInbox } from "~/components/shopify-inbox";
 
 `openShopifyInbox()` opens the widget whatever state it is in: it clicks the loader's placeholder bubble (`#dummy-chat-button`, inside the same-origin `#dummy-chat-button-iframe`) for first-time visitors, or the `[data-spec="toggle-button"]` launcher inside the `<inbox-online-store-chat>` web component's shadow root once the full widget has loaded (skipping the click when the chat is already open, since that launcher toggles). It returns `true` when a launcher was found and clicked or the chat is already open, `false` otherwise (the widget has not rendered yet, or Inbox is not configured). These selectors are **Shopify-internal and undocumented** — they can change when Shopify updates the chat widget.
 
+## Hiding the chat during overlays
+
+Drawers, popups, and modals should hide Shopify Inbox so its floating launcher
+or open chat panel cannot cover storefront content. For Radix dialogs, render
+`ShopifyInboxOverlayGuard` inside `Dialog.Content`:
+
+```tsx
+import * as Dialog from "@radix-ui/react-dialog";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
+
+<Dialog.Content>
+  <ShopifyInboxOverlayGuard />
+  {/* Dialog content */}
+</Dialog.Content>;
+```
+
+The guard renders no DOM. It hides Inbox when the dialog content mounts and
+shows it again after the content unmounts, including after Radix's closing
+animation. Visibility requests are reference-counted, so closing one of several
+nested or overlapping dialogs does not reveal Inbox while another remains open.
+
+For an overlay that stays mounted and controls visibility with state (for
+example, a `forceMount` portal), use the imperative helper and return its
+cleanup function from an effect:
+
+```tsx
+import { useEffect } from "react";
+import { hideShopifyInbox } from "~/components/shopify-inbox";
+
+useEffect(() => {
+  if (open) {
+    return hideShopifyInbox();
+  }
+}, [open]);
+```
+
+The helper is safe when Inbox is not configured or has not mounted yet. It sets
+`data-shopify-inbox-hidden` on the document root; global CSS hides both the
+loader's placeholder iframe and the loaded `#shopify-chat` wrapper. A
+`visibility: hidden` fallback targets `<inbox-online-store-chat>` directly
+because Shopify's shadow stylesheet forces `:host { display: block !important; }`,
+which light-DOM `display` rules cannot override. Because the selectors are
+state-based, a widget injected after an overlay opens is hidden immediately
+without polling or a mutation observer. Hiding the loaded widget also
+temporarily hides an already-open chat panel while preserving its internal state
+for when the overlay closes.
+
 ## Limitations
 
 - **Localhost:** Shopify's bot protection blocks the widget on `localhost`. The loader `<script>` is still injected (after `load`), but the chat UI will not initialize. Verify on a deployed (staging/production) domain.
