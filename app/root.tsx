@@ -3,6 +3,7 @@ import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
+import type { WeaverseImage } from "@weaverse/hydrogen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
@@ -24,6 +25,7 @@ import { IconSprite } from "./components/icon-sprite";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import { PwaInstallHint } from "./components/pwa-install-hint";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
@@ -36,6 +38,7 @@ import { ShopifyInbox } from "./components/shopify-inbox";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
 import { getPublicEnv } from "./utils/env";
+import { cdnSize } from "./utils/pwa";
 import { GlobalStyle } from "./weaverse/style";
 
 export type RootLoader = typeof loader;
@@ -113,7 +116,15 @@ export const Layout = withWeaverse(function RootLayout({
   const data = useRouteLoaderData<RootLoader>("root");
   const publicEnv = data?.publicEnv;
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-  const { topbarHeight, topbarText } = useThemeSettings<ThemeSettings>();
+  const { topbarHeight, topbarText, pwaEnabled, pwaIcon, pwaThemeColor } =
+    useThemeSettings<ThemeSettings>();
+  // App icon for iOS Add to Home Screen (iOS ignores manifest icons).
+  const pwaIconUrl =
+    (pwaIcon as WeaverseImage | undefined)?.url ||
+    data?.layout?.shop?.brand?.logo?.image?.url;
+  // Without any icon the manifest 404s (browsers won't install icon-less
+  // apps), so don't advertise the PWA at all until one exists.
+  const pwaActive = Boolean(pwaEnabled && pwaIconUrl);
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
   // Cart is bootstrapped client-side (see CartStoreSync) so the SSR document
   // stays anonymous and Oxygen can full-page cache it. The provider re-renders
@@ -156,6 +167,33 @@ export const Layout = withWeaverse(function RootLayout({
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: "window.Shopify = window.Shopify || {};",
+          }}
+        />
+        {pwaActive ? (
+          <>
+            <link rel="manifest" href="/manifest.webmanifest" />
+            <meta name="theme-color" content={pwaThemeColor || "#ffffff"} />
+            <link rel="apple-touch-icon" href={cdnSize(pwaIconUrl, 180)} />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta
+              name="apple-mobile-web-app-status-bar-style"
+              content="default"
+            />
+          </>
+        ) : null}
+        {/*
+         * SW registration lives here (not entry.client) because it depends on
+         * theme settings. When PWA is off, actively unregister so previously
+         * installed workers don't linger after a merchant disables the feature.
+         */}
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: pwaActive
+              ? 'if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js"))}'
+              : // Only remove Pilot's own worker — merchants may run third-party SWs under other scopes.
+                'if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then((rs)=>rs.forEach((r)=>{const w=r.active||r.waiting||r.installing;if(w&&new URL(w.scriptURL).pathname==="/sw.js"){r.unregister()}}))}',
           }}
         />
         <link rel="stylesheet" href={styles} />
@@ -212,6 +250,7 @@ export const Layout = withWeaverse(function RootLayout({
         ) : (
           children
         )}
+        <PwaInstallHint />
         <GlobalLoading />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
