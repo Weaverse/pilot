@@ -4,6 +4,24 @@ import type { ThemeSettings } from "~/types/weaverse";
 
 const DISMISS_KEY = "pilot:pwa-hint-dismissed";
 
+// localStorage can throw (Safari restricted/embedded contexts, quota). A
+// marketing hint must never take down the root layout — degrade to in-memory.
+function isDismissed() {
+  try {
+    return Boolean(localStorage.getItem(DISMISS_KEY));
+  } catch {
+    return false;
+  }
+}
+
+function persistDismissed() {
+  try {
+    localStorage.setItem(DISMISS_KEY, "1");
+  } catch {
+    // In-memory dismissal (setVisible) still applies for this page view.
+  }
+}
+
 /**
  * One-time dismissible "Add to Home Screen" hint for iOS Safari.
  * iOS never shows an install prompt on its own, so without this banner
@@ -18,7 +36,7 @@ export function PwaInstallHint() {
     if (!pwaEnabled || !pwaIosHint) {
       return;
     }
-    if (localStorage.getItem(DISMISS_KEY)) {
+    if (isDismissed()) {
       return;
     }
     // Modern iPadOS reports a Macintosh UA; touch points distinguish it.
@@ -56,7 +74,7 @@ export function PwaInstallHint() {
         aria-label="Dismiss"
         className="shrink-0 p-1 text-lg leading-none"
         onClick={() => {
-          localStorage.setItem(DISMISS_KEY, "1");
+          persistDismissed();
           setVisible(false);
         }}
       >
