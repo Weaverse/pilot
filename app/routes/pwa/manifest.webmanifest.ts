@@ -10,23 +10,28 @@ import { cdnSize } from "~/utils/pwa";
  * `:locale?` prefix) like robots.txt — browsers request it from the site root.
  */
 export async function loader({ context }: LoaderFunctionArgs) {
-  const [theme, { shop }] = await Promise.all([
-    context.weaverse.loadThemeSettings() as Promise<ThemeSettings | null>,
+  let [settingsResponse, { shop }] = await Promise.all([
+    context.weaverse.loadThemeSettings(),
     context.storefront.query<PwaShopQuery>(PWA_SHOP_QUERY, {
       cache: CacheLong(),
     }),
   ]);
+  // loadThemeSettings returns { theme, schema, publicEnv } — settings live under `theme`.
+  let theme = settingsResponse?.theme as ThemeSettings | undefined;
 
-  if (!theme?.pwaEnabled) {
+  let icon = theme?.pwaIcon as WeaverseImage | undefined;
+  let iconUrl = icon?.url || shop?.brand?.logo?.image?.url;
+  // No icon (neither uploaded nor a Shopify brand logo) = not installable:
+  // browsers won't offer install without 192/512 icons, so stay 404 rather
+  // than advertise a broken manifest. root.tsx gates its tags the same way.
+  if (!theme?.pwaEnabled || !iconUrl) {
     return new Response("Not found", { status: 404 });
   }
 
-  const icon = theme.pwaIcon as WeaverseImage | undefined;
-  const iconUrl = icon?.url || shop?.brand?.logo?.image?.url;
-  const name = (theme.pwaName || "").trim() || shop?.name || "Store";
-  const shortName = (theme.pwaShortName || "").trim() || name.slice(0, 12);
+  let name = (theme.pwaName || "").trim() || shop?.name || "Store";
+  let shortName = (theme.pwaShortName || "").trim() || name.slice(0, 12);
 
-  const manifest = {
+  let manifest = {
     id: "/",
     start_url: "/",
     scope: "/",
@@ -35,7 +40,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
     short_name: shortName,
     theme_color: theme.pwaThemeColor || "#ffffff",
     background_color: theme.pwaBackgroundColor || "#ffffff",
-    icons: iconUrl ? buildIcons(iconUrl) : [],
+    icons: buildIcons(iconUrl),
   };
 
   return new Response(JSON.stringify(manifest), {

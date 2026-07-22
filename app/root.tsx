@@ -122,6 +122,9 @@ export const Layout = withWeaverse(function RootLayout({
   const pwaIconUrl =
     (pwaIcon as WeaverseImage | undefined)?.url ||
     data?.layout?.shop?.brand?.logo?.image?.url;
+  // Without any icon the manifest 404s (browsers won't install icon-less
+  // apps), so don't advertise the PWA at all until one exists.
+  const pwaActive = Boolean(pwaEnabled && pwaIconUrl);
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
   // Cart is bootstrapped client-side (see CartStoreSync) so the SSR document
   // stays anonymous and Oxygen can full-page cache it. The provider re-renders
@@ -166,13 +169,11 @@ export const Layout = withWeaverse(function RootLayout({
             __html: "window.Shopify = window.Shopify || {};",
           }}
         />
-        {pwaEnabled ? (
+        {pwaActive ? (
           <>
             <link rel="manifest" href="/manifest.webmanifest" />
             <meta name="theme-color" content={pwaThemeColor || "#ffffff"} />
-            {pwaIconUrl ? (
-              <link rel="apple-touch-icon" href={cdnSize(pwaIconUrl, 180)} />
-            ) : null}
+            <link rel="apple-touch-icon" href={cdnSize(pwaIconUrl, 180)} />
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta
               name="apple-mobile-web-app-status-bar-style"
@@ -189,7 +190,7 @@ export const Layout = withWeaverse(function RootLayout({
           nonce={nonce}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: pwaEnabled
+            __html: pwaActive
               ? 'if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js"))}'
               : // Only remove Pilot's own worker — merchants may run third-party SWs under other scopes.
                 'if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then((rs)=>rs.forEach((r)=>{const w=r.active||r.waiting||r.installing;if(w&&new URL(w.scriptURL).pathname==="/sw.js"){r.unregister()}}))}',

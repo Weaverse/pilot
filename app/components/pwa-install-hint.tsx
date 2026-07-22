@@ -40,14 +40,14 @@ export function PwaInstallHint() {
       return;
     }
     // Modern iPadOS reports a Macintosh UA; touch points distinguish it.
-    const isIos =
+    let isIos =
       /iPhone|iPad|iPod/.test(navigator.userAgent) ||
       (navigator.userAgent.includes("Macintosh") &&
         navigator.maxTouchPoints > 1);
-    const isSafari =
+    let isSafari =
       /Safari/.test(navigator.userAgent) &&
       !/CriOS|FxiOS|EdgiOS/.test(navigator.userAgent);
-    const isStandalone =
+    let isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       // navigator.standalone is a non-standard iOS Safari property
       (navigator as Navigator & { standalone?: boolean }).standalone === true;

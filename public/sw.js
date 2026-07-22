@@ -37,11 +37,11 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  const request = event.request;
+  let request = event.request;
   if (request.method !== "GET") {
     return;
   }
-  const url = new URL(request.url);
+  let url = new URL(request.url);
   if (url.origin === location.origin && url.pathname.startsWith("/assets/")) {
     event.respondWith(cacheFirst(ASSET_CACHE, request));
     return;
@@ -56,31 +56,35 @@ self.addEventListener("fetch", (event) => {
 });
 
 async function cacheFirst(cacheName, request) {
-  const cache = await caches.open(cacheName);
-  const cached = await cache.match(request);
+  let cache = await caches.open(cacheName);
+  let cached = await cache.match(request);
   if (cached) {
     return cached;
   }
-  const response = await fetch(request);
+  let response = await fetch(request);
   if (response.ok) {
-    // Await the write: respondWith's lifetime ends when we return, and the
-    // browser may kill the worker before an un-awaited put() completes.
-    await cache.put(request, response.clone());
+    try {
+      // Await the write: respondWith's lifetime ends when we return, and the
+      // browser may kill the worker before an un-awaited put() completes.
+      await cache.put(request, response.clone());
+    } catch {
+      // Best-effort: a quota/uncacheable failure must not break the response.
+    }
   }
   return response;
 }
 
 function staleWhileRevalidate(cacheName, request, event) {
-  const cachedPromise = caches
+  let cachedPromise = caches
     .open(cacheName)
     .then((cache) => cache.match(request));
-  const refresh = cachedPromise.then((cached) =>
+  let refresh = cachedPromise.then((cached) =>
     fetch(request)
       .then(async (response) => {
         // Cross-origin <img> requests are no-cors, so successful responses are
         // opaque (status 0, ok=false) — those are exactly what we must cache.
         if (response.ok || response.type === "opaque") {
-          const cache = await caches.open(cacheName);
+          let cache = await caches.open(cacheName);
           await cache.put(request, response.clone());
           await trimCache(cache);
         }
@@ -103,7 +107,7 @@ function staleWhileRevalidate(cacheName, request, event) {
 
 // Best-effort LRU-ish cap: Cache API keys() preserves insertion order.
 async function trimCache(cache) {
-  const keys = await cache.keys();
+  let keys = await cache.keys();
   if (keys.length > IMG_CACHE_MAX_ENTRIES) {
     await Promise.all(
       keys.slice(0, keys.length - IMG_CACHE_MAX_ENTRIES).map((key) => cache.delete(key)),
