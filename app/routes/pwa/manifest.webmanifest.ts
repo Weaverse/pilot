@@ -49,17 +49,15 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 function buildIcons(url: string) {
+  // `type` is deliberately omitted: the CDN preserves the uploaded format
+  // (PNG/JPEG/WebP), so a hardcoded MIME could misdeclare the asset and make
+  // browsers reject the icon. Browsers sniff the format when type is absent.
   return [
-    { src: cdnSize(url, 192), sizes: "192x192", type: "image/png" },
-    { src: cdnSize(url, 512), sizes: "512x512", type: "image/png" },
+    { src: cdnSize(url, 192), sizes: "192x192" },
+    { src: cdnSize(url, 512), sizes: "512x512" },
     // Same asset reused as maskable; merchants wanting perfect safe-zone
     // padding upload a padded icon.
-    {
-      src: cdnSize(url, 512),
-      sizes: "512x512",
-      type: "image/png",
-      purpose: "maskable",
-    },
+    { src: cdnSize(url, 512), sizes: "512x512", purpose: "maskable" },
   ];
 }
 
