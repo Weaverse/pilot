@@ -7,7 +7,8 @@
 // The SSR document stays anonymous by design (Oxygen full-page cache); keep it
 // that way here too.
 
-const VERSION = "pilot-pwa-v1"; // bump on any change to this file
+const CACHE_PREFIX = "pilot-pwa-";
+const VERSION = `${CACHE_PREFIX}v1`; // bump on any change to this file
 const ASSET_CACHE = `${VERSION}-assets`;
 const IMG_CACHE = `${VERSION}-img`;
 const IMG_CACHE_MAX_ENTRIES = 60;
@@ -23,7 +24,11 @@ self.addEventListener("activate", (event) => {
       .then((keys) =>
         Promise.all(
           keys
-            .filter((key) => !key.startsWith(VERSION))
+            // Cache Storage is origin-wide: only ever touch Pilot-owned caches,
+            // and of those, only stale versions.
+            .filter(
+              (key) => key.startsWith(CACHE_PREFIX) && !key.startsWith(VERSION),
+            )
             .map((key) => caches.delete(key)),
         ),
       )
