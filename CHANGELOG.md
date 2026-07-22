@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2026.7.22
 
 - [feature] Installable mobile app (PWA): new "Mobile app (PWA)" theme settings group (off by default). When enabled, serves a merchant-branded `/manifest.webmanifest` (name, icon, colors from theme settings with Shopify brand fallbacks), adds install head tags, registers a minimal service worker (hashed assets + CDN images only — never HTML/cart/checkout), and shows a dismissible iOS Add-to-Home-Screen hint.
 
