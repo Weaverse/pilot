@@ -21,7 +21,11 @@ export function PwaInstallHint() {
     if (localStorage.getItem(DISMISS_KEY)) {
       return;
     }
-    const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    // Modern iPadOS reports a Macintosh UA; touch points distinguish it.
+    const isIos =
+      /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+      (navigator.userAgent.includes("Macintosh") &&
+        navigator.maxTouchPoints > 1);
     const isSafari =
       /Safari/.test(navigator.userAgent) &&
       !/CriOS|FxiOS|EdgiOS/.test(navigator.userAgent);

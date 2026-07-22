@@ -63,7 +63,9 @@ async function cacheFirst(cacheName, request) {
   }
   const response = await fetch(request);
   if (response.ok) {
-    cache.put(request, response.clone());
+    // Await the write: respondWith's lifetime ends when we return, and the
+    // browser may kill the worker before an un-awaited put() completes.
+    await cache.put(request, response.clone());
   }
   return response;
 }
