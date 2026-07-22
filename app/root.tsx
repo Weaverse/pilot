@@ -191,7 +191,8 @@ export const Layout = withWeaverse(function RootLayout({
           dangerouslySetInnerHTML={{
             __html: pwaEnabled
               ? 'if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js"))}'
-              : 'if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then((rs)=>rs.forEach((r)=>r.unregister()))}',
+              : // Only remove Pilot's own worker — merchants may run third-party SWs under other scopes.
+                'if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then((rs)=>rs.forEach((r)=>{const w=r.active||r.waiting||r.installing;if(w&&new URL(w.scriptURL).pathname==="/sw.js"){r.unregister()}}))}',
           }}
         />
         <link rel="stylesheet" href={styles} />

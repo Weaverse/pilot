@@ -45,7 +45,7 @@ self.addEventListener("fetch", (event) => {
     url.hostname === "cdn.shopify.com" &&
     request.destination === "image"
   ) {
-    event.respondWith(staleWhileRevalidate(IMG_CACHE, request));
+    staleWhileRevalidate(IMG_CACHE, request, event);
   }
   // Anything else: no respondWith — the network handles it untouched.
 });
@@ -63,19 +63,35 @@ async function cacheFirst(cacheName, request) {
   return response;
 }
 
-async function staleWhileRevalidate(cacheName, request) {
-  const cache = await caches.open(cacheName);
-  const cached = await cache.match(request);
-  const refresh = fetch(request)
-    .then(async (response) => {
-      if (response.ok) {
-        await cache.put(request, response.clone());
-        trimCache(cache);
+function staleWhileRevalidate(cacheName, request, event) {
+  const cachedPromise = caches
+    .open(cacheName)
+    .then((cache) => cache.match(request));
+  const refresh = cachedPromise.then((cached) =>
+    fetch(request)
+      .then(async (response) => {
+        // Cross-origin <img> requests are no-cors, so successful responses are
+        // opaque (status 0, ok=false) — those are exactly what we must cache.
+        if (response.ok || response.type === "opaque") {
+          const cache = await caches.open(cacheName);
+          await cache.put(request, response.clone());
+          await trimCache(cache);
+        }
+        return response;
+      })
+      .catch(() => cached),
+  );
+  event.respondWith(
+    cachedPromise.then((cached) => {
+      if (cached) {
+        // Serve stale immediately; keep the worker alive until the background
+        // refresh finishes so revalidation actually happens.
+        event.waitUntil(refresh.then(() => undefined).catch(() => undefined));
+        return cached;
       }
-      return response;
-    })
-    .catch(() => cached);
-  return cached || refresh;
+      return refresh;
+    }),
+  );
 }
 
 // Best-effort LRU-ish cap: Cache API keys() preserves insertion order.
