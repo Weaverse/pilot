@@ -20,7 +20,7 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 - Blogs: `routes/blogs/blog.tsx`, `routes/blogs/article.tsx`
 - SEO: `routes/seo/robots.ts`, `routes/seo/sitemap.ts`
 
-**Adding New Routes**: Always add new routes to `app/routes.ts` using the `route()`, `index()`, `layout()`, and `prefix()` helpers from `@react-router/dev/routes`.
+**Adding New Routes**: Always add new routes to `app/routes.ts` using the `route()`, `index()`, `layout()`, and `prefix()` helpers from `@react-router/dev/routes`. Non-HTML resource routes served from the site root (e.g. `robots.txt`, `manifest.webmanifest`) are registered top-level, outside the `:locale?` prefix.
 
 ### Key Architectural Patterns
 

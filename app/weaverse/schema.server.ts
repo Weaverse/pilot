@@ -10,6 +10,7 @@ import { linksButtonsSettings } from "./settings/links-buttons";
 import { newsletterSettings } from "./settings/newsletter";
 import { productBadgesSettings } from "./settings/product-badges";
 import { productCardsSettings } from "./settings/product-cards";
+import { pwaSettings } from "./settings/pwa";
 import { searchSettings } from "./settings/search";
 import { typographySettings } from "./settings/typography";
 
@@ -48,6 +49,7 @@ export const themeSchema: HydrogenThemeSchema = {
     newsletterSettings,
     searchSettings,
     cartSettings,
+    pwaSettings,
     footerSettings,
   ],
 };
