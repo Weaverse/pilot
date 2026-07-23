@@ -25,7 +25,7 @@ export function Spinner({
       <span
         className={cn(
           "animate-spin [animation-duration:var(--spinner-duration)]",
-          "inline-block size-(--spinner-size) rounded-full",
+          "inline-block size-(--spinner-size) shrink-0 rounded-full",
           "border-2 border-gray-300 border-t-gray-600",
         )}
       />
