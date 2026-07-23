@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
@@ -40,6 +41,7 @@ export function MobileMenu() {
           ])}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <Dialog.Title asChild>
             <div className="px-4">Menu</div>
           </Dialog.Title>

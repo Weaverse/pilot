@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 
 type ShopifyInboxButton = {
   /** Button color as a hex value, e.g. `#000000`. */
@@ -67,6 +67,15 @@ const LOADER_BASE_URL =
   "https://cdn.shopify.com/shopifycloud/shopify_chat/storefront";
 
 const SCRIPT_ID = "shopify-inbox";
+const HIDDEN_ATTRIBUTE = "data-shopify-inbox-hidden";
+
+// Each mounted overlay owns one token. The widget is shown again only after
+// every owner releases its token, so nested/overlapping dialogs cannot reveal
+// the launcher while another overlay is still open.
+const hiddenRequests = new Set<symbol>();
+
+const useHydrationSafeLayoutEffect =
+  typeof document === "undefined" ? useEffect : useLayoutEffect;
 
 // Shopify-internal (undocumented) selectors for the chat launcher; they could
 // change if Shopify updates the chat widget. Before the widget bundle loads the
@@ -144,6 +153,55 @@ export function ShopifyInbox({
     return () => window.removeEventListener("load", injectLoader);
   }, [src]);
 
+  return null;
+}
+
+function syncShopifyInboxVisibility() {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  document.documentElement.toggleAttribute(
+    HIDDEN_ATTRIBUTE,
+    hiddenRequests.size > 0,
+  );
+}
+
+/**
+ * Hides Shopify Inbox until the returned cleanup function is called.
+ *
+ * The request is reference-counted, so it is safe for nested or overlapping
+ * overlays. It also degrades gracefully when Inbox is not configured or has
+ * not mounted yet: CSS keyed by `HIDDEN_ATTRIBUTE` applies when Shopify later
+ * injects its placeholder iframe or loaded web component.
+ */
+export function hideShopifyInbox(): () => void {
+  if (typeof document === "undefined") {
+    return () => undefined;
+  }
+
+  const request = Symbol("shopify-inbox-hidden");
+  hiddenRequests.add(request);
+  syncShopifyInboxVisibility();
+
+  let released = false;
+  return () => {
+    if (released) {
+      return;
+    }
+    released = true;
+    hiddenRequests.delete(request);
+    syncShopifyInboxVisibility();
+  };
+}
+
+/**
+ * Keeps Shopify Inbox hidden for the lifetime of an overlay's content.
+ * Place this inside `Dialog.Content` so Radix Presence retains the guard until
+ * the closing animation finishes. Renders no DOM.
+ */
+export function ShopifyInboxOverlayGuard() {
+  useHydrationSafeLayoutEffect(() => hideShopifyInbox(), []);
   return null;
 }
 

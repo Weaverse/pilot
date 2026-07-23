@@ -179,6 +179,15 @@ export default function Homepage() {
 
 `WeaverseContent` wraps `WeaverseHydrogenRoot` from `@weaverse/hydrogen` with the project's component registry.
 
+### Installable mobile app (PWA)
+
+Pilot can make the storefront installable as a home-screen app on iOS and Android — no app store, branded per merchant. Enable it in theme settings under **Mobile app (PWA)** and optionally upload a square app icon (512×512 PNG recommended; falls back to the Shopify brand logo).
+
+- `/manifest.webmanifest` is generated from theme settings (`app/routes/pwa/manifest.webmanifest.ts`).
+- A minimal service worker (`public/sw.js`) caches only hashed build assets and Shopify CDN images. HTML, cart, account, and checkout are never intercepted.
+- iOS shows no install prompt, so an optional one-time hint banner explains Share → Add to Home Screen (`app/components/pwa-install-hint.tsx`).
+- Push notifications are intentionally not included.
+
 ### Use global theme settings
 
 Theme settings load in `root.tsx` and are read anywhere with `useThemeSettings`:

@@ -3,6 +3,7 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useState } from "react";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { StarRating } from "~/components/star-rating";
 import type { JudgeMeReviewType, JudgemeReviewImage } from "~/types/judgeme";
 import { cn } from "~/utils/cn";
@@ -160,6 +161,7 @@ export function ReviewImagesModal({
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <VisuallyHidden.Root asChild>
             <Dialog.Title>Review image gallery</Dialog.Title>
           </VisuallyHidden.Root>

@@ -11,6 +11,7 @@ import { hydrogenRoutes } from "@shopify/hydrogen";
 // See https://remix.run/docs/en/main/guides/routing for more details
 export default hydrogenRoutes([
   route("robots.txt", "routes/seo/robots.ts"),
+  route("manifest.webmanifest", "routes/pwa/manifest.webmanifest.ts"),
   ...prefix(":locale?", [
     index("routes/home.tsx"),
     route("search", "routes/search/index.tsx"),
@@ -43,6 +44,8 @@ export default hydrogenRoutes([
       route(":blogHandle", "routes/blogs/blog.tsx"),
       route(":blogHandle/:articleHandle", "routes/blogs/article.tsx"),
     ]),
+    // Redirect legacy article URLs emitted by Hydrogen's default sitemap.
+    route("articles/:articleHandle", "routes/blogs/article-redirect.tsx"),
     ...prefix("policies", [
       index("routes/policies/list.tsx"),
       route(":policyHandle", "routes/policies/policy.tsx"),

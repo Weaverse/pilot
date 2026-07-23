@@ -14,6 +14,7 @@ import type { linksButtonsSettings } from "~/weaverse/settings/links-buttons";
 import type { newsletterSettings } from "~/weaverse/settings/newsletter";
 import type { productBadgesSettings } from "~/weaverse/settings/product-badges";
 import type { productCardsSettings } from "~/weaverse/settings/product-cards";
+import type { pwaSettings } from "~/weaverse/settings/pwa";
 import type { searchSettings } from "~/weaverse/settings/search";
 import type { typographySettings } from "~/weaverse/settings/typography";
 
@@ -93,6 +94,7 @@ type NewsletterSettings = ExtractSettings<typeof newsletterSettings>;
 type SearchSettings = ExtractSettings<typeof searchSettings>;
 type CartSettings = ExtractSettings<typeof cartSettings>;
 type FooterSettings = ExtractSettings<typeof footerSettings>;
+type PwaSettings = ExtractSettings<typeof pwaSettings>;
 
 // -- Combined theme settings --
 export type ThemeSettings = GeneralSettings &
@@ -105,4 +107,5 @@ export type ThemeSettings = GeneralSettings &
   NewsletterSettings &
   SearchSettings &
   CartSettings &
-  FooterSettings;
+  FooterSettings &
+  PwaSettings;
