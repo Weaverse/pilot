@@ -38,6 +38,10 @@ export default defineConfig(({ isSsrBuild }) => ({
   },
   build: {
     assetsInlineLimit: 0,
+    // Disable sourcemaps in the production build. Sourcemap generation is a
+    // major memory driver and can push large storefronts past the CI runner's
+    // default Node heap (~2GB), causing OOM (exit 134) during Oxygen deploys.
+    sourcemap: false,
     ...(!isSsrBuild && {
       rollupOptions: {
         output: {

@@ -95,6 +95,8 @@ Pilot is designed to be developed *with* an agent:
 
 ---
 
+## Getting started
+
 ## Commands
 
 ```bash
@@ -270,6 +272,19 @@ export const components: HydrogenComponent[] = [/* …existing, */ Video];
 
 - [Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen) (recommended)
 - [Vercel](https://wvse.cc/deploy-pilot-to-vercel)
+
+> [!NOTE]
+> Large storefronts can hit a `JavaScript heap out of memory` error (exit code 134) during the Oxygen build. If that happens, raise Node's heap limit on the deploy step in the generated GitHub Actions workflow (`.github/workflows/oxygen-deployment-*.yml`):
+>
+> ```yaml
+> - name: Build and Publish to Oxygen
+>   run: npx shopify hydrogen deploy
+>   env:
+>     SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_... }}
+>     NODE_OPTIONS: --max-old-space-size=8192
+> ```
+>
+> Production sourcemaps are already disabled in `vite.config.ts` (`build.sourcemap: false`) to keep build memory down.
 
 ---
 
