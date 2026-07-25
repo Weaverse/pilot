@@ -2,7 +2,7 @@
 
 | Field            | Value                                          |
 | ---------------- | ---------------------------------------------- |
-| **Status**       | draft                                          |
+| **Status**       | in-progress                                    |
 | **Owner**        | @hta218                                        |
 | **Issue**        | N/A                                            |
 | **Branch**       | `update/instant-add-to-cart-drawer`            |

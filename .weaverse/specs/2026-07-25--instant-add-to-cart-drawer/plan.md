@@ -54,9 +54,14 @@ and the drawer visibly jumps backwards on the click.
 - New `buildOptimisticAddCart(baseline, lines)`:
   - Merge each input line into a clone of `baseline.lines.nodes` — bump
     `quantity` when the `merchandiseId` already has a line, otherwise `unshift`
-    a synthetic node built from `line.selectedVariant` with an
-    `optimistic-<uuid>` id (same shape `applyOptimisticMutations` already
-    produces, so `cart-line-item.tsx` needs no new branches).
+    a synthetic node built from `line.selectedVariant` (same shape
+    `applyOptimisticMutations` already produces, so `cart-line-item.tsx` needs
+    no new branches).
+  - The synthetic node's id is **`optimistic-<merchandiseId>`, never a random
+    UUID**. This cart is recomposed on every render, so a random id would give
+    `<CartLineItem key={line.id}>` a new key each pass — remounting the row
+    (image reload, visible flicker) and re-keying `useOptimisticData(id)`.
+    A cart holds at most one line per merchandise, so it is unique.
   - Mark **only touched lines** `isOptimistic: true`, and the cart
     `isOptimistic: true`; recompute `totalQuantity` from the nodes so the header
     badge is instantly correct.
@@ -145,9 +150,6 @@ by hand pre-bootstrap sees the spinner, not a false empty cart.
   is looking at — and it may already hold other items that are perfectly fine.
   The error belongs where the shopper's attention is, so it also renders inside
   the drawer (step 6).
-- Add an optional `onAddStart?: () => void` prop fired synchronously from the
-  click handler, and `onSettled?: (ok: boolean) => void` fired when the mutation
-  resolves. Used by quick shop (step 7).
 - **Harden the analytics effect.** `AddToCartAnalytics` reads
   `fetcherData.cart.id` with no guard. Today a failed add is never exercised;
   this change makes that path reachable, and an add that returns no `cart`
@@ -155,28 +157,30 @@ by hand pre-bootstrap sees the spinner, not a false empty cart.
 
 ### 6. Surface the add error in the drawer
 
-`app/components/cart/store.ts`, `app/components/cart/cart-main.tsx`
+`app/components/cart/store.ts`, `app/components/cart/cart-drawer.tsx`
 
 - Add `lastAddError: string | null` to the store, set on a failed add and
-  cleared on the next successful add or when the drawer closes.
-- Render it as a dismissible `role="alert"` banner at the top of the drawer
-  body, so the message is visible whether the shopper is looking at the button
-  or the drawer.
+  cleared on the next add, and on `close()` / `toggle()`.
+- Render it as a dismissible `role="alert"` banner above the drawer body. It
+  lives in `cart-drawer.tsx`, not `cart-main.tsx`: `CartMain` also backs the
+  `/cart` page, which has no add-to-cart entry point of its own.
 
 ### 7. Align the three entry points
 
 - `app/sections/main-product/buy-buttons/index.tsx` and
   `buy-buttons/sticky-atc-bar.tsx` — no behavioral change needed; verify the
   drawer opening does not fight the sticky bar's visibility store.
-- `app/components/product-card/quick-shop.tsx` — the quick-shop Radix dialog and
-  the cart drawer would otherwise stack two overlays (there is already a `TODO`
-  in this file for exactly that). Close the quick-shop dialog from
-  `onAddStart`, i.e. on the **same tick** the drawer opens — not on success.
-  Waiting for success would leave both overlays stacked for the entire mutation
-  window, which is the bug, not the fix. On failure the error is already visible
-  in the drawer (step 6), so the dialog does not need to reopen.
-  This requires lifting the dialog's `open` state so `QuickShop` can close it —
-  pass a `onRequestClose` callback down from `QuickShopTrigger`.
+- `app/components/product-card/quick-shop.tsx` — **the dialog stays open
+  through the add; no code change beyond dropping the stale `TODO` about the
+  overlap.** The cart drawer's portal mounts after the dialog's, so at equal
+  z-index the drawer paints on top, and closing the drawer returns the shopper
+  to the dialog to add another variant.
+
+  Closing it on the click is what an earlier revision tried, and it breaks the
+  feature outright: unmounting the form before the browser runs its default
+  submit action means **no request is ever sent**. Keeping it mounted also
+  keeps the settle effect alive, so a failed quick-shop add still reports its
+  error. The only cost is two stacked overlays dimming the backdrop twice.
 
 ### 8. Verification
 
@@ -185,11 +189,17 @@ there is no vitest config and no `*.test.*` file in the repo. Adding one is out
 of scope for this feature; if we want unit coverage for the store it should be
 its own spec.
 
-So `buildOptimisticAddCart` is covered by e2e instead, extending the existing
-`tests/cart.test.ts`:
+The existing `tests/cart.test.ts` cannot be extended as-is either: it targets
+`[data-test=subtotal]`, `[data-test=close-cart]`, `[data-test=price]`,
+`[data-test=collection-grid]` and `[data-test=product-grid]`, and **none of
+those hooks exist in the app anymore** — only `item-quantity` and
+`add-to-cart` do. The suite is already stale, so new specs stacked on it would
+be unverifiable. Repairing it is a separate task; it is filed as a follow-up
+rather than folded in here.
 
-- Playwright specs (network throttled/stubbed so the pending window is
-  observable and deterministic):
+Verification for this feature is therefore the manual list below, run against
+a dev server with the network throttled so the pending window is observable.
+The scenarios are written to double as the e2e spec once the suite is repaired:
   1. PDP add with empty cart → drawer opens within the click, line visible,
      price skeleton, then real price. Badge count correct throughout.
   2. PDP add onto an existing cart → quantity bumps instantly; existing lines
@@ -201,24 +211,29 @@ So `buildOptimisticAddCart` is covered by e2e instead, extending the existing
   5. Cold page, click add before `/api/cart` responds → drawer shows the line,
      not the bootstrap spinner.
   6. Sticky ATC bar add → same behavior; sticky bar state unaffected.
-  7. Quick shop add from a collection card → quick-shop dialog closes on the
-     click; drawer shows the line.
+  7. Quick shop add from a collection card → drawer opens over the still-open
+     dialog and shows the line; the POST actually fires; closing the drawer
+     reveals the dialog again.
   8. Forced failure (offline, or an unavailable variant) → drawer stays open,
      error banner shown, no phantom line, retry works.
   9. Close the drawer mid-mutation → it does not re-open by itself.
-- `pnpm biome:fix` and `pnpm typecheck` clean.
+- `npm run biome` and `npm run typecheck` clean. This repo is on npm — see
+  `AGENTS.md` ("Use npm (not pnpm)").
 
 ## Files and folders touched
 
 - `.weaverse/specs/2026-07-25--instant-add-to-cart-drawer/`
 - `app/components/cart/store.ts`
 - `app/components/cart/cart-drawer.tsx`
-- `app/components/cart/cart-main.tsx`
 - `app/components/product/add-to-cart-button.tsx`
 - `app/components/product-card/quick-shop.tsx`
-- `app/sections/main-product/buy-buttons/index.tsx`
-- `app/sections/main-product/buy-buttons/sticky-atc-bar.tsx`
-- `tests/cart.test.ts` (Playwright specs)
+
+Verified as needing no change:
+
+- `app/sections/main-product/buy-buttons/index.tsx` and
+  `buy-buttons/sticky-atc-bar.tsx` — both render `AddToCartButton`, so they
+  inherit the new behavior; the sticky bar's visibility store is independent of
+  the drawer's `isOpen`.
 
 Read-only / verified but not expected to change:
 
