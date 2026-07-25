@@ -79,6 +79,9 @@ feels like a round-trip:
   a skeleton.
 - Changing cart route, checkout flow, analytics payloads, or any public URL.
 - Inventory/stock-limit handling on the add button (a separate concern).
+- Introducing a unit-test runner. Pilot has Playwright only (no vitest config,
+  no `*.test.*` outside `tests/`); adding one is its own spec. Store behavior is
+  covered by e2e here.
 
 ## Success Criteria
 
@@ -86,10 +89,16 @@ feels like a round-trip:
   line visible (image, title, options, quantity) and its price as a skeleton.
 - Works for a first-ever add (no existing cart) as well as adds onto an
   existing cart, and when adding a variant already present in the cart.
+- Works on a cold page too: an add clicked before the `/api/cart` bootstrap
+  responds shows the line, not the bootstrap spinner.
+- Lines already in the cart keep their real prices; only the totals and the
+  line being added are skeletoned.
+- Two adds in flight at once (e.g. quick shop then sticky bar) do not cancel
+  each other's staged line.
 - No frame where the line disappears between `submitting` and the server cart
   landing.
 - The button cannot be submitted twice while a mutation is in flight.
 - A rejected add surfaces a visible, retryable error and does not leave a
-  phantom line in the drawer.
+  phantom line in the drawer. The drawer stays open.
 - All three add-to-cart entry points (PDP buy buttons, sticky ATC bar,
   product-card quick shop) behave consistently.
