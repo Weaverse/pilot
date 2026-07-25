@@ -62,7 +62,10 @@ export const schema = createSchema({
           type: "text",
           name: "aliReviewsApiKey",
           label: "Ali Reviews API key",
-          defaultValue: "",
+          // Third-party bearer token. `sensitive` keeps the value out of the
+          // generated component manifest and any agent-visible surface.
+          // Sensitive inputs must not declare a `defaultValue`.
+          sensitive: true,
           placeholder: "Your Ali Reviews API key",
           helpText: `Learn how to get your API key from <a href="https://support.fireapps.io/en/article/ali-reviews-learn-more-about-integration-using-api-key-hklfr0/" target="_blank">Ali Reviews app</a>.`,
           shouldRevalidate: true,

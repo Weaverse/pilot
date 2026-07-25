@@ -2,6 +2,23 @@
 
 This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) when working with code in this repository.
 
+## Companion Guides
+
+- **`.agents/weaverse.md`** — required reading before changing any component
+  schema, section, or the component registry. Covers the generated component
+  manifest, sensitivity marking, and safe composition.
+- **`DESIGN.md`** — brand tokens, accessibility requirements, component rules,
+  and prohibited patterns.
+
+Weaverse schema changes must be accompanied by a regenerated manifest:
+
+```bash
+npm run weaverse:manifest   # regenerate .weaverse/component-manifest.json
+npm run weaverse:audit      # check registrations and setting sensitivity
+```
+
+CI fails when the committed manifest is stale.
+
 ## Project Overview
 
 This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting.

@@ -119,8 +119,6 @@ export const components: HydrogenComponent[] = [
   NewsLetterForm,
   ContactUs,
   MessageUsButton,
-  Blogs,
-  BlogPost,
   FeaturedProducts,
   FeaturedProductItems,
   Testimonial,
