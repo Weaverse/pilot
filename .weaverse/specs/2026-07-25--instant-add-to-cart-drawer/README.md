@@ -79,9 +79,9 @@ feels like a round-trip:
   a skeleton.
 - Changing cart route, checkout flow, analytics payloads, or any public URL.
 - Inventory/stock-limit handling on the add button (a separate concern).
-- Introducing a unit-test runner. Pilot has Playwright only (no vitest config,
-  no `*.test.*` outside `tests/`); adding one is its own spec. Store behavior is
-  covered by e2e here.
+- Introducing another test framework. Focused store tests use the existing
+  Playwright test runner with a unit-only config that does not start the
+  storefront server.
 
 ## Success Criteria
 
@@ -98,7 +98,10 @@ feels like a round-trip:
 - No frame where the line disappears between `submitting` and the server cart
   landing.
 - The button cannot be submitted twice while a mutation is in flight.
+- Optimistic lines cannot be removed, and checkout cannot start, until Shopify
+  confirms the pending cart state.
 - A rejected add surfaces a visible, retryable error and does not leave a
   phantom line in the drawer. The drawer stays open.
-- All three add-to-cart entry points (PDP buy buttons, sticky ATC bar,
-  product-card quick shop) behave consistently.
+- All four add-to-cart entry points (PDP buy buttons, sticky ATC bar,
+  product-card quick shop, single-product section) behave consistently.
+- Token isolation and first-add cart construction have automated coverage.

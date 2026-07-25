@@ -2,17 +2,15 @@
 
 ## Approach
 
-Add one piece of state to the existing cart store — a **staged pending-add
-cart** — that is written synchronously by the add-to-cart click handler and read
-by `useCart()` with priority over everything else. This closes the frame gap
-that `useFetchers()`-derived optimism cannot cover, without touching the
-bootstrap/sync machinery that already works.
+Store each pending add's **lines** synchronously from the initiating click, then
+compose every active stage over the freshest cart baseline inside `useCart()`.
+This closes the first-frame gap that `useFetchers()` cannot cover while keeping
+concurrent adds isolated by token.
 
-The staged cart is a *presentation* cart only: real merchandise data (taken from
-the `selectedVariant` already passed in `lines`), real quantity, but skeletoned
-money and `isOptimistic: true`, so no wrong number is ever painted. It is
-discarded the moment the mutation settles, at which point `useCartFetcherSync`
-has already pushed the authoritative cart into `serverCart`.
+The composed cart is presentation-only: real merchandise data and quantity,
+with the touched lines and cart totals marked optimistic. Shopify remains
+authoritative. Controls that would submit synthetic IDs or leave for checkout
+stay disabled until the authoritative cart lands.
 
 ## Steps
 
@@ -20,28 +18,27 @@ has already pushed the authoritative cart into `serverCart`.
 
 `app/components/cart/store.ts`
 
-`useCart()` currently resolves its baseline from three sources in one inlined
-block: `serverCart`, the `freshestFetcherCartRef` module ref, and a scan of idle
-fetchers. `stagePendingAdd()` must stage from the *same* cart the drawer is
-about to render, otherwise the staged cart can be older than what is on screen
-and the drawer visibly jumps backwards on the click.
+`useCart()` resolves its baseline from `serverCart`, the
+`freshestFetcherCartRef` module ref, and a scan of idle fetchers. The click-time
+stage records the timestamp of the same baseline resolver so a newer
+authoritative cart can supersede it.
 
 - Extract `resolveBaselineCart(fetchers?)` returning
-  `{ cart, updatedAt, source }`, used by both `useCart()` and
+  `{ cart, updatedAt }`, used by both `useCart()` and
   `stagePendingAdd()`. Outside render (the click handler) it is called without
   fetchers, so it consults `serverCart` + `freshestFetcherCartRef` only —
   the idle-fetcher scan needs a render pass and has no equivalent off-render.
-- Keep the tombstone (`removedLineIds`) filtering inside `useCart()`; it is a
-  render-time concern and the staged cart is built from the already-filtered
-  baseline passed in by the caller.
+- Keep tombstone (`removedLineIds`) filtering inside `useCart()` as a
+  render-time concern.
 
-### 2. Stage a pending-add cart in the store
+### 2. Stage pending-add lines in the store
 
 `app/components/cart/store.ts`
 
 - Add to `CartStore`:
   - `pendingAdds: Map<string, PendingAdd>` where
-    `PendingAdd = { cart: CartWithOptimistic; stagedFromUpdatedAt: string }`.
+    `PendingAdd = { lines: OptimisticCartLineInput[]; stagedFromUpdatedAt:
+    string }`.
   - `stagePendingAdd(lines: OptimisticCartLineInput[]): string | null` —
     returns an opaque token, or `null` when nothing could be staged.
   - `clearPendingAdd(token: string)` — clears **only** that token's entry.
@@ -51,8 +48,9 @@ and the drawer visibly jumps backwards on the click.
   succession). With a single slot the second stage overwrites the first, and the
   first fetcher settling would then clear a stage that is still in flight.
 
-- New `buildOptimisticAddCart(baseline, lines)`:
-  - Merge each input line into a clone of `baseline.lines.nodes` — bump
+- Add shared composition helpers:
+  - `applyAddLines(nodes, lines)` merges each input line into a cloned baseline:
+    bump
     `quantity` when the `merchandiseId` already has a line, otherwise `unshift`
     a synthetic node built from `line.selectedVariant` (same shape
     `applyOptimisticMutations` already produces, so `cart-line-item.tsx` needs
@@ -78,22 +76,18 @@ and the drawer visibly jumps backwards on the click.
     - `currencyCode` on every zeroed money object comes from
       `selectedVariant.price.currencyCode` (falling back to the baseline's), so
       `<Money>` never receives a mismatched currency.
-  - **Null-baseline case:** when `baseline` is `null` (first-ever add)
-    synthesize a minimal cart from the variant alone, so the drawer shows the
-    line instead of the empty state. Return `null` only if there is neither a
-    baseline nor a usable variant — the caller then falls back to today's
-    behavior (no stage, drawer opens on settle).
+  - `buildOptimisticAddCart(lines)` handles the null-baseline/first-ever-add
+    case by synthesizing a minimal cart from the variants.
 
-- In `useCart()`, when `pendingAdds` is non-empty return the most recently
-  staged entry's cart **unless the resolved baseline is newer than
-  `stagedFromUpdatedAt`** — in which case the authoritative cart has already
-  landed and the stage is stale.
+- In `useCart()`, collect all active staged lines, apply them over the freshest
+  baseline, and then layer pending fetcher mutations. A stage becomes inactive
+  when the resolved baseline is newer than its `stagedFromUpdatedAt`.
 
   Do not rely on `clearPendingAdd()` running first: `useCartFetcherSync` writes
   `serverCart` inside a `queueMicrotask`, while the clear happens in a passive
   effect, and pinning correctness to that ordering is fragile. The
   `updatedAt` comparison makes the handoff self-correcting; the explicit clear
-  in step 4 is then just cleanup.
+  in step 5 is then just cleanup.
 
 - Also fix the `loading`-phase gap (problem 4): treat fetchers in `submitting`
   **and** `loading` as pending in `applyOptimisticMutations`, so the overlay
@@ -165,7 +159,7 @@ by hand pre-bootstrap sees the spinner, not a false empty cart.
   lives in `cart-drawer.tsx`, not `cart-main.tsx`: `CartMain` also backs the
   `/cart` page, which has no add-to-cart entry point of its own.
 
-### 7. Align the three entry points
+### 7. Align all add-to-cart entry points
 
 - `app/sections/main-product/buy-buttons/index.tsx` and
   `buy-buttons/sticky-atc-bar.tsx` — no behavioral change needed; verify the
@@ -182,24 +176,35 @@ by hand pre-bootstrap sees the spinner, not a false empty cart.
   keeps the settle effect alive, so a failed quick-shop add still reports its
   error. The only cost is two stacked overlays dimming the backdrop twice.
 
-### 8. Verification
+The single-product section also renders `AddToCartButton` and inherits the same
+behavior without a call-site change.
 
-Pilot has **no unit-test runner** — `package.json` has Playwright (`e2e`) only,
-there is no vitest config and no `*.test.*` file in the repo. Adding one is out
-of scope for this feature; if we want unit coverage for the store it should be
-its own spec.
+### 8. Lock interactions while the cart is optimistic
 
-The existing `tests/cart.test.ts` cannot be extended as-is either: it targets
-`[data-test=subtotal]`, `[data-test=close-cart]`, `[data-test=price]`,
-`[data-test=collection-grid]` and `[data-test=product-grid]`, and **none of
-those hooks exist in the app anymore** — only `item-quantity` and
-`add-to-cart` do. The suite is already stale, so new specs stacked on it would
-be unverifiable. Repairing it is a separate task; it is filed as a follow-up
-rather than folded in here.
+`app/components/cart/cart-line-item.tsx`,
+`app/components/cart/cart-summary.tsx`
 
-Verification for this feature is therefore the manual list below, run against
-a dev server with the network throttled so the pending window is observable.
-The scenarios are written to double as the e2e spec once the suite is repaired:
+- Disable a line's remove button while that line is optimistic. Synthetic line
+  IDs do not exist in Shopify yet and must never be submitted.
+- Remove `href` and disable the checkout control while the cart is optimistic.
+  Restore both as soon as the authoritative cart lands.
+- Quantity controls already disable themselves for optimistic lines; no change
+  is needed there.
+
+### 9. Verification
+
+Use the existing Playwright dependency as a lightweight unit runner; do not add
+another test framework or start the storefront server:
+
+- Add `playwright.unit.config.ts` with `tests/unit` as its test directory and no
+  `webServer`.
+- Add `npm run test:unit`.
+- Cover distinct pending-add tokens, token-specific clearing, rejection of
+  unusable lines, and first-add optimistic cart construction.
+- Keep the existing stale `tests/cart.test.ts` unchanged; repairing the legacy
+  browser flow remains a separate task.
+
+Run the manual list below against a throttled dev server:
   1. PDP add with empty cart → drawer opens within the click, line visible,
      price skeleton, then real price. Badge count correct throughout.
   2. PDP add onto an existing cart → quantity bumps instantly; existing lines
@@ -217,16 +222,22 @@ The scenarios are written to double as the e2e spec once the suite is repaired:
   8. Forced failure (offline, or an unavailable variant) → drawer stays open,
      error banner shown, no phantom line, retry works.
   9. Close the drawer mid-mutation → it does not re-open by itself.
-- `npm run biome` and `npm run typecheck` clean. This repo is on npm — see
-  `AGENTS.md` ("Use npm (not pnpm)").
+  10. While the add is pending → remove and checkout are disabled; both recover
+      after Shopify confirms the cart.
+- `npm run biome`, `npm run typecheck`, and `npm run test:unit` clean.
 
 ## Files and folders touched
 
 - `.weaverse/specs/2026-07-25--instant-add-to-cart-drawer/`
 - `app/components/cart/store.ts`
 - `app/components/cart/cart-drawer.tsx`
+- `app/components/cart/cart-line-item.tsx`
+- `app/components/cart/cart-summary.tsx`
 - `app/components/product/add-to-cart-button.tsx`
 - `app/components/product-card/quick-shop.tsx`
+- `package.json`
+- `playwright.unit.config.ts`
+- `tests/unit/cart-store.test.ts`
 
 Verified as needing no change:
 
@@ -234,10 +245,3 @@ Verified as needing no change:
   `buy-buttons/sticky-atc-bar.tsx` — both render `AddToCartButton`, so they
   inherit the new behavior; the sticky bar's visibility store is independent of
   the drawer's `isOpen`.
-
-Read-only / verified but not expected to change:
-
-- `app/components/cart/cart-line-item.tsx` — already skeletons the line price
-  when `isOptimistic`, per line.
-- `app/components/cart/cart-summary.tsx` — already skeletons totals when
-  `isOptimistic`.

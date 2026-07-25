@@ -96,3 +96,25 @@ unreachable (`useCart()` returns early on a null baseline above its only call
 site).
 
 **Not yet done**: QA round 2 on the 9 scenarios in `plan.md` §8.
+
+## 2026-07-25 — Review follow-up
+
+Checkpointed the reviewed implementation before making follow-up changes:
+
+- `54e5ad75` — Stage optimistic cart additions in the cart store
+- `9c747735` — Open the cart drawer with staged additions
+- `d6452f4a` — Document the instant cart drawer implementation
+
+Synchronized the spec with the implemented line-based pending-add model and all
+four add-to-cart entry points. Optimistic cart lines now disable removal, and
+checkout stays disabled until the cart update settles.
+
+Added a standalone Playwright unit-test configuration and four cart-store tests
+covering concurrent pending tokens, invalid optimistic input, stale error
+clearing, and the first-add empty-cart path.
+
+Verification:
+
+- `npm run test:unit` — 4 passed
+- `npm run biome` — passed with 3 pre-existing warnings
+- `npm run typecheck` — passed
