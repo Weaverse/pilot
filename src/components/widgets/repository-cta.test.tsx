@@ -2,8 +2,8 @@
 import { describe, expect, test } from 'bun:test'
 import { renderToStaticMarkup } from 'react-dom/server'
 import BuildLog from './BuildLog'
-import HomeSourceFooter from './HomeSourceFooter'
 import { repositorySourceLabel } from './repository-link'
+import SidebarRepository from './SidebarRepository'
 
 const REPO = 'hta218/leohuynh.dev'
 const REPO_URL = 'https://github.com/hta218/leohuynh.dev'
@@ -39,17 +39,18 @@ describe('repository discovery links', () => {
     expect(html).toContain('rel="noreferrer"')
   })
 
-  test('renders a personal homepage source CTA with conversion tracking', () => {
+  test('renders a personal sidebar source CTA with conversion tracking', () => {
     const html = renderToStaticMarkup(
-      <HomeSourceFooter repo={REPO} repoUrl={REPO_URL} />,
+      <SidebarRepository repo={REPO} repoUrl={REPO_URL} />,
     )
 
     expect(html).toContain('handwritten signature')
     expect(html).toContain('built by Leo Huynh in Hanoi')
-    expect(html).toContain('View source on GitHub')
+    expect(html).toContain('GitHub source')
     expect(html).toContain(`href="${REPO_URL}"`)
-    expect(html).toContain('data-umami-event="homepage-view-repo"')
-    expect(html).toContain('data-umami-event-source="closing-block"')
+    expect(html).toContain('data-umami-event="sidebar-view-repo"')
+    expect(html).toContain('data-umami-event-source="studio-sidebar"')
+    expect(html).not.toContain('homepage-view-repo')
     expect(html).toContain('target="_blank"')
     expect(html).toContain('rel="noreferrer"')
   })

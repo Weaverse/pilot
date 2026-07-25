@@ -6,7 +6,6 @@ import JsonLd from '~/components/JsonLd.astro'
 import Twemoji from '~/components/mdx/Twemoji.astro'
 import StudioShell from '~/components/studio/StudioShell.astro'
 import BuildLog from '~/components/widgets/BuildLog'
-import HomeSourceFooter from '~/components/widgets/HomeSourceFooter'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import { siteJsonLd } from '~/lib/seo'
 import { SITE } from '~/lib/site'
@@ -122,11 +121,5 @@ const codebase = {
         stack={codebase.stack}
       />
     </div>
-
-    <HomeSourceFooter
-      client:idle
-      repo={codebase.repo}
-      repoUrl={SITE.siteRepo}
-    />
   </StudioShell>
 </BaseLayout>
