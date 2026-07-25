@@ -305,7 +305,7 @@ function stagedCurrencyCode(
  * all (a shopper's first-ever add). Without this the drawer would render its
  * empty-cart state on the very click that adds the first item.
  */
-function buildOptimisticAddCart(
+export function buildOptimisticAddCart(
   lines: OptimisticCartLineInput[],
 ): CartWithOptimistic | null {
   const nodes: OptimisticLineNode[] = [];
