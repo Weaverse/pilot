@@ -15,6 +15,7 @@ import type { BlogStats, StatsType } from '~/types/stats'
 
 const STATS_ENDPOINT = '/api/stats'
 const SITE_STATS_ENDPOINT = '/api/site-stats.json'
+export const SITE_STATS_REFRESH_INTERVAL_MS = 30_000
 
 export function emptyStats(type: StatsType, slug: string): BlogStats {
   return {
@@ -101,8 +102,8 @@ function unavailableSiteStats(): SiteStatsPayload {
  * Read live site-wide stats (traffic, reactions, repo) from `/api/site-stats.json`. Returns a
  * `null`-field payload when the endpoint is unavailable so the UI shows `—`.
  *
- * The `BuildLog` island calls this for the manifest's live numbers; the short TTL cache +
- * in-flight dedup keeps repeated/poll reads to a single network request.
+ * The home-page islands call this for live numbers; the short TTL cache + in-flight dedup
+ * keeps their repeated/poll reads to a single network request.
  */
 export async function fetchSiteStats(): Promise<SiteStatsPayload> {
   const now = Date.now()
