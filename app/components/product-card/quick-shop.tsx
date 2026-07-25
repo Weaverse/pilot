@@ -123,7 +123,13 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
             />
           </div>
           <Quantity value={quantity} onChange={setQuantity} />
-          {/* TODO: fix quick-shop modal & cart drawer overlap each other */}
+          {/*
+            This dialog deliberately stays open through the add: the cart
+            drawer's portal mounts after it, so at equal z-index the drawer
+            paints on top, and closing the drawer returns the shopper here to
+            add another variant. Closing it on the click would unmount the form
+            before the browser's default submit action — no request at all.
+          */}
           <AddToCartButton
             disabled={!selectedVariant?.availableForSale}
             lines={[

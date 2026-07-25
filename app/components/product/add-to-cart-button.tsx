@@ -9,7 +9,7 @@ import {
   getClientBrowserParameters,
   sendShopifyAnalytics,
 } from "@shopify/hydrogen";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
@@ -45,6 +45,7 @@ export function AddToCartButton({
       {(fetcher: FetcherWithComponents<any>) => (
         <AddToCartButtonContent
           fetcher={fetcher}
+          lines={lines}
           disabled={disabled}
           className={className}
           analytics={analytics}
@@ -59,6 +60,7 @@ export function AddToCartButton({
 
 function AddToCartButtonContent({
   fetcher,
+  lines,
   children,
   disabled,
   className,
@@ -66,23 +68,55 @@ function AddToCartButtonContent({
   ...props
 }: {
   fetcher: FetcherWithComponents<any>;
+  lines: OptimisticCartLineInput[];
   children: React.ReactNode;
   disabled?: boolean;
   className?: string;
   analytics?: unknown;
   [key: string]: any;
 }) {
-  const { open: openCartDrawer } = useCartStore();
+  const {
+    open: openCartDrawer,
+    stagePendingAdd,
+    clearPendingAdd,
+    setLastAddError,
+  } = useCartStore();
   useCartFetcherSync(fetcher);
-  const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
   const isLoading = fetcher.state !== "idle";
+  // Token of the stage this button owns, so a concurrent add from another
+  // button is never cleared by this one.
+  const pendingTokenRef = useRef<string | null>(null);
+  const submittedRef = useRef(false);
+  const [addError, setAddError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
-      openCartDrawer();
+    if (fetcher.state !== "idle" || !submittedRef.current) {
+      return;
     }
-    prevStateRef.current = fetcher.state;
-  }, [fetcher.state, openCartDrawer]);
+    submittedRef.current = false;
+    const token = pendingTokenRef.current;
+    pendingTokenRef.current = null;
+
+    const message = getAddErrorMessage(fetcher.data);
+    if (token) {
+      clearPendingAdd(token);
+    }
+    setAddError(message);
+    setLastAddError(message);
+  }, [fetcher.state, fetcher.data, clearPendingAdd, setLastAddError]);
+
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    props.onClick?.(event);
+    if (event.defaultPrevented) {
+      return;
+    }
+    setAddError(null);
+    submittedRef.current = true;
+    // Stage BEFORE the form submits so the drawer's first paint already has
+    // the line — the fetcher only becomes visible on the next render.
+    pendingTokenRef.current = stagePendingAdd(lines);
+    openCartDrawer();
+  }
 
   return (
     <AddToCartAnalytics fetcher={fetcher}>
@@ -90,16 +124,48 @@ function AddToCartButtonContent({
       <Button
         type="submit"
         className={cn("relative w-full", className)}
-        disabled={disabled ?? isLoading}
         {...props}
+        disabled={disabled || isLoading}
+        aria-busy={isLoading || undefined}
+        onClick={handleClick}
       >
         <span className={cn(isLoading && "invisible")}>
           {children || "Add to cart"}
         </span>
         {isLoading && <Spinner className="z-0" size={20} duration={400} />}
       </Button>
+      {addError && (
+        <p role="alert" className="mt-2 text-red-600 text-sm">
+          {addError}
+        </p>
+      )}
     </AddToCartAnalytics>
   );
+}
+
+const ADD_FAILED_MESSAGE = "Couldn't add this to your cart. Please try again.";
+
+/**
+ * A cart mutation can fail three ways: a thrown/network error surfaced as
+ * `errors`, Shopify `userErrors`, or a response with no cart at all.
+ */
+function getAddErrorMessage(data: unknown): string | null {
+  if (!data) {
+    return null;
+  }
+  const payload = data as {
+    cart?: unknown;
+    errors?: { message?: string }[];
+    userErrors?: { message?: string }[];
+  };
+  const firstError = payload.errors?.[0] ?? payload.userErrors?.[0];
+  if (firstError) {
+    return firstError.message || ADD_FAILED_MESSAGE;
+  }
+  if (!payload.cart) {
+    return ADD_FAILED_MESSAGE;
+  }
+  return null;
 }
 
 function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
@@ -154,7 +220,10 @@ function AddToCartAnalytics({
         // do nothing
       }
 
-      if (Object.keys(cartData).length && fetcherData) {
+      // A failed add settles with no `cart` on the response — reading
+      // `fetcherData.cart.id` unguarded would throw, and there is nothing
+      // meaningful to report anyway.
+      if (Object.keys(cartData).length && fetcherData?.cart?.id) {
         const addToCartPayload: ShopifyAddToCartPayload = {
           ...getClientBrowserParameters(),
           ...pageAnalytics,
