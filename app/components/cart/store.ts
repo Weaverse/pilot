@@ -1,4 +1,4 @@
-import { CartForm } from "@shopify/hydrogen";
+import { CartForm, type OptimisticCartLineInput } from "@shopify/hydrogen";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Fetcher } from "react-router";
 import {
@@ -46,10 +46,40 @@ type CartStore = {
    * actions revalidated the token promise and re-suspended the widget.
    */
   customerAccessTokenKnown: boolean;
+  /**
+   * Add-to-cart lines staged synchronously by the initiating click, keyed by
+   * an opaque token. `useCart()` composes these over the baseline cart so the
+   * drawer can open on the same click with the new line already visible —
+   * `useFetchers()`-derived optimism cannot cover that first frame, because
+   * React Router only exposes a submitted fetcher on the NEXT render.
+   *
+   * A map, not a single slot: two add buttons can be in flight at once (sticky
+   * ATC bar + quick shop, or two product cards in succession), and each must
+   * only ever clear its own entry.
+   */
+  pendingAdds: Map<string, PendingAdd>;
+  /** Message from the most recent failed add, surfaced inside the drawer. */
+  lastAddError: string | null;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
+  /** Returns a token to pass back to `clearPendingAdd`, or null if nothing could be staged. */
+  stagePendingAdd: (lines: OptimisticCartLineInput[]) => string | null;
+  clearPendingAdd: (token: string) => void;
+  setLastAddError: (message: string | null) => void;
 };
+
+type PendingAdd = {
+  lines: OptimisticCartLineInput[];
+  /**
+   * `updatedAt` of the cart this add was staged against. Once the resolved
+   * baseline is newer, the mutation has landed and the stage is stale — see
+   * `getActiveStagedLines`.
+   */
+  stagedFromUpdatedAt: string;
+};
+
+let pendingAddSeq = 0;
 
 export const useCartStore = create<CartStore>()((set) => ({
   isOpen: false,
@@ -59,10 +89,43 @@ export const useCartStore = create<CartStore>()((set) => ({
   cartBootstrapResponseToken: null,
   cartBootstrapResolvedPath: null,
   customerAccessTokenKnown: false,
+  pendingAdds: new Map(),
+  lastAddError: null,
   open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
+  close: () => set({ isOpen: false, lastAddError: null }),
   toggle: (open) =>
-    set((state) => ({ isOpen: open !== undefined ? open : !state.isOpen })),
+    set((state) => ({
+      isOpen: open !== undefined ? open : !state.isOpen,
+      lastAddError: null,
+    })),
+  stagePendingAdd: (lines) => {
+    const usableLines = lines.filter((line) => line.selectedVariant);
+    if (usableLines.length === 0) {
+      return null;
+    }
+    pendingAddSeq += 1;
+    const token = `add-${pendingAddSeq}`;
+    const { cart } = resolveBaselineCart(useCartStore.getState().serverCart);
+    set((state) => {
+      const pendingAdds = new Map(state.pendingAdds);
+      pendingAdds.set(token, {
+        lines: usableLines,
+        stagedFromUpdatedAt: cart?.updatedAt ?? "",
+      });
+      return { pendingAdds, lastAddError: null };
+    });
+    return token;
+  },
+  clearPendingAdd: (token) =>
+    set((state) => {
+      if (!state.pendingAdds.has(token)) {
+        return {};
+      }
+      const pendingAdds = new Map(state.pendingAdds);
+      pendingAdds.delete(token);
+      return { pendingAdds };
+    }),
+  setLastAddError: (message) => set({ lastAddError: message }),
 }));
 
 const freshestFetcherCartRef = {
@@ -145,14 +208,142 @@ type OptimisticLineNode = CartApiQueryFragment["lines"]["nodes"][number] & {
 
 type CartWithOptimistic = CartApiQueryFragment & { isOptimistic?: boolean };
 
+type MoneyV2 = { amount: string; currencyCode: string };
+
+function zeroMoney(currencyCode: string): MoneyV2 {
+  return { amount: "0.0", currencyCode };
+}
+
+/**
+ * Adds `lines` to `nodes` in place and reports which merchandise IDs it
+ * handled, so a fetcher-derived add for the same variant is not applied twice
+ * (the staged add and its own in-flight fetcher describe the same mutation).
+ */
+function applyAddLines(
+  nodes: OptimisticLineNode[],
+  lines: OptimisticCartLineInput[],
+) {
+  const handled = new Set<string>();
+  let mutated = false;
+
+  for (const line of lines) {
+    const selectedVariant =
+      line.selectedVariant as OptimisticLineNode["merchandise"];
+    if (!selectedVariant) {
+      continue;
+    }
+    mutated = true;
+    handled.add(selectedVariant.id);
+    const existingIdx = nodes.findIndex(
+      (n) => n.merchandise?.id === selectedVariant.id,
+    );
+    if (existingIdx !== -1) {
+      const cloned = { ...nodes[existingIdx] } as OptimisticLineNode;
+      cloned.quantity = (cloned.quantity || 1) + (line.quantity || 1);
+      cloned.isOptimistic = true;
+      nodes[existingIdx] = cloned;
+    } else {
+      const currencyCode =
+        (selectedVariant as { price?: MoneyV2 })?.price?.currencyCode ?? "USD";
+      nodes.unshift({
+        // Derived from the merchandise ID, NOT random: this cart is rebuilt on
+        // every render, so a `crypto.randomUUID()` here would hand
+        // `<CartLineItem key={line.id}>` a new key each time — remounting the
+        // row (image reload, flicker) and re-keying `useOptimisticData(id)`
+        // every pass. A cart holds at most one line per merchandise, so this
+        // is unique within the list.
+        id: `optimistic-${selectedVariant.id}`,
+        merchandise: selectedVariant,
+        isOptimistic: true,
+        quantity: line.quantity || 1,
+        cost: {
+          totalAmount: zeroMoney(currencyCode),
+          amountPerQuantity: zeroMoney(currencyCode),
+          compareAtAmountPerQuantity: null,
+        },
+      } as unknown as OptimisticLineNode);
+    }
+  }
+
+  return { handled, mutated };
+}
+
+/**
+ * Cart-level totals genuinely change on an add, so they are zeroed and the
+ * cart is flagged optimistic — `cart-summary.tsx` skeletons every money slot
+ * while that flag is set, so the zeros are never rendered.
+ *
+ * Existing lines' own `cost` is deliberately left alone: `cart-line-item.tsx`
+ * skeletons per line via `line.isOptimistic`, so an untouched line keeps
+ * showing its real, still-correct price.
+ */
+function zeroCartCost(cart: CartWithOptimistic, currencyCode: string) {
+  cart.cost = {
+    ...cart.cost,
+    subtotalAmount: zeroMoney(currencyCode),
+    totalAmount: zeroMoney(currencyCode),
+    totalDutyAmount: null,
+    totalTaxAmount: null,
+  } as CartApiQueryFragment["cost"];
+}
+
+function stagedCurrencyCode(
+  lines: OptimisticCartLineInput[],
+  fallback: string | undefined,
+) {
+  for (const line of lines) {
+    const price = (line.selectedVariant as { price?: MoneyV2 })?.price;
+    if (price?.currencyCode) {
+      return price.currencyCode;
+    }
+  }
+  return fallback ?? "USD";
+}
+
+/**
+ * Builds the cart shown while an add is in flight and there is no baseline at
+ * all (a shopper's first-ever add). Without this the drawer would render its
+ * empty-cart state on the very click that adds the first item.
+ */
+function buildOptimisticAddCart(
+  lines: OptimisticCartLineInput[],
+): CartWithOptimistic | null {
+  const nodes: OptimisticLineNode[] = [];
+  const { mutated } = applyAddLines(nodes, lines);
+  if (!mutated) {
+    return null;
+  }
+  const currencyCode = stagedCurrencyCode(lines, undefined);
+  const cart = {
+    id: "optimistic-cart",
+    updatedAt: "",
+    checkoutUrl: "",
+    note: null,
+    appliedGiftCards: [],
+    discountCodes: [],
+    discountAllocations: [],
+    attributes: [],
+    buyerIdentity: null,
+    lines: { nodes, pageInfo: { hasNextPage: false } },
+    totalQuantity: nodes.reduce((sum, line) => sum + line.quantity, 0),
+    isOptimistic: true,
+  } as unknown as CartWithOptimistic;
+  zeroCartCost(cart, currencyCode);
+  return cart;
+}
+
 function applyOptimisticMutations(
   baseline: CartApiQueryFragment,
   fetchers: ReturnType<typeof useFetchers>,
+  stagedLines: OptimisticCartLineInput[],
 ): CartWithOptimistic | null {
+  // A submission goes submitting → loading → idle. `loading` must count as
+  // pending too: serverCart is only synced once the response lands, so
+  // dropping the overlay at `loading` flashes the line away and back.
   const pendingFetchers = fetchers.filter(
-    (f) => f.state === "submitting" && f.formData,
+    (f) => (f.state === "submitting" || f.state === "loading") && f.formData,
   );
-  if (pendingFetchers.length === 0) {
+  if (pendingFetchers.length === 0 && stagedLines.length === 0) {
     return null;
   }
 
@@ -167,6 +358,19 @@ function applyOptimisticMutations(
     totalQuantity: number;
   };
   let mutated = false;
+  let addedCurrencyCode: string | null = null;
+
+  // Staged lines are applied first; their merchandise IDs are then skipped
+  // when walking the fetchers, so the click-time stage and the fetcher that
+  // carries the same add do not both bump the quantity.
+  const staged = applyAddLines(cart.lines.nodes, stagedLines);
+  mutated = staged.mutated;
+  if (staged.mutated) {
+    addedCurrencyCode = stagedCurrencyCode(
+      stagedLines,
+      baseline.cost?.totalAmount?.currencyCode,
+    );
+  }
 
   for (const fetcher of pendingFetchers) {
     const formData = fetcher.formData;
@@ -177,29 +381,21 @@ function applyOptimisticMutations(
     const lineNodes = cart.lines.nodes;
 
     if (action === CartForm.ACTIONS.LinesAdd) {
-      for (const line of inputs?.lines ?? []) {
-        const selectedVariant =
-          line.selectedVariant as OptimisticLineNode["merchandise"];
-        if (!selectedVariant) {
-          continue;
-        }
-        const existingIdx = lineNodes.findIndex(
-          (n) => n.merchandise?.id === selectedVariant.id,
+      const fetcherLines = ((inputs?.lines ?? []) as OptimisticCartLineInput[])
+        .filter((line) => line.selectedVariant)
+        .filter(
+          (line) =>
+            !staged.handled.has(
+              (line.selectedVariant as { id: string }).id as string,
+            ),
         );
-        mutated = true;
-        if (existingIdx !== -1) {
-          const cloned = { ...lineNodes[existingIdx] } as OptimisticLineNode;
-          cloned.quantity = (cloned.quantity || 1) + (line.quantity || 1);
-          cloned.isOptimistic = true;
-          lineNodes[existingIdx] = cloned;
-        } else {
-          lineNodes.unshift({
-            id: `optimistic-${crypto.randomUUID()}`,
-            merchandise: selectedVariant,
-            isOptimistic: true,
-            quantity: line.quantity || 1,
-          } as OptimisticLineNode);
-        }
+      const applied = applyAddLines(lineNodes, fetcherLines);
+      mutated = mutated || applied.mutated;
+      if (applied.mutated && !addedCurrencyCode) {
+        addedCurrencyCode = stagedCurrencyCode(
+          fetcherLines,
+          baseline.cost?.totalAmount?.currencyCode,
+        );
       }
     } else if (action === CartForm.ACTIONS.LinesRemove) {
       for (const lineId of (inputs?.lineIds as string[]) ?? []) {
@@ -239,6 +435,9 @@ function applyOptimisticMutations(
     0,
   );
   cart.isOptimistic = true;
+  if (addedCurrencyCode) {
+    zeroCartCost(cart, addedCurrencyCode);
+  }
   return cart;
 }
 
@@ -293,48 +492,51 @@ function getTimestampMs(dateString: string | undefined): number {
 }
 
 /**
- * Scans all sources (zustand, fetchers, module ref) and returns the
- * freshest cart as baseline, then applies pending optimistic mutations.
+ * Scans all sources (zustand, module ref, idle fetchers) and returns the
+ * freshest cart to use as a baseline.
  *
  * The fetcher scan here is critical: when a remove button's component
  * unmounts before its fetcher completes, useCartFetcherSync never fires.
- * Scanning useFetchers() in THIS hook (same render pass) catches those
- * completed carts that would otherwise be lost.
+ * Scanning useFetchers() in the same render pass catches those completed
+ * carts that would otherwise be lost.
  *
  * Only the SINGLE freshest completed cart is used as baseline — not
  * accumulated across multiple fetchers — to avoid double-counting.
+ *
+ * `serverCart` is passed in rather than read from the store so `useCart()`
+ * keeps its zustand subscription; `fetchers` is omitted when called outside
+ * render (`stagePendingAdd`), where the idle-fetcher scan has no equivalent.
+ * Both callers must agree on the baseline, otherwise a stage built from an
+ * older cart makes the drawer jump backwards on the click.
  */
-export function useCart(): CartWithOptimistic | null {
-  const serverCart = useCartStore((s) => s.serverCart);
-  const fetchers = useFetchers();
-
-  let baseline = serverCart;
-  let baselineTime = getTimestampMs(serverCart?.updatedAt);
-  let baselineSource = "zustand";
+function resolveBaselineCart(
+  serverCart: CartApiQueryFragment | null,
+  fetchers?: ReturnType<typeof useFetchers>,
+) {
+  let cart = serverCart;
+  let updatedAt = getTimestampMs(serverCart?.updatedAt);
 
   const refTime = getTimestampMs(freshestFetcherCartRef.updatedAt);
-  if (freshestFetcherCartRef.cart && refTime > baselineTime) {
-    baseline = freshestFetcherCartRef.cart;
-    baselineTime = refTime;
-    baselineSource = "moduleRef";
+  if (freshestFetcherCartRef.cart && refTime > updatedAt) {
+    cart = freshestFetcherCartRef.cart;
+    updatedAt = refTime;
   }
 
-  for (const fetcher of fetchers) {
+  for (const fetcher of fetchers ?? []) {
     if (fetcher.state !== "idle") {
       continue;
     }
     const fetcherData = fetcher.data as Record<string, unknown> | undefined;
-    const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
-    if (!cart?.id || !cart?.lines) {
+    const fetcherCart = fetcherData?.cart as CartApiQueryFragment | undefined;
+    if (!fetcherCart?.id || !fetcherCart?.lines) {
       continue;
     }
-    const t = getTimestampMs(cart.updatedAt);
-    if (t > baselineTime) {
-      baseline = cart;
-      baselineTime = t;
-      baselineSource = `fetcher(${fetcher.key})`;
-      freshestFetcherCartRef.cart = cart;
-      freshestFetcherCartRef.updatedAt = cart.updatedAt;
+    const t = getTimestampMs(fetcherCart.updatedAt);
+    if (t > updatedAt) {
+      cart = fetcherCart;
+      updatedAt = t;
+      freshestFetcherCartRef.cart = fetcherCart;
+      freshestFetcherCartRef.updatedAt = fetcherCart.updatedAt;
       // This fallback scan is the only place that can see completed
       // fetchers after React Router drops their components. Treat it as a
       // real mutation sync for null-bootstrap race guards too.
@@ -342,8 +544,56 @@ export function useCart(): CartWithOptimistic | null {
     }
   }
 
+  return { cart, updatedAt };
+}
+
+/**
+ * Staged adds whose mutation has not landed yet. A stage older than the
+ * resolved baseline has already been confirmed by the server, so applying it
+ * again would double-count the line.
+ *
+ * This comparison — not `clearPendingAdd()` — is what makes the handoff
+ * correct: `useCartFetcherSync` writes `serverCart` from a `queueMicrotask`
+ * while the clear runs in a passive effect, and pinning the quantity to that
+ * ordering would be fragile. The explicit clear is just cleanup.
+ */
+function getActiveStagedLines(
+  pendingAdds: Map<string, PendingAdd>,
+  baselineTime: number,
+) {
+  if (pendingAdds.size === 0) {
+    return [];
+  }
+  const lines: OptimisticCartLineInput[] = [];
+  for (const pending of pendingAdds.values()) {
+    if (getTimestampMs(pending.stagedFromUpdatedAt) >= baselineTime) {
+      lines.push(...pending.lines);
+    }
+  }
+  return lines;
+}
+
+/**
+ * The cart every consumer renders: freshest baseline, with click-staged adds
+ * and pending fetcher mutations layered on top.
+ */
+export function useCart(): CartWithOptimistic | null {
+  const serverCart = useCartStore((s) => s.serverCart);
+  const pendingAdds = useCartStore((s) => s.pendingAdds);
+  const fetchers = useFetchers();
+
+  const { cart: resolved, updatedAt: baselineTime } = resolveBaselineCart(
+    serverCart,
+    fetchers,
+  );
+  let baseline = resolved;
+  const stagedLines = getActiveStagedLines(pendingAdds, baselineTime);
+
   if (!baseline) {
-    return null;
+    // First-ever add: there is no cart to build on, so synthesize one from the
+    // staged variant rather than letting the drawer paint its empty state on
+    // the very click that creates the cart.
+    return stagedLines.length > 0 ? buildOptimisticAddCart(stagedLines) : null;
   }
 
   // Filter tombstoned lines from baseline — prevents flash-back when
@@ -376,7 +626,9 @@ export function useCart(): CartWithOptimistic | null {
   }
 
   const optimisticCart =
-    fetchers.length > 0 ? applyOptimisticMutations(baseline, fetchers) : null;
+    fetchers.length > 0 || stagedLines.length > 0
+      ? applyOptimisticMutations(baseline, fetchers, stagedLines)
+      : null;
 
   return optimisticCart ?? baseline;
 }
