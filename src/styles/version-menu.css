@@ -59,6 +59,10 @@
 .version-popover[hidden] {
   display: none;
 }
+.version-popover--right {
+  right: 0;
+  left: auto;
+}
 .version-item {
   display: flex;
   align-items: center;

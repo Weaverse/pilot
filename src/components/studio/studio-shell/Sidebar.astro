@@ -1,8 +1,6 @@
 ---
 import HugeIcon from '~/components/icons/HugeIcon.astro'
-import SidebarRepository from '~/components/widgets/SidebarRepository'
 import type { DotfileNode } from '~/lib/dotfiles'
-import { SITE } from '~/lib/site'
 import DotfilesNav from '../DotfilesNav.astro'
 import { BRAND_ICONS } from './lib/brand-icons'
 import { getPrefetchStrategy } from './lib/explorer-tree'
@@ -18,16 +16,14 @@ interface Props {
 
 const { explorerItems, currentPath, dotfilesTree, activeDotfile } = Astro.props
 const isExternal = (href: string) => href.startsWith('http')
-const repoName = new URL(SITE.siteRepo).pathname.replace(/^\/+|\/+$/g, '')
 ---
 
-<aside class="hidden min-h-0 overflow-hidden border-r border-line bg-[#f8fafc] px-3 py-3 lg:flex lg:flex-col" data-track-region="sidebar">
-  <a href="/" class="mb-4 flex shrink-0 items-center gap-2.5 font-extrabold no-underline text-ink">
+<aside class="thin-scrollbar hidden min-h-0 overflow-y-auto border-r border-line bg-[#f8fafc] px-3 py-3 lg:block" data-track-region="sidebar">
+  <a href="/" class="mb-4 flex items-center gap-2.5 font-extrabold no-underline text-ink">
     <span class="flex h-9 w-9 items-center justify-center rounded-xl border border-ink bg-white font-mono text-base shadow-[3px_3px_0_var(--color-ink)]">~/</span>
     <span>leohuynh.dev</span>
   </a>
 
-  <div class="thin-scrollbar min-h-0 flex-1 overflow-y-auto">
   <section class="mb-4" data-folder="section-explorer">
     <button
       type="button"
@@ -166,13 +162,4 @@ const repoName = new URL(SITE.siteRepo).pathname.replace(/^\/+|\/+$/g, '')
       </a>
     </nav>
   </section>
-  </div>
-
-  <div class="shrink-0 pt-2">
-    <SidebarRepository
-      client:visible
-      repo={repoName}
-      repoUrl={SITE.siteRepo}
-    />
-  </div>
 </aside>

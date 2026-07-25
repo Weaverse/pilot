@@ -1,4 +1,6 @@
 ---
+import StatusRepository from '~/components/widgets/StatusRepository'
+import { SITE } from '~/lib/site'
 import { CURRENT_BRANCH, GIT_BRANCH_ICON, SITE_VERSIONS } from './lib/meta'
 
 interface Props {
@@ -8,61 +10,72 @@ interface Props {
 }
 
 const { lastCommit, lastCommitDate, lastCommitUrl } = Astro.props
+const repoName = new URL(SITE.siteRepo).pathname.replace(/^\/+|\/+$/g, '')
 ---
 
-<footer class="studio-statusbar flex min-w-0 items-center justify-between gap-3 border-t border-line bg-white px-3 font-mono text-[12px] text-slate-600" data-track-region="bottombar">
-  <div class="flex min-w-0 items-center gap-3">
-    <div class="version-menu" data-version-menu>
-      <button
-        type="button"
-        class="version-trigger"
-        data-version-trigger
-        aria-haspopup="menu"
-        aria-expanded="false"
-        aria-label="Switch site version (git branch)"
-        title="Switch site version"
-      >
-        <span class="git-branch-icon" set:html={GIT_BRANCH_ICON} />
-        <span>{CURRENT_BRANCH}</span>
-        <svg class="version-caret" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 15l6-6 6 6" />
-        </svg>
-      </button>
-      <div class="version-popover" data-version-popover role="menu" hidden>
-        <div class="version-popover-title">Checkout version</div>
-        {
-          SITE_VERSIONS.map((version) => (
-            <a
-              href={version.href}
-              target={version.value === 'latest' ? '_self' : '_blank'}
-              rel="noreferrer"
-              class="version-item"
-              role="menuitem"
-              data-version-item
-              aria-current={version.current ? 'true' : undefined}
-            >
-              <span class="git-branch-icon" set:html={GIT_BRANCH_ICON} />
-              <span class="version-item-branch">{version.branch}</span>
-              <span class="version-item-label">{version.label}</span>
-              {version.current && <span class="version-item-check" aria-hidden="true">✓</span>}
-            </a>
-          ))
-        }
+<footer class="studio-statusbar flex min-w-0 items-center justify-between gap-2 border-t border-line bg-white px-3 font-mono text-[12px] text-slate-600" data-track-region="bottombar">
+  <div class="min-w-0">
+    <StatusRepository
+      client:visible
+      repo={repoName}
+      repoUrl={SITE.siteRepo}
+    />
+  </div>
+
+  <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+    <div>
+      <div class="version-menu" data-version-menu>
+        <button
+          type="button"
+          class="version-trigger"
+          data-version-trigger
+          aria-haspopup="menu"
+          aria-expanded="false"
+          aria-label="Switch site version (git branch)"
+          title="Switch site version"
+        >
+          <span class="git-branch-icon" set:html={GIT_BRANCH_ICON} />
+          <span class="hidden sm:inline">{CURRENT_BRANCH}</span>
+          <svg class="version-caret" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 15l6-6 6 6" />
+          </svg>
+        </button>
+        <div class="version-popover version-popover--right" data-version-popover role="menu" hidden>
+          <div class="version-popover-title">Checkout version</div>
+          {
+            SITE_VERSIONS.map((version) => (
+              <a
+                href={version.href}
+                target={version.value === 'latest' ? '_self' : '_blank'}
+                rel="noreferrer"
+                class="version-item"
+                role="menuitem"
+                data-version-item
+                aria-current={version.current ? 'true' : undefined}
+              >
+                <span class="git-branch-icon" set:html={GIT_BRANCH_ICON} />
+                <span class="version-item-branch">{version.branch}</span>
+                <span class="version-item-label">{version.label}</span>
+                {version.current && <span class="version-item-check" aria-hidden="true">✓</span>}
+              </a>
+            ))
+          }
+        </div>
       </div>
     </div>
+
     <a
       href={lastCommitUrl}
       target="_blank"
       rel="noreferrer"
-      class="hidden whitespace-nowrap text-slate-950 underline decoration-slate-300 underline-offset-3 hover:decoration-slate-950 sm:inline"
+      class="hidden whitespace-nowrap text-slate-950 underline decoration-slate-300 underline-offset-3 hover:decoration-slate-950 md:inline"
       title="View last commit on GitHub"
       data-commit-time={lastCommitDate}
     >
       #{lastCommit}
       <span class="text-slate-400" data-commit-ago>—</span>
     </a>
-  </div>
-  <div class="flex shrink-0 items-center gap-3">
+
     <a
       href="https://time.is/Hanoi"
       target="_blank"
@@ -70,7 +83,7 @@ const { lastCommit, lastCommitDate, lastCommitUrl } = Astro.props
       class="whitespace-nowrap text-slate-700 underline decoration-slate-300 underline-offset-3 hover:text-slate-950"
       data-local-time-link
     >
-      Hanoi <span data-local-time>--:--</span> <span class="text-slate-400" data-local-time-diff></span>
+      Hanoi <span data-local-time>--:--</span><span class="ml-1 hidden text-slate-400 sm:inline" data-local-time-diff></span>
     </a>
   </div>
 </footer>

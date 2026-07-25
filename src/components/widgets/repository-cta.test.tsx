@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import { renderToStaticMarkup } from 'react-dom/server'
 import BuildLog from './BuildLog'
 import { repositorySourceLabel } from './repository-link'
-import SidebarRepository from './SidebarRepository'
+import StatusRepository from './StatusRepository'
 
 const REPO = 'hta218/leohuynh.dev'
 const REPO_URL = 'https://github.com/hta218/leohuynh.dev'
@@ -39,21 +39,24 @@ describe('repository discovery links', () => {
     expect(html).toContain('rel="noreferrer"')
   })
 
-  test('renders a personal sidebar source CTA with conversion tracking', () => {
+  test('renders a compact status-bar repository identity with conversion tracking', () => {
     const html = renderToStaticMarkup(
-      <SidebarRepository repo={REPO} repoUrl={REPO_URL} />,
+      <StatusRepository repo={REPO} repoUrl={REPO_URL} />,
     )
 
-    expect(html).toContain('handwritten signature')
     expect(html).toContain('leo@[::1]:443')
-    expect(html).toContain('~/leohuynh.dev')
-    expect(html).toContain('Source code')
-    expect(html.match(/<svg/g)).toHaveLength(3)
+    expect(html).toContain('~/')
+    expect(html).toContain(REPO)
+    expect(html).toContain('(stargazers: —)')
+    expect(html.match(/<svg/g)).toHaveLength(1)
+    expect(html).not.toContain('handwritten signature')
+    expect(html).not.toContain('Source code')
     expect(html).not.toContain('★')
     expect(html).toContain(`href="${REPO_URL}"`)
-    expect(html).toContain('data-umami-event="sidebar-view-repo"')
-    expect(html).toContain('data-umami-event-source="studio-sidebar"')
+    expect(html).toContain('data-umami-event="statusbar-view-repo"')
+    expect(html).toContain('data-umami-event-source="studio-statusbar"')
     expect(html).not.toContain('homepage-view-repo')
+    expect(html).not.toContain('sidebar-view-repo')
     expect(html).toContain('target="_blank"')
     expect(html).toContain('rel="noreferrer"')
   })
