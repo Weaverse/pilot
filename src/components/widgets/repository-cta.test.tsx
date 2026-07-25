@@ -45,8 +45,11 @@ describe('repository discovery links', () => {
     )
 
     expect(html).toContain('handwritten signature')
-    expect(html).toContain('built by Leo Huynh in Hanoi')
-    expect(html).toContain('GitHub source')
+    expect(html).toContain('leo@[::1]:443')
+    expect(html).toContain('~/leohuynh.dev')
+    expect(html).toContain('Source code')
+    expect(html.match(/<svg/g)).toHaveLength(3)
+    expect(html).not.toContain('★')
     expect(html).toContain(`href="${REPO_URL}"`)
     expect(html).toContain('data-umami-event="sidebar-view-repo"')
     expect(html).toContain('data-umami-event-source="studio-sidebar"')
