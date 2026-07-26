@@ -11,7 +11,19 @@ interface Props {
 const { seedTabs, currentTab } = Astro.props
 ---
 
-<nav class="flex shrink-0 items-stretch border-b border-line bg-[#fbfcff]" data-track-region="topbar">
+<nav class="flex min-h-11 shrink-0 items-stretch border-b border-line bg-[#fbfcff] lg:min-h-0" data-track-region="topbar">
+  <button
+    type="button"
+    class="studio-mobile-panel-toggle relative z-50 grid min-w-11 shrink-0 cursor-pointer place-items-center border-r border-line bg-[#fbfcff] px-3 text-muted hover:bg-white hover:text-slate-950 lg:hidden"
+    data-toggle-mobile-panel="sidebar"
+    data-open-label="Open site explorer"
+    data-close-label="Close site explorer"
+    aria-controls="studio-sidebar"
+    aria-expanded="false"
+    aria-label="Open site explorer"
+  >
+    <HugeIcon name="sidebar-left" size={18} />
+  </button>
   <div
     class="thin-scrollbar flex min-w-0 flex-1 overflow-x-auto"
     data-tab-bar

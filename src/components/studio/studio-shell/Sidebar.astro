@@ -18,7 +18,13 @@ const { explorerItems, currentPath, dotfilesTree, activeDotfile } = Astro.props
 const isExternal = (href: string) => href.startsWith('http')
 ---
 
-<aside class="thin-scrollbar hidden min-h-0 overflow-y-auto border-r border-line bg-[#f8fafc] px-3 py-3 lg:block" data-track-region="sidebar">
+<aside
+  id="studio-sidebar"
+  class="studio-mobile-panel studio-mobile-panel--left thin-scrollbar min-h-0 overflow-y-auto border-r border-line bg-[#f8fafc] px-3 py-3 lg:block"
+  data-track-region="sidebar"
+  data-mobile-panel-name="sidebar"
+  aria-label="Site explorer"
+>
   <a href="/" class="mb-4 flex items-center gap-2.5 font-extrabold no-underline text-ink">
     <span class="flex h-9 w-9 items-center justify-center rounded-xl border border-ink bg-white font-mono text-base shadow-[3px_3px_0_var(--color-ink)]">~/</span>
     <span>leohuynh.dev</span>
