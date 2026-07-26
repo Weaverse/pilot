@@ -12,28 +12,43 @@ with the touched lines and cart totals marked optimistic. Shopify remains
 authoritative. Controls that would submit synthetic IDs or leave for checkout
 stay disabled until the authoritative cart lands.
 
+### Module boundaries
+
+The initial implementation grew `app/components/cart/store.ts` to 800 lines by
+mixing state, pure cart transforms, mutable freshness state, and React Router
+effects. The reviewed layout keeps those responsibilities separate:
+
+- `store.ts` — Zustand state, bootstrap selectors, and the composed `useCart()`
+  hook.
+- `optimistic-cart.ts` — optimistic add/update/remove transforms and removal
+  tombstones.
+- `cart-baseline.ts` — authoritative baseline cache, timestamps, bootstrap
+  request identity, and mutation-epoch race guards.
+- `cart-sync.ts` — React Router fetcher capture and client-side `/api/cart`
+  bootstrap effects.
+
 ## Steps
 
 ### 1. Extract a shared baseline resolver
 
-`app/components/cart/store.ts`
+`app/components/cart/cart-baseline.ts`
 
-`useCart()` resolves its baseline from `serverCart`, the
-`freshestFetcherCartRef` module ref, and a scan of idle fetchers. The click-time
-stage records the timestamp of the same baseline resolver so a newer
-authoritative cart can supersede it.
+`useCart()` resolves its baseline from `serverCart`, the cart-baseline module
+cache, and a scan of idle fetchers. The click-time stage records the timestamp
+of the same baseline resolver so a newer authoritative cart can supersede it.
 
 - Extract `resolveBaselineCart(fetchers?)` returning
   `{ cart, updatedAt }`, used by both `useCart()` and
   `stagePendingAdd()`. Outside render (the click handler) it is called without
-  fetchers, so it consults `serverCart` + `freshestFetcherCartRef` only —
+  fetchers, so it consults `serverCart` + the cart-baseline cache only —
   the idle-fetcher scan needs a render pass and has no equivalent off-render.
 - Keep tombstone (`removedLineIds`) filtering inside `useCart()` as a
   render-time concern.
 
 ### 2. Stage pending-add lines in the store
 
-`app/components/cart/store.ts`
+`app/components/cart/store.ts`,
+`app/components/cart/optimistic-cart.ts`
 
 - Add to `CartStore`:
   - `pendingAdds: Map<string, PendingAdd>` where
@@ -236,6 +251,9 @@ Run the manual list below against a throttled dev server:
 ## Files and folders touched
 
 - `.weaverse/specs/2026-07-25--instant-add-to-cart-drawer/`
+- `app/components/cart/cart-baseline.ts`
+- `app/components/cart/cart-sync.ts`
+- `app/components/cart/optimistic-cart.ts`
 - `app/components/cart/store.ts`
 - `app/components/cart/cart-drawer.tsx`
 - `app/components/cart/cart-line-item.tsx`

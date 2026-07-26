@@ -141,3 +141,33 @@ Added regression coverage for:
 - first add staying at authoritative quantity `1`, never flashing to `2`;
 - second add staying at authoritative quantity `2`, never flashing to `3`;
 - an older baseline still receiving the pending add overlay.
+
+## 2026-07-26 — Cart module split
+
+Reviewed the 800-line `app/components/cart/store.ts` after the authoritative
+handoff fix. No obsolete optimistic mutation path remained, but four unrelated
+responsibilities had accumulated in one module. Split them into:
+
+- `store.ts` for Zustand state and `useCart()`;
+- `optimistic-cart.ts` for cart transforms and removal tombstones;
+- `cart-baseline.ts` for authoritative freshness and bootstrap race state;
+- `cart-sync.ts` for React Router effects.
+
+Removed two pieces of redundant state during the move:
+
+- Zustand's `cartBootstrapRequestToken`, which was written but never read;
+- the unbounded `cartBootstrapEpochByToken` map, because responses are already
+  restricted to the single current request token. A single current-request
+  epoch snapshot preserves the same null-cart race guard.
+
+Callers now import sync and baseline APIs from their owning modules instead of
+using `store.ts` as a barrel. Optimistic regression tests import the pure
+transforms directly.
+
+Verification:
+
+- `npm run test:unit` — 8 passed;
+- `npm run typecheck` — passed;
+- `npm run build` — passed with pre-existing Rolldown/plugin warnings;
+- `npm run biome` — could not start because local `node_modules` contains
+  Biome/config versions older than those declared in `package.json`.
