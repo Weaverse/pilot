@@ -45,7 +45,8 @@ describe('repository discovery links', () => {
     )
 
     expect(html).toContain('leo@[::1]:443')
-    expect(html).toContain('~/')
+    expect(html).not.toContain('leo@[::1]:443~/')
+    expect(html).toContain('>~/</span><a')
     expect(html).toContain(REPO)
     expect(html).toContain('(stargazers: —)')
     expect(html.match(/<svg/g)).toHaveLength(1)
