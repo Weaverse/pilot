@@ -300,6 +300,52 @@ function stagedCurrencyCode(
   return fallback ?? "USD";
 }
 
+function cartLineQuantity(
+  cart: CartApiQueryFragment,
+  merchandiseId: string,
+) {
+  return (
+    cart.lines.nodes.find((line) => line.merchandise?.id === merchandiseId)
+      ?.quantity ?? 0
+  );
+}
+
+/**
+ * True when `baseline` already contains the authoritative result of this add.
+ *
+ * During React Router's `loading` phase, the add fetcher already exposes its
+ * action result while `/api/cart` revalidation can update `serverCart` to that
+ * same version. Reapplying the fetcher's form input then briefly increments the
+ * confirmed quantity a second time. Timestamp equality also checks the touched
+ * line quantities, protecting against stores whose cart timestamps have coarse
+ * resolution.
+ */
+function baselineIncludesFetcherAdd(
+  baseline: CartApiQueryFragment,
+  fetcherCart: CartApiQueryFragment | undefined,
+  lines: OptimisticCartLineInput[],
+) {
+  if (!fetcherCart?.id || fetcherCart.id !== baseline.id) {
+    return false;
+  }
+  const baselineTime = getTimestampMs(baseline.updatedAt);
+  const fetcherTime = getTimestampMs(fetcherCart.updatedAt);
+  if (baselineTime > fetcherTime) {
+    return true;
+  }
+  if (baselineTime < fetcherTime) {
+    return false;
+  }
+  return lines.every((line) => {
+    const merchandiseId =
+      (line.selectedVariant as { id?: string })?.id ?? line.merchandiseId;
+    return (
+      cartLineQuantity(baseline, merchandiseId) >=
+      cartLineQuantity(fetcherCart, merchandiseId)
+    );
+  });
+}
+
 /**
  * Builds the cart shown while an add is in flight and there is no baseline at
  * all (a shopper's first-ever add). Without this the drawer would render its
@@ -332,7 +378,11 @@ export function buildOptimisticAddCart(
   return cart;
 }
 
-function applyOptimisticMutations(
+/**
+ * Applies in-flight cart form inputs that are not yet represented by the
+ * authoritative baseline.
+ */
+export function applyOptimisticMutations(
   baseline: CartApiQueryFragment,
   fetchers: ReturnType<typeof useFetchers>,
   stagedLines: OptimisticCartLineInput[],
@@ -389,6 +439,12 @@ function applyOptimisticMutations(
               (line.selectedVariant as { id: string }).id as string,
             ),
         );
+      const fetcherCart = (
+        fetcher.data as { cart?: CartApiQueryFragment } | undefined
+      )?.cart;
+      if (baselineIncludesFetcherAdd(baseline, fetcherCart, fetcherLines)) {
+        continue;
+      }
       const applied = applyAddLines(lineNodes, fetcherLines);
       mutated = mutated || applied.mutated;
       if (applied.mutated && !addedCurrencyCode) {

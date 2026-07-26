@@ -118,3 +118,26 @@ Verification:
 - `npm run test:unit` — 4 passed
 - `npm run biome` — passed with 3 pre-existing warnings
 - `npm run typecheck` — passed
+
+## 2026-07-26 — Authoritative handoff count fix
+
+Manual PDP QA found the drawer count briefly overshooting after a successful
+add (`1 → 2 → 1` on the first add and `2 → 3 → 2` on the second).
+
+React Router keeps the add fetcher in `loading` with both its submitted
+`formData` and authoritative action-result cart while revalidating loaders.
+During that window, the `/api/cart` fetcher can advance `serverCart` to the
+same authoritative version. `applyOptimisticMutations()` then reapplied the
+still-loading add input to a baseline that already contained it.
+
+The cart store now skips a loading add whose result is already represented by
+the baseline. Cart timestamps establish ordering; touched-line quantities
+disambiguate equal timestamps. A separate regression verifies that an older
+baseline still receives the loading overlay, preserving the no-disappearance
+behavior.
+
+Added regression coverage for:
+
+- first add staying at authoritative quantity `1`, never flashing to `2`;
+- second add staying at authoritative quantity `2`, never flashing to `3`;
+- an older baseline still receiving the pending add overlay.

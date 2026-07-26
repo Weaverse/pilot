@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
-import type { OptimisticCartLineInput } from "@shopify/hydrogen";
 import {
+  CartForm,
+  type OptimisticCartLineInput,
+} from "@shopify/hydrogen";
+import {
+  applyOptimisticMutations,
   buildOptimisticAddCart,
   useCartStore,
 } from "../../app/components/cart/store";
@@ -36,6 +40,48 @@ function resetCartStore() {
     lastAddError: null,
     isOpen: false,
   });
+}
+
+function createAuthoritativeCart(quantity: number, updatedAt: string) {
+  const cart = buildOptimisticAddCart([createLine(VARIANT_ID, quantity)]);
+  if (!cart) {
+    throw new Error("Expected test cart");
+  }
+  return {
+    ...cart,
+    id: "gid://shopify/Cart/1",
+    updatedAt,
+    isOptimistic: false,
+    lines: {
+      ...cart.lines,
+      nodes: cart.lines.nodes.map((line) => ({
+        ...line,
+        id: "gid://shopify/CartLine/1",
+        isOptimistic: false,
+      })),
+    },
+  };
+}
+
+function createLoadingAddFetcher(
+  authoritativeQuantity: number,
+  updatedAt = "2026-07-26T10:00:01.000Z",
+) {
+  const formData = new FormData();
+  formData.set(
+    CartForm.INPUT_NAME,
+    JSON.stringify({
+      action: CartForm.ACTIONS.LinesAdd,
+      inputs: { lines: [createLine()] },
+    }),
+  );
+  return {
+    state: "loading",
+    formData,
+    data: {
+      cart: createAuthoritativeCart(authoritativeQuantity, updatedAt),
+    },
+  } as Parameters<typeof applyOptimisticMutations>[1][number];
 }
 
 test.beforeEach(resetCartStore);
@@ -101,4 +147,33 @@ test("builds a stable first-add cart with skeleton-safe money", () => {
     },
   });
   expect(secondCart?.lines.nodes[0].id).toBe(firstCart?.lines.nodes[0].id);
+});
+
+for (const authoritativeQuantity of [1, 2]) {
+  test(`does not reapply a loading add after the authoritative cart reaches quantity ${authoritativeQuantity}`, () => {
+    const baseline = createAuthoritativeCart(
+      authoritativeQuantity,
+      "2026-07-26T10:00:01.000Z",
+    );
+    const fetcher = createLoadingAddFetcher(authoritativeQuantity);
+
+    const cart = applyOptimisticMutations(baseline, [fetcher], []);
+
+    expect(cart?.totalQuantity ?? baseline.totalQuantity).toBe(
+      authoritativeQuantity,
+    );
+  });
+}
+
+test("keeps the loading add overlay while the baseline is still older", () => {
+  const baseline = createAuthoritativeCart(1, "2026-07-26T10:00:00.000Z");
+  const fetcher = createLoadingAddFetcher(
+    2,
+    "2026-07-26T10:00:01.000Z",
+  );
+
+  const cart = applyOptimisticMutations(baseline, [fetcher], []);
+
+  expect(cart?.totalQuantity).toBe(2);
+  expect(cart?.lines.nodes[0]).toMatchObject({ isOptimistic: true });
 });

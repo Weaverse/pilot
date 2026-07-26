@@ -97,6 +97,8 @@ feels like a round-trip:
   each other's staged line.
 - No frame where the line disappears between `submitting` and the server cart
   landing.
+- The confirmed cart count never overshoots during the `loading` → `idle`
+  handoff (for example `1 → 2 → 1` after the first add).
 - The button cannot be submitted twice while a mutation is in flight.
 - Optimistic lines cannot be removed, and checkout cannot start, until Shopify
   confirms the pending cart state.

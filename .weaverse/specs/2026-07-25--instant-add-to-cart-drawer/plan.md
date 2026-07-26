@@ -92,6 +92,12 @@ authoritative cart can supersede it.
 - Also fix the `loading`-phase gap (problem 4): treat fetchers in `submitting`
   **and** `loading` as pending in `applyOptimisticMutations`, so the overlay
   survives until `serverCart` is synced.
+- A `loading` fetcher already carries its authoritative action-result cart.
+  If `/api/cart` revalidation has advanced the baseline to that same cart
+  version, do not apply the fetcher's add input again. Compare `updatedAt`, with
+  touched-line quantities as the equality fallback, so the handoff neither
+  drops the optimistic line on an older baseline nor briefly double-counts it
+  on an adopted authoritative baseline.
 
 ### 3. Open the drawer on the initiating click
 
@@ -200,7 +206,8 @@ another test framework or start the storefront server:
   `webServer`.
 - Add `npm run test:unit`.
 - Cover distinct pending-add tokens, token-specific clearing, rejection of
-  unusable lines, and first-add optimistic cart construction.
+  unusable lines, first-add optimistic cart construction, and the
+  loading-to-authoritative handoff without count overshoot.
 - Keep the existing stale `tests/cart.test.ts` unchanged; repairing the legacy
   browser flow remains a separate task.
 
