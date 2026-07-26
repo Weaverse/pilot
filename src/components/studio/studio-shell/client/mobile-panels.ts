@@ -14,6 +14,13 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',')
 
+export function nextMobilePanel(
+  current: MobilePanelName | undefined,
+  requested: MobilePanelName,
+) {
+  return current === requested ? undefined : requested
+}
+
 function isMobileViewport() {
   return window.matchMedia(MOBILE_QUERY).matches
 }
@@ -94,19 +101,19 @@ function toggleMobilePanel(
   trigger: HTMLElement,
 ) {
   if (!isMobileViewport()) return
-  if (getOpenPanel(shell) === name) {
+  const nextPanel = nextMobilePanel(getOpenPanel(shell), name)
+  if (!nextPanel) {
     closeMobilePanel(shell)
     return
   }
 
-  shell.dataset.mobilePanel = name
+  shell.dataset.mobilePanel = nextPanel
   window.__leohuynhMobilePanelTrigger = trigger
   syncMobilePanelState(shell)
 
-  const panel = getPanel(shell, name)
+  const panel = getPanel(shell, nextPanel)
   requestAnimationFrame(() => {
-    const firstFocusable = panel && getFocusableElements(panel)[0]
-    ;(firstFocusable ?? panel)?.focus({ preventScroll: true })
+    panel?.focus({ preventScroll: true })
   })
 }
 
@@ -125,10 +132,16 @@ function trapPanelFocus(event: KeyboardEvent, shell: HTMLElement) {
   const first = focusable[0]
   const last = focusable.at(-1)
   const active = document.activeElement
-  if (event.shiftKey && (active === first || !panel.contains(active))) {
+  if (
+    event.shiftKey &&
+    (active === panel || active === first || !panel.contains(active))
+  ) {
     event.preventDefault()
     last?.focus({ preventScroll: true })
-  } else if (!event.shiftKey && (active === last || !panel.contains(active))) {
+  } else if (
+    !event.shiftKey &&
+    (active === panel || active === last || !panel.contains(active))
+  ) {
     event.preventDefault()
     first.focus({ preventScroll: true })
   }

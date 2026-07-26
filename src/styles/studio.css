@@ -162,7 +162,21 @@ html[data-nav-pending="true"] .nav-progress {
     transform: translateX(-100%);
   }
 
+  .studio-mobile-panel--right {
+    right: 0;
+    display: grid;
+    transform: translateX(100%);
+    box-shadow: -12px 0 28px rgb(15 23 42 / 0.14);
+  }
+
   .studio-shell[data-mobile-panel="sidebar"] .studio-mobile-panel--left {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+    transition-delay: 0s;
+  }
+
+  .studio-shell[data-mobile-panel="rail"] .studio-mobile-panel--right {
     visibility: visible;
     pointer-events: auto;
     transform: translateX(0);

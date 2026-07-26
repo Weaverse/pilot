@@ -53,6 +53,18 @@ const { seedTabs, currentTab } = Astro.props
   </div>
   <button
     type="button"
+    class="studio-mobile-panel-toggle relative z-50 grid min-w-11 shrink-0 cursor-pointer place-items-center border-l border-line bg-[#fbfcff] px-3 text-muted hover:bg-white hover:text-slate-950 lg:hidden"
+    data-toggle-mobile-panel="rail"
+    data-open-label="Open runtime activity"
+    data-close-label="Close runtime activity"
+    aria-controls="runtime-rail"
+    aria-expanded="false"
+    aria-label="Open runtime activity"
+  >
+    <HugeIcon name="sidebar-right" size={18} />
+  </button>
+  <button
+    type="button"
     class="hidden cursor-pointer shrink-0 border-l border-line bg-[#fbfcff] px-3.5 py-2.5 font-mono text-xs text-muted hover:bg-white hover:text-slate-950 lg:block"
     data-toggle-rail
     aria-controls="runtime-rail"

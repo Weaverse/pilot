@@ -5,7 +5,14 @@ import SpotifyCard from './SpotifyCard.astro'
 import TokenBurnCard from './TokenBurnCard.astro'
 ---
 
-<aside id="runtime-rail" transition:persist="runtime-rail" class="runtime-rail thin-scrollbar hidden min-h-0 content-start gap-3 overflow-y-auto border-l border-line bg-panel2 p-3.5 lg:grid" data-track-region="rail">
+<aside
+  id="runtime-rail"
+  transition:persist="runtime-rail"
+  class="runtime-rail studio-mobile-panel studio-mobile-panel--right thin-scrollbar min-h-0 content-start gap-3 overflow-y-auto border-l border-line bg-panel2 p-3.5 lg:grid"
+  data-track-region="rail"
+  data-mobile-panel-name="rail"
+  aria-label="Runtime activity"
+>
   <SpotifyCard />
   <GitGrassCard />
   <TokenBurnCard />
