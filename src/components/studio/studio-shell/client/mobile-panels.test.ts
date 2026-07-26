@@ -11,6 +11,12 @@ const sidebarSource = await Bun.file(
 const runtimeRailSource = await Bun.file(
   new URL('../../runtime-rail/RuntimeRail.astro', import.meta.url),
 ).text()
+const mobilePanelSource = await Bun.file(
+  new URL('./mobile-panels.ts', import.meta.url),
+).text()
+const studioStyles = await Bun.file(
+  new URL('../../../../styles/studio.css', import.meta.url),
+).text()
 const shellSource = await Bun.file(
   new URL('../../StudioShell.astro', import.meta.url),
 ).text()
@@ -35,5 +41,13 @@ describe('mobile studio navigation', () => {
     expect(nextMobilePanel(undefined, 'sidebar')).toBe('sidebar')
     expect(nextMobilePanel('sidebar', 'rail')).toBe('rail')
     expect(nextMobilePanel('rail', 'rail')).toBeUndefined()
+  })
+
+  test('isolates an open drawer from status controls', () => {
+    expect(tabBarSource).toContain('studio-topbar')
+    expect(mobilePanelSource).toContain('closeVersionMenus()')
+    expect(studioStyles).toContain(
+      '.studio-shell[data-mobile-panel] .studio-statusbar',
+    )
   })
 })

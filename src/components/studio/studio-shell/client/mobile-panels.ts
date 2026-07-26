@@ -1,3 +1,5 @@
+import { closeVersionMenus } from './interactions'
+
 type MobilePanelName = 'sidebar' | 'rail'
 
 type CloseOptions = {
@@ -107,6 +109,7 @@ function toggleMobilePanel(
     return
   }
 
+  closeVersionMenus()
   shell.dataset.mobilePanel = nextPanel
   window.__leohuynhMobilePanelTrigger = trigger
   syncMobilePanelState(shell)

@@ -208,6 +208,15 @@ html[data-nav-pending="true"] .nav-progress {
   .studio-shell[data-mobile-panel] [data-track-region="content"] {
     overflow: hidden;
   }
+
+  .studio-shell[data-mobile-panel] .studio-topbar,
+  .studio-shell[data-mobile-panel] .studio-statusbar {
+    pointer-events: none;
+  }
+
+  .studio-shell[data-mobile-panel] .studio-mobile-panel-toggle {
+    pointer-events: auto;
+  }
 }
 
 @media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
