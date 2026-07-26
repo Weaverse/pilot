@@ -47,6 +47,12 @@ function syncMobilePanelState(shell: HTMLElement) {
   const openPanel = mobile ? getOpenPanel(shell) : undefined
 
   shell
+    .querySelectorAll<HTMLElement>('[data-mobile-panel-background]')
+    .forEach((background) => {
+      background.toggleAttribute('inert', Boolean(openPanel))
+    })
+
+  shell
     .querySelectorAll<HTMLElement>('[data-toggle-mobile-panel]')
     .forEach((toggle) => {
       const panel = toggle.dataset.toggleMobilePanel as

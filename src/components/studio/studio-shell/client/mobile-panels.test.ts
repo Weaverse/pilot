@@ -45,7 +45,9 @@ describe('mobile studio navigation', () => {
 
   test('isolates an open drawer from status controls', () => {
     expect(tabBarSource).toContain('studio-topbar')
+    expect(tabBarSource).toContain('data-mobile-panel-background')
     expect(mobilePanelSource).toContain('closeVersionMenus()')
+    expect(mobilePanelSource).toContain('[data-mobile-panel-background]')
     expect(studioStyles).toContain(
       '.studio-shell[data-mobile-panel] .studio-statusbar',
     )
