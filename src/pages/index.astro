@@ -8,6 +8,7 @@ import StudioShell from '~/components/studio/StudioShell.astro'
 import BuildLog from '~/components/widgets/BuildLog'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import { siteJsonLd } from '~/lib/seo'
+import { SITE } from '~/lib/site'
 
 const isPublished = (d: { data: { draft?: boolean } }) => d.data.draft !== true
 
@@ -33,8 +34,9 @@ const loc = sourceFiles.reduce(
   (total, file) => total + readFileSync(file, 'utf8').split('\n').length,
   0,
 )
+const repoName = new URL(SITE.siteRepo).pathname.replace(/^\/+|\/+$/g, '')
 const codebase = {
-  repo: 'hta218/leohuynh.dev',
+  repo: repoName,
   loc,
   files: sourceFiles.length,
   stack: ['astro', 'bun', 'tailwind', 'typescript'],
@@ -113,6 +115,7 @@ const codebase = {
         site="leohuynh.dev"
         description="documenting the work, one note at a time"
         repo={codebase.repo}
+        repoUrl={SITE.siteRepo}
         loc={codebase.loc}
         files={codebase.files}
         stack={codebase.stack}

@@ -1,14 +1,14 @@
 import { type ReactNode, useEffect, useState } from 'react'
-import { fetchSiteStats } from '~/lib/stats'
+import { fetchSiteStats, SITE_STATS_REFRESH_INTERVAL_MS } from '~/lib/stats'
 import type { SiteStatsPayload } from '~/types/integrations'
-
-const POLL_INTERVAL_MS = 30_000
+import { repositorySourceLabel } from './repository-link'
 
 interface BuildLogProps {
   /** Build-time facts: site config + a filesystem glob. */
   site: string
   description: string
   repo: string
+  repoUrl: string
   loc: number
   files: number
   stack: string[]
@@ -46,6 +46,7 @@ export default function BuildLog({
   site,
   description,
   repo,
+  repoUrl,
   loc,
   files,
   stack,
@@ -61,7 +62,7 @@ export default function BuildLog({
     }
 
     load()
-    const id = setInterval(load, POLL_INTERVAL_MS)
+    const id = setInterval(load, SITE_STATS_REFRESH_INTERVAL_MS)
     return () => {
       cancelled = true
       clearInterval(id)
@@ -69,6 +70,7 @@ export default function BuildLog({
   }, [])
 
   const ok = live?.ok ? live : null
+  const stars = ok?.stars ?? null
 
   return (
     <figure className="m-0 overflow-hidden rounded-xl border border-line bg-white shadow-[3px_3px_0_var(--color-line)]">
@@ -127,7 +129,17 @@ export default function BuildLog({
           {'\n    '}
           <Key name="repo" />
           <P>: </P>
-          <Str>{repo}</Str>
+          <a
+            href={repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={repositorySourceLabel(repo, stars)}
+            className="rounded-sm underline decoration-line underline-offset-[3px] hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            data-umami-event="build-log-view-repo"
+            data-umami-event-target="repo"
+          >
+            <Str>{repo}</Str>
+          </a>
           <P>,</P>
           {'\n    '}
           <Key name="loc" />
@@ -144,7 +156,17 @@ export default function BuildLog({
           <P>, </P>
           <Key name="stars" />
           <P>: </P>
-          <Num value={ok?.stars ?? null} />
+          <a
+            href={repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={repositorySourceLabel(repo, stars)}
+            className="rounded-sm no-underline hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            data-umami-event="build-log-view-repo"
+            data-umami-event-target="stars"
+          >
+            <Num value={stars} />
+          </a>
           {'\n  '}
           <P>{'}'},</P>
           {'\n  '}
