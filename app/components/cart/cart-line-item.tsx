@@ -17,7 +17,8 @@ import type { CartLayoutType } from "~/types/others";
 import { lineDiscountTotal, toMoney } from "~/utils/cart";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
-import { useCartFetcherSync, useCartStore } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
+import { useCartStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 

@@ -4,10 +4,15 @@ import {
   type OptimisticCartLineInput,
 } from "@shopify/hydrogen";
 import {
+  canApplyNullCartBootstrap,
+  markCartBootstrapStarted,
+  recordCartMutation,
+} from "../../app/components/cart/cart-baseline";
+import {
   applyOptimisticMutations,
   buildOptimisticAddCart,
-  useCartStore,
-} from "../../app/components/cart/store";
+} from "../../app/components/cart/optimistic-cart";
+import { useCartStore } from "../../app/components/cart/store";
 
 const VARIANT_ID = "gid://shopify/ProductVariant/1";
 
@@ -176,4 +181,14 @@ test("keeps the loading add overlay while the baseline is still older", () => {
 
   expect(cart?.totalQuantity).toBe(2);
   expect(cart?.lines.nodes[0]).toMatchObject({ isOptimistic: true });
+});
+
+test("blocks a null bootstrap after a cart mutation lands", () => {
+  markCartBootstrapStarted();
+
+  recordCartMutation(
+    createAuthoritativeCart(1, "2026-07-26T10:00:02.000Z"),
+  );
+
+  expect(canApplyNullCartBootstrap()).toBe(false);
 });

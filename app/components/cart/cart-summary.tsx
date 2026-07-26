@@ -20,7 +20,7 @@ import {
   GiftCardDialog,
   NoteDialog,
 } from "./cart-summary-actions";
-import { useCartFetcherSync } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function CartSummary({
   cart,

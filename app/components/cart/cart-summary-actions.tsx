@@ -9,7 +9,7 @@ import { Icon } from "~/components/icon";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
-import { useCartFetcherSync } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);
