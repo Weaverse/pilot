@@ -8,6 +8,7 @@ import {
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as apiCartLoader } from "~/routes/api/cart";
+import { hasCartResponseErrors } from "~/utils/cart-note";
 import {
   canApplyNullCartBootstrap,
   clearFreshestFetcherCart,
@@ -31,7 +32,12 @@ export function useCartFetcherSync(fetcher: Fetcher<unknown>) {
   const lastSyncedRef = useRef<string | null>(null);
   const fetcherData = fetcher.data as Record<string, unknown> | undefined;
   const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
-  if (fetcher.state === "idle" && cart?.id && cart.lines) {
+  if (
+    fetcher.state === "idle" &&
+    !hasCartResponseErrors(fetcherData) &&
+    cart?.id &&
+    cart.lines
+  ) {
     const updatedAt = cart.updatedAt;
     if (updatedAt !== lastSyncedRef.current) {
       lastSyncedRef.current = updatedAt;

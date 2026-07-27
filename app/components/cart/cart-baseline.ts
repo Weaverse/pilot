@@ -1,5 +1,6 @@
 import type { Fetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { hasCartResponseErrors } from "~/utils/cart-note";
 
 let freshestFetcherCart: CartApiQueryFragment | null = null;
 let cartMutationEpoch = 0;
@@ -63,6 +64,9 @@ export function resolveBaselineCart(
       continue;
     }
     const fetcherData = fetcher.data as Record<string, unknown> | undefined;
+    if (hasCartResponseErrors(fetcherData)) {
+      continue;
+    }
     const fetcherCart = fetcherData?.cart as CartApiQueryFragment | undefined;
     if (!fetcherCart?.id || !fetcherCart.lines) {
       continue;

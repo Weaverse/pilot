@@ -1,40 +1,32 @@
-import type {
-  OptimisticCartLineInput,
-  ShopifyAddToCartPayload,
-  ShopifyPageViewPayload,
-} from "@shopify/hydrogen";
-import {
-  AnalyticsEventName,
-  CartForm,
-  getClientBrowserParameters,
-  sendShopifyAnalytics,
-} from "@shopify/hydrogen";
+import { CartForm, type OptimisticCartLineInput } from "@shopify/hydrogen";
 import { useEffect, useRef, useState } from "react";
 import type { FetcherWithComponents } from "react-router";
-import { useMatches } from "react-router";
-import { Button } from "~/components/button";
+import { Button, type ButtonProps } from "~/components/button";
 import { useCartFetcherSync } from "~/components/cart/cart-sync";
 import { useCartStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
-import { DEFAULT_LOCALE } from "~/utils/const";
+
+type AddToCartButtonProps = Omit<
+  ButtonProps,
+  "children" | "loading" | "type"
+> & {
+  children: React.ReactNode;
+  lines: OptimisticCartLineInput[];
+};
+
+type AddToCartButtonContentProps = AddToCartButtonProps & {
+  fetcher: FetcherWithComponents<any>;
+};
 
 export function AddToCartButton({
   children,
   lines,
   className = "",
   disabled,
-  analytics,
   ...props
-}: {
-  children: React.ReactNode;
-  lines: OptimisticCartLineInput[];
-  className?: string;
-  disabled?: boolean;
-  analytics?: unknown;
-  [key: string]: any;
-}) {
+}: AddToCartButtonProps) {
   const cartRoute = usePrefixPathWithLocale("/cart");
 
   return (
@@ -49,7 +41,6 @@ export function AddToCartButton({
           lines={lines}
           disabled={disabled}
           className={className}
-          analytics={analytics}
           {...props}
         >
           {children}
@@ -65,17 +56,8 @@ function AddToCartButtonContent({
   children,
   disabled,
   className,
-  analytics,
   ...props
-}: {
-  fetcher: FetcherWithComponents<any>;
-  lines: OptimisticCartLineInput[];
-  children: React.ReactNode;
-  disabled?: boolean;
-  className?: string;
-  analytics?: unknown;
-  [key: string]: any;
-}) {
+}: AddToCartButtonContentProps) {
   const {
     open: openCartDrawer,
     stagePendingAdd,
@@ -120,8 +102,7 @@ function AddToCartButtonContent({
   }
 
   return (
-    <AddToCartAnalytics fetcher={fetcher}>
-      <input type="hidden" name="analytics" value={JSON.stringify(analytics)} />
+    <>
       <Button
         type="submit"
         className={cn("relative w-full", className)}
@@ -140,7 +121,7 @@ function AddToCartButtonContent({
           {addError}
         </p>
       )}
-    </AddToCartAnalytics>
+    </>
   );
 }
 
@@ -167,78 +148,4 @@ function getAddErrorMessage(data: unknown): string | null {
     return ADD_FAILED_MESSAGE;
   }
   return null;
-}
-
-function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
-  const matches = useMatches();
-
-  const data: Record<string, unknown> = {};
-  for (const match of matches) {
-    const eventData = match?.data as Record<string, unknown>;
-    if (eventData) {
-      if (eventData.analytics) {
-        Object.assign(data, eventData.analytics);
-      }
-      const selectedLocale =
-        (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
-      Object.assign(data, {
-        currency: selectedLocale.currency,
-        acceptedLanguage: selectedLocale.language,
-      });
-    }
-  }
-
-  return {
-    ...data,
-    hasUserConsent,
-  } as unknown as ShopifyPageViewPayload;
-}
-
-function AddToCartAnalytics({
-  fetcher,
-  children,
-}: {
-  fetcher: FetcherWithComponents<any>;
-  children: React.ReactNode;
-}) {
-  const fetcherData = fetcher.data;
-  const formData = fetcher.formData;
-  const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
-
-  useEffect(() => {
-    if (formData) {
-      const cartData: Record<string, unknown> = {};
-      const cartInputs = CartForm.getFormInput(formData);
-
-      try {
-        if (cartInputs.inputs.analytics) {
-          const dataInForm: unknown = JSON.parse(
-            String(cartInputs.inputs.analytics),
-          );
-          Object.assign(cartData, dataInForm);
-        }
-      } catch {
-        // do nothing
-      }
-
-      // A failed add settles with no `cart` on the response — reading
-      // `fetcherData.cart.id` unguarded would throw, and there is nothing
-      // meaningful to report anyway.
-      if (Object.keys(cartData).length && fetcherData?.cart?.id) {
-        const addToCartPayload: ShopifyAddToCartPayload = {
-          ...getClientBrowserParameters(),
-          ...pageAnalytics,
-          ...cartData,
-          cartId: fetcherData.cart.id,
-        };
-
-        sendShopifyAnalytics({
-          eventName: AnalyticsEventName.ADD_TO_CART,
-          payload: addToCartPayload,
-        });
-      }
-    }
-  }, [fetcherData, formData, pageAnalytics]);
-
-  return <>{children}</>;
 }

@@ -34,6 +34,7 @@
     "dev:ca": "shopify hydrogen dev --codegen --port 3456 --customer-account-push",
     "preview": "shopify hydrogen preview --build",
     "start": "shopify hydrogen preview",
+    "test:cart-correctness": "node --experimental-strip-types --test tests/cart-correctness.node.mjs",
     "typecheck": "tsc --noEmit",
     "routes-check": "shopify hydrogen check routes",
     "codegen": "shopify hydrogen codegen",
