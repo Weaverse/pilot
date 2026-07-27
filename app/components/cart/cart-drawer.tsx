@@ -17,11 +17,18 @@ export function CartDrawer() {
   // /api/cart bootstrap responds — rendering CartMain then would show a
   // false "empty cart". Hold a loading state until the first response lands
   // (the old root-loader Await behaved the same way).
-  const cartBootstrapResolved = useCartBootstrapResolved();
+  const bootstrapResolved = useCartBootstrapResolved();
+  // An optimistic cart is staged by the add-to-cart click itself, so it is
+  // available before the bootstrap responds. Without this, an add clicked on a
+  // cold page would open the drawer onto the bootstrap spinner — exactly the
+  // frame the instant drawer exists to remove.
+  const cartReady = bootstrapResolved || Boolean(cart?.isOptimistic);
   const {
     isOpen,
     close: closeCartDrawer,
     toggle: toggleCartDrawer,
+    lastAddError,
+    setLastAddError,
   } = useCartStore();
   const location = useLocation();
 
@@ -80,7 +87,7 @@ export function CartDrawer() {
                   onClick={closeCartDrawer}
                 >
                   Cart
-                  {cartBootstrapResolved && ` (${cart?.totalQuantity || 0})`}
+                  {cartReady && ` (${cart?.totalQuantity || 0})`}
                   <Icon
                     name="arrow-right"
                     className="size-4 transition-transform group-hover/cart-title:translate-x-0.5"
@@ -97,7 +104,22 @@ export function CartDrawer() {
                 </button>
               </Dialog.Close>
             </div>
-            {cartBootstrapResolved ? (
+            {lastAddError && (
+              <div
+                role="alert"
+                className="mx-4 flex items-start justify-between gap-3 rounded-sm bg-red-50 px-3 py-2 text-red-700 text-sm"
+              >
+                <span>{lastAddError}</span>
+                <button
+                  type="button"
+                  onClick={() => setLastAddError(null)}
+                  aria-label="Dismiss error"
+                >
+                  <Icon name="x" className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
+            {cartReady ? (
               <CartMain layout="drawer" cart={cart} />
             ) : (
               <div

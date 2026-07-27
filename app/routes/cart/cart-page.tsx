@@ -19,12 +19,11 @@ import {
   useLoaderData,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { CartMain } from "~/components/cart/cart-main";
 import {
   getCurrentCartBootstrapRequestToken,
-  useCart,
-  useCartStore,
-} from "~/components/cart/store";
+} from "~/components/cart/cart-baseline";
+import { CartMain } from "~/components/cart/cart-main";
+import { useCart, useCartStore } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
