@@ -109,7 +109,7 @@
     "vite": "^8.1.5"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "0.28.0"
+    "@esbuild/linux-x64": "0.28.1"
   },
   "engines": {
     "node": ">=22.12.0"
