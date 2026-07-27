@@ -35,7 +35,7 @@ The experience should feel native to the v4 Lab rather than copying Chess.com br
 1. Open `/lab/chess-review` from the Lab index or Explorer.
 2. Paste a PGN or load the bundled sample.
 3. Parse and validate the game locally.
-4. Choose review depth: Quick (10), Standard (12), Deep (14).
+4. Choose review depth: Quick (8), Balanced (12), Deep (16).
 5. Start review.
 6. Watch engine download/analysis progress; optionally cancel.
 7. Review the summary and step through moves on the board.

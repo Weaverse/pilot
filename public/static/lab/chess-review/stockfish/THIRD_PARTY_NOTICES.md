@@ -7,9 +7,11 @@ The files in this directory were extracted without modification from the npm pac
 - `stockfish-18-lite-single.js`
 - `stockfish-18-lite-single.wasm`
 
-Upstream implementation: https://github.com/nmrugg/stockfish.js
+Upstream build source for the exact npm release (`gitHead 93c994592dcf3b4b21052ab925e9b534df9c0918`):
+https://github.com/nmrugg/stockfish.js/tree/93c994592dcf3b4b21052ab925e9b534df9c0918
 
-Corresponding Stockfish source: https://github.com/official-stockfish/Stockfish
+Corresponding Stockfish 18 engine source:
+https://github.com/official-stockfish/Stockfish/tree/sf_18
 
 Stockfish.js and Stockfish are licensed under GNU GPL v3. The complete license text is included as `Copying.txt`. Any modified version of these engine files must be distributed with its corresponding source under GPL v3.
 

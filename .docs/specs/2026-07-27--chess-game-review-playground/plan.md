@@ -43,8 +43,7 @@ Pure domain modules under `src/lib/lab/chess-review/`:
 Client modules under `src/components/lab/chess-review/`:
 
 - `stockfish-client.ts` — UCI lifecycle, sequential analysis, timeout, stop/dispose;
-- `stockfish-protocol.ts` — pure parsing of `info`/`bestmove` lines;
-- `engine-path.ts` — one canonical same-origin asset path.
+- `stockfish-protocol.ts` — pure parsing of `info`/`bestmove` lines. The client owns one canonical same-origin asset path.
 
 Tests:
 
@@ -121,14 +120,14 @@ feat: generate deterministic chess game reviews
 Files:
 
 - `ChessReview.tsx` — top-level state composition;
-- `PgnInput.tsx` — form, depth options, sample action, validation;
-- `ReviewProgress.tsx` — engine loading/progress/cancel;
-- `ReviewBoard.tsx` — responsive board, coordinates, keyboard navigation;
+- `PgnInput.tsx` — form, depth options, sample action, validation, engine progress, and cancellation;
+- `ReviewWorkspace.tsx` — selected-ply state and shared button/keyboard navigation;
+- `ReviewBoard.tsx` — responsive read-only board and coordinates;
 - `MoveList.tsx` — grouped plies and classification badges;
-- `MoveReview.tsx` — selected move coaching facts and PV;
+- `MoveReviewPanel.tsx` — selected move coaching facts and PV;
 - `GameSummary.tsx` — player accuracy/ACPL/counts;
 - `EvaluationBar.tsx` — accessible evaluation visualization;
-- `styles.ts` or small collocated helpers only when Tailwind cannot express the behavior cleanly;
+- `navigation.ts`, `ui.ts`, and `chess-review.css` — collocated navigation and presentation helpers;
 - `src/pages/lab/chess-review.astro` — route;
 - Lab index and Explorer entries.
 
@@ -177,7 +176,7 @@ git diff --check
 Commit:
 
 ```text
-feat: add chess review playground
+feat: add chess game review playground
 ```
 
 ## Phase 4 — final hardening and external review
@@ -205,6 +204,20 @@ Possible review-fix commit:
 ```text
 fix: harden chess review interactions
 ```
+
+Local verification completed on 2026-07-27:
+
+- `bun test`: 52 pass, 0 fail;
+- `bun run check`: 0 errors, warnings, or hints;
+- `bun run build`, focused Biome, and `git diff --check`: pass;
+- real Stockfish sample review selected `Nf6` as a blunder;
+- invalid PGN, cancellation, retry, filters, and keyboard navigation: pass;
+- viewport matrix `320×640`, `390×844`, `768×900`, `1024×768`, and `1440×900`: no horizontal overflow or clipped navigation;
+- reduced-motion emulation and Astro navigation away/back: pass;
+- no Stockfish binary request before Start and no review POST/API request;
+- vendored and built JS/WASM SHA-256 values match;
+- exact npm `gitHead`, Stockfish 18 source, and GPL URLs resolve;
+- added-line credential scan: no findings (`gitleaks` and `trufflehog` were unavailable, so the documented regex fallback was used).
 
 ## Phase 5 — delivery
 
