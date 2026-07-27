@@ -37,9 +37,9 @@ export function classifyMove(
   if (missedMate || allowedMate) return 'blunder'
 
   const loss = centipawnLoss(input.bestScore, input.playedScore)
-  if (loss <= 15) return 'excellent'
-  if (loss <= 50) return 'good'
-  if (loss <= 100) return 'inaccuracy'
-  if (loss <= 200) return 'mistake'
+  if (loss <= 20) return 'excellent'
+  if (loss <= 60) return 'good'
+  if (loss <= 120) return 'inaccuracy'
+  if (loss <= 250) return 'mistake'
   return 'blunder'
 }

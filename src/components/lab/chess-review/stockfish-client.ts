@@ -1,3 +1,4 @@
+import { Chess } from 'chess.js'
 import type { PositionAnalysis } from '~/lib/lab/chess-review/types'
 import {
   applyEngineLine,
@@ -51,6 +52,29 @@ interface StockfishClientOptions {
 
 function abortError(): Error {
   return new DOMException('Chess analysis was cancelled.', 'AbortError')
+}
+
+function terminalAnalysis(
+  fen: string,
+  bestMove: string,
+): PositionAnalysis | null {
+  if (bestMove !== '(none)') return null
+
+  try {
+    const chess = new Chess(fen)
+    if (!chess.isGameOver()) return null
+    return {
+      fen,
+      depth: 0,
+      score: chess.isCheckmate()
+        ? { type: 'mate', value: -1 }
+        : { type: 'cp', value: 0 },
+      bestMove,
+      pv: [],
+    }
+  } catch {
+    return null
+  }
 }
 
 export class StockfishClient {
@@ -170,7 +194,14 @@ export class StockfishClient {
 
       const onLine = (line: string) => {
         output = applyEngineLine(output, line)
-        if (!parseBestMoveLine(line)) return
+        const bestMove = parseBestMoveLine(line)
+        if (!bestMove) return
+
+        const terminal = terminalAnalysis(fen, bestMove)
+        if (!output.info && terminal) {
+          finish(null, terminal)
+          return
+        }
 
         if (!output.info || !output.bestMove) {
           finish(new Error('Stockfish returned an incomplete analysis.'))

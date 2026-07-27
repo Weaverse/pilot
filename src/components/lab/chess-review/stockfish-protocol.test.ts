@@ -36,7 +36,12 @@ describe('Stockfish protocol parsing', () => {
     expect(
       parseInfoLine('info depth 8 multipv 2 score cp 10 pv e2e4'),
     ).toBeNull()
-    expect(parseInfoLine('info depth 8 score lowerbound 10')).toBeNull()
+    expect(
+      parseInfoLine('info depth 8 score cp 34 upperbound pv e2e4'),
+    ).toBeNull()
+    expect(
+      parseInfoLine('info depth 8 score cp -12 lowerbound pv d2d4'),
+    ).toBeNull()
   })
 
   test('retains the deepest primary result and captures bestmove', () => {

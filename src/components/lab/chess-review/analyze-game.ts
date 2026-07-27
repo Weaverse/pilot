@@ -48,10 +48,7 @@ export async function analyzeGame(
         completed: index + 1,
         total: fens.length,
         currentPly:
-          index + 1 < fens.length
-            ? (game.moves[Math.min(index + 1, game.moves.length - 1)]?.ply ??
-              null)
-            : null,
+          index + 1 < fens.length ? (game.moves[index]?.ply ?? null) : null,
       })
     }
   } finally {

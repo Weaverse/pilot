@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { parsePgn } from '~/lib/lab/chess-review/pgn'
 import type {
   AnalysisProgress,
@@ -44,99 +44,96 @@ export function useChessReview(
   const controllerRef = useRef<AbortController | null>(null)
   const runRef = useRef(0)
 
-  const cancel = useCallback(() => {
+  function cancel() {
     controllerRef.current?.abort()
     clientRef.current?.cancel()
-  }, [])
+  }
 
-  const reset = useCallback(() => {
+  function reset() {
     cancel()
     runRef.current += 1
     setState(INITIAL_STATE)
-  }, [cancel])
+  }
 
-  const start = useCallback(
-    async (pgn: string, depth: number) => {
-      cancel()
-      const run = runRef.current + 1
-      runRef.current = run
-      setState({ ...INITIAL_STATE, status: 'parsing' })
+  async function start(pgn: string, depth: number) {
+    cancel()
+    const run = runRef.current + 1
+    runRef.current = run
+    setState({ ...INITIAL_STATE, status: 'parsing' })
 
-      let game: ParsedGame
-      try {
-        game = parsePgn(pgn)
-      } catch (error) {
-        if (run !== runRef.current) return
-        setState({
-          ...INITIAL_STATE,
-          status: 'error',
-          error: error instanceof Error ? error.message : String(error),
-        })
-        return
-      }
-
-      const controller = new AbortController()
-      const client = clientFactory()
-      controllerRef.current = controller
-      clientRef.current = client
+    let game: ParsedGame
+    try {
+      game = parsePgn(pgn)
+    } catch (error) {
+      if (run !== runRef.current) return
       setState({
         ...INITIAL_STATE,
-        status: 'loading-engine',
+        status: 'error',
+        error: error instanceof Error ? error.message : String(error),
+      })
+      return
+    }
+
+    const controller = new AbortController()
+    const client = clientFactory()
+    controllerRef.current = controller
+    clientRef.current = client
+    setState({
+      ...INITIAL_STATE,
+      status: 'loading-engine',
+      game,
+    })
+
+    try {
+      await client.initialize()
+      if (controller.signal.aborted) {
+        throw new DOMException('Chess analysis was cancelled.', 'AbortError')
+      }
+      setState({
+        ...INITIAL_STATE,
+        status: 'analyzing',
         game,
       })
 
-      try {
-        await client.initialize()
-        if (controller.signal.aborted) {
-          throw new DOMException('Chess analysis was cancelled.', 'AbortError')
-        }
-        setState({
-          ...INITIAL_STATE,
-          status: 'analyzing',
-          game,
-        })
+      const review = await analyzeGame(game, client, {
+        depth,
+        signal: controller.signal,
+        onProgress: (progress) => {
+          if (run !== runRef.current) return
+          setState((current) => ({ ...current, progress }))
+        },
+      })
 
-        const review = await analyzeGame(game, client, {
-          depth,
-          signal: controller.signal,
-          onProgress: (progress) => {
-            if (run !== runRef.current) return
-            setState((current) => ({ ...current, progress }))
-          },
-        })
-
-        if (run === runRef.current) {
-          setState({
-            status: 'ready',
-            game,
-            review,
-            progress: null,
-            error: null,
-          })
-        }
-      } catch (error) {
-        if (run !== runRef.current) return
-        const cancelled =
-          error instanceof DOMException && error.name === 'AbortError'
+      if (run === runRef.current) {
         setState({
-          status: cancelled ? 'cancelled' : 'error',
+          status: 'ready',
           game,
-          review: null,
+          review,
           progress: null,
-          error: cancelled
-            ? null
-            : error instanceof Error
-              ? error.message
-              : String(error),
+          error: null,
         })
-      } finally {
-        client.dispose()
-        if (clientRef.current === client) clientRef.current = null
-        if (controllerRef.current === controller) controllerRef.current = null
       }
-    },
-    [cancel, clientFactory],
-  )
+    } catch (error) {
+      if (run !== runRef.current) return
+      const cancelled =
+        error instanceof DOMException && error.name === 'AbortError'
+      setState({
+        status: cancelled ? 'cancelled' : 'error',
+        game,
+        review: null,
+        progress: null,
+        error: cancelled
+          ? null
+          : error instanceof Error
+            ? error.message
+            : String(error),
+      })
+    } finally {
+      client.dispose()
+      if (clientRef.current === client) clientRef.current = null
+      if (controllerRef.current === controller) controllerRef.current = null
+    }
+  }
 
   useEffect(
     () => () => {

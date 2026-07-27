@@ -3,6 +3,8 @@ import { describe, expect, test } from 'bun:test'
 import { StockfishClient } from './stockfish-client'
 
 const FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+const CHECKMATE_FEN =
+  'rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3'
 
 class MockWorker {
   commands: string[] = []
@@ -79,6 +81,25 @@ describe('StockfishClient', () => {
     await expect(active).rejects.toMatchObject({ name: 'AbortError' })
     expect(worker.commands.at(-1)).toBe('stop')
     expect(worker.terminated).toBe(true)
+  })
+
+  test('handles terminal bestmove without a preceding info line', async () => {
+    const worker = new MockWorker()
+    worker.autoAnalyze = false
+    const client = new StockfishClient({ workerFactory: () => worker })
+    const active = client.analyze(CHECKMATE_FEN, 10)
+    await Bun.sleep(0)
+
+    worker.emit('bestmove (none)')
+
+    await expect(active).resolves.toEqual({
+      fen: CHECKMATE_FEN,
+      depth: 0,
+      score: { type: 'mate', value: -1 },
+      bestMove: '(none)',
+      pv: [],
+    })
+    client.dispose()
   })
 
   test('times out initialization and terminates the failed worker', async () => {

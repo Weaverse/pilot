@@ -14,14 +14,14 @@ function input(loss: number) {
 
 describe('move classification', () => {
   test('uses deterministic centipawn-loss boundaries', () => {
-    expect(classifyMove(input(15))).toBe('excellent')
-    expect(classifyMove(input(16))).toBe('good')
-    expect(classifyMove(input(50))).toBe('good')
-    expect(classifyMove(input(51))).toBe('inaccuracy')
-    expect(classifyMove(input(100))).toBe('inaccuracy')
-    expect(classifyMove(input(101))).toBe('mistake')
-    expect(classifyMove(input(200))).toBe('mistake')
-    expect(classifyMove(input(201))).toBe('blunder')
+    expect(classifyMove(input(20))).toBe('excellent')
+    expect(classifyMove(input(21))).toBe('good')
+    expect(classifyMove(input(60))).toBe('good')
+    expect(classifyMove(input(61))).toBe('inaccuracy')
+    expect(classifyMove(input(120))).toBe('inaccuracy')
+    expect(classifyMove(input(121))).toBe('mistake')
+    expect(classifyMove(input(250))).toBe('mistake')
+    expect(classifyMove(input(251))).toBe('blunder')
   })
 
   test('gives forced and engine-best moves explicit precedence', () => {
@@ -44,6 +44,16 @@ describe('move classification', () => {
         ...input(0),
         bestScore: { type: 'cp', value: -100 },
         playedScore: { type: 'mate', value: -2 },
+      }),
+    ).toBe('blunder')
+  })
+
+  test('classifies a materially delayed forced mate by its score loss', () => {
+    expect(
+      classifyMove({
+        ...input(0),
+        bestScore: { type: 'mate', value: 1 },
+        playedScore: { type: 'mate', value: 5 },
       }),
     ).toBe('blunder')
   })

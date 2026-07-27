@@ -9,6 +9,8 @@ import { GameSummary } from './GameSummary'
 import { MoveList } from './MoveList'
 import { MoveReviewPanel } from './MoveReviewPanel'
 import { PgnInput } from './PgnInput'
+import { boardMotionOptions } from './ReviewBoard'
+import { ReviewWorkspace } from './ReviewWorkspace'
 
 function noop() {}
 
@@ -71,7 +73,7 @@ describe('chess review input UI', () => {
     )
 
     expect(html).toContain('Cancel review')
-    expect(html).toContain('Analyzing position 2 of 2')
+    expect(html).toContain('Analyzing move 1 (White) · position 2 of 2')
     expect(html).toContain('aria-live="polite"')
     expect(html).toContain('50%')
   })
@@ -88,6 +90,9 @@ describe('chess review result UI', () => {
       <MoveReviewPanel move={review.moves[0]} position={review.positions[0]} />,
     )
     const evaluation = renderToStaticMarkup(<EvaluationBar evaluation={35} />)
+    const workspace = renderToStaticMarkup(
+      <ReviewWorkspace review={review} onNewReview={noop} />,
+    )
 
     expect(summary).toContain('Ada')
     expect(summary).toContain('Grace')
@@ -99,6 +104,15 @@ describe('chess review result UI', () => {
     expect(coaching).toContain('White’s perspective')
     expect(evaluation).toContain('<meter')
     expect(evaluation).toContain('Position evaluation +0.3')
+    expect(workspace).toContain('aria-label="Chess review workspace"')
+    expect(workspace).toContain(
+      'aria-keyshortcuts="ArrowLeft ArrowRight Home End"',
+    )
+    expect(workspace).toContain('inert=""')
+    expect(boardMotionOptions(true)).toEqual({
+      animationDurationInMs: 0,
+      showAnimations: false,
+    })
   })
 })
 

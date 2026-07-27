@@ -23,7 +23,11 @@ function progressLabel(
   if (status === 'parsing') return 'Validating PGN…'
   if (status === 'loading-engine') return 'Loading Stockfish in your browser…'
   if (status === 'analyzing' && progress) {
-    return `Analyzing position ${Math.min(progress.completed + 1, progress.total)} of ${progress.total}`
+    const position = Math.min(progress.completed + 1, progress.total)
+    const move = progress.currentPly
+      ? `move ${Math.ceil(progress.currentPly / 2)} (${progress.currentPly % 2 === 1 ? 'White' : 'Black'})`
+      : 'final position'
+    return `Analyzing ${move} · position ${position} of ${progress.total}`
   }
   return 'Preparing review…'
 }

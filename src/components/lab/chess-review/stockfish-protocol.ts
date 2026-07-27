@@ -29,6 +29,8 @@ export function parseInfoLine(line: string): EngineInfo | null {
 
   if (!Number.isInteger(depth) || depth < 0 || multipv !== 1) return null
   if (scoreIndex < 0 || scoreIndex + 2 >= tokens.length) return null
+  if (tokens.includes('lowerbound') || tokens.includes('upperbound'))
+    return null
 
   const scoreType = tokens[scoreIndex + 1]
   const parsedScoreValue = Number(tokens[scoreIndex + 2])

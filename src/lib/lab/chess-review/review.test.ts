@@ -46,6 +46,35 @@ describe('game review assembly', () => {
     expect(review.moves[0].narrative).toContain('d4')
   })
 
+  test('clamps mate losses in summaries and orients Black-to-move mate scores', () => {
+    const game = parsePgn('1. f3 e5 2. g4')
+    const [first, second, third] = game.moves
+    const review = buildGameReview(game, [
+      analysis(first.beforeFen, { type: 'cp', value: 0 }, first.uci),
+      analysis(first.afterFen, { type: 'cp', value: 0 }, second.uci),
+      analysis(second.afterFen, { type: 'cp', value: 0 }, 'g2g3'),
+      analysis(third.afterFen, { type: 'mate', value: 1 }, 'd8h4'),
+    ])
+
+    expect(review.moves[2]).toMatchObject({
+      classification: 'blunder',
+      evaluationAfter: -99_900,
+    })
+    expect(review.white.averageCentipawnLoss).toBe(500)
+  })
+
+  test('uses bestmove rather than a divergent PV for the displayed move', () => {
+    const game = parsePgn('1. e4')
+    const move = game.moves[0]
+    const review = buildGameReview(game, [
+      analysis(move.beforeFen, { type: 'cp', value: 30 }, 'd2d4', ['e2e4']),
+      analysis(move.afterFen, { type: 'cp', value: -20 }, 'e7e5'),
+    ])
+
+    expect(review.moves[0].bestMoveSan).toBe('d4')
+    expect(review.moves[0].principalVariation).toEqual(['d4'])
+  })
+
   test('rejects missing position analysis and handles invalid PV tails', () => {
     const game = parsePgn('1. e4')
     expect(() => buildGameReview(game, [])).toThrow(

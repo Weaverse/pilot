@@ -1,6 +1,7 @@
 import { Chess } from 'chess.js'
 import { centipawnLoss, classifyMove } from './classify'
 import { moveNarrative } from './narrative'
+import { uciToSan } from './pgn'
 import {
   negateScore,
   scoreFromWhitePerspective,
@@ -26,6 +27,7 @@ const CLASSIFICATIONS: MoveClassification[] = [
   'mistake',
   'blunder',
 ]
+const MAX_SUMMARY_LOSS_CP = 1_000
 
 export function principalVariationToSan(fen: string, pv: string[]): string[] {
   const chess = new Chess(fen)
@@ -78,7 +80,7 @@ function summarize(
   }
 
   const totalLoss = playerMoves.reduce(
-    (total, move) => total + move.centipawnLoss,
+    (total, move) => total + Math.min(move.centipawnLoss, MAX_SUMMARY_LOSS_CP),
     0,
   )
   const totalAccuracy = playerMoves.reduce(
@@ -114,8 +116,17 @@ export function buildGameReview(
       bestScore: before.score,
       playedScore,
     })
-    const bestLine = principalVariationToSan(move.beforeFen, before.pv)
-    const bestMoveSan = bestLine[0] ?? null
+    const principalVariation = principalVariationToSan(
+      move.beforeFen,
+      before.pv,
+    )
+    const bestMoveSan = uciToSan(move.beforeFen, before.bestMove)
+    const bestLine =
+      before.pv[0] === before.bestMove
+        ? principalVariation
+        : bestMoveSan
+          ? [bestMoveSan]
+          : []
 
     return {
       ...move,

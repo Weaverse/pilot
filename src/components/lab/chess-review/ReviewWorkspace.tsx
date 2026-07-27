@@ -5,7 +5,7 @@ import {
   RefreshIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { useEffect, useState } from 'react'
+import { type KeyboardEvent, useState } from 'react'
 import {
   scoreFromWhitePerspective,
   scoreToCentipawns,
@@ -76,28 +76,28 @@ export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
     setSelectedPly(clampPly(ply, maxPly))
   }
 
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      const key = event.key
-      if (
-        isTypingTarget(event.target) ||
-        event.altKey ||
-        event.metaKey ||
-        event.ctrlKey ||
-        !isReviewNavigationKey(key)
-      )
-        return
+  function onWorkspaceKey(event: KeyboardEvent<HTMLElement>) {
+    const key = event.key
+    if (
+      isTypingTarget(event.target) ||
+      event.altKey ||
+      event.metaKey ||
+      event.ctrlKey ||
+      !isReviewNavigationKey(key)
+    )
+      return
 
-      event.preventDefault()
-      setSelectedPly((ply) => navigatePly(ply, key, maxPly))
-    }
-
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [maxPly])
+    event.preventDefault()
+    setSelectedPly((ply) => navigatePly(ply, key, maxPly))
+  }
 
   return (
-    <div className="chess-review-root">
+    <section
+      className="chess-review-root"
+      aria-label="Chess review workspace"
+      aria-keyshortcuts="ArrowLeft ArrowRight Home End"
+      onKeyDown={onWorkspaceKey}
+    >
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-700">
@@ -207,6 +207,6 @@ export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
         Labels and accuracy are deterministic local estimates built from
         Stockfish evaluations—not Chess.com ratings.
       </p>
-    </div>
+    </section>
   )
 }

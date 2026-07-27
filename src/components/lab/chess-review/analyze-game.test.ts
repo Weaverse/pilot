@@ -39,6 +39,13 @@ describe('analyzeGame', () => {
       ...game.moves.map((move) => move.afterFen),
     ])
     expect(progress.map((value) => value.completed)).toEqual([0, 1, 2, 3, 4])
+    expect(progress.map((value) => value.currentPly)).toEqual([
+      1,
+      1,
+      2,
+      3,
+      null,
+    ])
     expect(progress.at(-1)).toEqual({
       completed: 4,
       total: 4,
