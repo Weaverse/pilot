@@ -30,7 +30,7 @@ export default function StatusRepository({
   }, [])
 
   return (
-    <div className="flex min-w-0 items-center gap-1 whitespace-nowrap text-[11px]">
+    <div className="flex min-w-0 items-center gap-1 whitespace-nowrap">
       <span className="shrink-0 text-slate-400" aria-hidden="true">
         <HugeiconsIcon icon={TerminalIcon} size={13} strokeWidth={1.9} />
       </span>
