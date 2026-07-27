@@ -1,0 +1,67 @@
+.chess-review-root {
+  container-type: inline-size;
+}
+
+.chess-review-workspace {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.chess-review-board-column {
+  width: 100%;
+  max-width: 42rem;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.chess-review-side-column {
+  display: grid;
+  min-width: 0;
+  gap: 1rem;
+  align-content: start;
+}
+
+@container (min-width: 54rem) {
+  .chess-review-workspace {
+    grid-template-columns: minmax(24rem, 1.08fr) minmax(19rem, 0.92fr);
+    align-items: start;
+  }
+
+  .chess-review-board-column {
+    max-width: none;
+    margin-inline: 0;
+  }
+}
+
+.chess-review-nav-button {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #334155;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease,
+    background-color 150ms ease;
+}
+
+.chess-review-nav-button:hover:not(:disabled) {
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.chess-review-nav-button:focus-visible {
+  outline: 3px solid rgb(16 185 129 / 25%);
+  outline-offset: 1px;
+}
+
+.chess-review-nav-button:disabled {
+  cursor: not-allowed;
+  background: #f8fafc;
+  color: #cbd5e1;
+}

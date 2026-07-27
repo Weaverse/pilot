@@ -16,6 +16,18 @@ describe('review narrative', () => {
     )
   })
 
+  test('describes mate swings without fake pawn counts', () => {
+    expect(
+      moveNarrative({
+        classification: 'blunder',
+        centipawnLoss: 99_800,
+        bestMoveSan: 'Qh7#',
+      }),
+    ).toBe(
+      'A critical error that changes a forced-mate outcome. Qh7# was the engine’s top choice.',
+    )
+  })
+
   test('does not invent an alternative when no legal PV move is available', () => {
     expect(
       moveNarrative({

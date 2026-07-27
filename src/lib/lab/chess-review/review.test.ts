@@ -56,9 +56,10 @@ describe('game review assembly', () => {
     ])
   })
 
-  test('bundled sample is a legal, bounded game', () => {
+  test('bundled sample is a legal, bounded tactical game', () => {
     const game = parsePgn(SAMPLE_PGN)
-    expect(game.moves.length).toBeGreaterThan(10)
-    expect(game.headers.Event).toBe('Ruy Lopez sample')
+    expect(game.moves).toHaveLength(7)
+    expect(game.headers.Result).toBe('1-0')
+    expect(game.moves.at(-1)?.san).toBe('Qxf7#')
   })
 })

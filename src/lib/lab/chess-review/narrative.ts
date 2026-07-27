@@ -47,5 +47,9 @@ export function moveNarrative(options: {
     return `This loses about ${formatLoss(centipawnLoss)} and shifts the position.${alternative}`
   }
 
+  if (classification === 'blunder' && centipawnLoss >= 50_000) {
+    return `A critical error that changes a forced-mate outcome.${alternative}`
+  }
+
   return `A critical error that loses about ${formatLoss(centipawnLoss)}.${alternative}`
 }

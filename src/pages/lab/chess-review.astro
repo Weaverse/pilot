@@ -1,0 +1,25 @@
+---
+import ChessReview from '~/components/lab/chess-review/ChessReview'
+import PageHeader from '~/components/PageHeader.astro'
+import StudioShell from '~/components/studio/StudioShell.astro'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Chess Game Review"
+  description="Paste a PGN and review every move locally with Stockfish in your browser."
+>
+  <StudioShell
+    active="/lab/chess-review"
+    crumb="~/leohuynh.dev/lab/chess-review/"
+  >
+    <PageHeader
+      title="Chess Game Review"
+      description="Paste a PGN. Find the moves that changed the game."
+    />
+
+    <div class="w-full max-w-6xl">
+      <ChessReview client:only="react" />
+    </div>
+  </StudioShell>
+</BaseLayout>
