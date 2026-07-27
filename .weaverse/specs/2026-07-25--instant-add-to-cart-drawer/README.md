@@ -2,12 +2,12 @@
 
 | Field            | Value                                          |
 | ---------------- | ---------------------------------------------- |
-| **Status**       | in-progress                                    |
+| **Status**       | completed                                      |
 | **Owner**        | @hta218                                        |
-| **Issue**        | N/A                                            |
+| **Issue**        | [#464](https://github.com/Weaverse/pilot/issues/464) |
 | **Branch**       | `update/instant-add-to-cart-drawer`            |
 | **Created**      | 2026-07-25                                     |
-| **Last Updated** | 2026-07-25                                     |
+| **Last Updated** | 2026-07-27                                     |
 
 ## Original Prompt
 

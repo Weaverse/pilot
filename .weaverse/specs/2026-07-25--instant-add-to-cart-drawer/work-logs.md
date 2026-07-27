@@ -192,3 +192,10 @@ Verification:
 - `npm run test:unit` — 10 passed;
 - `npm run typecheck` — passed;
 - `git diff --check` — passed.
+
+## 2026-07-27 — Completion
+
+Manual QA confirmed the instant drawer, authoritative count handoff, and stable
+line rendering. Marked the feature completed and linked its tracking issue,
+[#464](https://github.com/Weaverse/pilot/issues/464), to PR
+[#453](https://github.com/Weaverse/pilot/pull/453).
