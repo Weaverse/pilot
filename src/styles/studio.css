@@ -139,6 +139,93 @@ html[data-nav-pending="true"] .nav-progress {
   }
 }
 
+/* On narrow viewports the existing rails become off-canvas panels below the
+ * tab bar. Reusing the same DOM preserves folder state and live widget islands. */
+@media (max-width: 1023px) {
+  .studio-mobile-panel {
+    position: absolute;
+    top: 44px;
+    bottom: 0;
+    z-index: 40;
+    display: block;
+    width: min(320px, calc(100% - 48px));
+    visibility: hidden;
+    pointer-events: none;
+    box-shadow: 12px 0 28px rgb(15 23 42 / 0.14);
+    transition:
+      transform 180ms ease,
+      visibility 0s linear 180ms;
+  }
+
+  .studio-mobile-panel--left {
+    left: 0;
+    transform: translateX(-100%);
+  }
+
+  .studio-mobile-panel--right {
+    right: 0;
+    display: grid;
+    transform: translateX(100%);
+    box-shadow: -12px 0 28px rgb(15 23 42 / 0.14);
+  }
+
+  .studio-shell[data-mobile-panel="sidebar"] .studio-mobile-panel--left {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+    transition-delay: 0s;
+  }
+
+  .studio-shell[data-mobile-panel="rail"] .studio-mobile-panel--right {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+    transition-delay: 0s;
+  }
+
+  .studio-mobile-panel-backdrop {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    visibility: hidden;
+    background: rgb(15 23 42 / 0.3);
+    opacity: 0;
+    touch-action: none;
+    transition:
+      opacity 180ms ease,
+      visibility 0s linear 180ms;
+  }
+
+  .studio-shell[data-mobile-panel] .studio-mobile-panel-backdrop {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+  }
+
+  .studio-shell[data-mobile-panel] [data-track-region="content"] {
+    overflow: hidden;
+  }
+
+  .studio-shell[data-mobile-panel] .studio-topbar,
+  .studio-shell[data-mobile-panel] .studio-statusbar {
+    pointer-events: none;
+  }
+
+  .studio-shell[data-mobile-panel] .studio-mobile-panel-toggle {
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .studio-mobile-panel,
+  .studio-mobile-panel-backdrop {
+    transition: none;
+  }
+}
+
 @media (min-width: 1024px) {
   .studio-workspace {
     grid-template-columns: 260px minmax(0, 1fr) 360px;

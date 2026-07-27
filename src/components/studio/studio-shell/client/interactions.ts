@@ -2,21 +2,21 @@
 // the click-driven UI bits of the shell. Folder + rail state live on `window`
 // / localStorage so they survive SPA navigation.
 
+export function closeVersionMenus() {
+  document
+    .querySelectorAll<HTMLElement>('[data-version-popover]')
+    .forEach((popover) => {
+      popover.hidden = true
+    })
+  document.querySelectorAll('[data-version-trigger]').forEach((trigger) => {
+    trigger.setAttribute('aria-expanded', 'false')
+  })
+}
+
 /** Document-level listeners for the footer version menu. Binds only once. */
 export function bindVersionMenu() {
   if (window.__leohuynhVersionMenuBound) return
   window.__leohuynhVersionMenuBound = true
-
-  const closeVersionMenus = () => {
-    document
-      .querySelectorAll<HTMLElement>('[data-version-popover]')
-      .forEach((p) => {
-        p.hidden = true
-      })
-    document.querySelectorAll('[data-version-trigger]').forEach((t) => {
-      t.setAttribute('aria-expanded', 'false')
-    })
-  }
 
   document.addEventListener('click', (event) => {
     const target = event.target as HTMLElement

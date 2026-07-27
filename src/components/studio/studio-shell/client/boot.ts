@@ -1,6 +1,7 @@
 import './globals'
 import { setupClock, setupCommitAgo } from './clock'
 import { bindVersionMenu, setupFolders, setupRail } from './interactions'
+import { setupMobilePanels } from './mobile-panels'
 import { setupNavPending } from './nav-pending'
 import { initStudioTabs } from './tabs'
 
@@ -17,6 +18,7 @@ function initStudioShell() {
   document.querySelectorAll<HTMLElement>('.studio-shell').forEach((shell) => {
     initStudioTabs(shell)
     setupRail(shell, root)
+    setupMobilePanels(shell)
     setupFolders(shell)
     setupClock(shell)
     setupCommitAgo(shell)

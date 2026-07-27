@@ -13,7 +13,11 @@ const { lastCommit, lastCommitDate, lastCommitUrl } = Astro.props
 const repoName = new URL(SITE.siteRepo).pathname.replace(/^\/+|\/+$/g, '')
 ---
 
-<footer class="studio-statusbar flex min-w-0 items-center justify-between gap-2 border-t border-line bg-white px-3 font-mono text-[12px] text-slate-600" data-track-region="bottombar">
+<footer
+  class="studio-statusbar flex min-w-0 items-center justify-between gap-2 border-t border-line bg-white px-3 font-mono text-[12px] text-slate-600"
+  data-track-region="bottombar"
+  data-mobile-panel-background
+>
   <div class="min-w-0">
     <StatusRepository
       client:visible

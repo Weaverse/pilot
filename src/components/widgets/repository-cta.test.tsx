@@ -60,5 +60,6 @@ describe('repository discovery links', () => {
     expect(html).not.toContain('sidebar-view-repo')
     expect(html).toContain('target="_blank"')
     expect(html).toContain('rel="noreferrer"')
+    expect(html).not.toContain('text-[11px]')
   })
 })

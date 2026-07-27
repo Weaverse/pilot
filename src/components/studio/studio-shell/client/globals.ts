@@ -10,5 +10,9 @@ declare global {
     __leohuynhVersionMenuBound?: boolean
     // Guards the document-level nav-pending transition listeners to bind only once.
     __leohuynhNavPendingBound?: boolean
+    // Guards delegated mobile-panel and viewport listeners to bind only once.
+    __leohuynhMobilePanelsBound?: boolean
+    // Returns focus to the control that opened the active mobile panel.
+    __leohuynhMobilePanelTrigger?: HTMLElement
   }
 }
