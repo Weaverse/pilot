@@ -75,7 +75,7 @@ describe('StockfishClient', () => {
     const active = client.analyze(FEN, 10)
     await Bun.sleep(0)
 
-    expect(client.analyze(FEN, 10)).rejects.toThrow('already analyzing')
+    await expect(client.analyze(FEN, 10)).rejects.toThrow('already analyzing')
     client.cancel()
 
     await expect(active).rejects.toMatchObject({ name: 'AbortError' })

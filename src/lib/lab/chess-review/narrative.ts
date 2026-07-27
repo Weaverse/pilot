@@ -24,8 +24,10 @@ export function moveNarrative(options: {
   classification: MoveClassification
   centipawnLoss: number
   bestMoveSan: string | null
+  mateDistanceLoss: 'slower-win' | 'faster-loss' | null
 }): string {
-  const { classification, centipawnLoss, bestMoveSan } = options
+  const { classification, centipawnLoss, bestMoveSan, mateDistanceLoss } =
+    options
 
   if (classification === 'forced') return 'This was the only legal move.'
   if (classification === 'best') return 'Best move in the position.'
@@ -36,6 +38,13 @@ export function moveNarrative(options: {
   const alternative = bestMoveSan
     ? ` ${bestMoveSan} was the engine’s top choice.`
     : ''
+
+  if (mateDistanceLoss === 'slower-win') {
+    return `This still forces mate, but takes longer.${alternative}`
+  }
+  if (mateDistanceLoss === 'faster-loss') {
+    return `This allows the opponent to force mate sooner.${alternative}`
+  }
 
   if (classification === 'good') {
     return `A solid move with only a small concession.${alternative}`

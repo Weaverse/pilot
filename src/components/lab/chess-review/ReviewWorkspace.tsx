@@ -18,6 +18,7 @@ import { MoveList } from './MoveList'
 import { MoveReviewPanel } from './MoveReviewPanel'
 import { clampPly, isReviewNavigationKey, navigatePly } from './navigation'
 import { ReviewBoard } from './ReviewBoard'
+import { CLASSIFICATION_UI } from './ui'
 
 interface ReviewWorkspaceProps {
   review: GameReview
@@ -105,6 +106,11 @@ export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
       tabIndex={-1}
       onKeyDown={onWorkspaceKey}
     >
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {selectedMove
+          ? `Move ${selectedMove.moveNumber} ${selectedMove.color}, ${selectedMove.san}, ${CLASSIFICATION_UI[selectedMove.classification].label}`
+          : 'Starting position'}
+      </p>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-700">

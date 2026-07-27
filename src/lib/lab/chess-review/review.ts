@@ -1,5 +1,9 @@
 import { Chess } from 'chess.js'
-import { centipawnLoss, classifyMove } from './classify'
+import {
+  centipawnLoss,
+  classifyMove,
+  mateDistanceDeterioration,
+} from './classify'
 import { moveNarrative } from './narrative'
 import { uciToSan } from './pgn'
 import {
@@ -121,6 +125,16 @@ export function buildGameReview(
       before.pv,
     )
     const bestMoveSan = uciToSan(move.beforeFen, before.bestMove)
+    const mateDeterioration = mateDistanceDeterioration(
+      before.score,
+      playedScore,
+    )
+    const mateDistanceLoss =
+      mateDeterioration !== null && mateDeterioration > 0
+        ? before.score.value > 0
+          ? 'slower-win'
+          : 'faster-loss'
+        : null
     const bestLine =
       before.pv[0] === before.bestMove
         ? principalVariation
@@ -145,6 +159,7 @@ export function buildGameReview(
         classification,
         centipawnLoss: loss,
         bestMoveSan,
+        mateDistanceLoss,
       }),
     }
   })

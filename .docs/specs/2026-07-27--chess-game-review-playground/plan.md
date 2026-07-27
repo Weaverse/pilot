@@ -207,7 +207,7 @@ fix: harden chess review interactions
 
 Local verification completed on 2026-07-27:
 
-- `bun test`: 57 pass, 0 fail;
+- `bun test`: 58 pass, 0 fail;
 - `bun run check`: 0 errors, warnings, or hints;
 - `bun run build`, focused Biome, and `git diff --check`: pass;
 - real Stockfish sample review selected `Nf6` as a blunder;

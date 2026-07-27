@@ -124,7 +124,7 @@ describe('chess review result UI', () => {
     expect(moves).toContain('Move 1 white, e4, Best')
     expect(coaching).toContain('Best move in the position')
     expect(coaching).toContain('White’s perspective')
-    expect(coaching.match(/aria-live=/g)).toHaveLength(1)
+    expect(coaching.match(/aria-live=/g) ?? []).toHaveLength(0)
     expect(evaluation).toContain('<meter')
     expect(evaluation).toContain('Position evaluation +0.3')
     expect(evaluation.match(/Position evaluation/g)).toHaveLength(1)
@@ -133,6 +133,7 @@ describe('chess review result UI', () => {
       'aria-keyshortcuts="ArrowLeft ArrowRight Home End"',
     )
     expect(workspace).toContain('tabindex="-1"')
+    expect(workspace.match(/aria-live=/g)).toHaveLength(1)
     expect(workspace).toContain('inert=""')
     expect(workspace).toContain(
       describeBoardPosition(review.positions[review.turningPointPly ?? 1].fen),

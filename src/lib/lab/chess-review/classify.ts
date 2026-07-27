@@ -9,7 +9,7 @@ export interface MoveClassificationInput {
   playedScore: EngineScore
 }
 
-function mateDistanceDeterioration(
+export function mateDistanceDeterioration(
   bestScore: EngineScore,
   playedScore: EngineScore,
 ): number | null {
