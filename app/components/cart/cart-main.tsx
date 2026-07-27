@@ -9,8 +9,8 @@ import { Section } from "~/components/section";
 import type { CartLayoutType } from "~/types/others";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
-import { getCartLineRenderKeys } from "./optimistic-cart";
 import { CartSummary } from "./cart-summary";
+import { getCartLineRenderKeys } from "./optimistic-cart";
 
 function CartEmpty({
   hidden = false,

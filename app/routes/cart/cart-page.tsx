@@ -19,9 +19,7 @@ import {
   useLoaderData,
 } from "react-router";
 import invariant from "tiny-invariant";
-import {
-  getCurrentCartBootstrapRequestToken,
-} from "~/components/cart/cart-baseline";
+import { getCurrentCartBootstrapRequestToken } from "~/components/cart/cart-baseline";
 import { CartMain } from "~/components/cart/cart-main";
 import { useCart, useCartStore } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";

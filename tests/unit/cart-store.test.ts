@@ -1,8 +1,5 @@
 import { expect, test } from "@playwright/test";
-import {
-  CartForm,
-  type OptimisticCartLineInput,
-} from "@shopify/hydrogen";
+import { CartForm, type OptimisticCartLineInput } from "@shopify/hydrogen";
 import {
   canApplyNullCartBootstrap,
   markCartBootstrapStarted,
@@ -202,10 +199,7 @@ for (const authoritativeQuantity of [1, 2]) {
 
 test("keeps the loading add overlay while the baseline is still older", () => {
   const baseline = createAuthoritativeCart(1, "2026-07-26T10:00:00.000Z");
-  const fetcher = createLoadingAddFetcher(
-    2,
-    "2026-07-26T10:00:01.000Z",
-  );
+  const fetcher = createLoadingAddFetcher(2, "2026-07-26T10:00:01.000Z");
 
   const cart = applyOptimisticMutations(baseline, [fetcher], []);
 
@@ -216,9 +210,7 @@ test("keeps the loading add overlay while the baseline is still older", () => {
 test("blocks a null bootstrap after a cart mutation lands", () => {
   markCartBootstrapStarted();
 
-  recordCartMutation(
-    createAuthoritativeCart(1, "2026-07-26T10:00:02.000Z"),
-  );
+  recordCartMutation(createAuthoritativeCart(1, "2026-07-26T10:00:02.000Z"));
 
   expect(canApplyNullCartBootstrap()).toBe(false);
 });

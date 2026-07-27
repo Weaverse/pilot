@@ -1,7 +1,4 @@
-import {
-  CartForm,
-  type OptimisticCartLineInput,
-} from "@shopify/hydrogen";
+import { CartForm, type OptimisticCartLineInput } from "@shopify/hydrogen";
 import type { Fetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { getTimestampMs } from "./cart-baseline";
@@ -102,10 +99,7 @@ function stagedCurrencyCode(
   return fallback ?? "USD";
 }
 
-function cartLineQuantity(
-  cart: CartApiQueryFragment,
-  merchandiseId: string,
-) {
+function cartLineQuantity(cart: CartApiQueryFragment, merchandiseId: string) {
   return (
     cart.lines.nodes.find((line) => line.merchandise?.id === merchandiseId)
       ?.quantity ?? 0
@@ -300,9 +294,7 @@ export function applyOptimisticMutations(
         .filter((line) => line.selectedVariant)
         .filter(
           (line) =>
-            !staged.handled.has(
-              (line.selectedVariant as { id: string }).id,
-            ),
+            !staged.handled.has((line.selectedVariant as { id: string }).id),
         );
       const fetcherCart = (
         fetcher.data as { cart?: CartApiQueryFragment } | undefined

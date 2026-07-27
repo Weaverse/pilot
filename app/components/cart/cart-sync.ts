@@ -1,10 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Fetcher } from "react-router";
-import {
-  useFetcher,
-  useLocation,
-  useNavigation,
-} from "react-router";
+import { useFetcher, useLocation, useNavigation } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as apiCartLoader } from "~/routes/api/cart";
@@ -118,8 +114,7 @@ export function CartStoreSync() {
     if (resolved) {
       const current = useCartStore.getState().serverCart;
       if (
-        getTimestampMs(resolved.updatedAt) >=
-        getTimestampMs(current?.updatedAt)
+        getTimestampMs(resolved.updatedAt) >= getTimestampMs(current?.updatedAt)
       ) {
         updates.serverCart = resolved as CartApiQueryFragment;
       }
