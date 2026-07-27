@@ -171,3 +171,24 @@ Verification:
 - `npm run build` — passed with pre-existing Rolldown/plugin warnings;
 - `npm run biome` — could not start because local `node_modules` contains
   Biome/config versions older than those declared in `package.json`.
+
+## 2026-07-27 — Stable line identity at authoritative handoff
+
+Manual QA found one remaining visual remount after a successful add. The
+synthetic line ID was stable during the optimistic window, but Shopify replaced
+it with the authoritative cart line ID when the mutation settled.
+`CartMain` used that changing ID as the React key, so the entire row remounted:
+the title flashed and `Image` reset its local load state.
+
+Cart rows now use merchandise ID as their presentation key when it is unique in
+the cart. This matches the optimistic pipeline's existing merge identity and
+keeps the row mounted across the handoff without changing the real line ID used
+by cart mutations. Duplicate merchandise IDs fall back to Shopify line IDs to
+avoid React key collisions. Added a regression proving the optimistic and
+authoritative versions receive the same render key.
+
+Verification:
+
+- `npm run test:unit` — 10 passed;
+- `npm run typecheck` — passed;
+- `git diff --check` — passed.

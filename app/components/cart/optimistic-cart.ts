@@ -215,6 +215,36 @@ export function filterRemovedCartLines(
 }
 
 /**
+ * Returns React keys that survive the synthetic-to-authoritative line handoff.
+ *
+ * The optimistic pipeline merges lines by merchandise ID, so a unique variant
+ * identifies the same visual row before and after Shopify replaces its line ID.
+ * Carts with duplicate merchandise fall back to Shopify line IDs to avoid key
+ * collisions.
+ */
+export function getCartLineRenderKeys(
+  lines: CartApiQueryFragment["lines"]["nodes"],
+) {
+  const merchandiseCounts = new Map<string, number>();
+  for (const line of lines) {
+    const merchandiseId = line.merchandise?.id;
+    if (merchandiseId) {
+      merchandiseCounts.set(
+        merchandiseId,
+        (merchandiseCounts.get(merchandiseId) ?? 0) + 1,
+      );
+    }
+  }
+
+  return lines.map((line) => {
+    const merchandiseId = line.merchandise?.id;
+    return merchandiseId && merchandiseCounts.get(merchandiseId) === 1
+      ? `merchandise-${merchandiseId}`
+      : line.id;
+  });
+}
+
+/**
  * Applies in-flight cart inputs not yet represented by the baseline.
  */
 export function applyOptimisticMutations(

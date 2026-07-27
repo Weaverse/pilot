@@ -11,6 +11,7 @@ import {
 import {
   applyOptimisticMutations,
   buildOptimisticAddCart,
+  getCartLineRenderKeys,
 } from "../../app/components/cart/optimistic-cart";
 import { useCartStore } from "../../app/components/cart/store";
 
@@ -152,6 +153,35 @@ test("builds a stable first-add cart with skeleton-safe money", () => {
     },
   });
   expect(secondCart?.lines.nodes[0].id).toBe(firstCart?.lines.nodes[0].id);
+});
+
+test("keeps the line render key through the authoritative handoff", () => {
+  const optimisticCart = buildOptimisticAddCart([createLine()]);
+  const authoritativeCart = createAuthoritativeCart(
+    1,
+    "2026-07-27T10:00:00.000Z",
+  );
+
+  expect(optimisticCart?.lines.nodes[0].id).not.toBe(
+    authoritativeCart.lines.nodes[0].id,
+  );
+  expect(getCartLineRenderKeys(optimisticCart?.lines.nodes ?? [])).toEqual(
+    getCartLineRenderKeys(authoritativeCart.lines.nodes),
+  );
+});
+
+test("falls back to line IDs for duplicate merchandise render keys", () => {
+  const cart = createAuthoritativeCart(1, "2026-07-27T10:00:00.000Z");
+  const firstLine = cart.lines.nodes[0];
+  const secondLine = {
+    ...firstLine,
+    id: "gid://shopify/CartLine/2",
+  };
+
+  expect(getCartLineRenderKeys([firstLine, secondLine])).toEqual([
+    firstLine.id,
+    secondLine.id,
+  ]);
 });
 
 for (const authoritativeQuantity of [1, 2]) {

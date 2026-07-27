@@ -71,10 +71,13 @@ of the same baseline resolver so a newer authoritative cart can supersede it.
     `applyOptimisticMutations` already produces, so `cart-line-item.tsx` needs
     no new branches).
   - The synthetic node's id is **`optimistic-<merchandiseId>`, never a random
-    UUID**. This cart is recomposed on every render, so a random id would give
-    `<CartLineItem key={line.id}>` a new key each pass — remounting the row
-    (image reload, visible flicker) and re-keying `useOptimisticData(id)`.
-    A cart holds at most one line per merchandise, so it is unique.
+    UUID**. This cart is recomposed on every render, so a random id would remount
+    the row throughout the pending window and re-key `useOptimisticData(id)`.
+  - `CartMain` keys a unique merchandise row by merchandise ID instead of the
+    temporary cart line ID. Shopify replaces the synthetic line ID after a
+    successful add, but React keeps the same row mounted, preventing title flash
+    and image load-state reset. If a cart contains duplicate merchandise IDs,
+    keys fall back to Shopify line IDs to avoid collisions.
   - Mark **only touched lines** `isOptimistic: true`, and the cart
     `isOptimistic: true`; recompute `totalQuantity` from the nodes so the header
     badge is instantly correct.
@@ -256,6 +259,7 @@ Run the manual list below against a throttled dev server:
 - `app/components/cart/optimistic-cart.ts`
 - `app/components/cart/store.ts`
 - `app/components/cart/cart-drawer.tsx`
+- `app/components/cart/cart-main.tsx`
 - `app/components/cart/cart-line-item.tsx`
 - `app/components/cart/cart-summary.tsx`
 - `app/components/product/add-to-cart-button.tsx`
