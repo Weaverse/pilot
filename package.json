@@ -35,6 +35,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "typecheck": "astro check",
+    "test": "bun test",
     "seo:check": "node scripts/check-seo-lengths.mjs",
     "dotfiles:refresh": "bun scripts/refresh-dotfiles-tree.ts",
     "heatmap:refresh": "bun scripts/refresh-heatmap-map.ts"

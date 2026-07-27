@@ -96,7 +96,11 @@ export function PgnInput(props: PgnInputProps) {
           value={props.pgn}
           disabled={busy}
           onChange={(event) => props.onPgnChange(event.target.value)}
-          aria-describedby="chess-review-pgn-help"
+          aria-describedby={
+            props.error
+              ? 'chess-review-pgn-help chess-review-pgn-error'
+              : 'chess-review-pgn-help'
+          }
           aria-invalid={props.status === 'error'}
           placeholder={
             '[Event "Casual game"]\n[White "Leo"]\n[Black "Opponent"]\n\n1. e4 e5 2. Nf3 Nc6 …'
@@ -106,6 +110,7 @@ export function PgnInput(props: PgnInputProps) {
 
         {props.error && (
           <div
+            id="chess-review-pgn-error"
             role="alert"
             className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
           >

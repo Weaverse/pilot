@@ -36,8 +36,10 @@ export function MoveReviewPanel({ move, position }: MoveReviewPanelProps) {
     <section
       className="rounded-xl border border-line bg-white p-5"
       aria-labelledby="move-review-title"
-      aria-live="polite"
     >
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        Move {move.moveNumber} {move.color}, {move.san}, {presentation.label}
+      </p>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">

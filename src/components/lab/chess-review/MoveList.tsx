@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { MoveReview } from '~/lib/lab/chess-review/types'
 import { CLASSIFICATION_UI, isNotable } from './ui'
 
@@ -10,10 +10,26 @@ interface MoveListProps {
 
 export function MoveList({ moves, selectedPly, onSelect }: MoveListProps) {
   const [filter, setFilter] = useState<'all' | 'notable'>('all')
+  const listRef = useRef<HTMLUListElement>(null)
+  const selectedRef = useRef<HTMLLIElement>(null)
   const visible =
     filter === 'all'
       ? moves
       : moves.filter((move) => isNotable(move.classification))
+
+  useEffect(() => {
+    const list = listRef.current
+    const selected = selectedRef.current
+    if (!list || !selected) return
+
+    const listBounds = list.getBoundingClientRect()
+    const selectedBounds = selected.getBoundingClientRect()
+    if (selectedBounds.top < listBounds.top) {
+      list.scrollTop -= listBounds.top - selectedBounds.top
+    } else if (selectedBounds.bottom > listBounds.bottom) {
+      list.scrollTop += selectedBounds.bottom - listBounds.bottom
+    }
+  })
 
   return (
     <section
@@ -45,6 +61,7 @@ export function MoveList({ moves, selectedPly, onSelect }: MoveListProps) {
       </div>
 
       <ul
+        ref={listRef}
         className="thin-scrollbar max-h-96 overflow-y-auto p-2"
         aria-label="Reviewed moves"
       >
@@ -59,7 +76,7 @@ export function MoveList({ moves, selectedPly, onSelect }: MoveListProps) {
             const presentation = CLASSIFICATION_UI[move.classification]
             const selected = move.ply === selectedPly
             return (
-              <li key={move.ply}>
+              <li key={move.ply} ref={selected ? selectedRef : undefined}>
                 <button
                   type="button"
                   onClick={() => onSelect(move.ply)}

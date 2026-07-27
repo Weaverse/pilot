@@ -28,6 +28,11 @@ function serverReducedMotionSnapshot() {
   return false
 }
 
+export function describeBoardPosition(fen: string) {
+  const activeColor = fen.split(' ')[1] === 'b' ? 'Black' : 'White'
+  return `Chess position after the selected move. ${activeColor} to move. FEN: ${fen}`
+}
+
 export function boardMotionOptions(reducedMotion: boolean) {
   return {
     animationDurationInMs: reducedMotion ? 0 : 180,
@@ -74,9 +79,7 @@ export function ReviewBoard({ fen, selectedMove }: ReviewBoardProps) {
 
   return (
     <figure className="relative min-w-0 flex-1">
-      <figcaption className="sr-only">
-        Chess position after the selected move
-      </figcaption>
+      <figcaption className="sr-only">{describeBoardPosition(fen)}</figcaption>
       <div inert>
         <Chessboard options={options} />
       </div>

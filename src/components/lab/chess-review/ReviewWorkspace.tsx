@@ -5,7 +5,7 @@ import {
   RefreshIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { type KeyboardEvent, useState } from 'react'
+import { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import {
   scoreFromWhitePerspective,
   scoreToCentipawns,
@@ -56,9 +56,10 @@ function PlayerLabel({
 }
 
 export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
-  const initialPly = review.turningPointPly ?? Math.min(1, review.moves.length)
-  const [selectedPly, setSelectedPly] = useState(initialPly)
   const maxPly = review.moves.length
+  const initialPly = review.turningPointPly ?? Math.min(1, maxPly)
+  const [selectedPly, setSelectedPly] = useState(initialPly)
+  const workspaceRef = useRef<HTMLElement>(null)
   const selectedMove = selectedPly > 0 ? review.moves[selectedPly - 1] : null
   const selectedPosition = review.positions[selectedPly]
   const evaluation = selectedMove
@@ -91,11 +92,17 @@ export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
     setSelectedPly((ply) => navigatePly(ply, key, maxPly))
   }
 
+  useEffect(() => {
+    workspaceRef.current?.focus({ preventScroll: true })
+  }, [])
+
   return (
     <section
+      ref={workspaceRef}
       className="chess-review-root"
       aria-label="Chess review workspace"
       aria-keyshortcuts="ArrowLeft ArrowRight Home End"
+      tabIndex={-1}
       onKeyDown={onWorkspaceKey}
     >
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">

@@ -9,7 +9,7 @@ import { GameSummary } from './GameSummary'
 import { MoveList } from './MoveList'
 import { MoveReviewPanel } from './MoveReviewPanel'
 import { PgnInput } from './PgnInput'
-import { boardMotionOptions } from './ReviewBoard'
+import { boardMotionOptions, describeBoardPosition } from './ReviewBoard'
 import { ReviewWorkspace } from './ReviewWorkspace'
 
 function noop() {}
@@ -77,6 +77,28 @@ describe('chess review input UI', () => {
     expect(html).toContain('aria-live="polite"')
     expect(html).toContain('50%')
   })
+
+  test('associates a parse error with the PGN field', () => {
+    const html = renderToStaticMarkup(
+      <PgnInput
+        pgn="invalid"
+        depth={8}
+        status="error"
+        progress={null}
+        error="Invalid PGN"
+        onPgnChange={noop}
+        onDepthChange={noop}
+        onLoadSample={noop}
+        onSubmit={noop}
+        onCancel={noop}
+      />,
+    )
+
+    expect(html).toContain(
+      'aria-describedby="chess-review-pgn-help chess-review-pgn-error"',
+    )
+    expect(html).toContain('id="chess-review-pgn-error"')
+  })
 })
 
 describe('chess review result UI', () => {
@@ -102,13 +124,19 @@ describe('chess review result UI', () => {
     expect(moves).toContain('Move 1 white, e4, Best')
     expect(coaching).toContain('Best move in the position')
     expect(coaching).toContain('White’s perspective')
+    expect(coaching.match(/aria-live=/g)).toHaveLength(1)
     expect(evaluation).toContain('<meter')
     expect(evaluation).toContain('Position evaluation +0.3')
+    expect(evaluation.match(/Position evaluation/g)).toHaveLength(1)
     expect(workspace).toContain('aria-label="Chess review workspace"')
     expect(workspace).toContain(
       'aria-keyshortcuts="ArrowLeft ArrowRight Home End"',
     )
+    expect(workspace).toContain('tabindex="-1"')
     expect(workspace).toContain('inert=""')
+    expect(workspace).toContain(
+      describeBoardPosition(review.positions[review.turningPointPly ?? 1].fen),
+    )
     expect(boardMotionOptions(true)).toEqual({
       animationDurationInMs: 0,
       showAnimations: false,

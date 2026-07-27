@@ -48,14 +48,32 @@ describe('move classification', () => {
     ).toBe('blunder')
   })
 
-  test('classifies a materially delayed forced mate by its score loss', () => {
+  test('caps same-outcome mate distance changes below mistake severity', () => {
     expect(
       classifyMove({
         ...input(0),
         bestScore: { type: 'mate', value: 1 },
         playedScore: { type: 'mate', value: 5 },
       }),
-    ).toBe('blunder')
+    ).toBe('inaccuracy')
+    expect(
+      centipawnLoss({ type: 'mate', value: 1 }, { type: 'mate', value: 5 }),
+    ).toBe(90)
+
+    expect(
+      classifyMove({
+        ...input(0),
+        bestScore: { type: 'mate', value: -5 },
+        playedScore: { type: 'mate', value: -1 },
+      }),
+    ).toBe('inaccuracy')
+    expect(
+      classifyMove({
+        ...input(0),
+        bestScore: { type: 'mate', value: 3 },
+        playedScore: { type: 'mate', value: 4 },
+      }),
+    ).toBe('good')
   })
 
   test('never reports negative centipawn loss', () => {

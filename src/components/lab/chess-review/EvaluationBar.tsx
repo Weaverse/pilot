@@ -29,7 +29,6 @@ export function EvaluationBar({ evaluation }: EvaluationBarProps) {
       <span className="absolute bottom-1 left-1/2 -translate-x-1/2 font-mono text-[9px] font-bold text-slate-900">
         W
       </span>
-      <span className="sr-only">{label}</span>
     </div>
   )
 }
