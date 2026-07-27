@@ -30,3 +30,45 @@ export interface PositionAnalysis {
   bestMove: string
   pv: string[]
 }
+
+export type MoveClassification =
+  | 'forced'
+  | 'best'
+  | 'excellent'
+  | 'good'
+  | 'inaccuracy'
+  | 'mistake'
+  | 'blunder'
+
+export interface MoveReview extends ParsedMove {
+  classification: MoveClassification
+  centipawnLoss: number
+  evaluationBefore: number
+  evaluationAfter: number
+  bestMove: string
+  bestMoveSan: string | null
+  principalVariation: string[]
+  narrative: string
+}
+
+export interface PlayerReviewSummary {
+  color: ChessColor
+  accuracy: number
+  averageCentipawnLoss: number
+  classifications: Record<MoveClassification, number>
+}
+
+export interface GameReview {
+  game: ParsedGame
+  positions: PositionAnalysis[]
+  moves: MoveReview[]
+  white: PlayerReviewSummary
+  black: PlayerReviewSummary
+  turningPointPly: number | null
+}
+
+export interface AnalysisProgress {
+  completed: number
+  total: number
+  currentPly: number | null
+}

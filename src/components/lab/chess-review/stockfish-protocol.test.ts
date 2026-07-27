@@ -23,6 +23,11 @@ describe('Stockfish protocol parsing', () => {
       score: { type: 'mate', value: -3 },
       pv: ['h7h8q'],
     })
+    expect(parseInfoLine('info depth 0 score mate 0')).toEqual({
+      depth: 0,
+      score: { type: 'mate', value: -1 },
+      pv: [],
+    })
   })
 
   test('ignores malformed and secondary multipv lines', () => {

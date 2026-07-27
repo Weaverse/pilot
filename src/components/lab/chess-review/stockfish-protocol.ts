@@ -27,17 +27,19 @@ export function parseInfoLine(line: string): EngineInfo | null {
   const multipv = Number(tokenValue(tokens, 'multipv') ?? '1')
   const scoreIndex = tokens.indexOf('score')
 
-  if (!Number.isInteger(depth) || depth < 1 || multipv !== 1) return null
+  if (!Number.isInteger(depth) || depth < 0 || multipv !== 1) return null
   if (scoreIndex < 0 || scoreIndex + 2 >= tokens.length) return null
 
   const scoreType = tokens[scoreIndex + 1]
-  const scoreValue = Number(tokens[scoreIndex + 2])
+  const parsedScoreValue = Number(tokens[scoreIndex + 2])
   if (
     (scoreType !== 'cp' && scoreType !== 'mate') ||
-    !Number.isFinite(scoreValue)
+    !Number.isFinite(parsedScoreValue)
   ) {
     return null
   }
+  const scoreValue =
+    scoreType === 'mate' && parsedScoreValue === 0 ? -1 : parsedScoreValue
 
   const pvIndex = tokens.indexOf('pv')
   const pv = pvIndex >= 0 ? tokens.slice(pvIndex + 1) : []
