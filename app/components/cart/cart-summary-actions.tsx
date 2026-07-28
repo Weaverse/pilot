@@ -10,7 +10,7 @@ import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { getSuccessfulCartNote } from "~/utils/cart-note";
 import { cn } from "~/utils/cn";
-import { useCartFetcherSync } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);

@@ -41,6 +41,9 @@ export default function Spacer(props: SpacerData) {
 export const schema = createSchema({
   type: "spacer",
   title: "Spacer",
+  enabledOn: {
+    groups: ["body"],
+  },
   settings: [
     {
       group: "Spacer",

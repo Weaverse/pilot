@@ -3,7 +3,7 @@ import { useLoaderData, useRouteLoaderData } from "react-router";
 import {
   FacebookShareButton,
   PinterestShareButton,
-  TwitterShareButton,
+  XShareButton,
 } from "react-share";
 import type { ArticleQuery } from "storefront-api.generated";
 import { Icon } from "~/components/icon";
@@ -70,9 +70,9 @@ export default function BlogPost(props: BlogPostProps) {
                   <PinterestShareButton url={articleUrl} media={image?.url}>
                     <Icon name="pinterest-logo" size={24} />
                   </PinterestShareButton>
-                  <TwitterShareButton url={articleUrl} title={title}>
+                  <XShareButton url={articleUrl} title={title}>
                     <Icon name="x-logo" size={24} />
-                  </TwitterShareButton>
+                  </XShareButton>
                 </div>
               )}
               {showTags && tags?.length > 0 && (

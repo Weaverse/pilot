@@ -10,7 +10,7 @@ import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Icon } from "~/components/icon";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLineOptimisticData } from "./cart-line-item";
-import { useCartFetcherSync } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function CartLineQuantityAdjust({
   line,

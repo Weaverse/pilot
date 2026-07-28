@@ -20,7 +20,7 @@ import {
   GiftCardDialog,
   NoteDialog,
 } from "./cart-summary-actions";
-import { useCartFetcherSync } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function CartSummary({
   cart,
@@ -255,8 +255,16 @@ export function CartSummary({
       )}
       {checkoutUrl && (
         <div className="mt-2 flex flex-col gap-3">
-          <a href={checkoutHref} target="_self">
-            <Button className="w-full">
+          <a
+            href={isCartUpdating ? undefined : checkoutHref}
+            target="_self"
+            aria-disabled={isCartUpdating || undefined}
+          >
+            <Button
+              className="w-full"
+              disabled={isCartUpdating}
+              aria-busy={isCartUpdating || undefined}
+            >
               <span>{checkoutButtonText || "Continue to Checkout"}</span>
               {layout === "drawer" && (
                 <>

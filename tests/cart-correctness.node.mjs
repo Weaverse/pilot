@@ -150,13 +150,14 @@ describe("cart response error gating", () => {
     );
   });
 
-  test("both cart-store fetcher paths use the shared error gate", async () => {
-    const source = await readFile(
-      new URL("app/components/cart/store.ts", PROJECT_ROOT),
-      "utf8",
+  test("both cart fetcher paths use the shared error gate", async () => {
+    const sources = await Promise.all(
+      ["cart-sync.ts", "cart-baseline.ts"].map((file) =>
+        readFile(new URL(`app/components/cart/${file}`, PROJECT_ROOT), "utf8"),
+      ),
     );
     assert.equal(
-      source.match(/hasCartResponseErrors\(fetcherData\)/g)?.length,
+      sources.join("\n").match(/hasCartResponseErrors\(fetcherData\)/g)?.length,
       2,
     );
   });
