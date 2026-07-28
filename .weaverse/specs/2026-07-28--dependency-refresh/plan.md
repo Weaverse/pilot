@@ -124,6 +124,13 @@ for that concrete caller instead of retaining unused global tooling.
 Do not reintroduce a per-platform esbuild pin. esbuild already declares every
 platform binary, and a hand-maintained pin drifts out of sync on each upgrade.
 
+### 10. Re-date the release
+
+- [x] Bump `package.json` and `package-lock.json` from `2026.7.27` to
+      `2026.7.28` because the release ships a day after it was first prepared.
+- [x] Rename release PR `#465` to `v2026.7.28`.
+- [x] Retag and rename the draft release to `v2026.7.28`.
+
 ## Files and Folders Touched
 
 Dependency and release implementation:
@@ -150,4 +157,4 @@ Specification and continuation context:
 External release state:
 
 - GitHub pull request `#465`
-- Draft GitHub release `v2026.7.27`
+- Draft GitHub release `v2026.7.28`

@@ -125,3 +125,11 @@ Verification re-run under Node.js `24.18.0`:
 - `npm run test:cart-correctness` — 17 tests passed.
 - `npm run build` — exited `0` with the existing `envFile` deprecation and
   chunk-size warnings.
+
+## 2026-07-28 — Release re-dated to 2026.7.28
+
+The release was prepared on 2026-07-27 but ships on 2026-07-28, so the version
+follows the ship date per the repository's `YYYY.M.D` convention. Bumped
+`package.json` and `package-lock.json` to `2026.7.28`, renamed release PR `#465`,
+and retagged the draft release from `v2026.7.27` to `v2026.7.28`. The earlier
+`v2026.7.27` tag was never pushed, so no published reference changed.

@@ -52,7 +52,7 @@ The refresh includes:
 - Removal of unused direct declarations for `@shopify/hydrogen-react`,
   `graphql-tag`, `@tailwindcss/forms`, `cross-env`, and `ts-node`.
 - Removal of the pinned `@esbuild/linux-x64` optional dependency.
-- Pilot version `2026.7.27`.
+- Pilot version `2026.7.28`.
 
 React Router 8 and GraphQL 17 remain intentionally deferred because both are
 major upgrades with separate compatibility work. No forced audit fix was run.
@@ -104,8 +104,8 @@ removed rather than retained as dormant tooling.
 - [x] The redundant pinned `@esbuild/linux-x64` optional dependency is removed
       and every esbuild platform binary remains in the lockfile.
 - [x] Code generation and all release verification commands pass.
-- [x] Version `2026.7.27` is committed and pushed to `dev`.
-- [x] Release PR `#465` and draft release `v2026.7.27` are prepared.
+- [x] Version `2026.7.28` is committed and pushed to `dev`.
+- [x] Release PR `#465` and draft release `v2026.7.28` are prepared.
 - [x] Final clean install, dependency audit, tests, and build pass.
 
 ## References
