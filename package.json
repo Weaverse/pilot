@@ -66,14 +66,12 @@
     "@radix-ui/react-visually-hidden": "1.2.11",
     "@react-router/dev": "7.16.0",
     "@shopify/hydrogen": "^2026.4.4",
-    "@shopify/hydrogen-react": "^2026.4.3",
     "@tailwindcss/vite": "^4.3.3",
     "@weaverse/hydrogen": "^5.19.2",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.9.3",
     "graphql": "16.14.2",
-    "graphql-tag": "2.12.7",
     "isbot": "^5.2.1",
     "react": "19.2.8",
     "react-country-flag": "3.1.0",
@@ -96,20 +94,14 @@
     "@shopify/hydrogen-codegen": "0.3.3",
     "@shopify/mini-oxygen": "^4.2.0",
     "@shopify/oxygen-workers-types": "4.2.0",
-    "@tailwindcss/forms": "0.5.11",
     "@tailwindcss/typography": "0.5.20",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@weaverse/biome": "5.8.0",
-    "cross-env": "10.1.0",
     "tailwindcss": "^4.3.3",
-    "ts-node": "10.9.2",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "vite": "^8.1.5"
-  },
-  "optionalDependencies": {
-    "@esbuild/linux-x64": "0.28.1"
   },
   "engines": {
     "node": ">=22.12.0"
