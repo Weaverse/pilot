@@ -23,7 +23,7 @@
 
 @container (min-width: 54rem) {
   .chess-review-workspace {
-    grid-template-columns: minmax(24rem, 1.08fr) minmax(19rem, 0.92fr);
+    grid-template-columns: minmax(27rem, 1.25fr) minmax(17rem, 0.75fr);
     align-items: start;
   }
 

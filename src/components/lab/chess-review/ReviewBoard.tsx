@@ -1,11 +1,12 @@
 import { useSyncExternalStore } from 'react'
 import { Chessboard } from 'react-chessboard'
 import type { MoveReview } from '~/lib/lab/chess-review/types'
-import { CLASSIFICATION_UI, uciSquares } from './ui'
+import { uciSquares } from './ui'
 
 interface ReviewBoardProps {
   fen: string
   selectedMove: MoveReview | null
+  orientation?: 'white' | 'black'
 }
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
@@ -40,20 +41,21 @@ export function boardMotionOptions(reducedMotion: boolean) {
   }
 }
 
-export function ReviewBoard({ fen, selectedMove }: ReviewBoardProps) {
+export function ReviewBoard({
+  fen,
+  selectedMove,
+  orientation = 'white',
+}: ReviewBoardProps) {
   const reducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
     reducedMotionSnapshot,
     serverReducedMotionSnapshot,
   )
   const moveSquares = selectedMove ? uciSquares(selectedMove.uci) : null
-  const presentation = selectedMove
-    ? CLASSIFICATION_UI[selectedMove.classification]
-    : null
   const options = {
     id: 'chess-review-board',
     position: fen,
-    boardOrientation: 'white' as const,
+    boardOrientation: orientation,
     allowDragging: false,
     allowDrawingArrows: false,
     showNotation: true,
@@ -78,20 +80,11 @@ export function ReviewBoard({ fen, selectedMove }: ReviewBoardProps) {
   }
 
   return (
-    <figure className="relative min-w-0 flex-1">
+    <figure className="relative min-w-0" data-board-orientation={orientation}>
       <figcaption className="sr-only">{describeBoardPosition(fen)}</figcaption>
       <div inert>
         <Chessboard options={options} />
       </div>
-      {presentation && (
-        <span
-          className={`pointer-events-none absolute top-2 right-2 flex h-8 min-w-8 items-center justify-center rounded-lg border px-1.5 font-mono text-[11px] font-bold shadow-sm ${presentation.badge}`}
-          title={presentation.label}
-          aria-hidden="true"
-        >
-          {presentation.glyph}
-        </span>
-      )}
     </figure>
   )
 }

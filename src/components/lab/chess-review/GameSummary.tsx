@@ -7,10 +7,51 @@ interface GameSummaryProps {
   review: GameReview
 }
 
+interface CountBadgeProps {
+  count: number
+  singular: string
+  plural: string
+  tone: string
+}
+
 function playerName(review: GameReview, color: 'white' | 'black'): string {
   const header =
     color === 'white' ? review.game.headers.White : review.game.headers.Black
   return header || (color === 'white' ? 'White' : 'Black')
+}
+
+function gameOutcome(review: GameReview): {
+  label: string
+  result: string
+} {
+  const result = review.game.headers.Result || '*'
+
+  if (result === '1-0') {
+    return { label: `Winner · ${playerName(review, 'white')}`, result: '1–0' }
+  }
+  if (result === '0-1') {
+    return { label: `Winner · ${playerName(review, 'black')}`, result: '0–1' }
+  }
+  if (result === '1/2-1/2') {
+    return { label: 'Draw', result: '½–½' }
+  }
+  if (result === '*') {
+    return { label: 'Game unfinished', result: 'No result' }
+  }
+
+  return { label: 'Result recorded', result }
+}
+
+function CountBadge({ count, singular, plural, tone }: CountBadgeProps) {
+  const label = count === 1 ? singular : plural
+
+  return (
+    <span
+      className={`rounded px-2 py-1 font-mono text-[10px] font-semibold ${tone}`}
+    >
+      {count} {label}
+    </span>
+  )
 }
 
 function PlayerRow({
@@ -26,7 +67,7 @@ function PlayerRow({
     summary.classifications.blunder
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 border-t border-line px-4 py-3 first:border-t-0 sm:px-5">
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-t border-line px-4 py-3 first:border-t-0 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:px-5">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <span
@@ -51,25 +92,25 @@ function PlayerRow({
           accuracy
         </div>
       </div>
-      <div className="flex gap-1.5 font-mono text-[10px]">
-        <span
-          className="rounded bg-amber-100 px-1.5 py-1 text-amber-700"
-          title="Inaccuracies"
-        >
-          {summary.classifications.inaccuracy}?!
-        </span>
-        <span
-          className="rounded bg-orange-100 px-1.5 py-1 text-orange-700"
-          title="Mistakes"
-        >
-          {summary.classifications.mistake}?
-        </span>
-        <span
-          className="rounded bg-red-100 px-1.5 py-1 text-red-700"
-          title="Blunders"
-        >
-          {summary.classifications.blunder}??
-        </span>
+      <div className="col-span-2 flex flex-wrap gap-1.5 sm:col-span-1 sm:justify-end">
+        <CountBadge
+          count={summary.classifications.inaccuracy}
+          singular="inaccuracy"
+          plural="inaccuracies"
+          tone="bg-amber-100 text-amber-800"
+        />
+        <CountBadge
+          count={summary.classifications.mistake}
+          singular="mistake"
+          plural="mistakes"
+          tone="bg-orange-100 text-orange-800"
+        />
+        <CountBadge
+          count={summary.classifications.blunder}
+          singular="blunder"
+          plural="blunders"
+          tone="bg-red-100 text-red-800"
+        />
       </div>
     </div>
   )
@@ -77,8 +118,7 @@ function PlayerRow({
 
 export function GameSummary({ review }: GameSummaryProps) {
   const event = review.game.headers.Event
-  const result = review.game.headers.Result || '*'
-  const resultLabel = result === '*' ? 'Unfinished' : result
+  const outcome = gameOutcome(review)
 
   return (
     <section
@@ -95,9 +135,12 @@ export function GameSummary({ review }: GameSummaryProps) {
             estimate
           </p>
         </div>
-        <span className="rounded-lg border border-line bg-white px-3 py-1.5 font-mono text-sm font-bold text-ink">
-          Result {resultLabel}
-        </span>
+        <div className="rounded-lg border border-line bg-white px-3 py-2 text-right">
+          <p className="text-sm font-bold text-ink">{outcome.label}</p>
+          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">
+            Result {outcome.result}
+          </p>
+        </div>
       </div>
       <PlayerRow name={playerName(review, 'white')} summary={review.white} />
       <PlayerRow name={playerName(review, 'black')} summary={review.black} />

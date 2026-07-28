@@ -101,10 +101,13 @@ Game summary:
   - previous/next/start/end controls;
   - move list with move number, SAN, classification, and evaluation;
   - selected-move coaching card;
-  - evaluation bar;
-  - summary cards for White and Black;
+  - evaluation bar matched to the rendered board height;
+  - summary cards for White and Black with a clear outcome and named move-count badges;
+  - player names above and below the board, following the selected orientation;
+  - a tooltip-labelled board flip control alongside the move toolbar;
   - filters/jump controls for notable moves;
   - progress and cancel controls during analysis.
+- Classification badges use distinct solid colors and readable text; no review badge overlays a board square.
 - Selecting a move updates the board to the position after that move.
 - ArrowLeft/ArrowRight step through moves unless focus is in a text input.
 - Board coordinates and piece names remain understandable without color alone.

@@ -102,11 +102,7 @@ export function MoveList({ moves, selectedPly, onSelect }: MoveListProps) {
                     </span>
                   </span>
                   <span
-                    className={`flex h-7 min-w-7 items-center justify-center rounded-md border px-1 font-mono text-[10px] font-bold ${
-                      selected
-                        ? 'border-slate-600 bg-slate-800 text-white'
-                        : presentation.badge
-                    }`}
+                    className={`flex h-7 min-w-7 items-center justify-center rounded-md border px-1 font-mono text-[10px] font-bold ${presentation.badge}`}
                     aria-hidden="true"
                   >
                     {presentation.glyph}

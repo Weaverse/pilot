@@ -3,9 +3,16 @@ import {
   ArrowRight01Icon,
   KeyboardIcon,
   RefreshIcon,
+  RotateClockwiseIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { type KeyboardEvent, useEffect, useRef, useState } from 'react'
+import {
+  type KeyboardEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   scoreFromWhitePerspective,
   scoreToCentipawns,
@@ -25,6 +32,15 @@ interface ReviewWorkspaceProps {
   onNewReview: () => void
 }
 
+interface ToolbarButtonProps {
+  id: string
+  label: string
+  disabled?: boolean
+  pressed?: boolean
+  onClick: () => void
+  children: ReactNode
+}
+
 function isTypingTarget(target: EventTarget | null): boolean {
   return (
     target instanceof HTMLInputElement ||
@@ -37,22 +53,68 @@ function isTypingTarget(target: EventTarget | null): boolean {
 function PlayerLabel({
   name,
   color,
+  position,
 }: {
   name: string
   color: 'white' | 'black'
+  position: 'top' | 'bottom'
 }) {
   return (
-    <div className="flex items-center gap-2 py-2 font-mono text-xs text-slate-600">
-      <span
-        className={`h-3 w-3 rounded-sm border ${
-          color === 'white'
-            ? 'border-slate-300 bg-white'
-            : 'border-slate-900 bg-slate-900'
-        }`}
-        aria-hidden="true"
-      />
-      <span className="truncate">{name}</span>
+    <div
+      className="flex min-w-0 items-center justify-between gap-3 py-2.5"
+      data-board-player={position}
+      data-player-color={color}
+    >
+      <div className="flex min-w-0 items-center gap-2.5">
+        <span
+          className={`h-3.5 w-3.5 shrink-0 rounded-sm border ${
+            color === 'white'
+              ? 'border-slate-300 bg-white shadow-sm'
+              : 'border-slate-900 bg-slate-900'
+          }`}
+          aria-hidden="true"
+        />
+        <span className="truncate text-sm font-semibold text-ink">{name}</span>
+      </div>
+      <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
+        {color}
+      </span>
     </div>
+  )
+}
+
+function ToolbarButton({
+  id,
+  label,
+  disabled = false,
+  pressed,
+  onClick,
+  children,
+}: ToolbarButtonProps) {
+  const tooltipId = `chess-review-tooltip-${id}`
+
+  return (
+    <span className="group relative inline-flex">
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={disabled}
+        aria-label={label}
+        aria-describedby={tooltipId}
+        aria-pressed={pressed}
+        className="chess-review-nav-button"
+        data-toolbar-action={id}
+      >
+        {children}
+      </button>
+      <span
+        id={tooltipId}
+        role="tooltip"
+        className="pointer-events-none absolute top-full left-1/2 z-30 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-950 px-2 py-1 font-mono text-[10px] font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none"
+      >
+        {label}
+      </span>
+    </span>
   )
 }
 
@@ -60,6 +122,7 @@ export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
   const maxPly = review.moves.length
   const initialPly = review.turningPointPly ?? Math.min(1, maxPly)
   const [selectedPly, setSelectedPly] = useState(initialPly)
+  const [orientation, setOrientation] = useState<'white' | 'black'>('white')
   const workspaceRef = useRef<HTMLElement>(null)
   const selectedMove = selectedPly > 0 ? review.moves[selectedPly - 1] : null
   const selectedPosition = review.positions[selectedPly]
@@ -73,9 +136,21 @@ export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
       )
   const whiteName = review.game.headers.White || 'White'
   const blackName = review.game.headers.Black || 'Black'
+  const topPlayer =
+    orientation === 'white'
+      ? { name: blackName, color: 'black' as const }
+      : { name: whiteName, color: 'white' as const }
+  const bottomPlayer =
+    orientation === 'white'
+      ? { name: whiteName, color: 'white' as const }
+      : { name: blackName, color: 'black' as const }
 
   function select(ply: number) {
     setSelectedPly(clampPly(ply, maxPly))
+  }
+
+  function flipBoard() {
+    setOrientation((current) => (current === 'white' ? 'black' : 'white'))
   }
 
   function onWorkspaceKey(event: KeyboardEvent<HTMLElement>) {
@@ -134,73 +209,101 @@ export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
 
       <div className="chess-review-workspace mt-5">
         <div className="chess-review-board-column">
-          <PlayerLabel name={blackName} color="black" />
-          <div className="flex aspect-[calc(1+1/8)] min-w-0 gap-2 sm:gap-3">
-            <EvaluationBar evaluation={evaluation} />
-            <ReviewBoard
-              fen={selectedPosition.fen}
-              selectedMove={selectedMove}
-            />
+          <div className="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-2 sm:grid-cols-[2rem_minmax(0,1fr)] sm:gap-x-3">
+            <div className="col-start-2 row-start-1">
+              <PlayerLabel
+                name={topPlayer.name}
+                color={topPlayer.color}
+                position="top"
+              />
+            </div>
+            <div className="col-start-1 row-start-2 min-h-0">
+              <EvaluationBar
+                evaluation={evaluation}
+                orientation={orientation}
+              />
+            </div>
+            <div className="col-start-2 row-start-2 min-w-0">
+              <ReviewBoard
+                fen={selectedPosition.fen}
+                selectedMove={selectedMove}
+                orientation={orientation}
+              />
+            </div>
+            <div className="col-start-2 row-start-3">
+              <PlayerLabel
+                name={bottomPlayer.name}
+                color={bottomPlayer.color}
+                position="bottom"
+              />
+            </div>
+
+            <nav
+              className="col-start-2 row-start-4 mt-1 flex items-center justify-center gap-1.5"
+              aria-label="Move navigation"
+            >
+              <ToolbarButton
+                id="start"
+                label="Starting position"
+                onClick={() => select(0)}
+                disabled={selectedPly === 0}
+              >
+                <span aria-hidden="true">|‹</span>
+              </ToolbarButton>
+              <ToolbarButton
+                id="previous"
+                label="Previous move"
+                onClick={() => select(selectedPly - 1)}
+                disabled={selectedPly === 0}
+              >
+                <HugeiconsIcon
+                  icon={ArrowLeft01Icon}
+                  size={17}
+                  strokeWidth={1.9}
+                />
+              </ToolbarButton>
+              <span className="min-w-16 text-center font-mono text-xs text-muted">
+                {selectedPly === 0 ? 'Start' : `${selectedPly} / ${maxPly}`}
+              </span>
+              <ToolbarButton
+                id="next"
+                label="Next move"
+                onClick={() => select(selectedPly + 1)}
+                disabled={selectedPly === maxPly}
+              >
+                <HugeiconsIcon
+                  icon={ArrowRight01Icon}
+                  size={17}
+                  strokeWidth={1.9}
+                />
+              </ToolbarButton>
+              <ToolbarButton
+                id="final"
+                label="Final position"
+                onClick={() => select(maxPly)}
+                disabled={selectedPly === maxPly}
+              >
+                <span aria-hidden="true">›|</span>
+              </ToolbarButton>
+              <ToolbarButton
+                id="flip"
+                label="Flip board"
+                onClick={flipBoard}
+                pressed={orientation === 'black'}
+              >
+                <HugeiconsIcon
+                  icon={RotateClockwiseIcon}
+                  size={17}
+                  strokeWidth={1.9}
+                />
+              </ToolbarButton>
+            </nav>
+
+            <p className="col-start-2 row-start-5 mt-3 flex items-center justify-center gap-2 text-center font-mono text-[10px] text-muted">
+              <HugeiconsIcon icon={KeyboardIcon} size={13} strokeWidth={1.8} />
+              Arrow keys · Home · End
+            </p>
           </div>
-          <PlayerLabel name={whiteName} color="white" />
-
-          <nav
-            className="mt-2 flex items-center justify-center gap-1.5"
-            aria-label="Move navigation"
-          >
-            <button
-              type="button"
-              onClick={() => select(0)}
-              disabled={selectedPly === 0}
-              className="chess-review-nav-button"
-              aria-label="Starting position"
-            >
-              <span aria-hidden="true">|‹</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => select(selectedPly - 1)}
-              disabled={selectedPly === 0}
-              className="chess-review-nav-button"
-              aria-label="Previous move"
-            >
-              <HugeiconsIcon
-                icon={ArrowLeft01Icon}
-                size={17}
-                strokeWidth={1.9}
-              />
-            </button>
-            <span className="min-w-22 text-center font-mono text-xs text-muted">
-              {selectedPly === 0 ? 'Start' : `${selectedPly} / ${maxPly}`}
-            </span>
-            <button
-              type="button"
-              onClick={() => select(selectedPly + 1)}
-              disabled={selectedPly === maxPly}
-              className="chess-review-nav-button"
-              aria-label="Next move"
-            >
-              <HugeiconsIcon
-                icon={ArrowRight01Icon}
-                size={17}
-                strokeWidth={1.9}
-              />
-            </button>
-            <button
-              type="button"
-              onClick={() => select(maxPly)}
-              disabled={selectedPly === maxPly}
-              className="chess-review-nav-button"
-              aria-label="Final position"
-            >
-              <span aria-hidden="true">›|</span>
-            </button>
-          </nav>
-
-          <p className="mt-3 flex items-center justify-center gap-2 text-center font-mono text-[10px] text-muted">
-            <HugeiconsIcon icon={KeyboardIcon} size={13} strokeWidth={1.8} />
-            Arrow keys · Home · End
-          </p>
         </div>
 
         <div className="chess-review-side-column">
