@@ -65,18 +65,27 @@ function AddToCartButtonContent({
     setLastAddError,
   } = useCartStore();
   useCartFetcherSync(fetcher);
-  const isLoading = fetcher.state !== "idle";
   // Token of the stage this button owns, so a concurrent add from another
   // button is never cleared by this one.
   const pendingTokenRef = useRef<string | null>(null);
   const submittedRef = useRef(false);
   const [addError, setAddError] = useState<string | null>(null);
+  // React Router commits fetcher state inside `startTransition`, so
+  // `fetcher.state` only turns "submitting" in a later, non-urgent render —
+  // after the urgent render that opens the drawer has already painted. Driving
+  // the spinner off a click-time state instead makes it appear in that first
+  // frame. `fetcher.state` is still consulted for submissions that reach the
+  // form without going through `handleClick`.
+  const [clickPending, setClickPending] = useState(false);
+  const isSubmitting = fetcher.state !== "idle";
+  const isLoading = clickPending || isSubmitting;
 
   useEffect(() => {
     if (fetcher.state !== "idle" || !submittedRef.current) {
       return;
     }
     submittedRef.current = false;
+    setClickPending(false);
     const token = pendingTokenRef.current;
     pendingTokenRef.current = null;
 
@@ -94,6 +103,7 @@ function AddToCartButtonContent({
       return;
     }
     setAddError(null);
+    setClickPending(true);
     submittedRef.current = true;
     // Stage BEFORE the form submits so the drawer's first paint already has
     // the line — the fetcher only becomes visible on the next render.
@@ -107,7 +117,11 @@ function AddToCartButtonContent({
         type="submit"
         className={cn("relative w-full", className)}
         {...props}
-        disabled={disabled || isLoading}
+        // Deliberately NOT `isLoading`: React flushes a discrete event's state
+        // update before the browser runs the click's default action, so
+        // disabling on the click-time state would disable the submit button
+        // before it can submit the form — the add would never be sent.
+        disabled={disabled || isSubmitting}
         aria-busy={isLoading || undefined}
         onClick={handleClick}
       >
