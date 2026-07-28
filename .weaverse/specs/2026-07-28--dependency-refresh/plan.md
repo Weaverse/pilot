@@ -81,7 +81,7 @@ current Hydrogen/Oxygen toolchain supports Node.js 22 and 24.
 
 Expected non-failing output:
 
-- Biome reports three existing warnings.
+- Biome reports three existing warnings, cleared in step 11.
 - The build reports existing dependency/plugin deprecation and chunk-size
   warnings.
 - npm reports unresolved transitive vulnerabilities; no
@@ -130,6 +130,13 @@ platform binary, and a hand-maintained pin drifts out of sync on each upgrade.
       `2026.7.28` because the release ships a day after it was first prepared.
 - [x] Rename release PR `#465` to `v2026.7.28`.
 - [x] Retag and rename the draft release to `v2026.7.28`.
+
+### 11. Clear the remaining Biome warnings
+
+- [x] Replace the deprecated `TwitterShareButton` with `XShareButton`.
+- [x] Wrap the two guard clauses in `appendForwardedAttribution` in block
+      statements.
+- [x] Confirm `npm run biome` reports no warnings.
 
 ## Files and Folders Touched
 

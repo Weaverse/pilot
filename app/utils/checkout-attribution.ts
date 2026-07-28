@@ -67,8 +67,12 @@ export function appendForwardedAttribution(
   checkoutUrl: string,
   searchString: string,
 ): string {
-  if (!checkoutUrl) return checkoutUrl;
-  if (!searchString) return checkoutUrl;
+  if (!checkoutUrl) {
+    return checkoutUrl;
+  }
+  if (!searchString) {
+    return checkoutUrl;
+  }
 
   let target: URL;
   try {

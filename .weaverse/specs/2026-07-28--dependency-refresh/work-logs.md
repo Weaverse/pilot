@@ -133,3 +133,18 @@ follows the ship date per the repository's `YYYY.M.D` convention. Bumped
 `package.json` and `package-lock.json` to `2026.7.28`, renamed release PR `#465`,
 and retagged the draft release from `v2026.7.27` to `v2026.7.28`. The earlier
 `v2026.7.27` tag was never pushed, so no published reference changed.
+
+## 2026-07-28 — Cleared the remaining Biome warnings
+
+The three warnings carried through the whole refresh are now fixed rather than
+deferred:
+
+- `app/sections/blog-post.tsx` imported the deprecated `TwitterShareButton`.
+  Replaced it with `XShareButton`, which takes the same `url` and `title` props.
+  The rendered icon was already `x-logo`, so the markup is unchanged.
+- `app/utils/checkout-attribution.ts` had two single-line guard clauses.
+  Wrapped both in block statements.
+
+`npm run biome` now reports no warnings across 321 files. Type checking, the 10
+unit tests, the 17 cart-correctness tests, and the production build all still
+pass under Node.js `24.18.0`.
