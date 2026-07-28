@@ -9,6 +9,7 @@ export type IconName =
   | "caret-left"
   | "caret-right"
   | "caret-up"
+  | "chat-teardrop-dots"
   | "check"
   | "circle-notch"
   | "circle"
