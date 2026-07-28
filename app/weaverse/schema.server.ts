@@ -12,6 +12,7 @@ import { productBadgesSettings } from "./settings/product-badges";
 import { productCardsSettings } from "./settings/product-cards";
 import { pwaSettings } from "./settings/pwa";
 import { searchSettings } from "./settings/search";
+import { shopifyChatSettings } from "./settings/shopify-chat";
 import { typographySettings } from "./settings/typography";
 
 export const themeSchema: HydrogenThemeSchema = {
@@ -50,6 +51,7 @@ export const themeSchema: HydrogenThemeSchema = {
     searchSettings,
     cartSettings,
     pwaSettings,
+    shopifyChatSettings,
     footerSettings,
   ],
 };
