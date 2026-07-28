@@ -53,3 +53,75 @@ Created this retrospective spec and the accompanying handoff so another
 developer or agent can complete that cleanup without reconstructing the
 dependency history.
 
+## 2026-07-28 — Dependency compatibility and unused-dependency cleanup
+
+Audited direct dependencies using repository searches, package scripts, peer
+metadata, the installed graph, Knip, and depcheck. Removed five unused direct
+declarations:
+
+- `@shopify/hydrogen-react`
+- `graphql-tag`
+- `@tailwindcss/forms`
+- `cross-env`
+- `ts-node`
+
+`@shopify/hydrogen-react` remains installed through `@shopify/hydrogen`, and
+`graphql-tag` remains installed for the GraphQL code-generation packages. The
+other three packages and their now-unneeded transitive nodes were removed from
+the lockfile.
+
+TypeScript 7 was rolled back to `6.0.3`. The application itself type-checked
+with TypeScript 7, but the Hydrogen-compatible `@react-router/dev@7.16.0` and
+`@react-router/node@7.16.0` peer contracts support TypeScript 5 and 6 only.
+Strict peer resolution exposed the conflict that the repository's
+`legacy-peer-deps=true` setting otherwise masks.
+
+Regenerated the lockfile and verified a clean install with Node.js `24.18.0`
+and npm `11.16.0`. The install added 694 packages and audited 695 packages.
+npm continued to report 26 transitive vulnerabilities: 4 low, 4 moderate, 17
+high, and 1 critical. No forced audit fix was applied.
+
+Final verification:
+
+- Knip dependency-only audit — passed with no unused dependency declarations.
+- `npm run biome` — passed with three existing warnings.
+- `npm run typecheck` — passed.
+- `npm run test:unit` — 10 tests passed.
+- `npm run test:cart-correctness` — 17 tests passed.
+- `npm run build` — passed with existing dependency/plugin deprecation and
+  chunk-size warnings.
+
+## 2026-07-28 — Lockfile reinstall and esbuild pin removal
+
+Reinstalled from `package.json` under Node.js `24.18.0`. Because the reinstall
+re-resolved every caret range rather than replaying the lockfile, the dependency
+graph shrank from 869 to 782 nodes with 161 transitive version changes. Most of
+the shrinkage is deduplication: 44 nested `@shopify/cli/node_modules/@esbuild/*`
+packages collapsed into the hoisted copies, and the 20 platform-specific
+`@typescript/typescript-*` packages disappeared with the TypeScript 7 rollback.
+
+Reviewing that diff surfaced a latent defect in the earlier esbuild change. The
+pinned `@esbuild/linux-x64@0.28.1` optional dependency had been hoisted to the
+tree root, while esbuild resolved its own nested `@esbuild/linux-x64@0.27.4`.
+esbuild loads the binary adjacent to itself, so the pin was inert and the two
+copies would drift apart again on the next esbuild bump. Removed the
+`optionalDependencies` block and regenerated the lockfile. esbuild `0.28.1` now
+resolves as a single deduplicated copy, and all 26 platform packages — Linux x64
+included — remain recorded through esbuild's own optional dependencies.
+
+Transitive majors that moved during the re-resolve: `@babel/runtime` to `8.0.0`
+(with `rtl-css-js` keeping a nested 7.x copy), `change-case` to `5.4.4`,
+`change-case-all` to `2.1.0`, `auto-bind` to `5.0.1`, `swap-case` to `3.0.3`,
+`sponge-case` to `2.0.3`, and `undici-types` to `8.3.0`. The `change-case`
+family and `auto-bind` sit under the GraphQL code-generation packages only.
+`@types/node` moved to `26.1.2`; it is left as resolved because type checking
+passes and the storefront runs on workerd rather than Node.
+
+Verification re-run under Node.js `24.18.0`:
+
+- `npm run biome` — passed with the same three existing warnings.
+- `npm run typecheck` — passed.
+- `npm run test:unit` — 10 tests passed.
+- `npm run test:cart-correctness` — 17 tests passed.
+- `npm run build` — exited `0` with the existing `envFile` deprecation and
+  chunk-size warnings.

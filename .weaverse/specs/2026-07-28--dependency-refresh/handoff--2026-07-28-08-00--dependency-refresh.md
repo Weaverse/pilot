@@ -1,5 +1,8 @@
 # Handoff Context - 2026-07-28 08:00
 
+> Historical snapshot. See `README.md` and `work-logs.md` for the final
+> compatibility decision and completed dependency cleanup.
+
 ## Project
 
 - Repository: `Weaverse/pilot`
@@ -99,4 +102,3 @@
   - `b8c37973` — Bump version to 2026.7.27
 - The user explicitly requested that this handoff be included in the following
   documentation commit and pushed to `dev`.
-

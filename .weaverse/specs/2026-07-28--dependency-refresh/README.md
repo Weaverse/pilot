@@ -2,7 +2,7 @@
 
 | Field            | Value                                                        |
 | ---------------- | ------------------------------------------------------------ |
-| **Status**       | in-progress                                                  |
+| **Status**       | completed                                                    |
 | **Owner**        | @hta218                                                      |
 | **Issue**        | —                                                            |
 | **PR**           | [#465](https://github.com/Weaverse/pilot/pull/465)            |
@@ -19,17 +19,21 @@
 ## Summary
 
 Refresh Pilot's dependencies in controlled groups under Node.js 24, updating
-supported-range packages first, exact-pinned packages second, and TypeScript 7
-last. The upgrade is implemented, verified, pushed to `dev`, and prepared for
-release as `v2026.7.27`; one unused TypeScript API consumer (`ts-node`) remains
-to be removed before this maintenance item is considered complete.
+supported-range packages first and exact-pinned packages second. TypeScript 7
+was evaluated last but was rolled back to TypeScript 6 because the current
+Hydrogen-compatible React Router release does not support it; the final cleanup
+removes five unused direct dependency declarations and the redundant pinned
+`@esbuild/linux-x64` optional dependency.
 
 ## Scope
 
 - Reinstall dependencies from the lockfile using Node.js 24.
 - Update patch/minor releases allowed by existing version ranges.
 - Update exact-pinned runtime, UI, and test dependencies.
-- Upgrade TypeScript only after the other dependency groups are stable.
+- Evaluate TypeScript 7 only after the other dependency groups are stable.
+- Remove unused direct dependency declarations identified by source, peer-graph,
+  clean-install, and build verification.
+- Remove the redundant pinned `@esbuild/linux-x64` optional dependency.
 - Apply formatting required by the upgraded Biome toolchain.
 - Run code generation, linting, type checking, focused cart tests, unit tests,
   and the production build.
@@ -43,14 +47,32 @@ The refresh includes:
 - React and React DOM `19.2.8`.
 - Radix UI patch releases across the existing component set.
 - Vite `8.1.5`, Tailwind CSS `4.3.3`, Biome `2.5.5`, Playwright `1.62.0`,
-  Shopify CLI `4.5.2`, Swiper `14.0.6`, and TypeScript `7.0.2`.
-- The optional Linux x64 esbuild binary `0.28.1`.
+  Shopify CLI `4.5.2`, Swiper `14.0.6`, and TypeScript `6.0.3`.
+- esbuild `0.28.1`, deduplicated to a single copy across the tree.
+- Removal of unused direct declarations for `@shopify/hydrogen-react`,
+  `graphql-tag`, `@tailwindcss/forms`, `cross-env`, and `ts-node`.
+- Removal of the pinned `@esbuild/linux-x64` optional dependency.
 - Pilot version `2026.7.27`.
 
 React Router 8 and GraphQL 17 remain intentionally deferred because both are
 major upgrades with separate compatibility work. No forced audit fix was run.
 
-## TypeScript 7 Compatibility
+## esbuild Optional-Dependency Decision
+
+The refresh originally pinned `@esbuild/linux-x64` as a direct optional
+dependency to guarantee the Linux binary for Oxygen builds. Inspecting the
+resolved tree showed the pin never took effect: npm hoisted the pinned
+`0.28.1` package to the tree root while esbuild — then at `0.27.4` — resolved
+its own nested `@esbuild/linux-x64@0.27.4`. The binary esbuild actually loaded
+came from the nested copy, so the pin only added a second, unused package.
+
+The pin is removed. esbuild declares every platform binary in its own
+`optionalDependencies`, so the lockfile still records all 26 platform packages
+including `@esbuild/linux-x64@0.28.1`, and npm installs the one matching the
+build platform. Keeping the pin would also require bumping it by hand on every
+esbuild upgrade, silently reintroducing the same version skew.
+
+## TypeScript Compatibility Decision
 
 The current `tsconfig.json` already uses supported, explicit settings:
 
@@ -60,27 +82,33 @@ The current `tsconfig.json` already uses supported, explicit settings:
 - `strict: false`
 
 It does not rely on removed legacy options such as `baseUrl`,
-`moduleResolution: "node"`, or an ES5 target. Type checking, Hydrogen code
-generation, tests, and the production build pass with TypeScript `7.0.2`.
+`moduleResolution: "node"`, or an ES5 target, and the application checks pass
+with TypeScript `7.0.2`. However, `@react-router/dev@7.16.0` and
+`@react-router/node@7.16.0` declare TypeScript support only for versions 5 and
+6. Hydrogen `2026.4.4` pins that React Router line, and strict npm resolution
+fails with TypeScript 7 even though the repository's `legacy-peer-deps=true`
+setting masks the conflict.
 
-TypeScript 7 does not expose the stable compiler API expected by
-`ts-node@10.9.2`. A direct smoke test fails while reading `ts.sys`, and no
-repository script or source file uses `ts-node`, so removing that dependency is
-the remaining follow-up.
+TypeScript remains on `6.0.3` until the Hydrogen-compatible React Router release
+supports TypeScript 7. The unrelated, unused `ts-node@10.9.2` dependency is
+removed rather than retained as dormant tooling.
 
 ## Success Criteria
 
 - [x] Clean install succeeds under Node.js 24.
 - [x] Supported-range dependencies are updated.
 - [x] Exact-pinned dependencies are updated.
-- [x] TypeScript is upgraded last to `7.0.2`.
+- [x] TypeScript 7 is evaluated after the other dependency groups.
+- [x] TypeScript is restored to the supported `6.0.3` release.
+- [x] Unused direct dependency declarations are removed.
+- [x] The redundant pinned `@esbuild/linux-x64` optional dependency is removed
+      and every esbuild platform binary remains in the lockfile.
 - [x] Code generation and all release verification commands pass.
 - [x] Version `2026.7.27` is committed and pushed to `dev`.
 - [x] Release PR `#465` and draft release `v2026.7.27` are prepared.
-- [ ] Remove the unused, TypeScript 7-incompatible `ts-node` dependency.
+- [x] Final clean install, dependency audit, tests, and build pass.
 
 ## References
 
 - [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)
 - [Release PR #465](https://github.com/Weaverse/pilot/pull/465)
-
