@@ -120,8 +120,7 @@ function ToolbarButton({
 
 export function ReviewWorkspace({ review, onNewReview }: ReviewWorkspaceProps) {
   const maxPly = review.moves.length
-  const initialPly = review.turningPointPly ?? Math.min(1, maxPly)
-  const [selectedPly, setSelectedPly] = useState(initialPly)
+  const [selectedPly, setSelectedPly] = useState(Math.min(1, maxPly))
   const [orientation, setOrientation] = useState<'white' | 'black'>('white')
   const workspaceRef = useRef<HTMLElement>(null)
   const selectedMove = selectedPly > 0 ? review.moves[selectedPly - 1] : null

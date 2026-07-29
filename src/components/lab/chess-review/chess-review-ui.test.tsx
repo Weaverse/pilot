@@ -102,6 +102,17 @@ describe('chess review input UI', () => {
 })
 
 describe('chess review result UI', () => {
+  test('opens the first move instead of the detected turning point', () => {
+    const review = { ...reviewFixture(), turningPointPly: 3 }
+    const workspace = renderToStaticMarkup(
+      <ReviewWorkspace review={review} onNewReview={noop} />,
+    )
+
+    expect(workspace).toContain('Move 1 · white')
+    expect(workspace).toContain('>e4</h3>')
+    expect(workspace).not.toContain('>Nf3</h3>')
+  })
+
   test('renders summary, semantic move list, selected coaching, and evaluation meter', () => {
     const review = reviewFixture()
     const summary = renderToStaticMarkup(<GameSummary review={review} />)

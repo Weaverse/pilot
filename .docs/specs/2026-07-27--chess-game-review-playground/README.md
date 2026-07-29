@@ -108,6 +108,7 @@ Game summary:
   - filters/jump controls for notable moves;
   - progress and cancel controls during analysis.
 - Classification badges use distinct solid colors and readable text; no review badge overlays a board square.
+- A completed review opens at the first played move, regardless of the detected turning point.
 - Selecting a move updates the board to the position after that move.
 - ArrowLeft/ArrowRight step through moves unless focus is in a text input.
 - Board coordinates and piece names remain understandable without color alone.
