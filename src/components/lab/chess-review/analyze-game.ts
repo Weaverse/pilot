@@ -1,5 +1,6 @@
 import { buildGameReview } from '~/lib/lab/chess-review/review'
 import type {
+  AnalysisHistory,
   AnalysisProgress,
   GameReview,
   ParsedGame,
@@ -7,7 +8,11 @@ import type {
 } from '~/lib/lab/chess-review/types'
 
 export interface ChessEngine {
-  analyze(fen: string, depth: number): Promise<PositionAnalysis>
+  analyze(
+    fen: string,
+    depth: number,
+    history: AnalysisHistory,
+  ): Promise<PositionAnalysis>
   cancel(): void
 }
 
@@ -41,7 +46,12 @@ export async function analyzeGame(
 
     for (const [index, fen] of fens.entries()) {
       if (options.signal?.aborted) throw abortError()
-      positions.push(await engine.analyze(fen, options.depth))
+      positions.push(
+        await engine.analyze(fen, options.depth, {
+          initialFen: game.initialFen,
+          moves: game.moves.slice(0, index).map((move) => move.uci),
+        }),
+      )
       if (options.signal?.aborted) throw abortError()
 
       options.onProgress?.({

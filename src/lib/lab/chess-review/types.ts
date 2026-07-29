@@ -23,6 +23,11 @@ export type EngineScore =
   | { type: 'cp'; value: number }
   | { type: 'mate'; value: number }
 
+export interface AnalysisHistory {
+  initialFen: string
+  moves: string[]
+}
+
 export interface PositionAnalysis {
   fen: string
   depth: number

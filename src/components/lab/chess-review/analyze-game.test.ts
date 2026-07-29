@@ -4,11 +4,18 @@ import { parsePgn } from '~/lib/lab/chess-review/pgn'
 import { analyzeGame } from './analyze-game'
 
 class SequenceEngine {
-  calls: string[] = []
+  calls: Array<{
+    fen: string
+    history: { initialFen: string; moves: string[] } | undefined
+  }> = []
   cancelled = 0
 
-  async analyze(fen: string, depth: number) {
-    this.calls.push(fen)
+  async analyze(
+    fen: string,
+    depth: number,
+    history?: { initialFen: string; moves: string[] },
+  ) {
+    this.calls.push({ fen, history })
     return {
       fen,
       depth,
@@ -35,8 +42,17 @@ describe('analyzeGame', () => {
     })
 
     expect(engine.calls).toEqual([
-      game.initialFen,
-      ...game.moves.map((move) => move.afterFen),
+      {
+        fen: game.initialFen,
+        history: { initialFen: game.initialFen, moves: [] },
+      },
+      ...game.moves.map((move, index) => ({
+        fen: move.afterFen,
+        history: {
+          initialFen: game.initialFen,
+          moves: game.moves.slice(0, index + 1).map((item) => item.uci),
+        },
+      })),
     ])
     expect(progress.map((value) => value.completed)).toEqual([0, 1, 2, 3, 4])
     expect(progress.map((value) => value.currentPly)).toEqual([

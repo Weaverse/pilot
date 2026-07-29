@@ -1,5 +1,8 @@
 import { Chess } from 'chess.js'
-import type { PositionAnalysis } from '~/lib/lab/chess-review/types'
+import type {
+  AnalysisHistory,
+  PositionAnalysis,
+} from '~/lib/lab/chess-review/types'
 import {
   applyEngineLine,
   createEngineOutputState,
@@ -57,11 +60,17 @@ function abortError(): Error {
 function terminalAnalysis(
   fen: string,
   bestMove: string,
+  history?: AnalysisHistory,
 ): PositionAnalysis | null {
   if (bestMove !== '(none)') return null
 
   try {
-    const chess = new Chess(fen)
+    const chess = history ? new Chess(history.initialFen) : new Chess(fen)
+    for (const uci of history?.moves ?? []) {
+      const match = /^([a-h][1-8])([a-h][1-8])([qrbn])?$/.exec(uci)
+      if (!match) return null
+      chess.move({ from: match[1], to: match[2], promotion: match[3] })
+    }
     if (!chess.isGameOver()) return null
     return {
       fen,
@@ -75,6 +84,13 @@ function terminalAnalysis(
   } catch {
     return null
   }
+}
+
+function positionCommand(fen: string, history?: AnalysisHistory): string {
+  if (!history) return `position fen ${fen}`
+  const moves =
+    history.moves.length > 0 ? ` moves ${history.moves.join(' ')}` : ''
+  return `position fen ${history.initialFen}${moves}`
 }
 
 export class StockfishClient {
@@ -179,7 +195,11 @@ export class StockfishClient {
     return this.initializePromise
   }
 
-  async analyze(fen: string, depth: number): Promise<PositionAnalysis> {
+  async analyze(
+    fen: string,
+    depth: number,
+    history?: AnalysisHistory,
+  ): Promise<PositionAnalysis> {
     if (!Number.isInteger(depth) || depth < 1) {
       throw new Error('Analysis depth must be a positive integer.')
     }
@@ -197,7 +217,7 @@ export class StockfishClient {
         const bestMove = parseBestMoveLine(line)
         if (!bestMove) return
 
-        const terminal = terminalAnalysis(fen, bestMove)
+        const terminal = terminalAnalysis(fen, bestMove, history)
         if (!output.info && terminal) {
           finish(null, terminal)
           return
@@ -237,7 +257,7 @@ export class StockfishClient {
 
       this.activeAnalysis = { reject, cleanup }
       this.lineListeners.add(onLine)
-      this.post(`position fen ${fen}`)
+      this.post(positionCommand(fen, history))
       this.post(`go depth ${depth}`)
     })
   }

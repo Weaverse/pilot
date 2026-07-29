@@ -58,6 +58,7 @@ The experience should feel native to the v4 Lab rather than copying Chess.com br
 - Use Stockfish 18 lite single-thread WASM through a dedicated Web Worker.
 - Load the engine only when analysis begins.
 - Use UCI commands and process positions sequentially.
+- Send the initial FEN plus the complete UCI move prefix for every position so Stockfish retains repetition history.
 - Analyze the initial position and every resulting position (`plies + 1` total).
 - Record depth, score, mate score, best move, and principal variation.
 - Normalize scores to White's point of view for the graph and to the mover's point of view for centipawn loss.
