@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { parsePgn } from '~/lib/lab/chess-review/pgn'
 import { buildGameReview } from '~/lib/lab/chess-review/review'
+import { ClassificationIcon } from './ClassificationIcon'
 import { EvaluationBar } from './EvaluationBar'
 import { GameSummary } from './GameSummary'
 import { MoveList } from './MoveList'
@@ -102,6 +103,31 @@ describe('chess review input UI', () => {
 })
 
 describe('chess review result UI', () => {
+  test('renders a decorative Hugeicon for every move classification', () => {
+    const classifications = [
+      'forced',
+      'best',
+      'excellent',
+      'good',
+      'inaccuracy',
+      'mistake',
+      'blunder',
+    ] as const
+    const html = renderToStaticMarkup(
+      classifications.map((classification) => (
+        <ClassificationIcon
+          key={classification}
+          classification={classification}
+        />
+      )),
+    )
+
+    expect(html.match(/<svg/g)).toHaveLength(classifications.length)
+    expect(html.match(/aria-hidden="true"/g)).toHaveLength(
+      classifications.length,
+    )
+  })
+
   test('opens the first move instead of the detected turning point', () => {
     const review = { ...reviewFixture(), turningPointPly: 3 }
     const workspace = renderToStaticMarkup(
@@ -146,9 +172,13 @@ describe('chess review result UI', () => {
     expect(moves).toContain('aria-current="step"')
     expect(moves).toContain('Move 1 white, e4, Best')
     expect(moves).toContain('bg-emerald-600 text-white')
+    expect(moves.match(/<svg/g)).toHaveLength(review.moves.length)
+    expect(moves).not.toContain('★')
     expect(coaching).toContain('Best move in the position')
     expect(coaching).toContain('White’s perspective')
     expect(coaching).toContain('bg-emerald-600 text-white')
+    expect(coaching.match(/<svg/g)).toHaveLength(1)
+    expect(coaching).not.toContain('★')
     expect(coaching.match(/aria-live=/g) ?? []).toHaveLength(0)
     expect(evaluation).toContain('<meter')
     expect(evaluation).toContain('Position evaluation +0.3')
@@ -195,11 +225,14 @@ describe('playground registration', () => {
       'src/components/studio/studio-shell/Sidebar.astro',
       'utf8',
     )
+    const hugeIcon = readFileSync('src/components/icons/HugeIcon.astro', 'utf8')
 
     expect(route).toContain('<ChessReview client:only="react" />')
     expect(route).toContain('active="/lab/chess-review"')
     expect(lab).toContain("href: '/lab/chess-review'")
     expect(sidebar).toContain('href="/lab/chess-review"')
     expect(sidebar).toContain('chess-review.tsx')
+    expect(sidebar).toContain('<HugeIcon name="chess-knight"')
+    expect(hugeIcon).toContain('ChessKnightIcon')
   })
 })

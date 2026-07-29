@@ -1,4 +1,5 @@
 import type { MoveReview, PositionAnalysis } from '~/lib/lab/chess-review/types'
+import { ClassificationIcon } from './ClassificationIcon'
 import { CLASSIFICATION_UI, formatEvaluation } from './ui'
 
 interface MoveReviewPanelProps {
@@ -52,7 +53,7 @@ export function MoveReviewPanel({ move, position }: MoveReviewPanelProps) {
         <span
           className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-mono text-[11px] font-bold ${presentation.badge}`}
         >
-          <span aria-hidden="true">{presentation.glyph}</span>
+          <ClassificationIcon classification={move.classification} size={15} />
           {presentation.label}
         </span>
       </div>

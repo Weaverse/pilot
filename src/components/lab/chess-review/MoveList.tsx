@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { MoveReview } from '~/lib/lab/chess-review/types'
+import { ClassificationIcon } from './ClassificationIcon'
 import { CLASSIFICATION_UI, isNotable } from './ui'
 
 interface MoveListProps {
@@ -102,10 +103,10 @@ export function MoveList({ moves, selectedPly, onSelect }: MoveListProps) {
                     </span>
                   </span>
                   <span
-                    className={`flex h-7 min-w-7 items-center justify-center rounded-md border px-1 font-mono text-[10px] font-bold ${presentation.badge}`}
+                    className={`flex h-7 min-w-7 items-center justify-center rounded-md border px-1 ${presentation.badge}`}
                     aria-hidden="true"
                   >
-                    {presentation.glyph}
+                    <ClassificationIcon classification={move.classification} />
                   </span>
                 </button>
               </li>

@@ -2,7 +2,6 @@ import type { MoveClassification } from '~/lib/lab/chess-review/types'
 
 interface ClassificationPresentation {
   label: string
-  glyph: string
   badge: string
   dot: string
 }
@@ -13,43 +12,36 @@ export const CLASSIFICATION_UI: Record<
 > = {
   forced: {
     label: 'Forced',
-    glyph: '=',
     badge: 'border-violet-600 bg-violet-600 text-white',
     dot: 'bg-violet-500',
   },
   best: {
     label: 'Best',
-    glyph: '★',
     badge: 'border-emerald-600 bg-emerald-600 text-white',
     dot: 'bg-emerald-500',
   },
   excellent: {
     label: 'Excellent',
-    glyph: '✓',
     badge: 'border-cyan-600 bg-cyan-600 text-white',
     dot: 'bg-cyan-500',
   },
   good: {
     label: 'Good',
-    glyph: '·',
     badge: 'border-teal-600 bg-teal-600 text-white',
     dot: 'bg-teal-500',
   },
   inaccuracy: {
     label: 'Inaccuracy',
-    glyph: '?!',
     badge: 'border-amber-600 bg-amber-600 text-white',
     dot: 'bg-amber-500',
   },
   mistake: {
     label: 'Mistake',
-    glyph: '?',
     badge: 'border-orange-600 bg-orange-600 text-white',
     dot: 'bg-orange-500',
   },
   blunder: {
     label: 'Blunder',
-    glyph: '??',
     badge: 'border-red-600 bg-red-600 text-white',
     dot: 'bg-red-500',
   },
