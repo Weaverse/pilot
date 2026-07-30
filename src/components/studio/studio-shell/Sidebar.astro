@@ -154,6 +154,19 @@ const isExternal = (href: string) => href.startsWith('http')
         <span>README.md</span>
       </a>
       <a
+        href="/lab/chess-review"
+        class:list={[
+          'explorer-row group py-1.5 font-mono text-[13px] no-underline',
+          currentPath.startsWith('/lab/chess-review')
+            ? 'bg-slate-200 text-slate-950'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950',
+        ]}
+      >
+        <span class="explorer-caret" aria-hidden="true" />
+        <HugeIcon name="chess-knight" class="explorer-icon text-slate-500" />
+        <span>chess-review.tsx</span>
+      </a>
+      <a
         href="/lab/travel-egypt"
         class:list={[
           'explorer-row group py-1.5 font-mono text-[13px] no-underline',

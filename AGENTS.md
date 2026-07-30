@@ -26,6 +26,7 @@ bun dev                # dev server on http://localhost:4321
 bun run build          # production build
 bun run preview        # preview the build (no Vercel Functions — see Stats note)
 bun run check          # astro check (also the typecheck script)
+bun run test           # run the Bun test suite
 ```
 
 Lint/format with Biome (config in `biome.json`; not a project dep — run via bunx):
