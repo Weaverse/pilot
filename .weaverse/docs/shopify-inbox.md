@@ -1,120 +1,60 @@
 # Shopify Inbox (Chat) Integration
 
-Pilot can render the [Shopify Inbox](https://apps.shopify.com/inbox) chat widget on every storefront page, giving shoppers real-time support without leaving the store.
+Pilot renders Shopify Inbox through Hydrogen's official `ShopifyScripts` integration and the `<shopify-chat>` web component.
 
-The widget is **opt-in**: it only renders when `PUBLIC_SHOPIFY_INBOX_SHOP_ID` is set, and degrades gracefully (renders nothing) otherwise.
+The integration degrades safely when the standard Shopify shop identity is incomplete. It does not require an Inbox-specific shop ID.
+
+> **Preview spike:** Hydrogen currently exposes this API only in its July 30, 2026 developer preview. Pilot keeps its stable Hydrogen runtime and installs the preview package as `@shopify/hydrogen-preview` solely to exercise the Inbox API. Replace the alias import with `@shopify/hydrogen/react` and remove the alias dependency when Shopify publishes a compatible stable release.
 
 ## How it works
 
-- [`app/utils/env.ts`](../../app/utils/env.ts) — `getPublicEnv()` filters the server `Env` down to its `PUBLIC_*` keys so private credentials are never sent to the browser.
-- [`app/root.tsx`](../../app/root.tsx) — the root `loader` returns `publicEnv: getPublicEnv(args.context.env)`, and the `Layout` renders `<ShopifyInbox>` when `publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID` is present.
-- [`app/components/shopify-inbox.tsx`](../../app/components/shopify-inbox.tsx) — injects the loader `<script>` on the client **after the window `load` event** (see [Why the loader is injected after `load`](#why-the-loader-is-injected-after-load)). The script loads from `cdn.shopify.com`, which the CSP already allow-lists by host, so no nonce is required.
+- [`app/.server/root.ts`](../../app/.server/root.ts) builds the Inbox shop identity from `SHOP_ID`, `PUBLIC_STOREFRONT_ID`, and `PUBLIC_STORE_DOMAIN`. It returns `null` if any value is missing.
+- [`app/root.tsx`](../../app/root.tsx) renders `<ShopifyInbox>` with the current locale and CSP nonce.
+- [`app/components/shopify-inbox.tsx`](../../app/components/shopify-inbox.tsx) renders `<ShopifyScripts inbox>` and `<shopify-chat>`, exposes the custom-trigger helper, and preserves reference-counted overlay visibility.
 
-### Global loader — no app-extension UUID required
+Hydrogen loads the official module from:
 
-The component injects the **store-agnostic** loader:
-
-```
-https://cdn.shopify.com/shopifycloud/shopify_chat/storefront/shopifyChatV1.js?...&shop_id=<id>&shop=<domain>
+```text
+https://cdn.shopify.com/storefront/web-components/agent.js
 ```
 
-This loader reads `shop_id`/`shop` from its own `<script>` tag and resolves the
-store's widget bundle (`.../storefront/shopifyChatV1Widget.js`) at runtime. It is
-the same tag a Liquid Online Store injects into its `<head>`.
-
-> **Do not** hardcode the theme-app-extension URL
-> (`cdn.shopify.com/extensions/<uuid>/inbox-<version>/assets/shopifyChatV1Widget.js`).
-> That path embeds a store-specific UUID and a pinned version (`inbox-1274`, …)
-> that change per store and per app update. The global loader above has no such
-> dependency.
-
-### Why the loader is injected after `load`
-
-Shopify's loader bootstraps with `window.onload = handler; window.onload()` — it
-**overwrites** `window.onload` and invokes it once immediately. The handler
-mounts an `about:blank` bubble iframe and writes the chat button into it.
-
-If the loader runs **before** the page's real `load` event (e.g. as an SSR
-`<script async>` or any script that executes during initial load), the browser
-fires that reassigned `window.onload` a **second** time on real `load`. The
-second invocation re-mounts the bubble iframe, which resets its document and
-**wipes the freshly written button** — leaving an empty `#shopify-chat-dummy`
-and no visible chat bubble.
-
-Injecting the loader only after `load` (when `document.readyState === "complete"`,
-otherwise on the one-shot `load` listener) keeps `window.onload` to a single
-invocation, so the button renders and persists.
-
-> **Do not** revert this to an SSR `<Script async>` / `defer` tag, or to
-> `waitForHydration` — hydration can finish before `load` on image-heavy pages,
-> which re-introduces the double-invocation and the empty button.
+The legacy `shopifyChatV1.js` loader, its query-string configuration, and `PUBLIC_SHOPIFY_INBOX_SHOP_ID` are no longer used.
 
 ## Setup
 
-### 1. Enable Shopify Inbox
-
-1. Install the [Shopify Inbox](https://apps.shopify.com/inbox) app in your Shopify admin.
-2. Enable the chat for the **Online Store** sales channel.
-
-### 2. Find your Inbox shop id
-
-1. Open the published Liquid theme preview for your store.
-2. Inspect the `<head>` and find the `shopifyChatV1.js` script tag.
-3. Copy the value of its `shop_id` query parameter.
-
-(See the [reference walkthrough](https://github.com/juanpprieto/hydrogen-chat-inbox?tab=readme-ov-file#1-find-your-shopify-inbox-shop-id) for screenshots.)
-
-### 3. Configure the environment variable
-
-Add the id to `.env`:
+1. Install [Shopify Inbox](https://apps.shopify.com/inbox) in Shopify admin.
+2. Enable the Agent feature.
+3. Disable **Require sign-in to chat with staff** so shoppers can move from the AI agent to staff without signing in.
+4. Configure Pilot's standard Shopify identity:
 
 ```env
-PUBLIC_SHOPIFY_INBOX_SHOP_ID=your-shopify-inbox-shop-id
+SHOP_ID=your-shop-id
+PUBLIC_STOREFRONT_ID=your-storefront-id
+PUBLIC_STORE_DOMAIN=your-store.myshopify.com
 ```
 
-`shop.domain` is sent as the Inbox `shop` parameter and uses `PUBLIC_STORE_DOMAIN` (your store's `*.myshopify.com` domain) — the same value Shopify's injected Inbox tag carries — so no additional variable is required.
+No Inbox-specific environment variable is needed.
 
-## Configuration options
+## Opening chat from a custom action
 
-By default the widget uses a black icon button anchored bottom-right. To customize it, pass a `button` prop to `<ShopifyInbox>` in [`app/root.tsx`](../../app/root.tsx):
-
-```tsx
-<ShopifyInbox
-  shop={{ domain: publicEnv.PUBLIC_STORE_DOMAIN, id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID }}
-  button={{ color: "#000000", style: "icon", position: "bottom_right", verticalPosition: "lowest", text: "chat_with_us", icon: "chat_bubble" }}
-/>
-```
-
-| Option | Default | Values |
-| --- | --- | --- |
-| `color` | `#000000` | Any hex color (e.g. `#202a36`) |
-| `style` | `icon` | `icon`, `text` |
-| `position` | `bottom_right` | `bottom_left`, `bottom_right` |
-| `verticalPosition` | `lowest` | `lowest`, `higher`, `highest` |
-| `text` | `chat_with_us` | `chat_with_us`, `assistance`, `contact`, `help`, `support`, `live_chat`, `message_us`, `need_help`, `no_text` |
-| `icon` | `chat_bubble` | `chat_bubble`, `agent`, `speech_bubble`, `text_message`, `email`, `hand_wave`, `lifebuoy`, `paper_plane`, `service_bell`, `smiley_face`, `question_mark`, `team`, `no_icon` |
-
-## Opening the chat from a button
-
-Pilot ships a **Contact us** Weaverse section ([`app/sections/contact-us/`](../../app/sections/contact-us)) whose **Message us button** child opens the Inbox widget on click. Add it to any page in Weaverse Studio — it needs no configuration beyond `PUBLIC_SHOPIFY_INBOX_SHOP_ID`.
-
-To open the chat from your own component, import the helper:
+Pilot's **Contact us** section includes a **Message us** child action. It calls `openShopifyInbox()`, which uses the public `<shopify-chat>` API instead of Shopify's internal iframe or Shadow DOM selectors.
 
 ```tsx
 import { openShopifyInbox } from "~/components/shopify-inbox";
 
 <button type="button" onClick={openShopifyInbox}>
   Message us
-</button>;
+</button>
 ```
 
-`openShopifyInbox()` opens the widget whatever state it is in: it clicks the loader's placeholder bubble (`#dummy-chat-button`, inside the same-origin `#dummy-chat-button-iframe`) for first-time visitors, or the `[data-spec="toggle-button"]` launcher inside the `<inbox-online-store-chat>` web component's shadow root once the full widget has loaded (skipping the click when the chat is already open, since that launcher toggles). It returns `true` when a launcher was found and clicked or the chat is already open, `false` otherwise (the widget has not rendered yet, or Inbox is not configured). These selectors are **Shopify-internal and undocumented** — they can change when Shopify updates the chat widget.
+The helper calls `shopify-chat.show()` and returns:
 
-## Hiding the chat during overlays
+- `true` when chat is already open or was opened successfully;
+- `false` when the component or its module has not loaded yet.
 
-Drawers, popups, and modals should hide Shopify Inbox so its floating launcher
-or open chat panel cannot cover storefront content. For Radix dialogs, render
-`ShopifyInboxOverlayGuard` inside `Dialog.Content`:
+## Hiding chat during overlays
+
+Drawers, dialogs, and popups should hide Shopify Inbox so the launcher or open panel cannot cover storefront content. For Radix dialogs, render `ShopifyInboxOverlayGuard` inside `Dialog.Content`:
 
 ```tsx
 import * as Dialog from "@radix-ui/react-dialog";
@@ -123,17 +63,12 @@ import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 <Dialog.Content>
   <ShopifyInboxOverlayGuard />
   {/* Dialog content */}
-</Dialog.Content>;
+</Dialog.Content>
 ```
 
-The guard renders no DOM. It hides Inbox when the dialog content mounts and
-shows it again after the content unmounts, including after Radix's closing
-animation. Visibility requests are reference-counted, so closing one of several
-nested or overlapping dialogs does not reveal Inbox while another remains open.
+The guard renders no DOM. Visibility requests are reference-counted, so closing one of several nested or overlapping overlays does not reveal chat while another remains open. Global CSS hides the `<shopify-chat>` host and applies even if the component upgrades after the overlay opens.
 
-For an overlay that stays mounted and controls visibility with state (for
-example, a `forceMount` portal), use the imperative helper and return its
-cleanup function from an effect:
+For an overlay that remains mounted, use the imperative helper:
 
 ```tsx
 import { useEffect } from "react";
@@ -146,32 +81,38 @@ useEffect(() => {
 }, [open]);
 ```
 
-The helper is safe when Inbox is not configured or has not mounted yet. It sets
-`data-shopify-inbox-hidden` on the document root; global CSS hides both the
-loader's placeholder iframe and the loaded `#shopify-chat` wrapper. A
-`visibility: hidden` fallback targets `<inbox-online-store-chat>` directly
-because Shopify's shadow stylesheet forces `:host { display: block !important; }`,
-which light-DOM `display` rules cannot override. Because the selectors are
-state-based, a widget injected after an overlay opens is hidden immediately
-without polling or a mutation observer. Hiding the loaded widget also
-temporarily hides an already-open chat panel while preserving its internal state
-for when the overlay closes.
+## Analytics, consent, and locale
 
-## Limitations
+The preview `ShopifyScripts` package is a new framework-agnostic architecture and cannot replace Pilot's current stable Hydrogen package directly. This spike therefore:
 
-- **Localhost:** Shopify's bot protection blocks the widget on `localhost`. The loader `<script>` is still injected (after `load`), but the chat UI will not initialize. Verify on a deployed (staging/production) domain.
-- **No programmatic send or pre-fill:** there is no supported API to send or pre-fill a message from the storefront. The chat composer runs in a Shopify-hosted, cross-origin frame, and the real send path is an internal, session-bound `postMessage` the widget mints after its own identity/bot checks. Opening the widget (`openShopifyInbox()`) is the only durable programmatic action.
+- keeps Pilot's existing `Analytics.Provider`;
+- passes `shopifyAnalytics={false}` to the preview component to avoid loading the new Shopify analytics destination;
+- uses `consent={{mode: "no-banner"}}` while Pilot's stable analytics integration continues to own its existing privacy-banner behavior;
+- passes the current country and language to the Shopify bootstrap.
+
+This compatibility bridge must be removed when Pilot migrates fully to the stable API. Re-test analytics events, consent changes, and locale navigation during that migration.
 
 ## Content Security Policy
 
-No CSP changes are required for the default setup:
+Pilot passes Hydrogen's CSP nonce to `ShopifyScripts`. The Inbox module loads from `cdn.shopify.com`, which is already allowed by Pilot's Shopify CSP configuration.
 
-- Pilot ships CSP in **report-only** mode (`app/entry.server.tsx`), so violations are logged but never block.
-- The script loads from `cdn.shopify.com`, already allow-listed in `scriptSrc` (`app/weaverse/csp.ts`).
-- The widget's iframe/network calls target `*.shopify.com` / `*.myshopify.com`, already covered by `defaultSrc`/`connectSrc`.
+Verify the deployed response and browser console before enabling an enforcing CSP header. Pilot currently reports CSP violations without blocking them.
 
-If you switch to an enforcing `Content-Security-Policy` header, keep those Shopify domains allow-listed.
+## Verification
 
-## Security
+Local tests can verify rendering, types, overlay state, and the public custom-trigger contract. Shopify may block or limit the full Inbox runtime on localhost, so complete verification requires a deployed domain.
 
-Only `PUBLIC_*` environment variables reach the client. `getPublicEnv()` strips everything else (e.g. `SESSION_SECRET`, `*_PRIVATE_API_TOKEN`) before the loader serializes data to the browser.
+On desktop and mobile, verify:
+
+- initial page load and client-side navigation;
+- locale changes;
+- custom **Message us** action;
+- cart drawer, filters, newsletter popup, and overlapping dialogs;
+- CSP and console output;
+- AI-agent conversation and staff handoff with sign-in disabled.
+
+## Current preview limitations
+
+- A direct upgrade from stable `@shopify/hydrogen@2026.4.x` to the July 30 preview breaks Pilot because the preview no longer provides Hydrogen's React Router runtime exports, including `@shopify/hydrogen/react-router-types`.
+- In Pilot's React 19 production preview, SSR emits one of each `ShopifyScripts` tag, but hydration leaves two DOM scripts for every generated ID (`shopify-inbox`, consent, analytics bus, and related bootstrap scripts). The module registers `<shopify-chat>` successfully, but this duplicate bootstrap must be resolved upstream or during the stable migration before production rollout.
+- The preview package types register `<shopify-chat>` as an intrinsic element but do not type its `show()`, `close()`, or `open` members. The shipped `agent.js` runtime exposes those members; this spike supplies a local interface until Shopify publishes complete web-component types and stable migration guidance.
