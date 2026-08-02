@@ -38,7 +38,6 @@ import { NotFound } from "./components/root/not-found";
 import { ShopifyInbox } from "./components/shopify-inbox";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
-import { getPublicEnv } from "./utils/env";
 import { cdnSize } from "./utils/pwa";
 import { GlobalStyle } from "./weaverse/style";
 
@@ -72,7 +71,6 @@ export async function loader(args: LoaderFunctionArgs) {
   return {
     ...deferredData,
     ...criticalData,
-    publicEnv: getPublicEnv(args.context.env),
   };
 }
 
@@ -115,8 +113,8 @@ export const Layout = withWeaverse(function RootLayout({
   const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
-  const publicEnv = data?.publicEnv;
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  const shopifyInboxShop = data?.shopifyInboxShop;
   const { topbarHeight, topbarText, pwaEnabled, pwaIcon, pwaThemeColor } =
     useThemeSettings<ThemeSettings>();
   // App icon for iOS Add to Home Screen (iOS ignores manifest icons).
@@ -255,12 +253,14 @@ export const Layout = withWeaverse(function RootLayout({
         <GlobalLoading />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        {publicEnv?.PUBLIC_SHOPIFY_INBOX_SHOP_ID && (
+        {shopifyInboxShop && (
           <ShopifyInbox
-            shop={{
-              domain: publicEnv.PUBLIC_STORE_DOMAIN,
-              id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID,
+            i18n={{
+              country: locale.country,
+              language: locale.language,
             }}
+            nonce={nonce}
+            shop={shopifyInboxShop}
           />
         )}
       </body>

@@ -41,9 +41,23 @@ export async function loadCriticalData({
       language: storefront.i18n.language,
     },
     selectedLocale: storefront.i18n,
+    shopifyInboxShop: getShopifyInboxShop(env),
     weaverseTheme,
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
+  };
+}
+
+function getShopifyInboxShop(env: Env) {
+  const { SHOP_ID, PUBLIC_STOREFRONT_ID, PUBLIC_STORE_DOMAIN } = env;
+  if (!(SHOP_ID && PUBLIC_STOREFRONT_ID && PUBLIC_STORE_DOMAIN)) {
+    return null;
+  }
+
+  return {
+    shopId: SHOP_ID,
+    storefrontId: PUBLIC_STOREFRONT_ID,
+    myshopifyDomain: PUBLIC_STORE_DOMAIN,
   };
 }
 

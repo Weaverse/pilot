@@ -66,6 +66,7 @@
     "@radix-ui/react-visually-hidden": "1.2.11",
     "@react-router/dev": "7.16.0",
     "@shopify/hydrogen": "^2026.4.4",
+    "@shopify/hydrogen-preview": "npm:@shopify/hydrogen@0.0.0-preview-116d5d7-20260730141607",
     "@tailwindcss/vite": "^4.3.3",
     "@weaverse/hydrogen": "^5.19.2",
     "class-variance-authority": "0.7.1",
