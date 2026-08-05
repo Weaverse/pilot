@@ -11,7 +11,7 @@ const ONE_DAY = ONE_HOUR * 24;
 function calculateRemainingTime(endTime: number) {
   const now = Date.now();
   const diff = endTime - now;
-  if (diff <= 0) {
+  if (!Number.isFinite(diff) || diff <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   }
   return {
@@ -24,11 +24,20 @@ function calculateRemainingTime(endTime: number) {
 
 interface CountDownTimerData {
   textColor: string;
-  endTime: number;
+  endTime?: number;
 }
 
 function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
-  const { textColor, endTime, ...rest } = props;
+  const { textColor, endTime: configuredEndTime, ...rest } = props;
+  // The schema cannot carry a "tomorrow" default: a time-based default value is
+  // recomputed on every module load, which makes the generated component
+  // manifest non-deterministic and its drift check unusable. An unconfigured
+  // timer instead falls back to one day from mount, held stable for the
+  // component's lifetime.
+  const [fallbackEndTime] = useState(() => Date.now() + ONE_DAY);
+  const endTime = Number.isFinite(configuredEndTime)
+    ? (configuredEndTime as number)
+    : fallbackEndTime;
   const [remainingTime, setRemainingTime] = useState(
     calculateRemainingTime(endTime),
   );
@@ -105,9 +114,6 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
 
 export default CountdownTimer;
 
-const tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
-
 export const schema = createSchema({
   type: "countdown--timer",
   title: "Timer",
@@ -119,7 +125,7 @@ export const schema = createSchema({
           type: "datepicker",
           label: "End time",
           name: "endTime",
-          defaultValue: tomorrow.getTime(),
+          helpText: "Defaults to one day from now until a date is chosen.",
         },
         {
           type: "color",
