@@ -10,6 +10,7 @@ import type { CartLayoutType } from "~/types/others";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
 import { CartSummary } from "./cart-summary";
+import { getCartLineRenderKeys } from "./optimistic-cart";
 
 function CartEmpty({
   hidden = false,
@@ -81,6 +82,8 @@ export function CartMain({
   const { y } = useScroll(scrollRef);
   const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
   const cartHasItems = Boolean(cart) && cart.totalQuantity > 0;
+  const lines = cart?.lines?.nodes ?? [];
+  const lineRenderKeys = getCartLineRenderKeys(lines);
 
   return (
     <>
@@ -116,8 +119,12 @@ export function CartMain({
                 layout === "drawer" && "gap-5",
               )}
             >
-              {(cart?.lines?.nodes ?? []).map((line) => (
-                <CartLineItem key={line.id} line={line} layout={layout} />
+              {lines.map((line, index) => (
+                <CartLineItem
+                  key={lineRenderKeys[index]}
+                  line={line}
+                  layout={layout}
+                />
               ))}
             </ul>
           </ScrollArea>

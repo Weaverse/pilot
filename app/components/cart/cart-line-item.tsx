@@ -17,7 +17,8 @@ import type { CartLayoutType } from "~/types/others";
 import { lineDiscountTotal, toMoney } from "~/utils/cart";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
-import { useCartFetcherSync, useCartStore } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
+import { useCartStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
@@ -93,7 +94,11 @@ export function CartLineItem({
             )}
           </div>
           {layout === "drawer" && (
-            <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
+            <ItemRemoveButton
+              lineId={id}
+              className="-mt-1.5 -mr-2"
+              disabled={isOptimistic}
+            />
           )}
         </div>
         <div
@@ -103,7 +108,9 @@ export function CartLineItem({
           )}
         >
           <CartLineQuantityAdjust line={line} />
-          {layout === "page" && <ItemRemoveButton lineId={id} />}
+          {layout === "page" && (
+            <ItemRemoveButton lineId={id} disabled={isOptimistic} />
+          )}
           <CartLinePrice line={line} isOptimistic={isOptimistic} />
         </div>
       </div>
@@ -114,9 +121,11 @@ export function CartLineItem({
 function ItemRemoveButton({
   lineId,
   className,
+  disabled = false,
 }: {
   lineId: CartLine["id"];
   className?: string;
+  disabled?: boolean;
 }) {
   const cartRoute = usePrefixPathWithLocale("/cart");
 
@@ -128,7 +137,11 @@ function ItemRemoveButton({
       fetcherKey="cart-line-remove"
     >
       {(fetcher: FetcherWithComponents<any>) => (
-        <ItemRemoveButtonInner fetcher={fetcher} className={className} />
+        <ItemRemoveButtonInner
+          fetcher={fetcher}
+          className={className}
+          disabled={disabled}
+        />
       )}
     </CartForm>
   );
@@ -137,18 +150,21 @@ function ItemRemoveButton({
 function ItemRemoveButtonInner({
   fetcher,
   className,
+  disabled,
 }: {
   fetcher: FetcherWithComponents<any>;
   className?: string;
+  disabled: boolean;
 }) {
   useCartFetcherSync(fetcher);
   return (
     <button
       className={clsx(
-        "flex h-8 w-8 items-center justify-center border-none",
+        "flex h-8 w-8 items-center justify-center border-none disabled:cursor-not-allowed disabled:text-body-subtle",
         className,
       )}
       type="submit"
+      disabled={disabled}
     >
       <span className="sr-only">Remove</span>
       <Icon name="trash" aria-hidden="true" className="size-4.5" />

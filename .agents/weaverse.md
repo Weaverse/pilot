@@ -57,7 +57,9 @@ default absent — see `app/sections/countdown/timer.tsx`.
 
 ## Sensitivity
 
-Any setting holding a credential, token, or server-only value must be marked:
+Any *component* setting holding a credential, token, or server-only value must
+be marked. Theme settings in `app/weaverse/settings/` do not enter the manifest
+and are not covered by the audit, so never put a credential there.
 
 ```ts
 {
@@ -87,15 +89,14 @@ Fails on:
 - duplicate component types
 - a setting whose name looks like a credential but lacks `sensitive: true`
 - a sensitive setting that declares a `defaultValue`
-- any secret-shaped value that reached presets or examples
+- any secret-shaped value that reached settings, presets, or examples
 
 **The heuristic is not the security boundary.** Name matching only catches what
 a human forgot to classify. `sensitive: true` is what actually protects a value.
 Never assume a setting is safe because the audit passed.
 
-If the audit flags a setting that genuinely holds no credential, add it to
-`REVIEWED_SAFE` in `other/audit-weaverse-settings.mjs` **with a written
-justification**. If that list starts growing, tighten the pattern instead.
+If the audit flags a setting that genuinely holds no credential, rename it. The
+pattern is deliberately narrow, so a match usually means the name is misleading.
 
 ## Registering components
 

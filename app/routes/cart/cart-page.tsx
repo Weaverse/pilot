@@ -19,15 +19,17 @@ import {
   useLoaderData,
 } from "react-router";
 import invariant from "tiny-invariant";
+import { getCurrentCartBootstrapRequestToken } from "~/components/cart/cart-baseline";
 import { CartMain } from "~/components/cart/cart-main";
-import {
-  getCurrentCartBootstrapRequestToken,
-  useCart,
-  useCartStore,
-} from "~/components/cart/store";
+import { useCart, useCartStore } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import {
+  getInvalidCartNoteResult,
+  isCartNoteInput,
+  updateCartNote,
+} from "~/utils/cart-note";
 import { COUNTRIES, getLocalePrefixFromPath } from "~/utils/const";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
@@ -84,11 +86,12 @@ export async function action({ request, context }: ActionFunctionArgs) {
       break;
     }
     case CartForm.ACTIONS.NoteUpdate: {
-      const cartOptions = await syncCartBuyerIdentityToLocale();
-      const cartNote = inputs.cartNote as string;
-      if (cartNote) {
-        result = await cart.updateNote(cartNote, cartOptions);
+      const cartNote = inputs.cartNote;
+      if (!isCartNoteInput(cartNote)) {
+        return data(getInvalidCartNoteResult(), { status: 400 });
       }
+      const cartOptions = await syncCartBuyerIdentityToLocale();
+      result = await updateCartNote(cart, cartNote, cartOptions);
       break;
     }
     case CartForm.ACTIONS.DiscountCodesUpdate: {

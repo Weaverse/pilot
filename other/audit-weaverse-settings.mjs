@@ -26,19 +26,6 @@ const SUSPICIOUS_NAME =
   /(api[_-]?key|secret|token|password|passwd|credential|private[_-]?key|access[_-]?key|auth[_-]?(token|key|secret|header)|authorization|signature|webhook)/i;
 
 /**
- * Reviewed exceptions to the name heuristic.
- *
- * Each entry must record why the setting is safe. Keep this list short; if it
- * grows, the heuristic needs tightening rather than more exceptions.
- */
-const REVIEWED_SAFE = new Map([
-  [
-    "popularSearchKeywords",
-    "Merchant-authored search terms shown in the search UI. 'Keywords' matches the 'key' pattern but carries no credential.",
-  ],
-]);
-
-/**
  * Values that must never appear in a committed manifest, regardless of name.
  */
 function looksLikeSecretValue(value) {
@@ -98,12 +85,9 @@ function auditUnclassifiedSettings(manifest, failures) {
         if (input.sensitive === true) {
           continue;
         }
-        if (REVIEWED_SAFE.has(input.name)) {
-          continue;
-        }
         failures.push(
           `Setting "${input.name}" on component "${component.type}" looks like a credential but is not marked \`sensitive: true\`.\n` +
-            "  Mark it sensitive, or add it to REVIEWED_SAFE in other/audit-weaverse-settings.mjs with a justification.",
+            "  Mark it sensitive, or rename it if it holds no credential.",
         );
       }
     }
@@ -115,6 +99,10 @@ function auditLeakedValues(manifest, failures) {
     const surfaces = {
       presets: component.presets,
       examples: component.examples,
+      // `defaultValue` lives here, so this is the largest surface a hardcoded
+      // credential can reach. The name heuristic above misses a benign name
+      // like `apiEndpoint`; this catches it by value shape instead.
+      settings: component.settings,
     };
     for (const [surface, value] of Object.entries(surfaces)) {
       if (value === undefined) {

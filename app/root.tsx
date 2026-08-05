@@ -20,7 +20,8 @@ import {
 } from "react-router";
 import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
-import { CartStoreSync, useCartStore } from "./components/cart/store";
+import { CartStoreSync } from "./components/cart/cart-sync";
+import { useCartStore } from "./components/cart/store";
 import { IconSprite } from "./components/icon-sprite";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";

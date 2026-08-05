@@ -59,3 +59,12 @@
   (accurate with cart-level discounts/taxes — no client-side cost math).
 - Verified manually: removing a non-last item updates the total correctly in
   both drawer and page; rapid multi-remove converges.
+
+## 2026-07-26 — Module split
+
+The cart pipeline remained behaviorally sound but `store.ts` had grown to 800
+lines after bootstrap, account-token, and instant-add follow-ups. Split state,
+optimistic transforms, authoritative baseline state, and React Router sync into
+focused modules under `app/components/cart/`. Removed a write-only Zustand
+bootstrap request token and replaced the per-navigation epoch map with one
+current-request snapshot.

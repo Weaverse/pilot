@@ -65,7 +65,10 @@ async function main() {
     }
     if (committed !== json) {
       console.error(`${relativePath} is out of date.`);
-      console.error("Component schemas changed without regenerating it.");
+      console.error(
+        "A component schema, the registry, or the theme version changed",
+      );
+      console.error("without regenerating it.");
       console.error("Run: npm run weaverse:manifest");
       process.exitCode = 1;
       return;

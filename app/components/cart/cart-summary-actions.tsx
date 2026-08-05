@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm } from "@shopify/hydrogen";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
@@ -8,38 +8,51 @@ import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { getSuccessfulCartNote } from "~/utils/cart-note";
 import { cn } from "~/utils/cn";
-import { useCartFetcherSync } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);
   const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
+  const lastProcessedData = useRef(fetcher.data);
   useCartFetcherSync(fetcher);
   const cartRoute = usePrefixPathWithLocale("/cart");
 
   useEffect(() => {
-    if (fetcher.state === "idle" && fetcher.data) {
-      setSubmitted(true);
+    if (
+      fetcher.state !== "idle" ||
+      !fetcher.data ||
+      fetcher.data === lastProcessedData.current
+    ) {
+      return;
     }
-  }, [fetcher]);
+    lastProcessedData.current = fetcher.data;
+    const updatedNote = getSuccessfulCartNote(fetcher.data);
+    if (updatedNote === undefined) {
+      setSubmitted(false);
+      return;
+    }
+    setNote(updatedNote);
+    setSubmitted(true);
+  }, [fetcher.data, fetcher.state]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formCartNote = formData.get("cartNote") as string;
-    if (formCartNote) {
-      fetcher.submit(
-        {
-          [CartForm.INPUT_NAME]: JSON.stringify({
-            action: CartForm.ACTIONS.NoteUpdate,
-            inputs: { cartNote: formCartNote },
-          }),
-        },
-        { method: "POST", action: cartRoute },
-      );
-      setNote(formCartNote);
-    }
+    setSubmitted(false);
+    fetcher.submit(
+      {
+        [CartForm.INPUT_NAME]: JSON.stringify({
+          action: CartForm.ACTIONS.NoteUpdate,
+          inputs: { cartNote: formCartNote },
+        }),
+      },
+      { method: "POST", action: cartRoute },
+    );
+    setNote(formCartNote);
   }
 
   return (

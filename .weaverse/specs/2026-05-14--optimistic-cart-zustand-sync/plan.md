@@ -15,7 +15,7 @@ zustand, `@shopify/hydrogen` (`CartForm` only — `useOptimisticCart` removed).
 
 ## Architecture
 
-A custom cart pipeline in `app/components/cart/store.ts` replaces
+A custom cart pipeline in `app/components/cart/` replaces
 `useOptimisticCart`. Every cart consumer now reads from a single `useCart()`
 hook instead of subscribing to the deferred root-loader promise directly.
 
@@ -25,7 +25,7 @@ root loader (deferred cart.get())
         ▼
   <CartStoreSync/>  ──(updatedAt gate)──►  zustand: serverCart
                                                   │
- fetcher responses ──► useCartFetcherSync ───────►│  (+ freshestFetcherCartRef)
+ fetcher responses ──► useCartFetcherSync ───────►│  (+ cart-baseline cache)
                                                   ▼
                                     useCart()  ── picks freshest baseline
                                                   ── filters removedLineIds
@@ -34,33 +34,36 @@ root loader (deferred cart.get())
               CartDrawer badge/title · CartMain · CartRoute · CartSummary
 ```
 
-### Core pieces (`store.ts`)
+### Core pieces
 
 - **`useCartStore`** (zustand) — renamed from `useCartDrawerStore`. Adds
   `serverCart: CartApiQueryFragment | null` alongside the existing
   `isOpen`/`open`/`close`/`toggle` drawer state.
-- **`freshestFetcherCartRef`** — module-level ref holding the freshest
+- **`cart-baseline.ts`** — holds the freshest
   fetcher-sourced cart + its `updatedAt`. Survives React Router's synchronous
-  fetcher cleanup.
-- **`removedLineIds`** — module-level `Set<string>` of optimistically removed
+  fetcher cleanup and owns bootstrap request/epoch race guards.
+- **`optimistic-cart.ts`** — owns the `Set<string>` of optimistically removed
   line IDs. Filtered from the baseline until the server cart confirms the lines
   are gone. Needed because RR deletes fetchers from unmounted remove buttons
   before their response is visible via `useFetchers()`.
-- **`applyOptimisticMutations(baseline, fetchers)`** — applies **only pending**
+- **`optimistic-cart.ts` / `applyOptimisticMutations(baseline, fetchers)`** —
+  applies **only pending**
   (`state === "submitting"` with `formData`) fetchers. This is the key fix for
   double-counting: idle fetchers are never re-applied. Handles
   `LinesAdd` (merge into existing line or unshift synthetic
   `optimistic-<uuid>` line), `LinesRemove` (splice + tombstone), `LinesUpdate`
   (set qty, splice on 0). Recomputes `totalQuantity`; sets `isOptimistic`.
-- **`useCartFetcherSync(fetcher)`** — syncs a *singular* fetcher's cart into
+- **`cart-sync.ts` / `useCartFetcherSync(fetcher)`** — syncs a *singular*
+  fetcher's cart into
   zustand **during render** (via `queueMicrotask` to avoid setState-in-render
   warnings), gated by `updatedAt` so older data never clobbers newer. Singular
   `useFetcher().data` survives cleanup where plural `useFetchers()` does not.
-- **`useCart()`** — single source of truth. Picks the freshest baseline across
-  zustand `serverCart`, `freshestFetcherCartRef`, and a same-render scan of
-  idle `useFetchers()`; filters tombstoned `removedLineIds` (clearing confirmed
-  removals); then overlays pending optimistic mutations.
-- **`CartStoreSync()`** — component mounted in `root.tsx`. Resolves the deferred
+- **`store.ts` / `useCart()`** — single source of truth. Picks the freshest
+  baseline across zustand `serverCart`, the cart-baseline cache, and a
+  same-render scan of idle `useFetchers()`; filters tombstoned `removedLineIds`
+  (clearing confirmed removals); then overlays pending optimistic mutations.
+- **`cart-sync.ts` / `CartStoreSync()`** — component mounted in `root.tsx`.
+  Resolves the deferred
   root-loader cart promise and writes it to `serverCart` **only if** its
   `updatedAt` is `>=` the current one — skipping the stale-overwrite flaw.
 
@@ -89,7 +92,10 @@ root loader (deferred cart.get())
 
 | File | Change |
 |------|--------|
-| `app/components/cart/store.ts` | New custom cart sync (zustand + render-time fetcher sync, tombstones, optimistic mutations) — core of the change |
+| `app/components/cart/store.ts` | Zustand state, selectors, and composed `useCart()` hook |
+| `app/components/cart/optimistic-cart.ts` | Optimistic transforms and removal tombstones |
+| `app/components/cart/cart-baseline.ts` | Authoritative baseline and bootstrap race registry |
+| `app/components/cart/cart-sync.ts` | Fetcher capture and client bootstrap effects |
 | `app/graphql/fragments.ts` | `$numCartLines` → hardcoded `250` in `CART_MUTATION_FRAGMENT` |
 | `app/.server/context.ts` | Cart handler uses `CART_MUTATION_FRAGMENT` |
 | `app/root.tsx` | Mounts `<CartStoreSync />` |

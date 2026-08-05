@@ -2,8 +2,8 @@
   "version": 1,
   "source": {
     "name": "@weaverse/pilot",
-    "revision": "v2026.7.22",
-    "version": "2026.7.22"
+    "revision": "v2026.7.28",
+    "version": "2026.7.28"
   },
   "components": [
     {
@@ -14,7 +14,8 @@
         "heading",
         "paragraph",
         "ap--toolbar",
-        "ap--product-grid"
+        "ap--product-grid",
+        "spacer"
       ],
       "limit": 1,
       "availability": {
@@ -584,7 +585,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "collections-items"
+        "collections-items",
+        "spacer"
       ],
       "limit": 1,
       "availability": {
@@ -968,7 +970,8 @@
         "columns-with-images--items",
         "subheading",
         "heading",
-        "paragraph"
+        "paragraph",
+        "spacer"
       ],
       "settings": [
         {
@@ -1166,7 +1169,8 @@
       "title": "Items",
       "hasLoader": false,
       "childTypes": [
-        "column-with-image--item"
+        "column-with-image--item",
+        "spacer"
       ],
       "settings": [
         {
@@ -1212,7 +1216,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "message-us-button"
+        "message-us-button",
+        "spacer"
       ],
       "settings": [
         {
@@ -1421,7 +1426,8 @@
         "heading",
         "subheading",
         "countdown--timer",
-        "button"
+        "button",
+        "spacer"
       ],
       "settings": [
         {
@@ -1693,7 +1699,8 @@
         "featured-collections-items",
         "heading",
         "subheading",
-        "paragraph"
+        "paragraph",
+        "spacer"
       ],
       "settings": [
         {
@@ -2040,7 +2047,8 @@
         "featured-products-items",
         "heading",
         "subheading",
-        "paragraph"
+        "paragraph",
+        "spacer"
       ],
       "settings": [
         {
@@ -2543,7 +2551,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "button"
+        "button",
+        "spacer"
       ],
       "settings": [
         {
@@ -2766,7 +2775,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "button"
+        "button",
+        "spacer"
       ],
       "settings": [
         {
@@ -2995,7 +3005,8 @@
       "title": "Hotspots",
       "hasLoader": false,
       "childTypes": [
-        "hotspots--item"
+        "hotspots--item",
+        "spacer"
       ],
       "settings": [
         {
@@ -3588,7 +3599,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "image-gallery--items"
+        "image-gallery--items",
+        "spacer"
       ],
       "settings": [
         {
@@ -3824,7 +3836,8 @@
       "title": "Images",
       "hasLoader": false,
       "childTypes": [
-        "image-gallery--item"
+        "image-gallery--item",
+        "spacer"
       ],
       "settings": [
         {
@@ -3898,7 +3911,8 @@
       "hasLoader": false,
       "childTypes": [
         "image-with-text--content",
-        "image-with-text--image"
+        "image-with-text--image",
+        "spacer"
       ],
       "settings": [
         {
@@ -4046,7 +4060,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "button"
+        "button",
+        "spacer"
       ],
       "limit": 1,
       "settings": [
@@ -4203,7 +4218,8 @@
         "heading",
         "paragraph",
         "judgeme-reviews--summary",
-        "judgeme-reviews--list"
+        "judgeme-reviews--list",
+        "spacer"
       ],
       "availability": {
         "pages": [
@@ -4507,7 +4523,8 @@
       "childTypes": [
         "mc--header",
         "mc--toolbar",
-        "mc--content"
+        "mc--content",
+        "spacer"
       ],
       "limit": 1,
       "availability": {
@@ -4591,7 +4608,8 @@
       "hasLoader": false,
       "childTypes": [
         "mp--media",
-        "mp--info"
+        "mp--info",
+        "spacer"
       ],
       "limit": 1,
       "availability": {
@@ -4873,7 +4891,8 @@
       "hasLoader": false,
       "childTypes": [
         "mc--filters",
-        "mc--product-grid"
+        "mc--product-grid",
+        "spacer"
       ],
       "presets": {
         "children": [
@@ -5608,7 +5627,8 @@
       "title": "Product highlights",
       "hasLoader": false,
       "childTypes": [
-        "mp--highlight-item"
+        "mp--highlight-item",
+        "spacer"
       ],
       "availability": {
         "pages": [
@@ -5684,7 +5704,8 @@
         "mp--atc-buttons",
         "mp--estimated-delivery",
         "mp--highlights",
-        "mp--collapsible-details"
+        "mp--collapsible-details",
+        "spacer"
       ],
       "limit": 1,
       "availability": {
@@ -5744,7 +5765,8 @@
       "title": "Product Media",
       "hasLoader": false,
       "childTypes": [
-        "mp--badges"
+        "mp--badges",
+        "spacer"
       ],
       "limit": 1,
       "availability": {
@@ -6182,7 +6204,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "newsletter-form"
+        "newsletter-form",
+        "spacer"
       ],
       "settings": [
         {
@@ -6437,7 +6460,8 @@
       "childTypes": [
         "heading",
         "paragraph",
-        "our-team-members"
+        "our-team-members",
+        "spacer"
       ],
       "settings": [
         {
@@ -6781,7 +6805,8 @@
       "title": "Promotion grid",
       "hasLoader": false,
       "childTypes": [
-        "promotion-grid-item"
+        "promotion-grid-item",
+        "spacer"
       ],
       "settings": [
         {
@@ -7057,7 +7082,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "promotion-item--buttons"
+        "promotion-item--buttons",
+        "spacer"
       ],
       "settings": [
         {
@@ -7156,7 +7182,8 @@
       "title": "Buttons",
       "hasLoader": false,
       "childTypes": [
-        "button"
+        "button",
+        "spacer"
       ],
       "settings": [
         {
@@ -7331,7 +7358,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "related-products--items"
+        "related-products--items",
+        "spacer"
       ],
       "limit": 1,
       "availability": {
@@ -7565,7 +7593,8 @@
       "title": "Slideshow",
       "hasLoader": false,
       "childTypes": [
-        "slideshow-slide"
+        "slideshow-slide",
+        "spacer"
       ],
       "settings": [
         {
@@ -7965,7 +7994,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "button"
+        "button",
+        "spacer"
       ],
       "settings": [
         {
@@ -8171,6 +8201,11 @@
       "type": "spacer",
       "title": "Spacer",
       "hasLoader": false,
+      "availability": {
+        "groups": [
+          "body"
+        ]
+      },
       "settings": [
         {
           "group": "Spacer",
@@ -8400,7 +8435,8 @@
         "subheading",
         "heading",
         "paragraph",
-        "testimonials-items"
+        "testimonials-items",
+        "spacer"
       ],
       "settings": [
         {
@@ -8655,7 +8691,8 @@
       "title": "Items",
       "hasLoader": false,
       "childTypes": [
-        "testimonial--item"
+        "testimonial--item",
+        "spacer"
       ],
       "settings": [
         {
@@ -8684,7 +8721,8 @@
       "childTypes": [
         "heading",
         "paragraph",
-        "video-embed--item"
+        "video-embed--item",
+        "spacer"
       ],
       "settings": [
         {

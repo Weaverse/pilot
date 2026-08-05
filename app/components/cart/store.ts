@@ -1,492 +1,141 @@
-import { CartForm } from "@shopify/hydrogen";
-import { useEffect, useLayoutEffect, useRef } from "react";
-import type { Fetcher } from "react-router";
-import {
-  useFetcher,
-  useFetchers,
-  useLocation,
-  useNavigation,
-} from "react-router";
+import type { OptimisticCartLineInput } from "@shopify/hydrogen";
+import { useFetchers } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { create } from "zustand";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { loader as apiCartLoader } from "~/routes/api/cart";
+import { resolveBaselineCart } from "./cart-baseline";
+import {
+  applyOptimisticMutations,
+  buildOptimisticAddCart,
+  type CartWithOptimistic,
+  filterRemovedCartLines,
+  getActiveStagedLines,
+  type PendingAdd,
+} from "./optimistic-cart";
 
-type CartStore = {
+export type CartStore = {
   isOpen: boolean;
   serverCart: CartApiQueryFragment | null;
   /**
    * Customer Account API access token for the Shopify account web component.
-   * Bootstrapped client-side via /api/cart — it must never be embedded in
-   * the SSR document (see entry.server.tsx full-page cache notes).
+   * It is bootstrapped client-side and must never be embedded in the cached SSR
+   * document.
    */
   customerAccessToken: string | null;
-  /**
-   * Unique /api/cart bootstrap request token currently in flight, and the
-   * token whose response has been applied. Components whose analytics need an
-   * authoritative cart (e.g. <Analytics.CartView>, whose publish effect is
-   * keyed on URL and never replays when the cart context updates) must wait
-   * until these match. React Router history keys can be reused on back/forward
-   * navigation, so a per-request token is required.
-   */
-  cartBootstrapRequestToken: string | null;
   cartBootstrapResponseToken: string | null;
   /**
-   * The locale-prefixed /api/cart path whose bootstrap response has been
-   * applied. Cart-presenting UI gates on this matching the ACTIVE locale's
-   * path: same-locale navigations keep it resolved (no flicker), while a
-   * market switch re-gates until the new market's cart/currency arrives.
+   * Locale-prefixed cart endpoint whose bootstrap response has been applied.
    */
   cartBootstrapResolvedPath: string | null;
   /**
-   * False while an auth-relevant (non-GET) navigation submission is in
-   * flight and until the next bootstrap response applies. The account web
-   * component must not stay mounted with a stale customerAccessToken across
-   * e.g. the logout redirect — matching the old root-loader behavior where
-   * actions revalidated the token promise and re-suspended the widget.
+   * False during an auth-relevant navigation and until the next bootstrap
+   * confirms the customer token.
    */
   customerAccessTokenKnown: boolean;
+  /**
+   * Click-time additions keyed by owner token so concurrent buttons settle
+   * independently.
+   */
+  pendingAdds: Map<string, PendingAdd>;
+  lastAddError: string | null;
   open: () => void;
   close: () => void;
   toggle: (open?: boolean) => void;
+  stagePendingAdd: (lines: OptimisticCartLineInput[]) => string | null;
+  clearPendingAdd: (token: string) => void;
+  setLastAddError: (message: string | null) => void;
 };
 
+let pendingAddSeq = 0;
+
+/**
+ * Shared cart presentation and personalized bootstrap state.
+ */
 export const useCartStore = create<CartStore>()((set) => ({
   isOpen: false,
   serverCart: null,
   customerAccessToken: null,
-  cartBootstrapRequestToken: null,
   cartBootstrapResponseToken: null,
   cartBootstrapResolvedPath: null,
   customerAccessTokenKnown: false,
+  pendingAdds: new Map(),
+  lastAddError: null,
   open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
+  close: () => set({ isOpen: false, lastAddError: null }),
   toggle: (open) =>
-    set((state) => ({ isOpen: open !== undefined ? open : !state.isOpen })),
+    set((state) => ({
+      isOpen: open !== undefined ? open : !state.isOpen,
+      lastAddError: null,
+    })),
+  stagePendingAdd: (lines) => {
+    const usableLines = lines.filter((line) => line.selectedVariant);
+    if (usableLines.length === 0) {
+      return null;
+    }
+    pendingAddSeq += 1;
+    const token = `add-${pendingAddSeq}`;
+    const { cart } = resolveBaselineCart(useCartStore.getState().serverCart);
+    set((state) => {
+      const pendingAdds = new Map(state.pendingAdds);
+      pendingAdds.set(token, {
+        lines: usableLines,
+        stagedFromUpdatedAt: cart?.updatedAt ?? "",
+      });
+      return { pendingAdds, lastAddError: null };
+    });
+    return token;
+  },
+  clearPendingAdd: (token) =>
+    set((state) => {
+      if (!state.pendingAdds.has(token)) {
+        return {};
+      }
+      const pendingAdds = new Map(state.pendingAdds);
+      pendingAdds.delete(token);
+      return { pendingAdds };
+    }),
+  setLastAddError: (message) => set({ lastAddError: message }),
 }));
 
-const freshestFetcherCartRef = {
-  cart: null as CartApiQueryFragment | null,
-  updatedAt: "",
-};
 /**
- * Counts mutation-fetcher cart syncs. CartStoreSync snapshots this before
- * each /api/cart load: a `cart: null` bootstrap response is only allowed to
- * clear the store when no mutation landed in between — otherwise a slow
- * pre-cookie bootstrap would wipe a cart the shopper just created.
- */
-let cartMutationEpoch = 0;
-
-let cartBootstrapRequestSeq = 0;
-let currentCartBootstrapLocationKey = "";
-let currentCartBootstrapPath = "";
-let currentCartBootstrapRequestToken: string | null = null;
-const cartBootstrapEpochByToken = new Map<string, number>();
-
-function ensureCartBootstrapRequestToken(locationKey: string, path: string) {
-  if (typeof document === "undefined") {
-    return null;
-  }
-  if (
-    currentCartBootstrapLocationKey !== locationKey ||
-    currentCartBootstrapPath !== path
-  ) {
-    cartBootstrapRequestSeq += 1;
-    currentCartBootstrapLocationKey = locationKey;
-    currentCartBootstrapPath = path;
-    currentCartBootstrapRequestToken = `${locationKey}:${cartBootstrapRequestSeq}`;
-  }
-  return currentCartBootstrapRequestToken;
-}
-
-export function getCurrentCartBootstrapRequestToken() {
-  return currentCartBootstrapRequestToken;
-}
-/**
- * True once the ACTIVE locale's /api/cart bootstrap response has been
- * applied. Pre-bootstrap, `useCart()` returns null for returning shoppers
- * too, so cart-presenting UI (the drawer body) must not render its
- * empty-cart state yet. Same-locale navigations stay resolved — matching
- * the old root-loader behavior where the resolved cart promise persisted —
- * while a market switch re-gates until the new market's cart/currency
- * arrives. (Per-navigation freshness gates like <Analytics.CartView> use
- * the request-token match instead.)
+ * True once the active locale's cart bootstrap response has been applied.
  */
 export function useCartBootstrapResolved() {
   const apiCartPath = usePrefixPathWithLocale("/api/cart");
-  const resolvedPath = useCartStore((s) => s.cartBootstrapResolvedPath);
+  const resolvedPath = useCartStore((state) => state.cartBootstrapResolvedPath);
   return resolvedPath === apiCartPath;
 }
 
 /**
- * True while the bootstrapped customerAccessToken can be trusted: at least
- * one bootstrap response applied, and no auth-relevant (non-GET) navigation
- * submission since. Gates the account web component (see header.tsx).
+ * True while the bootstrapped customer access token can be trusted.
  */
 export function useCustomerAccessTokenKnown() {
-  return useCartStore((s) => s.customerAccessTokenKnown);
-}
-
-const useHydrationSafeLayoutEffect =
-  typeof document === "undefined" ? useEffect : useLayoutEffect;
-
-/**
- * Module-level set of line IDs that have been optimistically removed.
- * These are filtered from the baseline cart until the server cart
- * confirms the lines are gone. This is necessary because React Router
- * cleans up fetchers from unmounted components synchronously — the
- * remove fetcher's response is never visible via useFetchers().
- */
-const removedLineIds = new Set<string>();
-
-type OptimisticLineNode = CartApiQueryFragment["lines"]["nodes"][number] & {
-  isOptimistic?: boolean;
-};
-
-type CartWithOptimistic = CartApiQueryFragment & { isOptimistic?: boolean };
-
-function applyOptimisticMutations(
-  baseline: CartApiQueryFragment,
-  fetchers: ReturnType<typeof useFetchers>,
-): CartWithOptimistic | null {
-  const pendingFetchers = fetchers.filter(
-    (f) => f.state === "submitting" && f.formData,
-  );
-  if (pendingFetchers.length === 0) {
-    return null;
-  }
-
-  const nodes = [...baseline.lines.nodes] as OptimisticLineNode[];
-  const cart = {
-    ...baseline,
-    lines: { ...baseline.lines, nodes },
-    totalQuantity: baseline.totalQuantity,
-    isOptimistic: false,
-  } as CartWithOptimistic & {
-    lines: { nodes: OptimisticLineNode[] };
-    totalQuantity: number;
-  };
-  let mutated = false;
-
-  for (const fetcher of pendingFetchers) {
-    const formData = fetcher.formData;
-    if (!formData) {
-      continue;
-    }
-    const { action, inputs } = CartForm.getFormInput(formData);
-    const lineNodes = cart.lines.nodes;
-
-    if (action === CartForm.ACTIONS.LinesAdd) {
-      for (const line of inputs?.lines ?? []) {
-        const selectedVariant =
-          line.selectedVariant as OptimisticLineNode["merchandise"];
-        if (!selectedVariant) {
-          continue;
-        }
-        const existingIdx = lineNodes.findIndex(
-          (n) => n.merchandise?.id === selectedVariant.id,
-        );
-        mutated = true;
-        if (existingIdx !== -1) {
-          const cloned = { ...lineNodes[existingIdx] } as OptimisticLineNode;
-          cloned.quantity = (cloned.quantity || 1) + (line.quantity || 1);
-          cloned.isOptimistic = true;
-          lineNodes[existingIdx] = cloned;
-        } else {
-          lineNodes.unshift({
-            id: `optimistic-${crypto.randomUUID()}`,
-            merchandise: selectedVariant,
-            isOptimistic: true,
-            quantity: line.quantity || 1,
-          } as OptimisticLineNode);
-        }
-      }
-    } else if (action === CartForm.ACTIONS.LinesRemove) {
-      for (const lineId of (inputs?.lineIds as string[]) ?? []) {
-        const idx = lineNodes.findIndex((n) => n.id === lineId);
-        if (idx !== -1) {
-          lineNodes.splice(idx, 1);
-          mutated = true;
-        }
-        removedLineIds.add(lineId);
-      }
-    } else if (action === CartForm.ACTIONS.LinesUpdate) {
-      for (const update of inputs?.lines ?? []) {
-        const idx = lineNodes.findIndex((n) => n.id === update.id);
-        if (idx !== -1) {
-          const cloned = { ...lineNodes[idx] } as OptimisticLineNode;
-          cloned.quantity = update.quantity;
-          cloned.isOptimistic = true;
-          if (cloned.quantity === 0) {
-            lineNodes.splice(idx, 1);
-          } else {
-            lineNodes[idx] = cloned;
-          }
-          mutated = true;
-        }
-      }
-    } else {
-      mutated = true;
-    }
-  }
-
-  if (!mutated) {
-    return null;
-  }
-
-  cart.totalQuantity = cart.lines.nodes.reduce(
-    (sum, line) => sum + line.quantity,
-    0,
-  );
-  cart.isOptimistic = true;
-  return cart;
+  return useCartStore((state) => state.customerAccessTokenKnown);
 }
 
 /**
- * Syncs cart data from a singular fetcher instance into zustand.
- *
- * WHY: `useFetchers()` (plural) reads from `state.fetchers` map which
- * React Router deletes idle fetchers from on the same synchronous tick
- * as completion. The singular `useFetcher()` preserves data via a
- * `fetcherData` ref that survives cleanup. By syncing from individual
- * fetcher instances, we reliably capture post-mutation cart state.
- *
- * SYNC DURING RENDER: We sync to zustand during render (not in useEffect)
- * so that `useCart()` reads the fresh serverCart in the same render cycle.
- * Without this, there's a 1-frame flash where optimistic mutations are
- * cleared (fetcher is idle) but serverCart hasn't been updated yet.
- * `queueMicrotask` is used to avoid React's "setState during render" warning.
- */
-export function useCartFetcherSync(fetcher: Fetcher<unknown>) {
-  const lastSyncedRef = useRef<string | null>(null);
-  const fetcherData = fetcher.data as Record<string, unknown> | undefined;
-  const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
-  if (fetcher.state === "idle" && cart?.id && cart?.lines) {
-    const updatedAt = cart.updatedAt;
-    if (updatedAt !== lastSyncedRef.current) {
-      lastSyncedRef.current = updatedAt;
-      cartMutationEpoch += 1;
-      const fetcherCart = cart as CartApiQueryFragment;
-      const fetcherTime = new Date(fetcherCart.updatedAt).getTime();
-      const refTime = freshestFetcherCartRef.updatedAt
-        ? new Date(freshestFetcherCartRef.updatedAt).getTime()
-        : 0;
-      if (fetcherTime >= refTime) {
-        freshestFetcherCartRef.cart = fetcherCart;
-        freshestFetcherCartRef.updatedAt = fetcherCart.updatedAt;
-      }
-      const current = useCartStore.getState().serverCart;
-      const currentTime = current?.updatedAt
-        ? new Date(current.updatedAt).getTime()
-        : 0;
-      if (fetcherTime >= currentTime) {
-        queueMicrotask(() => {
-          useCartStore.setState({ serverCart: fetcherCart });
-        });
-      }
-    }
-  }
-}
-
-function getTimestampMs(dateString: string | undefined): number {
-  return dateString ? new Date(dateString).getTime() : 0;
-}
-
-/**
- * Scans all sources (zustand, fetchers, module ref) and returns the
- * freshest cart as baseline, then applies pending optimistic mutations.
- *
- * The fetcher scan here is critical: when a remove button's component
- * unmounts before its fetcher completes, useCartFetcherSync never fires.
- * Scanning useFetchers() in THIS hook (same render pass) catches those
- * completed carts that would otherwise be lost.
- *
- * Only the SINGLE freshest completed cart is used as baseline — not
- * accumulated across multiple fetchers — to avoid double-counting.
+ * Returns the freshest authoritative cart with all active optimistic mutations
+ * composed over it.
  */
 export function useCart(): CartWithOptimistic | null {
-  const serverCart = useCartStore((s) => s.serverCart);
+  const serverCart = useCartStore((state) => state.serverCart);
+  const pendingAdds = useCartStore((state) => state.pendingAdds);
   const fetchers = useFetchers();
+  const { cart: resolved, updatedAt: baselineTime } = resolveBaselineCart(
+    serverCart,
+    fetchers,
+  );
+  const stagedLines = getActiveStagedLines(pendingAdds, baselineTime);
 
-  let baseline = serverCart;
-  let baselineTime = getTimestampMs(serverCart?.updatedAt);
-  let baselineSource = "zustand";
-
-  const refTime = getTimestampMs(freshestFetcherCartRef.updatedAt);
-  if (freshestFetcherCartRef.cart && refTime > baselineTime) {
-    baseline = freshestFetcherCartRef.cart;
-    baselineTime = refTime;
-    baselineSource = "moduleRef";
+  if (!resolved) {
+    return stagedLines.length > 0 ? buildOptimisticAddCart(stagedLines) : null;
   }
 
-  for (const fetcher of fetchers) {
-    if (fetcher.state !== "idle") {
-      continue;
-    }
-    const fetcherData = fetcher.data as Record<string, unknown> | undefined;
-    const cart = fetcherData?.cart as CartApiQueryFragment | undefined;
-    if (!cart?.id || !cart?.lines) {
-      continue;
-    }
-    const t = getTimestampMs(cart.updatedAt);
-    if (t > baselineTime) {
-      baseline = cart;
-      baselineTime = t;
-      baselineSource = `fetcher(${fetcher.key})`;
-      freshestFetcherCartRef.cart = cart;
-      freshestFetcherCartRef.updatedAt = cart.updatedAt;
-      // This fallback scan is the only place that can see completed
-      // fetchers after React Router drops their components. Treat it as a
-      // real mutation sync for null-bootstrap race guards too.
-      cartMutationEpoch += 1;
-    }
-  }
-
-  if (!baseline) {
-    return null;
-  }
-
-  // Filter tombstoned lines from baseline — prevents flash-back when
-  // the remove fetcher's response is lost due to component unmount
-  if (removedLineIds.size > 0) {
-    const baselineLineIds = new Set(baseline.lines.nodes.map((n) => n.id));
-    const confirmedRemovals: string[] = [];
-    for (const id of removedLineIds) {
-      if (!baselineLineIds.has(id)) {
-        confirmedRemovals.push(id);
-      }
-    }
-    for (const id of confirmedRemovals) {
-      removedLineIds.delete(id);
-    }
-
-    if (removedLineIds.size > 0) {
-      const filteredNodes = baseline.lines.nodes.filter(
-        (n) => !removedLineIds.has(n.id),
-      );
-      baseline = {
-        ...baseline,
-        lines: { ...baseline.lines, nodes: filteredNodes },
-        totalQuantity: filteredNodes.reduce(
-          (sum, line) => sum + line.quantity,
-          0,
-        ),
-      };
-    }
-  }
-
+  const baseline = filterRemovedCartLines(resolved);
   const optimisticCart =
-    fetchers.length > 0 ? applyOptimisticMutations(baseline, fetchers) : null;
+    fetchers.length > 0 || stagedLines.length > 0
+      ? applyOptimisticMutations(baseline, fetchers, stagedLines)
+      : null;
 
   return optimisticCart ?? baseline;
-}
-
-/**
- * Bootstraps personalized state (cart + customer access token) client-side
- * from /api/cart after hydration.
- *
- * This data used to come from the root loader's deferred promise, but
- * deferred values stream into the SSR document — personalizing every page
- * and blocking Oxygen's full-page cache (see entry.server.tsx). Fetching
- * after hydration keeps the document anonymous.
- *
- * The load is locale-prefixed so the cart query runs in the active market's
- * i18n context (a bare `/api/cart` would price the cart in the default
- * locale), and it re-runs on every navigation (`location.key`) — matching
- * the old root-loader revalidation that refreshed the token after auth
- * actions (e.g. logout redirect) and picked up carts mutated by GET-loader
- * redirects (e.g. discount-code routes).
- *
- * Post-mutation freshness is handled by `useCartFetcherSync`. Two race
- * guards protect against this bootstrap resolving after a faster mutation
- * fetcher: the `updatedAt` comparison for non-empty carts, and the
- * `cartMutationEpoch` snapshot for `cart: null` responses (which carry no
- * timestamp to compare).
- */
-export function CartStoreSync() {
-  const fetcher = useFetcher<typeof apiCartLoader>();
-  const load = fetcher.load;
-  const apiCartPath = usePrefixPathWithLocale("/api/cart");
-  const location = useLocation();
-  const navigation = useNavigation();
-  // Auth state can only change through non-GET navigation submissions
-  // (login/logout actions; cart mutations use fetchers). Distrust the
-  // bootstrapped customerAccessToken from the moment one starts until the
-  // next bootstrap response applies — the account widget must not stay
-  // active with a pre-logout token across the redirect.
-  const isAuthRelevantSubmission =
-    navigation.state !== "idle" &&
-    navigation.formMethod != null &&
-    navigation.formMethod !== "GET";
-  useEffect(() => {
-    if (isAuthRelevantSubmission) {
-      useCartStore.setState({ customerAccessTokenKnown: false });
-    }
-  }, [isAuthRelevantSubmission]);
-  const cartRequestToken = ensureCartBootstrapRequestToken(
-    location.key,
-    apiCartPath,
-  );
-  useHydrationSafeLayoutEffect(() => {
-    if (!cartRequestToken) {
-      return;
-    }
-    cartBootstrapEpochByToken.set(cartRequestToken, cartMutationEpoch);
-    useCartStore.setState({ cartBootstrapRequestToken: cartRequestToken });
-    const url = new URL(apiCartPath, window.location.origin);
-    url.searchParams.set("cartRequestToken", cartRequestToken);
-    load(url.pathname + url.search);
-  }, [load, apiCartPath, cartRequestToken]);
-  const payload = fetcher.data;
-  useEffect(() => {
-    if (!payload) {
-      return;
-    }
-    const responseToken = payload.cartRequestToken ?? null;
-    if (
-      !responseToken ||
-      responseToken !== getCurrentCartBootstrapRequestToken()
-    ) {
-      return;
-    }
-    // Apply the response token and the cart state in ONE store update:
-    // consumers gate on the token (drawer body, <Analytics.CartView>), so a
-    // split update could let them observe "bootstrap complete" while
-    // serverCart still holds a stale pre-bootstrap cart (e.g. a cart:null
-    // response after checkout completed) and publish/render from it.
-    const updates: Partial<CartStore> = {
-      customerAccessToken: payload.customerAccessToken,
-      cartBootstrapResponseToken: responseToken,
-      // The matched response token implies currentCartBootstrapPath is the
-      // path this response was requested for.
-      cartBootstrapResolvedPath: currentCartBootstrapPath,
-      // Trust the fresh token — unless an auth-mutating submission is
-      // already in flight again (its redirect will trigger the next load).
-      customerAccessTokenKnown: !isAuthRelevantSubmission,
-    };
-    const resolved = payload.cart;
-    if (resolved) {
-      const current = useCartStore.getState().serverCart;
-      const resolvedTime = new Date(resolved.updatedAt).getTime();
-      const currentTime = current?.updatedAt
-        ? new Date(current.updatedAt).getTime()
-        : 0;
-      if (resolvedTime >= currentTime) {
-        updates.serverCart = resolved as CartApiQueryFragment;
-      }
-    } else if (
-      // Only clear when no mutation synced since this load was issued —
-      // a slow pre-cookie bootstrap must not wipe a just-created cart.
-      cartMutationEpoch === cartBootstrapEpochByToken.get(responseToken)
-    ) {
-      // Reset the module ref too: useCart() consults it before the store,
-      // so a surviving entry would keep resurrecting a cart whose cookie
-      // expired or was completed at checkout.
-      freshestFetcherCartRef.cart = null;
-      freshestFetcherCartRef.updatedAt = "";
-      updates.serverCart = null;
-    }
-    useCartStore.setState(updates);
-  }, [payload, isAuthRelevantSubmission]);
-  return null;
 }
