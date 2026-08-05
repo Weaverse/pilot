@@ -47,3 +47,10 @@ jobs:
       # `sensitive: true` is the real boundary; this catches what humans missed.
       - name: Audit Weaverse settings
         run: npm run weaverse:audit
+
+      # Typecheck does not see bundler-level breakage: a bad dynamic import, a
+      # client-only module pulled into the worker bundle, or a Vite plugin
+      # misconfiguration all typecheck clean and fail at deploy. The build
+      # needs no storefront credentials, so it runs unauthenticated here.
+      - name: Build
+        run: npm run build
