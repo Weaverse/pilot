@@ -22,14 +22,19 @@
   display: inline-flex;
   visibility: hidden;
   opacity: 0;
+  flex: 0 0 auto;
   align-items: flex-end;
   gap: 2px;
+  inline-size: 0;
   height: 14px;
+  overflow: hidden;
 }
 
 .eq.is-playing {
   visibility: visible;
   opacity: 1;
+  inline-size: 18px;
+  margin-inline-end: 6px;
 }
 
 .eq span {
