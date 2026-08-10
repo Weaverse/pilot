@@ -11,7 +11,7 @@ tags: ['liquid', 'shopify', 'date']
 
 Adding/substracting days in Shopify's Liquid template language
 
-```liquid:snippet.liquid showLineNumbers
+```liquid title="snippet.liquid" showLineNumbers
 {% assign days = 4 %}
 
 {% assign ms = days | times: 24 | times: 60 | times: 60 %}
@@ -28,7 +28,7 @@ Adding/substracting days in Shopify's Liquid template language
 
 Result:
 
-```html:index.html showLineNumbers
+```html title="index.html" showLineNumbers
 <div>Today: Aug 29</div>
 <div>4 days before today: Aug 25</div>
 <div>4 days after today: Sep 02</div>

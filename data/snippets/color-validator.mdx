@@ -13,7 +13,7 @@ tags: ['typescript', 'color', 'validator']
 
 Simple color validator function
 
-```ts:utils.ts showLineNumbers
+```ts title="utils.ts" showLineNumbers
 export function isValidColor(color: string) {
   let otpNode = new Option()
   otpNode.style.color = color
@@ -24,7 +24,7 @@ export function isValidColor(color: string) {
 
 Usage
 
-```ts:index.ts showLineNumbers
+```ts title="index.ts" showLineNumbers
 // Valid colors
 isValidColor('purple') // true
 isValidColor('burlywood') // true
@@ -45,7 +45,7 @@ Caveat
 
 Strings like `unset`, `initial`, `inherit`, `currentcolor`, `transparent` are also valid values, so if you want to exclude these strings, just change the function a bit:
 
-```ts:utils.ts showLineNumbers
+```ts title="utils.ts" showLineNumbers
 export function isValidColor(color: string) {
   let otpNode = new Option()
   otpNode.style.color = color

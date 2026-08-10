@@ -11,7 +11,7 @@ tags: ['typescript', 'time', 'date', 'relative-time-ago']
 A simple utility function to parse relative time-ago in JavaScript. Showing the time ago in a human-readable format
 since the given date / time in the past.
 
-```ts:time-ago.ts showLineNumbers
+```ts title="time-ago.ts" showLineNumbers
 function is(interval: number, cycle: number) {
   return cycle >= interval ? Math.floor(cycle / interval) : 0
 }
@@ -66,7 +66,7 @@ export function getTimeAgo(time: string | number | Date, now = Date.now()): stri
 
 Example usages:
 
-```ts:example.ts
+```ts title="example.ts"
 const MARCH_10_2025 = new Date('2025-03-10').getTime()
 
 getTimeAgo(MARCH_10_2025, MARCH_10_2025) // 'just now'

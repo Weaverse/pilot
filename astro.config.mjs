@@ -1,12 +1,10 @@
 import mdx from '@astrojs/mdx'
-import { unified } from '@astrojs/markdown-remark'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
-import tailwindcss from '@tailwindcss/vite'
 import vercel from '@astrojs/vercel'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 import expressiveCode from 'astro-expressive-code'
-import { remarkCodeTitles } from './src/plugins/remark-code-titles.mjs'
 
 // Production site URL — kept in parity with legacy `data/site-metadata.ts`.
 export default defineConfig({
@@ -62,11 +60,6 @@ export default defineConfig({
       },
     }),
   ],
-  markdown: {
-    processor: unified({
-      remarkPlugins: [remarkCodeTitles],
-    }),
-  },
   // v4 route rebrand: old section prefixes 301 to the new ones (slugs preserved).
   // The specific legacy redirect must precede the broader `/snippets/*` rule.
   redirects: {

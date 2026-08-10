@@ -18,7 +18,7 @@ that has many useful features, we can leverage them with some custom styles to c
 
 The simple idea here is to make the image blurry at first (with `blur-xl` class), and then fade it in by removing the blur effect (with `blur-0`) when the image is [loaded](https://nextjs.org/docs/app/api-reference/components/image#onload).
 
-```tsx:image.tsx showLineNumbers
+```tsx title="image.tsx" showLineNumbers
 'use client'
 
 import { clsx } from 'clsx'
@@ -89,7 +89,7 @@ For example:
 If you want to use the component to render images in MDX files, you will need to update tailwind typography config
 to make the images responsive.
 
-```js:tailwind.config.js showLineNumbers
+```js title="tailwind.config.js" showLineNumbers
 module.exports = {
   theme: {
     extend: {
@@ -119,7 +119,7 @@ module.exports = {
 The blur effect is happening every time the `Image` component is rendered (even if the image is already loaded).
 If you want to avoid this, you will need to control the `loaded` state manually:
 
-```tsx:image.tsx {9-25,33} showLineNumbers
+```tsx title="image.tsx" {9-25,33} showLineNumbers
 'use client'
 
 import { clsx } from 'clsx'

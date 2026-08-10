@@ -11,7 +11,7 @@ tags: ['react', 'state', 'hooks', 'local-storage']
 
 Simple custom hook to synchronize component state with local storage.
 
-```ts:use-local-storage-state.ts showLineNumbers
+```ts title="use-local-storage-state.ts" showLineNumbers
 import { useState, useEffect } from 'react'
 
 export function useLocalStorageState<T = { [key: string]: any }>(key: string, defaultValue?: T) {
@@ -34,7 +34,7 @@ export function useLocalStorageState<T = { [key: string]: any }>(key: string, de
 
 In some cases, you might need to check for browser environment, cause local storage is available only in the client side.
 
-```ts:use-local-storage-state.ts showLineNumbers {3,7-12}
+```ts title="use-local-storage-state.ts" showLineNumbers {3,7-12}
 import { useState, useEffect } from 'react'
 
 let isBrowser = typeof window !== 'undefined' // Check for browser/client environment
@@ -63,7 +63,7 @@ export function useLocalStorageState<T = { [key: string]: any }>(key: string, de
 A simple example of using the hook to synchronize component state with local storage
 is shown below:
 
-```tsx:theme-switcher.tsx showLineNumbers
+```tsx title="theme-switcher.tsx" showLineNumbers
 function ThemeSwitcher() {
   let [theme, setTheme] = useLocalStorageState<'dark' | 'light'>('theme', 'light')
 

@@ -21,7 +21,7 @@ You can see this effect in action in all pages at [pilot.weaverse.dev](https://p
 We'll extend Shopify Hydrogen's built-in Image component to leverage the types.
 Here's the basic structure:
 
-```ts:image.tsx showLineNumbers
+```ts title="image.tsx" showLineNumbers
 import { Image as HydrogenImage } from "@shopify/hydrogen";
 import type { Image as ImageType } from "@shopify/hydrogen/storefront-api-types";
 import type React from "react";
@@ -59,7 +59,7 @@ This interface extends the standard img props while adding Shopify-specific opti
 
 The key is tracking when the image finishes loading:
 
-```ts:image.tsx showLineNumbers
+```ts title="image.tsx" showLineNumbers
 export let Image = forwardRef<HTMLDivElement, ImageProps>(
   ({ className, onLoad, ...rest }, ref) => {
     let hydrogenImageRef = useRef<HTMLImageElement>(null);
@@ -102,7 +102,7 @@ In details:
 Here I'm leveraging Tailwind CSS's [`blur`](https://tailwindcss.com/docs/filter-blur) filer utility to create the loading effect,
 and the [`transition`](https://tailwindcss.com/docs/transition-property) for smooth transitions.
 
-```ts:image.tsx showLineNumbers
+```ts title="image.tsx" showLineNumbers
 return (
   <div
     ref={ref}
@@ -129,7 +129,7 @@ return (
 
 Here's how you'd use this in your Hydrogen store:
 
-```ts:product-card.tsx showLineNumbers
+```ts title="product-card.tsx" showLineNumbers
 import { Image } from "~/components/Image";
 
 function ProductCard({ product }) {
@@ -155,7 +155,7 @@ And that's it! <Twemoji emoji="party-popper" /> You now have a smooth, professio
 
 Here's the complete component code for reference:
 
-```ts:image.tsx showLineNumbers
+```ts title="image.tsx" showLineNumbers
 import { Image as HydrogenImage } from "@shopify/hydrogen";
 import type { Image as ImageType } from "@shopify/hydrogen/storefront-api-types";
 import type React from "react";

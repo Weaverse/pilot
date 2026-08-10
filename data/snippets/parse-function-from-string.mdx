@@ -22,7 +22,7 @@ And on the client side, you need to parse those strings back into functions with
 
 This snippet shows you how to safely parse different function formats from a string and get a callable function back:
 
-```ts:parse-function.ts
+```ts title="parse-function.ts"
 function parseFunction(funcStr: string): (...args: any[]) => any {
   if (!funcStr || typeof funcStr !== "string") {
     throw new Error("Invalid function string: must be a non-empty string");

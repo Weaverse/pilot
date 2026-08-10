@@ -14,7 +14,7 @@ It is important to ensure that the webhook request is coming from Github and pro
 
 This is how you can simply verify the webhook signature in a [Remix](https://remix.run) app (or any Node.js server).
 
-```ts:github.ts showLineNumbers
+```ts title="github.ts" showLineNumbers
 import type { ActionFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import crypto from 'crypto'

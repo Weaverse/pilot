@@ -21,7 +21,7 @@ So let's prevent this layout shift with CSS.
 
 ## The classic fix
 
-```css:global.css showLineNumbers
+```css title="global.css" showLineNumbers
 html {
   overflow-y: scroll;
 }
@@ -47,7 +47,7 @@ If you don't know yet, `vw` or [view width](https://developer.mozilla.org/en-US/
 
 So, we can calculate the width of the scrollbar by subtracting the `100%` width from the `100vw` width with the CSS's `calc()` function like this:
 
-```css:global.css showLineNumbers
+```css title="global.css" showLineNumbers
 html {
   margin-left: calc(100vw - 100%);
 }
@@ -61,7 +61,7 @@ The `margin-left` value will equal `0` when the `Window` isn't scrollable and eq
 
 For example:
 
-```css:global.css showLineNumbers
+```css title="global.css" showLineNumbers
 html,
 .popup-overlay,
 .modal-overlay {
@@ -71,7 +71,7 @@ html,
 
 Another solution is to set the width of the `html` element to `100vw` and prevent horizontal scroll:
 
-```css:global.css showLineNumbers
+```css title="global.css" showLineNumbers
 html {
   width: 100vw;
   overflow-x: hidden;

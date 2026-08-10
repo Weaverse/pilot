@@ -13,7 +13,7 @@ authors: ['default']
 
 Let's say you have a list of async tasks (each return a **Promise**).
 
-```js:promises.js showLineNumbers
+```js title="promises.js" showLineNumbers
 let promise1 = async function () {
   /* ... */
 }
@@ -47,7 +47,7 @@ The first approach is running them **sequentially**, one after another. It means
 
 Like this:
 
-```js:promise-hell.js showLineNumbers
+```js title="promise-hell.js" showLineNumbers
 promise1().then(() => {
   promise2().then(() => {
     promise3().then(() => {
@@ -92,7 +92,7 @@ The answer for the question in the title is: `Promise.all()` runs concurrently, 
 
 If you have a list promises that don't depend on each other, you can run them concurrently (or parallel-like):
 
-```js:concurrently.js showLineNumbers
+```js title="concurrently.js" showLineNumbers
 await Promise.all([promise1(), promise2(), promise3()])
 // or
 await Promise.all(
@@ -104,7 +104,7 @@ await Promise.all(
 
 Or sequentially:
 
-```js:sequentially.js showLineNumbers
+```js title="sequentially.js" showLineNumbers
 for (let item of items) {
   await doSomething(item)
 }

@@ -50,7 +50,7 @@ touch postcss.config.js
 
 Add the following config:
 
-```js:postcss.config.js showLineNumbers
+```js title="postcss.config.js" showLineNumbers
 module.exports = {
   plugins: [require('tailwindcss'), require('autoprefixer')],
 }
@@ -70,7 +70,7 @@ mkdir src/styles && touch src/styles/tailwind.css
 
 Import the following modules from Tailwind CSS:
 
-```css:tailwind.css showLineNumbers
+```css title="tailwind.css" showLineNumbers
 @tailwind base;
 
 @tailwind components;
@@ -105,7 +105,7 @@ After configuring and building, your project structure should look like this:
 
 To make things easier, you can integrate the `build:css` command into the start and build scripts of your project, ensuring that your CSS is always rebuilt with the latest updates each time you start the project:
 
-```json:package.json showLineNumbers
+```json title="package.json" showLineNumbers
 "scripts": {
 	"start": "npm run build:css && react-scripts start",
 	"build": "npm run build:css && react-scripts build",
@@ -128,7 +128,7 @@ import './styles/main.css'
 
 Create a basic component:
 
-```jsx:app.jsx showLineNumbers
+```jsx title="app.jsx" showLineNumbers
 import React from 'react'
 
 function App() {

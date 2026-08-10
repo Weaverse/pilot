@@ -1,0 +1,35 @@
+---
+import type { GiscusConfig } from '~/lib/comments'
+
+interface Props {
+  config: GiscusConfig
+}
+
+const { config } = Astro.props
+---
+
+<div id="comment" class="not-prose mt-10 border-t border-line pt-6">
+  <div class="mb-4 flex items-center justify-between">
+    <span class="font-mono text-[11px] uppercase tracking-[0.08em] text-muted">
+      comments
+    </span>
+  </div>
+  <giscus-widget
+    repo={config.repo}
+    repoid={config.repoId}
+    category={config.category}
+    categoryid={config.categoryId}
+    mapping={config.mapping}
+    strict="0"
+    reactionsenabled={config.reactionsEnabled}
+    emitmetadata={config.emitMetadata}
+    inputposition={config.inputPosition}
+    theme={config.theme}
+    lang={config.lang}
+    loading="lazy"
+  ></giscus-widget>
+</div>
+
+<script>
+  import 'giscus'
+</script>

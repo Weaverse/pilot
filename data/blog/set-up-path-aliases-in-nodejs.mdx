@@ -40,7 +40,7 @@ The solution is quite simple with [module-alias](https://www.npmjs.com/package/m
 
 Open the `tsconfig.json` file and add the following configuration to the `compilerOptions` object:
 
-```json:tsconfig.json showLineNumbers
+```json title="tsconfig.json" showLineNumbers
 "compilerOptions": {
   // other configs...
   "baseUrl": "./src",
@@ -79,7 +79,7 @@ This package **resolves** path aliases in JS files after they are compiled.
 
 - Configure it in `package.json`:
 
-  ```json:package.json showLineNumbers
+  ```json title="package.json" showLineNumbers
   "_moduleAliases": {
     "@models": "dist/models",
     "@controllers": "dist/controllers"

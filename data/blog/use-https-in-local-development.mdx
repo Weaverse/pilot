@@ -88,7 +88,7 @@ Now, we will use the trusted **Root SSL Certificate** to generate an **SSL Certi
 
 Create a config file named `server.csr.cnf` with the following cotent. **OpenSSL** will use this file to generate the **Certificate key**:
 
-```bash:server.csr.cnf showLineNumbers
+```bash title="server.csr.cnf" showLineNumbers
 [req]
 default_bits = 2048
 prompt = no
@@ -117,7 +117,7 @@ openssl req -new -sha256 -nodes -out server.csr -newkey rsa:2048 -keyout server.
 
 Create a `v3.ext` file with the configurations below to generate the certificate:
 
-```bash:v3.ext showLineNumbers
+```bash title="v3.ext" showLineNumbers
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
@@ -150,7 +150,7 @@ The most important work of generating `server.key` and `server.crt` is done, now
 
 Create a simple **web server** with **Koa**:
 
-```js:server.js showLineNumbers
+```js title="server.js" showLineNumbers
 let Koa = require('koa');
 let app = new Koa();
 
@@ -165,7 +165,7 @@ Create a directory called `certs/` in your app, then move `server.key` and `serv
 
 Load the certificate files and create **HTTPS** server with `https` module:
 
-```js:index.js showLineNumbers
+```js title="index.js" showLineNumbers
 let app = require('./server')
 let https = require('https')
 let fs = require('fs')

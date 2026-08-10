@@ -11,7 +11,7 @@ tags: [remix, remix-utils, submission, hooks]
 I have been working with [Remix](https://remix.run) for a while now and I love it.
 Here is a custom hook I use to handle in-route-submission in my Remix apps.
 
-````ts:use-route-submission.ts showLineNumbers
+````ts title="use-route-submission.ts" showLineNumbers
 import { useActionData, useNavigation, useSubmit } from '@remix-run/react'
 import { useEffect } from 'react'
 import { parseSubmissionData } from '~/utils/object'
@@ -89,7 +89,7 @@ export function useRouteSubmission(input: RouteSubmissionInput): RouteSubmission
 
 The utils used in the hook are:
 
-```ts:object.ts showLineNumbers
+```ts title="object.ts" showLineNumbers
 import type { useNavigation } from '@remix-run/react'
 import type {SubmitDataWithAction} from '~/types/hooks'
 
@@ -111,7 +111,7 @@ export function parseSubmissionData(
 
 And
 
-```ts:use-index-route-detector.ts
+```ts title="use-index-route-detector.ts"
 import { useLocation, useMatches } from '@remix-run/react'
 
 export function useIndexRouteDetector() {
@@ -127,7 +127,7 @@ export function useIndexRouteDetector() {
 
 And the types used in the hook are:
 
-```ts:hooks.ts showLineNumbers
+```ts title="hooks.ts" showLineNumbers
 export type RouteSubmissionInput = {
   _action: string
   onSubmitted?: (
@@ -156,7 +156,7 @@ export type RouteSubmission = {
 
 Example usage:
 
-```tsx:example.tsx showLineNumbers
+```tsx title="example.tsx" showLineNumbers
 import { Button } from '~/components/button'
 import { useRouteSubmission } from '~/hooks/use-route-submission'
 

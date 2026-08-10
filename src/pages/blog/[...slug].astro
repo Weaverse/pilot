@@ -3,14 +3,14 @@ import { getCollection, render } from 'astro:content'
 import JsonLd from '~/components/JsonLd.astro'
 import Twemoji from '~/components/mdx/Twemoji.astro'
 import StudioShell from '~/components/studio/StudioShell.astro'
+import Comments from '~/components/widgets/Comments.astro'
 import Reactions from '~/components/widgets/Reactions'
 import ViewsCounter from '~/components/widgets/ViewsCounter'
-import Comments from '~/components/widgets/Comments'
+import BaseLayout from '~/layouts/BaseLayout.astro'
 import { getGiscusConfig } from '~/lib/comments'
 import { isPublished, tagSlug } from '~/lib/content'
 import { articleJsonLd, breadcrumbJsonLd } from '~/lib/seo'
 import { SITE } from '~/lib/site'
-import BaseLayout from '~/layouts/BaseLayout.astro'
 
 // Slug parity: id = filename (no nested dirs) → `/blog/<slug>` exactly as legacy.
 export async function getStaticPaths() {
@@ -28,8 +28,18 @@ export async function getStaticPaths() {
 
 const { post, translations } = Astro.props
 const { Content } = await render(post)
-const { title, summary, seoTitle, seoDescription, date, lastmod, tags, images, canonicalUrl, lang } =
-  post.data
+const {
+  title,
+  summary,
+  seoTitle,
+  seoDescription,
+  date,
+  lastmod,
+  tags,
+  images,
+  canonicalUrl,
+  lang,
+} = post.data
 const metaTitle = seoTitle ?? title
 const metaDescription = seoDescription ?? summary
 const ogImage = Array.isArray(images) ? images[0] : images
@@ -144,7 +154,7 @@ const alternates =
         </span>
         <Reactions type="blog" slug={post.id} client:visible />
       </div>
-      {giscusConfig && <Comments config={giscusConfig} client:only="react" />}
+      {giscusConfig && <Comments config={giscusConfig} />}
     </article>
   </StudioShell>
 </BaseLayout>

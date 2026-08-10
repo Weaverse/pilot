@@ -27,7 +27,7 @@ In your collection route loader function, you will need to query the products an
 
 All filters are stored in the request query parameters, and should have the same filter prefix to differentiate them from other params.
 
-```ts:($locale).collection.$collectionHandle.tsx showLineNumbers
+```ts title="($locale).collection.$collectionHandle.tsx" showLineNumbers
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen"
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types"
 
@@ -52,7 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 After parsing the filters, we will pass them to the collection query to get the products.
 
-```ts:($locale).collection.$collectionHandle.tsx showLineNumbers
+```ts title="($locale).collection.$collectionHandle.tsx" showLineNumbers
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen"
 import type { CollectionQuery } from "storefront-api.generated"
 
@@ -73,7 +73,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
 The `COLLECTION_QUERY` should also include the lowest and highest price products to be used for the price range filter.
 
-```ts:($locale).collection.$collectionHandle.tsx showLineNumbers
+```ts title="($locale).collection.$collectionHandle.tsx" showLineNumbers
 const COLLECTION_QUERY = `#graphql
   query collection(
     $handle: String!
@@ -142,7 +142,7 @@ const COLLECTION_QUERY = `#graphql
 Some filters are not having any values, so we need process the params to extract the applied filters
 and prettify the price filter label.
 
-```ts:($locale).collection.$collectionHandle.tsx showLineNumbers
+```ts title="($locale).collection.$collectionHandle.tsx" showLineNumbers
 import type { I18nBase } from '@shopify/hydrogen'
 import type { ProductFilter, CurrencyCode } from "@shopify/hydrogen/storefront-api-types"
 
@@ -203,7 +203,7 @@ function parseAsCurrency(
 That's all the data needed for the price range filter component.
 Send them to the client by returning in the end of the loader function.
 
-```ts:($locale).collection.$collectionHandle.tsx showLineNumbers
+```ts title="($locale).collection.$collectionHandle.tsx" showLineNumbers
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen"
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
@@ -223,7 +223,7 @@ Since Hydrogen is built on top of [Remix](https://remix.run), this component wil
 I will use [`Radix UI`](https://www.radix-ui.com/primitives/docs/components/slider) for the slider component,
 and [Tailwind CSS](https://tailwindcss.com) for the styling.
 
-```tsx:price-range-filter.tsx showLineNumbers
+```tsx title="price-range-filter.tsx" showLineNumbers
 import * as Slider from "@radix-ui/react-slider"
 import { useLocation, useNavigate, useSearchParams } from "@remix-run/react"
 import clsx from "clsx"
@@ -318,7 +318,7 @@ export function PriceRangeFilter({
 
 The utils needed for the price range filter component are:
 
-```ts:price-range-filter.tsx showLineNumbers
+```ts title="price-range-filter.tsx" showLineNumbers
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types"
 import type { CollectionQuery } from "storefront-api.generated"
 
@@ -372,7 +372,7 @@ function getPricesFromFilter(params: URLSearchParams) {
 You might include 2 inputs for the `min` and `max` price to make it more user-friendly.
 The 2 inputs values will be synced with the slider.
 
-```tsx:price-range-filter.tsx showLineNumbers
+```tsx title="price-range-filter.tsx" showLineNumbers
 export function PriceRangeFilter({
   collection,
 }: {

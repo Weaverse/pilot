@@ -19,7 +19,7 @@ The answer is that you don't need to add a new dependency to your `package.json`
 
 You can create a `request` using `https` as follows:
 
-```js:server.ts {8,11} showLineNumbers
+```js title="server.ts" {8,11} showLineNumbers
 let https = require('https')
 
 https
@@ -52,7 +52,7 @@ In the code above:
 
 That's it! Now let's abstract this logic into a function that can be used anywhere in the `server`:
 
-```js:fetch-json.js showLineNumbers
+```js title="fetch-json.js" showLineNumbers
 let https = require('https')
 
 let fetchJSON = (url) => {
@@ -78,7 +78,7 @@ module.exports = fetchJSON
 
 And you can use it as follows:
 
-```js:index.js showLineNumbers
+```js title="index.js" showLineNumbers
 // Async context
 let data = await fetchJSON(url)
 

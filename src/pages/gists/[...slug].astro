@@ -3,14 +3,14 @@ import { getCollection, render } from 'astro:content'
 import JsonLd from '~/components/JsonLd.astro'
 import Twemoji from '~/components/mdx/Twemoji.astro'
 import StudioShell from '~/components/studio/StudioShell.astro'
+import Comments from '~/components/widgets/Comments.astro'
 import Reactions from '~/components/widgets/Reactions'
 import ViewsCounter from '~/components/widgets/ViewsCounter'
-import Comments from '~/components/widgets/Comments'
+import BaseLayout from '~/layouts/BaseLayout.astro'
 import { getGiscusConfig } from '~/lib/comments'
 import { isPublished, tagSlug } from '~/lib/content'
 import { articleJsonLd, breadcrumbJsonLd } from '~/lib/seo'
 import { SITE } from '~/lib/site'
-import BaseLayout from '~/layouts/BaseLayout.astro'
 
 // Slug parity: id = filename → `/snippets/<slug>` exactly as legacy.
 export async function getStaticPaths() {
@@ -23,8 +23,18 @@ export async function getStaticPaths() {
 
 const { snippet } = Astro.props
 const { Content } = await render(snippet)
-const { title, heading, summary, seoTitle, seoDescription, date, lastmod, tags, images, canonicalUrl } =
-  snippet.data
+const {
+  title,
+  heading,
+  summary,
+  seoTitle,
+  seoDescription,
+  date,
+  lastmod,
+  tags,
+  images,
+  canonicalUrl,
+} = snippet.data
 const metaTitle = seoTitle ?? title
 const metaDescription = seoDescription ?? summary
 const ogImage = Array.isArray(images) ? images[0] : images
@@ -35,7 +45,8 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 })
 const giscusConfig = getGiscusConfig()
 
-const canonical = canonicalUrl ?? new URL(`/gists/${snippet.id}`, SITE.siteUrl).href
+const canonical =
+  canonicalUrl ?? new URL(`/gists/${snippet.id}`, SITE.siteUrl).href
 const jsonLd = [
   articleJsonLd({
     title: heading,
@@ -92,7 +103,7 @@ const jsonLd = [
         </span>
         <Reactions type="snippet" slug={snippet.id} client:visible />
       </div>
-      {giscusConfig && <Comments config={giscusConfig} client:only="react" />}
+      {giscusConfig && <Comments config={giscusConfig} />}
     </article>
   </StudioShell>
 </BaseLayout>

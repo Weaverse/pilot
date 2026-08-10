@@ -18,7 +18,7 @@ I've decided to crawl / scrape user's book data. There are two primary ways to d
 
 No matter which method you choose, we'll parse everything into a clean, consistent format. Here's what our final `GoodreadsBook` type looks like:
 
-```ts:types.ts showLineNumbers
+```ts title="types.ts" showLineNumbers
 export type GoodreadsBook = {
   guid: string
   pubDate: string
@@ -49,7 +49,7 @@ export type GoodreadsBook = {
 
 The first method is to use the [`rss-parser`](https://www.npmjs.com/package/rss-parser) package to parse the RSS feed and extract the book data.
 
-```ts:goodreads-rss.ts showLineNumbers
+```ts title="goodreads-rss.ts" showLineNumbers
 import Parser from 'rss-parser'
 import type { GoodreadsBook } from '~/types'
 
@@ -86,7 +86,7 @@ let parser = new Parser<{[key: string]: any}, GoodreadsBook>({
 
 Then you can fetch the data from the RSS feed using the `parser` object, and process it as needed.
 
-```ts:goodreads-rss.ts showLineNumbers
+```ts title="goodreads-rss.ts" showLineNumbers
 const GOODREADS_RSS_FEED_URL = '<YOUR_GOODREADS_RSS_FEED_URL>'
 
 export async function fetchGoodreadsBooks() {
@@ -112,7 +112,7 @@ export async function fetchGoodreadsBooks() {
 Now that you have the data you might need to prettify them before storing or using in your application
 since the data is stored in a raw format.
 
-```ts:goodreads-rss.ts showLineNumbers
+```ts title="goodreads-rss.ts" showLineNumbers
 let data = await parser.parseURL(/* GOODREADS_RSS_FEED_URL */)
 // Loop through the `data.items` array to prettify the data
 for (let book of data.items) {
@@ -134,7 +134,7 @@ First, you need to export your data from the [Goodreads import/export page](http
 
 Once you have the `goodreads_library_export.csv` file, you can use the [`csv-parser`](https://www.npmjs.com/package/csv-parser) package to parse it.
 
-```ts:goodreads-csv.ts showLineNumbers
+```ts title="goodreads-csv.ts" showLineNumbers
 import fs from 'node:fs'
 import path from 'node:path'
 import csv from 'csv-parser'
@@ -196,7 +196,7 @@ export async function parseGoodreadsCsv() {
 
 The data from the CSV needs to be transformed to a consistent format, similar to the one used for the RSS feed data. Notice that some fields like `bookImageUrl` are not available in the CSV export.
 
-```ts:goodreads-transform.ts showLineNumbers
+```ts title="goodreads-transform.ts" showLineNumbers
 // Transform CSV data to match a common GoodreadsBook format
 let books: GoodreadsBook[] = csvBooks.map(book => {
   let transformedBook: GoodreadsBook = {

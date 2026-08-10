@@ -41,13 +41,11 @@
     "heatmap:refresh": "bun scripts/refresh-heatmap-map.ts"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.2.1",
     "@astrojs/mdx": "^7.0.2",
     "@astrojs/react": "^6.0.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^11.0.2",
-    "@giscus/react": "^3.1.0",
     "@hugeicons/core-free-icons": "^4.2.2",
     "@hugeicons/react": "^1.1.9",
     "@tailwindcss/vite": "^4.3.2",
@@ -56,12 +54,12 @@
     "chess.js": "1.4.0",
     "d3-geo": "^3.1.1",
     "github-slugger": "^2.0.0",
+    "giscus": "^1.6.0",
     "postgres": "^3.4.9",
     "react": "^19.2.7",
     "react-chessboard": "5.10.0",
     "react-dom": "^19.2.7",
-    "tailwindcss": "^4.3.2",
-    "unist-util-visit": "^5.1.0"
+    "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",

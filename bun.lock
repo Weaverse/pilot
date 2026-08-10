@@ -5,13 +5,11 @@
     "": {
       "name": "leohuynh-dev-v4",
       "dependencies": {
-        "@astrojs/markdown-remark": "^7.2.1",
         "@astrojs/mdx": "^7.0.2",
         "@astrojs/react": "^6.0.1",
         "@astrojs/rss": "^4.0.19",
         "@astrojs/sitemap": "^3.7.3",
         "@astrojs/vercel": "^11.0.2",
-        "@giscus/react": "^3.1.0",
         "@hugeicons/core-free-icons": "^4.2.2",
         "@hugeicons/react": "^1.1.9",
         "@tailwindcss/vite": "^4.3.2",
@@ -19,13 +17,13 @@
         "astro-expressive-code": "^0.44.0",
         "chess.js": "1.4.0",
         "d3-geo": "^3.1.1",
+        "giscus": "^1.6.0",
         "github-slugger": "^2.0.0",
         "postgres": "^3.4.9",
         "react": "^19.2.7",
         "react-chessboard": "5.10.0",
         "react-dom": "^19.2.7",
         "tailwindcss": "^4.3.2",
-        "unist-util-visit": "^5.1.0",
       },
       "devDependencies": {
         "@astrojs/check": "^0.9.9",
@@ -239,8 +237,6 @@
     "@expressive-code/plugin-shiki": ["@expressive-code/plugin-shiki@0.44.0", "", { "dependencies": { "@expressive-code/core": "^0.44.0", "shiki": "^4.0.2" } }, "sha512-RZsdaqlbGqyAQKuoX4myQXxjmiE2l5KBpJ/gKPh62tCdIdpWyjbzVqSo8+5XsezZxkfi8AJ/J6EUaBTPROFX/Q=="],
 
     "@expressive-code/plugin-text-markers": ["@expressive-code/plugin-text-markers@0.44.0", "", { "dependencies": { "@expressive-code/core": "^0.44.0" } }, "sha512-0/m3A5b+lz2upyNq+wzZ1S69HRoJmyFs5LsR42lVZ9pmGRlBiSBYQpvqlji4DBj1+Riamxc0AvcCr5kuzOQeWA=="],
-
-    "@giscus/react": ["@giscus/react@3.1.0", "", { "dependencies": { "giscus": "^1.6.0" }, "peerDependencies": { "react": "^16 || ^17 || ^18 || ^19", "react-dom": "^16 || ^17 || ^18 || ^19" } }, "sha512-0TCO2TvL43+oOdyVVGHDItwxD1UMKP2ZYpT6gXmhFOqfAJtZxTzJ9hkn34iAF/b6YzyJ4Um89QIt9z/ajmAEeg=="],
 
     "@hugeicons/core-free-icons": ["@hugeicons/core-free-icons@4.2.2", "", {}, "sha512-fjQW3p6cwoJmwK3oCnV8Z3PC5sHihDvr2jkAHax8cxqp62GaV/D7B/Rnao+JwicW8fmLZUQ6QrzWfoyMFOEQlQ=="],
 

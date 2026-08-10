@@ -13,7 +13,7 @@ This function will remove all falsy values like `null`, `undefined`, `0`, `''`, 
 
 Allow passing custom `falsyValues` to remove and return a new object without the falsy values.
 
-```js:remove-falsy.js showLineNumbers
+```js title="remove-falsy.js" showLineNumbers
 function removeFalsy(obj, falsyValues = ['', null, undefined]) {
   if (!obj || typeof obj !== 'object') {
     return obj
@@ -30,7 +30,7 @@ function removeFalsy(obj, falsyValues = ['', null, undefined]) {
 
 ##### Example usage
 
-```js:index.js showLineNumbers
+```js title="index.js" showLineNumbers
 let obj = {
   a: 1,
   b: 0,

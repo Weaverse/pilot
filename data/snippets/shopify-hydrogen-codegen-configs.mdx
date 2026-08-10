@@ -21,7 +21,7 @@ npm install @graphql-codegen/cli @shopify/hydrogen-codegen --save-dev
 
 Then create a `codegen.ts` file in the root of your project with the following content:
 
-```ts:codegen.ts
+```ts title="codegen.ts"
 import type { CodegenConfig } from "@graphql-codegen/cli";
 import { pluckConfig, preset, getSchema } from "@shopify/hydrogen-codegen";
 
@@ -48,7 +48,7 @@ The generated types are saved in the `storefront-api.generated.d.ts` file (you c
 
 Now, update your `package.json` to add the `codegen` scripts:
 
-```json:package.json
+```json title="package.json"
 "scripts": {
   "codegen": "shopify hydrogen codegen",
   "dev": "shopify hydrogen dev --codegen",
@@ -71,7 +71,7 @@ The codegen will also automatically update the types when you run the `dev` or `
 If you are using the new [Customer Account API](https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/hydrogen),
 you will need to add a new config for the `customer-account` schema.
 
-```ts:codegen.ts showLineNumbers {14,17-21}
+```ts title="codegen.ts" showLineNumbers {14,17-21}
 import type { CodegenConfig } from "@graphql-codegen/cli";
 import { pluckConfig, preset, getSchema } from "@shopify/hydrogen-codegen";
 
