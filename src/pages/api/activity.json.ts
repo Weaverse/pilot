@@ -6,5 +6,5 @@ export const prerender = false
 
 export const GET: APIRoute = async () => {
   const payload = await fetchActivity()
-  return new Response(JSON.stringify(payload), { headers: jsonHeaders(120) })
+  return Response.json(payload, { headers: jsonHeaders(120) })
 }

@@ -12,5 +12,5 @@ export const prerender = false
 
 export const GET: APIRoute = async () => {
   const payload = await fetchSiteStats()
-  return new Response(JSON.stringify(payload), { headers: jsonHeaders(30) })
+  return Response.json(payload, { headers: jsonHeaders(30) })
 }

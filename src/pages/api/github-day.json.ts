@@ -22,33 +22,31 @@ function isRealIsoDate(date: string): boolean {
 export const GET: APIRoute = async ({ url }) => {
   const date = url.searchParams.get('date')
   if (!date) {
-    return new Response(
-      JSON.stringify({ ok: false, error: 'Missing date query parameter.' }),
+    return Response.json(
+      { ok: false, error: 'Missing date query parameter.' },
       { status: 400, headers: jsonHeaders(60) },
     )
   }
 
   if (!isRealIsoDate(date)) {
-    return new Response(
-      JSON.stringify({ ok: false, date, error: 'Invalid calendar date.' }),
+    return Response.json(
+      { ok: false, date, error: 'Invalid calendar date.' },
       { status: 400, headers: jsonHeaders(60) },
     )
   }
 
   const window = githubHeatmapDateWindow()
   if (date < window.fromDate || date > window.toDate) {
-    return new Response(
-      JSON.stringify({
+    return Response.json(
+      {
         ok: false,
         date,
         error: `Date must be within ${window.fromDate} and ${window.toDate}.`,
-      }),
+      },
       { status: 400, headers: jsonHeaders(60) },
     )
   }
 
   const payload = await fetchGithubDay(date)
-  return new Response(JSON.stringify(payload), {
-    headers: jsonHeaders(86_400),
-  })
+  return Response.json(payload, { headers: jsonHeaders(86_400) })
 }

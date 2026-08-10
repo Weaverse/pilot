@@ -33,7 +33,7 @@ export const GET: APIRoute = async () => {
     }),
   )
 
-  return new Response(JSON.stringify(Object.fromEntries(entries)), {
+  return Response.json(Object.fromEntries(entries), {
     headers: jsonHeaders(600),
   })
 }

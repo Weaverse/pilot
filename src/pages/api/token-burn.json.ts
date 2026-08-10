@@ -11,5 +11,5 @@ export const GET: APIRoute = async ({ request }) => {
       ? await fetchTokenBurnFull()
       : await fetchTokenBurn()
   // token-burn data changes ~once/day per machine — cache generously.
-  return new Response(JSON.stringify(payload), { headers: jsonHeaders(600) })
+  return Response.json(payload, { headers: jsonHeaders(600) })
 }

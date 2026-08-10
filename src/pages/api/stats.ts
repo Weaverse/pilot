@@ -32,10 +32,7 @@ function parseSlug(value: string | undefined): string | null {
 }
 
 function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: JSON_HEADERS,
-  })
+  return Response.json(body, { status, headers: JSON_HEADERS })
 }
 
 function jsonError(status: number, message: string) {

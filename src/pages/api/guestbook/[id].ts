@@ -14,7 +14,7 @@ const JSON_HEADERS = {
 }
 
 function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS })
+  return Response.json(body, { status, headers: JSON_HEADERS })
 }
 
 function jsonError(status: number, message: string) {

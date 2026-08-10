@@ -6,5 +6,5 @@ export const prerender = false
 
 export const GET: APIRoute = async () => {
   const payload = await fetchSpotifyStatus()
-  return new Response(JSON.stringify(payload), { headers: noStoreJsonHeaders() })
+  return Response.json(payload, { headers: noStoreJsonHeaders() })
 }
