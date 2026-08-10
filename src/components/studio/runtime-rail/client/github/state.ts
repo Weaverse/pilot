@@ -2,7 +2,7 @@ import type {
   GithubContributionDay,
   GithubDayPayload,
   GithubTodayPayload,
-} from '../types'
+} from '~/types/integrations'
 
 export const HEAT_LEVEL_CLASSES: Record<string, string> = {
   NONE: 'border-[#dde6ee] bg-[#eef3f7] hover:bg-[#e3ebf2]',

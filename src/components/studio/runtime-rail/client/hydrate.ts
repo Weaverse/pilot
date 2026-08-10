@@ -1,14 +1,14 @@
-import { updateActivity } from './activity'
-import { updateGithub } from './github/heat'
-import { fetchRuntimeJson } from './shared'
-import { syncSpotify } from './spotify-sync'
-import { updateTokenBurn } from './token-burn'
 import type {
   ActivityPayload,
   GithubStreakPayload,
   GithubTodayPayload,
   TokenBurnPayload,
-} from './types'
+} from '~/types/integrations'
+import { updateActivity } from './activity'
+import { updateGithub } from './github/heat'
+import { fetchRuntimeJson } from './shared'
+import { syncSpotify } from './spotify-sync'
+import { updateTokenBurn } from './token-burn'
 
 function hydrateGithubActivity(rail: HTMLElement) {
   if (rail.dataset.hydrated === 'true') return

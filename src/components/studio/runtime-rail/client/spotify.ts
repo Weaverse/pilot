@@ -1,11 +1,13 @@
+import type { SpotifyPayload } from '~/types/integrations'
 import { fetchRuntimeJson } from './shared'
-import type { SpotifyPayload } from './types'
 
-function spotifyStatusLabel(status: SpotifyPayload['status']): string {
+function spotifyStatusLabel(
+  status: SpotifyPayload['status'] | undefined,
+): string {
   return status || 'unavailable'
 }
 
-function spotifyHeading(status: SpotifyPayload['status']): string {
+function spotifyHeading(status: SpotifyPayload['status'] | undefined): string {
   return status === 'playing' ? 'audio: live' : 'audio: idle'
 }
 

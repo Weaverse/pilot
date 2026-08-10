@@ -1,3 +1,5 @@
+import { env } from '~/lib/runtime/shared'
+
 export interface GiscusConfig {
   repo: `${string}/${string}`
   repoId: string
@@ -9,14 +11,6 @@ export interface GiscusConfig {
   inputPosition: 'top' | 'bottom'
   theme: string
   lang: string
-}
-
-function env(name: string): string | undefined {
-  return (
-    process.env[name]?.trim() ||
-    (import.meta.env as Record<string, string | undefined>)[name]?.trim() ||
-    undefined
-  )
 }
 
 export function getGiscusConfig(): GiscusConfig | null {

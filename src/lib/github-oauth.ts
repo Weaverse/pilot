@@ -1,4 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
+import { env } from '~/lib/runtime/shared'
 import type { GuestbookUser } from '~/types/guestbook'
 
 /**
@@ -9,11 +10,6 @@ import type { GuestbookUser } from '~/types/guestbook'
  * `process.env`. Read both so the code works locally and in production. None of
  * these names are `PUBLIC_`-prefixed, so they never reach the client bundle.
  */
-export function getServerEnv(name: string): string | undefined {
-  const value = import.meta.env[name] ?? process.env[name]
-  return typeof value === 'string' ? value.trim() : undefined
-}
-
 const GITHUB_AUTHORIZE_URL = 'https://github.com/login/oauth/authorize'
 const GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token'
 const GITHUB_USER_URL = 'https://api.github.com/user'
@@ -33,7 +29,7 @@ interface SessionPayload extends GuestbookUser {
 }
 
 function getSessionSecret(): string {
-  const secret = getServerEnv('GUESTBOOK_SESSION_SECRET')
+  const secret = env('GUESTBOOK_SESSION_SECRET')
   if (!secret) {
     throw new Error('GUESTBOOK_SESSION_SECRET is not configured.')
   }
@@ -75,7 +71,7 @@ export function createGithubAuthUrl(origin: string): {
   url: string
   state: string
 } {
-  const clientId = getServerEnv('GITHUB_OAUTH_CLIENT_ID')
+  const clientId = env('GITHUB_OAUTH_CLIENT_ID')
   if (!clientId) {
     throw new Error('GITHUB_OAUTH_CLIENT_ID is not configured.')
   }
@@ -97,8 +93,8 @@ export async function exchangeGithubCode(
   code: string,
   origin: string,
 ): Promise<string> {
-  const clientId = getServerEnv('GITHUB_OAUTH_CLIENT_ID')
-  const clientSecret = getServerEnv('GITHUB_OAUTH_CLIENT_SECRET')
+  const clientId = env('GITHUB_OAUTH_CLIENT_ID')
+  const clientSecret = env('GITHUB_OAUTH_CLIENT_SECRET')
   if (!clientId || !clientSecret) {
     throw new Error('GitHub OAuth credentials are not configured.')
   }

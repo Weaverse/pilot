@@ -9,7 +9,7 @@ import type {
   TokenBurnModelSlice,
   TokenBurnPayload,
   TokenBurnWindow,
-} from './types'
+} from '~/types/integrations'
 
 function tokenBurnWindowLabel(
   window: TokenBurnWindow | null | undefined,

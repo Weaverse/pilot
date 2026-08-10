@@ -1,5 +1,5 @@
+import type { GithubDayPayload } from '~/types/integrations'
 import { stat } from '../shared'
-import type { GithubDayPayload } from '../types'
 import { formatGithubDate } from './state'
 
 export function setGithubDetailTitle(rail: Element, date: string | null) {

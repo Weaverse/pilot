@@ -1,4 +1,4 @@
-import type { ActivityItem, ActivityPayload } from './types'
+import type { ActivityItem, ActivityPayload } from '~/types/integrations'
 
 const ACTIVITY_COLORS: Record<ActivityItem['type'], string> = {
   book: 'bg-code-amber',

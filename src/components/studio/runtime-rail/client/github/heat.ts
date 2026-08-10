@@ -1,9 +1,9 @@
-import { fetchRuntimeJson } from '../shared'
 import type {
   GithubDayPayload,
   GithubStreakPayload,
   GithubTodayPayload,
-} from '../types'
+} from '~/types/integrations'
+import { fetchRuntimeJson } from '../shared'
 import { renderGithubDetail, renderGithubLoading } from './detail'
 import {
   contributionLabel,
