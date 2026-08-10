@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import Twemoji from '~/components/icons/Twemoji'
+import { emojiCodepoint } from '~/lib/emoji'
 import { fetchStats, postStats } from '~/lib/stats'
 import type { ReactionKey, StatsType } from '~/types/stats'
 
@@ -119,6 +119,8 @@ function Reaction({
   onSave: (v: number) => void
 }) {
   const [reacting, setReacting] = useState(false)
+  const codepoint = emojiCodepoint(emoji)
+  const emojiText = emoji.replace(/-/g, ' ')
   const latestReactions = useRef(reactions)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const countRef = useRef<HTMLSpanElement>(null)
@@ -165,7 +167,16 @@ function Reaction({
       data-umami-event-post={path}
       data-umami-event-react={reactionKey}
     >
-      <Twemoji emoji={emoji} size="2x" />
+      {codepoint ? (
+        <img
+          src={`/static/twemoji/${codepoint}.svg`}
+          alt={emojiText}
+          title={emojiText}
+          loading="lazy"
+          decoding="async"
+          className="twemoji inline-block h-[2em] w-[2em] align-[-0.15em]"
+        />
+      ) : null}
       <span className="relative h-6 w-8 overflow-hidden text-center font-mono text-xs">
         <span
           className={[

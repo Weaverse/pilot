@@ -11,7 +11,6 @@ export type HugeIconName =
   | 'braces'
   | 'caret-down'
   | 'caret-right'
-  | 'comment'
   | 'compass'
   | 'external'
   | 'file'
@@ -21,12 +20,10 @@ export type HugeIconName =
   | 'keyboard'
   | 'land-plot'
   | 'markdown'
-  | 'project'
   | 'quill'
   | 'rocket'
   | 'star'
   | 'tag'
-  | 'user'
   | 'code'
 
 export type IconSpec =

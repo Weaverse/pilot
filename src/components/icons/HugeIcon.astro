@@ -8,9 +8,7 @@ import {
   BracesIcon,
   Briefcase01Icon,
   ChessKnightIcon,
-  CodeSquareIcon,
   Compass01Icon,
-  DatabaseIcon,
   ExternalLinkIcon,
   File01Icon,
   FileCodeIcon,
@@ -18,26 +16,20 @@ import {
   FolderOpenIcon,
   GalleryThumbnailsIcon,
   GlobeIcon,
-  Home01Icon,
   KeyboardIcon,
   LandPlotIcon,
-  Message02Icon,
   Note01Icon,
-  PaintBrushIcon,
   PuzzleIcon,
   QuillWrite02Icon,
   RefreshIcon,
   RobotIcon,
   Rocket01Icon,
-  ShoppingBag01Icon,
   SidebarLeftIcon,
   SidebarRightIcon,
   StarIcon,
   Store01Icon,
   Tag01Icon,
   TerminalIcon,
-  UserCircleIcon,
-  WorkIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
@@ -50,36 +42,28 @@ type IconName =
   | 'caret-down'
   | 'caret-right'
   | 'chess-knight'
-  | 'comment'
   | 'compass'
-  | 'database'
   | 'external'
   | 'file'
   | 'folder'
   | 'folder-open'
   | 'gallery'
   | 'globe'
-  | 'home'
   | 'keyboard'
   | 'land-plot'
   | 'markdown'
-  | 'paint-brush'
-  | 'project'
   | 'puzzle'
   | 'quill'
   | 'refresh'
   | 'robot'
   | 'rocket'
-  | 'shopping-bag'
   | 'sidebar-left'
   | 'sidebar-right'
   | 'star'
   | 'store'
   | 'tag'
   | 'terminal'
-  | 'user'
   | 'code'
-  | 'work'
 
 interface Props {
   name: IconName
@@ -106,36 +90,29 @@ const ICONS = {
   'caret-down': ArrowDown01Icon,
   'caret-right': ArrowRight01Icon,
   'chess-knight': ChessKnightIcon,
-  comment: Message02Icon,
   compass: Compass01Icon,
-  database: DatabaseIcon,
   external: ExternalLinkIcon,
   file: File01Icon,
   folder: Folder01Icon,
   'folder-open': FolderOpenIcon,
   gallery: GalleryThumbnailsIcon,
   globe: GlobeIcon,
-  home: Home01Icon,
   keyboard: KeyboardIcon,
   'land-plot': LandPlotIcon,
   markdown: Note01Icon,
-  'paint-brush': PaintBrushIcon,
-  project: CodeSquareIcon,
   puzzle: PuzzleIcon,
   quill: QuillWrite02Icon,
   refresh: RefreshIcon,
   robot: RobotIcon,
   rocket: Rocket01Icon,
-  'shopping-bag': ShoppingBag01Icon,
+
   'sidebar-left': SidebarLeftIcon,
   'sidebar-right': SidebarRightIcon,
   star: StarIcon,
   store: Store01Icon,
   tag: Tag01Icon,
   terminal: TerminalIcon,
-  user: UserCircleIcon,
   code: FileCodeIcon,
-  work: WorkIcon,
 } as const
 ---
 

@@ -6,17 +6,12 @@
  */
 import Astro from '@icons/astro.svg?raw'
 import Bash from '@icons/bash.svg?raw'
-import Biome from '@icons/biome.svg?raw'
 import Claude from '@icons/claude.svg?raw'
 import CSS from '@icons/css.svg?raw'
-import Drizzle from '@icons/drizzle.svg?raw'
 import Exercism from '@icons/exercism.svg?raw'
-import Git from '@icons/git.svg?raw'
-import GitHub from '@icons/github.svg?raw'
 import HeadlessUI from '@icons/headlessui.svg?raw'
 import Html from '@icons/html5.svg?raw'
 import Hydrogen from '@icons/hydrogen.svg?raw'
-import Iterm2 from '@icons/iterm2.svg?raw'
 import Java from '@icons/java.svg?raw'
 import Javascript from '@icons/javascript.svg?raw'
 import JWT from '@icons/jsonwebtokens.svg?raw'
@@ -25,17 +20,9 @@ import Liquid from '@icons/liquid.svg?raw'
 import Markdown from '@icons/markdown.svg?raw'
 import MongoDB from '@icons/mongodb.svg?raw'
 import MySQL from '@icons/mysql.svg?raw'
-import NextJS from '@icons/nextjs.svg?raw'
-import Node from '@icons/nodejs.svg?raw'
-import Npm from '@icons/npm.svg?raw'
 import OpenAI from '@icons/openai.svg?raw'
 import Picsum from '@icons/picsum.svg?raw'
-import Pnpm from '@icons/pnpm.svg?raw'
-import Postcss from '@icons/postcss.svg?raw'
-import Prisma from '@icons/prisma.svg?raw'
-import Pygame from '@icons/pygame.svg?raw'
 import Python from '@icons/python.svg?raw'
-import Railway from '@icons/railway.svg?raw'
 import React from '@icons/react.svg?raw'
 import Remix from '@icons/remix.svg?raw'
 import SemanticUI from '@icons/semanticui.svg?raw'
@@ -45,8 +32,6 @@ import TailwindCSS from '@icons/tailwind.svg?raw'
 import Turborepo from '@icons/turborepo.svg?raw'
 import Typescript from '@icons/typescript.svg?raw'
 import Umami from '@icons/umami.svg?raw'
-import Vercel from '@icons/vercel.svg?raw'
-import VSCode from '@icons/vscode.svg?raw'
 import Webpack from '@icons/webpack.svg?raw'
 
 /** Maps a stack tool or GitHub language name to its inline SVG markup. */
@@ -54,18 +39,12 @@ export const BRAND_ICONS: Record<string, string> = {
   Astro,
   Bash,
   Shell: Bash,
-  Biome,
   Claude,
   CSS,
-  Drizzle,
   Exercism,
-  Git,
-  GitHub,
   HeadlessUI,
-  Html,
   HTML: Html,
   Hydrogen,
-  Iterm2,
   Java,
   Javascript,
   JavaScript: Javascript,
@@ -76,18 +55,10 @@ export const BRAND_ICONS: Record<string, string> = {
   MDX: Markdown,
   MongoDB,
   MySQL,
-  NextJS,
-  Node,
-  Npm,
   OpenAI,
   Picsum,
-  Pnpm,
   Polaris: Shopify,
-  Postcss,
-  Prisma,
-  Pygame,
   Python,
-  Railway,
   React,
   Remix,
   SemanticUI,
@@ -99,8 +70,6 @@ export const BRAND_ICONS: Record<string, string> = {
   Typescript,
   TypeScript: Typescript,
   Umami,
-  Vercel,
-  VSCode,
   Webpack,
 }
 
