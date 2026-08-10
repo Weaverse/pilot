@@ -134,7 +134,6 @@ export interface TokenBurnFullPayload {
   last7Days: TokenBurnWindow
   last30Days: TokenBurnWindow
   allTimeModels: TokenBurnModelSlice[]
-  todayModels: TokenBurnModelSlice[]
   daily: TokenBurnDailyPoint[]
   machines: string[]
   lastActivity?: string

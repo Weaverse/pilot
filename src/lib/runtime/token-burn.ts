@@ -109,7 +109,6 @@ function unavailableTokenBurnFull(error: string): TokenBurnFullPayload {
     last7Days: EMPTY_TOKEN_BURN_WINDOW,
     last30Days: EMPTY_TOKEN_BURN_WINDOW,
     allTimeModels: [],
-    todayModels: [],
     daily: [],
     machines: [],
     error,
@@ -131,10 +130,7 @@ function buildTokenBurnFullPayload(
     today: tokenBurnWindow(todayRow ? [todayRow] : []),
     last7Days: tokenBurnWindow(daily.filter((row) => row.date >= from7)),
     last30Days: tokenBurnWindow(daily.filter((row) => row.date >= from30)),
-    // All-time breakdown lives at the top level of the summary; today's is
-    // derived from the matching daily row.
     allTimeModels: modelSlices(summary.byModel),
-    todayModels: modelSlices(todayRow?.byModel),
     daily: [...daily]
       .sort((a, b) => a.date.localeCompare(b.date))
       .map((row) => ({

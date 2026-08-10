@@ -10,9 +10,6 @@ export const SMALL_GRID = 4
 export const LARGE_GRID = 5
 export const LARGE_GRID_FROM_LEVEL = 5
 
-/** Source board images are 600×600; CSS sprites slice tiles from them. */
-export const BOARD_PX = 600
-
 /** Random shuffle-move counts per mode, keyed by grid size (mirrors the original). */
 export const SHUFFLE_MOVES: Record<number, Record<Mode, number>> = {
   [SMALL_GRID]: { easy: 20, medium: 40, hard: 60 },

@@ -1,9 +1,5 @@
 import { SITE } from '~/lib/site'
-import { env, timeoutSignal } from './shared'
-
-export function getUmamiWebsiteId(): string | undefined {
-  return env('PUBLIC_UMAMI_WEBSITE_ID')
-}
+import { timeoutSignal } from './shared'
 
 /**
  * Umami public share auth, derived entirely from the public share URL in `SITE.analytics`

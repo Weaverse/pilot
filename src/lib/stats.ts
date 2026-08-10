@@ -17,18 +17,6 @@ const STATS_ENDPOINT = '/api/stats'
 const SITE_STATS_ENDPOINT = '/api/site-stats.json'
 export const SITE_STATS_REFRESH_INTERVAL_MS = 30_000
 
-export function emptyStats(type: StatsType, slug: string): BlogStats {
-  return {
-    type,
-    slug,
-    views: 0,
-    loves: 0,
-    applauses: 0,
-    ideas: 0,
-    bullseyes: 0,
-  }
-}
-
 function normalize(
   type: StatsType,
   slug: string,

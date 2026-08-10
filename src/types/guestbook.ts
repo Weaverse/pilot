@@ -39,19 +39,7 @@ export interface GuestbookListResponse {
   nextCursor: string | null
 }
 
-export interface CreateGuestbookRequest {
-  message: string
-  displayName?: string
-  signature?: GuestbookSignature | null
-  /** Honeypot field; must be empty for a real submission. */
-  website?: string
-}
-
 export interface CreateGuestbookResponse {
   entry: GuestbookEntry
   status: 'approved' | 'pending'
-}
-
-export interface ModerateGuestbookRequest {
-  status: 'approved' | 'hidden'
 }

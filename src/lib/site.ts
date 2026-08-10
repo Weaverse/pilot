@@ -118,17 +118,3 @@ export const CAREER = [
 
 /** Blog list pagination size — parity with legacy `utils/const.ts`. */
 export const POSTS_PER_PAGE = 9
-
-export const NAV_LINKS = [
-  { href: '/blog', title: 'Log' },
-  { href: '/gists', title: 'Gists' },
-  { href: '/builds', title: 'Builds' },
-  { href: '/whoami', title: 'whoami' },
-] as const
-
-export const MORE_LINKS = [
-  { href: '/shelf', title: 'Shelf' },
-  { href: '/heatmap', title: 'Heatmap' },
-  { href: '/topics', title: 'Topics' },
-  { href: SITE.analytics.umamiShareUrl, title: 'Analytics' },
-] as const

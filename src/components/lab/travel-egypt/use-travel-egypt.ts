@@ -11,7 +11,6 @@ import { SHUFFLE_MOVES, TOTAL_LEVELS } from '~/lib/lab/travel-egypt/constants'
 import { getLevel } from '~/lib/lab/travel-egypt/levels'
 import type {
   Board,
-  LevelConfig,
   Mode,
   Phase,
   RunStats,
@@ -149,33 +148,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export interface TravelEgypt {
-  phase: Phase
-  audio: GameAudio
-  level: LevelConfig
-  levelNo: number
-  reachedLevel: number
-  mode: Mode
-  board: Board
-  levelMoves: number
-  stats: RunStats | null
-  muted: boolean
-  canGoNext: boolean
-  canGoPrev: boolean
-  start: () => void
-  selectMode: (mode: Mode) => void
-  tapTile: (index: number) => void
-  slideDir: (direction: SlideDirection) => void
-  nextLevel: () => void
-  prevLevel: () => void
-  restartLevel: () => void
-  finishEnding: () => void
-  playAgain: () => void
-  quit: () => void
-  toggleMute: () => void
-}
-
-export function useTravelEgypt(): TravelEgypt {
+export function useTravelEgypt() {
   const audioRef = useRef<GameAudio | null>(null)
   if (audioRef.current === null) audioRef.current = new GameAudio()
   const audio = audioRef.current
