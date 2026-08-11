@@ -271,6 +271,24 @@ export const components: HydrogenComponent[] = [/* …existing, */ Video];
 - [Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen) (recommended)
 - [Vercel](https://wvse.cc/deploy-pilot-to-vercel)
 
+> [!NOTE]
+> **Deploy fails with `JavaScript heap out of memory` (exit 134)?**
+>
+> The Oxygen build generates a server sourcemap (~4.6 MB here, roughly two thirds of the server output). On large storefronts that can push the CI runner past Node's default heap, and the deploy dies before uploading a complete build. The environment then serves HTML referencing assets that were never published, and the storefront renders blank.
+>
+> Set `SHOPIFY_HYDROGEN_FLAG_SOURCEMAP=false` on the deploy step of the generated workflow (`.github/workflows/oxygen-deployment-*.yml`). Add `NODE_OPTIONS` too if it still OOMs:
+>
+> ```yaml
+> - name: Build and Publish to Oxygen
+>   run: npx shopify hydrogen deploy
+>   env:
+>     SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_... }}
+>     SHOPIFY_HYDROGEN_FLAG_SOURCEMAP: "false"
+>     NODE_OPTIONS: --max-old-space-size=8192
+> ```
+>
+> This can't be fixed in `vite.config.ts`: the Shopify CLI passes `sourcemap` inline to Vite when it builds, and inline config overrides the config file. The CLI flag (or its `--no-sourcemap` equivalent) is the only lever the theme repo can document.
+
 ---
 
 ## Who's using Pilot
