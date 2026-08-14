@@ -2,6 +2,15 @@
 
 This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) when working with code in this repository.
 
+> **Canonical agent instructions:** edit `AGENTS.md` only. Root `CLAUDE.md` is a relative symlink to this file and must never become a separate copy.
+
+## Spec Maintenance
+
+- Search existing specs and linked issues before creating a spec.
+- Update the closest canonical spec; merge overlapping specs when they describe the same user outcome and implementation boundary.
+- Create a new spec only when no existing spec can absorb the work without mixing independent outcomes.
+- When a dated spec is updated or merged, rename it to the current date (and current month bucket when present), preserve `Created`, refresh `Last Updated`, and update backlinks and generated indexes in the same change.
+
 ## Companion Guides
 
 - **`.agents/weaverse.md`** — required reading before changing any component
