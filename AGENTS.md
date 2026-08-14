@@ -2,7 +2,7 @@
 
 This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) when working with code in this repository.
 
-> **Canonical agent instructions:** edit `AGENTS.md` only. Root `CLAUDE.md` is a relative symlink to this file and must never become a separate copy.
+> **Canonical agent instructions:** `AGENTS.md` is the source of truth and may always be updated. Root `CLAUDE.md` is a relative symlink to it and must never become a separate copy. Push completed instruction changes to the repository's default branch.
 
 ## Spec Maintenance
 
