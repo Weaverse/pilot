@@ -2,8 +2,8 @@
   "version": 1,
   "source": {
     "name": "@weaverse/pilot",
-    "revision": "v2026.7.28",
-    "version": "2026.7.28"
+    "revision": "v2026.8.17",
+    "version": "2026.8.17"
   },
   "components": [
     {

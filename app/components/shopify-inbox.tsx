@@ -1,4 +1,7 @@
 import { useEffect, useLayoutEffect } from "react";
+import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
+import { cn } from "~/utils/cn";
 
 type ShopifyInboxButton = {
   /** Button color as a hex value, e.g. `#000000`. */
@@ -68,6 +71,10 @@ const LOADER_BASE_URL =
 
 const SCRIPT_ID = "shopify-inbox";
 const HIDDEN_ATTRIBUTE = "data-shopify-inbox-hidden";
+// Set while a theme-owned launcher replaces Shopify's bubble. Styling lives in
+// `app/styles/app.css` because the closed widget host can only be hidden from
+// the light DOM — its launcher sits in a shadow root we must not reach into.
+const CUSTOM_LAUNCHER_ATTRIBUTE = "data-shopify-inbox-custom-launcher";
 
 // Each mounted overlay owns one token. The widget is shown again only after
 // every owner releases its token, so nested/overlapping dialogs cannot reveal
@@ -239,7 +246,9 @@ export function openShopifyInbox(): boolean {
   }
 
   // 2. Loaded web component: open it via the launcher in its shadow root,
-  //    unless the chat window is already open (the launcher toggles).
+  //    unless the chat window is already open (the launcher toggles). The host
+  //    may be visually hidden by the custom-launcher CSS; a programmatic click
+  //    still dispatches, so this works either way.
   const widget = document.querySelector(WIDGET_TAG);
   if (widget) {
     if (widget.getAttribute("is-open") === "true") {
@@ -254,4 +263,54 @@ export function openShopifyInbox(): boolean {
   }
 
   return false;
+}
+
+type ShopifyInboxLauncherProps = {
+  position?: "bottom_left" | "bottom_right";
+  /** Visible label. Omit to render an icon-only circular button. */
+  label?: string;
+};
+
+/**
+ * Theme-styled replacement for Shopify's chat bubble.
+ *
+ * Shopify renders its launcher in a Shopify-hosted frame (before load) or an
+ * `<inbox-online-store-chat>` shadow root (after load), so it cannot be
+ * restyled — only positioned and recolored via loader params. This renders a
+ * button that matches the theme instead, and suppresses Shopify's own launcher
+ * while the chat is closed. Once the chat opens, Shopify's widget is revealed
+ * again so its launcher can still act as the close control.
+ *
+ * Mount this only alongside `<ShopifyInbox>`; it does nothing on its own.
+ */
+export function ShopifyInboxLauncher({
+  position = "bottom_left",
+  label,
+}: ShopifyInboxLauncherProps) {
+  useHydrationSafeLayoutEffect(() => {
+    document.documentElement.setAttribute(CUSTOM_LAUNCHER_ATTRIBUTE, "");
+    return () =>
+      document.documentElement.removeAttribute(CUSTOM_LAUNCHER_ATTRIBUTE);
+  }, []);
+
+  return (
+    <Button
+      variant="primary"
+      // `animate` wraps the button in ScrollReveal, which is wrong for a
+      // permanently fixed launcher — it would fade in on scroll.
+      animate={false}
+      onClick={() => openShopifyInbox()}
+      aria-label={label || "Chat with us"}
+      className={cn(
+        "shopify-inbox-launcher",
+        "fixed bottom-5 z-9 gap-2 shadow-lg",
+        "transition-transform hover:scale-105",
+        label ? "px-5 py-3" : "p-4",
+        position === "bottom_left" ? "left-5" : "right-5",
+      )}
+    >
+      <Icon name="chat-teardrop-dots" className="size-6 shrink-0" />
+      {label && <span className="font-semibold">{label}</span>}
+    </Button>
+  );
 }

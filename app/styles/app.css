@@ -19,6 +19,25 @@ html[data-shopify-inbox-hidden] inbox-online-store-chat {
   pointer-events: none !important;
 }
 
+/* Custom launcher mode: suppress Shopify's own bubble while the chat is closed.
+ * The loaded widget's launcher lives in a shadow root, so the closed host is
+ * hidden wholesale and revealed again on `is-open` — that keeps Shopify's
+ * launcher available as the close control while the chat window is up. */
+html[data-shopify-inbox-custom-launcher] #shopify-chat-dummy,
+html[data-shopify-inbox-custom-launcher] #dummy-chat-button-iframe,
+html[data-shopify-inbox-custom-launcher]
+  inbox-online-store-chat:not([is-open="true"]) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* The theme launcher follows the same overlay guard as Shopify's bubble, and
+ * steps aside whenever the chat window itself is on screen. */
+html[data-shopify-inbox-hidden] .shopify-inbox-launcher,
+html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
+  display: none !important;
+}
+
 @layer base {
   *,
   ::after,

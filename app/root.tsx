@@ -35,7 +35,7 @@ import {
   useShouldRenderNewsletterPopup,
 } from "./components/root/newsletter-popup";
 import { NotFound } from "./components/root/not-found";
-import { ShopifyInbox } from "./components/shopify-inbox";
+import { ShopifyInbox, ShopifyInboxLauncher } from "./components/shopify-inbox";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
 import { getPublicEnv } from "./utils/env";
@@ -117,8 +117,21 @@ export const Layout = withWeaverse(function RootLayout({
   const data = useRouteLoaderData<RootLoader>("root");
   const publicEnv = data?.publicEnv;
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-  const { topbarHeight, topbarText, pwaEnabled, pwaIcon, pwaThemeColor } =
-    useThemeSettings<ThemeSettings>();
+  const {
+    topbarHeight,
+    topbarText,
+    pwaEnabled,
+    pwaIcon,
+    pwaThemeColor,
+    shopifyChatPosition,
+    shopifyChatVerticalPosition,
+    shopifyChatColor,
+    shopifyChatStyle,
+    shopifyChatIcon,
+    shopifyChatText,
+    shopifyChatCustomButton,
+    shopifyChatCustomButtonLabel,
+  } = useThemeSettings<ThemeSettings>();
   // App icon for iOS Add to Home Screen (iOS ignores manifest icons).
   const pwaIconUrl =
     (pwaIcon as WeaverseImage | undefined)?.url ||
@@ -261,6 +274,20 @@ export const Layout = withWeaverse(function RootLayout({
               domain: publicEnv.PUBLIC_STORE_DOMAIN,
               id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID,
             }}
+            button={{
+              position: shopifyChatPosition,
+              verticalPosition: shopifyChatVerticalPosition,
+              color: shopifyChatColor,
+              style: shopifyChatStyle,
+              icon: shopifyChatIcon,
+              text: shopifyChatText,
+            }}
+          />
+        )}
+        {publicEnv?.PUBLIC_SHOPIFY_INBOX_SHOP_ID && shopifyChatCustomButton && (
+          <ShopifyInboxLauncher
+            position={shopifyChatPosition}
+            label={shopifyChatCustomButtonLabel}
           />
         )}
       </body>
