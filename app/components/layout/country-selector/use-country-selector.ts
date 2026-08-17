@@ -1,6 +1,6 @@
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import {
   useFetcher,
@@ -37,16 +37,10 @@ export function useCountrySelector() {
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : "";
 
-  const { ref, inView } = useInView({
+  const { ref: observerRef, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });
-
-  const observerRef = useRef(null);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ref callback from useInView
-  useEffect(() => {
-    ref(observerRef.current);
-  }, [ref, observerRef]);
 
   useEffect(() => {
     if (!inView || fetcher.data || fetcher.state === "loading") {
