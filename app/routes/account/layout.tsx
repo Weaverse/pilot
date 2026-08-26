@@ -15,7 +15,7 @@ import AccountDashboard from "./dashboard";
 
 export const headers = routeHeaders;
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { data: d, errors } =
     await context.customerAccount.query<CustomerDetailsQuery>(
       CUSTOMER_DETAILS_QUERY,
@@ -30,7 +30,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
    * If the customer failed to load, we assume their access token is invalid.
    */
   if (errors?.length || !d?.customer) {
-    throw await doLogout(context);
+    throw await doLogout(context, request);
   }
 
   const customer = d?.customer;

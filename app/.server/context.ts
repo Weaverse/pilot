@@ -10,7 +10,7 @@ import {
   CART_MUTATION_FRAGMENT,
   CART_QUERY_FRAGMENT,
 } from "~/graphql/fragments";
-import { resolveLocaleFromRequest } from "~/utils/locale";
+import { resolveLocaleFromRequest, unauthorizedRedirect } from "~/utils/locale";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
 
@@ -39,6 +39,8 @@ export async function createHydrogenRouterContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
+  const locale = resolveLocaleFromRequest(request);
+
   const hydrogenContext = createHydrogenContext(
     {
       env,
@@ -46,7 +48,14 @@ export async function createHydrogenRouterContext(
       cache,
       waitUntil,
       session,
-      i18n: resolveLocaleFromRequest(request),
+      i18n: locale,
+      customerAccount: {
+        // Hydrogen's default handler redirects to a fixed `/account/login`,
+        // dropping the market: a shopper bounced from `/de-de/account` would
+        // sign in on the US storefront. `authUrl` stays the registered,
+        // non-dynamic OAuth callback; only this in-app bounce is localized.
+        customAuthStatusHandler: () => unauthorizedRedirect(request, locale),
+      },
       cart: {
         queryFragment: CART_QUERY_FRAGMENT,
         mutateFragment: CART_MUTATION_FRAGMENT,

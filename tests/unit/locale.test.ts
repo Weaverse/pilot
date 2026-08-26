@@ -8,6 +8,7 @@ import {
   localizePath,
   resolveLocale,
   SUPPORTED_LOCALES,
+  unauthorizedRedirect,
 } from "../../app/utils/locale";
 
 test("every configured market is internally consistent", () => {
@@ -284,4 +285,44 @@ test("customer-account navigation keeps the shopper's market", async () => {
   const header = await read("components/layout/header.tsx");
   expect(header).not.toContain('sign-in-url="/account/login"');
   expect(header).toContain("usePrefixPathWithLocale");
+});
+
+test("an unauthenticated account visit signs in on the same market", () => {
+  // Hydrogen's default handler redirects to a fixed `/account/login`, so a
+  // shopper bounced out of /de-de/account would sign in on the US storefront
+  // and return there afterwards.
+  for (const locale of SUPPORTED_LOCALES) {
+    const response = unauthorizedRedirect(
+      new Request(`https://shop.test${locale.pathPrefix}/account/orders/123`),
+      locale,
+    );
+    const location = new URL(
+      response.headers.get("Location") as string,
+      "https://shop.test",
+    );
+
+    expect(response.status).toBe(302);
+    expect(location.pathname).toBe(`${locale.pathPrefix}/account/login`);
+    // The shopper must come back to the market's page, not the default one.
+    expect(location.searchParams.get("return_to")).toBe(
+      `${locale.pathPrefix}/account/orders/123`,
+    );
+  }
+});
+
+test("a single-fetch account request returns to a real page path", () => {
+  // React Router requests `/de-de/account.data`; returning the shopper to that
+  // URL after login would hand them a data payload instead of a page.
+  const german = SUPPORTED_LOCALES.find(
+    (locale) => locale.hreflang === "de-DE",
+  ) as (typeof SUPPORTED_LOCALES)[number];
+  const location = new URL(
+    unauthorizedRedirect(
+      new Request("https://shop.test/de-de/account.data"),
+      german,
+    ).headers.get("Location") as string,
+    "https://shop.test",
+  );
+
+  expect(location.searchParams.get("return_to")).toBe("/de-de/account");
 });

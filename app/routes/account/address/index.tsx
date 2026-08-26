@@ -55,7 +55,7 @@ export const action: ActionFunction = async ({ request, context }) => {
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
   if (!(await customerAccount.isLoggedIn())) {
-    throw await doLogout(context);
+    throw await doLogout(context, request);
   }
 
   const addressId = formData.get("addressId");

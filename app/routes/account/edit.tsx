@@ -56,7 +56,7 @@ export const action: ActionFunction = async ({ request, context }) => {
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
   if (!(await context.customerAccount.isLoggedIn())) {
-    throw await doLogout(context);
+    throw await doLogout(context, request);
   }
 
   try {

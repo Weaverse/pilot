@@ -220,6 +220,38 @@ export function localizedPathForRequest(
   return localizePath(path, resolveLocaleFromRequest(request));
 }
 
+/**
+ * Where to send a shopper who hits an account route without a session.
+ *
+ * Hydrogen's `defaultAuthStatusHandler` redirects to a fixed `/account/login`,
+ * so a shopper bounced out of `/de-de/account` would sign in on the default
+ * market and return there. This keeps both the login URL and the `return_to`
+ * path on the market the request came in on.
+ *
+ * The `return_to` normalization matches Hydrogen's own: React Router's
+ * single-fetch `.data` suffix and `/_root` segment are stripped, and a trailing
+ * slash is dropped, so the value round-trips as a real app path.
+ */
+export function unauthorizedRedirect(
+  request: Request,
+  locale: Locale,
+): Response {
+  const { pathname } = new URL(request.url);
+  const returnTo = pathname
+    .replace(/\.data$/, "")
+    .replace(/\/_root$/, "/")
+    .replace(/(.+)\/$/, "$1");
+  const login = localizePath("/account/login", locale);
+  const query = new URLSearchParams({
+    return_to: localizePath(returnTo, locale),
+  });
+
+  return new Response(null, {
+    status: 302,
+    headers: { Location: `${login}?${query.toString()}` },
+  });
+}
+
 /** The exact shape of a market prefix: `xx-yy`, nothing longer or shorter. */
 const MARKET_SHAPED_SEGMENT = /^\/[a-z]{2}-[a-z]{2}$/;
 
