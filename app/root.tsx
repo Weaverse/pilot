@@ -4,11 +4,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
 import type { WeaverseImage } from "@weaverse/hydrogen";
-import {
-  useThemeSettings,
-  useTranslation,
-  withWeaverse,
-} from "@weaverse/hydrogen";
+import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
@@ -22,6 +18,7 @@ import {
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
+import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { CartStoreSync } from "./components/cart/cart-sync";
@@ -29,7 +26,10 @@ import { useCartStore } from "./components/cart/store";
 import { IconSprite } from "./components/icon-sprite";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
-import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import {
+  hasVisibleAnnouncement,
+  ScrollingAnnouncement,
+} from "./components/layout/scrolling-announcement";
 import { PwaInstallHint } from "./components/pwa-install-hint";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
@@ -121,10 +121,13 @@ export const Layout = withWeaverse(function RootLayout({
   const data = useRouteLoaderData<RootLoader>("root");
   const publicEnv = data?.publicEnv;
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-  const { t } = useTranslation();
   // Announcement copy is theme content, not a theme setting: it is translated
-  // per language in the Translation Manager.
-  const topbarText = t("announcement.topbarText");
+  // per language in the Translation Manager. It must be read through the same
+  // legacy-aware reader `ScrollingAnnouncement` uses — a raw `t()` ignores a
+  // merchant's pre-migration `topbarText`, so the reserved height and the bar
+  // that renders into it would disagree and the header would jump on hydration.
+  const themeText = useLegacyThemeText();
+  const topbarText = themeText("announcement.topbarText");
   const {
     topbarHeight,
     pwaEnabled,
@@ -231,7 +234,9 @@ export const Layout = withWeaverse(function RootLayout({
       <body
         style={
           {
-            "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
+            "--initial-topbar-height": `${
+              hasVisibleAnnouncement(topbarText) ? topbarHeight : 0
+            }px`,
           } as CSSProperties
         }
         className="bg-background text-body antialiased"

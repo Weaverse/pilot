@@ -135,3 +135,134 @@ That fix had a bug of its own on first write: spreading `redirected.headers`
 into an object literal and then setting `Location` appended a second header,
 producing a comma-joined URL. `Headers.set` replaces; the test asserts the
 object-literal form does not come back.
+
+## 2026-08-26 — Release-blocker review (P1 items)
+
+Two blockers from the independent review, both fixed at the root and
+mutation-tested.
+
+### Blocker 1 — market URL contract was silently narrowed
+
+`app/utils/const.ts` on the base shipped **27 prefixed markets**. The candidate's
+canonical table shipped 10, and redirected the other 23 to the US market via a
+`RETIRED_MARKET_PREFIXES` shim — changing each shopper's country and currency.
+Issue #473 asked for one source of truth plus GCC/India markets; it never
+authorized retiring a market.
+
+Fixed by merging, not choosing: the table is now **33 markets** — all 27 prior
+prefixes with their original country/currency, plus the 5 new locales
+(`/hi-in`, `/en-in`, `/ar-ae`, `/en-ae`, `/ar-sa`); `/es-es`, `/fr-fr`,
+`/de-de`, `/en-gb` already overlapped. With every market live the retirement
+shim and its second list are dead code, so both were deleted — the one-table
+invariant holds.
+
+Restoring markets pulled in three languages with no bundled copy. `it.json`,
+`ja.json` and `zh.json` were added at full parity: 174/174 keys, zero missing,
+zero orphan, zero interpolation-variable drift.
+
+Regression: `tests/unit/fixtures/prior-market-contract.json` pins the base
+contract, and two tests assert every prior prefix still resolves to its original
+language/country/currency and that nothing was dropped.
+
+### Blocker 2 — `isMarketInvariantPath` was a negative heuristic
+
+It claimed an allowlist but implemented `segments.length < 2 || !RESOURCE[first]`,
+so `/festive-wear`, `/foo/bar` and every unknown path were "invariant". Root SEO
+calls `alternateLinks` for every route including the `*` catch-all, so each
+emitted 11 fabricated localized URLs.
+
+Replaced with an exact positive matcher over the six static, parameterless
+paths the route table actually defines (`/`, `/search`, `/cart`, `/collections`,
+`/products`, `/policies`), normalizing trailing slash, query and case.
+Handle-bearing, account and catch-all paths return zero alternates: a wrong
+`hreflang` asserts a page exists where it does not, which is worse than absence.
+
+### Release evidence — the redirect seam is now behavior-tested
+
+The market-aware redirect logic was inline in `server.ts` and could only be
+checked by grepping source strings. Extracted to `app/.server/market-redirect.ts`
+with the Shopify lookup injected, and covered by seven behavior tests against
+real `Response` objects: document (301 + `Location`) and single-fetch
+(204 + `X-Remix-Redirect`) carriers, query preservation, `.data` protocol
+survival, off-origin targets left untouched, genuine 404 passthrough, and a
+single non-comma-joined header. The two source-string tests they replace were
+deleted.
+
+Mutations verified each guard: restoring the negative heuristic fails 4 SEO
+tests; dropping `/en-au` fails both contract tests; reading only `Location`
+fails the single-fetch test; removing the off-origin check fails its test.
+
+### Operational truth — Shopify silently falls back
+
+Read-only Storefront probe (`@inContext`) of all 33 configured markets on the
+current env: **3 are fully enabled** — root `EN-US/USD`, `/en-gb EN-GB/GBP`,
+`/en-vn EN-VN/VND`. 23 resolve to `EN-US/USD`; 7 have the country enabled but
+fall back on currency/language (`/en-au` → `EN-AU/VND`, `/ar-ae` → `EN-AE/VND`,
+`/en-jp` → `EN-JP/VND`, and siblings).
+
+This is Admin configuration, not code, and is identical on base `main` — the
+same 27 prefixes were already configured against the same store. Shopify does
+not error on an unconfigured country/language; it silently serves the default.
+Every market in the table must be enabled in Shopify Admin before production
+use. No unsupported context is claimed as verified.
+
+## 2026-08-26 — Release review, four items
+
+Item 3 was already fixed in the working tree before this review (exact
+allowlist, `RESOURCE_NAMESPACE` deleted, negative regression). It was
+re-verified live rather than re-implemented; the other three are fixed below.
+
+### 1. Duplicate spec directory — removed
+
+`.specs/2026-05-09--weaverse-translation-migration/` was added by this branch
+and does not exist on `main`. Pilot's specs live in `.weaverse/specs/`
+(`.weaverse/README.md`), and the new folder already carries the original prompt,
+`Created: 2026-05-09`, owner lineage `@Hieu1866 → @paul-phan` and the verbatim
+2026-05-09 work log. The copy was redundant, so the move is now a move.
+
+### 2. Legacy fallback treated a cleared setting as absent
+
+`legacyThemeText` required `legacy.length > 0`, so a merchant who deliberately
+cleared their store address, contact email or announcement fell through to the
+theme's bundled demo copy — republishing `contact@my-store.com` and a sample
+Toronto address on a live storefront. Presence is now decided by the property
+and emptiness returned as `""`.
+
+Writing the boundary test surfaced a second defect in the fix itself: `in`
+walks the prototype chain, so an inherited `copyright` counted as a merchant
+setting. Now `Object.hasOwn`.
+
+`RootLayout` also read the announcement with a raw `t()` while
+`ScrollingAnnouncement` read it legacy-aware, so the reserved
+`--initial-topbar-height` could describe copy that never rendered. The root now
+uses the same `useLegacyThemeText()` reader.
+
+Aligning the reader exposed a third, pre-existing disagreement: the root decided
+by truthiness and the component by visible text, so `"<p></p>"` — a non-empty
+string that paints nothing — reserved a 36px strip above the header that no bar
+filled. Both sides now call one exported `hasVisibleAnnouncement`.
+
+### 4. Dead binding — removed
+
+`scrolling-announcement.tsx` still destructured `t` from `useTranslation` after
+migrating to `useLegacyThemeText`; zero call sites remained. Binding and import
+removed.
+
+### Verification
+
+Five mutations, each reintroducing one defect, each caught:
+`length > 0` (3 tests), `in` for `hasOwn` (1), truthiness for visible-text (1),
+root re-inlining `topbarText ? topbarHeight : 0` (1), root reverting to a raw
+reader (1). Two assertions had to be tightened first — `themeText("…")` contains
+`t("…")` as a substring, and the formatter wraps the height expression — both of
+which had made a mutation pass silently.
+
+Gates: `typecheck`, `biome`, `test:unit` (89), `test:cart-correctness`,
+`weaverse:manifest` (not stale), `weaverse:audit`, `build` — all exit 0.
+
+Live: 33/33 markets serve 200 with correct `lang`/`dir`; invented prefixes
+(`/en-xx`, `/zz-zz`, `/XX-YY` uppercase, `.data`) all 404; `/ja-jp/collections/all`
+301s to `/ja-jp/collections/the-full-catalog`, preserving the market; invariant
+paths emit 34 `hreflang` links (33 markets + `x-default`) while
+`/products/<handle>`, `/about` and `/de-de/about` emit none; reserved topbar
+height matches the rendered bar on every market sampled.

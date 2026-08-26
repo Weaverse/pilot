@@ -1,0 +1,168 @@
+{
+  "source": "origin/main app/utils/const.ts at 2f8a10fdb8e8bf38728ee236ebb6f79d396538fe",
+  "note": "The public URL contract before the canonical-table migration. Deleting any entry changes a live market URL and its country/currency, which issue #473 never authorized.",
+  "markets": [
+    {
+      "pathPrefix": "/en-au",
+      "language": "EN",
+      "country": "AU",
+      "currency": "AUD"
+    },
+    {
+      "pathPrefix": "/de-at",
+      "language": "DE",
+      "country": "AT",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/fr-be",
+      "language": "FR",
+      "country": "BE",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/en-ca",
+      "language": "EN",
+      "country": "CA",
+      "currency": "CAD"
+    },
+    {
+      "pathPrefix": "/fr-ca",
+      "language": "FR",
+      "country": "CA",
+      "currency": "CAD"
+    },
+    {
+      "pathPrefix": "/en-cn",
+      "language": "EN",
+      "country": "CN",
+      "currency": "CNY"
+    },
+    {
+      "pathPrefix": "/zh-cn",
+      "language": "ZH",
+      "country": "CN",
+      "currency": "CNY"
+    },
+    {
+      "pathPrefix": "/en-fr",
+      "language": "EN",
+      "country": "FR",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/fr-fr",
+      "language": "FR",
+      "country": "FR",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/en-de",
+      "language": "EN",
+      "country": "DE",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/de-de",
+      "language": "DE",
+      "country": "DE",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/en-hk",
+      "language": "EN",
+      "country": "HK",
+      "currency": "HKD"
+    },
+    {
+      "pathPrefix": "/zh-hk",
+      "language": "ZH",
+      "country": "HK",
+      "currency": "HKD"
+    },
+    {
+      "pathPrefix": "/en-it",
+      "language": "EN",
+      "country": "IT",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/it-it",
+      "language": "IT",
+      "country": "IT",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/en-jp",
+      "language": "EN",
+      "country": "JP",
+      "currency": "JPY"
+    },
+    {
+      "pathPrefix": "/ja-jp",
+      "language": "JA",
+      "country": "JP",
+      "currency": "JPY"
+    },
+    {
+      "pathPrefix": "/es-mx",
+      "language": "ES",
+      "country": "MX",
+      "currency": "MXN"
+    },
+    {
+      "pathPrefix": "/en-nl",
+      "language": "EN",
+      "country": "NL",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/en-es",
+      "language": "EN",
+      "country": "ES",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/es-es",
+      "language": "ES",
+      "country": "ES",
+      "currency": "EUR"
+    },
+    {
+      "pathPrefix": "/de-ch",
+      "language": "DE",
+      "country": "CH",
+      "currency": "CHF"
+    },
+    {
+      "pathPrefix": "/fr-ch",
+      "language": "FR",
+      "country": "CH",
+      "currency": "CHF"
+    },
+    {
+      "pathPrefix": "/it-ch",
+      "language": "IT",
+      "country": "CH",
+      "currency": "CHF"
+    },
+    {
+      "pathPrefix": "/zh-tw",
+      "language": "ZH",
+      "country": "TW",
+      "currency": "TWD"
+    },
+    {
+      "pathPrefix": "/en-gb",
+      "language": "EN",
+      "country": "GB",
+      "currency": "GBP"
+    },
+    {
+      "pathPrefix": "/en-vn",
+      "language": "EN",
+      "country": "VN",
+      "currency": "VND"
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "badge": {
+    "bestSeller": "ベストセラー",
+    "new": "新着",
+    "bundle": "セット",
+    "soldOut": "売り切れ",
+    "sale": "-[percentage]% オフ"
+  },
+  "cart": {
+    "title": "カート",
+    "empty": {
+      "message": "まだ何も追加されていません。お買い物を始めましょう！",
+      "startShopping": "買い物を始める",
+      "shopBestSellers": "ベストセラーを見る"
+    },
+    "summary": {
+      "orderSummary": "注文内容",
+      "estimatedTotal": "推定合計:",
+      "taxesDiscountsShipping": "税金、割引、{{link}}はレジで計算されます。",
+      "shipping": "配送料",
+      "viewCart": "カートを見る"
+    },
+    "actions": {
+      "addNote": "メモを追加",
+      "discountCode": "割引コードを追加",
+      "giftCard": "ギフトカードを利用",
+      "checkout": "レジに進む",
+      "cancel": "キャンセル",
+      "saveNote": "メモを保存",
+      "apply": "適用",
+      "redeem": "利用する"
+    },
+    "messages": {
+      "noteSaved": "カートのメモを保存しました 🎉",
+      "discountApplied": "割引を適用しました 🎉",
+      "discountInvalid": "割引コードが無効です。",
+      "giftCardApplied": "ギフトカードを適用しました 🎉",
+      "giftCardInvalid": "ギフトカードのコードが無効です。"
+    },
+    "placeholder": {
+      "note": "ご注文に関する特別なご要望やメモをご記入ください...",
+      "discountCode": "割引コード",
+      "giftCardCode": "ギフトカードコード"
+    },
+    "bestSellers": "ベストセラーからさらに"
+  },
+  "product": {
+    "addToCart": "カートに追加",
+    "soldOut": "売り切れ",
+    "from": "〜から",
+    "viewFullDetails": "詳細を見る →",
+    "quickShop": "クイックショップ",
+    "add": "追加",
+    "remove": "削除",
+    "pictureOf": "{{name}}の画像",
+    "secondPictureOf": "{{name}}の2枚目の画像"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "最新情報をお届けします！",
+      "description": "ニュースレターに登録して、限定オファーや新商品情報などを受け取りましょう。",
+      "buttonText": "初回注文が15%オフ",
+      "placeholder": "メールアドレスを入力"
+    }
+  },
+  "search": {
+    "title": "検索",
+    "placeholder": "ストア内を検索...",
+    "enterKeyword": "キーワードを入力してください",
+    "viewAllResults": "すべての結果を見る",
+    "noResults": "「{{term}}」の結果が見つかりません。別のキーワードでお試しください。",
+    "noResultsShort": "結果が見つかりません:",
+    "trendingProducts": "人気の商品",
+    "problemLoadingProducts": "関連商品の読み込み中に問題が発生しました",
+    "popularKeywords": "サングラス、帽子、ジャケット、靴",
+    "popularSearches": "人気の検索:"
+  },
+  "footer": {
+    "bio": "<p>私たちは、美しく機能的な製品づくりに情熱を注ぐデザイナー、開発者、クリエイターのチームです。</p>",
+    "addressTitle": "店舗情報",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canada",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "最新情報を受け取る",
+    "newsletterDescription": "毎週、ニュースとインスピレーションをお届けします。",
+    "newsletterPlaceholder": "メールアドレスを入力してください",
+    "newsletterButtonText": "送信",
+    "copyright": "© 2024 Weaverse. All rights reserved.",
+    "email": "メール:",
+    "newsletterSuccess": "ご登録ありがとうございます！🎉",
+    "newsletterError": "登録中にエラーが発生しました。"
+  },
+  "announcement": {
+    "topbarText": "<p>50ドル以上のご注文で送料無料</p><p>毎週新商品が入荷</p><p>30日間かんたん返品</p><p>ご登録で初回注文が10%オフ</p>"
+  },
+  "pagination": {
+    "loading": "読み込み中...",
+    "loadPrevious": "↑ 前を読み込む",
+    "loadMore": "↓ さらに読み込む"
+  },
+  "accessibility": {
+    "closeCartDrawer": "カートを閉じる",
+    "close": "閉じる",
+    "removeGiftCard": "ギフトカードコード{{code}}を削除",
+    "removeDiscount": "割引コード{{code}}を削除",
+    "predictiveSearch": "予測検索",
+    "quickShopModal": "クイックショップのモーダル",
+    "skipToContent": "本文へスキップ"
+  },
+  "account": {
+    "signOut": "ログアウト",
+    "na": "該当なし",
+    "details": {
+      "title": "アカウント",
+      "name": "名前",
+      "phone": "電話番号",
+      "email": "メールアドレス",
+      "editLink": "アカウント情報を編集"
+    },
+    "orders": {
+      "title": "注文履歴",
+      "empty": "まだご注文はありません。",
+      "orderImage": "注文商品の画像",
+      "more": "その他",
+      "orderId": "注文ID",
+      "orderNo": "注文番号",
+      "orderDate": "注文日",
+      "fulfillmentStatus": "配送状況",
+      "viewDetails": "詳細を見る",
+      "startShopping": "買い物を始める →",
+      "loading": "読み込み中...",
+      "loadPrevious": "前を読み込む",
+      "loadMore": "さらに読み込む",
+      "viewOrder": "注文を見る →"
+    },
+    "address": {
+      "title": "住所録",
+      "empty": "保存された住所はありません。",
+      "add": "住所を追加",
+      "default": "デフォルト",
+      "edit": "編集",
+      "remove": "削除"
+    },
+    "edit": {
+      "title": "アカウントを編集",
+      "firstName": "名",
+      "lastName": "姓",
+      "cancel": "キャンセル",
+      "save": "保存",
+      "saving": "保存中"
+    },
+    "addressForm": {
+      "titleAdd": "新しい住所を追加",
+      "titleEdit": "住所を編集",
+      "company": "会社名",
+      "address1": "住所1",
+      "address1Required": "住所1*",
+      "address2": "住所2",
+      "city": "市区町村",
+      "state": "都道府県 / 州",
+      "statePlaceholder": "都道府県 / 州 (zoneCode)",
+      "zip": "郵便番号",
+      "country": "国",
+      "countryPlaceholder": "国 (地域) コード",
+      "phone": "電話番号",
+      "setDefault": "デフォルトの住所に設定"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}}点の商品",
+    "filter": "絞り込む",
+    "filters": "絞り込み",
+    "closeFilters": "絞り込みパネルを閉じる",
+    "sortBy": "並び替え:",
+    "sort": "並び替え",
+    "sortOptions": {
+      "featured": "おすすめ",
+      "relevance": "関連度",
+      "priceLowHigh": "価格が安い順",
+      "priceHighLow": "価格が高い順",
+      "bestSelling": "売れ筋順",
+      "newest": "新着順"
+    },
+    "clearAllFilters": "絞り込みをすべて解除",
+    "clearAllFiltersAriaLabel": "適用中の絞り込みをすべて解除",
+    "noProductsMatchedFilters": "条件に一致する商品がありません。",
+    "priceRange": {
+      "minPrice": "最低価格",
+      "maxPrice": "最高価格",
+      "to": "〜"
+    }
+  },
+  "productDetails": {
+    "description": "商品説明",
+    "shipping": "配送について",
+    "returns": "返品について",
+    "learnMore": "詳しく見る"
+  },
+  "review": {
+    "writeYourReview": "レビューを書く",
+    "shareExperience": "ご感想を他のお客様と共有してください",
+    "rating": "評価",
+    "yourName": "お名前",
+    "enterName": "お名前を入力してください",
+    "emailAddress": "メールアドレス",
+    "enterEmail": "メールアドレスを入力してください",
+    "reviewTitle": "レビューのタイトル",
+    "giveTitle": "レビューにタイトルを付けてください",
+    "yourReview": "レビュー内容",
+    "shareExperienceProduct": "この商品のご感想を共有してください",
+    "cancel": "キャンセル",
+    "submit": "レビューを送信",
+    "submitting": "送信中...",
+    "selectRating": "評価を選択してください",
+    "successTitle": "レビューを送信しました！",
+    "successMessage": "ご意見ありがとうございます。レビューは処理中で、数分後に公開されます。",
+    "writeAnother": "別のレビューを書く",
+    "errorTitle": "送信に失敗しました",
+    "errorMessage": "レビューの送信中にエラーが発生しました。もう一度お試しください。",
+    "tryAgain": "再試行",
+    "imageAlt": "レビュー画像 {{index}}",
+    "imageView": "表示",
+    "imageGalleryAriaLabel": "レビュー画像ギャラリー",
+    "closeImageAriaLabel": "画像を閉じる",
+    "previousImageAriaLabel": "前の画像",
+    "nextImageAriaLabel": "次の画像",
+    "reviewImageAlt": "レビュー画像"
+  }
+}

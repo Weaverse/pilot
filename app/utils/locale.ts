@@ -56,6 +56,276 @@ export const SUPPORTED_LOCALES: Locale[] = [
     direction: "ltr",
   },
   {
+    pathPrefix: "/en-au",
+    label: "Australia (AUD $)",
+    languageLabel: "English",
+    language: "EN",
+    country: "AU",
+    currency: "AUD",
+    hreflang: "en-AU",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/de-at",
+    label: "Austria (EUR €)",
+    languageLabel: "Deutsch",
+    language: "DE",
+    country: "AT",
+    currency: "EUR",
+    hreflang: "de-AT",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/fr-be",
+    label: "Belgium (EUR €)",
+    languageLabel: "Français",
+    language: "FR",
+    country: "BE",
+    currency: "EUR",
+    hreflang: "fr-BE",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-ca",
+    label: "Canada (CAD $)",
+    languageLabel: "English",
+    language: "EN",
+    country: "CA",
+    currency: "CAD",
+    hreflang: "en-CA",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/fr-ca",
+    label: "Canada (CAD $)",
+    languageLabel: "Français",
+    language: "FR",
+    country: "CA",
+    currency: "CAD",
+    hreflang: "fr-CA",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-cn",
+    label: "China (CNY ¥)",
+    languageLabel: "English",
+    language: "EN",
+    country: "CN",
+    currency: "CNY",
+    hreflang: "en-CN",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/zh-cn",
+    label: "China (CNY ¥)",
+    languageLabel: "中文",
+    language: "ZH",
+    country: "CN",
+    currency: "CNY",
+    hreflang: "zh-CN",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-fr",
+    label: "France (EUR €)",
+    languageLabel: "English",
+    language: "EN",
+    country: "FR",
+    currency: "EUR",
+    hreflang: "en-FR",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/fr-fr",
+    label: "France (EUR €)",
+    languageLabel: "Français",
+    language: "FR",
+    country: "FR",
+    currency: "EUR",
+    hreflang: "fr-FR",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-de",
+    label: "Germany (EUR €)",
+    languageLabel: "English",
+    language: "EN",
+    country: "DE",
+    currency: "EUR",
+    hreflang: "en-DE",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/de-de",
+    label: "Germany (EUR €)",
+    languageLabel: "Deutsch",
+    language: "DE",
+    country: "DE",
+    currency: "EUR",
+    hreflang: "de-DE",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-hk",
+    label: "Hong Kong (HKD $)",
+    languageLabel: "English",
+    language: "EN",
+    country: "HK",
+    currency: "HKD",
+    hreflang: "en-HK",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/zh-hk",
+    label: "Hong Kong (HKD $)",
+    languageLabel: "中文",
+    language: "ZH",
+    country: "HK",
+    currency: "HKD",
+    hreflang: "zh-HK",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-it",
+    label: "Italy (EUR €)",
+    languageLabel: "English",
+    language: "EN",
+    country: "IT",
+    currency: "EUR",
+    hreflang: "en-IT",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/it-it",
+    label: "Italy (EUR €)",
+    languageLabel: "Italiano",
+    language: "IT",
+    country: "IT",
+    currency: "EUR",
+    hreflang: "it-IT",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-jp",
+    label: "Japan (JPY ¥)",
+    languageLabel: "English",
+    language: "EN",
+    country: "JP",
+    currency: "JPY",
+    hreflang: "en-JP",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/ja-jp",
+    label: "Japan (JPY ¥)",
+    languageLabel: "日本語",
+    language: "JA",
+    country: "JP",
+    currency: "JPY",
+    hreflang: "ja-JP",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/es-mx",
+    label: "Mexico (MXN $)",
+    languageLabel: "Español",
+    language: "ES",
+    country: "MX",
+    currency: "MXN",
+    hreflang: "es-MX",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-nl",
+    label: "Netherlands (EUR €)",
+    languageLabel: "English",
+    language: "EN",
+    country: "NL",
+    currency: "EUR",
+    hreflang: "en-NL",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-es",
+    label: "Spain (EUR €)",
+    languageLabel: "English",
+    language: "EN",
+    country: "ES",
+    currency: "EUR",
+    hreflang: "en-ES",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/es-es",
+    label: "Spain (EUR €)",
+    languageLabel: "Español",
+    language: "ES",
+    country: "ES",
+    currency: "EUR",
+    hreflang: "es-ES",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/de-ch",
+    label: "Switzerland (CHF Fr.)",
+    languageLabel: "Deutsch",
+    language: "DE",
+    country: "CH",
+    currency: "CHF",
+    hreflang: "de-CH",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/fr-ch",
+    label: "Switzerland (CHF Fr.)",
+    languageLabel: "Français",
+    language: "FR",
+    country: "CH",
+    currency: "CHF",
+    hreflang: "fr-CH",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/it-ch",
+    label: "Switzerland (CHF Fr.)",
+    languageLabel: "Italiano",
+    language: "IT",
+    country: "CH",
+    currency: "CHF",
+    hreflang: "it-CH",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/zh-tw",
+    label: "Taiwan (TWD $)",
+    languageLabel: "中文",
+    language: "ZH",
+    country: "TW",
+    currency: "TWD",
+    hreflang: "zh-TW",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-gb",
+    label: "United Kingdom (GBP £)",
+    languageLabel: "English",
+    language: "EN",
+    country: "GB",
+    currency: "GBP",
+    hreflang: "en-GB",
+    direction: "ltr",
+  },
+  {
+    pathPrefix: "/en-vn",
+    label: "Vietnam (VND ₫)",
+    languageLabel: "English",
+    language: "EN",
+    country: "VN",
+    currency: "VND",
+    hreflang: "en-VN",
+    direction: "ltr",
+  },
+  {
     pathPrefix: "/hi-in",
     label: "India (INR ₹)",
     languageLabel: "हिन्दी",
@@ -104,46 +374,6 @@ export const SUPPORTED_LOCALES: Locale[] = [
     currency: "SAR",
     hreflang: "ar-SA",
     direction: "rtl",
-  },
-  {
-    pathPrefix: "/es-es",
-    label: "Spain (EUR €)",
-    languageLabel: "Español",
-    language: "ES",
-    country: "ES",
-    currency: "EUR",
-    hreflang: "es-ES",
-    direction: "ltr",
-  },
-  {
-    pathPrefix: "/fr-fr",
-    label: "France (EUR €)",
-    languageLabel: "Français",
-    language: "FR",
-    country: "FR",
-    currency: "EUR",
-    hreflang: "fr-FR",
-    direction: "ltr",
-  },
-  {
-    pathPrefix: "/de-de",
-    label: "Germany (EUR €)",
-    languageLabel: "Deutsch",
-    language: "DE",
-    country: "DE",
-    currency: "EUR",
-    hreflang: "de-DE",
-    direction: "ltr",
-  },
-  {
-    pathPrefix: "/en-gb",
-    label: "United Kingdom (GBP £)",
-    languageLabel: "English",
-    language: "EN",
-    country: "GB",
-    currency: "GBP",
-    hreflang: "en-GB",
-    direction: "ltr",
   },
 ];
 
@@ -218,65 +448,6 @@ export function localizedPathForRequest(
   path: string,
 ): string {
   return localizePath(path, resolveLocaleFromRequest(request));
-}
-
-/**
- * Market prefixes this storefront used to serve, listed in
- * `app/utils/const.ts` before the canonical table replaced it.
- *
- * Search engines and inbound links still hold these URLs. Answering them with
- * 404 discards that equity, and serving the default market's page at the old
- * URL would duplicate the catalogue, so they redirect to the equivalent
- * market-neutral path instead. Re-adding any of them is a one-line change to
- * {@link SUPPORTED_LOCALES}; this map exists only so retired URLs stay
- * addressable, and every entry is absent from that table by construction.
- */
-const RETIRED_MARKET_PREFIXES: Record<string, true> = {
-  "/de-at": true,
-  "/de-ch": true,
-  "/en-au": true,
-  "/en-ca": true,
-  "/en-cn": true,
-  "/en-de": true,
-  "/en-es": true,
-  "/en-fr": true,
-  "/en-hk": true,
-  "/en-it": true,
-  "/en-jp": true,
-  "/en-nl": true,
-  "/en-vn": true,
-  "/es-mx": true,
-  "/fr-be": true,
-  "/fr-ca": true,
-  "/fr-ch": true,
-  "/it-ch": true,
-  "/it-it": true,
-  "/ja-jp": true,
-  "/zh-cn": true,
-  "/zh-hk": true,
-  "/zh-tw": true,
-};
-
-/**
- * The market-neutral path a retired market's URL should redirect to, or `null`
- * when the path is not a retired market.
- *
- * The query string and React Router's `.data` suffix ride along so a redirected
- * single-fetch navigation stays a single-fetch navigation.
- */
-export function retiredMarketPath(path: string): string | null {
-  const withSlash = path.startsWith("/") ? path : `/${path}`;
-  const [segment, rest] = splitLeadingSegment(withSlash);
-  if (RETIRED_MARKET_PREFIXES[segment.toLowerCase()] !== true) {
-    return null;
-  }
-  const suffix = withSlash.endsWith(".data") ? ".data" : "";
-  const queryAt = rest.search(/[?#]/);
-  const base = queryAt === -1 ? rest : rest.slice(0, queryAt);
-  const query = queryAt === -1 ? "" : rest.slice(queryAt);
-  const target = base.startsWith("/") ? base : `/${base}`;
-
-  return (target === "/" && suffix ? "/" : target) + suffix + query;
 }
 
 /**
@@ -403,41 +574,50 @@ export type AlternateLink = {
  * URLs would duplicate the whole facet space per market.
  */
 /**
- * URL namespaces addressed by a Shopify resource handle.
+ * Paths this theme's route table defines with no dynamic segment, and which
+ * therefore address the same page in every market.
  *
- * A handle is per-market data: Shopify localizes it (hence
- * `redirectIfHandleIsLocalized` on the product, collection, blog, article and
- * page routes), and a resource can be unpublished in a market entirely.
+ * Every entry is a static `route(...)` or `index(...)` under the `:locale?`
+ * prefix in `app/routes.ts`. `/cart` is listed because it renders in every
+ * market, even though its contents differ per shopper.
+ *
+ * Deliberately excluded:
+ * - anything with a handle (`/products/<handle>`, `/blogs/<blog>/<article>`,
+ *   `/pages/<handle>`, `/policies/<handle>`): Shopify localizes handles — which
+ *   is why five routes call `redirectIfHandleIsLocalized` — and a resource can
+ *   be unpublished in a market, so the swapped URL may redirect or 404;
+ * - `/account/*`: behind auth and noindex;
+ * - `/api/*`, sitemaps and `robots.txt`: not indexable pages;
+ * - anything served by the `*` catch-all, including Weaverse custom pages: a
+ *   custom page is published per project, and nothing here proves it exists in
+ *   every market.
  */
-const RESOURCE_NAMESPACE: Record<string, true> = {
-  blogs: true,
-  collections: true,
-  pages: true,
-  policies: true,
-  products: true,
+const MARKET_INVARIANT_PATHS: Record<string, true> = {
+  "/": true,
+  "/search": true,
+  "/cart": true,
+  "/collections": true,
+  "/products": true,
+  "/policies": true,
 };
 
 /**
  * Whether the same path is known to address the same page in every market.
  *
- * Swapping the market prefix is only sound for paths the route table defines —
- * `/`, `/search`, `/collections` — because those exist in every market by
- * construction. A path that addresses a resource (`/products/<handle>`) is not
- * provable here: the handle may be localized, and the resource may not be
- * published to that market at all, so the swapped URL can 301 elsewhere or 404.
- *
- * Proving those would need one Storefront query per market per page. Until that
- * data is in hand the alternates are omitted, because a wrong `hreflang` tells
- * a search engine a page exists where it does not, which is worse than no
- * `hreflang` at all.
+ * This is an exact allowlist, not a heuristic: a path is market-invariant only
+ * when the route table proves it. Anything unrecognised — a custom page, an
+ * unknown URL, a resource handle — returns `false`, because a wrong `hreflang`
+ * tells a search engine a page exists where it does not, which is worse than
+ * no `hreflang` at all.
  */
 export function isMarketInvariantPath(path: string): boolean {
-  const segments = delocalizePath(path)
-    .split("?")[0]
-    .split("/")
-    .filter(Boolean);
+  const neutral = delocalizePath(path).split(/[?#]/)[0];
+  const normalized =
+    neutral.length > 1 && neutral.endsWith("/")
+      ? neutral.slice(0, -1)
+      : neutral;
 
-  return segments.length < 2 || RESOURCE_NAMESPACE[segments[0]] !== true;
+  return MARKET_INVARIANT_PATHS[normalized.toLowerCase()] === true;
 }
 
 export function alternateLinks(path: string, origin: string): AlternateLink[] {

@@ -3,6 +3,9 @@ import de from "~/i18n/de.json" with { type: "json" };
 import es from "~/i18n/es.json" with { type: "json" };
 import fr from "~/i18n/fr.json" with { type: "json" };
 import hi from "~/i18n/hi.json" with { type: "json" };
+import it from "~/i18n/it.json" with { type: "json" };
+import ja from "~/i18n/ja.json" with { type: "json" };
+import zh from "~/i18n/zh.json" with { type: "json" };
 import type { Locale } from "~/utils/locale";
 
 type Translations = Record<string, unknown>;
@@ -16,7 +19,16 @@ type Translations = Record<string, unknown>;
  * override. Bundling it again would duplicate the whole file in the payload of
  * every English market (`en-US`, `en-GB`, `en-IN`, `en-AE`).
  */
-const BUNDLED: Record<string, Translations> = { ar, de, es, fr, hi };
+const BUNDLED: Record<string, Translations> = {
+  ar,
+  de,
+  es,
+  fr,
+  hi,
+  it,
+  ja,
+  zh,
+};
 
 /**
  * Merges `overrides` onto `base`, recursing into nested groups.

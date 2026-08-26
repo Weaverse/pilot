@@ -7,7 +7,6 @@ import {
   localizedPathForRequest,
   localizePath,
   resolveLocale,
-  retiredMarketPath,
   SUPPORTED_LOCALES,
   unauthorizedRedirect,
 } from "../../app/utils/locale";
@@ -201,22 +200,6 @@ test("round-trips every market through localize and delocalize", () => {
   }
 });
 
-test("a storefront redirect keeps the shopper on their market", async () => {
-  const server = await readFile(
-    new URL("../../server.ts", import.meta.url),
-    "utf8",
-  );
-
-  // Shopify stores URL redirects on market-neutral paths and matches the
-  // request path verbatim, so `/de-de/collections/all` would 404 while
-  // `/collections/all` redirects. The lookup must be delocalized and the
-  // target relocalized.
-  expect(server).toContain("delocalizePath");
-  expect(server).toContain("localizePath");
-  // A second Location header would be comma-joined into an invalid URL.
-  expect(server).not.toMatch(/Location:\s*localized/);
-});
-
 test("the request boundary refuses unsupported markets", async () => {
   const server = await readFile(
     new URL("../../server.ts", import.meta.url),
@@ -345,52 +328,55 @@ test("neutralizing a path preserves the single-fetch protocol", () => {
   expect(delocalizePath("/de-de.data")).toBe("/.data");
 });
 
-test("a retired market's URLs redirect instead of 404ing", () => {
-  // These prefixes shipped in app/utils/const.ts before the canonical table
-  // replaced it, so they are still indexed and linked. A 404 discards that
-  // equity; serving the default market's page at the old URL would duplicate
-  // the catalogue under a second prefix.
-  expect(retiredMarketPath("/en-ca/products/hoodie")).toBe("/products/hoodie");
-  expect(retiredMarketPath("/ja-jp")).toBe("/");
-  expect(retiredMarketPath("/zh-tw/collections/all?sort=price")).toBe(
-    "/collections/all?sort=price",
-  );
-  // Single-fetch navigations must stay single-fetch across the redirect.
-  expect(retiredMarketPath("/en-ca/products/hoodie.data")).toBe(
-    "/products/hoodie.data",
-  );
-  // Live markets and ordinary paths are never redirected.
-  for (const locale of SUPPORTED_LOCALES) {
-    expect(retiredMarketPath(`${locale.pathPrefix}/products/hoodie`)).toBe(
-      null,
-    );
-  }
-  expect(retiredMarketPath("/products/hoodie")).toBe(null);
-  expect(retiredMarketPath("/about-us")).toBe(null);
-  // An invented prefix is not retired — it must 404, not redirect.
-  expect(retiredMarketPath("/en-xx/products/hoodie")).toBe(null);
-});
+test("every market URL from before the migration still resolves", async () => {
+  // The prior contract is `app/utils/const.ts` at the pre-migration base. Those
+  // prefixes are public URLs: indexed, linked, and bookmarked. Issue #473 asked
+  // for one source of truth and new GCC/India markets — it never authorized
+  // retiring a live market, and silently redirecting one to the US changes the
+  // shopper's country and currency.
+  const contract = JSON.parse(
+    await readFile(
+      new URL("./fixtures/prior-market-contract.json", import.meta.url),
+      "utf8",
+    ),
+  ) as {
+    markets: Array<{
+      pathPrefix: string;
+      language: string;
+      country: string;
+      currency: string;
+    }>;
+  };
 
-test("no market is both live and retired", () => {
-  // A retired entry that is also configured would black-hole a live market.
-  for (const locale of SUPPORTED_LOCALES) {
+  for (const market of contract.markets) {
+    const locale = resolveLocale(`${market.pathPrefix}/products/hoodie`);
+
     expect({
-      market: locale.pathPrefix,
-      retired: retiredMarketPath(locale.pathPrefix) !== null,
-    }).toEqual({ market: locale.pathPrefix, retired: false });
+      prefix: market.pathPrefix,
+      language: locale.language,
+      country: locale.country,
+      currency: locale.currency,
+    }).toEqual({
+      prefix: market.pathPrefix,
+      language: market.language,
+      country: market.country,
+      currency: market.currency,
+    });
   }
 });
 
-test("the redirect seam handles both single-fetch carriers", async () => {
-  const server = await readFile(
-    new URL("../../server.ts", import.meta.url),
-    "utf8",
-  );
+test("the prior contract is a subset of the shipped markets", async () => {
+  const contract = JSON.parse(
+    await readFile(
+      new URL("./fixtures/prior-market-contract.json", import.meta.url),
+      "utf8",
+    ),
+  ) as { markets: Array<{ pathPrefix: string }> };
+  const shipped = new Set(SUPPORTED_LOCALES.map((locale) => locale.pathPrefix));
+  const dropped = contract.markets
+    .map((market) => market.pathPrefix)
+    .filter((prefix) => !shipped.has(prefix));
 
-  // Hydrogen answers a `.data` navigation with 204 + `X-Remix-Redirect` and no
-  // `Location`. Reading only `Location` drops every client-side redirect back
-  // to a 404, which is what shipped before this check existed.
-  expect(server).toContain("X-Remix-Redirect");
-  // `X-Remix-Redirect` carries an app-relative path; `Location` is absolute.
-  expect(server).toContain("localizePath");
+  // Removing a market is a product decision, not a refactor side effect.
+  expect(dropped).toEqual([]);
 });

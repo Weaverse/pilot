@@ -175,3 +175,60 @@ test("still advertises markets for route-table paths", () => {
     });
   }
 });
+
+test("never advertises a path the route table does not prove", () => {
+  // Root SEO calls `alternateLinks` for every route, including the `*`
+  // catch-all that serves Weaverse custom pages and unknown URLs. A negative
+  // heuristic ("not a resource namespace") accepted all of them and published
+  // fabricated localized URLs; only an exact allowlist is sound.
+  for (const path of [
+    // Weaverse custom pages: published per project, not proven per market.
+    "/festive-wear",
+    "/de-de/festive-wear",
+    "/about",
+    "/ar-ae/about",
+    // Unknown / 404-like paths.
+    "/foo/bar",
+    "/hi-in/foo/bar",
+    "/definitely-not-a-page",
+    // Resource URLs: handles are localized and may be unpublished per market.
+    "/products/hoodie",
+    "/collections/winter",
+    "/blogs/news/post",
+    "/pages/about",
+    "/policies/refund-policy",
+    // Behind auth / noindex.
+    "/account",
+    "/account/orders",
+    "/en-gb/account/orders",
+  ]) {
+    expect({ path, alternates: alternateLinks(path, ORIGIN).length }).toEqual({
+      path,
+      alternates: 0,
+    });
+  }
+});
+
+test("advertises every market for the route table's static paths", () => {
+  // These are `route(...)`/`index(...)` entries with no dynamic segment under
+  // the `:locale?` prefix, so they exist in every market by construction.
+  for (const path of [
+    "/",
+    "/search",
+    "/cart",
+    "/collections",
+    "/products",
+    "/policies",
+    // A localized request advertises the same set.
+    "/de-de/search",
+    "/ar-ae/collections",
+    // Trailing slash and query are normalized away.
+    "/search/",
+    "/search?q=hat",
+  ]) {
+    expect({ path, alternates: alternateLinks(path, ORIGIN).length }).toEqual({
+      path,
+      alternates: SUPPORTED_LOCALES.length + 1,
+    });
+  }
+});

@@ -1,9 +1,25 @@
-import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
 
 const MAX_DURATION = 20;
+
+/**
+ * Whether announcement copy renders anything a shopper can see.
+ *
+ * The copy is rich text, so `"<p></p>"` is a non-empty string that paints
+ * nothing. `RootLayout` reserves `--initial-topbar-height` from this same
+ * answer: deciding it by truthiness there and by visible text here reserved
+ * space for a bar that never rendered, and the header jumped on hydration.
+ */
+export function hasVisibleAnnouncement(
+  html: string | null | undefined,
+): boolean {
+  return (
+    Boolean(html) && (html as string).replace(/<[^>]*>/g, "").trim() !== ""
+  );
+}
 
 export function ScrollingAnnouncement() {
   const themeSettings = useThemeSettings<ThemeSettings>();
@@ -15,11 +31,10 @@ export function ScrollingAnnouncement() {
     topbarScrollingGap,
     topbarScrollingSpeed,
   } = themeSettings;
-  const { t } = useTranslation();
   const topbarText = themeText("announcement.topbarText");
 
   function updateStyles() {
-    if (topbarText) {
+    if (hasVisibleAnnouncement(topbarText)) {
       document.body.style.setProperty(
         "--topbar-height",
         `${Math.max(topbarHeight - window.scrollY, 0)}px`,
@@ -36,7 +51,7 @@ export function ScrollingAnnouncement() {
     return () => window.removeEventListener("scroll", updateStyles);
   }, [topbarText]);
 
-  if (topbarText?.replace(/<[^>]*>/g, "").trim() === "") {
+  if (!hasVisibleAnnouncement(topbarText)) {
     return null;
   }
 

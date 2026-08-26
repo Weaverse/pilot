@@ -2,13 +2,8 @@ import * as remixBuild from "virtual:react-router/server-build"; // Virtual entr
 import { storefrontRedirect } from "@shopify/hydrogen";
 import { createRequestHandler } from "@shopify/hydrogen/oxygen";
 import { createHydrogenRouterContext } from "~/.server/context";
-import {
-  delocalizePath,
-  isUnsupportedMarketPath,
-  localizePath,
-  resolveLocaleFromRequest,
-  retiredMarketPath,
-} from "~/utils/locale";
+import { marketAwareRedirect } from "~/.server/market-redirect";
+import { isUnsupportedMarketPath } from "~/utils/locale";
 
 /**
  * Export a fetch handler in module format.
@@ -45,16 +40,6 @@ export default {
        * rather than asking each loader to remember.
        */
       const requestUrl = new URL(request.url);
-      // A market this storefront used to serve is still indexed and linked, so
-      // its URLs redirect to the market-neutral equivalent rather than 404.
-      const retired = retiredMarketPath(requestUrl.pathname);
-
-      if (retired) {
-        return new Response(null, {
-          status: 301,
-          headers: { Location: retired + requestUrl.search },
-        });
-      }
 
       if (isUnsupportedMarketPath(requestUrl.pathname)) {
         return new Response("Not Found", { status: 404 });
@@ -71,70 +56,17 @@ export default {
 
       if (response.status === 404) {
         /**
-         * Check for redirects only when there's a 404 from the app.
-         * If the redirect doesn't exist, then `storefrontRedirect`
-         * will pass through the 404 response.
-         *
-         * Shopify stores URL redirects on market-neutral paths, and
-         * `storefrontRedirect` matches on the request path verbatim. A
-         * localized URL would therefore never match: `/collections/all`
-         * redirects on the default market while `/de-de/collections/all`
-         * 404s. Look the redirect up market-neutral, then put the market back
-         * on the target so the shopper stays where they were shopping.
+         * Check for redirects only when there's a 404 from the app. If no
+         * redirect exists, `storefrontRedirect` passes the 404 through.
          */
-        const locale = resolveLocaleFromRequest(request);
-        const url = new URL(request.url);
-        const neutralPath = delocalizePath(url.pathname);
-
-        if (neutralPath === url.pathname) {
-          return storefrontRedirect({
-            request,
+        return marketAwareRedirect(request, response, (lookupRequest) =>
+          storefrontRedirect({
+            request: lookupRequest,
             response,
             storefront: hydrogenContext.storefront,
-          });
-        }
-
-        url.pathname = neutralPath;
-        const redirected = await storefrontRedirect({
-          request: new Request(url, request),
-          response,
-          storefront: hydrogenContext.storefront,
-        });
-        // A single-fetch navigation is answered with 204 + `X-Remix-Redirect`
-        // rather than a `Location`, so both carriers must be handled: reading
-        // only `Location` would drop every client-side redirect back to a 404.
-        const header = redirected.headers.get("Location")
-          ? "Location"
-          : "X-Remix-Redirect";
-        const location = redirected.headers.get(header);
-
-        if (!location || redirected.status === 404) {
-          return response;
-        }
-
-        const target = new URL(location, url);
-        const localized =
-          target.origin === url.origin
-            ? localizePath(target.pathname, locale) + target.search
-            : null;
-
-        // `Headers` overwrites on `set`; spreading into an object literal
-        // would append a second value and produce a comma-joined header.
-        const headers = new Headers(redirected.headers);
-        headers.set(
-          header,
-          localized === null
-            ? location
-            : // `X-Remix-Redirect` carries an app-relative path; `Location` is
-              // sent absolute, matching what Hydrogen emitted.
-              header === "Location"
-              ? new URL(localized, url).toString()
-              : localized,
+          }),
         );
-
-        return new Response(null, { status: redirected.status, headers });
       }
-
       return response;
     } catch (error) {
       console.error(error);
