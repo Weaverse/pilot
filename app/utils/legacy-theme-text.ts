@@ -67,11 +67,17 @@ const SHIPPED_DEFAULT_FOR_SETTING: Record<string, string> = {
  * should be used instead.
  *
  * Precedence, highest first:
- * 1. A translation published in the Translation Manager — the merchant edited
+ * 1. A live design-mode edit — the merchant is typing this string in Studio
+ *    right now, so it must be what the preview shows.
+ * 2. A translation published in the Translation Manager — the merchant edited
  *    the string in the new system, so it is their current intent.
- * 2. The legacy theme setting, whenever the property is *present* — copy from
+ * 3. The legacy theme setting, whenever the property is *present* — copy from
  *    before the migration, which must never be silently discarded.
- * 3. `null`, meaning fall through to the theme's bundled default.
+ * 4. `null`, meaning fall through to the theme's bundled default.
+ *
+ * (1) and (2) both return `null`: the caller's `t()` already resolves a live
+ * edit over a published override over the market's translation, so the only
+ * decision made here is whether the pre-migration value still applies.
  *
  * A present-but-empty legacy string is an intent, not an absence: a merchant
  * who cleared their store address or announcement wanted it gone. Treating it
@@ -79,7 +85,7 @@ const SHIPPED_DEFAULT_FOR_SETTING: Record<string, string> = {
  * `contact@my-store.com`, a sample Toronto address — on their live storefront.
  * So presence is decided by the property, and emptiness is returned as `""`.
  *
- * Once a merchant edits the string in the Translation Manager, (1) wins and the
+ * Once a merchant edits the string in the Translation Manager, (2) wins and the
  * legacy value stops being consulted, so the fallback retires itself per key
  * with no migration step and no write to the merchant's data.
  */
@@ -87,7 +93,17 @@ export function legacyThemeText(
   key: string,
   settings: Record<string, unknown> | null | undefined,
   merchantOverrides: Record<string, unknown> | null | undefined,
+  designOverrides?: Record<string, string> | null,
 ): string | null {
+  // A live design-mode edit is unpublished, so it is absent from
+  // `merchantOverrides` and the legacy value would otherwise mask it — the
+  // merchant would type a new string in Studio and watch the preview not
+  // change. Own-property, because the store is a plain flat record and an
+  // inherited key is not an edit.
+  if (designOverrides && Object.hasOwn(designOverrides, key)) {
+    return null;
+  }
+
   // Presence, not truthiness: a merchant who cleared the string in the
   // Translation Manager published an empty value, and that is current intent.
   // Requiring a non-empty override treats it as absent and resurrects the
@@ -115,26 +131,4 @@ export function legacyThemeText(
   // value still identical to the shipped default was never edited, so the
   // market's translation applies instead.
   return legacy === SHIPPED_DEFAULT_FOR_SETTING[legacyName] ? null : legacy;
-}
-
-/**
- * Copy for a merchant-configurable control, given the value a component was
- * passed and the theme's own reader.
- *
- * A prop wins because it is an explicit merchant setting forwarded by the
- * caller; `undefined` means the caller has nothing to say and the translated
- * copy applies. A shipped default reaching a component is filtered out first,
- * so the market's translation is not suppressed by copy no merchant chose.
- */
-export function controlCopy(
-  value: string | undefined,
-  setting: string,
-  translated: (key: string) => string,
-  key: string,
-): string {
-  if (value === undefined || value === SHIPPED_DEFAULT_FOR_SETTING[setting]) {
-    return translated(key);
-  }
-
-  return value;
 }

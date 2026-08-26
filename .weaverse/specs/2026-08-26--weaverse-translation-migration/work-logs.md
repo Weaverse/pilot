@@ -408,3 +408,117 @@ No Shopify, Weaverse, Customer Account, DNS or deployment state was changed.
 3. **Translation Manager rollout.** Sync and publish the theme keys and intended
    merchant overrides after this correctness fix, so provenance is recorded
    against the corrected precedence.
+
+## 2026-08-26 — Second independent review of `6fd2f438`: four more P1s
+
+An exact-SHA review BLOCKED `6fd2f438` with four findings. Two were fixed
+before the report arrived (quick-shop's second precedence layer and live design
+overrides); two were new.
+
+### Finding 1 — the Shopify enum corrupted the Weaverse translation lookup
+
+The previous entry claimed `providerLanguageFor()` produced "the Shopify +
+Weaverse `LanguageCode`". That was wrong, and the spec has been corrected:
+Shopify and Weaverse are **separate boundaries with opposite requirements**.
+
+Shopify's `LanguageCode` is a script-specific enum. Weaverse keys Translation
+Manager overrides by the locale a merchant picks in Studio, and the installed
+client builds that key as lowercase `${language}-${country}` from
+`storefront.i18n` (`weaverse-client.ts:813-838`). Because `context.ts` spread
+the same Shopify-facing storefront into `WeaverseClient`, Chinese markets asked
+for locales that do not exist.
+
+**RED**, driving the real `createHydrogenRouterContext` with a recording
+`fetch`:
+
+| Market | Required | Requested |
+| --- | --- | --- |
+| `/zh-cn` | `zh-cn` | `zh_cn-cn` |
+| `/zh-hk` | `zh-hk` | `zh_tw-hk` |
+| `/zh-tw` | `zh-tw` | `zh_tw-tw` |
+
+German asked for `de-de` correctly. The SDK swallows a missing-override
+response, so this failed silently — every published Chinese string reverting to
+theme defaults with nothing in the logs.
+
+**GREEN.** `weaverseStorefront()` shallow-copies the storefront with `i18n.
+language` re-labelled for Weaverse. Hydrogen's `query` binds `@inContext` from
+its own closure, verified directly, so Shopify keeps receiving `ZH_CN`/`ZH_TW`
+while Weaverse reads `zh-cn`/`zh-hk`/`zh-tw`.
+
+A first attempt read the public code back off `storefront.i18n` and did not
+work: `providerContextForRequest()` had already overwritten `language` with the
+enum, so the public identity was destroyed, not shadowed. Deriving it from
+`hreflang` worked but needed a cast. The shipped version takes the canonical
+market entry as an argument — no derivation, no cast, and the wrong version is
+kept as mutation W2.
+
+All 33 markets are asserted, sequentially — the first version ran them through
+`Promise.all` and every market read another's `fetch` recorder, reporting
+`null`. A test that passes only when run alone proves nothing.
+
+**Mutations, all caught:** Weaverse handed the raw provider storefront (2
+fail); re-labelling from the mutated `i18n` instead of the market entry (2);
+passing the provider context as the market (2); context passing the raw locale
+instead of the provider context (1).
+
+### Finding 4 — the tests did not discriminate production wiring
+
+The reviewer mutated six production paths and all 129 tests stayed green,
+including one that reopened the unauthenticated open redirect. The prior suite
+tested helpers and recomposed production behaviour instead of executing it.
+
+Four boundary tests now execute the shipping code:
+
+- `weaverse-locale.test.ts` builds the real request context and asserts the URL
+  each provider is actually asked for.
+- `production-boundaries.test.ts` calls the real root loader and the real cart
+  route action, including the `Set-Cookie` that a refused redirect must keep.
+- `live-translation-preview.test.ts` renders the shipped announcement, badge and
+  quick-shop components under the SDK's own `TranslationProvider`.
+
+`tests/support/render-app.ts` compiles app modules with esbuild — already
+installed via `@shopify/cli` — because Playwright owns the JSX runtime for
+files under `testDir` and rewrites app `.tsx` into fixture objects React
+refuses to render. This replaces the harness abandoned in the previous entry;
+the earlier "component tests are impossible here" limitation is now closed.
+`tests/support/hydrogen-env.ts` supplies a fully typed `Env` and the worker
+`caches` global the context opens before anything else.
+
+**Every reviewer mutation now fails:**
+
+| # | Mutation | Result |
+| --- | --- | --- |
+| 1 | context passes raw locale | 1 failed |
+| 2 | root bypasses `localizedThemePayload` | 1 failed |
+| 3 | hook ignores all legacy settings | 2 failed |
+| 4 | badge renders hardcoded copy | 1 failed |
+| 5 | product card stops forwarding quick-shop copy | structurally removed |
+| 6 | cart route bypasses `safeRedirectPath` | 1 failed |
+
+Mutation 5 no longer has a path to break: the prop and `controlCopy()` were
+deleted, and `QuickShopTrigger` reads the shared hook. Its surviving equivalent
+— the trigger hardcoding `"Quick shop"` — fails 3 tests.
+
+### Findings 2 and 3 — live and published edits masked by legacy copy
+
+Fixed before the report arrived; recorded here against its findings.
+
+`useLegacyThemeText` answered from a persisted legacy setting before calling
+`t()`, and the SDK resolves `designOverrides ?? merchantOverrides ??
+staticContent` inside `t()`. A merchant editing a migrated string in Studio saw
+the preview not change. `QuickShopTrigger` had a second bypass: `controlCopy()`
+returned the forwarded prop without consulting the reader at all.
+
+`legacyThemeText` now takes the design-override snapshot and retires itself for
+any key the merchant is editing live, including an explicit `""`. The
+quick-shop prop, `controlCopy()` and the `ProductCard` plumbing are deleted —
+the setting is read through the same hook, so a second precedence path cannot
+reappear.
+
+**Mutations, all caught:** design overrides never consulted (4 fail); hook
+stops passing the store (3); truthiness instead of own-property presence (3);
+`in` walking the prototype chain (1); quick-shop bypass restored (2).
+
+The prototype case is reachable: the store's snapshot is a plain object, so
+`"constructor" in snapshot` is `true`.

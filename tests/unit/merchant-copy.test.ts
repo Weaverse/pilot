@@ -1,10 +1,13 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
+import { TranslationProvider } from "@weaverse/hydrogen";
+import { createElement, type ReactElement } from "react";
 import staticContent from "../../app/i18n/en.json" with { type: "json" };
-import {
-  controlCopy,
-  legacyThemeText,
-} from "../../app/utils/legacy-theme-text";
+import { legacyThemeText } from "../../app/utils/legacy-theme-text";
+import { loadComponent, renderInApp } from "../support/render-app";
+
+/** Market translations for the keys these tests resolve. */
+const TRANSLATED = { product: { quickShop: "Schnellansicht (übersetzt)" } };
 
 type PreUpgrade = { settings: Record<string, unknown> };
 
@@ -194,42 +197,47 @@ test("a merchant's edit is preserved even when it looks ordinary", async () => {
   });
 });
 
-test("the quick-shop trigger prefers a forwarded merchant label", () => {
-  // `ProductCard` forwards `pcardQuickShopButtonText`; the trigger must use it
-  // rather than a hardcoded English literal. The shipped default is filtered so
-  // an untouched storefront still gets its market's translation.
-  const translated = (key: string) =>
-    key === "product.quickShop" ? "Schnellansicht (übersetzt)" : key;
+test("the quick-shop trigger renders the merchant's own label", async () => {
+  // `pcardQuickShopButtonText` was renamed to `product.quickShop`. The trigger
+  // reads the setting through the shared reader instead of taking it as a
+  // prop, so there is no second path that could bypass a published or live
+  // edit. The shipped English default is filtered, so an untouched storefront
+  // still gets its market's translation.
+  const { QuickShopTrigger } = await loadComponent<{
+    QuickShopTrigger: (props: Record<string, unknown>) => ReactElement;
+  }>("components/product-card/quick-shop.tsx");
+
+  async function label(settings: Record<string, unknown>) {
+    const html = await renderInApp(
+      {
+        weaverseTheme: {
+          theme: { ...settings, pcardQuickShopButtonType: "text" },
+          staticContent: TRANSLATED,
+          merchantOverrides: null,
+        },
+      },
+      () =>
+        createElement(
+          TranslationProvider,
+          { staticContent: TRANSLATED, children: null },
+          createElement(QuickShopTrigger, {
+            productHandle: "hoodie",
+            buttonType: "text",
+          }),
+        ),
+    );
+    return html.slice(html.indexOf('<span class="px-2">') + 19).split("<")[0];
+  }
 
   expect({
-    merchantEdit: controlCopy(
-      "Schnellansicht",
-      "pcardQuickShopButtonText",
-      translated,
-      "product.quickShop",
-    ),
-    untouchedDefault: controlCopy(
-      "Quick shop",
-      "pcardQuickShopButtonText",
-      translated,
-      "product.quickShop",
-    ),
-    notForwarded: controlCopy(
-      undefined,
-      "pcardQuickShopButtonText",
-      translated,
-      "product.quickShop",
-    ),
-    cleared: controlCopy(
-      "",
-      "pcardQuickShopButtonText",
-      translated,
-      "product.quickShop",
-    ),
+    merchantEdit: await label({ pcardQuickShopButtonText: "Schnellansicht" }),
+    untouchedDefault: await label({ pcardQuickShopButtonText: "Quick shop" }),
+    neverSet: await label({}),
+    cleared: await label({ pcardQuickShopButtonText: "" }),
   }).toEqual({
     merchantEdit: "Schnellansicht",
     untouchedDefault: "Schnellansicht (übersetzt)",
-    notForwarded: "Schnellansicht (übersetzt)",
+    neverSet: "Schnellansicht (übersetzt)",
     cleared: "",
   });
 });

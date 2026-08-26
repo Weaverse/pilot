@@ -145,19 +145,29 @@ MOD  ~12 components/routes                        useThemeText → useTranslatio
 Four release blockers on `30a3664e`. Each fix lands at the shared boundary so
 siblings are covered, and each is proved by a mutation that reintroduces it.
 
-### P1-1 — split the four language identities
+### P1-1 — split the language identities, per provider
 
 `Locale` gains two optional fields, set only where a market's identities
 diverge, so 30 of 33 markets are untouched:
 
-- `providerLanguage` — the `LanguageCode` sent to Shopify and Weaverse.
+- `providerLanguage` — the `LanguageCode` sent to **Shopify**.
 - `bundleLocale` — the theme translation file to load.
 
 Two readers own the defaults, so no call site re-derives them:
-`providerLanguageFor()` falls back to `language`, `bundleLocaleFor()` to the
-BCP-47 primary subtag. `providerContextForRequest()` is the single seam
-`app/.server/context.ts` hands to `createHydrogenContext`, which is what puts
-`language` on every `@inContext` query.
+`providerLanguageFor()` falls back to `language` and `bundleLocaleFor()` to the
+BCP-47 primary subtag.
+`providerContextForRequest()` is the single seam `app/.server/context.ts` hands
+to `createHydrogenContext`, which is what puts `language` on every `@inContext`
+query.
+
+**Weaverse is a second boundary, not the same one.** The installed client
+builds its Translation Manager locale as lowercase `${language}-${country}`
+from `storefront.i18n`, so it must be handed the public identity, not the
+Shopify enum. `weaverseStorefront()` shallow-copies the storefront with `i18n`
+set to the canonical market entry; Hydrogen's `query` binds `@inContext` from
+its own closure, so Shopify still receives `ZH_CN`/`ZH_TW`. It takes the market
+as an argument rather than deriving it, because the storefront's `i18n` has
+already had `language` replaced with the provider enum.
 
 `Intl` tags move off the provider enum onto `hreflang`, because `ZH_CN-CN` is
 not a BCP-47 tag and `Intl` throws on it — prices (`parseAsCurrency`) and blog

@@ -78,6 +78,34 @@ test("an inherited property is not the merchant's own setting", () => {
   expect(legacyThemeText("footer.copyright", settings, null)).toBe(null);
 });
 
+test("an inherited key is not a live design edit", () => {
+  // The design-mode store's snapshot is a plain object, so it inherits
+  // `Object.prototype`. `in` would report `constructor` and `toString` as
+  // edits, and any key the theme ever maps to one of those names would
+  // silently lose the merchant's own copy.
+  const settings = { copyright: "MERCHANT COPYRIGHT" };
+  const inherited = Object.create({
+    "footer.copyright": "not an edit",
+  }) as Record<string, string>;
+
+  expect(legacyThemeText("footer.copyright", settings, null, inherited)).toBe(
+    "MERCHANT COPYRIGHT",
+  );
+});
+
+test("a live edit that clears the string is still an edit", () => {
+  // Emptiness is intent: the merchant deleted the text and is looking at the
+  // preview to judge it. Falling back to their pre-migration copy shows them
+  // the opposite of what they just did.
+  const settings = { copyright: "MERCHANT COPYRIGHT" };
+
+  expect(
+    legacyThemeText("footer.copyright", settings, null, {
+      "footer.copyright": "",
+    }),
+  ).toBe(null);
+});
+
 test("a published translation still wins over a cleared legacy setting", () => {
   // Precedence is unchanged by the presence fix: the new system is current
   // intent, so it outranks anything left in the old one.

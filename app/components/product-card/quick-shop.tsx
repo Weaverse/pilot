@@ -23,7 +23,6 @@ import { Skeleton } from "~/components/skeleton";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import type { ThemeSettings } from "~/types/weaverse";
-import { controlCopy } from "~/utils/legacy-theme-text";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -177,7 +176,6 @@ interface QuickShopTriggerProps {
   productHandle: string;
   showOnHover?: boolean;
   buttonType?: "icon" | "text";
-  buttonText?: string;
   panelType?: "modal" | "drawer";
 }
 
@@ -185,19 +183,13 @@ export function QuickShopTrigger({
   productHandle,
   showOnHover = true,
   buttonType = "icon",
-  buttonText,
   panelType = "modal",
 }: QuickShopTriggerProps) {
-  // Merchant-configurable CTA copy: a persisted `pcardQuickShopButtonText`
-  // outranks the theme's translation, but the English string the schema
-  // shipped is not a merchant choice and must not suppress it.
+  // Merchant-configurable CTA copy. The reader resolves the same
+  // `pcardQuickShopButtonText` a caller would forward, so taking it as a prop
+  // would only reintroduce a path that bypasses live and published edits.
   const themeText = useLegacyThemeText();
-  const label = controlCopy(
-    buttonText,
-    "pcardQuickShopButtonText",
-    themeText,
-    "product.quickShop",
-  );
+  const label = themeText("product.quickShop");
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 

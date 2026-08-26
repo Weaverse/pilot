@@ -11,6 +11,7 @@ import {
   CART_QUERY_FRAGMENT,
 } from "~/graphql/fragments";
 import {
+  type Locale,
   providerContextForRequest,
   resolveLocaleFromRequest,
   unauthorizedRedirect,
@@ -70,6 +71,7 @@ export async function createHydrogenRouterContext(
 
   const weaverse = new WeaverseClient({
     ...hydrogenContext,
+    storefront: weaverseStorefront(hydrogenContext.storefront, locale),
     request,
     cache,
     themeSchema,
@@ -141,4 +143,28 @@ class AppSession implements HydrogenSession {
     this.isPending = false;
     return this.#sessionStorage.commitSession(this.#session);
   }
+}
+
+/**
+ * The storefront client as Weaverse should see it.
+ *
+ * Weaverse keys Translation Manager overrides by the locale a merchant picks
+ * in Studio — the market's public BCP-47 identity — and the installed client
+ * builds that key as lowercase `${language}-${country}` from `i18n`. Shopify
+ * wants the opposite for Chinese: a script-specific `LanguageCode` its enum
+ * defines. Handing one identity to both asks the translation API for
+ * `zh_tw-hk`, which matches nothing and silently resolves to theme defaults.
+ *
+ * `market` is the canonical entry, whose `language` is the public code; the
+ * storefront's own `i18n` has already had that field replaced with the Shopify
+ * enum by {@link providerContextForRequest}, so it cannot be recovered from
+ * there. `query` binds its `@inContext` variables from the client's closure
+ * rather than this property, so re-labelling `i18n` changes what Weaverse
+ * reads without weakening what Shopify receives.
+ */
+export function weaverseStorefront<T extends { i18n: Locale }>(
+  storefront: T,
+  market: Locale,
+): T {
+  return { ...storefront, i18n: market };
 }

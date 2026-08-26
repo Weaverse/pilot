@@ -42,22 +42,36 @@ An independent exact-SHA review BLOCKED `30a3664e` with four P1 findings. Each
 is a contract this spec now owns; `plan.md` carries the design and
 `work-logs.md` the RED/GREEN/mutation evidence.
 
-### P1-1 — URL identity, document identity, bundle and provider language are four fields
+### P1-1 — a market has five language-shaped identities
 
-A market has four language-shaped decisions and they are not the same value:
+They are not the same value, and the two providers disagree with each other:
 
 | Decision | Field | `/zh-tw` |
 | --- | --- | --- |
 | Public URL prefix | `pathPrefix` | `/zh-tw` |
 | BCP-47 / `hreflang` / `<html lang>` / `Intl` | `hreflang` | `zh-TW` |
 | Theme translation bundle | `bundleLocaleFor()` | `zh-tw` |
-| Shopify + Weaverse `LanguageCode` | `providerLanguageFor()` | `ZH_TW` |
+| **Shopify** Storefront `LanguageCode` | `providerLanguageFor()` | `ZH_TW` |
+| **Weaverse** Translation Manager locale | `weaverseStorefront()` | `zh-tw` |
+
+Shopify and Weaverse are **separate boundaries**. Shopify's `LanguageCode` is a
+script-specific enum, and a read-only probe showed bare `ZH` resolving to
+English in CN, HK and TW — so markets send `ZH_CN` or `ZH_TW`. Weaverse keys
+Translation Manager overrides by the locale a merchant selects in Studio, and
+the installed client builds that key as lowercase `${language}-${country}` from
+`storefront.i18n`. Giving both boundaries one identity requests `zh_tw-hk`,
+which matches no locale; the SDK swallows the miss, so every published Chinese
+string silently reverts to the theme default.
+
+`weaverseStorefront()` re-labels `i18n` for the Weaverse client only, using
+the canonical market entry rather than the storefront's own `i18n` — that field
+has already been replaced with the Shopify enum by `providerContextForRequest()`
+and cannot be recovered from there. Hydrogen's `query` binds `@inContext` from
+its own closure, so Shopify keeps receiving the enum.
 
 Public prefixes and SEO identities stay stable; the provider enum is never used
-to build a URL, tag or bundle key, and the prefix is never derived from it.
-Chinese markets send `ZH_CN` (Simplified, mainland) or `ZH_TW` (Traditional,
-Hong Kong and Taiwan), because a read-only probe showed bare `ZH` resolving to
-English in CN, HK and TW.
+to build a URL, tag, bundle key or translation locale, and the prefix is never
+derived from it.
 
 ### P1-2 — bundle fallbacks are theme content, merchant overrides are provenance
 
@@ -89,3 +103,94 @@ references, absolute URLs, backslash variants, relative and malformed values —
 falls back to the shopper's own localized cart. Query and fragment are
 preserved on accepted targets, and the cart-id `Set-Cookie` rides along with
 the redirect.
+
+## Public docs + reusable skill deltas
+
+Behaviour verified by code and tests in this branch. Each item names the test
+that proves it. These are corrections to guidance that is currently wrong or
+absent — no roadmap items, no untested claims.
+
+### 1. Shopify and Weaverse need different language identities
+
+Docs that describe one "locale" flowing from the request into both clients are
+wrong for any market whose Shopify `LanguageCode` is script-specific.
+
+- Shopify's `@inContext` takes the enum (`ZH_CN`, `ZH_TW`).
+- Weaverse's Translation Manager takes the public BCP-47 locale (`zh-cn`,
+  `zh-hk`, `zh-tw`), because the installed client builds its lookup as
+  lowercase `${language}-${country}` from `storefront.i18n`.
+
+Sending the enum to Weaverse requests a locale that does not exist. The SDK
+treats a missing override as "no overrides", so the failure is silent and looks
+like an unpublished translation.
+
+Pattern: keep the canonical market entry, and hand Weaverse a copy of the
+storefront whose `i18n` is that entry —
+`weaverseStorefront(hydrogenContext.storefront, locale)`. Hydrogen binds
+`@inContext` from the storefront client's own closure, so replacing the `i18n`
+property does not change what Shopify receives.
+
+*Verified by* `tests/unit/weaverse-locale.test.ts` — all 33 markets, both
+providers asserted per request.
+
+### 2. Studio preview requires reading the design-override store
+
+A theme that falls back to its own persisted settings must consult
+`translationStore` before doing so, or live Studio edits are invisible until
+published. The SDK resolves `designOverrides ?? merchantOverrides ??
+staticContent` inside `t()`, so any code path that returns before calling
+`t()` opts out of the preview workflow.
+
+- Own-property presence, not truthiness: a live edit cleared to `""` is an
+  edit, and must preview as cleared.
+- The snapshot is a plain object, so `key in snapshot` is true for
+  `constructor` and `toString`; use `Object.hasOwn`.
+
+*Verified by* `tests/unit/live-translation-preview.test.ts` and
+`tests/unit/legacy-theme-text.test.ts`.
+
+### 3. One reader per migrated key
+
+When a theme setting is replaced by a translation key, exactly one code path
+may resolve it. A component that also accepts the old value as a prop
+reintroduces a precedence layer that cannot see published or live edits, and
+the two paths disagree only for merchants who customised the string.
+
+Pattern: delete the prop and let the component call the shared reader. The
+reader already reads the same theme settings the caller would have forwarded.
+
+*Verified by* `tests/unit/merchant-copy.test.ts`.
+
+### 4. Upgrade-safe migration needs the shipped default recorded
+
+Persisted settings cannot distinguish "merchant chose this" from "this is what
+the theme shipped", because every setting had a `defaultValue`. Preserving
+persisted values verbatim pins English into every localized market.
+
+Pattern: record the English `defaultValue` each setting shipped with; a value
+still equal to it falls through to translation, anything else is the merchant's.
+
+Known limit: a merchant who deliberately chose the exact shipped default is
+indistinguishable from one who never opened the field.
+
+*Verified by* `tests/unit/merchant-copy.test.ts`.
+
+### 5. Helper tests do not protect boundaries
+
+A test that re-implements a rule passes when the shipping code stops calling
+it. Boundaries whose regression is a released defect — request context,
+route actions, root loaders, rendered components — need tests that execute
+them.
+
+Two constraints make this practical in this repo:
+
+- Playwright owns the JSX runtime for files under `testDir` and rewrites app
+  `.tsx` into fixture objects React refuses to render. Compiling the module
+  with esbuild (installed via `@shopify/cli`) yields real
+  `react/jsx-runtime` calls — see `tests/support/render-app.ts`.
+- `createHydrogenRouterContext` opens a `caches` entry and reads every `Env`
+  field, so tests need the worker global and a fully typed env — see
+  `tests/support/hydrogen-env.ts`.
+
+*Verified by* `tests/unit/production-boundaries.test.ts`, plus a mutation
+matrix in which each of six production paths fails at least one test.
