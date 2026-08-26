@@ -21,6 +21,7 @@ import { ProductMedia } from "~/components/product-media";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Skeleton } from "~/components/skeleton";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import type { ThemeSettings } from "~/types/weaverse";
 
@@ -192,11 +193,17 @@ export function QuickShopTrigger({
   const label = themeText("product.quickShop");
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
+  // The market lives in the URL, and an absolute `/api/...` carries none of
+  // it: the API route would resolve the default market and answer with its
+  // copy, pricing and availability inside a localized page.
+  const productApiPath = usePrefixPathWithLocale(
+    `/api/product/${productHandle}`,
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
   useEffect(() => {
     if (open && !data) {
-      load(`/api/product/${productHandle}`);
+      load(productApiPath);
     }
   }, [open]);
 

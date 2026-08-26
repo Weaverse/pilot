@@ -190,6 +190,16 @@ The dividing line, asserted directly by
 | `context.storefront` | `ZH_TW` — the Shopify enum |
 | `context.weaverse.storefront` | `ZH` — the public identity |
 
+### P1-5 — internal API requests keep the market
+
+Client-issued API paths go through `usePrefixPathWithLocale`, so the request
+URL names the market and the API route resolves the shopper's context rather
+than the default one. `quick-shop`, `collection-card` and the collection
+`toolbar` were the three callers still using absolute paths; the rest of the
+codebase already followed this. Verified by
+`tests/unit/api-locale-boundary.test.ts`, which mounts each component in a real
+browser and records the request that leaves the page.
+
 `Intl` tags move off the provider enum onto `hreflang`, because `ZH_CN-CN` is
 not a BCP-47 tag and `Intl` throws on it — prices (`parseAsCurrency`) and blog
 dates were both building tags that way.

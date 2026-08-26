@@ -103,22 +103,50 @@ test("featured collections query Shopify with the provider language", async () =
   }).toEqual({ shopify: ["ZH_TW"], translation: ["zh-hk"] });
 });
 
-test("featured products query Shopify with the provider language", async () => {
+test("every featured-products selection mode queries with the provider language", async () => {
+  // The section picks one of three queries from `selectionMethod`, and a test
+  // that exercises one mode says nothing about the other two: adding an
+  // explicit `language` to the manual branch alone stays green against a
+  // collection-only test while every manual section on `/zh-cn` sends `ZH`.
+  //
+  // The `auto` case runs through the real section loader rather than calling
+  // its helper directly, because the section hands the helper
+  // `weaverse.storefront` — the public identity — while a test calling
+  // `getFeaturedProducts(context.storefront)` hands it the provider enum and
+  // would pass no matter what the section does.
   const { loader } = await loadAppModule<{
     loader: (args: { data: unknown; weaverse: unknown }) => Promise<unknown>;
   }>("sections/featured-products/index.tsx");
 
-  const sent = await sentBy("/zh-cn", (context) =>
-    loader({
+  const modes = [
+    {
+      mode: "collection",
       data: { selectionMethod: "collection", collection: { handle: "all" } },
-      weaverse: context.weaverse,
-    }),
-  );
+    },
+    {
+      mode: "manual",
+      data: { selectionMethod: "manual", products: [{ id: "1" }] },
+    },
+    { mode: "auto", data: { selectionMethod: "auto" } },
+  ];
 
-  expect({
-    shopify: [...new Set(sent.shopify)],
-    translation: [...new Set(sent.translation)],
-  }).toEqual({ shopify: ["ZH_CN"], translation: ["zh-cn"] });
+  const sent: { mode: string; shopify: string[]; translation: string[] }[] = [];
+  for (const { mode, data } of modes) {
+    const observed = await sentBy("/zh-cn", (context) =>
+      loader({ data, weaverse: context.weaverse }),
+    );
+    sent.push({
+      mode,
+      shopify: [...new Set(observed.shopify)],
+      translation: [...new Set(observed.translation)],
+    });
+  }
+
+  expect(sent).toEqual([
+    { mode: "collection", shopify: ["ZH_CN"], translation: ["zh-cn"] },
+    { mode: "manual", shopify: ["ZH_CN"], translation: ["zh-cn"] },
+    { mode: "auto", shopify: ["ZH_CN"], translation: ["zh-cn"] },
+  ]);
 });
 
 test("the collection list route queries with the provider language", async () => {
@@ -141,12 +169,23 @@ test("the collection list route queries with the provider language", async () =>
   }).toEqual({ shopify: ["ZH_TW"], translation: ["zh-tw"] });
 });
 
-test("featured products helper queries with the provider language", async () => {
-  const sent = await sentBy("/zh-hk", (context) =>
+test("the featured-products helper keeps the provider language for any caller", async () => {
+  // The helper is shared, so it is checked with both clients a caller can hand
+  // it. Passing only `context.storefront` would hide an explicit variable
+  // added inside the helper, since that client already carries the enum.
+  const viaHydrogen = await sentBy("/zh-hk", (context) =>
     getFeaturedProducts(context.storefront),
   );
+  const viaWeaverse = await sentBy("/zh-hk", (context) =>
+    getFeaturedProducts(
+      context.weaverse.storefront as typeof context.storefront,
+    ),
+  );
 
-  expect([...new Set(sent.shopify)]).toEqual(["ZH_TW"]);
+  expect({
+    viaHydrogen: [...new Set(viaHydrogen.shopify)],
+    viaWeaverse: [...new Set(viaWeaverse.shopify)],
+  }).toEqual({ viaHydrogen: ["ZH_TW"], viaWeaverse: ["ZH_TW"] });
 });
 
 test("every Weaverse section loader queries with the provider language", async () => {
@@ -323,4 +362,39 @@ test("the two clients keep different language identities", async () => {
   } finally {
     restoreCaches();
   }
+});
+
+test("shared product helpers never send the public language", async () => {
+  // Helpers are where a caller/callee mismatch hides: the helper looks correct
+  // beside a caller that hands it Hydrogen's client, and leaks beside one that
+  // hands it Weaverse's. Each is therefore exercised with the client its own
+  // callers actually pass.
+  const recommended = await loadAppModule<{
+    getRecommendedProducts: (
+      storefront: unknown,
+      productId: string,
+    ) => Promise<unknown>;
+  }>("routes/products/recommended-product.ts");
+
+  // Both clients, for the same reason the featured-products helper takes both:
+  // handing it only Hydrogen's client would pass even if the helper started
+  // copying `i18n.language` into its variables, because that client already
+  // carries the enum. Weaverse's client is the one that exposes the mistake.
+  const viaHydrogen = await sentBy("/zh-cn", (context) =>
+    recommended.getRecommendedProducts(
+      context.storefront,
+      "gid://shopify/Product/1",
+    ),
+  );
+  const viaWeaverse = await sentBy("/zh-cn", (context) =>
+    recommended.getRecommendedProducts(
+      context.weaverse.storefront,
+      "gid://shopify/Product/1",
+    ),
+  );
+
+  expect({
+    viaHydrogen: [...new Set(viaHydrogen.shopify)],
+    viaWeaverse: [...new Set(viaWeaverse.shopify)],
+  }).toEqual({ viaHydrogen: ["ZH_CN"], viaWeaverse: ["ZH_CN"] });
 });

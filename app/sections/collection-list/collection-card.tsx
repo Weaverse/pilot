@@ -4,6 +4,7 @@ import { type CSSProperties, useEffect, useState } from "react";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 
@@ -29,16 +30,20 @@ export function CollectionCard({
   overlayOpacity,
 }: CollectionCardProps) {
   let [productCount, setProductCount] = useState<string | number | null>(null);
+  // Same market rule as every other internal request: the count is per market.
+  const countApiPath = usePrefixPathWithLocale(
+    `/api/collection/${collection.handle}/product-count`,
+  );
 
   useEffect(() => {
     if (!showProductCount) {
       return;
     }
-    fetch(`/api/collection/${collection.handle}/product-count`)
+    fetch(countApiPath)
       .then((res) => res.json())
       .then((data: { count: number | string }) => setProductCount(data.count))
       .catch(() => setProductCount(null));
-  }, [collection.handle, showProductCount]);
+  }, [countApiPath, showProductCount]);
 
   if (collection.products.nodes.length === 0) {
     return null;

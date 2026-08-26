@@ -747,3 +747,73 @@ and provider codes agree, a hardcoded enum would pass.
 The `Intl` tag was already read from `resolveLocaleFromRequest`, and still is —
 `hreflang` is the market's public tag, which is what `Intl` accepts and what
 `ZH_CN` would break. Unchanged behaviour, one fewer field to misread.
+
+## 2026-08-26 — Sixth review of `7c1ba3fa`: two P1s, both real
+
+### P1-A — internal API requests dropped the market
+
+`quick-shop`, `collection-list/collection-card` and `main-collection/toolbar`
+fetched absolute `/api/...` paths. With a `url-path` locale strategy the URL is
+the only carrier of the market, so those requests resolved `EN/US`: a shopper on
+`/zh-cn/collections/all` got US copy, pricing, availability and counts inside a
+Chinese page, 200 all the way.
+
+Fixed with `usePrefixPathWithLocale`, which six other callers already used —
+the convention existed, these three had not adopted it. `predictive-search`
+localizes by hand via `params.locale`; `klaviyo` and `customer` touch no locale.
+So three genuine offenders, no new abstraction.
+
+**A harness gap found while testing this, and it mattered.** My first attempt
+recorded what `usePrefixPathWithLocale` *returned* during render. It passed
+while all three callers were still broken, because the hook result is computed
+whether or not the component fetches it — reverting `load(productApiPath)` to
+`load(\`/api/product/${handle}\`)` left the recorded value untouched. Three
+mutations escaped before I noticed.
+
+The replacement (`tests/support/browser-render.ts`) mounts the component in
+Chromium, clicks where a shopper would, and records the requests that actually
+leave the page. It also fails loudly when a component throws: React Router's
+default error boundary renders fine, so a crashed component previously reported
+"made no requests" — indistinguishable from the regression under test. That
+check caught a bad fixture of mine (`collection.products.nodes[0].media`).
+
+| Mutation | Render-recorder | Real browser |
+| --- | --- | --- |
+| quick-shop reverts to an absolute path | GREEN — escaped | **1 failed** |
+| collection-card reverts | GREEN — escaped | **1 failed** |
+| toolbar reverts | GREEN — escaped | **1 failed** |
+| `localizePath` stops prefixing `/api/` | 3 failed | **3 failed** |
+
+Live, on the running storefront: `/api/product/wunder-puff-jacket` returns
+`Wunder Puff Jacket`, `/zh-cn/api/...` returns `Wunder Puff 夹克`. Driving the
+real page, `/zh-cn/collections/all` requests
+`/zh-cn/api/collection/the-full-catalog/product-count`, and clicking the real
+quick-shop trigger requests `/zh-cn/api/product/pack-it-down-vest.data`.
+
+### P1-B — featured products: two paths were never exercised
+
+Both escapes the review demonstrated were real:
+
+1. Coverage only ran `selectionMethod: "collection"`. Adding an explicit
+   `language` to the *manual* branch stayed green.
+2. The section hands `getFeaturedProducts` the Weaverse client (public `ZH`),
+   but the test handed it `context.storefront` (the enum), so restoring an
+   explicit `language` inside the helper stayed green.
+
+Now all three modes run through the real section loader with the real client,
+and every shared product helper is exercised with **both** clients a caller can
+pass — that second call is what makes an explicit variable observable.
+
+| Mutation | Before | Now |
+| --- | --- | --- |
+| explicit `language` on the manual query only | GREEN | **1 failed** |
+| explicit `language` restored in the helper | GREEN | **2 failed** |
+| explicit `language` on the collection query | 1 failed | **1 failed** |
+| explicit `language` in `recommended-product` | GREEN | **1 failed** |
+
+TypeScript stayed green under each, which is why none of them were visible to
+the gates.
+
+The fourth row is a sibling I found by sweeping helpers that take a storefront:
+`getRecommendedProducts`. It was already correct, but its guard had the same
+single-client weakness, so it would not have caught a regression. Hardened.

@@ -116,21 +116,29 @@ export async function loadAppModule<T>(entry: string): Promise<T> {
  *
  * `useThemeSettings` reads `weaverseTheme` from the root route's loader data,
  * so a component can only be exercised inside a router that actually has one.
+ *
+ * `pathname` is the URL the router renders at. It matters for anything reading
+ * `useLocation` — with a `url-path` locale strategy that includes every
+ * component deriving a market-aware link or API path, which cannot be
+ * exercised at `/` because the default market has no prefix.
  */
 export async function renderInApp(
   rootData: Record<string, unknown>,
   children: (() => ReactElement) | ReactNode,
+  pathname = "/",
 ): Promise<string> {
   const routes = [
     {
       id: "root",
-      path: "/",
+      path: "*",
       loader: () => rootData,
       Component: typeof children === "function" ? children : () => children,
     },
   ];
   const handler = createStaticHandler(routes);
-  const context = await handler.query(new Request("http://localhost/"));
+  const context = await handler.query(
+    new Request(`http://localhost${pathname}`),
+  );
   // A `Response` means the route redirected or threw; there is no tree to
   // render and a test asserting on markup would silently pass on empty output.
   if (context instanceof Response) {

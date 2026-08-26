@@ -11,6 +11,7 @@ import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import { useProductGridStore } from "~/components/product-grid/store";
 import { ScrollArea } from "~/components/scroll-area";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { Filters, type FiltersProps } from "../filters/filters";
@@ -104,13 +105,17 @@ function CollectionToolbar(props: CollectionToolbarProps) {
   const { collection } = useLoaderData<CollectionQuery>();
   let displayedCount = useProductGridStore((s) => s.displayedCount);
   let [totalCount, setTotalCount] = useState<number | string | null>(null);
+  // Same market rule as every other internal request: the count is per market.
+  const countApiPath = usePrefixPathWithLocale(
+    `/api/collection/${collection.handle}/product-count`,
+  );
 
   useEffect(() => {
-    fetch(`/api/collection/${collection.handle}/product-count`)
+    fetch(countApiPath)
       .then((res) => res.json())
       .then((data: { count: number | string }) => setTotalCount(data.count))
       .catch(() => setTotalCount(null));
-  }, [collection.handle]);
+  }, [countApiPath]);
 
   let formattedCount = "";
   if (displayedCount > 0 && totalCount !== null) {

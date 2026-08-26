@@ -90,6 +90,33 @@ Formatting is the one legitimate reader of the public identity: `article`
 derives its `Intl` tag from `resolveLocaleFromRequest`, never from a client, so
 neither shape of `i18n` can affect a date.
 
+**Internal API requests carry the market in their own URL.** A component that
+fetches an absolute `/api/...` sends no market: the API route builds a default
+context and Shopify answers with the default market's copy, pricing and
+availability, inside a page that is otherwise localized. `Referer` is not a
+fallback — absent under several referrer policies, never authoritative for
+routing — so the path itself has to be localized with
+`usePrefixPathWithLocale`, which most callers already did.
+
+### 6. A test can execute the right component and still miss the defect
+
+Three separate reviews found the same shape of gap, and each time the test
+looked reasonable:
+
+- constructing `QuickShopTrigger` directly proves it resolves its own copy, and
+  says nothing about the props its caller passes;
+- exercising one `selectionMethod` proves nothing about the other two branches
+  of the same loader;
+- calling a shared helper with `context.storefront` proves nothing about the
+  caller that hands it `weaverse.storefront`.
+
+The rule that follows: **exercise the production path with the production
+inputs**. Every mode the code branches on, every client a caller actually
+passes, and — where the observable is a request rather than markup — the real
+request, from a real mount. Observing the URL as it is *built* is not enough:
+a component can build a localized path and fetch a different literal, which is
+exactly what the mutation matrix caught.
+
 Public prefixes and SEO identities stay stable; the provider enum is never used
 to build a URL, tag, bundle key or translation locale, and the prefix is never
 derived from it.
