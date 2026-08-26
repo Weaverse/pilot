@@ -2,6 +2,32 @@
 
 This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) when working with code in this repository.
 
+> **Canonical agent instructions:** `AGENTS.md` is the source of truth and may always be updated. Root `CLAUDE.md` is a relative symlink to it and must never become a separate copy. Push completed instruction changes to the repository's default branch.
+
+## Spec Maintenance
+
+- Search existing specs and linked issues before creating a spec.
+- Update the closest canonical spec; merge overlapping specs when they describe the same user outcome and implementation boundary.
+- Create a new spec only when no existing spec can absorb the work without mixing independent outcomes.
+- When a dated spec is updated or merged, rename it to the current date (and current month bucket when present), preserve `Created`, refresh `Last Updated`, and update backlinks and generated indexes in the same change.
+
+## Companion Guides
+
+- **`.agents/weaverse.md`** — required reading before changing any component
+  schema, section, or the component registry. Covers the generated component
+  manifest, sensitivity marking, and safe composition.
+- **`DESIGN.md`** — brand tokens, accessibility requirements, component rules,
+  and prohibited patterns.
+
+Weaverse schema changes must be accompanied by a regenerated manifest:
+
+```bash
+npm run weaverse:manifest   # regenerate .weaverse/component-manifest.json
+npm run weaverse:audit      # check registrations and setting sensitivity
+```
+
+CI fails when the committed manifest is stale.
+
 ## Project Overview
 
 This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting.
@@ -20,7 +46,7 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 - Blogs: `routes/blogs/blog.tsx`, `routes/blogs/article.tsx`
 - SEO: `routes/seo/robots.ts`, `routes/seo/sitemap.ts`
 
-**Adding New Routes**: Always add new routes to `app/routes.ts` using the `route()`, `index()`, `layout()`, and `prefix()` helpers from `@react-router/dev/routes`.
+**Adding New Routes**: Always add new routes to `app/routes.ts` using the `route()`, `index()`, `layout()`, and `prefix()` helpers from `@react-router/dev/routes`. Non-HTML resource routes served from the site root (e.g. `robots.txt`, `manifest.webmanifest`) are registered top-level, outside the `:locale?` prefix.
 
 ### Key Architectural Patterns
 

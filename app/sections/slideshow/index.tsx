@@ -5,15 +5,26 @@ import {
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import { createContext } from "react";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ScrollReveal } from "~/components/scroll-reveal";
+import {
+  RevealImmediateContext,
+  ScrollReveal,
+} from "~/components/scroll-reveal";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { ThemeSettings } from "~/types/weaverse";
 import type { SlideshowArrowsProps } from "./arrows";
 import { Arrows } from "./arrows";
 import type { SlideshowDotsProps } from "./dots";
 import { Dots } from "./dots";
+/**
+ * True for the slideshow's first slide — its background is the LCP element
+ * on slideshow-led pages and must load eagerly. Weaverse wraps section
+ * children in its own item renderer, so a cloned prop would be dropped;
+ * context crosses that boundary (consumed in ./slide.tsx).
+ */
+export const EagerSlideContext = createContext(false);
 
 const variants = cva("group [&_.swiper]:h-full", {
   variants: {
@@ -90,6 +101,7 @@ export default function Slideshow(
   return (
     <ScrollReveal
       as="section"
+      immediate
       key={Object.values(props)
         .filter((v) => typeof v !== "object")
         .join("-")}
@@ -134,7 +146,11 @@ export default function Slideshow(
       >
         {children.map((child, idx) => (
           <SwiperSlide key={idx} className="bg-white">
-            {child}
+            <EagerSlideContext.Provider value={idx === 0}>
+              <RevealImmediateContext.Provider value={idx === 0}>
+                {child}
+              </RevealImmediateContext.Provider>
+            </EagerSlideContext.Provider>
           </SwiperSlide>
         ))}
         {showArrows && (

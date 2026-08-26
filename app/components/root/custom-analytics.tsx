@@ -17,6 +17,11 @@ export function CustomAnalytics() {
   let id = rootData?.googleGtmID;
 
   useEffect(() => {
+    // Queue immediately; GTM network loading is intentionally delayed below.
+    // This prevents early Hydrogen analytics events from being dropped.
+    window.dataLayer = window.dataLayer || [];
+  }, []);
+  useEffect(() => {
     subscribe(AnalyticsEvent.PAGE_VIEWED, (data: PageViewPayload) => {
       window.dataLayer?.push({
         event: "page_viewed",
@@ -61,26 +66,58 @@ export function CustomAnalytics() {
     if (!id) {
       return;
     }
-    let init = () => {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(...args: any[]) {
-        window.dataLayer.push(args);
-      }
-      gtag("js", new Date());
-      gtag({ "gtm.start": Date.now(), event: "gtm.js" });
-      gtag("config", id);
 
-      let script = document.createElement("script");
+    window.dataLayer = window.dataLayer || [];
+
+    let didLoad = false;
+    let fallbackTimer: number | undefined;
+    let cleanupEvents: (() => void) | undefined;
+
+    function loadGtm() {
+      if (didLoad) {
+        return;
+      }
+      didLoad = true;
+      cleanupEvents?.();
+      if (fallbackTimer) {
+        window.clearTimeout(fallbackTimer);
+      }
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
+      window.dataLayer.push(["js", new Date()]);
+      window.dataLayer.push(["config", id]);
+
+      const script = document.createElement("script");
       script.async = true;
       script.nonce = nonce;
-      script.src = `https://www.googletagmanager.com/gtm.js?id=${id}`;
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`;
       document.head.appendChild(script);
-    };
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(init);
-    } else {
-      setTimeout(init, 1000);
     }
+
+    const intentEvents = ["pointerdown", "keydown", "touchstart", "scroll"];
+    for (const event of intentEvents) {
+      window.addEventListener(event, loadGtm, {
+        once: true,
+        passive: true,
+      });
+    }
+    cleanupEvents = () => {
+      for (const event of intentEvents) {
+        window.removeEventListener(event, loadGtm);
+      }
+    };
+
+    // Long-tail fallback: keep analytics for no-interaction page views, but
+    // keep GTM out of the initial render/LCP window. User intent loads sooner.
+    fallbackTimer = window.setTimeout(loadGtm, 8000);
+
+    return () => {
+      cleanupEvents?.();
+      if (fallbackTimer) {
+        window.clearTimeout(fallbackTimer);
+      }
+    };
   }, [id, nonce]);
 
   return null;

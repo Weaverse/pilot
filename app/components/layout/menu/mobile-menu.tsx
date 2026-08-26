@@ -1,8 +1,9 @@
-import { CaretRightIcon, ListIcon, XIcon } from "@phosphor-icons/react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Dialog from "@radix-ui/react-dialog";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { SingleMenuItem } from "~/types/menu";
 import { cn } from "~/utils/cn";
@@ -40,11 +41,12 @@ export function MobileMenu() {
           ])}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <Dialog.Title asChild>
             <div className="px-4">Menu</div>
           </Dialog.Title>
           <Dialog.Close asChild>
-            <XIcon className="fixed top-4 right-4 h-5 w-5" />
+            <Icon name="x" className="fixed top-4 right-4 h-5 w-5" />
           </Dialog.Close>
           <div className="mt-4 border-line-subtle border-t" />
           <div className="py-2">
@@ -86,7 +88,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
           className='flex w-full items-center justify-between gap-4 py-3 data-[state="open"]:[&>svg]:rotate-90'
         >
           <span>{title}</span>
-          <CaretRightIcon className="h-4 w-4" />
+          <Icon name="caret-right" className="h-4 w-4" />
         </button>
       </Collapsible.Trigger>
       <Collapsible.Content className="flex flex-col border-gray-300 border-l pl-4">
@@ -104,7 +106,7 @@ function MenuTrigger(
   const { ...rest } = props;
   return (
     <button type="button" {...rest}>
-      <ListIcon className="h-5 w-5" />
+      <Icon name="list" className="h-5 w-5" />
     </button>
   );
 }

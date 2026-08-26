@@ -1,9 +1,9 @@
-import { TagIcon } from "@phosphor-icons/react";
 import { Money } from "@shopify/hydrogen";
 import type {
   OrderFragment,
   OrderLineItemFullFragment,
 } from "customer-account-api.generated";
+import { Icon } from "~/components/icon";
 
 export function OrderSummary({
   order,
@@ -48,7 +48,7 @@ export function OrderSummary({
       </div>
       <div className="flex justify-between gap-4">
         <dt className="flex items-center gap-2">
-          <TagIcon className="h-4 w-4" />
+          <Icon name="tag" className="h-4 w-4" />
           <span className="font-bold text-sm uppercase leading-none">
             Total savings
           </span>

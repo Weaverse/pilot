@@ -1,4 +1,4 @@
-import { StarIcon } from "@phosphor-icons/react";
+import { Icon } from "~/components/icon";
 
 export function ReviewBar(review: {
   rating: number;
@@ -10,7 +10,7 @@ export function ReviewBar(review: {
       <p className="w-2 shrink-0 text-start font-medium text-gray-900 text-sm leading-none">
         {review.rating}
       </p>
-      <StarIcon className="h-4 w-4 shrink-0" />
+      <Icon name="star" className="h-4 w-4 shrink-0" />
       <div className="h-1.5 w-72 max-w-80 rounded-md bg-gray-200">
         <div
           className="h-1.5 rounded-md bg-gray-800"

@@ -1,5 +1,5 @@
-import { TruckIcon } from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
 interface EstimatedDeliveryProps extends HydrogenComponentProps {
@@ -32,7 +32,7 @@ export default function ProductEstimatedDelivery(
       className={cn("flex items-center gap-2 rounded-md px-4 py-3 text-sm")}
       style={{ color: textColor, backgroundColor }}
     >
-      <TruckIcon className="size-5 shrink-0" />
+      <Icon name="truck" className="size-5 shrink-0" />
       <span>
         {heading} <strong className="font-bold">{formatDate(minDate)}</strong>{" "}
         and <strong className="font-bold">{formatDate(maxDate)}</strong>.

@@ -1,11 +1,3 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ArrowsOutSimpleIcon,
-  CubeIcon,
-  VideoCameraIcon,
-  XIcon,
-} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ExternalVideo, ModelViewer, parseGid } from "@shopify/hydrogen";
@@ -19,8 +11,10 @@ import type {
   MediaFragment,
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { ScrollArea } from "~/components/scroll-area";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Spinner } from "~/components/spinner";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
@@ -117,16 +111,13 @@ export function ZoomModal({
           ])}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div className="relative flex h-full w-full items-center justify-center bg-background">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
             <div className="absolute top-10 left-8 hidden lg:block">
-              <ScrollArea
-                ref={scrollAreaRef}
-                className="max-h-[700px]"
-                size="sm"
-              >
+              <ScrollArea ref={scrollAreaRef} className="max-h-175" size="sm">
                 <div className="w-24 space-y-2 pr-2">
                   {media.map(({ id, previewImage, alt, mediaContentType }) => {
                     const { id: mediaId } = parseGid(id);
@@ -153,12 +144,12 @@ export function ZoomModal({
                         />
                         {mediaContentType === "VIDEO" && (
                           <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
-                            <VideoCameraIcon className="size-5" />
+                            <Icon name="video-camera" className="size-5" />
                           </div>
                         )}
                         {mediaContentType === "MODEL_3D" && (
                           <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
-                            <CubeIcon className="size-5" />
+                            <Icon name="cube" className="size-5" />
                           </div>
                         )}
                       </div>
@@ -167,7 +158,12 @@ export function ZoomModal({
                 </div>
               </ScrollArea>
             </div>
-            <div className="relative">
+            <div
+              className={cn(
+                "relative",
+                zoomMedia?.mediaContentType !== "IMAGE" && "h-full",
+              )}
+            >
               {isImageLoading && <Spinner />}
               <ZoomMedia
                 media={zoomMedia}
@@ -175,7 +171,7 @@ export function ZoomModal({
               />
             </div>
             <Dialog.Close className="absolute top-4 right-4 z-1">
-              <XIcon className="h-6 w-6" />
+              <Icon name="x" className="h-6 w-6" />
             </Dialog.Close>
             <div className="absolute right-10 bottom-10 left-10 flex items-center justify-center gap-2 md:left-auto">
               <Button
@@ -186,7 +182,7 @@ export function ZoomModal({
                   scrollToMedia(prevMedia.id);
                 }}
               >
-                <ArrowLeftIcon className="h-4.5 w-4.5" />
+                <Icon name="arrow-left" className="h-4.5 w-4.5" />
               </Button>
               <Button
                 variant="secondary"
@@ -196,7 +192,7 @@ export function ZoomModal({
                   scrollToMedia(nextMedia.id);
                 }}
               >
-                <ArrowRightIcon className="h-4.5 w-4.5" />
+                <Icon name="arrow-right" className="h-4.5 w-4.5" />
               </Button>
             </div>
           </div>
@@ -233,7 +229,7 @@ function ZoomMedia({
   if (media.mediaContentType === "VIDEO") {
     let mediaVideo = media as Media_Video_Fragment;
     return (
-      <video controls className="h-auto object-cover md:h-full">
+      <video controls className="h-auto object-cover md:h-full rounded-md">
         <track kind="captions" />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
@@ -243,7 +239,10 @@ function ZoomMedia({
     let model3d = media as Media_Model3d_Fragment;
     let { data, iosSrc } = getModel3dData(model3d);
     return (
-      <div style={{ width: "min(80vw, 80vh)", height: "80vh" }}>
+      <div
+        className="rounded-md overflow-hidden"
+        style={{ width: "min(80vw, 80vh)", height: "80vh" }}
+      >
         <ModelViewer data={data} iosSrc={iosSrc} className="h-full w-full" />
       </div>
     );
@@ -253,7 +252,7 @@ function ZoomMedia({
     return (
       <ExternalVideo
         data={externalVideo}
-        className="aspect-video h-auto w-auto md:h-full lg:max-w-[calc(100vw-16rem)]"
+        className="aspect-video rounded-md overflow-hidden h-auto w-auto md:h-full lg:max-w-[calc(100vw-16rem)]"
       />
     );
   }
@@ -287,7 +286,7 @@ export function ZoomButton({ className, ...props }: ZoomButtonProps) {
       aria-label="Zoom product media"
       {...props}
     >
-      <ArrowsOutSimpleIcon className="h-5 w-5" />
+      <Icon name="arrows-out-simple" className="h-5 w-5" />
     </button>
   );
 }

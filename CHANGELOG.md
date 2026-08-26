@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026.7.22
+
+- [feature] Installable mobile app (PWA): new "Mobile app (PWA)" theme settings group (off by default). When enabled, serves a merchant-branded `/manifest.webmanifest` (name, icon, colors from theme settings with Shopify brand fallbacks), adds install head tags, registers a minimal service worker (hashed assets + CDN images only — never HTML/cart/checkout), and shows a dismissible iOS Add-to-Home-Screen hint.
+
+## 2026.6.24
+
+- [fix] Silence React Router v8 future-flag dev warnings by explicitly opting out of `v8_passThroughRequests` and `v8_trailingSlashAwareDataRequests` in `react-router.config.ts` (deep-merged over the Hydrogen preset; no behavior change)
+- [docs] Rewrite README for an agent-first quickstart, Weaverse MCP, and refreshed stack — drops the "Who is using Weaverse/Pilot on production?" section (#440)
+
 ## 2026.3.16
 
 - [feature] Switch versioning from semver to datetime-based (`YYYY.M.D`)

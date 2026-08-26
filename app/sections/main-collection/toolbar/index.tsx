@@ -1,25 +1,30 @@
-import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import {
-  createSchema,
-  type HydrogenComponentProps,
-  useThemeText,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import { useProductGridStore } from "~/components/product-grid/store";
 import { ScrollArea } from "~/components/scroll-area";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { Filters, type FiltersProps } from "../filters/filters";
 
+const SORT_OPTIONS: Array<{ label: string; key: SortParam }> = [
+  { label: "Featured", key: "featured" },
+  { label: "Relevance", key: "relevance" },
+  { label: "Price, (low to high)", key: "price-low-high" },
+  { label: "Price, (high to low)", key: "price-high-low" },
+  { label: "Best selling", key: "best-selling" },
+  { label: "Newest", key: "newest" },
+];
+
 function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
-  const { t } = useThemeText();
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -28,8 +33,8 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
           className="flex h-12 items-center gap-1.5 border py-2"
           animate={false}
         >
-          <SlidersIcon size={18} />
-          <span>{t("collection.filter")}</span>
+          <Icon name="sliders" size={18} />
+          <span>Filter</span>
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -49,18 +54,19 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div className="space-y-1">
             <div className="flex items-center justify-between gap-2 px-4">
               <Dialog.Title asChild className="py-2.5 font-bold">
-                <span>{t("collection.filters")}</span>
+                <span>Filters</span>
               </Dialog.Title>
               <Dialog.Close asChild>
                 <button
                   type="button"
                   className="translate-x-2 p-2"
-                  aria-label={t("collection.closeFilters")}
+                  aria-label="Close filters drawer"
                 >
-                  <XIcon className="h-4 w-4" />
+                  <Icon name="x" className="h-4 w-4" />
                 </button>
               </Dialog.Close>
             </div>
@@ -96,7 +102,6 @@ function CollectionToolbar(props: CollectionToolbarProps) {
     ...rest
   } = props;
   const { collection } = useLoaderData<CollectionQuery>();
-  const { t } = useThemeText();
   let displayedCount = useProductGridStore((s) => s.displayedCount);
   let [totalCount, setTotalCount] = useState<number | string | null>(null);
 
@@ -107,22 +112,13 @@ function CollectionToolbar(props: CollectionToolbarProps) {
       .catch(() => setTotalCount(null));
   }, [collection.handle]);
 
-  const sortOptions: Array<{ label: string; key: SortParam }> = [
-    { label: t("collection.sortOptions.featured"), key: "featured" },
-    { label: t("collection.sortOptions.relevance"), key: "relevance" },
-    { label: t("collection.sortOptions.priceLowHigh"), key: "price-low-high" },
-    { label: t("collection.sortOptions.priceHighLow"), key: "price-high-low" },
-    { label: t("collection.sortOptions.bestSelling"), key: "best-selling" },
-    { label: t("collection.sortOptions.newest"), key: "newest" },
-  ];
-
   let formattedCount = "";
   if (displayedCount > 0 && totalCount !== null) {
     formattedCount = productsCountFormat
       .replace("{{displayed_products}}", String(displayedCount))
       .replace("{{total}}", String(totalCount));
   } else if (displayedCount > 0) {
-    formattedCount = t("collection.productsCount", { count: displayedCount });
+    formattedCount = `${displayedCount} products`;
   }
 
   return (
@@ -139,7 +135,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
         </div>
         {enableSort && (
           <SortDropdown
-            options={sortOptions}
+            options={SORT_OPTIONS}
             className={cn("md:ml-auto", enableFilter && "md:mr-4")}
           />
         )}

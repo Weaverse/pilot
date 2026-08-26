@@ -1,127 +1,18 @@
-import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
-import {
-  type HydrogenComponentProps,
-  isBrowser,
-  type WeaverseVideo,
-} from "@weaverse/hydrogen";
-import type { VariantProps } from "class-variance-authority";
-import { cva } from "class-variance-authority";
+import { isBrowser } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { Overlay, type OverlayProps } from "~/components/overlay";
+import { Icon } from "~/components/icon";
+import { Overlay } from "~/components/overlay";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { variants } from "./styles";
+import { type HeroVideoProps, SECTION_HEIGHTS } from "./types";
 
-export { schema } from "./schema";
-
-const SECTION_HEIGHTS = {
-  small: "40vh",
-  medium: "50vh",
-  large: "70vh",
-  custom: null,
-};
-
-export interface HeroVideoData
-  extends OverlayProps,
-    VariantProps<typeof variants> {
-  video: WeaverseVideo;
-  videoURL: string;
-  autoplay: boolean;
-  loop: boolean;
-  showPlayPauseButton: boolean;
-  height: "small" | "medium" | "large" | "custom";
-  heightOnDesktop: number;
-}
-
-export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {
-  ref: React.Ref<HTMLElement>;
-}
-
-export const variants = cva(
-  "absolute inset-0 z-10 mx-auto flex max-w-screen flex-col px-3 [&_.paragraph]:mx-[unset]",
-  {
-    variants: {
-      gap: {
-        0: "",
-        4: "space-y-1",
-        8: "space-y-2",
-        12: "space-y-3",
-        16: "space-y-4",
-        20: "space-y-5",
-        24: "space-y-3 lg:space-y-6",
-        28: "space-y-3.5 lg:space-y-7",
-        32: "space-y-4 lg:space-y-8",
-        36: "space-y-4 lg:space-y-9",
-        40: "space-y-5 lg:space-y-10",
-        44: "space-y-5 lg:space-y-11",
-        48: "space-y-6 lg:space-y-12",
-        52: "space-y-6 lg:space-y-[52px]",
-        56: "space-y-7 lg:space-y-14",
-        60: "space-y-7 lg:space-y-[60px]",
-      },
-      width: {
-        full: "w-full",
-        stretch: "w-full px-3 md:px-10 lg:px-16",
-        fixed: "w-full max-w-(--page-width) px-3 md:px-4 lg:px-6",
-      },
-      verticalPadding: {
-        none: "",
-        small: "py-4 md:py-6 lg:py-8",
-        medium: "py-8 md:py-12 lg:py-16",
-        large: "py-12 md:py-24 lg:py-32",
-      },
-      contentPosition: {
-        "top left": "items-start justify-start [&_.paragraph]:text-left",
-        "top center": "items-center justify-start [&_.paragraph]:text-center",
-        "top right": "items-end justify-start [&_.paragraph]:text-right",
-        "center left": "items-start justify-center [&_.paragraph]:text-left",
-        "center center":
-          "items-center justify-center [&_.paragraph]:text-center",
-        "center right": "items-end justify-center [&_.paragraph]:text-right",
-        "bottom left": "items-start justify-end [&_.paragraph]:text-left",
-        "bottom center": "items-center justify-end [&_.paragraph]:text-center",
-        "bottom right": "items-end justify-end [&_.paragraph]:text-right",
-      },
-    },
-    defaultVariants: {
-      gap: 20,
-      contentPosition: "center center",
-    },
-  },
-);
-
-function getPlayerSize(id: string) {
-  if (isBrowser) {
-    const section = document.querySelector(`[data-wv-id="${id}"]`);
-    if (section) {
-      const rect = section.getBoundingClientRect();
-      const aspectRatio = rect.width / rect.height;
-      if (aspectRatio < 16 / 9) {
-        return { width: "auto", height: "100%" };
-      }
-    }
-  }
-  return { width: "100%", height: "auto" };
-}
-
-/**
- * Calculate expected video height based on intrinsic dimensions and container width.
- * This avoids layout shift by setting the correct height before the video renders.
- */
-function calculateVideoHeight(
-  video: WeaverseVideo | undefined,
-  containerWidth: number,
-): number | null {
-  // Use WeaverseVideo intrinsic dimensions if available
-  if (video?.width && video?.height && containerWidth > 0) {
-    const aspectRatio = video.width / video.height;
-    return containerWidth / aspectRatio;
-  }
-  return null;
-}
-
-const ReactPlayer = lazy(() => import("react-player/lazy"));
+// react-player v3 is ESM-only and lazy-loads individual players internally,
+// so a plain dynamic import resolves cleanly. React.lazy here only defers the
+// player until the section scrolls into view.
+const ReactPlayer = lazy(() => import("react-player"));
 
 export default function HeroVideo(props: HeroVideoProps) {
   const {
@@ -145,37 +36,42 @@ export default function HeroVideo(props: HeroVideoProps) {
     ...rest
   } = props;
 
-  const id = rest["data-wv-id"];
   const containerRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState(() => getPlayerSize(id));
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [playing, setPlaying] = useState(autoplay !== false);
   const [hovered, setHovered] = useState(false);
+  const [hideContent, setHideContent] = useState(false);
 
-  // Calculate initial video height from intrinsic dimensions
-  const [videoHeight, setVideoHeight] = useState<number | null>(() => {
-    if (isBrowser && containerRef.current) {
-      const containerWidth = containerRef.current.getBoundingClientRect().width;
-      return calculateVideoHeight(video, containerWidth);
-    }
-    // Fallback: calculate from video metadata if available
-    if (isBrowser && video?.width && video?.height) {
-      // Use viewport width as estimate for container width
-      const estimatedWidth = window.innerWidth;
-      return calculateVideoHeight(video, estimatedWidth);
-    }
-    return null;
-  });
-
-  let contentVisible = !hovered || !playing;
+  // Content visible when: paused, or not hovered, or not hidden by delay
+  let contentVisible = !playing || !hovered || !hideContent;
 
   function togglePlaying() {
     setPlaying((prev) => !prev);
   }
 
-  const desktopHeight = SECTION_HEIGHTS[height] || `${heightOnDesktop}px`;
+  function handleMouseEnter() {
+    setHovered(true);
+    // Delay before hiding content (1.5 seconds)
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHideContent(true);
+    }, 1500);
+  }
+
+  function handleMouseLeave() {
+    setHovered(false);
+    // Cancel delayed hide and show content immediately
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setHideContent(false);
+  }
+
+  const sectionHeight = SECTION_HEIGHTS[height] || `${heightOnDesktop}px`;
   const sectionStyle: CSSProperties = {
-    "--desktop-height": desktopHeight,
-    ...(videoHeight ? { "--video-height": `${videoHeight}px` } : {}),
+    "--section-height": sectionHeight,
+    "--gap-desktop": `${gap ?? 0}px`,
+    "--gap-mobile": (gap ?? 0) <= 20 ? `${gap ?? 0}px` : `${(gap ?? 0) / 2}px`,
   } as CSSProperties;
 
   const { ref: inViewRef, inView } = useInView({
@@ -192,61 +88,79 @@ export default function HeroVideo(props: HeroVideoProps) {
   };
 
   /**
-   * Measure actual video element height and adjust container to match.
-   * This corrects any discrepancy between calculated and actual rendered height.
+   * Force muted + inline playback on the lazily-mounted <video> — required for
+   * iOS to autoplay inline rather than going fullscreen. react-player mounts
+   * the element asynchronously, so poll briefly until it appears. No height is
+   * measured here: the container size is fixed in CSS and the video just covers
+   * it (`object-cover`), so there is no measure→resize feedback loop.
    */
-  function syncVideoHeight() {
-    if (!containerRef.current) {
+  useEffect(() => {
+    if (!isBrowser || !inView || !containerRef.current) {
       return;
     }
+    const container = containerRef.current;
+    let pollId: ReturnType<typeof setInterval> | null = null;
+    let attempts = 0;
 
-    // Find the actual video or iframe element inside ReactPlayer
-    const mediaEl = containerRef.current.querySelector(
-      "video, iframe",
-    ) as HTMLElement | null;
-
-    if (mediaEl) {
-      const actualHeight = mediaEl.getBoundingClientRect().height;
-      if (actualHeight > 0) {
-        // Only update if significantly different (> 2px) to avoid jitter
-        setVideoHeight((prev) => {
-          if (prev === null || Math.abs(prev - actualHeight) > 2) {
-            return actualHeight;
-          }
-          return prev;
-        });
+    function configure() {
+      const mediaEl = container.querySelector("video");
+      if (!mediaEl) {
+        // Lazy player chunk / iframe embed not a <video> — retry briefly.
+        attempts += 1;
+        if (attempts > 100 && pollId) {
+          clearInterval(pollId);
+        }
+        return;
+      }
+      if (pollId) {
+        clearInterval(pollId);
+        pollId = null;
+      }
+      mediaEl.muted = true;
+      mediaEl.defaultMuted = true;
+      mediaEl.playsInline = true;
+      mediaEl.setAttribute("muted", "");
+      mediaEl.setAttribute("playsinline", "");
+      mediaEl.setAttribute("webkit-playsinline", "");
+      if (playing) {
+        mediaEl.autoplay = true;
+        mediaEl.setAttribute("autoplay", "");
+      }
+      if (loop !== false) {
+        mediaEl.loop = true;
+        mediaEl.setAttribute("loop", "");
       }
     }
-  }
 
-  /**
-   * Recalculate video height on resize using intrinsic dimensions.
-   * This ensures the container always matches the video's actual displayed size.
-   */
-  function handleResize() {
-    setSize(getPlayerSize(id));
+    pollId = setInterval(configure, 100);
+    configure();
 
-    // First, try intrinsic calculation
-    if (containerRef.current && video?.width && video?.height) {
-      const containerWidth = containerRef.current.getBoundingClientRect().width;
-      const calculatedHeight = calculateVideoHeight(video, containerWidth);
-      if (calculatedHeight) {
-        setVideoHeight(calculatedHeight);
-      }
-    }
-
-    // Then sync with actual video element after a brief delay
-    requestAnimationFrame(syncVideoHeight);
-  }
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
-  useEffect(() => {
-    handleResize();
-    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      if (pollId) {
+        clearInterval(pollId);
+      }
     };
-  }, [inView, height, heightOnDesktop]);
+  }, [inView, playing, loop]);
+
+  // Reset hideContent when video is paused (show content immediately)
+  useEffect(() => {
+    if (!playing) {
+      setHideContent(false);
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+        hoverTimeoutRef.current = null;
+      }
+    }
+  }, [playing]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <ScrollReveal
@@ -258,31 +172,39 @@ export default function HeroVideo(props: HeroVideoProps) {
     >
       <div
         ref={containerRef}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         className={clsx(
-          "relative flex items-center justify-center overflow-hidden w-full",
-          videoHeight
-            ? "h-(--video-height) md:h-[min(var(--desktop-height),var(--video-height))]"
-            : "aspect-video md:aspect-auto md:h-(--desktop-height)",
-          "md:w-[max(var(--desktop-height)/9*16,100vw)]",
-          "md:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
+          // Full-bleed hero band: full width, fixed height. `container-type:size`
+          // exposes the box to container-query units so the player below can
+          // scale itself to cover the band (see its inline style).
+          "relative w-full overflow-hidden h-(--section-height) @container-size",
         )}
       >
         {inView && (
           <Suspense fallback={null}>
             <ReactPlayer
-              url={video?.url || videoURL}
+              src={video?.url || videoURL}
               playing={playing}
+              autoPlay={playing}
               muted
               loop={loop !== false}
-              width={size.width}
-              height={size.height}
+              playsInline
               controls={false}
-              // className="aspect-video"
-              onReady={() => {
-                // Sync container height with actual video element after render
-                requestAnimationFrame(syncVideoHeight);
+              // Cover the band for ANY source. `object-fit: cover` only crops
+              // native <video>; YouTube/Vimeo render an <iframe> in shadow DOM
+              // that ignores it, so we instead size the player to the smallest
+              // 16:9 box that still covers the container, then center it (the
+              // band's `overflow-hidden` crops the excess). cqw/cqh resolve
+              // against the band's own width/height.
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "max(100cqw, calc(100cqh * 16 / 9))",
+                height: "max(100cqh, calc(100cqw * 9 / 16))",
+                objectFit: "cover",
               }}
             />
           </Suspense>
@@ -296,7 +218,8 @@ export default function HeroVideo(props: HeroVideoProps) {
         />
         <div
           className={clsx(
-            variants({ gap, width, verticalPadding, contentPosition }),
+            variants({ width, verticalPadding, contentPosition }),
+            "space-y-(--gap-mobile) lg:space-y-(--gap-desktop)",
             "hidden transition-opacity duration-300 md:flex",
             contentVisible ? "opacity-100" : "opacity-0",
           )}
@@ -312,12 +235,14 @@ export default function HeroVideo(props: HeroVideoProps) {
           aria-label={playing ? "Pause video" : "Play video"}
         >
           {playing ? (
-            <PauseIcon className="size-6" />
+            <Icon name="pause" className="size-6" />
           ) : (
-            <PlayIcon className="size-6" />
+            <Icon name="play" className="size-6" />
           )}
         </button>
       )}
     </ScrollReveal>
   );
 }
+
+export { schema } from "./schema";

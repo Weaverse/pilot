@@ -1,19 +1,20 @@
-import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
-const POPUP_DISMISSED_KEY = "newsletter-popup-dismissed";
+const POPUP_SEEN_KEY = "newsletter-popup-dismissed";
 
 export function useShouldRenderNewsletterPopup() {
   const location = useLocation();
@@ -21,12 +22,15 @@ export function useShouldRenderNewsletterPopup() {
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { newsletterPopupEnabled, newsletterPopupHomeOnly } =
     useThemeSettings<ThemeSettings>();
+  const isDesignMode = useWeaverseStudioCheck();
   const pathParts = location.pathname.split("/").filter(Boolean);
   const isHomePage =
     pathParts.length === 0 ||
     (pathParts.length === 1 && pathParts[0] === locale.pathPrefix.slice(1));
   return (
-    newsletterPopupEnabled && (newsletterPopupHomeOnly ? isHomePage : true)
+    !isDesignMode &&
+    newsletterPopupEnabled &&
+    (newsletterPopupHomeOnly ? isHomePage : true)
   );
 }
 
@@ -42,7 +46,6 @@ export function NewsletterPopup() {
     newsletterPopupButtonText,
     newsletterPopupPosition = "bottom-right",
   } = useThemeSettings<ThemeSettings>();
-  const { t } = useThemeText();
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
@@ -50,10 +53,10 @@ export function NewsletterPopup() {
   const isModal = newsletterPopupType === "modal";
 
   // Compute message and error from fetcher data
-  const message = fetcher.data?.ok ? t("footer.newsletterSuccess") : "";
+  const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
   const error =
     fetcher.data && !fetcher.data.ok
-      ? fetcher.data.error || t("footer.newsletterError")
+      ? fetcher.data.error || "An error occurred while signing up."
       : "";
 
   // Close popup after successful submission
@@ -68,33 +71,43 @@ export function NewsletterPopup() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: just need to run once
   useEffect(() => {
+    if (isDesignMode) {
+      return;
+    }
+    if (localStorage.getItem(POPUP_SEEN_KEY) === "true") {
+      return;
+    }
+    // Defer the popup until the visitor first engages (scroll/pointer/key/
+    // touch), then honor the configured delay. A newsletter popup that covers
+    // the hero during the initial render is an intrusive interstitial: it hurts
+    // perceived load (the popup becomes the last-painted content) and is poor
+    // UX. Gating on first interaction mirrors the GTM defer in
+    // custom-analytics.tsx and only shows the popup to engaged visitors.
     let timer: ReturnType<typeof setTimeout> | null = null;
-    if (!isDesignMode) {
-      const isDismissed = localStorage.getItem(POPUP_DISMISSED_KEY) === "true";
-      if (isDismissed) {
-        return;
-      }
+    const intentEvents = ["pointerdown", "keydown", "touchstart", "scroll"];
+    const controller = new AbortController();
+    function start() {
+      // First interaction wins: abort() drops the remaining intent listeners
+      // so the timer is scheduled exactly once.
+      controller.abort();
       timer = setTimeout(() => {
+        localStorage.setItem(POPUP_SEEN_KEY, "true");
         setOpen(true);
       }, newsletterPopupDelay * 1000);
     }
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Re-open popup when settings change in design mode
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to track all settings changes in design mode
-  useEffect(() => {
-    if (isDesignMode) {
-      setOpen(true);
+    for (const event of intentEvents) {
+      window.addEventListener(event, start, {
+        passive: true,
+        signal: controller.signal,
+      });
     }
-  }, [
-    newsletterPopupType,
-    newsletterPopupDelay,
-    newsletterPopupAllowDismiss,
-    newsletterPopupImage,
-    newsletterPopupImagePosition,
-    newsletterPopupPosition,
-  ]);
+    return () => {
+      controller.abort();
+      if (timer) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, []);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen} modal={isModal}>
@@ -121,6 +134,7 @@ export function NewsletterPopup() {
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div
             className={cn(
               "relative w-full overflow-hidden rounded-lg bg-white",
@@ -142,7 +156,7 @@ export function NewsletterPopup() {
                 className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-2xl bg-white/80 border border-gray-300 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
                 aria-label="Close"
               >
-                <XIcon size={14} />
+                <Icon name="x" size={14} />
               </button>
             </Dialog.Close>
 
@@ -195,10 +209,10 @@ export function NewsletterPopup() {
                     !isModal && "mb-3 text-2xl",
                   )}
                 >
-                  {t("newsletter.popup.heading")}
+                  {newsletterPopupHeading}
                 </h3>
                 <p className={cn("mb-6 text-body-subtle", !isModal && "mb-4")}>
-                  {t("newsletter.popup.description")}
+                  {newsletterPopupDescription}
                 </p>
 
                 <fetcher.Form
@@ -211,7 +225,7 @@ export function NewsletterPopup() {
                     name="email"
                     type="email"
                     required
-                    placeholder={t("newsletter.popup.placeholder")}
+                    placeholder="Enter your email"
                     className="w-full px-4 py-2.5"
                   />
                   <Button
@@ -219,7 +233,7 @@ export function NewsletterPopup() {
                     className="w-full"
                     loading={fetcher.state === "submitting"}
                   >
-                    {t("newsletter.popup.buttonText")}
+                    {newsletterPopupButtonText}
                   </Button>
                 </fetcher.Form>
 
@@ -238,7 +252,7 @@ export function NewsletterPopup() {
                   <button
                     type="button"
                     onClick={() => {
-                      localStorage.setItem(POPUP_DISMISSED_KEY, "true");
+                      localStorage.setItem(POPUP_SEEN_KEY, "true");
                       setOpen(false);
                     }}
                     className="mt-4 text-body-subtle text-sm underline underline-offset-4 hover:text-body"

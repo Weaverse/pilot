@@ -1,8 +1,15 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
+
+/**
+ * When true (via provider), descendant ScrollReveals render visible
+ * immediately. Provided by above-the-fold/LCP containers (e.g. the first
+ * slideshow slide) so hero text is not hidden until hydration runs.
+ */
+export const RevealImmediateContext = createContext(false);
 
 /**
  * Shared IntersectionObserver utility
@@ -32,7 +39,7 @@ function getSharedObserver(): IntersectionObserver {
           }
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0 },
     );
   }
   return sharedObserver;
@@ -100,6 +107,13 @@ interface ScrollRevealProps extends React.HTMLAttributes<HTMLElement> {
   animation?: AnimationType;
   duration?: number;
   delay?: number;
+  /**
+   * Render visible immediately (no opacity-0 reveal gate, no observer).
+   * Required for above-the-fold/LCP sections: the default reveal hides
+   * content until hydration + IntersectionObserver fire, which delays the
+   * LCP element's paint until client JS runs.
+   */
+  immediate?: boolean;
   [key: string]: unknown;
 }
 
@@ -110,26 +124,29 @@ export function ScrollReveal({
   animation = "fade-up",
   duration = 0.5,
   delay = 0,
+  immediate = false,
   className,
   style,
   ...rest
 }: ScrollRevealProps) {
   let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
+  let immediateFromContext = useContext(RevealImmediateContext);
+  let isImmediate = immediate || immediateFromContext;
   let [isVisible, setIsVisible] = useState(false);
+  let [revealed, setRevealed] = useState(false);
   let internalRef = useRef<HTMLElement>(null);
 
   let setRefs = (node: HTMLElement | null) => {
-    (internalRef as React.MutableRefObject<HTMLElement | null>).current = node;
+    (internalRef as React.RefObject<HTMLElement | null>).current = node;
     if (typeof externalRef === "function") {
       externalRef(node);
     } else if (externalRef && "current" in externalRef) {
-      (externalRef as React.MutableRefObject<HTMLElement | null>).current =
-        node;
+      (externalRef as React.RefObject<HTMLElement | null>).current = node;
     }
   };
 
   useEffect(() => {
-    if (!revealElementsOnScroll || !internalRef.current) {
+    if (isImmediate || !revealElementsOnScroll || !internalRef.current) {
       return;
     }
 
@@ -140,9 +157,28 @@ export function ScrollReveal({
     });
 
     return cleanup;
-  }, [revealElementsOnScroll]);
+  }, [revealElementsOnScroll, isImmediate]);
 
-  if (!revealElementsOnScroll) {
+  // Strip the reveal transition wrapper from the DOM once the animation
+  // finishes so subsequent re-renders don't keep paying for the inline
+  // transition/transform styles — and downstream hover/focus animations
+  // on the same element aren't fighting an active `transition-all`.
+  useEffect(() => {
+    if (!isVisible || !internalRef.current) {
+      return;
+    }
+    let el = internalRef.current;
+    function onEnd(e: TransitionEvent) {
+      // Only react to our own transitions (opacity always animates here).
+      if (e.target === el && e.propertyName === "opacity") {
+        setRevealed(true);
+      }
+    }
+    el.addEventListener("transitionend", onEnd);
+    return () => el.removeEventListener("transitionend", onEnd);
+  }, [isVisible]);
+
+  if (isImmediate || !revealElementsOnScroll || revealed) {
     return (
       <Component ref={setRefs} className={className} style={style} {...rest}>
         {children}

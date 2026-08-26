@@ -1,4 +1,3 @@
-import { MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react";
 import {
   Analytics,
   getPaginationVariables,
@@ -10,6 +9,7 @@ import { data, Form, useLoaderData } from "react-router";
 import type { SearchPageQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
+import { Icon } from "~/components/icon";
 import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { getFeaturedProducts } from "~/utils/featured-products";
@@ -170,7 +170,10 @@ export default function Search() {
         method="get"
         className="mx-auto mt-6 mb-4 flex w-175 max-w-[90vw] items-center gap-3 rounded-xl border border-line px-3"
       >
-        <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
+        <Icon
+          name="magnifying-glass"
+          className="h-5 w-5 shrink-0 text-gray-500"
+        />
         <input
           className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
           value={searchKey}
@@ -184,7 +187,7 @@ export default function Search() {
           className="shrink-0 p-1 text-gray-500"
           onClick={() => setSearchKey("")}
         >
-          <XIcon className="h-5 w-5" />
+          <Icon name="x" className="h-5 w-5" />
         </button>
       </Form>
       <PopularKeywords />

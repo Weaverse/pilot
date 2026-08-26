@@ -1,4 +1,3 @@
-import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import {
   CartForm,
   type OptimisticCart,
@@ -6,8 +5,12 @@ import {
   useOptimisticData,
 } from "@shopify/hydrogen";
 import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
+import type { FetcherWithComponents } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLineOptimisticData } from "./cart-line-item";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function CartLineQuantityAdjust({
   line,
@@ -43,7 +46,7 @@ export function CartLineQuantityAdjust({
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
-            <MinusIcon />
+            <Icon name="minus" />
             <OptimisticInput
               id={optimisticId}
               data={{ quantity: prevQuantity }}
@@ -64,7 +67,7 @@ export function CartLineQuantityAdjust({
             aria-label="Increase quantity"
             disabled={isOptimistic}
           >
-            <PlusIcon />
+            <Icon name="plus" />
             <OptimisticInput
               id={optimisticId}
               data={{ quantity: nextQuantity }}
@@ -83,13 +86,30 @@ function UpdateCartButton({
   children: React.ReactNode;
   lines: CartLineUpdateInput[];
 }) {
+  const cartRoute = usePrefixPathWithLocale("/cart");
+
   return (
     <CartForm
-      route="/cart"
+      route={cartRoute}
       action={CartForm.ACTIONS.LinesUpdate}
       inputs={{ lines }}
     >
-      {children}
+      {(fetcher: FetcherWithComponents<any>) => (
+        <UpdateCartButtonInner fetcher={fetcher}>
+          {children}
+        </UpdateCartButtonInner>
+      )}
     </CartForm>
   );
+}
+
+function UpdateCartButtonInner({
+  fetcher,
+  children,
+}: {
+  fetcher: FetcherWithComponents<any>;
+  children: React.ReactNode;
+}) {
+  useCartFetcherSync(fetcher);
+  return <>{children}</>;
 }

@@ -1,5 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
+import { appendForwardedAttribution } from "~/utils/checkout-attribution";
 
 /**
  * Automatically creates a new cart based on the URL and redirects straight to checkout.
@@ -59,7 +60,17 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
 
   //! redirect to checkout
   if (cartResult.checkoutUrl) {
-    return redirect(cartResult.checkoutUrl, { headers });
+    // Forward ad-attribution params (gclid, fbclid, utm_*, …) from the
+    // storefront URL to the checkout URL so Shopify's built-in tracking
+    // on the checkout subdomain sees the same last-click identifiers.
+    // Without this, every paid-ad Buy-now order lands on checkout with
+    // organic / direct attribution. No-op when no such params are
+    // present on the incoming URL.
+    const incoming = new URL(request.url);
+    return redirect(
+      appendForwardedAttribution(cartResult.checkoutUrl, incoming.search),
+      { headers },
+    );
   }
   throw new Error("No checkout URL found");
 }

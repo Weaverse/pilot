@@ -2,6 +2,7 @@ import type { HydrogenComponent } from "@weaverse/hydrogen";
 import * as Heading from "~/components/heading";
 import * as Link from "~/components/link";
 import * as Paragraph from "~/components/paragraph";
+import * as Spacer from "~/components/spacer";
 import * as SubHeading from "~/components/subheading";
 import * as AllProducts from "~/sections/all-products";
 import * as AllProductsGrid from "~/sections/all-products/product-grid";
@@ -13,6 +14,8 @@ import * as CollectionListItems from "~/sections/collection-list/collections-ite
 import * as ColumnsWithImages from "~/sections/columns-with-images";
 import * as ColumnWithImageItem from "~/sections/columns-with-images/column";
 import * as ColumnsWithImagesItems from "~/sections/columns-with-images/items";
+import * as ContactUs from "~/sections/contact-us";
+import * as MessageUsButton from "~/sections/contact-us/message-us-button";
 import * as Countdown from "~/sections/countdown";
 import * as CountDownTimer from "~/sections/countdown/timer";
 import * as FeaturedCollections from "~/sections/featured-collections";
@@ -73,7 +76,6 @@ import * as RelatedProductsItems from "~/sections/related-products/items";
 import * as SingleProduct from "~/sections/single-product";
 import * as SlideShow from "~/sections/slideshow";
 import * as SlideShowSlide from "~/sections/slideshow/slide";
-import * as Spacer from "~/sections/spacer";
 import * as Testimonial from "~/sections/testimonials";
 import * as TestimonialItem from "~/sections/testimonials/item";
 import * as TestimonialItems from "~/sections/testimonials/items";
@@ -115,8 +117,8 @@ export const components: HydrogenComponent[] = [
   CountDownTimer,
   NewsLetter,
   NewsLetterForm,
-  Blogs,
-  BlogPost,
+  ContactUs,
+  MessageUsButton,
   FeaturedProducts,
   FeaturedProductItems,
   Testimonial,
@@ -166,3 +168,21 @@ export const components: HydrogenComponent[] = [
   SlideShowSlide,
   Spacer,
 ];
+
+// Universal children: types that can be dropped into ANY container (a parent —
+// i.e. any component that declares `childTypes`), but never into last-level leaf
+// items (components with no `childTypes`). Add a `type` here to make it available
+// inside every current and future parent without editing each schema by hand.
+const UNIVERSAL_CHILD_TYPES = ["spacer"];
+for (let component of components) {
+  let { childTypes } = component.schema;
+  if (!Array.isArray(childTypes)) {
+    continue;
+  }
+  for (let type of UNIVERSAL_CHILD_TYPES) {
+    // Skip self so a universal child can't be nested inside itself.
+    if (component.schema.type !== type && !childTypes.includes(type)) {
+      childTypes.push(type);
+    }
+  }
+}

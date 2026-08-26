@@ -1,17 +1,31 @@
 import { CartForm } from "@shopify/hydrogen";
 import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
+import {
+  useFetcher,
+  useLocation,
+  useRouteLoaderData,
+  useSubmit,
+} from "react-router";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
+export type CountryGroup = {
+  country: string;
+  label: string;
+  locales: Array<{ path: string; locale: I18nLocale }>;
+};
+
 export function useCountrySelector() {
   const fetcher = useFetcher();
+  const submit = useSubmit();
   const rootData = useRouteLoaderData<RootLoader>("root");
   const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
   const { pathname, search } = useLocation();
+  const cartRoute = usePrefixPathWithLocale("/cart");
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
     "",
@@ -23,16 +37,10 @@ export function useCountrySelector() {
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : "";
 
-  const { ref, inView } = useInView({
+  const { ref: observerRef, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });
-
-  const observerRef = useRef(null);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ref callback from useInView
-  useEffect(() => {
-    ref(observerRef.current);
-  }, [ref, observerRef]);
 
   useEffect(() => {
     if (!inView || fetcher.data || fetcher.state === "loading") {
@@ -48,30 +56,16 @@ export function useCountrySelector() {
     redirectTo: string;
     buyerIdentity: CartBuyerIdentityInput;
   }) {
-    // Use native form.submit() (full page reload) instead of react-router's
-    // submit() to ensure Weaverse section content is re-fetched for the new
-    // locale. Client-side navigation leaves stale section data on first switch.
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/cart";
-
-    const redirectToInput = document.createElement("input");
-    redirectToInput.type = "hidden";
-    redirectToInput.name = "redirectTo";
-    redirectToInput.value = redirectTo;
-    form.appendChild(redirectToInput);
-
-    const cartFormInput = document.createElement("input");
-    cartFormInput.type = "hidden";
-    cartFormInput.name = "cartFormInput";
-    cartFormInput.value = JSON.stringify({
-      action: CartForm.ACTIONS.BuyerIdentityUpdate,
-      inputs: { buyerIdentity },
-    });
-    form.appendChild(cartFormInput);
-
-    document.body.appendChild(form);
-    form.submit();
+    submit(
+      {
+        redirectTo,
+        cartFormInput: JSON.stringify({
+          action: CartForm.ACTIONS.BuyerIdentityUpdate,
+          inputs: { buyerIdentity },
+        }),
+      },
+      { method: "POST", action: cartRoute },
+    );
   }
 
   function getRedirectUrl(countryLocale: I18nLocale) {
@@ -83,9 +77,37 @@ export function useCountrySelector() {
     return `${countryPrefixPath}${pathWithoutLocale}`;
   }
 
+  const groupedCountries: CountryGroup[] = [];
+  const groupIndex: Record<string, number> = {};
+  for (const path of Object.keys(countries)) {
+    const locale = countries[path];
+    const key = locale.country;
+    if (groupIndex[key] === undefined) {
+      groupIndex[key] = groupedCountries.length;
+      groupedCountries.push({
+        country: locale.country,
+        label: locale.label,
+        locales: [],
+      });
+    }
+    groupedCountries[groupIndex[key]].locales.push({ path, locale });
+  }
+  for (const group of groupedCountries) {
+    group.locales.sort((a, b) => {
+      if (a.locale.language === "EN" && b.locale.language !== "EN") {
+        return 1;
+      }
+      if (a.locale.language !== "EN" && b.locale.language === "EN") {
+        return -1;
+      }
+      return 0;
+    });
+  }
+
   return {
     selectedLocale,
     countries,
+    groupedCountries,
     observerRef,
     handleLocaleChange,
     getRedirectUrl,

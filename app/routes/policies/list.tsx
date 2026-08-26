@@ -1,4 +1,3 @@
-import { FileTextIcon } from "@phosphor-icons/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
@@ -7,6 +6,7 @@ import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
+import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import { routeHeaders } from "~/utils/cache";
@@ -25,15 +25,20 @@ export async function loader({
 
   invariant(data, "No data returned from Shopify API");
 
-  const policies = Object.values(
-    data.shop as NonNullableFields<typeof data.shop>,
-  ).filter(Boolean);
+  const { name, ...policyFields } = data.shop as NonNullableFields<
+    typeof data.shop
+  >;
+  const policies = Object.values(policyFields).filter(Boolean);
 
   if (policies.length === 0) {
     throw new Response("Not found", { status: 404 });
   }
 
-  const seo = seoPayload.policies({ policies, url: request.url });
+  const seo = seoPayload.policies({
+    policies,
+    shop: { name },
+    url: request.url,
+  });
 
   return {
     policies,
@@ -62,7 +67,7 @@ export default function Policies() {
                 className="w-fit gap-2"
                 to={`/policies/${policy.handle}`}
               >
-                <FileTextIcon className="h-5 w-5" />
+                <Icon name="file-text" className="h-5 w-5" />
                 <span>{policy.title}</span>
               </Link>
             );
@@ -83,6 +88,7 @@ const POLICIES_QUERY = `#graphql
 
   query PoliciesIndex {
     shop {
+      name
       privacyPolicy {
         ...PolicyIndex
       }

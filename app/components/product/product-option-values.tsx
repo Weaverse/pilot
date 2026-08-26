@@ -1,8 +1,8 @@
-import { CaretDownIcon, CaretUpIcon, CheckIcon } from "@phosphor-icons/react";
 import * as Select from "@radix-ui/react-select";
 import { Image, type MappedProductOptions } from "@shopify/hydrogen";
 import type { ButtonHTMLAttributes } from "react";
 import { useNavigate } from "react-router";
+import { Icon } from "~/components/icon";
 import Link, { type LinkProps } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
@@ -70,13 +70,13 @@ export function ProductOptionValues({
         >
           <Select.Value />
           <Select.Icon className="shrink-0">
-            <CaretDownIcon size={16} />
+            <Icon name="caret-down" size={16} />
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
           <Select.Content className="overflow-hidden rounded-lg bg-white shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)]">
             <Select.ScrollUpButton className="flex cursor-pointer items-center justify-center hover:bg-gray-100">
-              <CaretUpIcon size={16} />
+              <Icon name="caret-up" size={16} />
             </Select.ScrollUpButton>
             <Select.Viewport className="p-1.5">
               {optionValues.map(({ name: value, selected, available }) => (
@@ -91,14 +91,14 @@ export function ProductOptionValues({
                   <Select.ItemText>{value}</Select.ItemText>
                   {selected && (
                     <Select.ItemIndicator className="inline-flex w-6 shrink-0 items-center justify-center">
-                      <CheckIcon size={16} />
+                      <Icon name="check" size={16} />
                     </Select.ItemIndicator>
                   )}
                 </Select.Item>
               ))}
             </Select.Viewport>
             <Select.ScrollDownButton className="flex cursor-pointer items-center justify-center rounded-lg hover:bg-info-100 dark:hover:bg-info-700">
-              <CaretDownIcon size={16} />
+              <Icon name="caret-down" size={16} />
             </Select.ScrollDownButton>
           </Select.Content>
         </Select.Portal>

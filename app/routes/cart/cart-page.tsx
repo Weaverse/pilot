@@ -2,14 +2,13 @@ import {
   Analytics,
   CartForm,
   type CartQueryDataReturn,
-  useOptimisticCart,
 } from "@shopify/hydrogen";
 import type {
   CartBuyerIdentityInput,
   CartLineInput,
   CartLineUpdateInput,
+  CountryCode,
 } from "@shopify/hydrogen/storefront-api-types";
-import { useThemeText } from "@weaverse/hydrogen";
 import { Suspense } from "react";
 import {
   type ActionFunctionArgs,
@@ -20,15 +19,22 @@ import {
   useLoaderData,
 } from "react-router";
 import invariant from "tiny-invariant";
+import { getCurrentCartBootstrapRequestToken } from "~/components/cart/cart-baseline";
 import { CartMain } from "~/components/cart/cart-main";
+import { useCart, useCartStore } from "~/components/cart/store";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import {
+  getInvalidCartNoteResult,
+  isCartNoteInput,
+  updateCartNote,
+} from "~/utils/cart-note";
+import { COUNTRIES, getLocalePrefixFromPath } from "~/utils/const";
 import { getFeaturedProducts } from "~/utils/featured-products";
 
 export async function action({ request, context }: ActionFunctionArgs) {
-  const { cart } = context;
-
+  const { cart, storefront } = context;
   const formData = await request.formData();
   const { action: cartFormAction, inputs } = CartForm.getFormInput(formData);
 
@@ -36,57 +42,94 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   const status = 200;
   let result: CartQueryDataReturn;
+  const countryCode = getCountryCodeFromRequestOrReferer(
+    request,
+    storefront.i18n.country,
+  );
+  const localeBuyerIdentity: CartBuyerIdentityInput = {
+    countryCode,
+  };
+
+  async function syncCartBuyerIdentityToLocale() {
+    if (!cart.getCartId()) {
+      return;
+    }
+    const syncResult = await cart.updateBuyerIdentity(localeBuyerIdentity);
+    return syncResult?.cart?.id ? { cartId: syncResult.cart.id } : undefined;
+  }
 
   switch (cartFormAction) {
-    case CartForm.ACTIONS.LinesAdd:
-      result = await cart.addLines(inputs.lines as CartLineInput[]);
-      break;
-    case CartForm.ACTIONS.LinesUpdate:
-      result = await cart.updateLines(inputs.lines as CartLineUpdateInput[]);
-      break;
-    case CartForm.ACTIONS.LinesRemove:
-      result = await cart.removeLines(inputs.lineIds as string[]);
-      break;
-    case CartForm.ACTIONS.NoteUpdate: {
-      const cartNote = inputs.cartNote as string;
-      if (cartNote) {
-        result = await cart.updateNote(cartNote);
+    case CartForm.ACTIONS.LinesAdd: {
+      const lines = getCartLineInputs(inputs.lines as CartLineInput[]);
+      if (!cart.getCartId()) {
+        result = await cart.create({
+          lines,
+          buyerIdentity: localeBuyerIdentity,
+        });
+      } else {
+        const cartOptions = await syncCartBuyerIdentityToLocale();
+        result = await cart.addLines(lines, cartOptions);
       }
       break;
     }
+    case CartForm.ACTIONS.LinesUpdate: {
+      const cartOptions = await syncCartBuyerIdentityToLocale();
+      result = await cart.updateLines(
+        inputs.lines as CartLineUpdateInput[],
+        cartOptions,
+      );
+      break;
+    }
+    case CartForm.ACTIONS.LinesRemove: {
+      const cartOptions = await syncCartBuyerIdentityToLocale();
+      result = await cart.removeLines(inputs.lineIds as string[], cartOptions);
+      break;
+    }
+    case CartForm.ACTIONS.NoteUpdate: {
+      const cartNote = inputs.cartNote;
+      if (!isCartNoteInput(cartNote)) {
+        return data(getInvalidCartNoteResult(), { status: 400 });
+      }
+      const cartOptions = await syncCartBuyerIdentityToLocale();
+      result = await updateCartNote(cart, cartNote, cartOptions);
+      break;
+    }
     case CartForm.ACTIONS.DiscountCodesUpdate: {
+      const cartOptions = await syncCartBuyerIdentityToLocale();
       const formDiscountCode = inputs.discountCode;
       const discountCodes = (
         formDiscountCode ? [formDiscountCode] : []
       ) as string[];
       discountCodes.push(...(inputs.discountCodes as string[]));
-      result = await cart.updateDiscountCodes(discountCodes);
+      result = await cart.updateDiscountCodes(discountCodes, cartOptions);
       break;
     }
     case CartForm.ACTIONS.GiftCardCodesAdd: {
+      const cartOptions = await syncCartBuyerIdentityToLocale();
       const giftCardCodes = (inputs.giftCardCodes as string[]) || [];
-      result = await cart.addGiftCardCodes(giftCardCodes);
+      result = await cart.addGiftCardCodes(giftCardCodes, cartOptions);
       break;
     }
     case CartForm.ACTIONS.GiftCardCodesUpdate: {
-      // Just keep this for backward compatibility, same as add gift card codes
+      const cartOptions = await syncCartBuyerIdentityToLocale();
+      // Backward compatibility: same as add gift card codes
       const giftCardCodes = (inputs.giftCardCodes as string[]) || [];
-      result = await cart.addGiftCardCodes(giftCardCodes);
+      result = await cart.addGiftCardCodes(giftCardCodes, cartOptions);
       break;
     }
     case CartForm.ACTIONS.GiftCardCodesRemove: {
+      const cartOptions = await syncCartBuyerIdentityToLocale();
       const giftCardIds = inputs.giftCardCodes as string[];
-      result = await cart.removeGiftCardCodes(giftCardIds);
+      result = await cart.removeGiftCardCodes(giftCardIds, cartOptions);
       break;
     }
     case CartForm.ACTIONS.BuyerIdentityUpdate:
       result = await cart.updateBuyerIdentity({
+        ...localeBuyerIdentity,
         ...(inputs.buyerIdentity as CartBuyerIdentityInput),
       });
       break;
     default:
-      console.error("Unknown cart action:", cartFormAction);
-      console.error("Available actions:", Object.keys(CartForm.ACTIONS));
       invariant(false, `${cartFormAction} cart action is not defined`);
   }
 
@@ -115,19 +158,25 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function CartRoute() {
-  const { cart: originalCart, featuredProducts } =
-    useLoaderData<typeof loader>();
-  const cart = useOptimisticCart(originalCart);
-  const { t } = useThemeText();
-
+  const { featuredProducts } = useLoaderData<typeof loader>();
+  const cart = useCart();
+  // <Analytics.CartView> publishes once per URL and never replays when the
+  // provider's cart context updates later. CartStoreSync (rendered above the
+  // route tree) synchronously advances the current request token during
+  // render; this prevents a back/forward visit from reusing a previous
+  // matching token before effects run.
+  const requestToken = getCurrentCartBootstrapRequestToken();
+  const responseToken = useCartStore((s) => s.cartBootstrapResponseToken);
+  const canPublishCartView =
+    requestToken !== null && responseToken === requestToken;
   return (
     <>
       <Section width="fixed" verticalPadding="medium" overflow="unset">
         <h1 className="h3 mb-8 text-center md:mb-16">
-          {t("cart.title")} ({cart?.totalQuantity || 0})
+          Cart ({cart?.totalQuantity || 0})
         </h1>
         <CartMain layout="page" cart={cart} />
-        <Analytics.CartView />
+        {canPublishCartView && <Analytics.CartView />}
       </Section>
       <Suspense fallback={null}>
         <Await resolve={featuredProducts}>
@@ -137,7 +186,7 @@ export default function CartRoute() {
             }
             return (
               <Section width="stretch" verticalPadding="large" gap={32}>
-                <h2 className="h4 text-center">{t("cart.bestSellers")}</h2>
+                <h2 className="h4 text-center">More from our best sellers</h2>
                 <Swimlane className="gap-4">
                   {products.nodes.map((product) => (
                     <ProductCard
@@ -154,6 +203,42 @@ export default function CartRoute() {
       </Suspense>
     </>
   );
+}
+
+function getCartLineInputs(lines: CartLineInput[]): CartLineInput[] {
+  return lines.map(
+    ({ attributes, merchandiseId, parent, quantity, sellingPlanId }) => ({
+      attributes,
+      merchandiseId,
+      parent,
+      quantity,
+      sellingPlanId,
+    }),
+  );
+}
+function getCountryCodeFromRequestOrReferer(
+  request: Request,
+  fallbackCountryCode: CountryCode,
+) {
+  return (
+    getCountryCodeFromUrl(request.url) ??
+    getCountryCodeFromUrl(request.headers.get("Referer")) ??
+    fallbackCountryCode
+  );
+}
+
+function getCountryCodeFromUrl(url: string | null) {
+  if (!url) {
+    return;
+  }
+
+  try {
+    const { pathname } = new URL(url);
+    const prefix = getLocalePrefixFromPath(pathname);
+    return COUNTRIES[prefix]?.country as CountryCode | undefined;
+  } catch {
+    return;
+  }
 }
 
 function isLocalPath(url: string) {

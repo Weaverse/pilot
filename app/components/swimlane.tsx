@@ -1,6 +1,6 @@
-import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import type { ComponentPropsWithRef } from "react";
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
 interface SwimlaneProps extends ComponentPropsWithRef<"div"> {
@@ -77,7 +77,7 @@ export function Swimlane({
   return (
     <div className="relative">
       {showArrows && (
-        <div className="absolute -top-4 right-0 z-1 flex -translate-y-full gap-2 lg:-top-6">
+        <div className="absolute -top-3.5 right-0 z-1 flex -translate-y-full gap-2 lg:-top-6">
           <button
             type="button"
             disabled={!canScrollLeft}
@@ -88,7 +88,7 @@ export function Swimlane({
             )}
             aria-label="Scroll left"
           >
-            <CaretLeftIcon size={24} />
+            <Icon name="caret-left" size={24} />
           </button>
           <button
             type="button"
@@ -100,7 +100,7 @@ export function Swimlane({
             )}
             aria-label="Scroll right"
           >
-            <CaretRightIcon size={24} />
+            <Icon name="caret-right" size={24} />
           </button>
         </div>
       )}
@@ -110,7 +110,7 @@ export function Swimlane({
           "grid w-full grid-flow-col justify-start gap-4",
           "snap-x snap-mandatory",
           "hidden-scroll scroll-px-6 overflow-x-scroll overflow-y-hidden",
-          "*:snap-start *:w-[38vw] *:lg:w-80",
+          "*:snap-start *:w-[80vw] *:lg:w-80",
           className,
         )}
         onScroll={withArrows ? handleScroll : rest.onScroll}

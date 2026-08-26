@@ -1,23 +1,18 @@
-import {
-  GiftIcon,
-  MegaphoneIcon,
-  TagIcon,
-  TruckIcon,
-} from "@phosphor-icons/react";
 import { Image } from "@shopify/hydrogen";
 import {
   createSchema,
   type HydrogenComponentProps,
   type WeaverseImage,
 } from "@weaverse/hydrogen";
+import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
 let ICONS = {
   none: null,
-  gift: GiftIcon,
-  tag: TagIcon,
-  megaphone: MegaphoneIcon,
-  truck: TruckIcon,
+  gift: "gift",
+  tag: "tag",
+  megaphone: "megaphone",
+  truck: "truck",
 } as const;
 
 type IconOption = keyof typeof ICONS;
@@ -37,7 +32,7 @@ export default function ProductPromoText(props: ProductPromoTextProps) {
     return null;
   }
 
-  let IconComponent = ICONS[icon];
+  let iconName = ICONS[icon];
 
   return (
     <div
@@ -52,8 +47,8 @@ export default function ProductPromoText(props: ProductPromoTextProps) {
           height={20}
           className="size-5 shrink-0 object-contain"
         />
-      ) : IconComponent ? (
-        <IconComponent className="size-5 shrink-0" />
+      ) : iconName ? (
+        <Icon name={iconName} className="size-5 shrink-0" />
       ) : null}
       <div dangerouslySetInnerHTML={{ __html: text }} />
     </div>

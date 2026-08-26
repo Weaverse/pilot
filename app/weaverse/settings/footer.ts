@@ -14,7 +14,7 @@ export const footerSettings = {
           { value: "fixed", label: "Fixed" },
         ],
       },
-      defaultValue: "fixed",
+      defaultValue: "stretch",
     },
     {
       type: "image",

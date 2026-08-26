@@ -1,13 +1,9 @@
-import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
-import {
-  createSchema,
-  type HydrogenComponentProps,
-  useThemeText,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData, useLocation, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import Link, { variants } from "~/components/link";
 import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import type { AppliedFilter } from "~/types/others";
@@ -47,7 +43,6 @@ function ProductGrid(props: ProductGridProps) {
   const location = useLocation();
   const { pathname } = location;
   const { ref: inViewRef, inView } = useInView();
-  const { t } = useThemeText();
   const isInfiniteScroll = loadMoreBehavior === "infinite-scroll";
 
   return (
@@ -69,7 +64,7 @@ function ProductGrid(props: ProductGridProps) {
                   preventScrollReset
                 >
                   <span>{label}</span>
-                  <XIcon className="h-4 w-4" />
+                  <Icon name="x" className="h-4 w-4" />
                 </Link>
               );
             })}
@@ -78,10 +73,10 @@ function ProductGrid(props: ProductGridProps) {
             <Link
               to={pathname}
               variant="underline"
-              aria-label={t("collection.clearAllFiltersAriaLabel")}
+              aria-label="Clear all applied filters"
               preventScrollReset
             >
-              {t("collection.clearAllFilters")}
+              Clear all filters
             </Link>
           ) : null}
         </div>
@@ -103,7 +98,7 @@ function ProductGrid(props: ProductGridProps) {
                 <PreviousLink
                   className={cn("mx-auto", variants({ variant: "outline" }))}
                 >
-                  {isLoading ? t("pagination.loading") : loadPrevText}
+                  {isLoading ? "Loading..." : loadPrevText}
                 </PreviousLink>
               )}
               <ProductsLoadedOnScroll
@@ -121,9 +116,7 @@ function ProductGrid(props: ProductGridProps) {
                   ref={isInfiniteScroll ? inViewRef : undefined}
                   className={cn("mx-auto", variants({ variant: "outline" }))}
                 >
-                  {isInfiniteScroll || isLoading
-                    ? t("pagination.loading")
-                    : loadMoreText}
+                  {isInfiniteScroll || isLoading ? "Loading..." : loadMoreText}
                 </NextLink>
               )}
             </div>
@@ -131,10 +124,8 @@ function ProductGrid(props: ProductGridProps) {
         </Pagination>
       ) : (
         <div className="flex flex-col items-center justify-center gap-3 pt-20">
-          <FunnelXIcon size={50} weight="light" />
-          <div className="text-lg">
-            {t("collection.noProductsMatchedFilters")}
-          </div>
+          <Icon name="funnel-x-light" size={50} />
+          <div className="text-lg">No products matched your filters.</div>
         </div>
       )}
     </div>

@@ -41,7 +41,6 @@ export function MediaItem({
         loading={index === 0 ? "eager" : "lazy"}
         fetchPriority={index === 0 ? "high" : undefined}
         className={cn("h-auto w-full object-cover", className)}
-        width={2048}
         aspectRatio={calculateAspectRatio(image, imageAspectRatio)}
         sizes={sizes}
       />
@@ -52,7 +51,7 @@ export function MediaItem({
     const aspectRatio =
       imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
     return (
-      <div className={cn("relative", className)}>
+      <div className={cn("relative rounded-md overflow-hidden", className)}>
         <video
           controls
           aria-label={mediaVideo.alt || "Product video"}
@@ -90,7 +89,10 @@ export function MediaItem({
     }
 
     return (
-      <div className={cn("relative", className)} style={modelStyle}>
+      <div
+        className={cn("relative rounded-md overflow-hidden", className)}
+        style={modelStyle}
+      >
         <Suspense fallback={<div className="h-full w-full bg-gray-100" />}>
           <LazyModelViewerItem
             data={data}
@@ -108,7 +110,10 @@ export function MediaItem({
     return (
       <ExternalVideo
         data={externalVideo}
-        className={cn("aspect-video h-auto w-full", className)}
+        className={cn(
+          "aspect-video h-auto w-full rounded-md overflow-hidden",
+          className,
+        )}
       />
     );
   }

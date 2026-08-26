@@ -7,6 +7,7 @@ export default {
   buildDirectory: "dist",
   ssr: true,
   future: {
-    v8_viteEnvironmentApi: true,
+    v8_passThroughRequests: true,
+    v8_trailingSlashAwareDataRequests: true,
   },
 } satisfies Config;

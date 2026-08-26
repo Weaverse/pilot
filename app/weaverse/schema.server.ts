@@ -1,6 +1,5 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-import staticContent from "~/i18n/en.json";
-import { COUNTRIES } from "~/utils/const";
+import { COUNTRIES, DEFAULT_LOCALE } from "~/utils/const";
 import { version } from "../../package.json";
 import { announcementSettings } from "./settings/announcements";
 import { cartSettings } from "./settings/cart";
@@ -11,7 +10,9 @@ import { linksButtonsSettings } from "./settings/links-buttons";
 import { newsletterSettings } from "./settings/newsletter";
 import { productBadgesSettings } from "./settings/product-badges";
 import { productCardsSettings } from "./settings/product-cards";
+import { pwaSettings } from "./settings/pwa";
 import { searchSettings } from "./settings/search";
+import { shopifyChatSettings } from "./settings/shopify-chat";
 import { typographySettings } from "./settings/typography";
 
 export const themeSchema: HydrogenThemeSchema = {
@@ -25,16 +26,8 @@ export const themeSchema: HydrogenThemeSchema = {
     supportUrl: "https://help.weaverse.io/",
   },
   i18n: {
-    translation: true,
-    staticContent,
     urlStructure: "url-path",
-    defaultLocale: {
-      pathPrefix: "",
-      label: "United States (USD $)",
-      language: "EN",
-      country: "US",
-      currency: "USD",
-    },
+    defaultLocale: DEFAULT_LOCALE,
     shopLocales: Object.entries(COUNTRIES).map(
       ([pathPrefix, { label, language, country }]) => {
         return {
@@ -57,6 +50,8 @@ export const themeSchema: HydrogenThemeSchema = {
     newsletterSettings,
     searchSettings,
     cartSettings,
+    pwaSettings,
+    shopifyChatSettings,
     footerSettings,
   ],
 };

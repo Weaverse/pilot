@@ -1,51 +1,46 @@
-import type {
-  OptimisticCartLineInput,
-  ShopifyAddToCartPayload,
-  ShopifyPageViewPayload,
-} from "@shopify/hydrogen";
-import {
-  AnalyticsEventName,
-  CartForm,
-  getClientBrowserParameters,
-  sendShopifyAnalytics,
-} from "@shopify/hydrogen";
-import { useThemeText } from "@weaverse/hydrogen";
-import { useEffect, useRef } from "react";
+import { CartForm, type OptimisticCartLineInput } from "@shopify/hydrogen";
+import { useEffect, useRef, useState } from "react";
 import type { FetcherWithComponents } from "react-router";
-import { useMatches } from "react-router";
-import { Button } from "~/components/button";
-import { useCartDrawerStore } from "~/components/cart/store";
+import { Button, type ButtonProps } from "~/components/button";
+import { useCartFetcherSync } from "~/components/cart/cart-sync";
+import { useCartStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
-import { DEFAULT_LOCALE } from "~/utils/const";
+
+type AddToCartButtonProps = Omit<
+  ButtonProps,
+  "children" | "loading" | "type"
+> & {
+  children: React.ReactNode;
+  lines: OptimisticCartLineInput[];
+};
+
+type AddToCartButtonContentProps = AddToCartButtonProps & {
+  fetcher: FetcherWithComponents<any>;
+};
 
 export function AddToCartButton({
   children,
   lines,
   className = "",
   disabled,
-  analytics,
   ...props
-}: {
-  children: React.ReactNode;
-  lines: OptimisticCartLineInput[];
-  className?: string;
-  disabled?: boolean;
-  analytics?: unknown;
-  [key: string]: any;
-}) {
+}: AddToCartButtonProps) {
+  const cartRoute = usePrefixPathWithLocale("/cart");
+
   return (
     <CartForm
-      route="/cart"
+      route={cartRoute}
       inputs={{ lines }}
       action={CartForm.ACTIONS.LinesAdd}
     >
       {(fetcher: FetcherWithComponents<any>) => (
         <AddToCartButtonContent
           fetcher={fetcher}
+          lines={lines}
           disabled={disabled}
           className={className}
-          analytics={analytics}
           {...props}
         >
           {children}
@@ -57,116 +52,114 @@ export function AddToCartButton({
 
 function AddToCartButtonContent({
   fetcher,
+  lines,
   children,
   disabled,
   className,
-  analytics,
   ...props
-}: {
-  fetcher: FetcherWithComponents<any>;
-  children: React.ReactNode;
-  disabled?: boolean;
-  className?: string;
-  analytics?: unknown;
-  [key: string]: any;
-}) {
-  const { open: openCartDrawer } = useCartDrawerStore();
-  const { t } = useThemeText();
-  const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
-  const isLoading = fetcher.state !== "idle";
+}: AddToCartButtonContentProps) {
+  const {
+    open: openCartDrawer,
+    stagePendingAdd,
+    clearPendingAdd,
+    setLastAddError,
+  } = useCartStore();
+  useCartFetcherSync(fetcher);
+  // Token of the stage this button owns, so a concurrent add from another
+  // button is never cleared by this one.
+  const pendingTokenRef = useRef<string | null>(null);
+  const submittedRef = useRef(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  // React Router commits fetcher state inside `startTransition`, so
+  // `fetcher.state` only turns "submitting" in a later, non-urgent render —
+  // after the urgent render that opens the drawer has already painted. Driving
+  // the spinner off a click-time state instead makes it appear in that first
+  // frame. `fetcher.state` is still consulted for submissions that reach the
+  // form without going through `handleClick`.
+  const [clickPending, setClickPending] = useState(false);
+  const isSubmitting = fetcher.state !== "idle";
+  const isLoading = clickPending || isSubmitting;
 
   useEffect(() => {
-    if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
-      openCartDrawer();
+    if (fetcher.state !== "idle" || !submittedRef.current) {
+      return;
     }
-    prevStateRef.current = fetcher.state;
-  }, [fetcher.state, openCartDrawer]);
+    submittedRef.current = false;
+    setClickPending(false);
+    const token = pendingTokenRef.current;
+    pendingTokenRef.current = null;
+
+    const message = getAddErrorMessage(fetcher.data);
+    if (token) {
+      clearPendingAdd(token);
+    }
+    setAddError(message);
+    setLastAddError(message);
+  }, [fetcher.state, fetcher.data, clearPendingAdd, setLastAddError]);
+
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    props.onClick?.(event);
+    if (event.defaultPrevented) {
+      return;
+    }
+    setAddError(null);
+    setClickPending(true);
+    submittedRef.current = true;
+    // Stage BEFORE the form submits so the drawer's first paint already has
+    // the line — the fetcher only becomes visible on the next render.
+    pendingTokenRef.current = stagePendingAdd(lines);
+    openCartDrawer();
+  }
 
   return (
-    <AddToCartAnalytics fetcher={fetcher}>
-      <input type="hidden" name="analytics" value={JSON.stringify(analytics)} />
+    <>
       <Button
         type="submit"
         className={cn("relative w-full", className)}
-        disabled={disabled ?? isLoading}
         {...props}
+        // Deliberately NOT `isLoading`: React flushes a discrete event's state
+        // update before the browser runs the click's default action, so
+        // disabling on the click-time state would disable the submit button
+        // before it can submit the form — the add would never be sent.
+        disabled={disabled || isSubmitting}
+        aria-busy={isLoading || undefined}
+        onClick={handleClick}
       >
         <span className={cn(isLoading && "invisible")}>
-          {children || t("product.addToCart")}
+          {children || "Add to cart"}
         </span>
         {isLoading && <Spinner className="z-0" size={20} duration={400} />}
       </Button>
-    </AddToCartAnalytics>
+      {addError && (
+        <p role="alert" className="mt-2 text-red-600 text-sm">
+          {addError}
+        </p>
+      )}
+    </>
   );
 }
 
-function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
-  const matches = useMatches();
+const ADD_FAILED_MESSAGE = "Couldn't add this to your cart. Please try again.";
 
-  const data: Record<string, unknown> = {};
-  for (const match of matches) {
-    const eventData = match?.data as Record<string, unknown>;
-    if (eventData) {
-      if (eventData.analytics) {
-        Object.assign(data, eventData.analytics);
-      }
-      const selectedLocale =
-        (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
-      Object.assign(data, {
-        currency: selectedLocale.currency,
-        acceptedLanguage: selectedLocale.language,
-      });
-    }
+/**
+ * A cart mutation can fail three ways: a thrown/network error surfaced as
+ * `errors`, Shopify `userErrors`, or a response with no cart at all.
+ */
+function getAddErrorMessage(data: unknown): string | null {
+  if (!data) {
+    return null;
   }
-
-  return {
-    ...data,
-    hasUserConsent,
-  } as unknown as ShopifyPageViewPayload;
-}
-
-function AddToCartAnalytics({
-  fetcher,
-  children,
-}: {
-  fetcher: FetcherWithComponents<any>;
-  children: React.ReactNode;
-}) {
-  const fetcherData = fetcher.data;
-  const formData = fetcher.formData;
-  const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
-
-  useEffect(() => {
-    if (formData) {
-      const cartData: Record<string, unknown> = {};
-      const cartInputs = CartForm.getFormInput(formData);
-
-      try {
-        if (cartInputs.inputs.analytics) {
-          const dataInForm: unknown = JSON.parse(
-            String(cartInputs.inputs.analytics),
-          );
-          Object.assign(cartData, dataInForm);
-        }
-      } catch {
-        // do nothing
-      }
-
-      if (Object.keys(cartData).length && fetcherData) {
-        const addToCartPayload: ShopifyAddToCartPayload = {
-          ...getClientBrowserParameters(),
-          ...pageAnalytics,
-          ...cartData,
-          cartId: fetcherData.cart.id,
-        };
-
-        sendShopifyAnalytics({
-          eventName: AnalyticsEventName.ADD_TO_CART,
-          payload: addToCartPayload,
-        });
-      }
-    }
-  }, [fetcherData, formData, pageAnalytics]);
-
-  return <>{children}</>;
+  const payload = data as {
+    cart?: unknown;
+    errors?: { message?: string }[];
+    userErrors?: { message?: string }[];
+  };
+  const firstError = payload.errors?.[0] ?? payload.userErrors?.[0];
+  if (firstError) {
+    return firstError.message || ADD_FAILED_MESSAGE;
+  }
+  if (!payload.cart) {
+    return ADD_FAILED_MESSAGE;
+  }
+  return null;
 }

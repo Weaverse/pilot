@@ -53,7 +53,7 @@ export const announcementSettings = {
       type: "color",
       label: "Background",
       name: "topbarBgColor",
-      defaultValue: "#000000",
+      defaultValue: "#f3f2f1",
     },
   ],
 } as const satisfies InspectorGroup;

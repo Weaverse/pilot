@@ -1,7 +1,6 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useThemeText } from "@weaverse/hydrogen";
 import { useLocation, useSearchParams } from "react-router";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { clearPaginationParams } from "~/sections/main-collection/filters/filter-utils";
 import type { SortParam } from "~/types/others";
@@ -18,7 +17,6 @@ interface SortDropdownProps {
 export function SortDropdown({ options, className }: SortDropdownProps) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const { t } = useThemeText();
   const currentSort =
     options.find(({ key }) => key === searchParams.get("sort")) || options[0];
 
@@ -31,11 +29,10 @@ export function SortDropdown({ options, className }: SortDropdownProps) {
         )}
       >
         <span className="hidden lg:inline">
-          {t("collection.sortBy")}{" "}
-          <span className="font-semibold">{currentSort.label}</span>
+          Sort by: <span className="font-semibold">{currentSort.label}</span>
         </span>
-        <span className="lg:hidden">{t("collection.sort")}</span>
-        <CaretDownIcon />
+        <span className="lg:hidden">Sort</span>
+        <Icon name="caret-down" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content

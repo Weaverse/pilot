@@ -1,28 +1,26 @@
-import {
-  GiftIcon,
-  NotePencilIcon,
-  TagIcon,
-  XIcon,
-} from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
-import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, useLocation } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import type { ThemeSettings } from "~/types/weaverse";
+import { cartDiscountTotal } from "~/utils/cart";
 import { cn } from "~/utils/cn";
 import {
   DiscountDialog,
   GiftCardDialog,
   NoteDialog,
 } from "./cart-summary-actions";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function CartSummary({
   cart,
@@ -40,13 +38,25 @@ export function CartSummary({
     giftCardButtonText,
     checkoutButtonText,
   } = useThemeSettings<ThemeSettings>();
-  const { t } = useThemeText();
   const [removingDiscountCode, setRemovingDiscountCode] = useState<
     string | null
   >(null);
   const [removingGiftCard, setRemovingGiftCard] = useState<string | null>(null);
   const dcRemoveFetcher = useFetcher({ key: "discount-code-remove" });
   const gcRemoveFetcher = useFetcher({ key: "gift-card-remove" });
+  const cartRoute = usePrefixPathWithLocale("/cart");
+  const checkoutRoute = usePrefixPathWithLocale("/cart/checkout");
+  const { search } = useLocation();
+  const checkoutHref = `${checkoutRoute}${search}`;
+  // Line removal submits with this stable fetcherKey. The CartLineItem that
+  // owns the trash button unmounts the moment the line is optimistically
+  // spliced out, so its own fetcher response would be lost. Reading the keyed
+  // fetcher here (CartSummary stays mounted while the cart has items) captures
+  // the authoritative post-remove cart — including the updated cost.
+  const lineRemoveFetcher = useFetcher({ key: "cart-line-remove" });
+  useCartFetcherSync(dcRemoveFetcher);
+  useCartFetcherSync(gcRemoveFetcher);
+  useCartFetcherSync(lineRemoveFetcher);
   const {
     cost,
     discountCodes,
@@ -55,12 +65,14 @@ export function CartSummary({
     appliedGiftCards,
     note,
   } = cart;
+  const cartDiscount = cartDiscountTotal(cart);
 
   // Show loading state for optimistic line item changes or pending cart actions
   const isCartUpdating =
     isOptimistic ||
     dcRemoveFetcher.state !== "idle" ||
-    gcRemoveFetcher.state !== "idle";
+    gcRemoveFetcher.state !== "idle" ||
+    lineRemoveFetcher.state !== "idle";
   return (
     <div
       className={clsx(
@@ -70,7 +82,7 @@ export function CartSummary({
       )}
     >
       <h2 id="summary-heading" className="sr-only">
-        {t("cart.summary.orderSummary")}
+        Order summary
       </h2>
       {appliedGiftCards?.length > 0 && (
         <div className="mb-4 flex flex-wrap justify-end gap-2">
@@ -84,7 +96,7 @@ export function CartSummary({
                 key={giftCard.id}
                 className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
               >
-                <GiftIcon className="h-4.5 w-4.5" aria-hidden="true" />
+                <Icon name="gift" className="h-4.5 w-4.5" aria-hidden="true" />
                 <div className="flex items-center gap-1 leading-normal">
                   <span>***{giftCard.lastCharacters}</span>
                   <span className="inline-flex items-center">
@@ -92,7 +104,7 @@ export function CartSummary({
                   </span>
                 </div>
                 <CartForm
-                  route="/cart"
+                  route={cartRoute}
                   action={CartForm.ACTIONS.GiftCardCodesRemove}
                   inputs={{
                     giftCardCodes: [giftCard.id],
@@ -108,11 +120,7 @@ export function CartSummary({
                     {isGCRemoving ? (
                       <Spinner size={16} />
                     ) : (
-                      <XIcon
-                        className="size-4"
-                        weight="regular"
-                        aria-hidden="true"
-                      />
+                      <Icon name="x" className="size-4" aria-hidden="true" />
                     )}
                   </button>
                 </CartForm>
@@ -141,10 +149,10 @@ export function CartSummary({
                   key={discount.code}
                   className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
                 >
-                  <TagIcon className="h-4.5 w-4.5" aria-hidden="true" />
+                  <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />
                   <span className="leading-normal">{discount.code}</span>
                   <CartForm
-                    route="/cart"
+                    route={cartRoute}
                     action={CartForm.ACTIONS.DiscountCodesUpdate}
                     inputs={{ discountCodes: updatedCodes || [] }}
                     fetcherKey="discount-code-remove"
@@ -158,11 +166,7 @@ export function CartSummary({
                       {isDCRemoving ? (
                         <Spinner size={16} />
                       ) : (
-                        <XIcon
-                          className="size-4"
-                          weight="regular"
-                          aria-hidden="true"
-                        />
+                        <Icon name="x" className="size-4" aria-hidden="true" />
                       )}
                     </button>
                   </CartForm>
@@ -171,10 +175,21 @@ export function CartSummary({
             })}
         </div>
       )}
+      {cartDiscount && !isCartUpdating && (
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <span className="flex items-center gap-1.5">
+            <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />
+            Discount
+          </span>
+          <span className="inline-flex items-center">
+            -<Money data={cartDiscount} />
+          </span>
+        </div>
+      )}
       {layout === "page" && (
         <dl className="mb-4 grid">
           <div className="flex items-center justify-between text-xl font-medium">
-            <dt>{t("cart.summary.estimatedTotal")}</dt>
+            <dt>Estimated total:</dt>
             {isCartUpdating ? (
               <Skeleton className="h-4 w-20 rounded-md" />
             ) : (
@@ -195,8 +210,10 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
-                  <NotePencilIcon className="size-4" />
-                  {t("cart.actions.addNote")}
+                  <Icon name="note-pencil" className="size-4" />
+                  {layout === "drawer"
+                    ? cartNoteButtonText || "Note"
+                    : cartNoteButtonText || "Add a note"}
                 </button>
               </Dialog.Trigger>
               <NoteDialog cartNote={note} />
@@ -209,8 +226,10 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
-                  <TagIcon className="size-4" />
-                  {t("cart.actions.discountCode")}
+                  <Icon name="tag" className="size-4" />
+                  {layout === "drawer"
+                    ? discountCodeButtonText || "Discount"
+                    : discountCodeButtonText || "Add a discount code"}
                 </button>
               </Dialog.Trigger>
               <DiscountDialog discountCodes={discountCodes} />
@@ -223,8 +242,10 @@ export function CartSummary({
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <button type="button" className="flex items-center gap-1.5">
-                  <GiftIcon className="size-4" />
-                  {t("cart.actions.giftCard")}
+                  <Icon name="gift" className="size-4" />
+                  {layout === "drawer"
+                    ? giftCardButtonText || "Gift card"
+                    : giftCardButtonText || "Redeem a gift card"}
                 </button>
               </Dialog.Trigger>
               <GiftCardDialog appliedGiftCards={appliedGiftCards} />
@@ -234,9 +255,17 @@ export function CartSummary({
       )}
       {checkoutUrl && (
         <div className="mt-2 flex flex-col gap-3">
-          <a href={checkoutUrl} target="_self">
-            <Button className="w-full">
-              <span>{t("cart.actions.checkout")}</span>
+          <a
+            href={isCartUpdating ? undefined : checkoutHref}
+            target="_self"
+            aria-disabled={isCartUpdating || undefined}
+          >
+            <Button
+              className="w-full"
+              disabled={isCartUpdating}
+              aria-busy={isCartUpdating || undefined}
+            >
+              <span>{checkoutButtonText || "Continue to Checkout"}</span>
               {layout === "drawer" && (
                 <>
                   <span className="mx-1.5">·</span>
@@ -258,24 +287,16 @@ export function CartSummary({
               layout === "page" && "text-right",
             )}
           >
-            {
-              t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
-                "{{link}}",
-              )[0]
-            }
+            * Taxes, discounts and{" "}
             <Link
               target="_blank"
               to="/policies/shipping-policy"
               variant="underline"
               className="text-current after:bg-current"
             >
-              {t("cart.summary.shipping")}
-            </Link>
-            {
-              t("cart.summary.taxesDiscountsShipping", { link: "" }).split(
-                "{{link}}",
-              )[1]
-            }
+              shipping
+            </Link>{" "}
+            calculated at checkout.
           </div>
         </div>
       )}

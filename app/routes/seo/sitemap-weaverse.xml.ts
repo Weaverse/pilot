@@ -10,7 +10,7 @@ function escapeXml(str: string): string {
 }
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
-  const { weaverse } = context as any;
+  const { weaverse } = context;
   const url = new URL(request.url);
   const baseUrl = `${url.protocol}//${url.host}`;
 

@@ -6,7 +6,7 @@ import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
-
+import { getFullPageCacheControl } from "~/utils/full-page-cache";
 import { getWeaverseCsp } from "~/weaverse/csp";
 
 export default async function handleRequest(
@@ -53,6 +53,20 @@ export default async function handleRequest(
   responseHeaders.set("Content-Type", "text/html");
   // TODO: change to Content-Security-Policy when you ready with your CSP configs.
   responseHeaders.set("Content-Security-Policy-Report-Only", header);
+  // Opt anonymous document responses into Oxygen's full-page cache. Both
+  // headers are required by Oxygen; responses that commit a session cookie
+  // (Set-Cookie in server.ts) are excluded by Oxygen automatically. See
+  // app/utils/full-page-cache.ts for the gating rules.
+  const fullPageCacheControl = getFullPageCacheControl(
+    request,
+    responseStatusCode,
+  );
+  if (fullPageCacheControl) {
+    responseHeaders.set("Oxygen-Cache-Control", fullPageCacheControl);
+    if (!responseHeaders.has("Vary")) {
+      responseHeaders.set("Vary", "Accept-Encoding");
+    }
+  }
 
   return new Response(body, {
     headers: responseHeaders,

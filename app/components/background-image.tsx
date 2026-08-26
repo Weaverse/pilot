@@ -30,20 +30,31 @@ const variants = cva("absolute inset-0 z-[-1] h-full w-full", {
 
 export type BackgroundImageProps = VariantProps<typeof variants> & {
   backgroundImage?: WeaverseImage | string;
+  /**
+   * Above-the-fold sections (hero-image, first slideshow slide) must render
+   * their background eagerly: section backgrounds are the LCP element on
+   * most Weaverse pages, and the default lazy loading defers the LCP fetch
+   * until after layout (measured 13.6s mobile LCP on the demo homepage).
+   */
+  loading?: "eager" | "lazy";
 };
-
 export function BackgroundImage(props: BackgroundImageProps) {
-  const { backgroundImage, backgroundFit, backgroundPosition } = props;
+  const { backgroundImage, backgroundFit, backgroundPosition, loading } = props;
   if (backgroundImage) {
     const data =
       typeof backgroundImage === "string"
         ? { url: backgroundImage, altText: "Section background" }
         : backgroundImage;
+    const eager = loading === "eager";
     return (
       <Image
         className={variants({ backgroundFit, backgroundPosition })}
         data={data}
-        sizes="auto"
+        loading={loading}
+        fetchPriority={eager ? "high" : undefined}
+        // `sizes="auto"` is only valid for lazy images (browser uses layout
+        // size); eager backgrounds are full-bleed, so 100vw is correct.
+        sizes={eager ? "100vw" : "auto"}
       />
     );
   }

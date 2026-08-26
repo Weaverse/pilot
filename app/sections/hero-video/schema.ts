@@ -1,6 +1,6 @@
 import { createSchema } from "@weaverse/hydrogen";
 import { overlayInputs } from "~/components/overlay";
-import type { HeroVideoData } from "./index";
+import type { HeroVideoData } from "./types";
 
 export const schema = createSchema({
   type: "hero-video",
@@ -81,8 +81,8 @@ export const schema = createSchema({
           label: "Items spacing",
           configs: {
             min: 0,
-            max: 40,
-            step: 4,
+            max: 60,
+            step: 2,
             unit: "px",
           },
           defaultValue: 20,

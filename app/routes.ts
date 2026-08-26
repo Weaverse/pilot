@@ -11,6 +11,7 @@ import { hydrogenRoutes } from "@shopify/hydrogen";
 // See https://remix.run/docs/en/main/guides/routing for more details
 export default hydrogenRoutes([
   route("robots.txt", "routes/seo/robots.ts"),
+  route("manifest.webmanifest", "routes/pwa/manifest.webmanifest.ts"),
   ...prefix(":locale?", [
     index("routes/home.tsx"),
     route("search", "routes/search/index.tsx"),
@@ -24,6 +25,7 @@ export default hydrogenRoutes([
     route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
     route("discount/:code", "routes/others/discount-code.tsx"),
     ...prefix("api", [
+      route("cart", "routes/api/cart.ts"),
       route("countries", "routes/api/countries.ts"),
       route("customer", "routes/api/customer.ts"),
       route("featured-products", "routes/api/featured-products.ts"),
@@ -42,12 +44,15 @@ export default hydrogenRoutes([
       route(":blogHandle", "routes/blogs/blog.tsx"),
       route(":blogHandle/:articleHandle", "routes/blogs/article.tsx"),
     ]),
+    // Redirect legacy article URLs emitted by Hydrogen's default sitemap.
+    route("articles/:articleHandle", "routes/blogs/article-redirect.tsx"),
     ...prefix("policies", [
       index("routes/policies/list.tsx"),
       route(":policyHandle", "routes/policies/policy.tsx"),
     ]),
     ...prefix("cart", [
       index("routes/cart/cart-page.tsx"),
+      route("checkout", "routes/cart/checkout.tsx"),
       route(":lines", "routes/cart/lines.tsx"),
     ]),
     ...prefix("collections", [

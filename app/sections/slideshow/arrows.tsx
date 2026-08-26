@@ -1,14 +1,9 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CaretLeftIcon,
-  CaretRightIcon,
-} from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useState } from "react";
 import { useSwiper } from "swiper/react";
+import { Icon } from "~/components/icon";
 
 const variants = cva(
   [
@@ -101,9 +96,15 @@ export function Arrows(props: SlideshowArrowsProps) {
         disabled={!canPrev}
       >
         {arrowsIcon === "caret" ? (
-          <CaretLeftIcon style={{ width: iconSize, height: iconSize }} />
+          <Icon
+            name="caret-left"
+            style={{ width: iconSize, height: iconSize }}
+          />
         ) : (
-          <ArrowLeftIcon style={{ width: iconSize, height: iconSize }} />
+          <Icon
+            name="arrow-left"
+            style={{ width: iconSize, height: iconSize }}
+          />
         )}
       </button>
       <button
@@ -121,9 +122,15 @@ export function Arrows(props: SlideshowArrowsProps) {
         disabled={!canNext}
       >
         {arrowsIcon === "caret" ? (
-          <CaretRightIcon style={{ width: iconSize, height: iconSize }} />
+          <Icon
+            name="caret-right"
+            style={{ width: iconSize, height: iconSize }}
+          />
         ) : (
-          <ArrowRightIcon style={{ width: iconSize, height: iconSize }} />
+          <Icon
+            name="arrow-right"
+            style={{ width: iconSize, height: iconSize }}
+          />
         )}
       </button>
     </>

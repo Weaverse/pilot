@@ -178,12 +178,12 @@ export const productCardsSettings = {
     },
     {
       type: "heading",
-      label: "Variant media grouping",
+      label: "Variant images grouping",
       condition: (theme) => theme.pcardEnableQuickShop === true,
     },
     {
       type: "switch",
-      label: "Group media by variant in quick shop",
+      label: "Group images by variant in quick shop",
       name: "quickShopGroupMediaByVariant",
       defaultValue: true,
       helpText:

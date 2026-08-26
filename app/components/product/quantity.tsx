@@ -1,4 +1,4 @@
-import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
+import { Icon } from "~/components/icon";
 import { ScrollReveal } from "~/components/scroll-reveal";
 
 interface QuantityProps {
@@ -32,7 +32,7 @@ export function Quantity(props: QuantityProps) {
           disabled={value <= 1}
           onClick={() => onChange(value - 1)}
         >
-          <MinusIcon size={18} />
+          <Icon name="minus" size={18} />
         </button>
         <input
           className="w-12 border-none px-1 py-2.5 text-center focus:outline-hidden focus:ring-0"
@@ -47,7 +47,7 @@ export function Quantity(props: QuantityProps) {
           aria-label="Increase quantity"
           onClick={() => onChange(value + 1)}
         >
-          <PlusIcon size={18} />
+          <Icon name="plus" size={18} />
         </button>
       </div>
     </ScrollReveal>

@@ -1,6 +1,5 @@
 import {
   getAdjacentAndFirstAvailableVariants,
-  ShopPayButton,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
@@ -8,6 +7,7 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import { LazyShopPayButton } from "~/components/product/lazy-shop-pay-button";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { useProductQtyStore } from "../product-quantity-selector";
 import { StickyATCBar } from "./sticky-atc-bar";
@@ -103,7 +103,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
         {atcButtonText}
       </AddToCartButton>
       {showShopPayButton && selectedVariant?.availableForSale && (
-        <ShopPayButton
+        <LazyShopPayButton
           width="100%"
           variantIdsAndQuantities={[
             {

@@ -2,12 +2,12 @@
 
 | Field            | Value                                                    |
 | ---------------- | -------------------------------------------------------- |
-| **Status**       | approved                                                 |
+| **Status**       | deprecated                                                 |
 | **Owner**        | Paul Phan                                                |
 | **Issue**        | N/A                                                      |
 | **Branch**       | `fix/optimistic-cart`                                    |
 | **Created**      | 2026-04-10                                               |
-| **Last Updated** | 2026-04-10                                               |
+| **Last Updated** | 2026-05-18                                               |
 
 ## Original Prompt
 
@@ -16,6 +16,21 @@
 ## Summary
 
 Refactors the optimistic cart implementation by lifting `useOptimisticCart` from `CartMain` into parent components (`CartDrawer` and `CartRoute`), ensuring badge count, drawer title, and line items all share the same optimistic state. Removes the redundant dual-mechanism removal (CSS + hook) to eliminate flicker when removing items.
+
+## Resolution — Abandoned, Not Implemented
+
+> **This lift-`useOptimisticCart` approach was never implemented.** It was
+> abandoned because `useOptimisticCart` itself proved flawed (double-counting
+> idle fetchers, stale deferred root-loader overwrite, undeclared
+> `$numCartLines`) — problems lifting the hook could not fix.
+>
+> - **What shipped instead:** a custom zustand-based cart sync — see
+>   [`../2026-05-14--optimistic-cart-zustand-sync/`](../2026-05-14--optimistic-cart-zustand-sync/)
+>   (PR [#375](https://github.com/Weaverse/pilot/pull/375), merged 2026-05-14).
+> - **Related abandoned design attempts:**
+>   [`../2026-04-10--optimistic-cart-fix-attempts/`](../2026-04-10--optimistic-cart-fix-attempts/).
+>
+> The original problem analysis below is retained for historical context only.
 
 ## Problem
 

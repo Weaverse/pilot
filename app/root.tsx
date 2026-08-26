@@ -1,9 +1,10 @@
 import "@fontsource-variable/cabin"; // Supports weights 400-700
 import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import type { SeoConfig } from "@shopify/hydrogen";
+import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
-import { useThemeSettings, useThemeText, withWeaverse } from "@weaverse/hydrogen";
+import type { WeaverseImage } from "@weaverse/hydrogen";
+import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
@@ -19,9 +20,13 @@ import {
 } from "react-router";
 import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
+import { CartStoreSync } from "./components/cart/cart-sync";
+import { useCartStore } from "./components/cart/store";
+import { IconSprite } from "./components/icon-sprite";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import { PwaInstallHint } from "./components/pwa-install-hint";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
@@ -30,10 +35,12 @@ import {
   useShouldRenderNewsletterPopup,
 } from "./components/root/newsletter-popup";
 import { NotFound } from "./components/root/not-found";
+import { ShopifyInbox, ShopifyInboxLauncher } from "./components/shopify-inbox";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
+import { getPublicEnv } from "./utils/env";
+import { cdnSize } from "./utils/pwa";
 import { GlobalStyle } from "./weaverse/style";
-import { WeaverseI18nProvider } from "@weaverse/i18n";
 
 export type RootLoader = typeof loader;
 
@@ -65,6 +72,7 @@ export async function loader(args: LoaderFunctionArgs) {
   return {
     ...deferredData,
     ...criticalData,
+    publicEnv: getPublicEnv(args.context.env),
   };
 }
 
@@ -107,12 +115,35 @@ export const Layout = withWeaverse(function RootLayout({
   const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
-  const locale = data?.locale ?? DEFAULT_LOCALE.language.toLowerCase();
-  const { topbarHeight } = useThemeSettings<ThemeSettings>();
-  const { t } = useThemeText();
-  const topbarText = t("announcement.topbarText");
+  const publicEnv = data?.publicEnv;
+  const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  const {
+    topbarHeight,
+    topbarText,
+    pwaEnabled,
+    pwaIcon,
+    pwaThemeColor,
+    shopifyChatPosition,
+    shopifyChatVerticalPosition,
+    shopifyChatColor,
+    shopifyChatStyle,
+    shopifyChatIcon,
+    shopifyChatText,
+    shopifyChatCustomButton,
+    shopifyChatCustomButtonLabel,
+  } = useThemeSettings<ThemeSettings>();
+  // App icon for iOS Add to Home Screen (iOS ignores manifest icons).
+  const pwaIconUrl =
+    (pwaIcon as WeaverseImage | undefined)?.url ||
+    data?.layout?.shop?.brand?.logo?.image?.url;
+  // Without any icon the manifest 404s (browsers won't install icon-less
+  // apps), so don't advertise the PWA at all until one exists.
+  const pwaActive = Boolean(pwaEnabled && pwaIconUrl);
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
-  const i18nData = (data as any)?.i18nData;
+  // Cart is bootstrapped client-side (see CartStoreSync) so the SSR document
+  // stays anonymous and Oxygen can full-page cache it. The provider re-renders
+  // as the store updates, so cart_updated analytics still fire on mutations.
+  const serverCart = useCartStore((state) => state.serverCart);
 
   // Bypass Weaverse theme layout for Hydrogen dev tools
   // See: https://github.com/Weaverse/pilot/issues/321
@@ -123,19 +154,8 @@ export const Layout = withWeaverse(function RootLayout({
     return children;
   }
 
-  const content = (
-    <>
-      <ScrollingAnnouncement />
-      <Header />
-      <main id="mainContent" className="grow">
-        {children}
-      </main>
-      <Footer />
-    </>
-  );
-
   return (
-    <html lang={locale}>
+    <html lang={locale.language}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -163,16 +183,43 @@ export const Layout = withWeaverse(function RootLayout({
             __html: "window.Shopify = window.Shopify || {};",
           }}
         />
+        {pwaActive ? (
+          <>
+            <link rel="manifest" href="/manifest.webmanifest" />
+            <meta name="theme-color" content={pwaThemeColor || "#ffffff"} />
+            <link rel="apple-touch-icon" href={cdnSize(pwaIconUrl, 180)} />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta
+              name="apple-mobile-web-app-status-bar-style"
+              content="default"
+            />
+          </>
+        ) : null}
+        {/*
+         * SW registration lives here (not entry.client) because it depends on
+         * theme settings. When PWA is off, actively unregister so previously
+         * installed workers don't linger after a merchant disables the feature.
+         */}
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: pwaActive
+              ? 'if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js"))}'
+              : // Only remove Pilot's own worker — merchants may run third-party SWs under other scopes.
+                'if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then((rs)=>rs.forEach((r)=>{const w=r.active||r.waiting||r.installing;if(w&&new URL(w.scriptURL).pathname==="/sw.js"){r.unregister()}}))}',
+          }}
+        />
         <link rel="stylesheet" href={styles} />
         <Meta />
         <Links />
         <GlobalStyle />
-        <script
-          type="module"
-          src="https://cdn.shopify.com/storefront/web-components/account.js"
-          async
-          nonce={nonce}
-        />
+        {/*
+         * Shopify Storefront Web Components are large third-party bundles.
+         * Do NOT load them in the document head: the header account button
+         * lazy-loads them on hover/focus/click instead, preserving the
+         * required script order (web-components.js before account.js).
+         */}
       </head>
       <body
         style={
@@ -182,25 +229,33 @@ export const Layout = withWeaverse(function RootLayout({
         }
         className="bg-background text-body antialiased"
       >
+        <IconSprite />
         {data ? (
           <Analytics.Provider
-            cart={data.cart}
+            // CartApiQueryFragment is the same runtime shape cart.get()
+            // returned before (pilot's custom cart fragment) — the nominal
+            // CartReturn type just demands `metafields` we never query.
+            cart={serverCart as unknown as CartReturn}
             shop={data.shop}
             consent={data.consent}
           >
+            <CartStoreSync />
             <TooltipProvider disableHoverableContent>
               <div
                 className="flex min-h-screen flex-col"
-                key={locale}
+                key={`${locale.language}-${locale.country}`}
               >
                 <div className="">
                   <a href="#mainContent" className="sr-only">
                     Skip to content
                   </a>
                 </div>
-                <WeaverseI18nProvider data={i18nData}>
-                  {content}
-                </WeaverseI18nProvider>
+                <ScrollingAnnouncement />
+                <Header />
+                <main id="mainContent" className="grow">
+                  {children}
+                </main>
+                <Footer />
               </div>
               {shouldShowNewsletterPopup && <NewsletterPopup />}
             </TooltipProvider>
@@ -209,11 +264,34 @@ export const Layout = withWeaverse(function RootLayout({
         ) : (
           children
         )}
+        <PwaInstallHint />
         <GlobalLoading />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
+        {publicEnv?.PUBLIC_SHOPIFY_INBOX_SHOP_ID && (
+          <ShopifyInbox
+            shop={{
+              domain: publicEnv.PUBLIC_STORE_DOMAIN,
+              id: publicEnv.PUBLIC_SHOPIFY_INBOX_SHOP_ID,
+            }}
+            button={{
+              position: shopifyChatPosition,
+              verticalPosition: shopifyChatVerticalPosition,
+              color: shopifyChatColor,
+              style: shopifyChatStyle,
+              icon: shopifyChatIcon,
+              text: shopifyChatText,
+            }}
+          />
+        )}
+        {publicEnv?.PUBLIC_SHOPIFY_INBOX_SHOP_ID && shopifyChatCustomButton && (
+          <ShopifyInboxLauncher
+            position={shopifyChatPosition}
+            label={shopifyChatCustomButtonLabel}
+          />
+        )}
       </body>
-    </html >
+    </html>
   );
 });
 

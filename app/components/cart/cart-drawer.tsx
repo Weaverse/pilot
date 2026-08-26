@@ -1,23 +1,35 @@
-import { ArrowRightIcon, HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useAnalytics, useOptimisticCart } from "@shopify/hydrogen";
-import { useThemeText } from "@weaverse/hydrogen";
+import { useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
-import { Suspense, useEffect } from "react";
-import { Await, useLocation, useRouteLoaderData } from "react-router";
-import type { CartApiQueryFragment } from "storefront-api.generated";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
+import { Icon } from "~/components/icon";
 import Link from "~/components/link";
-import type { RootLoader } from "~/root";
-import { useCartDrawerStore } from "./store";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
+import { Spinner } from "~/components/spinner";
+import { useCart, useCartBootstrapResolved, useCartStore } from "./store";
 
 export function CartDrawer() {
-  const rootData = useRouteLoaderData<RootLoader>("root");
+  const { publish } = useAnalytics();
+  const cart = useCart();
+  // Returning shoppers have a cart cookie but useCart() stays null until the
+  // /api/cart bootstrap responds — rendering CartMain then would show a
+  // false "empty cart". Hold a loading state until the first response lands
+  // (the old root-loader Await behaved the same way).
+  const bootstrapResolved = useCartBootstrapResolved();
+  // An optimistic cart is staged by the add-to-cart click itself, so it is
+  // available before the bootstrap responds. Without this, an add clicked on a
+  // cold page would open the drawer onto the bootstrap spinner — exactly the
+  // frame the instant drawer exists to remove.
+  const cartReady = bootstrapResolved || Boolean(cart?.isOptimistic);
   const {
     isOpen,
     close: closeCartDrawer,
     toggle: toggleCartDrawer,
-  } = useCartDrawerStore();
+    lastAddError,
+    setLastAddError,
+  } = useCartStore();
   const location = useLocation();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
@@ -26,52 +38,12 @@ export function CartDrawer() {
   }, [location.pathname, closeCartDrawer]);
 
   return (
-    <Suspense
-      fallback={
-        <Link
-          to="/cart"
-          className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
-        >
-          <HandbagIcon className="h-5 w-5" />
-        </Link>
-      }
-    >
-      <Await resolve={rootData?.cart}>
-        {(cart) => (
-          <CartDrawerContent
-            cart={cart}
-            isOpen={isOpen}
-            toggleCartDrawer={toggleCartDrawer}
-            closeCartDrawer={closeCartDrawer}
-          />
-        )}
-      </Await>
-    </Suspense>
-  );
-}
-
-function CartDrawerContent({
-  cart: originalCart,
-  isOpen,
-  toggleCartDrawer,
-  closeCartDrawer,
-}: {
-  cart: CartApiQueryFragment | null;
-  isOpen: boolean;
-  toggleCartDrawer: () => void;
-  closeCartDrawer: () => void;
-}) {
-  const { publish } = useAnalytics();
-  const cart = useOptimisticCart(originalCart);
-  const { t } = useThemeText();
-
-  return (
     <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>
       <Dialog.Trigger
         onClick={() => publish("custom_sidecart_viewed", { cart })}
         className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
       >
-        <HandbagIcon className="h-5 w-5" />
+        <Icon name="handbag" className="h-5 w-5" />
         {cart?.totalQuantity > 0 && (
           <div
             className={clsx(
@@ -105,6 +77,7 @@ function CartDrawerContent({
           )}
           aria-describedby={undefined}
         >
+          <ShopifyInboxOverlayGuard />
           <div className="flex h-full flex-col space-y-6">
             <div className="flex items-center justify-between gap-2 px-4">
               <Dialog.Title asChild className="text-base">
@@ -113,21 +86,50 @@ function CartDrawerContent({
                   className="group/cart-title flex items-center gap-1.5 text-lg font-serif font-semibold hover:underline"
                   onClick={closeCartDrawer}
                 >
-                  {t("cart.title")} ({cart?.totalQuantity || 0})
-                  <ArrowRightIcon className="size-4 transition-transform group-hover/cart-title:translate-x-0.5" />
+                  Cart
+                  {cartReady && ` (${cart?.totalQuantity || 0})`}
+                  <Icon
+                    name="arrow-right"
+                    className="size-4 transition-transform group-hover/cart-title:translate-x-0.5"
+                  />
                 </Link>
               </Dialog.Title>
               <Dialog.Close asChild>
                 <button
                   type="button"
                   className="translate-x-2 p-2"
-                  aria-label={t("accessibility.closeCartDrawer")}
+                  aria-label="Close cart drawer"
                 >
-                  <XIcon className="h-4 w-4" />
+                  <Icon name="x" className="h-4 w-4" />
                 </button>
               </Dialog.Close>
             </div>
-            <CartMain layout="drawer" cart={cart} />
+            {lastAddError && (
+              <div
+                role="alert"
+                className="mx-4 flex items-start justify-between gap-3 rounded-sm bg-red-50 px-3 py-2 text-red-700 text-sm"
+              >
+                <span>{lastAddError}</span>
+                <button
+                  type="button"
+                  onClick={() => setLastAddError(null)}
+                  aria-label="Dismiss error"
+                >
+                  <Icon name="x" className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
+            {cartReady ? (
+              <CartMain layout="drawer" cart={cart} />
+            ) : (
+              <div
+                className="relative grow"
+                role="status"
+                aria-label="Loading cart"
+              >
+                <Spinner />
+              </div>
+            )}
           </div>
         </Dialog.Content>
       </Dialog.Portal>

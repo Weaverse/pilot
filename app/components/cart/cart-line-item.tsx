@@ -1,21 +1,24 @@
-import { TrashIcon } from "@phosphor-icons/react";
 import {
   CartForm,
   Money,
   type OptimisticCart,
   useOptimisticData,
 } from "@shopify/hydrogen";
-import { useThemeText } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import type { FetcherWithComponents } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
+import { lineDiscountTotal, toMoney } from "~/utils/cart";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
-import { useCartDrawerStore } from "./store";
+import { useCartFetcherSync } from "./cart-sync";
+import { useCartStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
@@ -30,7 +33,7 @@ export function CartLineItem({
   line: CartLine;
   layout: CartLayoutType;
 }) {
-  const { close: closeCartDrawer } = useCartDrawerStore();
+  const { close: closeCartDrawer } = useCartStore();
   const optimisticData = useOptimisticData<CartLineOptimisticData>(line?.id);
 
   if (!line?.id) {
@@ -38,9 +41,10 @@ export function CartLineItem({
   }
 
   const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
-  // Workaround: line.isOptimistic is only set for newly added lines (Hydrogen limitation),
-  // so fall back to checking whether useOptimisticData has pending data (e.g. quantity change).
-  const isOptimistic = lineOptimistic ?? Object.keys(optimisticData).length > 0;
+  // Workaround: line.isOptimistic is only set for newly added lines,
+  // so fall back to checking whether useOptimisticData has pending data.
+  const isOptimistic =
+    lineOptimistic ?? Object.keys(optimisticData ?? {}).length > 0;
 
   if (typeof quantity === "undefined" || !merchandise?.product) {
     return null;
@@ -90,7 +94,11 @@ export function CartLineItem({
             )}
           </div>
           {layout === "drawer" && (
-            <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
+            <ItemRemoveButton
+              lineId={id}
+              className="-mt-1.5 -mr-2"
+              disabled={isOptimistic}
+            />
           )}
         </div>
         <div
@@ -100,7 +108,9 @@ export function CartLineItem({
           )}
         >
           <CartLineQuantityAdjust line={line} />
-          {layout === "page" && <ItemRemoveButton lineId={id} />}
+          {layout === "page" && (
+            <ItemRemoveButton lineId={id} disabled={isOptimistic} />
+          )}
           <CartLinePrice line={line} isOptimistic={isOptimistic} />
         </div>
       </div>
@@ -111,28 +121,54 @@ export function CartLineItem({
 function ItemRemoveButton({
   lineId,
   className,
+  disabled = false,
 }: {
   lineId: CartLine["id"];
   className?: string;
+  disabled?: boolean;
 }) {
-  const { t } = useThemeText();
+  const cartRoute = usePrefixPathWithLocale("/cart");
+
   return (
     <CartForm
-      route="/cart"
+      route={cartRoute}
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{ lineIds: [lineId] }}
+      fetcherKey="cart-line-remove"
     >
-      <button
-        className={clsx(
-          "flex h-8 w-8 items-center justify-center border-none",
-          className,
-        )}
-        type="submit"
-      >
-        <span className="sr-only">{t("product.remove")}</span>
-        <TrashIcon aria-hidden="true" className="size-4.5" />
-      </button>
+      {(fetcher: FetcherWithComponents<any>) => (
+        <ItemRemoveButtonInner
+          fetcher={fetcher}
+          className={className}
+          disabled={disabled}
+        />
+      )}
     </CartForm>
+  );
+}
+
+function ItemRemoveButtonInner({
+  fetcher,
+  className,
+  disabled,
+}: {
+  fetcher: FetcherWithComponents<any>;
+  className?: string;
+  disabled: boolean;
+}) {
+  useCartFetcherSync(fetcher);
+  return (
+    <button
+      className={clsx(
+        "flex h-8 w-8 items-center justify-center border-none disabled:cursor-not-allowed disabled:text-body-subtle",
+        className,
+      )}
+      type="submit"
+      disabled={disabled}
+    >
+      <span className="sr-only">Remove</span>
+      <Icon name="trash" aria-hidden="true" className="size-4.5" />
+    </button>
   );
 }
 
@@ -161,6 +197,30 @@ function CartLinePrice({
   if (isOptimistic) {
     return <Skeleton as="span" className="ml-auto h-4 w-16 rounded-md" />;
   }
+
+  // Item-level discount: when a line carries a LINE_ITEM allocation, cost.totalAmount
+  // already reflects the reduced price, which on its own just looks like a cheaper
+  // item. Show the pre-discount total struck through next to it so the saving is
+  // explained at the product line, not only in the cart summary.
+  const lineDiscount = priceType === "regular" ? lineDiscountTotal(line) : 0;
+  if (lineDiscount > 0) {
+    const original = toMoney(
+      Number.parseFloat(line.cost.totalAmount.amount) + lineDiscount,
+      line.cost.totalAmount.currencyCode,
+    );
+    return (
+      <span className="ml-auto flex flex-col items-end gap-0.5 leading-tight">
+        <Money
+          withoutTrailingZeros
+          as="span"
+          data={original}
+          className="text-gray-500 text-sm line-through"
+        />
+        <Money withoutTrailingZeros as="span" data={line.cost.totalAmount} />
+      </span>
+    );
+  }
+
   return (
     <Money withoutTrailingZeros as="span" data={moneyV2} className="ml-auto" />
   );

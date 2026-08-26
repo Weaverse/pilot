@@ -1,10 +1,4 @@
 import {
-  CircleIcon,
-  HandbagIcon,
-  PlusIcon,
-  TagIcon,
-} from "@phosphor-icons/react";
-import {
   type ComponentLoaderArgs,
   createSchema,
   type HydrogenComponentProps,
@@ -12,6 +6,7 @@ import {
 } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import type { ProductQuery } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { ProductPopup } from "./product-popup";
 
@@ -32,11 +27,11 @@ interface HotspotsItemProps
     HotspotsItemData {}
 
 const ICONS = {
-  circle: CircleIcon,
-  plus: PlusIcon,
-  bag: HandbagIcon,
-  tag: TagIcon,
-};
+  circle: "circle",
+  plus: "plus",
+  bag: "handbag",
+  tag: "tag",
+} as const;
 
 export default function HotspotsItem(props: HotspotsItemProps) {
   const {
@@ -53,7 +48,7 @@ export default function HotspotsItem(props: HotspotsItemProps) {
     loaderData,
     ...rest
   } = props;
-  const Icon = ICONS[icon];
+  const iconName = ICONS[icon];
 
   return (
     <div
@@ -75,7 +70,7 @@ export default function HotspotsItem(props: HotspotsItemProps) {
           style={{ animationDuration: "1500ms" }}
         />
         <span className="group relative inline-flex rounded-md bg-white p-2">
-          <Icon style={{ width: iconSize, height: iconSize }} />
+          <Icon name={iconName} style={{ width: iconSize, height: iconSize }} />
           <ProductPopup
             product={loaderData?.product}
             popupWidth={popupWidth}

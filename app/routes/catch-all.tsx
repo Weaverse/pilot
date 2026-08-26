@@ -1,4 +1,5 @@
-import type { LoaderFunctionArgs } from "react-router";
+import { getWeaverseSeoMeta } from "@weaverse/hydrogen";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { routeHeaders } from "~/utils/cache";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
@@ -14,6 +15,10 @@ export async function loader({ context }: LoaderFunctionArgs) {
     weaverseData,
   };
 }
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return getWeaverseSeoMeta(data?.weaverseData);
+};
 
 export default function Component() {
   return <WeaverseContent />;

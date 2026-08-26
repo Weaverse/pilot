@@ -13,8 +13,8 @@ export const cartSettings = {
       type: "text",
       label: "Cart note button text",
       name: "cartNoteButtonText",
-      defaultValue: "Add a note",
-      placeholder: "Add a note",
+      defaultValue: "Note",
+      placeholder: "Note",
       condition: (theme) => theme.enableCartNote === true,
     },
     {
@@ -27,8 +27,8 @@ export const cartSettings = {
       type: "text",
       label: "Discount code button text",
       name: "discountCodeButtonText",
-      defaultValue: "Add a discount code",
-      placeholder: "Add a discount code",
+      defaultValue: "Discount code",
+      placeholder: "Discount code",
       condition: (theme) => theme.enableDiscountCode === true,
     },
     {
@@ -41,8 +41,8 @@ export const cartSettings = {
       type: "text",
       label: "Gift card button text",
       name: "giftCardButtonText",
-      defaultValue: "Redeem a gift card",
-      placeholder: "Redeem a gift card",
+      defaultValue: "Gift card",
+      placeholder: "Gift card",
       condition: (theme) => theme.enableGiftCard === true,
     },
     {

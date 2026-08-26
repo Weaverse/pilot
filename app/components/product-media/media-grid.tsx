@@ -1,4 +1,3 @@
-import { CaretDownIcon, CaretUpIcon } from "@phosphor-icons/react";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -6,6 +5,7 @@ import type {
   MediaFragment,
   ProductVariantFragment,
 } from "storefront-api.generated";
+import { Icon } from "~/components/icon";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { MediaItem } from "./media-item";
@@ -163,7 +163,7 @@ export function MediaGrid({
             aria-label={`${showMoreText} (+${hiddenCount})`}
           >
             <span className="flex flex-col items-center gap-1">
-              <CaretDownIcon className="h-4 w-4" />
+              <Icon name="caret-down" className="h-4 w-4" />
               <span className="underline underline-offset-4">
                 {`${showMoreText} (+${hiddenCount})`}
               </span>
@@ -178,7 +178,7 @@ export function MediaGrid({
             aria-label={showLessText}
           >
             <span className="flex flex-col items-center gap-1">
-              <CaretUpIcon className="h-4 w-4" />
+              <Icon name="caret-up" className="h-4 w-4" />
               <span className="underline underline-offset-4">
                 {showLessText}
               </span>

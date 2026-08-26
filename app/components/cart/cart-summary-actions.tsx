@@ -1,42 +1,58 @@
-import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm } from "@shopify/hydrogen";
-import { useThemeText } from "@weaverse/hydrogen";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
+import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { getSuccessfulCartNote } from "~/utils/cart-note";
 import { cn } from "~/utils/cn";
+import { useCartFetcherSync } from "./cart-sync";
 
 export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
   const [note, setNote] = useState(currentNote);
   const [submitted, setSubmitted] = useState(false);
   const fetcher = useFetcher();
-  const { t } = useThemeText();
+  const lastProcessedData = useRef(fetcher.data);
+  useCartFetcherSync(fetcher);
+  const cartRoute = usePrefixPathWithLocale("/cart");
 
   useEffect(() => {
-    if (fetcher.state === "idle" && fetcher.data) {
-      setSubmitted(true);
+    if (
+      fetcher.state !== "idle" ||
+      !fetcher.data ||
+      fetcher.data === lastProcessedData.current
+    ) {
+      return;
     }
-  }, [fetcher]);
+    lastProcessedData.current = fetcher.data;
+    const updatedNote = getSuccessfulCartNote(fetcher.data);
+    if (updatedNote === undefined) {
+      setSubmitted(false);
+      return;
+    }
+    setNote(updatedNote);
+    setSubmitted(true);
+  }, [fetcher.data, fetcher.state]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formCartNote = formData.get("cartNote") as string;
-    if (formCartNote) {
-      fetcher.submit(
-        {
-          [CartForm.INPUT_NAME]: JSON.stringify({
-            action: CartForm.ACTIONS.NoteUpdate,
-            inputs: { cartNote: formCartNote },
-          }),
-        },
-        { method: "POST", action: "/cart" },
-      );
-      setNote(formCartNote);
-    }
+    setSubmitted(false);
+    fetcher.submit(
+      {
+        [CartForm.INPUT_NAME]: JSON.stringify({
+          action: CartForm.ACTIONS.NoteUpdate,
+          inputs: { cartNote: formCartNote },
+        }),
+      },
+      { method: "POST", action: cartRoute },
+    );
+    setNote(formCartNote);
   }
 
   return (
@@ -55,25 +71,26 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
         )}
         aria-describedby={undefined}
       >
+        <ShopifyInboxOverlayGuard />
         <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
               type="button"
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-              aria-label={t("accessibility.close")}
+              aria-label="Close"
             >
-              <XIcon size={16} />
+              <Icon name="x" size={16} />
             </button>
           </Dialog.Close>
 
           <Dialog.Title className="mb-4 font-medium text-lg">
-            {t("cart.actions.addNote")}
+            Add a note
           </Dialog.Title>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <textarea
               className="min-h-20 w-full resize-none p-3"
-              placeholder={t("cart.placeholder.note")}
+              placeholder="Add any special instructions or notes for your order..."
               rows={4}
               name="cartNote"
               value={note}
@@ -83,12 +100,12 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
               }}
             />
             {submitted && (
-              <Banner variant="success">{t("cart.messages.noteSaved")}</Banner>
+              <Banner variant="success">Cart note saved successfully 🎉</Banner>
             )}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">
-                  {t("cart.actions.cancel")}
+                  Cancel
                 </Button>
               </Dialog.Close>
               <Button
@@ -97,7 +114,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
                 disabled={fetcher.state !== "idle"}
                 className="w-24 leading-tight! [--spinner-duration:400ms]"
               >
-                {t("cart.actions.saveNote")}
+                Save note
               </Button>
             </div>
           </form>
@@ -114,7 +131,8 @@ export function DiscountDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
-  const { t } = useThemeText();
+  useCartFetcherSync(fetcher);
+  const cartRoute = usePrefixPathWithLocale("/cart");
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted && discountCodes?.find((d) => d.code === code && d.applicable),
@@ -136,7 +154,7 @@ export function DiscountDialog({
             },
           }),
         },
-        { method: "POST", action: "/cart" },
+        { method: "POST", action: cartRoute },
       );
     }
   }
@@ -157,19 +175,20 @@ export function DiscountDialog({
         )}
         aria-describedby={undefined}
       >
+        <ShopifyInboxOverlayGuard />
         <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
               type="button"
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-              aria-label={t("accessibility.close")}
+              aria-label="Close"
             >
-              <XIcon size={16} />
+              <Icon name="x" size={16} />
             </button>
           </Dialog.Close>
 
           <Dialog.Title className="mb-4 font-medium text-xl">
-            {t("cart.actions.discountCode")}
+            Apply a discount code
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -182,23 +201,19 @@ export function DiscountDialog({
               className="w-full p-3"
               type="text"
               name="discountCode"
-              placeholder={t("cart.placeholder.discountCode")}
+              placeholder="Discount code"
               required
             />
             {success && (
               <Banner variant="success">
-                {t("cart.messages.discountApplied")}
+                Discount applied successfully 🎉
               </Banner>
             )}
-            {error && (
-              <Banner variant="error">
-                {t("cart.messages.discountInvalid")}
-              </Banner>
-            )}
+            {error && <Banner variant="error">Invalid discount code.</Banner>}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">
-                  {t("cart.actions.cancel")}
+                  Cancel
                 </Button>
               </Dialog.Close>
               <Button
@@ -207,7 +222,7 @@ export function DiscountDialog({
                 loading={fetcher.state !== "idle"}
                 disabled={fetcher.state !== "idle"}
               >
-                {t("cart.actions.apply")}
+                Apply
               </Button>
             </div>
           </form>
@@ -224,7 +239,8 @@ export function GiftCardDialog({
 }) {
   const [code, setCode] = useState("");
   const fetcher = useFetcher();
-  const { t } = useThemeText();
+  useCartFetcherSync(fetcher);
+  const cartRoute = usePrefixPathWithLocale("/cart");
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted &&
@@ -248,7 +264,7 @@ export function GiftCardDialog({
             },
           }),
         },
-        { method: "POST", action: "/cart" },
+        { method: "POST", action: cartRoute },
       );
     }
   }
@@ -269,19 +285,20 @@ export function GiftCardDialog({
         )}
         aria-describedby={undefined}
       >
+        <ShopifyInboxOverlayGuard />
         <div className="relative w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl">
           <Dialog.Close asChild>
             <button
               type="button"
               className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-              aria-label={t("accessibility.close")}
+              aria-label="Close"
             >
-              <XIcon size={16} />
+              <Icon name="x" size={16} />
             </button>
           </Dialog.Close>
 
           <Dialog.Title className="mb-4 font-medium text-xl">
-            {t("cart.actions.giftCard")}
+            Redeem a gift card
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -289,7 +306,7 @@ export function GiftCardDialog({
               className="w-full p-3"
               type="text"
               name="giftCardCode"
-              placeholder={t("cart.placeholder.giftCardCode")}
+              placeholder="Gift card code"
               value={code}
               onChange={(e) => {
                 setCode(e.target.value);
@@ -299,18 +316,14 @@ export function GiftCardDialog({
             />
             {success && (
               <Banner variant="success">
-                {t("cart.messages.giftCardApplied")}
+                Gift card applied successfully 🎉
               </Banner>
             )}
-            {error && (
-              <Banner variant="error">
-                {t("cart.messages.giftCardInvalid")}
-              </Banner>
-            )}
+            {error && <Banner variant="error">Invalid gift card code.</Banner>}
             <div className="flex items-center justify-end gap-3">
               <Dialog.Close asChild>
                 <Button variant="custom" className="w-24 border-none">
-                  {t("cart.actions.cancel")}
+                  Cancel
                 </Button>
               </Dialog.Close>
               <Button
@@ -319,7 +332,7 @@ export function GiftCardDialog({
                 loading={fetcher.state !== "idle"}
                 disabled={fetcher.state !== "idle"}
               >
-                {t("cart.actions.redeem")}
+                Redeem
               </Button>
             </div>
           </form>

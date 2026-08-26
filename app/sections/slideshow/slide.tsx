@@ -5,11 +5,13 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import { useContext, useEffect, useState } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { OverlayAndBackgroundProps } from "~/components/overlay-and-background";
 import { OverlayAndBackground } from "~/components/overlay-and-background";
 import { layoutInputs } from "~/components/section";
+import { EagerSlideContext } from "./index";
 
 const variants = cva("flex h-full w-full flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
@@ -66,6 +68,33 @@ export interface SlideProps
   backgroundColor: string;
 }
 
+/**
+ * Non-first slides are invisible on first paint (fade effect = opacity 0,
+ * slide effect = translated off-screen), yet their full-bleed background is
+ * still treated as "in viewport" by native lazy-loading and fetched
+ * immediately — ~230KB of off-screen imagery competing with the LCP slide.
+ * Defer those backgrounds to the first idle callback: they paint while the
+ * slide is still hidden, so the carousel fade/autoplay never reveals a gap.
+ */
+function useDeferredBackground(immediate: boolean) {
+  let [ready, setReady] = useState(immediate);
+  useEffect(() => {
+    if (immediate) {
+      setReady(true);
+      return;
+    }
+    if (typeof window.requestIdleCallback === "function") {
+      let id = window.requestIdleCallback(() => setReady(true), {
+        timeout: 2000,
+      });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    let id = window.setTimeout(() => setReady(true), 1000);
+    return () => window.clearTimeout(id);
+  }, [immediate]);
+  return ready;
+}
+
 export default function Slide(props: SlideProps) {
   const {
     contentPosition,
@@ -74,6 +103,7 @@ export default function Slide(props: SlideProps) {
     verticalPadding,
     backgroundColor,
     backgroundImage,
+    loading,
     enableOverlay,
     overlayOpacity,
     overlayColor,
@@ -83,13 +113,17 @@ export default function Slide(props: SlideProps) {
     children,
     ...rest
   } = props;
-
+  // First slide loads its background eagerly (LCP); the rest defer to idle so
+  // their off-screen full-bleed images don't compete with the LCP fetch.
+  const eagerSlide = useContext(EagerSlideContext);
+  let showBackground = useDeferredBackground(eagerSlide);
   return (
     <div {...rest} className="h-full w-full">
       <OverlayAndBackground
-        backgroundImage={backgroundImage}
+        backgroundImage={showBackground ? backgroundImage : undefined}
         backgroundFit={backgroundFit}
         backgroundPosition={backgroundPosition}
+        loading={eagerSlide ? "eager" : loading}
         enableOverlay={enableOverlay}
         overlayOpacity={overlayOpacity}
         overlayColor={overlayColor}
