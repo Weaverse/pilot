@@ -493,12 +493,13 @@ the earlier "component tests are impossible here" limitation is now closed.
 | 2 | root bypasses `localizedThemePayload` | 1 failed |
 | 3 | hook ignores all legacy settings | 2 failed |
 | 4 | badge renders hardcoded copy | 1 failed |
-| 5 | product card stops forwarding quick-shop copy | structurally removed |
+| 5 | product card stops forwarding quick-shop copy | see below — **was GREEN**, now 4 failed |
 | 6 | cart route bypasses `safeRedirectPath` | 1 failed |
 
-Mutation 5 no longer has a path to break: the prop and `controlCopy()` were
-deleted, and `QuickShopTrigger` reads the shared hook. Its surviving equivalent
-— the trigger hardcoding `"Quick shop"` — fails 3 tests.
+Mutation 5 was recorded here as "structurally removed", on the reasoning that
+deleting the prop and `controlCopy()` left nothing to break. That was wrong,
+and a later review proved it by restoring the exact prior three-file path and
+watching every test stay green. See the 2026-08-26 entry below.
 
 ### Findings 2 and 3 — live and published edits masked by legacy copy
 
@@ -519,6 +520,10 @@ reappear.
 **Mutations, all caught:** design overrides never consulted (4 fail); hook
 stops passing the store (3); truthiness instead of own-property presence (3);
 `in` walking the prototype chain (1); quick-shop bypass restored (2).
+
+The last of those mutates `QuickShopTrigger` in isolation, which is a weaker
+claim than it reads as: the tests of the day constructed the trigger directly,
+so they could not see a bypass that lived in its *caller*. Corrected below.
 
 The prototype case is reachable: the store's snapshot is a plain object, so
 `"constructor" in snapshot` is `true`.
@@ -598,3 +603,75 @@ public locale (3 fail) — proving the translation half is still guarded.
   index.tsx` overwrote `featured-collections/index.tsx` and corrupted the
   working tree (duplicate component type, stale codegen). Restored from git and
   reapplied; backups are now keyed by full path.
+
+## 2026-08-26 — Fourth review of `f46f1d57`: the bypass I called "structurally removed"
+
+A review restored the exact prior three-file path and every relevant test
+stayed green. That is a real gap in my coverage, and my own claim above was the
+thing that hid it.
+
+### What I had actually proven
+
+`QuickShopTrigger` resolves its label correctly. That is all
+`live-translation-preview.test.ts:78-114` and `merchant-copy.test.ts:200-242`
+can show, because they construct the trigger themselves and pass only
+`productHandle` and `buttonType`. The caller decides which props exist, so a
+test that *is* the caller cannot observe a caller-side bypass. Deleting the prop
+made my tests pass for a reason unrelated to what they assert.
+
+### The exact mutation
+
+Restored verbatim from parent `6fd2f438`:
+
+| File | Change |
+| --- | --- |
+| `product-card/index.tsx` | destructure `pcardQuickShopButtonText`, forward as `buttonText` |
+| `product-card/quick-shop.tsx` | accept `buttonText`, resolve via `controlCopy()` |
+| `utils/legacy-theme-text.ts` | re-add `controlCopy()` |
+
+`index.tsx` came back byte-identical to `6fd2f438`; `quick-shop.tsx` differs
+only in import order and comment text, with an identical executable path;
+`controlCopy()` is identical.
+
+Under it, exactly as the review reported:
+
+- `pnpm typecheck` — **passed**
+- the 30 tests in the three legacy/translation files — **all passed**
+
+### The test that catches it
+
+`tests/unit/product-card-quick-shop.test.ts` renders the real `ProductCard`
+with `pcardQuickShopButtonText` set, and reads the label out of the rendered
+button:
+
+| Case | Expected | Under the bypass |
+| --- | --- | --- |
+| Published Translation Manager value | `PUBLISHED` | `PERSISTED LEGACY LABEL` |
+| Live `TranslationStore` edit | `LIVE` | `PERSISTED LEGACY LABEL` |
+| Published value cleared to `""` | `""` | `PERSISTED LEGACY LABEL` |
+| Live edit cleared to `""` | `""` | `PERSISTED LEGACY LABEL` |
+| Nothing translated (control) | legacy label | legacy label ✓ |
+
+**4 failed, 1 passed.** The control passing is the point: the test discriminates
+a masked override from a legitimate fallback rather than rejecting the legacy
+value outright.
+
+Mounting the real card needed `badges`, `options`, `images.nodes`,
+`priceRange` and `variants` on the fixture — `ProductCardOptions` and the badge
+row read them during render. No production code changed; the three files were
+restored byte-exact and verified by SHA-256 against pre-mutation copies.
+
+**Further mutations, all caught:** trigger hardcodes `"Quick shop"` (5 fail);
+hook stops passing the design snapshot (2); published override read by
+truthiness instead of presence (1); design-override check disabled (2).
+
+### Documentation corrected
+
+- `app/utils/locale.ts` described `providerLanguage` as the identity for
+  "Shopify and Weaverse". Since `f46f1d57` it is Shopify-only — Weaverse keys
+  translations by the public `hreflang`. Both the type doc and
+  `providerLanguageFor` now say so.
+- `plan.md` still specified `controlCopy()` and ProductCard forwarding, which
+  is the opposite of what shipped. It now records the deletion and why.
+- The mutation table above claimed mutation 5 was "structurally removed". It
+  was not, and the row now points here.

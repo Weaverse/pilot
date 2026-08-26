@@ -201,5 +201,13 @@ Two constraints make this practical in this repo:
   field, so tests need the worker global and a fully typed env — see
   `tests/support/hydrogen-env.ts`.
 
-*Verified by* `tests/unit/production-boundaries.test.ts`, plus a mutation
-matrix in which each of six production paths fails at least one test.
+A test can execute the right component and still miss the defect, because the
+*caller* decides which props exist. `QuickShopTrigger` tests that construct the
+trigger themselves prove it is correct when called that way, and say nothing
+about how `ProductCard` calls it — which is exactly where the bypass lived. The
+boundary to render is the one a storefront renders.
+
+*Verified by* `tests/unit/production-boundaries.test.ts` and
+`tests/unit/product-card-quick-shop.test.ts`, plus a mutation matrix in which
+each production path — including the exact prior three-file ProductCard →
+QuickShop prop bypass — fails at least one test.

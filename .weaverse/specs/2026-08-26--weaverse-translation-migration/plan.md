@@ -196,9 +196,17 @@ treats any published string — including `""` — as current intent.
 `LEGACY_SETTING_FOR_KEY` gains the five badge settings and the quick-shop
 label. `SHIPPED_DEFAULT_FOR_SETTING` records the English `defaultValue` each
 setting shipped with, so an untouched value falls through to the market's
-translation instead of pinning English. `controlCopy()` applies the same rule to
-a value a component was passed; `ProductCard` forwards
-`pcardQuickShopButtonText` again and badges read through `useLegacyThemeText`.
+translation instead of pinning English. Every consumer — badges and the
+quick-shop trigger alike — resolves through `useLegacyThemeText`, and no
+component takes the copy as a prop.
+
+An earlier draft kept a `controlCopy()` helper so `ProductCard` could forward
+`pcardQuickShopButtonText` to `QuickShopTrigger`. That was dropped: a forwarded
+value is resolved by the caller, so it arrives already decided and outranks the
+Translation Manager the migration exists to honour. Published overrides, live
+Studio edits, and deliberate clears were all masked by it. One reader per key is
+the rule; `tests/unit/product-card-quick-shop.test.ts` renders the real
+`ProductCard` and fails if any prop-shaped bypass returns.
 
 ### P1-4 — positive path validation
 

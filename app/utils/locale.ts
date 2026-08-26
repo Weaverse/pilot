@@ -13,11 +13,13 @@ import type {
  * - `language` is the market's BCP-47 identity. It builds the URL prefix, the
  *   `hreflang`, `<html lang>`, the `Intl` tag used for prices and dates, and
  *   the theme's own translation bundle. It is always a bare two-letter code.
- * - `providerLanguage` is what Shopify and Weaverse are asked for. Shopify's
- *   `LanguageCode` has script-specific members, and for Chinese only those
- *   resolve: a read-only probe of this store returned `EN` for `ZH` in CN, HK
- *   and TW, and `ZH_CN` for `ZH_CN`. Sending the BCP-47 code would serve an
- *   English catalogue under a Chinese URL.
+ * - `providerLanguage` is what **Shopify** is asked for, and nothing else.
+ *   Shopify's `LanguageCode` has script-specific members, and for Chinese only
+ *   those resolve: a read-only probe of this store returned `EN` for `ZH` in
+ *   CN, HK and TW, and `ZH_CN` for `ZH_CN`. Sending the BCP-47 code would serve
+ *   an English catalogue under a Chinese URL. Weaverse is the opposite: its
+ *   Translation Manager keys the market by its public `hreflang`, so it reads
+ *   `language` via {@link publicLanguageFor} and never this field.
  *
  * Only markets whose provider code differs from their BCP-47 code set
  * `providerLanguage`; {@link providerLanguageFor} falls back to `language`.
@@ -25,8 +27,9 @@ import type {
 export type Locale = I18nBase & {
   language: LanguageCode;
   /**
-   * Shopify/Weaverse `LanguageCode` for this market when it differs from the
-   * BCP-47 `language`. Never used to build a URL, tag, or bundle key.
+   * Shopify `LanguageCode` for this market when it differs from the BCP-47
+   * `language`. Never used to build a URL, tag, bundle key, or any Weaverse
+   * request.
    */
   providerLanguage?: LanguageCode;
   /**
@@ -460,10 +463,11 @@ export function resolveLocaleFromRequest(request: Request): Locale {
 }
 
 /**
- * The `LanguageCode` to send to Shopify and Weaverse for `locale`.
+ * The `LanguageCode` to send to Shopify for `locale`.
  *
  * Defaults to the market's BCP-47 `language`, which is already a valid enum
- * member for every other market this theme ships.
+ * member for every other market this theme ships. Weaverse takes the public
+ * identity instead — see {@link publicLanguageFor}.
  */
 export function providerLanguageFor(locale: Locale): LanguageCode {
   return locale.providerLanguage ?? locale.language;
