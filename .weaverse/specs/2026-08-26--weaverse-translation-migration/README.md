@@ -185,6 +185,28 @@ table, which answers with a real market or the default one.
 runs through the real route loaders and asserts the **resolved origin**, not
 the header string.
 
+### P1-5 — a cart carries the market it was created on
+
+Shopify does not persist the mutation's `@inContext(country:)` into the cart.
+Only `buyerIdentity.countryCode` survives to checkout, so a cart created on
+`/de-de` without one prices, taxes and ships as the default market — while the
+catalogue around it stays correctly German. The failure is invisible in the
+storefront and only appears on the order.
+
+The default is set once, on `createHydrogenContext`, from the market already
+resolved for the request. Hydrogen merges it *under* every cart create, so it
+also covers the implicit ones — `updateDiscountCodes` on a session with no cart
+creates a cart — which a per-route guard would miss. A caller that names its
+own country still wins: the cart action resolves the market from the URL or the
+`Referer`, and that resolution must survive.
+
+Two identities remain separate here as everywhere else: `countryCode` is the
+Shopify market, unrelated to the public/provider language split.
+
+*Verified by* `tests/unit/cart-market.test.ts` — the real installed Hydrogen
+cart handler, reached through the real `createHydrogenRouterContext`, with the
+outbound `cartCreate` variables read off the wire.
+
 ## Public docs + reusable skill deltas
 
 Behaviour verified by code and tests in this branch. Each item names the test

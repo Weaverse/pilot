@@ -65,6 +65,15 @@ export async function createHydrogenRouterContext(
         queryFragment: CART_QUERY_FRAGMENT,
         mutateFragment: CART_MUTATION_FRAGMENT,
       },
+      // Shopify does not persist the mutation's `@inContext(country:)` into the
+      // cart, so a cart created without a buyer identity prices and taxes as
+      // the default market no matter how correct the request context was. The
+      // default lives here because Hydrogen merges it under every cart create,
+      // including the implicit ones (`updateDiscountCodes` on a session with no
+      // cart), which a per-route guard would miss. A caller that names its own
+      // country still wins: the cart action resolves the market from the URL or
+      // the `Referer`, and that value must survive an unprefixed `/cart` POST.
+      buyerIdentity: { countryCode: locale.country },
     },
     additionalContext,
   );

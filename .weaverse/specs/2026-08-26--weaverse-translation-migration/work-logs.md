@@ -974,3 +974,100 @@ still returns `303`, still creates a cart (`set-cookie: cart=…`), and lands on
 extra parameters to the target.
 
 No new exports, no new dependencies, no second sanitizer.
+
+## 2026-08-26 — Anonymous carts lost the market before checkout
+
+The final exact-SHA review of `a9c0efa7` left one substantiated P1: a cart
+created from a localized URL reached Shopify with `buyerIdentity: {}`.
+
+Shopify does not persist the mutation's `@inContext(country:)` into the cart —
+only `buyerIdentity.countryCode` survives to checkout. So `/de-de/cart/<id>:1`
+created a US cart while every visible surface stayed German. Nothing errors,
+nothing looks wrong in the storefront; it shows up as the wrong currency, tax
+and shipping on the order.
+
+**Two paths were affected, one of them implicit:**
+
+- `routes/cart/lines.tsx` — `cart.create({ lines, discountCodes })`, then
+  straight to checkout. No buyer identity.
+- `routes/others/discount-code.tsx` — `updateDiscountCodes` on a session with
+  no cart *creates* one inside Hydrogen. The route never mentions a cart create
+  at all, which is exactly why a per-route guard was the wrong shape.
+
+`routes/cart/cart-page.tsx` already did the right thing for its own paths,
+resolving the country from the URL or the `Referer`. That behaviour had to
+survive the fix, not be replaced by it.
+
+**Fix — one line, at the seam Hydrogen already provides.** The installed
+runtime merges the context default *under* each call:
+
+```js
+p[0].buyerIdentity = { ...i, ...p[0].buyerIdentity }
+```
+
+read out of `@shopify/hydrogen/dist/production/index.js` rather than assumed.
+So `buyerIdentity: { countryCode: locale.country }` on `createHydrogenContext`
+covers explicit and implicit creates at once, and every existing per-call value
+still wins.
+
+**RED against the shipped context** — outbound `cartCreate` variables, read off
+the wire through the real `createHydrogenRouterContext`:
+
+| Path | Market | Sent |
+|---|---|---|
+| `/zh-cn/cart/<variant>:1` | CN | `null` |
+| `/zh-tw/cart/<variant>:1` | TW | `null` |
+| `/de-de/cart/<variant>:1` | DE | `null` |
+| `/zh-cn/discount/SALE` (implicit) | CN | `null` |
+| `/de-de/discount/SALE` (implicit) | DE | `null` |
+
+**Mutations, all caught (6), typecheck green under every one:**
+
+| # | Mutation | Named failure |
+|---|---|---|
+| C1 | remove the shared default (the reported defect) | buy-now market; implicit discount market |
+| C2 | empty it (`buyerIdentity: {}`) | same two |
+| C3 | hardcode the default market instead of the request's | same two |
+| C4 | invert Hydrogen's own merge order in `node_modules` | explicit identity outranks the default |
+| C5 | cart action stops sending its resolved market | cart action's market outranks the context default |
+| C6 | cart action reads `i18n.country` instead of URL/`Referer` | same |
+
+C4 mutated the library to prove the precedence test depends on the real merge
+order rather than on a coincidence; the file was restored byte-identically.
+
+**Live evidence** — same dev server, real Shopify carts, market read back from
+`/api/cart` after creation:
+
+| Path | Shipped | Fixed |
+|---|---|---|
+| `/zh-cn/cart/<variant>:1` | `US` | `CN` |
+| `/zh-tw/cart/<variant>:1` | `US` | `TW` |
+| `/de-de/cart/<variant>:1` | `US` | `DE` |
+| `/de-de/discount/FREESHIPPING` | `US` | `DE` |
+| `/zh-cn/discount/FREESHIPPING` | — | `CN` |
+
+### Two self-review corrections worth recording
+
+1. **A parallel recorder is not a recorder.** The first version ran the three
+   markets through `Promise.all`, but each run swaps the global `fetch` to
+   observe its own mutation, so one market's cart landed in another's array.
+   The markets are now driven sequentially, matching the convention already
+   used in `weaverse-locale.test.ts`.
+2. **A mutation that misses its target proves nothing.** C5 first mutated the
+   `LinesAdd` branch while the test exercised `BuyerIdentityUpdate`, and
+   "escaped". The test was fine; the mutation was aimed at unrelated code.
+   Re-aimed at the branch under test, it fails as it should.
+
+A third finding was a probe defect, not a defect: posting to an unprefixed
+`/cart` yielded `US`, because `getCountryCodeFromUrl(request.url)` resolves the
+default market rather than returning `undefined`, so the `Referer` fallback is
+never consulted. Production posts to the localized cart path
+(`usePrefixPathWithLocale`), where the same probe returns `DE`. Confirmed
+identical before and after this change, so it is not a regression and was left
+alone.
+
+`Buyer` from the Customer Account session carries only `customerAccessToken`
+and `companyLocationId` — no country — so a logged-in or B2B buyer cannot
+collide with the market default.
+
+No new exports, no new dependencies, no route-level duplication.

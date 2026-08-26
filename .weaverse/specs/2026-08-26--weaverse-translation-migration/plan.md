@@ -253,6 +253,18 @@ re-serialising an accepted target through `new URL().pathname` collapses `..`
 into a network-path reference, and falling back to `/` instead of the
 localized path moves the shopper off their market.
 
+### P1-5 — cart buyer identity defaults to the request market
+
+`createHydrogenContext` receives `buyerIdentity: { countryCode: locale.country }`.
+One wire, because Hydrogen merges the context default under every cart create
+(`{...default, ...perCall}`), covering `cart.create` and the implicit create
+inside `updateDiscountCodes`. Per-call values stay authoritative, which is what
+keeps the cart action's URL/`Referer` resolution intact.
+
+Not duplicated into the routes: a guard in `lines.tsx` and `discount-code.tsx`
+would be two more places to forget, and would still miss any future implicit
+create.
+
 ## Gates
 
 `npm run biome` · `npm run typecheck` · `npm run test:unit` ·
