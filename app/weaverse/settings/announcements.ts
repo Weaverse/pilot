@@ -4,6 +4,13 @@ export const announcementSettings = {
   group: "Scrolling announcements",
   inputs: [
     {
+      // `name` is a key into `i18n.staticContent`, not a component prop: the
+      // value is stored per language so each market gets its own copy.
+      type: "translation-key",
+      name: "announcement.topbarText",
+      label: "Content",
+    },
+    {
       type: "range",
       label: "Content gap",
       name: "topbarScrollingGap",

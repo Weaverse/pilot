@@ -1,5 +1,6 @@
 import type { ProductCollectionSortKeys } from "@shopify/hydrogen/storefront-api-types";
-import type { I18nLocale, SortParam } from "~/types/others";
+import type { SortParam } from "~/types/others";
+import type { Locale } from "~/utils/locale";
 
 export function getSortValuesFromParam(sortParam: SortParam | null): {
   sortKey: ProductCollectionSortKeys;
@@ -21,7 +22,7 @@ export function getSortValuesFromParam(sortParam: SortParam | null): {
   }
 }
 
-export function parseAsCurrency(value: number, locale: I18nLocale) {
+export function parseAsCurrency(value: number, locale: Locale) {
   return new Intl.NumberFormat(`${locale.language}-${locale.country}`, {
     style: "currency",
     currency: locale.currency,

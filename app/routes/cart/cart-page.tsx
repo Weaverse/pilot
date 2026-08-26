@@ -30,8 +30,8 @@ import {
   isCartNoteInput,
   updateCartNote,
 } from "~/utils/cart-note";
-import { COUNTRIES, getLocalePrefixFromPath } from "~/utils/const";
 import { getFeaturedProducts } from "~/utils/featured-products";
+import { resolveLocale } from "~/utils/locale";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart, storefront } = context;
@@ -233,9 +233,7 @@ function getCountryCodeFromUrl(url: string | null) {
   }
 
   try {
-    const { pathname } = new URL(url);
-    const prefix = getLocalePrefixFromPath(pathname);
-    return COUNTRIES[prefix]?.country as CountryCode | undefined;
+    return resolveLocale(new URL(url).pathname).country;
   } catch {
     return;
   }

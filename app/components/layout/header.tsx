@@ -14,7 +14,7 @@ import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
-import { DEFAULT_LOCALE } from "~/utils/const";
+import { delocalizePath } from "~/utils/locale";
 import { HeaderCountrySelector } from "./country-selector/header-country-selector";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
@@ -116,9 +116,7 @@ function loadShopifyAccountComponents(nonce?: string) {
 
 function useIsHomeCheck() {
   const { pathname } = useLocation();
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  return pathname.replace(selectedLocale.pathPrefix, "") === "/";
+  return delocalizePath(pathname) === "/";
 }
 
 export function Header() {

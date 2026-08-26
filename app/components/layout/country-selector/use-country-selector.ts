@@ -1,115 +1,71 @@
 import { CartForm } from "@shopify/hydrogen";
-import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import {
-  useFetcher,
-  useLocation,
-  useRouteLoaderData,
-  useSubmit,
-} from "react-router";
+import { useLocation, useRouteLoaderData } from "react-router";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
-import type { I18nLocale, Localizations } from "~/types/others";
-import { DEFAULT_LOCALE } from "~/utils/const";
+import {
+  DEFAULT_LOCALE,
+  delocalizePath,
+  type Locale,
+  localizePath,
+  resolveLocale,
+  SUPPORTED_LOCALES,
+} from "~/utils/locale";
 
 export type CountryGroup = {
   country: string;
   label: string;
-  locales: Array<{ path: string; locale: I18nLocale }>;
+  locales: Locale[];
 };
 
-export function useCountrySelector() {
-  const fetcher = useFetcher();
-  const submit = useSubmit();
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
-  const { pathname, search } = useLocation();
-  const cartRoute = usePrefixPathWithLocale("/cart");
-  const pathWithoutLocale = `${pathname.replace(
-    selectedLocale.pathPrefix,
-    "",
-  )}${search}`;
-
-  const countries = (fetcher.data ?? {}) as Localizations;
-  const defaultLocale = countries?.default;
-  const defaultLocalePrefix = defaultLocale
-    ? `${defaultLocale?.language}-${defaultLocale?.country}`
-    : "";
-
-  const { ref: observerRef, inView } = useInView({
-    threshold: 0,
-    triggerOnce: true,
-  });
-
-  useEffect(() => {
-    if (!inView || fetcher.data || fetcher.state === "loading") {
-      return;
-    }
-    fetcher.load("/api/countries");
-  }, [inView, fetcher]);
-
-  function handleLocaleChange({
-    redirectTo,
-    buyerIdentity,
-  }: {
-    redirectTo: string;
-    buyerIdentity: CartBuyerIdentityInput;
-  }) {
-    submit(
-      {
-        redirectTo,
-        cartFormInput: JSON.stringify({
-          action: CartForm.ACTIONS.BuyerIdentityUpdate,
-          inputs: { buyerIdentity },
-        }),
-      },
-      { method: "POST", action: cartRoute },
-    );
-  }
-
-  function getRedirectUrl(countryLocale: I18nLocale) {
-    let countryPrefixPath = "";
-    const countryLocalePrefix = `${countryLocale.language}-${countryLocale.country}`;
-    if (countryLocalePrefix !== defaultLocalePrefix) {
-      countryPrefixPath = `/${countryLocalePrefix.toLowerCase()}`;
-    }
-    return `${countryPrefixPath}${pathWithoutLocale}`;
-  }
-
-  const groupedCountries: CountryGroup[] = [];
-  const groupIndex: Record<string, number> = {};
-  for (const path of Object.keys(countries)) {
-    const locale = countries[path];
-    const key = locale.country;
-    if (groupIndex[key] === undefined) {
-      groupIndex[key] = groupedCountries.length;
-      groupedCountries.push({
+/**
+ * Markets grouped by country, English last within a country so a market's own
+ * language leads the list.
+ */
+const COUNTRY_GROUPS: CountryGroup[] = (() => {
+  const groups: CountryGroup[] = [];
+  for (const locale of SUPPORTED_LOCALES) {
+    const group = groups.find((item) => item.country === locale.country);
+    if (group) {
+      group.locales.push(locale);
+    } else {
+      groups.push({
         country: locale.country,
         label: locale.label,
-        locales: [],
+        locales: [locale],
       });
     }
-    groupedCountries[groupIndex[key]].locales.push({ path, locale });
   }
-  for (const group of groupedCountries) {
-    group.locales.sort((a, b) => {
-      if (a.locale.language === "EN" && b.locale.language !== "EN") {
-        return 1;
-      }
-      if (a.locale.language !== "EN" && b.locale.language === "EN") {
-        return -1;
-      }
-      return 0;
-    });
+  for (const group of groups) {
+    group.locales.sort(
+      (a, b) => Number(a.language === "EN") - Number(b.language === "EN"),
+    );
   }
+  return groups;
+})();
+
+export function useCountrySelector() {
+  const rootData = useRouteLoaderData<RootLoader>("root");
+  const { pathname, search } = useLocation();
+  const cartRoute = usePrefixPathWithLocale("/cart");
+  const selectedLocale =
+    rootData?.selectedLocale ?? resolveLocale(pathname) ?? DEFAULT_LOCALE;
 
   return {
     selectedLocale,
-    countries,
-    groupedCountries,
-    observerRef,
-    handleLocaleChange,
-    getRedirectUrl,
+    cartRoute,
+    groupedCountries: COUNTRY_GROUPS,
+    /**
+     * The same page in another market. Query is preserved so an active filter
+     * or search survives the switch.
+     */
+    getRedirectUrl(locale: Locale) {
+      return localizePath(delocalizePath(pathname) + search, locale);
+    },
+    buyerIdentityInput(locale: Locale) {
+      return JSON.stringify({
+        action: CartForm.ACTIONS.BuyerIdentityUpdate,
+        inputs: { buyerIdentity: { countryCode: locale.country } },
+      });
+    },
   };
 }

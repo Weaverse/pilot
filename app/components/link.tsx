@@ -9,12 +9,12 @@ import type { HTMLAttributes } from "react";
 import {
   Link as RemixLink,
   type LinkProps as RemixLinkProps,
-  useRouteLoaderData,
+  useLocation,
 } from "react-router";
 import { ScrollReveal } from "~/components/scroll-reveal";
-import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
+import { localizePath, resolveLocale } from "~/utils/locale";
 
 export const variants = cva(["inline-flex rounded-md transition-colors"], {
   variants: {
@@ -97,24 +97,15 @@ function checkExternal(to: LinkProps["to"]) {
 }
 
 function useHrefWithLocale(href: LinkProps["to"]) {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const selectedLocale = rootData?.selectedLocale;
+  const { pathname } = useLocation();
 
-  const isExternal = checkExternal(href);
-  if (isExternal) {
+  if (typeof href !== "string" || checkExternal(href)) {
     return href;
   }
-
-  let toWithLocale = href;
-  if (
-    typeof toWithLocale === "string" &&
-    selectedLocale?.pathPrefix &&
-    !toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)
-  ) {
-    toWithLocale = `${selectedLocale.pathPrefix}${href}`;
-  }
-
-  return toWithLocale;
+  // `localizePath` is idempotent and whole-segment aware, so an already
+  // localized `to` is left alone and `/collections/hi-in-picks` is never
+  // mistaken for a market prefix.
+  return localizePath(href, resolveLocale(pathname));
 }
 
 /**

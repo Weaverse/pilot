@@ -1,5 +1,5 @@
 import type { OptimisticCart } from "@shopify/hydrogen";
-import { useThemeText } from "@weaverse/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
@@ -24,7 +24,7 @@ function CartEmpty({
 }) {
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
-  const { t } = useThemeText();
+  const { t } = useTranslation();
 
   return (
     <div

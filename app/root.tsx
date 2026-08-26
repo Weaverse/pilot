@@ -4,7 +4,11 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
 import type { WeaverseImage } from "@weaverse/hydrogen";
-import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import {
+  useThemeSettings,
+  useTranslation,
+  withWeaverse,
+} from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
@@ -37,8 +41,8 @@ import {
 import { NotFound } from "./components/root/not-found";
 import { ShopifyInbox, ShopifyInboxLauncher } from "./components/shopify-inbox";
 import styles from "./styles/app.css?url";
-import { DEFAULT_LOCALE } from "./utils/const";
 import { getPublicEnv } from "./utils/env";
+import { DEFAULT_LOCALE } from "./utils/locale";
 import { cdnSize } from "./utils/pwa";
 import { GlobalStyle } from "./weaverse/style";
 
@@ -117,9 +121,12 @@ export const Layout = withWeaverse(function RootLayout({
   const data = useRouteLoaderData<RootLoader>("root");
   const publicEnv = data?.publicEnv;
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  const { t } = useTranslation();
+  // Announcement copy is theme content, not a theme setting: it is translated
+  // per language in the Translation Manager.
+  const topbarText = t("announcement.topbarText");
   const {
     topbarHeight,
-    topbarText,
     pwaEnabled,
     pwaIcon,
     pwaThemeColor,
@@ -155,7 +162,7 @@ export const Layout = withWeaverse(function RootLayout({
   }
 
   return (
-    <html lang={locale.language}>
+    <html lang={locale.hreflang} dir={locale.direction}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

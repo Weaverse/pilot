@@ -12,6 +12,7 @@ import type {
   ProductQuery,
   ShopFragment,
 } from "storefront-api.generated";
+import { alternateLinks, localizePath, resolveLocale } from "~/utils/locale";
 
 function root({
   shop,
@@ -20,12 +21,18 @@ function root({
   shop: ShopFragment;
   url: Request["url"];
 }): SeoConfig {
+  const { origin, pathname } = new URL(url);
+  // Each market's URL is its own canonical; the full set is advertised via
+  // hreflang so the markets are not read as duplicates of one another.
+  const marketHome = origin + localizePath("/", resolveLocale(pathname));
+
   return {
     title: shop?.name,
     titleTemplate: shop?.name ? `%s | ${shop.name}` : "%s",
     description: truncate(shop?.description ?? ""),
     handle: "@weaverse",
     url,
+    alternates: alternateLinks(pathname, origin),
     robots: {
       noIndex: false,
       noFollow: false,
@@ -41,10 +48,11 @@ function root({
         "https://instagram.com/weaverse.io",
         "https://youtube.com/@weaverse",
       ],
-      url,
+      // The organization's storefront for this market, not the current page.
+      url: marketHome,
       potentialAction: {
         "@type": "SearchAction",
-        target: `${url}search?q={search_term}`,
+        target: `${marketHome.replace(/\/$/, "")}/search?q={search_term}`,
         query: "required name='search_term'",
       },
     },

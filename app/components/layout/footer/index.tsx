@@ -1,5 +1,5 @@
 import { Image } from "@shopify/hydrogen";
-import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
+import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -51,7 +51,7 @@ export function Footer() {
     showDiscover,
     showAlipay,
   } = useThemeSettings<ThemeSettings>();
-  const { t } = useThemeText();
+  const { t } = useTranslation();
 
   return (
     <footer
@@ -82,9 +82,7 @@ export function Footer() {
                 <h3 className="font-medium text-base uppercase">{shopName}</h3>
               )}
               {t("footer.bio") ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: t("footer.bio") }}
-                />
+                <div dangerouslySetInnerHTML={{ __html: t("footer.bio") }} />
               ) : null}
               <SocialLinks
                 socialInstagram={socialInstagram}

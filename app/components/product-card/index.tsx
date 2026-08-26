@@ -59,16 +59,11 @@ export function ProductCard({
     colorText,
     colorTextInverse,
     badgeTextTransform,
-    newBadgeText,
     newBadgeColor,
     newBadgeDaysOld,
-    bestSellerBadgeText,
     bestSellerBadgeColor,
-    soldOutBadgeText,
     soldOutBadgeColor,
-    bundleBadgeText,
     bundleBadgeColor,
-    saleBadgeText,
     saleBadgeColor,
   } = useThemeSettings<ThemeSettings>();
 
@@ -171,7 +166,6 @@ export function ProductCard({
           {isBundle && pcardShowBundleBadge && (
             <BundleBadge
               badgeStyle={badgeStyle}
-              bundleBadgeText={bundleBadgeText}
               bundleBadgeColor={bundleBadgeColor}
             />
           )}
@@ -182,14 +176,12 @@ export function ProductCard({
                 (selectedVariant || firstVariant)?.compareAtPrice as MoneyV2
               }
               badgeStyle={badgeStyle}
-              saleBadgeText={saleBadgeText}
               saleBadgeColor={saleBadgeColor}
             />
           )}
           {pcardShowBestSellerBadge && isBestSellerProduct && (
             <BestSellerBadge
               badgeStyle={badgeStyle}
-              bestSellerBadgeText={bestSellerBadgeText}
               bestSellerBadgeColor={bestSellerBadgeColor}
             />
           )}
@@ -197,7 +189,6 @@ export function ProductCard({
             <NewBadge
               publishedAt={product.publishedAt}
               badgeStyle={badgeStyle}
-              newBadgeText={newBadgeText}
               newBadgeColor={newBadgeColor}
               newBadgeDaysOld={newBadgeDaysOld}
             />
@@ -205,7 +196,6 @@ export function ProductCard({
           {pcardShowOutOfStockBadge && (
             <SoldOutBadge
               badgeStyle={badgeStyle}
-              soldOutBadgeText={soldOutBadgeText}
               soldOutBadgeColor={soldOutBadgeColor}
             />
           )}

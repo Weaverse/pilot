@@ -2,7 +2,7 @@ import { Pagination } from "@shopify/hydrogen";
 import {
   createSchema,
   type HydrogenComponentProps,
-  useThemeText,
+  useTranslation,
 } from "@weaverse/hydrogen";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
@@ -37,7 +37,7 @@ function AllProductsGrid(props: AllProductsGridProps) {
 
   const { products } = useLoaderData<AllProductsQuery>();
   const { ref: inViewRef, inView } = useInView();
-  const { t } = useThemeText();
+  const { t } = useTranslation();
   const isInfiniteScroll = loadMoreBehavior === "infinite-scroll";
 
   return (

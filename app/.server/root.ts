@@ -6,7 +6,6 @@ import type {
   SwatchesQuery,
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import { getI18nServer } from "~/lib/i18n.server";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "./seo";
 
@@ -18,9 +17,6 @@ export async function loadCriticalData({
   request,
   context,
 }: LoaderFunctionArgs) {
-  const i18nServer = getI18nServer(context.env);
-  const i18nData = await i18nServer.getI18nData(request);
-
   const [layout, weaverseTheme] = await Promise.all([
     getLayoutData(context),
     context.weaverse.loadThemeSettings(),
@@ -48,8 +44,6 @@ export async function loadCriticalData({
     weaverseTheme,
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
-    i18nData,
-    locale: i18nData?.locale ?? storefront.i18n.language.toLowerCase(),
   };
 }
 
@@ -70,17 +64,12 @@ export function loadDeferredData(args: LoaderFunctionArgs) {
 }
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  let lang = storefront.i18n.language;
-  if (lang === "ZH") {
-    lang = "ZH_CN";
-  }
-
   const data = await storefront
     .query<LayoutQuery>(LAYOUT_QUERY, {
       variables: {
         headerMenuHandle: "main-menu",
         footerMenuHandle: "footer",
-        language: lang,
+        language: storefront.i18n.language,
       },
       cache: storefront.CacheLong(),
     })

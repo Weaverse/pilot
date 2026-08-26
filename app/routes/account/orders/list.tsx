@@ -4,7 +4,7 @@ import {
   Money,
   Pagination,
 } from "@shopify/hydrogen";
-import { useThemeText } from "@weaverse/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen";
 import type {
   CustomerOrdersFragment,
   OrderItemFragment,
@@ -143,7 +143,7 @@ function PaginatedOrders<NodesType>({
   children: (props: { node: NodesType; index: number }) => React.ReactNode;
   resourcesClassName?: string;
 }) {
-  const { t } = useThemeText();
+  const { t } = useTranslation();
   return (
     <Pagination connection={connection}>
       {({ nodes, isLoading, PreviousLink, NextLink }) => {

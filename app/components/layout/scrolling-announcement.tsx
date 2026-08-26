@@ -1,4 +1,4 @@
-import { useThemeSettings, useThemeText } from "@weaverse/hydrogen";
+import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import type { ThemeSettings } from "~/types/weaverse";
 
@@ -13,7 +13,7 @@ export function ScrollingAnnouncement() {
     topbarScrollingGap,
     topbarScrollingSpeed,
   } = themeSettings;
-  const { t } = useThemeText();
+  const { t } = useTranslation();
   const topbarText = t("announcement.topbarText");
 
   function updateStyles() {

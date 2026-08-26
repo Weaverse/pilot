@@ -1,11 +1,11 @@
-import { useThemeText } from "@weaverse/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen";
 
 export function PopularKeywords({
   onKeywordClick,
 }: {
   onKeywordClick: (keyword: string) => void;
 }) {
-  const { t } = useThemeText();
+  const { t } = useTranslation();
   const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;

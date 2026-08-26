@@ -2,54 +2,54 @@
   "badge": {
     "bestSeller": "Bestseller",
     "new": "Neu",
-    "bundle": "Paket",
+    "bundle": "Set",
     "soldOut": "Ausverkauft",
     "sale": "-[percentage]% Rabatt"
   },
   "cart": {
     "title": "Warenkorb",
     "empty": {
-      "message": "Es sieht so aus, als hätten Sie noch nichts hinzugefügt. Lassen Sie uns anfangen!",
+      "message": "Sie haben noch nichts hinzugefügt – legen wir los!",
       "startShopping": "Jetzt einkaufen",
-      "shopBestSellers": "Bestseller shoppen"
+      "shopBestSellers": "Bestseller entdecken"
     },
     "summary": {
       "orderSummary": "Bestellübersicht",
-      "estimatedTotal": "Geschätzter Gesamtbetrag:",
-      "taxesDiscountsShipping": "Steuern, Rabatte und {{link}} werden an der Kasse berechnet.",
+      "estimatedTotal": "Voraussichtliche Summe:",
+      "taxesDiscountsShipping": "Steuern, Rabatte und {{link}} werden beim Checkout berechnet.",
       "shipping": "Versandkosten",
-      "viewCart": "Warenkorb anzeigen"
+      "viewCart": "Warenkorb ansehen"
     },
     "actions": {
       "addNote": "Notiz hinzufügen",
       "discountCode": "Rabattcode hinzufügen",
-      "giftCard": "Geschenkgutschein einlösen",
-      "checkout": "Zur Kasse",
+      "giftCard": "Geschenkkarte einlösen",
+      "checkout": "Weiter zur Kasse",
       "cancel": "Abbrechen",
       "saveNote": "Notiz speichern",
       "apply": "Anwenden",
       "redeem": "Einlösen"
     },
     "messages": {
-      "noteSaved": "Warenkorb-Notiz erfolgreich gespeichert 🎉",
-      "discountApplied": "Rabattcode erfolgreich angewendet 🎉",
+      "noteSaved": "Notiz erfolgreich gespeichert 🎉",
+      "discountApplied": "Rabatt erfolgreich angewendet 🎉",
       "discountInvalid": "Ungültiger Rabattcode.",
-      "giftCardApplied": "Geschenkgutschein erfolgreich angewendet 🎉",
-      "giftCardInvalid": "Ungültiger Geschenkgutscheincode."
+      "giftCardApplied": "Geschenkkarte erfolgreich eingelöst 🎉",
+      "giftCardInvalid": "Ungültiger Geschenkkartencode."
     },
     "placeholder": {
-      "note": "Fügen Sie spezielle Anweisungen oder Notizen für Ihre Bestellung hinzu...",
+      "note": "Besondere Wünsche oder Hinweise zu Ihrer Bestellung ...",
       "discountCode": "Rabattcode",
-      "giftCardCode": "Geschenkgutscheincode"
+      "giftCardCode": "Geschenkkartencode"
     },
-    "bestSellers": "Mehr von unseren Bestsellern"
+    "bestSellers": "Mehr aus unseren Bestsellern"
   },
   "product": {
     "addToCart": "In den Warenkorb",
     "soldOut": "Ausverkauft",
     "from": "Ab",
-    "viewFullDetails": "Vollständige Details anzeigen →",
-    "quickShop": "Schnellkauf",
+    "viewFullDetails": "Alle Details ansehen →",
+    "quickShop": "Schnellansicht",
     "add": "Hinzufügen",
     "remove": "Entfernen",
     "pictureOf": "Bild von {{name}}",
@@ -58,84 +58,84 @@
   "newsletter": {
     "popup": {
       "heading": "Bleiben Sie auf dem Laufenden!",
-      "description": "Abonnieren Sie unseren Newsletter und erhalten Sie exklusive Angebote, Updates zu neuen Produkten und mehr.",
-      "buttonText": "Holen Sie sich 15% Rabatt auf Ihre erste Bestellung",
-      "placeholder": "Geben Sie Ihre E-Mail-Adresse ein"
+      "description": "Abonnieren Sie unseren Newsletter und erhalten Sie exklusive Angebote, Neuheiten und mehr.",
+      "buttonText": "15 % Rabatt auf Ihre erste Bestellung",
+      "placeholder": "E-Mail-Adresse eingeben"
     }
   },
   "search": {
     "title": "Suche",
-    "placeholder": "Suchen Sie in unserem Shop...",
-    "enterKeyword": "Geben Sie ein Stichwort ein",
-    "viewAllResults": "Alle Ergebnisse anzeigen",
-    "noResults": "Keine Ergebnisse für \"{{term}}\", versuchen Sie eine andere Suche.",
+    "placeholder": "Shop durchsuchen ...",
+    "enterKeyword": "Suchbegriff eingeben",
+    "viewAllResults": "Alle Ergebnisse ansehen",
+    "noResults": "Keine Ergebnisse für „{{term}}“, versuchen Sie eine andere Suche.",
     "noResultsShort": "Keine Ergebnisse gefunden für",
-    "trendingProducts": "Trendprodukte",
-    "problemLoadingProducts": "Es gab ein Problem beim Laden der verwandten Produkte",
+    "trendingProducts": "Beliebte Produkte",
+    "problemLoadingProducts": "Ähnliche Produkte konnten nicht geladen werden",
     "popularKeywords": "Sonnenbrillen, Hüte, Jacken, Schuhe",
     "popularSearches": "Beliebte Suchanfragen:"
   },
   "footer": {
-    "bio": "<p>Wir sind ein Team von Designern, Entwicklern und Kreativen, die leidenschaftlich gerne schöne und funktionale Produkte entwickeln.</p>",
-    "addressTitle": "UNSER SHOP",
+    "bio": "<p>Wir sind ein Team aus Designerinnen, Entwicklern und Kreativen mit einer Leidenschaft für schöne und funktionale Produkte.</p>",
+    "addressTitle": "UNSER GESCHÄFT",
     "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Kanada",
     "storeEmail": "contact@my-store.com",
     "newsletterTitle": "BLEIBEN SIE IN KONTAKT",
-    "newsletterDescription": "Neuigkeiten und Inspiration jede Woche in Ihrem Posteingang.",
-    "newsletterPlaceholder": "Bitte geben Sie Ihre E-Mail-Adresse ein",
+    "newsletterDescription": "Neuigkeiten und Inspiration – jede Woche in Ihrem Postfach.",
+    "newsletterPlaceholder": "Bitte E-Mail-Adresse eingeben",
     "newsletterButtonText": "Senden",
     "copyright": "© 2024 Weaverse. Alle Rechte vorbehalten.",
     "email": "E-Mail:",
-    "newsletterSuccess": "Vielen Dank für Ihre Anmeldung! 🎉",
+    "newsletterSuccess": "Danke für Ihre Anmeldung! 🎉",
     "newsletterError": "Bei der Anmeldung ist ein Fehler aufgetreten."
   },
   "announcement": {
-    "topbarText": "<p>Kostenloser Versand ab 50 $</p><p>Wöchentlich neue Eingänge</p><p>30 Tage unkomplizierte Rückgabe</p><p>Jetzt anmelden und 10 % Rabatt auf die erste Bestellung erhalten</p>"
+    "topbarText": "<p>Kostenloser Versand ab 50 $</p><p>Jede Woche neue Produkte</p><p>30 Tage unkompliziertes Rückgaberecht</p><p>Anmelden und 10 % auf die erste Bestellung sichern</p>"
   },
   "pagination": {
-    "loading": "Wird geladen...",
+    "loading": "Wird geladen ...",
     "loadPrevious": "↑ Vorherige laden",
     "loadMore": "↓ Mehr laden"
   },
   "accessibility": {
-    "closeCartDrawer": "Warenkorb-Schublade schließen",
+    "closeCartDrawer": "Warenkorb schließen",
     "close": "Schließen",
-    "removeGiftCard": "Geschenkgutscheincode {{code}} entfernen",
+    "removeGiftCard": "Geschenkkartencode {{code}} entfernen",
     "removeDiscount": "Rabattcode {{code}} entfernen",
-    "predictiveSearch": "Vorausschauende Suche",
-    "quickShopModal": "Schnellkauf-Modal",
+    "predictiveSearch": "Sucheingabe mit Vorschlägen",
+    "quickShopModal": "Schnellansicht-Dialog",
     "skipToContent": "Zum Inhalt springen"
   },
   "account": {
     "signOut": "Abmelden",
-    "na": "N.V.",
+    "na": "K. A.",
     "details": {
       "title": "Konto",
       "name": "Name",
       "phone": "Telefonnummer",
       "email": "E-Mail-Adresse",
-      "editLink": "Kontodetails bearbeiten"
+      "editLink": "Kontodaten bearbeiten"
     },
     "orders": {
       "title": "Bestellungen",
       "empty": "Sie haben noch keine Bestellungen aufgegeben.",
       "orderImage": "Bestellbild",
-      "more": "mehr",
+      "more": "weitere",
       "orderId": "Bestell-ID",
-      "orderNo": "Bestell-Nr.",
+      "orderNo": "Bestellnr.",
       "orderDate": "Bestelldatum",
-      "fulfillmentStatus": "Erfüllungsstatus",
-      "viewDetails": "Details anzeigen",
+      "fulfillmentStatus": "Versandstatus",
+      "viewDetails": "Details ansehen",
       "startShopping": "Jetzt einkaufen →",
-      "loading": "Wird geladen...",
+      "loading": "Wird geladen ...",
       "loadPrevious": "Vorherige laden",
       "loadMore": "Mehr laden",
-      "viewOrder": "Bestellung anzeigen →"
+      "viewOrder": "Bestellung ansehen →"
     },
     "address": {
       "title": "Adressbuch",
       "empty": "Sie haben noch keine Adressen gespeichert.",
-      "add": "Eine Adresse hinzufügen",
+      "add": "Adresse hinzufügen",
       "default": "Standard",
       "edit": "Bearbeiten",
       "remove": "Entfernen"
@@ -160,33 +160,33 @@
       "statePlaceholder": "Bundesland / Provinz (zoneCode)",
       "zip": "Postleitzahl",
       "country": "Land",
-      "countryPlaceholder": "Ländercode (Territorium)",
+      "countryPlaceholder": "Ländercode (Region)",
       "phone": "Telefon",
       "setDefault": "Als Standardadresse festlegen"
     }
   },
   "collection": {
     "productsCount": "{{count}} Produkte",
-    "filter": "Filtern",
+    "filter": "Filter",
     "filters": "Filter",
-    "closeFilters": "Filter-Schublade schließen",
+    "closeFilters": "Filter-Panel schließen",
     "sortBy": "Sortieren nach:",
     "sort": "Sortieren",
     "sortOptions": {
-      "featured": "Vorgestellt",
+      "featured": "Empfohlen",
       "relevance": "Relevanz",
-      "priceLowHigh": "Preis (niedrig bis hoch)",
-      "priceHighLow": "Preis (hoch bis niedrig)",
-      "bestSelling": "Bestseller",
+      "priceLowHigh": "Preis (aufsteigend)",
+      "priceHighLow": "Preis (absteigend)",
+      "bestSelling": "Meistverkauft",
       "newest": "Neueste"
     },
-    "clearAllFilters": "Alle Filter löschen",
-    "clearAllFiltersAriaLabel": "Alle angewendeten Filter löschen",
+    "clearAllFilters": "Alle Filter zurücksetzen",
+    "clearAllFiltersAriaLabel": "Alle aktiven Filter zurücksetzen",
     "noProductsMatchedFilters": "Keine Produkte entsprechen Ihren Filtern.",
     "priceRange": {
       "minPrice": "Mindestpreis",
       "maxPrice": "Höchstpreis",
-      "to": "Bis"
+      "to": "bis"
     }
   },
   "productDetails": {
@@ -196,93 +196,33 @@
     "learnMore": "Mehr erfahren"
   },
   "review": {
-    "writeYourReview": "Schreiben Sie Ihre Bewertung",
-    "shareExperience": "Teilen Sie Ihre Erfahrungen mit anderen Kunden",
+    "writeYourReview": "Bewertung schreiben",
+    "shareExperience": "Teilen Sie Ihre Erfahrung mit anderen Kundinnen und Kunden",
     "rating": "Bewertung",
     "yourName": "Ihr Name",
-    "enterName": "Geben Sie Ihren Namen ein",
+    "enterName": "Namen eingeben",
     "emailAddress": "E-Mail-Adresse",
-    "enterEmail": "Geben Sie Ihre E-Mail-Adresse ein",
+    "enterEmail": "E-Mail-Adresse eingeben",
     "reviewTitle": "Titel der Bewertung",
     "giveTitle": "Geben Sie Ihrer Bewertung einen Titel",
     "yourReview": "Ihre Bewertung",
-    "shareExperienceProduct": "Teilen Sie Ihre Erfahrungen mit diesem Produkt",
+    "shareExperienceProduct": "Teilen Sie Ihre Erfahrung mit diesem Produkt",
     "cancel": "Abbrechen",
     "submit": "Bewertung absenden",
-    "submitting": "Wird gesendet...",
-    "selectRating": "Bitte wählen Sie eine Bewertung aus",
-    "successTitle": "Bewertung erfolgreich eingereicht!",
-    "successMessage": "Vielen Dank für Ihr Feedback. Ihre Bewertung wird im Hintergrund verarbeitet und in Kürze veröffentlicht.",
-    "writeAnother": "Eine weitere Bewertung schreiben",
-    "errorTitle": "Einreichung fehlgeschlagen",
-    "errorMessage": "Beim Einreichen Ihrer Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "submitting": "Wird gesendet ...",
+    "selectRating": "Bitte wählen Sie eine Bewertung",
+    "successTitle": "Bewertung erfolgreich gesendet!",
+    "successMessage": "Danke für Ihr Feedback. Ihre Bewertung wird im Hintergrund verarbeitet und in wenigen Minuten veröffentlicht.",
+    "writeAnother": "Weitere Bewertung schreiben",
+    "errorTitle": "Senden fehlgeschlagen",
+    "errorMessage": "Beim Senden Ihrer Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
     "tryAgain": "Erneut versuchen",
     "imageAlt": "Bewertungsbild {{index}}",
     "imageView": "Ansehen",
-    "imageGalleryAriaLabel": "Bildergalerie zur Bewertung",
+    "imageGalleryAriaLabel": "Bildergalerie der Bewertung",
     "closeImageAriaLabel": "Bild schließen",
     "previousImageAriaLabel": "Vorheriges Bild",
     "nextImageAriaLabel": "Nächstes Bild",
     "reviewImageAlt": "Bewertungsbild"
-  },
-  "nav": {
-    "waitingList": "Warteliste",
-    "account": "Konto",
-    "toggleMenu": "Menü umschalten"
-  },
-  "contact": {
-    "phone": "Telefon:",
-    "email": "E-Mail:",
-    "address": "Adresse:"
-  },
-  "trackOrder": {
-    "errorEmpty": "Bitte geben Sie Ihre Sendungsnummer ein.",
-    "errorLoading": "Der Tracking-Service wird geladen, bitte versuchen Sie es in Kürze erneut.",
-    "title": "Verfolgen Sie Ihre Bestellung",
-    "description": "Geben Sie Ihre Sendungsnummer ein, um den Status und die Lieferdetails Ihrer SEGAI-Bestellung anzuzeigen.",
-    "placeholder": "Sendungsnummer eingeben",
-    "button": "VERFOLGEN",
-    "howToTrack": "So verfolgen Sie Ihre Bestellung",
-    "step1Part1": "Finden Sie Ihre",
-    "step1Strong": "Sendungsnummer",
-    "step1Part2": "in Ihrer Bestellbestätigungs-E-Mail",
-    "step2": "Geben Sie die Sendungsnummer in das Suchfeld oben ein",
-    "step3Part1": "Klicken Sie auf",
-    "step3Strong": "VERFOLGEN",
-    "step3Part2": "um Echtzeit-Liefer-Updates zu sehen"
-  },
-  "affiliate": {
-    "title": "Hohe Warenkorbwerte",
-    "aov": "300$+ durchschnittlicher Bestellwert",
-    "description": "SEGAI definiert Premium-Sexual-Wellness neu. Bewerben Sie sich für unser exklusives Partnernetzwerk und sichern Sie sich Ihre wachstumsorientierten Belohnungen.",
-    "tieredStructure": "Gestaffelte Provisionsstruktur",
-    "baseTier": "Basis-Stufe",
-    "baseCommission": "15% Provision",
-    "milestone50": "50+ Verkaufsmeilenstein",
-    "milestone50Commission": "22% Provision",
-    "milestone100": "100+ Verkaufsmeilenstein",
-    "milestone100Commission": "25% Provision",
-    "elitePartnership": "Elite-Partnerschaft",
-    "elitePartnershipDesc": "Für geprüfte Partner und Kreative",
-    "eliteUpTo": "BIS ZU 40%",
-    "realTimeTracking": "Echtzeit-Tracking",
-    "realTimeTrackingDesc": "Integriert mit GoAffPro für 100% transparente Konversionsdaten und Auszahlungsmanagement.",
-    "readyToStart": "Bereit anzufangen?",
-    "readyToStartDesc": "Wenn Sie bereits ein Publikum haben und bereit sind zu werben, registrieren Sie sich direkt auf unserem Tracking-Portal.",
-    "registerGoAffPro": "Auf GoAffPro registrieren",
-    "applicationTitle": "Partner-Antrag",
-    "applicationDesc": "Senden Sie Ihre Informationen, um mit dem Onboarding zu beginnen.",
-    "formFullName": "Vollständiger Name / Kanalname *",
-    "formFullNamePlaceholder": "z.B. Alex Reviews",
-    "formEmail": "E-Mail-Adresse *",
-    "formEmailPlaceholder": "alex@beispiel.de",
-    "formPhone": "Telefonnummer",
-    "formPhonePlaceholder": "+49 123 4567890",
-    "formSocialLink": "Haupt-Social-Link",
-    "formSocialLinkPlaceholder": "https://youtube.com/deinkanal",
-    "formReach": "Monatliche Reichweite / Aufrufe *",
-    "formReachPlaceholder": "z.B. 50k+ Aufrufe/Monat",
-    "formSubmit": "Antrag absenden",
-    "poweredBy": "Unterstützt durch"
   }
 }

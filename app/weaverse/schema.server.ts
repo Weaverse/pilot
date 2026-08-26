@@ -1,6 +1,7 @@
 import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
-import { COUNTRIES, DEFAULT_LOCALE } from "~/utils/const";
-import { version } from "../../package.json";
+import staticContent from "~/i18n/en.json" with { type: "json" };
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "~/utils/locale";
+import packageJson from "../../package.json" with { type: "json" };
 import { announcementSettings } from "./settings/announcements";
 import { cartSettings } from "./settings/cart";
 import { footerSettings } from "./settings/footer";
@@ -17,7 +18,7 @@ import { typographySettings } from "./settings/typography";
 
 export const themeSchema: HydrogenThemeSchema = {
   info: {
-    version,
+    version: packageJson.version,
     author: "Weaverse",
     name: "Pilot",
     authorProfilePhoto:
@@ -26,18 +27,14 @@ export const themeSchema: HydrogenThemeSchema = {
     supportUrl: "https://help.weaverse.io/",
   },
   i18n: {
+    // `translation: true` + `staticContent` are what Studio's Translation
+    // Manager reads: without them it reports "not configured" and Sync Theme
+    // Keys finds nothing. `en.json` stays the source language.
+    translation: true,
+    staticContent,
     urlStructure: "url-path",
     defaultLocale: DEFAULT_LOCALE,
-    shopLocales: Object.entries(COUNTRIES).map(
-      ([pathPrefix, { label, language, country }]) => {
-        return {
-          pathPrefix: pathPrefix === "default" ? "" : pathPrefix,
-          label,
-          language,
-          country,
-        };
-      },
-    ),
+    shopLocales: SUPPORTED_LOCALES,
   },
   settings: [
     generalSettings,

@@ -10,8 +10,7 @@ import {
   CART_MUTATION_FRAGMENT,
   CART_QUERY_FRAGMENT,
 } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/others";
-import { COUNTRIES } from "~/utils/const";
+import { resolveLocaleFromRequest } from "~/utils/locale";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
 
@@ -47,7 +46,7 @@ export async function createHydrogenRouterContext(
       cache,
       waitUntil,
       session,
-      i18n: getLocaleFromRequest(request),
+      i18n: resolveLocaleFromRequest(request),
       cart: {
         queryFragment: CART_QUERY_FRAGMENT,
         mutateFragment: CART_MUTATION_FRAGMENT,
@@ -129,20 +128,4 @@ class AppSession implements HydrogenSession {
     this.isPending = false;
     return this.#sessionStorage.commitSession(this.#session);
   }
-}
-
-function getLocaleFromRequest(request: Request): I18nLocale {
-  const url = new URL(request.url);
-  let firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
-  firstPathPart = firstPathPart.replace(".data", "");
-
-  return COUNTRIES[firstPathPart]
-    ? {
-        ...COUNTRIES[firstPathPart],
-        pathPrefix: firstPathPart,
-      }
-    : {
-        ...COUNTRIES.default,
-        pathPrefix: "",
-      };
 }

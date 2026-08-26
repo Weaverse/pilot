@@ -1,17 +1,15 @@
-import { useLocation, useRouteLoaderData } from "react-router";
-import type { RootLoader } from "~/root";
-import { DEFAULT_LOCALE, getLocalePrefixFromPath } from "~/utils/const";
+import { useLocation } from "react-router";
+import { localizePath, resolveLocale } from "~/utils/locale";
 
+/**
+ * Prefixes an app path with the active market.
+ *
+ * The market is read from the URL rather than the root loader: with a
+ * `url-path` strategy the URL *is* the market, so cart and API forms keep
+ * posting to the right one even while a loader revalidation is in flight.
+ */
 export function usePrefixPathWithLocale(path: string) {
-  const rootData = useRouteLoaderData<RootLoader>("root");
   const { pathname } = useLocation();
-  // Derive the prefix from the current URL first so cart forms post to the
-  // active locale's cart route. `||` (not `??`) lets the empty-string result
-  // for a non-locale path fall through to the loader's selected locale.
-  const pathPrefix =
-    getLocalePrefixFromPath(pathname) ||
-    rootData?.selectedLocale?.pathPrefix ||
-    DEFAULT_LOCALE.pathPrefix;
-  const suffix = path.startsWith("/") ? path : `/${path}`;
-  return pathPrefix + suffix;
+
+  return localizePath(path, resolveLocale(pathname));
 }

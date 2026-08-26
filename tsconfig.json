@@ -14,7 +14,7 @@
     "jsxImportSource": "react",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "module": "ES2022",
+    "module": "ESNext",
     "target": "ES2022",
     "strict": false,
     "allowJs": true,

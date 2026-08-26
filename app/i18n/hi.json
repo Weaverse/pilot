@@ -1,0 +1,228 @@
+{
+  "badge": {
+    "bestSeller": "सर्वाधिक बिकने वाला",
+    "new": "नया",
+    "bundle": "बंडल",
+    "soldOut": "स्टॉक ख़त्म",
+    "sale": "-[percentage]% छूट"
+  },
+  "cart": {
+    "title": "कार्ट",
+    "empty": {
+      "message": "लगता है आपने अभी कुछ नहीं जोड़ा, चलिए शुरू करते हैं!",
+      "startShopping": "ख़रीदारी शुरू करें",
+      "shopBestSellers": "बेस्ट सेलर देखें"
+    },
+    "summary": {
+      "orderSummary": "ऑर्डर सारांश",
+      "estimatedTotal": "अनुमानित कुल:",
+      "taxesDiscountsShipping": "कर, छूट और {{link}} की गणना चेकआउट पर की जाएगी।",
+      "shipping": "शिपिंग",
+      "viewCart": "कार्ट देखें"
+    },
+    "actions": {
+      "addNote": "नोट जोड़ें",
+      "discountCode": "डिस्काउंट कोड जोड़ें",
+      "giftCard": "गिफ़्ट कार्ड रिडीम करें",
+      "checkout": "चेकआउट जारी रखें",
+      "cancel": "रद्द करें",
+      "saveNote": "नोट सहेजें",
+      "apply": "लागू करें",
+      "redeem": "रिडीम करें"
+    },
+    "messages": {
+      "noteSaved": "कार्ट नोट सफलतापूर्वक सहेजा गया 🎉",
+      "discountApplied": "छूट सफलतापूर्वक लागू हुई 🎉",
+      "discountInvalid": "अमान्य डिस्काउंट कोड।",
+      "giftCardApplied": "गिफ़्ट कार्ड सफलतापूर्वक लागू हुआ 🎉",
+      "giftCardInvalid": "अमान्य गिफ़्ट कार्ड कोड।"
+    },
+    "placeholder": {
+      "note": "अपने ऑर्डर के लिए कोई विशेष निर्देश या नोट जोड़ें...",
+      "discountCode": "डिस्काउंट कोड",
+      "giftCardCode": "गिफ़्ट कार्ड कोड"
+    },
+    "bestSellers": "हमारे बेस्ट सेलर में और देखें"
+  },
+  "product": {
+    "addToCart": "कार्ट में जोड़ें",
+    "soldOut": "स्टॉक ख़त्म",
+    "from": "से शुरू",
+    "viewFullDetails": "पूरा विवरण देखें →",
+    "quickShop": "क्विक शॉप",
+    "add": "जोड़ें",
+    "remove": "हटाएँ",
+    "pictureOf": "{{name}} की तस्वीर",
+    "secondPictureOf": "{{name}} की दूसरी तस्वीर"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "जुड़े रहिए!",
+      "description": "हमारे न्यूज़लेटर की सदस्यता लें और विशेष ऑफ़र, नए उत्पादों की जानकारी और बहुत कुछ पाएँ।",
+      "buttonText": "पहले ऑर्डर पर 15% छूट पाएँ",
+      "placeholder": "अपना ईमेल दर्ज करें"
+    }
+  },
+  "search": {
+    "title": "खोजें",
+    "placeholder": "हमारे स्टोर में खोजें...",
+    "enterKeyword": "कोई कीवर्ड दर्ज करें",
+    "viewAllResults": "सभी परिणाम देखें",
+    "noResults": "\"{{term}}\" के लिए कोई परिणाम नहीं, कोई दूसरी खोज आज़माएँ।",
+    "noResultsShort": "इसके लिए कोई परिणाम नहीं मिला",
+    "trendingProducts": "ट्रेंडिंग उत्पाद",
+    "problemLoadingProducts": "संबंधित उत्पाद लोड करने में समस्या हुई",
+    "popularKeywords": "धूप का चश्मा, टोपी, जैकेट, जूते",
+    "popularSearches": "लोकप्रिय खोजें:"
+  },
+  "footer": {
+    "bio": "<p>हम डिज़ाइनरों, डेवलपर्स और रचनात्मक लोगों की एक टीम हैं, जो सुंदर और उपयोगी उत्पाद बनाने के लिए समर्पित हैं।</p>",
+    "addressTitle": "हमारा स्टोर",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, कनाडा",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "संपर्क में रहें",
+    "newsletterDescription": "हर हफ़्ते आपके इनबॉक्स में ख़बरें और प्रेरणा।",
+    "newsletterPlaceholder": "कृपया अपना ईमेल दर्ज करें",
+    "newsletterButtonText": "भेजें",
+    "copyright": "© 2024 Weaverse. सर्वाधिकार सुरक्षित।",
+    "email": "ईमेल:",
+    "newsletterSuccess": "साइन अप करने के लिए धन्यवाद! 🎉",
+    "newsletterError": "साइन अप करते समय एक त्रुटि हुई।"
+  },
+  "announcement": {
+    "topbarText": "<p>$50 से अधिक के ऑर्डर पर मुफ़्त शिपिंग</p><p>हर हफ़्ते नए उत्पाद</p><p>30 दिनों में आसान वापसी</p><p>साइन अप करें और पहले ऑर्डर पर 10% छूट पाएँ</p>"
+  },
+  "pagination": {
+    "loading": "लोड हो रहा है...",
+    "loadPrevious": "↑ पिछले लोड करें",
+    "loadMore": "↓ और लोड करें"
+  },
+  "accessibility": {
+    "closeCartDrawer": "कार्ट ड्रॉअर बंद करें",
+    "close": "बंद करें",
+    "removeGiftCard": "गिफ़्ट कार्ड कोड {{code}} हटाएँ",
+    "removeDiscount": "डिस्काउंट कोड {{code}} हटाएँ",
+    "predictiveSearch": "प्रेडिक्टिव खोज",
+    "quickShopModal": "क्विक शॉप मोडल",
+    "skipToContent": "सामग्री पर जाएँ"
+  },
+  "account": {
+    "signOut": "साइन आउट",
+    "na": "लागू नहीं",
+    "details": {
+      "title": "खाता",
+      "name": "नाम",
+      "phone": "फ़ोन नंबर",
+      "email": "ईमेल पता",
+      "editLink": "खाते का विवरण संपादित करें"
+    },
+    "orders": {
+      "title": "ऑर्डर",
+      "empty": "आपने अभी तक कोई ऑर्डर नहीं दिया है।",
+      "orderImage": "ऑर्डर की तस्वीर",
+      "more": "और",
+      "orderId": "ऑर्डर आईडी",
+      "orderNo": "ऑर्डर सं.",
+      "orderDate": "ऑर्डर की तारीख़",
+      "fulfillmentStatus": "पूर्ति की स्थिति",
+      "viewDetails": "विवरण देखें",
+      "startShopping": "ख़रीदारी शुरू करें →",
+      "loading": "लोड हो रहा है...",
+      "loadPrevious": "पिछले लोड करें",
+      "loadMore": "और लोड करें",
+      "viewOrder": "ऑर्डर देखें →"
+    },
+    "address": {
+      "title": "पता पुस्तिका",
+      "empty": "आपने अभी तक कोई पता सहेजा नहीं है।",
+      "add": "पता जोड़ें",
+      "default": "डिफ़ॉल्ट",
+      "edit": "संपादित करें",
+      "remove": "हटाएँ"
+    },
+    "edit": {
+      "title": "खाता संपादित करें",
+      "firstName": "पहला नाम",
+      "lastName": "अंतिम नाम",
+      "cancel": "रद्द करें",
+      "save": "सहेजें",
+      "saving": "सहेजा जा रहा है"
+    },
+    "addressForm": {
+      "titleAdd": "नया पता जोड़ें",
+      "titleEdit": "पता संपादित करें",
+      "company": "कंपनी",
+      "address1": "पता पंक्ति 1",
+      "address1Required": "पता पंक्ति 1*",
+      "address2": "पता पंक्ति 2",
+      "city": "शहर",
+      "state": "राज्य / प्रांत",
+      "statePlaceholder": "राज्य / प्रांत (zoneCode)",
+      "zip": "पिन / पोस्टल कोड",
+      "country": "देश",
+      "countryPlaceholder": "देश (क्षेत्र) कोड",
+      "phone": "फ़ोन",
+      "setDefault": "डिफ़ॉल्ट पते के रूप में सेट करें"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}} उत्पाद",
+    "filter": "फ़िल्टर",
+    "filters": "फ़िल्टर",
+    "closeFilters": "फ़िल्टर ड्रॉअर बंद करें",
+    "sortBy": "इसके अनुसार क्रमबद्ध करें:",
+    "sort": "क्रमबद्ध करें",
+    "sortOptions": {
+      "featured": "विशेष रूप से चुने हुए",
+      "relevance": "प्रासंगिकता",
+      "priceLowHigh": "मूल्य (कम से अधिक)",
+      "priceHighLow": "मूल्य (अधिक से कम)",
+      "bestSelling": "सर्वाधिक बिकने वाले",
+      "newest": "नवीनतम"
+    },
+    "clearAllFilters": "सभी फ़िल्टर हटाएँ",
+    "clearAllFiltersAriaLabel": "सभी लागू फ़िल्टर हटाएँ",
+    "noProductsMatchedFilters": "आपके फ़िल्टर से कोई उत्पाद मेल नहीं खाता।",
+    "priceRange": {
+      "minPrice": "न्यूनतम मूल्य",
+      "maxPrice": "अधिकतम मूल्य",
+      "to": "से"
+    }
+  },
+  "productDetails": {
+    "description": "विवरण",
+    "shipping": "शिपिंग",
+    "returns": "वापसी",
+    "learnMore": "और जानें"
+  },
+  "review": {
+    "writeYourReview": "अपनी समीक्षा लिखें",
+    "shareExperience": "अन्य ग्राहकों के साथ अपना अनुभव साझा करें",
+    "rating": "रेटिंग",
+    "yourName": "आपका नाम",
+    "enterName": "अपना नाम दर्ज करें",
+    "emailAddress": "ईमेल पता",
+    "enterEmail": "अपना ईमेल दर्ज करें",
+    "reviewTitle": "समीक्षा का शीर्षक",
+    "giveTitle": "अपनी समीक्षा को एक शीर्षक दें",
+    "yourReview": "आपकी समीक्षा",
+    "shareExperienceProduct": "इस उत्पाद के साथ अपना अनुभव साझा करें",
+    "cancel": "रद्द करें",
+    "submit": "समीक्षा सबमिट करें",
+    "submitting": "सबमिट हो रहा है...",
+    "selectRating": "कृपया एक रेटिंग चुनें",
+    "successTitle": "समीक्षा सफलतापूर्वक सबमिट हुई!",
+    "successMessage": "आपकी प्रतिक्रिया के लिए धन्यवाद। आपकी समीक्षा पृष्ठभूमि में संसाधित हो रही है और कुछ ही मिनटों में प्रकाशित हो जाएगी।",
+    "writeAnother": "एक और समीक्षा लिखें",
+    "errorTitle": "सबमिट करने में विफल",
+    "errorMessage": "आपकी समीक्षा सबमिट करते समय त्रुटि हुई। कृपया फिर से प्रयास करें।",
+    "tryAgain": "फिर से प्रयास करें",
+    "imageAlt": "समीक्षा की तस्वीर {{index}}",
+    "imageView": "देखें",
+    "imageGalleryAriaLabel": "समीक्षा की तस्वीरों की गैलरी",
+    "closeImageAriaLabel": "तस्वीर बंद करें",
+    "previousImageAriaLabel": "पिछली तस्वीर",
+    "nextImageAriaLabel": "अगली तस्वीर",
+    "reviewImageAlt": "समीक्षा की तस्वीर"
+  }
+}

@@ -1,17 +1,14 @@
 import { getSitemap } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
-import { COUNTRIES } from "~/utils/const";
+import { localizePath, SUPPORTED_LOCALES } from "~/utils/locale";
 
 // Match Shopify's sitemap pagination size so page numbers in the sitemap
 // index (`sitemap/articles/1.xml`, `.../2.xml`, ...) stay consistent.
 const ARTICLES_PER_SITEMAP_PAGE = 250;
 
-const SITEMAP_LOCALES = Object.entries(COUNTRIES).map(([path, locale]) => ({
-  hreflang: `${locale.language}-${locale.country}`,
-  pathPrefix: path === "default" ? "" : path.toLowerCase(),
-}));
-
-const SITEMAP_HREFLANG_CODES = SITEMAP_LOCALES.map((locale) => locale.hreflang);
+const SITEMAP_HREFLANG_CODES = SUPPORTED_LOCALES.map(
+  (locale) => locale.hreflang,
+);
 
 const BLOGS_QUERY = `#graphql
   query SitemapBlogs($first: Int!, $after: String) {
@@ -155,9 +152,9 @@ async function articlesSitemap({
     .map((node) => {
       const canonicalPath = `/blogs/${node.blogHandle}/${node.handle}`;
       const loc = escapeXml(`${baseUrl}${canonicalPath}`);
-      const alternates = SITEMAP_LOCALES.map(
+      const alternates = SUPPORTED_LOCALES.map(
         (locale) =>
-          `    <xhtml:link rel="alternate" hreflang="${escapeXml(locale.hreflang)}" href="${escapeXml(`${baseUrl}${locale.pathPrefix}${canonicalPath}`)}" />`,
+          `    <xhtml:link rel="alternate" hreflang="${escapeXml(locale.hreflang)}" href="${escapeXml(baseUrl + localizePath(canonicalPath, locale))}" />`,
       ).join("\n");
       return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${escapeXml(node.publishedAt)}</lastmod>\n    <changefreq>weekly</changefreq>\n${alternates}\n  </url>`;
     })
@@ -188,10 +185,11 @@ export async function loader({
     params,
     locales: SITEMAP_HREFLANG_CODES,
     getLink: ({ type, baseUrl, handle, locale }) => {
-      const configuredLocale = SITEMAP_LOCALES.find(
+      const configured = SUPPORTED_LOCALES.find(
         (item) => item.hreflang.toLowerCase() === locale?.toLowerCase(),
       );
-      return `${baseUrl}${configuredLocale?.pathPrefix ?? ""}/${type}/${handle}`;
+      const path = `/${type}/${handle}`;
+      return baseUrl + (configured ? localizePath(path, configured) : path);
     },
   });
 

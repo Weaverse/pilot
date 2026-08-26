@@ -2,10 +2,10 @@ import type { Storefront } from "@shopify/hydrogen";
 import type { ProductRecommendationsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/others";
+import type { Locale } from "~/utils/locale";
 
 export async function getRecommendedProducts(
-  storefront: Storefront<I18nLocale>,
+  storefront: Storefront<Locale>,
   productId: string,
 ) {
   const products = await storefront.query<ProductRecommendationsQuery>(

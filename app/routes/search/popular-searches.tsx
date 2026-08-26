@@ -1,9 +1,9 @@
-import { useThemeText } from "@weaverse/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen";
 import { Fragment } from "react";
 import Link from "~/components/link";
 
 export function PopularKeywords() {
-  const { t } = useThemeText();
+  const { t } = useTranslation();
   const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;

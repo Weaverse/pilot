@@ -1,0 +1,228 @@
+{
+  "badge": {
+    "bestSeller": "الأكثر مبيعًا",
+    "new": "جديد",
+    "bundle": "حزمة",
+    "soldOut": "نفدت الكمية",
+    "sale": "خصم [percentage]%"
+  },
+  "cart": {
+    "title": "سلة التسوق",
+    "empty": {
+      "message": "يبدو أنك لم تضف أي شيء بعد، لنبدأ!",
+      "startShopping": "ابدأ التسوق",
+      "shopBestSellers": "تسوّق الأكثر مبيعًا"
+    },
+    "summary": {
+      "orderSummary": "ملخص الطلب",
+      "estimatedTotal": "الإجمالي التقديري:",
+      "taxesDiscountsShipping": "تُحتسب الضرائب والخصومات و{{link}} عند إتمام الشراء.",
+      "shipping": "الشحن",
+      "viewCart": "عرض السلة"
+    },
+    "actions": {
+      "addNote": "إضافة ملاحظة",
+      "discountCode": "إضافة رمز خصم",
+      "giftCard": "استخدام بطاقة هدية",
+      "checkout": "متابعة إلى الدفع",
+      "cancel": "إلغاء",
+      "saveNote": "حفظ الملاحظة",
+      "apply": "تطبيق",
+      "redeem": "استخدام"
+    },
+    "messages": {
+      "noteSaved": "تم حفظ ملاحظة السلة بنجاح 🎉",
+      "discountApplied": "تم تطبيق الخصم بنجاح 🎉",
+      "discountInvalid": "رمز الخصم غير صالح.",
+      "giftCardApplied": "تم تطبيق بطاقة الهدية بنجاح 🎉",
+      "giftCardInvalid": "رمز بطاقة الهدية غير صالح."
+    },
+    "placeholder": {
+      "note": "أضف أي تعليمات أو ملاحظات خاصة بطلبك...",
+      "discountCode": "رمز الخصم",
+      "giftCardCode": "رمز بطاقة الهدية"
+    },
+    "bestSellers": "المزيد من منتجاتنا الأكثر مبيعًا"
+  },
+  "product": {
+    "addToCart": "أضف إلى السلة",
+    "soldOut": "نفدت الكمية",
+    "from": "ابتداءً من",
+    "viewFullDetails": "عرض التفاصيل كاملة ←",
+    "quickShop": "تسوّق سريع",
+    "add": "إضافة",
+    "remove": "إزالة",
+    "pictureOf": "صورة {{name}}",
+    "secondPictureOf": "الصورة الثانية لـ {{name}}"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "ابقَ على اطلاع!",
+      "description": "اشترك في نشرتنا البريدية واحصل على عروض حصرية وأحدث المنتجات والمزيد.",
+      "buttonText": "احصل على خصم 15% على طلبك الأول",
+      "placeholder": "أدخل بريدك الإلكتروني"
+    }
+  },
+  "search": {
+    "title": "بحث",
+    "placeholder": "ابحث في متجرنا...",
+    "enterKeyword": "أدخل كلمة مفتاحية",
+    "viewAllResults": "عرض كل النتائج",
+    "noResults": "لا توجد نتائج لـ «{{term}}»، جرّب بحثًا آخر.",
+    "noResultsShort": "لم يتم العثور على نتائج لـ",
+    "trendingProducts": "المنتجات الرائجة",
+    "problemLoadingProducts": "حدثت مشكلة أثناء تحميل المنتجات ذات الصلة",
+    "popularKeywords": "نظارات شمسية، قبعات، جاكيتات، أحذية",
+    "popularSearches": "عمليات البحث الشائعة:"
+  },
+  "footer": {
+    "bio": "<p>نحن فريق من المصممين والمطورين والمبدعين الشغوفين بصناعة منتجات جميلة وعملية.</p>",
+    "addressTitle": "متجرنا",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, كندا",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "ابقَ على تواصل",
+    "newsletterDescription": "أخبار وإلهام في بريدك الإلكتروني كل أسبوع.",
+    "newsletterPlaceholder": "يرجى إدخال بريدك الإلكتروني",
+    "newsletterButtonText": "إرسال",
+    "copyright": "© 2024 Weaverse. جميع الحقوق محفوظة.",
+    "email": "البريد الإلكتروني:",
+    "newsletterSuccess": "شكرًا لاشتراكك! 🎉",
+    "newsletterError": "حدث خطأ أثناء الاشتراك."
+  },
+  "announcement": {
+    "topbarText": "<p>شحن مجاني للطلبات التي تزيد عن 50 دولارًا</p><p>منتجات جديدة كل أسبوع</p><p>إرجاع سهل خلال 30 يومًا</p><p>اشترك واحصل على خصم 10% على طلبك الأول</p>"
+  },
+  "pagination": {
+    "loading": "جارٍ التحميل...",
+    "loadPrevious": "↑ تحميل السابق",
+    "loadMore": "↓ تحميل المزيد"
+  },
+  "accessibility": {
+    "closeCartDrawer": "إغلاق سلة التسوق",
+    "close": "إغلاق",
+    "removeGiftCard": "إزالة رمز بطاقة الهدية {{code}}",
+    "removeDiscount": "إزالة رمز الخصم {{code}}",
+    "predictiveSearch": "البحث التنبؤي",
+    "quickShopModal": "نافذة التسوق السريع",
+    "skipToContent": "الانتقال إلى المحتوى"
+  },
+  "account": {
+    "signOut": "تسجيل الخروج",
+    "na": "غير متوفر",
+    "details": {
+      "title": "الحساب",
+      "name": "الاسم",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "editLink": "تعديل بيانات الحساب"
+    },
+    "orders": {
+      "title": "الطلبات",
+      "empty": "لم تقم بأي طلب حتى الآن.",
+      "orderImage": "صورة الطلب",
+      "more": "المزيد",
+      "orderId": "معرّف الطلب",
+      "orderNo": "رقم الطلب",
+      "orderDate": "تاريخ الطلب",
+      "fulfillmentStatus": "حالة التنفيذ",
+      "viewDetails": "عرض التفاصيل",
+      "startShopping": "ابدأ التسوق ←",
+      "loading": "جارٍ التحميل...",
+      "loadPrevious": "تحميل السابق",
+      "loadMore": "تحميل المزيد",
+      "viewOrder": "عرض الطلب ←"
+    },
+    "address": {
+      "title": "دفتر العناوين",
+      "empty": "لم تحفظ أي عنوان حتى الآن.",
+      "add": "إضافة عنوان",
+      "default": "افتراضي",
+      "edit": "تعديل",
+      "remove": "إزالة"
+    },
+    "edit": {
+      "title": "تعديل الحساب",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "saving": "جارٍ الحفظ"
+    },
+    "addressForm": {
+      "titleAdd": "إضافة عنوان جديد",
+      "titleEdit": "تعديل العنوان",
+      "company": "الشركة",
+      "address1": "سطر العنوان 1",
+      "address1Required": "سطر العنوان 1*",
+      "address2": "سطر العنوان 2",
+      "city": "المدينة",
+      "state": "الولاية / المحافظة",
+      "statePlaceholder": "الولاية / المحافظة (zoneCode)",
+      "zip": "الرمز البريدي",
+      "country": "الدولة",
+      "countryPlaceholder": "رمز الدولة (المنطقة)",
+      "phone": "الهاتف",
+      "setDefault": "تعيين كعنوان افتراضي"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}} منتجًا",
+    "filter": "تصفية",
+    "filters": "عوامل التصفية",
+    "closeFilters": "إغلاق لوحة التصفية",
+    "sortBy": "ترتيب حسب:",
+    "sort": "ترتيب",
+    "sortOptions": {
+      "featured": "المميزة",
+      "relevance": "الأكثر صلة",
+      "priceLowHigh": "السعر (من الأقل إلى الأعلى)",
+      "priceHighLow": "السعر (من الأعلى إلى الأقل)",
+      "bestSelling": "الأكثر مبيعًا",
+      "newest": "الأحدث"
+    },
+    "clearAllFilters": "مسح كل عوامل التصفية",
+    "clearAllFiltersAriaLabel": "مسح كل عوامل التصفية المطبقة",
+    "noProductsMatchedFilters": "لا توجد منتجات تطابق عوامل التصفية.",
+    "priceRange": {
+      "minPrice": "أقل سعر",
+      "maxPrice": "أعلى سعر",
+      "to": "إلى"
+    }
+  },
+  "productDetails": {
+    "description": "الوصف",
+    "shipping": "الشحن",
+    "returns": "الإرجاع",
+    "learnMore": "اعرف المزيد"
+  },
+  "review": {
+    "writeYourReview": "اكتب مراجعتك",
+    "shareExperience": "شارك تجربتك مع العملاء الآخرين",
+    "rating": "التقييم",
+    "yourName": "اسمك",
+    "enterName": "أدخل اسمك",
+    "emailAddress": "البريد الإلكتروني",
+    "enterEmail": "أدخل بريدك الإلكتروني",
+    "reviewTitle": "عنوان المراجعة",
+    "giveTitle": "اختر عنوانًا لمراجعتك",
+    "yourReview": "مراجعتك",
+    "shareExperienceProduct": "شارك تجربتك مع هذا المنتج",
+    "cancel": "إلغاء",
+    "submit": "إرسال المراجعة",
+    "submitting": "جارٍ الإرسال...",
+    "selectRating": "يرجى اختيار تقييم",
+    "successTitle": "تم إرسال المراجعة بنجاح!",
+    "successMessage": "شكرًا على ملاحظاتك. تتم معالجة مراجعتك وسيتم نشرها خلال دقائق قليلة.",
+    "writeAnother": "اكتب مراجعة أخرى",
+    "errorTitle": "فشل الإرسال",
+    "errorMessage": "حدث خطأ أثناء إرسال مراجعتك. يرجى المحاولة مرة أخرى.",
+    "tryAgain": "حاول مرة أخرى",
+    "imageAlt": "صورة المراجعة {{index}}",
+    "imageView": "عرض",
+    "imageGalleryAriaLabel": "معرض صور المراجعة",
+    "closeImageAriaLabel": "إغلاق الصورة",
+    "previousImageAriaLabel": "الصورة السابقة",
+    "nextImageAriaLabel": "الصورة التالية",
+    "reviewImageAlt": "صورة المراجعة"
+  }
+}

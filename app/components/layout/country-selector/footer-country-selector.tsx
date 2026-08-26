@@ -4,20 +4,20 @@ import ReactCountryFlag from "react-country-flag";
 import { Icon } from "~/components/icon";
 import { ScrollArea } from "~/components/scroll-area";
 import { cn } from "~/utils/cn";
-import { LANGUAGE_LABELS } from "~/utils/const";
+import { MarketForm } from "./market-form";
 import { useCountrySelector } from "./use-country-selector";
 
 export function FooterCountrySelector() {
   const {
     selectedLocale,
     groupedCountries,
-    observerRef,
-    handleLocaleChange,
+    cartRoute,
     getRedirectUrl,
+    buyerIdentityInput,
   } = useCountrySelector();
 
   return (
-    <div ref={observerRef} className="grid w-80 gap-4">
+    <div className="grid w-80 gap-4">
       <Popover.Root>
         <Popover.Trigger asChild>
           <button
@@ -46,18 +46,15 @@ export function FooterCountrySelector() {
                 const isActiveCountry =
                   group.country === selectedLocale.country;
                 if (group.locales.length === 1) {
-                  const { path, locale } = group.locales[0];
+                  const locale = group.locales[0];
                   return (
-                    <Popover.Close
-                      aria-label={`Select ${locale.label}`}
-                      key={path}
-                      type="button"
-                      onClick={() =>
-                        handleLocaleChange({
-                          redirectTo: getRedirectUrl(locale),
-                          buyerIdentity: { countryCode: locale.country },
-                        })
-                      }
+                    <MarketForm
+                      key={locale.pathPrefix}
+                      locale={locale}
+                      cartRoute={cartRoute}
+                      redirectTo={getRedirectUrl(locale)}
+                      buyerIdentityInput={buyerIdentityInput(locale)}
+                      label={`Select ${locale.label}`}
                       className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-white transition hover:bg-neutral-600"
                     >
                       <ReactCountryFlag
@@ -80,7 +77,7 @@ export function FooterCountrySelector() {
                           className="ml-auto size-4 shrink-0"
                         />
                       ) : null}
-                    </Popover.Close>
+                    </MarketForm>
                   );
                 }
 
@@ -109,29 +106,23 @@ export function FooterCountrySelector() {
                       ) : null}
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8">
-                      {group.locales.map(({ path, locale }, i) => {
+                      {group.locales.map((locale, i) => {
                         const isSelected =
-                          locale.language === selectedLocale.language &&
-                          locale.country === selectedLocale.country;
+                          locale.pathPrefix === selectedLocale.pathPrefix;
                         return (
-                          <Fragment key={path}>
+                          <Fragment key={locale.pathPrefix}>
                             {i > 0 ? (
                               <span
                                 aria-hidden
                                 className="h-3.5 w-px bg-neutral-600"
                               />
                             ) : null}
-                            <Popover.Close
-                              aria-label={`Select ${locale.label} in ${locale.language}`}
-                              type="button"
-                              onClick={() =>
-                                handleLocaleChange({
-                                  redirectTo: getRedirectUrl(locale),
-                                  buyerIdentity: {
-                                    countryCode: locale.country,
-                                  },
-                                })
-                              }
+                            <MarketForm
+                              locale={locale}
+                              cartRoute={cartRoute}
+                              redirectTo={getRedirectUrl(locale)}
+                              buyerIdentityInput={buyerIdentityInput(locale)}
+                              label={`Select ${locale.label} in ${locale.languageLabel}`}
                               className={cn(
                                 "cursor-pointer underline-offset-4 transition",
                                 isSelected
@@ -139,9 +130,8 @@ export function FooterCountrySelector() {
                                   : "text-neutral-400 hover:text-white hover:underline",
                               )}
                             >
-                              {LANGUAGE_LABELS[locale.language] ??
-                                locale.language}
-                            </Popover.Close>
+                              {locale.languageLabel}
+                            </MarketForm>
                           </Fragment>
                         );
                       })}

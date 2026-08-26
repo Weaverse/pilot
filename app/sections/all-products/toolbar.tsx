@@ -1,7 +1,7 @@
 import {
   createSchema,
   type HydrogenComponentProps,
-  useThemeText,
+  useTranslation,
 } from "@weaverse/hydrogen";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
@@ -20,7 +20,7 @@ interface AllProductsToolbarProps
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { enableSort, showBreadcrumb, showProductsCount, ...rest } = props;
-  const { t } = useThemeText();
+  const { t } = useTranslation();
   let displayedCount = useProductGridStore((s) => s.displayedCount);
 
   const sortOptions: Array<{ label: string; key: SortParam }> = [

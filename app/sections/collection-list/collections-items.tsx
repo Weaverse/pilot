@@ -1,6 +1,6 @@
 import { Pagination } from "@shopify/hydrogen";
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
-import { createSchema, useThemeText } from "@weaverse/hydrogen";
+import { createSchema, useTranslation } from "@weaverse/hydrogen";
 import { useLoaderData } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
@@ -21,7 +21,7 @@ interface CollectionsItemsProps extends OverlayProps {
 
 function CollectionsItems(props: CollectionsItemsProps) {
   const { collections } = useLoaderData<CollectionsQuery>();
-  const { t } = useThemeText();
+  const { t } = useTranslation();
   const {
     prevButtonText,
     nextButtonText,

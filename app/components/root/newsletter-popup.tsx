@@ -2,31 +2,25 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
-import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
+import { useFetcher, useLocation } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
-import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
-import { DEFAULT_LOCALE } from "~/utils/const";
+import { delocalizePath } from "~/utils/locale";
 
 const POPUP_SEEN_KEY = "newsletter-popup-dismissed";
 
 export function useShouldRenderNewsletterPopup() {
   const location = useLocation();
-  const data = useRouteLoaderData<RootLoader>("root");
-  const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
   const { newsletterPopupEnabled, newsletterPopupHomeOnly } =
     useThemeSettings<ThemeSettings>();
   const isDesignMode = useWeaverseStudioCheck();
-  const pathParts = location.pathname.split("/").filter(Boolean);
-  const isHomePage =
-    pathParts.length === 0 ||
-    (pathParts.length === 1 && pathParts[0] === locale.pathPrefix.slice(1));
+  const isHomePage = delocalizePath(location.pathname) === "/";
   return (
     !isDesignMode &&
     newsletterPopupEnabled &&

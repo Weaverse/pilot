@@ -35,6 +35,12 @@ export const footerSettings = {
       defaultValue: 80,
     },
     {
+      // `name` is a key into `i18n.staticContent`, not a component prop.
+      type: "translation-key",
+      name: "footer.bio",
+      label: "Store bio",
+    },
+    {
       type: "heading",
       label: "Social links",
     },
@@ -64,7 +70,46 @@ export const footerSettings = {
     },
     {
       type: "heading",
+      label: "Store information",
+    },
+    {
+      type: "translation-key",
+      name: "footer.addressTitle",
+      label: "Title",
+    },
+    {
+      type: "translation-key",
+      name: "footer.storeAddress",
+      label: "Address",
+    },
+    {
+      type: "translation-key",
+      name: "footer.storeEmail",
+      label: "Email",
+    },
+    {
+      type: "heading",
       label: "Newsletter",
+    },
+    {
+      type: "translation-key",
+      name: "footer.newsletterTitle",
+      label: "Title",
+    },
+    {
+      type: "translation-key",
+      name: "footer.newsletterDescription",
+      label: "Description",
+    },
+    {
+      type: "translation-key",
+      name: "footer.newsletterPlaceholder",
+      label: "Input placeholder",
+    },
+    {
+      type: "translation-key",
+      name: "footer.newsletterButtonText",
+      label: "Button text",
     },
     {
       type: "range",
@@ -77,6 +122,11 @@ export const footerSettings = {
         unit: "px",
       },
       defaultValue: 450,
+    },
+    {
+      type: "translation-key",
+      name: "footer.copyright",
+      label: "Copyright text",
     },
     {
       type: "heading",

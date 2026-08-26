@@ -26,7 +26,6 @@ export default hydrogenRoutes([
     route("discount/:code", "routes/others/discount-code.tsx"),
     ...prefix("api", [
       route("cart", "routes/api/cart.ts"),
-      route("countries", "routes/api/countries.ts"),
       route("customer", "routes/api/customer.ts"),
       route("featured-products", "routes/api/featured-products.ts"),
       route("klaviyo", "routes/api/klaviyo.ts"),
