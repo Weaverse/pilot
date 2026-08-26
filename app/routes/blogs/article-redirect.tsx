@@ -1,4 +1,5 @@
 import { type LoaderFunctionArgs, redirect } from "react-router";
+import { localizePath, resolveLocaleFromRequest } from "~/utils/locale";
 
 const ARTICLE_BLOG_LOOKUP_QUERY = `#graphql
   query ArticleBlogLookup($handle: String!, $after: String) {
@@ -25,10 +26,14 @@ const ARTICLE_BLOG_LOOKUP_QUERY = `#graphql
  */
 export async function loader({
   params,
+  request,
   context: { storefront },
 }: LoaderFunctionArgs) {
   const articleHandle = params.articleHandle;
-  const localePrefix = params.locale ? `/${params.locale.toLowerCase()}` : "";
+  // `:locale?` is a URL segment, so `%5C` arrives here decoded as `\`.
+  // Interpolating it would build the `Location` out of attacker input; the
+  // canonical market table answers with a real market or the default one.
+  const locale = resolveLocaleFromRequest(request);
   if (!articleHandle) {
     throw new Response("Not found", { status: 404 });
   }
@@ -51,7 +56,7 @@ export async function loader({
     const blog = data.blogs.nodes.find((node) => node.articleByHandle);
     if (blog) {
       return redirect(
-        `${localePrefix}/blogs/${blog.handle}/${articleHandle}`,
+        localizePath(`/blogs/${blog.handle}/${articleHandle}`, locale),
         301,
       );
     }

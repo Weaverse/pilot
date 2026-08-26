@@ -897,3 +897,80 @@ providers". It asserts the Weaverse locale for 33 markets and the Shopify enum
 for the four markets whose identities can disagree. The other 29 set no
 `providerLanguage`, so their enum equals their BCP-47 code by construction —
 true, but not the same claim, and now stated as what it is.
+
+## 2026-08-26 — Open redirect in the discount route, and a sibling
+
+An exact-candidate review of `858ec504` reported a public open redirect at
+`app/routes/others/discount-code.tsx:23-34`, unchanged from base.
+
+`?redirect=%2F%5Cevil.example%2Fphish` decodes to `/\evil.example/phish`. The
+route's own check was `includes("//")`, which that value passes, so the header
+went out verbatim and the browser resolved it as `https://evil.example/phish`.
+The rule the cart action already used — `safeRedirectPath()` — rejects it. The
+route had a second, weaker copy of the idea, so the fix deletes the copy rather
+than adding a third.
+
+**RED against the shipped route, six escapes, not one:**
+
+| Payload | Shipped result |
+|---|---|
+| `?redirect=%2F%5Cevil.example%2Fphish` | `https://evil.example` |
+| `?redirect=/\evil.example/phish` | `https://evil.example` |
+| `?redirect=%5C%5Cevil.example` | `https://evil.example` |
+| `?redirect=/%09/evil.example` | `https://evil.example` |
+| `?return_to=%2F%5Cevil.example` | `https://evil.example` — the alias was unguarded too |
+| `?redirect=javascript:alert(1)` | `javascript:alert(1)?` emitted as `Location` |
+
+The same RED run also caught a behavioural bug the review had not named: the
+old `` `${param}?${searchParams}` `` template appended a bare `?` to every
+target, so `/products/hoodie#reviews` shipped as `/products/hoodie#reviews?`.
+
+**Sibling, found by sweeping every `redirect()` for request-derived targets.**
+`app/routes/blogs/article-redirect.tsx` interpolated `params.locale` into the
+`Location`. `:locale?` is a URL segment, so `%5C` arrives decoded; the real
+router was probed to confirm it (`{"locale":"\\evil.example"}`), and
+`/%5Cevil.example/articles/<handle>` resolved to `https://evil.example`. Fixed
+from the other side: the segment is resolved against the canonical market table
+instead of being interpolated. Same defect class, so it was in scope; the other
+`redirect()` callers were checked and left alone, because their targets come
+from Shopify (`primaryDomain`, `checkoutUrl`) or from the canonical table.
+
+**The trap that shaped the fix.** `..` traversal is only dangerous if the
+*code* normalises it. A verbatim `/..//evil.example` resolves one step against
+the request URL and stays on this origin — the single leading `/` pins the
+authority. But re-serialising through `new URL().pathname` collapses it to
+`//evil.example`, which does not. Both were probed directly before choosing the
+shape, and mutation M6 pins it: introducing the "tidier" `new URL()` round-trip
+turns the guard into the vulnerability, with TypeScript green.
+
+**Mutations, all caught (9), typecheck green under every one:**
+
+| # | Mutation | Named failure |
+|---|---|---|
+| M1 | restore the shipped `includes("//")` | discount refuses off-origin; refusal stays on market |
+| M2 | drop the backslash arm of the sanitizer | 3 failed |
+| M3 | drop the network-path arm | 2 failed |
+| M4 | drop the control-character arm | 1 failed |
+| M5 | re-interpolate the raw locale segment | article refuses off-origin locale |
+| M6 | re-serialise the target via `new URL().pathname` | 1 failed |
+| M7 | always join extras with `?` | 1 failed |
+| M8 | append extras after the fragment | 1 failed |
+| M9 | fall back to `/` rather than the localized path | 1 failed |
+
+M7–M9 were added by self-review: the first version of the test left the `&`
+branch, the fragment ordering, and the localized fallback unexercised.
+
+**Live evidence** — same dev server, only the fix differing:
+
+| Request | Shipped | Fixed |
+|---|---|---|
+| `/discount/SALE?redirect=%2F%5Cevil.example%2Fphish` | `http://evil.example` | `/` |
+| `/de-de/discount/SALE?redirect=%2F%5Cevil.example` | `http://evil.example` | `/de-de` |
+| `/%5Cevil.example/articles/<handle>` | `http://evil.example` | `/blogs/news/<handle>` |
+
+Behaviour preserved live: `/de-de/discount/FREESHIPPING` with a refused target
+still returns `303`, still creates a cart (`set-cookie: cart=…`), and lands on
+`/de-de`; `?redirect=/collections/all&sort=price&utm_source=ad` forwards the
+extra parameters to the target.
+
+No new exports, no new dependencies, no second sanitizer.

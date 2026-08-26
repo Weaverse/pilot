@@ -246,6 +246,13 @@ the rule; `tests/unit/product-card-quick-shop.test.ts` renders the real
 fallback. The broken `isLocalPath` (which trusted `new URL()` throwing) is
 deleted. The redirect keeps `headers` so the cart-id cookie is not lost.
 
+Applied to every public redirect sink, not only the cart action: the discount
+route's `?redirect`/`?return_to` and the legacy article redirect's `:locale?`
+segment reach the same rule. Two traps are recorded because both are silent:
+re-serialising an accepted target through `new URL().pathname` collapses `..`
+into a network-path reference, and falling back to `/` instead of the
+localized path moves the shopper off their market.
+
 ## Gates
 
 `npm run biome` · `npm run typecheck` · `npm run test:unit` ·

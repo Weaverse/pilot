@@ -1,5 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
+import { localizedPathForRequest } from "~/utils/locale";
+import { safeRedirectPath } from "~/utils/safe-redirect";
 
 /**
  * Automatically applies a discount found on the url
@@ -20,18 +22,31 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
 
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
-  let redirectParam =
-    searchParams.get("redirect") || searchParams.get("return_to") || "/";
+  const redirectParam =
+    searchParams.get("redirect") || searchParams.get("return_to");
 
-  if (redirectParam.includes("//")) {
-    // Avoid redirecting to external URLs to prevent phishing attacks
-    redirectParam = "/";
-  }
+  // Both parameters are public and unauthenticated. `URLSearchParams` decodes
+  // `%2F%5C` to `/\`, which reads as a local path but which browsers resolve
+  // as an authority, so the target is guarded by the same rule as the cart
+  // form rather than a second, weaker one. A refused target keeps the
+  // shopper's market: falling back to `/` would also drop them off `/de-de`.
+  const target = safeRedirectPath(
+    redirectParam,
+    localizedPathForRequest(request, "/"),
+  );
 
   searchParams.delete("redirect");
   searchParams.delete("return_to");
 
-  const redirectUrl = `${redirectParam}?${searchParams}`;
+  // The remaining parameters ride along to the target. The split is by hand
+  // because re-serialising through `new URL()` resolves `..` segments, which
+  // turns an accepted `/..//evil.example` back into a network-path reference.
+  const hashAt = target.indexOf("#");
+  const path = hashAt === -1 ? target : target.slice(0, hashAt);
+  const hash = hashAt === -1 ? "" : target.slice(hashAt);
+  const query = searchParams.toString();
+  const separator = query ? (path.includes("?") ? "&" : "?") : "";
+  const redirectUrl = `${path}${separator}${query}${hash}`;
 
   if (!code) {
     return redirect(redirectUrl);

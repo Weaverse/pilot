@@ -151,15 +151,39 @@ merchant value outranks the translation fallback. A persisted value still equal
 to the English `defaultValue` the schema shipped is not a merchant choice and
 must not suppress the market's translation. No editor setting is left dead.
 
-### P1-4 — cart action redirects are same-origin absolute paths only
+### P1-4 — every public redirect target is a same-origin absolute path
 
-`redirectTo` is attacker-controlled form input on a public cart mutation. A
-target is accepted only when it begins with exactly one `/` not followed by `/`
-or `\`, and carries no control characters. Everything else — network-path
-references, absolute URLs, backslash variants, relative and malformed values —
-falls back to the shopper's own localized cart. Query and fragment are
-preserved on accepted targets, and the cart-id `Set-Cookie` rides along with
-the redirect.
+Three routes build a `Location` out of request input: the cart action
+(`redirectTo` form field), the discount route (`?redirect` / `?return_to`), and
+the legacy article redirect (the `:locale?` URL segment). All three now resolve
+through one rule instead of three.
+
+A target is accepted only when it begins with exactly one `/` not followed by
+`/` or `\`, and carries no control characters. Everything else — network-path
+references, absolute URLs, backslash variants, `javascript:`, relative and
+malformed values — falls back to the shopper's own localized path. Query and
+fragment are preserved on accepted targets, and the cart-id `Set-Cookie` rides
+along with the redirect.
+
+Two properties are load-bearing and easy to lose:
+
+- **A single leading `/` is what pins the authority.** `..` segments can only
+  remove path segments, never introduce an authority, so an accepted
+  `/..//evil.example` still resolves to this origin. Re-serialising a target
+  through `new URL().pathname` *collapses* those segments and yields
+  `//evil.example` — the check turns into the attack. The discount route
+  therefore splits the fragment by hand rather than re-parsing.
+- **A refusal must stay on the shopper's market.** Falling back to `/` would
+  quietly move a `/de-de` shopper to the default market, so each caller passes
+  its own localized fallback.
+
+The article redirect takes the same rule from the other side: the locale
+segment is never interpolated. It is resolved against the canonical market
+table, which answers with a real market or the default one.
+
+*Verified by* `tests/unit/production-boundaries.test.ts` — the exploit matrix
+runs through the real route loaders and asserts the **resolved origin**, not
+the header string.
 
 ## Public docs + reusable skill deltas
 
