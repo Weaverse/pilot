@@ -1,6 +1,6 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -46,8 +46,10 @@ export async function loader({
   };
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data.seo as SeoConfig);
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as { seo?: SeoConfig })?.seo),
+  );
 };
 
 export default function Policies() {

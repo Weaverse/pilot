@@ -1,4 +1,3 @@
-import * as Popover from "@radix-ui/react-popover";
 import { Form } from "react-router";
 import type { Locale } from "~/utils/locale";
 
@@ -13,6 +12,11 @@ import type { Locale } from "~/utils/locale";
  *
  * A real form (rather than an onClick submit) keeps the control keyboard
  * operable and working without JavaScript.
+ *
+ * The submit control is a plain button, never a `Popover.Close`: closing the
+ * popover unmounts this form synchronously during the click, so the browser
+ * drops the pending native submission and the market never changes. The
+ * document navigation tears the popover down instead.
  */
 export function MarketForm({
   locale,
@@ -35,14 +39,14 @@ export function MarketForm({
     <Form method="POST" action={cartRoute} reloadDocument>
       <input type="hidden" name="redirectTo" value={redirectTo} />
       <input type="hidden" name="cartFormInput" value={buyerIdentityInput} />
-      <Popover.Close
+      <button
         type="submit"
         aria-label={label}
         lang={locale.hreflang}
         className={className}
       >
         {children}
-      </Popover.Close>
+      </button>
     </Form>
   );
 }

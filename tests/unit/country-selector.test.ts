@@ -43,6 +43,16 @@ test("switches market with a document navigation", async () => {
   expect(hook).toContain("BuyerIdentityUpdate");
 });
 
+test("the submit control outlives the popover that holds it", async () => {
+  const form = await readFile(new URL("market-form.tsx", SELECTOR_DIR), "utf8");
+
+  // `Popover.Close` unmounts this form synchronously during the click, so the
+  // browser discards the pending native submission and the market never
+  // changes. The document navigation closes the popover on its own.
+  expect(form).not.toContain("react-popover");
+  expect(form).toContain('type="submit"');
+});
+
 test("groups every market by country", () => {
   // Each configured market must be reachable from the selector exactly once,
   // and a country that sells in several languages must yield several rows.

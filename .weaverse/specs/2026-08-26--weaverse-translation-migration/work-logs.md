@@ -45,3 +45,51 @@ installed SDK.
 - Verified **no Builder change is required**: page translations are already
   baked per non-default locale in `hydrogen-project.server.ts`, and
   `/api/translation/static` already serves theme overrides.
+
+### Live smoke test on the dev server (defects found and fixed)
+
+Running the real storefront (`npm run dev`, Chromium via the repo's own
+Playwright) surfaced three defects that every static gate had passed:
+
+1. **Bundled locale JSON was dead weight.** `app/i18n/*.json` shipped in the
+   theme but nothing read it: the SDK only fetches *merchant* overrides from
+   `/api/translation/static`. A project with no published translations rendered
+   English in every market. Fixed by `app/.server/translations.ts`, which merges
+   the active market's bundled file under the merchant's overrides (deep merge,
+   so a partially-translated group does not hide its untranslated siblings).
+
+2. **`hreflang` never reached most pages.** Ten routes exported
+   `meta = ({ data }) => getSeoMeta(data.seo)`, discarding the root match that
+   carries `alternates`. Only the three `matches`-merging routes emitted them.
+   All routes now merge the root payload.
+
+3. **The market switcher could not switch markets.** The submit control was a
+   `Popover.Close`, which unmounts the form synchronously during the click, so
+   the browser dropped the pending native submission — clicking a market row did
+   nothing. Verified by driving the real popover; now a plain `<button>`.
+
+Additionally, Hydrogen renders `SeoConfig.alternates[].default: true` as
+`hrefLang="en-US-default"`, which is not a valid value. `alternateLinks` now
+emits a separate `x-default` entry instead.
+
+### Verified against the running storefront
+
+- `/`, `/de-de`, `/hi-in`, `/ar-ae` → correct `lang`/`dir` (`rtl` for `ar-AE`);
+  `/en-xx` → 404.
+- Announcement bar renders per market: `Kostenloser Versand ab 50 $` (de),
+  `شحن مجاني` (ar), `मुफ़्त शिपिंग` (hi).
+- Home/product/collection emit self-referential canonical + 10 alternates +
+  `x-default`; sitemap emits the same set.
+- Market switch from `/de-de/collections/all?sort=price` → `/hi-in/...?sort=price`
+  (query preserved, `lang` flips to `hi-IN`).
+- Cart buyer identity + checkout follow the market: `en-gb` → `GB`/`GBP 111.0`,
+  `ar-ae` → `AE`/`VND 3939000.0`, both redirecting to `checkout.weaverse.dev`.
+
+### Storefront-level limits (Shopify Admin config, not code)
+
+`localization.availableCountries` on the dev store returns 12 countries with
+only `EN`/`VI`/`ZH_CN` languages, and only US (USD) and GB (GBP) have their own
+currency — every other market resolves to VND. So `/de-de` prices in USD and
+`/ar-ae` in VND on this store. The theme passes the market through correctly
+(`/en-gb` renders GBP, `/ar-ae` cart is `AE`); the missing markets/languages are
+Admin configuration, listed in the handoff manifest.

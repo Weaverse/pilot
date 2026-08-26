@@ -1,6 +1,6 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { data } from "react-router";
 import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -52,8 +52,12 @@ export const loader = async (args: LoaderFunctionArgs) => {
   return data({ blog, articles, seo, weaverseData });
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
-  return getSeoMeta(loaderData?.seo as SeoConfig);
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
+  // Merge the root match so the market's canonical + hreflang alternates ride
+  // along; a route-only payload would drop them.
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as { seo?: SeoConfig })?.seo),
+  );
 };
 
 export default function Blogs() {

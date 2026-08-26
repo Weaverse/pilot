@@ -1,10 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import {
-  alternateLinks,
-  DEFAULT_LOCALE,
-  SUPPORTED_LOCALES,
-} from "../../app/utils/locale";
+import { alternateLinks, SUPPORTED_LOCALES } from "../../app/utils/locale";
 
 const ORIGIN = "https://pilot.weaverse.dev";
 
@@ -20,15 +16,19 @@ test("emits one alternate per market plus x-default", () => {
     });
   }
 
-  // Exactly one x-default, pointing at the default market.
-  const defaults = alternates.filter((alternate) => alternate.default);
+  // Exactly one x-default, pointing at the default market. It must be a
+  // literal `x-default`: Hydrogen's `default: true` flag renders
+  // `hreflang="en-US-default"`, which no search engine recognises.
+  const defaults = alternates.filter(
+    (alternate) => alternate.language === "x-default",
+  );
   expect(defaults).toEqual([
-    {
-      language: DEFAULT_LOCALE.hreflang,
-      url: `${ORIGIN}/products/hoodie`,
-      default: true,
-    },
+    { language: "x-default", url: `${ORIGIN}/products/hoodie` },
   ]);
+  // No market tag may carry the suffix, i.e. never `en-US-default`.
+  expect(
+    alternates.filter((alternate) => alternate.language.endsWith("-default")),
+  ).toEqual([{ language: "x-default", url: `${ORIGIN}/products/hoodie` }]);
 });
 
 test("alternates are built from a market-neutral path", () => {
@@ -52,11 +52,7 @@ test("alternates drop the query string", () => {
 test("the home page alternates have no trailing slash mismatch", () => {
   const alternates = alternateLinks("/", ORIGIN);
 
-  expect(alternates).toContainEqual({
-    language: DEFAULT_LOCALE.hreflang,
-    url: ORIGIN,
-    default: true,
-  });
+  expect(alternates).toContainEqual({ language: "x-default", url: ORIGIN });
   for (const locale of SUPPORTED_LOCALES) {
     expect(alternates).toContainEqual({
       language: locale.hreflang,

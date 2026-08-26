@@ -1,7 +1,7 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
 import type { RouteLoaderArgs } from "@weaverse/hydrogen";
-import type { MetaFunction } from "react-router";
+import type { MetaArgs } from "react-router";
 import type { ArticleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
@@ -76,8 +76,10 @@ export async function loader(args: RouteLoaderArgs) {
   };
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data?.seo as SeoConfig);
+export const meta = ({ matches }: MetaArgs<typeof loader>) => {
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as { seo?: SeoConfig })?.seo),
+  );
 };
 
 export default function Article() {

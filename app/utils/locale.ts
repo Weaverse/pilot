@@ -246,7 +246,6 @@ export function delocalizePath(path: string): string {
 export type AlternateLink = {
   language: string;
   url: string;
-  default?: boolean;
 };
 
 /**
@@ -274,10 +273,9 @@ export function alternateLinks(path: string, origin: string): AlternateLink[] {
       language: locale.hreflang,
       url: href(locale),
     })),
-    {
-      language: DEFAULT_LOCALE.hreflang,
-      url: href(DEFAULT_LOCALE),
-      default: true,
-    },
+    // Emitted as a literal `x-default` language rather than via Hydrogen's
+    // `default: true` flag, which renders `hreflang="en-US-default"` — not a
+    // value any search engine recognises.
+    { language: "x-default", url: href(DEFAULT_LOCALE) },
   ];
 }
