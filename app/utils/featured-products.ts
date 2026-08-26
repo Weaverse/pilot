@@ -11,8 +11,6 @@ export async function getFeaturedProducts(
     {
       variables: {
         pageBy: 16,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
       },
     },
   );

@@ -522,3 +522,79 @@ stops passing the store (3); truthiness instead of own-property presence (3);
 
 The prototype case is reachable: the store's snapshot is a plain object, so
 `"constructor" in snapshot` is `true`.
+
+## 2026-08-26 — Third review of `1c9db169`: the split leaked back through query variables
+
+An exact-SHA review BLOCKED `1c9db169` on one P1, and it was right.
+
+`weaverseStorefront()` deliberately puts the market's **public** identity on
+`weaverse.storefront.i18n`, because the installed client derives its Translation
+Manager locale from it. Six loaders then read that same object and copied
+`language`/`country` into their own query variables. Hydrogen fills
+`$country`/`$language` from the storefront client's closure **only when the
+caller leaves them absent** (`index.js`: `!P?.language && /\$language/.test(K)`),
+so those explicit variables won — sending bare `ZH` to Shopify.
+
+`ZH` is a valid enum member that resolves to English, so nothing errored: a
+Chinese shopper would get correct Chinese theme copy over an English catalogue.
+
+### RED, at the real boundary
+
+`tests/unit/provider-locale-leak.test.ts` builds the real request context,
+calls the real loaders, and inspects the Storefront POST body and the
+translation URL separately:
+
+| Market | Shopify sent | Required | Weaverse sent |
+| --- | --- | --- | --- |
+| `/zh-hk` | `ZH` | `ZH_TW` | `zh-hk` ✓ |
+| `/zh-cn` | `ZH` | `ZH_CN` | `zh-cn` ✓ |
+| `/zh-tw` | `ZH` | `ZH_TW` | `zh-tw` ✓ |
+
+The translation half was already correct, so this confirmed the two identities
+had to be separated at the *request*, not just in the object.
+
+### GREEN — one rule, not six patches
+
+The explicit variables were redundant: Hydrogen already injects both from the
+closure, which holds the provider enum. Deleting them is the whole fix. A
+runtime probe confirms the injected values are `{"country":"TW","language":
+"ZH_TW"}`.
+
+The review named four consumers. Two more had the identical defect —
+`sections/single-product/loader.ts` and `sections/hotspots/item.tsx` — found by
+auditing every `storefront.i18n.language` callsite. Both are fixed and covered,
+since the guard should hold for the flow rather than the reported instances.
+Route loaders reading `context.storefront` are untouched: that object still
+carries the enum, which is correct for them.
+
+### Live evidence
+
+Same server, same URL, only the fix differing — the `<h6>` grid the list route
+renders from its own Shopify query:
+
+- **with the leak:** `The Full Catalog`
+- **with the fix:** `完整目录`, `外壳`, `优质抓绒`
+
+A direct Storefront probe pins why this is invisible without rendering:
+`ZH`/`CN` returns `"The Full Catalog"`, `ZH_CN`/`CN` returns `"完整目录"` — same
+200, no error.
+
+`/zh-hk` and `/zh-tw` still render an English catalogue. That is provider
+configuration, not code: `availableLanguages` is `EN VI ZH_CN`, so `ZH_TW` is
+accepted and silently falls back. Unchanged prerequisite.
+
+**Mutations, all caught:** each of the five loaders re-adding its explicit
+`language` (1 fail each, 2 for featured-collections); Weaverse losing the
+public locale (3 fail) — proving the translation half is still guarded.
+
+### Two harness defects fixed on the way
+
+- `packages: "external"` (a first attempt at the media-element build failure)
+  moved `react-use/esm/useScroll` from a bundler concern to an unresolvable
+  runtime import, breaking three cart tests. Packages are bundled again; only
+  genuinely-missing specifiers are stubbed, via a plugin whose stub throws if
+  anything ever calls it.
+- A mutation-restore loop keyed backups by basename, so `featured-products/
+  index.tsx` overwrote `featured-collections/index.tsx` and corrupted the
+  working tree (duplicate component type, stale codegen). Restored from git and
+  reapplied; backups are now keyed by full path.

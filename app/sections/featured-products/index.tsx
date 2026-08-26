@@ -70,18 +70,17 @@ export const loader = async ({
   data,
   weaverse,
 }: ComponentLoaderArgs<FeaturedProductsSectionData>) => {
-  const { language, country } = weaverse.storefront.i18n;
   const { selectionMethod = "auto", collection, products } = data;
 
   if (selectionMethod === "collection" && collection?.handle) {
     const result = await weaverse.storefront.query<CollectionProductsQuery>(
       COLLECTION_PRODUCTS_QUERY,
       {
-        variables: {
-          country,
-          language,
-          handle: collection.handle,
-        },
+        // `$country`/`$language` are Hydrogen's to fill, from the storefront
+        // client's closure — the Shopify provider enum. `weaverse.storefront.
+        // i18n.language` is the market's public code, and bare `ZH` resolves
+        // to English.
+        variables: { handle: collection.handle },
       },
     );
     return {
@@ -98,11 +97,7 @@ export const loader = async ({
     const { nodes } = await weaverse.storefront.query<ProductsByIdsQuery>(
       PRODUCTS_BY_IDS_QUERY,
       {
-        variables: {
-          country,
-          language,
-          ids,
-        },
+        variables: { ids },
       },
     );
     return {

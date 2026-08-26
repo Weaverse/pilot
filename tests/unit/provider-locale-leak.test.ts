@@ -1,0 +1,210 @@
+import { expect, test } from "@playwright/test";
+import type { AppLoadContext } from "react-router";
+import { createHydrogenRouterContext } from "../../app/.server/context";
+import { getFeaturedProducts } from "../../app/utils/featured-products";
+import {
+  installWorkerCaches,
+  recordFetches,
+  TEST_ENV,
+  TEST_EXECUTION_CONTEXT,
+} from "../support/hydrogen-env";
+import { loadAppModule } from "../support/render-app";
+
+/**
+ * The two identities must stay apart at the boundary that actually issues
+ * requests, not merely in the object that holds them.
+ *
+ * `weaverse.storefront.i18n` carries the market's public identity because the
+ * installed client derives its Translation Manager locale from it. That object
+ * is also what section loaders reach for, so any query that copies
+ * `i18n.language` into its own variables sends `ZH` to Shopify — and this
+ * store resolves bare `ZH` to English, so `/zh-cn` would serve an English
+ * catalogue underneath correct Chinese theme copy.
+ *
+ * Hydrogen fills `$country`/`$language` from the storefront client's own
+ * closure, but only for variables the caller left absent, so an explicit
+ * variable silently wins. These assert what leaves the process: the `language`
+ * in the Storefront POST body, and the `locale` in the translation URL.
+ */
+
+type Sent = { shopify: string[]; translation: string[] };
+
+/** Everything `run` sends, split by which provider it was addressed to. */
+async function sentBy(
+  pathPrefix: string,
+  run: (context: AppLoadContext) => Promise<unknown>,
+): Promise<Sent> {
+  const restoreCaches = installWorkerCaches();
+  const shopify: string[] = [];
+
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
+    const body = init?.body;
+    if (typeof body === "string" && body.includes("$language")) {
+      const { variables } = JSON.parse(body) as {
+        variables?: { language?: string };
+      };
+      if (variables?.language) {
+        shopify.push(variables.language);
+      }
+    }
+    return new Response(JSON.stringify({ data: {} }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  }) as typeof globalThis.fetch;
+
+  let translation: string[] = [];
+  try {
+    const context = (await createHydrogenRouterContext(
+      new Request(`https://shop.test${pathPrefix}/`),
+      TEST_ENV,
+      TEST_EXECUTION_CONTEXT,
+    )) as unknown as AppLoadContext;
+
+    // The translation fetch is recorded separately: `recordFetches` replaces
+    // the same global, so the two observations cannot be interleaved.
+    //
+    // The stubbed response is empty, so a loader may well throw while shaping
+    // it. That happens strictly after the request went out, and the request is
+    // what is under test.
+    await run(context).catch(() => undefined);
+    globalThis.fetch = realFetch;
+
+    const { urls } = await recordFetches(() =>
+      context.weaverse.loadThemeSettings(),
+    );
+    translation = urls
+      .filter((url) => url.includes("/api/translation/static"))
+      .map((url) => new URL(url).searchParams.get("locale") ?? "");
+  } finally {
+    globalThis.fetch = realFetch;
+    restoreCaches();
+  }
+
+  return { shopify, translation };
+}
+
+test("featured collections query Shopify with the provider language", async () => {
+  const { loader } = await loadAppModule<{
+    loader: (args: { data: unknown; weaverse: unknown }) => Promise<unknown>;
+  }>("sections/featured-collections/index.tsx");
+
+  const sent = await sentBy("/zh-hk", (context) =>
+    loader({
+      data: { collections: [{ id: "1" }] },
+      weaverse: context.weaverse,
+    }),
+  );
+
+  expect({
+    shopify: [...new Set(sent.shopify)],
+    translation: [...new Set(sent.translation)],
+  }).toEqual({ shopify: ["ZH_TW"], translation: ["zh-hk"] });
+});
+
+test("featured products query Shopify with the provider language", async () => {
+  const { loader } = await loadAppModule<{
+    loader: (args: { data: unknown; weaverse: unknown }) => Promise<unknown>;
+  }>("sections/featured-products/index.tsx");
+
+  const sent = await sentBy("/zh-cn", (context) =>
+    loader({
+      data: { selectionMethod: "collection", collection: { handle: "all" } },
+      weaverse: context.weaverse,
+    }),
+  );
+
+  expect({
+    shopify: [...new Set(sent.shopify)],
+    translation: [...new Set(sent.translation)],
+  }).toEqual({ shopify: ["ZH_CN"], translation: ["zh-cn"] });
+});
+
+test("the collection list route queries with the provider language", async () => {
+  const { loader } = await loadAppModule<{
+    loader: (args: { context: unknown; request: Request }) => Promise<unknown>;
+  }>("routes/collections/list.tsx");
+
+  const sent = await sentBy("/zh-tw", (context) =>
+    loader({
+      context,
+      // The route reads pagination off the request; without it the loader
+      // throws before querying and the test would assert on nothing.
+      request: new Request("https://shop.test/zh-tw/collections"),
+    }),
+  );
+
+  expect({
+    shopify: [...new Set(sent.shopify)],
+    translation: [...new Set(sent.translation)],
+  }).toEqual({ shopify: ["ZH_TW"], translation: ["zh-tw"] });
+});
+
+test("featured products helper queries with the provider language", async () => {
+  const sent = await sentBy("/zh-hk", (context) =>
+    getFeaturedProducts(context.storefront),
+  );
+
+  expect([...new Set(sent.shopify)]).toEqual(["ZH_TW"]);
+});
+
+test("every Weaverse section loader queries with the provider language", async () => {
+  // The four consumers above are the ones a review named. These are the rest
+  // of the same class — a loader reading `weaverse.storefront.i18n` and
+  // copying it into its own query variables — so the guard covers the flow
+  // rather than the reported instances.
+  const cases = [
+    {
+      entry: "sections/single-product/loader.ts",
+      data: { product: { handle: "hoodie" } },
+    },
+    {
+      entry: "sections/hotspots/item.tsx",
+      data: { product: { handle: "hoodie" } },
+    },
+  ];
+
+  const sent: { entry: string; shopify: string[] }[] = [];
+  for (const { entry, data } of cases) {
+    const { loader } = await loadAppModule<{
+      loader: (args: { data: unknown; weaverse: unknown }) => Promise<unknown>;
+    }>(entry);
+
+    const observed = await sentBy("/zh-hk", (context) =>
+      loader({ data, weaverse: context.weaverse }),
+    );
+    sent.push({ entry, shopify: [...new Set(observed.shopify)] });
+  }
+
+  expect(sent).toEqual([
+    { entry: "sections/single-product/loader.ts", shopify: ["ZH_TW"] },
+    { entry: "sections/hotspots/item.tsx", shopify: ["ZH_TW"] },
+  ]);
+});
+
+test("no Shopify query ever collapses to the bare public language", async () => {
+  // `ZH` is a valid enum member that this store silently resolves to English,
+  // so a leak is invisible in a response and shows up only as an untranslated
+  // catalogue. Every Chinese market is checked, not just a spot case.
+  const { loader } = await loadAppModule<{
+    loader: (args: { data: unknown; weaverse: unknown }) => Promise<unknown>;
+  }>("sections/featured-collections/index.tsx");
+
+  const leaked: { market: string; language: string }[] = [];
+  for (const market of ["/zh-cn", "/zh-hk", "/zh-tw"]) {
+    const sent = await sentBy(market, (context) =>
+      loader({
+        data: { collections: [{ id: "1" }] },
+        weaverse: context.weaverse,
+      }),
+    );
+    for (const language of sent.shopify) {
+      if (language === "ZH") {
+        leaked.push({ market, language });
+      }
+    }
+  }
+
+  expect(leaked).toEqual([]);
+});

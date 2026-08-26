@@ -169,6 +169,15 @@ its own closure, so Shopify still receives `ZH_CN`/`ZH_TW`. It takes the market
 as an argument rather than deriving it, because the storefront's `i18n` has
 already had `language` replaced with the provider enum.
 
+That split only holds if nothing re-reads `weaverse.storefront.i18n` into query
+variables. Hydrogen fills `$country`/`$language` from the closure *only when
+absent*, so the six Weaverse-scoped loaders that passed them explicitly
+(`featured-collections`, `featured-products`, `collections/list`,
+`utils/featured-products`, `single-product`, `hotspots`) were overriding the
+provider enum with the public code. All six now omit both variables. Route
+loaders that read `context.storefront` are unaffected — that object still
+carries the enum — and are left alone.
+
 `Intl` tags move off the provider enum onto `hreflang`, because `ZH_CN-CN` is
 not a BCP-47 tag and `Intl` throws on it — prices (`parseAsCurrency`) and blog
 dates were both building tags that way.

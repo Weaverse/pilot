@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { build } from "esbuild";
+import { build, type Plugin } from "esbuild";
 import {
   type ComponentType,
   createElement,
@@ -35,6 +35,37 @@ export async function loadComponent<T = Record<string, ComponentType<never>>>(
 }
 
 /**
+ * Resolves imports that exist in the dependency graph but not on disk.
+ *
+ * `jsonp` declares `debug@^2` while the tree hoists only a newer major, and
+ * several media elements declare optional peers that were never installed.
+ * The app never reaches any of them on the paths under test — they are pulled
+ * in by side-effect imports — but esbuild fails the whole bundle on an
+ * unresolved specifier. The stub throws if one is ever actually called, so a
+ * real dependency on them cannot hide behind this.
+ */
+const stubUnresolvable: Plugin = {
+  name: "stub-unresolvable",
+  setup(build) {
+    const missing = /^(debug|custom-media-element|super-media-element)(\/|$)/;
+    build.onResolve({ filter: missing }, (args) => ({
+      path: args.path,
+      namespace: "stub-unresolvable",
+    }));
+    // CommonJS: esbuild then satisfies any named import without the stub
+    // having to enumerate exports it cannot know.
+    build.onLoad({ filter: /.*/, namespace: "stub-unresolvable" }, (args) => ({
+      contents: `module.exports = new Proxy(function () {}, {
+        get: () => {
+          throw new Error(${JSON.stringify(`${args.path} is stubbed in tests but was used`)});
+        },
+      });`,
+      loader: "js",
+    }));
+  },
+};
+
+/**
  * Compiles any app module and returns it.
  *
  * Route modules import UI chains that use extensionless deep paths — legal for
@@ -50,6 +81,13 @@ export async function loadAppModule<T>(entry: string): Promise<T> {
     platform: "neutral",
     jsx: "automatic",
     target: "es2022",
+    resolveExtensions: [".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
+    alias: { "~": new URL(".", APP_DIR).pathname },
+    plugins: [stubUnresolvable],
+    // Packages stay bundled: some ship extensionless deep imports (`react-use/
+    // esm/useScroll`) that a bundler resolves and Node's ESM loader does not,
+    // so externalising everything moves the failure to runtime. Only the
+    // packages that break the bundle are excluded below.
     external: [
       "react",
       "react/jsx-runtime",
@@ -61,8 +99,6 @@ export async function loadAppModule<T>(entry: string): Promise<T> {
       "@radix-ui/*",
       "clsx",
     ],
-    resolveExtensions: [".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
-    alias: { "~": new URL(".", APP_DIR).pathname },
     logLevel: "silent",
   });
 

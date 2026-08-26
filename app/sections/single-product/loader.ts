@@ -13,7 +13,6 @@ export let loader = async ({
   weaverse,
 }: ComponentLoaderArgs<SingleProductData>) => {
   let { storefront } = weaverse;
-  let { language, country } = storefront.i18n;
   let handle = data?.product?.handle;
 
   if (!handle) {
@@ -23,12 +22,16 @@ export let loader = async ({
   let [result, variantsResult] = await Promise.all([
     storefront
       .query<ProductQuery>(PRODUCT_QUERY, {
-        variables: { handle, selectedOptions: [], country, language },
+        // `$country`/`$language` come from the storefront client's closure,
+        // which holds the Shopify provider enum. `weaverse.storefront.i18n` is
+        // deliberately the market's public identity for the Translation
+        // Manager, and bare `ZH` resolves to English.
+        variables: { handle, selectedOptions: [] },
       })
       .catch(() => null),
     storefront
       .query<ProductVariantsQuery>(PRODUCT_VARIANTS_QUERY, {
-        variables: { handle, country, language },
+        variables: { handle },
       })
       .catch(() => null),
   ]);

@@ -94,11 +94,13 @@ export const loader = async (args: ComponentLoaderArgs<HotspotsItemData>) => {
   }
   const productHandle = data.product.handle;
   const { product } = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
+    // `$country`/`$language` come from the storefront client's closure, which
+    // holds the Shopify provider enum. `weaverse.storefront.i18n` is
+    // deliberately the market's public identity for the Translation Manager,
+    // and bare `ZH` resolves to English.
     variables: {
       handle: productHandle,
       selectedOptions: [],
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
     },
   });
 

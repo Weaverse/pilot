@@ -48,20 +48,18 @@ export const loader = async ({
   data,
   weaverse,
 }: ComponentLoaderArgs<FeaturedCollectionsData>) => {
-  const { language, country } = weaverse.storefront.i18n;
   const ids = data.collections?.map(
     (collection) => `gid://shopify/Collection/${collection.id}`,
   );
   if (ids?.length) {
+    // `$country`/`$language` are left to Hydrogen, which fills them from the
+    // storefront client's own closure — the Shopify provider enum. Passing
+    // them explicitly would send `weaverse.storefront.i18n.language`, which is
+    // the market's public code because Weaverse keys translations by it, and
+    // bare `ZH` resolves to English.
     const { nodes } = await weaverse.storefront.query<CollectionsByIdsQuery>(
       COLLECTIONS_QUERY,
-      {
-        variables: {
-          country,
-          language,
-          ids,
-        },
-      },
+      { variables: { ids } },
     );
     return nodes.filter(Boolean);
   }

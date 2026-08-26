@@ -20,8 +20,6 @@ export const loader = async (args: RouteLoaderArgs) => {
     storefront.query<CollectionsQuery>(COLLECTIONS_QUERY, {
       variables: {
         ...getPaginationVariables(request, { pageBy: 16 }),
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
       },
     }),
     weaverse.loadPage({
