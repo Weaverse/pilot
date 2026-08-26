@@ -37,7 +37,12 @@ export const loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
 };
 
 const OUR_TEAM_QUERY = `#graphql
-  query OurTeam ($type: String!, $first: Int) {
+  query OurTeam(
+    $country: CountryCode
+    $language: LanguageCode
+    $type: String!
+    $first: Int
+  ) @inContext(country: $country, language: $language) {
     metaobjects(type: $type, first: $first) {
       nodes {
         fields {

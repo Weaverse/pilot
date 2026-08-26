@@ -592,6 +592,13 @@ accepted and silently falls back. Unchanged prerequisite.
 `language` (1 fail each, 2 for featured-collections); Weaverse losing the
 public locale (3 fail) — proving the translation half is still guarded.
 
+Two of those were later shown to be weaker than this reads. The
+featured-products checks exercised one selection mode and passed the helper the
+wrong client, so the exact mutations escaped; see the 2026-08-26 entries below.
+The class of defect was also narrower than "explicit `language`": a query that
+declares no locale variables at all is answered in the shop's default language,
+which no mutation of that shape would have caught.
+
 ### Two harness defects fixed on the way
 
 - `packages: "external"` (a first attempt at the media-element build failure)
@@ -817,3 +824,76 @@ the gates.
 The fourth row is a sibling I found by sweeping helpers that take a storefront:
 `getRecommendedProducts`. It was already correct, but its guard had the same
 single-client weakness, so it would not have caught a regression. Hardened.
+
+## 2026-08-26 — Seventh review of `2fc8d3c3`: Our Team never asked for a market
+
+### The defect
+
+`sections/our-team/index.tsx` queried Shopify through the Weaverse client, and
+its document declared neither `$country`/`$language` nor `@inContext`. Every
+sweep so far looked for the *opposite* mistake — a caller forwarding the public
+locale — so a query that asked for nothing passed each one.
+
+The installed client injects locale only into documents that declare it:
+
+```js
+!P?.language && /\$language/.test(K) && (A.language = n.language)
+```
+
+So this path reached Shopify with no market at all and was answered in the
+shop's default language. Translatable Our Team metaobject fields — names,
+roles, bios — came back in the default language on every localized storefront,
+with a 200 and nothing in any log.
+
+The fix is four lines at the existing query seam: declare the two variables and
+apply `@inContext`. Nothing is forwarded explicitly, so the storefront closure
+supplies the provider enum exactly as it does for every other query.
+
+### Evidence
+
+`tests/unit/provider-locale-leak.test.ts` executes the real loader against the
+real request context and inspects the request body: the document text *and* the
+variables it carried.
+
+| Market | Before | After |
+| --- | --- | --- |
+| `/zh-cn` | declares nothing, sends `null` | `ZH_CN` / `CN` |
+| `/zh-tw` | declares nothing, sends `null` | `ZH_TW` / `TW` |
+| `/de-de` control | declares nothing, sends `null` | `DE` / `DE` |
+
+Asserting both halves matters: variables alone would pass a document that
+hardcoded them, and declarations alone would pass a document Hydrogen never
+filled.
+
+**Mutations, all RED with TypeScript green:** removing both declarations and
+`@inContext` (the shipped defect); keeping the declarations but dropping
+`@inContext` — compile-valid, schema-valid, silently unlocalized; forwarding
+`storefront.i18n.language` explicitly, the sibling defect from earlier commits.
+The file was restored byte-exact afterwards, verified by SHA-256.
+
+### Re-audit
+
+Every Shopify query issued through the Weaverse client was checked for the same
+contract defect. `hotspots` uses the shared `PRODUCT_QUERY`, which declares and
+applies `@inContext`; `pwa/manifest.webmanifest` queries shop metadata through
+`context.storefront` and is locale-independent. Our Team was the only one, so
+nothing else changed.
+
+### The review's second P1
+
+Its featured-products finding was already closed by `2fc8d3c3`, which landed
+after the review's immutable candidate. Both of its exact mutations were
+re-run here against the current tree:
+
+| Review mutation | At `7c1ba3fa` | Now |
+| --- | --- | --- |
+| manual branch forwards `weaverse.storefront.i18n` | 10/10 green | **1 failed** |
+| auto/helper path forwards it | 10/10 green | **2 failed** |
+
+### Documentation corrected
+
+The README claimed `weaverse-locale.test.ts` asserts "all 33 markets, both
+providers". It asserts the Weaverse locale for 33 markets and the Shopify enum
+for the four markets whose identities can disagree. The other 29 set no
+`providerLanguage`, so their enum equals their BCP-47 code by construction —
+true, but not the same claim, and now stated as what it is.

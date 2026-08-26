@@ -3201,6 +3201,8 @@ export type ProductsByIdsQuery = {
 };
 
 export type OurTeamQueryVariables = StorefrontAPI.Exact<{
+  country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
+  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
   type: StorefrontAPI.Scalars['String']['input'];
   first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
 }>;
@@ -3496,7 +3498,7 @@ interface GeneratedQueryTypes {
     return: ProductsByIdsQuery;
     variables: ProductsByIdsQueryVariables;
   };
-  '#graphql\n  query OurTeam ($type: String!, $first: Int) {\n    metaobjects(type: $type, first: $first) {\n      nodes {\n        fields {\n          key\n          type\n          value\n          reference {\n            ... on MediaImage {\n              alt\n              image {\n                altText\n                url\n                width\n                height\n              }\n            }\n          }\n        }\n        handle\n        id\n        type\n      }\n    }\n  }\n': {
+  '#graphql\n  query OurTeam(\n    $country: CountryCode\n    $language: LanguageCode\n    $type: String!\n    $first: Int\n  ) @inContext(country: $country, language: $language) {\n    metaobjects(type: $type, first: $first) {\n      nodes {\n        fields {\n          key\n          type\n          value\n          reference {\n            ... on MediaImage {\n              alt\n              image {\n                altText\n                url\n                width\n                height\n              }\n            }\n          }\n        }\n        handle\n        id\n        type\n      }\n    }\n  }\n': {
     return: OurTeamQuery;
     variables: OurTeamQueryVariables;
   };

@@ -190,6 +190,15 @@ The dividing line, asserted directly by
 | `context.storefront` | `ZH_TW` — the Shopify enum |
 | `context.weaverse.storefront` | `ZH` — the public identity |
 
+### P1-6 — every Weaverse-client query declares its locale
+
+A Shopify document that omits `$country`/`$language` is not one variable short:
+Hydrogen fills them only for documents that declare them, so an omitting query
+is answered in the shop's default language. `sections/our-team` declared
+neither and now does, supplied by the storefront closure like every other
+query. `hotspots` (shared `PRODUCT_QUERY`) and `pwa/manifest.webmanifest`
+(shop metadata, locale-independent) were audited and needed no change.
+
 ### P1-5 — internal API requests keep the market
 
 Client-issued API paths go through `usePrefixPathWithLocale`, so the request

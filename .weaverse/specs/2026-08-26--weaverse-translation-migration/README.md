@@ -90,6 +90,15 @@ Formatting is the one legitimate reader of the public identity: `article`
 derives its `Intl` tag from `resolveLocaleFromRequest`, never from a client, so
 neither shape of `i18n` can affect a date.
 
+**A Shopify query must declare `$country`/`$language` to receive them.** The
+installed client fills them from its closure only for documents that ask —
+literally `/\$language/.test(query)` — so a document omitting the declarations
+is not one variable short: it reaches Shopify with no market and is answered in
+the shop's default language. That is invisible to TypeScript, to the schema,
+and to any test that only inspects variables, which is why
+`tests/unit/provider-locale-leak.test.ts` asserts the document *and* the values
+it was called with.
+
 **Internal API requests carry the market in their own URL.** A component that
 fetches an absolute `/api/...` sends no market: the API route builds a default
 context and Shopify answers with the default market's copy, pricing and
@@ -178,8 +187,12 @@ storefront whose `i18n` is that entry —
 `@inContext` from the storefront client's own closure, so replacing the `i18n`
 property does not change what Shopify receives.
 
-*Verified by* `tests/unit/weaverse-locale.test.ts` — all 33 markets, both
-providers asserted per request.
+*Verified by* `tests/unit/weaverse-locale.test.ts`. Be precise about what that
+covers: the **Weaverse** locale is asserted for all 33 markets, one request
+each; the **Shopify** enum is asserted for the four markets where the two
+identities can disagree (`zh-cn`, `zh-hk`, `zh-tw`, and `de-de` as a control).
+The remaining 29 markets set no `providerLanguage`, so their enum is their
+BCP-47 code by construction and there is nothing per-market to observe.
 
 ### 2. Studio preview requires reading the design-override store
 

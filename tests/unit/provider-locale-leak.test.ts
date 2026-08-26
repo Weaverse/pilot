@@ -398,3 +398,99 @@ test("shared product helpers never send the public language", async () => {
     viaWeaverse: [...new Set(viaWeaverse.shopify)],
   }).toEqual({ viaHydrogen: ["ZH_CN"], viaWeaverse: ["ZH_CN"] });
 });
+
+/** The query document and locale variables a run actually sent to Shopify. */
+async function shopifyQueryContract(
+  pathPrefix: string,
+  run: (context: AppLoadContext) => Promise<unknown>,
+): Promise<{
+  declaresLocale: boolean;
+  appliesInContext: boolean;
+  language: string | null;
+  country: string | null;
+}> {
+  const restoreCaches = installWorkerCaches();
+  const realFetch = globalThis.fetch;
+  let sent: { query?: string; variables?: Record<string, string> } | null =
+    null;
+
+  globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
+    const body = init?.body;
+    if (typeof body === "string" && body.includes("query ") && !sent) {
+      sent = JSON.parse(body);
+    }
+    return new Response(JSON.stringify({ data: {} }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  }) as typeof globalThis.fetch;
+
+  try {
+    const context = (await createHydrogenRouterContext(
+      new Request(`https://shop.test${pathPrefix}/`),
+      TEST_ENV,
+      TEST_EXECUTION_CONTEXT,
+    )) as unknown as AppLoadContext;
+
+    await run(context).catch(() => undefined);
+  } finally {
+    globalThis.fetch = realFetch;
+    restoreCaches();
+  }
+
+  const query = sent?.query ?? "";
+
+  return {
+    declaresLocale: query.includes("$country") && query.includes("$language"),
+    appliesInContext: query.includes("@inContext"),
+    language: sent?.variables?.language ?? null,
+    country: sent?.variables?.country ?? null,
+  };
+}
+
+test("the our-team section queries Shopify in the shopper's market", async () => {
+  // Hydrogen fills `$country`/`$language` from the storefront closure only for
+  // documents that declare them — `/\$language/.test(query)` in the installed
+  // client. A query that omits the declarations is not merely missing a
+  // variable: it reaches Shopify with no market at all and is answered in the
+  // shop's default language, so translated metaobject fields come back in the
+  // wrong language with a 200 and no error.
+  //
+  // Both halves are asserted. The variables alone would pass against a
+  // document that hardcoded them, and the declarations alone would pass
+  // against a document Hydrogen never filled.
+  const { loader } = await loadAppModule<{
+    loader: (args: { data: unknown; weaverse: unknown }) => Promise<unknown>;
+  }>("sections/our-team/index.tsx");
+
+  const run = (market: string) =>
+    shopifyQueryContract(market, (context) =>
+      loader({
+        data: { metaobject: { handle: "team_member" }, membersCount: 4 },
+        weaverse: context.weaverse,
+      }),
+    );
+
+  expect(await run("/zh-cn")).toEqual({
+    declaresLocale: true,
+    appliesInContext: true,
+    language: "ZH_CN",
+    country: "CN",
+  });
+
+  expect(await run("/zh-tw")).toEqual({
+    declaresLocale: true,
+    appliesInContext: true,
+    language: "ZH_TW",
+    country: "TW",
+  });
+
+  // A market whose public and provider codes agree, so a hardcoded Chinese
+  // enum would satisfy the two cases above and fail here.
+  expect(await run("/de-de")).toEqual({
+    declaresLocale: true,
+    appliesInContext: true,
+    language: "DE",
+    country: "DE",
+  });
+});
