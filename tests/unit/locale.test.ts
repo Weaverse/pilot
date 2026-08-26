@@ -3,6 +3,8 @@ import { expect, test } from "@playwright/test";
 import {
   DEFAULT_LOCALE,
   delocalizePath,
+  isUnsupportedMarketPath,
+  localizedPathForRequest,
   localizePath,
   resolveLocale,
   SUPPORTED_LOCALES,
@@ -80,10 +82,47 @@ test("strips React Router's single-fetch .data suffix", () => {
 });
 
 test("falls back to the default market for unsupported locales", () => {
-  // A locale-shaped segment for a market we do not sell in must not silently
-  // become a 200 at a non-canonical URL for the default market's content.
+  // The fallback exists so link, redirect and sitemap helpers never throw on a
+  // malformed URL. Serving it to a visitor is a separate question, settled by
+  // `isUnsupportedMarketPath` below.
   expect(resolveLocale("/en-xx/products/hoodie")).toBe(DEFAULT_LOCALE);
   expect(resolveLocale("/zz-zz")).toBe(DEFAULT_LOCALE);
+});
+
+test("refuses a market-shaped prefix we do not sell in", () => {
+  // Serving the default market's page here would publish the whole catalogue
+  // at an unbounded set of invented, non-canonical URLs.
+  expect(isUnsupportedMarketPath("/en-xx")).toBe(true);
+  expect(isUnsupportedMarketPath("/en-xx/products/hoodie")).toBe(true);
+  expect(isUnsupportedMarketPath("/zz-zz/collections/all?sort=price")).toBe(
+    true,
+  );
+  // Case-insensitive: an uppercase invented prefix is still invented.
+  expect(isUnsupportedMarketPath("/EN-XX/products/hoodie")).toBe(true);
+  // React Router single-fetch requests take the same path as the document.
+  expect(isUnsupportedMarketPath("/en-xx/products/hoodie.data")).toBe(true);
+});
+
+test("serves every configured market and ordinary content path", () => {
+  for (const locale of SUPPORTED_LOCALES) {
+    expect(
+      isUnsupportedMarketPath(`${locale.pathPrefix}/products/hoodie`),
+    ).toBe(false);
+    expect(isUnsupportedMarketPath(`${locale.pathPrefix}/cart.data`)).toBe(
+      false,
+    );
+  }
+  // The default market's own root and paths carry no prefix at all.
+  expect(isUnsupportedMarketPath("/")).toBe(false);
+  expect(isUnsupportedMarketPath("")).toBe(false);
+  expect(isUnsupportedMarketPath("/products/hoodie")).toBe(false);
+  // Root-level Weaverse custom pages are hyphenated but not market-shaped.
+  expect(isUnsupportedMarketPath("/about-us")).toBe(false);
+  expect(isUnsupportedMarketPath("/size-guide/womens")).toBe(false);
+  // Only an exact `xx-yy` segment counts, so these stay routable.
+  expect(isUnsupportedMarketPath("/hi-india/products")).toBe(false);
+  expect(isUnsupportedMarketPath("/collections/hi-in-specials")).toBe(false);
+  expect(isUnsupportedMarketPath("/products/de-de")).toBe(false);
 });
 
 test("never mistakes a content path for a locale prefix", () => {
@@ -174,4 +213,75 @@ test("a storefront redirect keeps the shopper on their market", async () => {
   expect(server).toContain("localizePath");
   // A second Location header would be comma-joined into an invalid URL.
   expect(server).not.toMatch(/Location:\s*localized/);
+});
+
+test("the request boundary refuses unsupported markets", async () => {
+  const server = await readFile(
+    new URL("../../server.ts", import.meta.url),
+    "utf8",
+  );
+
+  // The predicate is worthless unless the boundary actually calls it, and it
+  // must run before `handleRequest` so no route can serve the invented URL.
+  expect(server).toContain("isUnsupportedMarketPath");
+  expect(server).toContain("status: 404");
+  expect(server.indexOf("isUnsupportedMarketPath")).toBeLessThan(
+    server.indexOf("await handleRequest(request)"),
+  );
+});
+
+test("a localized redirect target is always absolute", () => {
+  // `${params.locale}/account` omits the leading slash, so the browser resolves
+  // it against the current directory: from /de-de/account/orders/123 the
+  // shopper lands on /de-de/account/orders/de-de/account.
+  for (const locale of SUPPORTED_LOCALES) {
+    const target = localizedPathForRequest(
+      new Request(`https://shop.test${locale.pathPrefix}/account/orders/123`),
+      "/account",
+    );
+
+    expect(target.startsWith("/")).toBe(true);
+    expect(target).toBe(`${locale.pathPrefix}/account`);
+  }
+});
+
+test("customer-account navigation keeps the shopper's market", async () => {
+  // Every one of these bypassed the locale helpers and dropped the market on a
+  // non-default storefront: a raw react-router Link, a bare redirect literal,
+  // and a sign-in URL the web component navigates to itself.
+  const read = (path: string) =>
+    readFile(new URL(`../../app/${path}`, import.meta.url), "utf8");
+
+  const ordersList = await read("routes/account/orders/list.tsx");
+  // The app's Link localizes its `to`; react-router's does not.
+  expect(ordersList).not.toMatch(
+    /import \{[^}]*\bLink\b[^}]*\} from "react-router"/,
+  );
+  expect(ordersList).toContain('from "~/components/link"');
+
+  for (const route of [
+    "routes/account/catch-all.ts",
+    "routes/account/auth/logout.ts",
+    "routes/account/edit.tsx",
+    "routes/account/orders/order.tsx",
+    "routes/account/address/index.tsx",
+  ]) {
+    const source = await read(route);
+    expect({
+      route,
+      localized: source.includes("localizedPathForRequest"),
+    }).toEqual({ route, localized: true });
+    // A hand-built prefix is the exact shape that loses the leading slash.
+    expect({
+      route,
+      handBuilt: /\$\{params\??\.locale\}/.test(source),
+    }).toEqual({
+      route,
+      handBuilt: false,
+    });
+  }
+
+  const header = await read("components/layout/header.tsx");
+  expect(header).not.toContain('sign-in-url="/account/login"');
+  expect(header).toContain("usePrefixPathWithLocale");
 });

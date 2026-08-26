@@ -8,6 +8,7 @@ import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import { ORDER_STATUS } from "~/routes/account/dashboard/orders-history";
+import { localizedPathForRequest } from "~/utils/locale";
 import { OrderLineItem } from "./order-line-item";
 import { CUSTOMER_ORDER_QUERY } from "./order-query";
 import { OrderSummary } from "./order-summary";
@@ -18,7 +19,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export async function loader({ request, context, params }: LoaderFunctionArgs) {
   if (!params.id) {
-    return redirect(params?.locale ? `${params.locale}/account` : "/account");
+    return redirect(localizedPathForRequest(request, "/account"));
   }
 
   const queryParams = new URL(request.url).searchParams;

@@ -11,7 +11,8 @@ import type {
 } from "customer-account-api.generated";
 import type * as React from "react";
 import type { LoaderFunctionArgs } from "react-router";
-import { Link, type MetaFunction, useLoaderData } from "react-router";
+import { type MetaFunction, useLoaderData } from "react-router";
+import Link from "~/components/link";
 import { Section } from "~/components/section";
 
 // https://shopify.dev/docs/api/customer/latest/objects/Order

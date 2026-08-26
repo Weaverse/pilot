@@ -11,6 +11,7 @@ import {
 } from "~/components/cart/store";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
@@ -202,6 +203,9 @@ export function Header() {
 
 function ShopifyAccountButton() {
   const nonce = useNonce();
+  // The web component navigates to this URL itself, so it must already carry
+  // the market or sign-in drops the shopper onto the default storefront.
+  const signInUrl = usePrefixPathWithLocale("/account/login");
   const accountRef = useRef<HTMLElement>(null);
   const shouldOpenWhenReadyRef = useRef(false);
   const rootData = useRouteLoaderData<RootLoader>("root");
@@ -292,7 +296,7 @@ function ShopifyAccountButton() {
       public-access-token={publicAccessToken}
       customer-access-token={customerAccessToken || undefined}
     >
-      <shopify-account ref={accountRef} sign-in-url="/account/login">
+      <shopify-account ref={accountRef} sign-in-url={signInUrl}>
         <span slot="signed-out-avatar">
           <Icon name="user" className="h-5 w-5" />
         </span>

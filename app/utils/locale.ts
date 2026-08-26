@@ -205,6 +205,56 @@ export function resolveLocaleFromRequest(request: Request): Locale {
 }
 
 /**
+ * An app path localized for the market the request came in on.
+ *
+ * Server redirects must never build a prefix by hand: `` `${params.locale}/x` ``
+ * omits the leading slash, so the browser resolves it against the current
+ * directory and the shopper lands somewhere arbitrary. Routing through
+ * {@link localizePath} guarantees an absolute, correctly prefixed path and
+ * keeps the market on customer-account round trips.
+ */
+export function localizedPathForRequest(
+  request: Request,
+  path: string,
+): string {
+  return localizePath(path, resolveLocaleFromRequest(request));
+}
+
+/** The exact shape of a market prefix: `xx-yy`, nothing longer or shorter. */
+const MARKET_SHAPED_SEGMENT = /^\/[a-z]{2}-[a-z]{2}$/;
+
+/**
+ * Whether a path opens with a market-shaped segment this storefront does not
+ * sell in, such as `/en-xx/products/hoodie`.
+ *
+ * {@link resolveLocale} deliberately falls back to {@link DEFAULT_LOCALE} so
+ * that link, redirect and sitemap helpers never throw on a malformed URL. That
+ * fallback is wrong for an inbound request: it would serve the default market's
+ * page at a non-canonical URL, duplicating the whole catalogue under an
+ * unbounded set of invented prefixes. The request boundary refuses those URLs
+ * instead.
+ *
+ * The test is deliberately narrow. Only an exact `xx-yy` segment counts, so a
+ * root-level custom page handle (`/about-us`), a longer prefix-like segment
+ * (`/hi-india`) and a content path (`/collections/hi-in-specials`) all stay
+ * routable. A root-level handle that is itself `xx-yy` shaped is unroutable by
+ * construction — it is indistinguishable from a market prefix.
+ */
+export function isUnsupportedMarketPath(path: string): boolean {
+  if (!path || path === "/") {
+    return false;
+  }
+  const [segment] = splitLeadingSegment(
+    path.startsWith("/") ? path : `/${path}`,
+  );
+  const prefix = segment.toLowerCase();
+
+  return (
+    MARKET_SHAPED_SEGMENT.test(prefix) && LOCALE_BY_PREFIX[prefix] === undefined
+  );
+}
+
+/**
  * Rewrites a market-neutral path for `locale`, preserving the query string.
  * Idempotent: a path already prefixed for that market is returned unchanged.
  */

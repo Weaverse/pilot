@@ -15,6 +15,7 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
+import { localizedPathForRequest } from "~/utils/locale";
 import { doLogout } from "./auth/logout";
 import { CUSTOMER_UPDATE_MUTATION } from "./profile";
 
@@ -49,7 +50,7 @@ export const handle = {
   renderInModal: true,
 };
 
-export const action: ActionFunction = async ({ request, context, params }) => {
+export const action: ActionFunction = async ({ request, context }) => {
   const formData = await request.formData();
 
   // Double-check current user is logged in.
@@ -84,7 +85,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
       updateData?.customerUpdate?.userErrors?.[0]?.message,
     );
 
-    return redirect(params?.locale ? `${params.locale}/account` : "/account");
+    return redirect(localizedPathForRequest(request, "/account"));
   } catch (error: any) {
     return data(
       { formError: error?.message },

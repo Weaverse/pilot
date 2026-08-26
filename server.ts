@@ -4,6 +4,7 @@ import { createRequestHandler } from "@shopify/hydrogen/oxygen";
 import { createHydrogenRouterContext } from "~/.server/context";
 import {
   delocalizePath,
+  isUnsupportedMarketPath,
   localizePath,
   resolveLocaleFromRequest,
 } from "~/utils/locale";
@@ -33,6 +34,18 @@ export default {
         mode: process.env.NODE_ENV,
         getLoadContext: () => hydrogenContext,
       });
+
+      /**
+       * A market-shaped prefix we do not sell in (`/en-xx/products/hoodie`)
+       * must not resolve. `resolveLocale` falls back to the default market so
+       * link and sitemap helpers never throw, but serving that fallback to a
+       * visitor would publish the entire catalogue at unlimited non-canonical
+       * URLs. Refusing here covers every route, including `.data` requests,
+       * rather than asking each loader to remember.
+       */
+      if (isUnsupportedMarketPath(new URL(request.url).pathname)) {
+        return new Response("Not Found", { status: 404 });
+      }
 
       const response = await handleRequest(request);
 
