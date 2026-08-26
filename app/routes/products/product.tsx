@@ -1,7 +1,6 @@
 import {
   Analytics,
   getAdjacentAndFirstAvailableVariants,
-  getSeoMeta,
   useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
@@ -14,6 +13,7 @@ import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { routeHeaders } from "~/utils/cache";
+import { seoMetaFromMatches } from "~/utils/seo";
 import { WeaverseContent } from "~/weaverse";
 import { getRecommendedProducts } from "./recommended-product";
 
@@ -59,9 +59,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 }
 
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(
-    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
-  );
+  return seoMetaFromMatches(matches);
 };
 
 export default function Product() {

@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { alternateLinks, SUPPORTED_LOCALES } from "../../app/utils/locale";
 
@@ -103,4 +103,40 @@ test("no surface reimplements locale parsing", async () => {
       legacy: false,
     });
   }
+});
+
+test("every page route builds its meta from the matched routes", async () => {
+  // A route that calls `getSeoMeta(data.seo)` with only its own payload drops
+  // the root match, and with it the market's canonical URL and every hreflang
+  // alternate — the page ships without alternates and no test would notice.
+  const routes = new URL("../../app/routes/", import.meta.url);
+  const offenders: string[] = [];
+
+  const walk = async (dir: URL): Promise<void> => {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      // Account pages are behind auth and marked noindex, so they carry a bare
+      // title rather than market SEO.
+      if (entry.name === "account") {
+        continue;
+      }
+      const child = new URL(
+        entry.isDirectory() ? `${entry.name}/` : entry.name,
+        dir,
+      );
+      if (entry.isDirectory()) {
+        await walk(child);
+      } else if (entry.name.endsWith(".tsx")) {
+        const source = await readFile(child, "utf8");
+        if (!source.includes("export const meta")) {
+          continue;
+        }
+        if (!source.includes("seoMetaFromMatches")) {
+          offenders.push(child.pathname.slice(routes.pathname.length));
+        }
+      }
+    }
+  };
+  await walk(routes);
+
+  expect(offenders).toEqual([]);
 });

@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import {
   DEFAULT_LOCALE,
@@ -157,4 +158,20 @@ test("round-trips every market through localize and delocalize", () => {
     );
     expect(delocalizePath(localizePath("/", locale))).toBe("/");
   }
+});
+
+test("a storefront redirect keeps the shopper on their market", async () => {
+  const server = await readFile(
+    new URL("../../server.ts", import.meta.url),
+    "utf8",
+  );
+
+  // Shopify stores URL redirects on market-neutral paths and matches the
+  // request path verbatim, so `/de-de/collections/all` would 404 while
+  // `/collections/all` redirects. The lookup must be delocalized and the
+  // target relocalized.
+  expect(server).toContain("delocalizePath");
+  expect(server).toContain("localizePath");
+  // A second Location header would be comma-joined into an invalid URL.
+  expect(server).not.toMatch(/Location:\s*localized/);
 });

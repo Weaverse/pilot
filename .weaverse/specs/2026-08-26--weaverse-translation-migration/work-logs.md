@@ -107,3 +107,31 @@ render translated copy.
 The prototype-safety comment also over-claimed: skipping `constructor` and
 `prototype` does nothing on a plain object literal. Only `__proto__` is skipped,
 and the comment now says exactly why.
+
+### Simplification pass, and the defect it exposed
+
+Ten routes had each grown their own copy of the same three-line
+`getSeoMeta(...matches.map(...))` body — the invariant "always merge the root
+match" was restated ten times and enforced nowhere. `app/utils/seo.ts` now owns
+`seoMetaFromMatches`, every page route calls it (net −30 lines), and a test
+walks `app/routes/` to fail if a new route reintroduces the pattern. Account
+routes are exempt and skipped explicitly: they are behind auth and noindex, so a
+bare title is correct.
+
+Writing that test surfaced `app/routes/catch-all.tsx`, which serves public
+Weaverse CUSTOM pages and emitted page SEO only — no canonical, no alternates.
+Fixed with the same helper.
+
+Verifying the refactor against the running server then exposed a genuine
+market-parity bug that predates this work: **Shopify URL redirects only worked
+on the default market.** `storefrontRedirect` matches the request path verbatim
+while Shopify stores redirects market-neutral, so `/collections/all` → 301
+`/collections/the-full-catalog` but `/de-de/collections/all` → 404. `server.ts`
+now delocalizes the lookup and relocalizes the target, keeping the shopper in
+their market. Confirmed live for `de-de`, `en-gb` and `ar-ae`, with genuine
+misses (`/de-de/definitely-not-a-page`, `/en-xx/...`) still 404.
+
+That fix had a bug of its own on first write: spreading `redirected.headers`
+into an object literal and then setting `Location` appended a second header,
+producing a comma-joined URL. `Headers.set` replaces; the test asserts the
+object-literal form does not come back.

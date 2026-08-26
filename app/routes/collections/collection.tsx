@@ -2,7 +2,6 @@ import {
   Analytics,
   flattenConnection,
   getPaginationVariables,
-  getSeoMeta,
 } from "@shopify/hydrogen";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
@@ -14,14 +13,13 @@ import { seoPayload } from "~/.server/seo";
 import type { SortParam } from "~/types/others";
 import { routeHeaders } from "~/utils/cache";
 import { FILTER_URL_PREFIX } from "~/utils/const";
+import { seoMetaFromMatches } from "~/utils/seo";
 import { WeaverseContent } from "~/weaverse";
 import { COLLECTION_QUERY } from "./collection-query";
 import { getSortValuesFromParam, parseAsCurrency } from "./utils";
 
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(
-    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
-  );
+  return seoMetaFromMatches(matches);
 };
 
 export const headers = routeHeaders;

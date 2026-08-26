@@ -1,5 +1,3 @@
-import type { SeoConfig } from "@shopify/hydrogen";
-import { getSeoMeta } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import type { PoliciesIndexQuery } from "storefront-api.generated";
@@ -10,6 +8,7 @@ import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import { routeHeaders } from "~/utils/cache";
+import { seoMetaFromMatches } from "~/utils/seo";
 
 export const headers = routeHeaders;
 
@@ -47,9 +46,7 @@ export async function loader({
 }
 
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(
-    ...matches.map((match) => (match.data as { seo?: SeoConfig })?.seo),
-  );
+  return seoMetaFromMatches(matches);
 };
 
 export default function Policies() {

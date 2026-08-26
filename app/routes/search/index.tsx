@@ -1,8 +1,4 @@
-import {
-  Analytics,
-  getPaginationVariables,
-  getSeoMeta,
-} from "@shopify/hydrogen";
+import { Analytics, getPaginationVariables } from "@shopify/hydrogen";
 import { useEffect, useState } from "react";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { data, Form, useLoaderData } from "react-router";
@@ -13,6 +9,7 @@ import { Icon } from "~/components/icon";
 import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { getFeaturedProducts } from "~/utils/featured-products";
+import { seoMetaFromMatches } from "~/utils/seo";
 import { ArticlesGrid } from "./articles-grid";
 import { CollectionsGrid } from "./collections-grid";
 import { NoResults } from "./no-results";
@@ -102,9 +99,7 @@ export async function loader({
 }
 
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-  return getSeoMeta(
-    ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
-  );
+  return seoMetaFromMatches(matches);
 };
 
 export default function Search() {
