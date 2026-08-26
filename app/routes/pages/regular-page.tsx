@@ -16,11 +16,13 @@ export async function loader({ request, params, context }: RouteLoaderArgs) {
 
   // Load page data and weaverseData in parallel
   const [{ page }, weaverseData] = await Promise.all([
+    // `$language` is left to Hydrogen, which fills it from the storefront
+    // client's own closure — the Shopify provider enum. This client comes from
+    // `context.weaverse`, whose `i18n` carries the market's *public* code
+    // because Weaverse keys translations by it, so passing it explicitly would
+    // send bare `ZH` and Shopify would answer in English.
     storefront.query<PageDetailsQuery>(PAGE_QUERY, {
-      variables: {
-        handle: params.pageHandle,
-        language: storefront.i18n.language,
-      },
+      variables: { handle: params.pageHandle },
     }),
     context.weaverse.loadPage({
       type: "PAGE",

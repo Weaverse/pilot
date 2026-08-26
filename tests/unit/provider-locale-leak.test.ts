@@ -208,3 +208,119 @@ test("no Shopify query ever collapses to the bare public language", async () => 
 
   expect(leaked).toEqual([]);
 });
+
+test("the page route queries Shopify with the provider language", async () => {
+  // `regular-page` destructures its client off `context.weaverse`, so the
+  // earlier sweep — which grepped `weaverse.storefront.i18n` — did not see it.
+  // The alias makes no difference to what is sent: that object carries the
+  // public identity, and copying it into `$language` sends `ZH`.
+  const { loader } = await loadAppModule<{
+    loader: (args: {
+      request: Request;
+      params: Record<string, string>;
+      context: unknown;
+    }) => Promise<unknown>;
+  }>("routes/pages/regular-page.tsx");
+
+  const sent = await sentBy("/zh-cn", (context) =>
+    loader({
+      request: new Request("https://shop.test/zh-cn/pages/about"),
+      params: { pageHandle: "about" },
+      context,
+    }),
+  );
+
+  expect({
+    shopify: [...new Set(sent.shopify)],
+    translation: [...new Set(sent.translation)],
+  }).toEqual({ shopify: ["ZH_CN"], translation: ["zh-cn"] });
+});
+
+test("the article route queries Shopify with the provider language", async () => {
+  const { loader } = await loadAppModule<{
+    loader: (args: {
+      request: Request;
+      params: Record<string, string>;
+      context: unknown;
+    }) => Promise<unknown>;
+  }>("routes/blogs/article.tsx");
+
+  const sent = await sentBy("/zh-hk", (context) =>
+    loader({
+      request: new Request("https://shop.test/zh-hk/blogs/news/a-post"),
+      params: { blogHandle: "news", articleHandle: "a-post" },
+      context,
+    }),
+  );
+
+  expect({
+    shopify: [...new Set(sent.shopify)],
+    translation: [...new Set(sent.translation)],
+  }).toEqual({ shopify: ["ZH_TW"], translation: ["zh-hk"] });
+});
+
+test("page and article keep a non-Chinese market unchanged", async () => {
+  // The control: German has one identity, so a market where public and
+  // provider codes agree must be unaffected by the fix. Without this a loader
+  // that hardcoded `ZH_CN` would satisfy the tests above.
+  const page = await loadAppModule<{
+    loader: (args: {
+      request: Request;
+      params: Record<string, string>;
+      context: unknown;
+    }) => Promise<unknown>;
+  }>("routes/pages/regular-page.tsx");
+
+  const article = await loadAppModule<{
+    loader: (args: {
+      request: Request;
+      params: Record<string, string>;
+      context: unknown;
+    }) => Promise<unknown>;
+  }>("routes/blogs/article.tsx");
+
+  const sentPage = await sentBy("/de-de", (context) =>
+    page.loader({
+      request: new Request("https://shop.test/de-de/pages/about"),
+      params: { pageHandle: "about" },
+      context,
+    }),
+  );
+
+  const sentArticle = await sentBy("/de-de", (context) =>
+    article.loader({
+      request: new Request("https://shop.test/de-de/blogs/news/a-post"),
+      params: { blogHandle: "news", articleHandle: "a-post" },
+      context,
+    }),
+  );
+
+  expect({
+    page: [...new Set(sentPage.shopify)],
+    article: [...new Set(sentArticle.shopify)],
+    translation: [...new Set(sentPage.translation)],
+  }).toEqual({ page: ["DE"], article: ["DE"], translation: ["de-de"] });
+});
+
+test("the two clients keep different language identities", async () => {
+  // The invariant every test above depends on, asserted directly so a change
+  // to `weaverseStorefront` cannot quietly turn them into tautologies. If both
+  // clients ever agreed, the leak would be unobservable and the suite would
+  // pass while shipping English.
+  const restoreCaches = installWorkerCaches();
+  try {
+    const context = (await createHydrogenRouterContext(
+      new Request("https://shop.test/zh-hk/"),
+      TEST_ENV,
+      TEST_EXECUTION_CONTEXT,
+    )) as unknown as AppLoadContext;
+
+    expect({
+      shopify: context.storefront.i18n.language,
+      weaverse: context.weaverse.storefront.i18n.language,
+      country: context.storefront.i18n.country,
+    }).toEqual({ shopify: "ZH_TW", weaverse: "ZH", country: "HK" });
+  } finally {
+    restoreCaches();
+  }
+});

@@ -169,14 +169,26 @@ its own closure, so Shopify still receives `ZH_CN`/`ZH_TW`. It takes the market
 as an argument rather than deriving it, because the storefront's `i18n` has
 already had `language` replaced with the provider enum.
 
-That split only holds if nothing re-reads `weaverse.storefront.i18n` into query
-variables. Hydrogen fills `$country`/`$language` from the closure *only when
+That split only holds if nothing re-reads the Weaverse client's `i18n` into
+query variables — under **any** spelling. `regular-page` and `article` reach the
+same object through `const { storefront } = context.weaverse`, so a sweep
+grepping `weaverse.storefront.i18n` misses them entirely. The rule is about
+which client a value came from, not how the expression is written. Hydrogen fills `$country`/`$language` from the closure *only when
 absent*, so the six Weaverse-scoped loaders that passed them explicitly
 (`featured-collections`, `featured-products`, `collections/list`,
 `utils/featured-products`, `single-product`, `hotspots`) were overriding the
-provider enum with the public code. All six now omit both variables. Route
-loaders that read `context.storefront` are unaffected — that object still
-carries the enum — and are left alone.
+provider enum with the public code, as did two route loaders reaching the same
+client via `context.weaverse` (`pages/regular-page`, `blogs/article`). All eight
+now omit both variables. Route loaders that read `context.storefront` are
+unaffected — that object still carries the enum — and are left alone.
+
+The dividing line, asserted directly by
+`tests/unit/provider-locale-leak.test.ts`, is the client:
+
+| Expression | `i18n.language` on `/zh-hk` |
+| --- | --- |
+| `context.storefront` | `ZH_TW` — the Shopify enum |
+| `context.weaverse.storefront` | `ZH` — the public identity |
 
 `Intl` tags move off the provider enum onto `hreflang`, because `ZH_CN-CN` is
 not a BCP-47 tag and `Intl` throws on it — prices (`parseAsCurrency`) and blog

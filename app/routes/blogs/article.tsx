@@ -14,10 +14,10 @@ export const headers = routeHeaders;
 export async function loader(args: RouteLoaderArgs) {
   const { request, params, context } = args;
   const { storefront } = context.weaverse;
-  const { language, country } = storefront.i18n;
-  // The canonical market table owns the BCP-47 tag; `storefront.i18n.language`
-  // is the provider enum and can be script-specific (`ZH_CN`), which `Intl`
-  // rejects.
+  // The canonical market table owns the BCP-47 tag used for formatting. It is
+  // read from the request rather than the client: this storefront comes from
+  // `context.weaverse`, so its `i18n` is the public identity, and the shape of
+  // that field is not something this route should depend on.
   const { hreflang } = resolveLocaleFromRequest(request);
 
   invariant(params.blogHandle, "Missing blog handle");
@@ -28,11 +28,11 @@ export async function loader(args: RouteLoaderArgs) {
   // Load blog data and weaverseData in parallel
   const [{ blog }, weaverseData] = await Promise.all([
     storefront.query<ArticleQuery>(ARTICLE_QUERY, {
-      variables: {
-        blogHandle,
-        articleHandle,
-        language,
-      },
+      // `$language` is left to Hydrogen, which fills it from the storefront
+      // client's own closure — the Shopify provider enum. Passing
+      // `storefront.i18n.language` would send the market's public code, and
+      // bare `ZH` resolves to English.
+      variables: { blogHandle, articleHandle },
     }),
     context.weaverse.loadPage({
       type: "ARTICLE",

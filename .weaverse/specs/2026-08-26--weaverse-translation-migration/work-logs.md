@@ -675,3 +675,75 @@ truthiness instead of presence (1); design-override check disabled (2).
   is the opposite of what shipped. It now records the deletion and why.
 - The mutation table above claimed mutation 5 was "structurally removed". It
   was not, and the row now points here.
+
+## 2026-08-26 — Fifth review of `f46f1d57`: two more callers of the same leak
+
+A review found `pages/regular-page.tsx` and `blogs/article.tsx` sending the
+public `ZH` to Shopify. Both are real, both are now fixed, and my earlier sweep
+was the reason they survived.
+
+### Why the sweep missed them
+
+I grepped `weaverse.storefront.i18n`. These routes write:
+
+```ts
+const { storefront } = context.weaverse;
+// ...
+variables: { handle, language: storefront.i18n.language }
+```
+
+Identical text to a correct route reading `context.storefront`, opposite
+meaning. The invariant is the **client a value came from**, and a textual sweep
+cannot see that. Probing the real context settles it:
+
+| Expression | `i18n.language` on `/zh-hk` |
+| --- | --- |
+| `context.storefront` | `ZH_TW` |
+| `context.weaverse.storefront` | `ZH` |
+
+`tests/unit/provider-locale-leak.test.ts` now asserts that difference directly,
+so the two clients cannot quietly converge and turn the other tests into
+tautologies.
+
+### The full classification
+
+Every explicit `$language`/`$country` in `app/` was traced to its client:
+
+| Client | Callers | Verdict |
+| --- | --- | --- |
+| `context.weaverse.storefront` | the two routes above | **leak — fixed** |
+| `context.storefront` | `blogs/blog`, `policies/policy`, `products/*`, `search`, `collections/collection`, `api/product`, `api/products`, `.server/root` | correct, left alone |
+| `customerAccount` | `account/*` | its own i18n, unrelated |
+
+Eight callers of the Weaverse client have now been fixed across two commits;
+nothing outside that set needed to change.
+
+### Evidence
+
+RED, executing the real loaders through the real request context:
+
+| Route | Market | Sent | Required |
+| --- | --- | --- | --- |
+| `regular-page` | `/zh-cn` | `ZH` | `ZH_CN` |
+| `article` | `/zh-hk` | `ZH` | `ZH_TW` |
+
+Live, same server and URL, only the fix differing — the article `<title>`,
+which Shopify translates:
+
+- **with the leak:** `Freedom and Constraint Are the Competing Tendencies…`
+- **with the fix:** `自由与束缚是2024秋季系列中相互竞争的趋势`
+
+**Mutations, all caught:** `regular-page` re-adds the leak (1 fail); `article`
+re-adds it (1); `article` hardcodes `ZH_TW`, which satisfies the Chinese case
+and still fails the German control (1); `weaverseStorefront` stops re-labelling
+so the identities collapse (6).
+
+That third mutation is why the control exists: without a market whose public
+and provider codes agree, a hardcoded enum would pass.
+
+### Date formatting
+
+`article` no longer destructures `language`/`country` from the client at all.
+The `Intl` tag was already read from `resolveLocaleFromRequest`, and still is —
+`hreflang` is the market's public tag, which is what `Intl` accepts and what
+`ZH_CN` would break. Unchanged behaviour, one fewer field to misread.

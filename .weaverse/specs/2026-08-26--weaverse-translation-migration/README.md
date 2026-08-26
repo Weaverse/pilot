@@ -69,7 +69,7 @@ has already been replaced with the Shopify enum by `providerContextForRequest()`
 and cannot be recovered from there. Hydrogen's `query` binds `@inContext` from
 its own closure, so Shopify keeps receiving the enum.
 
-**Section loaders must not pass `$country`/`$language` themselves.** Hydrogen
+**No caller of the Weaverse client may pass `$country`/`$language` itself.** Hydrogen
 fills those variables from the closure only when the caller leaves them absent,
 so an explicit `variables: { language: weaverse.storefront.i18n.language }`
 wins — and that value is the market's public code, which is the whole point of
@@ -77,6 +77,18 @@ the re-labelling. `ZH` is a valid enum member that resolves to English, so the
 result is an English catalogue under a Chinese URL with no error anywhere.
 Every Weaverse-scoped loader therefore omits both variables and lets Hydrogen
 supply them.
+
+The rule is about the *client*, not the expression. `context.storefront` and
+`context.weaverse.storefront` differ only in `i18n`, and a route destructuring
+`const { storefront } = context.weaverse` reads the public identity while
+looking identical to one that reads the enum. Two route loaders were missed by
+a sweep that grepped the spelling rather than the source:
+`pages/regular-page.tsx` and `blogs/article.tsx`. On `/zh-cn` the article title
+came back in English from Shopify while the page around it was Chinese.
+
+Formatting is the one legitimate reader of the public identity: `article`
+derives its `Intl` tag from `resolveLocaleFromRequest`, never from a client, so
+neither shape of `i18n` can affect a date.
 
 Public prefixes and SEO identities stay stable; the provider enum is never used
 to build a URL, tag, bundle key or translation locale, and the prefix is never
