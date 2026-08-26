@@ -3,9 +3,13 @@ import { expect, test } from "@playwright/test";
 import { TranslationProvider, useTranslation } from "@weaverse/hydrogen";
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { resolveTranslations } from "../../app/.server/translations";
+import { resolveThemeContent } from "../../app/.server/translations";
 import staticContent from "../../app/i18n/en.json" with { type: "json" };
-import { type Locale, SUPPORTED_LOCALES } from "../../app/utils/locale";
+import {
+  bundleLocaleFor,
+  type Locale,
+  SUPPORTED_LOCALES,
+} from "../../app/utils/locale";
 import { themeSchema } from "../../app/weaverse/schema.server";
 
 const I18N_DIR = new URL("../../app/i18n/", import.meta.url);
@@ -73,17 +77,19 @@ test("exposes the theme's static content to the Translation Manager", () => {
   expect(themeSchema.i18n?.staticContent).toBe(staticContent);
 });
 
-test("ships a bundled translation for every configured market language", async () => {
+test("ships a bundled translation for every configured market", async () => {
+  // Keyed by bundle locale, not language: `zh-CN` is Simplified while `zh-HK`
+  // and `zh-TW` are Traditional, so one Chinese file cannot serve all three.
   const files = await readLocaleFiles();
-  const languages = new Set(
-    SUPPORTED_LOCALES.map((locale) => locale.language.toLowerCase()),
-  );
+  // `en.json` is the source language shipped as `staticContent`; every other
+  // bundle locale needs its own file.
+  const bundles = new Set(SUPPORTED_LOCALES.map(bundleLocaleFor));
 
-  for (const language of languages) {
-    expect(files.map((file) => file.name)).toContain(`${language}.json`);
+  for (const bundle of bundles) {
+    expect(files.map((file) => file.name)).toContain(`${bundle}.json`);
   }
   // No orphan payloads for markets we do not serve.
-  expect(files.length).toBe(languages.size);
+  expect(files.length).toBe(bundles.size);
 });
 
 test("every bundled translation covers the source keys exactly", async () => {
@@ -186,7 +192,7 @@ test("interpolates variables into a translated string", () => {
 test("ships the market's own copy when the merchant published nothing", () => {
   // Without this the SDK only ever sees merchant overrides, so a project with
   // an empty Translation Manager renders English in every market.
-  const german = resolveTranslations(
+  const german = resolveThemeContent(
     SUPPORTED_LOCALES.find((locale) => locale.hreflang === "de-DE") as Locale,
     undefined,
   );
@@ -194,23 +200,18 @@ test("ships the market's own copy when the merchant published nothing", () => {
   expect(flatten(german as Json)["cart.title"]).toBe("Warenkorb");
 });
 
-test("a merchant override wins without dropping its untranslated siblings", () => {
+test("a market bundle wins over English without dropping untranslated keys", () => {
+  // `resolveThemeContent` layers the market bundle onto the English source, so
+  // a key the bundle does not translate must still resolve to English rather
+  // than vanish. A shallow merge would replace the whole `cart` group.
   const german = SUPPORTED_LOCALES.find(
     (locale) => locale.hreflang === "de-DE",
   ) as Locale;
-  const merged = flatten(
-    resolveTranslations(german, {
-      cart: { title: "Einkaufstasche" },
-    }) as Json,
-  );
+  const source = { cart: { title: "Cart", untranslated: "Only in English" } };
+  const merged = flatten(resolveThemeContent(german, source) as Json);
 
-  expect(merged["cart.title"]).toBe("Einkaufstasche");
-  // A shallow merge would replace the whole `cart` group and lose this.
-  expect(merged["cart.actions.checkout"]).toBe(
-    flatten(resolveTranslations(german, undefined) as Json)[
-      "cart.actions.checkout"
-    ],
-  );
+  expect(merged["cart.title"]).toBe("Warenkorb");
+  expect(merged["cart.untranslated"]).toBe("Only in English");
 });
 
 test("English markets are served from staticContent, not a second copy", () => {
@@ -219,6 +220,6 @@ test("English markets are served from staticContent, not a second copy", () => {
   for (const locale of SUPPORTED_LOCALES.filter(
     (candidate) => candidate.language === "EN",
   )) {
-    expect(resolveTranslations(locale, undefined)).toBeUndefined();
+    expect(resolveThemeContent(locale, undefined)).toBeUndefined();
   }
 });

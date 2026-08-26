@@ -8,12 +8,32 @@ import type {
 /**
  * A single Shopify market served by this storefront.
  *
- * `language`/`country` are the codes sent to the Storefront API's `@inContext`
- * directive and to Weaverse when resolving localized page content, so they must
- * be real Shopify enum members — not display strings.
+ * Two language identities exist and are deliberately separate:
+ *
+ * - `language` is the market's BCP-47 identity. It builds the URL prefix, the
+ *   `hreflang`, `<html lang>`, the `Intl` tag used for prices and dates, and
+ *   the theme's own translation bundle. It is always a bare two-letter code.
+ * - `providerLanguage` is what Shopify and Weaverse are asked for. Shopify's
+ *   `LanguageCode` has script-specific members, and for Chinese only those
+ *   resolve: a read-only probe of this store returned `EN` for `ZH` in CN, HK
+ *   and TW, and `ZH_CN` for `ZH_CN`. Sending the BCP-47 code would serve an
+ *   English catalogue under a Chinese URL.
+ *
+ * Only markets whose provider code differs from their BCP-47 code set
+ * `providerLanguage`; {@link providerLanguageFor} falls back to `language`.
  */
 export type Locale = I18nBase & {
   language: LanguageCode;
+  /**
+   * Shopify/Weaverse `LanguageCode` for this market when it differs from the
+   * BCP-47 `language`. Never used to build a URL, tag, or bundle key.
+   */
+  providerLanguage?: LanguageCode;
+  /**
+   * Theme translation bundle for this market when the BCP-47 primary subtag is
+   * not specific enough — `zh-TW` is Traditional, `zh-CN` Simplified.
+   */
+  bundleLocale?: string;
   country: CountryCode;
   /** Leading URL segment for this market; `""` for the default market. */
   pathPrefix: string;
@@ -120,6 +140,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
     label: "China (CNY ¥)",
     languageLabel: "中文",
     language: "ZH",
+    providerLanguage: "ZH_CN",
     country: "CN",
     currency: "CNY",
     hreflang: "zh-CN",
@@ -180,6 +201,8 @@ export const SUPPORTED_LOCALES: Locale[] = [
     label: "Hong Kong (HKD $)",
     languageLabel: "中文",
     language: "ZH",
+    providerLanguage: "ZH_TW",
+    bundleLocale: "zh-tw",
     country: "HK",
     currency: "HKD",
     hreflang: "zh-HK",
@@ -300,6 +323,8 @@ export const SUPPORTED_LOCALES: Locale[] = [
     label: "Taiwan (TWD $)",
     languageLabel: "中文",
     language: "ZH",
+    providerLanguage: "ZH_TW",
+    bundleLocale: "zh-tw",
     country: "TW",
     currency: "TWD",
     hreflang: "zh-TW",
@@ -432,6 +457,41 @@ export function resolveLocale(path: string): Locale {
 /** The market for a request URL. */
 export function resolveLocaleFromRequest(request: Request): Locale {
   return resolveLocale(new URL(request.url).pathname);
+}
+
+/**
+ * The `LanguageCode` to send to Shopify and Weaverse for `locale`.
+ *
+ * Defaults to the market's BCP-47 `language`, which is already a valid enum
+ * member for every other market this theme ships.
+ */
+export function providerLanguageFor(locale: Locale): LanguageCode {
+  return locale.providerLanguage ?? locale.language;
+}
+
+/**
+ * The theme translation bundle to load for `locale`.
+ *
+ * Defaults to the BCP-47 primary subtag, which is right wherever one file
+ * serves every market in a language. Chinese is the exception this exists for:
+ * `zh-CN` is Simplified while `zh-HK` and `zh-TW` are Traditional, and
+ * collapsing them onto one file renders the wrong script.
+ */
+export function bundleLocaleFor(locale: Locale): string {
+  return locale.bundleLocale ?? locale.hreflang.split("-")[0].toLowerCase();
+}
+
+/**
+ * The `i18n` object handed to `createHydrogenContext` for `request`.
+ *
+ * Hydrogen copies this onto every `@inContext` query, so `language` here is the
+ * provider code. The market's public identity — `pathPrefix`, `hreflang`,
+ * `direction`, `currency` — rides along unchanged for the loaders that read it.
+ */
+export function providerContextForRequest(request: Request): Locale {
+  const locale = resolveLocaleFromRequest(request);
+
+  return { ...locale, language: providerLanguageFor(locale) };
 }
 
 /**

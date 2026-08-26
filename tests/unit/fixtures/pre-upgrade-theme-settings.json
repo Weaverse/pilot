@@ -1,0 +1,16 @@
+{
+  "source": "Persisted theme settings as saved by Pilot before the Translation Manager migration (schema shipped at origin/main 2f8a10fdb8e8bf38728ee236ebb6f79d396538fe).",
+  "note": "These keys exist in every live storefront upgraded from that release. The migration renamed the badge settings to translation keys and stopped forwarding the quick-shop label, which silently reverts customer-visible merchandising copy to theme defaults.",
+  "settings": {
+    "bestSellerBadgeText": "Kundenliebling",
+    "newBadgeText": "Neu eingetroffen",
+    "bundleBadgeText": "Set",
+    "soldOutBadgeText": "Ausverkauft",
+    "saleBadgeText": "-[percentage]% reduziert",
+    "pcardQuickShopButtonText": "Schnellansicht",
+    "newBadgeDaysOld": 30,
+    "badgeTextTransform": "uppercase",
+    "pcardEnableQuickShop": true,
+    "pcardQuickShopButtonType": "text"
+  }
+}

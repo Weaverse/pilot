@@ -140,6 +140,54 @@ MOD  ~12 components/routes                        useThemeText → useTranslatio
 10. removed legacy paths (`COUNTRIES`, `getLocalePrefixFromPath`, `/api/countries`)
     are referenced nowhere
 
+## Forward fix design (2026-08-26, `fix/i18n-release-blockers`)
+
+Four release blockers on `30a3664e`. Each fix lands at the shared boundary so
+siblings are covered, and each is proved by a mutation that reintroduces it.
+
+### P1-1 — split the four language identities
+
+`Locale` gains two optional fields, set only where a market's identities
+diverge, so 30 of 33 markets are untouched:
+
+- `providerLanguage` — the `LanguageCode` sent to Shopify and Weaverse.
+- `bundleLocale` — the theme translation file to load.
+
+Two readers own the defaults, so no call site re-derives them:
+`providerLanguageFor()` falls back to `language`, `bundleLocaleFor()` to the
+BCP-47 primary subtag. `providerContextForRequest()` is the single seam
+`app/.server/context.ts` hands to `createHydrogenContext`, which is what puts
+`language` on every `@inContext` query.
+
+`Intl` tags move off the provider enum onto `hreflang`, because `ZH_CN-CN` is
+not a BCP-47 tag and `Intl` throws on it — prices (`parseAsCurrency`) and blog
+dates were both building tags that way.
+
+`app/i18n/zh-tw.json` is added: `zh.json` is Simplified, and Hong Kong and
+Taiwan write Traditional.
+
+### P1-2 — one payload seam owns provenance
+
+`localizedThemePayload()` builds `weaverseTheme`: the market bundle merges into
+`staticContent`, `merchantOverrides` passes through untouched. `legacyThemeText`
+treats any published string — including `""` — as current intent.
+
+### P1-3 — one map owns persisted merchandising copy
+
+`LEGACY_SETTING_FOR_KEY` gains the five badge settings and the quick-shop
+label. `SHIPPED_DEFAULT_FOR_SETTING` records the English `defaultValue` each
+setting shipped with, so an untouched value falls through to the market's
+translation instead of pinning English. `controlCopy()` applies the same rule to
+a value a component was passed; `ProductCard` forwards
+`pcardQuickShopButtonText` again and badges read through `useLegacyThemeText`.
+
+### P1-4 — positive path validation
+
+`safeRedirectPath()` accepts exactly one leading `/` not followed by `/` or
+`\`, rejects control characters, and otherwise returns the caller's localized
+fallback. The broken `isLocalPath` (which trusted `new URL()` throwing) is
+deleted. The redirect keeps `headers` so the cart-id cookie is not lost.
+
 ## Gates
 
 `npm run biome` · `npm run typecheck` · `npm run test:unit` ·

@@ -6,6 +6,7 @@ import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
+import { resolveLocaleFromRequest } from "~/utils/locale";
 import { seoMetaFromMatches } from "~/utils/seo";
 import { WeaverseContent } from "~/weaverse";
 
@@ -15,6 +16,10 @@ export const loader = async (args: LoaderFunctionArgs) => {
   const { params, request, context } = args;
   const storefront = context.storefront;
   const { language, country } = storefront.i18n;
+  // The canonical market table owns the BCP-47 tag; `storefront.i18n.language`
+  // is the provider enum and can be script-specific (`ZH_CN`), which `Intl`
+  // rejects.
+  const { hreflang } = resolveLocaleFromRequest(request);
   const blogHandle = params?.blogHandle;
 
   invariant(blogHandle, "Missing blog handle");
@@ -39,7 +44,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
     const { publishedAt } = article;
     return {
       ...article,
-      publishedAt: new Intl.DateTimeFormat(`${language}-${country}`, {
+      publishedAt: new Intl.DateTimeFormat(hreflang, {
         year: "numeric",
         month: "long",
         day: "numeric",

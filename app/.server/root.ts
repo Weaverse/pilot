@@ -8,7 +8,7 @@ import type {
 import invariant from "tiny-invariant";
 import type { EnhancedMenu } from "~/types/menu";
 import { seoPayload } from "./seo";
-import { resolveTranslations } from "./translations";
+import { localizedThemePayload } from "./translations";
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
@@ -42,16 +42,7 @@ export async function loadCriticalData({
       language: storefront.i18n.language,
     },
     selectedLocale: storefront.i18n,
-    weaverseTheme: {
-      ...weaverseTheme,
-      // Theme-shipped translations for the active market, with any published
-      // merchant translations layered on top. `withWeaverse` feeds this to
-      // `TranslationProvider`, so SSR and hydration read the same source.
-      merchantOverrides: resolveTranslations(
-        storefront.i18n,
-        weaverseTheme.merchantOverrides,
-      ),
-    },
+    weaverseTheme: localizedThemePayload(weaverseTheme, storefront.i18n),
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
   };

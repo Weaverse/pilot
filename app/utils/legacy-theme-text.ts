@@ -11,6 +11,15 @@ import { getNestedKey } from "@weaverse/hydrogen";
  * merchant's published contact and legal text with sample data on upgrade.
  */
 export const LEGACY_SETTING_FOR_KEY: Record<string, string> = {
+  // Merchandising copy. These settings were renamed to translation keys by the
+  // migration, orphaning the values every upgraded storefront already has —
+  // badge wording and the quick-shop CTA are customer-visible conversion copy.
+  "badge.bestSeller": "bestSellerBadgeText",
+  "badge.new": "newBadgeText",
+  "badge.bundle": "bundleBadgeText",
+  "badge.soldOut": "soldOutBadgeText",
+  "badge.sale": "saleBadgeText",
+  "product.quickShop": "pcardQuickShopButtonText",
   "footer.bio": "bio",
   "footer.addressTitle": "addressTitle",
   "footer.storeAddress": "storeAddress",
@@ -21,6 +30,36 @@ export const LEGACY_SETTING_FOR_KEY: Record<string, string> = {
   "footer.newsletterButtonText": "newsletterButtonText",
   "footer.copyright": "copyright",
   "announcement.topbarText": "topbarText",
+};
+
+/**
+ * The English `defaultValue` each legacy setting shipped with, taken from the
+ * schema at the release before the Translation Manager migration.
+ *
+ * Every one of these settings had a default, so an upgraded storefront carries
+ * the value whether or not the merchant ever opened the field. A persisted
+ * value equal to what the theme shipped is not a choice — treating it as one
+ * would pin English copy into every localized market and undo the migration.
+ * Anything that differs, including an empty string, is the merchant's own.
+ */
+const SHIPPED_DEFAULT_FOR_SETTING: Record<string, string> = {
+  bestSellerBadgeText: "Best Seller",
+  newBadgeText: "New",
+  bundleBadgeText: "Bundle",
+  soldOutBadgeText: "Sold out",
+  saleBadgeText: "-[percentage]% Off",
+  pcardQuickShopButtonText: "Quick shop",
+  bio: "<p>We are a team of designers, developers, and creatives who are passionate about creating beautiful and functional products.</p>",
+  addressTitle: "OUR SHOP",
+  storeAddress: "301 Front St W, Toronto, ON M5V 2T6, Canada",
+  storeEmail: "contact@my-store.com",
+  newsletterTitle: "STAY IN TOUCH",
+  newsletterDescription: "News and inspiration in your inbox, every week.",
+  newsletterPlaceholder: "Please enter your email",
+  newsletterButtonText: "Subscribe",
+  copyright: "© 2024 Weaverse. All rights reserved.",
+  topbarText:
+    "<p>Free shipping on orders over $50</p><p>New arrivals dropping every week</p><p>30-day hassle-free returns</p><p>Sign up and get 10% off your first order</p>",
 };
 
 /**
@@ -49,10 +88,14 @@ export function legacyThemeText(
   settings: Record<string, unknown> | null | undefined,
   merchantOverrides: Record<string, unknown> | null | undefined,
 ): string | null {
+  // Presence, not truthiness: a merchant who cleared the string in the
+  // Translation Manager published an empty value, and that is current intent.
+  // Requiring a non-empty override treats it as absent and resurrects the
+  // pre-migration copy they deliberately removed.
   const published = merchantOverrides
     ? getNestedKey(merchantOverrides, key)
     : undefined;
-  if (typeof published === "string" && published.length > 0) {
+  if (typeof published === "string") {
     return null;
   }
   const legacyName = LEGACY_SETTING_FOR_KEY[key];
@@ -64,8 +107,34 @@ export function legacyThemeText(
   }
 
   const legacy = settings[legacyName];
+  if (typeof legacy !== "string") {
+    return null;
+  }
 
-  // Presence is proven; only a string is usable copy. An empty one is a
-  // deliberate clear and is returned as-is.
-  return typeof legacy === "string" ? legacy : null;
+  // Presence is proven; an empty string is a deliberate clear and is kept. A
+  // value still identical to the shipped default was never edited, so the
+  // market's translation applies instead.
+  return legacy === SHIPPED_DEFAULT_FOR_SETTING[legacyName] ? null : legacy;
+}
+
+/**
+ * Copy for a merchant-configurable control, given the value a component was
+ * passed and the theme's own reader.
+ *
+ * A prop wins because it is an explicit merchant setting forwarded by the
+ * caller; `undefined` means the caller has nothing to say and the translated
+ * copy applies. A shipped default reaching a component is filtered out first,
+ * so the market's translation is not suppressed by copy no merchant chose.
+ */
+export function controlCopy(
+  value: string | undefined,
+  setting: string,
+  translated: (key: string) => string,
+  key: string,
+): string {
+  if (value === undefined || value === SHIPPED_DEFAULT_FOR_SETTING[setting]) {
+    return translated(key);
+  }
+
+  return value;
 }

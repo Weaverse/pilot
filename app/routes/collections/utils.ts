@@ -23,7 +23,9 @@ export function getSortValuesFromParam(sortParam: SortParam | null): {
 }
 
 export function parseAsCurrency(value: number, locale: Locale) {
-  return new Intl.NumberFormat(`${locale.language}-${locale.country}`, {
+  // `hreflang`, not `language`: the provider code can be script-specific
+  // (`ZH_CN`), which is not a BCP-47 tag and makes `Intl` throw.
+  return new Intl.NumberFormat(locale.hreflang, {
     style: "currency",
     currency: locale.currency,
   }).format(value);

@@ -20,8 +20,10 @@ import { VariantSelector } from "~/components/product/variant-selector";
 import { ProductMedia } from "~/components/product-media";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Skeleton } from "~/components/skeleton";
+import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import type { ThemeSettings } from "~/types/weaverse";
+import { controlCopy } from "~/utils/legacy-theme-text";
 
 interface QuickViewData {
   product: NonNullable<ProductQuery["product"]>;
@@ -183,9 +185,19 @@ export function QuickShopTrigger({
   productHandle,
   showOnHover = true,
   buttonType = "icon",
-  buttonText = "Quick shop",
+  buttonText,
   panelType = "modal",
 }: QuickShopTriggerProps) {
+  // Merchant-configurable CTA copy: a persisted `pcardQuickShopButtonText`
+  // outranks the theme's translation, but the English string the schema
+  // shipped is not a merchant choice and must not suppress it.
+  const themeText = useLegacyThemeText();
+  const label = controlCopy(
+    buttonText,
+    "pcardQuickShopButtonText",
+    themeText,
+    "product.quickShop",
+  );
   const [open, setOpen] = useState(false);
   const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 
@@ -219,7 +231,7 @@ export function QuickShopTrigger({
               </span>
             </>
           ) : (
-            <span className="px-2">{buttonText}</span>
+            <span className="px-2">{label}</span>
           )}
         </Button>
       </Dialog.Trigger>

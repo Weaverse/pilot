@@ -31,7 +31,12 @@ import {
   updateCartNote,
 } from "~/utils/cart-note";
 import { getFeaturedProducts } from "~/utils/featured-products";
-import { resolveLocale } from "~/utils/locale";
+import {
+  localizePath,
+  resolveLocale,
+  resolveLocaleFromRequest,
+} from "~/utils/locale";
+import { safeRedirectPath } from "~/utils/safe-redirect";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { cart, storefront } = context;
@@ -138,9 +143,21 @@ export async function action({ request, context }: ActionFunctionArgs) {
     headers = cart.setCartId(result.cart.id);
   }
 
-  const redirectTo = formData.get("redirectTo") ?? null;
-  if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
-    return redirect(redirectTo);
+  const redirectTo = formData.get("redirectTo");
+  if (redirectTo !== null) {
+    // `redirectTo` is a hidden field on a public cart form, so it is
+    // attacker-controlled: a refused target falls back to this shopper's own
+    // localized cart rather than leaving the storefront.
+    //
+    // `headers` carries `Set-Cookie` for the cart id. A refused target used to
+    // fall through to `data(..., { headers })`; redirecting without them would
+    // drop a freshly created cart on exactly the request that created it.
+    const locale = resolveLocaleFromRequest(request);
+
+    return redirect(
+      safeRedirectPath(redirectTo, localizePath("/cart", locale)),
+      { headers },
+    );
   }
 
   const { cart: cartResult, errors, userErrors } = result || {};
@@ -237,13 +254,4 @@ function getCountryCodeFromUrl(url: string | null) {
   } catch {
     return;
   }
-}
-
-function isLocalPath(url: string) {
-  try {
-    new URL(url);
-  } catch (e) {
-    return true;
-  }
-  return false;
 }

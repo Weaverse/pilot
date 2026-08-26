@@ -6,7 +6,8 @@ import hi from "~/i18n/hi.json" with { type: "json" };
 import it from "~/i18n/it.json" with { type: "json" };
 import ja from "~/i18n/ja.json" with { type: "json" };
 import zh from "~/i18n/zh.json" with { type: "json" };
-import type { Locale } from "~/utils/locale";
+import zhTw from "~/i18n/zh-tw.json" with { type: "json" };
+import { bundleLocaleFor, type Locale } from "~/utils/locale";
 
 type Translations = Record<string, unknown>;
 
@@ -28,6 +29,8 @@ const BUNDLED: Record<string, Translations> = {
   it,
   ja,
   zh,
+  // Traditional script for `zh-HK` and `zh-TW`; `zh` is Simplified.
+  "zh-tw": zhTw,
 };
 
 /**
@@ -61,20 +64,50 @@ function deepMerge(base: Translations, overrides: Translations): Translations {
 }
 
 /**
- * Active-market translations for the root loader's `weaverseTheme` payload.
+ * The theme's own copy for the active market: `en.json` with that market's
+ * bundle layered on top.
  *
- * The SDK only fetches *merchant* translations from the Weaverse API, so
- * without this a project with nothing published in the Translation Manager
- * would render English in every market. Theme-shipped copy is the baseline;
- * anything the merchant publishes wins over it, key by key.
+ * This is `staticContent`, not `merchantOverrides`. The SDK resolves a key as
+ * `override ?? staticValue`, and `merchantOverrides` is also the provenance
+ * signal {@link legacyThemeText} reads to decide whether a merchant has
+ * published a string. Passing theme-shipped copy as an override tells every
+ * consumer the merchant published demo text they have never seen, which
+ * discards their saved pre-migration copy in every non-English market.
+ *
+ * English is the source language, so a market with no bundle keeps `source`
+ * unchanged; a partial bundle falls back to English key by key.
  */
-export function resolveTranslations(
+export function resolveThemeContent(
   locale: Locale,
-  merchantOverrides: Translations | undefined,
+  source: Translations | undefined,
 ): Translations | undefined {
-  const bundled = BUNDLED[locale.language.toLowerCase()];
+  // Keyed by the market's bundle locale, never the provider enum: `ZH_CN` is
+  // not a bundle name, and `zh-TW` needs Traditional rather than Simplified.
+  const bundled = BUNDLED[bundleLocaleFor(locale)];
   if (!bundled) {
-    return merchantOverrides;
+    return source;
   }
-  return merchantOverrides ? deepMerge(bundled, merchantOverrides) : bundled;
+  return source ? deepMerge(source, bundled) : bundled;
+}
+
+/**
+ * The `weaverseTheme` payload the root loader sends to the client.
+ *
+ * The SDK splits this into `TranslationProvider`'s two inputs and resolves a
+ * key as `override ?? staticValue`, so the split decides provenance:
+ * `staticContent` is theme-owned copy for the active market, `merchantOverrides`
+ * is only what the merchant published. Collapsing the two makes bundled demo
+ * text look merchant-published and discards saved pre-migration copy.
+ */
+export function localizedThemePayload<
+  T extends {
+    staticContent?: Translations;
+    merchantOverrides?: Translations;
+  },
+>(theme: T, locale: Locale): T {
+  return {
+    ...theme,
+    staticContent: resolveThemeContent(locale, theme.staticContent),
+    merchantOverrides: theme.merchantOverrides,
+  };
 }

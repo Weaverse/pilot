@@ -10,7 +10,11 @@ import {
   CART_MUTATION_FRAGMENT,
   CART_QUERY_FRAGMENT,
 } from "~/graphql/fragments";
-import { resolveLocaleFromRequest, unauthorizedRedirect } from "~/utils/locale";
+import {
+  providerContextForRequest,
+  resolveLocaleFromRequest,
+  unauthorizedRedirect,
+} from "~/utils/locale";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
 
@@ -48,7 +52,7 @@ export async function createHydrogenRouterContext(
       cache,
       waitUntil,
       session,
-      i18n: locale,
+      i18n: providerContextForRequest(request),
       customerAccount: {
         // Hydrogen's default handler redirects to a fixed `/account/login`,
         // dropping the market: a shopper bounced from `/de-de/account` would

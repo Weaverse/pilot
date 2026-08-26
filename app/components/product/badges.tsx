@@ -1,12 +1,13 @@
 import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { colord } from "colord";
 import type {
   ProductQuery,
   ProductVariantFragment,
 } from "storefront-api.generated";
+import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 
@@ -55,11 +56,11 @@ export function NewBadge({
   newBadgeDaysOld: number;
   className?: string;
 }) {
-  const { t } = useTranslation();
+  const themeText = useLegacyThemeText();
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
-        text={t("badge.new")}
+        text={themeText("badge.new")}
         backgroundColor={newBadgeColor}
         badgeStyle={badgeStyle}
         className={clsx("new-badge", className)}
@@ -78,10 +79,10 @@ export function BestSellerBadge({
   bestSellerBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation();
+  const themeText = useLegacyThemeText();
   return (
     <Badge
-      text={t("badge.bestSeller")}
+      text={themeText("badge.bestSeller")}
       backgroundColor={bestSellerBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("best-seller-badge", className)}
@@ -98,10 +99,10 @@ export function SoldOutBadge({
   soldOutBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation();
+  const themeText = useLegacyThemeText();
   return (
     <Badge
-      text={t("badge.soldOut")}
+      text={themeText("badge.soldOut")}
       backgroundColor={soldOutBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("sold-out-badge", className)}
@@ -118,10 +119,10 @@ export function BundleBadge({
   bundleBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation();
+  const themeText = useLegacyThemeText();
   return (
     <Badge
-      text={t("badge.bundle")}
+      text={themeText("badge.bundle")}
       backgroundColor={bundleBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("bundle-badge", className)}
@@ -142,10 +143,10 @@ export function SaleBadge({
   saleBadgeColor: string;
   className?: string;
 }) {
-  const { t } = useTranslation();
+  const themeText = useLegacyThemeText();
   let { amount, percentage } = calculateDiscount(price, compareAtPrice);
   let discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
-  let text = t("badge.sale")
+  let text = themeText("badge.sale")
     .replace("[amount]", discountAmount.withoutTrailingZeros)
     .replace("[percentage]", percentage);
 

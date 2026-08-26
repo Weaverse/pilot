@@ -266,3 +266,145 @@ Live: 33/33 markets serve 200 with correct `lang`/`dir`; invented prefixes
 paths emit 34 `hreflang` links (33 markets + `x-default`) while
 `/products/<handle>`, `/about` and `/de-de/about` emit none; reserved topbar
 height matches the rendered bar on every market sampled.
+
+## 2026-08-26 — Forward fix for four release blockers (`fix/i18n-release-blockers`)
+
+Branch cut from published `30a3664e`; no history rewritten. Every blocker was
+reproduced before any production change, and every fix proved by a mutation
+that reintroduces the defect.
+
+### P1-1 — Chinese URL identity was reused as provider language
+
+**RED.** Read-only Storefront probe: `ZH`/CN → `EN`, `ZH`/HK → `EN`, `ZH`/TW →
+`EN`; control `ZH_CN`/CN → `ZH_CN`. `tests/unit/locale-provider.test.ts`
+"Chinese markets request a language Shopify resolves" failed `resolves: false`.
+
+**GREEN.** `Locale` gained `providerLanguage` and `bundleLocale`, read through
+`providerLanguageFor()` and `bundleLocaleFor()`; `providerContextForRequest()`
+is the one seam `context.ts` uses. `Intl` tags moved from the provider enum to
+`hreflang` in `parseAsCurrency`, `blogs/blog.tsx` and `blogs/article.tsx` —
+`ZH_CN-CN` makes `Intl` throw.
+
+Writing the bundle test found a second defect the review had not itemised:
+`zh.json` is Simplified, and the bundle key was derived from the BCP-47 primary
+subtag, so `/zh-hk` and `/zh-tw` rendered Simplified copy. `app/i18n/zh-tw.json`
+was added at 174/174 key parity, zero interpolation drift, zero
+Simplified-only characters; the 25 entries identical to `zh.json` were each
+checked as script-neutral.
+
+**Mutations, all caught:** helper returning the bare enum (3 fail); seam
+returning the raw locale (1); bundle keyed by the provider enum (1); HK given
+`ZH_CN` (2); bundle collapsed to the primary subtag (5); HK's `bundleLocale`
+removed (3); `zh-tw` unregistered (3).
+
+**Live.** `/zh-cn` renders 购物车, `/zh-hk` and `/zh-tw` render 購物車, each with
+its own `<html lang>`. Provider readback: `/zh-cn` sends `ZH_CN` → Shopify
+resolves `ZH_CN`.
+
+`ZH_TW` resolves to `EN` on the current store because it is not an enabled
+language there — `availableCountries` reports only `EN VI ZH_CN`, and CN and TW
+are not enabled countries at all. A control probe confirms this is store
+configuration, not a bad enum: an invalid value (`XX_YY`) is a GraphQL error,
+while `ZH_TW` is accepted and silently falls back. Same class as the 30/33 gap
+below.
+
+### P1-2 — bundled copy was labelled merchant-published
+
+**RED.** `tests/unit/translation-provenance.test.ts`, composing the real German
+payload: footer email returned `contact@my-store.com` instead of the saved
+`merchant@example.test`; copyright returned the German demo string instead of
+`© Merchant 2026`; announcement likewise; an explicitly published `""` was
+ignored. 5 of 7 failed.
+
+**GREEN.** `resolveTranslations` became `resolveThemeContent` and merges the
+market bundle into `staticContent`; `localizedThemePayload()` is the single seam
+the root loader uses, leaving `merchantOverrides` exactly as the API returned
+it. `legacyThemeText` treats any published string, `""` included, as intent.
+
+**Mutations, all caught:** bundle labelled as `merchantOverrides` (6 fail);
+override intent by truthiness (1); `merchantOverrides` dropped (2); bundle
+overwriting English siblings (1, in `translation.test.ts`).
+
+**Live, on the German market.** The merchant's persisted `© 2025 Weaverse. All
+rights reserved.` renders; the German bundle's `© 2024 Weaverse. Alle Rechte
+vorbehalten.` is present in the payload and correctly does not render.
+`Subscribe me` (merchant edit) renders while `BLEIBEN SIE IN KONTAKT` comes from
+the bundle — merchant copy and translation coexisting, each where it belongs.
+
+### P1-3 — persisted badge and quick-shop copy was orphaned
+
+**RED.** `tests/unit/merchant-copy.test.ts` against
+`fixtures/pre-upgrade-theme-settings.json`: quick-shop rendered `Quick shop`
+instead of `Schnellansicht`, badges rendered theme defaults instead of the
+merchant's words. 5 of 7 failed.
+
+**GREEN.** The five badge settings and `pcardQuickShopButtonText` were added to
+`LEGACY_SETTING_FOR_KEY`; badges read through `useLegacyThemeText`; `ProductCard`
+forwards the label again and `QuickShopTrigger` resolves it via `controlCopy()`
+instead of defaulting to an English literal.
+
+A second RED followed: every one of these settings shipped an English
+`defaultValue`, so an upgraded storefront persists it whether or not the
+merchant ever opened the field. Preserving those verbatim would pin English into
+every localized market — the migration's whole purpose, undone.
+`SHIPPED_DEFAULT_FOR_SETTING` records them, so an untouched value falls through
+to the translation while any edit, including `""`, survives.
+
+**Mutations, all caught:** badge keys unmapped (3 fail); quick-shop mapping
+removed (2); shipped-default table ignored (1); `controlCopy` ignoring the
+forwarded value (1); `controlCopy` letting the shipped default win (1).
+
+**Live.** German collection page: `saleBadgeText` is `Sale` — a merchant edit,
+since the shipped default was `-[percentage]% Off` — and `Sale` renders while
+the German `-[percentage]% Rabatt` correctly does not.
+
+**Coverage limit, stated plainly.** Component-render tests are not possible in
+this suite: Playwright's transform rewrites app `.tsx` JSX into fixture objects
+React refuses to render, and a scoped `tsconfig` does not override it. A real
+static-router harness was built and discarded rather than left as a fake. The
+copy layer is unit-tested; the component wiring is covered by the live checks
+above.
+
+### P1-4 — cart action accepted scheme-relative redirects
+
+**RED.** Against the shipped guard verbatim: `//evil.example/phish` →
+`Location: //evil.example/phish`; `///evil.example/phish` and
+`/\evil.example/phish` likewise. Only the absolute `https://` form was refused,
+because the check trusted `new URL()` throwing.
+
+**GREEN.** `app/utils/safe-redirect.ts` validates positively: exactly one
+leading `/`, next character not `/` or `\`, no control characters, otherwise the
+caller's localized cart. `isLocalPath` was deleted. The redirect carries
+`headers` so a cart created by the same mutation is not lost.
+
+**Mutations, all caught:** the shipped parse-failure guard restored (5 fail);
+network-path check removed (4); backslash spelling allowed (1).
+
+**Live, real cart POST to `/de-de/cart`.** `//evil.example/phish`,
+`///evil.example/phish`, `/\evil.example/phish` and `https://evil.example/phish`
+all redirect to `http://localhost:3456/de-de/cart`;
+`/ar-ae/collections/all?sort=price` and `/products/hoodie#reviews` are preserved
+with query and fragment intact.
+
+### Regression sweep
+
+33/33 markets serve 200 with correct `lang`/`dir`; `/en-xx`,
+`/zz-zz/collections/all` and `/en-xx/products/hoodie.data` still 404.
+
+### Deployment prerequisites — documented, not mutated
+
+No Shopify, Weaverse, Customer Account, DNS or deployment state was changed.
+
+1. **Shopify market enablement.** 3 of 33 theme routes fully match Shopify
+   today (`/` → EN-US/USD, `/en-gb` → EN-GB/GBP, `/en-vn` → EN-VN/VND). The
+   store enables only `EN VI ZH_CN`. Every intended country, currency and
+   language — GCC, India, UK, US, and Traditional Chinese for `/zh-hk` and
+   `/zh-tw` — must be enabled and read back before launch, or the market
+   removed from the table. Shopify does not error on an unenabled combination;
+   it silently serves the default.
+2. **Customer Account logout URIs.** Register the storefront origin and every
+   served `origin/<prefix>` home URI as allowed post-logout URIs. The
+   authentication callback stays unlocalized.
+3. **Translation Manager rollout.** Sync and publish the theme keys and intended
+   merchant overrides after this correctness fix, so provenance is recorded
+   against the corrected precedence.

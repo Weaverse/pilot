@@ -1,0 +1,228 @@
+{
+  "badge": {
+    "bestSeller": "熱銷",
+    "new": "新品",
+    "bundle": "套組",
+    "soldOut": "已售完",
+    "sale": "-[percentage]% 折扣"
+  },
+  "cart": {
+    "title": "購物車",
+    "empty": {
+      "message": "您尚未加入任何商品，現在開始選購吧！",
+      "startShopping": "開始購物",
+      "shopBestSellers": "選購熱銷商品"
+    },
+    "summary": {
+      "orderSummary": "訂單摘要",
+      "estimatedTotal": "預估總計：",
+      "taxesDiscountsShipping": "稅金、折扣與{{link}}將於結帳時計算。",
+      "shipping": "運費",
+      "viewCart": "查看購物車"
+    },
+    "actions": {
+      "addNote": "新增備註",
+      "discountCode": "新增折扣碼",
+      "giftCard": "使用禮物卡",
+      "checkout": "前往結帳",
+      "cancel": "取消",
+      "saveNote": "儲存備註",
+      "apply": "套用",
+      "redeem": "兌換"
+    },
+    "messages": {
+      "noteSaved": "購物車備註已儲存 🎉",
+      "discountApplied": "折扣已成功套用 🎉",
+      "discountInvalid": "折扣碼無效。",
+      "giftCardApplied": "禮物卡已成功套用 🎉",
+      "giftCardInvalid": "禮物卡代碼無效。"
+    },
+    "placeholder": {
+      "note": "為您的訂單加上特殊說明或備註...",
+      "discountCode": "折扣碼",
+      "giftCardCode": "禮物卡代碼"
+    },
+    "bestSellers": "更多熱銷商品"
+  },
+  "product": {
+    "addToCart": "加入購物車",
+    "soldOut": "已售完",
+    "from": "起價",
+    "viewFullDetails": "查看完整詳情 →",
+    "quickShop": "快速選購",
+    "add": "新增",
+    "remove": "移除",
+    "pictureOf": "{{name}}的圖片",
+    "secondPictureOf": "{{name}}的第二張圖片"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "保持關注！",
+      "description": "訂閱我們的電子報，獲取專屬優惠、新品資訊等更多內容。",
+      "buttonText": "首單享 15% 折扣",
+      "placeholder": "請輸入您的電子郵件"
+    }
+  },
+  "search": {
+    "title": "搜尋",
+    "placeholder": "搜尋本店商品...",
+    "enterKeyword": "請輸入關鍵字",
+    "viewAllResults": "查看全部結果",
+    "noResults": "找不到「{{term}}」的結果，請嘗試其他搜尋字詞。",
+    "noResultsShort": "找不到結果：",
+    "trendingProducts": "熱門商品",
+    "problemLoadingProducts": "載入相關商品時發生問題",
+    "popularKeywords": "太陽眼鏡、帽子、外套、鞋子",
+    "popularSearches": "熱門搜尋："
+  },
+  "footer": {
+    "bio": "<p>我們是一支由設計師、開發者與創意人才組成的團隊，熱衷於打造美觀實用的產品。</p>",
+    "addressTitle": "我們的門市",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canada",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "保持聯絡",
+    "newsletterDescription": "每週為您送上資訊與靈感。",
+    "newsletterPlaceholder": "請輸入您的電子郵件",
+    "newsletterButtonText": "送出",
+    "copyright": "© 2024 Weaverse. 保留所有權利。",
+    "email": "電子郵件：",
+    "newsletterSuccess": "感謝您的訂閱！🎉",
+    "newsletterError": "訂閱時發生錯誤。"
+  },
+  "announcement": {
+    "topbarText": "<p>訂單滿 50 美元免運費</p><p>每週上新</p><p>30 天無憂退貨</p><p>註冊即享首單 10% 折扣</p>"
+  },
+  "pagination": {
+    "loading": "載入中...",
+    "loadPrevious": "↑ 載入上一頁",
+    "loadMore": "↓ 載入更多"
+  },
+  "accessibility": {
+    "closeCartDrawer": "關閉購物車",
+    "close": "關閉",
+    "removeGiftCard": "移除禮物卡代碼 {{code}}",
+    "removeDiscount": "移除折扣碼 {{code}}",
+    "predictiveSearch": "智慧搜尋",
+    "quickShopModal": "快速選購視窗",
+    "skipToContent": "跳至主要內容"
+  },
+  "account": {
+    "signOut": "登出",
+    "na": "無",
+    "details": {
+      "title": "帳戶",
+      "name": "姓名",
+      "phone": "電話號碼",
+      "email": "電子郵件地址",
+      "editLink": "編輯帳戶資訊"
+    },
+    "orders": {
+      "title": "訂單",
+      "empty": "您尚未有任何訂單。",
+      "orderImage": "訂單圖片",
+      "more": "更多",
+      "orderId": "訂單 ID",
+      "orderNo": "訂單編號",
+      "orderDate": "訂購日期",
+      "fulfillmentStatus": "出貨狀態",
+      "viewDetails": "查看詳情",
+      "startShopping": "開始購物 →",
+      "loading": "載入中...",
+      "loadPrevious": "載入上一頁",
+      "loadMore": "載入更多",
+      "viewOrder": "查看訂單 →"
+    },
+    "address": {
+      "title": "地址簿",
+      "empty": "您尚未儲存任何地址。",
+      "add": "新增地址",
+      "default": "預設",
+      "edit": "編輯",
+      "remove": "刪除"
+    },
+    "edit": {
+      "title": "編輯帳戶",
+      "firstName": "名字",
+      "lastName": "姓氏",
+      "cancel": "取消",
+      "save": "儲存",
+      "saving": "儲存中"
+    },
+    "addressForm": {
+      "titleAdd": "新增地址",
+      "titleEdit": "編輯地址",
+      "company": "公司",
+      "address1": "地址第 1 行",
+      "address1Required": "地址第 1 行*",
+      "address2": "地址第 2 行",
+      "city": "城市",
+      "state": "縣 / 市",
+      "statePlaceholder": "縣 / 市 (zoneCode)",
+      "zip": "郵遞區號",
+      "country": "國家",
+      "countryPlaceholder": "國家（地區）代碼",
+      "phone": "電話",
+      "setDefault": "設為預設地址"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}} 件商品",
+    "filter": "篩選",
+    "filters": "篩選條件",
+    "closeFilters": "關閉篩選面板",
+    "sortBy": "排序方式：",
+    "sort": "排序",
+    "sortOptions": {
+      "featured": "推薦",
+      "relevance": "相關度",
+      "priceLowHigh": "價格由低至高",
+      "priceHighLow": "價格由高至低",
+      "bestSelling": "最暢銷",
+      "newest": "最新"
+    },
+    "clearAllFilters": "清除全部篩選",
+    "clearAllFiltersAriaLabel": "清除所有已套用的篩選條件",
+    "noProductsMatchedFilters": "沒有符合篩選條件的商品。",
+    "priceRange": {
+      "minPrice": "最低價格",
+      "maxPrice": "最高價格",
+      "to": "至"
+    }
+  },
+  "productDetails": {
+    "description": "商品描述",
+    "shipping": "運送",
+    "returns": "退貨",
+    "learnMore": "了解更多"
+  },
+  "review": {
+    "writeYourReview": "撰寫評論",
+    "shareExperience": "與其他顧客分享您的體驗",
+    "rating": "評分",
+    "yourName": "您的姓名",
+    "enterName": "請輸入您的姓名",
+    "emailAddress": "電子郵件地址",
+    "enterEmail": "請輸入您的電子郵件",
+    "reviewTitle": "評論標題",
+    "giveTitle": "為您的評論取個標題",
+    "yourReview": "您的評論",
+    "shareExperienceProduct": "分享您使用該商品的體驗",
+    "cancel": "取消",
+    "submit": "送出評論",
+    "submitting": "送出中...",
+    "selectRating": "請選擇評分",
+    "successTitle": "評論送出成功！",
+    "successMessage": "感謝您的回饋。您的評論正在後台處理，幾分鐘後即可發布。",
+    "writeAnother": "再寫一則評論",
+    "errorTitle": "送出失敗",
+    "errorMessage": "送出評論時發生錯誤，請再試一次。",
+    "tryAgain": "再試一次",
+    "imageAlt": "評論圖片 {{index}}",
+    "imageView": "查看",
+    "imageGalleryAriaLabel": "評論圖片庫",
+    "closeImageAriaLabel": "關閉圖片",
+    "previousImageAriaLabel": "上一張圖片",
+    "nextImageAriaLabel": "下一張圖片",
+    "reviewImageAlt": "評論圖片"
+  }
+}
