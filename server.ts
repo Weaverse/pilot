@@ -7,6 +7,7 @@ import {
   isUnsupportedMarketPath,
   localizePath,
   resolveLocaleFromRequest,
+  retiredMarketPath,
 } from "~/utils/locale";
 
 /**
@@ -43,7 +44,19 @@ export default {
        * URLs. Refusing here covers every route, including `.data` requests,
        * rather than asking each loader to remember.
        */
-      if (isUnsupportedMarketPath(new URL(request.url).pathname)) {
+      const requestUrl = new URL(request.url);
+      // A market this storefront used to serve is still indexed and linked, so
+      // its URLs redirect to the market-neutral equivalent rather than 404.
+      const retired = retiredMarketPath(requestUrl.pathname);
+
+      if (retired) {
+        return new Response(null, {
+          status: 301,
+          headers: { Location: retired + requestUrl.search },
+        });
+      }
+
+      if (isUnsupportedMarketPath(requestUrl.pathname)) {
         return new Response("Not Found", { status: 404 });
       }
 
@@ -87,7 +100,13 @@ export default {
           response,
           storefront: hydrogenContext.storefront,
         });
-        const location = redirected.headers.get("Location");
+        // A single-fetch navigation is answered with 204 + `X-Remix-Redirect`
+        // rather than a `Location`, so both carriers must be handled: reading
+        // only `Location` would drop every client-side redirect back to a 404.
+        const header = redirected.headers.get("Location")
+          ? "Location"
+          : "X-Remix-Redirect";
+        const location = redirected.headers.get(header);
 
         if (!location || redirected.status === 404) {
           return response;
@@ -96,16 +115,22 @@ export default {
         const target = new URL(location, url);
         const localized =
           target.origin === url.origin
-            ? new URL(
-                localizePath(target.pathname, locale) + target.search,
-                url,
-              ).toString()
-            : location;
+            ? localizePath(target.pathname, locale) + target.search
+            : null;
 
         // `Headers` overwrites on `set`; spreading into an object literal
-        // would append a second Location and produce a comma-joined value.
+        // would append a second value and produce a comma-joined header.
         const headers = new Headers(redirected.headers);
-        headers.set("Location", localized);
+        headers.set(
+          header,
+          localized === null
+            ? location
+            : // `X-Remix-Redirect` carries an app-relative path; `Location` is
+              // sent absolute, matching what Hydrogen emitted.
+              header === "Location"
+              ? new URL(localized, url).toString()
+              : localized,
+        );
 
         return new Response(null, { status: redirected.status, headers });
       }

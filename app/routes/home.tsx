@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
-import { seoMetaFromMatches } from "~/utils/seo";
+import { seoMetaFromMatches, withWeaverseSeo } from "~/utils/seo";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -54,7 +54,7 @@ export const meta = ({ data, matches }: MetaArgs<typeof loader>) => {
   const routeSeo = seoMetaFromMatches(matches);
   return data?.seo
     ? routeSeo
-    : [...routeSeo, ...getWeaverseSeoMeta(data?.weaverseData)];
+    : withWeaverseSeo(routeSeo, getWeaverseSeoMeta(data?.weaverseData));
 };
 export default function Homepage() {
   return <WeaverseContent />;

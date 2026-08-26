@@ -221,6 +221,65 @@ export function localizedPathForRequest(
 }
 
 /**
+ * Market prefixes this storefront used to serve, listed in
+ * `app/utils/const.ts` before the canonical table replaced it.
+ *
+ * Search engines and inbound links still hold these URLs. Answering them with
+ * 404 discards that equity, and serving the default market's page at the old
+ * URL would duplicate the catalogue, so they redirect to the equivalent
+ * market-neutral path instead. Re-adding any of them is a one-line change to
+ * {@link SUPPORTED_LOCALES}; this map exists only so retired URLs stay
+ * addressable, and every entry is absent from that table by construction.
+ */
+const RETIRED_MARKET_PREFIXES: Record<string, true> = {
+  "/de-at": true,
+  "/de-ch": true,
+  "/en-au": true,
+  "/en-ca": true,
+  "/en-cn": true,
+  "/en-de": true,
+  "/en-es": true,
+  "/en-fr": true,
+  "/en-hk": true,
+  "/en-it": true,
+  "/en-jp": true,
+  "/en-nl": true,
+  "/en-vn": true,
+  "/es-mx": true,
+  "/fr-be": true,
+  "/fr-ca": true,
+  "/fr-ch": true,
+  "/it-ch": true,
+  "/it-it": true,
+  "/ja-jp": true,
+  "/zh-cn": true,
+  "/zh-hk": true,
+  "/zh-tw": true,
+};
+
+/**
+ * The market-neutral path a retired market's URL should redirect to, or `null`
+ * when the path is not a retired market.
+ *
+ * The query string and React Router's `.data` suffix ride along so a redirected
+ * single-fetch navigation stays a single-fetch navigation.
+ */
+export function retiredMarketPath(path: string): string | null {
+  const withSlash = path.startsWith("/") ? path : `/${path}`;
+  const [segment, rest] = splitLeadingSegment(withSlash);
+  if (RETIRED_MARKET_PREFIXES[segment.toLowerCase()] !== true) {
+    return null;
+  }
+  const suffix = withSlash.endsWith(".data") ? ".data" : "";
+  const queryAt = rest.search(/[?#]/);
+  const base = queryAt === -1 ? rest : rest.slice(0, queryAt);
+  const query = queryAt === -1 ? "" : rest.slice(queryAt);
+  const target = base.startsWith("/") ? base : `/${base}`;
+
+  return (target === "/" && suffix ? "/" : target) + suffix + query;
+}
+
+/**
  * Where to send a shopper who hits an account route without a session.
  *
  * Hydrogen's `defaultAuthStatusHandler` redirects to a fixed `/account/login`,
@@ -319,9 +378,15 @@ export function delocalizePath(path: string): string {
   if (!locale.pathPrefix) {
     return withSlash;
   }
+  // Strip the prefix only. React Router's single-fetch `.data` suffix is part
+  // of the request protocol, not the market: Hydrogen reads it to decide
+  // between a 301 `Location` and a 204 `X-Remix-Redirect`, so dropping it here
+  // would answer a client-side navigation with a document redirect.
+  const suffix = withSlash.endsWith(".data") ? ".data" : "";
   const [, rest] = splitLeadingSegment(withSlash);
+  const base = rest.startsWith("/") ? rest : `/${rest}`;
 
-  return rest.startsWith("/") ? rest : `/${rest}`;
+  return suffix && !base.endsWith(suffix) ? base + suffix : base;
 }
 
 /** An `hreflang` entry for Hydrogen's `SeoConfig.alternates`. */
@@ -337,7 +402,48 @@ export type AlternateLink = {
  * the same document in every market, and advertising them as distinct localized
  * URLs would duplicate the whole facet space per market.
  */
+/**
+ * URL namespaces addressed by a Shopify resource handle.
+ *
+ * A handle is per-market data: Shopify localizes it (hence
+ * `redirectIfHandleIsLocalized` on the product, collection, blog, article and
+ * page routes), and a resource can be unpublished in a market entirely.
+ */
+const RESOURCE_NAMESPACE: Record<string, true> = {
+  blogs: true,
+  collections: true,
+  pages: true,
+  policies: true,
+  products: true,
+};
+
+/**
+ * Whether the same path is known to address the same page in every market.
+ *
+ * Swapping the market prefix is only sound for paths the route table defines —
+ * `/`, `/search`, `/collections` — because those exist in every market by
+ * construction. A path that addresses a resource (`/products/<handle>`) is not
+ * provable here: the handle may be localized, and the resource may not be
+ * published to that market at all, so the swapped URL can 301 elsewhere or 404.
+ *
+ * Proving those would need one Storefront query per market per page. Until that
+ * data is in hand the alternates are omitted, because a wrong `hreflang` tells
+ * a search engine a page exists where it does not, which is worse than no
+ * `hreflang` at all.
+ */
+export function isMarketInvariantPath(path: string): boolean {
+  const segments = delocalizePath(path)
+    .split("?")[0]
+    .split("/")
+    .filter(Boolean);
+
+  return segments.length < 2 || RESOURCE_NAMESPACE[segments[0]] !== true;
+}
+
 export function alternateLinks(path: string, origin: string): AlternateLink[] {
+  if (!isMarketInvariantPath(path)) {
+    return [];
+  }
   const queryAt = path.search(/[?#]/);
   const neutral = delocalizePath(
     queryAt === -1 ? path : path.slice(0, queryAt),

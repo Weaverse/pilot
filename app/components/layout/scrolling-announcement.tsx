@@ -1,11 +1,13 @@
 import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
 import { useEffect } from "react";
+import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
 
 const MAX_DURATION = 20;
 
 export function ScrollingAnnouncement() {
   const themeSettings = useThemeSettings<ThemeSettings>();
+  const themeText = useLegacyThemeText();
   const {
     topbarHeight,
     topbarTextColor,
@@ -14,7 +16,7 @@ export function ScrollingAnnouncement() {
     topbarScrollingSpeed,
   } = themeSettings;
   const { t } = useTranslation();
-  const topbarText = t("announcement.topbarText");
+  const topbarText = themeText("announcement.topbarText");
 
   function updateStyles() {
     if (topbarText) {

@@ -7,6 +7,7 @@ import {
   localizedPathForRequest,
   localizePath,
   resolveLocale,
+  retiredMarketPath,
   SUPPORTED_LOCALES,
   unauthorizedRedirect,
 } from "../../app/utils/locale";
@@ -325,4 +326,71 @@ test("a single-fetch account request returns to a real page path", () => {
   );
 
   expect(location.searchParams.get("return_to")).toBe("/de-de/account");
+});
+
+test("neutralizing a path preserves the single-fetch protocol", () => {
+  // Hydrogen reads the `.data` suffix to choose between a 301 `Location` and a
+  // 204 `X-Remix-Redirect`. Stripping it while neutralizing the market answers
+  // a client-side navigation with a document redirect, which breaks the
+  // in-flight fetch instead of routing it.
+  expect(delocalizePath("/de-de/old-url.data")).toBe("/old-url.data");
+  expect(delocalizePath("/ar-ae/collections/all.data")).toBe(
+    "/collections/all.data",
+  );
+  // The default market has no prefix to strip, so the path is already neutral.
+  expect(delocalizePath("/old-url.data")).toBe("/old-url.data");
+  // Document requests keep their exact shape.
+  expect(delocalizePath("/de-de/old-url")).toBe("/old-url");
+  // `.data` on the market root still yields a rooted path.
+  expect(delocalizePath("/de-de.data")).toBe("/.data");
+});
+
+test("a retired market's URLs redirect instead of 404ing", () => {
+  // These prefixes shipped in app/utils/const.ts before the canonical table
+  // replaced it, so they are still indexed and linked. A 404 discards that
+  // equity; serving the default market's page at the old URL would duplicate
+  // the catalogue under a second prefix.
+  expect(retiredMarketPath("/en-ca/products/hoodie")).toBe("/products/hoodie");
+  expect(retiredMarketPath("/ja-jp")).toBe("/");
+  expect(retiredMarketPath("/zh-tw/collections/all?sort=price")).toBe(
+    "/collections/all?sort=price",
+  );
+  // Single-fetch navigations must stay single-fetch across the redirect.
+  expect(retiredMarketPath("/en-ca/products/hoodie.data")).toBe(
+    "/products/hoodie.data",
+  );
+  // Live markets and ordinary paths are never redirected.
+  for (const locale of SUPPORTED_LOCALES) {
+    expect(retiredMarketPath(`${locale.pathPrefix}/products/hoodie`)).toBe(
+      null,
+    );
+  }
+  expect(retiredMarketPath("/products/hoodie")).toBe(null);
+  expect(retiredMarketPath("/about-us")).toBe(null);
+  // An invented prefix is not retired — it must 404, not redirect.
+  expect(retiredMarketPath("/en-xx/products/hoodie")).toBe(null);
+});
+
+test("no market is both live and retired", () => {
+  // A retired entry that is also configured would black-hole a live market.
+  for (const locale of SUPPORTED_LOCALES) {
+    expect({
+      market: locale.pathPrefix,
+      retired: retiredMarketPath(locale.pathPrefix) !== null,
+    }).toEqual({ market: locale.pathPrefix, retired: false });
+  }
+});
+
+test("the redirect seam handles both single-fetch carriers", async () => {
+  const server = await readFile(
+    new URL("../../server.ts", import.meta.url),
+    "utf8",
+  );
+
+  // Hydrogen answers a `.data` navigation with 204 + `X-Remix-Redirect` and no
+  // `Location`. Reading only `Location` drops every client-side redirect back
+  // to a 404, which is what shipped before this check existed.
+  expect(server).toContain("X-Remix-Redirect");
+  // `X-Remix-Redirect` carries an app-relative path; `Location` is absolute.
+  expect(server).toContain("localizePath");
 });

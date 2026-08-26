@@ -5,14 +5,14 @@ import { alternateLinks, SUPPORTED_LOCALES } from "../../app/utils/locale";
 const ORIGIN = "https://pilot.weaverse.dev";
 
 test("emits one alternate per market plus x-default", () => {
-  const alternates = alternateLinks("/products/hoodie", ORIGIN);
+  const alternates = alternateLinks("/search", ORIGIN);
 
   expect(alternates.length).toBe(SUPPORTED_LOCALES.length + 1);
 
   for (const locale of SUPPORTED_LOCALES) {
     expect(alternates).toContainEqual({
       language: locale.hreflang,
-      url: `${ORIGIN}${locale.pathPrefix}/products/hoodie`,
+      url: `${ORIGIN}${locale.pathPrefix}/search`,
     });
   }
 
@@ -23,19 +23,19 @@ test("emits one alternate per market plus x-default", () => {
     (alternate) => alternate.language === "x-default",
   );
   expect(defaults).toEqual([
-    { language: "x-default", url: `${ORIGIN}/products/hoodie` },
+    { language: "x-default", url: `${ORIGIN}/search` },
   ]);
   // No market tag may carry the suffix, i.e. never `en-US-default`.
   expect(
     alternates.filter((alternate) => alternate.language.endsWith("-default")),
-  ).toEqual([{ language: "x-default", url: `${ORIGIN}/products/hoodie` }]);
+  ).toEqual([{ language: "x-default", url: `${ORIGIN}/search` }]);
 });
 
 test("alternates are built from a market-neutral path", () => {
   // A localized request URL must still advertise every sibling market, not
   // nest the active prefix inside each alternate.
-  const fromLocalized = alternateLinks("/hi-in/products/hoodie", ORIGIN);
-  const fromNeutral = alternateLinks("/products/hoodie", ORIGIN);
+  const fromLocalized = alternateLinks("/hi-in/search", ORIGIN);
+  const fromNeutral = alternateLinks("/search", ORIGIN);
 
   expect(fromLocalized).toEqual(fromNeutral);
 });
@@ -61,7 +61,7 @@ test("the home page alternates have no trailing slash mismatch", () => {
   }
 });
 
-test("the sitemap builds hreflang from the canonical market table", async () => {
+test("the sitemap reads the canonical market table", async () => {
   const source = await readFile(
     new URL("../../app/routes/seo/sitemap-page.ts", import.meta.url),
     "utf8",
@@ -69,8 +69,11 @@ test("the sitemap builds hreflang from the canonical market table", async () => 
 
   // Regression: the sitemap used to rebuild its own locale list from COUNTRIES
   // with a locally-derived prefix, so adding a market needed two edits.
-  expect(source).toContain("SUPPORTED_LOCALES");
+  expect(source).toContain("~/utils/locale");
   expect(source).not.toContain("COUNTRIES");
+  // It must not fabricate per-handle alternates by swapping the market prefix:
+  // handles are localized per market and resources can be unpublished in one.
+  expect(source).not.toContain('rel="alternate"');
 });
 
 test("no surface reimplements locale parsing", async () => {
@@ -139,4 +142,36 @@ test("every page route builds its meta from the matched routes", async () => {
   await walk(routes);
 
   expect(offenders).toEqual([]);
+});
+
+test("never fabricates an alternate for a resource URL", () => {
+  // A handle is per-market data: Shopify localizes it — which is why the
+  // product, collection, blog, article and page routes all call
+  // `redirectIfHandleIsLocalized` — and a resource can be unpublished in a
+  // market entirely. Swapping the prefix would advertise a URL that 301s
+  // elsewhere or 404s, telling a search engine a page exists where it does not.
+  for (const path of [
+    "/products/hoodie",
+    "/collections/winter",
+    "/blogs/news/post",
+    "/pages/about",
+    "/policies/refund-policy",
+    "/hi-in/products/hoodie",
+  ]) {
+    expect({ path, alternates: alternateLinks(path, ORIGIN).length }).toEqual({
+      path,
+      alternates: 0,
+    });
+  }
+});
+
+test("still advertises markets for route-table paths", () => {
+  // These exist in every market by construction, so the prefix swap is provable
+  // and the markets must keep advertising each other.
+  for (const path of ["/", "/search", "/collections", "/products"]) {
+    expect({ path, alternates: alternateLinks(path, ORIGIN).length }).toEqual({
+      path,
+      alternates: SUPPORTED_LOCALES.length + 1,
+    });
+  }
 });

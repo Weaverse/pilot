@@ -1,6 +1,7 @@
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
+import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
@@ -28,6 +29,7 @@ const footerVariants = cva("", {
 
 export function Footer() {
   const { shopName } = useShopMenu();
+  const themeText = useLegacyThemeText();
   const {
     footerWidth,
     socialFacebook,
@@ -81,8 +83,10 @@ export function Footer() {
               ) : (
                 <h3 className="font-medium text-base uppercase">{shopName}</h3>
               )}
-              {t("footer.bio") ? (
-                <div dangerouslySetInnerHTML={{ __html: t("footer.bio") }} />
+              {themeText("footer.bio") ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: themeText("footer.bio") }}
+                />
               ) : null}
               <SocialLinks
                 socialInstagram={socialInstagram}
@@ -92,15 +96,15 @@ export function Footer() {
               />
             </div>
             <StoreInfo
-              addressTitle={t("footer.addressTitle")}
-              storeAddress={t("footer.storeAddress")}
-              storeEmail={t("footer.storeEmail")}
+              addressTitle={themeText("footer.addressTitle")}
+              storeAddress={themeText("footer.storeAddress")}
+              storeEmail={themeText("footer.storeEmail")}
             />
             <NewsletterForm
-              title={t("footer.newsletterTitle")}
-              description={t("footer.newsletterDescription")}
-              placeholder={t("footer.newsletterPlaceholder")}
-              buttonText={t("footer.newsletterButtonText")}
+              title={themeText("footer.newsletterTitle")}
+              description={themeText("footer.newsletterDescription")}
+              placeholder={themeText("footer.newsletterPlaceholder")}
+              buttonText={themeText("footer.newsletterButtonText")}
               inputWidth={newsletterInputWidth}
             />
           </div>
@@ -110,7 +114,7 @@ export function Footer() {
           <div className="flex gap-2">
             <FooterCountrySelector />
           </div>
-          <p>{t("footer.copyright")}</p>
+          <p>{themeText("footer.copyright")}</p>
           <PaymentMethods
             showPaymentMethods={showPaymentMethods}
             showAmazonPay={showAmazonPay}
