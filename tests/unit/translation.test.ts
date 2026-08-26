@@ -3,8 +3,9 @@ import { expect, test } from "@playwright/test";
 import { TranslationProvider, useTranslation } from "@weaverse/hydrogen";
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { resolveTranslations } from "../../app/.server/translations";
 import staticContent from "../../app/i18n/en.json" with { type: "json" };
-import { SUPPORTED_LOCALES } from "../../app/utils/locale";
+import { type Locale, SUPPORTED_LOCALES } from "../../app/utils/locale";
 import { themeSchema } from "../../app/weaverse/schema.server";
 
 const I18N_DIR = new URL("../../app/i18n/", import.meta.url);
@@ -180,4 +181,44 @@ test("interpolates variables into a translated string", () => {
   );
 
   expect(html).toBe("<span>Bild von Hut</span>");
+});
+
+test("ships the market's own copy when the merchant published nothing", () => {
+  // Without this the SDK only ever sees merchant overrides, so a project with
+  // an empty Translation Manager renders English in every market.
+  const german = resolveTranslations(
+    SUPPORTED_LOCALES.find((locale) => locale.hreflang === "de-DE") as Locale,
+    undefined,
+  );
+
+  expect(flatten(german as Json)["cart.title"]).toBe("Warenkorb");
+});
+
+test("a merchant override wins without dropping its untranslated siblings", () => {
+  const german = SUPPORTED_LOCALES.find(
+    (locale) => locale.hreflang === "de-DE",
+  ) as Locale;
+  const merged = flatten(
+    resolveTranslations(german, {
+      cart: { title: "Einkaufstasche" },
+    }) as Json,
+  );
+
+  expect(merged["cart.title"]).toBe("Einkaufstasche");
+  // A shallow merge would replace the whole `cart` group and lose this.
+  expect(merged["cart.actions.checkout"]).toBe(
+    flatten(resolveTranslations(german, undefined) as Json)[
+      "cart.actions.checkout"
+    ],
+  );
+});
+
+test("English markets are served from staticContent, not a second copy", () => {
+  // `en.json` already ships as `themeSchema.i18n.staticContent`; bundling it
+  // again would duplicate the whole file in every English market's payload.
+  for (const locale of SUPPORTED_LOCALES.filter(
+    (candidate) => candidate.language === "EN",
+  )) {
+    expect(resolveTranslations(locale, undefined)).toBeUndefined();
+  }
 });

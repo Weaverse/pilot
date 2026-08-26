@@ -93,3 +93,17 @@ currency — every other market resolves to VND. So `/de-de` prices in USD and
 `/ar-ae` in VND on this store. The theme passes the market through correctly
 (`/en-gb` renders GBP, `/ar-ae` cart is `AE`); the missing markets/languages are
 Admin configuration, listed in the handoff manifest.
+
+### Self-review of the translation resolver
+
+Reviewing my own `app/.server/translations.ts` against the running server found
+that English was bundled *and* already sent as `themeSchema.i18n.staticContent`,
+so every English market (`en-US`, `en-GB`, `en-IN`, `en-AE`) carried the whole
+file twice — ~8 KB per request. `BUNDLED` now omits `en` and the resolver
+returns `undefined` for English markets, letting the SDK read `staticContent`.
+Confirmed live: `/` and `/en-gb` dropped ~8 KB while `/de-de` and `/ar-ae` still
+render translated copy.
+
+The prototype-safety comment also over-claimed: skipping `constructor` and
+`prototype` does nothing on a plain object literal. Only `__proto__` is skipped,
+and the comment now says exactly why.
