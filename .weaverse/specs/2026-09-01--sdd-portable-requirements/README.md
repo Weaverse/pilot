@@ -22,6 +22,7 @@
 - Distinguish private source-file locations used only to find source material from substantive repository paths, runtime paths, and URLs.
 - Normalize substantive paths to portable forms when possible and preserve the normalized paths and their meaning exactly.
 - Make credential and secret redaction explicitly higher priority than literal-value or identifier preservation.
+- Align the companion rule with Pilot's existing touched-spec convention: refresh the folder date, preserve `Created`, match `Last Updated`, and update backlinks and generated indexes.
 - Keep this README and `plan.md` as the minimal canonical spec required by Pilot's SDD convention.
 
 ## Summary

@@ -4,6 +4,7 @@
 
 - Top-level `AGENTS.md` requires every agent to read and follow the canonical `.claude/rules/spec-driven-development.md` convention.
 - New and touched specs use the `Initiating Requirement` heading and dated `Scope Updates`.
+- Updated or merged specs refresh the folder date while preserving `Created`, matching `Last Updated`, and updating backlinks and generated indexes.
 - Private source-file locations are removed after their substantive requirements are inlined.
 - Substantive repository paths, runtime paths, and URLs are normalized to portable forms when possible and then preserved exactly with their meaning.
 - Credential and secret redaction takes priority over every preservation rule.
@@ -13,7 +14,7 @@
 ## Implementation
 
 1. Add the required canonical SDD link and portable-requirement summary to top-level `AGENTS.md`.
-2. Align the canonical SDD rule with the path-normalization and secret-precedence contract.
+2. Align the canonical SDD rule with the path-normalization, secret-precedence, and folder-date contracts.
 3. Add this minimal canonical spec under Pilot's `.weaverse/specs/` authority.
 4. Verify obsolete raw-prompt directives are absent and review the full docs-only branch diff.
 5. Keep PR #476 open for review; do not merge, deploy, or release.
