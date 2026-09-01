@@ -47,7 +47,7 @@ Examples:
 project-root/
 ├── {specs-dir}/               ← Configurable path (default: .specs/)
 │   ├── 2026-03-01--user-authentication/
-│   │   ├── README.md          📋 Status, owner, original prompt
+│   │   ├── README.md          📋 Status, owner, initiating requirement
 │   │   ├── plan.md            🗺️ Agent-generated implementation plan
 │   │   └── work-logs.md       📝 Timeline & change history (optional)
 │   │
@@ -72,7 +72,8 @@ MUST contain:
 - **Owner**: who is responsible for this feature
 - **Created**: creation date (same as folder name)
 - **Last Updated**: date of last modification
-- **Original prompt/requirement**: the exact prompt or requirement that initiated this feature. This is the most important field in the entire spec. It preserves original intent. MUST NOT be edited or paraphrased.
+- **Initiating requirement**: a concise, self-contained, professionally revised account of the requirement that initiated the feature, not raw chat. If work arrives through a local brief, attachment, or file path, read the source and inline its substantive requirement; a machine-local path alone is never requirement content. Remove conversational scaffolding, agent orchestration chatter, machine-specific paths, credentials, and irrelevant prose. Preserve all substantive constraints, identifiers, commands, literal values, acceptance conditions, and externally meaningful branch, base, and head identifiers exactly. The result MUST be understandable to a contributor who cannot access the original chat, private file, or author's machine.
+- **Scope updates**: add later user intent to a dated `Scope Updates` section, revised to the same standard as the initiating requirement
 - **Summary**: 2-3 sentences max describing what this feature does and why it exists
 
 Template:
@@ -87,9 +88,9 @@ Template:
 | **Created**      | YYYY-MM-DD                                               |
 | **Last Updated** | YYYY-MM-DD                                               |
 
-## Original Prompt
+## Initiating Requirement
 
-> [Paste the exact original prompt or requirement here. Do not edit or paraphrase.]
+> [State the concise, self-contained initiating requirement. Preserve every substantive detail, but remove chat and machine-local context.]
 
 ## Summary
 
@@ -136,3 +137,4 @@ Append-only format:
 
 1. **New feature?** Create a spec folder following the convention above before writing any code.
 2. **Existing feature?** Read the spec first. Update it if your changes affect the plan, status, or scope.
+3. **Keep requirements portable.** Apply the `Initiating Requirement` and dated `Scope Updates` convention to new and touched specs. Do not bulk-migrate historical specs.
