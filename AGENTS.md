@@ -5,6 +5,9 @@ This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) 
 > **Canonical agent instructions:** `AGENTS.md` is the source of truth and may always be updated. Root `CLAUDE.md` is a relative symlink to it and must never become a separate copy. Push completed instruction changes to the repository's default branch.
 
 ## Spec Maintenance
+> **Required SDD convention:** Every agent MUST read and follow [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md), the canonical companion rule for spec structure and portable requirements.
+
+For new and touched specs, the `Initiating Requirement` MUST be concise, self-contained, and professionally revised rather than raw chat. Read briefs and attachments and inline their substantive requirements; remove private source-file locations used only to find that material. Distinguish those locations from substantive repository paths, runtime paths, and URLs. Normalize substantive paths to portable forms when possible, such as repo-relative paths, then preserve each normalized path and its meaning exactly. Remove conversational scaffolding, agent orchestration chatter, and irrelevant prose. Credential and secret redaction has higher priority than every preservation rule. Preserve every remaining substantive constraint, identifier, command, literal value, acceptance condition, and externally meaningful branch, base, and head identifier exactly. Add later intent as dated, similarly revised `Scope Updates`. Do not bulk-migrate historical specs.
 
 - Search existing specs and linked issues before creating a spec.
 - Update the closest canonical spec; merge overlapping specs when they describe the same user outcome and implementation boundary.
