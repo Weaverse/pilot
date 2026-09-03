@@ -103,7 +103,7 @@ npm run build        # production build (shopify hydrogen build --codegen)
 npm run preview      # build, then preview the production bundle
 npm run typecheck    # tsc --noEmit
 npm run biome:fix    # lint + format (write)
-npm run e2e          # Playwright end-to-end tests
+npm run test         # unit tests (tests/unit, Playwright runner)
 ```
 
 Run `npm run biome:fix && npm run typecheck` before committing.
