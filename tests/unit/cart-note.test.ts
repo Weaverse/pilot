@@ -1,22 +1,21 @@
-import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { describe, test } from "node:test";
+import { expect, test } from "@playwright/test";
 import {
   getInvalidCartNoteResult,
   getSuccessfulCartNote,
   hasCartResponseErrors,
   normalizeCartNote,
   updateCartNote,
-} from "../app/utils/cart-note.ts";
+} from "../../app/utils/cart-note";
 
-const PROJECT_ROOT = new URL("../", import.meta.url);
+const PROJECT_ROOT = new URL("../../", import.meta.url);
 const ADD_TO_CART_SURFACES = [
   "app/components/product-card/quick-shop.tsx",
   "app/sections/main-product/buy-buttons/index.tsx",
   "app/sections/main-product/buy-buttons/sticky-atc-bar.tsx",
   "app/sections/single-product/index.tsx",
 ];
-const MALFORMED_CART_NOTES = [
+const MALFORMED_CART_NOTES: [string, unknown][] = [
   ["missing", undefined],
   ["null", null],
   ["numeric", 42],
@@ -25,15 +24,15 @@ const MALFORMED_CART_NOTES = [
   ["boolean", true],
 ];
 
-describe("cart note updates", () => {
+test.describe("cart note updates", () => {
   test("normalizes only an all-whitespace note to the empty string", () => {
-    assert.equal(normalizeCartNote(""), "");
-    assert.equal(normalizeCartNote(" \n\t "), "");
-    assert.equal(normalizeCartNote("  Gift note  "), "  Gift note  ");
+    expect(normalizeCartNote("")).toBe("");
+    expect(normalizeCartNote(" \n\t ")).toBe("");
+    expect(normalizeCartNote("  Gift note  ")).toBe("  Gift note  ");
   });
 
   test("sends the normalized note and cart options to Hydrogen", async () => {
-    const calls = [];
+    const calls: { note: string; options: unknown }[] = [];
     const cart = {
       async updateNote(note, cartOptions) {
         calls.push({ note, options: cartOptions });
@@ -46,7 +45,7 @@ describe("cart note updates", () => {
     await updateCartNote(cart, "Replacement note", options);
     await updateCartNote(cart, " \n\t ", options);
 
-    assert.deepEqual(calls, [
+    expect(calls).toEqual([
       { note: "Added note", options },
       { note: "Replacement note", options },
       { note: "", options },
@@ -63,58 +62,51 @@ describe("cart note updates", () => {
         },
       };
 
-      assert.deepEqual(
-        await updateCartNote(cart, note),
+      expect(await updateCartNote(cart, note)).toEqual(
         getInvalidCartNoteResult(),
       );
-      assert.equal(calls, 0);
+      expect(calls).toBe(0);
     });
   }
 
   test("accepts only an error-free authoritative cart note", () => {
-    assert.equal(
+    expect(
       getSuccessfulCartNote({
         cart: { id: "gid://shopify/Cart/1", note: "Added note" },
         errors: [],
         userErrors: [],
       }),
-      "Added note",
-    );
-    assert.equal(
+    ).toBe("Added note");
+    expect(
       getSuccessfulCartNote({
         cart: { id: "gid://shopify/Cart/1", note: "Replacement note" },
       }),
-      "Replacement note",
-    );
-    assert.equal(
+    ).toBe("Replacement note");
+    expect(
       getSuccessfulCartNote({
         cart: { id: "gid://shopify/Cart/1", note: null },
       }),
-      "",
-    );
+    ).toBe("");
   });
 
   test("rejects user errors, GraphQL errors, network failure, and missing cart data", () => {
-    assert.equal(
+    expect(
       getSuccessfulCartNote({
         cart: { id: "gid://shopify/Cart/1", note: "Not saved" },
         userErrors: [{ message: "Rejected" }],
       }),
-      undefined,
-    );
-    assert.equal(
+    ).toBeUndefined();
+    expect(
       getSuccessfulCartNote({
         cart: { id: "gid://shopify/Cart/1", note: "Not saved" },
         errors: [{ message: "GraphQL failed" }],
       }),
-      undefined,
-    );
-    assert.equal(getSuccessfulCartNote(undefined), undefined);
-    assert.equal(getSuccessfulCartNote({ userErrors: [] }), undefined);
-    assert.equal(
+    ).toBeUndefined();
+    expect(getSuccessfulCartNote(undefined)).toBeUndefined();
+    expect(getSuccessfulCartNote({ userErrors: [] })).toBeUndefined();
+    expect(
       getSuccessfulCartNote({ cart: { id: "gid://shopify/Cart/1" } }),
-      undefined,
-    );
+    ).toBeUndefined();
   });
 
   test("a successful retry is accepted after a failed response", () => {
@@ -127,27 +119,25 @@ describe("cart note updates", () => {
       userErrors: [],
     };
 
-    assert.equal(getSuccessfulCartNote(failed), undefined);
-    assert.equal(getSuccessfulCartNote(retried), "Retried note");
+    expect(getSuccessfulCartNote(failed)).toBeUndefined();
+    expect(getSuccessfulCartNote(retried)).toBe("Retried note");
   });
 });
 
-describe("cart response error gating", () => {
+test.describe("cart response error gating", () => {
   test("accepts responses without errors", () => {
-    assert.equal(hasCartResponseErrors(undefined), false);
-    assert.equal(hasCartResponseErrors({}), false);
-    assert.equal(hasCartResponseErrors({ errors: [], userErrors: [] }), false);
+    expect(hasCartResponseErrors(undefined)).toBe(false);
+    expect(hasCartResponseErrors({})).toBe(false);
+    expect(hasCartResponseErrors({ errors: [], userErrors: [] })).toBe(false);
   });
 
   test("rejects GraphQL and user error responses", () => {
-    assert.equal(
+    expect(
       hasCartResponseErrors({ errors: [{ message: "GraphQL failed" }] }),
-      true,
-    );
-    assert.equal(
+    ).toBe(true);
+    expect(
       hasCartResponseErrors({ userErrors: [{ message: "Rejected" }] }),
-      true,
-    );
+    ).toBe(true);
   });
 
   test("both cart fetcher paths use the shared error gate", async () => {
@@ -156,23 +146,21 @@ describe("cart response error gating", () => {
         readFile(new URL(`app/components/cart/${file}`, PROJECT_ROOT), "utf8"),
       ),
     );
-    assert.equal(
+    expect(
       sources.join("\n").match(/hasCartResponseErrors\(fetcherData\)/g)?.length,
-      2,
-    );
+    ).toBe(2);
   });
 });
 
-describe("add-to-cart analytics ownership", () => {
+test.describe("add-to-cart analytics ownership", () => {
   test("all four add-to-cart surfaces use the shared button without an analytics prop", async () => {
     for (const file of ADD_TO_CART_SURFACES) {
       const source = await readFile(new URL(file, PROJECT_ROOT), "utf8");
-      assert.match(source, /<AddToCartButton\b/);
-      assert.doesNotMatch(
+      expect(source).toMatch(/<AddToCartButton\b/);
+      expect(
         source,
-        /<AddToCartButton\b[\s\S]*?\banalytics\s*=/,
         `${file} must not activate a direct analytics sender`,
-      );
+      ).not.toMatch(/<AddToCartButton\b[\s\S]*?\banalytics\s*=/);
     }
   });
 
@@ -182,11 +170,10 @@ describe("add-to-cart analytics ownership", () => {
       "utf8",
     );
 
-    assert.doesNotMatch(
-      source,
+    expect(source).not.toMatch(
       /sendShopifyAnalytics|hasUserConsent|AddToCartAnalytics|name="analytics"|analytics\?:|\[key:\s*string\]:\s*any/,
     );
-    assert.match(source, /Omit<\s*ButtonProps,/);
+    expect(source).toMatch(/Omit<\s*ButtonProps,/);
   });
 
   test("Hydrogen Analytics.Provider remains the canonical owner", async () => {
@@ -194,6 +181,6 @@ describe("add-to-cart analytics ownership", () => {
       new URL("app/root.tsx", PROJECT_ROOT),
       "utf8",
     );
-    assert.match(source, /<Analytics\.Provider\b/);
+    expect(source).toMatch(/<Analytics\.Provider\b/);
   });
 });
