@@ -132,6 +132,12 @@ export const schema = createSchema({
           type: "image",
           name: "image",
           label: "Image",
+          // Overrides the theme's `media` rules for this picker only: an empty
+          // prefix list and no product-file exclusion means "show everything".
+          configs: {
+            excludeFilenamePrefixes: [],
+            excludeProductFiles: false,
+          },
         },
         {
           type: "select",
