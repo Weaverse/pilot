@@ -40,7 +40,7 @@ export const themeSchema: HydrogenThemeSchema = {
   // it. `thumb_v*` files are generated assets; product media is excluded too.
   // The hotspots section's image input overrides this to show everything.
   media: {
-    excludeFilenamePrefixes: ["thumb_v"],
+    // excludeFilenamePrefixes: ["thumb_v"],
     excludeProductFiles: true,
   },
   settings: [
