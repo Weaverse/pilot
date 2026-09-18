@@ -36,6 +36,13 @@ export const themeSchema: HydrogenThemeSchema = {
     defaultLocale: DEFAULT_LOCALE,
     shopLocales: SUPPORTED_LOCALES,
   },
+  // Media Manager filtering, declared here so a content editor cannot change
+  // it. `thumb_v*` files are generated assets; product media is excluded too.
+  // The hotspots section's image input overrides this to show everything.
+  media: {
+    // excludeFilenamePrefixes: ["thumb_v"],
+    excludeProductFiles: true,
+  },
   settings: [
     generalSettings,
     typographySettings,
