@@ -33,7 +33,7 @@ CI fails when the committed manifest is stale.
 
 ## Project Overview
 
-This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting.
+This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, Tailwind CSS v4, and Vite+ 1.0.0 static checks. It runs on the Node.js ranges declared in `package.json`.
 
 ## Architecture Overview
 
@@ -77,7 +77,7 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
    - Tailwind CSS v4 with custom utilities
    - class-variance-authority (cva) for component variants
    - Use the `cn()` utility from `/app/utils/cn.ts` for class merging
-   - Biome's `useSortedClasses` enabled for `clsx`, `cva`, and `cn` functions
+   - Oxfmt sorts Tailwind classes in `clsx`, `cva`, and `cn` functions
 
 5. **Type Safety**:
    - GraphQL types are auto-generated via codegen
@@ -145,14 +145,15 @@ See [`.weaverse/docs/customer-account-local-dev.md`](.weaverse/docs/customer-acc
 
 Required environment variables are defined in `env.d.ts`. The project uses `@shopify/hydrogen` and `@shopify/remix-oxygen` for environment handling.
 
-### Biome Configuration
+### Vite+ Static Checks
 
-The project extends from `ultracite` and `@weaverse/biome` configurations with these customizations:
+The project uses Vite+ 1.0.0 with Oxlint and Oxfmt for static checks:
 - Double quotes for strings
 - Semicolons always
 - Trailing commas
-- Max cognitive complexity: 50
 - Sorted Tailwind classes in `clsx`, `cva`, and `cn` functions
+- `npm run typecheck` remains the explicit TypeScript gate
+- SonarJS cognitive complexity runs through Oxlint with error max 50
 
 ## Code Conventions
 

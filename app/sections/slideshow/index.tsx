@@ -57,7 +57,8 @@ const variants = cva("group [&_.swiper]:h-full", {
 });
 
 export interface SlideshowData
-  extends VariantProps<typeof variants>,
+  extends
+    VariantProps<typeof variants>,
     SlideshowArrowsProps,
     SlideshowDotsProps {
   effect?: "fade" | "slide";
@@ -129,7 +130,7 @@ export default function Slideshow(
               "transition-all duration-200",
               dotsStyle === "circle" && [
                 "h-2.5 w-2.5 rounded-full",
-                "outline-2 outline-solid outline-transparent outline-offset-3",
+                "outline-2 outline-offset-3 outline-transparent outline-solid",
               ],
               dotsStyle === "line" && "h-2 w-6 rounded-md",
               dotsStyle === "dash" && "h-1 w-12 rounded-md",

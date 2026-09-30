@@ -7,7 +7,7 @@ export function SingleProductPlaceholder({ ...rest }: SectionProps) {
   return (
     <Section {...rest}>
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-        <div className="aspect-square bg-background-subtle-1">
+        <div className="bg-background-subtle-1 aspect-square">
           <Image
             src={IMAGES_PLACEHOLDERS.product_1}
             alt="Product placeholder"
@@ -20,7 +20,7 @@ export function SingleProductPlaceholder({ ...rest }: SectionProps) {
           <div className="space-y-4">
             <h3 className="tracking-tight">Product title</h3>
             <p className="text-lg">$99</p>
-            <p className="leading-relaxed text-body-subtle">
+            <p className="text-body-subtle leading-relaxed">
               Select a product in the section settings to display it here.
             </p>
           </div>

@@ -12,7 +12,8 @@ interface FeaturedCollectionsData {
 }
 
 interface FeaturedCollectionsProps
-  extends SectionProps<FeaturedCollectionsLoaderData>,
+  extends
+    SectionProps<FeaturedCollectionsLoaderData>,
     FeaturedCollectionsData {}
 
 export default function FeaturedCollections(props: FeaturedCollectionsProps) {

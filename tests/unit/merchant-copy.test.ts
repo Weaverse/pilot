@@ -125,9 +125,8 @@ test("a cleared badge setting stays cleared", async () => {
 test("no badge or quick-shop setting is left dead in the editor", async () => {
   // Every persisted key the fixture carries must map to a translation key, or
   // the editor still shows a field that changes nothing.
-  const { LEGACY_SETTING_FOR_KEY } = await import(
-    "../../app/utils/legacy-theme-text"
-  );
+  const { LEGACY_SETTING_FOR_KEY } =
+    await import("../../app/utils/legacy-theme-text");
   const mapped = new Set(Object.values(LEGACY_SETTING_FOR_KEY));
 
   for (const setting of [
@@ -247,9 +246,8 @@ test("every merchant-configurable surface resolves copy the same way", async () 
   // applied to a single component would leave the siblings regressed, so pin
   // that they all resolve through the shared map.
   const settings = await preUpgradeSettings();
-  const { LEGACY_SETTING_FOR_KEY } = await import(
-    "../../app/utils/legacy-theme-text"
-  );
+  const { LEGACY_SETTING_FOR_KEY } =
+    await import("../../app/utils/legacy-theme-text");
 
   for (const key of [
     "badge.bestSeller",

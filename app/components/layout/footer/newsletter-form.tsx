@@ -46,7 +46,7 @@ export function NewsletterForm({
               type="email"
               required
               placeholder={placeholder}
-              className="grow rounded-none border-none px-3 focus-visible:outline-hidden focus:ring-0"
+              className="grow rounded-none border-none px-3 focus:ring-0 focus-visible:outline-hidden"
             />
             <Button
               variant="custom"

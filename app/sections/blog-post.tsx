@@ -51,7 +51,7 @@ export default function BlogPost(props: BlogPostProps) {
             </div>
           )}
         </div>
-        <div className="mx-auto w-1/3 border-line-subtle border-t" />
+        <div className="border-line-subtle mx-auto w-1/3 border-t" />
         <article className="mx-auto py-4 lg:max-w-5xl lg:py-10">
           <div className="mx-auto space-y-8 md:space-y-16">
             <div
@@ -59,7 +59,7 @@ export default function BlogPost(props: BlogPostProps) {
               suppressHydrationWarning
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
-            <div className="mx-auto w-1/3 border-line-subtle border-t" />
+            <div className="border-line-subtle mx-auto w-1/3 border-t" />
             <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
               {showShareButtons && (
                 <div className="flex items-center gap-2">

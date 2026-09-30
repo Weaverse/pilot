@@ -49,7 +49,7 @@ export function Logo() {
             )}
           </>
         ) : (
-          <h3 className="line-clamp-1 font-medium text-lg sm:text-2xl">
+          <h3 className="line-clamp-1 text-lg font-medium sm:text-2xl">
             {shopName}
           </h3>
         )}

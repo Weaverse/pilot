@@ -51,7 +51,7 @@ export function ProductsLoadedOnScroll({
           columnGap: `${gapX}px`,
         } as React.CSSProperties
       }
-      className="w-full grid grid-cols-[repeat(auto-fill,minmax(var(--min-card-width),1fr))]"
+      className="grid w-full grid-cols-[repeat(auto-fill,minmax(var(--min-card-width),1fr))]"
     >
       {nodes.map((product, index) => (
         <ProductCard

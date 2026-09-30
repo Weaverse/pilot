@@ -178,7 +178,7 @@ export default function HeroVideo(props: HeroVideoProps) {
           // Full-bleed hero band: full width, fixed height. `container-type:size`
           // exposes the box to container-query units so the player below can
           // scale itself to cover the band (see its inline style).
-          "relative w-full overflow-hidden h-(--section-height) @container-size",
+          "@container-size relative h-(--section-height) w-full overflow-hidden",
         )}
       >
         {inView && (
@@ -231,7 +231,7 @@ export default function HeroVideo(props: HeroVideoProps) {
         <button
           type="button"
           onClick={togglePlaying}
-          className="absolute right-4 bottom-4 z-20 flex p-3 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
+          className="absolute right-4 bottom-4 z-20 flex items-center justify-center rounded-full bg-black/50 p-3 text-white transition-colors hover:bg-black/70"
           aria-label={playing ? "Pause video" : "Play video"}
         >
           {playing ? (

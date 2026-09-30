@@ -59,7 +59,7 @@ function ProductGrid(props: ProductGridProps) {
                 <Link
                   key={label}
                   to={getAppliedFilterLink(filter, params, location)}
-                  className="items-center gap-2 border border-line-subtle px-2 py-1 hover:border-line"
+                  className="border-line-subtle hover:border-line items-center gap-2 border px-2 py-1"
                   variant="custom"
                   preventScrollReset
                 >

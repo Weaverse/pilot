@@ -11,8 +11,7 @@ export const SECTION_HEIGHTS = {
 };
 
 export interface HeroVideoData
-  extends OverlayProps,
-    VariantProps<typeof variants> {
+  extends OverlayProps, VariantProps<typeof variants> {
   video: WeaverseVideo;
   videoURL: string;
   autoplay: boolean;

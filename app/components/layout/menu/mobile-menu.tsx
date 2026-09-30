@@ -34,7 +34,7 @@ export function MobileMenu() {
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
-            "fixed inset-0 z-10 h-screen bg-(--color-header-bg) text-(--color-header-text) pt-4 pb-2",
+            "fixed inset-0 z-10 h-screen bg-(--color-header-bg) pt-4 pb-2 text-(--color-header-text)",
             "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
             "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
             "focus-visible:outline-hidden",
@@ -48,7 +48,7 @@ export function MobileMenu() {
           <Dialog.Close asChild>
             <Icon name="x" className="fixed top-4 right-4 h-5 w-5" />
           </Dialog.Close>
-          <div className="mt-4 border-line-subtle border-t" />
+          <div className="border-line-subtle mt-4 border-t" />
           <div className="py-2">
             <ScrollArea className="h-[calc(100vh-5rem)]">
               <div className="space-y-1 px-4">
@@ -73,7 +73,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
   if (!items?.length) {
     return (
       <Dialog.Close asChild>
-        <Link to={to} className="py-3 block">
+        <Link to={to} className="block py-3">
           {title}
         </Link>
       </Dialog.Close>
@@ -91,7 +91,7 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
           <Icon name="caret-right" className="h-4 w-4" />
         </button>
       </Collapsible.Trigger>
-      <Collapsible.Content className="flex flex-col border-gray-300 border-l pl-4">
+      <Collapsible.Content className="flex flex-col border-l border-gray-300 pl-4">
         {items.map((childItem) => (
           <CollapsibleMenuItem key={childItem.id} item={childItem} />
         ))}

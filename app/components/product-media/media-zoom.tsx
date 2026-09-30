@@ -76,7 +76,7 @@ export function ZoomModal({
     }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
+  // Keyboard listener uses the current props for one modal session.
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "ArrowRight" || event.key === "ArrowDown") {
@@ -96,12 +96,13 @@ export function ZoomModal({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
+    // oxlint-disable-next-line react/exhaustive-deps -- keyboard listener uses current props for one modal session
   }, [open, zoomMediaId, setZoomMediaId, nextMedia, prevMedia]);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-10 bg-white data-[state=open]:animate-fade-in" />
+        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-white" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx([
@@ -112,7 +113,7 @@ export function ZoomModal({
           aria-describedby={undefined}
         >
           <ShopifyInboxOverlayGuard />
-          <div className="relative flex h-full w-full items-center justify-center bg-background">
+          <div className="bg-background relative flex h-full w-full items-center justify-center">
             <VisuallyHidden.Root asChild>
               <Dialog.Title>Product media zoom</Dialog.Title>
             </VisuallyHidden.Root>
@@ -127,7 +128,7 @@ export function ZoomModal({
                         id={`zoom-media--${mediaId}`}
                         className={cn(
                           "relative bg-gray-100",
-                          "h-auto! cursor-pointer border border-transparent p-1 transition-colors rounded-lg overflow-hidden",
+                          "h-auto! cursor-pointer overflow-hidden rounded-lg border border-transparent p-1 transition-colors",
                           zoomMediaId === id && "border-line",
                         )}
                         onClick={() => setZoomMediaId(id)}
@@ -143,12 +144,12 @@ export function ZoomModal({
                           sizes="auto"
                         />
                         {mediaContentType === "VIDEO" && (
-                          <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
+                          <div className="absolute right-2 bottom-2 rounded-sm bg-gray-800 p-1 text-white">
                             <Icon name="video-camera" className="size-5" />
                           </div>
                         )}
                         {mediaContentType === "MODEL_3D" && (
-                          <div className="absolute rounded-sm right-2 bottom-2 bg-gray-800 p-1 text-white">
+                          <div className="absolute right-2 bottom-2 rounded-sm bg-gray-800 p-1 text-white">
                             <Icon name="cube" className="size-5" />
                           </div>
                         )}
@@ -229,7 +230,7 @@ function ZoomMedia({
   if (media.mediaContentType === "VIDEO") {
     let mediaVideo = media as Media_Video_Fragment;
     return (
-      <video controls className="h-auto object-cover md:h-full rounded-md">
+      <video controls className="h-auto rounded-md object-cover md:h-full">
         <track kind="captions" />
         <source src={mediaVideo.sources[0].url} type="video/mp4" />
       </video>
@@ -240,7 +241,7 @@ function ZoomMedia({
     let { data, iosSrc } = getModel3dData(model3d);
     return (
       <div
-        className="rounded-md overflow-hidden"
+        className="overflow-hidden rounded-md"
         style={{ width: "min(80vw, 80vh)", height: "80vh" }}
       >
         <ModelViewer data={data} iosSrc={iosSrc} className="h-full w-full" />
@@ -252,7 +253,7 @@ function ZoomMedia({
     return (
       <ExternalVideo
         data={externalVideo}
-        className="aspect-video rounded-md overflow-hidden h-auto w-auto md:h-full lg:max-w-[calc(100vw-16rem)]"
+        className="aspect-video h-auto w-auto overflow-hidden rounded-md md:h-full lg:max-w-[calc(100vw-16rem)]"
       />
     );
   }
@@ -270,8 +271,7 @@ function isVisibleInParent(child: HTMLElement, parent: HTMLElement) {
   );
 }
 
-export interface ZoomButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface ZoomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export function ZoomButton({ className, ...props }: ZoomButtonProps) {
   return (

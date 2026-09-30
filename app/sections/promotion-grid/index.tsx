@@ -7,8 +7,7 @@ import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 
 interface PromotionGridProps
-  extends VariantProps<typeof variants>,
-    Omit<SectionProps, "gap"> {}
+  extends VariantProps<typeof variants>, Omit<SectionProps, "gap"> {}
 
 const variants = cva("flex flex-col sm:grid", {
   variants: {

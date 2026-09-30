@@ -108,12 +108,12 @@ export function StickyATCBar({
           onInteractOutside={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn(
-            "fixed bottom-0 left-0 right-0 z-9",
+            "fixed right-0 bottom-0 left-0 z-9",
             "flex justify-center",
             "transition-transform duration-500 ease-in-out",
-            "data-[state=open]:translate-y-0 data-[state=closed]:translate-y-[200%]",
+            "data-[state=closed]:translate-y-[200%] data-[state=open]:translate-y-0",
             "data-[state=closed]:pointer-events-none",
-            barWidth === "narrow" ? "sm:pb-3 sm:px-3" : "",
+            barWidth === "narrow" ? "sm:px-3 sm:pb-3" : "",
           )}
           aria-describedby={undefined}
         >
@@ -123,9 +123,9 @@ export function StickyATCBar({
           <div
             onClick={handleBarClick}
             className={cn(
-              "cursor-pointer w-full",
-              "bg-background border-t sm:border border-gray-200 shadow-[0_-6px_20px_rgba(0,0,0,0.15)]",
-              "md:flex items-center justify-between gap-30 p-3 space-y-2 sm:space-y-0",
+              "w-full cursor-pointer",
+              "bg-background border-t border-gray-200 shadow-[0_-6px_20px_rgba(0,0,0,0.15)] sm:border",
+              "items-center justify-between gap-30 space-y-2 p-3 sm:space-y-0 md:flex",
               barWidth === "narrow" ? "sm:w-fit sm:rounded-md" : "",
             )}
           >
@@ -135,11 +135,11 @@ export function StickyATCBar({
                   data={variantImage}
                   width={200}
                   height={200}
-                  className="hidden shrink-0 rounded-md object-cover sm:block size-15"
+                  className="hidden size-15 shrink-0 rounded-md object-cover sm:block"
                   sizes="auto"
                 />
               )}
-              <div className="min-w-0 flex flex-wrap sm:block gap-2 text-lg md:text-base">
+              <div className="flex min-w-0 flex-wrap gap-2 text-lg sm:block md:text-base">
                 <p className="truncate font-medium">{product.title}</p>
                 <span className="text-body-subtle sm:hidden">·</span>
                 <div className="flex items-center gap-2">
@@ -163,7 +163,7 @@ export function StickyATCBar({
                     selectedVariant,
                   },
                 ]}
-                className="whitespace-nowrap px-3 md:px-16"
+                className="px-3 whitespace-nowrap md:px-16"
               >
                 {isBundle ? addBundleToCartText : addToCartText}
               </AddToCartButton>

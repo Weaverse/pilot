@@ -14,7 +14,7 @@ export function PopularKeywords() {
     .filter((k: string) => k.length > 0);
 
   return (
-    <div className="flex items-center justify-center text-body-subtle">
+    <div className="text-body-subtle flex items-center justify-center">
       <span>{t("search.popularSearches")}</span>
       {popularKeywords.map((search, ind) => (
         <Fragment key={search}>

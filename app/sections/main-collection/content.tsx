@@ -1,8 +1,10 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { ReactNode } from "react";
 
-interface CollectionContentProps
-  extends Omit<HydrogenComponentProps, "children"> {
+interface CollectionContentProps extends Omit<
+  HydrogenComponentProps,
+  "children"
+> {
   children: ReactNode;
 }
 

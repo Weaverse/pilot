@@ -72,7 +72,7 @@ export function DesktopMenu() {
             );
           })}
         </NavigationMenu.List>
-        <div className="absolute inset-x-0 top-full flex w-full justify-center shadow-header">
+        <div className="shadow-header absolute inset-x-0 top-full flex w-full justify-center">
           <NavigationMenu.Viewport
             className={cn(
               "relative origin-[top_center] overflow-hidden bg-(--color-header-bg)",
@@ -140,7 +140,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
                     <Link
                       to={cItem.to}
                       prefetch="intent"
-                      className="inline-block group relative items-center gap-2 transition-none"
+                      className="group relative inline-block items-center gap-2 transition-none"
                     >
                       <RevealUnderline>{cItem.title}</RevealUnderline>
                       {cItem.isExternal && (

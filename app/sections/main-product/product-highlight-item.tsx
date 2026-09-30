@@ -43,7 +43,7 @@ export default function ProductHighlightItem(props: HighlightItemProps) {
       className={cn(
         "flex gap-3",
         isGrid
-          ? "flex-col items-center text-center rounded-lg border border-gray-300 px-2 py-3"
+          ? "flex-col items-center rounded-lg border border-gray-300 px-2 py-3 text-center"
           : "items-center",
       )}
     >

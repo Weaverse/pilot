@@ -209,7 +209,7 @@ export default function AccountEditAddressForm() {
               First name
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="firstName"
               name="firstName"
               required
@@ -225,7 +225,7 @@ export default function AccountEditAddressForm() {
               Last name
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="lastName"
               name="lastName"
               required
@@ -241,7 +241,7 @@ export default function AccountEditAddressForm() {
               Company
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="company"
               name="company"
               type="text"
@@ -256,7 +256,7 @@ export default function AccountEditAddressForm() {
               Address line 1
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="address1"
               name="address1"
               type="text"
@@ -272,7 +272,7 @@ export default function AccountEditAddressForm() {
               Address line 2
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="address2"
               name="address2"
               type="text"
@@ -287,7 +287,7 @@ export default function AccountEditAddressForm() {
               City
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="city"
               name="city"
               type="text"
@@ -303,7 +303,7 @@ export default function AccountEditAddressForm() {
               State / Province
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="zoneCode"
               name="zoneCode"
               type="text"
@@ -319,7 +319,7 @@ export default function AccountEditAddressForm() {
               Zip / Postal Code
             </label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="zip"
               name="zip"
               type="text"
@@ -333,7 +333,7 @@ export default function AccountEditAddressForm() {
           <div className="space-y-1">
             <label htmlFor="territoryCode">Country</label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="territoryCode"
               name="territoryCode"
               type="text"
@@ -347,7 +347,7 @@ export default function AccountEditAddressForm() {
           <div className="space-y-1">
             <label htmlFor="phone">Phone</label>
             <input
-              className="w-full appearance-none border border-line p-3 focus:outline-hidden"
+              className="border-line w-full appearance-none border p-3 focus:outline-hidden"
               id="phone"
               name="phoneNumber"
               type="tel"
@@ -365,7 +365,7 @@ export default function AccountEditAddressForm() {
             defaultChecked={defaultAddress?.id === address?.id}
             className={clsx(
               "h-5 w-5 shrink-0 rounded-sm",
-              "border border-line focus-visible:outline-hidden",
+              "border-line border focus-visible:outline-hidden",
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}
           >

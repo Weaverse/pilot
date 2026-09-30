@@ -33,8 +33,7 @@ export interface SingleProductData {
 }
 
 interface SingleProductProps
-  extends HydrogenComponentProps<SingleProductLoaderData>,
-    SingleProductData {}
+  extends HydrogenComponentProps<SingleProductLoaderData>, SingleProductData {}
 
 export default function SingleProduct(props: SingleProductProps) {
   let {

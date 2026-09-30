@@ -8,7 +8,8 @@ import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 
 interface ProductMediaComponentProps
-  extends Omit<ProductMediaProps, "selectedVariant" | "media" | "product">,
+  extends
+    Omit<ProductMediaProps, "selectedVariant" | "media" | "product">,
     HydrogenComponentProps {}
 
 export default function ProductMediaComponent(

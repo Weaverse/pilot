@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    ".weaverse/**",
+    ".react-router/**",
+    ".shopify/**",
+    "app/styles/**",
+    "**/*.md",
+    "dist/**",
+    "node_modules/**"
+  ],
+  "printWidth": 80,
+  "semi": true,
+  "singleQuote": false,
+  "sortTailwindcss": {
+    "functions": ["clsx", "cva", "cn"]
+  },
+  "trailingComma": "all"
+}
