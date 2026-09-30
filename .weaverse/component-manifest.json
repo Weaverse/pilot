@@ -3075,7 +3075,11 @@
             {
               "type": "image",
               "name": "image",
-              "label": "Image"
+              "label": "Image",
+              "configs": {
+                "excludeFilenamePrefixes": [],
+                "excludeProductFiles": false
+              }
             },
             {
               "type": "select",
