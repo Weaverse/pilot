@@ -82,7 +82,7 @@ Pilot is designed to be developed *with* an agent:
 - [React Router 7](https://reactrouter.com/) — routing, SSR, and data loading
 - [TailwindCSS v4](https://tailwindcss.com/) + [Radix UI](https://www.radix-ui.com/) + [class-variance-authority](https://cva.style/)
 - TypeScript (strict) and GraphQL codegen
-- [Biome](https://biomejs.dev/) for linting/formatting
+- Vite+ with Oxlint/Oxfmt for linting and formatting
 - [Swiper](https://swiperjs.com/) carousels, [Playwright](https://playwright.dev/) E2E tests
 
 **Commerce features**
@@ -102,11 +102,11 @@ npm run dev          # dev server + codegen on http://localhost:3456
 npm run build        # production build (shopify hydrogen build --codegen)
 npm run preview      # build, then preview the production bundle
 npm run typecheck    # tsc --noEmit
-npm run biome:fix    # lint + format (write)
+npm run check        # Vite+ lint + format check
 npm run test         # unit tests (tests/unit, Playwright runner)
 ```
 
-Run `npm run biome:fix && npm run typecheck` before committing.
+Run `npm run check && npm run typecheck` before committing.
 
 ---
 
@@ -140,7 +140,7 @@ app/
 └── .server/      # Server-only context (Hydrogen + Weaverse client)
 ```
 
-Key config: `react-router.config.ts`, `vite.config.ts`, `codegen.ts`, `biome.json`, `AGENTS.md`.
+Key config: `react-router.config.ts`, `vite.config.ts`, `.oxfmtrc.json`, `codegen.ts`, `AGENTS.md`.
 
 ---
 
@@ -312,7 +312,7 @@ These **Shopify (Plus)** brands run on Weaverse/Pilot in production:
 
 - [Weaverse docs](https://weaverse.io/docs) · [Weaverse MCP](https://weaverse.io/docs/developer-tools/weaverse-mcp)
 - [Hydrogen](https://shopify.dev/custom-storefronts/hydrogen) · [React Router 7](https://reactrouter.com/)
-- [Tailwind CSS v4](https://tailwindcss.com/) · [Radix UI](https://www.radix-ui.com/) · [Biome](https://biomejs.dev/)
+- [Tailwind CSS v4](https://tailwindcss.com/) · [Radix UI](https://www.radix-ui.com/) · [Vite+](https://viteplus.dev/)
 
 Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under [MIT](LICENSE.md).
 

@@ -80,7 +80,7 @@ export function ReviewForm({
   return (
     <div
       className={cn(
-        "w-full space-y-6 border border-gray-200 p-6 shadow rounded-2xl transition-all duration-200 md:p-8",
+        "w-full space-y-6 rounded-2xl border border-gray-200 p-6 shadow transition-all duration-200 md:p-8",
         showForm ? "block" : "hidden",
         className,
       )}
@@ -96,7 +96,7 @@ export function ReviewForm({
         <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <Icon name="check" className="h-8 w-8 text-green-600" />
         </div>
-        <h3 className="mb-2 font-semibold text-green-900 text-xl">
+        <h3 className="mb-2 text-xl font-semibold text-green-900">
           Review Submitted Successfully!
         </h3>
         <p className="text-gray-600">
@@ -118,7 +118,7 @@ export function ReviewForm({
         <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
           <Icon name="warning-circle" className="h-8 w-8 text-red-600" />
         </div>
-        <h3 className="mb-2 font-semibold text-red-900 text-xl">
+        <h3 className="mb-2 text-xl font-semibold text-red-900">
           Submission Failed
         </h3>
         <p className="text-gray-600">
@@ -144,7 +144,7 @@ export function ReviewForm({
         )}
       >
         <div className="space-y-2">
-          <h2 className="text-center font-bold text-2xl text-gray-900">
+          <h2 className="text-center text-2xl font-bold text-gray-900">
             Write Your Review
           </h2>
           <p className="text-center text-gray-600">
@@ -174,7 +174,7 @@ export function ReviewForm({
         <div className="space-y-2">
           <label
             htmlFor="judgeme-reviewer-name"
-            className="block font-medium text-gray-700 text-sm"
+            className="block text-sm font-medium text-gray-700"
           >
             Your Name
             <span className="ml-1 text-red-500">*</span>
@@ -186,7 +186,7 @@ export function ReviewForm({
             defaultValue=""
             placeholder="Enter your name"
             required
-            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none"
           />
         </div>
 
@@ -194,7 +194,7 @@ export function ReviewForm({
         <div className="space-y-2">
           <label
             htmlFor="judgeme-reviewer-email"
-            className="block font-medium text-gray-700 text-sm"
+            className="block text-sm font-medium text-gray-700"
           >
             Email Address
             <span className="ml-1 text-red-500">*</span>
@@ -206,7 +206,7 @@ export function ReviewForm({
             defaultValue=""
             placeholder="Enter your email"
             required
-            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none"
           />
         </div>
 
@@ -214,7 +214,7 @@ export function ReviewForm({
         <div className="space-y-2">
           <label
             htmlFor="judgeme-review-title"
-            className="block font-medium text-gray-700 text-sm"
+            className="block text-sm font-medium text-gray-700"
           >
             Review Title
           </label>
@@ -224,7 +224,7 @@ export function ReviewForm({
             id="judgeme-review-title"
             defaultValue=""
             placeholder="Give your review a title"
-            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none"
           />
         </div>
 
@@ -232,7 +232,7 @@ export function ReviewForm({
         <div className="space-y-2">
           <label
             htmlFor="judgeme-review-body"
-            className="block font-medium text-gray-700 text-sm"
+            className="block text-sm font-medium text-gray-700"
           >
             Your Review
             <span className="ml-1 text-red-500">*</span>
@@ -244,7 +244,7 @@ export function ReviewForm({
             required
             placeholder="Share your experience with this product"
             rows={5}
-            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+            className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none"
           />
         </div>
 

@@ -48,7 +48,7 @@ function TeamMembers(props: TeamMembersProps) {
                 />
               )}
               <div className="p-5">
-                <h4 className="font-semibold text-xl tracking-tight">{name}</h4>
+                <h4 className="text-xl font-semibold tracking-tight">{name}</h4>
                 <span className="text-gray-600">{title}</span>
                 {bio && (
                   <p className="mt-3 mb-4 font-light text-gray-600">{bio}</p>

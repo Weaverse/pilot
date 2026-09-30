@@ -15,8 +15,7 @@ interface AllProductsToolbarData {
 }
 
 interface AllProductsToolbarProps
-  extends HydrogenComponentProps,
-    AllProductsToolbarData {}
+  extends HydrogenComponentProps, AllProductsToolbarData {}
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { enableSort, showBreadcrumb, showProductsCount, ...rest } = props;
@@ -33,7 +32,7 @@ function AllProductsToolbar(props: AllProductsToolbarProps) {
 
   return (
     <div {...rest}>
-      <div className="border-gray-400 border-b py-4">
+      <div className="border-b border-gray-400 py-4">
         <div className="flex w-full items-center justify-between gap-4 md:gap-8">
           <div className="hidden items-center gap-2 md:flex">
             {showBreadcrumb && <BreadCrumb page="All Products" />}

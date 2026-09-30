@@ -20,7 +20,7 @@ export function HeaderCountrySelector() {
   const { countryNameDisplay } = useThemeSettings<ThemeSettings>();
 
   return (
-    <div className="hidden md:flex items-center gap-1.5">
+    <div className="hidden items-center gap-1.5 md:flex">
       <Popover.Root>
         <Popover.Trigger asChild>
           <button
@@ -70,7 +70,7 @@ export function HeaderCountrySelector() {
                       <ReactCountryFlag
                         svg
                         countryCode={locale.country}
-                        className="rounded-xs shrink-0"
+                        className="shrink-0 rounded-xs"
                         style={{ width: "24px", height: "16px" }}
                       />
                       <span
@@ -97,7 +97,7 @@ export function HeaderCountrySelector() {
                       <ReactCountryFlag
                         svg
                         countryCode={group.country}
-                        className="rounded-xs shrink-0"
+                        className="shrink-0 rounded-xs"
                         style={{ width: "24px", height: "16px" }}
                       />
                       <span
@@ -153,7 +153,7 @@ export function HeaderCountrySelector() {
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
-      <div className="w-1 h-4 border-l border-gray-300" />
+      <div className="h-4 w-1 border-l border-gray-300" />
     </div>
   );
 }

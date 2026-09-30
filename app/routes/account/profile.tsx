@@ -144,7 +144,7 @@ export default function AccountProfile() {
                 aria-label="First name"
                 defaultValue={customer.firstName ?? ""}
                 minLength={2}
-                className="w-full border border-border bg-background px-3 py-2"
+                className="border-border bg-background w-full border px-3 py-2"
               />
             </div>
             <div className="space-y-2">
@@ -160,12 +160,12 @@ export default function AccountProfile() {
                 aria-label="Last name"
                 defaultValue={customer.lastName ?? ""}
                 minLength={2}
-                className="w-full border border-border bg-background px-3 py-2"
+                className="border-border bg-background w-full border px-3 py-2"
               />
             </div>
           </fieldset>
           {actionData?.error && (
-            <p className="text-red-600 text-sm">{actionData.error}</p>
+            <p className="text-sm text-red-600">{actionData.error}</p>
           )}
           <Button type="submit" disabled={state !== "idle"} variant="primary">
             {state !== "idle" ? "Updating..." : "Update Profile"}

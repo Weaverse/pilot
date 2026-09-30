@@ -44,7 +44,7 @@ export function MediaSlider({
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: change the slide when selectedVariant changes
+  // Change the slide when selectedVariant changes.
   useEffect(() => {
     if (!swiper) {
       return;
@@ -67,6 +67,7 @@ export function MediaSlider({
         }
       }
     }
+    // oxlint-disable-next-line react/exhaustive-deps -- change the slide when selectedVariant changes
   }, [selectedVariant]);
 
   const shouldShowButton =
@@ -141,7 +142,7 @@ export function MediaSlider({
             </Swiper>
           </div>
         )}
-        <div className="relative w-[calc(100%-var(--thumbs-width,0px))] max-h-[90vh]">
+        <div className="relative max-h-[90vh] w-[calc(100%-var(--thumbs-width,0px))]">
           <Swiper
             onSwiper={setSwiper}
             onSlideChange={(sw) => setActiveIndex(sw.realIndex)}
@@ -170,7 +171,7 @@ export function MediaSlider({
               return (
                 <SwiperSlide
                   key={med.id}
-                  className="group bg-gray-100 rounded-lg"
+                  className="group rounded-lg bg-gray-100"
                 >
                   <div
                     onClick={
@@ -219,13 +220,13 @@ export function MediaSlider({
           <div className="absolute right-6 bottom-6 z-1 hidden items-center gap-2 md:flex">
             <button
               type="button"
-              className="media_slider__prev left-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__prev disabled:text-body-subtle left-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed"
             >
               <Icon name="arrow-left" className="size-5" />
             </button>
             <button
               type="button"
-              className="media_slider__next right-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
+              className="media_slider__next disabled:text-body-subtle right-6 rounded-md border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed"
             >
               <Icon name="arrow-right" className="size-5" />
             </button>

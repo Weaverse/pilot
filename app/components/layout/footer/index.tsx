@@ -81,7 +81,7 @@ export function Footer() {
                   />
                 </div>
               ) : (
-                <h3 className="font-medium text-base uppercase">{shopName}</h3>
+                <h3 className="text-base font-medium uppercase">{shopName}</h3>
               )}
               {themeText("footer.bio") ? (
                 <div
@@ -110,7 +110,7 @@ export function Footer() {
           </div>
           <FooterMenu />
         </div>
-        <div className="flex flex-col justify-center lg:grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-line-subtle border-t py-9">
+        <div className="border-line-subtle flex grid-cols-[1fr_auto_1fr] flex-col items-center justify-center gap-4 border-t py-9 lg:grid">
           <div className="flex gap-2">
             <FooterCountrySelector />
           </div>

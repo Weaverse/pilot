@@ -54,7 +54,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
             </div>
 
             {/* Column 2 - Ratings Breakdown Skeleton */}
-            <div className="border-gray-200 border-r border-l px-8 py-2">
+            <div className="border-r border-l border-gray-200 px-8 py-2">
               <div className="w-full space-y-4">
                 {[...new Array(5)].map((_, i) => (
                   <div key={i} className="flex w-full items-center gap-3">
@@ -85,13 +85,13 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
                   rating={data.averageRating}
                   className="[&>svg]:size-10"
                 />
-                <span className="font-semibold text-gray-900 text-xl">
+                <span className="text-xl font-semibold text-gray-900">
                   {parseTemplate(averageRatingText, {
                     avgRating: data.averageRating.toFixed(2),
                   })}
                 </span>
               </div>
-              <div className="text-gray-600 text-sm">
+              <div className="text-sm text-gray-600">
                 {parseTemplate(totalReviewsText, {
                   totalReviews: data.totalReviews,
                 })}
@@ -138,7 +138,7 @@ export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {
             <div className="flex items-center justify-end space-y-3 pr-14">
               <div className="flex flex-col gap-2">
                 <StarRating rating={0} className="[&>svg]:size-10" />
-                <span className="text-gray-500 text-sm">{noReviewsText}</span>
+                <span className="text-sm text-gray-500">{noReviewsText}</span>
               </div>
             </div>
             {/* Column 3 - Write Review Button */}

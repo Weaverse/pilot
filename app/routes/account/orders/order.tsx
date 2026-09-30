@@ -87,7 +87,7 @@ export default function OrderDetails() {
           <h1 className="h4 font-medium">Order Detail</h1>
           <Link
             to="/account"
-            className="w-fit items-center gap-2 text-body-subtle after:bg-body-subtle"
+            className="text-body-subtle after:bg-body-subtle w-fit items-center gap-2"
             variant="underline"
           >
             <Icon name="arrow-left" className="h-4 w-4" />
@@ -108,7 +108,7 @@ export default function OrderDetails() {
               <OrderSummary order={order} lineItems={lineItems} />
             </div>
             <div className="mt-4 shrink-0 pt-10 md:m-0 md:border-none md:pt-0">
-              <h3 className="font-bold text-base">Shipping Address</h3>
+              <h3 className="text-base font-bold">Shipping Address</h3>
               {order?.shippingAddress ? (
                 <ul className="mt-3">
                   <li>{order.shippingAddress.name}</li>
@@ -123,7 +123,7 @@ export default function OrderDetails() {
               ) : (
                 <p className="mt-3">No shipping address defined</p>
               )}
-              <h3 className="mt-6 font-bold text-base">Status</h3>
+              <h3 className="mt-6 text-base font-bold">Status</h3>
               {fulfillmentStatus && (
                 <div
                   className={clsx(

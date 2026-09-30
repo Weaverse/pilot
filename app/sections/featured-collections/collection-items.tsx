@@ -42,9 +42,7 @@ const variants = cva("", {
 });
 
 interface CollectionItemsData
-  extends VariantProps<typeof variants>,
-    OverlayProps,
-    LinkStyles {
+  extends VariantProps<typeof variants>, OverlayProps, LinkStyles {
   imageAspectRatio: ImageAspectRatio;
   collectionNameColor: string;
   buttonText: string;

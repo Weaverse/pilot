@@ -120,8 +120,7 @@ export function ReviewsPagination() {
 }
 
 interface ReviewListProps
-  extends HydrogenComponentProps,
-    Omit<ReviewItemProps, "review"> {
+  extends HydrogenComponentProps, Omit<ReviewItemProps, "review"> {
   reviewsPerPage?: number;
 }
 

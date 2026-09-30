@@ -138,7 +138,7 @@ export function Header() {
         "transition-all duration-300 ease-in-out",
         "bg-(--color-header-bg) hover:bg-(--color-header-bg)",
         "text-(--color-header-text) hover:text-(--color-header-text)",
-        "border-gray-200 border-b",
+        "border-b border-gray-200",
         variants({ padding: headerWidth }),
         scrolled ? "shadow-header" : "shadow-none",
         enableTransparent
@@ -184,7 +184,7 @@ export function Header() {
         </div>
         {/* Center: logo on mobile, desktop menu on desktop */}
         <div className="flex items-center justify-center">
-          <div className="lg:hidden h-[calc(var(--height-nav)-0.75rem)]">
+          <div className="h-[calc(var(--height-nav)-0.75rem)] lg:hidden">
             <Logo />
           </div>
           <DesktopMenu />

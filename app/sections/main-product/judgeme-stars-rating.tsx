@@ -58,7 +58,7 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
     inViewRef(node);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only fetch when product handle change
+  // Fetch only when product handle visibility changes.
   useEffect(() => {
     if (!(handle && inView)) {
       return;
@@ -86,6 +86,7 @@ export default function JudgemeStarsRating(props: JudgemeStarsRatingProps) {
         setStatus("error");
         setData(null);
       });
+    // oxlint-disable-next-line react/exhaustive-deps -- only fetch when product handle changes
   }, [handle, inView]);
 
   if (!handle) {

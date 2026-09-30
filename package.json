@@ -3,28 +3,32 @@
   "version": "2026.9.18",
   "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
   "keywords": [
-    "shopify",
-    "hydrogen",
-    "theme",
-    "hydrogen-theme",
-    "weaverse",
     "ecommerce",
+    "hydrogen",
+    "hydrogen-theme",
     "react",
     "react-router",
+    "shopify",
+    "tailwindcss",
+    "theme",
     "typescript",
-    "tailwindcss"
+    "weaverse"
   ],
+  "homepage": "https://pilot.weaverse.dev",
+  "bugs": {
+    "url": "https://github.com/weaverse/pilot/issues"
+  },
   "license": "MIT",
   "author": "Weaverse",
-  "type": "module",
-  "homepage": "https://pilot.weaverse.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/weaverse/pilot.git"
   },
-  "bugs": {
-    "url": "https://github.com/weaverse/pilot/issues"
+  "directories": {
+    "test": "tests"
   },
+  "type": "module",
+  "main": "index.js",
   "scripts": {
     "build": "shopify hydrogen build --codegen",
     "build:icons": "node ./other/build-icons.mjs",
@@ -43,10 +47,10 @@
     "hydrogen": "shopify hydrogen",
     "clean": "rm -rf dist node_modules package-lock.json pnpm-lock.yaml .shopify .react-router",
     "test": "playwright test --config=playwright.unit.config.ts",
-    "biome": "biome check",
-    "biome:fix": "biome check --write",
-    "format": "biome format --write",
-    "format:check": "biome format"
+    "check": "vp check app other public tests codegen.ts env.d.ts package.json playwright.unit.config.ts react-router.config.ts server.ts tsconfig.json virtual-modules.d.ts vite.config.ts",
+    "check:fix": "vp check --fix app other public tests codegen.ts env.d.ts package.json playwright.unit.config.ts react-router.config.ts server.ts tsconfig.json virtual-modules.d.ts vite.config.ts",
+    "format": "vp fmt --write app other public tests codegen.ts env.d.ts package.json playwright.unit.config.ts react-router.config.ts server.ts tsconfig.json virtual-modules.d.ts vite.config.ts",
+    "format:check": "vp fmt --check app other public tests codegen.ts env.d.ts package.json playwright.unit.config.ts react-router.config.ts server.ts tsconfig.json virtual-modules.d.ts vite.config.ts"
   },
   "dependencies": {
     "@fontsource-variable/cabin": "^5.3.0",
@@ -88,7 +92,6 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.13",
     "@playwright/test": "1.63.0",
     "@shopify/cli": "^4.8.0",
     "@shopify/hydrogen-codegen": "0.3.3",
@@ -98,18 +101,20 @@
     "@total-typescript/ts-reset": "0.6.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@weaverse/biome": "5.8.0",
+    "eslint": "10.11.0",
+    "eslint-plugin-sonarjs": "4.2.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vite": "^8.3.0"
+    "vite": "8.3.0",
+    "vite-plus": "1.0.0"
   },
   "overrides": {
-    "undici": "^7.29.0",
-    "ws": "^8.21.3",
+    "lodash": "^4.18.1",
     "qs": "^6.16.0",
-    "lodash": "^4.18.1"
+    "undici": "^7.29.0",
+    "ws": "^8.21.3"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   }
 }

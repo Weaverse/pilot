@@ -63,7 +63,7 @@ export function NewsletterPopup() {
     }
   }, [fetcher.data]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: just need to run once
+  // Initialize visitor-intent popup trigger once.
   useEffect(() => {
     if (isDesignMode) {
       return;
@@ -101,19 +101,20 @@ export function NewsletterPopup() {
         window.clearTimeout(timer);
       }
     };
+    // oxlint-disable-next-line react/exhaustive-deps -- design-mode guard only needs to run once
   }, []);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen} modal={isModal}>
       <Dialog.Portal>
         {isModal && (
-          <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+          <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-50 bg-gray-900/50" />
         )}
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           onInteractOutside={!isModal ? (e) => e.preventDefault() : undefined}
           className={cn(
-            "fixed z-50 data-[state=open]:animate-slide-up",
+            "data-[state=open]:animate-slide-up fixed z-50",
             isModal
               ? "inset-0 flex items-center justify-center p-4 [--slide-up-from:20px]"
               : cn(
@@ -123,7 +124,7 @@ export function NewsletterPopup() {
                   newsletterPopupPosition === "bottom-left" &&
                     "bottom-0 left-0",
                   newsletterPopupPosition === "bottom-right" &&
-                    "bottom-0 right-0",
+                    "right-0 bottom-0",
                 ),
           )}
           aria-describedby={undefined}
@@ -147,7 +148,7 @@ export function NewsletterPopup() {
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-2xl bg-white/80 border border-gray-300 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+                className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-2xl border border-gray-300 bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
                 aria-label="Close"
               >
                 <Icon name="x" size={14} />
@@ -199,13 +200,13 @@ export function NewsletterPopup() {
               >
                 <h3
                   className={cn(
-                    "mb-4 font-medium text-2xl",
+                    "mb-4 text-2xl font-medium",
                     !isModal && "mb-3 text-2xl",
                   )}
                 >
                   {newsletterPopupHeading}
                 </h3>
-                <p className={cn("mb-6 text-body-subtle", !isModal && "mb-4")}>
+                <p className={cn("text-body-subtle mb-6", !isModal && "mb-4")}>
                   {newsletterPopupDescription}
                 </p>
 
@@ -249,7 +250,7 @@ export function NewsletterPopup() {
                       localStorage.setItem(POPUP_SEEN_KEY, "true");
                       setOpen(false);
                     }}
-                    className="mt-4 text-body-subtle text-sm underline underline-offset-4 hover:text-body"
+                    className="text-body-subtle hover:text-body mt-4 text-sm underline underline-offset-4"
                   >
                     Don't show this again
                   </button>

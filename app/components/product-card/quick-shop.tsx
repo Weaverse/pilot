@@ -101,7 +101,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
         <div
           className={clsx(
             "flex flex-col justify-start gap-5",
-            panelType === "drawer" ? "pb-5 px-5" : "py-6 pr-5",
+            panelType === "drawer" ? "px-5 pb-5" : "py-6 pr-5",
           )}
         >
           <div className="space-y-4">
@@ -200,11 +200,12 @@ export function QuickShopTrigger({
     `/api/product/${productHandle}`,
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
+  // Load product data when opening the dialog.
   useEffect(() => {
     if (open && !data) {
       load(productApiPath);
     }
+    // oxlint-disable-next-line react/exhaustive-deps -- open and state are intentionally excluded
   }, [open]);
 
   return (
@@ -235,7 +236,7 @@ export function QuickShopTrigger({
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-10 bg-gray-900/50" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx(
@@ -288,7 +289,7 @@ export function QuickShopTrigger({
                 )}
               >
                 <Skeleton className="flex h-183 items-center justify-center">
-                  <Icon name="image" className="h-16 w-16 text-body-subtle" />
+                  <Icon name="image" className="text-body-subtle h-16 w-16" />
                 </Skeleton>
                 <div className="flex flex-col justify-start gap-5 py-6 pr-5">
                   <div className="flex gap-2">
@@ -305,7 +306,7 @@ export function QuickShopTrigger({
                   <Skeleton className="flex h-10 w-1/2 items-center justify-center">
                     <Icon
                       name="shopping-cart"
-                      className="h-5 w-5 text-body-subtle"
+                      className="text-body-subtle h-5 w-5"
                     />
                   </Skeleton>
                 </div>

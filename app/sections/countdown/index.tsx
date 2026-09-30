@@ -9,9 +9,9 @@ import { Section } from "~/components/section";
 const variants = cva("flex flex-col px-4 sm:px-16 [&_.paragraph]:mx-[unset]", {
   variants: {
     alignment: {
-      left: "[&_.countdown--timer]:-ml-4 items-start [&_.paragraph]:text-left",
+      left: "items-start [&_.countdown--timer]:-ml-4 [&_.paragraph]:text-left",
       center: "items-center [&_.paragraph]:text-center",
-      right: "[&_.countdown--timer]:-mr-4 items-end [&_.paragraph]:text-right",
+      right: "items-end [&_.countdown--timer]:-mr-4 [&_.paragraph]:text-right",
     },
   },
 });

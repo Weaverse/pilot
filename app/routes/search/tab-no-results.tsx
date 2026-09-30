@@ -16,14 +16,14 @@ const TYPE_LABELS: Record<SearchType, string> = {
 export function TabNoResults({ type, searchTerm }: TabNoResultsProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="mb-4 rounded-full bg-secondary p-4">
-        <Icon name="magnifying-glass" className="size-8 text-body-subtle" />
+      <div className="bg-secondary mb-4 rounded-full p-4">
+        <Icon name="magnifying-glass" className="text-body-subtle size-8" />
       </div>
       <h3 className="text-lg font-medium">No {TYPE_LABELS[type]} found</h3>
-      <p className="mt-1 text-body-subtle">
+      <p className="text-body-subtle mt-1">
         We couldn't find any {TYPE_LABELS[type]} matching "{searchTerm}"
       </p>
-      <p className="mt-2 text-sm text-body-subtle">
+      <p className="text-body-subtle mt-2 text-sm">
         Try checking your spelling or using different keywords
       </p>
     </div>

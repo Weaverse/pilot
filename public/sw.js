@@ -8,7 +8,7 @@
 // that way here too.
 
 const CACHE_PREFIX = "pilot-pwa-";
-const VERSION = `${CACHE_PREFIX}v1`; // bump on any change to this file
+const VERSION = `${CACHE_PREFIX}v2`; // bump on any change to this file
 const ASSET_CACHE = `${VERSION}-assets`;
 const IMG_CACHE = `${VERSION}-img`;
 const IMG_CACHE_MAX_ENTRIES = 60;
@@ -46,10 +46,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(cacheFirst(ASSET_CACHE, request));
     return;
   }
-  if (
-    url.hostname === "cdn.shopify.com" &&
-    request.destination === "image"
-  ) {
+  if (url.hostname === "cdn.shopify.com" && request.destination === "image") {
     staleWhileRevalidate(IMG_CACHE, request, event);
   }
   // Anything else: no respondWith — the network handles it untouched.
@@ -110,7 +107,9 @@ async function trimCache(cache) {
   let keys = await cache.keys();
   if (keys.length > IMG_CACHE_MAX_ENTRIES) {
     await Promise.all(
-      keys.slice(0, keys.length - IMG_CACHE_MAX_ENTRIES).map((key) => cache.delete(key)),
+      keys
+        .slice(0, keys.length - IMG_CACHE_MAX_ENTRIES)
+        .map((key) => cache.delete(key)),
     );
   }
 }

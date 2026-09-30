@@ -72,9 +72,9 @@ type InputEntryValueType<T> = T extends { type: "switch" }
  * independently through the conditional type (no collapsed unions).
  */
 type SettingsFromInputs<T extends readonly unknown[]> = {
-  [K in T[number] as K extends { name: infer N extends string }
-    ? N
-    : never]: K extends unknown ? InputEntryValueType<K> : never;
+  [
+    K in T[number] as K extends { name: infer N extends string } ? N : never
+  ]: K extends unknown ? InputEntryValueType<K> : never;
 };
 
 /**

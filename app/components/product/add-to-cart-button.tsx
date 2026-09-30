@@ -131,7 +131,7 @@ function AddToCartButtonContent({
         {isLoading && <Spinner className="z-0" size={20} duration={400} />}
       </Button>
       {addError && (
-        <p role="alert" className="mt-2 text-red-600 text-sm">
+        <p role="alert" className="mt-2 text-sm text-red-600">
           {addError}
         </p>
       )}

@@ -27,8 +27,9 @@ function getFeaturedMediaAspectRatio(
   return undefined;
 }
 
-export interface ProductMediaProps
-  extends VariantProps<typeof mediaGridVariants> {
+export interface ProductMediaProps extends VariantProps<
+  typeof mediaGridVariants
+> {
   mediaLayout: "grid" | "slider";
   imageAspectRatio?: ImageAspectRatio;
   showThumbnails: boolean;

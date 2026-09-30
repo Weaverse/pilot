@@ -22,7 +22,7 @@ export function FooterCountrySelector() {
         <Popover.Trigger asChild>
           <button
             type="button"
-            className="flex w-full cursor-pointer items-center gap-2 overflow-clip rounded-md border border-line-subtle px-4 py-3 text-left outline-hidden"
+            className="border-line-subtle flex w-full cursor-pointer items-center gap-2 overflow-clip rounded-md border px-4 py-3 text-left outline-hidden"
             aria-label="Select country"
           >
             <ReactCountryFlag
@@ -60,7 +60,7 @@ export function FooterCountrySelector() {
                       <ReactCountryFlag
                         svg
                         countryCode={locale.country}
-                        className="rounded-xs shrink-0"
+                        className="shrink-0 rounded-xs"
                         style={{ width: "24px", height: "16px" }}
                       />
                       <span
@@ -87,7 +87,7 @@ export function FooterCountrySelector() {
                       <ReactCountryFlag
                         svg
                         countryCode={group.country}
-                        className="rounded-xs shrink-0"
+                        className="shrink-0 rounded-xs"
                         style={{ width: "24px", height: "16px" }}
                       />
                       <span

@@ -62,7 +62,7 @@ export function ReviewItem(props: ReviewItemProps) {
       <div className="w-full justify-between space-y-2 md:flex">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-base">{review.author}</span>
+            <span className="text-base font-semibold">{review.author}</span>
             {showCountry && (
               <ReactCountryFlag
                 svg
@@ -73,7 +73,7 @@ export function ReviewItem(props: ReviewItemProps) {
             )}
           </div>
           {showDate && (
-            <p className="font-normal text-gray-500 text-sm">
+            <p className="text-sm font-normal text-gray-500">
               {formatDate(review.created_at)}
             </p>
           )}
@@ -93,7 +93,7 @@ export function ReviewItem(props: ReviewItemProps) {
         </div>
       </div>
       <div className="mt-4 min-w-0 flex-1 space-y-4 sm:mt-0">
-        <p className="font-normal text-base">{review.content}</p>
+        <p className="text-base font-normal">{review.content}</p>
         <div className="flex flex-wrap gap-3">
           {review.media.map((media) => (
             <div

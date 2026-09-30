@@ -29,8 +29,7 @@ const variants = cva("h-(--image-height) rounded-md", {
 });
 
 interface ImageGalleryItemProps
-  extends VariantProps<typeof variants>,
-    HydrogenComponentProps {
+  extends VariantProps<typeof variants>, HydrogenComponentProps {
   src: WeaverseImage;
 }
 
