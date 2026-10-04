@@ -51,7 +51,7 @@ npm run dev            # → http://localhost:3456
 `.env.example` contains a live demo store's tokens, so the storefront runs immediately. Swap in your own values (see [Environment](#environment)) when you're ready to make it yours.
 
 > [!IMPORTANT]
-> Don't skip removing `.github`. Its workflows (the Oxygen deployment for Pilot's live demo, CI, and code review) need Weaverse's secrets and would fail on your first push. When you [connect your repo to Oxygen](#deployment), Shopify commits a fresh `oxygen-deployment-*.yml` for your own storefront. Options A and B (via `@weaverse/cli`) remove it for you.
+> Don't skip removing `.github`. Its workflows (the Oxygen deployment for Pilot's live demo, CI, and code review) need Weaverse's secrets and would fail on your first push. The same applies if you created your repo with GitHub's **Use this template** button. When you [connect your repo to Oxygen](#deployment), Shopify commits a fresh `oxygen-deployment-*.yml` for your own storefront. Options A and B (via `@weaverse/cli`) remove it for you.
 
 ---
 
