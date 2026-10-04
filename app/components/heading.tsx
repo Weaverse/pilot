@@ -329,6 +329,7 @@ export const headingInputs: InspectorGroup["inputs"] = [
 export const schema = createSchema({
   type: "heading",
   title: "Heading",
+  label: (data: HeadingProps) => data.content,
   settings: [
     {
       group: "Heading",

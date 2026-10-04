@@ -80,6 +80,7 @@ export default ColumnWithImageItem;
 export const schema = createSchema({
   type: "column-with-image--item",
   title: "Column",
+  label: (data: ColumnWithImageItemProps) => data.heading,
   settings: [
     {
       group: "Column",
