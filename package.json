@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/pilot",
-  "version": "2026.9.7",
+  "version": "2026.9.18",
   "description": "A production-ready Shopify storefront built with Hydrogen and Weaverse",
   "keywords": [
     "shopify",
@@ -67,7 +67,7 @@
     "@react-router/dev": "7.16.0",
     "@shopify/hydrogen": "^2026.4.5",
     "@tailwindcss/vite": "^4.3.3",
-    "@weaverse/hydrogen": "^5.21.2",
+    "@weaverse/hydrogen": "^5.22.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.10.0",

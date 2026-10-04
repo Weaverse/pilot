@@ -68,6 +68,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
 export const schema = createSchema({
   type: "testimonial--item",
   title: "Testimonial",
+  label: (data: TestimonialItemProps) => data.heading,
   settings: [
     {
       group: "Testimonial",

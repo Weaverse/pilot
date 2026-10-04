@@ -63,6 +63,7 @@ export default SubHeading;
 export const schema = createSchema({
   type: "subheading",
   title: "Subheading",
+  label: (data: SubHeadingProps) => data.content,
   settings: [
     {
       group: "Subheading",
