@@ -1,6 +1,6 @@
 # Plan
 
-1. README Option C: add `rm -rf .github` right after `cd my-storefront`, plus an `[!IMPORTANT]` note explaining which workflows it removes, why they fail, and that connecting Oxygen generates a fresh `oxygen-deployment-*.yml`.
+1. README Option C: add `rm -rf .github` right after `cd my-storefront`, plus a short `[!NOTE]` explaining which workflows it removes, why they fail, and that connecting Oxygen adds the developer's own deploy workflow.
    The note also covers repos created with GitHub's **Use this template** button, since `Weaverse/pilot` is a template repository and the button copies `.github/` too.
 2. Options A and B need no README change:
    - Option B (Studio) runs `npx @weaverse/cli@latest create`, which strips `.github/` since `@weaverse/cli@5.6.5` (`Weaverse/weaverse#532`).
