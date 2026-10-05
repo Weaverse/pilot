@@ -42,12 +42,16 @@ The agent boots a **live preview on the bundled demo store first** (≈2 minutes
 ```bash
 git clone https://github.com/weaverse/pilot my-storefront
 cd my-storefront
+rm -rf .github         # Pilot's internal workflows
 cp .env.example .env   # ships working demo-store tokens + a demo WEAVERSE_PROJECT_ID
 npm install
 npm run dev            # → http://localhost:3456
 ```
 
 `.env.example` contains a live demo store's tokens, so the storefront runs immediately. Swap in your own values (see [Environment](#environment)) when you're ready to make it yours.
+
+> [!NOTE]
+> `.github` holds Pilot's own workflows (demo deploy, CI, code review), which fail without Weaverse's secrets. Remove it the same way if you used **Use this template**; connecting Oxygen later adds your own deploy workflow.
 
 ---
 
