@@ -18,10 +18,10 @@ override; the Hydrogen peer range is respected deliberately.
 
 - [x] Add `brace-expansion` and `js-yaml` to `overrides` in `package.json`
 - [x] Regenerate `package-lock.json` (`npm install --package-lock-only`)
-- [ ] CI `Verify` passes on the PR into `dev`
+- [x] CI `Verify` passes on the PR into `dev`
 - [ ] Dismiss #160, #163, #166 on GitHub with reasons
 - [ ] Enable secret scanning
-- [ ] Close Dependabot PR #180, superseded by the override
+- [x] Close Dependabot PR #180, superseded by the override
 
 ## Files and Folders Touched
 

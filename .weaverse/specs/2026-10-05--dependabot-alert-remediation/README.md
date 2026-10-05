@@ -5,7 +5,7 @@
 | **Status**       | in-progress                                                  |
 | **Owner**        | @hta218                                                      |
 | **Issue**        | —                                                            |
-| **PR**           | —                                                            |
+| **PR**           | [#185](https://github.com/Weaverse/pilot/pull/185)           |
 | **Branch**       | `fix/security-overrides`                                     |
 | **Created**      | 2026-10-05                                                   |
 | **Last Updated** | 2026-10-05                                                   |
