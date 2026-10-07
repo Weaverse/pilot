@@ -4,7 +4,7 @@ This folder contains **Weaverse org-internal** resources used for development an
 
 ## Contents
 
-- `specs/` — Feature specifications following the [Spec-Driven Development](../.claude/rules/spec-driven-development.md) conventions. Each feature has one subfolder with a single `README.md` spec (older folders may also keep a legacy plan and work logs).
+- `specs/` — Feature specifications following the [Spec-Driven Development](../.claude/rules/spec-driven-development.md) conventions. New specs are single files named `YYYY-MM-DD-what-update.md`; older specs are subfolders with a `README.md` (some also keep a legacy plan and work logs).
 - `docs/` — Internal documentation including [release process](docs/release-process.md), [customer account local dev guide](docs/customer-account-local-dev.md), and other references.
 - `autoperf/` — Autonomous performance optimization tool that uses Claude Code CLI to iteratively improve Lighthouse scores via a build-measure-decide loop.
 

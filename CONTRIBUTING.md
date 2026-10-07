@@ -3,7 +3,7 @@
 ## Issues and Specs
 
 Issues track ownership, priority, status, and discussion. Small fixes need only the issue. Substantive changes are
-described in one spec file (`.weaverse/specs/<date>--<title>/README.md`); see
+described in one spec file (`.weaverse/specs/YYYY-MM-DD-what-update.md`); see
 [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md). Pull requests link the issue
 they resolve (e.g. `Closes #123`).
 
