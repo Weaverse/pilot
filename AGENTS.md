@@ -157,7 +157,6 @@ The project extends from `ultracite` and `@weaverse/biome` configurations with t
 
 ### Critical Rules (Always Check)
 
-- Use `const` for constants with `ALL_CAPS` naming and `let` for everything else
 - Use `cn()` utility for dynamic classes, never template strings
 - Use function declarations `function foo()` not arrow expressions (exception: route `meta`/`loader`/`action` exports follow React Router conventions)
 - Named exports only, no default exports (exceptions: Route components, Weaverse sections, and Weaverse-registered components)
