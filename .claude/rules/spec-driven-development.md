@@ -14,10 +14,15 @@ Each fact has one owner. Never mirror the same metadata or acceptance checklist 
 | **Git** | History |
 
 - Substantive issue-governed work links to its real GitHub issue before implementation starts.
+- **Search before creating an issue, including closed issues.** Resolve the owning repository and intended outcome, then search all states: `gh search issues "<outcome/synonyms>" --owner Weaverse --json number,title,state,url,repository` (no open-only filter), plus repo-specific title/body terms and linked PR/issue references. Read likely candidates' body, comments and closure reason before deciding.
+  - **Reuse** an issue that covers the same outcome, even if it is closed, instead of opening a duplicate. If its scope or acceptance changed, an issue-body edit is an external write that needs applicable approval: read the exact current body and state, prepare the proposed scope update, get approval for that issue and payload, preserve its identity, discussion, owner, labels, milestone, project and historical completion evidence (add only a concise scope delta), then read the issue back.
+  - A loosely related broad epic or different behavior is **not** a match. If a sibling repository's issue genuinely owns a cross-repository outcome (e.g. a Builder or SDK issue Pilot implements), reuse its URL rather than creating a per-repository child.
+  - **Reopen** a closed issue only when work genuinely resumes and the current authorization covers that state change; being closed alone is no reason to duplicate or reopen it.
+  - **Create** a new issue only after the search proves no genuine match exists (or a separately scoped repository contract needs one).
 - Follow the repository's branch and release policy. Resolve both the PR's actual base branch and the remote's default branch; never assume either.
 - When a PR fully resolves a task-scoped issue and targets the default branch, use a closing keyword (`Closes #NNNN`) and read back the actual Development relationship (`gh pr view <N> --json closingIssuesReferences`). A plain mention is not a link.
 - When a PR legitimately targets a non-default branch (staging, release, stacked), establish the explicit Development link GitHub supports for that case, then read it back. Never retarget a PR solely to make linking work.
-- Partial work does not close a broader parent issue.
+- Partial work does not close a broader parent issue; never use a closing keyword for partial work. A reused closed issue is fine, but neither its closed state nor PR text proves the new work complete: choose a GitHub-supported Development link that accurately reflects full versus partial scope and verify it through the API. Do not reopen it or create a duplicate merely to make a keyword work; if the relationship cannot be established without wrongly changing lifecycle, report it as a linking blocker.
 
 ## When a spec file is needed
 
