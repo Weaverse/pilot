@@ -26,12 +26,14 @@ out-of-range points.
 Both shared renderers apply it to the actual `<img>` element:
 
 - `app/components/image.tsx` (`Image`) overrides its default `object-center`.
+  An explicit `style.objectPosition` from the caller still wins.
 - `app/components/background-image.tsx` (`BackgroundImage`) overrides the
-  section's `backgroundPosition` setting.
+  section's `backgroundPosition` setting when `backgroundFit` is `cover`.
 
 Every image input that Pilot renders cropped goes through one of these two
-components, so sections need no extra code. Logos and icons render with
-`object-contain` and are not cropped, so they ignore the point.
+components, so sections need no extra code. Images that are not cropped keep
+their existing fit and ignore the point: `contain`/`fill` backgrounds, the
+image-with-text `contain` option, and logos and icons.
 
 To use it in a custom component:
 
@@ -64,3 +66,8 @@ Percentage positioning aligns the selected point of the image with the same
 relative position in the frame. For example, `80% 30%` places the point 80%
 across and 30% down the frame. It does not necessarily center the point, and it
 cannot guarantee the whole subject stays visible at every aspect ratio.
+
+The hotspots section positions its pins as percentages of the frame. When its
+aspect ratio crops the image, a focal point changes which part of the image is
+visible, so pins can drift away from the product they mark. Use the "Adapt to
+image" aspect ratio for hotspots, or keep the point near the center.
