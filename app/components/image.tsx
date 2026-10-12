@@ -66,9 +66,10 @@ export function Image({ className, onLoad, style, ...rest }: ImageProps) {
         }}
         style={{
           ...style,
-          // A Weaverse image's focal point overrides the default centering.
+          // A Weaverse image's focal point overrides the default centering
+          // unless the caller sets an explicit position.
           objectPosition:
-            getFocalPointPosition(rest.data) ?? style?.objectPosition,
+            style?.objectPosition ?? getFocalPointPosition(rest.data),
         }}
         {...rest}
       />

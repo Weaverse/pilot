@@ -50,8 +50,14 @@ export function BackgroundImage(props: BackgroundImageProps) {
     return (
       <Image
         className={variants({ backgroundFit, backgroundPosition })}
-        // A valid focal point takes precedence over `backgroundPosition`.
-        style={{ objectPosition: getFocalPointPosition(backgroundImage) }}
+        // A valid focal point takes precedence over `backgroundPosition`, but
+        // only when the image is cropped (`contain` and `fill` never crop).
+        style={{
+          objectPosition:
+            (backgroundFit ?? "cover") === "cover"
+              ? getFocalPointPosition(backgroundImage)
+              : undefined,
+        }}
         data={data}
         loading={loading}
         fetchPriority={eager ? "high" : undefined}
