@@ -31,6 +31,11 @@ function isUnitCoordinate(value: unknown): value is number {
   return typeof value === "number" && value >= 0 && value <= 1;
 }
 
+// Rounds to 2 decimals so float noise (0.29 * 100 = 28.999999999999996) stays out of the CSS.
+function toPercent(n: number) {
+  return Math.round(n * 10_000) / 100;
+}
+
 /**
  * Converts a Weaverse image's per-input focal point (`{ x, y }`, from 0 to 1,
  * measured from the image's top-left corner) to a CSS `object-position`.
@@ -42,7 +47,7 @@ export function getFocalPointPosition(image: unknown) {
     (image as { focalPoint?: { x?: unknown; y?: unknown } } | null)
       ?.focalPoint ?? {};
   if (isUnitCoordinate(x) && isUnitCoordinate(y)) {
-    return `${x * 100}% ${y * 100}%`;
+    return `${toPercent(x)}% ${toPercent(y)}%`;
   }
   return undefined;
 }

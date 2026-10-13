@@ -6,6 +6,9 @@ test("converts a valid focal point to an object-position", () => {
     getFocalPointPosition({ url: "/a.jpg", focalPoint: { x: 0.8, y: 0.3 } }),
   ).toBe("80% 30%");
   expect(getFocalPointPosition({ focalPoint: { x: 0, y: 1 } })).toBe("0% 100%");
+  expect(getFocalPointPosition({ focalPoint: { x: 0.29, y: 0.12346 } })).toBe(
+    "29% 12.35%",
+  );
 });
 
 test("ignores missing, malformed, and out-of-range focal points", () => {
