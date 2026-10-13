@@ -3,6 +3,7 @@ import type { Image as ImageType } from "@shopify/hydrogen/storefront-api-types"
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
+import { getFocalPointPosition } from "~/utils/image";
 
 type Crop = "center" | "top" | "bottom" | "left" | "right";
 
@@ -29,7 +30,7 @@ export interface ImageProps
   };
 }
 
-export function Image({ className, onLoad, ...rest }: ImageProps) {
+export function Image({ className, onLoad, style, ...rest }: ImageProps) {
   /**
    * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
    * even when using ref prop for the outer div
@@ -62,6 +63,13 @@ export function Image({ className, onLoad, ...rest }: ImageProps) {
         onLoad={(e) => {
           setLoaded(true);
           onLoad?.(e);
+        }}
+        style={{
+          ...style,
+          // A Weaverse image's focal point overrides the default centering
+          // unless the caller sets an explicit position.
+          objectPosition:
+            style?.objectPosition ?? getFocalPointPosition(rest.data),
         }}
         {...rest}
       />

@@ -2,6 +2,7 @@ import { Image } from "@shopify/hydrogen";
 import type { InspectorGroup, WeaverseImage } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import { getFocalPointPosition } from "~/utils/image";
 
 const variants = cva("absolute inset-0 z-[-1] h-full w-full", {
   variants: {
@@ -49,6 +50,14 @@ export function BackgroundImage(props: BackgroundImageProps) {
     return (
       <Image
         className={variants({ backgroundFit, backgroundPosition })}
+        // A valid focal point takes precedence over `backgroundPosition`, but
+        // only when the image is cropped (`contain` and `fill` never crop).
+        style={{
+          objectPosition:
+            (backgroundFit ?? "cover") === "cover"
+              ? getFocalPointPosition(backgroundImage)
+              : undefined,
+        }}
         data={data}
         loading={loading}
         fetchPriority={eager ? "high" : undefined}
