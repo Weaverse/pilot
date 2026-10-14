@@ -57,7 +57,7 @@ npm run dev            # → http://localhost:3456
 
 ## Requirements
 
-- **Node.js** ≥ 22.12.0
+- **Node.js** ≥ 22.15.0
 - **npm** (the repo ships a `package-lock.json`)
 - A **Shopify** store and the [Weaverse app](https://apps.shopify.com/weaverse) to customize visually and get a `WEAVERSE_PROJECT_ID`
 
