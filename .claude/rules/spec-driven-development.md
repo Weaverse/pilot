@@ -1,140 +1,83 @@
 # Spec-Driven Development (SDD) Conventions
 
-> **If you are an AI coding agent, you MUST FOLLOW THESE CONVENTIONS. This is PROJECT-SPECIFIC, so NO NEGOTIATION!**
+> **If you are an AI coding agent, you MUST follow these conventions.** They are project-specific.
 
-## ONLY 3 Core Principles
+## Issue-first, single-spec
 
-- The spec is the SOURCE OF TRUTH for a feature, not the code
-- Specs describe PROBLEM, PLAN, and PROGRESS
-- Every feature MUST have a spec folder
+Each fact has one owner. Never mirror the same metadata or acceptance checklist in more than one place.
 
----
+| Owner | Holds |
+| --- | --- |
+| **GitHub issue** | Owner, priority, milestone, status, discussion, links |
+| **Spec** (one `.weaverse/specs/YYYY-MM-DD-what-update.md` file) | Requirements, acceptance, technical approach, verification strategy, current important decisions |
+| **Pull request** | Implementation and observed verification evidence (CI, smoke runs) |
+| **Git** | History |
 
-## Spec Structure
+- Substantive issue-governed work links to its real GitHub issue before implementation starts.
+- **Search before creating an issue, including closed issues.** Resolve the owning repository and intended outcome, then search all states: `gh search issues "<outcome/synonyms>" --owner Weaverse --json number,title,state,url,repository` (no open-only filter), plus repo-specific title/body terms and linked PR/issue references. Read likely candidates' body, comments and closure reason before deciding.
+  - **Reuse** an issue that covers the same outcome, even if it is closed, instead of opening a duplicate. If its scope or acceptance changed, an issue-body edit is an external write that needs applicable approval: read the exact current body and state, prepare the proposed scope update, get approval for that issue and payload, preserve its identity, discussion, owner, labels, milestone, project and historical completion evidence (add only a concise scope delta), then read the issue back.
+  - A loosely related broad epic or different behavior is **not** a match. If a sibling repository's issue genuinely owns a cross-repository outcome (e.g. a Builder or SDK issue Pilot implements), reuse its URL rather than creating a per-repository child.
+  - **Reopen** a closed issue only when work genuinely resumes and the current authorization covers that state change; being closed alone is no reason to duplicate or reopen it.
+  - **Create** a new issue only after the search proves no genuine match exists (or a separately scoped repository contract needs one).
+- Follow the repository's branch and release policy. Resolve both the PR's actual base branch and the remote's default branch; never assume either.
+- When a PR fully resolves a task-scoped issue and targets the default branch, use a closing keyword (`Closes #NNNN`) and read back the actual Development relationship (`gh pr view <N> --json closingIssuesReferences`). A plain mention is not a link.
+- When a PR legitimately targets a non-default branch (staging, release, stacked), establish the explicit Development link GitHub supports for that case, then read it back. Never retarget a PR solely to make linking work.
+- Partial work does not close a broader parent issue; never use a closing keyword for partial work. A reused closed issue is fine, but neither its closed state nor PR text proves the new work complete: choose a GitHub-supported Development link that accurately reflects full versus partial scope and verify it through the API. Do not reopen it or create a duplicate merely to make a keyword work; if the relationship cannot be established without wrongly changing lifecycle, report it as a linking blocker.
 
-All specs live in a specs folder. The path can be configured in your project's `AGENTS.md` file (or similar project configuration). If not specified, the default location is `.specs/` at the project root.
+## When a spec file is needed
 
-If no `.specs` folder exists at the project root and no path is specified in the agent file, search the project for an existing specs folder (e.g., `specs/`, `docs/specs/`, `.github/specs/`). If found, use that location; otherwise, create `.specs/` at the project root.
+- **Small, clear bug or maintenance:** the existing issue is the mini-spec. No new file.
+- **Reviewing, verifying, or merging someone else's implementation:** use its PR/issue. No new administrative tracker.
+- **Substantive feature or contract change:** use a file spec. Search first and update the closest canonical spec; do not create a file per issue or PR.
+- Before a spec file exists, the issue holds intake. Once promoted to a file, replace the duplicated issue detail with a pointer to the spec so there are never two authoritative copies.
+- **Cross-repository outcome** (e.g. a Builder or SDK change Pilot consumes): keep one shared contract in the repository that owns the outcome and link to it from here. Add a local spec only for genuinely independent theme detail.
 
-**Configuration Example (in AGENTS.md):**
-```markdown
-## Spec-Driven Development (SDD) Directory
+## Location and paths
 
-Specs are located at: `docs/specs/`
-```
-
-Each feature gets its own subfolder inside the specs directory.
-
-### Folder Naming Pattern
-
-```
-{YYYY-MM-DD}--{kebab-case-title}
-```
-
-- `YYYY-MM-DD`: latest update date (ISO format); refresh it whenever the spec is updated or merged
-- `title`: stable kebab-case feature name; broaden it only when merged scope makes the old title misleading
-- Separators: double dashes `--`
-
-Examples:
-
-- `2026-03-01--user-authentication`
-- `2026-03-05--billing-integration`
-- `2026-03-15--dark-mode-toggle`
-
-### Folder Structure
+Pilot specs live in `.weaverse/specs/` (not `.specs/`). New specs are single Markdown files directly in that folder — no feature folder, no per-spec `README.md`:
 
 ```
-project-root/
-├── {specs-dir}/               ← Configurable path (default: .specs/)
-│   ├── 2026-03-01--user-authentication/
-│   │   ├── README.md          📋 Status, owner, initiating requirement
-│   │   ├── plan.md            🗺️ Agent-generated implementation plan
-│   │   └── work-logs.md       📝 Timeline & change history (optional)
-│   │
-│   ├── 2026-03-05--billing-integration/
-│       └── ...
-│
-├── src/                        ← your codebase (untouched by this convention)
-└── ...
+.weaverse/specs/YYYY-MM-DD-what-update.md
 ```
 
----
+- One hyphen separates the date from the kebab-case slug (`2026-10-07-flat-spec-layout.md`, not `2026-10-07--…`).
+- The date is the **creation** date. It is immutable context, not status. **Do not rename the file when it is updated**; paths are stable so links keep working.
+- Never overwrite an existing spec file with the same name; reuse it only when it describes the same outcome.
 
-## Files Inside Each Feature Folder
+## The spec file
 
-### README.md (required) - strongly intended for humans, but AI agents should read it as well.
-
-This is the feature's identity card. Short, scannable, no fluff.
-
-MUST contain:
-
-- **Status**: one of `draft`, `in-progress`, `completed`, `on-hold`, `deprecated`
-- **Owner**: who is responsible for this feature
-- **Created**: original creation date; preserve it when the folder date changes
-- **Last Updated**: date of the latest update; MUST match the date in the current folder name
-- **Initiating requirement**: a concise, self-contained, professionally revised account of the requirement that initiated the feature, not raw chat. If work arrives through a local brief, attachment, or file path, read the source and inline its substantive requirement; a private source-file location used only to locate that material is never requirement content. Distinguish those private source locations from substantive repository paths, runtime paths, and URLs. Normalize substantive paths to portable forms when possible, such as repo-relative paths, then preserve each normalized path and its meaning exactly. Remove conversational scaffolding, agent orchestration chatter, and irrelevant prose. Credential and secret redaction has higher priority than every preservation rule: remove them even when they also qualify as substantive literal values or identifiers. Preserve every remaining substantive constraint, identifier, command, literal value, acceptance condition, and externally meaningful branch, base, and head identifier exactly. The result MUST be understandable to a contributor who cannot access the original chat, private file, or author's machine.
-- **Scope updates**: add later user intent to a dated `Scope Updates` section, revised to the same standard as the initiating requirement
-- **Summary**: 2-3 sentences max describing what this feature does and why it exists
-
-Template:
+One file per spec. Write in English; keep it portable and self-contained. Minimum sections:
 
 ```markdown
-# Feature: [Name]
+# [Title]
 
-| Field            | Value                                                    |
-| ---------------- | -------------------------------------------------------- |
-| **Status**       | status                                                   |
-| **Owner**        | @developer                                               |
-| **Created**      | YYYY-MM-DD                                               |
-| **Last Updated** | YYYY-MM-DD                                               |
+Issue: [#NNNN](https://github.com/Weaverse/pilot/issues/NNNN)
 
-## Initiating Requirement
+## Outcome
+[What changes for whom, and why.]
 
-> [State the concise, self-contained initiating requirement. Preserve every substantive detail, but remove chat and machine-local context.]
+## Scope & contract
+[Requirements, constraints, section/schema surface, identifiers. Include non-goals.]
 
-## Summary
+## Acceptance
+[Observable conditions that make this done.]
 
-[2-3 sentences. What this feature does and why it exists.]
+## Approach
+[Steps, affected files, and current important technical decisions.]
+
+## Verification
+[How the behavior will be proven: tests, builds, smoke runs.]
 ```
 
-### plan.md (required)
+- Add **Risks**, **Migration**, or **Rollback** sections only when meaningful (e.g. `[breaking]` changes for forked themes).
+- Do **not** add Status, Owner, Priority, or progress fields — those live on the issue.
+- **Requirements are revised, not pasted.** State them concisely and professionally; exclude raw chat and agent-orchestration chatter. Preserve every substantive constraint, acceptance condition, and identifier. Read any local brief or attachment and inline its essential requirements; a private machine path used only to locate it is provenance, not requirement text. Normalize substantive repository paths, URL routes, API paths, and runtime paths to portable forms, then preserve them.
+- **Always redact** credentials, secrets, tokens, private session material, and signed URLs (remove or replace with `[REDACTED]`) before any literal-value preservation.
 
-Generated by the dev's preferred agent, framework, or workflow (Cursor, Claude Code, BMAD, spec-kit, superpowers...). The convention does NOT dictate format. Each dev uses whatever planning tool they prefer.
+## No parallel files
 
-**IMPORTANT**: `plan.md` does NOT contain status, created date, or other metadata - those live in `README.md`.
+Do not create `plan.md`, `work-logs.md`, `design.md`, `tasks.md`, or `handoff.md` by default. Merge the useful plan into the spec's **Approach**; put progress and discussion on the issue and evidence on the PR.
 
-The plan MUST meet these constraints:
+## Legacy specs
 
-- MUST be under 500 lines
-- MUST include a section listing all files and folders this feature touches, so other agents know the scope
-
-### work-logs.md (optional)
-
-A timeline of work done on this feature. Useful when:
-
-- The feature spans multiple days or sessions
-- Multiple devs contribute to the same feature
-- You want to track what was tried, what failed, what changed
-
-Append-only format:
-
-```markdown
-# Work Logs
-
-## YYYY-MM-DD — @developer
-- What was done
-- Decisions made
-- Blockers encountered
-
-## YYYY-MM-DD — @other-developer
-- Continued from previous session
-- Updated plan to reflect new approach
-```
-
----
-
-## Rules
-
-1. **New feature?** Create a spec folder following the convention above before writing any code.
-2. **Existing feature?** Read the spec first. If changes affect its plan, status, or scope, rename the folder to the current date, preserve `Created`, set `Last Updated` to the folder date, and update backlinks and generated indexes in the same change.
-3. **Keep requirements portable.** Apply the `Initiating Requirement` and dated `Scope Updates` convention to new and touched specs. Do not bulk-migrate historical specs.
+Existing `.weaverse/specs/YYYY-MM-DD--title/` folders (`README.md`, possibly with `plan.md`, `work-logs.md`, or Status/Owner tables) stay where they are; do not bulk-migrate, flatten, or re-date them. When you substantively edit one, consolidate that outcome's current unique requirements and approach into one flat `.weaverse/specs/YYYY-MM-DD-what-update.md` file (keeping the original creation date when known), update backlinks, and retire the old folder as an active contract only after its meaningful history/evidence is preserved. Historical evidence may remain, but never as a second maintained contract.

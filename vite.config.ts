@@ -130,12 +130,7 @@ export default defineConfig(({ isSsrBuild }) => ({
   },
   ssr: {
     optimizeDeps: {
-      include: [
-        "@radix-ui/react-primitive",
-        "jsonp",
-        "classnames",
-        "react-share",
-      ],
+      include: ["@radix-ui/react-primitive", "classnames", "react-share"],
     },
   },
 }));

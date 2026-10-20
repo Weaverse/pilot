@@ -58,6 +58,7 @@ export default function ProductHighlightItem(props: HighlightItemProps) {
 export let schema = createSchema({
   type: "mp--highlight-item",
   title: "Highlight item",
+  label: (data: HighlightItemProps) => data.text,
   settings: [
     {
       group: "General",

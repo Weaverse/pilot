@@ -5,14 +5,14 @@ This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) 
 > **Canonical agent instructions:** `AGENTS.md` is the source of truth and may always be updated. Root `CLAUDE.md` is a relative symlink to it and must never become a separate copy. Push completed instruction changes to the repository's default branch.
 
 ## Spec Maintenance
-> **Required SDD convention:** Every agent MUST read and follow [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md), the canonical companion rule for spec structure and portable requirements.
+> **Required SDD convention:** Every agent MUST read and follow [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md), the canonical companion rule. Summary only:
 
-For new and touched specs, the `Initiating Requirement` MUST be concise, self-contained, and professionally revised rather than raw chat. Read briefs and attachments and inline their substantive requirements; remove private source-file locations used only to find that material. Distinguish those locations from substantive repository paths, runtime paths, and URLs. Normalize substantive paths to portable forms when possible, such as repo-relative paths, then preserve each normalized path and its meaning exactly. Remove conversational scaffolding, agent orchestration chatter, and irrelevant prose. Credential and secret redaction has higher priority than every preservation rule. Preserve every remaining substantive constraint, identifier, command, literal value, acceptance condition, and externally meaningful branch, base, and head identifier exactly. Add later intent as dated, similarly revised `Scope Updates`. Do not bulk-migrate historical specs.
-
-- Search existing specs and linked issues before creating a spec.
-- Update the closest canonical spec; merge overlapping specs when they describe the same user outcome and implementation boundary.
-- Create a new spec only when no existing spec can absorb the work without mixing independent outcomes.
-- When a dated spec is updated or merged, rename it to the current date (and current month bucket when present), preserve `Created`, refresh `Last Updated`, and update backlinks and generated indexes in the same change.
+- **Issue-first, single-spec**: issues own owner/priority/milestone/status/discussion; one spec file owns requirements, acceptance, approach, and verification; PRs own evidence. Never mirror the same metadata or checklist in two places.
+- Issue-governed work links to its real GitHub issue before implementation. Follow the repo's branch/release policy; resolve both the PR base and the remote default. Default-targeting PRs that fully resolve the issue use a closing keyword; legitimate non-default PRs use GitHub's explicit Development link. Read the link back either way; never retarget a PR just to link it.
+- Before creating an issue, search related `Weaverse` issues in all states (open and closed). Reuse a matching one, even if closed; if its scope changed, editing the issue body is an external write that needs approval for that issue and payload (read it first, preserve history/metadata, read back). Create new only when no genuine match exists. Reopen only when work actually resumes within authorization.
+- Small clear bugs/maintenance use the issue as the mini-spec. Substantive work uses one flat file `.weaverse/specs/YYYY-MM-DD-what-update.md` (single hyphen after the date; no feature folder or per-spec `README.md`; sections Outcome; Scope & contract; Acceptance; Approach; Verification). No new `plan.md`/`work-logs.md`/`design.md`/`tasks.md`/`handoff.md` by default.
+- Search existing specs and linked issues first; update the closest canonical spec in place. The filename date is the creation date: never rename the file on update. Leave untouched legacy `.weaverse/specs/YYYY-MM-DD--title/` folders as they are; when substantively editing one, consolidate that outcome into one flat spec file so only one maintained contract remains.
+- Requirements are concise, portable, professionally revised (no raw chat or private source paths); always redact secrets and private session material.
 
 ## Companion Guides
 
@@ -33,7 +33,7 @@ CI fails when the committed manifest is stale.
 
 ## Project Overview
 
-This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, Tailwind CSS v4, and Vite+ 1.0.0 static checks. It runs on the Node.js ranges declared in `package.json`.
+This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, Tailwind CSS v4, and Vite+ 1.3.0 static checks. It runs on the Node.js ranges declared in `package.json`.
 
 ## Architecture Overview
 
@@ -147,7 +147,7 @@ Required environment variables are defined in `env.d.ts`. The project uses `@sho
 
 ### Vite+ Static Checks
 
-The project uses Vite+ 1.0.0 with Oxlint and Oxfmt for static checks:
+The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
 - Double quotes for strings
 - Semicolons always
 - Trailing commas

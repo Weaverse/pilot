@@ -70,7 +70,7 @@ export default function BlogPost(props: BlogPostProps) {
                   <PinterestShareButton url={articleUrl} media={image?.url}>
                     <Icon name="pinterest-logo" size={24} />
                   </PinterestShareButton>
-                  <XShareButton url={articleUrl} title={title}>
+                  <XShareButton url={articleUrl} text={title}>
                     <Icon name="x-logo" size={24} />
                   </XShareButton>
                 </div>

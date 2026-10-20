@@ -58,6 +58,10 @@ function ImageWithTextImage(props: ImageWithTextImageProps) {
           sizes="auto"
           aspectRatio={aspRt}
           className={cn("h-auto w-full rounded-md", variants({ objectFit }))}
+          // A contained image is not cropped, so it ignores the focal point.
+          style={
+            objectFit === "contain" ? { objectPosition: "center" } : undefined
+          }
         />
       </ScrollReveal>
     </div>
