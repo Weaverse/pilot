@@ -55,7 +55,7 @@ export function ReviewItem({
         <StarRating rating={review.rating} className="[&>svg]:size-4.5" />
         <div className="space-y-1">
           {showReviewerName && (
-            <h5 className="font-semibold text-gray-900 text-lg/none">
+            <h5 className="text-lg/none font-semibold text-gray-900">
               {review.reviewer.name}
             </h5>
           )}
@@ -72,13 +72,13 @@ export function ReviewItem({
       {/* Right column - Review content */}
       <div className="grow space-y-4">
         {showReviewTitle && review.title && (
-          <h4 className="font-semibold text-gray-900 text-lg leading-none">
+          <h4 className="text-lg leading-none font-semibold text-gray-900">
             {review.title}
           </h4>
         )}
         {/* Review body */}
         {review.body && (
-          <p className="whitespace-pre-wrap text-base text-gray-700 leading-relaxed">
+          <p className="text-base leading-relaxed whitespace-pre-wrap text-gray-700">
             {review.body}
           </p>
         )}
@@ -90,7 +90,7 @@ export function ReviewItem({
                 <button
                   type="button"
                   key={image.urls.small}
-                  className="group/image relative overflow-hidden transition-all duration-200 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  className="group/image relative overflow-hidden transition-all duration-200 hover:border-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
                   onClick={() => {
                     setSelectedImageIndex(ind);
                   }}
@@ -102,7 +102,7 @@ export function ReviewItem({
                       image.urls.original
                     }
                     alt={`Review image ${ind + 1}`}
-                    className="size-32 hover:brightness-75 transition-all brightness-100"
+                    className="size-32 brightness-100 transition-all hover:brightness-75"
                     sizes="(min-width: 45em) 50vw, 100vw"
                     width={500}
                     height={500}
@@ -113,7 +113,7 @@ export function ReviewItem({
           </div>
         )}
         {showReviewDate && (
-          <p className="shrink-0 truncate text-gray-500 text-sm">
+          <p className="shrink-0 truncate text-sm text-gray-500">
             {formatDate(review.created_at)}
           </p>
         )}
@@ -153,7 +153,7 @@ export function ReviewImagesModal({
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/75 data-[state=open]:animate-fade-in" />
+        <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-50 bg-black/75" />
         <Dialog.Content
           className={cn(
             "fixed inset-0 z-50 flex items-center justify-center",
@@ -182,7 +182,7 @@ export function ReviewImagesModal({
                 onClick={() =>
                   goTo((selectedImageIndex - 1 + images.length) % images.length)
                 }
-                className="-translate-y-1/2 absolute top-1/2 left-4 z-1 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
+                className="absolute top-1/2 left-4 z-1 -translate-y-1/2 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
                 aria-label="Previous image"
               >
                 <Icon name="arrow-left" className="h-5 w-5" />
@@ -210,7 +210,7 @@ export function ReviewImagesModal({
               <button
                 type="button"
                 onClick={() => goTo((selectedImageIndex + 1) % images.length)}
-                className="-translate-y-1/2 absolute top-1/2 right-4 z-1 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
+                className="absolute top-1/2 right-4 z-1 -translate-y-1/2 rounded-md bg-white/90 p-2 transition-colors hover:bg-white"
                 aria-label="Next image"
               >
                 <Icon name="arrow-right" className="h-5 w-5" />
@@ -219,7 +219,7 @@ export function ReviewImagesModal({
 
             {/* Image counter */}
             {images.length > 1 && (
-              <div className="-translate-x-1/2 absolute bottom-4 left-1/2 rounded-full bg-black/50 px-3 py-1 text-white text-sm">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-sm text-white">
                 {selectedImageIndex + 1} / {images.length}
               </div>
             )}

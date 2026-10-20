@@ -18,8 +18,7 @@ const variants = cva("grid lg:grid-cols-3", {
 });
 
 interface TestimonialsItemsProps
-  extends VariantProps<typeof variants>,
-    HydrogenComponentProps {}
+  extends VariantProps<typeof variants>, HydrogenComponentProps {}
 
 function TestimonialsItems(props: TestimonialsItemsProps) {
   const { gap, children, ...rest } = props;

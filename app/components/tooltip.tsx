@@ -35,7 +35,7 @@ export function TooltipContent({
       <Content
         className={cn(
           "animate-slide-up [--slide-up-from:6px]",
-          "z-1000 rounded-md bg-body px-3 py-1 text-background text-sm shadow-xs",
+          "bg-body text-background z-1000 rounded-md px-3 py-1 text-sm shadow-xs",
           className,
         )}
         align="center"
@@ -45,7 +45,7 @@ export function TooltipContent({
         {...rest}
       >
         <Arrow asChild>
-          <span className="border-x-6 border-x-transparent border-t-6 border-t-body" />
+          <span className="border-t-body border-x-6 border-t-6 border-x-transparent" />
         </Arrow>
         {children}
       </Content>

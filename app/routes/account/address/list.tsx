@@ -410,7 +410,7 @@ export function AddressForm({
               placeholder="First name"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2"
+              className="border-border bg-background w-full border px-3 py-2"
             />
           </div>
           <div>
@@ -426,7 +426,7 @@ export function AddressForm({
               placeholder="Last name"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2"
+              className="border-border bg-background w-full border px-3 py-2"
             />
           </div>
         </div>
@@ -442,7 +442,7 @@ export function AddressForm({
             name="company"
             placeholder="Company"
             type="text"
-            className="w-full border border-border bg-background px-3 py-2"
+            className="border-border bg-background w-full border px-3 py-2"
           />
         </div>
         <div>
@@ -458,7 +458,7 @@ export function AddressForm({
             placeholder="Address line 1*"
             required
             type="text"
-            className="w-full border border-border bg-background px-3 py-2"
+            className="border-border bg-background w-full border px-3 py-2"
           />
         </div>
         <div>
@@ -473,7 +473,7 @@ export function AddressForm({
             name="address2"
             placeholder="Address line 2"
             type="text"
-            className="w-full border border-border bg-background px-3 py-2"
+            className="border-border bg-background w-full border px-3 py-2"
           />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -490,7 +490,7 @@ export function AddressForm({
               placeholder="City"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2"
+              className="border-border bg-background w-full border px-3 py-2"
             />
           </div>
           <div>
@@ -506,7 +506,7 @@ export function AddressForm({
               placeholder="State / Province"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2"
+              className="border-border bg-background w-full border px-3 py-2"
             />
           </div>
         </div>
@@ -524,7 +524,7 @@ export function AddressForm({
               placeholder="Zip / Postal Code"
               required
               type="text"
-              className="w-full border border-border bg-background px-3 py-2"
+              className="border-border bg-background w-full border px-3 py-2"
             />
           </div>
           <div>
@@ -541,7 +541,7 @@ export function AddressForm({
               required
               type="text"
               maxLength={2}
-              className="w-full border border-border bg-background px-3 py-2"
+              className="border-border bg-background w-full border px-3 py-2"
             />
           </div>
         </div>
@@ -558,7 +558,7 @@ export function AddressForm({
             placeholder="+16135551111"
             pattern="^\+?[1-9]\d{3,14}$"
             type="tel"
-            className="w-full border border-border bg-background px-3 py-2"
+            className="border-border bg-background w-full border px-3 py-2"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -567,7 +567,7 @@ export function AddressForm({
             id="defaultAddress"
             name="defaultAddress"
             type="checkbox"
-            className="h-4 w-4 rounded-md border-border"
+            className="border-border h-4 w-4 rounded-md"
           />
           <label htmlFor="defaultAddress" className="">
             Set as default address

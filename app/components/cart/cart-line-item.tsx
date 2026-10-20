@@ -90,7 +90,7 @@ export function CartLineItem({
               <h5 className="text-base">{product?.title || ""}</h5>
             )}
             {!isDefaultVariant && (
-              <div className="space-y-0.5 text-gray-500 text-sm">{title}</div>
+              <div className="space-y-0.5 text-sm text-gray-500">{title}</div>
             )}
           </div>
           {layout === "drawer" && (
@@ -160,7 +160,7 @@ function ItemRemoveButtonInner({
   return (
     <button
       className={clsx(
-        "flex h-8 w-8 items-center justify-center border-none disabled:cursor-not-allowed disabled:text-body-subtle",
+        "disabled:text-body-subtle flex h-8 w-8 items-center justify-center border-none disabled:cursor-not-allowed",
         className,
       )}
       type="submit"
@@ -214,7 +214,7 @@ function CartLinePrice({
           withoutTrailingZeros
           as="span"
           data={original}
-          className="text-gray-500 text-sm line-through"
+          className="text-sm text-gray-500 line-through"
         />
         <Money withoutTrailingZeros as="span" data={line.cost.totalAmount} />
       </span>

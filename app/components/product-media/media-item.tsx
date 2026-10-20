@@ -51,7 +51,7 @@ export function MediaItem({
     const aspectRatio =
       imageAspectRatio === "adapt" ? undefined : imageAspectRatio;
     return (
-      <div className={cn("relative rounded-md overflow-hidden", className)}>
+      <div className={cn("relative overflow-hidden rounded-md", className)}>
         <video
           controls
           aria-label={mediaVideo.alt || "Product video"}
@@ -90,7 +90,7 @@ export function MediaItem({
 
     return (
       <div
-        className={cn("relative rounded-md overflow-hidden", className)}
+        className={cn("relative overflow-hidden rounded-md", className)}
         style={modelStyle}
       >
         <Suspense fallback={<div className="h-full w-full bg-gray-100" />}>
@@ -111,7 +111,7 @@ export function MediaItem({
       <ExternalVideo
         data={externalVideo}
         className={cn(
-          "aspect-video h-auto w-full rounded-md overflow-hidden",
+          "aspect-video h-auto w-full overflow-hidden rounded-md",
           className,
         )}
       />

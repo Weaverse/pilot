@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { getFocalPointPosition } from "../../app/utils/image";
+import { loadComponent } from "../support/render-app";
 
 test("converts a valid focal point to an object-position", () => {
   expect(
@@ -26,4 +29,30 @@ test("ignores missing, malformed, and out-of-range focal points", () => {
   ]) {
     expect(getFocalPointPosition(image)).toBeUndefined();
   }
+});
+
+test("an image without a focal point keeps Hydrogen's computed aspect ratio", async () => {
+  // Hydrogen's Image spreads caller props after its own `style`, so passing
+  // any `style` replaces the aspect ratio it derives from the image size.
+  const { Image } = await loadComponent<{
+    Image: (props: Record<string, unknown>) => React.ReactElement;
+  }>("components/image.tsx");
+  const data = {
+    url: "https://cdn.shopify.com/a.jpg",
+    width: 846,
+    height: 1000,
+  };
+  const plain = renderToStaticMarkup(
+    createElement(Image, { data, width: 1000 }),
+  );
+  expect(plain).toContain("aspect-ratio:846/1000");
+  expect(plain).not.toContain("object-position");
+
+  const focal = renderToStaticMarkup(
+    createElement(Image, {
+      data: { ...data, focalPoint: { x: 0.8, y: 0.3 } },
+      width: 1000,
+    }),
+  );
+  expect(focal).toContain("object-position:80% 30%");
 });

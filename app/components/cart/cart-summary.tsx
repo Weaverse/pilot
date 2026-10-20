@@ -76,7 +76,7 @@ export function CartSummary({
   return (
     <div
       className={clsx(
-        layout === "drawer" && "border-gray-300 border-t pt-4",
+        layout === "drawer" && "border-t border-gray-300 pt-4",
         layout === "page" &&
           "sticky top-[calc(var(--height-nav)+20px)] w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
       )}

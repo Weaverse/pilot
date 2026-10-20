@@ -22,7 +22,8 @@ interface FeaturedProductsSectionData {
 }
 
 interface FeaturedProductsProps
-  extends SectionProps<FeaturedProductsLoaderData>,
+  extends
+    SectionProps<FeaturedProductsLoaderData>,
     FeaturedProductsSectionData {}
 
 export default function FeaturedProducts(props: FeaturedProductsProps) {

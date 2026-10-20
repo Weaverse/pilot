@@ -32,7 +32,7 @@ export function safeRedirectPath(target: unknown, fallback: string): string {
   }
 
   // A control character can truncate or split the header downstream.
-  // biome-ignore lint/suspicious/noControlCharactersInRegex: rejecting them is the point
+  // oxlint-disable-next-line no-control-regex -- rejecting control characters is the point
   if (/[\u0000-\u001f\u007f]/.test(target)) {
     return fallback;
   }

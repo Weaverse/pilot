@@ -65,7 +65,7 @@ export function ProductOptionValues({
         }}
       >
         <Select.Trigger
-          className="inline-flex h-10 items-center justify-center gap-3 rounded-md border border-line bg-white py-3 pr-3 pl-4 outline-hidden"
+          className="border-line inline-flex h-10 items-center justify-center gap-3 rounded-md border bg-white py-3 pr-3 pl-4 outline-hidden"
           aria-label={optionName}
         >
           <Select.Value />
@@ -84,7 +84,7 @@ export function ProductOptionValues({
                   key={value}
                   value={value}
                   className={cn(
-                    "flex h-10 w-full cursor-pointer select-none items-center justify-between gap-4 py-2.5 pr-2 pl-4 outline-hidden hover:bg-gray-100",
+                    "flex h-10 w-full cursor-pointer items-center justify-between gap-4 py-2.5 pr-2 pl-4 outline-hidden select-none hover:bg-gray-100",
                     !available && "text-body-subtle line-through",
                   )}
                 >
@@ -97,7 +97,7 @@ export function ProductOptionValues({
                 </Select.Item>
               ))}
             </Select.Viewport>
-            <Select.ScrollDownButton className="flex cursor-pointer items-center justify-center rounded-lg hover:bg-info-100 dark:hover:bg-info-700">
+            <Select.ScrollDownButton className="hover:bg-info-100 dark:hover:bg-info-700 flex cursor-pointer items-center justify-center rounded-lg">
               <Icon name="caret-down" size={16} />
             </Select.ScrollDownButton>
           </Select.Content>
@@ -210,7 +210,7 @@ function OptionValue({
           "overflow-hidden rounded-full",
           "outline-1 outline-offset-2 transition-[outline-color]",
           !exists && "cursor-not-allowed",
-          selected ? "outline-line" : "outline-transparent hover:outline-line",
+          selected ? "outline-line" : "hover:outline-line outline-transparent",
           !available && "diagonal",
         )}
       >
@@ -226,7 +226,7 @@ function OptionValue({
             className={cn(
               "block h-full w-full rounded-full text-[0px]",
               (!isValidColor(swatchColor) || isLightColor(swatchColor)) &&
-                "border border-line-subtle",
+                "border-line-subtle border",
             )}
             style={{ backgroundColor: swatchColor }}
           >
@@ -243,7 +243,7 @@ function OptionValue({
       <Component
         {...componentProps}
         className={cn(
-          "border border-line-subtle rounded-md px-4 py-2.5 text-center transition-colors",
+          "border-line-subtle rounded-md border px-4 py-2.5 text-center transition-colors",
           !exists && "cursor-not-allowed",
           selected
             ? [
@@ -251,7 +251,7 @@ function OptionValue({
                 "border-body",
               ]
             : "hover:border-line",
-          !available && "diagonal bg-gray-100 text-body-subtle",
+          !available && "diagonal text-body-subtle bg-gray-100",
         )}
       >
         {name}
@@ -266,7 +266,7 @@ function OptionValue({
         {...componentProps}
         className={cn(
           "flex h-auto w-(--option-image-width) items-center justify-center rounded-md p-1",
-          "border border-line-subtle text-center transition-colors",
+          "border-line-subtle border text-center transition-colors",
           !exists && "cursor-not-allowed",
           selected
             ? [

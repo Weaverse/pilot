@@ -36,13 +36,13 @@ export function CartLineQuantityAdjust({
       <label htmlFor={`quantity-${lineId}`} className="sr-only">
         Quantity, {optimisticQuantity}
       </label>
-      <div className="flex min-w-30 items-center justify-evenly border border-line-subtle rounded-md">
+      <div className="border-line-subtle flex min-w-30 items-center justify-evenly rounded-md border">
         <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
             type="submit"
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed disabled:text-body-subtle"
+            className="disabled:text-body-subtle inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed"
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
@@ -61,7 +61,7 @@ export function CartLineQuantityAdjust({
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
             type="submit"
-            className="inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed disabled:text-body-subtle"
+            className="disabled:text-body-subtle inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"

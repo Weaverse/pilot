@@ -30,7 +30,7 @@ export function DropdownMenu({ menuItem }: { menuItem: SingleMenuItem }) {
         </Trigger>
         <Content
           align="start"
-          className="flex min-w-48 animate-fade-in flex-col gap-1.5 rounded-lg bg-(--color-header-bg) p-6 shadow-lg"
+          className="animate-fade-in flex min-w-48 flex-col gap-1.5 rounded-lg bg-(--color-header-bg) p-6 shadow-lg"
           onCloseAutoFocus={(e) => e.preventDefault()}
         >
           {childItems.map(

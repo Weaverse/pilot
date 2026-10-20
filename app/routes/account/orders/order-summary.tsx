@@ -49,7 +49,7 @@ export function OrderSummary({
       <div className="flex justify-between gap-4">
         <dt className="flex items-center gap-2">
           <Icon name="tag" className="h-4 w-4" />
-          <span className="font-bold text-sm uppercase leading-none">
+          <span className="text-sm leading-none font-bold uppercase">
             Total savings
           </span>
         </dt>

@@ -21,7 +21,7 @@ export function NotFound({ type = "page" }: { type?: string }) {
           removed, had its name changed, or is temporarily unavailable.
         </p>
         <div className="pt-10">
-          <h5 className="text-center font-medium text-xl">What you can do?</h5>
+          <h5 className="text-center text-xl font-medium">What you can do?</h5>
           <div className="flex flex-col items-center justify-center gap-4 pt-4 md:flex-row">
             <Link variant="outline" to="/products">
               Shop our products
@@ -42,9 +42,10 @@ function FeaturedProducts() {
   const { load, data } = useFetcher<FeaturedProductsData>();
   const api = usePrefixPathWithLocale("/api/featured-products");
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
+  // Load featured products for the not-found boundary.
   useEffect(() => {
     load(api);
+    // oxlint-disable-next-line react/exhaustive-deps -- loader call follows the API path for this boundary
   }, [api]);
 
   if (!data) {

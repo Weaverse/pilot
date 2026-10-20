@@ -79,23 +79,23 @@ const revealVariants = cva("transition-all duration-500", {
     },
   },
   compoundVariants: [
-    { animation: "fade-up", visible: false, class: "opacity-0 translate-y-5" },
-    { animation: "fade-up", visible: true, class: "opacity-100 translate-y-0" },
+    { animation: "fade-up", visible: false, class: "translate-y-5 opacity-0" },
+    { animation: "fade-up", visible: true, class: "translate-y-0 opacity-100" },
     {
       animation: "zoom-in",
       visible: false,
-      class: "opacity-0 scale-80 translate-y-5",
+      class: "translate-y-5 scale-80 opacity-0",
     },
     {
       animation: "zoom-in",
       visible: true,
-      class: "opacity-100 scale-100 translate-y-0",
+      class: "translate-y-0 scale-100 opacity-100",
     },
-    { animation: "slide-in", visible: false, class: "opacity-0 translate-x-5" },
+    { animation: "slide-in", visible: false, class: "translate-x-5 opacity-0" },
     {
       animation: "slide-in",
       visible: true,
-      class: "opacity-100 translate-x-0",
+      class: "translate-x-0 opacity-100",
     },
   ],
 });

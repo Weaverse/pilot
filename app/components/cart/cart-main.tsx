@@ -31,7 +31,7 @@ function CartEmpty({
       ref={scrollRef}
       className={clsx(
         layout === "drawer" && [
-          "flex h-screen-dynamic flex-col content-start justify-center space-y-12 overflow-y-scroll px-5 pb-5 text-center transition",
+          "h-screen-dynamic flex flex-col content-start justify-center space-y-12 overflow-y-scroll px-5 pb-5 text-center transition",
           y > 0 && "border-t",
         ],
         layout === "page" && [

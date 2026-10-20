@@ -20,8 +20,7 @@ const variants = cva(
 );
 
 interface ImageWithTextContentProps
-  extends VariantProps<typeof variants>,
-    HydrogenComponentProps {}
+  extends VariantProps<typeof variants>, HydrogenComponentProps {}
 
 function ImageWithTextContent(props: ImageWithTextContentProps) {
   const { alignment, children, ...rest } = props;

@@ -37,8 +37,7 @@ export async function loadComponent<T = Record<string, ComponentType<never>>>(
 /**
  * Resolves imports that exist in the dependency graph but not on disk.
  *
- * `jsonp` declares `debug@^2` while the tree hoists only a newer major, and
- * several media elements declare optional peers that were never installed.
+ * Several media elements declare optional peers that were never installed.
  * The app never reaches any of them on the paths under test — they are pulled
  * in by side-effect imports — but esbuild fails the whole bundle on an
  * unresolved specifier. The stub throws if one is ever actually called, so a
@@ -47,7 +46,7 @@ export async function loadComponent<T = Record<string, ComponentType<never>>>(
 const stubUnresolvable: Plugin = {
   name: "stub-unresolvable",
   setup(build) {
-    const missing = /^(debug|custom-media-element|super-media-element)(\/|$)/;
+    const missing = /^(custom-media-element|super-media-element)(\/|$)/;
     build.onResolve({ filter: missing }, (args) => ({
       path: args.path,
       namespace: "stub-unresolvable",

@@ -11,8 +11,7 @@ interface CollectionFiltersData {
 }
 
 interface CollectionFiltersProps
-  extends HydrogenComponentProps,
-    CollectionFiltersData {}
+  extends HydrogenComponentProps, CollectionFiltersData {}
 
 function CollectionFilters(props: CollectionFiltersProps) {
   const {

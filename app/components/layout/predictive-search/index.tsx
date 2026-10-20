@@ -16,9 +16,10 @@ export function PredictiveSearchButton() {
   const location = useLocation();
   const params = useParams();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: close the dialog when the location changes, aka when the user navigates to a search result page
+  // Close when navigation changes.
   useEffect(() => {
     setOpen(false);
+    // oxlint-disable-next-line react/exhaustive-deps -- close when navigation changes
   }, [location]);
 
   return (
@@ -57,7 +58,7 @@ export function PredictiveSearchButton() {
             <PredictiveSearchForm>
               {({ fetchResults, inputRef }) => (
                 <div className="mx-auto w-140 max-w-[90vw] space-y-2 py-6">
-                  <div className="flex items-center gap-3 border border-line-subtle px-3 rounded-lg">
+                  <div className="border-line-subtle flex items-center gap-3 rounded-lg border px-3">
                     <Icon
                       name="magnifying-glass"
                       className="h-5 w-5 shrink-0 text-gray-500"
@@ -82,7 +83,7 @@ export function PredictiveSearchButton() {
                       placeholder="Enter a keyword"
                       ref={inputRef}
                       autoComplete="off"
-                      className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
+                      className="h-full w-full border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
                     />
                     <button
                       type="button"
@@ -130,10 +131,10 @@ function PredictiveSearchResults() {
     );
   }
   return (
-    <div className="-translate-x-1/2 absolute top-full left-1/2 z-10 flex w-fit items-center justify-center">
-      <div className="grid max-h-[80vh] w-screen min-w-107.5 max-w-180 grid-cols-1 gap-6 overflow-y-auto bg-(--color-header-bg) p-6 lg:grid-cols-[1fr_2fr] rounded-b-lg">
+    <div className="absolute top-full left-1/2 z-10 flex w-fit -translate-x-1/2 items-center justify-center">
+      <div className="grid max-h-[80vh] w-screen max-w-180 min-w-107.5 grid-cols-1 gap-6 overflow-y-auto rounded-b-lg bg-(--color-header-bg) p-6 lg:grid-cols-[1fr_2fr]">
         <div className="space-y-8">
-          <div className="flex flex-col gap-4 divide-y divide-line">
+          <div className="divide-line flex flex-col gap-4 divide-y">
             <PredictiveSearchResult type="queries" items={queries?.items} />
           </div>
           <div className="flex flex-col gap-4">
@@ -168,7 +169,7 @@ function NoResults({ searchTerm }: { searchTerm: RefObject<string> }) {
     return null;
   }
   return (
-    <p className="w-160 rounded-b-lg bg-background p-6 shadow-header">
+    <p className="bg-background shadow-header w-160 rounded-b-lg p-6">
       No results found for <q>{searchTerm.current}</q>
     </p>
   );

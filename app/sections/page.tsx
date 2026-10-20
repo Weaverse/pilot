@@ -13,7 +13,7 @@ export default function Page(props: PageProps) {
   if (page) {
     return (
       <Section {...rest}>
-        <div className="mb-4 flex items-center justify-center gap-2 text-body-subtle">
+        <div className="text-body-subtle mb-4 flex items-center justify-center gap-2">
           <Link to="/" className="underline-offset-4 hover:underline">
             Home
           </Link>
@@ -27,7 +27,7 @@ export default function Page(props: PageProps) {
           <div
             suppressHydrationWarning
             dangerouslySetInnerHTML={{ __html: page.body }}
-            className="prose border-gray-200 border-t"
+            className="prose border-t border-gray-200"
           />
         </div>
       </Section>

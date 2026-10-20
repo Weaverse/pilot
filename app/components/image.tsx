@@ -7,8 +7,10 @@ import { getFocalPointPosition } from "~/utils/image";
 
 type Crop = "center" | "top" | "bottom" | "left" | "right";
 
-export interface ImageProps
-  extends Omit<React.ComponentPropsWithRef<"img">, "ref"> {
+export interface ImageProps extends Omit<
+  React.ComponentPropsWithRef<"img">,
+  "ref"
+> {
   aspectRatio?: string;
   crop?: "center" | "top" | "bottom" | "left" | "right";
   data?: Partial<
@@ -37,6 +39,14 @@ export function Image({ className, onLoad, style, ...rest }: ImageProps) {
    */
   const hydrogenImageRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
+  // A Weaverse image's focal point overrides the default centering unless the
+  // caller sets an explicit position. Hydrogen's Image spreads a caller's
+  // `style` key (even `undefined`) over the aspect ratio it computes, so the
+  // key is only passed when there is a style to apply.
+  const objectPosition =
+    style?.objectPosition ?? getFocalPointPosition(rest.data);
+  const styleProps =
+    style || objectPosition ? { style: { ...style, objectPosition } } : {};
 
   useEffect(() => {
     if (hydrogenImageRef.current?.complete) {
@@ -64,13 +74,7 @@ export function Image({ className, onLoad, style, ...rest }: ImageProps) {
           setLoaded(true);
           onLoad?.(e);
         }}
-        style={{
-          ...style,
-          // A Weaverse image's focal point overrides the default centering
-          // unless the caller sets an explicit position.
-          objectPosition:
-            style?.objectPosition ?? getFocalPointPosition(rest.data),
-        }}
+        {...styleProps}
         {...rest}
       />
     </div>

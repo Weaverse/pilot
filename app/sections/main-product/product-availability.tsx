@@ -34,7 +34,7 @@ export default function ProductAvailability(props: ProductAvailabilityProps) {
   return (
     <div {...rest} className={cn("flex items-center gap-2")}>
       {available ? (
-        <span className="relative flex size-3 mb-0.5">
+        <span className="relative mb-0.5 flex size-3">
           <span
             className="absolute inline-flex h-full w-full animate-ping opacity-75"
             style={{ backgroundColor: color, borderRadius: "99px" }}
@@ -46,7 +46,7 @@ export default function ProductAvailability(props: ProductAvailabilityProps) {
         </span>
       ) : (
         <span
-          className="size-3 mb-0.5"
+          className="mb-0.5 size-3"
           style={{ backgroundColor: color, borderRadius: "99px" }}
         />
       )}

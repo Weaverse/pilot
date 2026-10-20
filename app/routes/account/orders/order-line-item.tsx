@@ -37,7 +37,7 @@ export function OrderLineItem({
             return (
               <div
                 key={index}
-                className="flex w-fit items-center gap-1 border border-line-subtle rounded px-1.5 py-1 text-body-subtle text-sm"
+                className="border-line-subtle text-body-subtle flex w-fit items-center gap-1 rounded border px-1.5 py-1 text-sm"
               >
                 <Icon name="tag" className="h-4 w-4" />
                 <span>{discountTitle}</span>

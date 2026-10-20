@@ -37,7 +37,7 @@ export function ProductsTab({
       }) => (
         <>
           {hasPreviousPage && (
-            <PreviousLink className="flex justify-center mb-8">
+            <PreviousLink className="mb-8 flex justify-center">
               <Button variant="outline">
                 {isLoading
                   ? t("pagination.loading")
@@ -56,7 +56,7 @@ export function ProductsTab({
             gapY={24}
           />
           {hasNextPage && (
-            <div ref={inViewRef} className="flex justify-center mt-8">
+            <div ref={inViewRef} className="mt-8 flex justify-center">
               <Button variant="outline">{t("pagination.loading")}</Button>
             </div>
           )}

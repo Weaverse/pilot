@@ -8,7 +8,8 @@ import { getImageLoadingPriority } from "~/utils/image";
 import { ArticleCard, type ArticleCardProps } from "./blogs";
 
 interface RelatedArticlesProps
-  extends Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
+  extends
+    Omit<ArticleCardProps, "article" | "blogHandle" | "loading">,
     SectionProps {
   heading: string;
 }

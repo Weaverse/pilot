@@ -124,7 +124,7 @@ export default function Orders() {
             </p>
             <Link
               to="/collections"
-              className="inline-block text-primary underline-offset-4 hover:underline"
+              className="text-primary inline-block underline-offset-4 hover:underline"
             >
               Start Shopping →
             </Link>
@@ -154,7 +154,7 @@ function PaginatedOrders<NodesType>({
 
         return (
           <div className="space-y-6">
-            <PreviousLink className="inline-block text-primary text-sm underline-offset-4 hover:underline">
+            <PreviousLink className="text-primary inline-block text-sm underline-offset-4 hover:underline">
               {isLoading ? (
                 t("pagination.loading")
               ) : (
@@ -166,7 +166,7 @@ function PaginatedOrders<NodesType>({
             ) : (
               <div className="space-y-4">{resourcesMarkup}</div>
             )}
-            <NextLink className="inline-block text-primary text-sm underline-offset-4 hover:underline">
+            <NextLink className="text-primary inline-block text-sm underline-offset-4 hover:underline">
               {isLoading ? (
                 t("pagination.loading")
               ) : (
@@ -184,12 +184,12 @@ function OrderItem({ order }: { order: OrderItemFragment }) {
   const fulfillmentStatus = flattenConnection(order.fulfillments)[0]?.status;
   const orderId = order.id.split("/").pop();
   return (
-    <div className="border border-border rounded-lg p-6">
+    <div className="border-border rounded-lg border p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-2">
           <Link
             to={`/account/orders/${orderId}`}
-            className="font-medium text-lg hover:underline"
+            className="text-lg font-medium hover:underline"
           >
             Order #{order.number}
           </Link>
@@ -208,7 +208,7 @@ function OrderItem({ order }: { order: OrderItemFragment }) {
           </div>
         </div>
         <div className="flex flex-col items-start gap-3 sm:items-end">
-          <div className="font-medium text-lg">
+          <div className="text-lg font-medium">
             <Money data={order.totalPrice} />
           </div>
           <Link

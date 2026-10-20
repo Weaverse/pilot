@@ -11,7 +11,7 @@ export function BreadCrumb({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-center gap-2 text-body-subtle", className)}>
+    <div className={cn("text-body-subtle flex items-center gap-2", className)}>
       <Link to="/" className="underline-offset-4 hover:underline">
         {homeLabel}
       </Link>

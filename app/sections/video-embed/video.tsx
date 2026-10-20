@@ -20,8 +20,7 @@ const variants = cva("mx-auto aspect-video w-full rounded-md", {
 });
 
 interface VideoItemProps
-  extends VariantProps<typeof variants>,
-    HydrogenComponentProps {
+  extends VariantProps<typeof variants>, HydrogenComponentProps {
   video: WeaverseVideo;
   videoUrl: string;
 }

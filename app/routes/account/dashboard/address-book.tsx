@@ -13,7 +13,7 @@ export function AddressBook({
 }) {
   return (
     <div className="space-y-4">
-      <h2 className="font-bold text-base">Address Book</h2>
+      <h2 className="text-base font-bold">Address Book</h2>
       <div className="space-y-3">
         {!addresses?.length && (
           <div>You haven&apos;t saved any addresses yet.</div>
@@ -48,10 +48,10 @@ function Address({
   defaultAddress?: boolean;
 }) {
   return (
-    <div className="flex flex-col border border-line-subtle rounded-xl p-5">
+    <div className="border-line-subtle flex flex-col rounded-xl border p-5">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="bg-body-subtle rounded px-3 py-1 font-medium text-body-inverse text-sm">
+          <span className="bg-body-subtle text-body-inverse rounded px-3 py-1 text-sm font-medium">
             Default
           </span>
         </div>
@@ -83,7 +83,7 @@ function Address({
           <Button
             variant="underline"
             type="submit"
-            className="ml-6 text-body-subtle after:bg-body-subtle"
+            className="text-body-subtle after:bg-body-subtle ml-6"
             animate={false}
           >
             Remove

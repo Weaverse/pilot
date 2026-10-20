@@ -92,6 +92,7 @@ async function cartCreateFrom(
       TEST_ENV,
       TEST_EXECUTION_CONTEXT,
     )) as unknown as AppLoadContext;
+    // oxlint-disable-next-line react/rules-of-hooks -- route helper is named `use`, not a React Hook
     await use(context).catch(() => undefined);
   } finally {
     globalThis.fetch = realFetch;

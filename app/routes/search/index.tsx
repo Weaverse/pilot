@@ -163,14 +163,14 @@ export default function Search() {
       <h4 className="mt-4 mb-2.5 text-center font-medium">Search</h4>
       <Form
         method="get"
-        className="mx-auto mt-6 mb-4 flex w-175 max-w-[90vw] items-center gap-3 rounded-xl border border-line px-3"
+        className="border-line mx-auto mt-6 mb-4 flex w-175 max-w-[90vw] items-center gap-3 rounded-xl border px-3"
       >
         <Icon
           name="magnifying-glass"
           className="h-5 w-5 shrink-0 text-gray-500"
         />
         <input
-          className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
+          className="h-full w-full border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
           name="q"

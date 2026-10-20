@@ -78,7 +78,7 @@ export function ProductCardOptions({
                           "inline-block h-full w-full rounded-full text-[0px]",
                           (!isValidColor(swatchColor) ||
                             isLightColor(swatchColor)) &&
-                            "border border-line-subtle",
+                            "border-line-subtle border",
                         )}
                         style={{ backgroundColor: swatchColor }}
                       >
@@ -97,7 +97,7 @@ export function ProductCardOptions({
               variant="outline"
               animate={false}
               className={clsx(
-                "border border-line-subtle px-2 py-1 text-center text-sm transition-colors",
+                "border-line-subtle border px-2 py-1 text-center text-sm transition-colors",
                 selectedValue === name &&
                   "border-body bg-body text-body-inverse",
               )}

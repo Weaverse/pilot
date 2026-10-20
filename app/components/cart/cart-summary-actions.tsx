@@ -57,7 +57,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+      <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-50 bg-gray-900/50" />
       <Dialog.Content
         onCloseAutoFocus={(e) => {
           e.preventDefault();
@@ -83,7 +83,7 @@ export function NoteDialog({ cartNote: currentNote }: { cartNote: string }) {
             </button>
           </Dialog.Close>
 
-          <Dialog.Title className="mb-4 font-medium text-lg">
+          <Dialog.Title className="mb-4 text-lg font-medium">
             Add a note
           </Dialog.Title>
 
@@ -161,7 +161,7 @@ export function DiscountDialog({
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+      <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-50 bg-gray-900/50" />
       <Dialog.Content
         onCloseAutoFocus={(e) => {
           e.preventDefault();
@@ -187,7 +187,7 @@ export function DiscountDialog({
             </button>
           </Dialog.Close>
 
-          <Dialog.Title className="mb-4 font-medium text-xl">
+          <Dialog.Title className="mb-4 text-xl font-medium">
             Apply a discount code
           </Dialog.Title>
 
@@ -244,9 +244,9 @@ export function GiftCardDialog({
   const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
   const success = Boolean(
     submitted &&
-      appliedGiftCards?.find((gc) =>
-        code.toLowerCase().endsWith(gc.lastCharacters),
-      ),
+    appliedGiftCards?.find((gc) =>
+      code.toLowerCase().endsWith(gc.lastCharacters),
+    ),
   );
   const error = submitted && !success;
 
@@ -271,7 +271,7 @@ export function GiftCardDialog({
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 z-50 bg-gray-900/50 data-[state=open]:animate-fade-in" />
+      <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-50 bg-gray-900/50" />
       <Dialog.Content
         onCloseAutoFocus={(e) => {
           e.preventDefault();
@@ -297,7 +297,7 @@ export function GiftCardDialog({
             </button>
           </Dialog.Close>
 
-          <Dialog.Title className="mb-4 font-medium text-xl">
+          <Dialog.Title className="mb-4 text-xl font-medium">
             Redeem a gift card
           </Dialog.Title>
 

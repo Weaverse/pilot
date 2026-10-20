@@ -26,9 +26,9 @@ const variants = cva(
       },
       dotsStyle: {
         circle:
-          "[&_.active]:outline-current [&_.active]:outline-2 [&_.active]:outline-solid [&_.active]:outline-offset-3",
-        line: "[&_.active]:w-16 [&_.dot]:opacity-35 [&_.active]:opacity-100!",
-        dash: "[&_.dot]:opacity-35 [&_.active]:opacity-100!",
+          "[&_.active]:outline-2 [&_.active]:outline-offset-3 [&_.active]:outline-current [&_.active]:outline-solid",
+        line: "[&_.active]:w-16 [&_.active]:opacity-100! [&_.dot]:opacity-35",
+        dash: "[&_.active]:opacity-100! [&_.dot]:opacity-35",
       },
     },
     compoundVariants: [

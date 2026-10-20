@@ -71,28 +71,28 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
     >
       <div className="space-y-1">
         <div className="flex items-center">
-          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+          <h5 className="px-6 text-4xl leading-tight font-medium md:text-5xl">
             {remainingTime?.days || 0}
           </h5>
-          <div className="h-6 border-(--timer-color) border-r" />
+          <div className="h-6 border-r border-(--timer-color)" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">Days</div>
       </div>
       <div className="space-y-1">
         <div className="flex items-center">
-          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+          <h5 className="px-6 text-4xl leading-tight font-medium md:text-5xl">
             {remainingTime?.hours || 0}
           </h5>
-          <div className="h-6 border-(--timer-color) border-r" />
+          <div className="h-6 border-r border-(--timer-color)" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">hours</div>
       </div>
       <div className="space-y-1">
         <div className="flex items-center">
-          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+          <h5 className="px-6 text-4xl leading-tight font-medium md:text-5xl">
             {remainingTime?.minutes || 0}
           </h5>
-          <div className="h-6 border-(--timer-color) border-r" />
+          <div className="h-6 border-r border-(--timer-color)" />
         </div>
         <div className="text-center text-sm capitalize md:text-base">
           minutes
@@ -100,7 +100,7 @@ function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
       </div>
       <div className="space-y-1">
         <div className="flex items-center">
-          <h5 className="px-6 font-medium text-4xl leading-tight md:text-5xl">
+          <h5 className="px-6 text-4xl leading-tight font-medium md:text-5xl">
             {remainingTime?.seconds || 0}
           </h5>
         </div>

@@ -14,8 +14,7 @@ interface CollectionHeaderData {
 }
 
 interface CollectionHeaderProps
-  extends HydrogenComponentProps,
-    CollectionHeaderData {}
+  extends HydrogenComponentProps, CollectionHeaderData {}
 
 function CollectionHeader(props: CollectionHeaderProps) {
   const {

@@ -42,7 +42,7 @@ export default function AccountDashboard() {
         <Form method="post" action={signOutUrl}>
           <button
             type="submit"
-            className="group flex items-center gap-2 text-body-subtle"
+            className="group text-body-subtle flex items-center gap-2"
           >
             <Icon name="sign-out" className="h-4 w-4" />
             <span className="underline-offset-4 group-hover:underline">

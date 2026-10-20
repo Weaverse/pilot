@@ -57,7 +57,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
           />
           <div className="space-y-0.5">
             <div className="font-medium">{authorName}</div>
-            <div className="text-gray-500 text-sm">{authorTitle}</div>
+            <div className="text-sm text-gray-500">{authorTitle}</div>
           </div>
         </figcaption>
       </figure>

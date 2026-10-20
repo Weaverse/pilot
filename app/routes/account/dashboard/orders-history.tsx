@@ -20,7 +20,7 @@ type OrderCardsProps = {
 export function OrdersHistory({ orders }: OrderCardsProps) {
   return (
     <div className="space-y-4">
-      <h2 className="font-bold text-base">Orders</h2>
+      <h2 className="text-base font-bold">Orders</h2>
       {orders?.length ? (
         <Orders orders={orders} />
       ) : (
@@ -46,7 +46,7 @@ function Orders({ orders }: OrderCardsProps) {
           return (
             <li
               key={order.id}
-              className="flex items-center gap-5 border border-line-subtle rounded-xl p-5 text-center"
+              className="border-line-subtle flex items-center gap-5 rounded-xl border p-5 text-center"
             >
               {lineItems[0].image && (
                 <Link
@@ -88,7 +88,7 @@ function Orders({ orders }: OrderCardsProps) {
                     <>
                       <dt className="sr-only">Fulfillment Status</dt>
                       <dd className="mt-3">
-                        <span className="border bg-gray-100 px-2.5 py-1 font-medium text-xs">
+                        <span className="border bg-gray-100 px-2.5 py-1 text-xs font-medium">
                           {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}
                         </span>
                       </dd>
@@ -98,7 +98,7 @@ function Orders({ orders }: OrderCardsProps) {
                     to={orderLink}
                     prefetch="intent"
                     variant="underline"
-                    className="mt-3 w-fit text-body-subtle after:bg-body-subtle"
+                    className="text-body-subtle after:bg-body-subtle mt-3 w-fit"
                   >
                     View details
                   </Link>

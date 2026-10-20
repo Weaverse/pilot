@@ -32,7 +32,7 @@ export default function Spacer(props: SpacerData) {
       }
     >
       {addSeparator && (
-        <div className="mx-auto h-px w-3/4 border-(--separator-color,var(--color-border)) border-t md:w-2/3" />
+        <div className="mx-auto h-px w-3/4 border-t border-(--separator-color,var(--color-border)) md:w-2/3" />
       )}
     </div>
   );

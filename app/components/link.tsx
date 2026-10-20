@@ -52,10 +52,10 @@ export const variants = cva(["inline-flex rounded-md transition-colors"], {
         "hover:border-(--btn-border-hover)",
       ],
       underline: [
-        "relative bg-transparent pb-1 text-body",
-        "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
+        "text-body relative bg-transparent pb-1",
+        "after:bg-body after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full",
         "after:origin-right after:scale-x-100 after:transition-transform",
-        "hover:after:origin-left hover:after:animate-underline-toggle",
+        "hover:after:animate-underline-toggle hover:after:origin-left",
       ],
     },
   },
@@ -71,14 +71,13 @@ export interface LinkStyles {
 }
 
 export interface LinkData
-  extends RemixLinkProps,
-    Partial<LinkStyles>,
-    VariantProps<typeof variants> {
+  extends RemixLinkProps, Partial<LinkStyles>, VariantProps<typeof variants> {
   text?: string;
 }
 
 export interface LinkProps
-  extends HTMLAttributes<HTMLAnchorElement>,
+  extends
+    HTMLAttributes<HTMLAnchorElement>,
     Partial<Omit<HydrogenComponentProps, "children">>,
     LinkData {
   animate?: boolean;

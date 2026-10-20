@@ -38,7 +38,7 @@ export function SortDropdown({ options, className }: SortDropdownProps) {
         <DropdownMenu.Content
           sideOffset={8}
           align="end"
-          className="flex h-fit w-44 flex-col gap-2 rounded-lg border border-gray-400 bg-background p-5 shadow"
+          className="bg-background flex h-fit w-44 flex-col gap-2 rounded-lg border border-gray-400 p-5 shadow"
         >
           {options.map(({ key, label }) => {
             const params = new URLSearchParams(searchParams);

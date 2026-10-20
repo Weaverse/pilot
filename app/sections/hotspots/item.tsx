@@ -23,7 +23,8 @@ export interface HotspotsItemData {
 }
 
 interface HotspotsItemProps
-  extends HydrogenComponentProps<Awaited<ReturnType<typeof loader>>>,
+  extends
+    HydrogenComponentProps<Awaited<ReturnType<typeof loader>>>,
     HotspotsItemData {}
 
 const ICONS = {
@@ -53,7 +54,7 @@ export default function HotspotsItem(props: HotspotsItemProps) {
   return (
     <div
       {...rest}
-      className="-translate-x-1/2 -translate-y-1/2 absolute hover:z-1"
+      className="absolute -translate-x-1/2 -translate-y-1/2 hover:z-1"
       style={
         {
           top: `${offsetY}%`,

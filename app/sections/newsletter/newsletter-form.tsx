@@ -41,7 +41,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
             type="email"
             required
             placeholder={placeholder}
-            className="w-full rounded-none border-none bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:outline-hidden focus:ring-0"
+            className="w-full rounded-none border-none bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:ring-0 focus:outline-hidden"
           />
         </div>
         <Button
@@ -54,7 +54,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
       </ScrollReveal>
       {helpText && (
         <ScrollReveal
-          className="mt-3 text-body-subtle text-sm"
+          className="text-body-subtle mt-3 text-sm"
           dangerouslySetInnerHTML={{ __html: helpText }}
         />
       )}

@@ -49,7 +49,7 @@ function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx(
-            "fixed inset-y-0 left-0 z-10 w-full bg-background py-4 md:w-90",
+            "bg-background fixed inset-y-0 left-0 z-10 w-full py-4 md:w-90",
             "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
             "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
           )}
@@ -90,8 +90,7 @@ interface CollectionToolbarData {
 }
 
 interface CollectionToolbarProps
-  extends HydrogenComponentProps,
-    CollectionToolbarData {}
+  extends HydrogenComponentProps, CollectionToolbarData {}
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const {
@@ -127,7 +126,7 @@ function CollectionToolbar(props: CollectionToolbarProps) {
   }
 
   return (
-    <div {...rest} className="col-span-full border-gray-300 border-y py-4">
+    <div {...rest} className="col-span-full border-y border-gray-300 py-4">
       <div className="flex w-full items-center">
         <div className="hidden items-center gap-2 md:flex">
           {showBreadcrumb && <BreadCrumb page={collection.title} />}

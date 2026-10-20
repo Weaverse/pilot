@@ -61,9 +61,10 @@ export function MediaGrid({
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: reset expanded state on variant change
+  // Reset expanded state on variant change.
   useEffect(() => {
     setExpanded(false);
+    // oxlint-disable-next-line react/exhaustive-deps -- reset expanded state on variant change
   }, [selectedVariant]);
 
   const shouldShowButton =
@@ -158,7 +159,7 @@ export function MediaGrid({
         {shouldLimitMedia && !expanded && (
           <button
             type="button"
-            className="absolute right-0 bottom-0 left-0 hidden cursor-pointer items-end justify-center bg-linear-to-t from-white/80 via-white/60 to-transparent pt-50 pb-10 font-medium text-body transition-opacity lg:flex"
+            className="text-body absolute right-0 bottom-0 left-0 hidden cursor-pointer items-end justify-center bg-linear-to-t from-white/80 via-white/60 to-transparent pt-50 pb-10 font-medium transition-opacity lg:flex"
             onClick={() => setExpanded(true)}
             aria-label={`${showMoreText} (+${hiddenCount})`}
           >

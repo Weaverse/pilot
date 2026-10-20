@@ -8,7 +8,7 @@ import { cn } from "~/utils/cn";
 export const variants = cva(
   [
     "relative inline-flex items-center justify-center rounded-md",
-    "whitespace-nowrap font-normal text-base",
+    "text-base font-normal whitespace-nowrap",
     "focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50!",
     "transition-colors",
   ],
@@ -16,7 +16,7 @@ export const variants = cva(
     variants: {
       variant: {
         primary: [
-          "border font-semibold px-4 py-3",
+          "border px-4 py-3 font-semibold",
           "text-(--btn-primary-text)",
           "bg-(--btn-primary-bg)",
           "border-(--btn-primary-bg)",
@@ -24,7 +24,7 @@ export const variants = cva(
           "hover:border-(--btn-primary-bg-hover)",
         ],
         secondary: [
-          "border font-semibold px-4 py-3",
+          "border px-4 py-3 font-semibold",
           "text-(--btn-secondary-text)",
           "bg-(--btn-secondary-bg)",
           "border-(--btn-secondary-bg)",
@@ -32,14 +32,14 @@ export const variants = cva(
           "hover:border-(--btn-secondary-bg-hover)",
         ],
         outline: [
-          "border font-semibold px-4 py-3",
+          "border px-4 py-3 font-semibold",
           "text-(--btn-outline-text)",
           "bg-transparent",
           "border-(--btn-outline-text)",
           "hover:bg-(--btn-outline-bg-hover)",
         ],
         custom: [
-          "border font-semibold px-4 py-3",
+          "border px-4 py-3 font-semibold",
           "text-(--btn-text)",
           "bg-(--btn-bg)",
           "border-(--btn-border)",
@@ -48,10 +48,10 @@ export const variants = cva(
           "hover:border-(--btn-border-hover)",
         ],
         underline: [
-          "bg-transparent pb-1 text-body",
-          "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
+          "text-body bg-transparent pb-1",
+          "after:bg-body after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full",
           "after:origin-right after:scale-x-100 after:transition-transform",
-          "hover:after:origin-left hover:after:animate-underline-toggle",
+          "hover:after:animate-underline-toggle hover:after:origin-left",
         ],
       },
     },
@@ -71,7 +71,8 @@ export interface ButtonStyleProps {
 }
 
 export interface ButtonProps
-  extends VariantProps<typeof variants>,
+  extends
+    VariantProps<typeof variants>,
     Omit<HTMLAttributes<HTMLButtonElement>, "type">,
     Partial<ButtonStyleProps> {
   type?: "button" | "reset" | "submit";
@@ -151,7 +152,7 @@ export function Button(props: ButtonProps) {
 
 function Spinner() {
   return (
-    <span className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 [&~*]:invisible">
+    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 [&~*]:invisible">
       <Icon
         name="circle-notch"
         className="h-5 w-5 animate-spin [animation-duration:var(--spinner-duration,500ms)]"

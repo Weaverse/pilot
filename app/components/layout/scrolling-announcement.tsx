@@ -44,11 +44,12 @@ export function ScrollingAnnouncement() {
     }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
+  // Recalculate when topbar content changes.
   useEffect(() => {
     updateStyles();
     window.addEventListener("scroll", updateStyles);
     return () => window.removeEventListener("scroll", updateStyles);
+    // oxlint-disable-next-line react/exhaustive-deps -- scroll listener intentionally reuses updateStyles
   }, [topbarText]);
 
   if (!hasVisibleAnnouncement(topbarText)) {
@@ -58,7 +59,7 @@ export function ScrollingAnnouncement() {
   return (
     <div
       id="announcement-bar"
-      className="relative flex items-center overflow-hidden whitespace-nowrap text-center"
+      className="relative flex items-center overflow-hidden text-center whitespace-nowrap"
       style={
         {
           height: `${topbarHeight}px`,

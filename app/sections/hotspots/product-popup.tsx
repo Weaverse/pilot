@@ -8,8 +8,10 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import type { HotspotsItemData } from "./item";
 
-interface ProductPopupProps
-  extends Omit<HotspotsItemData, "icon" | "iconSize" | "product"> {
+interface ProductPopupProps extends Omit<
+  HotspotsItemData,
+  "icon" | "iconSize" | "product"
+> {
   product: ProductQuery["product"];
 }
 
@@ -89,7 +91,7 @@ export function ProductPopup({
         } as CSSProperties
       }
     >
-      <div className="flex flex-col gap-3 bg-white rounded-lg p-2.5 shadow-lg sm:flex-row">
+      <div className="flex flex-col gap-3 rounded-lg bg-white p-2.5 shadow-lg sm:flex-row">
         {featuredImage && (
           <div className="h-auto w-full sm:w-28">
             <Image data={featuredImage} alt={product.title} sizes="auto" />
@@ -97,7 +99,7 @@ export function ProductPopup({
         )}
         <div className="flex flex-col gap-2">
           <div className="space-y-1">
-            <h5 className="font-medium text-xl">{product.title}</h5>
+            <h5 className="text-xl font-medium">{product.title}</h5>
             {showPrice && (
               <div className="flex items-center gap-1.5">
                 {compareAtPrice && (
@@ -105,7 +107,7 @@ export function ProductPopup({
                     withoutTrailingZeros
                     data={compareAtPrice}
                     as="div"
-                    className="font-medium text-base text-gray-400 line-through"
+                    className="text-base font-medium text-gray-400 line-through"
                   />
                 )}
                 {price && (
@@ -113,7 +115,7 @@ export function ProductPopup({
                     withoutTrailingZeros
                     data={price}
                     as="div"
-                    className="font-medium text-base"
+                    className="text-base font-medium"
                   />
                 )}
               </div>

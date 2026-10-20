@@ -32,25 +32,26 @@ export function CartDrawer() {
   } = useCartStore();
   const location = useLocation();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
+  // Close on route change.
   useEffect(() => {
     closeCartDrawer();
+    // oxlint-disable-next-line react/exhaustive-deps -- close on route change
   }, [location.pathname, closeCartDrawer]);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>
       <Dialog.Trigger
         onClick={() => publish("custom_sidecart_viewed", { cart })}
-        className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
+        className="focus:ring-border relative flex h-8 w-8 items-center justify-center"
       >
         <Icon name="handbag" className="h-5 w-5" />
         {cart?.totalQuantity > 0 && (
           <div
             className={clsx(
               "cart-count",
-              "-right-1.5 absolute top-0",
+              "absolute top-0 -right-1.5",
               "flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1 text-center",
-              "text-center font-medium text-[13px] leading-none",
+              "text-center text-[13px] leading-none font-medium",
               "transition-colors duration-300",
               "group-hover/header:bg-(--color-header-text)",
               "group-hover/header:text-(--color-header-bg)",
@@ -71,7 +72,7 @@ export function CartDrawer() {
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={clsx(
-            "fixed inset-y-0 right-0 z-10 w-screen max-w-120 bg-background py-4",
+            "bg-background fixed inset-y-0 right-0 z-10 w-screen max-w-120 py-4",
             "data-[state=open]:animate-[enter-from-right_200ms_ease-out]",
             "data-[state=closed]:animate-[exit-to-right_200ms_ease-in]",
           )}
@@ -83,7 +84,7 @@ export function CartDrawer() {
               <Dialog.Title asChild className="text-base">
                 <Link
                   to="/cart"
-                  className="group/cart-title flex items-center gap-1.5 text-lg font-serif font-semibold hover:underline"
+                  className="group/cart-title flex items-center gap-1.5 font-serif text-lg font-semibold hover:underline"
                   onClick={closeCartDrawer}
                 >
                   Cart
@@ -107,7 +108,7 @@ export function CartDrawer() {
             {lastAddError && (
               <div
                 role="alert"
-                className="mx-4 flex items-start justify-between gap-3 rounded-sm bg-red-50 px-3 py-2 text-red-700 text-sm"
+                className="mx-4 flex items-start justify-between gap-3 rounded-sm bg-red-50 px-3 py-2 text-sm text-red-700"
               >
                 <span>{lastAddError}</span>
                 <button

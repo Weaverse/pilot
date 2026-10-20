@@ -31,8 +31,7 @@ const variants = cva("flex flex-col sm:grid sm:grid-cols-4", {
 });
 
 interface ImageGalleyItemsProps
-  extends HydrogenComponentProps,
-    VariantProps<typeof variants> {
+  extends HydrogenComponentProps, VariantProps<typeof variants> {
   height: number;
 }
 

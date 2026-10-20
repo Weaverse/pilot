@@ -17,7 +17,7 @@ Pilot keeps the part of an image chosen in Weaverse Studio visible when the imag
 ## Acceptance
 
 - Section images and backgrounds apply a saved point; the same file can render with different points in separate sections.
-- Removing the point restores the existing position.
+- Removing the point restores the existing position, and an image without a point renders exactly as before (including Hydrogen's computed `aspect-ratio` style).
 - `contain`/`fill` images are not repositioned.
 - Docs explain the contract, precedence, reset behavior, and that percentage positioning aligns the point with the same relative frame position rather than centering it.
 
@@ -34,5 +34,6 @@ Files: `package.json`, `package-lock.json`, `app/utils/image.ts`, `app/component
 ## Verification
 
 - Unit test for valid, missing, malformed, and out-of-range points.
-- Typecheck and Biome.
+- Server-render test that `Image` keeps Hydrogen's computed `aspect-ratio` without a point and applies `object-position` with one.
+- Typecheck and `npm run check`.
 - Manual: with Studio focal point controls, check desktop and mobile frames with portrait and landscape images.

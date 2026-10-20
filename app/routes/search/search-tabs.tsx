@@ -20,7 +20,7 @@ export function SearchTabs({
   onTabChange,
 }: SearchTabsProps) {
   return (
-    <div className="border-b border-line-subtle">
+    <div className="border-line-subtle border-b">
       <div className="flex gap-8">
         {tabs.map(({ type, label }) => (
           <button
@@ -28,7 +28,7 @@ export function SearchTabs({
             type="button"
             onClick={() => onTabChange(type)}
             className={cn(
-              "relative py-3 font-medium transition-colors cursor-pointer",
+              "relative cursor-pointer py-3 font-medium transition-colors",
               activeTab === type
                 ? "text-foreground"
                 : "text-body-subtle hover:text-foreground",
@@ -44,7 +44,7 @@ export function SearchTabs({
               ({counts[type]})
             </span>
             {activeTab === type && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground" />
+              <span className="bg-foreground absolute right-0 bottom-0 left-0 h-0.5" />
             )}
           </button>
         ))}

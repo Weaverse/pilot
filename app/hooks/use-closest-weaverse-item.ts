@@ -5,7 +5,7 @@ export function useClosestWeaverseItem<T>(ref: RefObject<T>) {
   const [weaverseId, setWeaverseId] = useState<string>("");
   const weaverseItem = useItemInstance(weaverseId);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: assuming `selector` does not change
+  // Resolve the closest Weaverse item from the stable ref.
   useEffect(() => {
     if (!weaverseItem && ref.current) {
       const closest = (ref.current as HTMLElement).closest("[data-wv-id]");
@@ -13,6 +13,7 @@ export function useClosestWeaverseItem<T>(ref: RefObject<T>) {
         setWeaverseId(closest.getAttribute("data-wv-id"));
       }
     }
+    // oxlint-disable-next-line react/exhaustive-deps -- selector is treated as stable by callers
   }, [ref]);
 
   return weaverseItem;

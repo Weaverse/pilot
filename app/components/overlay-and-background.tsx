@@ -4,8 +4,7 @@ import type { OverlayProps } from "./overlay";
 import { Overlay } from "./overlay";
 
 export interface OverlayAndBackgroundProps
-  extends Partial<BackgroundImageProps>,
-    Partial<OverlayProps> {}
+  extends Partial<BackgroundImageProps>, Partial<OverlayProps> {}
 
 export function OverlayAndBackground(props: OverlayAndBackgroundProps) {
   const {

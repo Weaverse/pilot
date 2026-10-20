@@ -62,7 +62,8 @@ const variants = cva("flex h-full w-full flex-col [&_.paragraph]:mx-[unset]", {
 });
 
 export interface SlideProps
-  extends VariantProps<typeof variants>,
+  extends
+    VariantProps<typeof variants>,
     HydrogenComponentProps,
     OverlayAndBackgroundProps {
   backgroundColor: string;
