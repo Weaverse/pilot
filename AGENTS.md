@@ -153,6 +153,7 @@ The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
 - Trailing commas
 - Sorted Tailwind classes in `clsx`, `cva`, and `cn` functions
 - `npm run typecheck` remains the explicit TypeScript gate
+- Linux CI uses `npm run typecheck:ci` with exactly pinned `tsrs`. Keep `npm run typecheck` and `typescript` for other platforms and framework/tool JS APIs: this experimental TS7 compiler is not a global TypeScript replacement. Recheck Linux diagnostics and source coverage before changing the pin ([Weaverse/pilot#200](https://github.com/Weaverse/pilot/issues/200)).
 - SonarJS cognitive complexity runs through Oxlint with error max 50
 
 ## Code Conventions

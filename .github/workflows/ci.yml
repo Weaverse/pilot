@@ -35,7 +35,7 @@ jobs:
         run: npm run check
 
       - name: Typecheck
-        run: npm run typecheck
+        run: npm run typecheck:ci
 
       # Fails when component schemas changed without regenerating the committed
       # manifest. Also rejects duplicate component types and invalid schemas,
