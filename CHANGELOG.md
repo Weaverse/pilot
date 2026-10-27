@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- [fix] Product page quantity no longer carries over to the next product: a newly opened product starts at 1, and the quantity selector, main and sticky Add to cart buttons and Shop Pay always use the same quantity. Choosing another variant of the same product keeps the selected quantity, and the buttons use the correct quantity even when the quantity selector section is removed (#202)
+
 ## 2026.7.22
 
 - [feature] Installable mobile app (PWA): new "Mobile app (PWA)" theme settings group (off by default). When enabled, serves a merchant-branded `/manifest.webmanifest` (name, icon, colors from theme settings with Shopify brand fallbacks), adds install head tags, registers a minimal service worker (hashed assets + CDN images only — never HTML/cart/checkout), and shows a dismissible iOS Add-to-Home-Screen hint.

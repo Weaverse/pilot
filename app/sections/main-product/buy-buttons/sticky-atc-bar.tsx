@@ -12,7 +12,7 @@ import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 import { hasOnlyDefaultVariant } from "~/utils/product";
-import { useProductQtyStore } from "../product-quantity-selector";
+import { useProductQuantity } from "../product-quantity-selector";
 import { useATCVisibilityStore } from "./store";
 
 interface StickyATCBarProps {
@@ -32,7 +32,7 @@ export function StickyATCBar({
   showImage = true,
 }: StickyATCBarProps) {
   const { product } = useLoaderData<typeof productRouteLoader>();
-  const { quantity } = useProductQtyStore();
+  const { quantity } = useProductQuantity(product?.id);
   const { inView, scrolledPast } = useATCVisibilityStore();
   const [isMobile, setIsMobile] = useState(false);
   const [footerInView, setFooterInView] = useState(false);

@@ -65,13 +65,51 @@ const stubUnresolvable: Plugin = {
 };
 
 /**
+ * Replaces whole modules, keyed by import specifier, with the given source.
+ *
+ * For third-party boundaries that render nothing on the server — a portal
+ * that waits for a mount, a widget that waits for the viewport — so the app
+ * code around them can still be observed. Only the named specifiers change;
+ * everything else is bundled as it ships.
+ */
+function stubModules(stubs: Record<string, string>): Plugin {
+  return {
+    name: "stub-modules",
+    setup(build) {
+      const names = Object.keys(stubs);
+      if (names.length === 0) {
+        return;
+      }
+      const escaped = names.map((n) =>
+        n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+      );
+      build.onResolve(
+        { filter: new RegExp(`^(${escaped.join("|")})$`) },
+        (args) => ({
+          path: args.path,
+          namespace: "stub-modules",
+        }),
+      );
+      build.onLoad({ filter: /.*/, namespace: "stub-modules" }, (args) => ({
+        contents: stubs[args.path],
+        loader: "jsx",
+        resolveDir: new URL(".", APP_DIR).pathname,
+      }));
+    },
+  };
+}
+
+/**
  * Compiles any app module and returns it.
  *
  * Route modules import UI chains that use extensionless deep paths — legal for
  * a bundler, unresolvable for Node's ESM loader — so the module a test imports
  * has to be bundled the way the app itself is, not resolved by hand.
  */
-export async function loadAppModule<T>(entry: string): Promise<T> {
+export async function loadAppModule<T>(
+  entry: string,
+  stubs: Record<string, string> = {},
+): Promise<T> {
   const out = await build({
     entryPoints: [new URL(entry, APP_DIR).pathname],
     bundle: true,
@@ -82,7 +120,7 @@ export async function loadAppModule<T>(entry: string): Promise<T> {
     target: "es2022",
     resolveExtensions: [".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
     alias: { "~": new URL(".", APP_DIR).pathname },
-    plugins: [stubUnresolvable],
+    plugins: [stubUnresolvable, stubModules(stubs)],
     // Packages stay bundled: some ship extensionless deep imports (`react-use/
     // esm/useScroll`) that a bundler resolves and Node's ESM loader does not,
     // so externalising everything moves the failure to runtime. Only the
@@ -102,8 +140,11 @@ export async function loadAppModule<T>(entry: string): Promise<T> {
   });
 
   mkdirSync(CACHE_DIR, { recursive: true });
+  const variant = Object.keys(stubs).length
+    ? `-stubbed-${Object.keys(stubs).join("-")}`
+    : "";
   const compiled = new URL(
-    `${entry.replace(/[^a-z0-9]/gi, "-")}.mjs`,
+    `${`${entry}${variant}`.replace(/[^a-z0-9]/gi, "-")}.mjs`,
     CACHE_DIR,
   );
   writeFileSync(compiled, out.outputFiles[0].contents);
