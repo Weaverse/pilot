@@ -30,7 +30,7 @@ const WEAVERSE_PREVIEW_PARAMS = [
  * enforced by Oxygen itself (session commits in server.ts automatically keep
  * those responses out of the cache), so this gate only needs to exclude:
  *
- * - non-GET / non-200 responses
+ * - non-GET / non-200 responses, and responses the app marked `no-store`
  * - personalized or mutating routes (account, cart, discount, api)
  * - Weaverse Studio design-mode and revision-preview requests
  *
@@ -47,8 +47,15 @@ const WEAVERSE_PREVIEW_PARAMS = [
 export function getFullPageCacheControl(
   request: Request,
   responseStatusCode: number,
+  responseCacheControl?: string | null,
 ): string | null {
   if (request.method !== "GET" || responseStatusCode !== 200) {
+    return null;
+  }
+
+  // A document the app marked uncacheable — rendered while Weaverse was
+  // unavailable — must not reach the full-page cache either.
+  if (responseCacheControl?.includes("no-store")) {
     return null;
   }
 

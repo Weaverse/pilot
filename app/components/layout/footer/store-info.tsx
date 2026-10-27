@@ -9,6 +9,9 @@ export function StoreInfo({
   storeAddress,
   storeEmail,
 }: StoreInfoProps) {
+  if (!(storeAddress || storeEmail)) {
+    return null;
+  }
   return (
     <div className="flex flex-col gap-6">
       <h3 className="text-base font-medium">{addressTitle}</h3>
