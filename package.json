@@ -72,7 +72,7 @@
     "@react-router/dev": "7.16.0",
     "@shopify/hydrogen": "~2026.4.7",
     "@tailwindcss/vite": "^4.3.3",
-    "@weaverse/hydrogen": "^5.23.0",
+    "@weaverse/hydrogen": "^5.24.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "colord": "2.10.0",

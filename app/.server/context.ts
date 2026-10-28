@@ -17,6 +17,7 @@ import {
   unauthorizedRedirect,
 } from "~/utils/locale";
 import { components } from "~/weaverse/components";
+import { throwRouteFailures } from "~/weaverse/load-failure";
 import { themeSchema } from "~/weaverse/schema.server";
 
 const additionalContext = {
@@ -78,14 +79,20 @@ export async function createHydrogenRouterContext(
     additionalContext,
   );
 
-  const weaverse = new WeaverseClient({
-    ...hydrogenContext,
-    storefront: weaverseStorefront(hydrogenContext.storefront, locale),
-    request,
-    cache,
-    themeSchema,
-    components,
-  });
+  // A Weaverse outage must not answer like a missing page: page loads
+  // reject on failure and leave the route as a retryable 503 (see
+  // `throwRouteFailures`). Missing pages still resolve and stay 404.
+  const weaverse = throwRouteFailures(
+    new WeaverseClient({
+      ...hydrogenContext,
+      storefront: weaverseStorefront(hydrogenContext.storefront, locale),
+      request,
+      cache,
+      themeSchema,
+      components,
+      throwPageLoadFailures: true,
+    }),
+  );
 
   // Add weaverse directly to the hydrogenContext instance
   // This preserves the RouterContextProvider class instance

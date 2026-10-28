@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- [fix] Product page quantity no longer carries over to the next product: a newly opened product starts at 1, and the quantity selector, main and sticky Add to cart buttons and Shop Pay always use the same quantity. Choosing another variant of the same product keeps the selected quantity, and the buttons use the correct quantity even when the quantity selector section is removed (#202)
+- [fix] When Weaverse content cannot be loaded, storefront pages answer `503 Service Unavailable` with `Cache-Control: no-store` and show "This page is temporarily unavailable." with a Reload page link, instead of a 404 "We've lost this page". Genuinely missing pages still answer 404; a refused or misconfigured Weaverse request answers a generic 500 without internal details. Requires the `@weaverse/hydrogen` release that adds `throwPageLoadFailures` (Weaverse/weaverse#501)
+- [fix] When theme settings cannot be loaded, the header and footer show the Shopify shop name instead of the Pilot demo logo, demo social links, sample store contact details and copyright; the newsletter popup stays closed, the page is not cached, and `/manifest.webmanifest` answers 503 rather than 404 (Weaverse/weaverse#501)
+
 ## 2026.7.22
 
 - [feature] Installable mobile app (PWA): new "Mobile app (PWA)" theme settings group (off by default). When enabled, serves a merchant-branded `/manifest.webmanifest` (name, icon, colors from theme settings with Shopify brand fallbacks), adds install head tags, registers a minimal service worker (hashed assets + CDN images only — never HTML/cart/checkout), and shows a dismissible iOS Add-to-Home-Screen hint.

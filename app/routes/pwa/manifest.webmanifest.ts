@@ -16,6 +16,14 @@ export async function loader({ context }: LoaderFunctionArgs) {
       cache: CacheLong(),
     }),
   ]);
+  // The merchant's settings could not be loaded, so whether the PWA is
+  // enabled is unknown: not a missing manifest, and not one to cache.
+  if (settingsResponse._loadFailed) {
+    return new Response("Service unavailable", {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
   // loadThemeSettings returns { theme, schema, publicEnv } — settings live under `theme`.
   let theme = settingsResponse?.theme as ThemeSettings | undefined;
 

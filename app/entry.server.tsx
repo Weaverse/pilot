@@ -60,6 +60,7 @@ export default async function handleRequest(
   const fullPageCacheControl = getFullPageCacheControl(
     request,
     responseStatusCode,
+    responseHeaders.get("Cache-Control"),
   );
   if (fullPageCacheControl) {
     responseHeaders.set("Oxygen-Cache-Control", fullPageCacheControl);

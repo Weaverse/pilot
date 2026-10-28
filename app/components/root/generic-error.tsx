@@ -1,5 +1,46 @@
-import Link from "~/components/link";
+import { useLocation } from "react-router";
+import Link, { variants } from "~/components/link";
 import { Section } from "~/components/section";
+import { cn } from "~/utils/cn";
+
+/**
+ * Shown when Weaverse could not provide the page.
+ *
+ * `unavailable` is temporary and the page itself exists, so the action is to
+ * load the same URL again as a full document. Any other failure is a
+ * configuration problem a shopper cannot fix; its details stay in the server
+ * log rather than on the page.
+ */
+export function WeaverseFailure({
+  failure,
+}: {
+  failure: "unavailable" | "error";
+}) {
+  const { pathname, search } = useLocation();
+
+  if (failure !== "unavailable") {
+    return <GenericError error={undefined} />;
+  }
+
+  return (
+    <Section
+      width="fixed"
+      verticalPadding="large"
+      containerClassName="space-y-4 flex justify-center items-center flex-col text-center"
+    >
+      <h4 className="font-medium">This page is temporarily unavailable.</h4>
+      <p>We couldn’t load this page right now. Please try again in a moment.</p>
+      {/* A plain anchor: a full document request, not a client navigation
+          that would replay the same failed data request. */}
+      <a
+        href={`${pathname}${search}`}
+        className={cn(variants({ variant: "outline" }), "w-fit")}
+      >
+        Reload page
+      </a>
+    </Section>
+  );
+}
 
 export function GenericError({
   error,

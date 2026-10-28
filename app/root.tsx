@@ -8,6 +8,7 @@ import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
+  data as routeData,
   isRouteErrorResponse,
   Links,
   Meta,
@@ -32,7 +33,7 @@ import {
 } from "./components/layout/scrolling-announcement";
 import { PwaInstallHint } from "./components/pwa-install-hint";
 import { CustomAnalytics } from "./components/root/custom-analytics";
-import { GenericError } from "./components/root/generic-error";
+import { GenericError, WeaverseFailure } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
 import {
   NewsletterPopup,
@@ -41,9 +42,14 @@ import {
 import { NotFound } from "./components/root/not-found";
 import { ShopifyInbox, ShopifyInboxLauncher } from "./components/shopify-inbox";
 import styles from "./styles/app.css?url";
+import { rootHeaders } from "./utils/cache";
 import { getPublicEnv } from "./utils/env";
 import { DEFAULT_LOCALE } from "./utils/locale";
 import { cdnSize } from "./utils/pwa";
+import {
+  DEGRADED_HEADERS,
+  type WeaverseRouteFailure,
+} from "./weaverse/load-failure";
 import { GlobalStyle } from "./weaverse/style";
 
 export type RootLoader = typeof loader;
@@ -73,12 +79,18 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {
-    ...deferredData,
-    ...criticalData,
-    publicEnv: getPublicEnv(args.context.env),
-  };
+  // Rendered without the merchant's theme settings: shown, but never cached.
+  return routeData(
+    {
+      ...deferredData,
+      ...criticalData,
+      publicEnv: getPublicEnv(args.context.env),
+    },
+    criticalData.themeUnavailable ? { headers: DEGRADED_HEADERS } : undefined,
+  );
 }
+
+export const headers = rootHeaders;
 
 export const meta = ({ data }: MetaArgs<typeof loader>) => {
   return getSeoMeta(data?.seo as SeoConfig);
@@ -96,6 +108,13 @@ export function ErrorBoundary({ error }: { error: Error }) {
 
   if (isRouteError && routeError.status === 404) {
     pageType = routeError.data || pageType;
+  }
+
+  const weaverseFailure = isRouteError
+    ? (routeError.data as WeaverseRouteFailure | null)?.weaverseFailure
+    : undefined;
+  if (weaverseFailure) {
+    return <WeaverseFailure failure={weaverseFailure} />;
   }
 
   return isRouteError ? (

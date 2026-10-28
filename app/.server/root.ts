@@ -7,6 +7,10 @@ import type {
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import type { EnhancedMenu } from "~/types/menu";
+import {
+  isThemeUnavailable,
+  neutralThemeWhenUnavailable,
+} from "~/weaverse/load-failure";
 import { seoPayload } from "./seo";
 import { localizedThemePayload } from "./translations";
 
@@ -42,7 +46,10 @@ export async function loadCriticalData({
       language: storefront.i18n.language,
     },
     selectedLocale: storefront.i18n,
-    weaverseTheme: localizedThemePayload(weaverseTheme, storefront.i18n),
+    weaverseTheme: neutralThemeWhenUnavailable(
+      localizedThemePayload(weaverseTheme, storefront.i18n),
+    ),
+    themeUnavailable: isThemeUnavailable(weaverseTheme),
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
   };

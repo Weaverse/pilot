@@ -9,7 +9,7 @@ import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { LazyShopPayButton } from "~/components/product/lazy-shop-pay-button";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { useProductQtyStore } from "../product-quantity-selector";
+import { useProductQuantity } from "../product-quantity-selector";
 import { StickyATCBar } from "./sticky-atc-bar";
 import { useATCVisibilityStore } from "./store";
 
@@ -43,7 +43,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     ...rest
   } = props;
   const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
-  const { quantity } = useProductQtyStore();
+  const { quantity } = useProductQuantity(product?.id);
   const { setInView, setScrolledPast } = useATCVisibilityStore();
   const { ref: inViewRef, inView, entry } = useInView({ threshold: 0 });
 
