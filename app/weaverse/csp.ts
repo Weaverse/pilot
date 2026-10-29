@@ -1,13 +1,11 @@
-import type { HydrogenRouterContextProvider } from "@shopify/hydrogen";
-
 export function getWeaverseCsp(
   request: Request,
-  context: HydrogenRouterContextProvider,
+  env: { WEAVERSE_HOST?: string },
 ) {
   const url = new URL(request.url);
   // Get weaverse host from query params
   const weaverseHost =
-    url.searchParams.get("weaverseHost") || context.env.WEAVERSE_HOST;
+    url.searchParams.get("weaverseHost") || env.WEAVERSE_HOST;
   const isDesignMode = url.searchParams.get("weaverseHost");
   const weaverseHosts = ["*.weaverse.io", "*.shopify.com", "*.myshopify.com"];
   if (weaverseHost) {
@@ -36,7 +34,17 @@ export function getWeaverseCsp(
       ...weaverseHosts,
     ],
     styleSrc: weaverseHosts,
-    scriptSrc: ["https://cdn.shopify.com"],
+    // `scriptSrc` replaces `defaultSrc` for scripts, so it lists every script
+    // origin itself: the Studio bridge (loaded without a nonce), YouTube's
+    // iframe API and Google Tag Manager.
+    scriptSrc: [
+      "'self'",
+      "https://cdn.shopify.com",
+      "https://www.youtube.com",
+      "*.googletagmanager.com",
+      "*.google-analytics.com",
+      ...weaverseHosts,
+    ],
   };
   if (isDesignMode) {
     updatedCsp.frameAncestors = ["*"];

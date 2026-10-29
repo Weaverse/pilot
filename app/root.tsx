@@ -2,7 +2,7 @@ import "@fontsource-variable/cabin"; // Supports weights 400-700
 import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
-import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
+import { Analytics, getSeoMeta } from "@shopify/hydrogen";
 import type { WeaverseImage } from "@weaverse/hydrogen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import type { CSSProperties } from "react";
@@ -21,6 +21,7 @@ import {
 } from "react-router";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
+import { useNonce } from "~/utils/csp";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { CartStoreSync } from "./components/cart/cart-sync";
 import { useCartStore } from "./components/cart/store";

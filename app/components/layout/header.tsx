@@ -1,4 +1,3 @@
-import { useNonce } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +14,7 @@ import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
+import { useNonce } from "~/utils/csp";
 import { delocalizePath } from "~/utils/locale";
 import { HeaderCountrySelector } from "./country-selector/header-country-selector";
 import { Logo } from "./logo";
