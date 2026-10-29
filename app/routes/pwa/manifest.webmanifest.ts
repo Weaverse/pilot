@@ -1,8 +1,10 @@
-import { CacheLong } from "@shopify/hydrogen";
-import type { WeaverseImage } from "@weaverse/hydrogen";
+import { gql } from "@shopify/hydrogen";
+import type { WeaverseImage } from "@weaverse/hydrogen/react-router";
 import type { LoaderFunctionArgs } from "react-router";
 import type { ThemeSettings } from "~/types/weaverse";
+import { CACHE_LONG } from "~/utils/cache";
 import { cdnSize } from "~/utils/pwa";
+import { unwrapStorefront } from "~/utils/storefront";
 
 /**
  * Web app manifest generated from Weaverse theme settings, so every merchant
@@ -12,9 +14,9 @@ import { cdnSize } from "~/utils/pwa";
 export async function loader({ context }: LoaderFunctionArgs) {
   let [settingsResponse, { shop }] = await Promise.all([
     context.weaverse.loadThemeSettings(),
-    context.storefront.query<PwaShopQuery>(PWA_SHOP_QUERY, {
-      cache: CacheLong(),
-    }),
+    context.storefront
+      .graphql(PWA_SHOP_QUERY, { cache: CACHE_LONG })
+      .then(unwrapStorefront),
   ]);
   // The merchant's settings could not be loaded, so whether the PWA is
   // enabled is unknown: not a missing manifest, and not one to cache.
@@ -74,14 +76,7 @@ function buildIcons(url: string) {
   ];
 }
 
-type PwaShopQuery = {
-  shop: {
-    name: string;
-    brand?: { logo?: { image?: { url: string } | null } | null } | null;
-  };
-};
-
-const PWA_SHOP_QUERY = `#graphql
+const PWA_SHOP_QUERY = gql(`
   query PwaShop {
     shop {
       name
@@ -94,4 +89,4 @@ const PWA_SHOP_QUERY = `#graphql
       }
     }
   }
-`;
+`);

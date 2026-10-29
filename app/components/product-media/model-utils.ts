@@ -1,4 +1,4 @@
-import type { Media_Model3d_Fragment } from "storefront-api.generated";
+import type { Media_Model3d_Fragment } from "./types";
 
 let GLB_MIME = "model/gltf-binary";
 let USDZ_MIME = "model/vnd.usdz+zip";

@@ -1,13 +1,16 @@
-import { getSitemap } from "@shopify/hydrogen";
+import { gql } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
+import { getSitemap } from "~/.server/sitemap";
+import { CACHE_DEFAULT } from "~/utils/cache";
 import { DEFAULT_LOCALE } from "~/utils/locale";
+import { unwrapStorefront } from "~/utils/storefront";
 
 // Match Shopify's sitemap pagination size so page numbers in the sitemap
 // index (`sitemap/articles/1.xml`, `.../2.xml`, ...) stay consistent.
 const ARTICLES_PER_SITEMAP_PAGE = 250;
 
-const BLOGS_QUERY = `#graphql
-  query SitemapBlogs($first: Int!, $after: String) {
+const BLOGS_QUERY = gql(`
+  query SitemapBlogHandles($first: Int!, $after: String) {
     blogs(first: $first, after: $after) {
       nodes {
         handle
@@ -18,9 +21,9 @@ const BLOGS_QUERY = `#graphql
       }
     }
   }
-` as const;
+`);
 
-const BLOG_ARTICLES_QUERY = `#graphql
+const BLOG_ARTICLES_QUERY = gql(`
   query SitemapBlogArticles(
     $blogHandle: String!
     $first: Int!
@@ -39,7 +42,7 @@ const BLOG_ARTICLES_QUERY = `#graphql
       }
     }
   }
-` as const;
+`);
 
 type ArticleSitemapNode = {
   handle: string;
@@ -57,8 +60,9 @@ function escapeXml(value: string) {
 }
 
 /**
- * Hydrogen's built-in `getSitemap` builds article links as
- * `/articles/<handle>`, but this storefront serves articles at
+ * Classic Hydrogen's `getSitemap` (ported to `~/.server/sitemap` without its
+ * article query) builds article links as `/articles/<handle>`, but this
+ * storefront serves articles at
  * `/blogs/<blogHandle>/<articleHandle>` — so every built-in article URL
  * 404s. The built-in sitemap query only returns the article handle (no
  * parent blog), so articles need this custom query/renderer instead.
@@ -87,14 +91,12 @@ async function articlesSitemap({
   // handles first, then paginate each blog's articles so the canonical
   // parent blog handle is available for every URL.
   while (true) {
-    const data: {
-      blogs: {
-        nodes: Array<{ handle: string }>;
-        pageInfo: { hasNextPage: boolean; endCursor: string | null };
-      };
-    } = await storefront.query(BLOGS_QUERY, {
-      variables: { first: 250, after: blogsAfter },
-    });
+    const data = unwrapStorefront(
+      await storefront.graphql(BLOGS_QUERY, {
+        variables: { first: 250, after: blogsAfter },
+        cache: CACHE_DEFAULT,
+      }),
+    );
     blogHandles.push(...data.blogs.nodes.map((blog) => blog.handle));
     if (!data.blogs.pageInfo.hasNextPage) {
       break;
@@ -105,20 +107,16 @@ async function articlesSitemap({
   for (const blogHandle of blogHandles) {
     let articlesAfter: string | null = null;
     while (nodes.length < endIndex) {
-      const data: {
-        blog: {
-          articles: {
-            nodes: Array<{ handle: string; publishedAt: string }>;
-            pageInfo: { hasNextPage: boolean; endCursor: string | null };
-          };
-        } | null;
-      } = await storefront.query(BLOG_ARTICLES_QUERY, {
-        variables: {
-          blogHandle,
-          first: ARTICLES_PER_SITEMAP_PAGE,
-          after: articlesAfter,
-        },
-      });
+      const data = unwrapStorefront(
+        await storefront.graphql(BLOG_ARTICLES_QUERY, {
+          variables: {
+            blogHandle,
+            first: ARTICLES_PER_SITEMAP_PAGE,
+            after: articlesAfter,
+          },
+          cache: CACHE_DEFAULT,
+        }),
+      );
       if (!data.blog) {
         break;
       }

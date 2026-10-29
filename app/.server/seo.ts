@@ -1,4 +1,3 @@
-import type { SeoConfig } from "@shopify/hydrogen";
 import type {
   Article,
   Blog,
@@ -7,12 +6,18 @@ import type {
   ShopPolicy,
 } from "@shopify/hydrogen/storefront-api-types";
 import type { BreadcrumbList, CollectionPage, Offer } from "schema-dts";
-import type {
-  CollectionsQuery,
-  ProductQuery,
-  ShopFragment,
-} from "storefront-api.generated";
+import type { ProductQuery } from "~/graphql/queries";
 import { alternateLinks, localizePath, resolveLocale } from "~/utils/locale";
+import type { SeoConfig } from "~/utils/seo-meta";
+
+/** The root layout query's `Shop` fields this module reads. */
+type ShopFragment = {
+  name: string;
+  description?: string | null;
+  brand?: { logo?: { image?: { url: string } | null } | null } | null;
+};
+
+type ProductData = NonNullable<ProductQuery["product"]>;
 
 function root({
   shop,
@@ -81,8 +86,8 @@ function productJsonLd({
   selectedVariant,
   url,
 }: {
-  product: ProductQuery["product"];
-  selectedVariant: ProductQuery["product"]["selectedOrFirstAvailableVariant"];
+  product: ProductData;
+  selectedVariant: ProductData["selectedOrFirstAvailableVariant"];
   url: Request["url"];
 }): SeoConfig["jsonLd"] {
   const origin = new URL(url).origin;
@@ -168,7 +173,7 @@ function product({
   product: productData,
   url,
 }: {
-  product: ProductQuery["product"];
+  product: ProductData;
   url: Request["url"];
 }): SeoConfig {
   const description = truncate(
@@ -278,7 +283,7 @@ function collection({
   };
 }
 
-type CollectionListRequiredFields = CollectionsQuery["collections"];
+type CollectionListRequiredFields = { nodes: Pick<Product, "handle">[] };
 
 function collectionsJsonLd({
   url,
