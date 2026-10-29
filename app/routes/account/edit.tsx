@@ -1,8 +1,4 @@
-import type {
-  Customer,
-  CustomerUpdateInput,
-} from "@shopify/hydrogen/customer-account-api-types";
-import type { CustomerUpdateMutation } from "customer-account-api.generated";
+import type { CustomerUpdateInput } from "@shopify/hydrogen/customer-account-api-types";
 import type { ActionFunction } from "react-router";
 import {
   data,
@@ -15,12 +11,12 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
+import type { CustomerDetailsFragment } from "~/routes/account/layout";
 import { localizedPathForRequest } from "~/utils/locale";
-import { doLogout } from "./auth/logout";
 import { CUSTOMER_UPDATE_MUTATION } from "./profile";
 
 export interface AccountOutletContext {
-  customer: Customer;
+  customer: CustomerDetailsFragment;
 }
 
 export interface ActionData {
@@ -56,7 +52,7 @@ export const action: ActionFunction = async ({ request, context }) => {
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
   if (!(await context.customerAccount.isLoggedIn())) {
-    throw await doLogout(context, request);
+    throw await context.customerAccount.logout();
   }
 
   try {
@@ -69,15 +65,14 @@ export const action: ActionFunction = async ({ request, context }) => {
       customer.lastName = formData.get("lastName") as string;
     }
 
-    const { data: updateData, errors } =
-      await context.customerAccount.mutate<CustomerUpdateMutation>(
-        CUSTOMER_UPDATE_MUTATION,
-        {
-          variables: {
-            customer,
-          },
+    const { data: updateData, errors } = await context.customerAccount.graphql(
+      CUSTOMER_UPDATE_MUTATION,
+      {
+        variables: {
+          customer,
         },
-      );
+      },
+    );
 
     invariant(!errors?.length, errors?.[0]?.message);
     invariant(
@@ -86,9 +81,9 @@ export const action: ActionFunction = async ({ request, context }) => {
     );
 
     return redirect(localizedPathForRequest(request, "/account"));
-  } catch (error: any) {
+  } catch (error: unknown) {
     return data(
-      { formError: error?.message },
+      { formError: error instanceof Error ? error.message : "Unknown error" },
       {
         status: 400,
       },

@@ -1,36 +1,34 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { CacheNone, generateCacheControlHeader } from "@shopify/hydrogen";
+import {
+  gql,
+  type InferResult,
+  type SourceOf,
+} from "@shopify/hydrogen/customer-account";
 import { clsx } from "clsx";
-import type { CustomerDetailsQuery } from "customer-account-api.generated";
 import type { LoaderFunctionArgs } from "react-router";
 import { data, Outlet, useLoaderData, useMatches } from "react-router";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_NONE, cacheControlHeader, routeHeaders } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
-import { doLogout } from "./auth/logout";
 import AccountDashboard from "./dashboard";
 
 export const headers = routeHeaders;
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
-  const { data: d, errors } =
-    await context.customerAccount.query<CustomerDetailsQuery>(
-      CUSTOMER_DETAILS_QUERY,
-      {
-        variables: {
-          language: context.customerAccount.i18n.language,
-        },
-      },
-    );
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { data: d, errors } = await context.customerAccount.graphql(
+    CUSTOMER_DETAILS_QUERY,
+  );
 
   /**
-   * If the customer failed to load, we assume their access token is invalid.
+   * If the customer failed to load, we assume their access token is invalid:
+   * sign them out (clearing the session) and return them to their market's
+   * home page.
    */
   if (errors?.length || !d?.customer) {
-    throw await doLogout(context, request);
+    throw await context.customerAccount.logout();
   }
 
   const customer = d?.customer;
@@ -42,7 +40,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       heading,
       featuredProducts: getFeaturedProducts(context.storefront),
     },
-    { headers: { "Cache-Control": generateCacheControlHeader(CacheNone()) } },
+    { headers: { "Cache-Control": cacheControlHeader(CACHE_NONE) } },
   );
 }
 
@@ -100,12 +98,7 @@ export default function AccountLayout() {
   return <Outlet context={loaderData} />;
 }
 
-const CUSTOMER_DETAILS_QUERY = `#graphql
-  query CustomerDetails($language: LanguageCode) @inContext(language: $language) {
-    customer {
-      ...CustomerDetails
-    }
-  }
+const ORDER_CARD_FRAGMENT = gql(`#graphql
   fragment OrderCard on Order {
     id
     number
@@ -135,7 +128,9 @@ const CUSTOMER_DETAILS_QUERY = `#graphql
       }
     }
   }
+`);
 
+const ADDRESS_PARTIAL_FRAGMENT = gql(`#graphql
   fragment AddressPartial on CustomerAddress {
     id
     formatted
@@ -144,13 +139,16 @@ const CUSTOMER_DETAILS_QUERY = `#graphql
     company
     address1
     address2
-    territoryCode
+    countryCode
     zoneCode
     city
     zip
     phoneNumber
   }
+`);
 
+const CUSTOMER_DETAILS_FRAGMENT = gql(
+  `#graphql
   fragment CustomerDetails on Customer {
     firstName
     lastName
@@ -178,4 +176,31 @@ const CUSTOMER_DETAILS_QUERY = `#graphql
       }
     }
   }
-` as const;
+`,
+  [ADDRESS_PARTIAL_FRAGMENT, ORDER_CARD_FRAGMENT],
+);
+
+// `$language` is filled from the request's market by the client.
+const CUSTOMER_DETAILS_QUERY = gql(
+  `#graphql
+  query CustomerDetails($language: LanguageCode) @inContext(language: $language) {
+    customer {
+      ...CustomerDetails
+    }
+  }
+`,
+  [CUSTOMER_DETAILS_FRAGMENT],
+);
+
+type CustomerDetailsQuery = InferResult<
+  SourceOf<typeof CUSTOMER_DETAILS_QUERY>
+>;
+/** The signed-in customer, as the account layout loads it. */
+export type CustomerDetailsFragment = NonNullable<
+  CustomerDetailsQuery["customer"]
+>;
+export type AddressPartialFragment = NonNullable<
+  CustomerDetailsFragment["defaultAddress"]
+>;
+export type OrderCardFragment =
+  CustomerDetailsFragment["orders"]["edges"][number]["node"];

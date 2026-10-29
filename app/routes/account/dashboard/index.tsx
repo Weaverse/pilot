@@ -1,18 +1,27 @@
 import { flattenConnection } from "@shopify/hydrogen";
 import { Suspense } from "react";
-import { Await, Form, useLoaderData, useOutletContext } from "react-router";
+import {
+  Await,
+  useLoaderData,
+  useLocation,
+  useOutletContext,
+} from "react-router";
 import { Icon } from "~/components/icon";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { customerAccountLogoutPath } from "~/utils/customer-account";
+import { resolveLocale } from "~/utils/locale";
 import type { loader as accountLoader } from "../layout";
 import { AccountDetails } from "./account-details";
 import { AddressBook } from "./address-book";
 import { OrdersHistory } from "./orders-history";
 
 export default function AccountDashboard() {
-  const signOutUrl = usePrefixPathWithLocale("/account/logout");
+  const { pathname } = useLocation();
+  // Hydrogen's logout handler is unprefixed; `return_to` brings the shopper
+  // back to their market's home page.
+  const signOutUrl = customerAccountLogoutPath(resolveLocale(pathname));
   const loaderData = useLoaderData<typeof accountLoader>();
   const outletContext =
     useOutletContext<Awaited<ReturnType<typeof accountLoader>>["data"]>();
@@ -39,7 +48,9 @@ export default function AccountDashboard() {
     >
       <div className="space-y-4">
         <h1 className="h4 font-medium">{heading}</h1>
-        <Form method="post" action={signOutUrl}>
+        {/* A plain <form>: the handler answers with a raw redirect (to
+            Shopify's logout) that client-side routing cannot follow. */}
+        <form method="post" action={signOutUrl}>
           <button
             type="submit"
             className="group text-body-subtle flex items-center gap-2"
@@ -49,7 +60,7 @@ export default function AccountDashboard() {
               Sign out
             </span>
           </button>
-        </Form>
+        </form>
       </div>
       {orders ? <OrdersHistory orders={orders} /> : null}
       <AccountDetails customer={customer} />
