@@ -1,4 +1,4 @@
-import type { ProductCardFragment } from "storefront-api.generated";
+import type { ProductCardFragment } from "~/graphql/fragments";
 
 export type SearchType = "products" | "articles" | "pages" | "collections";
 

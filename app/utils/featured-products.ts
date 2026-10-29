@@ -1,33 +1,35 @@
-import type { LoaderFunctionArgs } from "react-router";
-import type { FeaturedProductsQuery } from "storefront-api.generated";
-import invariant from "tiny-invariant";
+import {
+  type CachingStrategy,
+  gql,
+  type StorefrontApi,
+  type StorefrontClient,
+} from "@shopify/hydrogen";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { CACHE_DEFAULT } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
+/**
+ * Best-selling products, used as recommendations (search no-results, cart,
+ * account, 404, `/api/featured-products`) and by the featured-products section.
+ * Accepts both `context.storefront` and `weaverse.storefront`.
+ */
 export async function getFeaturedProducts(
-  storefront: LoaderFunctionArgs["context"]["storefront"],
+  storefront: StorefrontClient<{ cache?: CachingStrategy }>,
 ) {
-  const featuredProductsData = await storefront.query<FeaturedProductsQuery>(
-    FEATURED_PRODUCTS_QUERY,
-    {
-      variables: {
-        pageBy: 16,
-      },
-    },
+  return unwrapStorefront(
+    await storefront.graphql(FEATURED_PRODUCTS_QUERY, {
+      variables: { pageBy: 16 },
+      cache: CACHE_DEFAULT,
+    }),
   );
-
-  invariant(
-    featuredProductsData,
-    "No featured products data returned from Shopify API",
-  );
-
-  return featuredProductsData;
 }
 
 export type FeaturedProductsData = Awaited<
   ReturnType<typeof getFeaturedProducts>
 >;
 
-export const FEATURED_PRODUCTS_QUERY = `#graphql
+export const FEATURED_PRODUCTS_QUERY = gql(
+  `
   query featuredProducts(
     $country: CountryCode
     $language: LanguageCode
@@ -39,6 +41,10 @@ export const FEATURED_PRODUCTS_QUERY = `#graphql
       }
     }
   }
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);
 
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
+export type FeaturedProductsQuery = StorefrontApi.ResultOf<
+  typeof FEATURED_PRODUCTS_QUERY
+>;

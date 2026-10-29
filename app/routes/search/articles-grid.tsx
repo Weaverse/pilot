@@ -1,5 +1,5 @@
-import type { SearchPageQuery } from "storefront-api.generated";
 import { ArticleCard } from "~/sections/blogs";
+import type { SearchPageQuery } from "./index";
 
 type SearchArticle = SearchPageQuery["articles"]["nodes"][number];
 

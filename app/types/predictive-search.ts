@@ -1,16 +1,11 @@
-import type {
-  PredictiveArticleFragment,
-  PredictiveCollectionFragment,
-  PredictiveProductFragment,
-} from "storefront-api.generated";
+import type { MoneyV2 } from "@shopify/hydrogen";
 
-type PredictiveSearchResultItemImage =
-  | PredictiveCollectionFragment["image"]
-  | PredictiveArticleFragment["image"]
-  | PredictiveProductFragment["featuredImage"];
-
-type PredictiveSearchResultItemPrice =
-  PredictiveProductFragment["selectedOrFirstAvailableVariant"]["price"];
+type PredictiveSearchResultItemImage = {
+  url: string;
+  altText: string | null;
+  width: number | null;
+  height: number | null;
+} | null;
 
 export type NormalizedPredictiveSearch = {
   results: NormalizedPredictiveSearchResults;
@@ -26,14 +21,19 @@ export type NormalizedPredictiveSearchResults = Array<
 >;
 
 export type NormalizedPredictiveSearchResultItem = {
-  __typename?: "SearchQuerySuggestion" | "Product" | "Article";
+  __typename?:
+    | "SearchQuerySuggestion"
+    | "Product"
+    | "Collection"
+    | "Page"
+    | "Article";
   handle: string;
   id: string;
   image?: PredictiveSearchResultItemImage;
-  price?: PredictiveSearchResultItemPrice;
-  compareAtPrice?: PredictiveSearchResultItemPrice;
+  price?: MoneyV2;
+  compareAtPrice?: MoneyV2 | null;
   styledTitle?: string;
   title: string;
-  vendor: string;
-  url: string;
+  vendor?: string;
+  url?: string;
 };

@@ -1,10 +1,11 @@
-import { flattenConnection } from "@shopify/hydrogen";
+import { flattenConnection, gql } from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
 import type { LoaderFunctionArgs } from "react-router";
 import { data } from "react-router";
-import type { ApiAllProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { CACHE_LONG } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
 /**
  * Fetch a given set of products from the storefront API
@@ -45,19 +46,11 @@ export async function loader({
     // noop
   }
 
-  const { products } = await storefront.query<ApiAllProductsQuery>(
-    API_ALL_PRODUCTS_QUERY,
-    {
-      variables: {
-        count,
-        query,
-        reverse,
-        sortKey,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      },
-      cache: storefront.CacheLong(),
-    },
+  const { products } = unwrapStorefront(
+    await storefront.graphql(API_ALL_PRODUCTS_QUERY, {
+      variables: { count, query, reverse, sortKey },
+      cache: CACHE_LONG,
+    }),
   );
 
   invariant(products, "No data returned from top products query");
@@ -65,7 +58,8 @@ export async function loader({
   return data({ products: flattenConnection(products) });
 }
 
-const API_ALL_PRODUCTS_QUERY = `#graphql
+const API_ALL_PRODUCTS_QUERY = gql(
+  `
   query ApiAllProducts(
     $query: String
     $count: Int
@@ -80,5 +74,6 @@ const API_ALL_PRODUCTS_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);
