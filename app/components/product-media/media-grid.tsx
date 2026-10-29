@@ -42,6 +42,7 @@ interface MediaGridProps {
   initialMediaCount?: number;
   showMoreText?: string;
   showLessText?: string;
+  viewTransition?: boolean;
 }
 
 export function MediaGrid({
@@ -56,6 +57,7 @@ export function MediaGrid({
   initialMediaCount = 0,
   showMoreText = "Show more",
   showLessText = "Show less",
+  viewTransition,
 }: MediaGridProps) {
   const [expanded, setExpanded] = useState(false);
   const [zoomMediaId, setZoomMediaId] = useState<string | null>(null);
@@ -134,7 +136,8 @@ export function MediaGrid({
                     }
                     className={cn(
                       "w-[80vw] max-w-none object-cover lg:size-full",
-                      idx === 0 &&
+                      viewTransition &&
+                        idx === 0 &&
                         "[&_img]:[view-transition-name:image-expand]",
                     )}
                   />

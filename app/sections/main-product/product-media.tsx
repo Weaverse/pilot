@@ -69,6 +69,7 @@ export default function ProductMediaComponent(
           initialMediaCount={initialMediaCount}
           showMoreText={showMoreText}
           showLessText={showLessText}
+          viewTransition
         />
         {children}
       </div>

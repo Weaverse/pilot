@@ -24,6 +24,7 @@ interface MediaSliderProps {
   zoomButtonVisibility?: "always" | "hover";
   groupMediaByVariant?: boolean;
   autoHeight?: boolean;
+  viewTransition?: boolean;
 }
 
 export function MediaSlider({
@@ -37,6 +38,7 @@ export function MediaSlider({
   zoomButtonVisibility = "hover",
   groupMediaByVariant,
   autoHeight = true,
+  viewTransition,
 }: MediaSliderProps) {
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -195,6 +197,7 @@ export function MediaSlider({
                       sizes="(min-width: 1024px) 50vw, 100vw"
                       mediaLayout="slider"
                       className={
+                        viewTransition &&
                         idx === 0 &&
                         "[&_img]:[view-transition-name:image-expand]"
                       }

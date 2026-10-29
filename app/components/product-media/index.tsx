@@ -45,6 +45,8 @@ export interface ProductMediaProps extends VariantProps<
   showMoreText?: string;
   showLessText?: string;
   autoHeight?: boolean;
+  /** Name the first image `image-expand` for the product card -> PDP transition. Only one element per page may use it. */
+  viewTransition?: boolean;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
@@ -65,6 +67,7 @@ export function ProductMedia(props: ProductMediaProps) {
     showMoreText = "Show more",
     showLessText = "Show less",
     autoHeight,
+    viewTransition,
   } = props;
 
   let displayMedia = media;
@@ -112,6 +115,7 @@ export function ProductMedia(props: ProductMediaProps) {
           initialMediaCount={initialMediaCount}
           showMoreText={showMoreText}
           showLessText={showLessText}
+          viewTransition={viewTransition}
         />
       </div>
     );
@@ -130,6 +134,7 @@ export function ProductMedia(props: ProductMediaProps) {
         zoomButtonVisibility={zoomButtonVisibility}
         groupMediaByVariant={isMediaGrouped}
         autoHeight={autoHeight}
+        viewTransition={viewTransition}
       />
     </div>
   );
