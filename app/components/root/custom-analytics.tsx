@@ -4,11 +4,11 @@ import {
   type PageViewPayload,
   type ProductViewPayload,
   useAnalytics,
-  useNonce,
 } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { useRouteLoaderData } from "react-router";
 import type { RootLoader } from "~/root";
+import { useNonce } from "~/utils/csp";
 
 export function CustomAnalytics() {
   let { subscribe } = useAnalytics();

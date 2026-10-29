@@ -1,11 +1,13 @@
-import {
-  createContentSecurityPolicy,
-  type HydrogenRouterContextProvider,
-} from "@shopify/hydrogen";
+import type { HydrogenRouterContextProvider } from "@shopify/hydrogen";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
+import {
+  createContentSecurityPolicy,
+  generateNonce,
+  NonceProvider,
+} from "~/utils/csp";
 import { getFullPageCacheControl } from "~/utils/full-page-cache";
 import { getWeaverseCsp } from "~/weaverse/csp";
 
@@ -16,17 +18,19 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: HydrogenRouterContextProvider,
 ) {
-  const { nonce, header, NonceProvider } = createContentSecurityPolicy({
-    ...getWeaverseCsp(request, context),
-    shop: {
+  const nonce = generateNonce();
+  const header = createContentSecurityPolicy(
+    nonce,
+    getWeaverseCsp(request, context.env),
+    {
       checkoutDomain:
         context.env?.PUBLIC_CHECKOUT_DOMAIN || context.env?.PUBLIC_STORE_DOMAIN,
       storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
     },
-  });
+  );
 
   const body = await renderToReadableStream(
-    <NonceProvider>
+    <NonceProvider value={nonce}>
       <ServerRouter
         context={reactRouterContext}
         url={request.url}
