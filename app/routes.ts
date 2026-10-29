@@ -5,11 +5,11 @@ import {
   type RouteConfig,
   route,
 } from "@react-router/dev/routes";
-import { hydrogenRoutes } from "@shopify/hydrogen";
 
-// Manual route definitions can be added to this array, in addition to or instead of using the `flatRoutes` file-based routing convention.
-// See https://remix.run/docs/en/main/guides/routing for more details
-export default hydrogenRoutes([
+// Hydrogen's request handlers answer the routes it owns (`/api/cart`, the
+// Storefront API proxy, checkout and cart permalinks, Customer Account OAuth)
+// in `server.ts`, before React Router sees the request.
+export default [
   route("robots.txt", "routes/seo/robots.ts"),
   route("manifest.webmanifest", "routes/pwa/manifest.webmanifest.ts"),
   ...prefix(":locale?", [
@@ -25,13 +25,10 @@ export default hydrogenRoutes([
     route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
     route("discount/:code", "routes/others/discount-code.tsx"),
     ...prefix("api", [
-      route("cart", "routes/api/cart.ts"),
       route("customer", "routes/api/customer.ts"),
       route("featured-products", "routes/api/featured-products.ts"),
       route("klaviyo", "routes/api/klaviyo.ts"),
-      route("predictive-search", "routes/api/predictive-search.ts"),
       route("products", "routes/api/products.ts"),
-      route(":version/graphql.json", "routes/api/graphql.json.ts"),
       route("product/:productHandle", "routes/api/product.ts"),
       route(
         "collection/:handle/product-count",
@@ -63,9 +60,6 @@ export default hydrogenRoutes([
       route(":productHandle", "routes/products/product.tsx"),
     ]),
     ...prefix("account", [
-      route("authorize", "routes/account/auth/authorize.ts"),
-      route("login", "routes/account/auth/login.ts"),
-      route("logout", "routes/account/auth/logout.ts"),
       layout("routes/account/layout.tsx", [
         index("routes/account/dashboard/index.tsx"),
         route("profile", "routes/account/profile.tsx"),
@@ -81,4 +75,4 @@ export default hydrogenRoutes([
     ]),
     route("*", "routes/catch-all.tsx"),
   ]),
-]) satisfies RouteConfig;
+] satisfies RouteConfig;
