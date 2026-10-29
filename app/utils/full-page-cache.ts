@@ -35,9 +35,10 @@ const WEAVERSE_PREVIEW_PARAMS = [
  * - Weaverse Studio design-mode and revision-preview requests
  *
  * The document itself is safe to share because all personalized state
- * (cart, customer access token) is bootstrapped client-side via /api/cart —
- * see CartStoreSync. Do not reintroduce personalized data into root/route
- * loaders without revisiting this.
+ * (cart, customer access token) is loaded client-side: `CartProvider` renders
+ * without `initialData` and fetches /api/cart after hydration. Do not
+ * reintroduce personalized data into root/route loaders without revisiting
+ * this.
  *
  * Freshness: 300s shared max-age (matching the Weaverse SDK's Builder-data
  * freshness — total worst-case publish-to-live is ~10 minutes; Oxygen's

@@ -1,12 +1,19 @@
-import { getShopAnalytics } from "@shopify/hydrogen";
+import {
+  type ConsentConfig,
+  gql,
+  type ShopifyScriptsI18n,
+  type ShopifyScriptsShop,
+  type StorefrontApi,
+} from "@shopify/hydrogen";
 import type { AppLoadContext, LoaderFunctionArgs } from "react-router";
-import type {
-  LayoutQuery,
-  MenuFragment,
-  SwatchesQuery,
-} from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import type { EnhancedMenu } from "~/types/menu";
+import type {
+  EnhancedMenu,
+  MenuFragment,
+  MenuItemFragment,
+} from "~/types/menu";
+import { CACHE_LONG } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 import {
   isThemeUnavailable,
   neutralThemeWhenUnavailable,
@@ -33,17 +40,15 @@ export async function loadCriticalData({
   return {
     layout,
     seo,
-    shop: getShopAnalytics({
-      storefront,
-      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-    }),
+    shopifyScripts: getShopifyScriptsConfig(context, layout.shop.id),
     consent: {
-      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+      // Shopify's hosted privacy banner (classic `withPrivacyBanner: true`).
+      mode: "default-banner",
+      // Public token, read by the privacy banner (`#shopify-features`) and
+      // the header's `<shopify-store>` web component.
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: true,
-      // localize the privacy banner
-      country: storefront.i18n.country,
-      language: storefront.i18n.language,
+    } satisfies Pick<ConsentConfig, "mode"> & {
+      storefrontAccessToken?: string;
     },
     selectedLocale: storefront.i18n,
     weaverseTheme: neutralThemeWhenUnavailable(
@@ -56,14 +61,54 @@ export async function loadCriticalData({
 }
 
 /**
+ * The `shop` and `i18n` props of `<ShopifyScripts>` (replaces classic
+ * `getShopAnalytics`). Everything here is per-market, never per-shopper, so
+ * the document stays full-page cacheable.
+ *
+ * - `shopId`: the numeric `SHOP_ID` when set, else the Shop GID from the
+ *   layout query (the bus normalizes both to a GID).
+ * - Without a `PUBLIC_STOREFRONT_ID` there is nothing to attribute Hydrogen
+ *   channel analytics to: `""` keeps PerfKit off, the channel is `headless`,
+ *   and Shopify's analytics script isn't loaded.
+ * - `language` is Shopify's provider language (`ZH_TW`, not `ZH`), the same
+ *   `LanguageCode` the Storefront API served this page's content in and the
+ *   one classic `getShopAnalytics`/consent received. Shopify's scripts
+ *   lowercase it into `window.Shopify.locale`, Monorail's content language.
+ */
+function getShopifyScriptsConfig(
+  { storefront, env }: AppLoadContext,
+  shopGid: string,
+) {
+  const storefrontId = env.PUBLIC_STOREFRONT_ID || "";
+  const shop: ShopifyScriptsShop = {
+    shopId: env.SHOP_ID || shopGid,
+    storefrontId,
+    myshopifyDomain: env.PUBLIC_STORE_DOMAIN,
+  };
+  const i18n: ShopifyScriptsI18n = {
+    country: storefront.i18n.country,
+    language: storefront.i18n.language,
+    pathPrefix: storefront.i18n.pathPrefix,
+    currency: storefront.i18n.currency,
+  };
+  return {
+    shop,
+    i18n,
+    channel: storefrontId ? ("hydrogen" as const) : ("headless" as const),
+    shopifyAnalytics: storefrontId !== "",
+  };
+}
+
+/**
  * Load data for rendering content below the fold. This data is deferred and will be
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  *
  * NOTE: keep this loader free of personalized data (cart, customer tokens).
  * Deferred values stream into the HTML document, and the document must stay
- * anonymous for Oxygen's full-page cache (see entry.server.tsx). Personalized
- * state is bootstrapped client-side via /api/cart in CartStoreSync.
+ * anonymous for Oxygen's full-page cache (see entry.server.tsx). The cart
+ * store (`CartProvider`, rendered without `initialData`) loads the cart from
+ * `/api/cart` after hydration.
  */
 export function loadDeferredData(args: LoaderFunctionArgs) {
   return {
@@ -73,14 +118,14 @@ export function loadDeferredData(args: LoaderFunctionArgs) {
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
   const data = await storefront
-    .query<LayoutQuery>(LAYOUT_QUERY, {
+    .graphql(LAYOUT_QUERY, {
       variables: {
         headerMenuHandle: "main-menu",
         footerMenuHandle: "footer",
-        language: storefront.i18n.language,
       },
-      cache: storefront.CacheLong(),
+      cache: CACHE_LONG,
     })
+    .then(unwrapStorefront)
     .catch(console.error);
 
   invariant(data, "No data returned from Shopify API");
@@ -128,9 +173,11 @@ async function getSwatchesConfigs(context: AppLoadContext) {
     return { colors: [], images: [] };
   }
   try {
-    const { metaobjects } = await context.storefront.query<SwatchesQuery>(
-      SWATCHES_QUERY,
-      { variables: { type }, cache: context.storefront.CacheLong() },
+    const { metaobjects } = unwrapStorefront(
+      await context.storefront.graphql(SWATCHES_QUERY, {
+        variables: { type },
+        cache: CACHE_LONG,
+      }),
     );
     const colors: Swatch[] = [];
     const images: Swatch[] = [];
@@ -140,7 +187,8 @@ async function getSwatchesConfigs(context: AppLoadContext) {
         fields.find(({ key }) => key === "image") || {};
       const { value: name } = fields.find(({ key }) => key === "label") || {};
       if (imageRef) {
-        const url = imageRef?.image?.url;
+        const url =
+          imageRef.__typename === "MediaImage" ? imageRef.image?.url : null;
         if (url) {
           images.push({ id, name, value: url });
         }
@@ -183,9 +231,7 @@ function parseMenu(
 */
 function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
   return (
-    item:
-      | MenuFragment["items"][number]
-      | MenuFragment["items"][number]["items"][number],
+    item: MenuFragment["items"][number] | MenuItemFragment,
   ):
     | EnhancedMenu["items"][0]
     | EnhancedMenu["items"][number]["items"][0]
@@ -292,37 +338,7 @@ function resolveToFromType(
   }
 }
 
-const LAYOUT_QUERY = `#graphql
-  query layout(
-    $language: LanguageCode
-    $headerMenuHandle: String!
-    $footerMenuHandle: String!
-  ) @inContext(language: $language) {
-    shop {
-      ...Shop
-    }
-    headerMenu: menu(handle: $headerMenuHandle) {
-      ...Menu
-    }
-    footerMenu: menu(handle: $footerMenuHandle) {
-      ...Menu
-    }
-  }
-  fragment Shop on Shop {
-    id
-    name
-    description
-    primaryDomain {
-      url
-    }
-    brand {
-      logo {
-        image {
-          url
-        }
-      }
-    }
-  }
+const MENU_ITEM_FRAGMENT = gql(`
   fragment MenuItem on MenuItem {
     id
     resourceId
@@ -351,31 +367,70 @@ const LAYOUT_QUERY = `#graphql
     type
     url
   }
+`);
 
-  fragment ChildMenuItem on MenuItem {
-    ...MenuItem
-  }
-  fragment ParentMenuItem2 on MenuItem {
-    ...MenuItem
-    items {
-      ...ChildMenuItem
-    }
-  }
-  fragment ParentMenuItem on MenuItem {
-    ...MenuItem
-    items {
-      ...ParentMenuItem2
-    }
-  }
+// Three levels deep: parent → child → grandchild, as the classic
+// `ParentMenuItem`/`ParentMenuItem2`/`ChildMenuItem` fragments selected.
+const MENU_FRAGMENT = gql(
+  `
   fragment Menu on Menu {
     id
     items {
-      ...ParentMenuItem
+      ...MenuItem
+      items {
+        ...MenuItem
+        items {
+          ...MenuItem
+        }
+      }
     }
   }
-` as const;
+`,
+  [MENU_ITEM_FRAGMENT],
+);
 
-const SWATCHES_QUERY = `#graphql
+const SHOP_FRAGMENT = gql(`
+  fragment Shop on Shop {
+    id
+    name
+    description
+    primaryDomain {
+      url
+    }
+    brand {
+      logo {
+        image {
+          url
+        }
+      }
+    }
+  }
+`);
+
+const LAYOUT_QUERY = gql(
+  `
+  query layout(
+    $language: LanguageCode
+    $headerMenuHandle: String!
+    $footerMenuHandle: String!
+  ) @inContext(language: $language) {
+    shop {
+      ...Shop
+    }
+    headerMenu: menu(handle: $headerMenuHandle) {
+      ...Menu
+    }
+    footerMenu: menu(handle: $footerMenuHandle) {
+      ...Menu
+    }
+  }
+`,
+  [SHOP_FRAGMENT, MENU_FRAGMENT],
+);
+
+export type LayoutQuery = StorefrontApi.ResultOf<typeof LAYOUT_QUERY>;
+
+const SWATCHES_QUERY = gql(`
   query swatches($type: String!) {
     metaobjects(first: 250, type: $type) {
       nodes {
@@ -384,6 +439,7 @@ const SWATCHES_QUERY = `#graphql
           key
           value
           reference {
+            __typename
             ... on MediaImage {
               image {
                 id
@@ -398,4 +454,4 @@ const SWATCHES_QUERY = `#graphql
       }
     }
   }
-` as const;
+`);

@@ -1,10 +1,12 @@
 import "@fontsource-variable/cabin"; // Supports weights 400-700
 import "@fontsource-variable/newsreader"; // Supports weights 200-900
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import type { CartReturn, SeoConfig } from "@shopify/hydrogen";
-import { Analytics, getSeoMeta } from "@shopify/hydrogen";
-import type { WeaverseImage } from "@weaverse/hydrogen";
-import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import { ShopifyScripts } from "@shopify/hydrogen/react";
+import type { WeaverseImage } from "@weaverse/hydrogen/react-router";
+import {
+  useThemeSettings,
+  withWeaverse,
+} from "@weaverse/hydrogen/react-router";
 import type { CSSProperties } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
@@ -16,15 +18,16 @@ import {
   Scripts,
   ScrollRestoration,
   useLocation,
+  useNavigate,
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
 import { useNonce } from "~/utils/csp";
+import { getSeoMeta, type SeoConfig } from "~/utils/seo-meta";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
-import { CartStoreSync } from "./components/cart/cart-sync";
-import { useCartStore } from "./components/cart/store";
+import { CartProvider } from "./components/cart/cart-store";
 import { IconSprite } from "./components/icon-sprite";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
@@ -33,6 +36,7 @@ import {
   ScrollingAnnouncement,
 } from "./components/layout/scrolling-announcement";
 import { PwaInstallHint } from "./components/pwa-install-hint";
+import { CartAnalytics, PageView } from "./components/root/analytics-views";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError, WeaverseFailure } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
@@ -47,6 +51,7 @@ import { rootHeaders } from "./utils/cache";
 import { getPublicEnv } from "./utils/env";
 import { DEFAULT_LOCALE } from "./utils/locale";
 import { cdnSize } from "./utils/pwa";
+import { routeTemplates } from "./utils/route-templates";
 import {
   DEGRADED_HEADERS,
   type WeaverseRouteFailure,
@@ -137,6 +142,7 @@ export const Layout = withWeaverse(function RootLayout({
   children: React.ReactNode;
 }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const publicEnv = data?.publicEnv;
@@ -170,10 +176,6 @@ export const Layout = withWeaverse(function RootLayout({
   // apps), so don't advertise the PWA at all until one exists.
   const pwaActive = Boolean(pwaEnabled && pwaIconUrl);
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
-  // Cart is bootstrapped client-side (see CartStoreSync) so the SSR document
-  // stays anonymous and Oxygen can full-page cache it. The provider re-renders
-  // as the store updates, so cart_updated analytics still fire on mutations.
-  const serverCart = useCartStore((state) => state.serverCart);
 
   // Bypass Weaverse theme layout for Hydrogen dev tools
   // See: https://github.com/Weaverse/pilot/issues/321
@@ -189,6 +191,7 @@ export const Layout = withWeaverse(function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        {/* storefront-banner.js reads the public token from this tag. */}
         <script
           id="shopify-features"
           type="application/json"
@@ -200,19 +203,27 @@ export const Layout = withWeaverse(function RootLayout({
           }}
         />
         {/*
-         * Pre-initialize window.Shopify as a configurable plain object BEFORE
-         * the Shopify account.js web component loads. account.js defines
-         * window.Shopify as non-configurable, which later breaks Hydrogen's
-         * <ShopifyAnalytics> when it calls Object.defineProperty(window, 'Shopify', ...).
-         * Setting it first via assignment ensures account.js reuses this object.
+         * Shopify's runtime: the `window.Shopify` bootstrap, the analytics
+         * bus (`window.Shopify.analytics`), the consent/privacy banner,
+         * Shopify analytics and Standard Actions. Rendered first in the head
+         * so the bus exists before any route publishes, and so
+         * `window.Shopify` is created by plain assignment before the header
+         * lazy-loads account.js (which would otherwise define it as
+         * non-configurable). It starts once with its first props; switching
+         * market is a document navigation, so the market never goes stale.
          */}
-        <script
-          nonce={nonce}
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: "window.Shopify = window.Shopify || {};",
-          }}
-        />
+        {data ? (
+          <ShopifyScripts
+            nonce={nonce}
+            shop={data.shopifyScripts.shop}
+            i18n={data.shopifyScripts.i18n}
+            analytics={{ channel: data.shopifyScripts.channel }}
+            shopifyAnalytics={data.shopifyScripts.shopifyAnalytics}
+            consent={{ mode: data.consent.mode }}
+            routes={routeTemplates}
+            navigate={navigate}
+          />
+        ) : null}
         {pwaActive ? (
           <>
             <link rel="manifest" href="/manifest.webmanifest" />
@@ -263,15 +274,13 @@ export const Layout = withWeaverse(function RootLayout({
       >
         <IconSprite />
         {data ? (
-          <Analytics.Provider
-            // CartApiQueryFragment is the same runtime shape cart.get()
-            // returned before (pilot's custom cart fragment) — the nominal
-            // CartReturn type just demands `metafields` we never query.
-            cart={serverCart as unknown as CartReturn}
-            shop={data.shop}
-            consent={data.consent}
-          >
-            <CartStoreSync />
+          // No `initialData`: the cart loads from `/api/cart` after hydration,
+          // so the SSR document stays anonymous and Oxygen can full-page cache
+          // it.
+          <CartProvider>
+            <CustomAnalytics />
+            <PageView />
+            <CartAnalytics />
             <TooltipProvider disableHoverableContent>
               <div
                 className="flex min-h-screen flex-col"
@@ -291,8 +300,7 @@ export const Layout = withWeaverse(function RootLayout({
               </div>
               {shouldShowNewsletterPopup && <NewsletterPopup />}
             </TooltipProvider>
-            <CustomAnalytics />
-          </Analytics.Provider>
+          </CartProvider>
         ) : (
           children
         )}
