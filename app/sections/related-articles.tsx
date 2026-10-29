@@ -1,9 +1,9 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
-import type { ArticleFragment } from "storefront-api.generated";
 import Heading from "~/components/heading";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import type { ArticleFragment } from "~/routes/blogs/article";
 import { getImageLoadingPriority } from "~/utils/image";
 import { ArticleCard, type ArticleCardProps } from "./blogs";
 

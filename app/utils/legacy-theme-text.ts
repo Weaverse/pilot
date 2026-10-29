@@ -1,4 +1,4 @@
-import { getNestedKey } from "@weaverse/hydrogen";
+import { getNestedKey } from "@weaverse/hydrogen/react-router";
 
 /**
  * Legacy theme-setting name → the translation key that replaced it.

@@ -1,9 +1,9 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   IMAGES_PLACEHOLDERS,
   useParentInstance,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
@@ -48,7 +48,7 @@ interface CollectionItemsData
   buttonText: string;
 }
 
-function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
+function CollectionItems(props: CollectionItemsData & WeaverseComponentProps) {
   const {
     gridSize,
     gap,
@@ -190,6 +190,7 @@ const COLLECTION_PLACEHOLDER: FeaturedCollectionsLoaderData[0] = {
   id: "gid://shopify/Collection/1234567890",
   title: "Collection title",
   handle: "collection-handle",
+  onlineStoreUrl: null,
   description: "Collection description",
   image: {
     id: "gid://shopify/CollectionImage/1234567890",

@@ -1,4 +1,7 @@
-import type { HydrogenComponentProps, WeaverseVideo } from "@weaverse/hydrogen";
+import type {
+  WeaverseComponentProps,
+  WeaverseVideo,
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import type { OverlayProps } from "~/components/overlay";
 import type { variants } from "./styles";
@@ -22,6 +25,6 @@ export interface HeroVideoData
   gap?: number;
 }
 
-export interface HeroVideoProps extends HeroVideoData, HydrogenComponentProps {
+export interface HeroVideoProps extends HeroVideoData, WeaverseComponentProps {
   ref: React.Ref<HTMLElement>;
 }

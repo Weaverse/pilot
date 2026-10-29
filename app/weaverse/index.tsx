@@ -1,7 +1,7 @@
 import {
   WeaverseHydrogenRoot,
   type WeaverseLoaderData,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { GenericError } from "~/components/root/generic-error";
 import { components } from "./components";
 
