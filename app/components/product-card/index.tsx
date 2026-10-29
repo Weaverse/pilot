@@ -76,6 +76,9 @@ export function ProductCard({
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariantFragment | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  // Only the clicked card may own the shared view-transition-name: other cards
+  // for the same product (e.g. related products on the PDP) would duplicate it.
+  const [isClicked, setIsClicked] = useState(false);
   const productPageHref = usePrefixPathWithLocale(
     `/products/${product.handle}`,
   );
@@ -131,6 +134,7 @@ export function ProductCard({
         <Link
           to={`/products/${product.handle}?${params.toString()}`}
           prefetch="intent"
+          onClick={() => setIsClicked(true)}
           className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-md"
         >
           {/* Loading skeleton overlay */}
@@ -141,7 +145,9 @@ export function ProductCard({
               pcardShowImageOnHover &&
                 secondImage &&
                 "transition-opacity duration-300 group-hover:opacity-50",
-              isTransitioning && "[&_img]:[view-transition-name:image-expand]",
+              isClicked &&
+                isTransitioning &&
+                "[&_img]:[view-transition-name:image-expand]",
             ])}
             sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
             data={image}
