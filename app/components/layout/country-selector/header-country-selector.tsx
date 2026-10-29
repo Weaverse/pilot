@@ -1,5 +1,5 @@
 import * as Popover from "@radix-ui/react-popover";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Icon } from "~/components/icon";
@@ -10,13 +10,8 @@ import { MarketForm } from "./market-form";
 import { useCountrySelector } from "./use-country-selector";
 
 export function HeaderCountrySelector() {
-  const {
-    selectedLocale,
-    groupedCountries,
-    cartRoute,
-    getRedirectUrl,
-    buyerIdentityInput,
-  } = useCountrySelector();
+  const { selectedLocale, groupedCountries, getRedirectUrl } =
+    useCountrySelector();
   const { countryNameDisplay } = useThemeSettings<ThemeSettings>();
 
   return (
@@ -61,9 +56,7 @@ export function HeaderCountrySelector() {
                     <MarketForm
                       key={locale.pathPrefix}
                       locale={locale}
-                      cartRoute={cartRoute}
                       redirectTo={getRedirectUrl(locale)}
-                      buyerIdentityInput={buyerIdentityInput(locale)}
                       label={`Select ${locale.label}`}
                       className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left transition hover:bg-neutral-200"
                     >
@@ -129,9 +122,7 @@ export function HeaderCountrySelector() {
                             ) : null}
                             <MarketForm
                               locale={locale}
-                              cartRoute={cartRoute}
                               redirectTo={getRedirectUrl(locale)}
-                              buyerIdentityInput={buyerIdentityInput(locale)}
                               label={`Select ${locale.label} in ${locale.languageLabel}`}
                               className={cn(
                                 "cursor-pointer underline-offset-4 transition",

@@ -1,50 +1,52 @@
-import {
-  CartForm,
-  Money,
-  type OptimisticCart,
-  useOptimisticData,
-} from "@shopify/hydrogen";
 import clsx from "clsx";
-import type { FetcherWithComponents } from "react-router";
-import type { CartApiQueryFragment } from "storefront-api.generated";
+import { useId } from "react";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { Money } from "~/components/money";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import { lineDiscountTotal, toMoney } from "~/utils/cart";
 import { calculateAspectRatio } from "~/utils/image";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
-import { useCartFetcherSync } from "./cart-sync";
-import { useCartStore } from "./store";
+import { type CartLineData, useCart, useCartForm } from "./cart-store";
 
-type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
+/**
+ * A line the shopper just added has an `optimistic:` ID until Shopify confirms
+ * it. It has no real line to update or remove yet, and no server price.
+ */
+export function isOptimisticLine(line: CartLineData) {
+  return line.id.startsWith("optimistic:");
+}
 
-export type CartLineOptimisticData = {
-  quantity?: number;
-};
+function isDefaultVariant(
+  selectedOptions: { name: string; value: string }[] | undefined,
+) {
+  if (selectedOptions?.length !== 1) {
+    return false;
+  }
+  const { name, value } = selectedOptions[0];
+  return name === "Title" && value === "Default Title";
+}
 
 export function CartLineItem({
   line,
+  childLines,
   layout,
+  onClose,
 }: {
-  line: CartLine;
+  line: CartLineData;
+  childLines?: CartLineData[];
   layout: CartLayoutType;
+  onClose?: () => void;
 }) {
-  const { close: closeCartDrawer } = useCartStore();
-  const optimisticData = useOptimisticData<CartLineOptimisticData>(line?.id);
-
-  if (!line?.id) {
-    return null;
-  }
-
-  const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
-  // Workaround: line.isOptimistic is only set for newly added lines,
-  // so fall back to checking whether useOptimisticData has pending data.
-  const isOptimistic =
-    lineOptimistic ?? Object.keys(optimisticData ?? {}).length > 0;
+  const errorId = useId();
+  const isNew = isOptimisticLine(line);
+  const isPending = useCart((state) => state.pending.lines.has(line.id));
+  const lineError = useCart((state) => state.errors.lines.get(line.id));
+  const errorMessage = lineError?.userErrors[0]?.message;
+  const { quantity, merchandise } = line;
 
   if (typeof quantity === "undefined" || !merchandise?.product) {
     return null;
@@ -59,11 +61,9 @@ export function CartLineItem({
     }
     url += `?${params.toString()}`;
   }
-  let isDefaultVariant = false;
-  if (selectedOptions?.length === 1) {
-    const { name, value } = selectedOptions[0];
-    isDefaultVariant = name === "Title" && value === "Default Title";
-  }
+  const sellingPlanName = (
+    line.sellingPlanAllocation?.sellingPlan as { name?: string } | undefined
+  )?.name;
 
   return (
     <li className="flex gap-4">
@@ -82,22 +82,40 @@ export function CartLineItem({
       <div className="flex grow flex-col gap-3">
         <div className="flex justify-between gap-4">
           <div className="flex flex-col gap-1">
-            {product?.handle ? (
-              <Link to={url} className="inline-block" onClick={closeCartDrawer}>
-                <RevealUnderline>{product?.title || ""}</RevealUnderline>
+            {product.handle ? (
+              <Link to={url} className="inline-block" onClick={onClose}>
+                <RevealUnderline>{product.title || ""}</RevealUnderline>
               </Link>
             ) : (
-              <h5 className="text-base">{product?.title || ""}</h5>
+              <h5 className="text-base">{product.title || ""}</h5>
             )}
-            {!isDefaultVariant && (
+            {!isDefaultVariant(selectedOptions) && (
               <div className="space-y-0.5 text-sm text-gray-500">{title}</div>
             )}
+            {sellingPlanName && (
+              <div className="text-sm text-gray-500">{sellingPlanName}</div>
+            )}
+            {childLines?.length ? (
+              <ul
+                className="space-y-0.5 text-sm text-gray-500"
+                aria-label={`Items included with ${product.title}`}
+              >
+                {childLines.map((child) => (
+                  <li key={child.id}>
+                    {child.quantity} × {child.merchandise?.product.title}
+                    {child.merchandise &&
+                      !isDefaultVariant(child.merchandise.selectedOptions) &&
+                      ` – ${child.merchandise.title}`}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
           {layout === "drawer" && (
             <ItemRemoveButton
-              lineId={id}
+              lineId={line.id}
               className="-mt-1.5 -mr-2"
-              disabled={isOptimistic}
+              disabled={isNew}
             />
           )}
         </div>
@@ -107,12 +125,22 @@ export function CartLineItem({
             layout === "drawer" && "justify-between",
           )}
         >
-          <CartLineQuantityAdjust line={line} />
+          <CartLineQuantityAdjust
+            line={line}
+            disabled={isNew}
+            isPending={isPending}
+            errorId={errorMessage ? errorId : undefined}
+          />
           {layout === "page" && (
-            <ItemRemoveButton lineId={id} disabled={isOptimistic} />
+            <ItemRemoveButton lineId={line.id} disabled={isNew} />
           )}
-          <CartLinePrice line={line} isOptimistic={isOptimistic} />
+          <CartLinePrice line={line} isNew={isNew} isPending={isPending} />
         </div>
+        {errorMessage && (
+          <p id={errorId} role="alert" className="text-sm text-red-600">
+            {errorMessage}
+          </p>
+        )}
       </div>
     </li>
   );
@@ -123,63 +151,41 @@ function ItemRemoveButton({
   className,
   disabled = false,
 }: {
-  lineId: CartLine["id"];
+  lineId: string;
   className?: string;
   disabled?: boolean;
 }) {
-  const cartRoute = usePrefixPathWithLocale("/cart");
+  const { formProps, register } = useCartForm();
 
   return (
-    <CartForm
-      route={cartRoute}
-      action={CartForm.ACTIONS.LinesRemove}
-      inputs={{ lineIds: [lineId] }}
-      fetcherKey="cart-line-remove"
-    >
-      {(fetcher: FetcherWithComponents<any>) => (
-        <ItemRemoveButtonInner
-          fetcher={fetcher}
-          className={className}
-          disabled={disabled}
-        />
-      )}
-    </CartForm>
-  );
-}
-
-function ItemRemoveButtonInner({
-  fetcher,
-  className,
-  disabled,
-}: {
-  fetcher: FetcherWithComponents<any>;
-  className?: string;
-  disabled: boolean;
-}) {
-  useCartFetcherSync(fetcher);
-  return (
-    <button
-      className={clsx(
-        "disabled:text-body-subtle flex h-8 w-8 items-center justify-center border-none disabled:cursor-not-allowed",
-        className,
-      )}
-      type="submit"
-      disabled={disabled}
-    >
-      <span className="sr-only">Remove</span>
-      <Icon name="trash" aria-hidden="true" className="size-4.5" />
-    </button>
+    <form {...formProps()}>
+      <input type="hidden" {...register("lineId", { value: lineId })} />
+      <button
+        className={clsx(
+          "disabled:text-body-subtle flex h-8 w-8 items-center justify-center border-none disabled:cursor-not-allowed",
+          className,
+        )}
+        type="submit"
+        {...register("remove")}
+        disabled={disabled}
+      >
+        <span className="sr-only">Remove</span>
+        <Icon name="trash" aria-hidden="true" className="size-4.5" />
+      </button>
+    </form>
   );
 }
 
 function CartLinePrice({
   line,
   priceType = "regular",
-  isOptimistic,
+  isNew,
+  isPending,
 }: {
-  line: CartLine;
+  line: CartLineData;
   priceType?: "regular" | "compareAt";
-  isOptimistic?: boolean;
+  isNew?: boolean;
+  isPending?: boolean;
 }) {
   if (!(line?.cost?.amountPerQuantity && line?.cost?.totalAmount)) {
     return null;
@@ -194,7 +200,8 @@ function CartLinePrice({
     return null;
   }
 
-  if (isOptimistic) {
+  // A just-added line has no server price yet.
+  if (isNew) {
     return <Skeleton as="span" className="ml-auto h-4 w-16 rounded-md" />;
   }
 
@@ -209,7 +216,12 @@ function CartLinePrice({
       line.cost.totalAmount.currencyCode,
     );
     return (
-      <span className="ml-auto flex flex-col items-end gap-0.5 leading-tight">
+      <span
+        className={clsx(
+          "ml-auto flex flex-col items-end gap-0.5 leading-tight",
+          isPending && "opacity-50",
+        )}
+      >
         <Money
           withoutTrailingZeros
           as="span"
@@ -221,7 +233,13 @@ function CartLinePrice({
     );
   }
 
+  // The previous total stays visible, dimmed, until Shopify confirms the change.
   return (
-    <Money withoutTrailingZeros as="span" data={moneyV2} className="ml-auto" />
+    <Money
+      withoutTrailingZeros
+      as="span"
+      data={moneyV2}
+      className={clsx("ml-auto", isPending && "opacity-50")}
+    />
   );
 }

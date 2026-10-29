@@ -1,7 +1,9 @@
+import { cartQueries, createCartCookie, getCartId } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
 import { localizedPathForRequest } from "~/utils/locale";
 import { safeRedirectPath } from "~/utils/safe-redirect";
+import { unwrapStorefront } from "~/utils/storefront";
 
 /**
  * Automatically applies a discount found on the url
@@ -16,7 +18,7 @@ import { safeRedirectPath } from "~/utils/safe-redirect";
  * @preserve
  */
 export async function loader({ request, context, params }: LoaderFunctionArgs) {
-  const { cart } = context;
+  const { storefront } = context;
   // N.B. This route will probably be removed in the future.
   const { code } = params;
 
@@ -52,8 +54,35 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
     return redirect(redirectUrl);
   }
 
-  const result = await cart.updateDiscountCodes([code]);
-  const headers = cart.setCartId(result.cart.id);
+  // An existing cart gets the code; otherwise a cart is created with it, in
+  // the shopper's market.
+  const cartId = getCartId(request);
+  const updatedCart = cartId
+    ? unwrapStorefront(
+        await storefront.graphql(cartQueries.cartDiscountCodesUpdate, {
+          variables: { cartId, discountCodes: [code] },
+        }),
+      ).cartDiscountCodesUpdate?.cart
+    : unwrapStorefront(
+        await storefront.graphql(cartQueries.cartCreate, {
+          variables: {
+            input: {
+              discountCodes: [code],
+              buyerIdentity: {
+                countryCode: storefront.i18n.country,
+                // Classic Hydrogen's `cart.create` attached the signed-in
+                // customer, so checkout knows them.
+                customerAccessToken: await context.customerAccount
+                  .getAccessToken()
+                  .catch(() => undefined),
+              },
+            },
+          },
+        }),
+      ).cartCreate?.cart;
+  const headers = updatedCart
+    ? new Headers({ "Set-Cookie": createCartCookie(updatedCart.id) })
+    : undefined;
 
   // Using set-cookie on a 303 redirect will not work if the domain origin have port number (:3000)
   // If there is no cart id and a new cart id is created in the progress, it will not be set in the cookie

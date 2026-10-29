@@ -8,13 +8,8 @@ import { MarketForm } from "./market-form";
 import { useCountrySelector } from "./use-country-selector";
 
 export function FooterCountrySelector() {
-  const {
-    selectedLocale,
-    groupedCountries,
-    cartRoute,
-    getRedirectUrl,
-    buyerIdentityInput,
-  } = useCountrySelector();
+  const { selectedLocale, groupedCountries, getRedirectUrl } =
+    useCountrySelector();
 
   return (
     <div className="grid w-80 gap-4">
@@ -51,9 +46,7 @@ export function FooterCountrySelector() {
                     <MarketForm
                       key={locale.pathPrefix}
                       locale={locale}
-                      cartRoute={cartRoute}
                       redirectTo={getRedirectUrl(locale)}
-                      buyerIdentityInput={buyerIdentityInput(locale)}
                       label={`Select ${locale.label}`}
                       className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-white transition hover:bg-neutral-600"
                     >
@@ -119,9 +112,7 @@ export function FooterCountrySelector() {
                             ) : null}
                             <MarketForm
                               locale={locale}
-                              cartRoute={cartRoute}
                               redirectTo={getRedirectUrl(locale)}
-                              buyerIdentityInput={buyerIdentityInput(locale)}
                               label={`Select ${locale.label} in ${locale.languageLabel}`}
                               className={cn(
                                 "cursor-pointer underline-offset-4 transition",
