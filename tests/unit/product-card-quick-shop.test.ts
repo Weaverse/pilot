@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { TranslationProvider, TranslationStore } from "@weaverse/hydrogen";
+import {
+  TranslationProvider,
+  TranslationStore,
+} from "@weaverse/hydrogen/react-router";
 import { createElement, type ReactElement } from "react";
 import { loadComponent, renderInApp } from "../support/render-app";
 

@@ -1,12 +1,6 @@
 import { expect, test } from "@playwright/test";
-import type { AppLoadContext } from "react-router";
-import { createHydrogenRouterContext } from "../../app/.server/context";
 import { apiRequestsFrom, closeSharedBrowser } from "../support/browser-render";
-import {
-  installWorkerCaches,
-  TEST_ENV,
-  TEST_EXECUTION_CONTEXT,
-} from "../support/hydrogen-env";
+import { createTestContext } from "../support/hydrogen-env";
 
 /**
  * Internal API requests carry the market in their own URL, or they lose it.
@@ -18,8 +12,11 @@ import {
  * pricing, availability and variants — rendered into a Chinese page, with a 200
  * and nothing in any log.
  *
- * `Referer` is not a fallback: it is absent on same-origin requests under
- * several referrer policies and is never authoritative for routing.
+ * The `Referer` is only a last resort: `resolveRequestLocale` reads it for
+ * unprefixed `/api/*` paths because Hydrogen's handlers (`/api/cart`, ...)
+ * cannot carry a prefix, but it is absent on same-origin requests under
+ * several referrer policies. A caller that can localize its URL must, and an
+ * unprefixed URL without a `Referer` is the default market.
  *
  * These mount the real components in a real browser and record the requests
  * that leave the page, then resolve those exact URLs through the real request
@@ -31,21 +28,12 @@ import {
 async function localeAtApi(
   url: string,
 ): Promise<{ language: string; country: string }> {
-  const restoreCaches = installWorkerCaches();
-  try {
-    const context = (await createHydrogenRouterContext(
-      new Request(url),
-      TEST_ENV,
-      TEST_EXECUTION_CONTEXT,
-    )) as unknown as AppLoadContext;
+  const context = await createTestContext(url);
 
-    return {
-      language: context.storefront.i18n.language,
-      country: context.storefront.i18n.country,
-    };
-  } finally {
-    restoreCaches();
-  }
+  return {
+    language: context.storefront.i18n.language,
+    country: context.storefront.i18n.country,
+  };
 }
 
 /** The minimum collection shape the card reads while rendering. */

@@ -28,19 +28,19 @@ test("builds its market list without a client fetch", async () => {
 
 test("switches market with a document navigation", async () => {
   const form = await readFile(new URL("market-form.tsx", SELECTOR_DIR), "utf8");
-  const hook = await readFile(
-    new URL("use-country-selector.ts", SELECTOR_DIR),
-    "utf8",
-  );
 
   // A client-side navigation keeps the cached Weaverse page instance for the
-  // previous market, so its sections keep rendering under the new locale.
-  expect(form).toContain("reloadDocument");
-  expect(form).toContain('name="cartFormInput"');
+  // previous market, so its sections keep rendering under the new locale. A
+  // plain `<form>` posting outside React Router is a document navigation.
+  expect(form).not.toMatch(/import \{[^}]*\bForm\b[^}]*\} from "react-router"/);
+  expect(form).toContain(
+    '<form method="post" action={CART_BUYER_IDENTITY_PATH}>',
+  );
   expect(form).toContain('name="redirectTo"');
   // Buyer identity must move in the same request that changes the URL,
-  // otherwise pricing and checkout stay on the old market.
-  expect(hook).toContain("BuyerIdentityUpdate");
+  // otherwise pricing and checkout stay on the old market. The endpoint's
+  // behavior is asserted in `cart-market.test.ts`.
+  expect(form).toContain('name="countryCode" value={locale.country}');
 });
 
 test("the submit control outlives the popover that holds it", async () => {

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { getSeoMeta } from "@shopify/hydrogen";
-import { getWeaverseSeoMeta } from "@weaverse/hydrogen";
+import { getSeoMeta } from "../../app/utils/seo-meta";
+import { getWeaverseSeoMeta } from "@weaverse/hydrogen/react-router";
 import type { MetaDescriptor } from "react-router";
 import { withWeaverseSeo } from "../../app/utils/seo";
 
