@@ -33,14 +33,23 @@ export function getWeaverseCsp(
       "*.google-analytics.com",
       ...weaverseHosts,
     ],
-    styleSrc: weaverseHosts,
+    styleSrc: ["https://fonts.googleapis.com", ...weaverseHosts],
+    // Google Fonts stylesheets (added by third-party widgets) load their
+    // font files from fonts.gstatic.com.
+    fontSrc: [
+      "'self'",
+      "data:",
+      "https://cdn.shopify.com",
+      "https://fonts.gstatic.com",
+    ],
     // `scriptSrc` replaces `defaultSrc` for scripts, so it lists every script
     // origin itself: the Studio bridge (loaded without a nonce), YouTube's
-    // iframe API and Google Tag Manager.
+    // iframe API, Hydrogen's 3D model viewer and Google Tag Manager.
     scriptSrc: [
       "'self'",
       "https://cdn.shopify.com",
       "https://www.youtube.com",
+      "https://unpkg.com",
       "*.googletagmanager.com",
       "*.google-analytics.com",
       ...weaverseHosts,
@@ -48,6 +57,8 @@ export function getWeaverseCsp(
   };
   if (isDesignMode) {
     updatedCsp.frameAncestors = ["*"];
+    // The Studio bridge rebuilds schema `condition` functions from strings.
+    (updatedCsp.scriptSrc as string[]).push("'unsafe-eval'");
   }
   return updatedCsp;
 }
