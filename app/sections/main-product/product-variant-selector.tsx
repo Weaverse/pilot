@@ -1,14 +1,12 @@
 import {
-  getAdjacentAndFirstAvailableVariants,
-  getProductOptions,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { ProductVariants } from "./variants";
 
-interface ProductVariantSelectorProps extends HydrogenComponentProps {}
+interface ProductVariantSelectorProps extends WeaverseComponentProps {}
 
 export default function ProductVariantSelector(
   props: ProductVariantSelectorProps,
@@ -16,26 +14,13 @@ export default function ProductVariantSelector(
   const { ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
-  const selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
-
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
-
   if (!product) {
     return null;
   }
 
   return (
     <div {...rest}>
-      <ProductVariants
-        productOptions={productOptions}
-        selectedVariant={selectedVariant}
-      />
+      <ProductVariants product={product} />
     </div>
   );
 }

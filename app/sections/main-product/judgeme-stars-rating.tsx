@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -9,7 +12,7 @@ import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import type { JudgemeStarsRatingData } from "~/types/judgeme";
 
-interface JudgemeStarsRatingProps extends Partial<HydrogenComponentProps> {
+interface JudgemeStarsRatingProps extends Partial<WeaverseComponentProps> {
   ref?: React.Ref<HTMLDivElement>;
   productHandle?: string;
   onClickEvent?: "do-nothing" | "scroll-to-section";

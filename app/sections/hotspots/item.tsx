@@ -1,13 +1,14 @@
 import {
-  type ComponentLoaderArgs,
+  type WeaverseComponentLoaderArgs,
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   type WeaverseProduct,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { CSSProperties } from "react";
-import type { ProductQuery } from "storefront-api.generated";
 import { Icon } from "~/components/icon";
 import { PRODUCT_QUERY } from "~/graphql/queries";
+import { CACHE_DEFAULT } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 import { ProductPopup } from "./product-popup";
 
 export interface HotspotsItemData {
@@ -24,7 +25,7 @@ export interface HotspotsItemData {
 
 interface HotspotsItemProps
   extends
-    HydrogenComponentProps<Awaited<ReturnType<typeof loader>>>,
+    WeaverseComponentProps<Awaited<ReturnType<typeof loader>>>,
     HotspotsItemData {}
 
 const ICONS = {
@@ -87,14 +88,16 @@ export default function HotspotsItem(props: HotspotsItemProps) {
   );
 }
 
-export const loader = async (args: ComponentLoaderArgs<HotspotsItemData>) => {
+export const loader = async (
+  args: WeaverseComponentLoaderArgs<HotspotsItemData>,
+) => {
   const { weaverse, data } = args;
   const { storefront } = weaverse;
   if (!data?.product) {
     return null;
   }
   const productHandle = data.product.handle;
-  const { product } = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
+  const result = await storefront.graphql(PRODUCT_QUERY, {
     // `$country`/`$language` come from the storefront client's closure, which
     // holds the Shopify provider enum. `weaverse.storefront.i18n` is
     // deliberately the market's public identity for the Translation Manager,
@@ -103,9 +106,10 @@ export const loader = async (args: ComponentLoaderArgs<HotspotsItemData>) => {
       handle: productHandle,
       selectedOptions: [],
     },
+    cache: CACHE_DEFAULT,
   });
 
-  return { product };
+  return { product: unwrapStorefront(result).product };
 };
 
 export const schema = createSchema({

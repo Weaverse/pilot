@@ -1,49 +1,40 @@
-import type { LoaderFunction } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
 import { data } from "react-router";
-import type {
-  ProductQuery,
-  ProductVariantsQuery,
-} from "storefront-api.generated";
 import { PRODUCT_QUERY, PRODUCT_VARIANTS_QUERY } from "~/graphql/queries";
+import { CACHE_DEFAULT } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
-export const loader: LoaderFunction = async ({ context, params }) => {
+const EMPTY = { shop: null, product: null, variants: [] };
+
+/** Product data for quick shop, in the market of the (prefixed) request path. */
+export async function loader({ context, params }: LoaderFunctionArgs) {
   try {
     const { storefront } = context;
     const { productHandle } = params;
 
     if (!productHandle) {
-      return data({
-        shop: null,
-        product: null,
-        variants: [],
-        storeDomain: null,
-      });
+      return data(EMPTY);
     }
-
-    const variables = {
-      handle: productHandle,
-      language: storefront.i18n.language,
-      country: storefront.i18n.country,
-    };
 
     const [result, variantsResult] = await Promise.all([
       storefront
-        .query<ProductQuery>(PRODUCT_QUERY, {
-          variables: { ...variables, selectedOptions: [] },
+        .graphql(PRODUCT_QUERY, {
+          variables: { handle: productHandle, selectedOptions: [] },
+          cache: CACHE_DEFAULT,
         })
+        .then(unwrapStorefront)
         .catch(() => null),
       storefront
-        .query<ProductVariantsQuery>(PRODUCT_VARIANTS_QUERY, { variables })
+        .graphql(PRODUCT_VARIANTS_QUERY, {
+          variables: { handle: productHandle },
+          cache: CACHE_DEFAULT,
+        })
+        .then(unwrapStorefront)
         .catch(() => null),
     ]);
 
     if (!result) {
-      return data({
-        shop: null,
-        product: null,
-        variants: [],
-        storeDomain: null,
-      });
+      return data(EMPTY);
     }
 
     const { product, shop } = result;
@@ -51,15 +42,9 @@ export const loader: LoaderFunction = async ({ context, params }) => {
       shop,
       product,
       variants: variantsResult?.product?.variants?.nodes ?? [],
-      storeDomain: shop?.primaryDomain?.url || null,
     });
   } catch (err) {
     console.error("[Error in product API loader]", err);
-    return data({
-      shop: null,
-      product: null,
-      variants: [],
-      storeDomain: null,
-    });
+    return data(EMPTY);
   }
-};
+}

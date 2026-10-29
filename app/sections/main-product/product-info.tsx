@@ -1,6 +1,9 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 
-interface ProductInfoProps extends HydrogenComponentProps {}
+interface ProductInfoProps extends WeaverseComponentProps {}
 
 export default function ProductInfo(props: ProductInfoProps) {
   const { children, ...rest } = props;

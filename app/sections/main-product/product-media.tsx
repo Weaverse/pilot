@@ -1,16 +1,20 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
 import {
   ProductMedia,
   type ProductMediaProps,
 } from "~/components/product-media";
+import { useSelectedVariant } from "~/components/product/product-form";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 
 interface ProductMediaComponentProps
   extends
     Omit<ProductMediaProps, "selectedVariant" | "media" | "product">,
-    HydrogenComponentProps {}
+    WeaverseComponentProps {}
 
 export default function ProductMediaComponent(
   props: ProductMediaComponentProps,
@@ -33,12 +37,7 @@ export default function ProductMediaComponent(
   } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
-  const selectedVariant = product?.selectedOrFirstAvailableVariant;
-
-  if (!product) {
-    return null;
-  }
-
+  const selectedVariant = useSelectedVariant(product);
   const media = product?.media?.nodes || [];
 
   return (

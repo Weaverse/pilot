@@ -1,4 +1,4 @@
-import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
+import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen/react-router";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Section, type SectionProps } from "~/components/section";

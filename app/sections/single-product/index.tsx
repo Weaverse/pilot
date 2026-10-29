@@ -1,16 +1,20 @@
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   type WeaverseProduct,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { useState } from "react";
-import type { ProductVariantFragment } from "storefront-api.generated";
 import Link from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
-import { LazyShopPayButton } from "~/components/product/lazy-shop-pay-button";
+import { ProductShopPayButton } from "~/components/product/shop-pay-button";
+import {
+  type ProductFormData,
+  ProductProvider,
+  useSelectedVariant,
+} from "~/components/product/product-form";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
@@ -33,7 +37,7 @@ export interface SingleProductData {
 }
 
 interface SingleProductProps
-  extends HydrogenComponentProps<SingleProductLoaderData>, SingleProductData {}
+  extends WeaverseComponentProps<SingleProductLoaderData>, SingleProductData {}
 
 export default function SingleProduct(props: SingleProductProps) {
   let {
@@ -47,17 +51,42 @@ export default function SingleProduct(props: SingleProductProps) {
 
   let product = loaderData?.product;
   let variants = loaderData?.variants ?? [];
-  let storeDomain = loaderData?.storeDomain;
-
-  let [quantity, setQuantity] = useState<number>(1);
-  let [selectedVariant, setSelectedVariant] =
-    useState<ProductVariantFragment | null>(
-      product?.selectedOrFirstAvailableVariant ?? null,
-    );
 
   if (!product) {
     return <SingleProductPlaceholder {...rest} />;
   }
+
+  // Its own product form: the section selects in place on whatever page it
+  // sits on, and the loader's full variant list resolves every combination.
+  return (
+    <ProductProvider
+      product={{
+        ...product,
+        adjacentVariants: variants.length ? variants : product.adjacentVariants,
+      }}
+    >
+      <SingleProductContent
+        {...rest}
+        product={product}
+        showThumbnails={showThumbnails}
+        groupMediaByVariant={groupMediaByVariant}
+        groupByOption={groupByOption}
+      />
+    </ProductProvider>
+  );
+}
+
+function SingleProductContent({
+  product,
+  showThumbnails,
+  groupMediaByVariant,
+  groupByOption,
+  ...rest
+}: Omit<SingleProductProps, "product" | "loaderData"> & {
+  product: ProductFormData;
+}) {
+  let [quantity, setQuantity] = useState<number>(1);
+  let selectedVariant = useSelectedVariant(product);
 
   let isBundle = Boolean(product?.isBundle?.requiresComponents);
   let bundledVariants = isBundle ? product?.isBundle?.components.nodes : null;
@@ -121,23 +150,12 @@ export default function SingleProduct(props: SingleProductProps) {
                   />
                 </div>
               )}
-              <VariantSelector
-                product={product}
-                selectedVariant={selectedVariant}
-                setSelectedVariant={setSelectedVariant}
-                variants={variants}
-              />
+              <VariantSelector product={product} />
             </div>
             <Quantity value={quantity} onChange={setQuantity} />
             <AddToCartButton
-              disabled={!selectedVariant?.availableForSale}
-              lines={[
-                {
-                  merchandiseId: selectedVariant?.id,
-                  quantity,
-                  selectedVariant,
-                },
-              ]}
+              product={product}
+              quantity={quantity}
               variant="primary"
               className="-mt-2"
               data-test="add-to-cart"
@@ -145,15 +163,9 @@ export default function SingleProduct(props: SingleProductProps) {
               {atcText}
             </AddToCartButton>
             {selectedVariant?.availableForSale && (
-              <LazyShopPayButton
+              <ProductShopPayButton
                 width="100%"
-                variantIdsAndQuantities={[
-                  {
-                    id: selectedVariant?.id,
-                    quantity,
-                  },
-                ]}
-                storeDomain={storeDomain}
+                variants={[{ id: selectedVariant.id, quantity }]}
                 className="-mt-2"
               />
             )}

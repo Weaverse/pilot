@@ -1,13 +1,13 @@
 import {
-  getAdjacentAndFirstAvailableVariants,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
+import { useSelectedVariant } from "~/components/product/product-form";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 
-interface ProductAvailabilityProps extends HydrogenComponentProps {
+interface ProductAvailabilityProps extends WeaverseComponentProps {
   inStockText: string;
   outOfStockText: string;
   inStockColor: string;
@@ -19,14 +19,7 @@ export default function ProductAvailability(props: ProductAvailabilityProps) {
     props;
   let { product } = useLoaderData<typeof productRouteLoader>();
 
-  let selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
-
-  if (!product) {
-    return null;
-  }
+  let selectedVariant = useSelectedVariant(product);
 
   let available = selectedVariant?.availableForSale;
   let color = available ? inStockColor : outOfStockColor;
