@@ -1,5 +1,5 @@
 import { reactRouter } from "@react-router/dev/vite";
-import { hydrogen } from "@shopify/hydrogen/vite";
+import { localHttps } from "@shopify/hydrogen/vite";
 import { oxygen } from "@shopify/mini-oxygen/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath } from "node:url";
@@ -89,8 +89,10 @@ export default defineConfig(({ isSsrBuild }) => ({
     },
   },
   plugins: [
-    hydrogen(),
-    oxygen(),
+    // Customer Account OAuth needs an HTTPS origin; `npm run dev:https`
+    // serves https://local.tryhydrogen.dev with local certificates.
+    localHttps({ enabled: process.env.npm_lifecycle_event === "dev:https" }),
+    ...oxygen(),
     reactRouter(),
     tailwindcss(),
     ssrStubClientOnlyModules(),
@@ -130,7 +132,21 @@ export default defineConfig(({ isSsrBuild }) => ({
   },
   ssr: {
     optimizeDeps: {
-      include: ["@radix-ui/react-primitive", "classnames", "react-share"],
+      // React and React Router must be pre-bundled for the workerd SSR
+      // runtime, or dev fails with module-interop errors.
+      include: [
+        "react",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "react-dom",
+        "react-dom/server",
+        "react-router",
+        "react-router > cookie",
+        "react-router > set-cookie-parser",
+        "@radix-ui/react-primitive",
+        "classnames",
+        "react-share",
+      ],
     },
   },
 }));
