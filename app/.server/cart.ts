@@ -233,6 +233,21 @@ export async function syncCartCountry(
   };
 }
 
+/** Shopify's user error for a cart ID that no longer resolves to a cart. */
+function isMissingCartError(error: CartUserError) {
+  return error.code === "INVALID" && Boolean(error.field?.includes("cartId"));
+}
+
+/** `request` without its `cart` cookie. */
+function withoutCartCookie(request: Request) {
+  const headers = new Headers(request.headers);
+  const cookies = (headers.get("Cookie") ?? "")
+    .split(";")
+    .filter((cookie) => !cookie.trim().startsWith("cart="));
+  headers.set("Cookie", cookies.join(";"));
+  return new Request(request, { headers });
+}
+
 function isFormRequest(request: Request) {
   const type = request.headers.get("Content-Type") ?? "";
   return (
@@ -345,14 +360,20 @@ export function createPilotCartHandlers({
       CART_API_PATH,
       "POST",
       async (context: CartContext) => {
-        const request = await normalizeNoteRequest(context.request);
-        if (!(request instanceof Request)) return request;
+        const normalized = await normalizeNoteRequest(context.request);
+        if (!(normalized instanceof Request)) return normalized;
         const storefront = context.storefrontClient as Storefront;
         const token = await customerAccessToken();
-        const existingCartId = getCartId(request);
-        await syncCartCountry(request, storefront, {
+        const { userErrors } = await syncCartCountry(normalized, storefront, {
           customerAccessToken: token,
         });
+        // The cookie can outlive its cart (expired, or completed at checkout).
+        // Hydrogen would add to that cart and fail; without the cookie it
+        // creates a fresh cart and sets the new cookie.
+        const request = userErrors.some(isMissingCartError)
+          ? withoutCartCookie(normalized)
+          : normalized;
+        const existingCartId = getCartId(request);
         const result = await cartHandlers.post({ ...context, request });
         // Hydrogen creates a cart on the first add without the customer; attach
         // them right away, as classic Hydrogen's `cartCreate` did.
@@ -425,9 +446,10 @@ export function createPilotCartHandlers({
             .filter(Boolean);
         const cartId = getCartId(request);
         if (!cartId) return missingCart();
-        await syncCartCountry(request, storefrontClient, {
+        const synced = await syncCartCountry(request, storefrontClient, {
           customerAccessToken: await customerAccessToken(),
         });
+        if (synced.userErrors.some(isMissingCartError)) return missingCart();
 
         let userErrors: CartUserError[] = [];
         if (intent === "add") {
