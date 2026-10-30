@@ -2,10 +2,9 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { type FormEvent, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Banner } from "~/components/banner";
-import { Button, variants as buttonVariants } from "~/components/button";
+import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
-import { Spinner } from "~/components/spinner";
 import { CART_GIFT_CARDS_PATH } from "~/utils/cart";
 import { cn } from "~/utils/cn";
 import { useCart, useCartActions, useCartForm } from "./cart-store";
@@ -115,19 +114,15 @@ function DialogActions({
           Cancel
         </Button>
       </Dialog.Close>
-      {/* A plain button: the cart store reads the intent from the submitter's
-          `name`/`value`, which `Button` doesn't forward in its types. */}
-      <button
+      <Button
         type="submit"
         {...submitProps}
+        loading={loading}
         disabled={loading}
-        className={buttonVariants({
-          className: "w-24 leading-tight! [--spinner-duration:400ms]",
-        })}
+        className="w-24 leading-tight! [--spinner-duration:400ms]"
       >
-        {loading && <Spinner />}
-        <span>{submitLabel}</span>
-      </button>
+        {submitLabel}
+      </Button>
     </div>
   );
 }
