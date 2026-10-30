@@ -20,13 +20,13 @@ const handleRequest = createRequestHandler(serverBuild, process.env.NODE_ENV);
  * Hydrogen 2026.10 is a library: this handler composes the request lifecycle
  * that the classic framework owned.
  *
- * 1. Refuse unsupported market prefixes.
- * 2. Build the request context and clients.
- * 3. Let Hydrogen answer the routes it owns (cart, Storefront API proxy,
+ * 1. Build the request context and clients.
+ * 2. Let Hydrogen answer the routes it owns (cart, Storefront API proxy,
  *    checkout and cart permalinks, Customer Account OAuth, ...).
- * 4. Render the app.
- * 5. Commit the session and apply Shopify's response headers.
- * 6. On a 404, look the path up in Shopify's URL redirects for its market.
+ * 3. Render the app. Unsupported market prefixes render the 404 page
+ *    (`routes/market-guard.ts`).
+ * 4. Commit the session and apply Shopify's response headers.
+ * 5. On a 404, look the path up in Shopify's URL redirects for its market.
  */
 export default {
   async fetch(
@@ -37,18 +37,6 @@ export default {
     try {
       const request = toPublicRequest(rawRequest);
       const url = new URL(request.url);
-
-      /**
-       * A market-shaped prefix we do not sell in (`/en-xx/products/hoodie`)
-       * must not resolve. `resolveLocale` falls back to the default market so
-       * link and sitemap helpers never throw, but serving that fallback to a
-       * visitor would publish the entire catalogue at unlimited non-canonical
-       * URLs. Refusing here covers every route, including `.data` requests,
-       * rather than asking each loader to remember.
-       */
-      if (isUnsupportedMarketPath(url.pathname)) {
-        return new Response("Not Found", { status: 404 });
-      }
 
       const method = request.method;
       if ((method === "GET" || method === "HEAD") && request.body) {
@@ -109,10 +97,12 @@ export default {
       );
       const response = await handleRequest(request, routerContext);
 
-      if (response.status === 404) {
+      if (response.status === 404 && !isUnsupportedMarketPath(url.pathname)) {
         /**
-         * Check Shopify's URL redirects only when the app answered 404. A
-         * matched redirect already carries Shopify's response headers.
+         * Check Shopify's URL redirects only when the app answered 404, and
+         * never for an unsupported market, whose lookup would fall back to the
+         * default market. A matched redirect already carries Shopify's
+         * response headers.
          */
         const redirect = await marketAwareRedirect(request, (lookupRequest) =>
           handleShopifyRedirects({

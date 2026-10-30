@@ -200,23 +200,26 @@ test("round-trips every market through localize and delocalize", () => {
   }
 });
 
-test("the request boundary refuses unsupported markets", async () => {
-  const server = await readFile(
-    new URL("../../server.ts", import.meta.url),
-    "utf8",
+test("unsupported markets render the 404 page", async () => {
+  const [guard, routes, server] = await Promise.all(
+    [
+      "../../app/routes/market-guard.ts",
+      "../../app/routes.ts",
+      "../../server.ts",
+    ].map((path) => readFile(new URL(path, import.meta.url), "utf8")),
   );
 
-  // The predicate is worthless unless the boundary actually calls it, and it
-  // must run before Hydrogen's handlers and `handleRequest` so no route can
-  // serve the invented URL.
-  expect(server).toContain("isUnsupportedMarketPath");
-  expect(server).toContain("status: 404");
-  expect(server.indexOf("isUnsupportedMarketPath(")).toBeGreaterThan(-1);
-  expect(server.indexOf("isUnsupportedMarketPath(")).toBeLessThan(
-    server.indexOf("handleShopifyRoutes({"),
+  // The predicate is worthless unless something calls it. The guard throws
+  // below root so the error boundary still has root data for the header and
+  // footer, and it must wrap every localized route.
+  expect(guard).toContain("isUnsupportedMarketPath(");
+  expect(guard).toContain("status: 404");
+  expect(routes).toMatch(
+    /layout\("routes\/market-guard\.ts",\s*\[\s*\.\.\.prefix\(":locale\?"/,
   );
-  expect(server.indexOf("isUnsupportedMarketPath(")).toBeLessThan(
-    server.indexOf("await handleRequest(request"),
+  // An invented market must not be redirected by the Shopify URL redirects.
+  expect(server).toMatch(
+    /response\.status === 404 && !isUnsupportedMarketPath\(/,
   );
 });
 
