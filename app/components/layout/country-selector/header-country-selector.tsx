@@ -1,6 +1,6 @@
 import * as Popover from "@radix-ui/react-popover";
 import { useThemeSettings } from "@weaverse/hydrogen/react-router";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Icon } from "~/components/icon";
 import { ScrollArea } from "~/components/scroll-area";
@@ -12,11 +12,12 @@ import { useCountrySelector } from "./use-country-selector";
 export function HeaderCountrySelector() {
   const { selectedLocale, groupedCountries, getRedirectUrl } =
     useCountrySelector();
+  const [open, setOpen] = useState(false);
   const { countryNameDisplay } = useThemeSettings<ThemeSettings>();
 
   return (
     <div className="hidden items-center gap-1.5 md:flex">
-      <Popover.Root>
+      <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <button
             type="button"
@@ -54,6 +55,7 @@ export function HeaderCountrySelector() {
                   const locale = group.locales[0];
                   return (
                     <MarketForm
+                      onSwitch={() => setOpen(false)}
                       key={locale.pathPrefix}
                       locale={locale}
                       redirectTo={getRedirectUrl(locale)}
@@ -121,6 +123,7 @@ export function HeaderCountrySelector() {
                               />
                             ) : null}
                             <MarketForm
+                              onSwitch={() => setOpen(false)}
                               locale={locale}
                               redirectTo={getRedirectUrl(locale)}
                               label={`Select ${locale.label} in ${locale.languageLabel}`}

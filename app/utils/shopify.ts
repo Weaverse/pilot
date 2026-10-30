@@ -42,3 +42,38 @@ export function parseGid(gid: string | undefined): {
     return defaultReturn;
   }
 }
+
+/**
+ * Points `window.Shopify` at another market after a client-side navigation.
+ *
+ * `<ShopifyScripts>` writes the market (country, currency, locale, routes
+ * root) into `window.Shopify` once, from its first props. Without this,
+ * Shopify's analytics and web components keep reporting the market the
+ * visitor landed on. Mirrors the fields of Hydrogen's bootstrap script.
+ */
+export function syncShopifyMarket({
+  country,
+  language,
+  currency,
+  pathPrefix,
+}: {
+  country: string;
+  language: string;
+  currency: string;
+  pathPrefix: string;
+}) {
+  const shopify = typeof window === "undefined" ? undefined : window.Shopify;
+  if (!shopify) {
+    return;
+  }
+  shopify.country = country;
+  shopify.currency = { ...shopify.currency, active: currency.toUpperCase() };
+  shopify.locale = language.toLowerCase();
+  if (shopify.routes) {
+    shopify.routes.root = pathPrefix ? `${pathPrefix}/` : "/";
+  }
+  if (shopify.components?.config) {
+    shopify.components.config.country = country;
+    shopify.components.config.language = shopify.locale;
+  }
+}

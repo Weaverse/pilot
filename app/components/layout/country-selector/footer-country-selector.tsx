@@ -1,5 +1,5 @@
 import * as Popover from "@radix-ui/react-popover";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Icon } from "~/components/icon";
 import { ScrollArea } from "~/components/scroll-area";
@@ -10,10 +10,11 @@ import { useCountrySelector } from "./use-country-selector";
 export function FooterCountrySelector() {
   const { selectedLocale, groupedCountries, getRedirectUrl } =
     useCountrySelector();
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="grid w-80 gap-4">
-      <Popover.Root>
+      <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <button
             type="button"
@@ -44,6 +45,7 @@ export function FooterCountrySelector() {
                   const locale = group.locales[0];
                   return (
                     <MarketForm
+                      onSwitch={() => setOpen(false)}
                       key={locale.pathPrefix}
                       locale={locale}
                       redirectTo={getRedirectUrl(locale)}
@@ -111,6 +113,7 @@ export function FooterCountrySelector() {
                               />
                             ) : null}
                             <MarketForm
+                              onSwitch={() => setOpen(false)}
                               locale={locale}
                               redirectTo={getRedirectUrl(locale)}
                               label={`Select ${locale.label} in ${locale.languageLabel}`}

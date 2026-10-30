@@ -26,20 +26,23 @@ test("builds its market list without a client fetch", async () => {
   expect(source).toContain("SUPPORTED_LOCALES");
 });
 
-test("switches market with a document navigation", async () => {
+test("switches market with a client-side navigation", async () => {
   const form = await readFile(new URL("market-form.tsx", SELECTOR_DIR), "utf8");
 
-  // A client-side navigation keeps the cached Weaverse page instance for the
-  // previous market, so its sections keep rendering under the new locale. A
-  // plain `<form>` posting outside React Router is a document navigation.
-  expect(form).not.toMatch(/import \{[^}]*\bForm\b[^}]*\} from "react-router"/);
-  expect(form).toContain(
-    '<form method="post" action={CART_BUYER_IDENTITY_PATH}>',
-  );
+  // Hydrated, the switch navigates in the router (Weaverse builds a fresh page
+  // instance per URL) while the cart moves to the new market, then refreshes
+  // the cart store. A full reload re-downloaded and re-hydrated the app.
+  expect(form).toContain("onSubmit={handleSubmit}");
+  expect(form).toContain("event.preventDefault()");
+  expect(form).toContain("navigate(redirectTo)");
+  expect(form).toContain("fetch(CART_BUYER_IDENTITY_PATH");
+  expect(form).toContain("refresh()");
+  // `ShopifyScripts` reads the market once; analytics must follow the switch.
+  expect(form).toContain("syncShopifyMarket(locale)");
+  // Without JavaScript the native post moves the cart and redirects. The
+  // endpoint's behavior is asserted in `cart-market.test.ts`.
+  expect(form).toMatch(/method="post"\s+action=\{CART_BUYER_IDENTITY_PATH\}/);
   expect(form).toContain('name="redirectTo"');
-  // Buyer identity must move in the same request that changes the URL,
-  // otherwise pricing and checkout stay on the old market. The endpoint's
-  // behavior is asserted in `cart-market.test.ts`.
   expect(form).toContain('name="countryCode" value={locale.country}');
 });
 
@@ -47,10 +50,11 @@ test("the submit control outlives the popover that holds it", async () => {
   const form = await readFile(new URL("market-form.tsx", SELECTOR_DIR), "utf8");
 
   // `Popover.Close` unmounts this form synchronously during the click, so the
-  // browser discards the pending native submission and the market never
-  // changes. The document navigation closes the popover on its own.
+  // browser discards the submission and the market never changes. The
+  // selector closes its popover through `onSwitch` once the submit started.
   expect(form).not.toContain("react-popover");
   expect(form).toContain('type="submit"');
+  expect(form).toContain("onSwitch?.()");
 });
 
 test("groups every market by country", () => {

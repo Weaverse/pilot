@@ -7,7 +7,7 @@ import {
   useThemeSettings,
   withWeaverse,
 } from "@weaverse/hydrogen/react-router";
-import type { CSSProperties } from "react";
+import { type CSSProperties, useEffect } from "react";
 import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
 import {
   data as routeData,
@@ -52,6 +52,7 @@ import { getPublicEnv } from "./utils/env";
 import { DEFAULT_LOCALE } from "./utils/locale";
 import { cdnSize } from "./utils/pwa";
 import { routeTemplates } from "./utils/route-templates";
+import { syncShopifyMarket } from "./utils/shopify";
 import {
   DEGRADED_HEADERS,
   type WeaverseRouteFailure,
@@ -147,6 +148,9 @@ export const Layout = withWeaverse(function RootLayout({
   const data = useRouteLoaderData<RootLoader>("root");
   const publicEnv = data?.publicEnv;
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  useEffect(() => {
+    syncShopifyMarket(locale);
+  }, [locale]);
   // Announcement copy is theme content, not a theme setting: it is translated
   // per language in the Translation Manager. It must be read through the same
   // legacy-aware reader `ScrollingAnnouncement` uses — a raw `t()` ignores a
@@ -209,8 +213,9 @@ export const Layout = withWeaverse(function RootLayout({
          * so the bus exists before any route publishes, and so
          * `window.Shopify` is created by plain assignment before the header
          * lazy-loads account.js (which would otherwise define it as
-         * non-configurable). It starts once with its first props; switching
-         * market is a document navigation, so the market never goes stale.
+         * non-configurable). It starts once with its first props; the
+         * `syncShopifyMarket` effect above follows client-side market
+         * switches.
          */}
         {data ? (
           <ShopifyScripts
