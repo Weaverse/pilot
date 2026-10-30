@@ -1,8 +1,8 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   type InspectorGroup,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
@@ -95,7 +95,7 @@ export interface HeadingProps
   animate?: boolean;
 }
 
-function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
+function Heading(props: HeadingProps & Partial<WeaverseComponentProps>) {
   const {
     as: Tag = "h4",
     content,

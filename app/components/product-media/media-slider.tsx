@@ -1,13 +1,13 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import type {
-  MediaFragment,
-  ProductVariantFragment,
-} from "storefront-api.generated";
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
+import type {
+  MediaFragment,
+  ProductVariantFragment,
+} from "~/graphql/fragments";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { MediaItem } from "./media-item";

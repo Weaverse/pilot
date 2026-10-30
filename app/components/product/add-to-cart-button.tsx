@@ -1,165 +1,96 @@
-import { CartForm, type OptimisticCartLineInput } from "@shopify/hydrogen";
-import { useEffect, useRef, useState } from "react";
-import type { FetcherWithComponents } from "react-router";
+import { canAddToCart, type ProductFormErrors } from "@shopify/hydrogen";
+import { useState } from "react";
 import { Button, type ButtonProps } from "~/components/button";
-import { useCartFetcherSync } from "~/components/cart/cart-sync";
-import { useCartStore } from "~/components/cart/store";
+import { openCartDrawer } from "~/components/cart/cart-drawer";
+import {
+  type ProductFormData,
+  useProductForm,
+} from "~/components/product/product-form";
 import { Spinner } from "~/components/spinner";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 
 type AddToCartButtonProps = Omit<
   ButtonProps,
-  "children" | "loading" | "type"
+  "children" | "loading" | "type" | "name"
 > & {
   children: React.ReactNode;
-  lines: OptimisticCartLineInput[];
+  /** The product of the surrounding `ProductProvider`. */
+  product: ProductFormData;
+  quantity?: number;
 };
 
-type AddToCartButtonContentProps = AddToCartButtonProps & {
-  fetcher: FetcherWithComponents<any>;
-};
-
+/**
+ * Adds the selected variant of the surrounding `ProductProvider` to the cart.
+ *
+ * The form posts to the cart endpoint, so it works before hydration; once
+ * hydrated, the product form hands the submission to the cart store, which
+ * shows the line optimistically while the request runs.
+ */
 export function AddToCartButton({
   children,
-  lines,
-  className = "",
+  product,
+  quantity = 1,
+  className,
   disabled,
   ...props
 }: AddToCartButtonProps) {
-  const cartRoute = usePrefixPathWithLocale("/cart");
-
-  return (
-    <CartForm
-      route={cartRoute}
-      inputs={{ lines }}
-      action={CartForm.ACTIONS.LinesAdd}
-    >
-      {(fetcher: FetcherWithComponents<any>) => (
-        <AddToCartButtonContent
-          fetcher={fetcher}
-          lines={lines}
-          disabled={disabled}
-          className={className}
-          {...props}
-        >
-          {children}
-        </AddToCartButtonContent>
-      )}
-    </CartForm>
-  );
-}
-
-function AddToCartButtonContent({
-  fetcher,
-  lines,
-  children,
-  disabled,
-  className,
-  ...props
-}: AddToCartButtonContentProps) {
-  const {
-    open: openCartDrawer,
-    stagePendingAdd,
-    clearPendingAdd,
-    setLastAddError,
-  } = useCartStore();
-  useCartFetcherSync(fetcher);
-  // Token of the stage this button owns, so a concurrent add from another
-  // button is never cleared by this one.
-  const pendingTokenRef = useRef<string | null>(null);
-  const submittedRef = useRef(false);
+  const { options, register, formProps, pending, errors } = useProductForm();
   const [addError, setAddError] = useState<string | null>(null);
-  // React Router commits fetcher state inside `startTransition`, so
-  // `fetcher.state` only turns "submitting" in a later, non-urgent render —
-  // after the urgent render that opens the drawer has already painted. Driving
-  // the spinner off a click-time state instead makes it appear in that first
-  // frame. `fetcher.state` is still consulted for submissions that reach the
-  // form without going through `handleClick`.
-  const [clickPending, setClickPending] = useState(false);
-  const isSubmitting = fetcher.state !== "idle";
-  const isLoading = clickPending || isSubmitting;
+  const [wasPending, setWasPending] = useState(false);
 
-  useEffect(() => {
-    if (fetcher.state !== "idle" || !submittedRef.current) {
-      return;
-    }
-    submittedRef.current = false;
-    setClickPending(false);
-    const token = pendingTokenRef.current;
-    pendingTokenRef.current = null;
-
-    const message = getAddErrorMessage(fetcher.data);
-    if (token) {
-      clearPendingAdd(token);
-    }
-    setAddError(message);
-    setLastAddError(message);
-  }, [fetcher.state, fetcher.data, clearPendingAdd, setLastAddError]);
-
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-    props.onClick?.(event);
-    if (event.defaultPrevented) {
-      return;
-    }
-    setAddError(null);
-    setClickPending(true);
-    submittedRef.current = true;
-    // Stage BEFORE the form submits so the drawer's first paint already has
-    // the line — the fetcher only becomes visible on the next render.
-    pendingTokenRef.current = stagePendingAdd(lines);
-    openCartDrawer();
+  // `pending` belongs to this button's form: it turns on in the submit
+  // handler (so the spinner shows in the frame the drawer opens) and off once
+  // the store has applied the server's response, errors included. This add's
+  // outcome is read at that moment only, so later cart changes made elsewhere
+  // (the drawer, another form) never surface under this button.
+  if (pending !== wasPending) {
+    setWasPending(pending);
+    setAddError(pending ? null : getAddErrorMessage(errors));
   }
 
   return (
-    <>
+    <form
+      {...formProps({
+        beforeSubmit: () => {
+          // Open on submit, not after the response: the cart store already
+          // holds the optimistic line, so the drawer's first paint shows it.
+          openCartDrawer();
+        },
+      })}
+    >
+      <input type="hidden" {...register("merchandiseId", {})} />
+      <input type="hidden" {...register("quantity", { value: quantity })} />
       <Button
-        type="submit"
+        {...register("addToCart", {})}
         className={cn("relative w-full", className)}
         {...props}
-        // Deliberately NOT `isLoading`: React flushes a discrete event's state
-        // update before the browser runs the click's default action, so
-        // disabling on the click-time state would disable the submit button
-        // before it can submit the form — the add would never be sent.
-        disabled={disabled || isSubmitting}
-        aria-busy={isLoading || undefined}
-        onClick={handleClick}
+        disabled={disabled || pending || !canAddToCart(product, options)}
+        aria-busy={pending || undefined}
       >
-        <span className={cn(isLoading && "invisible")}>
+        <span className={cn(pending && "invisible")}>
           {children || "Add to cart"}
         </span>
-        {isLoading && <Spinner className="z-0" size={20} duration={400} />}
+        {pending && <Spinner className="z-0" size={20} duration={400} />}
       </Button>
       {addError && (
         <p role="alert" className="mt-2 text-sm text-red-600">
           {addError}
         </p>
       )}
-    </>
+    </form>
   );
 }
 
 const ADD_FAILED_MESSAGE = "Couldn't add this to your cart. Please try again.";
 
 /**
- * A cart mutation can fail three ways: a thrown/network error surfaced as
- * `errors`, Shopify `userErrors`, or a response with no cart at all.
+ * An add can fail two ways: Shopify `userErrors` (cart-level, or on the line
+ * that holds the variant), or a failed request recorded as a network error.
  */
-function getAddErrorMessage(data: unknown): string | null {
-  if (!data) {
+function getAddErrorMessage(errors: ProductFormErrors): string | null {
+  const firstError = errors.userErrors[0] ?? errors.networkErrors[0];
+  if (!firstError) {
     return null;
   }
-  const payload = data as {
-    cart?: unknown;
-    errors?: { message?: string }[];
-    userErrors?: { message?: string }[];
-  };
-  const firstError = payload.errors?.[0] ?? payload.userErrors?.[0];
-  if (firstError) {
-    return firstError.message || ADD_FAILED_MESSAGE;
-  }
-  if (!payload.cart) {
-    return ADD_FAILED_MESSAGE;
-  }
-  return null;
+  return firstError.message || ADD_FAILED_MESSAGE;
 }

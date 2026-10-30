@@ -1,4 +1,4 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import { useEffect, useState } from "react";
 import type { ThemeSettings } from "~/types/weaverse";
 

@@ -1,7 +1,10 @@
+import { gql } from "@shopify/hydrogen";
 import { type LoaderFunctionArgs, redirect } from "react-router";
+import { CACHE_DEFAULT } from "~/utils/cache";
 import { localizePath, resolveLocaleFromRequest } from "~/utils/locale";
+import { unwrapStorefront } from "~/utils/storefront";
 
-const ARTICLE_BLOG_LOOKUP_QUERY = `#graphql
+const ARTICLE_BLOG_LOOKUP_QUERY = gql(`
   query ArticleBlogLookup($handle: String!, $after: String) {
     blogs(first: 50, after: $after) {
       nodes {
@@ -16,7 +19,7 @@ const ARTICLE_BLOG_LOOKUP_QUERY = `#graphql
       }
     }
   }
-` as const;
+`);
 
 /**
  * Permanent redirect for legacy `/articles/<handle>` URLs to the canonical
@@ -41,17 +44,12 @@ export async function loader({
   let after: string | null = null;
   // Paginate through all blogs so articles in any blog are found.
   while (true) {
-    const data: {
-      blogs: {
-        nodes: Array<{
-          handle: string;
-          articleByHandle: { handle: string } | null;
-        }>;
-        pageInfo: { hasNextPage: boolean; endCursor: string | null };
-      };
-    } = await storefront.query(ARTICLE_BLOG_LOOKUP_QUERY, {
-      variables: { handle: articleHandle, after },
-    });
+    const data = unwrapStorefront(
+      await storefront.graphql(ARTICLE_BLOG_LOOKUP_QUERY, {
+        variables: { handle: articleHandle, after },
+        cache: CACHE_DEFAULT,
+      }),
+    );
 
     const blog = data.blogs.nodes.find((node) => node.articleByHandle);
     if (blog) {

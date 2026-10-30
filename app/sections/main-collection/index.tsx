@@ -1,6 +1,6 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
-import type { CollectionQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "~/routes/collections/collection-query";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 interface MainCollectionProps extends SectionProps {}

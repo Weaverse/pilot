@@ -1,13 +1,7 @@
 import { expect, test } from "@playwright/test";
-import type { AppLoadContext } from "react-router";
-import { createHydrogenRouterContext } from "../../app/.server/context";
+import type { AppContext } from "../../app/.server/context";
 import { getFeaturedProducts } from "../../app/utils/featured-products";
-import {
-  installWorkerCaches,
-  recordFetches,
-  TEST_ENV,
-  TEST_EXECUTION_CONTEXT,
-} from "../support/hydrogen-env";
+import { createTestContext } from "../support/hydrogen-env";
 import { loadAppModule } from "../support/render-app";
 
 /**
@@ -21,9 +15,9 @@ import { loadAppModule } from "../support/render-app";
  * store resolves bare `ZH` to English, so `/zh-cn` would serve an English
  * catalogue underneath correct Chinese theme copy.
  *
- * Hydrogen fills `$country`/`$language` from the storefront client's own
- * closure, but only for variables the caller left absent, so an explicit
- * variable silently wins. These assert what leaves the process: the `language`
+ * Hydrogen 2026.10 fills `$country`/`$language` from the request context and
+ * its types reject them in `variables`, but an untyped caller (a section
+ * loader handed `weaverse.storefront`) can still pass one. These assert what leaves the process: the `language`
  * in the Storefront POST body, and the `locale` in the translation URL.
  */
 
@@ -32,13 +26,20 @@ type Sent = { shopify: string[]; translation: string[] };
 /** Everything `run` sends, split by which provider it was addressed to. */
 async function sentBy(
   pathPrefix: string,
-  run: (context: AppLoadContext) => Promise<unknown>,
+  run: (context: AppContext) => Promise<unknown>,
 ): Promise<Sent> {
-  const restoreCaches = installWorkerCaches();
   const shopify: string[] = [];
+  const translation: string[] = [];
 
+  // One recorder for the whole request: the Weaverse client keeps the `fetch`
+  // it was constructed with, so the context is built under the same stub that
+  // later observes the theme load.
   const realFetch = globalThis.fetch;
-  globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input instanceof Request ? input.url : input);
+    if (url.includes("/api/translation/static")) {
+      translation.push(new URL(url).searchParams.get("locale") ?? "");
+    }
     const body = init?.body;
     if (typeof body === "string" && body.includes("$language")) {
       const { variables } = JSON.parse(body) as {
@@ -54,32 +55,16 @@ async function sentBy(
     });
   }) as typeof globalThis.fetch;
 
-  let translation: string[] = [];
   try {
-    const context = (await createHydrogenRouterContext(
-      new Request(`https://shop.test${pathPrefix}/`),
-      TEST_ENV,
-      TEST_EXECUTION_CONTEXT,
-    )) as unknown as AppLoadContext;
+    const context = await createTestContext(`https://shop.test${pathPrefix}/`);
 
-    // The translation fetch is recorded separately: `recordFetches` replaces
-    // the same global, so the two observations cannot be interleaved.
-    //
     // The stubbed response is empty, so a loader may well throw while shaping
     // it. That happens strictly after the request went out, and the request is
     // what is under test.
     await run(context).catch(() => undefined);
-    globalThis.fetch = realFetch;
-
-    const { urls } = await recordFetches(() =>
-      context.weaverse.loadThemeSettings(),
-    );
-    translation = urls
-      .filter((url) => url.includes("/api/translation/static"))
-      .map((url) => new URL(url).searchParams.get("locale") ?? "");
+    await context.weaverse.loadThemeSettings();
   } finally {
     globalThis.fetch = realFetch;
-    restoreCaches();
   }
 
   return { shopify, translation };
@@ -346,22 +331,13 @@ test("the two clients keep different language identities", async () => {
   // to `weaverseStorefront` cannot quietly turn them into tautologies. If both
   // clients ever agreed, the leak would be unobservable and the suite would
   // pass while shipping English.
-  const restoreCaches = installWorkerCaches();
-  try {
-    const context = (await createHydrogenRouterContext(
-      new Request("https://shop.test/zh-hk/"),
-      TEST_ENV,
-      TEST_EXECUTION_CONTEXT,
-    )) as unknown as AppLoadContext;
+  const context = await createTestContext("https://shop.test/zh-hk/");
 
-    expect({
-      shopify: context.storefront.i18n.language,
-      weaverse: context.weaverse.storefront.i18n.language,
-      country: context.storefront.i18n.country,
-    }).toEqual({ shopify: "ZH_TW", weaverse: "ZH", country: "HK" });
-  } finally {
-    restoreCaches();
-  }
+  expect({
+    shopify: context.storefront.i18n.language,
+    weaverse: context.weaverse.storefront.i18n.language,
+    country: context.storefront.i18n.country,
+  }).toEqual({ shopify: "ZH_TW", weaverse: "ZH", country: "HK" });
 });
 
 test("shared product helpers never send the public language", async () => {
@@ -402,14 +378,13 @@ test("shared product helpers never send the public language", async () => {
 /** The query document and locale variables a run actually sent to Shopify. */
 async function shopifyQueryContract(
   pathPrefix: string,
-  run: (context: AppLoadContext) => Promise<unknown>,
+  run: (context: AppContext) => Promise<unknown>,
 ): Promise<{
   declaresLocale: boolean;
   appliesInContext: boolean;
   language: string | null;
   country: string | null;
 }> {
-  const restoreCaches = installWorkerCaches();
   const realFetch = globalThis.fetch;
   let sent: { query?: string; variables?: Record<string, string> } | null =
     null;
@@ -426,16 +401,13 @@ async function shopifyQueryContract(
   }) as typeof globalThis.fetch;
 
   try {
-    const context = (await createHydrogenRouterContext(
+    const context = await createTestContext(
       new Request(`https://shop.test${pathPrefix}/`),
-      TEST_ENV,
-      TEST_EXECUTION_CONTEXT,
-    )) as unknown as AppLoadContext;
+    );
 
     await run(context).catch(() => undefined);
   } finally {
     globalThis.fetch = realFetch;
-    restoreCaches();
   }
 
   const query = sent?.query ?? "";

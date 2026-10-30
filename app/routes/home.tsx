@@ -1,10 +1,13 @@
-import { AnalyticsPageType } from "@shopify/hydrogen";
-import { getWeaverseSeoMeta, type PageType } from "@weaverse/hydrogen";
+import { gql } from "@shopify/hydrogen";
+import {
+  getWeaverseSeoMeta,
+  type PageType,
+} from "@weaverse/hydrogen/react-router";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
-import type { ShopQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_LONG, routeHeaders } from "~/utils/cache";
 import { seoMetaFromMatches, withWeaverseSeo } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -24,9 +27,9 @@ export async function loader(args: LoaderFunctionArgs) {
   const [weaverseData, { shop }] = await Promise.all([
     context.weaverse.loadPage({ type }),
     // Shop name/description only — effectively static content.
-    context.storefront.query<ShopQuery>(SHOP_QUERY, {
-      cache: context.storefront.CacheLong(),
-    }),
+    context.storefront
+      .graphql(SHOP_QUERY, { cache: CACHE_LONG })
+      .then(unwrapStorefront),
   ]);
 
   // Check weaverseData after parallel loading
@@ -41,7 +44,7 @@ export async function loader(args: LoaderFunctionArgs) {
     shop,
     weaverseData,
     analytics: {
-      pageType: AnalyticsPageType.home,
+      pageType: "home",
     },
     seo,
   };
@@ -60,7 +63,7 @@ export default function Homepage() {
   return <WeaverseContent />;
 }
 
-const SHOP_QUERY = `#graphql
+const SHOP_QUERY = gql(`
   query shop($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
     shop {
@@ -68,4 +71,4 @@ const SHOP_QUERY = `#graphql
       description
     }
   }
-` as const;
+`);

@@ -4,7 +4,7 @@ import type {
   WeaverseImage,
   WeaverseProduct,
   WeaverseVideo,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { announcementSettings } from "~/weaverse/settings/announcements";
 import type { cartSettings } from "~/weaverse/settings/cart";
 import type { footerSettings } from "~/weaverse/settings/footer";

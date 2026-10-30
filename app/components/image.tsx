@@ -1,7 +1,7 @@
-import { Image as HydrogenImage } from "@shopify/hydrogen";
 import type { Image as ImageType } from "@shopify/hydrogen/storefront-api-types";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import { ShopifyImage } from "~/components/shopify-image";
 import { cn } from "~/utils/cn";
 import { getFocalPointPosition } from "~/utils/image";
 
@@ -34,15 +34,16 @@ export interface ImageProps extends Omit<
 
 export function Image({ className, onLoad, style, ...rest }: ImageProps) {
   /**
-   * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
+   * Use useRef for ShopifyImage, so we can access the inner image's ref
    * even when using ref prop for the outer div
    */
   const hydrogenImageRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
   // A Weaverse image's focal point overrides the default centering unless the
-  // caller sets an explicit position. Hydrogen's Image spreads a caller's
-  // `style` key (even `undefined`) over the aspect ratio it computes, so the
-  // key is only passed when there is a style to apply.
+  // caller sets an explicit position. `ShopifyImage` (a port of classic
+  // Hydrogen's Image) spreads a caller's `style` key (even `undefined`) over
+  // the aspect ratio it computes, so the key is only passed when there is a
+  // style to apply.
   const objectPosition =
     style?.objectPosition ?? getFocalPointPosition(rest.data);
   const styleProps =
@@ -63,7 +64,7 @@ export function Image({ className, onLoad, style, ...rest }: ImageProps) {
         className,
       )}
     >
-      <HydrogenImage
+      <ShopifyImage
         ref={hydrogenImageRef}
         className={cn(
           "[transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",

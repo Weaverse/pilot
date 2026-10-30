@@ -1,8 +1,8 @@
 import {
-  type ThemeSettingsResponse,
+  type WeaverseThemeSettingsResponse,
   type WeaverseClient,
   WeaverseLoadError,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { data } from "react-router";
 
 /** Marker carried by the error response, read by the root error boundary. */
@@ -85,7 +85,9 @@ const DEMO_COPY = {
 };
 
 /** Whether the merchant's theme settings could not be loaded. */
-export function isThemeUnavailable(theme: ThemeSettingsResponse): boolean {
+export function isThemeUnavailable(
+  theme: WeaverseThemeSettingsResponse,
+): boolean {
   return theme._loadFailed === true;
 }
 
@@ -96,9 +98,9 @@ export function isThemeUnavailable(theme: ThemeSettingsResponse): boolean {
  * through. Apply after localizing, which would otherwise add market copy
  * back.
  */
-export function neutralThemeWhenUnavailable<T extends ThemeSettingsResponse>(
-  theme: T,
-): T {
+export function neutralThemeWhenUnavailable<
+  T extends WeaverseThemeSettingsResponse,
+>(theme: T): T {
   if (!isThemeUnavailable(theme)) {
     return theme;
   }

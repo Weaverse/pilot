@@ -1,13 +1,7 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import { flattenConnection } from "@shopify/hydrogen";
-import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
 import clsx from "clsx";
-import type {
-  CustomerAddressCreateMutation,
-  CustomerAddressDeleteMutation,
-  CustomerAddressUpdateMutation,
-} from "customer-account-api.generated";
 import type { ActionFunction } from "react-router";
 import {
   data,
@@ -24,29 +18,17 @@ import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/account/edit";
 import { localizedPathForRequest } from "~/utils/locale";
-import { doLogout } from "../auth/logout";
 import {
+  addressErrorMessage,
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
+  parseAddressForm,
   UPDATE_ADDRESS_MUTATION,
 } from "./address-mutation-queries";
 
 export const handle = {
   renderInModal: true,
 };
-
-const ADDRESS_INPUT_KEYS: (keyof CustomerAddressInput)[] = [
-  "lastName",
-  "firstName",
-  "address1",
-  "address2",
-  "city",
-  "zoneCode",
-  "territoryCode",
-  "zip",
-  "phoneNumber",
-  "company",
-];
 
 export const action: ActionFunction = async ({ request, context }) => {
   const { customerAccount } = context;
@@ -55,7 +37,7 @@ export const action: ActionFunction = async ({ request, context }) => {
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
   if (!(await customerAccount.isLoggedIn())) {
-    throw await doLogout(context, request);
+    throw await customerAccount.logout();
   }
 
   const addressId = formData.get("addressId");
@@ -63,16 +45,10 @@ export const action: ActionFunction = async ({ request, context }) => {
 
   if (request.method === "DELETE") {
     try {
-      const { data: deleteData, errors } =
-        await customerAccount.mutate<CustomerAddressDeleteMutation>(
-          DELETE_ADDRESS_MUTATION,
-          {
-            variables: {
-              addressId,
-              language: customerAccount.i18n.language,
-            },
-          },
-        );
+      const { data: deleteData, errors } = await customerAccount.graphql(
+        DELETE_ADDRESS_MUTATION,
+        { variables: { addressId } },
+      );
 
       invariant(!errors?.length, errors?.[0]?.message);
       invariant(
@@ -91,33 +67,20 @@ export const action: ActionFunction = async ({ request, context }) => {
     }
   }
 
-  const address: CustomerAddressInput = {};
-  for (const key of ADDRESS_INPUT_KEYS) {
-    const value = formData.get(key);
-    if (typeof value === "string") {
-      address[key] = value;
-    }
-  }
-
   const defaultAddress = formData.has("defaultAddress")
     ? String(formData.get("defaultAddress")) === "on"
     : false;
 
-  if (addressId === "add") {
-    try {
-      const { data: createData, errors } =
-        await customerAccount.mutate<CustomerAddressCreateMutation>(
-          CREATE_ADDRESS_MUTATION,
-          {
-            variables: {
-              address,
-              defaultAddress,
-              language: customerAccount.i18n.language,
-            },
-          },
-        );
+  try {
+    const address = parseAddressForm(formData);
 
-      invariant(!errors?.length, errors?.[0]?.message);
+    if (addressId === "add") {
+      const { data: createData, errors } = await customerAccount.graphql(
+        CREATE_ADDRESS_MUTATION,
+        { variables: { address, defaultAddress } },
+      );
+
+      invariant(!errors?.length, errors && addressErrorMessage(errors));
       invariant(
         !createData?.customerAddressCreate?.userErrors?.length,
         createData?.customerAddressCreate?.userErrors?.[0]?.message,
@@ -126,46 +89,27 @@ export const action: ActionFunction = async ({ request, context }) => {
         createData?.customerAddressCreate?.customerAddress?.id,
         "Expected customer address to be created",
       );
-
-      return redirect(localizedPathForRequest(request, "/account"));
-    } catch (error: unknown) {
-      return data(
-        { formError: error instanceof Error ? error.message : "Unknown error" },
-        {
-          status: 400,
-        },
+    } else {
+      const { data: updateData, errors } = await customerAccount.graphql(
+        UPDATE_ADDRESS_MUTATION,
+        { variables: { address, addressId, defaultAddress } },
       );
-    }
-  } else {
-    try {
-      const { data: updateData, errors } =
-        await customerAccount.mutate<CustomerAddressUpdateMutation>(
-          UPDATE_ADDRESS_MUTATION,
-          {
-            variables: {
-              address,
-              addressId,
-              defaultAddress,
-              language: customerAccount.i18n.language,
-            },
-          },
-        );
 
-      invariant(!errors?.length, errors?.[0]?.message);
+      invariant(!errors?.length, errors && addressErrorMessage(errors));
       invariant(
         !updateData?.customerAddressUpdate?.userErrors?.length,
         updateData?.customerAddressUpdate?.userErrors?.[0]?.message,
       );
-
-      return redirect(localizedPathForRequest(request, "/account"));
-    } catch (error: unknown) {
-      return data(
-        { formError: error instanceof Error ? error.message : "Unknown error" },
-        {
-          status: 400,
-        },
-      );
     }
+
+    return redirect(localizedPathForRequest(request, "/account"));
+  } catch (error: unknown) {
+    return data(
+      { formError: error instanceof Error ? error.message : "Unknown error" },
+      {
+        status: 400,
+      },
+    );
   }
 };
 
@@ -331,17 +275,20 @@ export default function AccountEditAddressForm() {
             />
           </div>
           <div className="space-y-1">
-            <label htmlFor="territoryCode">Country</label>
+            <label htmlFor="countryCode">Country</label>
             <input
               className="border-line w-full appearance-none border p-3 focus:outline-hidden"
-              id="territoryCode"
-              name="territoryCode"
+              id="countryCode"
+              name="countryCode"
               type="text"
               autoComplete="country"
-              placeholder="Country (Territory) Code"
+              placeholder="Country Code"
               required
-              aria-label="Country (Territory) Code"
-              defaultValue={address?.territoryCode ?? ""}
+              maxLength={2}
+              pattern="[A-Za-z]{2}"
+              title="Two-letter country code, such as US or GB"
+              aria-label="Country Code"
+              defaultValue={address?.countryCode ?? ""}
             />
           </div>
           <div className="space-y-1">

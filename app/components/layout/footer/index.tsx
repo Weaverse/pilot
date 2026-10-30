@@ -1,5 +1,8 @@
-import { Image } from "@shopify/hydrogen";
-import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
+import { ShopifyImage } from "~/components/shopify-image";
+import {
+  useThemeSettings,
+  useTranslation,
+} from "@weaverse/hydrogen/react-router";
 import { cva } from "class-variance-authority";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import { useShopMenu } from "~/hooks/use-shop-menu";
@@ -73,7 +76,7 @@ export function Footer() {
             <div className="flex flex-col gap-6">
               {footerLogoData ? (
                 <div className="relative" style={{ width: footerLogoWidth }}>
-                  <Image
+                  <ShopifyImage
                     data={footerLogoData}
                     sizes="auto"
                     width={500}

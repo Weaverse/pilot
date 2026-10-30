@@ -1,14 +1,14 @@
 import {
-  getAdjacentAndFirstAvailableVariants,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { Fragment } from "react";
 import { useLoaderData } from "react-router";
 import { ProductBadges } from "~/components/product/badges";
+import { useSelectedVariant } from "~/components/product/product-form";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductBadgesComponentProps extends HydrogenComponentProps {}
+interface ProductBadgesComponentProps extends WeaverseComponentProps {}
 
 export default function ProductBadgesComponent(
   props: ProductBadgesComponentProps,
@@ -16,14 +16,7 @@ export default function ProductBadgesComponent(
   const { ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
 
-  const selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
-
-  if (!product) {
-    return null;
-  }
+  const selectedVariant = useSelectedVariant(product);
 
   return (
     <div

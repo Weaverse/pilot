@@ -1,12 +1,13 @@
-import type { RouteLoaderArgs } from "@weaverse/hydrogen";
+import { gql, type StorefrontApi } from "@shopify/hydrogen";
+import type { RouteLoaderArgs } from "@weaverse/hydrogen/react-router";
 import type { MetaArgs } from "react-router";
-import type { ArticleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { resolveLocaleFromRequest } from "~/utils/locale";
 import { seoMetaFromMatches } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -27,13 +28,16 @@ export async function loader(args: RouteLoaderArgs) {
 
   // Load blog data and weaverseData in parallel
   const [{ blog }, weaverseData] = await Promise.all([
-    storefront.query<ArticleQuery>(ARTICLE_QUERY, {
-      // `$language` is left to Hydrogen, which fills it from the storefront
-      // client's own closure — the Shopify provider enum. Passing
-      // `storefront.i18n.language` would send the market's public code, and
-      // bare `ZH` resolves to English.
-      variables: { blogHandle, articleHandle },
-    }),
+    storefront
+      .graphql(ARTICLE_QUERY, {
+        // `$language` is left to Hydrogen, which fills it from the request
+        // context — the Shopify provider enum. This client comes from
+        // `context.weaverse`, whose `i18n` carries the market's public code
+        // (Weaverse keys translations by it); bare `ZH` resolves to English.
+        variables: { blogHandle, articleHandle },
+        cache: CACHE_DEFAULT,
+      })
+      .then(unwrapStorefront),
     context.weaverse.loadPage({
       type: "ARTICLE",
       handle: articleHandle,
@@ -88,7 +92,7 @@ export default function Article() {
   return <WeaverseContent />;
 }
 
-const ARTICLE_QUERY = `#graphql
+const ARTICLE_QUERY = gql(`
   query article(
     $language: LanguageCode
     $blogHandle: String!
@@ -144,4 +148,9 @@ const ARTICLE_QUERY = `#graphql
     publishedAt
     title
   }
-` as const;
+`);
+
+export type ArticleQuery = StorefrontApi.ResultOf<typeof ARTICLE_QUERY>;
+export type ArticleFragment = NonNullable<
+  ArticleQuery["blog"]
+>["articles"]["nodes"][number];

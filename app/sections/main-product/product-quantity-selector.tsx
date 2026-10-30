@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useEffect } from "react";
 import { useLoaderData } from "react-router";
 import { create } from "zustand";
@@ -61,7 +64,7 @@ export function useProductQuantity(productId: string | undefined) {
   return { quantity, setQuantity };
 }
 
-interface ProductQuantitySelectorProps extends HydrogenComponentProps {
+interface ProductQuantitySelectorProps extends WeaverseComponentProps {
   labelText: string;
 }
 

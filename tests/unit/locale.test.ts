@@ -8,8 +8,8 @@ import {
   localizePath,
   resolveLocale,
   SUPPORTED_LOCALES,
-  unauthorizedRedirect,
 } from "../../app/utils/locale";
+import { createTestContext } from "../support/hydrogen-env";
 
 test("every configured market is internally consistent", () => {
   const seenPrefixes = new Set<string>();
@@ -200,18 +200,26 @@ test("round-trips every market through localize and delocalize", () => {
   }
 });
 
-test("the request boundary refuses unsupported markets", async () => {
-  const server = await readFile(
-    new URL("../../server.ts", import.meta.url),
-    "utf8",
+test("unsupported markets render the 404 page", async () => {
+  const [guard, routes, server] = await Promise.all(
+    [
+      "../../app/routes/market-guard.ts",
+      "../../app/routes.ts",
+      "../../server.ts",
+    ].map((path) => readFile(new URL(path, import.meta.url), "utf8")),
   );
 
-  // The predicate is worthless unless the boundary actually calls it, and it
-  // must run before `handleRequest` so no route can serve the invented URL.
-  expect(server).toContain("isUnsupportedMarketPath");
-  expect(server).toContain("status: 404");
-  expect(server.indexOf("isUnsupportedMarketPath")).toBeLessThan(
-    server.indexOf("await handleRequest(request)"),
+  // The predicate is worthless unless something calls it. The guard throws
+  // below root so the error boundary still has root data for the header and
+  // footer, and it must wrap every localized route.
+  expect(guard).toContain("isUnsupportedMarketPath(");
+  expect(guard).toContain("status: 404");
+  expect(routes).toMatch(
+    /layout\("routes\/market-guard\.ts",\s*\[\s*\.\.\.prefix\(":locale\?"/,
+  );
+  // An invented market must not be redirected by the Shopify URL redirects.
+  expect(server).toMatch(
+    /response\.status === 404 && !isUnsupportedMarketPath\(/,
   );
 });
 
@@ -246,7 +254,6 @@ test("customer-account navigation keeps the shopper's market", async () => {
 
   for (const route of [
     "routes/account/catch-all.ts",
-    "routes/account/auth/logout.ts",
     "routes/account/edit.tsx",
     "routes/account/orders/order.tsx",
     "routes/account/address/index.tsx",
@@ -266,19 +273,35 @@ test("customer-account navigation keeps the shopper's market", async () => {
     });
   }
 
+  // Sign-in and sign-out go to Hydrogen's fixed, unprefixed handlers, so the
+  // market has to ride in the URL the helpers build (`return_to`/`locale`).
   const header = await read("components/layout/header.tsx");
   expect(header).not.toContain('sign-in-url="/account/login"');
-  expect(header).toContain("usePrefixPathWithLocale");
+  expect(header).toContain("customerAccountLoginPath(");
+  const dashboard = await read("routes/account/dashboard/index.tsx");
+  expect(dashboard).toContain("customerAccountLogoutPath(");
 });
 
-test("an unauthenticated account visit signs in on the same market", () => {
-  // Hydrogen's default handler redirects to a fixed `/account/login`, so a
+/** The sign-in redirect an anonymous account request is answered with. */
+async function loginRedirectFor(url: string): Promise<Response> {
+  const context = await createTestContext(url);
+  const thrown = await context.customerAccount.handleAuthStatus().then(
+    () => null,
+    (error: unknown) => error,
+  );
+  if (!(thrown instanceof Response)) {
+    throw new Error(`expected a login redirect for ${url}`);
+  }
+  return thrown;
+}
+
+test("an unauthenticated account visit signs in on the same market", async () => {
+  // Hydrogen's login handler is a fixed, unprefixed `/account/login`, so a
   // shopper bounced out of /de-de/account would sign in on the US storefront
-  // and return there afterwards.
+  // and return there afterwards unless the market rides in the query.
   for (const locale of SUPPORTED_LOCALES) {
-    const response = unauthorizedRedirect(
-      new Request(`https://shop.test${locale.pathPrefix}/account/orders/123`),
-      locale,
+    const response = await loginRedirectFor(
+      `https://shop.test${locale.pathPrefix}/account/orders/123`,
     );
     const location = new URL(
       response.headers.get("Location") as string,
@@ -286,24 +309,40 @@ test("an unauthenticated account visit signs in on the same market", () => {
     );
 
     expect(response.status).toBe(302);
-    expect(location.pathname).toBe(`${locale.pathPrefix}/account/login`);
+    expect(location.pathname).toBe("/account/login");
     // The shopper must come back to the market's page, not the default one.
     expect(location.searchParams.get("return_to")).toBe(
       `${locale.pathPrefix}/account/orders/123`,
     );
+    // And Shopify's login page renders in the market's language.
+    expect(location.searchParams.get("locale")).toBeTruthy();
   }
 });
 
-test("a single-fetch account request returns to a real page path", () => {
+test("the login page renders in the market's provider language", async () => {
+  // Shopify reads `locale` the way classic Hydrogen built it from the request
+  // language: script-specific for Chinese, bare for single-script markets.
+  const localeFor = async (prefix: string) =>
+    new URL(
+      (
+        await loginRedirectFor(`https://shop.test${prefix}/account`)
+      ).headers.get("Location") as string,
+      "https://shop.test",
+    ).searchParams.get("locale");
+
+  expect({
+    de: await localeFor("/de-de"),
+    zhCn: await localeFor("/zh-cn"),
+    zhHk: await localeFor("/zh-hk"),
+  }).toEqual({ de: "de", zhCn: "zh-CN", zhHk: "zh-TW" });
+});
+
+test("a single-fetch account request returns to a real page path", async () => {
   // React Router requests `/de-de/account.data`; returning the shopper to that
   // URL after login would hand them a data payload instead of a page.
-  const german = SUPPORTED_LOCALES.find(
-    (locale) => locale.hreflang === "de-DE",
-  ) as (typeof SUPPORTED_LOCALES)[number];
   const location = new URL(
-    unauthorizedRedirect(
-      new Request("https://shop.test/de-de/account.data"),
-      german,
+    (
+      await loginRedirectFor("https://shop.test/de-de/account.data")
     ).headers.get("Location") as string,
     "https://shop.test",
   );

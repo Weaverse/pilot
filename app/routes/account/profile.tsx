@@ -1,5 +1,9 @@
+import {
+  gql,
+  type InferResult,
+  type SourceOf,
+} from "@shopify/hydrogen/customer-account";
 import type { CustomerUpdateInput } from "@shopify/hydrogen/customer-account-api-types";
-import type { CustomerUpdateMutation } from "customer-account-api.generated";
 import {
   type ActionFunctionArgs,
   data,
@@ -14,7 +18,8 @@ import { Button } from "~/components/button";
 import { Section } from "~/components/section";
 
 // https://shopify.dev/docs/api/customer/latest/mutations/customerUpdate
-export const CUSTOMER_UPDATE_MUTATION = `#graphql
+// `$language` is filled from the request's market by the client.
+export const CUSTOMER_UPDATE_MUTATION = gql(`#graphql
   mutation customerUpdate(
     $customer: CustomerUpdateInput!
     $language: LanguageCode
@@ -37,11 +42,18 @@ export const CUSTOMER_UPDATE_MUTATION = `#graphql
       }
     }
   }
-` as const;
+`);
+
+type CustomerUpdateMutation = InferResult<
+  SourceOf<typeof CUSTOMER_UPDATE_MUTATION>
+>;
+type UpdatedCustomer = NonNullable<
+  NonNullable<CustomerUpdateMutation["customerUpdate"]>["customer"]
+>;
 
 export type ActionResponse = {
   error: string | null;
-  customer: CustomerUpdateMutation["customerUpdate"]["customer"] | null;
+  customer: UpdatedCustomer | null;
 };
 
 export const meta: MetaFunction = () => {
@@ -65,23 +77,19 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   try {
     const customer: CustomerUpdateInput = {};
-    const validInputKeys = ["firstName", "lastName"] as const;
-    for (const [key, value] of form.entries()) {
-      if (!validInputKeys.includes(key as any)) {
-        continue;
-      }
+    for (const key of ["firstName", "lastName"] as const) {
+      const value = form.get(key);
       if (typeof value === "string" && value.length) {
-        customer[key as (typeof validInputKeys)[number]] = value;
+        customer[key] = value;
       }
     }
 
     // update customer and possibly password
-    const { data: updateData, errors } = await customerAccount.mutate(
+    const { data: updateData, errors } = await customerAccount.graphql(
       CUSTOMER_UPDATE_MUTATION,
       {
         variables: {
           customer,
-          language: customerAccount.i18n.language,
         },
       },
     );
@@ -112,9 +120,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 }
 
 export default function AccountProfile() {
-  const account = useOutletContext<{
-    customer: CustomerUpdateMutation["customerUpdate"]["customer"];
-  }>();
+  const account = useOutletContext<{ customer: UpdatedCustomer }>();
   const { state } = useNavigation();
   const actionData = useActionData<ActionResponse>();
   const customer = actionData?.customer ?? account?.customer;

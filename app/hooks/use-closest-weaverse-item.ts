@@ -1,4 +1,4 @@
-import { useItemInstance } from "@weaverse/hydrogen";
+import { useItemInstance } from "@weaverse/hydrogen/react-router";
 import { type RefObject, useEffect, useState } from "react";
 
 export function useClosestWeaverseItem<T>(ref: RefObject<T>) {

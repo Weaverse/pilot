@@ -1,28 +1,20 @@
 import {
-  getAdjacentAndFirstAvailableVariants,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
+import { useSelectedVariant } from "~/components/product/product-form";
 import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductPricesProps extends HydrogenComponentProps {
+interface ProductPricesProps extends WeaverseComponentProps {
   showCompareAtPrice: boolean;
 }
 
 export default function ProductPrices(props: ProductPricesProps) {
   const { showCompareAtPrice, ...rest } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
-
-  const selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
-
-  if (!product) {
-    return null;
-  }
+  const selectedVariant = useSelectedVariant(product);
 
   return (
     <div {...rest}>

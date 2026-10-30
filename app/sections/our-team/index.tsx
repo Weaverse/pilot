@@ -1,11 +1,13 @@
+import { gql, type StorefrontApi } from "@shopify/hydrogen";
 import {
-  type ComponentLoaderArgs,
+  type WeaverseComponentLoaderArgs,
   createSchema,
   type WeaverseMetaObject,
-} from "@weaverse/hydrogen";
-import type { OurTeamQuery } from "storefront-api.generated";
+} from "@weaverse/hydrogen/react-router";
 import { backgroundInputs } from "~/components/background-image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { CACHE_DEFAULT } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
 type OurTeamData = {
   metaobject: WeaverseMetaObject;
@@ -20,22 +22,27 @@ function OurTeam(props: OurTeamProps) {
   return <Section {...rest}>{children}</Section>;
 }
 
-export const loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
+export const loader = async (
+  args: WeaverseComponentLoaderArgs<OurTeamData>,
+) => {
   const { weaverse, data } = args;
   const { storefront } = weaverse;
   const { metaobject, membersCount } = data;
   if (metaobject) {
-    return await storefront.query<OurTeamQuery>(OUR_TEAM_QUERY, {
-      variables: {
-        type: metaobject.handle,
-        first: membersCount,
-      },
-    });
+    return unwrapStorefront(
+      await storefront.graphql(OUR_TEAM_QUERY, {
+        variables: {
+          type: metaobject.handle,
+          first: membersCount,
+        },
+        cache: CACHE_DEFAULT,
+      }),
+    );
   }
   return null;
 };
 
-const OUR_TEAM_QUERY = `#graphql
+const OUR_TEAM_QUERY = gql(`
   query OurTeam(
     $country: CountryCode
     $language: LanguageCode
@@ -66,7 +73,9 @@ const OUR_TEAM_QUERY = `#graphql
       }
     }
   }
-`;
+`);
+
+export type OurTeamQuery = StorefrontApi.ResultOf<typeof OUR_TEAM_QUERY>;
 
 export const schema = createSchema({
   type: "our-team",

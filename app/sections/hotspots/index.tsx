@@ -1,5 +1,8 @@
-import type { WeaverseImage } from "@weaverse/hydrogen";
-import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
+import type { WeaverseImage } from "@weaverse/hydrogen/react-router";
+import {
+  createSchema,
+  IMAGES_PLACEHOLDERS,
+} from "@weaverse/hydrogen/react-router";
 import Heading, {
   type HeadingProps,
   headingInputs,

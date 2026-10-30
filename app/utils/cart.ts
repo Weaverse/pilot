@@ -1,9 +1,16 @@
-import type { OptimisticCart } from "@shopify/hydrogen";
-import type { CartApiQueryFragment } from "storefront-api.generated";
+import type { CartData, CartLineData } from "~/components/cart/cart-store";
 
-type Cart = OptimisticCart<CartApiQueryFragment>;
-type CartLine = Cart["lines"]["nodes"][number];
-type DiscountAllocation = NonNullable<CartLine["discountAllocations"]>[number];
+/**
+ * Pilot's own cart endpoints (registered in `app/.server/cart.ts`). Like
+ * Hydrogen's `/api/cart`, they are unprefixed: the market comes from the
+ * `Referer`.
+ */
+export const CART_BUYER_IDENTITY_PATH = "/api/cart/buyer-identity";
+export const CART_GIFT_CARDS_PATH = "/api/cart/gift-cards";
+
+type DiscountAllocation = NonNullable<
+  CartLineData["discountAllocations"]
+>[number];
 
 // Shopify's CartDiscountAllocation.targetType is LINE_ITEM | SHIPPING_LINE.
 // Only LINE_ITEM allocations reduce the merchandise prices the cart renders;
@@ -48,42 +55,36 @@ export function toMoney<C extends string>(
 }
 
 /** Total LINE_ITEM discount applied to a single cart line (0 when none). */
-export function lineDiscountTotal(line: CartLine): number {
+export function lineDiscountTotal(line: CartLineData): number {
   return sumLineItemAllocations(line?.discountAllocations);
 }
 
 /**
  * Aggregate discount shown in the cart summary's `Discount` row.
  *
- * Discount allocations live in two disjoint scopes that never overlap: an
- * order-level discount ("X% off entire order") lands in `cart.discountAllocations`
- * (always complete), while a line-scoped code ("X% off <collection>") allocates
- * onto each `line.discountAllocations` and leaves the cart-level array empty.
+ * Every line's `allDiscountAllocations` (`discountAllocations(lineLevelOnly:
+ * false)`) carries both its line-scoped discounts ("X% off <collection>") and
+ * its share of order-level ones ("X% off entire order"). Summed over the
+ * lines, that is the same total the deprecated `Cart.discountAllocations` plus
+ * the line-level allocations gave. Shipping discounts are not product
+ * discounts and are left out, as before.
  *
  * Per-line allocations are only as complete as the loaded line window
- * (`lines(first: $numCartLines)`, Hydrogen's default 100). When the cart has
- * more lines than that (`pageInfo.hasNextPage`), a line-scoped discount past the
- * window would be silently omitted, so the summed figure would under-report and
- * no longer reconcile with checkout. In that rare case we return `null` and the
- * caller hides the row rather than render a wrong total — better no figure than
- * a misleading one.
+ * (`lines(first: 250)`). When the cart has more lines than that
+ * (`pageInfo.hasNextPage`), a line-scoped discount past the window would be
+ * silently omitted, so the summed figure would under-report and no longer
+ * reconcile with checkout. In that rare case we return `null` and the caller
+ * hides the row rather than render a wrong total — better no figure than a
+ * misleading one.
  */
-export function cartDiscountTotal(cart: Cart) {
-  // OptimisticCart narrows `lines` to { nodes } and drops the connection
-  // pageInfo, but the runtime cart still carries it (the query selects
-  // pageInfo.hasNextPage). Read it through a precise structural type, not any.
-  const linesConnection = cart.lines as {
-    pageInfo?: { hasNextPage?: boolean };
-  };
-  if (linesConnection?.pageInfo?.hasNextPage) {
+export function cartDiscountTotal(cart: CartData) {
+  if (cart.lines.pageInfo?.hasNextPage) {
     return null;
   }
-  const amount =
-    sumLineItemAllocations(cart.discountAllocations) +
-    (cart.lines?.nodes ?? []).reduce(
-      (sum, line) => sum + sumLineItemAllocations(line.discountAllocations),
-      0,
-    );
+  const amount = cart.lines.nodes.reduce(
+    (sum, line) => sum + sumLineItemAllocations(line.allDiscountAllocations),
+    0,
+  );
   const currencyCode =
     cart.cost?.subtotalAmount?.currencyCode ??
     cart.cost?.totalAmount?.currencyCode;

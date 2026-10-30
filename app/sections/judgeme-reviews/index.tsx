@@ -1,4 +1,4 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen/react-router";
 import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";

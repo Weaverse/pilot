@@ -1,10 +1,13 @@
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
 import { BundledVariants } from "~/components/product/bundled-variants";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductBundledVariantsProps extends HydrogenComponentProps {
+interface ProductBundledVariantsProps extends WeaverseComponentProps {
   headingText: string;
 }
 

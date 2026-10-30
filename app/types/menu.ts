@@ -1,8 +1,9 @@
-import type {
-  ChildMenuItemFragment,
-  MenuFragment,
-  ParentMenuItemFragment,
-} from "storefront-api.generated";
+import type { LayoutQuery } from "~/.server/root";
+
+export type MenuFragment = NonNullable<LayoutQuery["headerMenu"]>;
+export type ParentMenuItemFragment = MenuFragment["items"][number];
+export type MenuItemFragment = ParentMenuItemFragment["items"][number];
+export type ChildMenuItemFragment = Omit<MenuItemFragment, "items">;
 
 type EnhancedMenuItemProps = {
   to: string;
@@ -12,7 +13,7 @@ type EnhancedMenuItemProps = {
 
 type ChildEnhancedMenuItem = ChildMenuItemFragment & EnhancedMenuItemProps;
 
-type ParentEnhancedMenuItem = (ParentMenuItemFragment &
+type ParentEnhancedMenuItem = (Omit<ParentMenuItemFragment, "items"> &
   EnhancedMenuItemProps) & {
   items: ChildEnhancedMenuItem[];
 };

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import type { ProductCardFragment } from "storefront-api.generated";
+import type { ProductCardFragment } from "~/graphql/fragments";
 import { ProductCard } from "~/components/product-card";
 import { useProductGridStore } from "./store";
 
@@ -9,7 +9,7 @@ interface ProductsLoadedOnScrollProps {
   inView: boolean;
   nextPageUrl: string;
   hasNextPage: boolean;
-  state: any;
+  state: unknown;
   minCardWidth: number;
   gapX: number;
   gapY: number;

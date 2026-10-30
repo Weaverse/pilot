@@ -1,10 +1,10 @@
-import { Image } from "@shopify/hydrogen";
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   type WeaverseImage,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { Icon } from "~/components/icon";
+import { ShopifyImage } from "~/components/shopify-image";
 import { cn } from "~/utils/cn";
 
 let ICONS = {
@@ -17,7 +17,7 @@ let ICONS = {
 
 type IconOption = keyof typeof ICONS;
 
-interface ProductPromoTextProps extends HydrogenComponentProps {
+interface ProductPromoTextProps extends WeaverseComponentProps {
   text: string;
   icon: IconOption;
   customIcon: WeaverseImage;
@@ -41,7 +41,7 @@ export default function ProductPromoText(props: ProductPromoTextProps) {
       style={{ color: textColor, backgroundColor }}
     >
       {customIcon?.url ? (
-        <Image
+        <ShopifyImage
           data={customIcon}
           width={20}
           height={20}

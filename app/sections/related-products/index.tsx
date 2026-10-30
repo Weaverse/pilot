@@ -1,4 +1,4 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen/react-router";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 interface RelatedProductsProps extends SectionProps {

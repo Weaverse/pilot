@@ -5,7 +5,7 @@ import type {
 import clsx from "clsx";
 import { useEffect, useId } from "react";
 import { useFetcher } from "react-router";
-import type { ProductCardFragment } from "storefront-api.generated";
+import type { ProductCardFragment } from "~/graphql/fragments";
 import { ProductCard } from "~/components/product-card";
 import { Skeleton } from "~/components/skeleton";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";

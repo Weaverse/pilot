@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
@@ -6,7 +9,7 @@ import { Icon } from "~/components/icon";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import type { CustomerApiPlayLoad } from "~/routes/api/customer";
 
-interface NewsLetterInputProps extends HydrogenComponentProps {
+interface NewsLetterInputProps extends WeaverseComponentProps {
   width: number;
   placeholder: string;
   buttonText: string;

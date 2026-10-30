@@ -1,6 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { type RefObject, useEffect, useState } from "react";
+import { PredictiveSearchProvider } from "@shopify/hydrogen/react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
@@ -8,6 +9,7 @@ import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { cn } from "~/utils/cn";
 import { PopularKeywords } from "./popular-keywords";
+import { PREDICTIVE_SEARCH_SETTINGS } from "./predictive-search-query";
 import { PredictiveSearchResult } from "./predictive-search-result";
 import { PredictiveSearchForm } from "./search-form";
 
@@ -54,63 +56,71 @@ export function PredictiveSearchButton() {
           <VisuallyHidden.Root asChild>
             <Dialog.Title>Predictive search</Dialog.Title>
           </VisuallyHidden.Root>
-          <div className="relative pt-(--topbar-height)">
-            <PredictiveSearchForm>
-              {({ fetchResults, inputRef }) => (
-                <div className="mx-auto w-140 max-w-[90vw] space-y-2 py-6">
-                  <div className="border-line-subtle flex items-center gap-3 rounded-lg border px-3">
-                    <Icon
-                      name="magnifying-glass"
-                      className="h-5 w-5 shrink-0 text-gray-500"
-                    />
-                    <input
-                      name="q"
-                      type="search"
-                      onChange={(e) => fetchResults(e.target.value)}
-                      onFocus={(e) => fetchResults(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          const query = e.currentTarget.value.trim();
-                          if (query) {
-                            const locale = params.locale
-                              ? `/${params.locale}`
-                              : "";
-                            window.location.href = `${locale}/search?q=${encodeURIComponent(query)}`;
+          {/* Mounted with the dialog, so every open starts with fresh results.
+              No debounce: a request per keystroke, earlier ones cancelled, as before. */}
+          <PredictiveSearchProvider
+            {...PREDICTIVE_SEARCH_SETTINGS}
+            types={[...PREDICTIVE_SEARCH_SETTINGS.types]}
+            debounceInMs={0}
+          >
+            <div className="relative pt-(--topbar-height)">
+              <PredictiveSearchForm>
+                {({ fetchResults, inputRef }) => (
+                  <div className="mx-auto w-140 max-w-[90vw] space-y-2 py-6">
+                    <div className="border-line-subtle flex items-center gap-3 rounded-lg border px-3">
+                      <Icon
+                        name="magnifying-glass"
+                        className="h-5 w-5 shrink-0 text-gray-500"
+                      />
+                      <input
+                        name="q"
+                        type="search"
+                        onChange={(e) => fetchResults(e.target.value)}
+                        onFocus={(e) => fetchResults(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            const query = e.currentTarget.value.trim();
+                            if (query) {
+                              const locale = params.locale
+                                ? `/${params.locale}`
+                                : "";
+                              window.location.href = `${locale}/search?q=${encodeURIComponent(query)}`;
+                            }
                           }
-                        }
-                      }}
-                      placeholder="Enter a keyword"
-                      ref={inputRef}
-                      autoComplete="off"
-                      className="h-full w-full border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
-                    />
-                    <button
-                      type="button"
-                      className="shrink-0 p-1 text-gray-500"
-                      onClick={() => {
+                        }}
+                        placeholder="Enter a keyword"
+                        ref={inputRef}
+                        autoComplete="off"
+                        className="h-full w-full border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
+                      />
+                      <button
+                        type="button"
+                        className="shrink-0 p-1 text-gray-500"
+                        onClick={() => {
+                          if (inputRef.current) {
+                            inputRef.current.value = "";
+                            fetchResults("");
+                          }
+                        }}
+                      >
+                        <Icon name="x" className="h-5 w-5" />
+                      </button>
+                    </div>
+                    <PopularKeywords
+                      onKeywordClick={(keyword) => {
                         if (inputRef.current) {
-                          inputRef.current.value = "";
-                          fetchResults("");
+                          inputRef.current.value = keyword;
+                          fetchResults(keyword);
                         }
                       }}
-                    >
-                      <Icon name="x" className="h-5 w-5" />
-                    </button>
+                    />
                   </div>
-                  <PopularKeywords
-                    onKeywordClick={(keyword) => {
-                      if (inputRef.current) {
-                        inputRef.current.value = keyword;
-                        fetchResults(keyword);
-                      }
-                    }}
-                  />
-                </div>
-              )}
-            </PredictiveSearchForm>
-            <PredictiveSearchResults />
-          </div>
+                )}
+              </PredictiveSearchForm>
+              <PredictiveSearchResults />
+            </div>
+          </PredictiveSearchProvider>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
@@ -146,10 +156,10 @@ function PredictiveSearchResults() {
             type="products"
             items={products?.items?.slice(0, 5)}
           />
-          {searchTerm.current && (
+          {searchTerm && (
             <div>
               <Link
-                to={`/search?q=${searchTerm.current}`}
+                to={`/search?q=${searchTerm}`}
                 variant="underline"
                 className="flex w-fit items-center gap-2"
               >
@@ -164,13 +174,13 @@ function PredictiveSearchResults() {
   );
 }
 
-function NoResults({ searchTerm }: { searchTerm: RefObject<string> }) {
-  if (!searchTerm.current) {
+function NoResults({ searchTerm }: { searchTerm: string }) {
+  if (!searchTerm) {
     return null;
   }
   return (
     <p className="bg-background shadow-header w-160 rounded-b-lg p-6">
-      No results found for <q>{searchTerm.current}</q>
+      No results found for <q>{searchTerm}</q>
     </p>
   );
 }

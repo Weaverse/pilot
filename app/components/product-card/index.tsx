@@ -1,15 +1,14 @@
-import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { IMAGES_PLACEHOLDERS, useThemeSettings } from "@weaverse/hydrogen";
+import {
+  IMAGES_PLACEHOLDERS,
+  useThemeSettings,
+} from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { useState } from "react";
 import { useViewTransitionState } from "react-router";
-import type {
-  ProductCardFragment,
-  ProductVariantFragment,
-} from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { Money } from "~/components/money";
 import {
   type BadgeStyleSettings,
   BestSellerBadge,
@@ -21,6 +20,10 @@ import {
 import { VariantPrices } from "~/components/product/variant-prices";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Spinner } from "~/components/spinner";
+import type {
+  ProductCardFragment,
+  ProductVariantFragment,
+} from "~/graphql/fragments";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import type { ThemeSettings } from "~/types/weaverse";
@@ -89,8 +92,8 @@ export function ProductCard({
 
   const firstVariant = product.selectedOrFirstAvailableVariant;
   const params = new URLSearchParams(
-    mapSelectedProductOptionToObject(
-      (selectedVariant || firstVariant)?.selectedOptions || [],
+    ((selectedVariant || firstVariant)?.selectedOptions || []).map(
+      ({ name, value }) => [name, value],
     ),
   );
 
@@ -113,6 +116,7 @@ export function ProductCard({
   // Use placeholder if no image exists
   if (!image) {
     image = {
+      id: "placeholder",
       url: IMAGES_PLACEHOLDERS.image,
       altText: `Picture of ${product.title}`,
       width: 800,

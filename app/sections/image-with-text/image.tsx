@@ -1,9 +1,9 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   IMAGES_PLACEHOLDERS,
   type WeaverseImage,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { Image } from "~/components/image";
@@ -26,7 +26,7 @@ const variants = cva("h-auto w-full", {
 });
 
 interface ImageWithTextImageProps
-  extends VariantProps<typeof variants>, HydrogenComponentProps {
+  extends VariantProps<typeof variants>, WeaverseComponentProps {
   image: WeaverseImage | string;
   imageAspectRatio: ImageAspectRatio;
 }

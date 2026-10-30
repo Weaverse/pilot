@@ -1,9 +1,9 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   type InspectorGroup,
   useThemeSettings,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import {
@@ -78,7 +78,7 @@ export interface LinkData
 export interface LinkProps
   extends
     HTMLAttributes<HTMLAnchorElement>,
-    Partial<Omit<HydrogenComponentProps, "children">>,
+    Partial<Omit<WeaverseComponentProps, "children">>,
     LinkData {
   animate?: boolean;
 }
@@ -86,7 +86,11 @@ export interface LinkProps
 function checkExternal(to: LinkProps["to"]) {
   if (typeof to === "string") {
     // Check if it's a full URL with protocol
-    return /^https?:\/\//.test(to) || /^mailto:/.test(to) || /^tel:/.test(to);
+    return (
+      /^https?:\/\//.test(to) ||
+      to.startsWith("mailto:") ||
+      to.startsWith("tel:")
+    );
   }
   if (typeof to === "object" && to.pathname) {
     // For object syntax, only check if pathname looks like an external URL

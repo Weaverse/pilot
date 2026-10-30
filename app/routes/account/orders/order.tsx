@@ -1,7 +1,6 @@
 import { flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
 import clsx from "clsx";
-import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { redirect, useLoaderData } from "react-router";
 import { Icon } from "~/components/icon";
@@ -10,7 +9,7 @@ import { Section } from "~/components/section";
 import { ORDER_STATUS } from "~/routes/account/dashboard/orders-history";
 import { localizedPathForRequest } from "~/utils/locale";
 import { OrderLineItem } from "./order-line-item";
-import { CUSTOMER_ORDER_QUERY } from "./order-query";
+import { CUSTOMER_ORDER_QUERY, type OrderFragment } from "./order-query";
 import { OrderSummary } from "./order-summary";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -30,7 +29,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       ? `gid://shopify/Order/${params.id}?key=${orderToken}`
       : `gid://shopify/Order/${params.id}`;
 
-    const { data, errors } = await context.customerAccount.query<OrderQuery>(
+    const { data, errors } = await context.customerAccount.graphql(
       CUSTOMER_ORDER_QUERY,
       { variables: { orderId } },
     );
@@ -62,6 +61,8 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
       fulfillmentStatus,
     };
   } catch (error) {
+    // The login redirect for a signed-out shopper must not become a 404.
+    if (error instanceof Response) throw error;
     throw new Response(error instanceof Error ? error.message : undefined, {
       status: 404,
     });

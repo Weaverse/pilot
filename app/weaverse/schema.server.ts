@@ -1,4 +1,4 @@
-import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
+import type { WeaverseThemeSchema } from "@weaverse/hydrogen/react-router";
 import staticContent from "~/i18n/en.json" with { type: "json" };
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "~/utils/locale";
 import packageJson from "../../package.json" with { type: "json" };
@@ -16,7 +16,7 @@ import { searchSettings } from "./settings/search";
 import { shopifyChatSettings } from "./settings/shopify-chat";
 import { typographySettings } from "./settings/typography";
 
-export const themeSchema: HydrogenThemeSchema = {
+export const themeSchema: WeaverseThemeSchema = {
   info: {
     version: packageJson.version,
     author: "Weaverse",

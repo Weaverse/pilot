@@ -1,4 +1,4 @@
-import type { InspectorGroup } from "@weaverse/hydrogen";
+import type { InspectorGroup } from "@weaverse/hydrogen/react-router";
 import type { CSSProperties } from "react";
 import { cn } from "~/utils/cn";
 

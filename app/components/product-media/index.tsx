@@ -1,13 +1,13 @@
 import type { VariantProps } from "class-variance-authority";
 import type {
-  Media_MediaImage_Fragment,
   MediaFragment,
-  ProductQuery,
   ProductVariantFragment,
-} from "storefront-api.generated";
+} from "~/graphql/fragments";
+import type { ProductQuery } from "~/graphql/queries";
 import type { ImageAspectRatio } from "~/types/others";
 import { MediaGrid, type mediaGridVariants } from "./media-grid";
 import { MediaSlider } from "./media-slider";
+import type { Media_MediaImage_Fragment } from "./types";
 import { getVariantGroupedMedia } from "./variant-media-group";
 
 function getFeaturedMediaAspectRatio(

@@ -38,7 +38,7 @@ This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page 
 ## Architecture Overview
 
 ### Route Structure
-Routes are defined in `app/routes.ts` using React Router v7's programmatic routing with Hydrogen's `hydrogenRoutes` wrapper (migrated from flat file-based routing in v7.0.0). All routes support internationalization via the `:locale?` prefix:
+Routes are defined in `app/routes.ts` using React Router v7's programmatic routing. All routes support internationalization via the `:locale?` prefix:
 - Homepage: `routes/home.tsx`
 - Products: `routes/products/product.tsx` (`:productHandle`)
 - Collections: `routes/collections/collection.tsx` (`:collectionHandle`)
@@ -49,6 +49,8 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 - Blogs: `routes/blogs/blog.tsx`, `routes/blogs/article.tsx`
 - SEO: `routes/seo/robots.ts`, `routes/seo/sitemap.ts`
 
+**Hydrogen-owned routes**: `@shopify/hydrogen` 2026.10 is a request-handler library. `server.ts` builds the request context (`app/.server/context.ts`) and calls `handleShopifyRoutes` before React Router, so these paths are answered there and must not get route files: `/api/cart` (plus Pilot's `/api/cart/buyer-identity` and `/api/cart/gift-cards` in `app/.server/cart.ts`), `/api/predictive-search`, `/api/account/token`, the Storefront API proxy (`/api/{version}/graphql.json`, `/__shopify/*`), `/checkout`, cart and buy permalinks with `payment` (Shop Pay), and Customer Account OAuth (`/account/login|authorize|refresh|logout`). These paths are never market-prefixed; the market comes from the page's `Referer` (`resolveRequestLocale`). Link to the account paths with plain `<a>`/`<form>`, not `<Link>`/`<Form>`.
+
 **Adding New Routes**: Always add new routes to `app/routes.ts` using the `route()`, `index()`, `layout()`, and `prefix()` helpers from `@react-router/dev/routes`. Non-HTML resource routes served from the site root (e.g. `robots.txt`, `manifest.webmanifest`) are registered top-level, outside the `:locale?` prefix.
 
 ### Key Architectural Patterns
@@ -56,7 +58,9 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 1. **Parallel Data Loading**: Every page route loads Weaverse data alongside GraphQL queries using `Promise.all()`:
    ```typescript
    const [{ shop, product }, weaverseData, productReviews] = await Promise.all([
-     storefront.query(PRODUCT_QUERY, { variables }),
+     storefront
+       .graphql(PRODUCT_QUERY, { variables, cache: CACHE_DEFAULT })
+       .then(unwrapStorefront),
      weaverse.loadPage({ type: "PRODUCT", handle }),
      getJudgeMeProductReviews({ context, handle }),
    ]);
@@ -71,6 +75,10 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
    - GraphQL fragments in `/app/graphql/fragments.ts`
    - Complete queries in `/app/graphql/queries.ts`
    - Route loaders handle all data fetching server-side
+   - Documents are written with `gql()` from `@shopify/hydrogen` (fragments compose via its second argument, never `${}` interpolation). Customer Account documents use `gql` from `@shopify/hydrogen/customer-account`.
+   - `storefront.graphql(doc, { variables, cache })` returns `{ data, errors }`; unwrap with `unwrapStorefront` (`~/utils/storefront`) to throw on errors like classic `storefront.query` did.
+   - Every query passes an explicit `cache` (`CACHE_DEFAULT`, `CACHE_SHORT`, `CACHE_LONG`, `CACHE_NONE` from `~/utils/cache`); there is no implicit default.
+   - Don't pass `country`/`language` in `variables`: the client injects them from the request context into `$country`/`$language` (Shopify's provider language, e.g. `ZH_TW`).
    - Use `routeHeaders` for consistent cache control
 
 4. **Styling**:
@@ -80,18 +88,15 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
    - Oxfmt sorts Tailwind classes in `clsx`, `cva`, and `cn` functions
 
 5. **Type Safety**:
-   - GraphQL types are auto-generated via codegen
+   - GraphQL result types are inferred from `gql()` documents by `@shopify/hydrogen/ts-plugin` (no codegen): `type XQuery = StorefrontApi.ResultOf<typeof X_QUERY>`, exported next to the document. Shared fragment types live in `app/graphql/fragments.ts`.
+   - `npm run typecheck` runs `react-router typegen`, `tsc` and `hydrogen gql check --fail-on-warn` (invalid or deprecated fields fail it).
    - Path alias `~/` maps to `/app/` directory
-   - Strict TypeScript configuration
-   - Two separate codegen outputs:
-     - `storefront-api.generated.d.ts` - For all storefront queries (excludes account routes)
-     - `customer-account-api.generated.d.ts` - For customer account queries (only in `*.account*.{ts,tsx,js,jsx}` files)
 
 ### Important Integrations
 
 - **Weaverse**: Visual page builder - sections must be registered in `/app/weaverse/components.ts`
 - **Judge.me**: Product reviews integration via utilities in `/app/utils/judgeme.ts`
-- **Combined Listings**: Product grouping system via `/app/utils/combined-listings.ts`
+- **Combined Listings**: Option values that belong to another product of a listing link to that product (`app/components/product/product-option-values.tsx`); filtering and grouping listings is a docs cookbook, not built in
 - **Customer Accounts**: New Shopify Customer Account API support (OAuth-based)
 - **Radix UI**: For accessible UI primitives (accordion, dialog, dropdown, etc.)
 - **Swiper**: For carousel/slideshow functionality
@@ -102,10 +107,10 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 1. **Creating a New Section**:
   ```typescript
   // app/sections/my-section/index.tsx
-  import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+  import { createSchema, type WeaverseComponentProps } from '@weaverse/hydrogen/react-router';
   import type { ComponentRef } from 'react';
 
-  interface MyProps extends HydrogenComponentProps {
+  interface MyProps extends WeaverseComponentProps {
     heading: string;
     ref?: React.Ref<HTMLDivElement>;
   }
@@ -139,11 +144,11 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 
 ### Customer Account Local Development
 
-See [`.weaverse/docs/customer-account-local-dev.md`](.weaverse/docs/customer-account-local-dev.md) for the full guide on running locally with Customer Account API support (`nr dev:ca`).
+See [`.weaverse/docs/customer-account-local-dev.md`](.weaverse/docs/customer-account-local-dev.md) for the full guide on running locally with Customer Account API support (`npm run dev:https`).
 
 ### Environment Configuration
 
-Required environment variables are defined in `env.d.ts`. The project uses `@shopify/hydrogen` and `@shopify/remix-oxygen` for environment handling.
+Required environment variables are defined in `env.d.ts` (`Env`) and listed in `.env.example`. Oxygen injects `PRIVATE_STOREFRONT_API_TOKEN` for a linked storefront; without it the public token is used.
 
 ### Vite+ Static Checks
 
@@ -187,15 +192,14 @@ The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
 
 ## Common Pitfalls to Avoid
 
-1. **GraphQL Codegen**: Always run `npm run codegen` after modifying GraphQL queries/fragments
+1. **GraphQL**: Run `npm run typecheck` after modifying GraphQL documents; it validates them against the bundled Storefront/Customer Account schemas
 2. **Route Registration**: New routes must be added to `/app/routes.ts` (not file-based routing anymore)
 3. **Weaverse Registration**: New sections must be registered in `/app/weaverse/components.ts`
 4. **Route Caching**: Use `routeHeaders` export for consistent cache control
-5. **Customer Account Queries**: Only use in `*.account*.{ts,tsx,js,jsx}` files - this naming pattern is critical
+5. **Customer Account Queries**: Run them through `context.customerAccount.graphql(doc, { variables })`, which attaches the customer's token and redirects to login when signed out
 6. **Parallel Loading**: Always use `Promise.all()` for multiple data fetches in loaders
 7. **Type Safety**: Avoid `any` type when possible, use `unknown` if escape hatch needed, properly type all Weaverse section props
-8. **Combined Listings**: Use utility functions from `/app/utils/combined-listings.ts` for product filtering and grouping logic
-9. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
+8. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
 
 ## Weaverse Component Development Guide
 
@@ -236,7 +240,7 @@ export default MySection;
 export let schema = createSchema({ ... });
 
 // 3. Loader export (optional) — server-side data fetching
-export let loader = async (args: ComponentLoaderArgs<DataType>) => { ... };
+export let loader = async (args: WeaverseComponentLoaderArgs<DataType>) => { ... };
 ```
 
 **Key rules:**
@@ -249,9 +253,9 @@ export let loader = async (args: ComponentLoaderArgs<DataType>) => { ... };
 ### Minimal Section Example
 
 ```tsx
-import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+import { createSchema, type WeaverseComponentProps } from '@weaverse/hydrogen/react-router';
 
-interface BannerProps extends HydrogenComponentProps {
+interface BannerProps extends WeaverseComponentProps {
   heading: string;
   description: string;
 }
@@ -290,7 +294,7 @@ export let schema = createSchema({
 import * as MySection from '~/sections/my-section';
 import * as HeroBanner from '~/sections/hero-banner';
 
-export let components: HydrogenComponent[] = [
+export let components: WeaverseComponent[] = [
   HeroBanner,
   MySection,
   // ...
@@ -361,19 +365,22 @@ export let schema = createSchema({
 ### Data Fetching with Loaders
 
 ```tsx
-import type { ComponentLoaderArgs, HydrogenComponentProps } from '@weaverse/hydrogen';
+import type { WeaverseComponentLoaderArgs, WeaverseComponentProps } from '@weaverse/hydrogen/react-router';
 
 type MyData = { collectionHandle: string };
 
-export let loader = async ({ weaverse, data }: ComponentLoaderArgs<MyData>) => {
+export let loader = async ({ weaverse, data }: WeaverseComponentLoaderArgs<MyData>) => {
   let { storefront } = weaverse;
-  return await storefront.query(COLLECTION_QUERY, {
-    variables: { handle: data.collectionHandle },
-  });
+  return unwrapStorefront(
+    await storefront.graphql(COLLECTION_QUERY, {
+      variables: { handle: data.collectionHandle },
+      cache: CACHE_DEFAULT,
+    }),
+  );
 };
 
 // Derive props type from loader return
-type Props = HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & MyData;
+type Props = WeaverseComponentProps<Awaited<ReturnType<typeof loader>>> & MyData;
 
 function MyComponent({ loaderData, collectionHandle, ...rest }: Props) {
   let collection = loaderData?.collection;
@@ -383,7 +390,7 @@ export default MyComponent;
 ```
 
 **Key patterns:**
-- `weaverse.storefront.query()` — Shopify Storefront API
+- `weaverse.storefront.graphql()` — Shopify Storefront API (pass an explicit `cache`)
 - `weaverse.fetchWithCache(url, options)` — External APIs with caching
 - Add `shouldRevalidate: true` on schema inputs that affect the loader
 
@@ -392,7 +399,7 @@ export default MyComponent;
 | API | Purpose |
 |-----|---------|
 | `createSchema()` | Define component schema |
-| `WeaverseClient` | Server-side client (initialized in `server.ts`) |
+| `WeaverseClient` | Server-side client (created in `app/.server/context.ts`) |
 | `weaverse.loadPage({ type, handle })` | Load page data in route loaders |
 | `weaverse.loadThemeSettings()` | Load global theme settings |
 | `weaverse.fetchWithCache(url)` | Cached external API fetching |
@@ -406,7 +413,7 @@ export default MyComponent;
 
 ```tsx
 // app/components/GlobalStyle.tsx
-import { useThemeSettings } from '@weaverse/hydrogen';
+import { useThemeSettings } from '@weaverse/hydrogen/react-router';
 
 export function GlobalStyle() {
   let settings = useThemeSettings();
@@ -429,7 +436,12 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const { storefront, weaverse } = context;
 
   const [shopifyData, weaverseData] = await Promise.all([
-    storefront.query(PRODUCT_QUERY, { variables: { handle: params.productHandle } }),
+    storefront
+      .graphql(PRODUCT_QUERY, {
+        variables: { handle: params.productHandle },
+        cache: CACHE_DEFAULT,
+      })
+      .then(unwrapStorefront),
     weaverse.loadPage({ type: 'PRODUCT', handle: params.productHandle }),
   ]);
 

@@ -1,4 +1,4 @@
-import { isBrowser } from "@weaverse/hydrogen";
+import { isBrowser } from "@weaverse/hydrogen/react-router";
 import { colord } from "colord";
 
 export function constructURL(

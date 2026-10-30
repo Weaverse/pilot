@@ -1,10 +1,12 @@
+import { gql, type StorefrontApi } from "@shopify/hydrogen";
 import {
   MEDIA_FRAGMENT,
   PRODUCT_OPTION_FRAGMENT,
   PRODUCT_VARIANT_FRAGMENT,
 } from "~/graphql/fragments";
 
-export const PRODUCT_QUERY = `#graphql
+export const PRODUCT_QUERY = gql(
+  `
   query product(
     $country: CountryCode
     $language: LanguageCode
@@ -20,6 +22,7 @@ export const PRODUCT_QUERY = `#graphql
       descriptionHtml
       description
       summary: description(truncateAt: 200)
+      requiresSellingPlan
       encodedVariantExistence
       encodedVariantAvailability
       featuredImage {
@@ -50,7 +53,7 @@ export const PRODUCT_QUERY = `#graphql
       selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
         ...ProductVariant
       }
-      adjacentVariants(selectedOptions: $selectedOptions) {
+      adjacentVariants(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
         ...ProductVariant
       }
       # Check if the product is a bundle
@@ -103,11 +106,12 @@ export const PRODUCT_QUERY = `#graphql
       }
     }
   }
-  ${MEDIA_FRAGMENT}
-  ${PRODUCT_OPTION_FRAGMENT}
-` as const;
+`,
+  [MEDIA_FRAGMENT, PRODUCT_OPTION_FRAGMENT],
+);
 
-export const PRODUCT_VARIANTS_QUERY = `#graphql
+export const PRODUCT_VARIANTS_QUERY = gql(
+  `
   query productVariants(
     $country: CountryCode
     $language: LanguageCode
@@ -121,5 +125,11 @@ export const PRODUCT_VARIANTS_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_VARIANT_FRAGMENT}
-` as const;
+`,
+  [PRODUCT_VARIANT_FRAGMENT],
+);
+
+export type ProductQuery = StorefrontApi.ResultOf<typeof PRODUCT_QUERY>;
+export type ProductVariantsQuery = StorefrontApi.ResultOf<
+  typeof PRODUCT_VARIANTS_QUERY
+>;

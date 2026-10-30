@@ -1,15 +1,18 @@
-import { Analytics, getPaginationVariables } from "@shopify/hydrogen";
+import { gql, type StorefrontApi } from "@shopify/hydrogen";
 import { useEffect, useState } from "react";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { data, Form, useLoaderData } from "react-router";
-import type { SearchPageQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Icon } from "~/components/icon";
+import { SearchView } from "~/components/root/analytics-views";
 import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { CACHE_DEFAULT } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
+import { getPaginationVariables } from "~/utils/pagination";
 import { seoMetaFromMatches } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 import { ArticlesGrid } from "./articles-grid";
 import { CollectionsGrid } from "./collections-grid";
 import { NoResults } from "./no-results";
@@ -36,16 +39,14 @@ export async function loader({
   let collections: SearchPageQuery["collections"] = { nodes: [] };
 
   if (searchTerm) {
-    const searchData = await storefront.query<SearchPageQuery>(
-      SEARCH_PAGE_QUERY,
-      {
+    const searchData = unwrapStorefront(
+      await storefront.graphql(SEARCH_PAGE_QUERY, {
         variables: {
           searchTerm: `title:*${searchTerm}*`,
           ...getPaginationVariables(request, { pageBy: 16 }),
-          country: storefront.i18n.country,
-          language: storefront.i18n.language,
         },
-      },
+        cache: CACHE_DEFAULT,
+      }),
     );
 
     products = searchData.products;
@@ -200,14 +201,13 @@ export default function Search() {
         <NoResults searchTerm={searchTerm} recommendations={recommendations} />
       )}
 
-      <Analytics.SearchView
-        data={{ searchTerm: searchTerm || "", searchResults: products }}
-      />
+      <SearchView searchTerm={searchTerm || ""} searchResults={products} />
     </Section>
   );
 }
 
-const SEARCH_PAGE_QUERY = `#graphql
+const SEARCH_PAGE_QUERY = gql(
+  `
   query searchPage(
     $country: CountryCode
     $endCursor: String
@@ -280,5 +280,8 @@ const SEARCH_PAGE_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);
+
+export type SearchPageQuery = StorefrontApi.ResultOf<typeof SEARCH_PAGE_QUERY>;

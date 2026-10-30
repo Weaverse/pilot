@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
@@ -20,7 +23,7 @@ const variants = cva(
 );
 
 interface ImageWithTextContentProps
-  extends VariantProps<typeof variants>, HydrogenComponentProps {}
+  extends VariantProps<typeof variants>, WeaverseComponentProps {}
 
 function ImageWithTextContent(props: ImageWithTextContentProps) {
   const { alignment, children, ...rest } = props;

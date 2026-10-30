@@ -1,19 +1,26 @@
 import {
-  Analytics,
-  getAdjacentAndFirstAvailableVariants,
-  useOptimisticVariant,
+  buildProductSelectionSearchParams,
+  type ValidProductSelectionResult,
 } from "@shopify/hydrogen";
-import { getSelectedProductOptions } from "@weaverse/hydrogen";
+import { getSelectedProductOptions } from "@weaverse/hydrogen/react-router";
 import { useEffect } from "react";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
-import { useLoaderData } from "react-router";
-import type { ProductQuery } from "storefront-api.generated";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
+import {
+  type ProductFormData,
+  ProductProvider,
+  productOptionPath,
+  useSelectedVariant,
+} from "~/components/product/product-form";
+import { ProductView } from "~/components/root/analytics-views";
 import { PRODUCT_QUERY } from "~/graphql/queries";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
+import { localizePath, resolveLocale } from "~/utils/locale";
 import { seoMetaFromMatches } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
 import { getRecommendedProducts } from "./recommended-product";
 
@@ -27,14 +34,12 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const { storefront, weaverse } = context;
   const selectedOptions = getSelectedProductOptions(request);
   const [{ shop, product }, weaverseData] = await Promise.all([
-    storefront.query<ProductQuery>(PRODUCT_QUERY, {
-      variables: {
-        handle,
-        selectedOptions,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      },
-    }),
+    storefront
+      .graphql(PRODUCT_QUERY, {
+        variables: { handle, selectedOptions },
+        cache: CACHE_DEFAULT,
+      })
+      .then(unwrapStorefront),
     weaverse.loadPage({ type: "PRODUCT", handle }),
     // Add other queries here, so that they are loaded in parallel
   ]);
@@ -51,7 +56,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     shop,
     product,
     weaverseData,
-    storeDomain: shop.primaryDomain.url,
     seo: seoPayload.product({ product, url: request.url }),
     recommended,
     selectedOptions,
@@ -64,75 +68,92 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+  const { pathname, search } = useLocation();
 
-  // Optimistically selects a variant with given available variant information
-  const selectedVariant = useOptimisticVariant(
-    product.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
+  useSyncSelectionToUrl(product);
 
-  // Sets the search param to the selected variant without navigation
-  // when no search params are set or when variant options don't match
-  useEffect(() => {
-    if (!selectedVariant?.selectedOptions) {
-      return;
-    }
-
-    const currentParams = new URLSearchParams(window.location.search);
-    let needsUpdate = false;
-
-    // If no search params exist, we need to add them
-    if (window.location.search === "") {
-      needsUpdate = true;
-    } else {
-      // Check if any of the selected variant options differ from current params
-      for (const option of selectedVariant.selectedOptions) {
-        const currentValue = currentParams.get(option.name);
-        if (currentValue !== option.value) {
-          needsUpdate = true;
-          break;
-        }
-      }
-    }
-
-    if (needsUpdate) {
-      // Preserve existing non-variant-related params
-      const updatedParams = new URLSearchParams(currentParams);
-
-      // Update or add variant option params
-      for (const option of selectedVariant.selectedOptions) {
-        updatedParams.set(option.name, option.value);
-      }
-
-      const newSearch = updatedParams.toString();
-      if (newSearch !== window.location.search.slice(1)) {
-        window.history.replaceState(
-          {},
-          "",
-          `${location.pathname}?${newSearch}`,
-        );
-      }
-    }
-  }, [selectedVariant?.selectedOptions]);
+  // A selection updates every section through the product form at once; the
+  // URL follows with a client-side replace that keeps the scroll position.
+  // A variant the page already loaded needs no loader round trip; one it
+  // didn't (`unresolved`) revalidates, and the loader's answer hydrates the
+  // form. Combined-listing values link to the other product instead.
+  function handleSelect(result: ValidProductSelectionResult<ProductFormData>) {
+    const path = productOptionPath(
+      product,
+      result.selectedOptions,
+      result.selectedVariant?.product?.handle,
+      new URLSearchParams(search),
+    );
+    navigate(localizePath(path, resolveLocale(pathname)), {
+      replace: true,
+      preventScrollReset: true,
+      ...(result.status === "resolved"
+        ? { defaultShouldRevalidate: false }
+        : {}),
+    });
+  }
 
   return (
-    <>
+    <ProductProvider product={product} onSelect={handleSelect}>
       <WeaverseContent />
-      <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: selectedVariant?.price.amount || "0",
-              vendor: product.vendor,
-              variantId: selectedVariant?.id || "",
-              variantTitle: selectedVariant?.title || "",
-              quantity: 1,
-            },
-          ],
-        }}
-      />
-    </>
+      <ProductAnalytics product={product} />
+    </ProductProvider>
   );
+}
+
+function ProductAnalytics({ product }: { product: ProductFormData }) {
+  const selectedVariant = useSelectedVariant(product);
+  return (
+    <ProductView
+      products={[
+        {
+          id: product.id,
+          title: product.title,
+          price: selectedVariant?.price ?? product.priceRange.minVariantPrice,
+          vendor: product.vendor,
+          variantId: selectedVariant?.id || "",
+          variantTitle: selectedVariant?.title || "",
+          quantity: 1,
+        },
+      ]}
+    />
+  );
+}
+
+/**
+ * Writes the server-selected variant's options into the URL when the URL
+ * doesn't carry them yet (a bare `/products/:handle` link, a case-insensitive
+ * or partial match), so the address bar always names the variant on screen.
+ *
+ * This mirrors the request rather than navigating, so it doesn't count as a
+ * new page view or revalidate the route. React Router's history state is
+ * kept as-is; its own location keeps the original search, which only serves
+ * as the base for unrelated params.
+ */
+function useSyncSelectionToUrl(product: ProductFormData) {
+  const variant = product.selectedOrFirstAvailableVariant;
+
+  useEffect(() => {
+    if (!variant) {
+      return;
+    }
+    const url = new URL(window.location.href);
+    const inSync = variant.selectedOptions.every(
+      ({ name, value }) => url.searchParams.get(name) === value,
+    );
+    if (inSync) {
+      return;
+    }
+    const params = buildProductSelectionSearchParams({
+      selectedOptions: variant.selectedOptions,
+      optionNames: product.options.map((option) => option.name),
+      base: url.searchParams,
+    });
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `${url.pathname}?${params}${url.hash}`,
+    );
+  }, [variant, product.options]);
 }

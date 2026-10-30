@@ -1,4 +1,4 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import { cva } from "class-variance-authority";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ThemeSettings } from "~/types/weaverse";

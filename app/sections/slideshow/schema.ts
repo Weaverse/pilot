@@ -1,4 +1,7 @@
-import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  IMAGES_PLACEHOLDERS,
+} from "@weaverse/hydrogen/react-router";
 import type { SlideshowData } from "./index";
 
 export const schema = createSchema({

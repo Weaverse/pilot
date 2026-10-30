@@ -1,12 +1,10 @@
-import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { colord } from "colord";
-import type {
-  ProductQuery,
-  ProductVariantFragment,
-} from "storefront-api.generated";
+import { useMoney } from "~/components/money";
+import type { ProductVariantFragment } from "~/graphql/fragments";
+import type { ProductQuery } from "~/graphql/queries";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
@@ -193,7 +191,7 @@ export function ProductBadges({
   as: Component = "div",
 }: {
   product: NonNullable<ProductQuery["product"]>;
-  selectedVariant: ProductVariantFragment;
+  selectedVariant: ProductVariantFragment | null;
   className?: string;
   as?: React.ElementType;
 }) {

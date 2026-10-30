@@ -1,12 +1,14 @@
-import { getPaginationVariables } from "@shopify/hydrogen";
+import { gql, type StorefrontApi } from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/.server/seo";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import type { SortParam } from "~/types/others";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
+import { getPaginationVariables } from "~/utils/pagination";
 import { seoMetaFromMatches } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -22,15 +24,16 @@ export async function loader({
 
   // Load products data and weaverseData in parallel
   const [data, weaverseData] = await Promise.all([
-    storefront.query(ALL_PRODUCTS_QUERY, {
-      variables: {
-        ...getPaginationVariables(request, { pageBy: 16 }),
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-        sortKey,
-        reverse,
-      },
-    }),
+    storefront
+      .graphql(ALL_PRODUCTS_QUERY, {
+        variables: {
+          ...getPaginationVariables(request, { pageBy: 16 }),
+          sortKey,
+          reverse,
+        },
+        cache: CACHE_DEFAULT,
+      })
+      .then(unwrapStorefront),
     weaverse.loadPage({ type: "ALL_PRODUCTS" }),
   ]);
 
@@ -65,7 +68,8 @@ export default function AllProducts() {
   return <WeaverseContent />;
 }
 
-const ALL_PRODUCTS_QUERY = `#graphql
+const ALL_PRODUCTS_QUERY = gql(
+  `
   query allProducts(
     $country: CountryCode
     $language: LanguageCode
@@ -97,8 +101,13 @@ const ALL_PRODUCTS_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);
+
+export type AllProductsQuery = StorefrontApi.ResultOf<
+  typeof ALL_PRODUCTS_QUERY
+>;
 
 function getSortValuesFromParam(sortParam: SortParam | null): {
   sortKey: ProductSortKeys;

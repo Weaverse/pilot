@@ -1,19 +1,23 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { IMAGES_PLACEHOLDERS, useThemeSettings } from "@weaverse/hydrogen";
+import {
+  IMAGES_PLACEHOLDERS,
+  useThemeSettings,
+} from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-import type {
-  ProductQuery,
-  ProductVariantFragment,
-} from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges } from "~/components/product/badges";
-import { LazyShopPayButton } from "~/components/product/lazy-shop-pay-button";
+import { ProductShopPayButton } from "~/components/product/shop-pay-button";
+import {
+  type ProductFormData,
+  ProductProvider,
+  useSelectedVariant,
+} from "~/components/product/product-form";
 import { Quantity } from "~/components/product/quantity";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
@@ -22,13 +26,14 @@ import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Skeleton } from "~/components/skeleton";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import type { ProductVariantFragment } from "~/graphql/fragments";
+import type { loader as productApiLoader } from "~/routes/api/product";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import type { ThemeSettings } from "~/types/weaverse";
 
 interface QuickViewData {
-  product: NonNullable<ProductQuery["product"]>;
+  product: ProductFormData;
   variants: ProductVariantFragment[];
-  storeDomain: string;
 }
 
 interface QuickShopProps {
@@ -36,11 +41,34 @@ interface QuickShopProps {
   panelType?: "modal" | "drawer";
 }
 
+/**
+ * Quick shop has its own product form: it selects in place (the page URL is
+ * not the product's) and resolves every combination locally, because the API
+ * route loads all of the product's variants.
+ */
 export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
-  const { product, variants, storeDomain } = data || {};
+  const { product, variants } = data;
+  return (
+    <ProductProvider
+      product={{
+        ...product,
+        adjacentVariants: variants.length ? variants : product.adjacentVariants,
+      }}
+    >
+      <QuickShopContent product={product} panelType={panelType} />
+    </ProductProvider>
+  );
+}
+
+function QuickShopContent({
+  product,
+  panelType,
+}: {
+  product: ProductFormData;
+  panelType: "modal" | "drawer";
+}) {
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedVariant, setSelectedVariant] =
-    useState<ProductVariantFragment>(product?.selectedOrFirstAvailableVariant);
+  const selectedVariant = useSelectedVariant(product);
 
   const {
     quickShopGroupMediaByVariant,
@@ -57,6 +85,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
           mediaContentType: "IMAGE" as const,
           alt: product?.title || "Product placeholder",
           previewImage: {
+            id: "placeholder",
             url: IMAGES_PLACEHOLDERS.product_1,
             altText: product?.title || "Product placeholder",
             width: 1000,
@@ -64,6 +93,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
           },
           id: "placeholder",
           image: {
+            id: "placeholder",
             url: IMAGES_PLACEHOLDERS.product_1,
             altText: product?.title || "Product placeholder",
             width: 1000,
@@ -117,12 +147,7 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
             {product.summary && (
               <p className="leading-relaxed">{product.summary}</p>
             )}
-            <VariantSelector
-              product={product}
-              selectedVariant={selectedVariant}
-              setSelectedVariant={setSelectedVariant}
-              variants={variants}
-            />
+            <VariantSelector product={product} />
           </div>
           <Quantity value={quantity} onChange={setQuantity} />
           {/*
@@ -133,29 +158,17 @@ export function QuickShop({ data, panelType = "modal" }: QuickShopProps) {
             before the browser's default submit action — no request at all.
           */}
           <AddToCartButton
-            disabled={!selectedVariant?.availableForSale}
-            lines={[
-              {
-                merchandiseId: selectedVariant?.id,
-                quantity,
-                selectedVariant,
-              },
-            ]}
+            product={product}
+            quantity={quantity}
             data-test="add-to-cart"
             className="w-full uppercase"
           >
             {selectedVariant?.availableForSale ? "Add to cart" : "Sold out"}
           </AddToCartButton>
           {selectedVariant?.availableForSale && (
-            <LazyShopPayButton
+            <ProductShopPayButton
               width="100%"
-              variantIdsAndQuantities={[
-                {
-                  id: selectedVariant?.id,
-                  quantity,
-                },
-              ]}
-              storeDomain={storeDomain}
+              variants={[{ id: selectedVariant.id, quantity }]}
               className="-mt-2"
             />
           )}
@@ -192,7 +205,7 @@ export function QuickShopTrigger({
   const themeText = useLegacyThemeText();
   const label = themeText("product.quickShop");
   const [open, setOpen] = useState(false);
-  const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
+  const { load, data } = useFetcher<typeof productApiLoader>();
   // The market lives in the URL, and an absolute `/api/...` carries none of
   // it: the API route would resolve the default market and answer with its
   // copy, pricing and availability inside a localized page.
@@ -280,7 +293,10 @@ export function QuickShopTrigger({
               <Dialog.Title>Quick shop modal</Dialog.Title>
             </VisuallyHidden.Root>
             {data?.product ? (
-              <QuickShop data={data as QuickViewData} panelType={panelType} />
+              <QuickShop
+                data={{ product: data.product, variants: data.variants }}
+                panelType={panelType}
+              />
             ) : (
               <div
                 className={clsx(

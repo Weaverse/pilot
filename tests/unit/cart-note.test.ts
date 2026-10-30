@@ -1,12 +1,11 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
+import { normalizeCartNote } from "../../app/utils/cart-note";
 import {
-  getInvalidCartNoteResult,
-  getSuccessfulCartNote,
-  hasCartResponseErrors,
-  normalizeCartNote,
-  updateCartNote,
-} from "../../app/utils/cart-note";
+  recordStorefrontCalls,
+  type StorefrontCall,
+  serverFetch,
+} from "../support/hydrogen-env";
 
 const PROJECT_ROOT = new URL("../../", import.meta.url);
 const ADD_TO_CART_SURFACES = [
@@ -16,13 +15,62 @@ const ADD_TO_CART_SURFACES = [
   "app/sections/single-product/index.tsx",
 ];
 const MALFORMED_CART_NOTES: [string, unknown][] = [
-  ["missing", undefined],
   ["null", null],
   ["numeric", 42],
   ["array", ["note"]],
   ["object", { note: "note" }],
   ["boolean", true],
 ];
+const CART_ID = "gid://shopify/Cart/1";
+
+/** Shopify's answer to every cart operation the note path sends. */
+function respond({ operation, variables }: StorefrontCall) {
+  if (operation === "PilotCartBuyerIdentity") {
+    return {
+      cartBuyerIdentityUpdate: { cart: { checkoutUrl: "" }, userErrors: [] },
+    };
+  }
+  return {
+    cartNoteUpdate: {
+      cart: { id: CART_ID, note: variables.note },
+      userErrors: [],
+      warnings: [],
+    },
+  };
+}
+
+/**
+ * Posts a note update to `/api/cart` through the worker, the way the cart
+ * store (JSON) or the no-JS form (`intent=note-update`) sends it, and returns
+ * the notes that reached Shopify.
+ */
+async function postNote(body: Record<string, unknown> | URLSearchParams) {
+  const isForm = body instanceof URLSearchParams;
+  const { result, calls } = await recordStorefrontCalls(
+    () =>
+      serverFetch(
+        new Request("https://shop.test/api/cart", {
+          method: "POST",
+          headers: {
+            "Content-Type": isForm
+              ? "application/x-www-form-urlencoded"
+              : "application/json",
+            Cookie: "cart=1",
+            Origin: "https://shop.test",
+            Referer: "https://shop.test/cart",
+          },
+          body: isForm ? body : JSON.stringify(body),
+        }),
+      ),
+    respond,
+  );
+  return {
+    response: result,
+    notes: calls
+      .filter((call) => call.operation !== "PilotCartBuyerIdentity")
+      .map((call) => call.variables.note),
+  };
+}
 
 test.describe("cart note updates", () => {
   test("normalizes only an all-whitespace note to the empty string", () => {
@@ -31,124 +79,47 @@ test.describe("cart note updates", () => {
     expect(normalizeCartNote("  Gift note  ")).toBe("  Gift note  ");
   });
 
-  test("sends the normalized note and cart options to Hydrogen", async () => {
-    const calls: { note: string; options: unknown }[] = [];
-    const cart = {
-      async updateNote(note, cartOptions) {
-        calls.push({ note, options: cartOptions });
-        return { cart: { id: "gid://shopify/Cart/1", note } };
-      },
-    };
-    const options = { cartId: "gid://shopify/Cart/1" };
+  test("sends the normalized note to Shopify", async () => {
+    const sent: unknown[] = [];
+    for (const note of ["Added note", "Replacement note", " \n\t "]) {
+      const { response, notes } = await postNote({ note });
+      expect(response.status).toBe(200);
+      sent.push(...notes);
+    }
 
-    await updateCartNote(cart, "Added note", options);
-    await updateCartNote(cart, "Replacement note", options);
-    await updateCartNote(cart, " \n\t ", options);
+    expect(sent).toEqual(["Added note", "Replacement note", ""]);
+  });
 
-    expect(calls).toEqual([
-      { note: "Added note", options },
-      { note: "Replacement note", options },
-      { note: "", options },
-    ]);
+  test("a no-JS note form is normalized the same way", async () => {
+    const { response, notes } = await postNote(
+      new URLSearchParams({ intent: "note-update", note: " \n\t " }),
+    );
+
+    // The form post lands back on the page it came from.
+    expect(response.status).toBeGreaterThanOrEqual(300);
+    expect(response.status).toBeLessThan(400);
+    expect(notes).toEqual([""]);
   });
 
   for (const [name, note] of MALFORMED_CART_NOTES) {
     test(`returns a controlled response for ${name} input`, async () => {
-      let calls = 0;
-      const cart = {
-        async updateNote() {
-          calls += 1;
-          return { cart: { id: "gid://shopify/Cart/1" } };
-        },
-      };
+      const { response, notes } = await postNote({ note });
 
-      expect(await updateCartNote(cart, note)).toEqual(
-        getInvalidCartNoteResult(),
-      );
-      expect(calls).toBe(0);
+      expect(response.status).toBe(400);
+      expect(await response.json()).toMatchObject({
+        error: { code: "invalid_cart_request" },
+      });
+      expect(notes).toEqual([]);
     });
   }
 
-  test("accepts only an error-free authoritative cart note", () => {
-    expect(
-      getSuccessfulCartNote({
-        cart: { id: "gid://shopify/Cart/1", note: "Added note" },
-        errors: [],
-        userErrors: [],
-      }),
-    ).toBe("Added note");
-    expect(
-      getSuccessfulCartNote({
-        cart: { id: "gid://shopify/Cart/1", note: "Replacement note" },
-      }),
-    ).toBe("Replacement note");
-    expect(
-      getSuccessfulCartNote({
-        cart: { id: "gid://shopify/Cart/1", note: null },
-      }),
-    ).toBe("");
-  });
-
-  test("rejects user errors, GraphQL errors, network failure, and missing cart data", () => {
-    expect(
-      getSuccessfulCartNote({
-        cart: { id: "gid://shopify/Cart/1", note: "Not saved" },
-        userErrors: [{ message: "Rejected" }],
-      }),
-    ).toBeUndefined();
-    expect(
-      getSuccessfulCartNote({
-        cart: { id: "gid://shopify/Cart/1", note: "Not saved" },
-        errors: [{ message: "GraphQL failed" }],
-      }),
-    ).toBeUndefined();
-    expect(getSuccessfulCartNote(undefined)).toBeUndefined();
-    expect(getSuccessfulCartNote({ userErrors: [] })).toBeUndefined();
-    expect(
-      getSuccessfulCartNote({ cart: { id: "gid://shopify/Cart/1" } }),
-    ).toBeUndefined();
-  });
-
-  test("a successful retry is accepted after a failed response", () => {
-    const failed = {
-      cart: { id: "gid://shopify/Cart/1", note: "Old note" },
-      userErrors: [{ message: "Try again" }],
-    };
-    const retried = {
-      cart: { id: "gid://shopify/Cart/1", note: "Retried note" },
-      userErrors: [],
-    };
-
-    expect(getSuccessfulCartNote(failed)).toBeUndefined();
-    expect(getSuccessfulCartNote(retried)).toBe("Retried note");
-  });
-});
-
-test.describe("cart response error gating", () => {
-  test("accepts responses without errors", () => {
-    expect(hasCartResponseErrors(undefined)).toBe(false);
-    expect(hasCartResponseErrors({})).toBe(false);
-    expect(hasCartResponseErrors({ errors: [], userErrors: [] })).toBe(false);
-  });
-
-  test("rejects GraphQL and user error responses", () => {
-    expect(
-      hasCartResponseErrors({ errors: [{ message: "GraphQL failed" }] }),
-    ).toBe(true);
-    expect(
-      hasCartResponseErrors({ userErrors: [{ message: "Rejected" }] }),
-    ).toBe(true);
-  });
-
-  test("both cart fetcher paths use the shared error gate", async () => {
-    const sources = await Promise.all(
-      ["cart-sync.ts", "cart-baseline.ts"].map((file) =>
-        readFile(new URL(`app/components/cart/${file}`, PROJECT_ROOT), "utf8"),
-      ),
+  test("a no-JS note form without a note is refused", async () => {
+    const { response, notes } = await postNote(
+      new URLSearchParams({ intent: "note-update" }),
     );
-    expect(
-      sources.join("\n").match(/hasCartResponseErrors\(fetcherData\)/g)?.length,
-    ).toBe(2);
+
+    expect(response.status).toBe(400);
+    expect(notes).toEqual([]);
   });
 });
 
@@ -176,11 +147,17 @@ test.describe("add-to-cart analytics ownership", () => {
     expect(source).toMatch(/Omit<\s*ButtonProps,/);
   });
 
-  test("Hydrogen Analytics.Provider remains the canonical owner", async () => {
-    const source = await readFile(
-      new URL("app/root.tsx", PROJECT_ROOT),
+  test("Shopify's analytics runtime remains the canonical owner", async () => {
+    // Hydrogen 2026.10 has no `Analytics.Provider`: `ShopifyScripts` loads the
+    // runtime and `useCartAnalytics` publishes cart events from the store, so
+    // a button that sent its own would double-count every add.
+    const root = await readFile(new URL("app/root.tsx", PROJECT_ROOT), "utf8");
+    const views = await readFile(
+      new URL("app/components/root/analytics-views.tsx", PROJECT_ROOT),
       "utf8",
     );
-    expect(source).toMatch(/<Analytics\.Provider\b/);
+    expect(root).toMatch(/<ShopifyScripts\b/);
+    expect(root).toMatch(/<CartAnalytics\b/);
+    expect(views).toMatch(/useCartAnalytics\(\)/);
   });
 });

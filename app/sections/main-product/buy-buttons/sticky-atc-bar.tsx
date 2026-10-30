@@ -1,13 +1,10 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import {
-  getAdjacentAndFirstAvailableVariants,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Image } from "~/components/image";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import { useSelectedVariant } from "~/components/product/product-form";
 import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
@@ -67,13 +64,9 @@ export function StickyATCBar({
     return () => observer.disconnect();
   }, []);
 
-  const allVariants = getAdjacentAndFirstAvailableVariants(product);
-  const selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    allVariants,
-  );
+  const selectedVariant = useSelectedVariant(product);
 
-  if (!product || !selectedVariant) {
+  if (!selectedVariant) {
     return null;
   }
 
@@ -155,14 +148,8 @@ export function StickyATCBar({
             </div>
             <div className="shrink-0">
               <AddToCartButton
-                disabled={!selectedVariant.availableForSale}
-                lines={[
-                  {
-                    merchandiseId: selectedVariant.id,
-                    quantity,
-                    selectedVariant,
-                  },
-                ]}
+                product={product}
+                quantity={quantity}
                 className="px-3 whitespace-nowrap md:px-16"
               >
                 {isBundle ? addBundleToCartText : addToCartText}

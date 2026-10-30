@@ -1,11 +1,11 @@
-import { Money } from "@shopify/hydrogen";
 import type { MediaImage } from "@shopify/hydrogen/storefront-api-types";
-import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
+import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
-import type { ProductQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { Money } from "~/components/money";
+import type { ProductQuery } from "~/graphql/queries";
 import type { HotspotsItemData } from "./item";
 
 interface ProductPopupProps extends Omit<
@@ -25,6 +25,14 @@ const PRODUCT_PLACEHOLDER: Partial<ProductQuery["product"]> = {
         id: "1",
         __typename: "MediaImage",
         mediaContentType: "IMAGE",
+        alt: "Example Product Title",
+        previewImage: {
+          id: "1",
+          url: IMAGES_PLACEHOLDERS.product_4,
+          altText: "Example Product Title",
+          width: 500,
+          height: 500,
+        },
         image: {
           id: "1",
           url: IMAGES_PLACEHOLDERS.product_4,

@@ -1,5 +1,5 @@
 import * as Popover from "@radix-ui/react-popover";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Icon } from "~/components/icon";
 import { ScrollArea } from "~/components/scroll-area";
@@ -8,17 +8,13 @@ import { MarketForm } from "./market-form";
 import { useCountrySelector } from "./use-country-selector";
 
 export function FooterCountrySelector() {
-  const {
-    selectedLocale,
-    groupedCountries,
-    cartRoute,
-    getRedirectUrl,
-    buyerIdentityInput,
-  } = useCountrySelector();
+  const { selectedLocale, groupedCountries, getRedirectUrl } =
+    useCountrySelector();
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="grid w-80 gap-4">
-      <Popover.Root>
+      <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <button
             type="button"
@@ -49,11 +45,10 @@ export function FooterCountrySelector() {
                   const locale = group.locales[0];
                   return (
                     <MarketForm
+                      onSwitch={() => setOpen(false)}
                       key={locale.pathPrefix}
                       locale={locale}
-                      cartRoute={cartRoute}
                       redirectTo={getRedirectUrl(locale)}
-                      buyerIdentityInput={buyerIdentityInput(locale)}
                       label={`Select ${locale.label}`}
                       className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-white transition hover:bg-neutral-600"
                     >
@@ -118,10 +113,9 @@ export function FooterCountrySelector() {
                               />
                             ) : null}
                             <MarketForm
+                              onSwitch={() => setOpen(false)}
                               locale={locale}
-                              cartRoute={cartRoute}
                               redirectTo={getRedirectUrl(locale)}
-                              buyerIdentityInput={buyerIdentityInput(locale)}
                               label={`Select ${locale.label} in ${locale.languageLabel}`}
                               className={cn(
                                 "cursor-pointer underline-offset-4 transition",

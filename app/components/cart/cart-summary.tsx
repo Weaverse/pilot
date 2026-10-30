@@ -1,32 +1,107 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { useState } from "react";
-import { useFetcher, useLocation } from "react-router";
-import type { CartApiQueryFragment } from "storefront-api.generated";
+import { useLocation } from "react-router";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
+import { Money } from "~/components/money";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import type { ThemeSettings } from "~/types/weaverse";
-import { cartDiscountTotal } from "~/utils/cart";
+import { CART_GIFT_CARDS_PATH, cartDiscountTotal } from "~/utils/cart";
 import { cn } from "~/utils/cn";
+import {
+  type CartData,
+  useCart,
+  useCartActions,
+  useCartForm,
+} from "./cart-store";
 import {
   DiscountDialog,
   GiftCardDialog,
   NoteDialog,
+  postGiftCards,
 } from "./cart-summary-actions";
-import { useCartFetcherSync } from "./cart-sync";
+
+type AppliedGiftCard = CartData["appliedGiftCards"][number];
+
+/**
+ * Removes one applied gift card. A real form, so it also works before
+ * hydration: `/api/cart/gift-cards` then redirects back to this page.
+ */
+function GiftCardRemoveButton({ giftCard }: { giftCard: AppliedGiftCard }) {
+  const { refresh } = useCartActions();
+  const { pathname, search } = useLocation();
+  const [removing, setRemoving] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setRemoving(true);
+    const userErrors = await postGiftCards({
+      intent: "remove",
+      appliedGiftCardIds: [giftCard.id],
+    });
+    if (userErrors.length === 0) {
+      // The chip unmounts once the refreshed cart drops the gift card.
+      refresh();
+    } else {
+      setRemoving(false);
+    }
+  }
+
+  return (
+    <form method="post" action={CART_GIFT_CARDS_PATH} onSubmit={handleSubmit}>
+      <input type="hidden" name="intent" value="remove" />
+      <input type="hidden" name="appliedGiftCardIds" value={giftCard.id} />
+      <input type="hidden" name="redirectTo" value={pathname + search} />
+      <button
+        type="submit"
+        className="relative ml-1 size-4 transition-colors hover:text-red-600"
+        aria-label={`Remove gift card code ${giftCard.id}`}
+        disabled={removing}
+      >
+        {removing ? (
+          <Spinner size={16} />
+        ) : (
+          <Icon name="x" className="size-4" aria-hidden="true" />
+        )}
+      </button>
+    </form>
+  );
+}
+
+function DiscountRemoveButton({ code }: { code: string }) {
+  const { formProps, register } = useCartForm();
+  const removing = useCart((state) => state.pending.discountCodes.has(code));
+
+  return (
+    <form {...formProps()}>
+      <input type="hidden" {...register("discountCode", { value: code })} />
+      <button
+        type="submit"
+        {...register("discount-remove")}
+        className="relative ml-1 size-4 transition-colors hover:text-red-600"
+        aria-label={`Remove discount code ${code}`}
+      >
+        {removing ? (
+          <Spinner size={16} />
+        ) : (
+          <Icon name="x" className="size-4" aria-hidden="true" />
+        )}
+      </button>
+    </form>
+  );
+}
 
 export function CartSummary({
   cart,
   layout,
 }: {
-  cart: OptimisticCart<CartApiQueryFragment>;
+  cart: CartData;
   layout: CartLayoutType;
 }) {
   const {
@@ -38,41 +113,20 @@ export function CartSummary({
     giftCardButtonText,
     checkoutButtonText,
   } = useThemeSettings<ThemeSettings>();
-  const [removingDiscountCode, setRemovingDiscountCode] = useState<
-    string | null
-  >(null);
-  const [removingGiftCard, setRemovingGiftCard] = useState<string | null>(null);
-  const dcRemoveFetcher = useFetcher({ key: "discount-code-remove" });
-  const gcRemoveFetcher = useFetcher({ key: "gift-card-remove" });
-  const cartRoute = usePrefixPathWithLocale("/cart");
   const checkoutRoute = usePrefixPathWithLocale("/cart/checkout");
   const { search } = useLocation();
+  // The storefront query rides along so `/cart/checkout` can forward ad
+  // attribution (gclid, utm_*, …) to Shopify's checkout.
   const checkoutHref = `${checkoutRoute}${search}`;
-  // Line removal submits with this stable fetcherKey. The CartLineItem that
-  // owns the trash button unmounts the moment the line is optimistically
-  // spliced out, so its own fetcher response would be lost. Reading the keyed
-  // fetcher here (CartSummary stays mounted while the cart has items) captures
-  // the authoritative post-remove cart — including the updated cost.
-  const lineRemoveFetcher = useFetcher({ key: "cart-line-remove" });
-  useCartFetcherSync(dcRemoveFetcher);
-  useCartFetcherSync(gcRemoveFetcher);
-  useCartFetcherSync(lineRemoveFetcher);
-  const {
-    cost,
-    discountCodes,
-    isOptimistic,
-    checkoutUrl,
-    appliedGiftCards,
-    note,
-  } = cart;
+  const { cost, discountCodes, checkoutUrl, appliedGiftCards } = cart;
   const cartDiscount = cartDiscountTotal(cart);
 
-  // Show loading state for optimistic line item changes or pending cart actions
-  const isCartUpdating =
-    isOptimistic ||
-    dcRemoveFetcher.state !== "idle" ||
-    gcRemoveFetcher.state !== "idle" ||
-    lineRemoveFetcher.state !== "idle";
+  // Totals are stale while a line or discount change is in flight, or while
+  // the store refetches the cart (after overlapping changes or a gift card
+  // change).
+  const isCartUpdating = useCart(
+    (state) => state.pending.cost === true || state.revalidating === true,
+  );
   return (
     <div
       className={clsx(
@@ -86,93 +140,37 @@ export function CartSummary({
       </h2>
       {appliedGiftCards?.length > 0 && (
         <div className="mb-4 flex flex-wrap justify-end gap-2">
-          {appliedGiftCards.map((giftCard) => {
-            // Check if this specific gift card is being removed
-            const isGCRemoving =
-              gcRemoveFetcher.state !== "idle" &&
-              removingGiftCard === giftCard.lastCharacters;
-            return (
-              <div
-                key={giftCard.id}
-                className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
-              >
-                <Icon name="gift" className="h-4.5 w-4.5" aria-hidden="true" />
-                <div className="flex items-center gap-1 leading-normal">
-                  <span>***{giftCard.lastCharacters}</span>
-                  <span className="inline-flex items-center">
-                    (-{<Money data={giftCard.amountUsed} />})
-                  </span>
-                </div>
-                <CartForm
-                  route={cartRoute}
-                  action={CartForm.ACTIONS.GiftCardCodesRemove}
-                  inputs={{
-                    giftCardCodes: [giftCard.id],
-                  }}
-                  fetcherKey="gift-card-remove"
-                >
-                  <button
-                    type="submit"
-                    className="relative ml-1 size-4 transition-colors hover:text-red-600"
-                    aria-label={`Remove gift card code ${giftCard.id}`}
-                    onClick={() => setRemovingGiftCard(giftCard.lastCharacters)}
-                  >
-                    {isGCRemoving ? (
-                      <Spinner size={16} />
-                    ) : (
-                      <Icon name="x" className="size-4" aria-hidden="true" />
-                    )}
-                  </button>
-                </CartForm>
+          {appliedGiftCards.map((giftCard) => (
+            <div
+              key={giftCard.id}
+              className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
+            >
+              <Icon name="gift" className="h-4.5 w-4.5" aria-hidden="true" />
+              <div className="flex items-center gap-1 leading-normal">
+                <span>***{giftCard.lastCharacters}</span>
+                <span className="inline-flex items-center">
+                  (-{<Money data={giftCard.amountUsed} />})
+                </span>
               </div>
-            );
-          })}
+              <GiftCardRemoveButton giftCard={giftCard} />
+            </div>
+          ))}
         </div>
       )}
       {discountCodes?.length > 0 && (
         <div className="mb-4 flex flex-wrap justify-end gap-2">
           {discountCodes
             .filter((discount) => discount.applicable)
-            .map((discount) => {
-              const codes = discountCodes
-                .filter((d) => d.applicable)
-                .map((d) => d.code);
-              const updatedCodes = codes.filter((c) => c !== discount.code);
-
-              // Check if this specific discount is being removed
-              const isDCRemoving =
-                dcRemoveFetcher.state !== "idle" &&
-                removingDiscountCode === discount.code;
-
-              return (
-                <div
-                  key={discount.code}
-                  className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
-                >
-                  <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />
-                  <span className="leading-normal">{discount.code}</span>
-                  <CartForm
-                    route={cartRoute}
-                    action={CartForm.ACTIONS.DiscountCodesUpdate}
-                    inputs={{ discountCodes: updatedCodes || [] }}
-                    fetcherKey="discount-code-remove"
-                  >
-                    <button
-                      type="submit"
-                      className="relative ml-1 size-4 transition-colors hover:text-red-600"
-                      aria-label={`Remove discount code ${discount.code}`}
-                      onClick={() => setRemovingDiscountCode(discount.code)}
-                    >
-                      {isDCRemoving ? (
-                        <Spinner size={16} />
-                      ) : (
-                        <Icon name="x" className="size-4" aria-hidden="true" />
-                      )}
-                    </button>
-                  </CartForm>
-                </div>
-              );
-            })}
+            .map((discount) => (
+              <div
+                key={discount.code}
+                className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
+              >
+                <Icon name="tag" className="h-4.5 w-4.5" aria-hidden="true" />
+                <span className="leading-normal">{discount.code}</span>
+                <DiscountRemoveButton code={discount.code} />
+              </div>
+            ))}
         </div>
       )}
       {cartDiscount && !isCartUpdating && (
@@ -216,7 +214,7 @@ export function CartSummary({
                     : cartNoteButtonText || "Add a note"}
                 </button>
               </Dialog.Trigger>
-              <NoteDialog cartNote={note} />
+              <NoteDialog />
             </Dialog.Root>
           )}
           {enableCartNote && (enableDiscountCode || enableGiftCard) && (
@@ -232,7 +230,7 @@ export function CartSummary({
                     : discountCodeButtonText || "Add a discount code"}
                 </button>
               </Dialog.Trigger>
-              <DiscountDialog discountCodes={discountCodes} />
+              <DiscountDialog />
             </Dialog.Root>
           )}
           {enableDiscountCode && enableGiftCard && (
@@ -248,7 +246,7 @@ export function CartSummary({
                     : giftCardButtonText || "Redeem a gift card"}
                 </button>
               </Dialog.Trigger>
-              <GiftCardDialog appliedGiftCards={appliedGiftCards} />
+              <GiftCardDialog />
             </Dialog.Root>
           )}
         </div>

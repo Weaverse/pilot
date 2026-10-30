@@ -1,13 +1,13 @@
-import { Pagination } from "@shopify/hydrogen";
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   useTranslation,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
-import type { AllProductsQuery } from "storefront-api.generated";
+import type { AllProductsQuery } from "~/routes/products/list";
 import { variants } from "~/components/link";
+import { Pagination } from "~/components/pagination";
 import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import { cn } from "~/utils/cn";
 
@@ -21,7 +21,7 @@ interface AllProductsGridData {
 }
 
 interface AllProductsGridProps
-  extends HydrogenComponentProps, AllProductsGridData {}
+  extends WeaverseComponentProps, AllProductsGridData {}
 
 function AllProductsGrid(props: AllProductsGridProps) {
   const {

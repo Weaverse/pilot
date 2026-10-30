@@ -1,8 +1,12 @@
+import {
+  type GraphQLFormattedError,
+  gql,
+  type StorefrontApi,
+} from "@shopify/hydrogen";
 import type { ActionFunction, ActionFunctionArgs } from "react-router";
 import { data } from "react-router";
-import type { CustomerCreateMutation } from "storefront-api.generated";
 
-const CUSTOMER_CREATE = `#graphql
+const CUSTOMER_CREATE = gql(`#graphql
   mutation customerCreate($input: CustomerCreateInput!) {
     customerCreate(input: $input) {
       customer {
@@ -19,7 +23,12 @@ const CUSTOMER_CREATE = `#graphql
       }
     }
   }
-` as const;
+`);
+
+type CustomerCreateMutation = StorefrontApi.ResultOf<typeof CUSTOMER_CREATE>;
+type CustomerCreatePayload = NonNullable<
+  CustomerCreateMutation["customerCreate"]
+>;
 
 export const action: ActionFunction = async ({
   request,
@@ -27,12 +36,13 @@ export const action: ActionFunction = async ({
 }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const email = formData.get("email") as string;
-  const { customerCreate, errors: queryErrors } =
-    await context.storefront.mutate<CustomerCreateMutation>(CUSTOMER_CREATE, {
+  const { data: mutationData, errors: queryErrors } =
+    await context.storefront.graphql(CUSTOMER_CREATE, {
       variables: {
         input: { email, password: "5hopify" },
       },
     });
+  const customerCreate = mutationData?.customerCreate;
 
   const customer = customerCreate?.customer;
   const customerUserErrors = customerCreate?.customerUserErrors;
@@ -71,9 +81,9 @@ export const action: ActionFunction = async ({
 
 export type CustomerApiPlayLoad = {
   ok: boolean;
-  customer?:
-    | NonNullable<CustomerCreateMutation["customerCreate"]>["customer"]
-    | null;
-  errors?: any[];
+  customer?: CustomerCreatePayload["customer"] | null;
+  errors?: Array<
+    GraphQLFormattedError | CustomerCreatePayload["customerUserErrors"][number]
+  >;
   errorMessage?: string;
 };

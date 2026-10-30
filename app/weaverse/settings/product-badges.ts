@@ -1,4 +1,4 @@
-import type { InspectorGroup } from "@weaverse/hydrogen";
+import type { InspectorGroup } from "@weaverse/hydrogen/react-router";
 
 export const productBadgesSettings = {
   group: "Product badges",

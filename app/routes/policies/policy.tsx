@@ -1,12 +1,13 @@
+import { gql } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-import type { PoliciesHandleQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
 import { Section } from "~/components/section";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
 export const headers = routeHeaders;
 
@@ -18,18 +19,17 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
     (_: unknown, m1: string) => m1.toUpperCase(),
   ) as "privacyPolicy" | "shippingPolicy" | "termsOfService" | "refundPolicy";
 
-  const data = await context.storefront.query<PoliciesHandleQuery>(
-    POLICY_CONTENT_QUERY,
-    {
+  const data = unwrapStorefront(
+    await context.storefront.graphql(POLICY_CONTENT_QUERY, {
       variables: {
         privacyPolicy: false,
         shippingPolicy: false,
         termsOfService: false,
         refundPolicy: false,
         [policyName]: true,
-        language: context.storefront.i18n.language,
       },
-    },
+      cache: CACHE_DEFAULT,
+    }),
   );
 
   invariant(data, "No data returned from Shopify API");
@@ -65,7 +65,7 @@ export default function Policies() {
   );
 }
 
-const POLICY_CONTENT_QUERY = `#graphql
+const POLICY_CONTENT_QUERY = gql(`
   fragment PolicyHandle on ShopPolicy {
     body
     handle
@@ -96,4 +96,4 @@ const POLICY_CONTENT_QUERY = `#graphql
       }
     }
   }
-`;
+`);

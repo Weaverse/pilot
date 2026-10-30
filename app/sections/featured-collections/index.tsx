@@ -1,11 +1,13 @@
+import { gql, type StorefrontApi } from "@shopify/hydrogen";
 import {
-  type ComponentLoaderArgs,
+  type WeaverseComponentLoaderArgs,
   createSchema,
   type WeaverseCollection,
-} from "@weaverse/hydrogen";
-import type { CollectionsByIdsQuery } from "storefront-api.generated";
+} from "@weaverse/hydrogen/react-router";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
+import { CACHE_DEFAULT } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
 interface FeaturedCollectionsData {
   collections: WeaverseCollection[];
@@ -21,7 +23,7 @@ export default function FeaturedCollections(props: FeaturedCollectionsProps) {
   return <Section {...rest}>{children}</Section>;
 }
 
-const COLLECTIONS_QUERY = `#graphql
+const COLLECTIONS_QUERY = gql(`
   query collectionsByIds($country: CountryCode, $language: LanguageCode, $ids: [ID!]!)
   @inContext(country: $country, language: $language) {
     nodes(ids: $ids) {
@@ -41,30 +43,42 @@ const COLLECTIONS_QUERY = `#graphql
       }
     }
   }
-` as const;
+`);
+
+/** `nodes(ids:)` answers any `Node`; only the `Collection` branch is selected. */
+type CollectionNode = Extract<
+  NonNullable<
+    StorefrontApi.ResultOf<typeof COLLECTIONS_QUERY>["nodes"][number]
+  >,
+  { id: string }
+>;
 
 export type FeaturedCollectionsLoaderData = Awaited<ReturnType<typeof loader>>;
 
 export const loader = async ({
   data,
   weaverse,
-}: ComponentLoaderArgs<FeaturedCollectionsData>) => {
+}: WeaverseComponentLoaderArgs<FeaturedCollectionsData>) => {
   const ids = data.collections?.map(
     (collection) => `gid://shopify/Collection/${collection.id}`,
   );
   if (ids?.length) {
     // `$country`/`$language` are left to Hydrogen, which fills them from the
-    // storefront client's own closure — the Shopify provider enum. Passing
-    // them explicitly would send `weaverse.storefront.i18n.language`, which is
-    // the market's public code because Weaverse keys translations by it, and
-    // bare `ZH` resolves to English.
-    const { nodes } = await weaverse.storefront.query<CollectionsByIdsQuery>(
-      COLLECTIONS_QUERY,
-      { variables: { ids } },
+    // request context — the Shopify provider enum. Passing them explicitly
+    // would send `weaverse.storefront.i18n.language`, which is the market's
+    // public code because Weaverse keys translations by it, and bare `ZH`
+    // resolves to English.
+    const { nodes } = unwrapStorefront(
+      await weaverse.storefront.graphql(COLLECTIONS_QUERY, {
+        variables: { ids },
+        cache: CACHE_DEFAULT,
+      }),
     );
-    return nodes.filter(Boolean);
+    return nodes.filter((node): node is CollectionNode =>
+      Boolean(node && "id" in node),
+    );
   }
-  return [];
+  return [] as CollectionNode[];
 };
 
 export const schema = createSchema({

@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { ScrollReveal } from "~/components/scroll-reveal";
@@ -27,7 +30,7 @@ interface CountDownTimerData {
   endTime?: number;
 }
 
-function CountdownTimer(props: CountDownTimerData & HydrogenComponentProps) {
+function CountdownTimer(props: CountDownTimerData & WeaverseComponentProps) {
   const { textColor, endTime: configuredEndTime, ...rest } = props;
   // The schema cannot carry a "tomorrow" default: a time-based default value is
   // recomputed on every module load, which makes the generated component

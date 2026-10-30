@@ -1,22 +1,21 @@
+import { flattenConnection } from "@shopify/hydrogen";
 import {
-  flattenConnection,
-  getPaginationVariables,
-  Money,
-  Pagination,
-} from "@shopify/hydrogen";
-import { useTranslation } from "@weaverse/hydrogen";
-import type {
-  CustomerOrdersFragment,
-  OrderItemFragment,
-} from "customer-account-api.generated";
+  gql,
+  type InferResult,
+  type SourceOf,
+} from "@shopify/hydrogen/customer-account";
+import { useTranslation } from "@weaverse/hydrogen/react-router";
 import type * as React from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { type MetaFunction, useLoaderData } from "react-router";
 import Link from "~/components/link";
+import { Money } from "~/components/money";
+import { Pagination } from "~/components/pagination";
 import { Section } from "~/components/section";
+import { getPaginationVariables } from "~/utils/pagination";
 
 // https://shopify.dev/docs/api/customer/latest/objects/Order
-const ORDER_ITEM_FRAGMENT = `#graphql
+const ORDER_ITEM_FRAGMENT = gql(`#graphql
   fragment OrderItem on Order {
     totalPrice {
       amount
@@ -33,36 +32,11 @@ const ORDER_ITEM_FRAGMENT = `#graphql
     number
     processedAt
   }
-` as const;
-
-// https://shopify.dev/docs/api/customer/latest/objects/Customer
-const CUSTOMER_ORDERS_FRAGMENT = `#graphql
-  fragment CustomerOrders on Customer {
-    orders(
-      sortKey: PROCESSED_AT,
-      reverse: true,
-      first: $first,
-      last: $last,
-      before: $startCursor,
-      after: $endCursor
-    ) {
-      nodes {
-        ...OrderItem
-      }
-      pageInfo {
-        hasPreviousPage
-        hasNextPage
-        endCursor
-        startCursor
-      }
-    }
-  }
-  ${ORDER_ITEM_FRAGMENT}
-` as const;
+`);
 
 // https://shopify.dev/docs/api/customer/latest/queries/customer
-const CUSTOMER_ORDERS_QUERY = `#graphql
-  ${CUSTOMER_ORDERS_FRAGMENT}
+const CUSTOMER_ORDERS_QUERY = gql(
+  `#graphql
   query CustomerOrders(
     $endCursor: String
     $first: Int
@@ -70,10 +44,34 @@ const CUSTOMER_ORDERS_QUERY = `#graphql
     $startCursor: String
   ) {
     customer {
-      ...CustomerOrders
+      orders(
+        sortKey: PROCESSED_AT,
+        reverse: true,
+        first: $first,
+        last: $last,
+        before: $startCursor,
+        after: $endCursor
+      ) {
+        nodes {
+          ...OrderItem
+        }
+        pageInfo {
+          hasPreviousPage
+          hasNextPage
+          endCursor
+          startCursor
+        }
+      }
     }
   }
-` as const;
+`,
+  [ORDER_ITEM_FRAGMENT],
+);
+
+type CustomerOrdersFragment = NonNullable<
+  InferResult<SourceOf<typeof CUSTOMER_ORDERS_QUERY>>["customer"]
+>;
+type OrderItemFragment = CustomerOrdersFragment["orders"]["nodes"][number];
 
 export const meta: MetaFunction = () => {
   return [{ title: "Orders" }];
@@ -84,7 +82,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     pageBy: 20,
   });
 
-  const { data, errors } = await context.customerAccount.query(
+  const { data, errors } = await context.customerAccount.graphql(
     CUSTOMER_ORDERS_QUERY,
     {
       variables: {
