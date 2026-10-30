@@ -20,7 +20,7 @@ Pilot runs on `@shopify/hydrogen@^2026.10` (Hydrogen as a server-handler library
   - on a 404, a market-aware `handleShopifyRedirects`.
   Loaders keep reading `context.storefront`, `context.weaverse`, `context.customerAccount`, `context.session` and `context.env`, typed by module augmentation.
 - **Data layer.** Every Storefront query is a `gql()` document run with `client.graphql(doc, {variables, cache})`. Each call checks `errors` and passes an explicit `cache`, because the classic default cache is gone. `$country`/`$language` are injected from the request context, not passed per call. Customer Account documents use `gql` from `@shopify/hydrogen/customer-account`.
-- **Markets.** `app/utils/locale.ts` stays the source of truth. Shopify receives the provider language (`ZH_CN`/`ZH_TW`); Weaverse, URLs and theme bundles receive the public market locale (the `weaverseStorefront` relabel).
+- **Markets.** `app/utils/locale.ts` stays the source of truth. Shopify receives the provider language (`ZH_CN`/`ZH_TW`); Weaverse, URLs and theme bundles receive the public market locale (the `weaverseStorefront` relabel). The country selector switches market with a client-side navigation: it posts the new country to `/api/cart/buyer-identity`, refreshes the cart store, and points the `window.Shopify` market fields (country, currency, locale, routes root) at the new market, because `ShopifyScripts` reads them only once. Without JavaScript it stays a form post that redirects.
 - **Cart.**
   - Library cart: `createCartServerHandlers({fragment})` at `/api/cart`, `CartProvider` with no server `initialData` (keeps the anonymous full-page cache), `useCart`, `useCartForm`, Standard Actions.
   - Pilot keeps, as app code:
@@ -29,6 +29,7 @@ Pilot runs on `@shopify/hydrogen@^2026.10` (Hydrogen as a server-handler library
     - `/cart/:lines` with locale prefix, discount and attribution;
     - `/discount/:code`;
     - `/cart/checkout` with attribution forwarding.
+  - A `cart` cookie whose cart no longer exists is dropped before Hydrogen's handler runs, so the next add creates a fresh cart instead of failing.
   - App-owned changes reconcile through the store's `refresh()`. Invalid gift card codes are reported by comparing `appliedGiftCards` before and after the mutation.
 - **Product.** `ProductProvider`/`useProductForm` replaces `useOptimisticVariant`, `getAdjacentAndFirstAvailableVariants` and `getProductOptions`. Combined-listing values link to the other product. Quick shop and single-product sections use their own provider.
 - **Collections, search, account orders.** A local port of `Pagination` and `getPaginationVariables`. The `filter.*` URL format, infinite scroll, sort and filter UI stay unchanged. The library collection store is a follow-up.
@@ -54,7 +55,7 @@ Parity with `main`: every item below behaves as it does today, verified on a pro
 
 - **Routing:**
   - every route in `app/routes.ts` resolves, with and without a market prefix;
-  - an unsupported market prefix returns 404 (including `.data`);
+  - an unsupported market prefix renders the 404 page with status 404 (including `.data`), from a layout route around the `:locale?` routes;
   - Shopify URL redirects work on prefixed paths;
   - `?variant=` product links redirect to option params;
   - `robots.txt`, `manifest.webmanifest` and `/admin` work.

@@ -96,7 +96,7 @@ Routes are defined in `app/routes.ts` using React Router v7's programmatic routi
 
 - **Weaverse**: Visual page builder - sections must be registered in `/app/weaverse/components.ts`
 - **Judge.me**: Product reviews integration via utilities in `/app/utils/judgeme.ts`
-- **Combined Listings**: Product grouping system via `/app/utils/combined-listings.ts`
+- **Combined Listings**: Option values that belong to another product of a listing link to that product (`app/components/product/product-option-values.tsx`); filtering and grouping listings is a docs cookbook, not built in
 - **Customer Accounts**: New Shopify Customer Account API support (OAuth-based)
 - **Radix UI**: For accessible UI primitives (accordion, dialog, dropdown, etc.)
 - **Swiper**: For carousel/slideshow functionality
@@ -199,8 +199,7 @@ The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
 5. **Customer Account Queries**: Run them through `context.customerAccount.graphql(doc, { variables })`, which attaches the customer's token and redirects to login when signed out
 6. **Parallel Loading**: Always use `Promise.all()` for multiple data fetches in loaders
 7. **Type Safety**: Avoid `any` type when possible, use `unknown` if escape hatch needed, properly type all Weaverse section props
-8. **Combined Listings**: Use utility functions from `/app/utils/combined-listings.ts` for product filtering and grouping logic
-9. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
+8. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
 
 ## Weaverse Component Development Guide
 
