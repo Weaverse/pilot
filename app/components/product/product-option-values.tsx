@@ -218,7 +218,9 @@ function OptionValueControl({
         prefetch={crossProduct ? "intent" : undefined}
         aria-current={value.selected ? "true" : undefined}
         aria-label={label}
-        className={className}
+        // Laid out like the buttons: an inline link's padding doesn't count
+        // toward the line height, so it would sit higher than its siblings.
+        className={cn("inline-block", className)}
         onClick={
           crossProduct
             ? undefined
