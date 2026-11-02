@@ -1,3 +1,4 @@
+import { getThemeElementProps } from "@weaverse/schema";
 import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import { cva } from "class-variance-authority";
 import { useEffect, useRef, useState } from "react";
@@ -202,6 +203,7 @@ export function Header() {
 
   return (
     <header
+      {...getThemeElementProps("Header")}
       className={cn(
         "z-10 w-full",
         "transition-all duration-300 ease-in-out",
