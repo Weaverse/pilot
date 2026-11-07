@@ -56,7 +56,9 @@ export async function loadRegisteredComponents() {
       // `@weaverse/schema`, which is ESM-only. Letting Node externalize it
       // would hit that broken CJS path. Routing the packages through Vite
       // resolves their ESM entrypoints, matching how the storefront builds.
-      noExternal: [/^@weaverse\//],
+      // `react-use/esm/*` files import siblings without extensions, which
+      // Node's ESM resolver rejects; Vite resolves them.
+      noExternal: [/^@weaverse\//, "react-use"],
     },
     logLevel: "error",
   });
