@@ -55,7 +55,7 @@ Parity with `main`: every item below behaves as it does today, verified on a pro
 
 - **Routing:**
   - every route in `app/routes.ts` resolves, with and without a market prefix;
-  - an unsupported market prefix renders the 404 page with status 404 (including `.data`), from a layout route around the `:locale?` routes;
+  - an unsupported market prefix renders the 404 page with status 404 (including `.data`), from a layout route around the `:locale?` routes; `:locale?` resource routes (APIs, sitemaps, redirects) sit under a second layout whose middleware answers 404, since their requests skip the page layout's loader;
   - Shopify URL redirects work on prefixed paths;
   - `?variant=` product links redirect to option params;
   - `robots.txt`, `manifest.webmanifest` and `/admin` work.

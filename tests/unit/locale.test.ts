@@ -201,9 +201,10 @@ test("round-trips every market through localize and delocalize", () => {
 });
 
 test("unsupported markets render the 404 page", async () => {
-  const [guard, routes, server] = await Promise.all(
+  const [guard, resourceGuard, routes, server] = await Promise.all(
     [
       "../../app/routes/market-guard.ts",
+      "../../app/routes/market-guard-resources.ts",
       "../../app/routes.ts",
       "../../server.ts",
     ].map((path) => readFile(new URL(path, import.meta.url), "utf8")),
@@ -216,6 +217,12 @@ test("unsupported markets render the 404 page", async () => {
   expect(guard).toContain("status: 404");
   expect(routes).toMatch(
     /layout\("routes\/market-guard\.ts",\s*\[\s*\.\.\.prefix\(":locale\?"/,
+  );
+  // Resource routes skip the page guard's loader; middleware guards them.
+  expect(resourceGuard).toContain("isUnsupportedMarketPath(");
+  expect(resourceGuard).toContain("export const middleware");
+  expect(routes).toMatch(
+    /layout\("routes\/market-guard-resources\.ts",\s*\[\s*\.\.\.prefix\(":locale\?"/,
   );
   // An invented market must not be redirected by the Shopify URL redirects.
   expect(server).toMatch(

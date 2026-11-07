@@ -12,19 +12,17 @@ import {
 export default [
   route("robots.txt", "routes/seo/robots.ts"),
   route("manifest.webmanifest", "routes/pwa/manifest.webmanifest.ts"),
-  layout("routes/market-guard.ts", [
+  // Resource routes (no page) under the market prefix. Their requests skip
+  // the page guard's loader, so this layout guards them with middleware.
+  layout("routes/market-guard-resources.ts", [
     ...prefix(":locale?", [
-      index("routes/home.tsx"),
-      route("search", "routes/search/index.tsx"),
-      route(
-        ":shopid/orders/:token/authenticate",
-        "routes/others/order-redirect.tsx",
-      ),
       route("sitemap.xml", "routes/seo/sitemap.ts"),
       route("sitemap/:type/:page.xml", "routes/seo/sitemap-page.ts"),
       route("sitemap-weaverse.xml", "routes/seo/sitemap-weaverse.xml.ts"),
-      route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
       route("discount/:code", "routes/others/discount-code.tsx"),
+      route("cart/checkout", "routes/cart/checkout.tsx"),
+      // Redirect legacy article URLs emitted by Hydrogen's default sitemap.
+      route("articles/:articleHandle", "routes/blogs/article-redirect.tsx"),
       ...prefix("api", [
         route("customer", "routes/api/customer.ts"),
         route("featured-products", "routes/api/featured-products.ts"),
@@ -37,19 +35,27 @@ export default [
         ),
         route("product/:productHandle/reviews", "routes/api/reviews.ts"),
       ]),
+    ]),
+  ]),
+  layout("routes/market-guard.ts", [
+    ...prefix(":locale?", [
+      index("routes/home.tsx"),
+      route("search", "routes/search/index.tsx"),
+      route(
+        ":shopid/orders/:token/authenticate",
+        "routes/others/order-redirect.tsx",
+      ),
+      route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
       ...prefix("blogs", [
         route(":blogHandle", "routes/blogs/blog.tsx"),
         route(":blogHandle/:articleHandle", "routes/blogs/article.tsx"),
       ]),
-      // Redirect legacy article URLs emitted by Hydrogen's default sitemap.
-      route("articles/:articleHandle", "routes/blogs/article-redirect.tsx"),
       ...prefix("policies", [
         index("routes/policies/list.tsx"),
         route(":policyHandle", "routes/policies/policy.tsx"),
       ]),
       ...prefix("cart", [
         index("routes/cart/cart-page.tsx"),
-        route("checkout", "routes/cart/checkout.tsx"),
         route(":lines", "routes/cart/lines.tsx"),
       ]),
       ...prefix("collections", [
