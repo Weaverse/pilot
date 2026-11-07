@@ -3,7 +3,7 @@ import {
   type ValidProductSelectionResult,
 } from "@shopify/hydrogen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 import invariant from "tiny-invariant";
@@ -73,12 +73,40 @@ export default function Product() {
 
   useSyncSelectionToUrl(product);
 
+  // The provider rehydrates the form only when the loaded variant changes. A
+  // selection resolved locally doesn't run the loader, so loading the same
+  // variant again (a link back to it) would leave the local selection on
+  // screen. In that case the form is remounted from the loaded product.
+  const loadedVariantId = product.selectedOrFirstAvailableVariant?.id;
+  const [form, setForm] = useState({
+    product,
+    selectedId: loadedVariantId,
+    key: 0,
+  });
+  if (form.product !== product) {
+    const reloaded =
+      form.product.id === product.id &&
+      form.product.selectedOrFirstAvailableVariant?.id === loadedVariantId;
+    setForm({
+      product,
+      selectedId: loadedVariantId,
+      key:
+        reloaded && form.selectedId !== loadedVariantId
+          ? form.key + 1
+          : form.key,
+    });
+  }
+
   // A selection updates every section through the product form at once; the
   // URL follows with a client-side replace that keeps the scroll position.
   // A variant the page already loaded needs no loader round trip; one it
   // didn't (`unresolved`) revalidates, and the loader's answer hydrates the
   // form. Combined-listing values link to the other product instead.
   function handleSelect(result: ValidProductSelectionResult<ProductFormData>) {
+    setForm((current) => ({
+      ...current,
+      selectedId: result.selectedVariant?.id,
+    }));
     const path = productOptionPath(
       product,
       result.selectedOptions,
@@ -95,7 +123,7 @@ export default function Product() {
   }
 
   return (
-    <ProductProvider product={product} onSelect={handleSelect}>
+    <ProductProvider key={form.key} product={product} onSelect={handleSelect}>
       <WeaverseContent />
       <ProductAnalytics product={product} />
     </ProductProvider>
