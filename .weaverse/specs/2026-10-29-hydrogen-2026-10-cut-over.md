@@ -8,7 +8,7 @@ Pilot runs on `@shopify/hydrogen@^2026.10` (Hydrogen as a server-handler library
 
 ## Scope & contract
 
-- **Runtime.** `@shopify/hydrogen@^2026.10.2`, `@weaverse/hydrogen@6` (beta until 6.0.0 is released), React Router 7 (latest 7.x; v8 is a separate follow-up, because Shopify's template pins 7.x and the Weaverse SDK depends on `react-router@^7`), Vite 8, `@shopify/mini-oxygen@^4.2.3`, Node `^22.18 || ^24.11`.
+- **Runtime.** `@shopify/hydrogen@^2026.10.2`, `@weaverse/hydrogen@^6.0.0`, React Router 7 (latest 7.x; v8 is a separate follow-up, because Shopify's template pins 7.x and the Weaverse SDK depends on `react-router@^7`), Vite 8, `@shopify/mini-oxygen@^4.2.3`, Node `^22.18 || ^24.11`.
 - **Tooling.** Scripts `vite dev` / `react-router build` / `vite preview` / `shopify hydrogen deploy --assets-dir dist/client --worker-dir dist/server`, plus `dev:https` for Customer Account login. Typecheck is `react-router typegen && tsc && hydrogen gql check --fail-on-warn`. GraphQL codegen (`@shopify/hydrogen-codegen`, `@graphql-codegen/cli`, `codegen.ts`, `*.generated.d.ts`) is replaced by `gql()` and `@shopify/hydrogen/ts-plugin`.
 - **Request lifecycle** (`server.ts`):
   - unsupported-market 404;
@@ -131,7 +131,7 @@ Main files: `package.json`, `package-lock.json`, `server.ts`, `env.d.ts`, `vite.
 
 ## Risks
 
-- **`@weaverse/hydrogen` 6.0 is a beta.** API changes in the SDK land here as well. The cut-over PR merges only after 6.0.0 stable is published, or after an explicit decision to ship on the beta.
+- **`@weaverse/hydrogen` 6.0.** The branch ran on `6.0.0-beta.0` during QA and moved to the 6.0.0 release with no code changes.
 - **Breaking for forked themes.** Imports, cart components, the product form and env names change. Release notes need a migration section (docs#66).
 - **Weaker typing in `.graphql` results** (partial and union-shaped). Narrow at the boundaries; don't use `any`.
 
