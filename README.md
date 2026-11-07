@@ -85,7 +85,7 @@ Pilot is designed to be developed *with* an agent:
 - [Shopify Hydrogen](https://hydrogen.shopify.dev/) on Oxygen, with the Shopify CLI
 - [React Router 7](https://reactrouter.com/) — routing, SSR, and data loading
 - [TailwindCSS v4](https://tailwindcss.com/) + [Radix UI](https://www.radix-ui.com/) + [class-variance-authority](https://cva.style/)
-- TypeScript (strict) and GraphQL codegen
+- TypeScript (strict) with typed `gql()` documents (no codegen)
 - Vite+ with Oxlint/Oxfmt for linting and formatting
 - [Swiper](https://swiperjs.com/) carousels, [Playwright](https://playwright.dev/) E2E tests
 
@@ -102,10 +102,12 @@ Pilot is designed to be developed *with* an agent:
 ## Commands
 
 ```bash
-npm run dev          # dev server + codegen on http://localhost:3456
-npm run build        # production build (shopify hydrogen build --codegen)
+npm run dev          # dev server on http://localhost:3456 (vite dev)
+npm run dev:https    # HTTPS dev server for Customer Account login
+npm run build        # production build (react-router build)
 npm run preview      # build, then preview the production bundle
-npm run typecheck    # tsc --noEmit
+npm run deploy       # deploy dist/ to Oxygen
+npm run typecheck    # react-router typegen + tsc + hydrogen gql check
 npm run check        # Vite+ lint + format check
 npm run test         # unit tests (tests/unit, Playwright runner)
 ```
@@ -124,6 +126,7 @@ The minimum variables needed to render a storefront (the rest are feature-comple
 | `PUBLIC_STORE_DOMAIN` | yes | Shopify (Hydrogen sales channel / Headless app) |
 | `PUBLIC_STOREFRONT_API_TOKEN` | yes | Shopify (Hydrogen sales channel / Headless app) |
 | `WEAVERSE_PROJECT_ID` | yes | Weaverse Studio (or the agent handshake) |
+| `PRIVATE_STOREFRONT_API_TOKEN` | no | Injected by Oxygen for a linked storefront; enables the private Storefront client |
 | `SHOP_ID`, customer-account, checkout, analytics, reviews | no | Shopify / integrations, add after first success |
 
 If your store is already linked to a Hydrogen channel, `npx shopify hydrogen env pull` fills these in. See [`.env.example`](.env.example) for the full list.
@@ -144,7 +147,7 @@ app/
 └── .server/      # Server-only context (Hydrogen + Weaverse client)
 ```
 
-Key config: `react-router.config.ts`, `vite.config.ts`, `.oxfmtrc.json`, `codegen.ts`, `AGENTS.md`.
+Key config: `server.ts` (request handling), `react-router.config.ts`, `vite.config.ts`, `.oxfmtrc.json`, `AGENTS.md`.
 
 ---
 
@@ -162,13 +165,15 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const { storefront, weaverse } = context;
   const [weaverseData, { shop }] = await Promise.all([
     weaverse.loadPage({ type: 'INDEX' }),
-    storefront.query(SHOP_QUERY),
+    storefront
+      .graphql(SHOP_QUERY, { cache: CACHE_LONG })
+      .then(unwrapStorefront),
   ]);
   return { weaverseData, shop };
 }
 ```
 
-`context.weaverse` is a `WeaverseClient` injected in `app/.server/context.ts` (`new WeaverseClient({ ...hydrogenContext, request, cache, themeSchema, components })`).
+`context.weaverse` is a `WeaverseClient` created in `app/.server/context.ts` (`new WeaverseClient({ storefront, env, cache, waitUntil, request, themeSchema, components })`). Storefront queries are `gql()` documents run with `storefront.graphql(doc, { variables, cache })`; every query passes an explicit cache strategy from `~/utils/cache`.
 
 ### Render a page
 
@@ -197,7 +202,7 @@ Pilot can make the storefront installable as a home-screen app on iOS and Androi
 Theme settings load in `root.tsx` and are read anywhere with `useThemeSettings`:
 
 ```tsx
-import { useThemeSettings } from '@weaverse/hydrogen';
+import { useThemeSettings } from '@weaverse/hydrogen/react-router';
 
 function Logo() {
   const { logo } = useThemeSettings();
@@ -207,13 +212,13 @@ function Logo() {
 
 ### Create a section
 
-Add a file under `app/sections/`, export a component (it **must** accept `ref` and extend `HydrogenComponentProps`) and a `schema`, then register it in `app/weaverse/components.ts`.
+Add a file under `app/sections/`, export a component (it **must** accept `ref` and extend `WeaverseComponentProps`) and a `schema`, then register it in `app/weaverse/components.ts`.
 
 ```tsx
 // app/sections/video/index.tsx
-import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+import { createSchema, type WeaverseComponentProps } from '@weaverse/hydrogen/react-router';
 
-interface VideoProps extends HydrogenComponentProps {
+interface VideoProps extends WeaverseComponentProps {
   ref: React.Ref<HTMLElement>;
   heading: string;
   videoUrl: string;
@@ -246,11 +251,12 @@ export const schema = createSchema({
 Need data from Shopify or a third-party API? Export a **server-side** `loader` from the section and read it via `Component.props.loaderData`:
 
 ```tsx
-import type { ComponentLoaderArgs } from '@weaverse/hydrogen';
+import type { WeaverseComponentLoaderArgs } from '@weaverse/hydrogen/react-router';
 
-export const loader = async ({ weaverse, data }: ComponentLoaderArgs) => {
-  const result = await weaverse.storefront.query(HOMEPAGE_SEO_QUERY, {
+export const loader = async ({ weaverse, data }: WeaverseComponentLoaderArgs) => {
+  const result = await weaverse.storefront.graphql(HOMEPAGE_SEO_QUERY, {
     variables: { handle: data.collection?.handle || 'frontpage' },
+    cache: CACHE_DEFAULT,
   });
   return result.data;
 };
@@ -259,7 +265,7 @@ export const loader = async ({ weaverse, data }: ComponentLoaderArgs) => {
 ```ts
 // app/weaverse/components.ts
 import * as Video from '~/sections/video';
-export const components: HydrogenComponent[] = [/* …existing, */ Video];
+export const components: WeaverseComponent[] = [/* …existing, */ Video];
 ```
 
 ### Dev tools

@@ -1,4 +1,4 @@
-import type { InspectorGroup } from "@weaverse/hydrogen";
+import type { InspectorGroup } from "@weaverse/hydrogen/react-router";
 
 /**
  * Appearance knobs for the Shopify Inbox chat launcher. Shopify's widget is

@@ -1,5 +1,5 @@
-import { ModelViewer } from "@shopify/hydrogen";
 import type { getModel3dData } from "./model-utils";
+import { ModelViewer } from "./model-viewer";
 
 type Model3dData = ReturnType<typeof getModel3dData>["data"];
 
@@ -13,7 +13,6 @@ export function ModelViewerItem({
   data: Model3dData;
   iosSrc?: string;
   loading?: "auto" | "lazy" | "eager";
-  // "interaction" is a valid runtime value but not in @google/model-viewer v1.12.1 types
   reveal?: "auto" | "manual" | "interaction";
   className?: string;
 }) {
@@ -22,7 +21,7 @@ export function ModelViewerItem({
       data={data}
       iosSrc={iosSrc}
       loading={loading}
-      reveal={reveal as any}
+      reveal={reveal}
       className={className}
     />
   );

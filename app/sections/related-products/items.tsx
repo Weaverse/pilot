@@ -1,11 +1,14 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { Suspense } from "react";
 import { Await, useLoaderData } from "react-router";
-import type { ProductCardFragment } from "storefront-api.generated";
+import type { ProductCardFragment } from "~/graphql/fragments";
 import { ProductCard } from "~/components/product-card";
 import { Swimlane } from "~/components/swimlane";
 
-interface RelatedProductsItemsProps extends HydrogenComponentProps {
+interface RelatedProductsItemsProps extends WeaverseComponentProps {
   ref?: React.Ref<HTMLDivElement>;
   productsCount: number;
 }

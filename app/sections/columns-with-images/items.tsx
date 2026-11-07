@@ -1,10 +1,10 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   IMAGES_PLACEHOLDERS,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 
-interface ColumnsWithImagesItemsProps extends HydrogenComponentProps {
+interface ColumnsWithImagesItemsProps extends WeaverseComponentProps {
   gap: number;
 }
 

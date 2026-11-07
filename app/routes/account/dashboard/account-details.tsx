@@ -1,5 +1,5 @@
-import type { CustomerDetailsFragment } from "customer-account-api.generated";
 import { Link } from "~/components/link";
+import type { CustomerDetailsFragment } from "~/routes/account/layout";
 
 export function AccountDetails({
   customer,

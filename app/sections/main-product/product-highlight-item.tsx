@@ -1,8 +1,8 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   useParentInstance,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
@@ -21,7 +21,7 @@ let ICONS = {
 
 type IconOption = keyof typeof ICONS;
 
-interface HighlightItemProps extends HydrogenComponentProps {
+interface HighlightItemProps extends WeaverseComponentProps {
   icon: IconOption;
   text: string;
 }

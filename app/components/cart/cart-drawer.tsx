@@ -1,51 +1,91 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
+import { create } from "zustand";
 import { CartMain } from "~/components/cart/cart-main";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Spinner } from "~/components/spinner";
-import { useCart, useCartBootstrapResolved, useCartStore } from "./store";
+import { CartErrorBanner } from "./cart-error-banner";
+import { type CartData, useCart } from "./cart-store";
+
+const useCartDrawerStore = create<{ isOpen: boolean }>()(() => ({
+  isOpen: false,
+}));
+
+/**
+ * Opens the cart drawer. Add-to-cart surfaces call it when they submit, so the
+ * drawer shows the optimistic line in the same frame as the click.
+ */
+export function openCartDrawer() {
+  useCartDrawerStore.setState({ isOpen: true });
+}
+
+export function closeCartDrawer() {
+  useCartDrawerStore.setState({ isOpen: false });
+}
+
+/**
+ * Standard Actions dispatches this event for every cart line change, from a
+ * form or from code. An `add` opens the drawer, so a surface that doesn't call
+ * `openCartDrawer()` itself still behaves like the rest. A cart that loads on
+ * page view dispatches nothing, so the drawer never opens on load.
+ */
+const CART_LINES_UPDATE_EVENT = "shopify:cart:lines-update";
+
+function openOnAdd(event: Event) {
+  if ((event as Event & { action?: string }).action === "add") {
+    openCartDrawer();
+  }
+}
+
+/** GTM-only event: the 2026.10 analytics bus has no custom events. */
+function publishSidecartViewed(cart: CartData) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: "custom_sidecart_viewed",
+    cart_id: cart.id,
+    cart_total: cart.cost?.totalAmount?.amount,
+    cart_total_quantity: cart.totalQuantity,
+  });
+}
 
 export function CartDrawer() {
-  const { publish } = useAnalytics();
-  const cart = useCart();
-  // Returning shoppers have a cart cookie but useCart() stays null until the
-  // /api/cart bootstrap responds — rendering CartMain then would show a
-  // false "empty cart". Hold a loading state until the first response lands
-  // (the old root-loader Await behaved the same way).
-  const bootstrapResolved = useCartBootstrapResolved();
-  // An optimistic cart is staged by the add-to-cart click itself, so it is
-  // available before the bootstrap responds. Without this, an add clicked on a
-  // cold page would open the drawer onto the bootstrap spinner — exactly the
-  // frame the instant drawer exists to remove.
-  const cartReady = bootstrapResolved || Boolean(cart?.isOptimistic);
-  const {
-    isOpen,
-    close: closeCartDrawer,
-    toggle: toggleCartDrawer,
-    lastAddError,
-    setLastAddError,
-  } = useCartStore();
+  const isOpen = useCartDrawerStore((state) => state.isOpen);
+  const cart = useCart((state) => state.data);
+  // Returning shoppers have a cart cookie, but the store holds an empty cart
+  // until its `/api/cart` load responds — rendering CartMain then would show a
+  // false "empty cart". Hold a loading state until the load lands. An add
+  // clicked on a cold page projects its line immediately, so the drawer shows
+  // that line instead of the spinner.
+  const cartReady = useCart(
+    (state) => !state.loading || state.pending.lines.size > 0,
+  );
   const location = useLocation();
 
-  // Close on route change.
   useEffect(() => {
-    closeCartDrawer();
-    // oxlint-disable-next-line react/exhaustive-deps -- close on route change
-  }, [location.pathname, closeCartDrawer]);
+    document.addEventListener(CART_LINES_UPDATE_EVENT, openOnAdd);
+    return () =>
+      document.removeEventListener(CART_LINES_UPDATE_EVENT, openOnAdd);
+  }, []);
+
+  // Close on route change.
+  // oxlint-disable-next-line react/exhaustive-deps -- close on route change
+  useEffect(closeCartDrawer, [location.pathname]);
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(open) => useCartDrawerStore.setState({ isOpen: open })}
+    >
       <Dialog.Trigger
-        onClick={() => publish("custom_sidecart_viewed", { cart })}
+        onClick={() => publishSidecartViewed(cart)}
         className="focus:ring-border relative flex h-8 w-8 items-center justify-center"
       >
         <Icon name="handbag" className="h-5 w-5" />
-        {cart?.totalQuantity > 0 && (
+        {cart.totalQuantity > 0 && (
           <div
             className={clsx(
               "cart-count",
@@ -57,7 +97,7 @@ export function CartDrawer() {
               "group-hover/header:text-(--color-header-bg)",
             )}
           >
-            <span>{cart?.totalQuantity}</span>
+            <span>{cart.totalQuantity}</span>
           </div>
         )}
       </Dialog.Trigger>
@@ -88,7 +128,7 @@ export function CartDrawer() {
                   onClick={closeCartDrawer}
                 >
                   Cart
-                  {cartReady && ` (${cart?.totalQuantity || 0})`}
+                  {cartReady && ` (${cart.totalQuantity || 0})`}
                   <Icon
                     name="arrow-right"
                     className="size-4 transition-transform group-hover/cart-title:translate-x-0.5"
@@ -105,23 +145,9 @@ export function CartDrawer() {
                 </button>
               </Dialog.Close>
             </div>
-            {lastAddError && (
-              <div
-                role="alert"
-                className="mx-4 flex items-start justify-between gap-3 rounded-sm bg-red-50 px-3 py-2 text-sm text-red-700"
-              >
-                <span>{lastAddError}</span>
-                <button
-                  type="button"
-                  onClick={() => setLastAddError(null)}
-                  aria-label="Dismiss error"
-                >
-                  <Icon name="x" className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            )}
+            <CartErrorBanner className="mx-4" />
             {cartReady ? (
-              <CartMain layout="drawer" cart={cart} />
+              <CartMain layout="drawer" onClose={closeCartDrawer} />
             ) : (
               <div
                 className="relative grow"

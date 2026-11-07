@@ -1,14 +1,15 @@
+import { gql } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { useLoaderData } from "react-router";
-import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Icon } from "~/components/icon";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { seoMetaFromMatches } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 
 export const headers = routeHeaders;
 
@@ -20,7 +21,9 @@ export async function loader({
   request,
   context: { storefront },
 }: LoaderFunctionArgs) {
-  const data = await storefront.query<PoliciesIndexQuery>(POLICIES_QUERY);
+  const data = unwrapStorefront(
+    await storefront.graphql(POLICIES_QUERY, { cache: CACHE_DEFAULT }),
+  );
 
   invariant(data, "No data returned from Shopify API");
 
@@ -78,7 +81,7 @@ export default function Policies() {
   );
 }
 
-const POLICIES_QUERY = `#graphql
+const POLICIES_QUERY = gql(`
   fragment PolicyIndex on ShopPolicy {
     id
     title
@@ -107,4 +110,4 @@ const POLICIES_QUERY = `#graphql
       }
     }
   }
-`;
+`);

@@ -1,16 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { CartForm } from "@shopify/hydrogen";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { loadCriticalData } from "../../app/.server/root";
-import { DEFAULT_LOCALE } from "../../app/utils/locale";
+import type { LoaderFunctionArgs } from "react-router";
+import { loadCriticalData, loadDeferredData } from "../../app/.server/root";
+import {
+  recordStorefrontCalls,
+  type StorefrontCall,
+  serverFetch,
+} from "../support/hydrogen-env";
 import { loadAppModule } from "../support/render-app";
-
-/** The shipped cart route, bundled the way the app bundles it. */
-async function cartRoute() {
-  return loadAppModule<{
-    action: (args: ActionFunctionArgs) => Promise<Response | unknown>;
-  }>("routes/cart/cart-page.tsx");
-}
 
 /**
  * Tests that execute the boundaries a release depends on.
@@ -19,7 +15,7 @@ async function cartRoute() {
  * still calls it. Every fix in this branch is one call away from silently
  * reverting — a route reading `redirectTo` straight from the form, a loader
  * returning the raw theme payload — and each of those reverts is a released
- * defect, not a refactor. So these drive the real route action and the real
+ * defect, not a refactor. So these drive the real worker, route loaders and
  * root loader.
  */
 
@@ -46,19 +42,26 @@ const LAYOUT = {
 function rootContext(language: string, country: string) {
   return {
     storefront: {
-      i18n: { language, country, hreflang: `${language}-${country}` },
-      // `getShopAnalytics` fires a query whose promise the loader returns
-      // unawaited. Answering it with the real shape keeps the rejection from
+      i18n: {
+        language,
+        country,
+        currency: "EUR",
+        hreflang: `${language}-${country}`,
+        pathPrefix: `/${language.toLowerCase()}-${country.toLowerCase()}`,
+      },
+      // The deferred swatches query's promise is returned unawaited.
+      // Answering every query with the real shape keeps a rejection from
       // surfacing inside whichever test happens to run next.
-      query: async () => ({
-        shop: LAYOUT.shop,
-        layout: LAYOUT,
-        localization: {
-          language: { isoCode: language },
-          country: { currency: { isoCode: "EUR" } },
+      graphql: async () => ({
+        data: {
+          ...LAYOUT,
+          metaobjects: { nodes: [] },
+          localization: {
+            language: { isoCode: language },
+            country: { currency: { isoCode: "EUR" } },
+          },
         },
       }),
-      CacheLong: () => undefined,
     },
     weaverse: { loadThemeSettings: async () => WEAVERSE_THEME },
     env: {
@@ -104,46 +107,141 @@ test("the root loader localizes the theme payload it sends to the client", async
   });
 });
 
-/** The `Location` the cart action answers with for `redirectTo`. */
+test("the document's root data never touches the shopper's cart or session", async () => {
+  // Oxygen full-page caches anonymous HTML. Anything the root loader reads
+  // from the cart, the session or the customer would be served to the next
+  // visitor, so it must not read them at all: the cart store loads
+  // `/api/cart` after hydration, and the account button fetches its token.
+  const touched: string[] = [];
+  const context = new Proxy(rootContext("DE", "DE"), {
+    get(target, key, receiver) {
+      if (key === "session" || key === "customerAccount" || key === "cart") {
+        touched.push(String(key));
+      }
+      return Reflect.get(target, key, receiver);
+    },
+  });
+  const args = {
+    request: new Request("https://shop.test/de-de/", {
+      headers: { Cookie: "cart=1; session=signed" },
+    }),
+    context,
+    params: {},
+  } as unknown as LoaderFunctionArgs;
+
+  const deferred = loadDeferredData(args);
+  const critical = await loadCriticalData(args);
+  const document = JSON.stringify({ ...critical, ...deferred });
+
+  expect({
+    touched,
+    keys: Object.keys({ ...critical, ...deferred }).filter((key) =>
+      /cart|customer|session/i.test(key),
+    ),
+    cartId: document.includes("gid://shopify/Cart"),
+  }).toEqual({ touched: [], keys: [], cartId: false });
+});
+
+/** The cache policy the worker answers a private endpoint with. */
+async function cacheControlOf(path: string) {
+  const { result } = await recordStorefrontCalls(
+    () =>
+      serverFetch(
+        new Request(`https://shop.test${path}`, {
+          headers: { Cookie: "cart=1" },
+        }),
+      ),
+    () => ({ cart: null }),
+  );
+  return result.headers.get("Cache-Control") ?? "";
+}
+
+test("the cart and account token endpoints are private and never stored", async () => {
+  // Both answer per shopper; a shared cache that kept either would hand one
+  // shopper's cart or Customer Account token to the next.
+  for (const path of ["/api/cart", "/api/account/token"]) {
+    const cacheControl = await cacheControlOf(path);
+    expect({ path, private: cacheControl.includes("private") }).toEqual({
+      path,
+      private: true,
+    });
+    expect({ path, noStore: cacheControl.includes("no-store") }).toEqual({
+      path,
+      noStore: true,
+    });
+  }
+});
+
+const CART_ID = "gid://shopify/Cart/1";
+
+/** Shopify's answer to every cart operation the no-JS forms send. */
+function respondToCart({ operation }: StorefrontCall) {
+  if (operation === "PilotCartBuyerIdentity") {
+    return {
+      cartBuyerIdentityUpdate: { cart: { checkoutUrl: "" }, userErrors: [] },
+    };
+  }
+  return {
+    cartCreate: {
+      cart: { id: CART_ID, checkoutUrl: "https://checkout.test/c/1" },
+      userErrors: [],
+      warnings: [],
+    },
+  };
+}
+
+/** Posts a no-JS cart form through the worker from a page on `fromPath`. */
+async function postCartForm(
+  fromPath: string,
+  path: string,
+  fields: Record<string, string>,
+  { referer = `https://shop.test${fromPath}`, cookie = "cart=1" } = {},
+) {
+  const { result } = await recordStorefrontCalls(
+    () =>
+      serverFetch(
+        new Request(`https://shop.test${path}`, {
+          method: "POST",
+          body: new URLSearchParams(fields),
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+            Origin: "https://shop.test",
+            Referer: referer,
+            ...(cookie && { Cookie: cookie }),
+          },
+        }),
+      ),
+    respondToCart,
+  );
+  return result;
+}
+
+/** Where a no-JS country switch lands for `redirectTo`, origin included. */
 async function cartRedirectFor(
   pathPrefix: string,
   redirectTo: string,
 ): Promise<string | null> {
-  const body = new URLSearchParams({
-    cartFormInput: JSON.stringify({
-      action: CartForm.ACTIONS.BuyerIdentityUpdate,
-      inputs: { buyerIdentity: { countryCode: "DE" } },
-    }),
-    redirectTo,
-  });
-
-  const { action: cartAction } = await cartRoute();
-  const response = await cartAction({
-    request: new Request(`https://shop.test${pathPrefix}/cart`, {
-      method: "POST",
-      body,
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-    }),
-    context: {
-      cart: {
-        getCartId: () => "gid://shopify/Cart/1",
-        updateBuyerIdentity: async () => ({
-          cart: { id: "gid://shopify/Cart/1" },
-        }),
-        setCartId: () => new Headers({ "set-cookie": "cart=1" }),
-      },
-      storefront: { i18n: DEFAULT_LOCALE },
-    },
-    params: {},
-  } as unknown as ActionFunctionArgs);
-
-  return response instanceof Response ? response.headers.get("Location") : null;
+  const response = await postCartForm(
+    `${pathPrefix}/collections/all`,
+    "/api/cart/buyer-identity",
+    { countryCode: "DE", redirectTo },
+  );
+  const location = response.headers.get("Location");
+  if (!location) {
+    return null;
+  }
+  const target = new URL(location, "https://shop.test");
+  // Reported relative only when it stays on this origin; an off-origin target
+  // shows up whole and fails the assertion.
+  return target.origin === "https://shop.test"
+    ? target.pathname + target.search + target.hash
+    : target.toString();
 }
 
-test("the cart action refuses an off-origin redirect target", async () => {
+test("the cart form refuses an off-origin redirect target", async () => {
   // `redirectTo` is a hidden field on an unauthenticated public form. A guard
-  // that lives in a helper but is not called by this action is a live open
-  // redirect, which is why this exercises the route rather than the helper.
+  // that lives in a helper but is not called by the handler is a live open
+  // redirect, which is why this exercises the endpoint rather than the helper.
   expect({
     networkPath: await cartRedirectFor("/de-de", "//evil.example/phish"),
     tripleSlash: await cartRedirectFor("/de-de", "///evil.example/phish"),
@@ -157,7 +255,7 @@ test("the cart action refuses an off-origin redirect target", async () => {
   });
 });
 
-test("the cart action keeps a legitimate localized target", async () => {
+test("the cart form keeps a legitimate localized target", async () => {
   expect({
     localized: await cartRedirectFor(
       "/de-de",
@@ -171,40 +269,56 @@ test("the cart action keeps a legitimate localized target", async () => {
 });
 
 test("a refused redirect still carries the cart cookie", async () => {
-  // The refused branch used to fall through to `data(..., { headers })`. A
-  // redirect that drops them loses a cart created by this very request.
-  const body = new URLSearchParams({
-    cartFormInput: JSON.stringify({
-      action: CartForm.ACTIONS.BuyerIdentityUpdate,
-      inputs: { buyerIdentity: { countryCode: "DE" } },
-    }),
-    redirectTo: "//evil.example/phish",
-  });
+  // A no-JS add with no cart creates one. When the posting page is not ours,
+  // Hydrogen refuses to redirect there; a redirect that dropped the cookie
+  // would lose the cart created by this very request.
+  const response = await postCartForm(
+    "/de-de/products/hoodie",
+    "/api/cart",
+    { merchandiseId: "gid://shopify/ProductVariant/1", quantity: "1" },
+    { referer: "https://evil.example/phish", cookie: "" },
+  );
+  const location = response.headers.get("Location");
 
-  const { action: cartAction } = await cartRoute();
-  const response = await cartAction({
-    request: new Request("https://shop.test/de-de/cart", {
-      method: "POST",
-      body,
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-    }),
-    context: {
-      cart: {
-        getCartId: () => "gid://shopify/Cart/1",
-        updateBuyerIdentity: async () => ({
-          cart: { id: "gid://shopify/Cart/1" },
-        }),
-        setCartId: () => new Headers({ "set-cookie": "cart=1" }),
-      },
-      storefront: { i18n: DEFAULT_LOCALE },
-    },
-    params: {},
-  } as unknown as ActionFunctionArgs);
-
-  expect(
-    response instanceof Response ? response.headers.get("set-cookie") : null,
-  ).toBe("cart=1");
+  expect({
+    redirect: response.status >= 300 && response.status < 400,
+    origin: location ? new URL(location, "https://shop.test").origin : null,
+    cookie: response.headers.get("set-cookie")?.startsWith("cart=1"),
+  }).toEqual({ redirect: true, origin: "https://shop.test", cookie: true });
 });
+
+/**
+ * What the discount route reads from the context: the storefront client, for
+ * `cartCreate` (no cart cookie) or `cartDiscountCodesUpdate`, and the
+ * customer's token for a new cart. `applied` collects the codes sent.
+ */
+function discountContext(applied: string[][] = []) {
+  return {
+    storefront: {
+      i18n: { country: "DE" },
+      graphql: async (
+        _doc: unknown,
+        {
+          variables,
+        }: {
+          variables: {
+            discountCodes?: string[];
+            input?: { discountCodes?: string[] };
+          };
+        },
+      ) => {
+        applied.push(
+          variables.discountCodes ?? variables.input?.discountCodes ?? [],
+        );
+        const payload = { cart: { id: "gid://shopify/Cart/1" } };
+        return {
+          data: { cartCreate: payload, cartDiscountCodesUpdate: payload },
+        };
+      },
+    },
+    customerAccount: { getAccessToken: async () => undefined },
+  };
+}
 
 /**
  * Where a browser lands after the discount route answers.
@@ -224,14 +338,7 @@ async function discountRedirectFor(
   const url = new URL(requestUrl);
   const response = await loader({
     request: new Request(requestUrl),
-    context: {
-      cart: {
-        updateDiscountCodes: async () => ({
-          cart: { id: "gid://shopify/Cart/1" },
-        }),
-        setCartId: () => new Headers({ "set-cookie": "cart=1" }),
-      },
-    },
+    context: discountContext(),
     params: { code: "SALE", locale: url.pathname.split("/")[1] || undefined },
   } as unknown as LoaderFunctionArgs);
 
@@ -343,15 +450,7 @@ test("the discount route still applies the code and sets the cart cookie", async
     request: new Request(
       "https://shop.test/de-de/discount/SALE?redirect=%2F%5Cevil.example",
     ),
-    context: {
-      cart: {
-        updateDiscountCodes: async (codes: string[]) => {
-          applied.push(codes);
-          return { cart: { id: "gid://shopify/Cart/1" } };
-        },
-        setCartId: () => new Headers({ "set-cookie": "cart=1" }),
-      },
-    },
+    context: discountContext(applied),
     params: { code: "SALE", locale: "de-de" },
   } as unknown as LoaderFunctionArgs);
 
@@ -359,11 +458,11 @@ test("the discount route still applies the code and sets the cart cookie", async
   expect({
     applied,
     status: response.status,
-    cookie: response.headers.get("set-cookie"),
+    cookie: response.headers.get("set-cookie")?.startsWith("cart=1"),
   }).toEqual({
     applied: [["SALE"]],
     status: 303,
-    cookie: "cart=1",
+    cookie: true,
   });
 });
 
@@ -385,10 +484,12 @@ test("the legacy article redirect refuses an off-origin locale segment", async (
       },
       context: {
         storefront: {
-          query: async () => ({
-            blogs: {
-              nodes: [{ handle: "news", articleByHandle: { handle: "a" } }],
-              pageInfo: { hasNextPage: false, endCursor: null },
+          graphql: async () => ({
+            data: {
+              blogs: {
+                nodes: [{ handle: "news", articleByHandle: { handle: "a" } }],
+                pageInfo: { hasNextPage: false, endCursor: null },
+              },
             },
           }),
         },

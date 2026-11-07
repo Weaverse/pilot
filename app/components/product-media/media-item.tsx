@@ -1,18 +1,18 @@
-import { ExternalVideo } from "@shopify/hydrogen";
 import { lazy, Suspense } from "react";
 import { preload } from "react-dom";
+import { Image } from "~/components/image";
+import type { MediaFragment } from "~/graphql/fragments";
+import type { ImageAspectRatio } from "~/types/others";
+import { cn } from "~/utils/cn";
+import { calculateAspectRatio } from "~/utils/image";
+import { ExternalVideo } from "./external-video";
+import { getModel3dData } from "./model-utils";
 import type {
   Media_ExternalVideo_Fragment,
   Media_MediaImage_Fragment,
   Media_Model3d_Fragment,
   Media_Video_Fragment,
-  MediaFragment,
-} from "storefront-api.generated";
-import { Image } from "~/components/image";
-import type { ImageAspectRatio } from "~/types/others";
-import { cn } from "~/utils/cn";
-import { calculateAspectRatio } from "~/utils/image";
-import { getModel3dData } from "./model-utils";
+} from "./types";
 
 let LazyModelViewerItem = lazy(() =>
   import("./model-viewer-item").then((m) => ({ default: m.ModelViewerItem })),

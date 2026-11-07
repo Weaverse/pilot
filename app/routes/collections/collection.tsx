@@ -1,19 +1,17 @@
-import {
-  Analytics,
-  flattenConnection,
-  getPaginationVariables,
-} from "@shopify/hydrogen";
+import { flattenConnection } from "@shopify/hydrogen";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { redirect, useLoaderData } from "react-router";
-import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
+import { CollectionView } from "~/components/root/analytics-views";
 import type { SortParam } from "~/types/others";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { FILTER_URL_PREFIX } from "~/utils/const";
+import { getPaginationVariables } from "~/utils/pagination";
 import { seoMetaFromMatches } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
 import { COLLECTION_QUERY } from "./collection-query";
 import { getSortValuesFromParam, parseAsCurrency } from "./utils";
@@ -51,33 +49,30 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     CUSTOM_COLLECTION_BANNER_METAFIELD.split(".");
 
   // Load collection data and weaverseData in parallel
-  const [{ collection, collections }, weaverseData] = await Promise.all([
+  const [collectionData, weaverseData] = await Promise.all([
     storefront
-      .query<CollectionQuery>(COLLECTION_QUERY, {
+      .graphql(COLLECTION_QUERY, {
         variables: {
           ...pagingVariables,
           handle: collectionHandle,
           filters,
           sortKey,
           reverse,
-          country: storefront.i18n.country,
-          language: storefront.i18n.language,
           // Query custom banner stored in Shopify's collection metafields
           customBannerNamespace: bannerNamespace,
           customBannerKey: bannerKey,
         },
+        cache: CACHE_DEFAULT,
       })
-      .catch((_e) => {
-        return {
-          collection: null,
-          collections: [],
-        } as unknown as CollectionQuery;
-      }),
+      .then(unwrapStorefront)
+      // A failed query (e.g. a stale cursor) is handled like a missing collection below.
+      .catch(() => null),
     context.weaverse.loadPage({
       type: "COLLECTION",
       handle: collectionHandle,
     }),
   ]);
+  const collection = collectionData?.collection;
 
   if (!collection) {
     if (
@@ -141,7 +136,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   return {
     collection,
     appliedFilters,
-    collections: flattenConnection(collections),
+    collections: flattenConnection(collectionData?.collections),
     seo,
     weaverseData,
   };
@@ -152,13 +147,8 @@ export default function Collection() {
   return (
     <>
       <WeaverseContent />
-      <Analytics.CollectionView
-        data={{
-          collection: {
-            id: collection.id,
-            handle: collection.handle,
-          },
-        }}
+      <CollectionView
+        collection={{ id: collection.id, handle: collection.handle }}
       />
     </>
   );

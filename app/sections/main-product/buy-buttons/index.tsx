@@ -1,19 +1,19 @@
 import {
-  getAdjacentAndFirstAvailableVariants,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import { LazyShopPayButton } from "~/components/product/lazy-shop-pay-button";
+import { ProductShopPayButton } from "~/components/product/shop-pay-button";
+import { useSelectedVariant } from "~/components/product/product-form";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { useProductQuantity } from "../product-quantity-selector";
 import { StickyATCBar } from "./sticky-atc-bar";
 import { useATCVisibilityStore } from "./store";
 
-interface ProductATCButtonsProps extends HydrogenComponentProps {
+interface ProductATCButtonsProps extends WeaverseComponentProps {
   ref: React.Ref<HTMLDivElement>;
   addToCartText: string;
   addBundleToCartText: string;
@@ -42,7 +42,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     buyNowText,
     ...rest
   } = props;
-  const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
+  const { product } = useLoaderData<typeof productRouteLoader>();
   const { quantity } = useProductQuantity(product?.id);
   const { setInView, setScrolledPast } = useATCVisibilityStore();
   const { ref: inViewRef, inView, entry } = useInView({ threshold: 0 });
@@ -55,19 +55,12 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     }
   }, [inView, entry, setInView, setScrolledPast]);
 
-  const selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
+  const selectedVariant = useSelectedVariant(product);
 
-  const isBundle = Boolean(product?.isBundle?.requiresComponents);
-
-  if (!product) {
-    return null;
-  }
+  const isBundle = Boolean(product.isBundle?.requiresComponents);
 
   let atcButtonText = "Add to cart";
-  if (selectedVariant.availableForSale) {
+  if (selectedVariant?.availableForSale) {
     atcButtonText = isBundle ? addBundleToCartText : addToCartText;
   } else {
     atcButtonText = soldOutText;
@@ -88,14 +81,8 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
       className="space-y-2 empty:hidden"
     >
       <AddToCartButton
-        disabled={!selectedVariant?.availableForSale}
-        lines={[
-          {
-            merchandiseId: selectedVariant?.id,
-            quantity,
-            selectedVariant,
-          },
-        ]}
+        product={product}
+        quantity={quantity}
         data-test="add-to-cart"
         className="w-full"
         style={{ textTransform: textCasing }}
@@ -103,15 +90,9 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
         {atcButtonText}
       </AddToCartButton>
       {showShopPayButton && selectedVariant?.availableForSale && (
-        <LazyShopPayButton
+        <ProductShopPayButton
           width="100%"
-          variantIdsAndQuantities={[
-            {
-              id: selectedVariant?.id,
-              quantity,
-            },
-          ]}
-          storeDomain={storeDomain}
+          variants={[{ id: selectedVariant.id, quantity }]}
         />
       )}
       {showStickyBar && (

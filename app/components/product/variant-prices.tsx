@@ -1,6 +1,6 @@
-import { Money, useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import type { ProductVariantFragment } from "storefront-api.generated";
+import { Money, useMoney } from "~/components/money";
+import type { ProductVariantFragment } from "~/graphql/fragments";
 import { cn } from "~/utils/cn";
 
 function CompareAtPrice({

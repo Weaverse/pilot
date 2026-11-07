@@ -1,8 +1,8 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   useParentInstance,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import { StarRating } from "~/components/star-rating";
 import type { AliReviewsLoaderData } from ".";
@@ -18,7 +18,7 @@ interface AliReviewsData extends ReviewItemData {
   showReviewWithMediaOnly: boolean;
 }
 
-function ReviewList(props: AliReviewsData & HydrogenComponentProps) {
+function ReviewList(props: AliReviewsData & WeaverseComponentProps) {
   const {
     children,
     showAvgRating,

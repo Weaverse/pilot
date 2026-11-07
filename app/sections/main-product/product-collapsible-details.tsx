@@ -1,5 +1,8 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
@@ -12,7 +15,7 @@ function getExcerpt(text: string) {
   return match?.length ? match[0] : text;
 }
 
-interface CollapsibleDetailsProps extends HydrogenComponentProps {
+interface CollapsibleDetailsProps extends WeaverseComponentProps {
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
 }

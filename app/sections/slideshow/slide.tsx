@@ -1,8 +1,8 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   IMAGES_PLACEHOLDERS,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { useContext, useEffect, useState } from "react";
@@ -64,7 +64,7 @@ const variants = cva("flex h-full w-full flex-col [&_.paragraph]:mx-[unset]", {
 export interface SlideProps
   extends
     VariantProps<typeof variants>,
-    HydrogenComponentProps,
+    WeaverseComponentProps,
     OverlayAndBackgroundProps {
   backgroundColor: string;
 }

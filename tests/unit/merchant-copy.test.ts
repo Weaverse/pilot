@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import { TranslationProvider } from "@weaverse/hydrogen";
+import { TranslationProvider } from "@weaverse/hydrogen/react-router";
 import { createElement, type ReactElement } from "react";
 import staticContent from "../../app/i18n/en.json" with { type: "json" };
 import { legacyThemeText } from "../../app/utils/legacy-theme-text";

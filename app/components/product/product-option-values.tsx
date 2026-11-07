@@ -1,11 +1,18 @@
 import * as Select from "@radix-ui/react-select";
-import { Image, type MappedProductOptions } from "@shopify/hydrogen";
-import type { ButtonHTMLAttributes } from "react";
-import { useNavigate } from "react-router";
+import type { ProductFormOptions } from "@shopify/hydrogen";
+import type { ReactNode } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 import { Icon } from "~/components/icon";
-import Link, { type LinkProps } from "~/components/link";
+import {
+  isPlainClick,
+  type ProductFormData,
+  productOptionPath,
+  useProductForm,
+} from "~/components/product/product-form";
+import { ShopifyImage } from "~/components/shopify-image";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
+import { localizePath, resolveLocale } from "~/utils/locale";
 import { isLightColor, isValidColor } from "~/utils/misc";
 
 /*
@@ -27,40 +34,61 @@ const OPTIONS_AS_BUTTON: string[] = ["Size"];
 const OPTIONS_AS_IMAGE: string[] = [];
 const OPTIONS_AS_DROPDOWN: string[] = [];
 
+type ProductOptionState = ProductFormOptions<ProductFormData>[number];
+type OptionValueState = ProductOptionState["values"][number];
+
+/**
+ * The values of one product option, bound to the surrounding `ProductProvider`.
+ *
+ * - `asLinks` (the product page): every existing value is a real link to its
+ *   option URL, so the selection is crawlable and works without JavaScript.
+ *   Hydrated, a plain click selects the value in the product form instead, and
+ *   the provider's `onSelect` syncs the URL without a loader round trip.
+ * - Otherwise (quick shop, single-product section): values are buttons that
+ *   select in place and leave the page URL alone.
+ *
+ * Either way, a value that belongs to another product of a combined listing
+ * is a link to that product, and a combination that doesn't exist is a
+ * disabled button.
+ */
 export function ProductOptionValues({
+  product,
   option,
-  onOptionChange,
+  asLinks = false,
 }: {
-  option: MappedProductOptions;
-  onOptionChange?: (optionName: string, value: string) => void;
+  product: ProductFormData;
+  option: ProductOptionState;
+  asLinks?: boolean;
 }) {
   const navigate = useNavigate();
-  const { name: optionName, optionValues } = option || {};
+  const { pathname, search } = useLocation();
+  const { register } = useProductForm();
+  const { name: optionName, values } = option;
+  // The same base the provider's `onSelect` uses, so a link's `href` and the
+  // hydrated selection land on the same URL with unrelated params kept.
+  const base = new URLSearchParams(search);
 
-  if (!optionName) {
-    return null;
+  function pathFor(value: OptionValueState) {
+    return localizePath(
+      productOptionPath(product, value.selectedOptions, value.handle, base),
+      resolveLocale(pathname),
+    );
   }
 
   if (OPTIONS_AS_DROPDOWN.includes(optionName)) {
-    const selectedValue = optionValues.find((v) => v.selected)?.name;
+    const selectedValue = values.find((v) => v.selected)?.name;
     return (
       <Select.Root
         value={selectedValue}
         onValueChange={(v) => {
-          const found = optionValues.find(({ name: value }) => value === v);
-          if (found) {
-            if (onOptionChange) {
-              onOptionChange(optionName, v);
-            } else {
-              const to = found.isDifferentProduct
-                ? `/products/${found.handle}?${found.variantUriQuery}`
-                : `?${found.variantUriQuery}`;
-              if (found.isDifferentProduct) {
-                window.location.href = to;
-              } else {
-                navigate(to, { replace: true });
-              }
-            }
+          const found = values.find(({ name }) => name === v);
+          if (!found) {
+            return;
+          }
+          if (found.handle !== product.handle) {
+            navigate(pathFor(found));
+          } else {
+            register("optionValue", { optionName, value: v }).onChange();
           }
         }}
       >
@@ -79,10 +107,11 @@ export function ProductOptionValues({
               <Icon name="caret-up" size={16} />
             </Select.ScrollUpButton>
             <Select.Viewport className="p-1.5">
-              {optionValues.map(({ name: value, selected, available }) => (
+              {values.map(({ name: value, selected, available, exists }) => (
                 <Select.Item
                   key={value}
                   value={value}
+                  disabled={!exists}
                   className={cn(
                     "flex h-10 w-full cursor-pointer items-center justify-between gap-4 py-2.5 pr-2 pl-4 outline-hidden select-none hover:bg-gray-100",
                     !available && "text-body-subtle line-through",
@@ -113,22 +142,27 @@ export function ProductOptionValues({
         OPTIONS_AS_SWATCH.includes(optionName) && "pt-0.5",
       )}
     >
-      {optionValues.map((optionValue) => {
+      {values.map((value) => {
+        const registered = register("optionValue", {
+          optionName,
+          value: value.name,
+        });
         return (
-          <Tooltip key={optionValue.name}>
+          <Tooltip key={value.name}>
             <TooltipTrigger>
               <div>
-                <OptionValue
-                  optionName={optionName}
-                  value={optionValue}
-                  onOptionChange={onOptionChange}
+                <OptionValueControl
+                  value={value}
+                  to={pathFor(value)}
+                  crossProduct={value.handle !== product.handle}
+                  asLink={asLinks}
+                  onSelect={registered.onClick}
+                  {...getOptionValueAppearance(product, optionName, value)}
                 />
               </div>
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>
-              {optionValue.exists
-                ? optionValue.name
-                : `${optionValue.name} (Not available)`}
+              {value.exists ? value.name : `${value.name} (Not available)`}
             </TooltipContent>
           </Tooltip>
         );
@@ -137,178 +171,191 @@ export function ProductOptionValues({
   );
 }
 
-function OptionValue({
-  optionName,
+/**
+ * The element for one option value. Same-product and cross-product values use
+ * the same element (a link) on the product page, so the activated control is
+ * reconciled in place across a combined-listing navigation and keeps focus.
+ */
+function OptionValueControl({
   value,
-  onOptionChange,
+  to,
+  crossProduct,
+  asLink,
+  onSelect,
+  className,
+  label,
+  children,
 }: {
-  optionName: string;
-  value: MappedProductOptions["optionValues"][number];
-  onOptionChange?: (optionName: string, value: string) => void;
+  value: OptionValueState;
+  to: string;
+  crossProduct: boolean;
+  asLink: boolean;
+  onSelect: () => void;
+  className: string;
+  label?: string;
+  children: ReactNode;
 }) {
-  const navigate = useNavigate();
-  const {
-    name,
-    variantUriQuery,
-    selected,
-    available,
-    exists,
-    isDifferentProduct,
-    firstSelectableVariant,
-    handle,
-    swatch,
-  } = value;
+  if (!(crossProduct || value.exists)) {
+    return (
+      <button
+        type="button"
+        disabled
+        aria-pressed={value.selected}
+        aria-label={label}
+        className={className}
+      >
+        {children}
+      </button>
+    );
+  }
 
-  const to = isDifferentProduct
-    ? `/products/${handle}?${variantUriQuery}`
-    : `?${variantUriQuery}`;
-  const linkProps: LinkProps = {
-    to,
-    preventScrollReset: true,
-    prefetch: "intent",
-    replace: true,
-  };
-  const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
-    type: "button" as const,
-    disabled: !exists,
-    onClick: () => {
-      if (onOptionChange) {
-        onOptionChange(optionName, name);
-      } else if (!selected && exists) {
-        navigate(to, { replace: true });
-      }
-    },
-  };
+  if (asLink || crossProduct) {
+    return (
+      <Link
+        to={to}
+        replace={!crossProduct}
+        preventScrollReset
+        prefetch={crossProduct ? "intent" : undefined}
+        aria-current={value.selected ? "true" : undefined}
+        aria-label={label}
+        // Laid out like the buttons: an inline link's padding doesn't count
+        // toward the line height, so it would sit higher than its siblings.
+        className={cn("inline-block", className)}
+        onClick={
+          crossProduct
+            ? undefined
+            : (event) => {
+                if (!isPlainClick(event)) {
+                  return;
+                }
+                // The provider's `onSelect` owns the URL; stop the link from
+                // navigating (and revalidating) a second time.
+                event.preventDefault();
+                onSelect();
+              }
+        }
+      >
+        {children}
+      </Link>
+    );
+  }
 
-  /*
-   * - When onOptionChange is provided, which means the variant is being managed by the parent component,
-   * we always render as a button.
-   * - When the variant is a combined listing child product that leads to a different URL,
-   * we need to render it as an anchor tag.
-   * - When the variant is an update to the search param, render it as a button with JavaScript navigating to
-   * the variant so that SEO bots do not index these as duplicated links.
-   */
-  const Component = onOptionChange
-    ? "button"
-    : isDifferentProduct
-      ? Link
-      : "button";
-  const componentProps = onOptionChange
-    ? buttonProps
-    : isDifferentProduct
-      ? linkProps
-      : buttonProps;
+  return (
+    <button
+      type="button"
+      aria-pressed={value.selected}
+      aria-label={label}
+      className={className}
+      onClick={onSelect}
+    >
+      {children}
+    </button>
+  );
+}
+
+function getOptionValueAppearance(
+  product: ProductFormData,
+  optionName: string,
+  value: OptionValueState,
+): { className: string; label?: string; children: ReactNode } {
+  const { name, selected, available, exists, swatch } = value;
 
   if (OPTIONS_AS_SWATCH.includes(optionName)) {
     const swatchColor = swatch?.color || name;
-    return (
-      // @ts-expect-error: TypeScript cannot infer the correct props for variable component
-      <Component
-        {...componentProps}
-        className={cn(
-          "flex aspect-square size-(--option-swatch-size)",
-          "overflow-hidden rounded-full",
-          "outline-1 outline-offset-2 transition-[outline-color]",
-          !exists && "cursor-not-allowed",
-          selected ? "outline-line" : "hover:outline-line outline-transparent",
-          !available && "diagonal",
-        )}
-      >
-        {swatch?.image?.previewImage ? (
-          <Image
-            data={swatch.image.previewImage}
-            className="h-full w-full object-cover object-center"
-            width={200}
-            sizes="auto"
-          />
-        ) : (
-          <span
-            className={cn(
-              "block h-full w-full rounded-full text-[0px]",
-              (!isValidColor(swatchColor) || isLightColor(swatchColor)) &&
-                "border-line-subtle border",
-            )}
-            style={{ backgroundColor: swatchColor }}
-          >
-            {name}
-          </span>
-        )}
-      </Component>
-    );
+    return {
+      label: name,
+      className: cn(
+        "flex aspect-square size-(--option-swatch-size)",
+        "overflow-hidden rounded-full",
+        "outline-1 outline-offset-2 transition-[outline-color]",
+        !exists && "cursor-not-allowed",
+        selected ? "outline-line" : "hover:outline-line outline-transparent",
+        !available && "diagonal",
+      ),
+      children: swatch?.image?.previewImage ? (
+        <ShopifyImage
+          data={swatch.image.previewImage}
+          className="h-full w-full object-cover object-center"
+          width={200}
+          sizes="auto"
+        />
+      ) : (
+        <span
+          className={cn(
+            "block h-full w-full rounded-full text-[0px]",
+            (!isValidColor(swatchColor) || isLightColor(swatchColor)) &&
+              "border-line-subtle border",
+          )}
+          style={{ backgroundColor: swatchColor }}
+        >
+          {name}
+        </span>
+      ),
+    };
   }
 
   if (OPTIONS_AS_BUTTON.includes(optionName)) {
-    return (
-      // @ts-expect-error: TypeScript cannot infer the correct props for variable component
-      <Component
-        {...componentProps}
-        className={cn(
-          "border-line-subtle rounded-md border px-4 py-2.5 text-center transition-colors",
-          !exists && "cursor-not-allowed",
-          selected
-            ? [
-                available ? "bg-body text-body-inverse" : "text-body-subtle",
-                "border-body",
-              ]
-            : "hover:border-line",
-          !available && "diagonal text-body-subtle bg-gray-100",
-        )}
-      >
-        {name}
-      </Component>
-    );
+    return {
+      className: cn(
+        "border-line-subtle rounded-md border px-4 py-2.5 text-center transition-colors",
+        !exists && "cursor-not-allowed",
+        selected
+          ? [
+              available ? "bg-body text-body-inverse" : "text-body-subtle",
+              "border-body",
+            ]
+          : "hover:border-line",
+        !available && "diagonal text-body-subtle bg-gray-100",
+      ),
+      children: name,
+    };
   }
 
   if (OPTIONS_AS_IMAGE.includes(optionName)) {
-    return (
-      // @ts-expect-error: TypeScript cannot infer the correct props for variable component
-      <Component
-        {...componentProps}
-        className={cn(
-          "flex h-auto w-(--option-image-width) items-center justify-center rounded-md p-1",
-          "border-line-subtle border text-center transition-colors",
-          !exists && "cursor-not-allowed",
-          selected
-            ? [
-                available ? "text-body-inverse" : "text-body-subtle",
-                "border-body",
-              ]
-            : "hover:border-line",
-          !available && "diagonal text-body-subtle opacity-75",
-        )}
-      >
-        {firstSelectableVariant?.image ? (
-          <Image
-            data={firstSelectableVariant?.image}
-            sizes="auto"
-            width={200}
-            className="h-full w-full object-cover object-center"
-          />
-        ) : (
-          <span>{name}</span>
-        )}
-      </Component>
-    );
+    const image = product.options
+      .find((o) => o.name === optionName)
+      ?.optionValues.find((v) => v.name === name)
+      ?.firstSelectableVariant?.image;
+    return {
+      label: name,
+      className: cn(
+        "flex h-auto w-(--option-image-width) items-center justify-center rounded-md p-1",
+        "border-line-subtle border text-center transition-colors",
+        !exists && "cursor-not-allowed",
+        selected
+          ? [
+              available ? "text-body-inverse" : "text-body-subtle",
+              "border-body",
+            ]
+          : "hover:border-line",
+        !available && "diagonal text-body-subtle opacity-75",
+      ),
+      children: image ? (
+        <ShopifyImage
+          data={image}
+          sizes="auto"
+          width={200}
+          className="h-full w-full object-cover object-center"
+        />
+      ) : (
+        <span>{name}</span>
+      ),
+    };
   }
 
   // Default fallback
-  return (
-    // @ts-expect-error: TypeScript cannot infer the correct props for variable component
-    <Component
-      {...componentProps}
-      className={cn(
-        "border-b py-0.5",
-        !exists && "cursor-not-allowed",
-        selected
-          ? [available ? "border-line" : "border-line-subtle"]
-          : [
-              "border-transparent",
-              available ? "hover:border-line" : "hover:border-line-subtle",
-            ],
-        !available && "text-body-subtle line-through",
-      )}
-    >
-      {name}
-    </Component>
-  );
+  return {
+    className: cn(
+      "border-b py-0.5",
+      !exists && "cursor-not-allowed",
+      selected
+        ? [available ? "border-line" : "border-line-subtle"]
+        : [
+            "border-transparent",
+            available ? "hover:border-line" : "hover:border-line-subtle",
+          ],
+      !available && "text-body-subtle line-through",
+    ),
+    children: name,
+  };
 }

@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useEffect } from "react";
 import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
@@ -120,7 +123,7 @@ export function ReviewsPagination() {
 }
 
 interface ReviewListProps
-  extends HydrogenComponentProps, Omit<ReviewItemProps, "review"> {
+  extends WeaverseComponentProps, Omit<ReviewItemProps, "review"> {
   reviewsPerPage?: number;
 }
 

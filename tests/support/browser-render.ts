@@ -92,18 +92,18 @@ export async function apiRequestsFrom({
 }): Promise<string[]> {
   const theme = {
     pcardEnableQuickShop: true,
-    ...((rootData?.weaverseTheme as { theme?: object })?.theme ?? {}),
+    ...(rootData?.weaverseTheme as { theme?: object })?.theme,
   };
 
   const entrySource = `
     import { createElement } from "react";
     import { createRoot } from "react-dom/client";
     import { createBrowserRouter, RouterProvider } from "react-router";
-    import { TranslationProvider } from "@weaverse/hydrogen";
+    import { TranslationProvider } from "@weaverse/hydrogen/react-router";
     import { ${exportName} as Subject } from ${JSON.stringify(new URL(entry, APP_DIR).pathname)};
 
     const loaderData = ${JSON.stringify({
-      ...(rootData ?? {}),
+      ...rootData,
       weaverseTheme: {
         theme,
         staticContent: {},

@@ -1,4 +1,7 @@
-import { IMAGES_PLACEHOLDERS, type InspectorGroup } from "@weaverse/hydrogen";
+import {
+  IMAGES_PLACEHOLDERS,
+  type InspectorGroup,
+} from "@weaverse/hydrogen/react-router";
 
 export const newsletterSettings = {
   group: "Newsletter Popup",

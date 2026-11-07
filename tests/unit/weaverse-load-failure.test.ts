@@ -1,21 +1,12 @@
 import { expect, test } from "@playwright/test";
 import { createElement, type ReactElement } from "react";
-import {
-  type AppLoadContext,
-  createStaticHandler,
-  type LoaderFunctionArgs,
-} from "react-router";
-import { createHydrogenRouterContext } from "../../app/.server/context";
+import { createStaticHandler, type LoaderFunctionArgs } from "react-router";
 import { loadCriticalData } from "../../app/.server/root";
 import { rootHeaders, routeHeaders } from "../../app/utils/cache";
 import { getFullPageCacheControl } from "../../app/utils/full-page-cache";
 import { weaverseRouteFailure } from "../../app/weaverse/load-failure";
 import { loadComponent, renderInApp } from "../support/render-app";
-import {
-  installWorkerCaches,
-  TEST_ENV,
-  TEST_EXECUTION_CONTEXT,
-} from "../support/hydrogen-env";
+import { createTestContext } from "../support/hydrogen-env";
 
 /**
  * What a storefront answers when Weaverse cannot provide a page or the theme
@@ -31,7 +22,6 @@ type Answer = { status: number; body: unknown };
 /** Runs `run` with the Weaverse page API answering `page`. */
 async function withWeaverse<T>(page: Answer, run: () => Promise<T>) {
   const realFetch = globalThis.fetch;
-  const restoreCaches = installWorkerCaches();
   globalThis.fetch = (async (input: RequestInfo | URL) => {
     const url = String(input instanceof Request ? input.url : input);
     const answer = url.endsWith("/api/public/project")
@@ -46,7 +36,6 @@ async function withWeaverse<T>(page: Answer, run: () => Promise<T>) {
     return await run();
   } finally {
     globalThis.fetch = realFetch;
-    restoreCaches();
   }
 }
 
@@ -71,17 +60,19 @@ async function homeLoaderAnswer(
 
   return withWeaverse(page, async () => {
     const request = new Request(url);
-    const context = (await createHydrogenRouterContext(
-      request,
-      TEST_ENV,
-      TEST_EXECUTION_CONTEXT,
-    )) as unknown as AppLoadContext;
+    const context = await createTestContext(request);
     // Shop query only: the storefront API is not under test here.
-    context.storefront.query = (async () => ({
-      shop: { name: "Acme", description: "" },
-    })) as typeof context.storefront.query;
+    const storefront = Object.assign(Object.create(context.storefront), {
+      graphql: async () => ({
+        data: { shop: { name: "Acme", description: "" } },
+      }),
+    }) as typeof context.storefront;
     try {
-      await loader({ request, context, params: {} } as LoaderFunctionArgs);
+      await loader({
+        request,
+        context: { ...context, storefront },
+        params: {},
+      } as unknown as LoaderFunctionArgs);
       return { status: "ok" as const, cacheControl: null };
     } catch (thrown) {
       // React Router's `data()` throws a DataWithResponseInit; a plain
@@ -147,17 +138,24 @@ function rootContext(theme: Record<string, unknown>) {
   };
   return {
     storefront: {
-      i18n: { language: "EN", country: "US", hreflang: "en-US" },
-      query: async () => ({
-        shop,
-        headerMenu: null,
-        footerMenu: null,
-        localization: {
-          language: { isoCode: "EN" },
-          country: { currency: { isoCode: "USD" } },
+      i18n: {
+        language: "EN",
+        country: "US",
+        currency: "USD",
+        hreflang: "en-US",
+        pathPrefix: "",
+      },
+      graphql: async () => ({
+        data: {
+          shop,
+          headerMenu: null,
+          footerMenu: null,
+          localization: {
+            language: { isoCode: "EN" },
+            country: { currency: { isoCode: "USD" } },
+          },
         },
       }),
-      CacheLong: () => undefined,
     },
     weaverse: { loadThemeSettings: async () => theme },
     env: {},
@@ -299,7 +297,7 @@ async function documentHeaders(thrown: unknown): Promise<{
 }
 
 test("the failure status and no-store reach the document through the root boundary", async () => {
-  const { WeaverseLoadError } = await import("@weaverse/hydrogen");
+  const { WeaverseLoadError } = await import("@weaverse/hydrogen/react-router");
   const failure = weaverseRouteFailure(
     new WeaverseLoadError("down", "unavailable"),
   );

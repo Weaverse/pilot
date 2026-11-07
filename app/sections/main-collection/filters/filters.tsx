@@ -3,7 +3,7 @@ import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useState } from "react";
 import { useLoaderData } from "react-router";
-import type { CollectionQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "~/routes/collections/collection-query";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { OPTIONS_AS_SWATCH } from "~/components/product/product-option-values";

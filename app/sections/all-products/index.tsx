@@ -1,6 +1,6 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
-import type { AllProductsQuery } from "storefront-api.generated";
+import type { AllProductsQuery } from "~/routes/products/list";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 interface AllProductsProps extends SectionProps {}

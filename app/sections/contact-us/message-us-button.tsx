@@ -1,8 +1,11 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { Button } from "~/components/button";
 import { openShopifyInbox } from "~/components/shopify-inbox";
 
-interface MessageUsButtonProps extends HydrogenComponentProps {
+interface MessageUsButtonProps extends WeaverseComponentProps {
   buttonText: string;
   variant: "primary" | "secondary" | "outline" | "underline";
 }

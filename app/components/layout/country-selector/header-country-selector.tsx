@@ -1,6 +1,6 @@
 import * as Popover from "@radix-ui/react-popover";
-import { useThemeSettings } from "@weaverse/hydrogen";
-import { Fragment } from "react";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
+import { Fragment, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Icon } from "~/components/icon";
 import { ScrollArea } from "~/components/scroll-area";
@@ -10,18 +10,14 @@ import { MarketForm } from "./market-form";
 import { useCountrySelector } from "./use-country-selector";
 
 export function HeaderCountrySelector() {
-  const {
-    selectedLocale,
-    groupedCountries,
-    cartRoute,
-    getRedirectUrl,
-    buyerIdentityInput,
-  } = useCountrySelector();
+  const { selectedLocale, groupedCountries, getRedirectUrl } =
+    useCountrySelector();
+  const [open, setOpen] = useState(false);
   const { countryNameDisplay } = useThemeSettings<ThemeSettings>();
 
   return (
     <div className="hidden items-center gap-1.5 md:flex">
-      <Popover.Root>
+      <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <button
             type="button"
@@ -59,11 +55,10 @@ export function HeaderCountrySelector() {
                   const locale = group.locales[0];
                   return (
                     <MarketForm
+                      onSwitch={() => setOpen(false)}
                       key={locale.pathPrefix}
                       locale={locale}
-                      cartRoute={cartRoute}
                       redirectTo={getRedirectUrl(locale)}
-                      buyerIdentityInput={buyerIdentityInput(locale)}
                       label={`Select ${locale.label}`}
                       className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left transition hover:bg-neutral-200"
                     >
@@ -128,10 +123,9 @@ export function HeaderCountrySelector() {
                               />
                             ) : null}
                             <MarketForm
+                              onSwitch={() => setOpen(false)}
                               locale={locale}
-                              cartRoute={cartRoute}
                               redirectTo={getRedirectUrl(locale)}
-                              buyerIdentityInput={buyerIdentityInput(locale)}
                               label={`Select ${locale.label} in ${locale.languageLabel}`}
                               className={cn(
                                 "cursor-pointer underline-offset-4 transition",

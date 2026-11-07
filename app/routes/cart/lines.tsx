@@ -1,3 +1,4 @@
+import { cartQueries, createCartCookie } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
 import { appendForwardedAttribution } from "~/utils/checkout-attribution";
@@ -12,6 +13,11 @@ import { appendForwardedAttribution } from "~/utils/checkout-attribution";
  * More than one `<variant_id>:<quantity>` separated by a comma, can be supplied in the URL, for
  * carts with more than one product variant.
  *
+ * Hydrogen answers unprefixed permalinks itself (it hands them to Shopify's
+ * own permalink, query included) before the router runs; this route serves
+ * the market-prefixed ones (`/fr-ca/cart/...`), creating the cart in that
+ * market.
+ *
  * @param `?discount` an optional discount code to apply to the cart
  * @example
  * Example path creating a cart with two product variants, different quantities, and a discount code:
@@ -22,9 +28,9 @@ import { appendForwardedAttribution } from "~/utils/checkout-attribution";
  * @preserve
  */
 export async function loader({ request, context, params }: LoaderFunctionArgs) {
-  const { cart } = context;
+  const { storefront } = context;
   const { lines } = params;
-  const linesMap = lines?.split(",").map((line) => {
+  const linesMap = (lines ?? "").split(",").map((line) => {
     const lineDetails = line.split(":");
     const variantId = lineDetails[0];
     const quantity = Number.parseInt(lineDetails[1], 10);
@@ -36,18 +42,27 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
   });
 
   const url = new URL(request.url);
-  const searchParams = new URLSearchParams(url.search);
-
-  const discount = searchParams.get("discount");
-  const discountArray = discount ? [discount] : [];
+  const discount = url.searchParams.get("discount");
 
   //! create a cart
-  const result = await cart.create({
-    lines: linesMap,
-    discountCodes: discountArray,
+  const result = await storefront.graphql(cartQueries.cartCreate, {
+    variables: {
+      input: {
+        lines: linesMap,
+        discountCodes: discount ? [discount] : [],
+        buyerIdentity: {
+          countryCode: storefront.i18n.country,
+          // Classic Hydrogen's `cart.create` attached the signed-in
+          // customer, so checkout knows them.
+          customerAccessToken: await context.customerAccount
+            .getAccessToken()
+            .catch(() => undefined),
+        },
+      },
+    },
   });
-
-  const cartResult = result.cart;
+  const payload = result.data?.cartCreate;
+  const cartResult = payload?.cart;
 
   if (result.errors?.length || !cartResult) {
     throw new Response("Link may be expired. Try checking the URL.", {
@@ -56,7 +71,9 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
   }
 
   // Update cart id in cookie
-  const headers = cart.setCartId(cartResult.id);
+  const headers = new Headers({
+    "Set-Cookie": createCartCookie(cartResult.id),
+  });
 
   //! redirect to checkout
   if (cartResult.checkoutUrl) {
@@ -66,9 +83,8 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
     // Without this, every paid-ad Buy-now order lands on checkout with
     // organic / direct attribution. No-op when no such params are
     // present on the incoming URL.
-    const incoming = new URL(request.url);
     return redirect(
-      appendForwardedAttribution(cartResult.checkoutUrl, incoming.search),
+      appendForwardedAttribution(cartResult.checkoutUrl, url.search),
       { headers },
     );
   }

@@ -1,22 +1,13 @@
+import { gql } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
+import { CACHE_LONG } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
 const MAX_PER_PAGE = 250;
 const MAX_REQUESTS = 8;
 const MAX_COUNT = MAX_PER_PAGE * MAX_REQUESTS;
 
-type CountQuery = {
-  collection: {
-    products: {
-      nodes: { id: string }[];
-      pageInfo: {
-        hasNextPage: boolean;
-        endCursor: string | null;
-      };
-    };
-  } | null;
-};
-
-const COLLECTION_COUNT_QUERY = `#graphql
+const COLLECTION_COUNT_QUERY = gql(`
   query collectionCount(
     $country: CountryCode
     $language: LanguageCode
@@ -36,7 +27,7 @@ const COLLECTION_COUNT_QUERY = `#graphql
       }
     }
   }
-` as const;
+`);
 
 export async function loader({
   params,
@@ -47,17 +38,15 @@ export async function loader({
     return Response.json({ count: 0 }, { status: 400 });
   }
 
-  let { country, language } = storefront.i18n;
   let totalCount = 0;
   let after: string | null = null;
 
   for (let i = 0; i < MAX_REQUESTS; i += 1) {
-    let { collection } = await storefront.query<CountQuery>(
-      COLLECTION_COUNT_QUERY,
-      {
-        variables: { country, language, handle, first: MAX_PER_PAGE, after },
-        cache: storefront.CacheLong(),
-      },
+    let { collection } = unwrapStorefront(
+      await storefront.graphql(COLLECTION_COUNT_QUERY, {
+        variables: { handle, first: MAX_PER_PAGE, after },
+        cache: CACHE_LONG,
+      }),
     );
     if (!collection) {
       return Response.json({ count: totalCount });

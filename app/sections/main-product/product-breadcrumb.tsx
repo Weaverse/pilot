@@ -1,9 +1,12 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
 import { Link } from "~/components/link";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductBreadcrumbProps extends HydrogenComponentProps {
+interface ProductBreadcrumbProps extends WeaverseComponentProps {
   homeText: string;
   excludeCollections: string;
 }

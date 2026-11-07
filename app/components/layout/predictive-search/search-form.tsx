@@ -1,44 +1,32 @@
+import { usePredictiveSearchActions } from "@shopify/hydrogen/react";
 import { type ReactNode, type RefObject, useEffect, useRef } from "react";
-import { type FormProps, useFetcher, useParams } from "react-router";
-import type { NormalizedPredictiveSearchResults } from "~/types/predictive-search";
 
 type ChildrenRenderProps = {
-  fetchResults: (event: string) => void;
-  fetcher: ReturnType<typeof useFetcher<NormalizedPredictiveSearchResults>>;
+  fetchResults: (searchTerm: string) => void;
   inputRef: RefObject<HTMLInputElement | null>;
 };
 
 type SearchFromProps = {
-  action?: FormProps["action"];
-  method?: FormProps["method"];
   className?: string;
   children: (passedProps: ChildrenRenderProps) => ReactNode;
   [key: string]: unknown;
 };
 
 /**
- *  Search form component that posts search requests to the `/search` route
+ * Search form that runs predictive search as the shopper types, through the
+ * nearest `PredictiveSearchProvider` (Hydrogen's store, `/api/predictive-search`).
+ * The submit itself is handled by the input (Enter opens the search page).
  */
 export function PredictiveSearchForm({
-  action,
   children,
   className = "predictive-search-form",
-  method = "POST",
   ...props
 }: SearchFromProps) {
-  const params = useParams();
-  const fetcher = useFetcher<NormalizedPredictiveSearchResults>();
+  const { search } = usePredictiveSearchActions();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   function fetchResults(searchTerm: string) {
-    const searchAction = action ?? "/api/predictive-search";
-    const localizedAction = params.locale
-      ? `/${params.locale}${searchAction}`
-      : searchAction;
-    fetcher.submit(
-      { q: searchTerm, limit: "6" },
-      { method, action: localizedAction },
-    );
+    void search(searchTerm);
   }
 
   // ensure the passed input has a type of search, because SearchResults
@@ -49,7 +37,7 @@ export function PredictiveSearchForm({
   }, []);
 
   return (
-    <fetcher.Form
+    <form
       {...props}
       className={className}
       onSubmit={(event) => {
@@ -61,7 +49,7 @@ export function PredictiveSearchForm({
         inputRef.current.blur();
       }}
     >
-      {children({ fetchResults, inputRef, fetcher })}
-    </fetcher.Form>
+      {children({ fetchResults, inputRef })}
+    </form>
   );
 }

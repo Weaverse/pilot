@@ -1,7 +1,7 @@
-import { Image } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { Link } from "~/components/link";
+import { ShopifyImage } from "~/components/shopify-image";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { ThemeSettings } from "~/types/weaverse";
 
@@ -22,7 +22,7 @@ export function Logo() {
       >
         {logoData ? (
           <>
-            <Image
+            <ShopifyImage
               data={logoData}
               sizes="auto"
               loading="eager"
@@ -35,7 +35,7 @@ export function Logo() {
               style={{ width: "auto" }}
             />
             {transparentLogoData && (
-              <Image
+              <ShopifyImage
                 data={transparentLogoData}
                 sizes="auto"
                 className={clsx(

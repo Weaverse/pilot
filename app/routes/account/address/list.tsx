@@ -1,8 +1,4 @@
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
-import type {
-  AddressPartialFragment,
-  CustomerDetailsFragment,
-} from "customer-account-api.generated";
 import {
   type ActionFunctionArgs,
   data,
@@ -16,9 +12,15 @@ import {
 } from "react-router";
 import { Button } from "~/components/button";
 import { Section } from "~/components/section";
+import type {
+  AddressPartialFragment,
+  CustomerDetailsFragment,
+} from "~/routes/account/layout";
 import {
+  addressErrorMessage,
   CREATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,
+  parseAddressForm,
   UPDATE_ADDRESS_MUTATION,
 } from "./address-mutation-queries";
 
@@ -68,32 +70,13 @@ export async function action({ request, context }: ActionFunctionArgs) {
     const defaultAddress = form.has("defaultAddress")
       ? String(form.get("defaultAddress")) === "on"
       : false;
-    const address: CustomerAddressInput = {};
-    const keys: (keyof CustomerAddressInput)[] = [
-      "address1",
-      "address2",
-      "city",
-      "company",
-      "territoryCode",
-      "firstName",
-      "lastName",
-      "phoneNumber",
-      "zoneCode",
-      "zip",
-    ];
-
-    for (const key of keys) {
-      const value = form.get(key);
-      if (typeof value === "string") {
-        address[key] = value;
-      }
-    }
 
     switch (request.method) {
       case "POST": {
         // handle new address creation
         try {
-          const { data: createData, errors } = await customerAccount.mutate(
+          const address = parseAddressForm(form);
+          const { data: createData, errors } = await customerAccount.graphql(
             CREATE_ADDRESS_MUTATION,
             {
               variables: { address, defaultAddress },
@@ -101,7 +84,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
           );
 
           if (errors?.length) {
-            throw new Error(errors[0].message);
+            throw new Error(addressErrorMessage(errors));
           }
 
           if (createData?.customerAddressCreate?.userErrors?.length) {
@@ -140,7 +123,8 @@ export async function action({ request, context }: ActionFunctionArgs) {
       case "PUT": {
         // handle address updates
         try {
-          const { data: updateData, errors } = await customerAccount.mutate(
+          const address = parseAddressForm(form);
+          const { data: updateData, errors } = await customerAccount.graphql(
             UPDATE_ADDRESS_MUTATION,
             {
               variables: {
@@ -152,7 +136,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
           );
 
           if (errors?.length) {
-            throw new Error(errors[0].message);
+            throw new Error(addressErrorMessage(errors));
           }
 
           if (updateData?.customerAddressUpdate?.userErrors?.length) {
@@ -161,7 +145,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
             );
           }
 
-          if (!updateData?.customerAddressUpdate?.userErrors?.length) {
+          if (!updateData?.customerAddressUpdate?.customerAddress) {
             throw new Error("Customer address update failed.");
           }
 
@@ -191,7 +175,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       case "DELETE": {
         // handles address deletion
         try {
-          const { data: delateData, errors } = await customerAccount.mutate(
+          const { data: delateData, errors } = await customerAccount.graphql(
             DELETE_ADDRESS_MUTATION,
             {
               variables: { addressId: decodeURIComponent(addressId) },
@@ -303,7 +287,7 @@ function NewAddressForm() {
     address2: "",
     city: "",
     company: "",
-    territoryCode: "",
+    countryCode: undefined,
     firstName: "",
     id: "new",
     lastName: "",
@@ -528,19 +512,21 @@ export function AddressForm({
             />
           </div>
           <div>
-            <label htmlFor="territoryCode" className="mb-1">
+            <label htmlFor="countryCode" className="mb-1">
               Country Code*
             </label>
             <input
-              aria-label="territoryCode"
+              aria-label="countryCode"
               autoComplete="country"
-              defaultValue={address?.territoryCode ?? ""}
-              id="territoryCode"
-              name="territoryCode"
+              defaultValue={address?.countryCode ?? ""}
+              id="countryCode"
+              name="countryCode"
               placeholder="Country"
               required
               type="text"
               maxLength={2}
+              pattern="[A-Za-z]{2}"
+              title="Two-letter country code, such as US or GB"
               className="border-border bg-background w-full border px-3 py-2"
             />
           </div>

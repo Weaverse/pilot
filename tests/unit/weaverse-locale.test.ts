@@ -1,13 +1,6 @@
 import { expect, test } from "@playwright/test";
-import type { AppLoadContext } from "react-router";
-import { createHydrogenRouterContext } from "../../app/.server/context";
 import { SUPPORTED_LOCALES } from "../../app/utils/locale";
-import {
-  installWorkerCaches,
-  recordFetches,
-  TEST_ENV,
-  TEST_EXECUTION_CONTEXT,
-} from "../support/hydrogen-env";
+import { createTestContext, recordFetches } from "../support/hydrogen-env";
 
 /**
  * Weaverse and Shopify disagree about what a language code is, and the request
@@ -28,22 +21,14 @@ type ProviderIdentity = { translation: string | null; shopify: string | null };
 
 /** What each provider was asked for while loading `pathPrefix`'s theme. */
 async function identitiesFor(pathPrefix: string): Promise<ProviderIdentity> {
-  const request = new Request(`https://shop.test${pathPrefix}/`);
-
-  const restoreCaches = installWorkerCaches();
   const { result: context, urls } = await recordFetches(async () => {
-    const ctx = await createHydrogenRouterContext(
-      request,
-      TEST_ENV,
-      TEST_EXECUTION_CONTEXT,
+    // `weaverse` and `storefront` are the context values loaders read.
+    const { weaverse, storefront } = await createTestContext(
+      `https://shop.test${pathPrefix}/`,
     );
-    // `weaverse` is attached to the context instance, exactly as loaders read
-    // it; `AppLoadContext` is where the app declares that shape.
-    const { weaverse, storefront } = ctx as unknown as AppLoadContext;
     await weaverse.loadThemeSettings();
     return { storefront };
   });
-  restoreCaches();
 
   const translation = urls.find((url) =>
     url.includes("/api/translation/static"),
@@ -53,7 +38,8 @@ async function identitiesFor(pathPrefix: string): Promise<ProviderIdentity> {
     translation: translation
       ? new URL(translation).searchParams.get("locale")
       : null,
-    // What Hydrogen will put on every `@inContext` query for this request.
+    // The request's Shopify identity; what actually reaches `@inContext` is
+    // asserted off the wire in `provider-locale-leak.test.ts`.
     shopify: context.storefront.i18n.language,
   };
 }

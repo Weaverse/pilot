@@ -1,6 +1,8 @@
+import { gql, type StorefrontApi } from "@shopify/hydrogen";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 
-export const COLLECTION_QUERY = `#graphql
+export const COLLECTION_QUERY = gql(
+  `
   query collection(
     $handle: String!
     $country: CountryCode
@@ -119,5 +121,8 @@ export const COLLECTION_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);
+
+export type CollectionQuery = StorefrontApi.ResultOf<typeof COLLECTION_QUERY>;

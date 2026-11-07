@@ -1,14 +1,14 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   IMAGES_PLACEHOLDERS,
   type WeaverseImage,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { Image } from "~/components/image";
 import { ScrollReveal } from "~/components/scroll-reveal";
 
-interface TestimonialItemProps extends HydrogenComponentProps {
+interface TestimonialItemProps extends WeaverseComponentProps {
   heading: string;
   content: string;
   authorImage: WeaverseImage;

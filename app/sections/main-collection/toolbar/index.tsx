@@ -1,9 +1,12 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
-import type { CollectionQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "~/routes/collections/collection-query";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
@@ -90,7 +93,7 @@ interface CollectionToolbarData {
 }
 
 interface CollectionToolbarProps
-  extends HydrogenComponentProps, CollectionToolbarData {}
+  extends WeaverseComponentProps, CollectionToolbarData {}
 
 function CollectionToolbar(props: CollectionToolbarProps) {
   const {

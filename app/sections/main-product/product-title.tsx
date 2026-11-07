@@ -1,8 +1,11 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductTitleProps extends HydrogenComponentProps {
+interface ProductTitleProps extends WeaverseComponentProps {
   headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 

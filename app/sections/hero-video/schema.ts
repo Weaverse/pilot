@@ -1,4 +1,4 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen/react-router";
 import { overlayInputs } from "~/components/overlay";
 import type { HeroVideoData } from "./types";
 

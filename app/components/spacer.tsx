@@ -1,6 +1,9 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 
-interface SpacerData extends HydrogenComponentProps {
+interface SpacerData extends WeaverseComponentProps {
   mobileHeight: number;
   desktopHeight: number;
   backgroundColor: string;

@@ -1,11 +1,11 @@
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import { Icon } from "~/components/icon";
 import type {
   MediaFragment,
   ProductVariantFragment,
-} from "storefront-api.generated";
-import { Icon } from "~/components/icon";
+} from "~/graphql/fragments";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { MediaItem } from "./media-item";

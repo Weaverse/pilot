@@ -1,4 +1,4 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import { extend } from "colord";
 import namesPlugin from "colord/plugins/names";
 import type { ThemeSettings } from "~/types/weaverse";

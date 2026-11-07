@@ -1,13 +1,13 @@
-import { flattenConnection } from "@shopify/hydrogen";
+import { flattenConnection, gql, type StorefrontApi } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { data } from "react-router";
-import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
-import { routeHeaders } from "~/utils/cache";
+import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { resolveLocaleFromRequest } from "~/utils/locale";
 import { seoMetaFromMatches } from "~/utils/seo";
+import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -15,7 +15,6 @@ export const headers = routeHeaders;
 export const loader = async (args: LoaderFunctionArgs) => {
   const { params, request, context } = args;
   const storefront = context.storefront;
-  const { language, country } = storefront.i18n;
   // The canonical market table owns the BCP-47 tag; `storefront.i18n.language`
   // is the provider enum and can be script-specific (`ZH_CN`), which `Intl`
   // rejects.
@@ -26,9 +25,12 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   // Load blog data and weaverseData in parallel
   const [{ blog }, weaverseData] = await Promise.all([
-    storefront.query<BlogQuery>(BLOGS_QUERY, {
-      variables: { blogHandle, pageBy: 16, language },
-    }),
+    storefront
+      .graphql(BLOGS_QUERY, {
+        variables: { blogHandle, pageBy: 16 },
+        cache: CACHE_DEFAULT,
+      })
+      .then(unwrapStorefront),
     context.weaverse.loadPage({ type: "BLOG", handle: blogHandle }),
   ]);
 
@@ -65,7 +67,7 @@ export default function Blogs() {
   return <WeaverseContent />;
 }
 
-const BLOGS_QUERY = `#graphql
+const BLOGS_QUERY = gql(`
   query blog(
     $language: LanguageCode
     $blogHandle: String!
@@ -108,4 +110,6 @@ const BLOGS_QUERY = `#graphql
     publishedAt
     title
   }
-` as const;
+`);
+
+export type BlogQuery = StorefrontApi.ResultOf<typeof BLOGS_QUERY>;

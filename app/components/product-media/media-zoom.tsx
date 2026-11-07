@@ -1,24 +1,26 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { ExternalVideo, ModelViewer, parseGid } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import type {
-  Media_ExternalVideo_Fragment,
-  Media_MediaImage_Fragment,
-  Media_Model3d_Fragment,
-  Media_Video_Fragment,
-  MediaFragment,
-} from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
+import type { MediaFragment } from "~/graphql/fragments";
 import { ScrollArea } from "~/components/scroll-area";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { Spinner } from "~/components/spinner";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
+import { parseGid } from "~/utils/shopify";
+import { ExternalVideo } from "./external-video";
 import { getModel3dData } from "./model-utils";
+import { ModelViewer } from "./model-viewer";
+import type {
+  Media_ExternalVideo_Fragment,
+  Media_MediaImage_Fragment,
+  Media_Model3d_Fragment,
+  Media_Video_Fragment,
+} from "./types";
 
 export function ZoomModal({
   media,

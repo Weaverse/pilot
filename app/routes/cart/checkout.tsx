@@ -1,18 +1,26 @@
-import type { CartBuyerIdentityInput } from "@shopify/hydrogen/storefront-api-types";
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
+import { cartHandlers, syncCartCountry } from "~/.server/cart";
 import { appendForwardedAttribution } from "~/utils/checkout-attribution";
 import { localizePath, resolveLocale } from "~/utils/locale";
 
+/**
+ * The checkout button's target. Moves the cart into the shopper's market
+ * (prices, taxes and the checkout's country follow the buyer identity), then
+ * hands off to Shopify's checkout with the storefront's ad attribution.
+ */
 export async function loader({ context, request }: LoaderFunctionArgs) {
-  const { cart, storefront } = context;
+  const { storefront, customerAccount } = context;
   const requestUrl = new URL(request.url);
-  const result = await cart.updateBuyerIdentity({
-    countryCode: storefront.i18n.country,
-  } as CartBuyerIdentityInput);
-
+  const synced = await syncCartCountry(request, storefront, {
+    customerAccessToken: await customerAccount
+      .getAccessToken()
+      .catch(() => undefined),
+  });
   const checkoutUrl =
-    result?.cart?.checkoutUrl ?? (await cart.get())?.checkoutUrl;
+    synced.checkoutUrl ??
+    (await cartHandlers.get({ storefrontClient: storefront, request })).data
+      .cart?.checkoutUrl;
 
   if (!checkoutUrl) {
     // Keep the buyer on their active locale's cart instead of dropping them
@@ -20,11 +28,5 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return redirect(localizePath("/cart", resolveLocale(requestUrl.pathname)));
   }
 
-  const headers = result?.cart?.id ? cart.setCartId(result.cart.id) : undefined;
-  const attributedCheckoutUrl = appendForwardedAttribution(
-    checkoutUrl,
-    requestUrl.search,
-  );
-
-  return redirect(attributedCheckoutUrl, { headers });
+  return redirect(appendForwardedAttribution(checkoutUrl, requestUrl.search));
 }

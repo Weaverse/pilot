@@ -1,7 +1,7 @@
-import { Money } from "@shopify/hydrogen";
-import type { OrderLineItemFullFragment } from "customer-account-api.generated";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
+import { Money } from "~/components/money";
+import type { OrderLineItemFullFragment } from "./order-query";
 
 export function OrderLineItem({
   lineItem,

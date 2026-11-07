@@ -1,9 +1,9 @@
-import { Pagination } from "@shopify/hydrogen";
-import { useTranslation } from "@weaverse/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen/react-router";
 import { useInView } from "react-intersection-observer";
-import type { SearchPageQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
+import { Pagination } from "~/components/pagination";
 import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
+import type { SearchPageQuery } from "./index";
 import { TabNoResults } from "./tab-no-results";
 
 interface ProductsTabProps {

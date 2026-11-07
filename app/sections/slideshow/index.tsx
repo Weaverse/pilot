@@ -1,7 +1,7 @@
 import {
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   useThemeSettings,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
@@ -73,7 +73,7 @@ export interface SlideshowData
 }
 
 export default function Slideshow(
-  props: SlideshowData & HydrogenComponentProps,
+  props: SlideshowData & WeaverseComponentProps,
 ) {
   const {
     height,

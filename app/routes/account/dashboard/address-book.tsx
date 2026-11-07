@@ -1,15 +1,17 @@
-import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
-import type { CustomerDetailsFragment } from "customer-account-api.generated";
 import { Form } from "react-router";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
+import type {
+  AddressPartialFragment,
+  CustomerDetailsFragment,
+} from "~/routes/account/layout";
 
 export function AddressBook({
   customer,
   addresses,
 }: {
   customer: CustomerDetailsFragment;
-  addresses: CustomerAddress[];
+  addresses: AddressPartialFragment[];
 }) {
   return (
     <div className="space-y-4">
@@ -44,7 +46,7 @@ function Address({
   address,
   defaultAddress,
 }: {
-  address: CustomerAddress;
+  address: AddressPartialFragment;
   defaultAddress?: boolean;
 }) {
   return (

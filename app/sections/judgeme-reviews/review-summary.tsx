@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useState } from "react";
 import { Button } from "~/components/button";
 import { Skeleton } from "~/components/skeleton";
@@ -7,7 +10,7 @@ import { RatingProgressBar } from "./rating-progress-bar";
 import { ReviewForm } from "./review-form";
 import { useJudgemeStore } from "./store";
 
-interface JudgemeReviewSummaryProps extends HydrogenComponentProps {
+interface JudgemeReviewSummaryProps extends WeaverseComponentProps {
   averageRatingText?: string;
   totalReviewsText?: string;
   writeReviewText?: string;

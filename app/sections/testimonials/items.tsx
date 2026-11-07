@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
@@ -18,7 +21,7 @@ const variants = cva("grid lg:grid-cols-3", {
 });
 
 interface TestimonialsItemsProps
-  extends VariantProps<typeof variants>, HydrogenComponentProps {}
+  extends VariantProps<typeof variants>, WeaverseComponentProps {}
 
 function TestimonialsItems(props: TestimonialsItemsProps) {
   const { gap, children, ...rest } = props;

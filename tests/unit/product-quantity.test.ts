@@ -1,11 +1,17 @@
 import { expect, test } from "@playwright/test";
-import { createElement, Fragment, type ReactElement } from "react";
+import {
+  createElement,
+  Fragment,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { loadAppModule, renderInApp } from "../support/render-app";
 
 /**
  * Purchase quantity on the product page, observed in the markup the real
- * sections render: the quantity input, the cart form payload of the main and
- * sticky Add to cart buttons, and the variants handed to Shop Pay.
+ * sections render: the quantity input, the hidden `merchandiseId`/`quantity`
+ * fields of the main and sticky Add to cart forms, and the variants handed to
+ * Shop Pay.
  *
  * The selector and the buttons are separate sections that share one store,
  * and that store survives client-side navigation between products. A
@@ -14,6 +20,11 @@ import { loadAppModule, renderInApp } from "../support/render-app";
  */
 
 type Controls = {
+  CartProvider: (props: { children?: ReactNode }) => ReactElement;
+  ProductProvider: (props: {
+    product: unknown;
+    children?: ReactNode;
+  }) => ReactElement;
   BuyButtons: (props: Record<string, unknown>) => ReactElement;
   StickyATCBar: (props: Record<string, unknown>) => ReactElement;
   QuantitySelector: (props: Record<string, unknown>) => ReactElement;
@@ -39,9 +50,9 @@ const STUBS = {
     export const Content = ({ children }) => <div data-sticky-bar>{children}</div>;
     export const Title = ({ children }) => children;
   `,
-  "~/components/product/lazy-shop-pay-button": `
-    export function LazyShopPayButton({ variantIdsAndQuantities }) {
-      return <div data-shop-pay={JSON.stringify(variantIdsAndQuantities)} />;
+  "~/components/product/shop-pay-button": `
+    export function ProductShopPayButton({ variants }) {
+      return <div data-shop-pay={JSON.stringify(variants)} />;
     }
   `,
 };
@@ -91,39 +102,56 @@ async function purchaseFor(
   productData: ReturnType<typeof product>,
   { withSelector = true } = {},
 ): Promise<Purchase> {
-  const { BuyButtons, StickyATCBar, QuantitySelector } = await loadControls();
-  const html = await renderInApp(
-    { product: productData, storeDomain: "https://shop.test" },
-    () =>
+  const {
+    CartProvider,
+    ProductProvider,
+    BuyButtons,
+    StickyATCBar,
+    QuantitySelector,
+  } = await loadControls();
+  // As on the product page: the root's cart store, and one product store for
+  // every purchase control of the product.
+  const html = await renderInApp({ product: productData }, () =>
+    createElement(
+      CartProvider,
+      null,
       createElement(
-        Fragment,
-        null,
-        withSelector
-          ? createElement(QuantitySelector, { labelText: "Quantity" })
-          : null,
-        createElement(BuyButtons, {
-          addToCartText: "Add",
-          soldOutText: "Sold out",
-          showShopPayButton: true,
-          showStickyBar: false,
-        }),
-        createElement(StickyATCBar, {}),
+        ProductProvider,
+        { product: productData },
+        createElement(
+          Fragment,
+          null,
+          withSelector
+            ? createElement(QuantitySelector, { labelText: "Quantity" })
+            : null,
+          createElement(BuyButtons, {
+            addToCartText: "Add",
+            soldOutText: "Sold out",
+            showShopPayButton: true,
+            showStickyBar: false,
+          }),
+          createElement(StickyATCBar, {}),
+        ),
       ),
+    ),
   );
 
-  const selector = html.match(/<input[^>]*value="(\d+)"/);
-  const addToCart = [
-    ...html.matchAll(/name="cartFormInput" value="([^"]+)"/g),
-  ].map((m) => {
-    const input = JSON.parse(m[1].replaceAll("&quot;", '"')) as {
-      inputs: { lines: { merchandiseId: string; quantity: number }[] };
-    };
-    const [line] = input.inputs.lines;
-    expect(line.merchandiseId).toBe(
-      productData.selectedOrFirstAvailableVariant.id,
-    );
-    return line.quantity;
-  });
+  const field = (form: string, name: string) =>
+    (new RegExp(`<input[^>]*name="${name}"[^>]*>`).exec(form)?.[0] ?? "").match(
+      /value="([^"]*)"/,
+    )?.[1];
+  const forms = [...html.matchAll(/<form[\s\S]*?<\/form>/g)].map((m) => m[0]);
+  const selector = html
+    .replace(/<form[\s\S]*?<\/form>/g, "")
+    .match(/<input[^>]*value="(\d+)"/);
+  const addToCart = forms
+    .filter((form) => form.includes('name="merchandiseId"'))
+    .map((form) => {
+      expect(field(form, "merchandiseId")).toBe(
+        productData.selectedOrFirstAvailableVariant.id,
+      );
+      return Number(field(form, "quantity"));
+    });
   const shopPay = html.match(/data-shop-pay="([^"]+)"/);
 
   return {

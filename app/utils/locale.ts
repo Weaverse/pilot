@@ -1,9 +1,10 @@
-import type { I18nBase } from "@shopify/hydrogen";
-import type {
-  CountryCode,
-  CurrencyCode,
-  LanguageCode,
-} from "@shopify/hydrogen/storefront-api-types";
+import type { I18nConfig } from "@shopify/hydrogen";
+import type { CurrencyCode } from "@shopify/hydrogen/storefront-api-types";
+
+// The enums Hydrogen's request context accepts, from the Storefront API schema
+// it ships with.
+type LanguageCode = I18nConfig["language"];
+type CountryCode = I18nConfig["country"];
 
 /**
  * A single Shopify market served by this storefront.
@@ -24,7 +25,7 @@ import type {
  * Only markets whose provider code differs from their BCP-47 code set
  * `providerLanguage`; {@link providerLanguageFor} falls back to `language`.
  */
-export type Locale = I18nBase & {
+export type Locale = I18nConfig & {
   language: LanguageCode;
   /**
    * Shopify `LanguageCode` for this market when it differs from the BCP-47
@@ -512,38 +513,6 @@ export function localizedPathForRequest(
   path: string,
 ): string {
   return localizePath(path, resolveLocaleFromRequest(request));
-}
-
-/**
- * Where to send a shopper who hits an account route without a session.
- *
- * Hydrogen's `defaultAuthStatusHandler` redirects to a fixed `/account/login`,
- * so a shopper bounced out of `/de-de/account` would sign in on the default
- * market and return there. This keeps both the login URL and the `return_to`
- * path on the market the request came in on.
- *
- * The `return_to` normalization matches Hydrogen's own: React Router's
- * single-fetch `.data` suffix and `/_root` segment are stripped, and a trailing
- * slash is dropped, so the value round-trips as a real app path.
- */
-export function unauthorizedRedirect(
-  request: Request,
-  locale: Locale,
-): Response {
-  const { pathname } = new URL(request.url);
-  const returnTo = pathname
-    .replace(/\.data$/, "")
-    .replace(/\/_root$/, "/")
-    .replace(/(.+)\/$/, "$1");
-  const login = localizePath("/account/login", locale);
-  const query = new URLSearchParams({
-    return_to: localizePath(returnTo, locale),
-  });
-
-  return new Response(null, {
-    status: 302,
-    headers: { Location: `${login}?${query.toString()}` },
-  });
 }
 
 /** The exact shape of a market prefix: `xx-yy`, nothing longer or shorter. */

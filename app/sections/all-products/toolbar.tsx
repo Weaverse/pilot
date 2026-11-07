@@ -1,8 +1,8 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   useTranslation,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import { useProductGridStore } from "~/components/product-grid/store";
@@ -15,7 +15,7 @@ interface AllProductsToolbarData {
 }
 
 interface AllProductsToolbarProps
-  extends HydrogenComponentProps, AllProductsToolbarData {}
+  extends WeaverseComponentProps, AllProductsToolbarData {}
 
 function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { enableSort, showBreadcrumb, showProductsCount, ...rest } = props;

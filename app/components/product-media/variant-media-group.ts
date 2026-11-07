@@ -1,8 +1,8 @@
 import type {
   MediaFragment,
-  ProductQuery,
   ProductVariantFragment,
-} from "storefront-api.generated";
+} from "~/graphql/fragments";
+import type { ProductQuery } from "~/graphql/queries";
 
 type Product = NonNullable<ProductQuery["product"]>;
 

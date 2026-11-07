@@ -1,24 +1,22 @@
-import type { Storefront } from "@shopify/hydrogen";
-import type { ProductRecommendationsQuery } from "storefront-api.generated";
-import invariant from "tiny-invariant";
+import { gql } from "@shopify/hydrogen";
+import type { Storefront } from "~/.server/storefront";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import type { Locale } from "~/utils/locale";
+import { CACHE_DEFAULT } from "~/utils/cache";
+import { unwrapStorefront } from "~/utils/storefront";
 
 export async function getRecommendedProducts(
-  storefront: Storefront<Locale>,
+  storefront: Storefront,
   productId: string,
 ) {
-  const products = await storefront.query<ProductRecommendationsQuery>(
-    RECOMMENDED_PRODUCTS_QUERY,
-    {
+  const products = unwrapStorefront(
+    await storefront.graphql(RECOMMENDED_PRODUCTS_QUERY, {
       variables: {
         productId,
         count: 12,
       },
-    },
+      cache: CACHE_DEFAULT,
+    }),
   );
-
-  invariant(products, "No data returned from Shopify API");
 
   const mergedProducts = (products.recommended ?? [])
     .concat(products.additional.nodes)
@@ -35,7 +33,8 @@ export async function getRecommendedProducts(
   return { nodes: mergedProducts };
 }
 
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+const RECOMMENDED_PRODUCTS_QUERY = gql(
+  `
   query productRecommendations(
     $productId: ID!
     $count: Int
@@ -52,5 +51,6 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);

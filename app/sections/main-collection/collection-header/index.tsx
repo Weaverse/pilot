@@ -1,6 +1,9 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
-import type { CollectionQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "~/routes/collections/collection-query";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Image } from "~/components/image";
 import { cn } from "~/utils/cn";
@@ -14,7 +17,7 @@ interface CollectionHeaderData {
 }
 
 interface CollectionHeaderProps
-  extends HydrogenComponentProps, CollectionHeaderData {}
+  extends WeaverseComponentProps, CollectionHeaderData {}
 
 function CollectionHeader(props: CollectionHeaderProps) {
   const {
@@ -36,8 +39,13 @@ function CollectionHeader(props: CollectionHeaderProps) {
     return null;
   }
 
+  // The banner metafield references a `MediaImage`; the query doesn't select
+  // `__typename`, so narrow on the selected field.
+  const reference = collection.metafield?.reference;
   const banner = collection.metafield
-    ? collection.metafield.reference.image
+    ? reference && "image" in reference
+      ? reference.image
+      : undefined
     : collection.image;
 
   let hasBanner = showBanner && Boolean(banner);

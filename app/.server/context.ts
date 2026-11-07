@@ -1,36 +1,25 @@
-import type { HydrogenSession } from "@shopify/hydrogen";
-import { createHydrogenContext } from "@shopify/hydrogen";
-import { WeaverseClient } from "@weaverse/hydrogen";
+import { WeaverseClient } from "@weaverse/hydrogen/react-router";
+import { createCustomerAccount } from "~/.server/customer-account";
+import { AppSession } from "~/.server/session";
 import {
-  createCookieSessionStorage,
-  type Session,
-  type SessionStorage,
-} from "react-router";
-import {
-  CART_MUTATION_FRAGMENT,
-  CART_QUERY_FRAGMENT,
-} from "~/graphql/fragments";
-import {
-  type Locale,
-  providerContextForRequest,
-  resolveLocaleFromRequest,
-  unauthorizedRedirect,
-} from "~/utils/locale";
+  createRequestStorefront,
+  resolveRequestLocale,
+  type Storefront,
+} from "~/.server/storefront";
+import type { Locale } from "~/utils/locale";
 import { components } from "~/weaverse/components";
 import { throwRouteFailures } from "~/weaverse/load-failure";
 import { themeSchema } from "~/weaverse/schema.server";
 
-const additionalContext = {
-  // Additional context for custom properties, CMS clients, 3P SDKs, etc.
-} as const;
-
-type AdditionalContextType = typeof additionalContext;
-
-declare global {
-  interface HydrogenAdditionalContext extends AdditionalContextType {}
-}
-
-export async function createHydrogenRouterContext(
+/**
+ * The per-request values every loader and action reads from `context`.
+ *
+ * Hydrogen 2026.10 has no `createHydrogenContext()`; Pilot builds the same
+ * shape itself and `server.ts` copies it onto React Router's context, so
+ * loaders keep reading `context.storefront`, `context.weaverse` and friends
+ * (typed in `env.d.ts`).
+ */
+export async function createAppContext(
   request: Request,
   env: Env,
   executionContext: ExecutionContext,
@@ -44,139 +33,64 @@ export async function createHydrogenRouterContext(
     caches.open("hydrogen"),
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
-
-  const locale = resolveLocaleFromRequest(request);
-
-  const hydrogenContext = createHydrogenContext(
-    {
-      env,
-      request,
-      cache,
-      waitUntil,
-      session,
-      i18n: providerContextForRequest(request),
-      customerAccount: {
-        // Hydrogen's default handler redirects to a fixed `/account/login`,
-        // dropping the market: a shopper bounced from `/de-de/account` would
-        // sign in on the US storefront. `authUrl` stays the registered,
-        // non-dynamic OAuth callback; only this in-app bounce is localized.
-        customAuthStatusHandler: () => unauthorizedRedirect(request, locale),
-      },
-      cart: {
-        queryFragment: CART_QUERY_FRAGMENT,
-        mutateFragment: CART_MUTATION_FRAGMENT,
-      },
-      // Shopify does not persist the mutation's `@inContext(country:)` into the
-      // cart, so a cart created without a buyer identity prices and taxes as
-      // the default market no matter how correct the request context was. The
-      // default lives here because Hydrogen merges it under every cart create,
-      // including the implicit ones (`updateDiscountCodes` on a session with no
-      // cart), which a per-route guard would miss. A caller that names its own
-      // country still wins: the cart action resolves the market from the URL or
-      // the `Referer`, and that value must survive an unprefixed `/cart` POST.
-      buyerIdentity: { countryCode: locale.country },
-    },
-    additionalContext,
-  );
+  const storefront = createRequestStorefront({
+    request,
+    env,
+    cache,
+    waitUntil,
+  });
+  const customerAccount = createCustomerAccount({
+    env,
+    request,
+    session,
+    storefront,
+  });
 
   // A Weaverse outage must not answer like a missing page: page loads
   // reject on failure and leave the route as a retryable 503 (see
   // `throwRouteFailures`). Missing pages still resolve and stay 404.
   const weaverse = throwRouteFailures(
     new WeaverseClient({
-      ...hydrogenContext,
-      storefront: weaverseStorefront(hydrogenContext.storefront, locale),
-      request,
+      storefront: weaverseStorefront(storefront, resolveRequestLocale(request)),
+      env,
       cache,
+      waitUntil,
+      request,
+      customerAccount,
       themeSchema,
       components,
       throwPageLoadFailures: true,
     }),
   );
 
-  // Add weaverse directly to the hydrogenContext instance
-  // This preserves the RouterContextProvider class instance
-  Object.assign(hydrogenContext, { weaverse });
-
-  return hydrogenContext;
+  return {
+    env,
+    cache,
+    waitUntil,
+    session,
+    storefront,
+    customerAccount,
+    weaverse,
+  };
 }
 
-class AppSession implements HydrogenSession {
-  isPending = false;
-  readonly #sessionStorage: SessionStorage;
-  readonly #session: Session;
-
-  constructor(sessionStorage: SessionStorage, session: Session) {
-    this.#sessionStorage = sessionStorage;
-    this.#session = session;
-  }
-
-  static async init(request: Request, secrets: string[]) {
-    const storage = createCookieSessionStorage({
-      cookie: {
-        name: "session",
-        httpOnly: true,
-        path: "/",
-        sameSite: "lax",
-        secrets,
-      },
-    });
-
-    const session = await storage
-      .getSession(request.headers.get("Cookie"))
-      .catch(() => storage.getSession());
-
-    return new AppSession(storage, session);
-  }
-
-  get has() {
-    return this.#session.has;
-  }
-
-  get get() {
-    return this.#session.get;
-  }
-
-  get flash() {
-    return this.#session.flash;
-  }
-
-  get unset() {
-    this.isPending = true;
-    return this.#session.unset;
-  }
-
-  get set() {
-    this.isPending = true;
-    return this.#session.set;
-  }
-
-  destroy() {
-    return this.#sessionStorage.destroySession(this.#session);
-  }
-
-  commit() {
-    this.isPending = false;
-    return this.#sessionStorage.commitSession(this.#session);
-  }
-}
+export type AppContext = Awaited<ReturnType<typeof createAppContext>>;
 
 /**
  * The storefront client as Weaverse should see it.
  *
  * Weaverse keys Translation Manager overrides by the locale a merchant picks
- * in Studio — the market's public BCP-47 identity — and the installed client
- * builds that key as lowercase `${language}-${country}` from `i18n`. Shopify
- * wants the opposite for Chinese: a script-specific `LanguageCode` its enum
- * defines. Handing one identity to both asks the translation API for
- * `zh_tw-hk`, which matches nothing and silently resolves to theme defaults.
+ * in Studio — the market's public BCP-47 identity — and builds that key as
+ * lowercase `${language}-${country}` from `i18n`. Shopify wants the opposite
+ * for Chinese: a script-specific `LanguageCode` its enum defines. Handing one
+ * identity to both asks the translation API for `zh_tw-hk`, which matches
+ * nothing and silently resolves to theme defaults.
  *
  * `market` is the canonical entry, whose `language` is the public code; the
- * storefront's own `i18n` has already had that field replaced with the Shopify
- * enum by {@link providerContextForRequest}, so it cannot be recovered from
- * there. `query` binds its `@inContext` variables from the client's closure
- * rather than this property, so re-labelling `i18n` changes what Weaverse
- * reads without weakening what Shopify receives.
+ * storefront's own `i18n` already carries the Shopify enum. `graphql()` reads
+ * `$country`/`$language` from the request context, not from this property,
+ * so re-labelling `i18n` changes what Weaverse reads without weakening what
+ * Shopify receives (verified in Weaverse/pilot#207).
  */
 export function weaverseStorefront<T extends { i18n: Locale }>(
   storefront: T,
@@ -184,3 +98,5 @@ export function weaverseStorefront<T extends { i18n: Locale }>(
 ): T {
   return { ...storefront, i18n: market };
 }
+
+export type { Storefront };

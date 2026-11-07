@@ -1,11 +1,14 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
 import { ScrollReveal } from "~/components/scroll-reveal";
 
 export interface ParagraphProps
-  extends VariantProps<typeof variants>, Partial<HydrogenComponentProps> {
+  extends VariantProps<typeof variants>, Partial<WeaverseComponentProps> {
   as?: "p" | "div";
   content: string;
   color?: string;

@@ -2,7 +2,7 @@ import {
   createSchema,
   IMAGES_PLACEHOLDERS,
   useThemeSettings,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { backgroundInputs } from "~/components/background-image";
@@ -106,12 +106,9 @@ export const schema = createSchema({
     },
     {
       group: "Background",
-      inputs: [
-        ...backgroundInputs.filter(
-          (inp) =>
-            inp.name !== "backgroundFor" && inp.name !== "backgroundColor",
-        ),
-      ],
+      inputs: backgroundInputs.filter(
+        (inp) => inp.name !== "backgroundFor" && inp.name !== "backgroundColor",
+      ),
     },
     { group: "Overlay", inputs: overlayInputs },
   ],

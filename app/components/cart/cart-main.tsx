@@ -1,17 +1,15 @@
-import type { OptimisticCart } from "@shopify/hydrogen";
-import { useTranslation } from "@weaverse/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
-import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
 import type { CartLayoutType } from "~/types/others";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
+import { type CartData, type CartLineData, useCart } from "./cart-store";
 import { CartSummary } from "./cart-summary";
-import { getCartLineRenderKeys } from "./optimistic-cart";
 
 function CartEmpty({
   hidden = false,
@@ -69,25 +67,79 @@ function CartEmpty({
   );
 }
 
+// Only `CartLine` has a parent; a `ComponentizableCartLine` never does.
+function getParentLineId(line: CartLineData) {
+  return "parentRelationship" in line
+    ? line.parentRelationship?.parent.id
+    : undefined;
+}
+
+/**
+ * React keys that survive the optimistic-to-confirmed line handoff.
+ *
+ * A new line is keyed `optimistic:<variant>` until Shopify answers with its
+ * real ID. A unique variant identifies the same visual row before and after,
+ * so keying by it keeps the row mounted and avoids image flicker. Carts with
+ * duplicate merchandise (different attributes or selling plans) fall back to
+ * Shopify line IDs to avoid key collisions.
+ */
+function getCartLineRenderKeys(lines: CartLineData[]) {
+  const merchandiseCounts = new Map<string, number>();
+  for (const line of lines) {
+    const merchandiseId = line.merchandise?.id;
+    if (merchandiseId) {
+      merchandiseCounts.set(
+        merchandiseId,
+        (merchandiseCounts.get(merchandiseId) ?? 0) + 1,
+      );
+    }
+  }
+  return lines.map((line) => {
+    const merchandiseId = line.merchandise?.id;
+    return merchandiseId && merchandiseCounts.get(merchandiseId) === 1
+      ? `merchandise-${merchandiseId}`
+      : line.id;
+  });
+}
+
+/**
+ * The cart lines and summary, shared by the drawer and the `/cart` page.
+ *
+ * Renders the cart store. `serverCart` is the `/cart` loader's cart: it is
+ * rendered until the store's first load lands, so the server-rendered page
+ * (and the page without JavaScript) shows the shopper's real cart.
+ */
 export function CartMain({
   layout,
   onClose,
-  cart,
+  serverCart,
 }: {
   layout: CartLayoutType;
   onClose?: () => void;
-  cart: OptimisticCart<CartApiQueryFragment | null>;
+  serverCart?: CartData | null;
 }) {
   const scrollRef = useRef(null);
   const { y } = useScroll(scrollRef);
-  const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
-  const cartHasItems = Boolean(cart) && cart.totalQuantity > 0;
-  const lines = cart?.lines?.nodes ?? [];
+  const storeCart = useCart((state) => state.data);
+  const loading = useCart((state) => state.loading);
+  const cart = (loading && serverCart) || storeCart;
+  const allLines = cart.lines.nodes;
+  // Bundle components and add-ons are lines of their own that point at their
+  // parent line; they render inside it, not as separate rows.
+  const childLines = new Map<string, CartLineData[]>();
+  for (const line of allLines) {
+    const parentId = getParentLineId(line);
+    if (parentId) {
+      childLines.set(parentId, [...(childLines.get(parentId) ?? []), line]);
+    }
+  }
+  const lines = allLines.filter((line) => !getParentLineId(line));
   const lineRenderKeys = getCartLineRenderKeys(lines);
+  const cartHasItems = cart.totalQuantity > 0;
 
   return (
     <>
-      <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
+      <CartEmpty hidden={lines.length > 0} onClose={onClose} layout={layout} />
       <div
         className={clsx(
           layout === "drawer" &&
@@ -123,7 +175,9 @@ export function CartMain({
                 <CartLineItem
                   key={lineRenderKeys[index]}
                   line={line}
+                  childLines={childLines.get(line.id)}
                   layout={layout}
+                  onClose={onClose}
                 />
               ))}
             </ul>

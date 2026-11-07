@@ -1,8 +1,11 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { Icon } from "~/components/icon";
 import { cn } from "~/utils/cn";
 
-interface EstimatedDeliveryProps extends HydrogenComponentProps {
+interface EstimatedDeliveryProps extends WeaverseComponentProps {
   minDays: number;
   maxDays: number;
   textColor: string;

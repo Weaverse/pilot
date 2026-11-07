@@ -1,15 +1,15 @@
-import { Image } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
-import type {
-  ProductCardFragment,
-  ProductVariantFragment,
-} from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { OPTIONS_AS_SWATCH } from "~/components/product/product-option-values";
 import { RevealUnderline } from "~/components/reveal-underline";
+import { ShopifyImage } from "~/components/shopify-image";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
+import type {
+  ProductCardFragment,
+  ProductVariantFragment,
+} from "~/graphql/fragments";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { isLightColor, isValidColor } from "~/utils/misc";
@@ -66,7 +66,7 @@ export function ProductCardOptions({
                     }}
                   >
                     {swatch?.image?.previewImage ? (
-                      <Image
+                      <ShopifyImage
                         data={swatch.image.previewImage}
                         className="h-full w-full rounded-full object-cover object-center"
                         width={200}

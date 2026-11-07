@@ -1,6 +1,4 @@
-import { CartForm } from "@shopify/hydrogen";
 import { useLocation, useRouteLoaderData } from "react-router";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
 import {
   DEFAULT_LOCALE,
@@ -46,13 +44,11 @@ const COUNTRY_GROUPS: CountryGroup[] = (() => {
 export function useCountrySelector() {
   const rootData = useRouteLoaderData<RootLoader>("root");
   const { pathname, search } = useLocation();
-  const cartRoute = usePrefixPathWithLocale("/cart");
   const selectedLocale =
     rootData?.selectedLocale ?? resolveLocale(pathname) ?? DEFAULT_LOCALE;
 
   return {
     selectedLocale,
-    cartRoute,
     groupedCountries: COUNTRY_GROUPS,
     /**
      * The same page in another market. Query is preserved so an active filter
@@ -60,12 +56,6 @@ export function useCountrySelector() {
      */
     getRedirectUrl(locale: Locale) {
       return localizePath(delocalizePath(pathname) + search, locale);
-    },
-    buyerIdentityInput(locale: Locale) {
-      return JSON.stringify({
-        action: CartForm.ACTIONS.BuyerIdentityUpdate,
-        inputs: { buyerIdentity: { countryCode: locale.country } },
-      });
     },
   };
 }

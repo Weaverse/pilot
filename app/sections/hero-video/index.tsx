@@ -1,4 +1,4 @@
-import { isBrowser } from "@weaverse/hydrogen";
+import { isBrowser } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";

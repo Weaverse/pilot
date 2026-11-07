@@ -1,13 +1,13 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   useParentInstance,
   type WeaverseImage,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { Link } from "react-router";
-import type { OurTeamQuery } from "storefront-api.generated";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
+import type { OurTeamQuery } from ".";
 
 type MemberType = {
   name: string;
@@ -19,7 +19,7 @@ type MemberType = {
   x_url: string;
 };
 
-interface TeamMembersProps extends HydrogenComponentProps {}
+interface TeamMembersProps extends WeaverseComponentProps {}
 
 function TeamMembers(props: TeamMembersProps) {
   const { ...rest } = props;
@@ -32,7 +32,11 @@ function TeamMembers(props: TeamMembersProps) {
         {members.map(({ id, fields }) => {
           const member: Partial<MemberType> = {};
           for (const { key, value, reference } of fields) {
-            member[key] = key === "avatar" ? reference?.image : value;
+            // Only `MediaImage` references select `image`; any other type
+            // leaves the avatar empty, as before.
+            const image =
+              reference && "image" in reference ? reference.image : undefined;
+            member[key] = key === "avatar" ? image : value;
           }
           const { name, title, bio, avatar, github_url, linkedin_url, x_url } =
             member;

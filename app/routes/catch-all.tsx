@@ -1,4 +1,4 @@
-import { getWeaverseSeoMeta } from "@weaverse/hydrogen";
+import { getWeaverseSeoMeta } from "@weaverse/hydrogen/react-router";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { routeHeaders } from "~/utils/cache";
 import { seoMetaFromMatches, withWeaverseSeo } from "~/utils/seo";

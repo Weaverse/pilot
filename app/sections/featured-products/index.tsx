@@ -1,19 +1,16 @@
-import type { Storefront } from "@shopify/hydrogen";
+import { gql } from "@shopify/hydrogen";
 import {
-  type ComponentLoaderArgs,
+  type WeaverseComponentLoaderArgs,
   createSchema,
   type WeaverseCollection,
   type WeaverseProduct,
-} from "@weaverse/hydrogen";
-import type {
-  CollectionProductsQuery,
-  ProductsByIdsQuery,
-} from "storefront-api.generated";
+} from "@weaverse/hydrogen/react-router";
 import type { SectionProps } from "~/components/section";
 import { layoutInputs, Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { CACHE_DEFAULT } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
-import type { Locale } from "~/utils/locale";
+import { unwrapStorefront } from "~/utils/storefront";
 
 interface FeaturedProductsSectionData {
   selectionMethod: "auto" | "collection" | "manual";
@@ -39,7 +36,8 @@ export default function FeaturedProducts(props: FeaturedProductsProps) {
   return <Section {...rest}>{children}</Section>;
 }
 
-const COLLECTION_PRODUCTS_QUERY = `#graphql
+const COLLECTION_PRODUCTS_QUERY = gql(
+  `
   query collectionProducts($country: CountryCode, $language: LanguageCode, $handle: String!)
   @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
@@ -50,10 +48,12 @@ const COLLECTION_PRODUCTS_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-`;
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);
 
-const PRODUCTS_BY_IDS_QUERY = `#graphql
+const PRODUCTS_BY_IDS_QUERY = gql(
+  `
   query productsByIds($country: CountryCode, $language: LanguageCode, $ids: [ID!]!)
   @inContext(country: $country, language: $language) {
     nodes(ids: $ids) {
@@ -62,27 +62,28 @@ const PRODUCTS_BY_IDS_QUERY = `#graphql
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-`;
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);
 
 export type FeaturedProductsLoaderData = Awaited<ReturnType<typeof loader>>;
 
 export const loader = async ({
   data,
   weaverse,
-}: ComponentLoaderArgs<FeaturedProductsSectionData>) => {
+}: WeaverseComponentLoaderArgs<FeaturedProductsSectionData>) => {
   const { selectionMethod = "auto", collection, products } = data;
 
   if (selectionMethod === "collection" && collection?.handle) {
-    const result = await weaverse.storefront.query<CollectionProductsQuery>(
-      COLLECTION_PRODUCTS_QUERY,
-      {
+    const result = unwrapStorefront(
+      await weaverse.storefront.graphql(COLLECTION_PRODUCTS_QUERY, {
         // `$country`/`$language` are Hydrogen's to fill, from the storefront
         // client's closure — the Shopify provider enum. `weaverse.storefront.
         // i18n.language` is the market's public code, and bare `ZH` resolves
         // to English.
         variables: { handle: collection.handle },
-      },
+        cache: CACHE_DEFAULT,
+      }),
     );
     return {
       products: {
@@ -95,11 +96,11 @@ export const loader = async ({
     const ids = products.map(
       (product) => `gid://shopify/Product/${product.id}`,
     );
-    const { nodes } = await weaverse.storefront.query<ProductsByIdsQuery>(
-      PRODUCTS_BY_IDS_QUERY,
-      {
+    const { nodes } = unwrapStorefront(
+      await weaverse.storefront.graphql(PRODUCTS_BY_IDS_QUERY, {
         variables: { ids },
-      },
+        cache: CACHE_DEFAULT,
+      }),
     );
     return {
       products: {
@@ -109,9 +110,7 @@ export const loader = async ({
   }
 
   // Default: auto selection (best selling products)
-  const { featuredProducts } = await getFeaturedProducts(
-    weaverse.storefront as Storefront<Locale>,
-  );
+  const { featuredProducts } = await getFeaturedProducts(weaverse.storefront);
   return { products: featuredProducts };
 };
 

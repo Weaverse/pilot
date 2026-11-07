@@ -1,115 +1,68 @@
-import {
-  CartForm,
-  type OptimisticCart,
-  OptimisticInput,
-  useOptimisticData,
-} from "@shopify/hydrogen";
-import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
-import type { FetcherWithComponents } from "react-router";
-import type { CartApiQueryFragment } from "storefront-api.generated";
+import clsx from "clsx";
+import { useId } from "react";
 import { Icon } from "~/components/icon";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { CartLineOptimisticData } from "./cart-line-item";
-import { useCartFetcherSync } from "./cart-sync";
+import { type CartLineData, useCartForm } from "./cart-store";
 
+/**
+ * The line's quantity form. The hidden `set` button comes first so editing the
+ * quantity and pressing Enter (or leaving the field) sets it; the stepper
+ * buttons increase and decrease. Without JavaScript the form posts to
+ * `/api/cart`, which redirects back to the page.
+ */
 export function CartLineQuantityAdjust({
   line,
+  disabled,
+  isPending,
+  errorId,
 }: {
-  line: OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
+  line: CartLineData;
+  disabled?: boolean;
+  isPending?: boolean;
+  errorId?: string;
 }) {
-  const optimisticId = line?.id;
-  const optimisticData =
-    useOptimisticData<CartLineOptimisticData>(optimisticId);
-
-  if (!line || typeof line?.quantity === "undefined") {
-    return null;
-  }
-
-  const optimisticQuantity = optimisticData?.quantity || line.quantity;
-
-  const { id: lineId, isOptimistic } = line;
-  const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
-  const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
+  const { formProps, register } = useCartForm();
+  // The drawer and the `/cart` page can render the same line at once.
+  const inputId = useId();
 
   return (
-    <>
-      <label htmlFor={`quantity-${lineId}`} className="sr-only">
-        Quantity, {optimisticQuantity}
+    <form {...formProps()}>
+      <button type="submit" {...register("set")} />
+      <input type="hidden" {...register("lineId", { value: line.id })} />
+      <label htmlFor={inputId} className="sr-only">
+        Quantity, {line.quantity}
       </label>
       <div className="border-line-subtle flex min-w-30 items-center justify-evenly rounded-md border">
-        <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
-          <button
-            type="submit"
-            name="decrease-quantity"
-            aria-label="Decrease quantity"
-            className="disabled:text-body-subtle inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed"
-            value={prevQuantity}
-            disabled={optimisticQuantity <= 1 || isOptimistic}
-          >
-            <Icon name="minus" />
-            <OptimisticInput
-              id={optimisticId}
-              data={{ quantity: prevQuantity }}
-            />
-          </button>
-        </UpdateCartButton>
-
-        <div className="min-w-8 px-2 text-center" data-test="item-quantity">
-          {optimisticQuantity}
-        </div>
-
-        <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
-          <button
-            type="submit"
-            className="disabled:text-body-subtle inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed"
-            name="increase-quantity"
-            value={nextQuantity}
-            aria-label="Increase quantity"
-            disabled={isOptimistic}
-          >
-            <Icon name="plus" />
-            <OptimisticInput
-              id={optimisticId}
-              data={{ quantity: nextQuantity }}
-            />
-          </button>
-        </UpdateCartButton>
+        <button
+          type="submit"
+          {...register("decrease")}
+          aria-label="Decrease quantity"
+          className="disabled:text-body-subtle inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed"
+          disabled={line.quantity <= 1 || disabled}
+        >
+          <Icon name="minus" />
+        </button>
+        <input
+          id={inputId}
+          {...register("quantity", { value: line.quantity, interactive: true })}
+          data-test="item-quantity"
+          readOnly={disabled}
+          aria-invalid={errorId ? true : undefined}
+          aria-describedby={errorId}
+          className={clsx(
+            "w-12 border-none bg-transparent px-2 py-0 text-center focus:ring-0",
+            isPending && "opacity-50",
+          )}
+        />
+        <button
+          type="submit"
+          {...register("increase")}
+          aria-label="Increase quantity"
+          className="disabled:text-body-subtle inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed"
+          disabled={disabled}
+        >
+          <Icon name="plus" />
+        </button>
       </div>
-    </>
+    </form>
   );
-}
-
-function UpdateCartButton({
-  children,
-  lines,
-}: {
-  children: React.ReactNode;
-  lines: CartLineUpdateInput[];
-}) {
-  const cartRoute = usePrefixPathWithLocale("/cart");
-
-  return (
-    <CartForm
-      route={cartRoute}
-      action={CartForm.ACTIONS.LinesUpdate}
-      inputs={{ lines }}
-    >
-      {(fetcher: FetcherWithComponents<any>) => (
-        <UpdateCartButtonInner fetcher={fetcher}>
-          {children}
-        </UpdateCartButtonInner>
-      )}
-    </CartForm>
-  );
-}
-
-function UpdateCartButtonInner({
-  fetcher,
-  children,
-}: {
-  fetcher: FetcherWithComponents<any>;
-  children: React.ReactNode;
-}) {
-  useCartFetcherSync(fetcher);
-  return <>{children}</>;
 }

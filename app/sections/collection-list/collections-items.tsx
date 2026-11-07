@@ -1,10 +1,10 @@
-import { Pagination } from "@shopify/hydrogen";
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
-import { createSchema, useTranslation } from "@weaverse/hydrogen";
+import { createSchema, useTranslation } from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
-import type { CollectionsQuery } from "storefront-api.generated";
 import { variants } from "~/components/link";
 import { type OverlayProps, overlayInputs } from "~/components/overlay";
+import { Pagination } from "~/components/pagination";
+import type { CollectionsQuery } from "~/routes/collections/list";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { getImageLoadingPriority } from "~/utils/image";

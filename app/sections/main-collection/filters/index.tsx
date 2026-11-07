@@ -1,4 +1,7 @@
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  type WeaverseComponentProps,
+} from "@weaverse/hydrogen/react-router";
 import { Filters } from "./filters";
 
 interface CollectionFiltersData {
@@ -11,7 +14,7 @@ interface CollectionFiltersData {
 }
 
 interface CollectionFiltersProps
-  extends HydrogenComponentProps, CollectionFiltersData {}
+  extends WeaverseComponentProps, CollectionFiltersData {}
 
 function CollectionFilters(props: CollectionFiltersProps) {
   const {

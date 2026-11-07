@@ -1,15 +1,15 @@
-import { createSchema, isBrowser } from "@weaverse/hydrogen";
+import { createSchema, isBrowser } from "@weaverse/hydrogen/react-router";
 import { useLoaderData, useRouteLoaderData } from "react-router";
 import {
   FacebookShareButton,
   PinterestShareButton,
   XShareButton,
 } from "react-share";
-import type { ArticleQuery } from "storefront-api.generated";
 import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { RootLoader } from "~/root";
+import type { ArticleQuery } from "~/routes/blogs/article";
 
 interface BlogPostProps extends SectionProps {
   showTags: boolean;

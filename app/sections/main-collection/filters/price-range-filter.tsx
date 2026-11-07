@@ -4,7 +4,7 @@ import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
-import type { CollectionQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "~/routes/collections/collection-query";
 import { FILTER_URL_PREFIX } from "~/utils/const";
 import { clearPaginationParams, filterInputToParams } from "./filter-utils";
 

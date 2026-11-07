@@ -22,19 +22,20 @@
     "skipLibCheck": true,
     "types": [
       "@shopify/oxygen-workers-types",
+      "node",
       "react-router",
-      "@shopify/hydrogen/react-router-types",
       "vite/client"
     ],
     "paths": {
-      "~/*": ["./app/*"],
-      "storefront-api.generated": ["./storefront-api.generated.d.ts"],
-      "customer-account-api.generated": [
-        "./customer-account-api.generated.d.ts"
-      ]
+      "~/*": ["./app/*"]
     },
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "plugins": [
+      {
+        "name": "@shopify/hydrogen/ts-plugin"
+      }
+    ]
   }
 }

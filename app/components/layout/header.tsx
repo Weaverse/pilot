@@ -1,21 +1,25 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import { cva } from "class-variance-authority";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useRouteError, useRouteLoaderData } from "react-router";
+import {
+  useLocation,
+  useNavigation,
+  useRouteError,
+  useRouteLoaderData,
+} from "react-router";
 import useWindowScroll from "react-use/esm/useWindowScroll";
 import { CartDrawer } from "~/components/cart/cart-drawer";
-import {
-  useCartStore,
-  useCustomerAccessTokenKnown,
-} from "~/components/cart/store";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
 import { useNonce } from "~/utils/csp";
-import { delocalizePath } from "~/utils/locale";
+import {
+  CUSTOMER_ACCESS_TOKEN_PATH,
+  customerAccountLoginPath,
+} from "~/utils/customer-account";
+import { delocalizePath, resolveLocale } from "~/utils/locale";
 import { HeaderCountrySelector } from "./country-selector/header-country-selector";
 import { Logo } from "./logo";
 import { DesktopMenu } from "./menu/desktop-menu";
@@ -102,10 +106,9 @@ function loadShopifyAccountComponents(nonce?: string) {
     // Hydrogen analytics gets a chance to define/update it. Keep this here too
     // so intent-loading stays safe even if root.tsx's tiny bootstrap script is
     // ever removed.
-    const shopifyWindow = window as Window & {
-      Shopify?: Record<string, unknown>;
-    };
-    shopifyWindow.Shopify = shopifyWindow.Shopify || {};
+    if (!window.Shopify) {
+      Object.assign(window, { Shopify: {} });
+    }
     await loadModuleScript(STOREFRONT_WEB_COMPONENTS_SRC, nonce);
     await customElements.whenDefined("shopify-store");
     await loadModuleScript(ACCOUNT_WEB_COMPONENTS_SRC, nonce);
@@ -113,6 +116,72 @@ function loadShopifyAccountComponents(nonce?: string) {
   })();
 
   return shopifyAccountComponentsPromise;
+}
+
+type CustomerAccessTokenState = {
+  /** False until this navigation's token response arrives. */
+  known: boolean;
+  token: string | null;
+};
+
+/**
+ * The signed-in customer's access token for the account web component.
+ *
+ * Fetched after hydration from Pilot's private, no-store
+ * `CUSTOMER_ACCESS_TOKEN_PATH` endpoint: the token must never be embedded in
+ * the SSR document, which stays anonymous so Oxygen can full-page cache it.
+ * It is re-fetched on every navigation (an expired token is refreshed
+ * server-side) and is unknown while a non-GET submission is in flight, since
+ * an action may change the auth state.
+ */
+function useCustomerAccessToken(): CustomerAccessTokenState {
+  const location = useLocation();
+  const navigation = useNavigation();
+  const [state, setState] = useState<CustomerAccessTokenState>({
+    known: false,
+    token: null,
+  });
+  // Set when a submission starts, cleared by the next token response.
+  const [stale, setStale] = useState(false);
+  const isAuthRelevantSubmission =
+    navigation.state !== "idle" &&
+    navigation.formMethod != null &&
+    navigation.formMethod !== "GET";
+  if (isAuthRelevantSubmission && !stale) {
+    setStale(true);
+  }
+
+  useEffect(() => {
+    if (isAuthRelevantSubmission) {
+      return;
+    }
+    const controller = new AbortController();
+    function apply(token: unknown) {
+      // A superseded request is aborted; the next one owns the state.
+      if (controller.signal.aborted) {
+        return;
+      }
+      setStale(false);
+      setState({
+        known: true,
+        token: typeof token === "string" ? token : null,
+      });
+    }
+    fetch(CUSTOMER_ACCESS_TOKEN_PATH, {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    })
+      .then((response) =>
+        response.ok
+          ? (response.json() as Promise<{ customerAccessToken?: unknown }>)
+          : null,
+      )
+      .then((payload) => apply(payload?.customerAccessToken))
+      .catch(() => apply(null));
+    return () => controller.abort();
+  }, [location.key, isAuthRelevantSubmission]);
+
+  return { known: state.known && !stale, token: state.token };
 }
 
 function useIsHomeCheck() {
@@ -203,9 +272,15 @@ export function Header() {
 
 function ShopifyAccountButton() {
   const nonce = useNonce();
-  // The web component navigates to this URL itself, so it must already carry
-  // the market or sign-in drops the shopper onto the default storefront.
-  const signInUrl = usePrefixPathWithLocale("/account/login");
+  const { pathname, search } = useLocation();
+  // The web component navigates to this URL itself (a full document load, as
+  // Hydrogen's unprefixed login handler needs), so it must already carry the
+  // market or sign-in drops the shopper onto the default storefront. After
+  // signing in, the shopper returns to the page they were on.
+  const signInUrl = customerAccountLoginPath(
+    pathname + search,
+    resolveLocale(pathname),
+  );
   const accountRef = useRef<HTMLElement>(null);
   const shouldOpenWhenReadyRef = useRef(false);
   const rootData = useRouteLoaderData<RootLoader>("root");
@@ -218,19 +293,14 @@ function ShopifyAccountButton() {
       customElements.get("shopify-account") !== undefined,
   );
   const [isLoading, setIsLoading] = useState(false);
-  // Bootstrapped client-side via /api/cart (CartStoreSync) — the token must
-  // not be embedded in the SSR document, which stays anonymous so Oxygen
-  // can full-page cache it.
-  const customerAccessToken = useCartStore(
-    (state) => state.customerAccessToken,
-  );
-  // Until the auth state is known — first bootstrap response, re-checked
-  // after auth-mutating navigations like the logout redirect — mounting an
-  // active <shopify-account> with a stale/null token would open the wrong
-  // flow for shoppers who click during that window. Render an inert icon
-  // instead (the old Suspense fallback, which also re-suspended after
-  // actions revalidated the root loader's token promise).
-  const customerAccessTokenKnown = useCustomerAccessTokenKnown();
+  // Until the auth state is known — first token response, re-checked after
+  // auth-mutating submissions — mounting an active <shopify-account> with a
+  // stale/null token would open the wrong flow for shoppers who click during
+  // that window. Render an inert icon instead (the old Suspense fallback,
+  // which also re-suspended after actions revalidated the root loader's
+  // token promise).
+  const { known: customerAccessTokenKnown, token: customerAccessToken } =
+    useCustomerAccessToken();
 
   function warmAccountComponents(openWhenReady = false) {
     if (!(customerAccessTokenKnown && publicAccessToken && publicStoreDomain)) {

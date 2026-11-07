@@ -1,6 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes } from "react";
 import { Icon } from "~/components/icon";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import { cn } from "~/utils/cn";
@@ -73,7 +73,7 @@ export interface ButtonStyleProps {
 export interface ButtonProps
   extends
     VariantProps<typeof variants>,
-    Omit<HTMLAttributes<HTMLButtonElement>, "type">,
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type">,
     Partial<ButtonStyleProps> {
   type?: "button" | "reset" | "submit";
   className?: string;

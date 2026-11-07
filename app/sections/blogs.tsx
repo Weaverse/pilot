@@ -1,10 +1,14 @@
-import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
+import {
+  createSchema,
+  IMAGES_PLACEHOLDERS,
+} from "@weaverse/hydrogen/react-router";
 import { useLoaderData } from "react-router";
-import type { ArticleFragment, BlogQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import type { ArticleFragment } from "~/routes/blogs/article";
+import type { BlogQuery } from "~/routes/blogs/blog";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
@@ -59,7 +63,15 @@ export default function Blogs(props: BlogsProps) {
 }
 
 export interface ArticleCardProps {
-  article: ArticleFragment;
+  // Only the fields the card reads: search results render it too, and they
+  // carry no `author` or `excerptHtml`.
+  article: Pick<
+    ArticleFragment,
+    "handle" | "title" | "publishedAt" | "excerpt"
+  > & {
+    image?: Omit<NonNullable<ArticleFragment["image"]>, "id"> | null;
+    author?: Pick<NonNullable<ArticleFragment["author"]>, "name"> | null;
+  };
   blogHandle: string;
   loading?: HTMLImageElement["loading"];
   showDate: boolean;

@@ -1,13 +1,13 @@
 import {
   createSchema,
-  type HydrogenComponentProps,
+  type WeaverseComponentProps,
   type InspectorGroup,
-} from "@weaverse/hydrogen";
+} from "@weaverse/hydrogen/react-router";
 import { cn } from "~/utils/cn";
 
 type ProductHighlightsLayout = "list" | "grid";
 
-interface ProductHighlightsProps extends HydrogenComponentProps {
+interface ProductHighlightsProps extends WeaverseComponentProps {
   layout: ProductHighlightsLayout;
 }
 

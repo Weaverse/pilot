@@ -1,6 +1,9 @@
 import { readdir, readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import { TranslationProvider, useTranslation } from "@weaverse/hydrogen";
+import {
+  TranslationProvider,
+  useTranslation,
+} from "@weaverse/hydrogen/react-router";
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { resolveThemeContent } from "../../app/.server/translations";

@@ -1,5 +1,11 @@
+import {
+  gql,
+  type InferResult,
+  type SourceOf,
+} from "@shopify/hydrogen/customer-account";
+
 // NOTE: https://shopify.dev/docs/api/customer/latest/queries/order
-export const CUSTOMER_ORDER_QUERY = `#graphql
+export const CUSTOMER_ORDER_QUERY = gql(`#graphql
   fragment OrderMoney on MoneyV2 {
     amount
     currencyCode
@@ -100,4 +106,9 @@ export const CUSTOMER_ORDER_QUERY = `#graphql
       }
     }
   }
-` as const;
+`);
+
+export type OrderQuery = InferResult<SourceOf<typeof CUSTOMER_ORDER_QUERY>>;
+export type OrderFragment = NonNullable<OrderQuery["order"]>;
+export type OrderLineItemFullFragment =
+  OrderFragment["lineItems"]["nodes"][number];
