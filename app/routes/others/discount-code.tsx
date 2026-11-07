@@ -1,6 +1,6 @@
 import { cartQueries, createCartCookie, getCartId } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
-import { redirect } from "react-router";
+import { redirect, redirectDocument } from "react-router";
 import { localizedPathForRequest } from "~/utils/locale";
 import { safeRedirectPath } from "~/utils/safe-redirect";
 import { unwrapStorefront } from "~/utils/storefront";
@@ -87,7 +87,9 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
   // Using set-cookie on a 303 redirect will not work if the domain origin have port number (:3000)
   // If there is no cart id and a new cart id is created in the progress, it will not be set in the cookie
   // on localhost:3000
-  return redirect(redirectUrl, {
+  // A document redirect, so a client-side link here reloads the page: the
+  // cart store loads the cart only on mount and would keep the old totals.
+  return redirectDocument(redirectUrl, {
     status: 303,
     headers,
   });
