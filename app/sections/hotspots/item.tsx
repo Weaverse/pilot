@@ -99,9 +99,8 @@ export const loader = async (
   const productHandle = data.product.handle;
   const result = await storefront.graphql(PRODUCT_QUERY, {
     // `$country`/`$language` come from the storefront client's closure, which
-    // holds the Shopify provider enum. `weaverse.storefront.i18n` is
-    // deliberately the market's public identity for the Translation Manager,
-    // and bare `ZH` resolves to English.
+    // holds the Shopify provider enum. Never pass the market's public code
+    // here: bare `ZH` resolves to English.
     variables: {
       handle: productHandle,
       selectedOptions: [],

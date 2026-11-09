@@ -6,7 +6,6 @@ import {
   resolveRequestLocale,
   type Storefront,
 } from "~/.server/storefront";
-import type { Locale } from "~/utils/locale";
 import { components } from "~/weaverse/components";
 import { throwRouteFailures } from "~/weaverse/load-failure";
 import { themeSchema } from "~/weaverse/schema.server";
@@ -49,9 +48,16 @@ export async function createAppContext(
   // A Weaverse outage must not answer like a missing page: page loads
   // reject on failure and leave the route as a retryable 503 (see
   // `throwRouteFailures`). Missing pages still resolve and stay 404.
+  //
+  // Weaverse keys Translation Manager overrides by the market's public locale
+  // (lowercase `${language}-${country}`), so it gets the canonical market as
+  // `locale`. The storefront client keeps Shopify's provider language
+  // (`ZH_TW`, not `ZH`): handing it to Weaverse would ask for `zh_tw-hk`,
+  // which matches nothing and silently falls back to theme defaults.
   const weaverse = throwRouteFailures(
     new WeaverseClient({
-      storefront: weaverseStorefront(storefront, resolveRequestLocale(request)),
+      storefront,
+      locale: resolveRequestLocale(request),
       env,
       cache,
       waitUntil,
@@ -75,28 +81,5 @@ export async function createAppContext(
 }
 
 export type AppContext = Awaited<ReturnType<typeof createAppContext>>;
-
-/**
- * The storefront client as Weaverse should see it.
- *
- * Weaverse keys Translation Manager overrides by the locale a merchant picks
- * in Studio — the market's public BCP-47 identity — and builds that key as
- * lowercase `${language}-${country}` from `i18n`. Shopify wants the opposite
- * for Chinese: a script-specific `LanguageCode` its enum defines. Handing one
- * identity to both asks the translation API for `zh_tw-hk`, which matches
- * nothing and silently resolves to theme defaults.
- *
- * `market` is the canonical entry, whose `language` is the public code; the
- * storefront's own `i18n` already carries the Shopify enum. `graphql()` reads
- * `$country`/`$language` from the request context, not from this property,
- * so re-labelling `i18n` changes what Weaverse reads without weakening what
- * Shopify receives (verified in Weaverse/pilot#207).
- */
-export function weaverseStorefront<T extends { i18n: Locale }>(
-  storefront: T,
-  market: Locale,
-): T {
-  return { ...storefront, i18n: market };
-}
 
 export type { Storefront };

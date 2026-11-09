@@ -21,9 +21,8 @@ export let loader = async ({
     storefront
       .graphql(PRODUCT_QUERY, {
         // `$country`/`$language` come from the storefront client's closure,
-        // which holds the Shopify provider enum. `weaverse.storefront.i18n` is
-        // deliberately the market's public identity for the Translation
-        // Manager, and bare `ZH` resolves to English.
+        // which holds the Shopify provider enum. Never pass the market's
+        // public code here: bare `ZH` resolves to English.
         variables: { handle, selectedOptions: [] },
         cache: CACHE_DEFAULT,
       })
