@@ -64,10 +64,8 @@ export const loader = async ({
   );
   if (ids?.length) {
     // `$country`/`$language` are left to Hydrogen, which fills them from the
-    // request context — the Shopify provider enum. Passing them explicitly
-    // would send `weaverse.storefront.i18n.language`, which is the market's
-    // public code because Weaverse keys translations by it, and bare `ZH`
-    // resolves to English.
+    // request context — the Shopify provider enum. Passing the market's
+    // public code instead would send bare `ZH`, which resolves to English.
     const { nodes } = unwrapStorefront(
       await weaverse.storefront.graphql(COLLECTIONS_QUERY, {
         variables: { ids },

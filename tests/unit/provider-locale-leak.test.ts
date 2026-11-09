@@ -8,11 +8,11 @@ import { loadAppModule } from "../support/render-app";
  * The two identities must stay apart at the boundary that actually issues
  * requests, not merely in the object that holds them.
  *
- * `weaverse.storefront.i18n` carries the market's public identity because the
- * installed client derives its Translation Manager locale from it. That object
- * is also what section loaders reach for, so any query that copies
- * `i18n.language` into its own variables sends `ZH` to Shopify — and this
- * store resolves bare `ZH` to English, so `/zh-cn` would serve an English
+ * The Weaverse client gets the market's public identity as its `locale`, for
+ * its Translation Manager key, while `weaverse.storefront` is the same client
+ * as `context.storefront`, carrying Shopify's provider language. Any query
+ * that copied the public `ZH` into its own variables would reach Shopify, and
+ * this store resolves bare `ZH` to English, so `/zh-cn` would serve an English
  * catalogue underneath correct Chinese theme copy.
  *
  * Hydrogen 2026.10 fills `$country`/`$language` from the request context and
@@ -96,9 +96,8 @@ test("every featured-products selection mode queries with the provider language"
   //
   // The `auto` case runs through the real section loader rather than calling
   // its helper directly, because the section hands the helper
-  // `weaverse.storefront` — the public identity — while a test calling
-  // `getFeaturedProducts(context.storefront)` hands it the provider enum and
-  // would pass no matter what the section does.
+  // `weaverse.storefront` rather than `context.storefront`, so only the real
+  // loader shows what that client sends.
   const { loader } = await loadAppModule<{
     loader: (args: { data: unknown; weaverse: unknown }) => Promise<unknown>;
   }>("sections/featured-products/index.tsx");
@@ -236,8 +235,8 @@ test("no Shopify query ever collapses to the bare public language", async () => 
 test("the page route queries Shopify with the provider language", async () => {
   // `regular-page` destructures its client off `context.weaverse`, so the
   // earlier sweep — which grepped `weaverse.storefront.i18n` — did not see it.
-  // The alias makes no difference to what is sent: that object carries the
-  // public identity, and copying it into `$language` sends `ZH`.
+  // The alias makes no difference to what is sent: it must carry the provider
+  // language, never the public `ZH`.
   const { loader } = await loadAppModule<{
     loader: (args: {
       request: Request;
@@ -326,18 +325,16 @@ test("page and article keep a non-Chinese market unchanged", async () => {
   }).toEqual({ page: ["DE"], article: ["DE"], translation: ["de-de"] });
 });
 
-test("the two clients keep different language identities", async () => {
-  // The invariant every test above depends on, asserted directly so a change
-  // to `weaverseStorefront` cannot quietly turn them into tautologies. If both
-  // clients ever agreed, the leak would be unobservable and the suite would
-  // pass while shipping English.
-  const context = await createTestContext("https://shop.test/zh-hk/");
+test("Weaverse gets the public locale while Shopify keeps the provider language", async () => {
+  // The two identities stay apart: the storefront client Weaverse holds sends
+  // `ZH_TW`, while the Translation Manager is asked for the market's public
+  // `zh-hk`. If both agreed, one of the two providers would get the wrong code.
+  const sent = await sentBy("/zh-hk", async () => undefined);
 
   expect({
-    shopify: context.storefront.i18n.language,
-    weaverse: context.weaverse.storefront.i18n.language,
-    country: context.storefront.i18n.country,
-  }).toEqual({ shopify: "ZH_TW", weaverse: "ZH", country: "HK" });
+    shopify: [...new Set(sent.shopify)],
+    translation: [...new Set(sent.translation)],
+  }).toEqual({ shopify: [], translation: ["zh-hk"] });
 });
 
 test("shared product helpers never send the public language", async () => {

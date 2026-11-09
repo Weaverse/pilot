@@ -20,7 +20,7 @@ Pilot runs on `@shopify/hydrogen@^2026.10` (Hydrogen as a server-handler library
   - on a 404, a market-aware `handleShopifyRedirects`.
   Loaders keep reading `context.storefront`, `context.weaverse`, `context.customerAccount`, `context.session` and `context.env`, typed by module augmentation.
 - **Data layer.** Every Storefront query is a `gql()` document run with `client.graphql(doc, {variables, cache})`. Each call checks `errors` and passes an explicit `cache`, because the classic default cache is gone. `$country`/`$language` are injected from the request context, not passed per call. Customer Account documents use `gql` from `@shopify/hydrogen/customer-account`.
-- **Markets.** `app/utils/locale.ts` stays the source of truth. Shopify receives the provider language (`ZH_CN`/`ZH_TW`); Weaverse, URLs and theme bundles receive the public market locale (the `weaverseStorefront` relabel). The country selector switches market with a client-side navigation: it posts the new country to `/api/cart/buyer-identity`, refreshes the cart store, and points the `window.Shopify` market fields (country, currency, locale, routes root) at the new market, because `ShopifyScripts` reads them only once. Without JavaScript it stays a form post that redirects.
+- **Markets.** `app/utils/locale.ts` stays the source of truth. Shopify receives the provider language (`ZH_CN`/`ZH_TW`); Weaverse, URLs and theme bundles receive the public market locale: Weaverse through `WeaverseClient`'s `locale` option (`@weaverse/hydrogen` 6.1, Weaverse/weaverse#568), which replaced the `weaverseStorefront` relabel of the storefront client. The country selector switches market with a client-side navigation: it posts the new country to `/api/cart/buyer-identity`, refreshes the cart store, and points the `window.Shopify` market fields (country, currency, locale, routes root) at the new market, because `ShopifyScripts` reads them only once. Without JavaScript it stays a form post that redirects.
 - **Cart.**
   - Library cart: `createCartServerHandlers({fragment})` at `/api/cart`, `CartProvider` with no server `initialData` (keeps the anonymous full-page cache), `useCart`, `useCartForm`, Standard Actions.
   - Pilot keeps, as app code:
@@ -124,7 +124,7 @@ Decisions from the #207 spike:
 - A cart created in an enabled market gets that country, but it keeps that country when the shopper switches market, so the sync stays.
 - Handler paths are exact and unprefixed, so the market comes from the `Referer`.
 - Invalid gift card codes return no `userErrors`.
-- The relabelled `weaverseStorefront` keeps the provider language on the wire.
+- Passing the market as `locale` keeps the provider language on the wire: `weaverse.storefront` is the same client as `context.storefront`.
 - The mini-oxygen `compatibilityDate` override isn't needed.
 
 Main files: `package.json`, `package-lock.json`, `server.ts`, `env.d.ts`, `vite.config.ts`, `react-router.config.ts`, `tsconfig.json`, `.gitignore`, `.env.example`, `codegen.ts` (deleted), `*.generated.d.ts` (deleted), `app/root.tsx`, `app/entry.server.tsx`, `app/routes.ts`, `app/.server/*`, `app/lib/*` (new), `app/graphql/*`, `app/routes/**`, `app/sections/**` (imports and loaders), `app/components/{cart,product,product-media,layout,root,customer}/**`, `app/components/image.tsx`, `app/utils/{cache,seo,locale}.ts`, `app/weaverse/*`, `tests/**`, `AGENTS.md`, `README.md`, `.weaverse/docs/*`.
