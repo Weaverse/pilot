@@ -1,26 +1,27 @@
 # Overview
 
-This prompt describes how to implement "Combined Listings" in the **Pilot theme** — a Weaverse-powered Hydrogen storefront built with React Router 7 and Tailwind CSS v4. Below is a "recipe" that contains the steps to apply to the Pilot theme to achieve the desired outcome.
+This prompt describes how to implement "Combined Listings" in the **Pilot theme** — a Weaverse-powered storefront on Hydrogen 2026.10 (`@shopify/hydrogen` as a request-handler library), React Router 7 and Tailwind CSS v4. Below is a "recipe" that contains the steps to apply to the Pilot theme to achieve the desired outcome.
 If there are any prerequisites, the recipe below will explain them; if the user is trying to implement the feature described in this recipe, make sure to prominently mention the prerequisites and any other preliminary instructions, as well as followups.
 If the user is asking on how to implement the feature from scratch, please first describe the feature in a general way before jumping into the implementation details.
 Please note that the recipe steps below are not necessarily ordered in the way they should be executed, as it depends on the user's needs and the specific details of the project. The recipe steps descriptions should allow you to understand what is required to be done in a certain order and what is not.
 
 **Key Pilot architecture notes:**
-- Pilot uses **Weaverse sections** in `app/sections/main-product/` instead of monolithic components. Each section has its own `createSchema` export, `loader` (optional), and default export.
-- There is NO single `ProductForm` component. Instead, ATC buttons, quantity selector, variant selector, prices, and media are all separate Weaverse sections.
-- Pilot uses Tailwind CSS v4 — no raw CSS files are needed for styling.
-- Import paths use `~/.server/`, `~/utils/`, `~/components/`, `~/sections/`, and `~/graphql/`.
-- Generated types come from `storefront-api.generated` (not `storefrontapi.generated`).
-- Redirects use `import { redirect } from "react-router"` (not `@shopify/remix-oxygen`).
-- Pilot uses semicolons and double quotes as its code style convention.
+- Product page parts are separate Weaverse sections in `app/sections/main-product/` (buy buttons, quantity selector, variant selector, prices, media). Each has its own `createSchema` export and default export.
+- Every product form reads the selection from Hydrogen's product store: the product route renders `ProductProvider` (`app/components/product/product-form.tsx`, built with `createProductComponents` from `@shopify/hydrogen/react`), and sections read it with `useProduct()`, `useProductForm()` and `useSelectedVariant(product)`.
+- GraphQL documents are `gql()` documents run with `storefront.graphql(doc, { variables, cache })`. Result types are inferred from the documents (`ProductQuery` in `~/graphql/queries`, `ProductCardFragment` in `~/graphql/fragments`); there is no codegen step.
+- Don't pass `country`/`language` in `variables`: the client injects them.
+- Pilot uses semicolons and double quotes.
+
+**Already built into Pilot:** option values that belong to another product of a combined listing link to that product (`app/components/product/product-option-values.tsx`, where `value.handle !== product.handle`). This recipe adds what Pilot leaves out: detecting the parent product, hiding it from product lists, and rendering its page as a listing rather than a purchasable product.
 
 # AI model verification steps
 
-- Never edit generated files (ending with .d.ts) directly; instead, run the `npm run codegen` command to update them (if the command is available).
+- Run `npm run typecheck` after applying the recipe. It runs `react-router typegen`, `tsc` and `hydrogen gql check --fail-on-warn`, which validates the GraphQL fields added below.
+- Never call hooks after an early `return` in a section: guard after the last hook, as the steps below do.
 
 # Summary
 
-Handle combined listings on product pages and in search results.
+Handle combined listings on product pages and in product lists.
 
 # User Intent Recognition
 
@@ -36,7 +37,9 @@ Handle combined listings on product pages and in search results.
 
 <troubleshooting>
 - **Issue**: Combined listings are being displayed in the product list.
-  **Solution**: Make sure to tag combined listing parent products in the Shopify admin and use that tag to filter out combined listings from the product list in the GraphQL query.
+  **Solution**: Make sure to tag combined listing parent products in the Shopify admin (the tag in `COMBINED_LISTINGS_CONFIGS.combinedListingTag`) and that `hideCombinedListingsFromProductList` is `true`.
+- **Issue**: The parent product page still shows Add to cart.
+  **Solution**: `isCombinedListing()` reads `product.tags`. Check that `tags` was added to `PRODUCT_QUERY` (product page) and `PRODUCT_CARD_FRAGMENT` (cards and lists).
 </troubleshooting>
 
 # Recipe Implementation
@@ -47,16 +50,18 @@ Here's the combined-listings recipe for the Pilot theme:
 
 ## Description
 
-This recipe lets you more precisely display and manage [combined listings](https://help.shopify.com/en/manual/products/combined-listings-app) on product pages and in search results for your Pilot-powered Hydrogen storefront. A combined listing groups separate products together into a single product listing using a shared option like color or size.
+This recipe lets you more precisely display and manage [combined listings](https://help.shopify.com/en/manual/products/combined-listings-app) on product pages and in product lists for your Pilot storefront. A combined listing groups separate products together into a single product listing using a shared option like color or size.
 Each product appears as a variant but can have its own title, description, URL, and images.
 In this recipe, you'll make the following changes:
 
 1. Set up the Combined Listings app in your Shopify admin and group relevant products together as combined listings.
-2. Configure how combined listings will be handled on your storefront.
-3. Hide the **Add to cart** button and quantity selector for the parent products of combined listings.
-4. Update variant option styling so combined listing parents don't show a "selected" state.
-5. Update the product media section to prepend the featured image for combined listings.
-6. Show a range of prices for combined listings on both the product page and product cards.
+2. Add a configuration and helper file.
+3. Query the parent's tags (and the featured image size).
+4. Hide the buy buttons and quantity selector, and the "selected" state of option values, for parent products.
+5. Prepend the parent's featured image to the product media.
+6. Show a range of prices for parents on the product page and product cards.
+7. Optionally redirect the parent page to its first child product.
+8. Filter parents out of product lists.
 
 ## Requirements
 
@@ -65,7 +70,7 @@ In this recipe, you'll make the following changes:
 
 ## New files added to the template by this recipe
 
-- app/utils/combined-listings.ts
+- `app/utils/combined-listings.ts`
 
 ## Steps
 
@@ -75,586 +80,350 @@ In this recipe, you'll make the following changes:
 
 2. [Create combined listing products in your store](https://help.shopify.com/en/manual/products/combined-listings-app#creating-a-combined-listing).
 
-3. Add tags to the parent products of combined listings to indicate that they're part of a combined listing (for example `combined`).
+3. Add a tag to the parent products of combined listings to mark them (for example `combined`).
 
-### Step 2: Configure combined listings behavior
+### Step 2: Add the combined listings helpers
 
-You can customize how the parent products of combined listings are retrieved and displayed.
+Create `app/utils/combined-listings.ts`. Edit `COMBINED_LISTINGS_CONFIGS` to customize the behavior.
 
-To make this process easier, we included a configuration object in the `combined-listings.ts` file that you can edit to customize according to your preferences.
-
-```ts
-// Edit these values to customize the combined listings behaviors
-export const COMBINED_LISTINGS_CONFIGS = {
-  // If true, loading the product page will redirect to the first variant
-  redirectToFirstVariant: false,
-  // The tag that indicates a combined listing
-  combinedListingTag: "combined",
-  // If true, combined listings will not be shown in the product list
-  hideCombinedListingsFromProductList: true,
-};
-```
-
-### Step 3: Add combined listings utilities
-
-Create a new `combined-listings.ts` file that contains utilities and settings for handling combined listings.
-
-#### File: [combined-listings.ts](app/utils/combined-listings.ts)
+#### File: app/utils/combined-listings.ts
 
 ```ts
 // Edit these values to customize combined listings' behavior
 export const COMBINED_LISTINGS_CONFIGS = {
-  // If true, loading the product page will redirect to the first variant
+  // If true, loading a parent product page redirects to its first variant's product
   redirectToFirstVariant: false,
-  // The tag that indicates a combined listing
+  // The tag that marks the parent product of a combined listing
   combinedListingTag: "combined",
-  // If true, combined listings will not be shown in the product list
+  // If true, combined listing parents are hidden from product lists
   hideCombinedListingsFromProductList: true,
 };
 
+/** A Storefront API `query` filter that drops combined listing parents. */
 export const maybeFilterOutCombinedListingsQuery =
   COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList
     ? `NOT tag:${COMBINED_LISTINGS_CONFIGS.combinedListingTag}`
     : "";
 
-interface ProductWithTags {
-  tags: string[];
-}
-
-function isProductWithTags(u: unknown): u is ProductWithTags {
-  const maybe = u as ProductWithTags;
+/** Whether `product` is the parent product of a combined listing. */
+export function isCombinedListing(product: unknown): boolean {
+  if (!product || typeof product !== "object" || !("tags" in product)) {
+    return false;
+  }
+  const { tags } = product;
   return (
-    u != null &&
-    typeof u === "object" &&
-    "tags" in maybe &&
-    Array.isArray(maybe.tags)
-  );
-}
-
-export function isCombinedListing(product: unknown) {
-  return (
-    isProductWithTags(product) &&
-    product.tags.includes(COMBINED_LISTINGS_CONFIGS.combinedListingTag)
+    Array.isArray(tags) &&
+    tags.includes(COMBINED_LISTINGS_CONFIGS.combinedListingTag)
   );
 }
 ```
 
-### Step 4: Hide ATC button, quantity selector, and update variant option styling
+### Step 3: Query the tags
 
-In Pilot, the Add to Cart button and quantity selector are separate Weaverse sections. Update each to return `null` for combined listing parent products. Also update the variant selector chain to pass a `combinedListing` prop and adjust styling.
+Add `tags` to the product page query and the product card fragment. The featured image also needs its size so it can be rendered as a media item (Step 5). `PRODUCT_QUERY` already selects `priceRange`.
 
-#### File: /app/sections/main-product/product-atc-buttons.tsx
+#### File: app/graphql/queries.ts
 
 ```diff
-@@ -8,6 +8,7 @@ import { useLoaderData } from "react-router";
- import { AddToCartButton } from "~/components/product/add-to-cart-button";
+@@ -25,10 +25,13 @@ export const PRODUCT_QUERY = gql(
+       requiresSellingPlan
+       encodedVariantExistence
+       encodedVariantAvailability
++      tags
+       featuredImage {
+         id
+         url
+         altText
++        width
++        height
+       }
+       priceRange {
+         minVariantPrice {
+```
+
+#### File: app/graphql/fragments.ts
+
+```diff
+@@ -91,6 +91,7 @@ export const PRODUCT_CARD_FRAGMENT = gql(
+     publishedAt
+     handle
+     vendor
++    tags
+     images(first: 50) {
+       nodes {
+         id
+```
+
+### Step 4: Hide the buy buttons and the selected state for parents
+
+A parent product isn't purchasable: shoppers pick a child product through the variant selector, whose values already link to the child products. The sticky add-to-cart bar is rendered by the buy buttons section, so it's hidden too. Return after the section's hooks, never before them.
+
+#### File: app/sections/main-product/buy-buttons/index.tsx
+
+```diff
+@@ -9,6 +9,7 @@ import { AddToCartButton } from "~/components/product/add-to-cart-button";
+ import { ProductShopPayButton } from "~/components/product/shop-pay-button";
+ import { useSelectedVariant } from "~/components/product/product-form";
  import type { loader as productRouteLoader } from "~/routes/products/product";
 +import { isCombinedListing } from "~/utils/combined-listings";
- import { useProductQtyStore } from "./product-quantity-selector";
-
-@@ -30,6 +31,11 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
-   const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
-   const { quantity } = useProductQtyStore();
-
-+  const combinedListing = isCombinedListing(product);
-+
-+  if (!product || combinedListing) {
+ import { useProductQuantity } from "../product-quantity-selector";
+ import { StickyATCBar } from "./sticky-atc-bar";
+ import { useATCVisibilityStore } from "./store";
+@@ -57,6 +58,12 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
+ 
+   const selectedVariant = useSelectedVariant(product);
+ 
++  // A combined listing parent isn't purchasable: shoppers pick a child
++  // product through the variant selector. Also hides the sticky bar.
++  if (isCombinedListing(product)) {
 +    return null;
 +  }
 +
-   const selectedVariant = useOptimisticVariant(
+   const isBundle = Boolean(product.isBundle?.requiresComponents);
+ 
+   let atcButtonText = "Add to cart";
 ```
 
-#### File: /app/sections/main-product/product-quantity-selector.tsx
-
-```diff
-@@ -4,6 +4,7 @@ import { create } from "zustand";
- import { Quantity } from "~/components/product/quantity";
- import type { loader as productRouteLoader } from "~/routes/products/product";
-+import { isCombinedListing } from "~/utils/combined-listings";
-
-@@ -24,6 +25,12 @@ export default function ProductQuantitySelector(
-   const { product } = useLoaderData<typeof productRouteLoader>();
-   const { quantity, setQuantity } = useProductQtyStore();
-
-+  const combinedListing = isCombinedListing(product);
-+
-+  if (!product || combinedListing) {
-+    return null;
-+  }
-+
-   return (
-```
-
-#### File: /app/sections/main-product/product-variant-selector.tsx
-
-The variant selector section detects if the product is a combined listing and passes the flag down.
-
-```diff
-@@ -5,6 +5,7 @@ import {
- import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
- import { useLoaderData } from "react-router";
- import type { loader as productRouteLoader } from "~/routes/products/product";
-+import { isCombinedListing } from "~/utils/combined-listings";
- import { ProductVariants } from "./variants";
-
-@@ -27,10 +28,13 @@ export default function ProductVariantSelector(
-     selectedOrFirstAvailableVariant: selectedVariant,
-   });
-
-+  const combinedListing = isCombinedListing(product);
-+
-   return (
-     <div ref={ref} {...rest}>
-       <ProductVariants
-         productOptions={productOptions}
-         selectedVariant={selectedVariant}
-+        combinedListing={combinedListing}
-       />
-     </div>
-```
-
-#### File: /app/sections/main-product/variants.tsx
-
-The `ProductVariants` component passes `combinedListing` through to `ProductOptionValues`.
-
-```diff
-@@ -1,5 +1,6 @@
- import type { MappedProductOptions } from "@shopify/hydrogen";
--import type { ProductVariantFragment } from "storefrontapi.generated";
-+import type { ProductVariantFragment } from "storefront-api.generated";
- import { ProductOptionValues } from "~/components/product/product-option-values";
-
- export function ProductVariants({
-   productOptions,
-   selectedVariant,
-+  combinedListing,
- }: {
-   productOptions: MappedProductOptions[];
-   selectedVariant: ProductVariantFragment;
-+  combinedListing?: boolean;
- }) {
-@@ -23,6 +25,7 @@ export function ProductVariants({
-             <ProductOptionValues
-               option={option}
-+              combinedListing={combinedListing}
-             />
-```
-
-#### File: /app/components/product/product-option-values.tsx
-
-Three changes in this file:
-1. Add `combinedListing?: boolean` prop to both `ProductOptionValues` and `OptionValue`.
-2. Set `replace: !combinedListing` in `linkProps` so navigation to a combined listing child doesn't replace history.
-3. Change all `selected` conditions to `selected && !combinedListing` across all 4 rendering modes (swatch, button, image, default).
-
-```diff
-@@ -30,9 +30,11 @@ export function ProductOptionValues({
-   option,
-   onOptionChange,
-+  combinedListing,
- }: {
-   option: MappedProductOptions;
-   onOptionChange?: (optionName: string, value: string) => void;
-+  combinedListing?: boolean;
- }) {
-
-@@ -119,6 +121,7 @@ export function ProductOptionValues({
-               <OptionValue
-                 optionName={optionName}
-                 value={optionValue}
-                 onOptionChange={onOptionChange}
-+                combinedListing={combinedListing}
-               />
-
-@@ -143,9 +146,11 @@ function OptionValue({
-   optionName,
-   value,
-   onOptionChange,
-+  combinedListing,
- }: {
-   optionName: string;
-   value: MappedProductOptions["optionValues"][number];
-   onOptionChange?: (optionName: string, value: string) => void;
-+  combinedListing?: boolean;
- }) {
-
-@@ -170,7 +175,7 @@ function OptionValue({
-   const linkProps: LinkProps = {
-     to,
-     preventScrollReset: true,
-     prefetch: "intent",
--    replace: true,
-+    replace: !combinedListing,
-   };
-
-   // Swatch rendering:
-@@ -218,7 +223,7 @@ function OptionValue({
-         className={cn(
-           "flex aspect-square size-(--option-swatch-size)",
-           "overflow-hidden rounded-full",
-           "outline-1 outline-offset-2 transition-[outline-color]",
-           !exists && "cursor-not-allowed",
--          selected
-+          selected && !combinedListing
-             ? "outline-line"
-             : "outline-transparent hover:outline-line",
-           !available && "diagonal",
-
-   // Button rendering:
-@@ -252,7 +257,7 @@ function OptionValue({
-         className={cn(
-           "border border-line-subtle px-4 py-2.5 text-center transition-colors",
-           !exists && "cursor-not-allowed",
--          selected
-+          selected && !combinedListing
-             ? [
-                 available ? "bg-body text-body-inverse" : "text-body-subtle",
-                 "border-body",
-
-   // Image rendering:
-@@ -274,7 +279,7 @@ function OptionValue({
-         className={cn(
-           "flex h-auto w-(--option-image-width) items-center justify-center p-1",
-           "border border-line-subtle text-center transition-colors",
-           !exists && "cursor-not-allowed",
--          selected
-+          selected && !combinedListing
-             ? [
-                 available ? "text-body-inverse" : "text-body-subtle",
-                 "border-body",
-
-   // Default fallback rendering:
-@@ -304,7 +309,7 @@ function OptionValue({
-       className={cn(
-         "border-b py-0.5",
-         !exists && "cursor-not-allowed",
--        selected
-+        selected && !combinedListing
-           ? [available ? "border-line" : "border-line-subtle"]
-           : [
-               "border-transparent",
-```
-
-### Step 5: Extend the Product Media section
-
-Update `product-media.tsx` to prepend the combined listing parent's featured image to the media list.
-
-#### File: /app/sections/main-product/product-media.tsx
-
-```diff
-@@ -6,6 +6,7 @@ import {
- } from "~/components/product-media";
- import type { loader as productRouteLoader } from "~/routes/products/product";
- import { cn } from "~/utils/cn";
-+import { isCombinedListing } from "~/utils/combined-listings";
-
-@@ -37,6 +38,20 @@ export default function ProductMediaComponent(
-   const selectedVariant = product?.selectedOrFirstAvailableVariant;
-
-+  const combinedListing = isCombinedListing(product);
-+  const media =
-+    combinedListing && product?.featuredImage
-+      ? [
-+          {
-+            __typename: "MediaImage" as const,
-+            id: product.featuredImage.id,
-+            mediaContentType: "IMAGE" as const,
-+            alt: product.featuredImage.altText,
-+            previewImage: product.featuredImage,
-+            image: product.featuredImage,
-+          },
-+          ...(product?.media?.nodes || []),
-+        ]
-+      : product?.media?.nodes || [];
-
-   return (
-     <div ...>
-       <ProductMedia
-         ...
--        media={product?.media?.nodes || []}
-+        media={media}
-```
-
-### Step 6: Show a range of prices for combined listings
-
-Update the product prices section to show a "From ... To ..." price range, and update the product card to show price ranges.
-
-#### File: /app/sections/main-product/product-prices.tsx
+#### File: app/sections/main-product/product-quantity-selector.tsx
 
 ```diff
 @@ -7,6 +7,7 @@ import { useLoaderData } from "react-router";
+ import { create } from "zustand";
+ import { Quantity } from "~/components/product/quantity";
+ import type { loader as productRouteLoader } from "~/routes/products/product";
++import { isCombinedListing } from "~/utils/combined-listings";
+ 
+ /**
+  * The quantity chosen on the product page, and the product it belongs to.
+@@ -75,7 +76,7 @@ export default function ProductQuantitySelector(
+   const { product } = useLoaderData<typeof productRouteLoader>();
+   const { quantity, setQuantity } = useProductQuantity(product?.id);
+ 
+-  if (!product) {
++  if (!product || isCombinedListing(product)) {
+     return null;
+   }
+ 
+```
+
+A parent has no variant of its own, so no option value should look selected and the option legend shouldn't name one.
+
+#### File: app/components/product/product-option-values.tsx
+
+```diff
+@@ -12,6 +12,7 @@ import {
+ import { ShopifyImage } from "~/components/shopify-image";
+ import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
+ import { cn } from "~/utils/cn";
++import { isCombinedListing } from "~/utils/combined-listings";
+ import { localizePath, resolveLocale } from "~/utils/locale";
+ import { isLightColor, isValidColor } from "~/utils/misc";
+ 
+@@ -258,7 +259,9 @@ function getOptionValueAppearance(
+   optionName: string,
+   value: OptionValueState,
+ ): { className: string; label?: string; children: ReactNode } {
+-  const { name, selected, available, exists, swatch } = value;
++  const { name, available, exists, swatch } = value;
++  // A combined listing parent has no variant of its own to mark as selected.
++  const selected = value.selected && !isCombinedListing(product);
+ 
+   if (OPTIONS_AS_SWATCH.includes(optionName)) {
+     const swatchColor = swatch?.color || name;
+```
+
+#### File: app/sections/main-product/variants.tsx
+
+```diff
+@@ -4,6 +4,7 @@ import {
+   useProduct,
+ } from "~/components/product/product-form";
+ import { ScrollReveal } from "~/components/scroll-reveal";
++import { isCombinedListing } from "~/utils/combined-listings";
+ import { hasOnlyDefaultVariant } from "~/utils/product";
+ 
+ /**
+@@ -13,6 +14,7 @@ import { hasOnlyDefaultVariant } from "~/utils/product";
+  */
+ export function ProductVariants({ product }: { product: ProductFormData }) {
+   const { options } = useProduct();
++  const combinedListing = isCombinedListing(product);
+ 
+   if (hasOnlyDefaultVariant(product.options)) {
+     return null;
+@@ -21,7 +23,9 @@ export function ProductVariants({ product }: { product: ProductFormData }) {
+   return (
+     <ScrollReveal className="product-form space-y-5">
+       {options.map((option) => {
+-        const selected = option.values.find((value) => value.selected);
++        const selected = combinedListing
++          ? undefined
++          : option.values.find((value) => value.selected);
+         return (
+           <div className="product-options space-y-2" key={option.name}>
+             <legend className="leading-tight">
+```
+
+### Step 5: Prepend the parent's featured image
+
+#### File: app/sections/main-product/product-media.tsx
+
+```diff
+@@ -10,6 +10,7 @@ import {
+ import { useSelectedVariant } from "~/components/product/product-form";
+ import type { loader as productRouteLoader } from "~/routes/products/product";
+ import { cn } from "~/utils/cn";
++import { isCombinedListing } from "~/utils/combined-listings";
+ 
+ interface ProductMediaComponentProps
+   extends
+@@ -38,7 +39,23 @@ export default function ProductMediaComponent(
+   const { product } = useLoaderData<typeof productRouteLoader>();
+ 
+   const selectedVariant = useSelectedVariant(product);
+-  const media = product?.media?.nodes || [];
++  const productMedia = product?.media?.nodes || [];
++  // Show a combined listing parent's own featured image first.
++  const featuredImage = product?.featuredImage;
++  const media =
++    isCombinedListing(product) && featuredImage
++      ? [
++          {
++            __typename: "MediaImage" as const,
++            mediaContentType: "IMAGE" as const,
++            id: featuredImage.id ?? "featured-image",
++            alt: featuredImage.altText,
++            previewImage: featuredImage,
++            image: featuredImage,
++          },
++          ...productMedia,
++        ]
++      : productMedia;
+ 
+   return (
+     <div
+```
+
+### Step 6: Show a range of prices
+
+#### File: app/sections/main-product/product-prices.tsx
+
+```diff
+@@ -6,6 +6,7 @@ import { useLoaderData } from "react-router";
+ import { useSelectedVariant } from "~/components/product/product-form";
  import { VariantPrices } from "~/components/product/variant-prices";
  import type { loader as productRouteLoader } from "~/routes/products/product";
 +import { isCombinedListing } from "~/utils/combined-listings";
-
-@@ -24,11 +25,28 @@ export default function ProductPrices(props: ProductPricesProps) {
-     getAdjacentAndFirstAvailableVariants(product),
-   );
-
-+  const combinedListing = isCombinedListing(product);
+ 
+ interface ProductPricesProps extends WeaverseComponentProps {
+   showCompareAtPrice: boolean;
+@@ -16,6 +17,28 @@ export default function ProductPrices(props: ProductPricesProps) {
+   const { product } = useLoaderData<typeof productRouteLoader>();
+   const selectedVariant = useSelectedVariant(product);
+ 
++  if (isCombinedListing(product)) {
++    const { minVariantPrice, maxVariantPrice } = product.priceRange;
++    return (
++      <div {...rest} className="flex gap-2 text-2xl/none">
++        <span className="flex gap-1">
++          From
++          <VariantPrices
++            variant={{ price: minVariantPrice }}
++            showCompareAtPrice={false}
++          />
++        </span>
++        <span className="flex gap-1">
++          To
++          <VariantPrices
++            variant={{ price: maxVariantPrice }}
++            showCompareAtPrice={false}
++          />
++        </span>
++      </div>
++    );
++  }
 +
    return (
-     <div ref={ref} {...rest}>
--      <VariantPrices
--        variant={selectedVariant}
--        showCompareAtPrice={showCompareAtPrice}
--        className="text-2xl/none"
--      />
-+      {combinedListing ? (
-+        <div className="flex gap-2 text-2xl/none">
-+          <span className="flex gap-1">
-+            From
-+            <VariantPrices
-+              variant={{ price: product.priceRange.minVariantPrice }}
-+              showCompareAtPrice={false}
-+            />
-+          </span>
-+          <span className="flex gap-1">
-+            To
-+            <VariantPrices
-+              variant={{ price: product.priceRange.maxVariantPrice }}
-+              showCompareAtPrice={false}
-+            />
-+          </span>
-+        </div>
-+      ) : (
-+        <VariantPrices
-+          variant={selectedVariant}
-+          showCompareAtPrice={showCompareAtPrice}
-+          className="text-2xl/none"
-+        />
-+      )}
-     </div>
+     <div {...rest}>
+       <VariantPrices
 ```
 
-#### File: /app/components/product-card/index.tsx
+#### File: app/components/product-card/index.tsx
 
 ```diff
-@@ -22,6 +22,7 @@ import { RevealUnderline } from "~/components/reveal-underline";
- import { Spinner } from "~/components/spinner";
+@@ -27,6 +27,7 @@ import type {
  import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+ import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
+ import type { ThemeSettings } from "~/types/weaverse";
 +import { isCombinedListing } from "~/utils/combined-listings";
-
-@@ -270,9 +271,19 @@ export function ProductCard({
--          <div className="flex gap-1">
--            <span>From</span>
--            <Money withoutTrailingZeros data={minVariantPrice} />
--          </div>
+ import { calculateAspectRatio } from "~/utils/image";
+ import { ProductCardOptions } from "./product-card-options";
+ import { QuickShopTrigger } from "./quick-shop";
+@@ -264,10 +265,16 @@ export function ProductCard({
+               {product.title}
+             </RevealUnderline>
+           </Link>
+-          {pcardShowLowestPrice ? (
 +          {pcardShowLowestPrice || isCombinedListing(product) ? (
-+            <div className="flex gap-1">
-+              <span>From</span>
-+              <Money withoutTrailingZeros data={minVariantPrice} />
+             <div className="flex gap-1">
+               <span>From</span>
+               <Money withoutTrailingZeros data={minVariantPrice} />
 +              {isCombinedListing(product) && (
 +                <>
 +                  <span>–</span>
 +                  <Money withoutTrailingZeros data={maxVariantPrice} />
 +                </>
 +              )}
-+            </div>
-+          ) : (
-+            <VariantPrices
-+              variant={selectedVariant || firstVariant}
-+              showCompareAtPrice={pcardShowSalePrice}
-+            />
-+          )}
+             </div>
+           ) : (
+             <VariantPrices
 ```
 
-### Step 7: (Optional) Add redirect utility to first variant of a combined listing
+### Step 7: (Optional) Redirect parents to their first child product
 
-If you want to redirect automatically to the first variant of a combined listing when the parent handle is selected, add a redirect utility that's called whenever the parent handle is requested.
+When `redirectToFirstVariant` is `true`, the parent's page redirects to the product of its first available variant.
 
-#### File: /app/.server/redirect.ts
+#### File: app/.server/redirect.ts
 
 ```diff
 @@ -1,4 +1,6 @@
  import { redirect } from "react-router";
-+import type { ProductQuery } from "storefront-api.generated";
++import type { ProductQuery } from "~/graphql/queries";
 +import { isCombinedListing } from "~/utils/combined-listings";
-
+ 
  export function redirectIfHandleIsLocalized(
    request: Request,
-@@ -21,3 +23,23 @@ export function redirectIfHandleIsLocalized(
+@@ -21,3 +23,20 @@ export function redirectIfHandleIsLocalized(
      throw redirect(url.toString());
    }
  }
 +
++/**
++ * Sends a combined listing parent's page to the product of its first
++ * available variant (one of the listing's child products).
++ */
 +export function redirectIfCombinedListing(
 +  request: Request,
-+  product: ProductQuery["product"],
++  product: NonNullable<ProductQuery["product"]>,
 +) {
++  const childHandle = product.selectedOrFirstAvailableVariant?.product?.handle;
++  if (!isCombinedListing(product) || !childHandle) {
++    return;
++  }
 +  const url = new URL(request.url);
-+  let shouldRedirect = false;
-+
-+  if (isCombinedListing(product)) {
-+    url.pathname = url.pathname.replace(
-+      product.handle,
-+      product.selectedOrFirstAvailableVariant?.product.handle ?? "",
-+    );
-+    shouldRedirect = true;
-+  }
-+
-+  if (shouldRedirect) {
-+    throw redirect(url.toString());
-+  }
++  url.pathname = url.pathname.replace(product.handle, childHandle);
++  throw redirect(url.toString());
 +}
 ```
 
-### Step 8: Update GraphQL queries for combined listings
+The product route calls it, and stops writing the variant's options into the parent's URL: a parent's `selectedOrFirstAvailableVariant` belongs to a child product.
 
-Add the `tags`, `featuredImage`, and `priceRange` fields to `PRODUCT_QUERY` and `tags` to `PRODUCT_CARD_FRAGMENT`.
-
-#### File: /app/graphql/queries.ts
+#### File: app/routes/products/product.tsx
 
 ```diff
-@@ -22,6 +22,18 @@ export const PRODUCT_QUERY = `#graphql
-       encodedVariantExistence
-       encodedVariantAvailability
-+      tags
-+      featuredImage {
-+        id
-+        url
-+        altText
-+      }
-+      priceRange {
-+        minVariantPrice {
-+          amount
-+          currencyCode
-+        }
-+        maxVariantPrice {
-+          amount
-+          currencyCode
-+        }
-+      }
-       options {
-```
-
-#### File: /app/graphql/fragments.ts
-
-```diff
-@@ -82,6 +82,7 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
-     handle
-     vendor
-+    tags
-     images(first: 50) {
-```
-
-### Step 9: Filter out combined listings from product list pages
-
-Apply the `maybeFilterOutCombinedListingsQuery` to filter combined listings from various product-listing queries.
-
-#### File: /app/utils/featured-products.ts
-
-The `query` variable is passed to the GraphQL query to exclude combined listing parents.
-
-```diff
-@@ -3,6 +3,7 @@ import type { FeaturedProductsQuery } from "storefront-api.generated";
- import invariant from "tiny-invariant";
- import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-+import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
-
-@@ -13,6 +14,7 @@ export async function getFeaturedProducts(
-       variables: {
-         pageBy: 16,
-+        query: maybeFilterOutCombinedListingsQuery,
-         country: storefront.i18n.country,
-```
-
-#### File: /app/routes/products/recommended-product.ts
-
-```diff
-@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
- import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
- import type { I18nLocale } from "~/types/others";
-+import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
-
-@@ -14,6 +15,7 @@ export async function getRecommendedProducts(
-       variables: {
-         productId,
-         count: 12,
-+        query: maybeFilterOutCombinedListingsQuery,
-       },
-```
-
-#### File: /app/routes/products/list.tsx
-
-```diff
-@@ -8,6 +8,7 @@ import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
- import type { SortParam } from "~/types/others";
- import { routeHeaders } from "~/utils/cache";
-+import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
-
-@@ -28,6 +29,7 @@ export async function loader({
-       variables: {
-         ...getPaginationVariables(request, { pageBy: 16 }),
-+        query: maybeFilterOutCombinedListingsQuery,
-         sortKey,
-```
-
-#### File: /app/routes/api/products.ts
-
-In this file, the combined listings query is merged with any existing user-provided `query` parameter:
-
-```diff
-@@ -6,6 +6,7 @@ import type { ApiAllProductsQuery } from "storefront-api.generated";
- import invariant from "tiny-invariant";
- import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-+import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
-
-@@ -47,8 +48,12 @@ export async function loader({
-+  const combinedQuery = [maybeFilterOutCombinedListingsQuery, query]
-+    .filter(Boolean)
-+    .join(" ");
-+
-   const { products } = await storefront.query<ApiAllProductsQuery>(
-     API_ALL_PRODUCTS_QUERY,
-     {
-       variables: {
-         count,
--        query,
-+        query: combinedQuery,
-```
-
-### Step 10: Filter combined listings on the client side
-
-For collection pages where server-side GraphQL query filtering is not possible, filter combined listings after data is loaded.
-
-#### File: /app/components/product-grid/products-loaded-on-scroll.tsx
-
-```diff
-@@ -3,6 +3,10 @@ import { useNavigate } from "react-router";
- import type { ProductCardFragment } from "storefront-api.generated";
- import { ProductCard } from "~/components/product-card";
-+import {
-+  COMBINED_LISTINGS_CONFIGS,
-+  isCombinedListing,
-+} from "~/utils/combined-listings";
-
-@@ -61,7 +65,14 @@ export function ProductsLoadedOnScroll({
-     >
--      {nodes.map((product, index) => (
-+      {nodes
-+        .filter(
-+          (product) =>
-+            !(
-+              COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList &&
-+              isCombinedListing(product)
-+            ),
-+        )
-+        .map((product, index) => (
-           <ProductCard
-             key={product.id}
-             product={product}
-```
-
-### Step 11: Update the product page route
-
-Update the product page route to handle combined listings: redirect to child if configured, skip URL param syncing, and pass combined listing state to Weaverse sections.
-
-#### File: /app/routes/products/product.tsx
-
-```diff
-@@ -11,6 +11,14 @@ import type { ProductQuery } from "storefront-api.generated";
+@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
+ import type { LoaderFunctionArgs, MetaArgs } from "react-router";
+ import { useLoaderData, useLocation, useNavigate } from "react-router";
  import invariant from "tiny-invariant";
 -import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 +import {
@@ -662,43 +431,221 @@ Update the product page route to handle combined listings: redirect to child if 
 +  redirectIfHandleIsLocalized,
 +} from "~/.server/redirect";
  import { seoPayload } from "~/.server/seo";
+ import {
+   type ProductFormData,
+@@ -18,6 +21,10 @@ import {
+ import { ProductView } from "~/components/root/analytics-views";
  import { PRODUCT_QUERY } from "~/graphql/queries";
- import { routeHeaders } from "~/utils/cache";
+ import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 +import {
 +  COMBINED_LISTINGS_CONFIGS,
 +  isCombinedListing,
 +} from "~/utils/combined-listings";
- import { WeaverseContent } from "~/weaverse";
-
-@@ -52,6 +60,10 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
+ import { localizePath, resolveLocale } from "~/utils/locale";
+ import { seoMetaFromMatches } from "~/utils/seo";
+ import { unwrapStorefront } from "~/utils/storefront";
+@@ -48,6 +55,9 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
+     throw new Response("product", { status: 404 });
+   }
    redirectIfHandleIsLocalized(request, { handle, data: product });
-
 +  if (COMBINED_LISTINGS_CONFIGS.redirectToFirstVariant) {
 +    redirectIfCombinedListing(request, product);
 +  }
-+
-   return {
-     shop,
-     product,
-
-@@ -78,12 +90,14 @@ export default function Product() {
-   const { product } = useLoaderData<typeof loader>();
+ 
+   // Use Hydrogen/Remix streaming for recommended products
+   const recommended = getRecommendedProducts(storefront, product.id);
+@@ -161,9 +171,12 @@ function ProductAnalytics({ product }: { product: ProductFormData }) {
+  */
+ function useSyncSelectionToUrl(product: ProductFormData) {
+   const variant = product.selectedOrFirstAvailableVariant;
++  // A combined listing parent's variant belongs to a child product, so its
++  // options don't describe the parent's URL.
 +  const combinedListing = isCombinedListing(product);
-
-   const selectedVariant = useOptimisticVariant(
-     product.selectedOrFirstAvailableVariant,
-     getAdjacentAndFirstAvailableVariants(product),
-   );
-
+ 
    useEffect(() => {
--    if (!selectedVariant?.selectedOptions) {
-+    if (!selectedVariant?.selectedOptions || combinedListing) {
+-    if (!variant) {
++    if (!variant || combinedListing) {
        return;
      }
-     // ... URL param sync logic unchanged ...
--  }, [selectedVariant?.selectedOptions]);
-+  }, [selectedVariant?.selectedOptions, combinedListing]);
+     const url = new URL(window.location.href);
+@@ -183,5 +196,5 @@ function useSyncSelectionToUrl(product: ProductFormData) {
+       "",
+       `${url.pathname}?${params}${url.hash}`,
+     );
+-  }, [variant, product.options]);
++  }, [variant, product.options, combinedListing]);
+ }
 ```
+
+### Step 8: Filter parents out of product lists
+
+Pass `maybeFilterOutCombinedListingsQuery` as the `query` of the product list queries. `FEATURED_PRODUCTS_QUERY` (best sellers, used by the featured products section, cart, account, search and 404 recommendations) needs a `$query` variable first; the other queries already declare one.
+
+#### File: app/utils/featured-products.ts
+
+```diff
+@@ -6,6 +6,7 @@ import {
+ } from "@shopify/hydrogen";
+ import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+ import { CACHE_DEFAULT } from "~/utils/cache";
++import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
+ import { unwrapStorefront } from "~/utils/storefront";
+ 
+ /**
+@@ -18,7 +19,7 @@ export async function getFeaturedProducts(
+ ) {
+   return unwrapStorefront(
+     await storefront.graphql(FEATURED_PRODUCTS_QUERY, {
+-      variables: { pageBy: 16 },
++      variables: { pageBy: 16, query: maybeFilterOutCombinedListingsQuery },
+       cache: CACHE_DEFAULT,
+     }),
+   );
+@@ -34,8 +35,13 @@ export const FEATURED_PRODUCTS_QUERY = gql(
+     $country: CountryCode
+     $language: LanguageCode
+     $pageBy: Int = 16
++    $query: String
+   ) @inContext(country: $country, language: $language) {
+-    featuredProducts: products(first: $pageBy, sortKey: BEST_SELLING) {
++    featuredProducts: products(
++      first: $pageBy
++      sortKey: BEST_SELLING
++      query: $query
++    ) {
+       nodes {
+         ...ProductCard
+       }
+```
+
+#### File: app/routes/products/recommended-product.ts
+
+```diff
+@@ -2,6 +2,7 @@ import { gql } from "@shopify/hydrogen";
+ import type { Storefront } from "~/.server/storefront";
+ import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+ import { CACHE_DEFAULT } from "~/utils/cache";
++import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
+ import { unwrapStorefront } from "~/utils/storefront";
+ 
+ export async function getRecommendedProducts(
+@@ -13,6 +14,7 @@ export async function getRecommendedProducts(
+       variables: {
+         productId,
+         count: 12,
++        query: maybeFilterOutCombinedListingsQuery,
+       },
+       cache: CACHE_DEFAULT,
+     }),
+```
+
+#### File: app/routes/products/list.tsx
+
+```diff
+@@ -6,6 +6,7 @@ import { seoPayload } from "~/.server/seo";
+ import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+ import type { SortParam } from "~/types/others";
+ import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
++import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
+ import { getPaginationVariables } from "~/utils/pagination";
+ import { seoMetaFromMatches } from "~/utils/seo";
+ import { unwrapStorefront } from "~/utils/storefront";
+@@ -28,6 +29,7 @@ export async function loader({
+       .graphql(ALL_PRODUCTS_QUERY, {
+         variables: {
+           ...getPaginationVariables(request, { pageBy: 16 }),
++          query: maybeFilterOutCombinedListingsQuery,
+           sortKey,
+           reverse,
+         },
+```
+
+In the products API route, the filter is merged with the caller's `query` parameter:
+
+#### File: app/routes/api/products.ts
+
+```diff
+@@ -5,6 +5,7 @@ import { data } from "react-router";
+ import invariant from "tiny-invariant";
+ import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+ import { CACHE_LONG } from "~/utils/cache";
++import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
+ import { unwrapStorefront } from "~/utils/storefront";
+ 
+ /**
+@@ -48,7 +49,14 @@ export async function loader({
+ 
+   const { products } = unwrapStorefront(
+     await storefront.graphql(API_ALL_PRODUCTS_QUERY, {
+-      variables: { count, query, reverse, sortKey },
++      variables: {
++        count,
++        query: [maybeFilterOutCombinedListingsQuery, query]
++          .filter(Boolean)
++          .join(" "),
++        reverse,
++        sortKey,
++      },
+       cache: CACHE_LONG,
+     }),
+   );
+```
+
+Collection product queries can't exclude a tag, so the collection grid drops parents after loading:
+
+#### File: app/components/product-grid/products-loaded-on-scroll.tsx
+
+```diff
+@@ -2,6 +2,10 @@ import { useEffect } from "react";
+ import { useNavigate } from "react-router";
+ import type { ProductCardFragment } from "~/graphql/fragments";
+ import { ProductCard } from "~/components/product-card";
++import {
++  COMBINED_LISTINGS_CONFIGS,
++  isCombinedListing,
++} from "~/utils/combined-listings";
+ import { useProductGridStore } from "./store";
+ 
+ interface ProductsLoadedOnScrollProps {
+@@ -26,11 +30,15 @@ export function ProductsLoadedOnScroll({
+   gapY,
+ }: ProductsLoadedOnScrollProps) {
+   const navigate = useNavigate();
++  // Collection queries can't exclude a tag, so parents are dropped here.
++  const products = COMBINED_LISTINGS_CONFIGS.hideCombinedListingsFromProductList
++    ? nodes.filter((product) => !isCombinedListing(product))
++    : nodes;
+   let setDisplayedCount = useProductGridStore((s) => s.setDisplayedCount);
+ 
+   useEffect(() => {
+-    setDisplayedCount(nodes.length);
+-  }, [nodes.length, setDisplayedCount]);
++    setDisplayedCount(products.length);
++  }, [products.length, setDisplayedCount]);
+ 
+   useEffect(() => {
+     if (inView && hasNextPage) {
+@@ -53,7 +61,7 @@ export function ProductsLoadedOnScroll({
+       }
+       className="grid w-full grid-cols-[repeat(auto-fill,minmax(var(--min-card-width),1fr))]"
+     >
+-      {nodes.map((product, index) => (
++      {products.map((product, index) => (
+         <ProductCard
+           key={product.id}
+           product={product}
+```
+
+### Step 9: Verify
+
+```bash
+npm run typecheck
+```
+
+## Not covered
+
+- Quick shop (`app/components/product-card/quick-shop.tsx`) and the single-product section (`app/sections/single-product/index.tsx`) still render their add-to-cart button for a parent. Apply the same `isCombinedListing(product)` guard there if parents can appear in them.
+- The search page and predictive search don't filter parents.
 
 </recipe_implementation>
 
