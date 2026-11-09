@@ -344,21 +344,25 @@ export default function App() {
 
 ### Step 7: Load pages in routes
 
-Load the Weaverse page in parallel with the route's Shopify queries and return it under `weaverseData`.
+Load the Weaverse page in parallel with the route's Shopify queries and return it under `weaverseData`. On a product route, read the selected options from the URL (`?Color=Black`) and wrap the content in `ProductProvider`. Pilot's real route (`app/routes/products/product.tsx`) also passes `onSelect` to keep the URL in sync with the selection.
 
 ```tsx
+import { getSelectedProductOptions } from "@weaverse/hydrogen/react-router";
 import type { LoaderFunctionArgs } from "react-router";
+import { useLoaderData } from "react-router";
+import { ProductProvider } from "~/components/product/product-form";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { CACHE_DEFAULT } from "~/utils/cache";
 import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const handle = params.productHandle ?? "";
+  const selectedOptions = getSelectedProductOptions(request);
   const [{ product }, weaverseData] = await Promise.all([
     context.storefront
       .graphql(PRODUCT_QUERY, {
-        variables: { handle, selectedOptions: [] },
+        variables: { handle, selectedOptions },
         cache: CACHE_DEFAULT,
       })
       .then(unwrapStorefront),
@@ -371,7 +375,14 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  return <WeaverseContent />;
+  const { product } = useLoaderData<typeof loader>();
+  // Pilot's product sections read the selected variant from this store
+  // (`useProduct`, `useSelectedVariant`), so they must render inside it.
+  return (
+    <ProductProvider product={product}>
+      <WeaverseContent />
+    </ProductProvider>
+  );
 }
 ```
 
