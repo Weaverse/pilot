@@ -1,5 +1,7 @@
 # Hydrogen upgrade guide: 2025.1.2 to 2025.1.3
 
+> **Historical guide.** This upgrade applies to classic Hydrogen (2026.4 and earlier). Classic APIs it refers to, such as `CartForm`, `Analytics.Provider`, `storefront.query` and GraphQL codegen, no longer exist in Pilot. For the current theme, see [`upgrade-2026.4.7-to-2026.10.2.md`](./upgrade-2026.4.7-to-2026.10.2.md).
+
 ----
 
 ## Features

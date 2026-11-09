@@ -187,7 +187,7 @@ The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
 ### Styling
 
 - Use Tailwind CSS
-- Use `cn()` from `lib/cn` for conditional classes (No string templates)
+- Use `cn()` from `~/utils/cn` for conditional classes (No string templates)
 - Use `cva` for building component class variants, not objects or arrays
 
 ## Common Pitfalls to Avoid
@@ -206,26 +206,31 @@ The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
 > Build Shopify Hydrogen storefronts with Weaverse visual page builder.
 > Docs: https://docs.weaverse.io | GitHub: https://github.com/Weaverse/pilot
 
-**This section covers the most common patterns inline.** For the full, always-up-to-date reference (including advanced features, migration guides, and copy-paste examples), see the [Weaverse Hydrogen Skills repo](https://github.com/Weaverse/skills):
+**This section covers the most common patterns inline.** For the full reference (including advanced features, migration guides, and copy-paste examples), see the `weaverse-hydrogen` skill in the [Shopify Hydrogen Skills pack](https://github.com/Weaverse/shopify-hydrogen-skills) (install with `npx skills add Weaverse/shopify-hydrogen-skills`). The older `Weaverse/skills` repository is archived.
 
 ```
-references/01-project-structure.md     — Project structure & file anatomy
-references/02-creating-components.md   — Component creation & registration
-references/03-component-schema.md      — createSchema(), settings, childTypes, presets
-references/04-input-settings.md        — All input types & configurations
-references/05-data-fetching.md         — Loaders, Storefront API, caching
-references/06-styling-theming.md       — Tailwind, theme settings, CVA, CSS variables
-references/07-react-router-7.md        — React Router v7 conventions
-references/08-hydrogen-fundamentals.md — Hydrogen framework essentials
-references/09-deployment.md            — Oxygen, Docker, env vars
-references/10-weaverse-api.md          — All hooks & WeaverseClient API
-references/11-advanced-features.md     — Localization, data connectors, CSP
-references/12-pilot-theme.md           — Pilot-specific patterns & conventions
-references/13-migration-v5.md          — Remix → React Router v7 migration
+skills/weaverse-hydrogen/references/01-project-structure.md          — Project structure & file anatomy
+skills/weaverse-hydrogen/references/02-creating-components.md        — Component creation & registration
+skills/weaverse-hydrogen/references/03-component-schema.md           — createSchema(), settings, childTypes, presets
+skills/weaverse-hydrogen/references/04-input-settings.md             — All input types & configurations
+skills/weaverse-hydrogen/references/05-data-fetching.md              — Loaders, Storefront API, caching
+skills/weaverse-hydrogen/references/06-styling-theming.md            — Tailwind, theme settings, CVA, CSS variables
+skills/weaverse-hydrogen/references/07-react-router-7.md             — React Router v7 conventions
+skills/weaverse-hydrogen/references/08-hydrogen-fundamentals.md      — Hydrogen framework essentials
+skills/weaverse-hydrogen/references/09-deployment.md                 — Oxygen, Docker, env vars
+skills/weaverse-hydrogen/references/10-weaverse-api.md               — All hooks & WeaverseClient API
+skills/weaverse-hydrogen/references/11-advanced-features.md          — Localization, data connectors, CSP
+skills/weaverse-hydrogen/references/12-pilot-theme.md                — Pilot-specific patterns & conventions
+skills/weaverse-hydrogen/references/13-migration-v5.md               — Remix → React Router v7 migration
+skills/weaverse-hydrogen/references/14-sdk-caching-and-diagnostics.md — SDK caching & diagnostics
 ```
 
-> **Tip for agents:** If anything below is insufficient or outdated, fetch the relevant file directly from:
-> `https://raw.githubusercontent.com/Weaverse/skills/main/references/<filename>`
+The pack also has `hydrogen-cookbooks`, `hydrogen-upgrades` and `theme-update` skills. Pilot's own copies of the cookbooks and upgrade guides live in `.guides/` and track this theme's code.
+
+> **Tip for agents:** If anything below is insufficient, fetch the relevant file directly from:
+> `https://raw.githubusercontent.com/Weaverse/shopify-hydrogen-skills/main/skills/weaverse-hydrogen/references/<filename>`
+>
+> Until [Weaverse/shopify-hydrogen-skills#8](https://github.com/Weaverse/shopify-hydrogen-skills/issues/8) lands, the pack may still describe classic Hydrogen and `@weaverse/hydrogen` 5 APIs. Where it disagrees with this file or the code, this file and the code win.
 
 ### Component Anatomy
 
@@ -412,7 +417,7 @@ export default MyComponent;
 ### Theme Settings Pattern
 
 ```tsx
-// app/components/GlobalStyle.tsx
+// app/weaverse/style.tsx
 import { useThemeSettings } from '@weaverse/hydrogen/react-router';
 
 export function GlobalStyle() {
