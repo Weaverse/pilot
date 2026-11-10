@@ -19,6 +19,14 @@ export function PriceRangeFilter({
 
   const [minPrice, setMinPrice] = useState(min);
   const [maxPrice, setMaxPrice] = useState(max);
+  // The store syncs from the URL after this mounts (chip removal, back/forward),
+  // so reset the drafts whenever the committed range changes.
+  const [committed, setCommitted] = useState({ min, max });
+  if (committed.min !== min || committed.max !== max) {
+    setCommitted({ min, max });
+    setMinPrice(min);
+    setMaxPrice(max);
+  }
 
   function handleFilter() {
     if (minPrice === min && maxPrice === max) {
