@@ -10,12 +10,12 @@ function CompareAtPrice({
   data: MoneyV2;
   className?: string;
 }) {
-  const { currencyNarrowSymbol, withoutTrailingZerosAndCurrency } =
-    useMoney(data);
+  // The market's own symbol placement (`12 €` in de-DE), never a prepended
+  // symbol glued to the amount.
+  const { withoutTrailingZeros } = useMoney(data);
   return (
     <span className={cn("strike text-(--color-compare-price-text)", className)}>
-      {currencyNarrowSymbol}
-      {withoutTrailingZerosAndCurrency}
+      {withoutTrailingZeros}
     </span>
   );
 }
