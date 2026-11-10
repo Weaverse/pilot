@@ -172,7 +172,7 @@ export default function Search() {
           className="h-5 w-5 shrink-0 text-gray-500"
         />
         <input
-          className="h-full w-full border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
+          className="h-full w-full min-w-0 border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
           name="q"
