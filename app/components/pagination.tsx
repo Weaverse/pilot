@@ -1,8 +1,9 @@
 /**
  * Local port of classic Hydrogen's `<Pagination>` (`@shopify/hydrogen@2026.4`, MIT).
- * Hydrogen 2026.10 no longer exports it. The port is near-literal so cursor URLs
- * (`?direction=next&cursor=...`), history-state page accumulation (infinite scroll,
- * load previous/more) and the render-prop API behave exactly as before.
+ * Hydrogen 2026.10 no longer exports it, and its collection store owns filters and sort,
+ * not pages. The port is near-literal: history-state page accumulation (infinite scroll,
+ * load previous/more) and the render-prop API behave as before. Cursor URLs use the
+ * `?after=`/`?before=` params that Hydrogen's collection helpers clear on a browse change.
  *
  * `useMemo` is kept on purpose (exception to the no-useMemo rule): `NextLink`/`PreviousLink`
  * are components created per render, and without a stable identity React would remount the
@@ -210,8 +211,8 @@ function getParamsWithoutPagination(
   const activeNamespaces = Object.keys(state?.pagination || {});
   for (const namespace of activeNamespaces) {
     const namespacePrefix = namespace === "" ? "" : `${namespace}_`;
-    params.delete(`${namespacePrefix}cursor`);
-    params.delete(`${namespacePrefix}direction`);
+    params.delete(`${namespacePrefix}after`);
+    params.delete(`${namespacePrefix}before`);
   }
   return params.toString();
 }
@@ -255,10 +256,9 @@ function usePagination<NodesType>(
     pathname: string;
   };
 
-  const cursorParam = namespace ? `${namespace}_cursor` : "cursor";
-  const directionParam = namespace ? `${namespace}_direction` : "direction";
-  const isPrevious =
-    new URLSearchParams(search).get(directionParam) === "previous";
+  const afterParam = namespace ? `${namespace}_after` : "after";
+  const beforeParam = namespace ? `${namespace}_before` : "before";
+  const isPrevious = new URLSearchParams(search).has(beforeParam);
 
   const nodes = useMemo(() => {
     if (
@@ -358,21 +358,21 @@ function usePagination<NodesType>(
 
   const previousPageUrl = useMemo(() => {
     const params = new URLSearchParams(search);
-    params.set(directionParam, "previous");
+    params.delete(afterParam);
     if (currentPageInfo.startCursor) {
-      params.set(cursorParam, currentPageInfo.startCursor);
+      params.set(beforeParam, currentPageInfo.startCursor);
     }
     return `?${params.toString()}`;
-  }, [search, currentPageInfo.startCursor, cursorParam, directionParam]);
+  }, [search, currentPageInfo.startCursor, afterParam, beforeParam]);
 
   const nextPageUrl = useMemo(() => {
     const params = new URLSearchParams(search);
-    params.set(directionParam, "next");
+    params.delete(beforeParam);
     if (currentPageInfo.endCursor) {
-      params.set(cursorParam, currentPageInfo.endCursor);
+      params.set(afterParam, currentPageInfo.endCursor);
     }
     return `?${params.toString()}`;
-  }, [search, currentPageInfo.endCursor, cursorParam, directionParam]);
+  }, [search, currentPageInfo.endCursor, afterParam, beforeParam]);
 
   return { ...currentPageInfo, previousPageUrl, nextPageUrl, nodes };
 }
