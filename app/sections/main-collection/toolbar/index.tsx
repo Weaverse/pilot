@@ -1,4 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
+import { getSortByValue } from "@shopify/hydrogen";
 import {
   createSchema,
   type WeaverseComponentProps,
@@ -15,17 +16,15 @@ import { useProductGridStore } from "~/components/product-grid/store";
 import { ScrollArea } from "~/components/scroll-area";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { Filters, type FiltersProps } from "../filters/filters";
 
-const SORT_OPTIONS: Array<{ label: string; key: SortParam }> = [
-  { label: "Featured", key: "featured" },
-  { label: "Relevance", key: "relevance" },
-  { label: "Price, (low to high)", key: "price-low-high" },
-  { label: "Price, (high to low)", key: "price-high-low" },
-  { label: "Best selling", key: "best-selling" },
-  { label: "Newest", key: "newest" },
+const SORT_OPTIONS = [
+  { label: "Featured", value: getSortByValue("COLLECTION_DEFAULT", false) },
+  { label: "Price, (low to high)", value: getSortByValue("PRICE", false) },
+  { label: "Price, (high to low)", value: getSortByValue("PRICE", true) },
+  { label: "Best selling", value: getSortByValue("BEST_SELLING", false) },
+  { label: "Newest", value: getSortByValue("CREATED", true) },
 ];
 
 function FiltersDrawer({ filterSettings }: { filterSettings?: FiltersProps }) {

@@ -1,4 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
+import { isFilterInputActive } from "@shopify/hydrogen";
+import { useCollection } from "@shopify/hydrogen/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useState } from "react";
@@ -96,7 +98,6 @@ export function Filters({
                       displayAs={
                         asSwatch ? "swatch" : asButton ? "button" : "list-item"
                       }
-                      appliedFilters={appliedFilters as AppliedFilter[]}
                       showFiltersCount={showFiltersCount}
                       limit={filterItemsLimit || 10}
                     />
@@ -114,17 +115,16 @@ export function Filters({
 function FilterValues({
   options,
   displayAs,
-  appliedFilters,
   showFiltersCount,
   limit,
 }: {
   options: Filter["values"];
   displayAs: "swatch" | "button" | "list-item";
-  appliedFilters: AppliedFilter[];
   showFiltersCount: boolean;
   limit: number;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const activeFilters = useCollection((state) => state.filters);
   const hasMore = options.length > limit;
 
   // Always show applied/checked items even if beyond the limit
@@ -135,9 +135,7 @@ function FilterValues({
           return true;
         }
         // Keep applied filters visible even beyond limit
-        return appliedFilters.some(
-          (flt) => JSON.stringify(flt.filter) === option.input,
-        );
+        return isFilterInputActive(activeFilters, option.input as string);
       });
 
   return (
@@ -146,7 +144,6 @@ function FilterValues({
         <FilterItem
           key={option.id}
           displayAs={displayAs}
-          appliedFilters={appliedFilters}
           option={option}
           showFiltersCount={showFiltersCount}
         />

@@ -1,10 +1,17 @@
-import { gql, type StorefrontApi } from "@shopify/hydrogen";
+import {
+  gql,
+  type ProductCollectionSortKeys,
+  parseCollectionParams,
+  type StorefrontApi,
+} from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
+import { redirect, useLoaderData } from "react-router";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/.server/seo";
+import { CollectionBrowseProvider } from "~/components/product-grid/collection-browse";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
-import type { SortParam } from "~/types/others";
+import { getLegacyBrowseRedirect } from "~/routes/collections/utils";
 import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { getPaginationVariables } from "~/utils/pagination";
 import { seoMetaFromMatches } from "~/utils/seo";
@@ -17,10 +24,12 @@ export async function loader({
   request,
   context: { storefront, weaverse },
 }: LoaderFunctionArgs) {
-  const searchParams = new URL(request.url).searchParams;
-  const { sortKey, reverse } = getSortValuesFromParam(
-    searchParams.get("sort") as SortParam,
-  );
+  const url = new URL(request.url);
+  const legacyRedirect = getLegacyBrowseRedirect(url);
+  if (legacyRedirect) {
+    throw redirect(legacyRedirect, 301);
+  }
+  const browse = parseCollectionParams(url.searchParams);
 
   // Load products data and weaverseData in parallel
   const [data, weaverseData] = await Promise.all([
@@ -28,8 +37,8 @@ export async function loader({
       .graphql(ALL_PRODUCTS_QUERY, {
         variables: {
           ...getPaginationVariables(request, { pageBy: 16 }),
-          sortKey,
-          reverse,
+          sortKey: toProductSortKey(browse.sortKey),
+          reverse: browse.reverse,
         },
         cache: CACHE_DEFAULT,
       })
@@ -56,6 +65,7 @@ export async function loader({
 
   return {
     products: data.products,
+    dataSearch: url.search,
     seo,
     weaverseData,
   };
@@ -65,7 +75,12 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return seoMetaFromMatches(matches);
 };
 export default function AllProducts() {
-  return <WeaverseContent />;
+  const { dataSearch } = useLoaderData<typeof loader>();
+  return (
+    <CollectionBrowseProvider handle="all-products" dataSearch={dataSearch}>
+      <WeaverseContent />
+    </CollectionBrowseProvider>
+  );
 }
 
 const ALL_PRODUCTS_QUERY = gql(
@@ -109,20 +124,18 @@ export type AllProductsQuery = StorefrontApi.ResultOf<
   typeof ALL_PRODUCTS_QUERY
 >;
 
-function getSortValuesFromParam(sortParam: SortParam | null): {
-  sortKey: ProductSortKeys;
-  reverse: boolean;
-} {
-  switch (sortParam) {
-    case "price-high-low":
-      return { sortKey: "PRICE", reverse: true };
-    case "price-low-high":
-      return { sortKey: "PRICE", reverse: false };
-    case "best-selling":
-      return { sortKey: "BEST_SELLING", reverse: false };
-    case "newest":
-      return { sortKey: "CREATED_AT", reverse: true };
+/** The `sort_by` sort key on the shop-wide `products` connection. */
+function toProductSortKey(
+  sortKey: ProductCollectionSortKeys | undefined,
+): ProductSortKeys {
+  switch (sortKey) {
+    case "PRICE":
+    case "BEST_SELLING":
+    case "TITLE":
+      return sortKey;
+    case "CREATED":
+      return "CREATED_AT";
     default:
-      return { sortKey: "RELEVANCE", reverse: false };
+      return "RELEVANCE";
   }
 }

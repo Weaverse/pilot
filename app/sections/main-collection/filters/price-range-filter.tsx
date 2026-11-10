@@ -1,45 +1,37 @@
 import * as Slider from "@radix-ui/react-slider";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
+import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
 import clsx from "clsx";
 import { useRef, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
 import type { CollectionQuery } from "~/routes/collections/collection-query";
-import { FILTER_URL_PREFIX } from "~/utils/const";
-import { clearPaginationParams, filterInputToParams } from "./filter-utils";
 
 export function PriceRangeFilter({
   collection,
 }: {
   collection: CollectionQuery["collection"];
 }) {
-  const [params] = useSearchParams();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const filters = useCollection((state) => state.filters);
+  const { setFilters } = useCollectionActions();
   const thumbRef = useRef<"from" | "to" | null>(null);
 
   const { minVariantPrice, maxVariantPrice } = getPricesRange(collection);
-  const { min, max } = getPricesFromFilter(params);
+  const { min, max } = filters.find((filter) => filter.price)?.price ?? {};
 
   const [minPrice, setMinPrice] = useState(min);
   const [maxPrice, setMaxPrice] = useState(max);
 
   function handleFilter() {
-    let paramsClone = new URLSearchParams(params);
-    if (minPrice === undefined && maxPrice === undefined) {
-      paramsClone.delete(`${FILTER_URL_PREFIX}price`);
-    } else {
-      const price = {
-        ...(minPrice === undefined ? {} : { min: minPrice }),
-        ...(maxPrice === undefined ? {} : { max: maxPrice }),
-      };
-      paramsClone = filterInputToParams({ price }, paramsClone);
+    if (minPrice === min && maxPrice === max) {
+      return;
     }
-    if (params.toString() !== paramsClone.toString()) {
-      clearPaginationParams(paramsClone);
-      navigate(`${location.pathname}?${paramsClone.toString()}`, {
-        preventScrollReset: true,
-      });
+    const otherFilters = filters.filter((filter) => !filter.price);
+    if (minPrice === undefined && maxPrice === undefined) {
+      setFilters(otherFilters);
+    } else {
+      setFilters([
+        ...otherFilters,
+        { price: { min: minPrice, max: maxPrice } },
+      ]);
     }
   }
 
@@ -152,14 +144,4 @@ function getPricesRange(collection: CollectionQuery["collection"]) {
     minVariantPrice: Number(minVariantPrice?.amount) || 0,
     maxVariantPrice: Number(maxVariantPrice?.amount) || 1000,
   };
-}
-
-function getPricesFromFilter(params: URLSearchParams) {
-  const priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
-  const price = priceFilter
-    ? (JSON.parse(priceFilter) as ProductFilter["price"])
-    : undefined;
-  const min = Number.isNaN(Number(price?.min)) ? undefined : Number(price?.min);
-  const max = Number.isNaN(Number(price?.max)) ? undefined : Number(price?.max);
-  return { min, max };
 }
