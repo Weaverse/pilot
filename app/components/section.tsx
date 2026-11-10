@@ -144,7 +144,9 @@ export function Section(props: SectionProps) {
       <div
         className={cn(
           variants({ width, verticalPadding, overflow }),
-          "space-y-(--gap-mobile) lg:space-y-(--gap-desktop)",
+          // Only with a `gap`, so a `space-y-*` in `containerClassName`
+          // isn't undone at `lg` by an unset 0px gap.
+          gap != null && "space-y-(--gap-mobile) lg:space-y-(--gap-desktop)",
           hasBackground &&
             isBgForContent && ["bg-(--section-bg-color)", "px-4 sm:px-8"],
           containerClassName,
