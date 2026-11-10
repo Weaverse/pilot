@@ -38,6 +38,7 @@ NEVER USE 'react-router-dom' imports!
 | `@shopify/remix-oxygen` (`LoaderFunctionArgs`, `AppLoadContext`, `redirect`, `data`, `createRequestHandler`) | `react-router`. The package is gone. |
 | `@shopify/hydrogen-react` and classic `@shopify/hydrogen` components (`ShopPayButton`, `CartProvider`, `ProductProvider`) | `@shopify/hydrogen/react` (`ShopPayButton`, `ShopifyScripts`, `createCartComponents`, `createProductComponents`). Pilot wraps the last two in `app/components/cart/cart-store.ts` and `app/components/product/product-form.tsx`. |
 | `Image`, `Money`, `ExternalVideo`, `ModelViewer`, `Pagination`, `getSeoMeta` from `@shopify/hydrogen` | Pilot's local ports: `~/components/image`, `~/components/money`, `~/components/product-media/*`, `~/components/pagination`, `~/utils/seo-meta` |
+| Hand-rolled collection filter and sort URLs (`filter.<field>=<json>`, `sort=`) | The library collection store: `CollectionBrowseProvider` from `~/components/product-grid/collection-browse`, `parseCollectionParams` in the loader, `useCollection`/`useCollectionActions` from `@shopify/hydrogen/react` |
 | `createContentSecurityPolicy`, `NonceProvider`, `useNonce` from `@shopify/hydrogen` | `~/utils/csp` |
 | `Analytics.Provider`, `Analytics.*View`, `useAnalytics` | `ShopifyScripts` in `app/root.tsx` and the trackers in `~/components/root/analytics-views` |
 | `CartForm`, `useOptimisticCart`, `context.cart` | The cart store: `useCart`, `useCartForm`, `useCartActions` from `~/components/cart/cart-store` |

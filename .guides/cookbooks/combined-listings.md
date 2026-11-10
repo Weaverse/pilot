@@ -542,21 +542,21 @@ Pass `maybeFilterOutCombinedListingsQuery` as the `query` of the product list qu
 #### File: app/routes/products/list.tsx
 
 ```diff
-@@ -6,6 +6,7 @@ import { seoPayload } from "~/.server/seo";
+@@ -13,6 +13,7 @@ import { CollectionBrowseProvider } from "~/components/product-grid/collection-browse";
  import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
- import type { SortParam } from "~/types/others";
+ import { getLegacyBrowseRedirect } from "~/routes/collections/utils";
  import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 +import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
  import { getPaginationVariables } from "~/utils/pagination";
  import { seoMetaFromMatches } from "~/utils/seo";
  import { unwrapStorefront } from "~/utils/storefront";
-@@ -28,6 +29,7 @@ export async function loader({
+@@ -37,6 +38,7 @@ export async function loader({
        .graphql(ALL_PRODUCTS_QUERY, {
          variables: {
            ...getPaginationVariables(request, { pageBy: 16 }),
 +          query: maybeFilterOutCombinedListingsQuery,
-           sortKey,
-           reverse,
+           sortKey: toProductSortKey(browse.sortKey),
+           reverse: browse.reverse,
          },
 ```
 
