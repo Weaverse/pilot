@@ -5,32 +5,37 @@ import type {
   JSX,
   ReactNode,
 } from "react";
-
-/**
- * Locale every price is formatted with.
- *
- * Classic Hydrogen's `useMoney()` read the locale from `useShop()`. Pilot never
- * rendered `<ShopifyProvider>`, so it always fell back to hydrogen-react's
- * default context (`languageIsoCode: "EN"`, `countryIsoCode: "US"`), i.e.
- * `en-US` for every market. Kept as-is so prices render exactly as on `main`
- * (`€10.00`, `CA$10.00`, `¥1,000`); switching to the market locale is a
- * visible formatting change and belongs in its own PR.
- */
-const MONEY_LOCALE = "en-US";
+import { useLocation } from "react-router";
+import { type Locale, resolveLocale } from "~/utils/locale";
 
 type MoneyData = Partial<MoneyV2>;
 
 /**
- * Drop-in replacement for classic hydrogen-react's `useMoney()`, built on
- * Hydrogen's `formatMoney()`. Exposes the same fields Pilot reads
- * (`localizedString`, `withoutTrailingZeros`, `withoutTrailingZerosAndCurrency`,
- * `currencyNarrowSymbol`, `currencySymbol`, `currencyName`, `amount`, `parts`).
+ * Formats `money` the way `locale`'s market writes prices: `1.234,56 €` in
+ * de-DE, `￥1,235` in ja-JP, `$1,234.56` in the default en-US market.
+ *
+ * Uses `hreflang`, not `language`: the provider code can be script-specific
+ * (`ZH_CN`), which is not a BCP-47 tag and makes `Intl` throw.
  */
-export function useMoney(money: MoneyData) {
+export function formatMarketMoney(money: MoneyData, locale: Locale) {
   return formatMoney(
     { amount: money.amount ?? "", currencyCode: money.currencyCode ?? "" },
-    { locale: MONEY_LOCALE },
+    { locale: locale.hreflang },
   );
+}
+
+/**
+ * Drop-in replacement for classic hydrogen-react's `useMoney()`, built on
+ * Hydrogen's `formatMoney()` with the current market's locale. Exposes the
+ * same fields Pilot reads (`localizedString`, `withoutTrailingZeros`,
+ * `withoutTrailingZerosAndCurrency`, `currencySymbol`, `amount`, `parts`, ...).
+ *
+ * The market is read from the URL, like `usePrefixPathWithLocale`: the server
+ * and the client see the same path, so both render the same string.
+ */
+export function useMoney(money: MoneyData) {
+  let { pathname } = useLocation();
+  return formatMarketMoney(money, resolveLocale(pathname));
 }
 
 type MoneyPropsBase<T extends ElementType> = {
