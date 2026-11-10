@@ -1,20 +1,27 @@
-import { flattenConnection } from "@shopify/hydrogen";
-import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
+import {
+  filterEquals,
+  flattenConnection,
+  parseCollectionParams,
+  type ProductFilter,
+} from "@shopify/hydrogen";
+import type { ProductFilter as StorefrontProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { redirect, useLoaderData } from "react-router";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
+import {
+  CollectionBrowseProvider,
+  parseCategoryFilters,
+} from "~/components/product-grid/collection-browse";
 import { CollectionView } from "~/components/root/analytics-views";
-import type { SortParam } from "~/types/others";
 import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
-import { FILTER_URL_PREFIX } from "~/utils/const";
 import { getPaginationVariables } from "~/utils/pagination";
 import { seoMetaFromMatches } from "~/utils/seo";
 import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
 import { COLLECTION_QUERY } from "./collection-query";
-import { getSortValuesFromParam, parseAsCurrency } from "./utils";
+import { getLegacyBrowseRedirect, parseAsCurrency } from "./utils";
 
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   return seoMetaFromMatches(matches);
@@ -30,19 +37,19 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
   invariant(collectionHandle, "Missing collectionHandle param");
 
-  const searchParams = new URL(request.url).searchParams;
-  const { sortKey, reverse } = getSortValuesFromParam(
-    searchParams.get("sort") as SortParam,
-  );
-  const filters = [...searchParams.entries()].reduce((flt, [key, value]) => {
-    if (key.startsWith(FILTER_URL_PREFIX)) {
-      const filterKey = key.substring(FILTER_URL_PREFIX.length);
-      flt.push({
-        [filterKey]: JSON.parse(value),
-      });
-    }
-    return flt;
-  }, [] as ProductFilter[]);
+  const url = new URL(request.url);
+  const legacyRedirect = getLegacyBrowseRedirect(url);
+  if (legacyRedirect) {
+    throw redirect(legacyRedirect, 301);
+  }
+  // Liquid-compatible `filter.p.*`/`filter.v.*` and `sort_by` params,
+  // the format Hydrogen's collection store writes.
+  const browse = parseCollectionParams(url.searchParams);
+  const { sortKey, reverse } = browse;
+  const filters = [
+    ...browse.filters,
+    ...parseCategoryFilters(url.searchParams),
+  ];
 
   const { CUSTOM_COLLECTION_BANNER_METAFIELD = "" } = env;
   const [bannerNamespace = "", bannerKey = ""] =
@@ -55,7 +62,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         variables: {
           ...pagingVariables,
           handle: collectionHandle,
-          filters,
+          filters: filters as StorefrontProductFilter[],
           sortKey,
           reverse,
           // Query custom banner stored in Shopify's collection metafields
@@ -80,9 +87,8 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       ("endCursor" in pagingVariables && pagingVariables.endCursor)
     ) {
       // remove the cursor from the url
-      const url = new URL(request.url);
-      url.searchParams.delete("cursor");
-      url.searchParams.delete("direction");
+      url.searchParams.delete("after");
+      url.searchParams.delete("before");
       throw redirect(url.toString());
     }
     throw new Response("collection", { status: 404 });
@@ -107,23 +113,18 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         if (valueInput.price && filter.price) {
           return true;
         }
-        return (
-          // This comparison should be okay as long as we're not manipulating the input we
-          // get from the API before using it as a URL param.
-          JSON.stringify(valueInput) === JSON.stringify(filter)
-        );
+        return filterEquals(valueInput, filter);
       });
       if (!foundValue) {
         console.error("Could not find filter value for filter", filter);
         return null;
       }
 
-      if (foundValue.id === "filter.v.price") {
+      if (filter.price) {
         // Special case for price, we want to show the min and max values as the label.
-        const input = JSON.parse(foundValue.input as string) as ProductFilter;
-        const min = parseAsCurrency(input.price?.min ?? 0, locale);
-        const max = input.price?.max
-          ? parseAsCurrency(input.price.max, locale)
+        const min = parseAsCurrency(filter.price.min ?? 0, locale);
+        const max = filter.price.max
+          ? parseAsCurrency(filter.price.max, locale)
           : "";
         const label = min && max ? `${min} - ${max}` : "Price";
 
@@ -137,19 +138,23 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     collection,
     appliedFilters,
     collections: flattenConnection(collectionData?.collections),
+    dataSearch: url.search,
     seo,
     weaverseData,
   };
 }
 
 export default function Collection() {
-  const { collection } = useLoaderData<typeof loader>();
+  const { collection, dataSearch } = useLoaderData<typeof loader>();
   return (
-    <>
+    <CollectionBrowseProvider
+      handle={collection.handle}
+      dataSearch={dataSearch}
+    >
       <WeaverseContent />
       <CollectionView
         collection={{ id: collection.id, handle: collection.handle }}
       />
-    </>
+    </CollectionBrowseProvider>
   );
 }

@@ -1,24 +1,26 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useLocation, useSearchParams } from "react-router";
+import { getSortByValue } from "@shopify/hydrogen";
+import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
 import { Icon } from "~/components/icon";
-import Link from "~/components/link";
-import { clearPaginationParams } from "~/sections/main-collection/filters/filter-utils";
-import type { SortParam } from "~/types/others";
 import { cn } from "~/utils/cn";
 
 interface SortDropdownProps {
+  /** `value` is a `sort_by` value from `getSortByValue`; the first option is the default sort. */
   options: Array<{
     label: string;
-    key: SortParam;
+    value: string;
   }>;
   className?: string;
 }
 
+/** Sort control for a `CollectionBrowseProvider` listing. */
 export function SortDropdown({ options, className }: SortDropdownProps) {
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
+  const sortByValue = useCollection((state) =>
+    state.sortKey ? getSortByValue(state.sortKey, state.reverse) : null,
+  );
+  const { setSortByValue } = useCollectionActions();
   const currentSort =
-    options.find(({ key }) => key === searchParams.get("sort")) || options[0];
+    options.find(({ value }) => value === sortByValue) || options[0];
 
   return (
     <DropdownMenu.Root>
@@ -40,26 +42,18 @@ export function SortDropdown({ options, className }: SortDropdownProps) {
           align="end"
           className="bg-background flex h-fit w-44 flex-col gap-2 rounded-lg border border-gray-400 p-5 shadow"
         >
-          {options.map(({ key, label }) => {
-            const params = new URLSearchParams(searchParams);
-            clearPaginationParams(params);
-            params.set("sort", key);
-
-            return (
-              <DropdownMenu.Item key={key} asChild>
-                <Link
-                  to={`${location.pathname}?${params.toString()}`}
-                  className={cn(
-                    "underline-offset-[6px] hover:underline hover:outline-hidden",
-                    currentSort.key === key && "font-bold",
-                  )}
-                  preventScrollReset
-                >
-                  {label}
-                </Link>
-              </DropdownMenu.Item>
-            );
-          })}
+          {options.map(({ value, label }) => (
+            <DropdownMenu.Item
+              key={value}
+              onSelect={() => setSortByValue(value)}
+              className={cn(
+                "cursor-pointer underline-offset-[6px] hover:underline hover:outline-hidden",
+                currentSort.value === value && "font-bold",
+              )}
+            >
+              {label}
+            </DropdownMenu.Item>
+          ))}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

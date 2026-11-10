@@ -1,3 +1,5 @@
+import { getFilterRemovalUrl } from "@shopify/hydrogen";
+import { useCollection } from "@shopify/hydrogen/react";
 import {
   createSchema,
   type WeaverseComponentProps,
@@ -11,7 +13,6 @@ import { Pagination } from "~/components/pagination";
 import { ProductsLoadedOnScroll } from "~/components/product-grid/products-loaded-on-scroll";
 import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
-import { getAppliedFilterLink } from "./filters/filter-utils";
 
 interface ProductGridData {
   minCardWidth: number;
@@ -47,11 +48,17 @@ function ProductGrid(props: ProductGridProps) {
   const { pathname } = location;
   const { ref: inViewRef, inView } = useInView();
   const isInfiniteScroll = loadMoreBehavior === "infinite-scroll";
+  // Stale products stay visible while new filters or sort load.
+  const isBrowsing = useCollection((state) => state.status === "loading");
 
   return (
     <div
       {...rest}
-      className="grow space-y-6 overflow-hidden pt-6 pb-8 lg:pt-6 lg:pb-20"
+      aria-busy={isBrowsing}
+      className={cn(
+        "grow space-y-6 overflow-hidden pt-6 pb-8 transition-opacity lg:pt-6 lg:pb-20",
+        isBrowsing && "opacity-60",
+      )}
     >
       {appliedFilters.length > 0 ? (
         <div className="flex flex-wrap items-center gap-6">
@@ -61,7 +68,7 @@ function ProductGrid(props: ProductGridProps) {
               return (
                 <Link
                   key={label}
-                  to={getAppliedFilterLink(filter, params, location)}
+                  to={`${pathname}${getFilterRemovalUrl(params, filter.filter)}`}
                   className="border-line-subtle hover:border-line items-center gap-2 border px-2 py-1"
                   variant="custom"
                   preventScrollReset

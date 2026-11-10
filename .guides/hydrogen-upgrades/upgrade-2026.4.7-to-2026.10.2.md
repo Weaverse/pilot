@@ -198,7 +198,7 @@ Rules:
 | `Money` | `app/components/money.tsx` (keeps `en-US` formatting for every market) |
 | `ExternalVideo`, `ModelViewer` | `app/components/product-media/external-video.tsx`, `model-viewer.tsx` |
 | `ShopPayButton` | `ShopPayButton` from `@shopify/hydrogen/react` (`app/components/product/shop-pay-button.tsx`) |
-| `Pagination`, `getPaginationVariables` | `app/components/pagination.tsx`, `app/utils/pagination.ts` |
+| `Pagination`, `getPaginationVariables` | `app/components/pagination.tsx`, `app/utils/pagination.ts` (`after`/`before` cursors; filters and sort use the library collection store) |
 | `getSeoMeta`, `SeoConfig` | `app/utils/seo-meta.ts` |
 | Sitemap helpers | `app/.server/sitemap.ts`, `app/routes/seo/*` |
 | `createContentSecurityPolicy`, `NonceProvider`, `useNonce` | `app/utils/csp.ts` |
@@ -249,7 +249,8 @@ Cart permalinks: Hydrogen answers `/cart/<variant>:<qty>` with Shopify's permali
 
 ## Step 11: Collections, search and predictive search
 
-- Collections, search and account orders use the local `Pagination`; the `filter.*` URL format, infinite scroll and sort stay unchanged.
+- Collection and all-products filters and sort run on the library collection store: `CollectionProvider` around the route (`app/components/product-grid/collection-browse.tsx`), `parseCollectionParams` in the loader, `useCollection`/`useCollectionActions` in the filter, chip and sort UI. URLs use Liquid-compatible `filter.p.*`/`filter.v.*` and `sort_by` params; old `filter.<field>=<json>` and `sort=` URLs 301 to them (`getLegacyBrowseRedirect` in `app/routes/collections/utils.ts`).
+- The store has no pagination. Infinite scroll and load previous/more, plus search, the collections list and account orders, use the local `Pagination` with `after`/`before` cursors, the params the store clears when filters or sort change.
 - Predictive search runs on Hydrogen's handlers at `/api/predictive-search` (`app/.server/predictive-search.ts`), with `PredictiveSearchProvider` on the client.
 
 ----

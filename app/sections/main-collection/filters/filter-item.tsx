@@ -1,50 +1,53 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
+import { isFilterInputActive, type ProductFilter } from "@shopify/hydrogen";
+import { useCollectionActions } from "@shopify/hydrogen/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
-import { Suspense, use, useState } from "react";
+import { Suspense, use } from "react";
+import { useRouteLoaderData } from "react-router";
 import {
-  useLocation,
-  useNavigate,
-  useRouteLoaderData,
-  useSearchParams,
-} from "react-router";
+  useActiveFilters,
+  useToggleCategoryFilter,
+} from "~/components/product-grid/collection-browse";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import type { RootLoader } from "~/root";
-import type { AppliedFilter } from "~/types/others";
 import { cn } from "~/utils/cn";
-import { getAppliedFilterLink, getFilterLink } from "./filter-utils";
 
 type FilterDisplayAs = "swatch" | "button" | "list-item";
 
 export function FilterItem({
   displayAs,
   option,
-  appliedFilters,
   showFiltersCount,
 }: {
   displayAs: FilterDisplayAs;
   option: Filter["values"][0];
-  appliedFilters: AppliedFilter[];
   showFiltersCount: boolean;
 }) {
-  const navigate = useNavigate();
-  const [params] = useSearchParams();
-  const location = useLocation();
   let rootData = useRouteLoaderData<RootLoader>("root");
-
-  const filter = appliedFilters.find(
-    (flt) => JSON.stringify(flt.filter) === option.input,
-  );
-
-  const [checked, setChecked] = useState(Boolean(filter));
+  // The store updates the filters right away, so the control is checked
+  // before the new products load, and back/forward navigation re-syncs it.
+  const filters = useActiveFilters();
+  const { setFilters, toggleFilterInput } = useCollectionActions();
+  const toggleCategoryFilter = useToggleCategoryFilter();
+  const input = option.input as string;
+  const checked = isFilterInputActive(filters, input);
 
   function handleCheckedChange(newChecked: boolean) {
-    setChecked(newChecked);
-    if (newChecked) {
-      const link = getFilterLink(option.input as string, params, location);
-      navigate(link, { preventScrollReset: true });
-    } else if (filter) {
-      const link = getAppliedFilterLink(filter, params, location);
-      navigate(link, { preventScrollReset: true });
+    if (newChecked === checked) {
+      return;
+    }
+    const filter = JSON.parse(input) as ProductFilter;
+    if (filter.category) {
+      toggleCategoryFilter(filter.category.id);
+    } else if (newChecked && filter.available != null) {
+      // In stock / out of stock is one choice: the store drops both when a
+      // second availability filter is toggled on.
+      setFilters([
+        ...filters.filter((f) => f.available == null && !f.category),
+        filter,
+      ]);
+    } else {
+      toggleFilterInput(input);
     }
   }
 

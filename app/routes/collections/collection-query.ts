@@ -8,7 +8,7 @@ export const COLLECTION_QUERY = gql(
     $country: CountryCode
     $language: LanguageCode
     $filters: [ProductFilter!]
-    $sortKey: ProductCollectionSortKeys!
+    $sortKey: ProductCollectionSortKeys
     $reverse: Boolean
     $first: Int
     $last: Int

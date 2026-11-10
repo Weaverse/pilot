@@ -1,3 +1,4 @@
+import { getSortByValue } from "@shopify/hydrogen";
 import {
   createSchema,
   type WeaverseComponentProps,
@@ -6,7 +7,6 @@ import {
 import { BreadCrumb } from "~/components/breadcrumb";
 import { SortDropdown } from "~/components/product-grid/sort-dropdown";
 import { useProductGridStore } from "~/components/product-grid/store";
-import type { SortParam } from "~/types/others";
 
 interface AllProductsToolbarData {
   enableSort: boolean;
@@ -22,12 +22,27 @@ function AllProductsToolbar(props: AllProductsToolbarProps) {
   const { t } = useTranslation();
   let displayedCount = useProductGridStore((s) => s.displayedCount);
 
-  const sortOptions: Array<{ label: string; key: SortParam }> = [
-    { label: t("collection.sortOptions.relevance"), key: "relevance" },
-    { label: t("collection.sortOptions.priceLowHigh"), key: "price-low-high" },
-    { label: t("collection.sortOptions.priceHighLow"), key: "price-high-low" },
-    { label: t("collection.sortOptions.bestSelling"), key: "best-selling" },
-    { label: t("collection.sortOptions.newest"), key: "newest" },
+  const sortOptions = [
+    {
+      label: t("collection.sortOptions.relevance"),
+      value: getSortByValue("RELEVANCE", false),
+    },
+    {
+      label: t("collection.sortOptions.priceLowHigh"),
+      value: getSortByValue("PRICE", false),
+    },
+    {
+      label: t("collection.sortOptions.priceHighLow"),
+      value: getSortByValue("PRICE", true),
+    },
+    {
+      label: t("collection.sortOptions.bestSelling"),
+      value: getSortByValue("BEST_SELLING", false),
+    },
+    {
+      label: t("collection.sortOptions.newest"),
+      value: getSortByValue("CREATED", true),
+    },
   ];
 
   return (

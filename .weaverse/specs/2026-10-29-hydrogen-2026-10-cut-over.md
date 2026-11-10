@@ -32,7 +32,10 @@ Pilot runs on `@shopify/hydrogen@^2026.10` (Hydrogen as a server-handler library
   - A `cart` cookie whose cart no longer exists is dropped before Hydrogen's handler runs, so the next add creates a fresh cart instead of failing.
   - App-owned changes reconcile through the store's `refresh()`. Invalid gift card codes are reported by comparing `appliedGiftCards` before and after the mutation.
 - **Product.** `ProductProvider`/`useProductForm` replaces `useOptimisticVariant`, `getAdjacentAndFirstAvailableVariants` and `getProductOptions`. Combined-listing values link to the other product. Quick shop and single-product sections use their own provider.
-- **Collections, search, account orders.** A local port of `Pagination` and `getPaginationVariables`. The `filter.*` URL format, infinite scroll, sort and filter UI stay unchanged. The library collection store is a follow-up.
+- **Collections, search, account orders.**
+  - Collection and all-products listings run on the library collection store (`CollectionProvider`, `useCollection`, `useCollectionActions`): filters and sort live in Liquid-compatible URL params (`filter.p.*`/`filter.v.*`, `sort_by`), parsed with `parseCollectionParams` in the loaders; chips use `getFilterRemovalUrl` and checked state uses `isFilterInputActive`. The filter and sort UI is otherwise unchanged.
+  - Pre-2026.10 URLs (`filter.<field>=<json>`, `sort=`) answer with a 301 to the new params, so shared and indexed links keep their filters and sort.
+  - The store owns filters and sort, not pages. Infinite scroll and load previous/more stay on the local port of `Pagination`/`getPaginationVariables`, which uses the `after`/`before` cursor params the store clears on every browse change. Search, the collections list and account orders keep the same port.
 - **Predictive search.** Library handlers at `/api/predictive-search`, with the market taken from the `Referer`, plus `PredictiveSearchProvider`.
 - **Customer account.**
   - Library handlers at the fixed paths `/account/login`, `/account/authorize`, `/account/refresh` and `/account/logout`, with a signed cookie session.
@@ -47,7 +50,7 @@ Pilot runs on `@shopify/hydrogen@^2026.10` (Hydrogen as a server-handler library
 - **Presentational.** Local `Image` (CDN srcset, plus the focal-point and aspect-ratio behavior from #176), `Money` (via `formatMoney`), `ExternalVideo`, `ModelViewer`, plus `ShopPayButton` from `@shopify/hydrogen/react`. No `@shopify/hydrogen-react` dependency.
 - **SEO.** A local `getSeoMeta`/`SeoConfig` port keeps `seoMetaFromMatches`, JSON-LD, hreflang and canonicals byte-equivalent. Local sitemap index and pages, keeping the Weaverse sitemap entry and the custom articles sitemap.
 - **Weaverse.** `WeaverseClient({storefront, env, cache, waitUntil, request, components, themeSchema, customerAccount})`, with `throwRouteFailures` and degraded-theme handling unchanged. Section loaders use `weaverse.storefront.graphql(doc, {variables, cache})`.
-- **Non-goals:** React Router 8, the library collection store, new features, design changes, and a cart-store UI redesign beyond what the new store requires.
+- **Non-goals:** React Router 8, new features, design changes, and a cart-store UI redesign beyond what the new store requires.
 
 ## Acceptance
 
@@ -77,7 +80,7 @@ Parity with `main`: every item below behaves as it does today, verified on a pro
   - checkout with attribution params;
   - the cart is priced in the shopper's market, and switching market moves the cart.
 - **Product:** variant selection updates client-side without a full navigation; URL params stay in sync; combined listings link to the other product; sold-out and unavailable states are shown; quantity; Shop Pay; media (images, video, 3D); Judge.me reviews; recommendations.
-- **Collections and search:** filters, sort, infinite scroll and load previous, and product count, with the same URLs as today; the search page and predictive search, localized.
+- **Collections and search:** filters, sort, infinite scroll and load previous, and product count; pre-2026.10 filter and sort URLs redirect to the Liquid-compatible params; the search page and predictive search, localized.
 - **Account:** the OAuth login round trip over HTTPS returns to the original localized page; dashboard, orders (paginated), order detail, profile edit, address CRUD (`countryCode`), logout to the localized home; the header account web component; the newsletter and Klaviyo forms.
 - **Analytics:** consent banner; page, product, collection, search, cart-viewed, add and remove events reach Shopify and the GTM `dataLayer` with the same payloads as today.
 - **Weaverse:** Studio preview and design mode; translations (including ZH markets); section loaders; a Weaverse outage still returns a retryable 503 with the degraded theme.
@@ -104,7 +107,7 @@ All work happens on the integration branch `feat/191-hydrogen-2026-10`, with one
    - Rework `routes/cart/*`, `routes/others/discount-code.tsx` and the country selector.
    - Rewrite the add-to-cart call sites.
 6. **Product.** A product provider at the route; replace the `useOptimisticVariant` call sites in `sections/main-product/*`; the variant selector, quick shop and single-product.
-7. **Collections, search, account pagination.** A local `Pagination` and `getPaginationVariables`, plus predictive search on the library handlers.
+7. **Collections, search, account pagination.** A local `Pagination` and `getPaginationVariables`, plus predictive search on the library handlers. Follow-up: collection and all-products filters and sort on the library collection store.
 8. **Customer account.**
    - `routes/account/**` on `client.graphql`, with access tokens from the session.
    - Remove the `account/auth/*` routes (the library owns those paths).
@@ -118,6 +121,7 @@ Decisions made during implementation:
 - **Soft-navigation redirects.** `handleShopifyRedirects` only matches document paths, so `marketAwareRedirect` maps single-fetch `.data` requests to their document path and answers a match with `204` + `X-Remix-Redirect`, as classic `storefrontRedirect` did.
 - **Deprecated cart fields.** `CartCost.totalDutyAmount`/`totalTaxAmount` (no longer populated) are dropped; the summary discount sums `lines.discountAllocations(lineLevelOnly: false)` instead of the deprecated `Cart.discountAllocations`.
 - **GTM.** The 2026.10 analytics bus has no ungated `subscribe`; the GTM `dataLayer` mapping is a bus destination, so its pushes follow Customer Privacy consent.
+- **Collection store.** Hydrogen 2026.10 has no pagination primitive; the store holds filters and sort only. Pages stay on the local `Pagination` port, moved from `cursor`/`direction` to the `after`/`before` params the store and `getFilterRemovalUrl` clear. "Featured" is the collection's default order (`COLLECTION_DEFAULT`) and the collection sort menu drops "Relevance", which `parseCollectionParams` does not read for collections. Price filter chips show the applied range instead of the collection's full range.
 - **Money formatting.** The local `Money` keeps classic Hydrogen's `en-US` formatting for every market (classic read the locale from a `ShopifyProvider` Pilot never rendered). Market-locale formatting is a separate change.
 
 Decisions from the #207 spike:

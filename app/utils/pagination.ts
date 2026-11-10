@@ -1,7 +1,8 @@
 /**
  * Local port of classic Hydrogen's `getPaginationVariables` (`@shopify/hydrogen@2026.4`, MIT).
- * Hydrogen 2026.10 no longer exports it. Behavior is unchanged: reads `cursor`/`direction`
- * (or `${namespace}_cursor`/`${namespace}_direction`) from the request URL.
+ * Hydrogen 2026.10 no longer exports it. Reads the `after`/`before` cursor params
+ * (or `${namespace}_after`/`${namespace}_before`) from the request URL: the cursor names
+ * Hydrogen 2026.10's collection helpers clear when filters or sort change.
  */
 export function getPaginationVariables(
   request: Request,
@@ -17,13 +18,11 @@ export function getPaginationVariables(
 
   const { pageBy, namespace = "" } = options;
   const searchParams = new URLSearchParams(new URL(request.url).search);
-  const cursorParam = namespace ? `${namespace}_cursor` : "cursor";
-  const directionParam = namespace ? `${namespace}_direction` : "direction";
-  const cursor = searchParams.get(cursorParam) ?? undefined;
-  const isPrevious = searchParams.get(directionParam) === "previous";
+  const prefix = namespace ? `${namespace}_` : "";
+  const before = searchParams.get(`${prefix}before`);
 
-  if (isPrevious) {
-    return { last: pageBy, startCursor: cursor ?? null };
+  if (before) {
+    return { last: pageBy, startCursor: before };
   }
-  return { first: pageBy, endCursor: cursor ?? null };
+  return { first: pageBy, endCursor: searchParams.get(`${prefix}after`) };
 }
