@@ -21,7 +21,7 @@ export function AddressBook({
           <div>You haven&apos;t saved any addresses yet.</div>
         )}
         <div className="">
-          <Link to="address/add" className="mb-5" variant="outline">
+          <Link to="/account/address/add" className="mb-5" variant="outline">
             Add an Address
           </Link>
         </div>

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- [fix] The account page keeps the space between its blocks on desktop, and "Add an Address" opens the address form instead of a 404. Sections only apply their `gap` spacing when a `gap` is set, so a `space-y-*` passed in `containerClassName` also holds on large screens (#223)
+
 ## 2026.11.10
 
 - [fix] English markets abroad format prices like their country: `/en-de` now shows `1.234,50 €` (was `€1,234.50`), and `/en-fr`, `/en-it`, `/en-nl`, `/en-es` and `/en-vn` match their native market. Markets whose country already writes prices the English way (`/en-au`, `/en-jp`, `/en-in`, ...) are unchanged. A market sets this with the new optional `priceLocale` field (defaults to `hreflang`); collection filter labels use the same format. The collection price range filter shows the market's currency symbol instead of a hardcoded `$` (#219)
