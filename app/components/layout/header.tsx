@@ -302,18 +302,52 @@ function ShopifyAccountButton() {
   const { known: customerAccessTokenKnown, token: customerAccessToken } =
     useCustomerAccessToken();
 
+  const showAccount = customerAccessTokenKnown && componentsReady;
+  // <shopify-account> renders nothing until it has fetched the shop and
+  // customer, so swapping it in straight away blanks the icon for a network
+  // round trip. Keep Pilot's icon in the slot until the component has drawn
+  // its own button (it fires `shopify-render` on the document when it does).
+  const [accountRendered, setAccountRendered] = useState(false);
+
+  useEffect(() => {
+    const account = accountRef.current;
+    if (!(showAccount && account)) {
+      return;
+    }
+    function syncRendered() {
+      if (account?.shadowRoot?.querySelector(".account-button")) {
+        setAccountRendered(true);
+      }
+    }
+    syncRendered();
+    document.addEventListener("shopify-render", syncRendered);
+    return () => {
+      document.removeEventListener("shopify-render", syncRendered);
+      setAccountRendered(false);
+    };
+  }, [showAccount]);
+
+  useEffect(() => {
+    if (!(accountRendered && shouldOpenWhenReadyRef.current)) {
+      return;
+    }
+    shouldOpenWhenReadyRef.current = false;
+    accountRef.current?.shadowRoot
+      ?.querySelector<HTMLElement>(".account-button")
+      ?.click();
+  }, [accountRendered]);
+
   function warmAccountComponents(openWhenReady = false) {
     if (!(customerAccessTokenKnown && publicAccessToken && publicStoreDomain)) {
       return;
     }
+    if (openWhenReady) {
+      shouldOpenWhenReadyRef.current = true;
+    }
     if (componentsReady) {
-      if (openWhenReady) {
-        accountRef.current?.click();
-      }
       return;
     }
     if (openWhenReady) {
-      shouldOpenWhenReadyRef.current = true;
       setIsLoading(true);
     }
     loadShopifyAccountComponents(nonce)
@@ -328,49 +362,42 @@ function ShopifyAccountButton() {
       });
   }
 
-  useEffect(() => {
-    if (!(componentsReady && shouldOpenWhenReadyRef.current)) {
-      return;
-    }
-    shouldOpenWhenReadyRef.current = false;
-    requestAnimationFrame(() => accountRef.current?.click());
-  }, [componentsReady]);
-
-  if (!customerAccessTokenKnown) {
-    return (
-      <span aria-hidden="true">
-        <Icon name="user" className="h-5 w-5" />
-      </span>
-    );
-  }
-
-  if (!componentsReady) {
-    return (
-      <button
-        type="button"
-        className="flex h-8 w-8 items-center justify-center focus-visible:outline-hidden"
-        aria-label={isLoading ? "Loading account" : "Account"}
-        aria-busy={isLoading || undefined}
-        onClick={() => warmAccountComponents(true)}
-        onFocus={() => warmAccountComponents()}
-        onPointerEnter={() => warmAccountComponents()}
-      >
-        <Icon name="user" className="h-5 w-5" />
-      </button>
-    );
-  }
-
+  // One fixed 32px slot for every state (inert icon, intent button, web
+  // component), so resolving the login state never shifts the header.
   return (
-    <shopify-store
-      store-domain={publicStoreDomain}
-      public-access-token={publicAccessToken}
-      customer-access-token={customerAccessToken || undefined}
-    >
-      <shopify-account ref={accountRef} sign-in-url={signInUrl}>
-        <span slot="signed-out-avatar">
-          <Icon name="user" className="h-5 w-5" />
-        </span>
-      </shopify-account>
-    </shopify-store>
+    <div className="relative flex h-8 w-8 items-center justify-center">
+      {!accountRendered &&
+        (customerAccessTokenKnown ? (
+          <button
+            type="button"
+            className="flex h-8 w-8 items-center justify-center focus-visible:outline-hidden"
+            aria-label={isLoading ? "Loading account" : "Account"}
+            aria-busy={isLoading || undefined}
+            onClick={() => warmAccountComponents(true)}
+            onFocus={() => warmAccountComponents()}
+            onPointerEnter={() => warmAccountComponents()}
+          >
+            <Icon name="user" className="h-5 w-5" />
+          </button>
+        ) : (
+          <span aria-hidden="true" className="flex">
+            <Icon name="user" className="h-5 w-5" />
+          </span>
+        ))}
+      {showAccount && (
+        <shopify-store
+          store-domain={publicStoreDomain}
+          public-access-token={publicAccessToken}
+          customer-access-token={customerAccessToken || undefined}
+          className={cn("flex", !accountRendered && "invisible absolute")}
+        >
+          <shopify-account ref={accountRef} sign-in-url={signInUrl}>
+            <span slot="signed-out-avatar">
+              <Icon name="user" className="h-5 w-5" />
+            </span>
+          </shopify-account>
+        </shopify-store>
+      )}
+    </div>
   );
 }
