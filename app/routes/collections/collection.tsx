@@ -10,7 +10,10 @@ import { redirect, useLoaderData } from "react-router";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
-import { CollectionBrowseProvider } from "~/components/product-grid/collection-browse";
+import {
+  CollectionBrowseProvider,
+  parseCategoryFilters,
+} from "~/components/product-grid/collection-browse";
 import { CollectionView } from "~/components/root/analytics-views";
 import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { getPaginationVariables } from "~/utils/pagination";
@@ -41,7 +44,12 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }
   // Liquid-compatible `filter.p.*`/`filter.v.*` and `sort_by` params,
   // the format Hydrogen's collection store writes.
-  const { filters, sortKey, reverse } = parseCollectionParams(url.searchParams);
+  const browse = parseCollectionParams(url.searchParams);
+  const { sortKey, reverse } = browse;
+  const filters = [
+    ...browse.filters,
+    ...parseCategoryFilters(url.searchParams),
+  ];
 
   const { CUSTOM_COLLECTION_BANNER_METAFIELD = "" } = env;
   const [bannerNamespace = "", bannerKey = ""] =

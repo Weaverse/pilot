@@ -1,9 +1,13 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { isFilterInputActive, type ProductFilter } from "@shopify/hydrogen";
-import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
+import { useCollectionActions } from "@shopify/hydrogen/react";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
 import { Suspense, use } from "react";
 import { useRouteLoaderData } from "react-router";
+import {
+  useActiveFilters,
+  useToggleCategoryFilter,
+} from "~/components/product-grid/collection-browse";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
@@ -22,8 +26,9 @@ export function FilterItem({
   let rootData = useRouteLoaderData<RootLoader>("root");
   // The store updates the filters right away, so the control is checked
   // before the new products load, and back/forward navigation re-syncs it.
-  const filters = useCollection((state) => state.filters);
+  const filters = useActiveFilters();
   const { setFilters, toggleFilterInput } = useCollectionActions();
+  const toggleCategoryFilter = useToggleCategoryFilter();
   const input = option.input as string;
   const checked = isFilterInputActive(filters, input);
 
@@ -32,10 +37,15 @@ export function FilterItem({
       return;
     }
     const filter = JSON.parse(input) as ProductFilter;
-    if (newChecked && filter.available != null) {
+    if (filter.category) {
+      toggleCategoryFilter(filter.category.id);
+    } else if (newChecked && filter.available != null) {
       // In stock / out of stock is one choice: the store drops both when a
       // second availability filter is toggled on.
-      setFilters([...filters.filter((f) => f.available == null), filter]);
+      setFilters([
+        ...filters.filter((f) => f.available == null && !f.category),
+        filter,
+      ]);
     } else {
       toggleFilterInput(input);
     }

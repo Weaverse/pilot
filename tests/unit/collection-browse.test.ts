@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { parseCollectionParams } from "@shopify/hydrogen";
+import {
+  parseCollectionParams,
+  serializeCollectionParams,
+} from "@shopify/hydrogen";
+import { parseCategoryFilters } from "../../app/components/product-grid/collection-browse";
 import { getPaginationVariables } from "../../app/utils/pagination";
 import { getLegacyBrowseRedirect } from "../../app/routes/collections/utils";
 
@@ -65,4 +69,28 @@ test("pagination reads the after/before cursors", () => {
   expect(vars("")).toEqual({ first: 12, endCursor: null });
   expect(vars("?after=abc")).toEqual({ first: 12, endCursor: "abc" });
   expect(vars("?before=xyz")).toEqual({ last: 12, startCursor: "xyz" });
+});
+
+test("category filters round-trip through the URL", () => {
+  const category = { category: { id: "gid://shopify/TaxonomyCategory/aa-1" } };
+  const params = serializeCollectionParams({
+    filters: [category],
+    sortKey: undefined,
+    reverse: false,
+  });
+
+  // Hydrogen 2026.10.2 writes `filter.p.category` but doesn't read it back.
+  expect(parseCollectionParams(params).filters).toEqual([]);
+  expect(parseCategoryFilters(params)).toEqual([category]);
+
+  const legacyTarget = legacy(
+    `/collections/all?filter.category=${encodeURIComponent(
+      JSON.stringify(category.category),
+    )}`,
+  );
+  expect(
+    parseCategoryFilters(
+      new URL(legacyTarget as string, "https://shop.test").searchParams,
+    ),
+  ).toEqual([category]);
 });
