@@ -4,7 +4,6 @@ import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import { data, Form, useLoaderData } from "react-router";
 import { seoPayload } from "~/.server/seo";
 import { BreadCrumb } from "~/components/breadcrumb";
-import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import { SearchView } from "~/components/root/analytics-views";
 import { Section } from "~/components/section";
@@ -186,9 +185,13 @@ export default function Search() {
         >
           <Icon name="x" className="h-5 w-5" />
         </button>
-        <Button type="submit" animate={false} className="shrink-0 px-4 py-2">
-          Search
-        </Button>
+        <button
+          type="submit"
+          aria-label="Search"
+          className="shrink-0 rounded-full p-1.5 text-gray-700 hover:bg-gray-100 focus-visible:bg-gray-100"
+        >
+          <Icon name="arrow-elbow-down-left" className="h-5 w-5" />
+        </button>
       </Form>
       <PopularKeywords />
 
