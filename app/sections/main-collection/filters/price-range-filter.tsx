@@ -3,6 +3,7 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
 import clsx from "clsx";
 import { useRef, useState } from "react";
+import { useMoney } from "~/components/money";
 import type { CollectionQuery } from "~/routes/collections/collection-query";
 
 export function PriceRangeFilter({
@@ -14,7 +15,9 @@ export function PriceRangeFilter({
   const { setFilters } = useCollectionActions();
   const thumbRef = useRef<"from" | "to" | null>(null);
 
-  const { minVariantPrice, maxVariantPrice } = getPricesRange(collection);
+  const { minVariantPrice, maxVariantPrice, currencyCode } =
+    getPricesRange(collection);
+  const { currencySymbol } = useMoney({ amount: "0", currencyCode });
   const { min, max } = filters.find((filter) => filter.price)?.price ?? {};
 
   const [minPrice, setMinPrice] = useState(min);
@@ -94,7 +97,7 @@ export function PriceRangeFilter({
               Min price
             </label>
           </VisuallyHidden.Root>
-          <span>$</span>
+          <span>{currencySymbol}</span>
           <input
             name="minPrice"
             type="number"
@@ -119,7 +122,7 @@ export function PriceRangeFilter({
               Max price
             </label>
           </VisuallyHidden.Root>
-          <span>$</span>
+          <span>{currencySymbol}</span>
           <input
             name="maxPrice"
             type="number"
@@ -151,5 +154,7 @@ function getPricesRange(collection: CollectionQuery["collection"]) {
   return {
     minVariantPrice: Number(minVariantPrice?.amount) || 0,
     maxVariantPrice: Number(maxVariantPrice?.amount) || 1000,
+    currencyCode:
+      minVariantPrice?.currencyCode ?? maxVariantPrice?.currencyCode,
   };
 }

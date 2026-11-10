@@ -171,7 +171,7 @@ export default function Search() {
           className="h-5 w-5 shrink-0 text-gray-500"
         />
         <input
-          className="h-full w-full border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
+          className="h-full w-full min-w-0 border-none py-4 focus:ring-0 focus:outline-hidden focus-visible:outline-hidden"
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
           name="q"
@@ -184,6 +184,13 @@ export default function Search() {
           onClick={() => setSearchKey("")}
         >
           <Icon name="x" className="h-5 w-5" />
+        </button>
+        <button
+          type="submit"
+          aria-label="Search"
+          className="shrink-0 rounded-full p-1.5 text-gray-700 hover:bg-gray-100 focus-visible:bg-gray-100"
+        >
+          <Icon name="arrow-elbow-down-left" className="h-5 w-5" />
         </button>
       </Form>
       <PopularKeywords />

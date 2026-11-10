@@ -2,12 +2,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { PredictiveSearchProvider } from "@shopify/hydrogen/react";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { cn } from "~/utils/cn";
+import { localizePath, resolveLocale } from "~/utils/locale";
 import { PopularKeywords } from "./popular-keywords";
 import { PREDICTIVE_SEARCH_SETTINGS } from "./predictive-search-query";
 import { PredictiveSearchResult } from "./predictive-search-result";
@@ -16,7 +17,7 @@ import { PredictiveSearchForm } from "./search-form";
 export function PredictiveSearchButton() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const params = useParams();
+  const navigate = useNavigate();
 
   // Close when navigation changes.
   useEffect(() => {
@@ -82,10 +83,13 @@ export function PredictiveSearchButton() {
                             e.preventDefault();
                             const query = e.currentTarget.value.trim();
                             if (query) {
-                              const locale = params.locale
-                                ? `/${params.locale}`
-                                : "";
-                              window.location.href = `${locale}/search?q=${encodeURIComponent(query)}`;
+                              // Client-side, like "View all results".
+                              navigate(
+                                localizePath(
+                                  `/search?q=${encodeURIComponent(query)}`,
+                                  resolveLocale(location.pathname),
+                                ),
+                              );
                             }
                           }
                         }}
@@ -159,7 +163,7 @@ function PredictiveSearchResults() {
           {searchTerm && (
             <div>
               <Link
-                to={`/search?q=${searchTerm}`}
+                to={`/search?q=${encodeURIComponent(searchTerm)}`}
                 variant="underline"
                 className="flex w-fit items-center gap-2"
               >

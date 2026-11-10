@@ -2,7 +2,7 @@ import {
   type ProductFilter,
   serializeCollectionParams,
 } from "@shopify/hydrogen";
-import type { Locale } from "~/utils/locale";
+import { type Locale, priceLocaleFor } from "~/utils/locale";
 
 /** Pilot's pre-2026.10 `sort` values, as their Liquid-compatible `sort_by` value. */
 const LEGACY_SORT_BY: Record<string, string | undefined> = {
@@ -69,9 +69,8 @@ export function getLegacyBrowseRedirect(url: URL): string | null {
 }
 
 export function parseAsCurrency(value: number, locale: Locale) {
-  // `hreflang`, not `language`: the provider code can be script-specific
-  // (`ZH_CN`), which is not a BCP-47 tag and makes `Intl` throw.
-  return new Intl.NumberFormat(locale.hreflang, {
+  // Same tag as `<Money>`, so filter labels match the prices on the page.
+  return new Intl.NumberFormat(priceLocaleFor(locale), {
     style: "currency",
     currency: locale.currency,
   }).format(value);

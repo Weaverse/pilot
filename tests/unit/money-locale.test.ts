@@ -30,6 +30,17 @@ test("European markets use their own separators and symbol placement", () => {
   expect(price("/fr-fr", "1234.5", "EUR").full).toBe("1 234,50 €");
 });
 
+test("English markets abroad write prices like their country", () => {
+  // Text follows the language, prices follow the country (#219).
+  expect(price("/en-de", "1234.5", "EUR").full).toBe("1.234,50 €");
+  expect(price("/en-fr", "1234.5", "EUR").full).toBe(
+    price("/fr-fr", "1234.5", "EUR").full,
+  );
+  // Countries that already write prices the English way keep `hreflang`.
+  expect(price("/en-au", "1234.5", "AUD").full).toBe("$1,234.50");
+  expect(price("/en-in", "1234.5", "INR").full).toBe("₹1,234.50");
+});
+
 test("zero-decimal currencies never show minor units", () => {
   expect(price("/ja-jp", "1234.5", "JPY").full).toBe("￥1,235");
   expect(price("/en-jp", "1000.0", "JPY").full).toBe("¥1,000");
