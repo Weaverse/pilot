@@ -6,7 +6,7 @@ import type {
   ReactNode,
 } from "react";
 import { useLocation } from "react-router";
-import { type Locale, resolveLocale } from "~/utils/locale";
+import { type Locale, priceLocaleFor, resolveLocale } from "~/utils/locale";
 
 type MoneyData = Partial<MoneyV2>;
 
@@ -14,13 +14,14 @@ type MoneyData = Partial<MoneyV2>;
  * Formats `money` the way `locale`'s market writes prices: `1.234,56 €` in
  * de-DE, `￥1,235` in ja-JP, `$1,234.56` in the default en-US market.
  *
- * Uses `hreflang`, not `language`: the provider code can be script-specific
- * (`ZH_CN`), which is not a BCP-47 tag and makes `Intl` throw.
+ * Uses {@link priceLocaleFor} (a BCP-47 tag), not `language`: the provider
+ * code can be script-specific (`ZH_CN`), which makes `Intl` throw. English
+ * markets abroad follow their country: `/en-de` also renders `1.234,56 €`.
  */
 export function formatMarketMoney(money: MoneyData, locale: Locale) {
   return formatMoney(
     { amount: money.amount ?? "", currencyCode: money.currencyCode ?? "" },
-    { locale: locale.hreflang },
+    { locale: priceLocaleFor(locale) },
   );
 }
 

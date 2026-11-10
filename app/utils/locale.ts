@@ -12,7 +12,8 @@ type CountryCode = I18nConfig["country"];
  * Two language identities exist and are deliberately separate:
  *
  * - `language` is the market's BCP-47 identity. It builds the URL prefix, the
- *   `hreflang`, `<html lang>`, the `Intl` tag used for prices and dates, and
+ *   `hreflang`, `<html lang>`, the `Intl` tag used for dates (and prices,
+ *   unless `priceLocale` says otherwise), and
  *   the theme's own translation bundle. It is always a bare two-letter code.
  * - `providerLanguage` is what **Shopify** is asked for, and nothing else.
  *   Shopify's `LanguageCode` has script-specific members, and for Chinese only
@@ -38,6 +39,12 @@ export type Locale = I18nConfig & {
    * not specific enough — `zh-TW` is Traditional, `zh-CN` Simplified.
    */
   bundleLocale?: string;
+  /**
+   * `Intl` tag for prices when the market's language writes numbers unlike
+   * its country: `/en-de` reads in English but prices follow Germany
+   * (`1.234,50 €`). Defaults to `hreflang`. See {@link priceLocaleFor}.
+   */
+  priceLocale?: string;
   country: CountryCode;
   /** Leading URL segment for this market; `""` for the default market. */
   pathPrefix: string;
@@ -158,6 +165,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
     country: "FR",
     currency: "EUR",
     hreflang: "en-FR",
+    priceLocale: "fr-FR",
     direction: "ltr",
   },
   {
@@ -178,6 +186,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
     country: "DE",
     currency: "EUR",
     hreflang: "en-DE",
+    priceLocale: "de-DE",
     direction: "ltr",
   },
   {
@@ -220,6 +229,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
     country: "IT",
     currency: "EUR",
     hreflang: "en-IT",
+    priceLocale: "it-IT",
     direction: "ltr",
   },
   {
@@ -270,6 +280,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
     country: "NL",
     currency: "EUR",
     hreflang: "en-NL",
+    priceLocale: "nl-NL",
     direction: "ltr",
   },
   {
@@ -280,6 +291,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
     country: "ES",
     currency: "EUR",
     hreflang: "en-ES",
+    priceLocale: "es-ES",
     direction: "ltr",
   },
   {
@@ -352,6 +364,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
     country: "VN",
     currency: "VND",
     hreflang: "en-VN",
+    priceLocale: "vi-VN",
     direction: "ltr",
   },
   {
@@ -484,6 +497,22 @@ export function providerLanguageFor(locale: Locale): LanguageCode {
  */
 export function bundleLocaleFor(locale: Locale): string {
   return locale.bundleLocale ?? locale.hreflang.split("-")[0].toLowerCase();
+}
+
+/**
+ * The `Intl` tag prices are formatted with for `locale`.
+ *
+ * Prices follow the country, text follows the language. An English market in
+ * a country that writes numbers differently (`en-DE`, `en-FR`) would otherwise
+ * show `€1,234.50`, unlike the rest of that market and unlike the same store's
+ * native market (`1.234,50 €`); `Intl`'s own `en-DE` data is English-style
+ * and varies between ICU versions, so the server and browser could disagree.
+ * Markets whose country already writes prices the English way (`en-AU`,
+ * `en-JP`, `en-IN`) keep `hreflang`, which also keeps the symbol in the
+ * page's script.
+ */
+export function priceLocaleFor(locale: Locale): string {
+  return locale.priceLocale ?? locale.hreflang;
 }
 
 /**
