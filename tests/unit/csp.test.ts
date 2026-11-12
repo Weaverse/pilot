@@ -28,3 +28,15 @@ test("Studio design mode adds only the trusted Studio origin", () => {
   expect(directives.scriptSrc).toContain("https://studio.weaverse.io");
   expect(directives.scriptSrc).toContain("'unsafe-eval'");
 });
+
+test("Shopify videos on the store's own domain are allowed media", () => {
+  const directives = getCspDirectives(
+    new Request(STOREFRONT),
+    "checkout.example.com",
+  );
+
+  expect(directives.mediaSrc).toContain("https://checkout.example.com");
+  expect(getCspDirectives(new Request(STOREFRONT)).mediaSrc).not.toContain(
+    "https://checkout.example.com",
+  );
+});

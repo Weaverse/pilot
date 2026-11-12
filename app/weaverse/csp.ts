@@ -53,11 +53,22 @@ const THEME_DIRECTIVES = {
  * The theme's CSP directives, plus Weaverse Studio's inside Studio. The SDK
  * adds the Studio origin only when `weaverseHost` is a trusted Studio host,
  * so a crafted `?weaverseHost=` cannot widen the policy.
+ *
+ * A store with its own domain gets Shopify-hosted video files on that domain
+ * (`https://<checkout domain>/cdn/shop/videos/...`), not on cdn.shopify.com,
+ * so the checkout domain is a media source too.
  */
 export function getCspDirectives(
   request: Request,
+  checkoutDomain?: string,
 ): ContentSecurityPolicyDirectives {
   const directives: ContentSecurityPolicyDirectives = { ...THEME_DIRECTIVES };
+  if (checkoutDomain) {
+    directives.mediaSrc = [
+      ...(directives.mediaSrc ?? []),
+      `https://${checkoutDomain.replace(/^https?:\/\//, "")}`,
+    ];
+  }
   const studio = getWeaverseStudioCspDirectives(request);
   for (const key of Object.keys(studio) as (keyof typeof studio)[]) {
     directives[key] = [...(directives[key] ?? []), ...(studio[key] ?? [])];
