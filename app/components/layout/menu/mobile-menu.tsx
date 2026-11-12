@@ -1,5 +1,6 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Dialog from "@radix-ui/react-dialog";
+import { getThemeElementProps } from "@weaverse/schema";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
@@ -32,6 +33,8 @@ export function MobileMenu() {
           )}
         />
         <Dialog.Content
+          // The open drawer renders the Header settings over the page.
+          {...getThemeElementProps("Header")}
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn([
             "fixed inset-0 z-10 h-screen bg-(--color-header-bg) pt-4 pb-2 text-(--color-header-text)",

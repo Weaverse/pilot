@@ -1,3 +1,4 @@
+import { getThemeElementProps } from "@weaverse/schema";
 import { ShopifyImage } from "~/components/shopify-image";
 import {
   useThemeSettings,
@@ -60,6 +61,7 @@ export function Footer() {
 
   return (
     <footer
+      {...getThemeElementProps("Footer")}
       className={cn(
         "w-full bg-(--color-footer-bg) pt-9 text-(--color-footer-text) lg:pt-16",
         footerVariants({ padding: footerWidth }),

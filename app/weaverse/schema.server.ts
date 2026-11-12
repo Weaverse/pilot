@@ -43,6 +43,12 @@ export const themeSchema: WeaverseThemeSchema = {
     // excludeFilenamePrefixes: ["thumb_v"],
     excludeProductFiles: true,
   },
+  // Settings groups listed in the Studio Page Outline, by group name.
+  outline: {
+    header: ["Scrolling announcements", "Header"],
+    footer: ["Footer"],
+    "popups-and-newsletter": ["Newsletter Popup"],
+  },
   settings: [
     generalSettings,
     typographySettings,
