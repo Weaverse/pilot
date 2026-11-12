@@ -1,10 +1,14 @@
-import type { I18nConfig } from "@shopify/hydrogen";
+import {
+  defineShopifyI18n,
+  type ShopifyCountryCode,
+  type ShopifyLanguageCode,
+} from "@shopify/hydrogen";
 import type { CurrencyCode } from "@shopify/hydrogen/storefront-api-types";
 
 // The enums Hydrogen's request context accepts, from the Storefront API schema
 // it ships with.
-type LanguageCode = I18nConfig["language"];
-type CountryCode = I18nConfig["country"];
+type LanguageCode = ShopifyLanguageCode;
+type CountryCode = ShopifyCountryCode;
 
 /**
  * A single Shopify market served by this storefront.
@@ -26,7 +30,7 @@ type CountryCode = I18nConfig["country"];
  * Only markets whose provider code differs from their BCP-47 code set
  * `providerLanguage`; {@link providerLanguageFor} falls back to `language`.
  */
-export type Locale = I18nConfig & {
+export type Locale = {
   language: LanguageCode;
   /**
    * Shopify `LanguageCode` for this market when it differs from the BCP-47
@@ -516,17 +520,43 @@ export function priceLocaleFor(locale: Locale): string {
 }
 
 /**
- * The `i18n` object handed to `createHydrogenContext` for `request`.
+ * `locale` as Hydrogen's request context sees it.
  *
- * Hydrogen copies this onto every `@inContext` query, so `language` here is the
+ * Hydrogen copies `language` onto every `@inContext` query, so it is the
  * provider code. The market's public identity — `pathPrefix`, `hreflang`,
  * `direction`, `currency` — rides along unchanged for the loaders that read it.
  */
-export function providerContextForRequest(request: Request): Locale {
-  const locale = resolveLocaleFromRequest(request);
-
+export function providerLocaleFor(locale: Locale): Locale {
   return { ...locale, language: providerLanguageFor(locale) };
 }
+
+/** {@link providerLocaleFor} for the market of a request URL. */
+export function providerContextForRequest(request: Request): Locale {
+  return providerLocaleFor(resolveLocaleFromRequest(request));
+}
+
+/**
+ * Hydrogen's i18n definition, built from {@link SUPPORTED_LOCALES}.
+ *
+ * Entries carry the provider language, so Hydrogen's derived prefix would be
+ * wrong for Chinese (`ZH_TW` + `HK` derives `zh-tw-hk`); every entry pins its
+ * existing prefix as `pathSegment`, keeping URLs unchanged. Pilot still
+ * resolves the market itself and passes it as `locale` (see
+ * `app/.server/storefront.ts`): Hydrogen's URL matching does not know the
+ * `.data` suffix or the `Referer` fallback for unprefixed handler paths.
+ */
+export const i18n = defineShopifyI18n({
+  defaultLocale: providerLocaleFor(DEFAULT_LOCALE),
+  routing: {
+    type: "pathname",
+    locales: SUPPORTED_LOCALES.filter((locale) => locale.pathPrefix).map(
+      (locale) => ({
+        ...providerLocaleFor(locale),
+        pathSegment: locale.pathPrefix.slice(1),
+      }),
+    ),
+  },
+});
 
 /**
  * An app path localized for the market the request came in on.

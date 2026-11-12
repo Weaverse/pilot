@@ -33,7 +33,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const pagingVariables = getPaginationVariables(request, { pageBy: 12 });
   const { collectionHandle } = params;
   const { storefront, env } = context;
-  const locale = storefront.i18n;
+  const locale = storefront.locale;
 
   invariant(collectionHandle, "Missing collectionHandle param");
 

@@ -8,8 +8,9 @@ import {
   type ShopifyRequestContext,
 } from "@shopify/hydrogen";
 import {
+  i18n,
   type Locale,
-  providerLanguageFor,
+  providerLocaleFor,
   resolveLocale,
 } from "~/utils/locale";
 
@@ -23,7 +24,7 @@ export type StorefrontI18n = Locale & { pathPrefix: string };
 export type Storefront = (
   | RequestScopedPrivateStorefrontClient<StorefrontCallOptions>
   | PublicStorefrontClient<StorefrontCallOptions>
-) & { i18n: StorefrontI18n };
+) & { locale: StorefrontI18n };
 
 /**
  * Paths Hydrogen's request handlers own. They are matched exactly and never
@@ -101,10 +102,11 @@ export function createRequestStorefront({
   cache: CacheInstance;
   waitUntil: ExecutionContext["waitUntil"];
 }): Storefront {
-  const locale = resolveRequestLocale(request);
   // Shopify gets the provider language (`ZH_TW`, not `ZH`); the rest of the
-  // market identity rides along for loaders that read it.
-  const i18n = { ...locale, language: providerLanguageFor(locale) };
+  // market identity rides along on `locale` for loaders that read it. The
+  // market is passed explicitly because Pilot resolves it from more than the
+  // URL path (see `resolveRequestLocale`).
+  const locale = providerLocaleFor(resolveRequestLocale(request));
   const buyerIp = getBuyerIp(request.headers);
   const config = {
     storeDomain: env.PUBLIC_STORE_DOMAIN,
@@ -116,7 +118,12 @@ export function createRequestStorefront({
   if (env.PRIVATE_STOREFRONT_API_TOKEN && buyerIp) {
     return createStorefrontClient({
       type: "private",
-      requestContext: createShopifyRequestContext({ request, i18n, buyerIp }),
+      requestContext: createShopifyRequestContext({
+        request,
+        i18n,
+        locale,
+        buyerIp,
+      }),
       config: {
         ...config,
         privateStorefrontToken: env.PRIVATE_STOREFRONT_API_TOKEN,
@@ -126,7 +133,7 @@ export function createRequestStorefront({
 
   return createStorefrontClient({
     type: "public",
-    requestContext: createShopifyRequestContext({ request, i18n }),
+    requestContext: createShopifyRequestContext({ request, i18n, locale }),
     config: {
       ...config,
       publicStorefrontToken: env.PUBLIC_STOREFRONT_API_TOKEN || undefined,
@@ -134,4 +141,4 @@ export function createRequestStorefront({
   }) as Storefront;
 }
 
-export type StorefrontRequestContext = ShopifyRequestContext<StorefrontI18n>;
+export type StorefrontRequestContext = ShopifyRequestContext<typeof i18n>;

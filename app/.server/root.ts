@@ -50,9 +50,9 @@ export async function loadCriticalData({
     } satisfies Pick<ConsentConfig, "mode"> & {
       storefrontAccessToken?: string;
     },
-    selectedLocale: storefront.i18n,
+    selectedLocale: storefront.locale,
     weaverseTheme: neutralThemeWhenUnavailable(
-      localizedThemePayload(weaverseTheme, storefront.i18n),
+      localizedThemePayload(weaverseTheme, storefront.locale),
     ),
     themeUnavailable: isThemeUnavailable(weaverseTheme),
     googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
@@ -86,10 +86,10 @@ function getShopifyScriptsConfig(
     myshopifyDomain: env.PUBLIC_STORE_DOMAIN,
   };
   const i18n: ShopifyScriptsI18n = {
-    country: storefront.i18n.country,
-    language: storefront.i18n.language,
-    pathPrefix: storefront.i18n.pathPrefix,
-    currency: storefront.i18n.currency,
+    country: storefront.locale.country,
+    language: storefront.locale.language,
+    pathPrefix: storefront.locale.pathPrefix,
+    currency: storefront.locale.currency,
   };
   return {
     shop,

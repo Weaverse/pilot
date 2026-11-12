@@ -1,11 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
+import { matchLocale, resolveSupportedLocale } from "@shopify/hydrogen";
 import {
   DEFAULT_LOCALE,
   delocalizePath,
+  i18n,
   isUnsupportedMarketPath,
   localizedPathForRequest,
   localizePath,
+  providerLocaleFor,
   resolveLocale,
   SUPPORTED_LOCALES,
 } from "../../app/utils/locale";
@@ -425,4 +428,18 @@ test("the prior contract is a subset of the shipped markets", async () => {
 
   // Removing a market is a product decision, not a refactor side effect.
   expect(dropped).toEqual([]);
+});
+
+test("Hydrogen's i18n definition serves every market under its existing prefix", () => {
+  for (const locale of SUPPORTED_LOCALES) {
+    const provider = providerLocaleFor(locale);
+    expect(resolveSupportedLocale(provider, i18n).pathPrefix).toBe(
+      locale.pathPrefix,
+    );
+    expect(matchLocale(`${locale.pathPrefix}/products/x`, i18n)).toMatchObject({
+      language: provider.language,
+      country: locale.country,
+      pathPrefix: locale.pathPrefix,
+    });
+  }
 });

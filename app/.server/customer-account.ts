@@ -151,7 +151,7 @@ export function createCustomerAccount({
   storefront: Storefront;
 }) {
   const requestContext = storefront.requestContext;
-  // The canonical market (public language), for URLs. `storefront.i18n`
+  // The canonical market (public language), for URLs. `storefront.locale`
   // carries Shopify's provider language instead.
   const market = resolveRequestLocale(request);
   const customerSession = getCustomerSession(env)?.session;
@@ -191,7 +191,7 @@ export function createCustomerAccount({
   }
 
   return {
-    i18n: storefront.i18n,
+    locale: storefront.locale,
     async isLoggedIn() {
       return customerSession
         ? customerSession.isLoggedIn(session, requestContext)

@@ -9,7 +9,7 @@ import { createTestContext, recordFetches } from "../support/hydrogen-env";
  * Shopify's `LanguageCode` enum is script-specific for Chinese — this store
  * resolves bare `ZH` to English — so markets send `ZH_CN` or `ZH_TW`. The
  * installed `WeaverseClient` builds its Translation Manager lookup as
- * lowercase `${language}-${country}` off `storefront.i18n`, so handing it the
+ * lowercase `${language}-${country}` off `storefront.locale`, so handing it the
  * same object asks for `zh_tw-hk`: a locale the Translation Manager has never
  * heard of. The SDK swallows a missing-override response, so every published
  * Chinese string reverts to the theme default with nothing in the logs.
@@ -40,7 +40,7 @@ async function identitiesFor(pathPrefix: string): Promise<ProviderIdentity> {
       : null,
     // The request's Shopify identity; what actually reaches `@inContext` is
     // asserted off the wire in `provider-locale-leak.test.ts`.
-    shopify: context.storefront.i18n.language,
+    shopify: context.storefront.locale.language,
   };
 }
 
