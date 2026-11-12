@@ -2,7 +2,7 @@ import {
   createSchema,
   type WeaverseComponentProps,
 } from "@weaverse/hydrogen/react-router";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigation } from "react-router";
 import {
   ProductMedia,
   type ProductMediaProps,
@@ -36,6 +36,7 @@ export default function ProductMediaComponent(
     ...rest
   } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
+  const navigation = useNavigation();
 
   const selectedVariant = useSelectedVariant(product);
   const media = product?.media?.nodes || [];
@@ -68,7 +69,9 @@ export default function ProductMediaComponent(
           initialMediaCount={initialMediaCount}
           showMoreText={showMoreText}
           showLessText={showLessText}
-          viewTransition
+          // Drop the name while leaving the page: a product card clicked on this
+          // page (related products) takes it, and two elements may not share it.
+          viewTransition={navigation.state === "idle"}
         />
         {children}
       </div>
