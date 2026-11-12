@@ -1,6 +1,6 @@
 # Hydrogen locale definition and shared CSP helpers
 
-Issue: [#226](https://github.com/Weaverse/pilot/issues/226)
+Issues: [#226](https://github.com/Weaverse/pilot/issues/226), [#229](https://github.com/Weaverse/pilot/issues/229)
 
 ## Outcome
 
@@ -14,6 +14,7 @@ Pilot no longer uses the APIs deprecated in `@shopify/hydrogen` 2026.10.3, and i
 - CSP: `app/utils/csp.ts` and the `NonceProvider`/`useNonce` plumbing are removed. `entry.server.tsx` calls `createContentSecurityPolicy({ nonce: false, shop, directives })`; `app/weaverse/csp.ts` merges the theme's third-party sources with `getWeaverseStudioCspDirectives(request)`.
 - Live visitors get no Weaverse, `*.shopify.com` or `*.myshopify.com` sources; merchant uploads on cdn.shopify.com are in Hydrogen's defaults. Studio origins are added only for a trusted `weaverseHost`; design mode also adds `'unsafe-eval'`.
 - The policy stays report-only (`Content-Security-Policy-Report-Only: csp.header`); each store decides when to enforce.
+- Sign-out (#229): Shopify only returns a sign-out to a registered logout URI, so the per-market `return_to` landed on `/` unless every market home was registered. Every sign-out (form and `customerAccount.logout()`) now lands on the fixed `/account/signed-out`; the logout remembers the market's prefix in the session and `/account/signed-out` redirects to that market's home. Stores register `<origin>/account/signed-out` as the logout URI. Same fix as Weaverse/forward#131.
 - Non-goals: enforcing CSP, hash-based CSP, changing markets or URL shape.
 
 ## Acceptance
@@ -21,6 +22,7 @@ Pilot no longer uses the APIs deprecated in `@shopify/hydrogen` 2026.10.3, and i
 - Every market resolves to its existing prefix through Hydrogen's definition, and Storefront API queries still receive the provider language.
 - A normal visitor's policy names no Weaverse origin, and adding `?weaverseHost=<untrusted>` does not change it.
 - Inside Studio, the trusted Studio origin is allowed to frame the page and serve the bridge; design mode allows `'unsafe-eval'`.
+- Signing out from any market returns to that market's home through `/account/signed-out`.
 - Document responses stay eligible for Oxygen's full-page cache (no nonce, no `no-store` from CSP).
 
 ## Approach

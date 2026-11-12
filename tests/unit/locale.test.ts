@@ -289,7 +289,7 @@ test("customer-account navigation keeps the shopper's market", async () => {
   expect(header).not.toContain('sign-in-url="/account/login"');
   expect(header).toContain("customerAccountLoginPath(");
   const dashboard = await read("routes/account/dashboard/index.tsx");
-  expect(dashboard).toContain("customerAccountLogoutPath(");
+  expect(dashboard).toContain("CUSTOMER_ACCOUNT_LOGOUT_PATH");
 });
 
 /** The sign-in redirect an anonymous account request is answered with. */
