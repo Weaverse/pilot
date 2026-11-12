@@ -21,7 +21,10 @@ export default async function handleRequest(
       checkoutDomain: context.env?.PUBLIC_CHECKOUT_DOMAIN || undefined,
       storeDomain: context.env?.PUBLIC_STORE_DOMAIN || undefined,
     },
-    directives: getCspDirectives(request),
+    directives: getCspDirectives(
+      request,
+      context.env?.PUBLIC_CHECKOUT_DOMAIN || undefined,
+    ),
   });
 
   const body = await renderToReadableStream(
