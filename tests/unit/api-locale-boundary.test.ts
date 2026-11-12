@@ -31,8 +31,8 @@ async function localeAtApi(
   const context = await createTestContext(url);
 
   return {
-    language: context.storefront.i18n.language,
-    country: context.storefront.i18n.country,
+    language: context.storefront.locale.language,
+    country: context.storefront.locale.country,
   };
 }
 

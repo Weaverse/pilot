@@ -7,6 +7,7 @@ import {
   ProductMedia,
   type ProductMediaProps,
 } from "~/components/product-media";
+import { usePdpMediaOwnsImageExpand } from "~/components/product-media/image-expand";
 import { useSelectedVariant } from "~/components/product/product-form";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
@@ -36,6 +37,7 @@ export default function ProductMediaComponent(
     ...rest
   } = props;
   const { product } = useLoaderData<typeof productRouteLoader>();
+  const ownsImageExpand = usePdpMediaOwnsImageExpand();
 
   const selectedVariant = useSelectedVariant(product);
   const media = product?.media?.nodes || [];
@@ -68,7 +70,7 @@ export default function ProductMediaComponent(
           initialMediaCount={initialMediaCount}
           showMoreText={showMoreText}
           showLessText={showLessText}
-          viewTransition
+          viewTransition={ownsImageExpand}
         />
         {children}
       </div>

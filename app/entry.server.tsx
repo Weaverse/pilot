@@ -1,14 +1,10 @@
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import type { EntryContext, RouterContextProvider } from "react-router";
+import { createContentSecurityPolicy } from "@shopify/hydrogen";
 import { ServerRouter } from "react-router";
-import {
-  createContentSecurityPolicy,
-  generateNonce,
-  NonceProvider,
-} from "~/utils/csp";
 import { getFullPageCacheControl } from "~/utils/full-page-cache";
-import { getWeaverseCsp } from "~/weaverse/csp";
+import { getCspDirectives } from "~/weaverse/csp";
 
 export default async function handleRequest(
   request: Request,
@@ -17,27 +13,20 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: RouterContextProvider,
 ) {
-  const nonce = generateNonce();
-  const header = createContentSecurityPolicy(
-    nonce,
-    getWeaverseCsp(request, context.env),
-    {
-      checkoutDomain:
-        context.env?.PUBLIC_CHECKOUT_DOMAIN || context.env?.PUBLIC_STORE_DOMAIN,
-      storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
+  // No nonce: a per-response nonce would make the HTML uncacheable, and the
+  // document is stored by Oxygen's full-page cache (see below).
+  const csp = createContentSecurityPolicy({
+    nonce: false,
+    shop: {
+      checkoutDomain: context.env?.PUBLIC_CHECKOUT_DOMAIN || undefined,
+      storeDomain: context.env?.PUBLIC_STORE_DOMAIN || undefined,
     },
-  );
+    directives: getCspDirectives(request),
+  });
 
   const body = await renderToReadableStream(
-    <NonceProvider value={nonce}>
-      <ServerRouter
-        context={reactRouterContext}
-        url={request.url}
-        nonce={nonce}
-      />
-    </NonceProvider>,
+    <ServerRouter context={reactRouterContext} url={request.url} />,
     {
-      nonce,
       signal: request.signal,
       onError(error) {
         console.error(error);
@@ -54,8 +43,9 @@ export default async function handleRequest(
   }
 
   responseHeaders.set("Content-Type", "text/html");
-  // TODO: change to Content-Security-Policy when you ready with your CSP configs.
-  responseHeaders.set("Content-Security-Policy-Report-Only", header);
+  // TODO: change to Content-Security-Policy (`csp.applyResponseHeaders`) when
+  // you are ready with your CSP configs. Each store decides when to enforce.
+  responseHeaders.set("Content-Security-Policy-Report-Only", csp.header);
   // Opt anonymous document responses into Oxygen's full-page cache. Both
   // headers are required by Oxygen; responses that commit a session cookie
   // (Set-Cookie in server.ts) are excluded by Oxygen automatically. See

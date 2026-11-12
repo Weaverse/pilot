@@ -68,9 +68,9 @@ Outside CI, the plugin uses Shopify CLI to add the dev server's URLs to the stor
 
 - **Callback URI(s)**: `https://local.tryhydrogen.dev:3456/account/authorize`
 - **JavaScript origin(s)**: `https://local.tryhydrogen.dev` (no port: Shopify rejects origins with a port)
-- **Logout URI(s)**: `https://local.tryhydrogen.dev:3456`, plus every market's home page you sign out from (`https://local.tryhydrogen.dev:3456/de-de`, `https://local.tryhydrogen.dev:3456/fr-ca`, ...). Shopify only returns the shopper to a registered logout URI, and Pilot sends them back to the market they signed out from.
+- **Logout URI**: `https://local.tryhydrogen.dev:3456/account/signed-out`. Shopify only returns the shopper to a registered logout URI, so every sign-out lands there and Pilot redirects on to the home page of the market they signed out from.
 
-Production needs the same three settings for the storefront's domain, including a logout URI per market prefix.
+Production needs the same three settings for the storefront's domain, including the `/account/signed-out` logout URI.
 
 ## Troubleshooting
 

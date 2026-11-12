@@ -24,7 +24,6 @@ import {
 } from "react-router";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
 import type { ThemeSettings } from "~/types/weaverse";
-import { useNonce } from "~/utils/csp";
 import { getSeoMeta, type SeoConfig } from "~/utils/seo-meta";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { CartProvider } from "./components/cart/cart-store";
@@ -144,7 +143,6 @@ export const Layout = withWeaverse(function RootLayout({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const publicEnv = data?.publicEnv;
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
@@ -219,7 +217,6 @@ export const Layout = withWeaverse(function RootLayout({
          */}
         {data ? (
           <ShopifyScripts
-            nonce={nonce}
             shop={data.shopifyScripts.shop}
             i18n={data.shopifyScripts.i18n}
             analytics={{ channel: data.shopifyScripts.channel }}
@@ -247,7 +244,6 @@ export const Layout = withWeaverse(function RootLayout({
          * installed workers don't linger after a merchant disables the feature.
          */}
         <script
-          nonce={nonce}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: pwaActive
@@ -311,8 +307,8 @@ export const Layout = withWeaverse(function RootLayout({
         )}
         <PwaInstallHint />
         <GlobalLoading />
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
+        <ScrollRestoration />
+        <Scripts />
         {publicEnv?.PUBLIC_SHOPIFY_INBOX_SHOP_ID && (
           <ShopifyInbox
             shop={{

@@ -42,7 +42,7 @@ const LAYOUT = {
 function rootContext(language: string, country: string) {
   return {
     storefront: {
-      i18n: {
+      locale: {
         language,
         country,
         currency: "EUR",
@@ -295,7 +295,7 @@ test("a refused redirect still carries the cart cookie", async () => {
 function discountContext(applied: string[][] = []) {
   return {
     storefront: {
-      i18n: { country: "DE" },
+      locale: { country: "DE" },
       graphql: async (
         _doc: unknown,
         {
