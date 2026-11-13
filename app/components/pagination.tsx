@@ -13,9 +13,7 @@ import { flattenConnection } from "@shopify/hydrogen";
 import {
   createElement,
   type FC,
-  type ForwardRefExoticComponent,
-  forwardRef,
-  type RefAttributes,
+  type Ref,
   useEffect,
   useMemo,
   useRef,
@@ -57,9 +55,11 @@ type PaginationState<NodesType> = {
   };
 };
 
-type PaginationLink = ForwardRefExoticComponent<
-  Omit<LinkProps, "to"> & RefAttributes<HTMLAnchorElement>
->;
+type PaginationLinkProps = Omit<LinkProps, "to"> & {
+  ref?: Ref<HTMLAnchorElement>;
+};
+
+type PaginationLink = FC<PaginationLinkProps>;
 
 interface PaginationInfo<NodesType> {
   /** The paginated array of nodes. You should map over and render this array. */
@@ -152,41 +152,35 @@ export function Pagination<NodesType>({
 
   const NextLink = useMemo(
     () =>
-      forwardRef<HTMLAnchorElement, Omit<LinkProps, "to">>(
-        function PaginationNextLink(props, ref) {
-          return hasNextPage
-            ? createElement(Link, {
-                preventScrollReset: true,
-                ...props,
-                to: nextPageUrl,
-                state,
-                replace: true,
-                ref,
-                onClick: () => setIsLoading(true),
-              })
-            : null;
-        },
-      ),
+      function PaginationNextLink(props: PaginationLinkProps) {
+        return hasNextPage
+          ? createElement(Link, {
+              preventScrollReset: true,
+              ...props,
+              to: nextPageUrl,
+              state,
+              replace: true,
+              onClick: () => setIsLoading(true),
+            })
+          : null;
+      },
     [hasNextPage, nextPageUrl, state],
   );
 
   const PreviousLink = useMemo(
     () =>
-      forwardRef<HTMLAnchorElement, Omit<LinkProps, "to">>(
-        function PaginationPreviousLink(props, ref) {
-          return hasPreviousPage
-            ? createElement(Link, {
-                preventScrollReset: true,
-                ...props,
-                to: previousPageUrl,
-                state,
-                replace: true,
-                ref,
-                onClick: () => setIsLoading(true),
-              })
-            : null;
-        },
-      ),
+      function PaginationPreviousLink(props: PaginationLinkProps) {
+        return hasPreviousPage
+          ? createElement(Link, {
+              preventScrollReset: true,
+              ...props,
+              to: previousPageUrl,
+              state,
+              replace: true,
+              onClick: () => setIsLoading(true),
+            })
+          : null;
+      },
     [hasPreviousPage, previousPageUrl, state],
   );
 

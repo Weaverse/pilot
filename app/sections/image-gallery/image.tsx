@@ -1,5 +1,6 @@
 import {
   createSchema,
+  IMAGES_PLACEHOLDERS,
   type WeaverseComponentProps,
   type WeaverseImage,
 } from "@weaverse/hydrogen/react-router";
@@ -65,8 +66,7 @@ export const schema = createSchema({
           type: "image",
           name: "src",
           label: "Image",
-          defaultValue:
-            "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg",
+          defaultValue: IMAGES_PLACEHOLDERS.image,
         },
         {
           type: "range",

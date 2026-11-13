@@ -28,9 +28,7 @@ export const schema = createSchema({
   type: "main-collection",
   title: "Main collection",
   limit: 1,
-  enabledOn: {
-    pages: ["COLLECTION"],
-  },
+  enabled: ({ page }) => page.type === "COLLECTION",
   childTypes: ["mc--header", "mc--toolbar", "mc--content"],
   settings: [
     {
