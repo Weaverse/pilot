@@ -4,7 +4,7 @@ import { getWeaverseStudioCspDirectives } from "@weaverse/hydrogen/react-router"
 /**
  * Third-party origins the theme's sections and integrations load from:
  * YouTube and Vimeo embeds, Google Maps, Google Tag Manager / Analytics,
- * Ali Reviews and jsDelivr. Hydrogen sets image, media and frame sources
+ * and jsDelivr. Hydrogen sets image, media and frame sources
  * apart from `default-src`, so the list extends each of them.
  */
 const THEME_SOURCES = [
@@ -15,9 +15,7 @@ const THEME_SOURCES = [
   "*.google.com",
   "*.google-analytics.com",
   "*.googletagmanager.com",
-  "cdn.alireviews.io",
   "cdn.jsdelivr.net",
-  "*.alicdn.com",
 ];
 
 /**
