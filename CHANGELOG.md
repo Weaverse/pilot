@@ -1,7 +1,12 @@
 # Changelog
 
-## Unreleased
+## 2026.11.13
 
+- [fix] Signing out returns the shopper to the home page of the market they were browsing (`/de-de` instead of `/`). Every sign-out, from the form or `customerAccount.logout()`, lands on `/account/signed-out`, which redirects to the market remembered in the session; the sign-out form no longer carries `return_to`. Register `<origin>/account/signed-out` as a Logout URI in the Customer Account API settings (#229)
+- [breaking] The Content Security Policy is built with Hydrogen's `createContentSecurityPolicy` and the SDK's Weaverse Studio directives. It stays report-only, no longer adds the `?weaverseHost=` query to `script-src`/`connect-src` or sets `frame-ancestors *`, and uses `'unsafe-inline'` without a nonce so Oxygen's full-page cache keeps storing documents. `PUBLIC_CHECKOUT_DOMAIN` is allowed as a media source for Shopify videos served from the store's own domain. Forks that import `app/utils/csp.ts` or `useNonce` need to update (#226)
+- [breaking] Markets are defined with Hydrogen 2026.10.3's `defineShopifyI18n`, keeping every market's URL prefix, and code reads `storefront.locale` instead of the deprecated `storefront.i18n`. Forks that use `I18nConfig` or `storefront.i18n` need to update (#226)
+- [fix] Opening a related product card on a product page no longer logs a duplicate `image-expand` view-transition name, and the image still expands into the next product page (follow-up to #205)
+- [fix] Upgrade `@shopify/hydrogen` to 2026.10.3 and `@weaverse/hydrogen` to 6.3.1, which stops Zod from logging a CSP `unsafe-eval` report (Weaverse/weaverse#595)
 - [fix] The account page keeps the space between its blocks on desktop, and "Add an Address" opens the address form instead of a 404. Sections only apply their `gap` spacing when a `gap` is set, so a `space-y-*` passed in `containerClassName` also holds on large screens (#223)
 
 ## 2026.11.10
