@@ -28,9 +28,7 @@ export const schema = createSchema({
   type: "mp--title",
   title: "Title",
   limit: 1,
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "General",

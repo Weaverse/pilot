@@ -40,9 +40,7 @@ export const schema = createSchema({
   type: "page",
   title: "Page",
   limit: 1,
-  enabledOn: {
-    pages: ["PAGE"],
-  },
+  enabled: ({ page }) => page.type === "PAGE",
   settings: [
     {
       group: "Layout",

@@ -127,9 +127,7 @@ export const schema = createSchema({
     "judgeme-reviews--summary",
     "judgeme-reviews--list",
   ],
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "General",

@@ -90,9 +90,7 @@ export const schema = createSchema({
   type: "mp--quantity-selector",
   title: "Quantity selector",
   limit: 1,
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "General",

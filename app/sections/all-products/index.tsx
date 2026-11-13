@@ -23,9 +23,7 @@ export const schema = createSchema({
   type: "all-products",
   title: "All products",
   limit: 1,
-  enabledOn: {
-    pages: ["ALL_PRODUCTS"],
-  },
+  enabled: ({ page }) => page.type === "ALL_PRODUCTS",
   childTypes: ["heading", "paragraph", "ap--toolbar", "ap--product-grid"],
   settings: [
     {
