@@ -14,13 +14,12 @@ Pilot runs its static checks through Vite+ (Oxlint and Oxfmt) instead of Biome, 
 - Oxfmt does not format Markdown or `app/styles/**`, and it sorts Tailwind classes in `clsx`, `cva` and `cn`. The one-time reflow is a formatting change only, with no change to import order, Tailwind tokens, JSX shape or lint directives.
 - `public/sw.js` is registered from `app/root.tsx` and copied into the client build, so it is in static-check scope. When its bytes change, bump its cache namespace version (currently `pilot-pwa-v2`). It caches only `/assets/*` (cache-first) and Shopify CDN images (stale-while-revalidate). It never intercepts documents, `/cart`, `/account`, `/api/*` or checkout.
 - Node engine is `^22.18.0 || ^24.11.0`: the intersection of Vite+ (`^22.18.0 || ^24.11.0 || >=26.0.0`) and `@shopify/mini-oxygen` (`^22 || ^24`).
-- Dependencies use the newest stable release each one's peer and runtime contracts allow. The current exceptions are:
-  - `@shopify/hydrogen` stays `~2026.4.7`. 2026.10 rewrites Hydrogen as a server-handler library: it drops the `shopify hydrogen dev/build` flow, the `hydrogen()` Vite plugin and framework exports such as `createHydrogenContext`, `hydrogenRoutes` and `CartForm`. Adopting it is a separate migration.
-  - `react-router` and `@react-router/dev` stay `7.16.0`. `@shopify/hydrogen@2026.4.7` and `@shopify/cli-hydrogen@13.0.6` pin `~7.16.0`, `@weaverse/hydrogen` requires `^7`, and 8.x also requires Node `>=22.22`.
-  - `graphql` stays `16.x`. `@shopify/hydrogen-codegen` → `@shopify/graphql-codegen` and `@shopify/hydrogen-react` peer only on `<=16`.
-  - `typescript` stays `6.x`. `@react-router/dev@7.16` peers `^5.1 || ^6`.
-  - `undici` override stays `7.x`. It is a security floor for the `@shopify/mini-oxygen` pin of `7.24.0`, and miniflare 3 uses the v7 API.
-- Non-goals: Hydrogen 2026.10 library migration, React Router 8, SDK, Builder or sandbox-image changes, Oxygen deployment, browser-backed tests.
+- Dependencies use the newest stable release each one's peer and runtime contracts allow, with exact pins (refreshed for [Weaverse/pilot#200](https://github.com/Weaverse/pilot/issues/200) on 2026-11-19: Vite+ 1.7.0 with tsrs `7.1.0-beta.tsrs2`, graphql 17, Shopify CLI 5). The current exceptions are:
+  - `react-router` and `@react-router/dev` stay on the latest 7.x. `@weaverse/hydrogen` 6.3.1 depends on `react-router@^7`, so React Router 8 installs a second, nested React Router 7 and Weaverse's hooks fail with "must be used within a data router". React Router 8 also always uses the Vite Environment API, which needs the Worker SSR entry set explicitly and rejects the client `manualChunks` setup in the SSR build. Shopify's React Router template moved to 8 on `main` (Shopify/hydrogen#4378) but no Hydrogen release ships it yet.
+  - `typescript` stays `6.x`. `@react-router/dev` 7.x peers `^5.1 || ^6`, and `hydrogen gql check` runs the `gql.tada` 1.9.2 that `@shopify/hydrogen` pins, which calls TypeScript's JS API; TypeScript 7 exposes none, so the check fails. Linux CI type-checks with `tsrs` (`npm run typecheck:ci`).
+  - `undici` override stays `7.x`. `@shopify/mini-oxygen` pins `7.30.1` and miniflare uses the v7 API.
+  - `@types/node` stays `22.x`, the engine floor, as in Shopify's template.
+- Non-goals: React Router 8, SDK, Builder or sandbox-image changes, Oxygen deployment, browser-backed tests.
 
 ## Licensing
 
