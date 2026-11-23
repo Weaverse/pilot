@@ -17,8 +17,8 @@ export function WeaverseContent() {
 export function validateWeaverseData(weaverseData: WeaverseLoaderData) {
   if (
     !weaverseData?.page?.id ||
-    (weaverseData?.page?.id?.includes("fallback") &&
-      !weaverseData?.configs?.requestInfo?.queries?.isDesignMode)
+    (weaverseData.isFallback &&
+      !weaverseData.configs?.requestInfo?.queries?.isDesignMode)
   ) {
     throw new Response(null, { status: 404 });
   }
