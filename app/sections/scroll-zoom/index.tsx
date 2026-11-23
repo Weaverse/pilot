@@ -51,7 +51,7 @@ export default function ScrollZoom(props: ScrollZoomProps) {
       className="scroll-zoom relative"
       style={{ "--scroll-zoom-inset": `${inset}%` } as CSSProperties}
     >
-      <div className="h-screen-dynamic sticky top-0 overflow-hidden">
+      <div className="sticky top-0 h-svh overflow-hidden">
         <div className="scroll-zoom-media absolute inset-0 isolate">
           {data?.url && (
             <Image

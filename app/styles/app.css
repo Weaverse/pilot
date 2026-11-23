@@ -194,7 +194,7 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .scroll-zoom {
-        height: 220vh;
+        height: 220svh;
       }
       .scroll-zoom-media {
         animation: scroll-zoom-media linear both;
