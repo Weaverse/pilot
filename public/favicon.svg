@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pilot">
+  <rect width="64" height="64" rx="8" fill="#1e1c1a"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#f3f2f1" stroke-width="6"/>
+  <path fill="#c6512c" d="M42 22l-7.2 13.2-6-6z"/>
+  <path fill="#f3f2f1" d="M22 42l7.2-13.2 6 6z"/>
+</svg>
