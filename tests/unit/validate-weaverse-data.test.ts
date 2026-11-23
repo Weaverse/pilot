@@ -23,9 +23,11 @@ async function statusFor(data: unknown): Promise<number | "ok"> {
   }
 }
 
-function loaderData(isFallback: boolean, isDesignMode = false) {
+/* Page ids are kept unrelated to `isFallback` so the guard cannot pass by
+ * sniffing the id. */
+function loaderData(isFallback: boolean, isDesignMode = false, id = "page_1") {
   return {
-    page: { id: isFallback ? "fallback_page_1" : "page_1" },
+    page: { id },
     configs: { requestInfo: { queries: { isDesignMode } } },
     ...(isFallback ? { isFallback } : {}),
   };
@@ -41,6 +43,12 @@ test("the placeholder page answers 404 outside design mode", async () => {
 
 test("the placeholder page renders in design mode", async () => {
   expect(await statusFor(loaderData(true, true))).toBe("ok");
+});
+
+test("an assigned page whose id mentions fallback renders", async () => {
+  expect(await statusFor(loaderData(false, false, "fallback_page_1"))).toBe(
+    "ok",
+  );
 });
 
 test("missing loader data answers 404", async () => {
