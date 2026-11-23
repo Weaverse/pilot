@@ -1,8 +1,6 @@
 import { useThemeSettings } from "@weaverse/hydrogen/react-router";
-import { cva } from "class-variance-authority";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ThemeSettings } from "~/types/weaverse";
-import { cn } from "~/utils/cn";
 
 /**
  * When true (via provider), descendant ScrollReveals render visible
@@ -64,48 +62,21 @@ export function observe(
   };
 }
 
-export type AnimationType = "fade-up" | "zoom-in" | "slide-in";
-
-const revealVariants = cva("transition-all duration-500", {
-  variants: {
-    animation: {
-      "fade-up": "",
-      "zoom-in": "",
-      "slide-in": "",
-    },
-    visible: {
-      true: "",
-      false: "",
-    },
-  },
-  compoundVariants: [
-    { animation: "fade-up", visible: false, class: "translate-y-5 opacity-0" },
-    { animation: "fade-up", visible: true, class: "translate-y-0 opacity-100" },
-    {
-      animation: "zoom-in",
-      visible: false,
-      class: "translate-y-5 scale-80 opacity-0",
-    },
-    {
-      animation: "zoom-in",
-      visible: true,
-      class: "translate-y-0 scale-100 opacity-100",
-    },
-    { animation: "slide-in", visible: false, class: "translate-x-5 opacity-0" },
-    {
-      animation: "slide-in",
-      visible: true,
-      class: "translate-x-0 opacity-100",
-    },
-  ],
-});
+export type AnimationType = "fade-up" | "zoom-in" | "slide-in" | "clip-up";
 
 interface ScrollRevealProps extends React.HTMLAttributes<HTMLElement> {
   ref?: React.Ref<HTMLElement>;
   as?: React.ElementType;
   children?: React.ReactNode;
+  /**
+   * `clip-up` wipes the element in from the bottom (for images). It only
+   * applies with the `expressive` motion style; `subtle` falls back to
+   * `slide-in`, the reveal these images used before.
+   */
   animation?: AnimationType;
+  /** Seconds. Defaults to the theme's `--reveal-duration`. */
   duration?: number;
+  /** Milliseconds. Defaults to the automatic sibling stagger. */
   delay?: number;
   /**
    * Render visible immediately (no opacity-0 reveal gate, no observer).
@@ -117,19 +88,24 @@ interface ScrollRevealProps extends React.HTMLAttributes<HTMLElement> {
   [key: string]: unknown;
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function ScrollReveal({
   ref: externalRef,
   as: Component = "div",
   children,
   animation = "fade-up",
-  duration = 0.5,
-  delay = 0,
+  duration,
+  delay,
   immediate = false,
   className,
   style,
   ...rest
 }: ScrollRevealProps) {
-  let { revealElementsOnScroll } = useThemeSettings<ThemeSettings>();
+  let { revealElementsOnScroll, motionStyle } =
+    useThemeSettings<ThemeSettings>();
   let immediateFromContext = useContext(RevealImmediateContext);
   let isImmediate = immediate || immediateFromContext;
   let [isVisible, setIsVisible] = useState(false);
@@ -149,9 +125,15 @@ export function ScrollReveal({
     if (isImmediate || !revealElementsOnScroll || !internalRef.current) {
       return;
     }
-
     let cleanup = observe(internalRef.current, (isIntersecting) => {
-      if (isIntersecting) {
+      if (!isIntersecting) {
+        return;
+      }
+      // Reduced motion: CSS already shows the element; drop the reveal
+      // attributes right away, since no transition will end to drop them.
+      if (prefersReducedMotion()) {
+        setRevealed(true);
+      } else {
         setIsVisible(true);
       }
     });
@@ -159,18 +141,19 @@ export function ScrollReveal({
     return cleanup;
   }, [revealElementsOnScroll, isImmediate]);
 
-  // Strip the reveal transition wrapper from the DOM once the animation
-  // finishes so subsequent re-renders don't keep paying for the inline
-  // transition/transform styles — and downstream hover/focus animations
-  // on the same element aren't fighting an active `transition-all`.
+  // Strip the reveal attributes once the animation finishes, so hover/focus
+  // transitions on the same element aren't fighting the reveal transition.
   useEffect(() => {
     if (!isVisible || !internalRef.current) {
       return;
     }
     let el = internalRef.current;
     function onEnd(e: TransitionEvent) {
-      // Only react to our own transitions (opacity always animates here).
-      if (e.target === el && e.propertyName === "opacity") {
+      // `clip-up` animates clip-path only; the others always animate opacity.
+      if (
+        e.target === el &&
+        (e.propertyName === "opacity" || e.propertyName === "clip-path")
+      ) {
         setRevealed(true);
       }
     }
@@ -186,18 +169,24 @@ export function ScrollReveal({
     );
   }
 
+  let reveal =
+    animation === "clip-up" && motionStyle !== "expressive"
+      ? "slide-in"
+      : animation;
+
   return (
     <Component
       ref={setRefs}
-      className={cn(
-        revealVariants({ animation, visible: isVisible }),
-        className,
-      )}
-      style={{
-        transitionDuration: `${duration}s`,
-        transitionDelay: `${delay}ms`,
-        ...style,
-      }}
+      data-reveal={reveal}
+      data-visible={isVisible || undefined}
+      className={className}
+      style={
+        {
+          ...(duration != null && { "--reveal-duration": `${duration}s` }),
+          ...(delay != null && { "--reveal-delay": `${delay}ms` }),
+          ...style,
+        } as React.CSSProperties
+      }
       {...rest}
     >
       {children}

@@ -92,6 +92,21 @@ export const generalSettings = {
       defaultValue: true,
     },
     {
+      type: "select",
+      label: "Motion style",
+      name: "motionStyle",
+      configs: {
+        options: [
+          { value: "subtle", label: "Subtle" },
+          { value: "expressive", label: "Expressive" },
+        ],
+      },
+      defaultValue: "subtle",
+      helpText:
+        "Expressive reveals travel further and slower, and images wipe in from the bottom. Visitors who turn on reduced motion see no reveal animations.",
+      condition: (theme) => theme.revealElementsOnScroll === true,
+    },
+    {
       type: "heading",
       label: "Colors",
     },

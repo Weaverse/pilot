@@ -135,7 +135,7 @@ function CollectionItems(props: CollectionItemsData & WeaverseComponentProps) {
       {collections.map((collection, ind) => (
         <ScrollReveal
           key={collection.id + ind}
-          animation="slide-in"
+          animation="clip-up"
           className="group group/overlay relative w-[67vw] md:w-auto"
         >
           {renderCollectionImage(collection)}

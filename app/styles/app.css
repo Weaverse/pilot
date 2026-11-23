@@ -116,3 +116,72 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
     }
   }
 }
+
+/* Scroll reveal: `ScrollReveal` and `Section` set `data-reveal` while an
+ * element waits to enter the viewport, and `data-visible` once it has.
+ * Timing comes from `--reveal-*` on :root (theme setting `motionStyle`). */
+@layer components {
+  [data-reveal] {
+    transition-property: opacity, transform, clip-path;
+    transition-duration: var(--reveal-duration, 600ms);
+    transition-timing-function: var(--reveal-ease, ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal]:not([data-visible]) {
+    opacity: 0;
+  }
+  [data-reveal="fade-up"]:not([data-visible]) {
+    transform: translateY(var(--reveal-distance, 20px));
+  }
+  [data-reveal="slide-in"]:not([data-visible]) {
+    transform: translateX(var(--reveal-distance, 20px));
+  }
+  [data-reveal="zoom-in"]:not([data-visible]) {
+    transform: translateY(var(--reveal-distance, 20px)) scale(0.8);
+  }
+  [data-reveal="clip-up"] {
+    clip-path: inset(0 0 0 0);
+  }
+  [data-reveal="clip-up"]:not([data-visible]) {
+    opacity: 1;
+    clip-path: inset(100% 0 0 0);
+  }
+  /* Images settle from a slight zoom while the wipe runs. */
+  [data-reveal="clip-up"] img {
+    transition: transform var(--reveal-duration, 600ms)
+      var(--reveal-ease, ease-out) var(--reveal-delay, 0ms);
+  }
+  [data-reveal="clip-up"]:not([data-visible]) img {
+    transform: scale(1.12);
+  }
+
+  /* Siblings reveal one after another; ponytail: capped at the 6th item,
+   * later items share its delay. */
+  [data-reveal]:nth-child(2) {
+    --reveal-delay: 80ms;
+  }
+  [data-reveal]:nth-child(3) {
+    --reveal-delay: 160ms;
+  }
+  [data-reveal]:nth-child(4) {
+    --reveal-delay: 240ms;
+  }
+  [data-reveal]:nth-child(5) {
+    --reveal-delay: 320ms;
+  }
+  [data-reveal]:nth-child(n + 6) {
+    --reveal-delay: 400ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal],
+    [data-reveal]:not([data-visible]),
+    [data-reveal="clip-up"] img {
+      transition: none;
+      opacity: 1;
+      transform: none;
+      clip-path: none;
+    }
+  }
+}
+
