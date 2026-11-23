@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- [feat] New "Motion style" theme setting: `Subtle` (default) keeps today's scroll reveal with a smoother easing curve; `Expressive` travels further and slower, and section images (image with text, gallery, promotion grid, columns, featured collections) wipe in from the bottom while settling from a slight zoom (#242)
+- [feat] Grid items and stacked text reveal one after another instead of all at once (#242)
+- [feat] New "Hide header on scroll down" header setting: the sticky header slides away while scrolling down and returns on scroll up. Off by default (#242)
+- [feat] New "Scroll zoom" section: an inset image grows to full width while the section is pinned, then its text fades in. Built on CSS scroll-driven animations; browsers without them and visitors with reduced motion see a static full-screen image (#242)
+- [feat] Pilot wordmark with a compass "O" (`public/brand/pilot-wordmark.svg`, plus a reversed version for dark or transparent headers) and a matching compass SVG favicon. The favicon link now points to `favicon.svg`, with `favicon.ico` as the fallback (#242)
+- [fix] Testimonials without an author image no longer render an empty image (#242)
+- [fix] Visitors who turn on reduced motion in their system settings no longer see scroll reveal animations (#242)
+- [breaking] `ScrollReveal` and `Section` mark their reveal state with `data-reveal` / `data-visible` attributes styled in `app/styles/app.css`, instead of Tailwind transform and opacity classes. Forks that restyled the reveal through those classes need to target the attributes (#242)
+
 ## 2026.11.23
 
 - [fix] Upgrade `@weaverse/hydrogen` to 6.5.1. Pages with no Weaverse page assigned are detected with the SDK's `isFallback` flag instead of matching `"fallback"` in the page id: they answer 404 on the storefront and still render the placeholder in Studio (#237, #239)
