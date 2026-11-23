@@ -33,7 +33,7 @@ CI fails when the committed manifest is stale.
 
 ## Project Overview
 
-This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, Tailwind CSS v4, and Vite+ 1.3.0 static checks. It runs on the Node.js ranges declared in `package.json`.
+This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, Tailwind CSS v4, and Vite+ 1.7.0 static checks. It runs on the Node.js ranges declared in `package.json`.
 
 ## Architecture Overview
 
@@ -152,7 +152,7 @@ Required environment variables are defined in `env.d.ts` (`Env`) and listed in `
 
 ### Vite+ Static Checks
 
-The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
+The project uses Vite+ 1.7.0 (Oxlint 1.94.0, Oxfmt 0.79.0) with Oxlint and Oxfmt for static checks:
 - Double quotes for strings
 - Semicolons always
 - Trailing commas
