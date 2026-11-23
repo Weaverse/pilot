@@ -51,9 +51,7 @@ export let schema = createSchema({
   title: "Product highlights",
   settings: [layoutGroup],
   childTypes: ["mp--highlight-item"],
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   presets: {
     children: [
       {

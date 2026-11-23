@@ -95,9 +95,7 @@ export const schema = createSchema({
   type: "mp--collapsible-details",
   title: "Collapsible details",
   limit: 1,
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "General",

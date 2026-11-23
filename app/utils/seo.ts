@@ -32,25 +32,54 @@ export function seoMetaFromMatches(matches: SeoMatch[]): MetaDescriptor[] {
 }
 
 /**
- * Merges Weaverse page SEO into a route's meta, keeping exactly one canonical.
+ * Identity of a descriptor that must appear at most once per document: the
+ * `<title>`, a `<meta>` by its `name`/`property` (Weaverse emits `twitter:*` as
+ * `name`, the root as `property`, so both share one key), or the canonical.
+ * Everything else (hreflang alternates, JSON-LD) has no key and is kept.
+ */
+function descriptorKey(descriptor: MetaDescriptor): string | undefined {
+  if (isCanonical(descriptor)) {
+    return "canonical";
+  }
+  if ("title" in descriptor) {
+    return "title";
+  }
+  if ("name" in descriptor) {
+    return `meta:${descriptor.name}`;
+  }
+  if ("property" in descriptor) {
+    return `meta:${descriptor.property}`;
+  }
+}
+
+/**
+ * Merges Weaverse page SEO into a route's meta, one tag per key.
  *
- * A Weaverse page can carry its own `canonicalUrl`, which is authored once and
- * is therefore market-neutral. Emitting it alongside the root's canonical
- * publishes two conflicting `<link rel="canonical">` tags on the same document
- * — search engines pick one arbitrarily, and the market URL is the one that
- * must win, since each market is its own canonical with the others advertised
- * via `hreflang`.
+ * Weaverse descriptors (title, description, Open Graph, Twitter, robots)
+ * replace the route's descriptors with the same key, so a custom page ships its
+ * Studio SEO title instead of a second `<title>` that loses to the shop name.
+ * The root's hreflang alternates and JSON-LD have no Weaverse counterpart and
+ * are kept.
  *
- * Every other Weaverse descriptor (title, description, Open Graph, robots,
- * JSON-LD) is page-level content and passes through untouched.
+ * The canonical is the exception: a Weaverse page's `canonicalUrl` is authored
+ * once and is therefore market-neutral, while each market must be its own
+ * canonical (the others are advertised via `hreflang`). So the route's
+ * canonical wins, and the page's is used only when the route has none.
  */
 export function withWeaverseSeo(
   routeSeo: MetaDescriptor[],
   weaverseSeo: MetaDescriptor[],
 ): MetaDescriptor[] {
-  if (!routeSeo.some(isCanonical)) {
-    return [...routeSeo, ...weaverseSeo];
-  }
+  let pageSeo = routeSeo.some(isCanonical)
+    ? weaverseSeo.filter((tag) => !isCanonical(tag))
+    : weaverseSeo;
+  let pageKeys = new Set(pageSeo.map(descriptorKey).filter(Boolean));
 
-  return [...routeSeo, ...weaverseSeo.filter((tag) => !isCanonical(tag))];
+  return [
+    ...routeSeo.filter((tag) => {
+      let key = descriptorKey(tag);
+      return !(key && pageKeys.has(key));
+    }),
+    ...pageSeo,
+  ];
 }

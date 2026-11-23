@@ -313,11 +313,10 @@ export let schema = createSchema({
   type: 'my-component',        // Unique kebab-case ID
   title: 'My Component',       // Studio display name
   limit: 1,                    // Max instances per page (optional)
-  enabledOn: {                 // Restrict to page types (optional)
-    pages: ['PRODUCT', 'COLLECTION'],
-    // Page types: INDEX | PRODUCT | ALL_PRODUCTS | COLLECTION |
-    //             COLLECTION_LIST | PAGE | BLOG | ARTICLE | CUSTOM
-  },
+  // Restrict to page types (optional). `enabledOn.pages` is deprecated.
+  // Page types: INDEX | PRODUCT | ALL_PRODUCTS | COLLECTION |
+  //             COLLECTION_LIST | PAGE | BLOG | ARTICLE | CUSTOM
+  enabled: ({ page }) => page.type === 'PRODUCT' || page.type === 'COLLECTION',
   settings: [
     {
       group: 'Content',

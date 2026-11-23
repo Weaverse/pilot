@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- [fix] Weaverse custom pages emit one `<title>`, description and Open Graph/Twitter tag each: the page's Studio SEO replaces the root's tags instead of being appended after them, so the Studio SEO title is no longer overridden by the shop name. The market canonical and `hreflang` alternates are unchanged (#233)
+- [fix] Section schemas use `enabled: ({ page }) => ...` instead of the deprecated `enabledOn.pages`, and `@weaverse/schema` is an explicit dev dependency of the manifest generator (#233)
+- [fix] `.env.example` documents `WEAVERSE_PUBLIC_API_BASE`, the variable the SDK reads, instead of `WEAVERSE_API_BASE` (#233)
+- [breaking] Remove the unregistered `ali-reviews` section, its CSP hosts (`cdn.alireviews.io`, `*.alicdn.com`), `ALI_REVIEWS_API_KEY` and the unused `useClosestWeaverseItem` hook. Forks that registered the section need to keep their own copy (#233)
+
 ## 2026.11.13
 
 - [fix] Signing out returns the shopper to the home page of the market they were browsing (`/de-de` instead of `/`). Every sign-out, from the form or `customerAccount.logout()`, lands on `/account/signed-out`, which redirects to the market remembered in the session; the sign-out form no longer carries `return_to`. Register `<origin>/account/signed-out` as a Logout URI in the Customer Account API settings (#229)

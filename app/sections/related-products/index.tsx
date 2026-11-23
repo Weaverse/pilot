@@ -19,9 +19,7 @@ export const schema = createSchema({
   title: "Related products",
   limit: 1,
   childTypes: ["subheading", "heading", "paragraph", "related-products--items"],
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "Layout",

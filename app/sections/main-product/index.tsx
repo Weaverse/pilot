@@ -34,9 +34,7 @@ export const schema = createSchema({
   title: "Main product",
   childTypes: ["mp--media", "mp--info"],
   limit: 1,
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [{ group: "Layout", inputs: layoutInputs }],
   presets: {
     width: "stretch",

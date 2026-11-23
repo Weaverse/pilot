@@ -94,9 +94,7 @@ export const schema = createSchema({
   type: "blog-post",
   title: "Blog post",
   limit: 1,
-  enabledOn: {
-    pages: ["ARTICLE"],
-  },
+  enabled: ({ page }) => page.type === "ARTICLE",
   settings: [
     {
       group: "Layout",

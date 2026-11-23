@@ -19,9 +19,9 @@
       ],
       "limit": 1,
       "availability": {
-        "pages": [
-          "ALL_PRODUCTS"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -236,9 +236,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "ARTICLE"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -331,9 +331,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "BLOG"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -590,9 +590,9 @@
       ],
       "limit": 1,
       "availability": {
-        "pages": [
-          "COLLECTION_LIST"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -3812,7 +3812,7 @@
               "type": "image",
               "name": "src",
               "label": "Image",
-              "defaultValue": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg"
+              "defaultValue": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-image-1024x1024.svg"
             },
             {
               "type": "range",
@@ -4226,9 +4226,9 @@
         "spacer"
       ],
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -4532,9 +4532,9 @@
       ],
       "limit": 1,
       "availability": {
-        "pages": [
-          "COLLECTION"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -4617,9 +4617,9 @@
       ],
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5213,9 +5213,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5346,9 +5346,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5390,9 +5390,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5412,9 +5412,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5445,9 +5445,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5474,9 +5474,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5504,9 +5504,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5635,9 +5635,9 @@
         "spacer"
       ],
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5713,9 +5713,9 @@
       ],
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "presets": {
         "children": [
@@ -5774,9 +5774,9 @@
       ],
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -5998,9 +5998,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -6021,9 +6021,9 @@
       "title": "Promo text",
       "hasLoader": false,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -6093,9 +6093,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -6118,9 +6118,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": []
     },
@@ -6130,9 +6130,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -6182,9 +6182,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": []
     },
@@ -6194,9 +6194,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": []
     },
@@ -6595,9 +6595,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "PAGE"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -7215,9 +7215,9 @@
       "hasLoader": false,
       "limit": 1,
       "availability": {
-        "pages": [
-          "ARTICLE"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {
@@ -7367,9 +7367,9 @@
       ],
       "limit": 1,
       "availability": {
-        "pages": [
-          "PRODUCT"
-        ]
+        "enabled": {
+          "dynamic": true
+        }
       },
       "settings": [
         {

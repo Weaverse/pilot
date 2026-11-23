@@ -83,9 +83,7 @@ export const schema = createSchema({
   title: "Product Media",
   limit: 1,
   childTypes: ["mp--badges"],
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "Product Media",

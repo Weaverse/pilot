@@ -60,9 +60,7 @@ export const schema = createSchema({
   type: "related-articles",
   title: "Related articles",
   limit: 1,
-  enabledOn: {
-    pages: ["ARTICLE"],
-  },
+  enabled: ({ page }) => page.type === "ARTICLE",
   settings: [
     {
       group: "Layout",

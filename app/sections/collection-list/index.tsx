@@ -15,9 +15,7 @@ export const schema = createSchema({
   title: "Collection list",
   limit: 1,
   childTypes: ["subheading", "heading", "paragraph", "collections-items"],
-  enabledOn: {
-    pages: ["COLLECTION_LIST"],
-  },
+  enabled: ({ page }) => page.type === "COLLECTION_LIST",
   settings: [
     {
       group: "Layout",
