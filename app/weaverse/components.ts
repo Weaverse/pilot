@@ -73,6 +73,7 @@ import * as PromotionGridItem from "~/sections/promotion-grid/item";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as RelatedProductsItems from "~/sections/related-products/items";
+import * as ScrollZoom from "~/sections/scroll-zoom";
 import * as SingleProduct from "~/sections/single-product";
 import * as SlideShow from "~/sections/slideshow";
 import * as SlideShowSlide from "~/sections/slideshow/slide";
@@ -105,6 +106,7 @@ export const components: WeaverseComponent[] = [
   ColumnsWithImagesItems,
   ColumnWithImageItem,
   HeroVideo,
+  ScrollZoom,
   MapSection,
   PromotionGrid,
   PromotionGridItem,

@@ -185,3 +185,58 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
   }
 }
 
+/* Scroll zoom section: the section is taller than the screen, its media is
+ * pinned, and the inset image grows to full-bleed while it is pinned. */
+@layer components {
+  .scroll-zoom {
+    view-timeline-name: --scroll-zoom;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .scroll-zoom {
+        height: 220vh;
+      }
+      .scroll-zoom-media {
+        animation: scroll-zoom-media linear both;
+        animation-timeline: --scroll-zoom;
+        animation-range: contain 0% contain 55%;
+      }
+      .scroll-zoom-media img {
+        animation: scroll-zoom-image linear both;
+        animation-timeline: --scroll-zoom;
+        animation-range: contain 0% contain 55%;
+      }
+      .scroll-zoom-content {
+        animation: scroll-zoom-content linear both;
+        animation-timeline: --scroll-zoom;
+        animation-range: contain 45% contain 75%;
+      }
+    }
+  }
+  @keyframes scroll-zoom-media {
+    from {
+      clip-path: inset(var(--scroll-zoom-inset) round var(--radius, 0px));
+    }
+    to {
+      clip-path: inset(0 round 0px);
+    }
+  }
+  @keyframes scroll-zoom-image {
+    from {
+      transform: scale(1.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes scroll-zoom-content {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
