@@ -1,7 +1,10 @@
 # Changelog
 
-## Unreleased
+## 2026.11.23
 
+- [fix] Upgrade `@weaverse/hydrogen` to 6.5.1. Pages with no Weaverse page assigned are detected with the SDK's `isFallback` flag instead of matching `"fallback"` in the page id: they answer 404 on the storefront and still render the placeholder in Studio (#237, #239)
+- [fix] The Oxygen deploy workflow installs the Node version from `package.json` `engines` instead of `lts/*`, which had moved to Node 26. Vite+ moves to 1.7.0 and the remaining dependencies to their latest compatible releases; React Router 8 and TypeScript 7 stay held (#236)
+- [fix] Override the vulnerable transitive dependencies `sharp`, `postcss-selector-parser`, `minimatch` and `body-parser` to patched releases, and bump `tailwind-merge` to 3.7.1. All are dev and build tooling; `npm audit` reports no vulnerabilities (#240)
 - [fix] Weaverse custom pages emit one `<title>`, description and Open Graph/Twitter tag each: the page's Studio SEO replaces the root's tags instead of being appended after them, so the Studio SEO title is no longer overridden by the shop name. The market canonical and `hreflang` alternates are unchanged (#233)
 - [fix] Section schemas use `enabled: ({ page }) => ...` instead of the deprecated `enabledOn.pages`, and `@weaverse/schema` is an explicit dev dependency of the manifest generator (#233)
 - [fix] `.env.example` documents `WEAVERSE_PUBLIC_API_BASE`, the variable the SDK reads, instead of `WEAVERSE_API_BASE` (#233)
