@@ -54,7 +54,9 @@ let cached:
   | {
       key: string;
       session: ShopCustomerSession;
-      cartHandlers: ReturnType<typeof createCustomerCartHandlers>;
+      cartHandlers:
+        | ReturnType<typeof createCustomerCartHandlers>
+        | typeof cartHandlers;
       hydrogenHandlers: ReturnType<typeof createHydrogenHandlers>;
       handlers: ReturnType<typeof createCustomerAccountHandlers>;
     }
@@ -76,7 +78,15 @@ function getCustomerSession(env: Env) {
       // request that created it.
       fetch: (input, init) => globalThis.fetch(input, init),
     });
-    const sessionCartHandlers = createCustomerCartHandlers(session);
+    // ponytail: `@shopify/hydrogen/customer-account` (2026.10.3) has no
+    // `development` build, so under `vite dev` it checks a different cart-sync
+    // brand than the dev core build attaches, and passing `cartServerHandlers`
+    // throws on every request. Dev runs without Hydrogen's cart sync
+    // (`syncCartCountry` still sends the token on later cart changes and at
+    // checkout); drop this once that export gains a `development` condition.
+    const sessionCartHandlers = import.meta.env?.DEV
+      ? undefined
+      : createCustomerCartHandlers(session);
     const hydrogenHandlers = createHydrogenHandlers(
       session,
       sessionCartHandlers,
@@ -84,7 +94,7 @@ function getCustomerSession(env: Env) {
     cached = {
       key,
       session,
-      cartHandlers: sessionCartHandlers,
+      cartHandlers: sessionCartHandlers ?? cartHandlers,
       hydrogenHandlers,
       handlers: createCustomerAccountHandlers(hydrogenHandlers),
     };
@@ -98,7 +108,7 @@ function getCustomerSession(env: Env) {
  */
 function createHydrogenHandlers(
   customerSession: ShopCustomerSession,
-  cartServerHandlers: ReturnType<typeof createCustomerCartHandlers>,
+  cartServerHandlers: ReturnType<typeof createCustomerCartHandlers> | undefined,
 ) {
   return createCustomerAccountServerHandlers({
     customerSession,
