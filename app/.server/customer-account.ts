@@ -12,6 +12,7 @@ import {
   createCustomerSession,
 } from "@shopify/hydrogen/customer-account";
 import { redirectDocument } from "react-router";
+import { cartHandlers, createCustomerCartHandlers } from "~/.server/cart";
 import type { AppSession } from "~/.server/session";
 import { resolveRequestLocale, type Storefront } from "~/.server/storefront";
 import {
@@ -44,12 +45,17 @@ function rememberSignedOutMarket(
   sessionManager.setSessionItem(SIGNED_OUT_MARKET_KEY, market.pathPrefix);
 }
 
+/** A session from `createCustomerSession`, which cart sync requires. */
+type ShopCustomerSession = ReturnType<typeof createCustomerSession>;
+
 // Reused across requests in the same isolate, so concurrent token refreshes
 // for one customer share a single request to Shopify.
 let cached:
   | {
       key: string;
-      session: CustomerSession;
+      session: ShopCustomerSession;
+      cartHandlers: ReturnType<typeof createCustomerCartHandlers>;
+      hydrogenHandlers: ReturnType<typeof createHydrogenHandlers>;
       handlers: ReturnType<typeof createCustomerAccountHandlers>;
     }
   | undefined;
@@ -66,26 +72,53 @@ function getCustomerSession(env: Env) {
     const session = createCustomerSession({
       shopId: env.SHOP_ID,
       customerAccountApiClientId: env.PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID,
+      // Resolved per call rather than captured once: the session outlives the
+      // request that created it.
+      fetch: (input, init) => globalThis.fetch(input, init),
     });
-    cached = { key, session, handlers: createCustomerAccountHandlers(session) };
+    const sessionCartHandlers = createCustomerCartHandlers(session);
+    const hydrogenHandlers = createHydrogenHandlers(
+      session,
+      sessionCartHandlers,
+    );
+    cached = {
+      key,
+      session,
+      cartHandlers: sessionCartHandlers,
+      hydrogenHandlers,
+      handlers: createCustomerAccountHandlers(hydrogenHandlers),
+    };
   }
   return cached;
 }
 
 /**
- * Hydrogen's Customer Account handlers, with sign-out routed through
+ * Hydrogen's Customer Account handlers, synced with the customer's cart: see
+ * `createCustomerCartHandlers`.
+ */
+function createHydrogenHandlers(
+  customerSession: ShopCustomerSession,
+  cartServerHandlers: ReturnType<typeof createCustomerCartHandlers>,
+) {
+  return createCustomerAccountServerHandlers({
+    customerSession,
+    cartServerHandlers,
+    // A sign-in that carries no `return_to` lands on the account page.
+    defaultPostLoginRedirectPathname: "/account",
+    postLogoutRedirectUri: CUSTOMER_ACCOUNT_SIGNED_OUT_PATH,
+  });
+}
+
+/**
+ * Pilot's Customer Account routes: Hydrogen's, with sign-out routed through
  * `/account/signed-out`: Shopify only returns a sign-out to a registered
  * logout URI, so one fixed URI replaces a URI per market. The logout handler
  * remembers the market (from the page's `Referer`) in the session, and
  * `/account/signed-out` redirects to that market's home page.
  */
-function createCustomerAccountHandlers(customerSession: CustomerSession) {
-  const handlers = createCustomerAccountServerHandlers({
-    customerSession,
-    // A sign-in that carries no `return_to` lands on the account page.
-    defaultPostLoginRedirectPathname: "/account",
-    postLogoutRedirectUri: CUSTOMER_ACCOUNT_SIGNED_OUT_PATH,
-  });
+function createCustomerAccountHandlers(
+  handlers: ReturnType<typeof createHydrogenHandlers>,
+) {
   return {
     ...handlers,
     logout: createShopifyRouteHandler(
@@ -183,6 +216,14 @@ export function getCustomerAccountHandlers(env: Env) {
 }
 
 /**
+ * The cart handlers to register: synced with the customer session when
+ * Customer Accounts are configured, Hydrogen's plain ones otherwise.
+ */
+export function getCartHandlers(env: Env) {
+  return getCustomerSession(env)?.cartHandlers ?? cartHandlers;
+}
+
+/**
  * The options of `customerAccount.graphql()`: the client's own, minus the
  * access token the wrapper attaches. Optional when the document has no
  * required variables.
@@ -220,7 +261,8 @@ export function createCustomerAccount({
   // The canonical market (public language), for URLs. `storefront.locale`
   // carries Shopify's provider language instead.
   const market = resolveRequestLocale(request);
-  const customerSession = getCustomerSession(env)?.session;
+  const customer = getCustomerSession(env);
+  const customerSession = customer?.session;
   let client: CustomerAccountClient | undefined;
 
   async function getAccessToken() {
@@ -264,6 +306,22 @@ export function createCustomerAccount({
         : false;
     },
     getAccessToken,
+    /**
+     * The customer token for a cart's buyer identity (see `syncCartCountry`):
+     * the signed-in customer's, `null` once the session has ended (signed
+     * out, or a refresh Shopify rejected) so the cart is detached, and
+     * `undefined` while that can't be told (no Customer Accounts, or a
+     * refresh that failed transiently and may still succeed).
+     */
+    async getCartCustomerAccessToken(): Promise<string | null | undefined> {
+      if (!customerSession) return undefined;
+      const accessToken = await getAccessToken().catch(() => undefined);
+      if (accessToken) return accessToken;
+      // A session that can still refresh counts as signed in.
+      return (await customerSession.isLoggedIn(session, requestContext))
+        ? undefined
+        : null;
+    },
     /** Throws a localized login redirect when the shopper has no session. */
     async handleAuthStatus() {
       await requireAccessToken();
@@ -285,22 +343,39 @@ export function createCustomerAccount({
       return client.graphql(doc, ...rest);
     },
     /**
-     * Signs the shopper out without a form post and returns them to their
-     * market's home page: clears the customer session (committed by
-     * `server.ts`) and redirects through Shopify's logout when the session
-     * held an ID token, landing on `/account/signed-out` like the sign-out
-     * form. Used when the session turns out to be unusable.
+     * Signs the shopper out without a form post, the way the sign-out form
+     * does: runs Hydrogen's logout handler, which clears the customer session,
+     * detaches the customer from the cart (expiring the `cart` cookie when
+     * that fails) and redirects through Shopify's logout when the session held
+     * an ID token, landing on `/account/signed-out` and then the market's home
+     * page. Used when the session turns out to be unusable.
      */
     async logout() {
-      if (!customerSession) {
+      if (!customer) {
         return redirectDocument(localizePath("/", market));
       }
       rememberSignedOutMarket(session, market);
-      return redirectDocument(
-        await customerSession.logout(session, requestContext, {
-          postLogoutRedirectUri: CUSTOMER_ACCOUNT_SIGNED_OUT_PATH,
+      // The handler only accepts a same-origin POST; the cart cookie names
+      // the cart to detach.
+      const origin = new URL(request.url).origin;
+      const headers = new Headers({ Origin: origin });
+      const cookie = request.headers.get("Cookie");
+      if (cookie) headers.set("Cookie", cookie);
+      const result = await customer.hydrogenHandlers.logout({
+        request: new Request(new URL(CUSTOMER_ACCOUNT_LOGOUT_PATH, origin), {
+          method: "POST",
+          headers,
         }),
-      );
+        sessionManager: session,
+        requestContext,
+        storefrontClient: storefront,
+      });
+      if (result.type !== "redirect") {
+        throw new Error("Customer Account logout did not redirect");
+      }
+      // The handler committed the session: its `Set-Cookie` headers (and an
+      // expired `cart` cookie) ride on this redirect.
+      return redirectDocument(result.location, { headers: result.headers });
     },
   };
 }

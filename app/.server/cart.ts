@@ -6,6 +6,7 @@ import {
   type ShopifyRouteHandlerContext,
   type ShopifyRouteHandlerResult,
 } from "@shopify/hydrogen";
+import type { CustomerSession } from "@shopify/hydrogen/customer-account";
 import type { Storefront } from "~/.server/storefront";
 import { CACHE_NONE } from "~/utils/cache";
 import { CART_BUYER_IDENTITY_PATH, CART_GIFT_CARDS_PATH } from "~/utils/cart";
@@ -102,11 +103,31 @@ const CART_FRAGMENT = gql(`
   }
 `);
 
+/**
+ * Hydrogen's cart handlers without a customer: for storefronts without
+ * Customer Accounts, server-side cart reads, and the cart data type.
+ */
 export const cartHandlers = createCartServerHandlers({
   fragment: CART_FRAGMENT,
 });
 
-type CartContext = Omit<ShopifyRouteHandlerContext, "sessionManager">;
+/**
+ * Hydrogen's cart handlers for a storefront with Customer Accounts. Passed to
+ * the Customer Account handlers as `cartServerHandlers`, they attach the
+ * customer to the cart on sign-in and token refresh, detach them on sign-out
+ * and on a refresh Shopify rejects (expiring the `cart` cookie when that
+ * detach fails), and create first carts with the customer attached.
+ */
+export function createCustomerCartHandlers(customerSession: CustomerSession) {
+  return createCartServerHandlers({
+    fragment: CART_FRAGMENT,
+    customerSession,
+  });
+}
+
+type CartHandlers =
+  | typeof cartHandlers
+  | ReturnType<typeof createCustomerCartHandlers>;
 
 const CART_BUYER_COUNTRY_UPDATE = gql(`
   mutation PilotCartBuyerIdentity(
@@ -201,7 +222,10 @@ type CartUserError = {
  * market would otherwise keep paying the old market's prices and taxes. A
  * signed-in customer's access token goes along, so checkout knows the
  * customer, as classic Hydrogen's cart did on every buyer-identity update.
- * This runs before every cart mutation, as Pilot's classic cart action did.
+ * A `null` token detaches the customer: a cart must not stay tied to a
+ * customer whose session ended (a shared browser). `undefined` leaves the
+ * cart's customer as it is. This runs before every cart mutation, as Pilot's
+ * classic cart action did.
  */
 export async function syncCartCountry(
   request: Request,
@@ -212,7 +236,7 @@ export async function syncCartCountry(
     cartId = getCartId(request),
   }: {
     countryCode?: Storefront["locale"]["country"];
-    customerAccessToken?: string;
+    customerAccessToken?: string | null;
     cartId?: string | null;
   } = {},
 ) {
@@ -220,9 +244,10 @@ export async function syncCartCountry(
   const result = await storefront.graphql(CART_BUYER_COUNTRY_UPDATE, {
     variables: {
       cartId,
-      buyerIdentity: customerAccessToken
-        ? { countryCode, customerAccessToken }
-        : { countryCode },
+      buyerIdentity:
+        customerAccessToken === undefined
+          ? { countryCode }
+          : { countryCode, customerAccessToken },
     },
   });
   if (result.errors) throw new Error(result.errors[0].message);
@@ -341,15 +366,19 @@ async function readBody(request: Request) {
  * Pilot's cart endpoints that Hydrogen's cart handlers don't cover yet, for
  * one request. They must be registered before `cartHandlers`: the first
  * `POST /api/cart` match wins, and this one syncs the cart's market and
- * customer and then delegates to Hydrogen.
+ * customer and then delegates to `hydrogenCartHandlers`, which attach a
+ * signed-in customer to a cart they create.
  *
- * `getCustomerAccessToken` resolves the signed-in customer's token (or
- * `undefined`), so their carts carry it into checkout.
+ * `getCustomerAccessToken` resolves the cart's customer token as
+ * `syncCartCountry` takes it: the signed-in customer's token, `null` once
+ * nobody is signed in, or `undefined` when that can't be told.
  */
 export function createPilotCartHandlers({
+  hydrogenCartHandlers,
   getCustomerAccessToken,
 }: {
-  getCustomerAccessToken: () => Promise<string | undefined>;
+  hydrogenCartHandlers: CartHandlers;
+  getCustomerAccessToken: () => Promise<string | null | undefined>;
 }) {
   async function customerAccessToken() {
     return getCustomerAccessToken().catch(() => undefined);
@@ -359,7 +388,7 @@ export function createPilotCartHandlers({
     post: createShopifyRouteHandler(
       CART_API_PATH,
       "POST",
-      async (context: CartContext) => {
+      async (context: ShopifyRouteHandlerContext) => {
         const normalized = await normalizeNoteRequest(context.request);
         if (!(normalized instanceof Request)) return normalized;
         const storefront = context.storefrontClient as Storefront;
@@ -373,21 +402,7 @@ export function createPilotCartHandlers({
         const request = userErrors.some(isMissingCartError)
           ? withoutCartCookie(normalized)
           : normalized;
-        const existingCartId = getCartId(request);
-        const result = await cartHandlers.post({ ...context, request });
-        // Hydrogen creates a cart on the first add without the customer; attach
-        // them right away, as classic Hydrogen's `cartCreate` did.
-        const createdCartId =
-          !existingCartId && result.type === "json"
-            ? (result.data as { cart?: { id?: string } } | undefined)?.cart?.id
-            : undefined;
-        if (token && createdCartId) {
-          await syncCartCountry(request, storefront, {
-            customerAccessToken: token,
-            cartId: createdCartId,
-          });
-        }
-        return result;
+        return hydrogenCartHandlers.post({ ...context, request });
       },
     ),
 
@@ -398,7 +413,7 @@ export function createPilotCartHandlers({
     buyerIdentity: createShopifyRouteHandler(
       CART_BUYER_IDENTITY_PATH,
       "POST",
-      async ({ request, ...context }: CartContext) => {
+      async ({ request, ...context }: ShopifyRouteHandlerContext) => {
         const storefrontClient = context.storefrontClient as Storefront;
         const { form, json } = await readBody(request);
         const requested = String(
@@ -433,7 +448,7 @@ export function createPilotCartHandlers({
     giftCards: createShopifyRouteHandler(
       CART_GIFT_CARDS_PATH,
       "POST",
-      async ({ request, ...context }: CartContext) => {
+      async ({ request, ...context }: ShopifyRouteHandlerContext) => {
         const storefrontClient = context.storefrontClient as Storefront;
         const { form, json } = await readBody(request);
         const intent = String(form?.get("intent") ?? json?.intent ?? "");
