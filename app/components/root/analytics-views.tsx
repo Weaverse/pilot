@@ -96,19 +96,32 @@ export function ProductView({
  * The collection's product count for `shopify:collection:view`, as Liquid's
  * `collection.products_count` reports it: products matching the active
  * filters. The Storefront API has no count field, so it is the sum of the
- * availability filter's value counts (in stock + out of stock). Without that
- * filter, it falls back to the products loaded on this page.
+ * availability filter's value counts (in stock + out of stock), or only the
+ * active ones when the shopper filters by availability: a facet's counts
+ * don't narrow to its own selection. Without that filter, it falls back to
+ * the products loaded on this page.
  */
-export function collectionProductsCount(products: {
-  filters: { id: string; values: { count: number }[] }[];
-  nodes: unknown[];
-}): number {
+export function collectionProductsCount(
+  products: {
+    filters: { id: string; values: { count: number; input: unknown }[] }[];
+    nodes: unknown[];
+  },
+  activeFilters: { available?: boolean }[] = [],
+): number {
   const availability = products.filters.find(
     (filter) => filter.id === "filter.v.availability",
   );
-  return availability
-    ? availability.values.reduce((sum, value) => sum + value.count, 0)
-    : products.nodes.length;
+  if (!availability) return products.nodes.length;
+  const active = activeFilters.flatMap((filter) =>
+    filter.available === undefined ? [] : [filter.available],
+  );
+  return availability.values
+    .filter((value) => {
+      if (active.length === 0) return true;
+      const input: { available?: boolean } = JSON.parse(String(value.input));
+      return input.available !== undefined && active.includes(input.available);
+    })
+    .reduce((sum, value) => sum + value.count, 0);
 }
 
 export function CollectionView({

@@ -148,7 +148,8 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 }
 
 export default function Collection() {
-  const { collection, dataSearch } = useLoaderData<typeof loader>();
+  const { collection, appliedFilters, dataSearch } =
+    useLoaderData<typeof loader>();
   return (
     <CollectionBrowseProvider
       handle={collection.handle}
@@ -157,7 +158,10 @@ export default function Collection() {
       <WeaverseContent />
       <CollectionView
         collection={{ id: collection.id, handle: collection.handle }}
-        productsCount={collectionProductsCount(collection.products)}
+        productsCount={collectionProductsCount(
+          collection.products,
+          appliedFilters.map(({ filter }) => filter),
+        )}
       />
     </CollectionBrowseProvider>
   );
