@@ -145,6 +145,24 @@ function ProductAnalytics({ product }: { product: ProductFormData }) {
           quantity: 1,
         },
       ]}
+      standardEvent={{
+        context: "page",
+        selectedOptions: selectedVariant?.selectedOptions ?? [],
+        product: {
+          id: product.id,
+          title: product.title,
+          handle: product.handle,
+          selectedVariant: selectedVariant
+            ? {
+                id: selectedVariant.id,
+                title: selectedVariant.title,
+                availableForSale: selectedVariant.availableForSale,
+                price: selectedVariant.price,
+                selectedOptions: selectedVariant.selectedOptions,
+              }
+            : null,
+        },
+      }}
     />
   );
 }

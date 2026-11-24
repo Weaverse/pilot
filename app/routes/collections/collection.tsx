@@ -14,7 +14,10 @@ import {
   CollectionBrowseProvider,
   parseCategoryFilters,
 } from "~/components/product-grid/collection-browse";
-import { CollectionView } from "~/components/root/analytics-views";
+import {
+  CollectionView,
+  collectionProductsCount,
+} from "~/components/root/analytics-views";
 import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { getPaginationVariables } from "~/utils/pagination";
 import { seoMetaFromMatches } from "~/utils/seo";
@@ -145,7 +148,8 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 }
 
 export default function Collection() {
-  const { collection, dataSearch } = useLoaderData<typeof loader>();
+  const { collection, appliedFilters, dataSearch } =
+    useLoaderData<typeof loader>();
   return (
     <CollectionBrowseProvider
       handle={collection.handle}
@@ -154,6 +158,10 @@ export default function Collection() {
       <WeaverseContent />
       <CollectionView
         collection={{ id: collection.id, handle: collection.handle }}
+        productsCount={collectionProductsCount(
+          collection.products,
+          appliedFilters.map(({ filter }) => filter),
+        )}
       />
     </CollectionBrowseProvider>
   );
