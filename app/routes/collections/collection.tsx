@@ -14,7 +14,10 @@ import {
   CollectionBrowseProvider,
   parseCategoryFilters,
 } from "~/components/product-grid/collection-browse";
-import { CollectionView } from "~/components/root/analytics-views";
+import {
+  CollectionView,
+  collectionProductsCount,
+} from "~/components/root/analytics-views";
 import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { getPaginationVariables } from "~/utils/pagination";
 import { seoMetaFromMatches } from "~/utils/seo";
@@ -154,6 +157,7 @@ export default function Collection() {
       <WeaverseContent />
       <CollectionView
         collection={{ id: collection.id, handle: collection.handle }}
+        productsCount={collectionProductsCount(collection.products)}
       />
     </CollectionBrowseProvider>
   );

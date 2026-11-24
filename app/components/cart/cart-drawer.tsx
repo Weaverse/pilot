@@ -28,6 +28,27 @@ export function closeCartDrawer() {
 }
 
 /**
+ * Points Standard Actions' `window.Shopify.actions.openCart()` at the drawer,
+ * so apps and Shopify scripts open it instead of the default (the `/cart`
+ * page). The standard-actions module script may run after this module, so a
+ * miss while the document is still loading retries on `DOMContentLoaded`.
+ */
+function configureOpenCartAction() {
+  const openCart = window.Shopify?.actions?.openCart;
+  if (openCart) {
+    openCart.configure({ handler: async () => openCartDrawer() });
+  } else if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", configureOpenCartAction, {
+      once: true,
+    });
+  }
+}
+
+if (typeof document !== "undefined") {
+  configureOpenCartAction();
+}
+
+/**
  * Standard Actions dispatches this event for every cart line change, from a
  * form or from code. An `add` opens the drawer, so a surface that doesn't call
  * `openCartDrawer()` itself still behaves like the rest. A cart that loads on

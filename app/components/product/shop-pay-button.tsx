@@ -1,7 +1,13 @@
+import { canAddToCart } from "@shopify/hydrogen";
 import {
   ShopPayButton,
   type ShopPayButtonProps,
 } from "@shopify/hydrogen/react";
+import { useCart } from "~/components/cart/cart-store";
+import {
+  type ProductFormData,
+  useProduct,
+} from "~/components/product/product-form";
 
 /**
  * Hydrogen's Shop Pay button in Pilot's buy boxes.
@@ -14,18 +20,29 @@ import {
  *
  * The wrapper keeps `--shop-pay-button-height` as `min-height` so the buy box
  * layout matches the other buttons.
+ *
+ * Render it inside the product's `ProductProvider`: like the add-to-cart
+ * button, it is disabled when `canAddToCart()` fails or a cart line change is
+ * in flight (a disabled button renders without an `href`).
  */
 export function ProductShopPayButton({
   className,
   width,
+  product,
   ...props
-}: ShopPayButtonProps & { className?: string }) {
+}: ShopPayButtonProps & { className?: string; product: ProductFormData }) {
+  const { options } = useProduct();
+  const pending = useCart((state) => state.pending.lines.size > 0);
   return (
     <div
       className={className}
       style={{ width, minHeight: "var(--shop-pay-button-height)" }}
     >
-      <ShopPayButton width="100%" {...props} />
+      <ShopPayButton
+        width="100%"
+        {...props}
+        disabled={!canAddToCart(product, options) || pending}
+      />
     </div>
   );
 }
