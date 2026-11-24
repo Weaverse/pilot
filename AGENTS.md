@@ -21,6 +21,10 @@ This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) 
   manifest, sensitivity marking, and safe composition.
 - **`DESIGN.md`** — brand tokens, accessibility requirements, component rules,
   and prohibited patterns.
+- **`.agents/skills/` and `.claude/skills/`** — Hydrogen's own skills, copied
+  from `@shopify/hydrogen` by `npx @shopify/hydrogen skills sync`. Don't edit
+  them; re-run the sync after upgrading `@shopify/hydrogen` (`npm run dev`
+  warns when they drift).
 
 Weaverse schema changes must be accompanied by a regenerated manifest:
 
