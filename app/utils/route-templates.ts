@@ -1,4 +1,4 @@
-import { createShopifyRouteTemplates } from "@shopify/hydrogen";
+import { defineShopifyRouteTemplates } from "@shopify/hydrogen";
 
 /**
  * How Shopify resources map to Pilot's routes. Hydrogen's request handlers use
@@ -9,6 +9,6 @@ import { createShopifyRouteTemplates } from "@shopify/hydrogen";
  * Pilot has no `/collections/:collectionHandle/products/:productHandle` route,
  * so products inside a collection resolve to the product page.
  */
-export const routeTemplates = createShopifyRouteTemplates({
+export const routeTemplates = defineShopifyRouteTemplates({
   productInCollection: "/products/:productHandle",
 });
