@@ -84,6 +84,35 @@ function getCartQuantity(cart: AnalyticsCart | null) {
   return lines.reduce((total, line) => total + line.quantity, 0);
 }
 
+/** Customer Privacy events after which consent may have changed. */
+const CONSENT_EVENTS = ["consentTrackingApiLoaded", "visitorConsentCollected"];
+
+/**
+ * Whether Customer Privacy allows analytics processing, with the same check
+ * the Hydrogen analytics bus uses before delivering to destinations: consent
+ * must have loaded, and an explicit "no" for analytics wins.
+ */
+export function isAnalyticsAllowed(
+  privacy:
+    | Pick<
+        NonNullable<NonNullable<Window["Shopify"]>["customerPrivacy"]>,
+        "consentStatus" | "currentVisitorConsent" | "analyticsProcessingAllowed"
+      >
+    | undefined,
+): boolean {
+  try {
+    if (privacy?.consentStatus !== "loaded") {
+      return false;
+    }
+    if (privacy.currentVisitorConsent()?.analytics === "no") {
+      return false;
+    }
+    return privacy.analyticsProcessingAllowed();
+  } catch {
+    return false;
+  }
+}
+
 export function CustomAnalytics() {
   let rootData = useRouteLoaderData<RootLoader>("root");
   let id = rootData?.googleGtmID;
@@ -103,18 +132,22 @@ export function CustomAnalytics() {
     window.dataLayer = window.dataLayer || [];
 
     let didLoad = false;
+    let delayPassed = false;
     let fallbackTimer: number | undefined;
-    let cleanupEvents: (() => void) | undefined;
 
-    function loadGtm() {
-      if (didLoad) {
+    // GTM is loaded outside the analytics bus, so the bus's consent gate
+    // doesn't cover it: load it only once Customer Privacy allows analytics,
+    // and retry when consent loads or the visitor answers the banner.
+    function tryLoadGtm() {
+      if (
+        didLoad ||
+        !delayPassed ||
+        !isAnalyticsAllowed(window.Shopify?.customerPrivacy)
+      ) {
         return;
       }
       didLoad = true;
-      cleanupEvents?.();
-      if (fallbackTimer) {
-        window.clearTimeout(fallbackTimer);
-      }
+      cleanup();
 
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
@@ -127,29 +160,44 @@ export function CustomAnalytics() {
       document.head.appendChild(script);
     }
 
+    function endDelay() {
+      delayPassed = true;
+      removeIntentListeners();
+      tryLoadGtm();
+    }
+
     const intentEvents = ["pointerdown", "keydown", "touchstart", "scroll"];
     for (const event of intentEvents) {
-      window.addEventListener(event, loadGtm, {
+      window.addEventListener(event, endDelay, {
         once: true,
         passive: true,
       });
     }
-    cleanupEvents = () => {
+    for (const event of CONSENT_EVENTS) {
+      document.addEventListener(event, tryLoadGtm);
+    }
+
+    function removeIntentListeners() {
       for (const event of intentEvents) {
-        window.removeEventListener(event, loadGtm);
+        window.removeEventListener(event, endDelay);
       }
-    };
-
-    // Long-tail fallback: keep analytics for no-interaction page views, but
-    // keep GTM out of the initial render/LCP window. User intent loads sooner.
-    fallbackTimer = window.setTimeout(loadGtm, 8000);
-
-    return () => {
-      cleanupEvents?.();
       if (fallbackTimer) {
         window.clearTimeout(fallbackTimer);
       }
-    };
+    }
+
+    function cleanup() {
+      removeIntentListeners();
+      for (const event of CONSENT_EVENTS) {
+        document.removeEventListener(event, tryLoadGtm);
+      }
+    }
+
+    // Long-tail fallback: keep analytics for no-interaction page views, but
+    // keep GTM out of the initial render/LCP window. User intent loads sooner.
+    fallbackTimer = window.setTimeout(endDelay, 8000);
+
+    return cleanup;
   }, [id]);
 
   return null;
