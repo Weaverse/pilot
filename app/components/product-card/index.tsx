@@ -9,6 +9,7 @@ import { useViewTransitionState } from "react-router";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Money } from "~/components/money";
+import { useClaimImageExpandForCard } from "~/components/product-media/image-expand";
 import {
   type BadgeStyleSettings,
   BestSellerBadge,
@@ -86,6 +87,7 @@ export function ProductCard({
     `/products/${product.handle}`,
   );
   const isTransitioning = useViewTransitionState(productPageHref);
+  const claimImageExpand = useClaimImageExpandForCard();
 
   const { images, badges, priceRange } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
@@ -138,7 +140,10 @@ export function ProductCard({
         <Link
           to={`/products/${product.handle}?${params.toString()}`}
           prefetch="intent"
-          onClick={() => setIsClicked(true)}
+          onClick={() => {
+            setIsClicked(true);
+            claimImageExpand();
+          }}
           className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-md"
         >
           {/* Loading skeleton overlay */}

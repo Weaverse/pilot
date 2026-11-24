@@ -44,14 +44,16 @@ export function customerAccountLoginPath(
 }
 
 /**
- * The action of a sign-out `<form method="post">` that returns the shopper to
- * their market's home page.
- *
- * Shopify redirects to this page after clearing its own session, so every
- * market's home URL (`https://shop.example/de-de`, ...) must be registered as
- * an allowed logout URI in the Customer Account API settings.
+ * The action of a sign-out `<form method="post">`. It carries no market: the
+ * logout handler remembers it in the session for
+ * {@link CUSTOMER_ACCOUNT_SIGNED_OUT_PATH}.
  */
-export function customerAccountLogoutPath(locale: Locale): string {
-  const query = new URLSearchParams({ return_to: localizePath("/", locale) });
-  return `/account/logout?${query.toString()}`;
-}
+export const CUSTOMER_ACCOUNT_LOGOUT_PATH = "/account/logout";
+
+/**
+ * Where Shopify returns every sign-out. It redirects on to the home page of
+ * the market the shopper signed out of, so the store registers this one
+ * logout URI (`https://shop.example/account/signed-out`) in the Customer
+ * Account API settings instead of one per market.
+ */
+export const CUSTOMER_ACCOUNT_SIGNED_OUT_PATH = "/account/signed-out";

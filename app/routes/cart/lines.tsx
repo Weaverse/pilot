@@ -51,7 +51,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
         lines: linesMap,
         discountCodes: discount ? [discount] : [],
         buyerIdentity: {
-          countryCode: storefront.i18n.country,
+          countryCode: storefront.locale.country,
           // Classic Hydrogen's `cart.create` attached the signed-in
           // customer, so checkout knows them.
           customerAccessToken: await context.customerAccount

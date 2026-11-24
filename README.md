@@ -131,6 +131,8 @@ The minimum variables needed to render a storefront (the rest are feature-comple
 
 If your store is already linked to a Hydrogen channel, `npx shopify hydrogen env pull` fills these in. See [`.env.example`](.env.example) for the full list.
 
+To enable Customer Account login, register `<origin>/account/authorize` as the callback URI and `<origin>/account/signed-out` as the logout URI in **Hydrogen > Storefront > Customer Account API settings**. Every sign-out lands on that one logout URI, which returns the shopper to their market's home page. For local HTTPS setup, see [Customer Account local development](https://weaverse.io/docs/development-guide/customer-account-local-dev).
+
 ---
 
 ## Project structure

@@ -207,11 +207,11 @@ export async function syncCartCountry(
   request: Request,
   storefront: Storefront,
   {
-    countryCode = storefront.i18n.country,
+    countryCode = storefront.locale.country,
     customerAccessToken,
     cartId = getCartId(request),
   }: {
-    countryCode?: Storefront["i18n"]["country"];
+    countryCode?: Storefront["locale"]["country"];
     customerAccessToken?: string;
     cartId?: string | null;
   } = {},
@@ -264,7 +264,7 @@ function formRedirect(
   storefront: Storefront,
   redirectTo: FormDataEntryValue | null,
 ): ShopifyRouteHandlerResult {
-  const fallback = localizePath("/cart", storefront.i18n);
+  const fallback = localizePath("/cart", storefront.locale);
   return {
     type: "redirect",
     location: safeRedirectPath(redirectTo, fallback),
@@ -409,7 +409,7 @@ export function createPilotCartHandlers({
         const market = SUPPORTED_LOCALES.find(
           (locale) => locale.country === requested,
         );
-        const countryCode = market?.country ?? storefrontClient.i18n.country;
+        const countryCode = market?.country ?? storefrontClient.locale.country;
         const { userErrors } = await syncCartCountry(
           request,
           storefrontClient,

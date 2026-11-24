@@ -174,7 +174,7 @@ test("the featured-products helper keeps the provider language for any caller", 
 
 test("every Weaverse section loader queries with the provider language", async () => {
   // The four consumers above are the ones a review named. These are the rest
-  // of the same class — a loader reading `weaverse.storefront.i18n` and
+  // of the same class — a loader reading `weaverse.storefront.locale` and
   // copying it into its own query variables — so the guard covers the flow
   // rather than the reported instances.
   const cases = [

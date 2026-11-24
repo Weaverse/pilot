@@ -15,7 +15,7 @@ export const headers = routeHeaders;
 export const loader = async (args: LoaderFunctionArgs) => {
   const { params, request, context } = args;
   const storefront = context.storefront;
-  // The canonical market table owns the BCP-47 tag; `storefront.i18n.language`
+  // The canonical market table owns the BCP-47 tag; `storefront.locale.language`
   // is the provider enum and can be script-specific (`ZH_CN`), which `Intl`
   // rejects.
   const { hreflang } = resolveLocaleFromRequest(request);

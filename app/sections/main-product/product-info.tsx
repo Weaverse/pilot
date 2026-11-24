@@ -41,9 +41,7 @@ export const schema = createSchema({
     "mp--highlights",
     "mp--collapsible-details",
   ],
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   presets: {
     children: [
       { type: "mp--vendor" },

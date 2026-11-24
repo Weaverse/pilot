@@ -33,7 +33,7 @@ CI fails when the committed manifest is stale.
 
 ## Project Overview
 
-This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, Tailwind CSS v4, and Vite+ 1.3.0 static checks. It runs on the Node.js ranges declared in `package.json`.
+This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, Tailwind CSS v4, and Vite+ 1.7.0 static checks. It runs on the Node.js ranges declared in `package.json`.
 
 ## Architecture Overview
 
@@ -152,7 +152,7 @@ Required environment variables are defined in `env.d.ts` (`Env`) and listed in `
 
 ### Vite+ Static Checks
 
-The project uses Vite+ 1.3.0 with Oxlint and Oxfmt for static checks:
+The project uses Vite+ 1.7.0 (Oxlint 1.94.0, Oxfmt 0.79.0) with Oxlint and Oxfmt for static checks:
 - Double quotes for strings
 - Semicolons always
 - Trailing commas
@@ -313,11 +313,10 @@ export let schema = createSchema({
   type: 'my-component',        // Unique kebab-case ID
   title: 'My Component',       // Studio display name
   limit: 1,                    // Max instances per page (optional)
-  enabledOn: {                 // Restrict to page types (optional)
-    pages: ['PRODUCT', 'COLLECTION'],
-    // Page types: INDEX | PRODUCT | ALL_PRODUCTS | COLLECTION |
-    //             COLLECTION_LIST | PAGE | BLOG | ARTICLE | CUSTOM
-  },
+  // Restrict to page types (optional). `enabledOn.pages` is deprecated.
+  // Page types: INDEX | PRODUCT | ALL_PRODUCTS | COLLECTION |
+  //             COLLECTION_LIST | PAGE | BLOG | ARTICLE | CUSTOM
+  enabled: ({ page }) => page.type === 'PRODUCT' || page.type === 'COLLECTION',
   settings: [
     {
       group: 'Content',

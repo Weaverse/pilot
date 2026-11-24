@@ -15,7 +15,6 @@ import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import type { ThemeSettings } from "~/types/weaverse";
 import { cn } from "~/utils/cn";
-import { useNonce } from "~/utils/csp";
 import {
   CUSTOMER_ACCESS_TOKEN_PATH,
   customerAccountLoginPath,
@@ -49,7 +48,7 @@ const ACCOUNT_WEB_COMPONENTS_SRC =
 
 let shopifyAccountComponentsPromise: Promise<void> | null = null;
 
-function loadModuleScript(src: string, nonce?: string) {
+function loadModuleScript(src: string) {
   return new Promise<void>((resolve, reject) => {
     const existing = document.querySelector<HTMLScriptElement>(
       `script[src="${src}"]`,
@@ -71,9 +70,6 @@ function loadModuleScript(src: string, nonce?: string) {
     const script = document.createElement("script");
     script.type = "module";
     script.src = src;
-    if (nonce) {
-      script.nonce = nonce;
-    }
     script.addEventListener(
       "load",
       () => {
@@ -91,7 +87,7 @@ function loadModuleScript(src: string, nonce?: string) {
   });
 }
 
-function loadShopifyAccountComponents(nonce?: string) {
+function loadShopifyAccountComponents() {
   if (typeof document === "undefined") {
     return Promise.resolve();
   }
@@ -110,9 +106,9 @@ function loadShopifyAccountComponents(nonce?: string) {
     if (!window.Shopify) {
       Object.assign(window, { Shopify: {} });
     }
-    await loadModuleScript(STOREFRONT_WEB_COMPONENTS_SRC, nonce);
+    await loadModuleScript(STOREFRONT_WEB_COMPONENTS_SRC);
     await customElements.whenDefined("shopify-store");
-    await loadModuleScript(ACCOUNT_WEB_COMPONENTS_SRC, nonce);
+    await loadModuleScript(ACCOUNT_WEB_COMPONENTS_SRC);
     await customElements.whenDefined("shopify-account");
   })();
 
@@ -273,7 +269,6 @@ export function Header() {
 }
 
 function ShopifyAccountButton() {
-  const nonce = useNonce();
   const { pathname, search } = useLocation();
   // The web component navigates to this URL itself (a full document load, as
   // Hydrogen's unprefixed login handler needs), so it must already carry the
@@ -352,7 +347,7 @@ function ShopifyAccountButton() {
     if (openWhenReady) {
       setIsLoading(true);
     }
-    loadShopifyAccountComponents(nonce)
+    loadShopifyAccountComponents()
       .then(() => {
         setComponentsReady(true);
       })

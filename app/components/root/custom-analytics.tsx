@@ -2,7 +2,6 @@ import { AnalyticsEvent, type AnalyticsCart } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { useRouteLoaderData } from "react-router";
 import type { RootLoader } from "~/root";
-import { useNonce } from "~/utils/csp";
 
 let gtmDestinationAdded = false;
 
@@ -86,7 +85,6 @@ function getCartQuantity(cart: AnalyticsCart | null) {
 }
 
 export function CustomAnalytics() {
-  let nonce = useNonce();
   let rootData = useRouteLoaderData<RootLoader>("root");
   let id = rootData?.googleGtmID;
 
@@ -125,7 +123,6 @@ export function CustomAnalytics() {
 
       const script = document.createElement("script");
       script.async = true;
-      script.nonce = nonce;
       script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`;
       document.head.appendChild(script);
     }
@@ -153,7 +150,7 @@ export function CustomAnalytics() {
         window.clearTimeout(fallbackTimer);
       }
     };
-  }, [id, nonce]);
+  }, [id]);
 
   return null;
 }

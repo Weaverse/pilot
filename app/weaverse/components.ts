@@ -87,8 +87,6 @@ export const components: WeaverseComponent[] = [
   Heading,
   Paragraph,
   Link,
-  // AliReview,
-  // AliReviewList,
   AllProducts,
   AllProductsToolbar,
   AllProductsGrid,

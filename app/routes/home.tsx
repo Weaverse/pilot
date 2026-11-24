@@ -14,7 +14,7 @@ export const headers = routeHeaders;
 
 export async function loader(args: LoaderFunctionArgs) {
   const { params, context } = args;
-  const { pathPrefix } = context.storefront.i18n;
+  const { pathPrefix } = context.storefront.locale;
   const locale = pathPrefix?.slice(1) || "";
   let type: PageType = "INDEX";
 

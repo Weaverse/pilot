@@ -16,12 +16,33 @@ import type { AppSession } from "~/.server/session";
 import { resolveRequestLocale, type Storefront } from "~/.server/storefront";
 import {
   CUSTOMER_ACCESS_TOKEN_PATH,
+  CUSTOMER_ACCOUNT_LOGOUT_PATH,
+  CUSTOMER_ACCOUNT_SIGNED_OUT_PATH,
   customerAccountLoginPath,
 } from "~/utils/customer-account";
-import { delocalizePath, localizePath } from "~/utils/locale";
+import {
+  delocalizePath,
+  type Locale,
+  localizePath,
+  resolveLocale,
+} from "~/utils/locale";
 
 const CUSTOMER_ACCOUNT_HANDLER_PATH =
-  /^\/account\/(login|authorize|refresh|logout)$/;
+  /^\/account\/(login|authorize|refresh|logout|signed-out)$/;
+
+/** The session key holding the path prefix of the market being signed out of. */
+const SIGNED_OUT_MARKET_KEY = "signedOutMarket";
+
+/** Remembers the market being signed out of, for `/account/signed-out`. */
+function rememberSignedOutMarket(
+  sessionManager: Pick<
+    ShopifyRouteHandlerContext["sessionManager"],
+    "setSessionItem"
+  >,
+  market: Locale,
+) {
+  sessionManager.setSessionItem(SIGNED_OUT_MARKET_KEY, market.pathPrefix);
+}
 
 // Reused across requests in the same isolate, so concurrent token refreshes
 // for one customer share a single request to Shopify.
@@ -29,7 +50,7 @@ let cached:
   | {
       key: string;
       session: CustomerSession;
-      handlers: ReturnType<typeof createCustomerAccountServerHandlers>;
+      handlers: ReturnType<typeof createCustomerAccountHandlers>;
     }
   | undefined;
 
@@ -46,14 +67,58 @@ function getCustomerSession(env: Env) {
       shopId: env.SHOP_ID,
       customerAccountApiClientId: env.PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID,
     });
-    const handlers = createCustomerAccountServerHandlers({
-      customerSession: session,
-      // A sign-in that carries no `return_to` lands on the account page.
-      defaultPostLoginRedirectPathname: "/account",
-    });
-    cached = { key, session, handlers };
+    cached = { key, session, handlers: createCustomerAccountHandlers(session) };
   }
   return cached;
+}
+
+/**
+ * Hydrogen's Customer Account handlers, with sign-out routed through
+ * `/account/signed-out`: Shopify only returns a sign-out to a registered
+ * logout URI, so one fixed URI replaces a URI per market. The logout handler
+ * remembers the market (from the page's `Referer`) in the session, and
+ * `/account/signed-out` redirects to that market's home page.
+ */
+function createCustomerAccountHandlers(customerSession: CustomerSession) {
+  const handlers = createCustomerAccountServerHandlers({
+    customerSession,
+    // A sign-in that carries no `return_to` lands on the account page.
+    defaultPostLoginRedirectPathname: "/account",
+    postLogoutRedirectUri: CUSTOMER_ACCOUNT_SIGNED_OUT_PATH,
+  });
+  return {
+    ...handlers,
+    logout: createShopifyRouteHandler(
+      CUSTOMER_ACCOUNT_LOGOUT_PATH,
+      "POST",
+      async (context: ShopifyRouteHandlerContext) => {
+        rememberSignedOutMarket(
+          context.sessionManager,
+          resolveRequestLocale(context.request),
+        );
+        return handlers.logout(context);
+      },
+    ),
+    signedOut: createShopifyRouteHandler(
+      CUSTOMER_ACCOUNT_SIGNED_OUT_PATH,
+      "GET",
+      async ({
+        sessionManager,
+      }: Pick<ShopifyRouteHandlerContext, "sessionManager">) => {
+        const prefix = await sessionManager.getSessionItem(
+          SIGNED_OUT_MARKET_KEY,
+        );
+        sessionManager.removeSessionItem(SIGNED_OUT_MARKET_KEY);
+        // `resolveLocale` maps anything but a supported prefix to the default.
+        const market = resolveLocale(typeof prefix === "string" ? prefix : "/");
+        return {
+          type: "redirect",
+          location: localizePath("/", market),
+          headers: { "Cache-Control": "private, no-store" },
+        };
+      },
+    ),
+  };
 }
 
 /** Whether this storefront has Customer Accounts configured. */
@@ -106,7 +171,8 @@ function customerAccessTokenHandler(customerSession?: CustomerSession) {
  * Pilot's Customer Account route handlers for `handleShopifyRoutes`:
  * Hydrogen's `/account/login`, `/account/authorize`, `/account/refresh` and
  * `/account/logout` (fixed and unprefixed; link to them with plain
- * `<a>`/`<form>`, never the router's `<Link>`/`<Form>`), plus the header's
+ * `<a>`/`<form>`, never the router's `<Link>`/`<Form>`), Pilot's
+ * `/account/signed-out` landing, plus the header's
  * access-token endpoint. Without Customer Accounts only the token endpoint is
  * registered, answering `null`.
  */
@@ -151,7 +217,7 @@ export function createCustomerAccount({
   storefront: Storefront;
 }) {
   const requestContext = storefront.requestContext;
-  // The canonical market (public language), for URLs. `storefront.i18n`
+  // The canonical market (public language), for URLs. `storefront.locale`
   // carries Shopify's provider language instead.
   const market = resolveRequestLocale(request);
   const customerSession = getCustomerSession(env)?.session;
@@ -191,7 +257,7 @@ export function createCustomerAccount({
   }
 
   return {
-    i18n: storefront.i18n,
+    locale: storefront.locale,
     async isLoggedIn() {
       return customerSession
         ? customerSession.isLoggedIn(session, requestContext)
@@ -222,20 +288,18 @@ export function createCustomerAccount({
      * Signs the shopper out without a form post and returns them to their
      * market's home page: clears the customer session (committed by
      * `server.ts`) and redirects through Shopify's logout when the session
-     * held an ID token. Used when the session turns out to be unusable.
-     *
-     * Shopify redirects to the home URL after clearing its own session, so
-     * every market's home URL must be registered as an allowed logout URI in
-     * the Customer Account API settings.
+     * held an ID token, landing on `/account/signed-out` like the sign-out
+     * form. Used when the session turns out to be unusable.
      */
     async logout() {
-      const home = localizePath("/", market);
+      if (!customerSession) {
+        return redirectDocument(localizePath("/", market));
+      }
+      rememberSignedOutMarket(session, market);
       return redirectDocument(
-        customerSession
-          ? await customerSession.logout(session, requestContext, {
-              postLogoutRedirectUri: home,
-            })
-          : home,
+        await customerSession.logout(session, requestContext, {
+          postLogoutRedirectUri: CUSTOMER_ACCOUNT_SIGNED_OUT_PATH,
+        }),
       );
     },
   };

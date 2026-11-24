@@ -52,9 +52,7 @@ export let schema = createSchema({
   type: "mp--availability",
   title: "Availability",
   limit: 1,
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "General",

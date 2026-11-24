@@ -154,9 +154,7 @@ export const schema = createSchema({
   type: "blogs",
   title: "Blogs",
   limit: 1,
-  enabledOn: {
-    pages: ["BLOG"],
-  },
+  enabled: ({ page }) => page.type === "BLOG",
   settings: [
     { group: "Layout", inputs: layoutInputs },
     {

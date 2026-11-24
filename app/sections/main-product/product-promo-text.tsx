@@ -58,9 +58,7 @@ export default function ProductPromoText(props: ProductPromoTextProps) {
 export let schema = createSchema({
   type: "mp--promo-text",
   title: "Promo text",
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
+  enabled: ({ page }) => page.type === "PRODUCT",
   settings: [
     {
       group: "General",

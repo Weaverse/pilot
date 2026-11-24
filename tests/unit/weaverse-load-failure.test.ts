@@ -138,7 +138,7 @@ function rootContext(theme: Record<string, unknown>) {
   };
   return {
     storefront: {
-      i18n: {
+      locale: {
         language: "EN",
         country: "US",
         currency: "USD",

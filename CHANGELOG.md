@@ -1,7 +1,22 @@
 # Changelog
 
-## Unreleased
+## 2026.11.23
 
+- [fix] Upgrade `@weaverse/hydrogen` to 6.5.1. Pages with no Weaverse page assigned are detected with the SDK's `isFallback` flag instead of matching `"fallback"` in the page id: they answer 404 on the storefront and still render the placeholder in Studio (#237, #239)
+- [fix] The Oxygen deploy workflow installs the Node version from `package.json` `engines` instead of `lts/*`, which had moved to Node 26. Vite+ moves to 1.7.0 and the remaining dependencies to their latest compatible releases; React Router 8 and TypeScript 7 stay held (#236)
+- [fix] Override the vulnerable transitive dependencies `sharp`, `postcss-selector-parser`, `minimatch` and `body-parser` to patched releases, and bump `tailwind-merge` to 3.7.1. All are dev and build tooling; `npm audit` reports no vulnerabilities (#240)
+- [fix] Weaverse custom pages emit one `<title>`, description and Open Graph/Twitter tag each: the page's Studio SEO replaces the root's tags instead of being appended after them, so the Studio SEO title is no longer overridden by the shop name. The market canonical and `hreflang` alternates are unchanged (#233)
+- [fix] Section schemas use `enabled: ({ page }) => ...` instead of the deprecated `enabledOn.pages`, and `@weaverse/schema` is an explicit dev dependency of the manifest generator (#233)
+- [fix] `.env.example` documents `WEAVERSE_PUBLIC_API_BASE`, the variable the SDK reads, instead of `WEAVERSE_API_BASE` (#233)
+- [breaking] Remove the unregistered `ali-reviews` section, its CSP hosts (`cdn.alireviews.io`, `*.alicdn.com`), `ALI_REVIEWS_API_KEY` and the unused `useClosestWeaverseItem` hook. Forks that registered the section need to keep their own copy (#233)
+
+## 2026.11.13
+
+- [fix] Signing out returns the shopper to the home page of the market they were browsing (`/de-de` instead of `/`). Every sign-out, from the form or `customerAccount.logout()`, lands on `/account/signed-out`, which redirects to the market remembered in the session; the sign-out form no longer carries `return_to`. Register `<origin>/account/signed-out` as a Logout URI in the Customer Account API settings (#229)
+- [breaking] The Content Security Policy is built with Hydrogen's `createContentSecurityPolicy` and the SDK's Weaverse Studio directives. It stays report-only, no longer adds the `?weaverseHost=` query to `script-src`/`connect-src` or sets `frame-ancestors *`, and uses `'unsafe-inline'` without a nonce so Oxygen's full-page cache keeps storing documents. `PUBLIC_CHECKOUT_DOMAIN` is allowed as a media source for Shopify videos served from the store's own domain. Forks that import `app/utils/csp.ts` or `useNonce` need to update (#226)
+- [breaking] Markets are defined with Hydrogen 2026.10.3's `defineShopifyI18n`, keeping every market's URL prefix, and code reads `storefront.locale` instead of the deprecated `storefront.i18n`. Forks that use `I18nConfig` or `storefront.i18n` need to update (#226)
+- [fix] Opening a related product card on a product page no longer logs a duplicate `image-expand` view-transition name, and the image still expands into the next product page (follow-up to #205)
+- [fix] Upgrade `@shopify/hydrogen` to 2026.10.3 and `@weaverse/hydrogen` to 6.3.1, which stops Zod from logging a CSP `unsafe-eval` report (Weaverse/weaverse#595)
 - [fix] The account page keeps the space between its blocks on desktop, and "Add an Address" opens the address form instead of a 404. Sections only apply their `gap` spacing when a `gap` is set, so a `space-y-*` passed in `containerClassName` also holds on large screens (#223)
 
 ## 2026.11.10

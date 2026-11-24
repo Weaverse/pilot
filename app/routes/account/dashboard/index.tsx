@@ -1,27 +1,17 @@
 import { flattenConnection } from "@shopify/hydrogen";
 import { Suspense } from "react";
-import {
-  Await,
-  useLoaderData,
-  useLocation,
-  useOutletContext,
-} from "react-router";
+import { Await, useLoaderData, useOutletContext } from "react-router";
 import { Icon } from "~/components/icon";
 import { ProductCard } from "~/components/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
-import { customerAccountLogoutPath } from "~/utils/customer-account";
-import { resolveLocale } from "~/utils/locale";
+import { CUSTOMER_ACCOUNT_LOGOUT_PATH } from "~/utils/customer-account";
 import type { loader as accountLoader } from "../layout";
 import { AccountDetails } from "./account-details";
 import { AddressBook } from "./address-book";
 import { OrdersHistory } from "./orders-history";
 
 export default function AccountDashboard() {
-  const { pathname } = useLocation();
-  // Hydrogen's logout handler is unprefixed; `return_to` brings the shopper
-  // back to their market's home page.
-  const signOutUrl = customerAccountLogoutPath(resolveLocale(pathname));
   const loaderData = useLoaderData<typeof accountLoader>();
   const outletContext =
     useOutletContext<Awaited<ReturnType<typeof accountLoader>>["data"]>();
@@ -50,7 +40,7 @@ export default function AccountDashboard() {
         <h1 className="h4 font-medium">{heading}</h1>
         {/* A plain <form>: the handler answers with a raw redirect (to
             Shopify's logout) that client-side routing cannot follow. */}
-        <form method="post" action={signOutUrl}>
+        <form method="post" action={CUSTOMER_ACCOUNT_LOGOUT_PATH}>
           <button
             type="submit"
             className="group text-body-subtle flex items-center gap-2"

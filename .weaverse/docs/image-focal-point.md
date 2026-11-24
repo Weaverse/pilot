@@ -38,7 +38,7 @@ image-with-text `contain` option, and logos and icons.
 To use it in a custom component:
 
 ```tsx
-import type { WeaverseImage } from "@weaverse/hydrogen";
+import type { WeaverseImage } from "@weaverse/hydrogen/react-router";
 import { getFocalPointPosition } from "~/utils/image";
 
 function Banner({ image }: { image: WeaverseImage }) {

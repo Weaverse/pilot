@@ -25,7 +25,7 @@ Android/Chrome then offers a native "Install app" prompt; iOS installs via Share
 ## 2. Guiding constraints (from codebase analysis)
 
 - **Oxygen full-page caching:** the SSR document is deliberately anonymous (cart hydrates client-side via `/api/cart` + `CartStoreSync` — see comments in `app/root.tsx` and `app/.server/root.ts`). The service worker must preserve this: **no HTML caching in v1 at all.** Nothing personalized may ever enter a SW cache.
-- **CSP:** inline scripts need the nonce (`useNonce()`, `app/weaverse/csp.ts`). The SW registration script must carry it.
+- **CSP:** the document carries no nonce (so Oxygen's full-page cache can store it); `app/weaverse/csp.ts` allows inline scripts via `'unsafe-inline'`. The SW registration script needs no nonce.
 - **Checkout is cross-origin** (Shopify domain) — outside SW scope by default; do not add any fetch handler logic that touches it.
 - **Routing is programmatic** (`app/routes.ts`, `hydrogenRoutes`). The manifest route registers **top-level, outside the `:locale?` prefix**, exactly like `robots.txt`.
 - Default **off**. Merchants opt in via the toggle. No behavior change for existing stores on update.
@@ -35,7 +35,7 @@ Android/Chrome then offers a native "Install app" prompt; iOS installs via Share
 New `InspectorGroup`, same style as existing groups (`as const satisfies InspectorGroup`):
 
 ```ts
-import type { InspectorGroup } from "@weaverse/hydrogen";
+import type { InspectorGroup } from "@weaverse/hydrogen/react-router";
 
 export const pwaSettings = {
   group: "Mobile app (PWA)",
@@ -232,12 +232,11 @@ self.addEventListener("fetch", (e) => {
 });
 ```
 
-**Registration:** inline script in `root.tsx` `<head>` (conditional on `pwaEnabled`), with the CSP nonce — not in `entry.client.tsx`, because entry has no access to theme settings:
+**Registration:** inline script in `root.tsx` `<head>` (conditional on `pwaEnabled`) — not in `entry.client.tsx`, because entry has no access to theme settings:
 
 ```tsx
 {settings?.pwaEnabled ? (
   <script
-    nonce={nonce}
     dangerouslySetInnerHTML={{
       __html: `if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js"))}`,
     }}
@@ -245,9 +244,9 @@ self.addEventListener("fetch", (e) => {
 ) : null}
 ```
 
-Check `app/weaverse/csp.ts` allows nonce'd inline scripts (it does — same mechanism as existing inline scripts in root).
+`app/weaverse/csp.ts` allows inline scripts (`'unsafe-inline'`, same as the other inline scripts in root).
 
-**Disable path:** if a merchant turns the toggle off, already-installed SWs stay registered. v1 accepts this (SW only caches immutable assets, harmless). Optional hardening: when `pwaEnabled` is off, root renders a nonce'd unregister one-liner instead. Cheap; include it.
+**Disable path:** if a merchant turns the toggle off, already-installed SWs stay registered. v1 accepts this (SW only caches immutable assets, harmless). Optional hardening: when `pwaEnabled` is off, root renders an inline unregister one-liner instead. Cheap; include it.
 
 ## 7. `public/` additions
 
@@ -268,7 +267,7 @@ Android gets Chrome's native prompt; no custom UI in v1.
 Unit/e2e (Playwright, existing setup):
 
 1. `GET /manifest.webmanifest` with toggle **on** → 200, `application/manifest+json`, valid JSON containing `name`, `display: "standalone"`, 192+512 icons; with toggle **off** → 404.
-2. Root document with toggle on contains manifest link, `theme-color`, apple-touch-icon, and the nonce'd SW registration script; with toggle off contains none of them.
+2. Root document with toggle on contains manifest link, `theme-color`, apple-touch-icon, and the SW registration script; with toggle off contains none of them.
 3. `GET /sw.js` → 200, `text/javascript` (Vite serves `public/` automatically).
 
 Manual acceptance:
