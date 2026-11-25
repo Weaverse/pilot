@@ -9756,8 +9756,7 @@
             {
               "type": "image",
               "name": "authorImage",
-              "label": "Author image",
-              "defaultValue": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-image-1024x1024.svg"
+              "label": "Author image"
             },
             {
               "type": "text",
