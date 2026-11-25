@@ -1,7 +1,6 @@
 import {
   createSchema,
   type WeaverseComponentProps,
-  IMAGES_PLACEHOLDERS,
   type WeaverseImage,
 } from "@weaverse/hydrogen/react-router";
 import clsx from "clsx";
@@ -93,7 +92,6 @@ export const schema = createSchema({
           type: "image",
           name: "authorImage",
           label: "Author image",
-          defaultValue: IMAGES_PLACEHOLDERS.image,
         },
         {
           type: "text",
