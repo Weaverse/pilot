@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- [feat] New "Animated stats" section: numbers with an optional prefix, suffix and label that count up from zero the first time they scroll into view. Numbers are formatted for the shopper's market (`12.500` in `/de-de`) and keep the decimals entered; the server renders the final number, so it reads correctly without JavaScript and for visitors with reduced motion (#246)
 - [feat] New "Tabbed products" section: a heading, a row of tabs and the selected tab's product row. Each tab picks its products like Featured products (best sellers, a collection or a manual list). Tabs switch without JavaScript, with the arrow keys too, and the first tab shows until another is picked (#246)
 - [feat] The Promotion grid has a new "Bento" grid size: tiles of mixed sizes packed densely, 4 columns on desktop and 2 on tablets, with a slow image zoom on hover. Each promotion gets a "Tile size" setting (small, wide, tall or large) that the Bento grid uses; the 2x2, 3x3 and 4x4 grids are unchanged (#246)
 - [feat] New "Shoppable video" section: a row of vertical videos, each with a card linking to its product (title, price and image). Videos play muted while on screen and pause when scrolled away or tapped; visitors with reduced motion start them themselves. A short row is centered, a long one scrolls sideways (#246)

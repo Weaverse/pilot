@@ -7,6 +7,8 @@ import * as SubHeading from "~/components/subheading";
 import * as AllProducts from "~/sections/all-products";
 import * as AllProductsGrid from "~/sections/all-products/product-grid";
 import * as AllProductsToolbar from "~/sections/all-products/toolbar";
+import * as AnimatedStats from "~/sections/animated-stats";
+import * as AnimatedStatsItem from "~/sections/animated-stats/item";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
 import * as CollectionList from "~/sections/collection-list";
@@ -130,6 +132,8 @@ export const components: WeaverseComponent[] = [
   FeaturedProductItems,
   TabbedProducts,
   TabbedProductsTab,
+  AnimatedStats,
+  AnimatedStatsItem,
   Testimonial,
   TestimonialItems,
   TestimonialItem,

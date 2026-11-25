@@ -115,6 +115,211 @@
       }
     },
     {
+      "type": "animated-stats",
+      "title": "Animated stats",
+      "hasLoader": false,
+      "childTypes": [
+        "heading",
+        "subheading",
+        "paragraph",
+        "animated-stats--item",
+        "spacer"
+      ],
+      "settings": [
+        {
+          "group": "Layout",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "width",
+              "label": "Content width",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Full page",
+                    "value": "full"
+                  },
+                  {
+                    "label": "Stretch",
+                    "value": "stretch"
+                  },
+                  {
+                    "label": "Fixed",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              "defaultValue": "fixed"
+            },
+            {
+              "type": "select",
+              "name": "verticalPadding",
+              "label": "Vertical padding",
+              "configs": {
+                "options": [
+                  {
+                    "label": "None",
+                    "value": "none"
+                  },
+                  {
+                    "label": "Small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "medium"
+            }
+          ]
+        },
+        {
+          "group": "Background",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "backgroundFor",
+              "label": "Background for",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Section",
+                    "value": "section"
+                  },
+                  {
+                    "label": "Content",
+                    "value": "content"
+                  }
+                ]
+              },
+              "defaultValue": "section"
+            },
+            {
+              "type": "color",
+              "name": "backgroundColor",
+              "label": "Background color",
+              "defaultValue": ""
+            },
+            {
+              "type": "image",
+              "name": "backgroundImage",
+              "label": "Background image"
+            },
+            {
+              "type": "select",
+              "name": "backgroundFit",
+              "label": "Background fit",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Fill",
+                    "value": "fill"
+                  },
+                  {
+                    "label": "Cover",
+                    "value": "cover"
+                  },
+                  {
+                    "label": "Contain",
+                    "value": "contain"
+                  }
+                ]
+              },
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "cover"
+            },
+            {
+              "type": "position",
+              "name": "backgroundPosition",
+              "label": "Background position",
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "center center"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "children": [
+          {
+            "content": "Made to be used",
+            "type": "heading"
+          },
+          {
+            "label": "Orders shipped",
+            "suffix": "+",
+            "type": "animated-stats--item",
+            "value": "12500"
+          },
+          {
+            "label": "Average review",
+            "suffix": "/5",
+            "type": "animated-stats--item",
+            "value": "4.9"
+          },
+          {
+            "label": "Countries we ship to",
+            "type": "animated-stats--item",
+            "value": "38"
+          },
+          {
+            "label": "Recycled packaging",
+            "suffix": "%",
+            "type": "animated-stats--item",
+            "value": "100"
+          }
+        ]
+      }
+    },
+    {
+      "type": "animated-stats--item",
+      "title": "Stat",
+      "hasLoader": false,
+      "settings": [
+        {
+          "group": "Stat",
+          "inputs": [
+            {
+              "type": "text",
+              "name": "value",
+              "label": "Number",
+              "helpText": "Digits only, with an optional decimal point (4.9).",
+              "defaultValue": "100"
+            },
+            {
+              "type": "text",
+              "name": "prefix",
+              "label": "Before the number"
+            },
+            {
+              "type": "text",
+              "name": "suffix",
+              "label": "After the number"
+            },
+            {
+              "type": "text",
+              "name": "label",
+              "label": "Label",
+              "defaultValue": "Label"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "label": "Label",
+        "value": "100"
+      }
+    },
+    {
       "type": "ap--product-grid",
       "title": "Products grid",
       "hasLoader": false,
