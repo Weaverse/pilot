@@ -28,6 +28,7 @@ export default [
         route("featured-products", "routes/api/featured-products.ts"),
         route("klaviyo", "routes/api/klaviyo.ts"),
         route("products", "routes/api/products.ts"),
+        route("recently-viewed", "routes/api/recently-viewed.ts"),
         route("product/:productHandle", "routes/api/product.ts"),
         route(
           "collection/:handle/product-count",
