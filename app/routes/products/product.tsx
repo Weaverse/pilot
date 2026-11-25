@@ -19,10 +19,14 @@ import { ProductView } from "~/components/root/analytics-views";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { localizePath, resolveLocale } from "~/utils/locale";
+import { rememberViewedProduct } from "~/utils/recently-viewed";
 import { seoMetaFromMatches } from "~/utils/seo";
 import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
-import { getRecommendedProducts } from "./recommended-product";
+import {
+  getComplementaryProducts,
+  getRecommendedProducts,
+} from "./recommended-product";
 
 export const headers = routeHeaders;
 
@@ -51,6 +55,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
   // Use Hydrogen/Remix streaming for recommended products
   const recommended = getRecommendedProducts(storefront, product.id);
+  const complementary = getComplementaryProducts(storefront, product.id);
 
   return {
     shop,
@@ -58,6 +63,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     weaverseData,
     seo: seoPayload.product({ product, url: request.url }),
     recommended,
+    complementary,
     selectedOptions,
   };
 }
@@ -72,6 +78,10 @@ export default function Product() {
   const { pathname, search } = useLocation();
 
   useSyncSelectionToUrl(product);
+
+  useEffect(() => {
+    rememberViewedProduct(product.id);
+  }, [product.id]);
 
   // The provider rehydrates the form only when the loaded variant changes. A
   // selection resolved locally doesn't run the loader, so loading the same
@@ -145,6 +155,24 @@ function ProductAnalytics({ product }: { product: ProductFormData }) {
           quantity: 1,
         },
       ]}
+      standardEvent={{
+        context: "page",
+        selectedOptions: selectedVariant?.selectedOptions ?? [],
+        product: {
+          id: product.id,
+          title: product.title,
+          handle: product.handle,
+          selectedVariant: selectedVariant
+            ? {
+                id: selectedVariant.id,
+                title: selectedVariant.title,
+                availableForSale: selectedVariant.availableForSale,
+                price: selectedVariant.price,
+                selectedOptions: selectedVariant.selectedOptions,
+              }
+            : null,
+        },
+      }}
     />
   );
 }

@@ -1,6 +1,7 @@
 import { gql } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
 import { CACHE_DEFAULT } from "~/utils/cache";
+import { SUPPORTED_LOCALES } from "~/utils/locale";
 import { parseGid } from "~/utils/shopify";
 import { unwrapStorefront } from "~/utils/storefront";
 
@@ -15,26 +16,47 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   return new Response(body, {
     status: 200,
     headers: {
-      "Content-Type": "text/plain",
-
-      "Cache-Control": `max-age=${60 * 60 * 24}`,
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": `public, max-age=${60 * 60 * 24}`,
     },
   });
 }
 
-function robotsTxtData({ url, shopId }: { shopId?: string; url?: string }) {
+// Market prefixes (`/fr-ca`). Page rules are repeated per prefix instead of
+// a wildcard prefix rule (`/*/cart`): `*` matches across slashes, so that
+// would also block `/products/cart-organizer`.
+const MARKET_PREFIXES = SUPPORTED_LOCALES.map((l) => l.pathPrefix).filter(
+  Boolean,
+);
+
+/** `Disallow` lines for `paths` at the root and under every market prefix. */
+function marketDisallows(paths: string[]) {
+  return ["", ...MARKET_PREFIXES]
+    .flatMap((prefix) => paths.map((path) => `Disallow: ${prefix}${path}`))
+    .join("\n");
+}
+
+export function robotsTxtData({
+  url,
+  shopId,
+}: {
+  shopId?: string;
+  url?: string;
+}) {
   const sitemapUrl = url ? `${url}/sitemap.xml` : undefined;
 
   return `
 User-agent: *
 ${generalDisallowRules({ sitemapUrl, shopId })}
 
-# Google adsbot ignores robots.txt unless specifically named!
+# Google AdsBot ignores the "*" group and follows only groups that name it.
 User-agent: adsbot-google
 Disallow: /checkouts/
 Disallow: /checkout
+Disallow: /buy/
 Disallow: /carts
 Disallow: /orders
+${marketDisallows(["/cart", "/account", "/search"])}
 ${shopId ? `Disallow: /${shopId}/checkouts` : ""}
 ${shopId ? `Disallow: /${shopId}/orders` : ""}
 Disallow: /*?*oseid=*
@@ -72,14 +94,15 @@ function generalDisallowRules({
   sitemapUrl?: string;
 }) {
   return `Disallow: /admin
-Disallow: /cart
 Disallow: /orders
 Disallow: /checkouts/
 Disallow: /checkout
+Disallow: /buy/
+Disallow: /__shopify
+${marketDisallows(["/cart", "/account", "/search", "/api/"])}
 ${shopId ? `Disallow: /${shopId}/checkouts` : ""}
 ${shopId ? `Disallow: /${shopId}/orders` : ""}
 Disallow: /carts
-Disallow: /account
 Disallow: /collections/*sort_by*
 Disallow: /*/collections/*sort_by*
 Disallow: /collections/*+*
@@ -102,9 +125,6 @@ Disallow: /policies/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
-Disallow: /search
-Allow: /search/
-Disallow: /search/?*
 Disallow: /apple-app-site-association
 Disallow: /.well-known/shopify/monorail
 ${sitemapUrl ? `Sitemap: ${sitemapUrl}` : ""}`;

@@ -117,6 +117,125 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
   }
 }
 
+/* Scrollytelling: on desktop every step image shares one sticky cell beside
+ * the text steps; the image of the active step (`data-active`, set while the
+ * step crosses the middle of the screen) fades in. */
+@layer components {
+  @media (width >= 48rem) {
+    .scrollytelling-media {
+      position: sticky;
+      top: var(--height-nav, 0px);
+      grid-row: 1 / span var(--steps, 1);
+      align-self: start;
+      height: calc(100svh - var(--height-nav, 0px));
+      padding-block: 1.5rem;
+      opacity: 0;
+      transform: scale(1.04);
+      transition:
+        opacity 700ms var(--reveal-ease, ease-out),
+        transform 1200ms var(--reveal-ease, ease-out);
+    }
+    .scrollytelling-media:has(+ [data-active]),
+    .scrollytelling:not(:has([data-active])) > .scrollytelling-media:first-child {
+      opacity: 1;
+      transform: none;
+    }
+    .scrollytelling [data-step] {
+      opacity: 0.3;
+      transition: opacity 500ms ease-out;
+    }
+    .scrollytelling [data-step][data-active],
+    .scrollytelling:not(:has([data-active])) > [data-step]:nth-child(2) {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scrollytelling-media,
+    .scrollytelling [data-step] {
+      transition: none;
+    }
+  }
+}
+
+/* Horizontal lookbook: the section is pinned and vertical scroll moves its
+ * track sideways, from the first look to the last (`-100% + 100vw` is the
+ * track's overflow). Without scroll-driven animations it is a sideways
+ * scrolling row. */
+@layer components {
+  .lookbook {
+    view-timeline-name: --lookbook;
+    /* Ignore the root's `scroll-padding-top`, which would start the
+     * timeline before the section is pinned. */
+    view-timeline-inset: 0px;
+  }
+  .lookbook-frame {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-block: 3rem;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .lookbook {
+        height: calc(100svh + var(--lookbook-items, 4) * 40svh);
+      }
+      .lookbook-frame {
+        position: sticky;
+        top: 0;
+        display: flex;
+        align-items: center;
+        height: 100svh;
+        overflow: hidden;
+        scroll-snap-type: none;
+        padding-block: 0;
+      }
+      .lookbook-track {
+        animation: lookbook-track linear both;
+        animation-timeline: --lookbook;
+        animation-range: contain 0% contain 100%;
+      }
+    }
+  }
+  @keyframes lookbook-track {
+    to {
+      transform: translateX(calc(-100% + 100vw));
+    }
+  }
+}
+
+/* Tabbed products: a tab is a hidden radio, its label and its panel. Panels
+ * sit after every label (`order`) and only the checked tab's panel shows;
+ * with none checked yet, the first tab does. */
+@layer components {
+  .tabbed-products > label {
+    border-bottom: 2px solid transparent;
+    color: var(--color-body-subtle);
+  }
+  .tabbed-products > .tab-panel {
+    display: none;
+    order: 1;
+    /* Let the product row scroll instead of widening the panel. */
+    min-width: 0;
+  }
+  .tabbed-products > input:checked + label + .tab-panel,
+  .tabbed-products:not(:has(> input:checked))
+    > input:first-of-type
+    + label
+    + .tab-panel {
+    display: block;
+    animation: fade-in 400ms ease-out;
+  }
+  .tabbed-products > input:checked + label,
+  .tabbed-products:not(:has(> input:checked)) > input:first-of-type + label {
+    color: var(--color-body);
+    border-color: currentColor;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tabbed-products > .tab-panel {
+      animation: none;
+    }
+  }
+}
+
 /* Scroll reveal: `ScrollReveal` and `Section` set `data-reveal` while an
  * element waits to enter the viewport, and `data-visible` once it has.
  * Timing comes from `--reveal-*` on :root (theme setting `motionStyle`). */

@@ -1,5 +1,6 @@
 import { gql } from "@shopify/hydrogen";
 import {
+  type InspectorGroup,
   type WeaverseComponentLoaderArgs,
   createSchema,
   type WeaverseCollection,
@@ -12,7 +13,7 @@ import { CACHE_DEFAULT } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
 import { unwrapStorefront } from "~/utils/storefront";
 
-interface FeaturedProductsSectionData {
+export interface FeaturedProductsSectionData {
   selectionMethod: "auto" | "collection" | "manual";
   collection?: WeaverseCollection;
   products?: WeaverseProduct[];
@@ -114,43 +115,43 @@ export const loader = async ({
   return { products: featuredProducts };
 };
 
+/** Shared with the tabbed products section's tabs. */
+export const productSelectionInputs: InspectorGroup["inputs"] = [
+  {
+    type: "select",
+    name: "selectionMethod",
+    label: "Source",
+    configs: {
+      options: [
+        { value: "auto", label: "Auto (best selling)" },
+        { value: "collection", label: "From a collection" },
+        { value: "manual", label: "Manual selection" },
+      ],
+    },
+    defaultValue: "auto",
+  },
+  {
+    type: "collection",
+    name: "collection",
+    label: "Select collection",
+    condition: (data: FeaturedProductsSectionData) =>
+      data.selectionMethod === "collection",
+  },
+  {
+    type: "product-list",
+    name: "products",
+    label: "Select products",
+    condition: (data: FeaturedProductsSectionData) =>
+      data.selectionMethod === "manual",
+  },
+];
+
 export const schema = createSchema({
   type: "featured-products",
   title: "Featured products",
   childTypes: ["featured-products-items", "heading", "subheading", "paragraph"],
   settings: [
-    {
-      group: "Product selection",
-      inputs: [
-        {
-          type: "select",
-          name: "selectionMethod",
-          label: "Source",
-          configs: {
-            options: [
-              { value: "auto", label: "Auto (best selling)" },
-              { value: "collection", label: "From a collection" },
-              { value: "manual", label: "Manual selection" },
-            ],
-          },
-          defaultValue: "auto",
-        },
-        {
-          type: "collection",
-          name: "collection",
-          label: "Select collection",
-          condition: (data: FeaturedProductsSectionData) =>
-            data.selectionMethod === "collection",
-        },
-        {
-          type: "product-list",
-          name: "products",
-          label: "Select products",
-          condition: (data: FeaturedProductsSectionData) =>
-            data.selectionMethod === "manual",
-        },
-      ],
-    },
+    { group: "Product selection", inputs: productSelectionInputs },
     {
       group: "Layout",
       inputs: layoutInputs,
