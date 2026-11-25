@@ -190,6 +190,9 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
 @layer components {
   .scroll-zoom {
     view-timeline-name: --scroll-zoom;
+    /* Ignore the root's `scroll-padding-top`, which would start the
+     * timeline before the section is pinned. */
+    view-timeline-inset: 0px;
   }
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
