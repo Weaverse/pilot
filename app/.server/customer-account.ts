@@ -4,6 +4,7 @@ import {
 } from "@shopify/hydrogen";
 import {
   type AnyCustomerAccountDocument,
+  CustomerAccountApiError,
   type CustomerAccountClient,
   type CustomerAccountGqlRestParam,
   type CustomerSession,
@@ -30,6 +31,14 @@ import {
 
 const CUSTOMER_ACCOUNT_HANDLER_PATH =
   /^\/account\/(login|authorize|refresh|logout|signed-out)$/;
+
+/**
+ * The longest `Retry-After` a rate-limited query waits out before its one
+ * retry. Anything longer fails straight away, so a page never hangs.
+ */
+const MAX_READ_RETRY_WAIT_SECONDS = 2;
+/** The wait before a query's retry when a 429 carries no `Retry-After`. */
+const DEFAULT_READ_RETRY_WAIT_SECONDS = 1;
 
 /** The session key holding the path prefix of the market being signed out of. */
 const SIGNED_OUT_MARKET_KEY = "signedOutMarket";
@@ -164,6 +173,40 @@ function createCustomerAccountHandlers(
   };
 }
 
+/** Whether `error` is the client's HTTP 429 (rate limited) failure. */
+function isRateLimited(error: unknown): error is CustomerAccountApiError {
+  return error instanceof CustomerAccountApiError && error.status === 429;
+}
+
+/**
+ * Whole seconds from a `Retry-After` header (delta-seconds or an HTTP date),
+ * or `undefined` when it is absent or unreadable.
+ */
+function retryAfterSeconds(value: string | undefined, now = Date.now()) {
+  if (!value) return undefined;
+  const seconds = /^\s*\d+\s*$/.test(value)
+    ? Number(value)
+    : (Date.parse(value) - now) / 1000;
+  return Number.isFinite(seconds) ? Math.max(0, Math.ceil(seconds)) : undefined;
+}
+
+/** Whether a Customer Account document is a mutation (comments ignored). */
+function isMutation(doc: AnyCustomerAccountDocument) {
+  return /^\s*mutation\b/m.test(doc.source.replace(/#[^\n]*/g, ""));
+}
+
+/**
+ * The shopper-facing error for a rate-limited request. Account actions show
+ * an error's message in their form.
+ */
+function rateLimitError(error: CustomerAccountApiError) {
+  const seconds = retryAfterSeconds(error.retryAfter);
+  const when = seconds && seconds > 1 ? `in ${seconds} seconds` : "in a moment";
+  return new Error(`Too many requests, please try again ${when}.`, {
+    cause: error,
+  });
+}
+
 /** Whether this storefront has Customer Accounts configured. */
 export function hasCustomerAccounts(env: Env) {
   if (!env.SHOP_ID || !env.PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID) return false;
@@ -255,6 +298,11 @@ type GraphqlRestParam<Doc extends AnyCustomerAccountDocument> =
  * session on every response). Without a session it throws a redirect to the
  * login handler with a localized `return_to`, so a shopper bounced from
  * `/de-de/account` signs in and comes back to the German market.
+ *
+ * A rate-limited (HTTP 429) query is retried once when `Retry-After` asks for
+ * at most `MAX_READ_RETRY_WAIT_SECONDS`; a mutation never is. Either way the
+ * final failure is an `Error` whose message tells the shopper when to try
+ * again.
  */
 export function createCustomerAccount({
   env,
@@ -350,7 +398,28 @@ export function createCustomerAccount({
       const rest = [
         { ...options, accessToken },
       ] as CustomerAccountGqlRestParam<Doc>;
-      return client.graphql(doc, ...rest);
+      try {
+        return await client.graphql(doc, ...rest);
+      } catch (error) {
+        if (!isRateLimited(error)) throw error;
+        // A mutation may already have been applied (a retried address create
+        // would duplicate it), so only queries are retried, once, and only
+        // when Shopify asks for a short wait.
+        const wait =
+          retryAfterSeconds(error.retryAfter) ??
+          DEFAULT_READ_RETRY_WAIT_SECONDS;
+        if (isMutation(doc) || wait > MAX_READ_RETRY_WAIT_SECONDS) {
+          throw rateLimitError(error);
+        }
+        await new Promise((resolve) => setTimeout(resolve, wait * 1000));
+        try {
+          return await client.graphql(doc, ...rest);
+        } catch (retryError) {
+          throw isRateLimited(retryError)
+            ? rateLimitError(retryError)
+            : retryError;
+        }
+      }
     },
     /**
      * Signs the shopper out without a form post, the way the sign-out form
