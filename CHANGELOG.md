@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- [feat] Tabbed products tabs are uppercase and letter-spaced, with an underline that grows into the selected tab and a panel that slides in. A heading sits on the left of the tabs on wider screens; without one, the tabs are centered
+- [fix] Collection reveal uses the heading font on every row by default; alternating fonts is now opt-in
 - [feat] New "Collection reveal" section: collection names set very large, one per row. Hovering a row dims the others and shows that collection's image, which follows the pointer. Rows can alternate the heading and body fonts. On touch screens the images stay hidden and the rows are plain links
 - [feat] New "Collection bubbles" section: a row of round collection thumbnails with labels, centered when it fits and scrolling sideways when it doesn't
 - [feat] New "Featured product hero" section: a full-bleed image with a headline and, on top of it, the featured product's card (quick shop, price, swatches), on the left or right

@@ -995,7 +995,7 @@
               "type": "switch",
               "name": "alternateFonts",
               "label": "Alternate heading and body fonts",
-              "defaultValue": true
+              "defaultValue": false
             }
           ]
         },
@@ -1054,7 +1054,7 @@
         }
       ],
       "presets": {
-        "alternateFonts": true,
+        "alternateFonts": false,
         "textSize": "huge",
         "verticalPadding": "medium"
       }
