@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- [feat] New "Collection reveal" section: collection names set very large, one per row. Hovering a row dims the others and shows that collection's image, which follows the pointer. Rows can alternate the heading and body fonts. On touch screens the images stay hidden and the rows are plain links
+- [feat] New "Collection bubbles" section: a row of round collection thumbnails with labels, centered when it fits and scrolling sideways when it doesn't
+- [feat] New "Featured product hero" section: a full-bleed image with a headline and, on top of it, the featured product's card (quick shop, price, swatches), on the left or right
 - [feat] New "Large wordmark" footer setting: shows the footer logo, or the shop name, across the full width at the bottom of the footer. The shop name is stretched to fit on one line whatever its length. Off by default
 - [fix] Testimonials without an author image no longer show a placeholder image: the author image input has no placeholder default, so a testimonial only shows an avatar when one is picked. The section preset still comes with images
 - [fix] Scrollytelling steps line up their text: the paragraph spans the text column instead of a narrower box pushed to the left, the button keeps its own width instead of stretching across the column, and new steps start left-aligned with a larger heading (5xl on desktop) and paragraph. The preset button shows its label (#246)
