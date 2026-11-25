@@ -22,7 +22,10 @@ import { localizePath, resolveLocale } from "~/utils/locale";
 import { seoMetaFromMatches } from "~/utils/seo";
 import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
-import { getRecommendedProducts } from "./recommended-product";
+import {
+  getComplementaryProducts,
+  getRecommendedProducts,
+} from "./recommended-product";
 
 export const headers = routeHeaders;
 
@@ -51,6 +54,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
   // Use Hydrogen/Remix streaming for recommended products
   const recommended = getRecommendedProducts(storefront, product.id);
+  const complementary = getComplementaryProducts(storefront, product.id);
 
   return {
     shop,
@@ -58,6 +62,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     weaverseData,
     seo: seoPayload.product({ product, url: request.url }),
     recommended,
+    complementary,
     selectedOptions,
   };
 }

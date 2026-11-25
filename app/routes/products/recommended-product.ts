@@ -54,3 +54,38 @@ const RECOMMENDED_PRODUCTS_QUERY = gql(
 `,
   [PRODUCT_CARD_FRAGMENT],
 );
+
+/**
+ * Products that go with this one: Shopify's complementary recommendations,
+ * set per product in the Search & Discovery app. Empty when none are set.
+ */
+export async function getComplementaryProducts(
+  storefront: Storefront,
+  productId: string,
+) {
+  const { complementary } = unwrapStorefront(
+    await storefront.graphql(COMPLEMENTARY_PRODUCTS_QUERY, {
+      variables: { productId },
+      cache: CACHE_DEFAULT,
+    }),
+  );
+  return { nodes: complementary ?? [] };
+}
+
+const COMPLEMENTARY_PRODUCTS_QUERY = gql(
+  `
+  query complementaryProducts(
+    $productId: ID!
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    complementary: productRecommendations(
+      productId: $productId
+      intent: COMPLEMENTARY
+    ) {
+      ...ProductCard
+    }
+  }
+`,
+  [PRODUCT_CARD_FRAGMENT],
+);

@@ -16,6 +16,7 @@ import * as CollectionListItems from "~/sections/collection-list/collections-ite
 import * as ColumnsWithImages from "~/sections/columns-with-images";
 import * as ColumnWithImageItem from "~/sections/columns-with-images/column";
 import * as ColumnsWithImagesItems from "~/sections/columns-with-images/items";
+import * as CompleteTheLook from "~/sections/complete-the-look";
 import * as ContactUs from "~/sections/contact-us";
 import * as MessageUsButton from "~/sections/contact-us/message-us-button";
 import * as Countdown from "~/sections/countdown";
@@ -167,6 +168,7 @@ export const components: WeaverseComponent[] = [
   ProductHighlights,
   ProductHighlightItem,
   RelatedProducts,
+  CompleteTheLook,
   RelatedProductsItems,
   RelatedArticles,
   MainCollection,
