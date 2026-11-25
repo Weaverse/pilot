@@ -19,6 +19,7 @@ import { ProductView } from "~/components/root/analytics-views";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { CACHE_DEFAULT, routeHeaders } from "~/utils/cache";
 import { localizePath, resolveLocale } from "~/utils/locale";
+import { rememberViewedProduct } from "~/utils/recently-viewed";
 import { seoMetaFromMatches } from "~/utils/seo";
 import { unwrapStorefront } from "~/utils/storefront";
 import { WeaverseContent } from "~/weaverse";
@@ -77,6 +78,10 @@ export default function Product() {
   const { pathname, search } = useLocation();
 
   useSyncSelectionToUrl(product);
+
+  useEffect(() => {
+    rememberViewedProduct(product.id);
+  }, [product.id]);
 
   // The provider rehydrates the form only when the loaded variant changes. A
   // selection resolved locally doesn't run the loader, so loading the same

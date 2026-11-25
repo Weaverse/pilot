@@ -75,6 +75,7 @@ import * as Page from "~/sections/page";
 import * as PromotionGrid from "~/sections/promotion-grid";
 import * as PromotionGridButtons from "~/sections/promotion-grid/buttons";
 import * as PromotionGridItem from "~/sections/promotion-grid/item";
+import * as RecentlyViewed from "~/sections/recently-viewed";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as RelatedProductsItems from "~/sections/related-products/items";
@@ -169,6 +170,7 @@ export const components: WeaverseComponent[] = [
   ProductHighlightItem,
   RelatedProducts,
   CompleteTheLook,
+  RecentlyViewed,
   RelatedProductsItems,
   RelatedArticles,
   MainCollection,
