@@ -40,12 +40,14 @@ const variants = cva(
 interface PromotionItemProps
   extends VariantProps<typeof variants>, WeaverseComponentProps, OverlayProps {
   backgroundImage: WeaverseImage | string;
+  tileSize: "small" | "wide" | "tall" | "large";
 }
 
 function PromotionGridItem(props: PromotionItemProps) {
   const {
     contentPosition,
     backgroundImage,
+    tileSize,
     children,
     enableOverlay,
     overlayColor,
@@ -58,6 +60,7 @@ function PromotionGridItem(props: PromotionItemProps) {
       animation="slide-in"
       {...rest}
       className={cn(variants({ contentPosition }))}
+      data-tile={tileSize}
     >
       <BackgroundImage backgroundImage={backgroundImage} />
       <Overlay
@@ -85,6 +88,21 @@ export const schema = createSchema({
           label: "Content position",
           name: "contentPosition",
           defaultValue: "center center",
+        },
+        {
+          type: "select",
+          name: "tileSize",
+          label: "Tile size",
+          configs: {
+            options: [
+              { value: "small", label: "Small (1x1)" },
+              { value: "wide", label: "Wide (2x1)" },
+              { value: "tall", label: "Tall (1x2)" },
+              { value: "large", label: "Large (2x2)" },
+            ],
+          },
+          defaultValue: "small",
+          helpText: "Used by the Bento grid size.",
         },
       ],
     },

@@ -18,6 +18,14 @@ const variants = cva("flex flex-col sm:grid", {
       "2x2": "sm:grid-cols-2 sm:[&_.promotion-grid-item]:p-16",
       "3x3": "sm:grid-cols-3 sm:[&_.promotion-grid-item]:p-12",
       "4x4": "sm:grid-cols-4 sm:[&_.promotion-grid-item]:p-8",
+      // Mixed tile sizes (`tileSize` on each item) packed densely.
+      bento: [
+        "grid-flow-dense sm:auto-rows-[16rem] sm:grid-cols-2 lg:auto-rows-[18rem] lg:grid-cols-4",
+        "sm:[&_.promotion-grid-item]:aspect-auto sm:[&_.promotion-grid-item]:p-8",
+        "sm:[&_[data-tile=large]]:col-span-2 sm:[&_[data-tile=large]]:row-span-2",
+        "sm:[&_[data-tile=tall]]:row-span-2 sm:[&_[data-tile=wide]]:col-span-2",
+        "[&_.promotion-grid-item_img]:transition-transform [&_.promotion-grid-item_img]:duration-700 [&_.promotion-grid-item:hover_img]:scale-105",
+      ],
     },
     gap: {
       0: "",
@@ -71,9 +79,11 @@ export const schema = createSchema({
               { value: "2x2", label: "2x2" },
               { value: "3x3", label: "3x3" },
               { value: "4x4", label: "4x4" },
+              { value: "bento", label: "Bento" },
             ],
           },
           defaultValue: "2x2",
+          helpText: "Bento mixes tile sizes: set each promotion's tile size.",
         },
         {
           type: "range",

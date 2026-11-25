@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- [feat] The Promotion grid has a new "Bento" grid size: tiles of mixed sizes packed densely, 4 columns on desktop and 2 on tablets, with a slow image zoom on hover. Each promotion gets a "Tile size" setting (small, wide, tall or large) that the Bento grid uses; the 2x2, 3x3 and 4x4 grids are unchanged (#246)
 - [feat] New "Shoppable video" section: a row of vertical videos, each with a card linking to its product (title, price and image). Videos play muted while on screen and pause when scrolled away or tapped; visitors with reduced motion start them themselves. A short row is centered, a long one scrolls sideways (#246)
 - [feat] New "Horizontal lookbook" section: the section is pinned and vertical scroll moves a row of looks sideways, from an intro heading to the last look. Each look has an image, a shape (portrait, square, landscape or wide), a caption and an optional "Shop the look" link. Built on CSS scroll-driven animations; browsers without them and visitors with reduced motion get a row they swipe sideways (#246)
 - [feat] New "Text marquee" section: large statement text scrolling continuously, one phrase per line with a separator between them. Settings for text size, outlined text, colors, loop duration, direction and pause on hover; the loop stops for visitors with reduced motion (#246)
