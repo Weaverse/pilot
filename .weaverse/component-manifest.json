@@ -8336,15 +8336,18 @@
           {
             "children": [
               {
+                "alignment": "left",
                 "content": "01 · Material",
                 "type": "subheading"
               },
               {
+                "alignment": "left",
                 "as": "h3",
                 "content": "Chosen for how it ages",
                 "type": "heading"
               },
               {
+                "alignment": "left",
                 "content": "Start with the material. Tell shoppers where it comes from and why it gets better with use.",
                 "type": "paragraph"
               }
@@ -8355,15 +8358,18 @@
           {
             "children": [
               {
+                "alignment": "left",
                 "content": "02 · Craft",
                 "type": "subheading"
               },
               {
+                "alignment": "left",
                 "as": "h3",
                 "content": "Made by hand, in small runs",
                 "type": "heading"
               },
               {
+                "alignment": "left",
                 "content": "Show the process. Each step swaps the image as shoppers scroll.",
                 "type": "paragraph"
               }
@@ -8374,15 +8380,18 @@
           {
             "children": [
               {
+                "alignment": "left",
                 "content": "03 · Care",
                 "type": "subheading"
               },
               {
+                "alignment": "left",
                 "as": "h3",
                 "content": "Built to be repaired",
                 "type": "heading"
               },
               {
+                "alignment": "left",
                 "content": "Finish with what happens after the purchase: care, repairs and guarantees.",
                 "type": "paragraph"
               },
@@ -8425,15 +8434,18 @@
       "presets": {
         "children": [
           {
+            "alignment": "left",
             "content": "Step",
             "type": "subheading"
           },
           {
+            "alignment": "left",
             "as": "h3",
             "content": "Tell one part of the story",
             "type": "heading"
           },
           {
+            "alignment": "left",
             "content": "The image beside this text shows while it is on screen.",
             "type": "paragraph"
           }

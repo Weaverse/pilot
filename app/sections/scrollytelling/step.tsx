@@ -32,7 +32,7 @@ export default function ScrollytellingStep(props: ScrollytellingStepProps) {
         ref={ref}
         {...rest}
         data-step
-        className="flex flex-col justify-center gap-4 py-8 md:min-h-svh md:py-24 [&_.paragraph]:mx-[unset]"
+        className="flex flex-col justify-center gap-4 py-8 md:min-h-svh md:py-24 [&_.paragraph]:w-full [&>a]:self-start"
       >
         {children}
       </div>
@@ -53,11 +53,17 @@ export const schema = createSchema({
   presets: {
     image: IMAGES_PLACEHOLDERS.image,
     children: [
-      { type: "subheading", content: "Step" },
-      { type: "heading", content: "Tell one part of the story", as: "h3" },
+      { type: "subheading", content: "Step", alignment: "left" },
+      {
+        type: "heading",
+        content: "Tell one part of the story",
+        as: "h3",
+        alignment: "left",
+      },
       {
         type: "paragraph",
         content: "The image beside this text shows while it is on screen.",
+        alignment: "left",
       },
     ],
   },

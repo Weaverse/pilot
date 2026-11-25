@@ -103,16 +103,18 @@ export const schema = createSchema({
         type: "scrollytelling--step",
         image: IMAGES_PLACEHOLDERS.collection_1,
         children: [
-          { type: "subheading", content: "01 · Material" },
+          { type: "subheading", content: "01 · Material", alignment: "left" },
           {
             type: "heading",
             content: "Chosen for how it ages",
             as: "h3",
+            alignment: "left",
           },
           {
             type: "paragraph",
             content:
               "Start with the material. Tell shoppers where it comes from and why it gets better with use.",
+            alignment: "left",
           },
         ],
       },
@@ -120,12 +122,18 @@ export const schema = createSchema({
         type: "scrollytelling--step",
         image: IMAGES_PLACEHOLDERS.collection_2,
         children: [
-          { type: "subheading", content: "02 · Craft" },
-          { type: "heading", content: "Made by hand, in small runs", as: "h3" },
+          { type: "subheading", content: "02 · Craft", alignment: "left" },
+          {
+            type: "heading",
+            content: "Made by hand, in small runs",
+            as: "h3",
+            alignment: "left",
+          },
           {
             type: "paragraph",
             content:
               "Show the process. Each step swaps the image as shoppers scroll.",
+            alignment: "left",
           },
         ],
       },
@@ -133,12 +141,18 @@ export const schema = createSchema({
         type: "scrollytelling--step",
         image: IMAGES_PLACEHOLDERS.collection_3,
         children: [
-          { type: "subheading", content: "03 · Care" },
-          { type: "heading", content: "Built to be repaired", as: "h3" },
+          { type: "subheading", content: "03 · Care", alignment: "left" },
+          {
+            type: "heading",
+            content: "Built to be repaired",
+            as: "h3",
+            alignment: "left",
+          },
           {
             type: "paragraph",
             content:
               "Finish with what happens after the purchase: care, repairs and guarantees.",
+            alignment: "left",
           },
           { type: "button", content: "Shop the collection" },
         ],
