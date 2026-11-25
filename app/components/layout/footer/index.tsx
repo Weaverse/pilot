@@ -41,6 +41,7 @@ export function Footer() {
     socialX,
     footerLogoData,
     footerLogoWidth,
+    footerLargeWordmark,
     newsletterInputWidth,
     showPaymentMethods,
     showAmazonPay,
@@ -134,6 +135,35 @@ export function Footer() {
             showAlipay={showAlipay}
           />
         </div>
+        {footerLargeWordmark && (
+          <div aria-hidden className="pb-6 select-none lg:pb-10">
+            {footerLogoData ? (
+              <ShopifyImage
+                data={footerLogoData}
+                sizes="100vw"
+                width={2000}
+                alt=""
+                className="h-auto w-full"
+              />
+            ) : (
+              // `textLength` stretches the name to the full width on one line,
+              // whatever its length.
+              <svg viewBox="0 0 1000 160" className="w-full font-serif">
+                <text
+                  x="0"
+                  y="140"
+                  textLength="1000"
+                  lengthAdjust="spacingAndGlyphs"
+                  fontSize="160"
+                  fill="currentColor"
+                  className="uppercase"
+                >
+                  {shopName}
+                </text>
+              </svg>
+            )}
+          </div>
+        )}
       </div>
     </footer>
   );

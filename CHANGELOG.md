@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- [feat] New "Large wordmark" footer setting: shows the footer logo, or the shop name, across the full width at the bottom of the footer. The shop name is stretched to fit on one line whatever its length. Off by default
 - [fix] Testimonials without an author image no longer show a placeholder image: the author image input has no placeholder default, so a testimonial only shows an avatar when one is picked. The section preset still comes with images
 - [fix] Scrollytelling steps line up their text: the paragraph spans the text column instead of a narrower box pushed to the left, the button keeps its own width instead of stretching across the column, and new steps start left-aligned with a larger heading (5xl on desktop) and paragraph. The preset button shows its label (#246)
 - [feat] New "Recently viewed" section: the products a shopper viewed before, most recent first, without the product on screen. Product pages remember up to 12 products in the browser's storage, and the new `/api/recently-viewed` route returns their cards in the shopper's market. The section hides itself on the storefront until there is a product to show (#246)

@@ -35,6 +35,14 @@ export const footerSettings = {
       defaultValue: 80,
     },
     {
+      type: "switch",
+      name: "footerLargeWordmark",
+      label: "Large wordmark",
+      defaultValue: false,
+      helpText:
+        "Shows the footer logo (or the shop name) across the full width at the bottom of the footer.",
+    },
+    {
       // `name` is a key into `i18n.staticContent`, not a component prop.
       type: "translation-key",
       name: "footer.bio",
