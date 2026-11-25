@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- [fix] Testimonials without an author image no longer show a placeholder image: the author image input has no placeholder default, so a testimonial only shows an avatar when one is picked. The section preset still comes with images
 - [feat] New "Recently viewed" section: the products a shopper viewed before, most recent first, without the product on screen. Product pages remember up to 12 products in the browser's storage, and the new `/api/recently-viewed` route returns their cards in the shopper's market. The section hides itself on the storefront until there is a product to show (#246)
 - [feat] New "Complete the look" section for product pages: a row of the products that go with the current one, from Shopify's complementary recommendations (set per product in the Search & Discovery app). The product route streams them like related products; the section hides itself on the storefront when a product has none and shows a setup hint in Studio (#246)
 - [feat] New "Animated stats" section: numbers with an optional prefix, suffix and label that count up from zero the first time they scroll into view. Numbers are formatted for the shopper's market (`12.500` in `/de-de`) and keep the decimals entered; the server renders the final number, so it reads correctly without JavaScript and for visitors with reduced motion (#246)
