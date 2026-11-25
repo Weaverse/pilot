@@ -90,8 +90,8 @@ export default function CollectionReveal(props: CollectionRevealProps) {
                 "group-hover/list:[&:not(:hover)]:opacity-40",
                 textVariants({ textSize }),
                 alternateFonts && idx % 2 === 1
-                  ? "font-serif"
-                  : "font-sans font-light",
+                  ? "font-sans font-light"
+                  : "font-serif",
               )}
             >
               {item.title}
@@ -149,7 +149,7 @@ export const schema = createSchema({
           type: "switch",
           name: "alternateFonts",
           label: "Alternate heading and body fonts",
-          defaultValue: true,
+          defaultValue: false,
         },
       ],
     },
@@ -160,7 +160,7 @@ export const schema = createSchema({
   ],
   presets: {
     textSize: "huge",
-    alternateFonts: true,
+    alternateFonts: false,
     verticalPadding: "medium",
   },
 });
