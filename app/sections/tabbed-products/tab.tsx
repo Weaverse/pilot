@@ -44,7 +44,7 @@ export default function Tab(props: TabProps) {
         ref={ref}
         {...rest}
         htmlFor={id}
-        className="hover:text-body cursor-pointer pb-1 text-lg transition-colors peer-focus-visible:outline"
+        className="hover:text-body cursor-pointer pb-2 text-sm tracking-[0.15em] uppercase transition-colors peer-focus-visible:outline md:text-base"
       >
         {label}
       </label>

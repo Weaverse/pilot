@@ -207,8 +207,21 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
  * with none checked yet, the first tab does. */
 @layer components {
   .tabbed-products > label {
-    border-bottom: 2px solid transparent;
+    position: relative;
     color: var(--color-body-subtle);
+  }
+  /* The active tab's underline grows in from the left; the one it replaces
+   * shrinks away to the right. */
+  .tabbed-products > label::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 400ms var(--reveal-ease, ease-out);
   }
   .tabbed-products > .tab-panel {
     display: none;
@@ -222,16 +235,30 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
     + label
     + .tab-panel {
     display: block;
-    animation: fade-in 400ms ease-out;
+    animation: tab-panel-in 500ms var(--reveal-ease, ease-out);
   }
   .tabbed-products > input:checked + label,
   .tabbed-products:not(:has(> input:checked)) > input:first-of-type + label {
     color: var(--color-body);
-    border-color: currentColor;
+  }
+  .tabbed-products > input:checked + label::after,
+  .tabbed-products:not(:has(> input:checked))
+    > input:first-of-type
+    + label::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  @keyframes tab-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .tabbed-products > .tab-panel {
+    .tabbed-products > .tab-panel,
+    .tabbed-products > label::after {
       animation: none;
+      transition: none;
     }
   }
 }

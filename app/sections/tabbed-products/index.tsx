@@ -19,7 +19,7 @@ export default function TabbedProducts(props: SectionProps) {
   return (
     <Section
       {...rest}
-      containerClassName="tabbed-products flex flex-wrap justify-center gap-x-8 gap-y-6 *:basis-full [&>label]:basis-auto"
+      containerClassName="tabbed-products flex flex-wrap items-end justify-center gap-x-8 gap-y-8 *:basis-full [&>label]:basis-auto md:[&>:not(label,input,.tab-panel)]:mr-auto md:[&>:not(label,input,.tab-panel)]:basis-auto md:[&>:not(label,input,.tab-panel)]:text-left"
     >
       <TabGroupContext value={group}>{children}</TabGroupContext>
     </Section>
