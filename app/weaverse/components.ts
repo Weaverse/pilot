@@ -73,6 +73,8 @@ import * as PromotionGridItem from "~/sections/promotion-grid/item";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as RelatedProductsItems from "~/sections/related-products/items";
+import * as Scrollytelling from "~/sections/scrollytelling";
+import * as ScrollytellingStep from "~/sections/scrollytelling/step";
 import * as SingleProduct from "~/sections/single-product";
 import * as SlideShow from "~/sections/slideshow";
 import * as SlideShowSlide from "~/sections/slideshow/slide";
@@ -124,6 +126,8 @@ export const components: WeaverseComponent[] = [
   TestimonialItems,
   TestimonialItem,
   TextMarquee,
+  Scrollytelling,
+  ScrollytellingStep,
   ImageGallery,
   ImageGalleryItems,
   ImageGalleryItem,

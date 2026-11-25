@@ -116,3 +116,43 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
     }
   }
 }
+
+/* Scrollytelling: on desktop every step image shares one sticky cell beside
+ * the text steps; the image of the active step (`data-active`, set while the
+ * step crosses the middle of the screen) fades in. */
+@layer components {
+  @media (width >= 48rem) {
+    .scrollytelling-media {
+      position: sticky;
+      top: var(--height-nav, 0px);
+      grid-row: 1 / span var(--steps, 1);
+      align-self: start;
+      height: calc(100svh - var(--height-nav, 0px));
+      padding-block: 1.5rem;
+      opacity: 0;
+      transform: scale(1.04);
+      transition:
+        opacity 700ms var(--reveal-ease, ease-out),
+        transform 1200ms var(--reveal-ease, ease-out);
+    }
+    .scrollytelling-media:has(+ [data-active]),
+    .scrollytelling:not(:has([data-active])) > .scrollytelling-media:first-child {
+      opacity: 1;
+      transform: none;
+    }
+    .scrollytelling [data-step] {
+      opacity: 0.3;
+      transition: opacity 500ms ease-out;
+    }
+    .scrollytelling [data-step][data-active],
+    .scrollytelling:not(:has([data-active])) > [data-step]:nth-child(2) {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scrollytelling-media,
+    .scrollytelling [data-step] {
+      transition: none;
+    }
+  }
+}
