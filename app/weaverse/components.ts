@@ -13,6 +13,8 @@ import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
 import * as CollectionList from "~/sections/collection-list";
 import * as CollectionListItems from "~/sections/collection-list/collections-items";
+import * as CollectionBubbles from "~/sections/collection-bubbles";
+import * as CollectionReveal from "~/sections/collection-reveal";
 import * as ColumnsWithImages from "~/sections/columns-with-images";
 import * as ColumnWithImageItem from "~/sections/columns-with-images/column";
 import * as ColumnsWithImagesItems from "~/sections/columns-with-images/items";
@@ -23,6 +25,7 @@ import * as Countdown from "~/sections/countdown";
 import * as CountDownTimer from "~/sections/countdown/timer";
 import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedCollectionItems from "~/sections/featured-collections/collection-items";
+import * as FeaturedProductHero from "~/sections/featured-product-hero";
 import * as FeaturedProducts from "~/sections/featured-products";
 import * as FeaturedProductItems from "~/sections/featured-products/product-items";
 import * as HeroImage from "~/sections/hero-image";
@@ -106,6 +109,9 @@ export const components: WeaverseComponent[] = [
   AllProductsGrid,
   FeaturedCollections,
   FeaturedCollectionItems,
+  CollectionReveal,
+  CollectionBubbles,
+  FeaturedProductHero,
   BlogPost,
   Blogs,
   Page,
