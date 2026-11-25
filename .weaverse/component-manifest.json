@@ -8719,6 +8719,148 @@
       ]
     },
     {
+      "type": "text-marquee",
+      "title": "Text marquee",
+      "hasLoader": false,
+      "settings": [
+        {
+          "group": "Content",
+          "inputs": [
+            {
+              "type": "textarea",
+              "name": "items",
+              "label": "Phrases",
+              "helpText": "One phrase per line.",
+              "defaultValue": "Made to last\nDesigned in small batches\nFree shipping over $100"
+            },
+            {
+              "type": "text",
+              "name": "separator",
+              "label": "Separator",
+              "defaultValue": "✦"
+            }
+          ]
+        },
+        {
+          "group": "Style",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "textSize",
+              "label": "Text size",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  },
+                  {
+                    "label": "Huge",
+                    "value": "huge"
+                  }
+                ]
+              },
+              "defaultValue": "large"
+            },
+            {
+              "type": "switch",
+              "name": "outlined",
+              "label": "Outlined text",
+              "defaultValue": false
+            },
+            {
+              "type": "color",
+              "name": "textColor",
+              "label": "Text color"
+            },
+            {
+              "type": "color",
+              "name": "backgroundColor",
+              "label": "Background color"
+            },
+            {
+              "type": "select",
+              "name": "verticalPadding",
+              "label": "Vertical padding",
+              "configs": {
+                "options": [
+                  {
+                    "label": "None",
+                    "value": "none"
+                  },
+                  {
+                    "label": "Small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "medium"
+            }
+          ]
+        },
+        {
+          "group": "Motion",
+          "inputs": [
+            {
+              "type": "range",
+              "name": "speed",
+              "label": "Loop duration",
+              "helpText": "Seconds for one pass. Lower is faster.",
+              "configs": {
+                "max": 90,
+                "min": 5,
+                "step": 1,
+                "unit": "s"
+              },
+              "defaultValue": 30
+            },
+            {
+              "type": "toggle-group",
+              "name": "direction",
+              "label": "Direction",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Left",
+                    "value": "left"
+                  },
+                  {
+                    "label": "Right",
+                    "value": "right"
+                  }
+                ]
+              },
+              "defaultValue": "left"
+            },
+            {
+              "type": "switch",
+              "name": "pauseOnHover",
+              "label": "Pause on hover",
+              "defaultValue": true
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "items": "Made to last\nDesigned in small batches\nFree shipping over $100\nRepairs for life",
+        "separator": "✦",
+        "textSize": "large",
+        "verticalPadding": "medium"
+      }
+    },
+    {
       "type": "video-embed",
       "title": "Video embed",
       "hasLoader": false,

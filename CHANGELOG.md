@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- [feat] New "Text marquee" section: large statement text scrolling continuously, one phrase per line with a separator between them. Settings for text size, outlined text, colors, loop duration, direction and pause on hover; the loop stops for visitors with reduced motion (#246)
+
 ## 2026.11.23
 
 - [fix] Upgrade `@weaverse/hydrogen` to 6.5.1. Pages with no Weaverse page assigned are detected with the SDK's `isFallback` flag instead of matching `"fallback"` in the page id: they answer 404 on the storefront and still render the placeholder in Studio (#237, #239)

@@ -79,6 +79,7 @@ import * as SlideShowSlide from "~/sections/slideshow/slide";
 import * as Testimonial from "~/sections/testimonials";
 import * as TestimonialItem from "~/sections/testimonials/item";
 import * as TestimonialItems from "~/sections/testimonials/items";
+import * as TextMarquee from "~/sections/text-marquee";
 import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
 
@@ -122,6 +123,7 @@ export const components: WeaverseComponent[] = [
   Testimonial,
   TestimonialItems,
   TestimonialItem,
+  TextMarquee,
   ImageGallery,
   ImageGalleryItems,
   ImageGalleryItem,
