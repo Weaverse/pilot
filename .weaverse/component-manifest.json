@@ -8344,11 +8344,15 @@
                 "alignment": "left",
                 "as": "h3",
                 "content": "Chosen for how it ages",
+                "desktopSize": "5xl",
+                "mobileSize": "3xl",
+                "size": "custom",
                 "type": "heading"
               },
               {
                 "alignment": "left",
                 "content": "Start with the material. Tell shoppers where it comes from and why it gets better with use.",
+                "textSize": "lg",
                 "type": "paragraph"
               }
             ],
@@ -8366,11 +8370,15 @@
                 "alignment": "left",
                 "as": "h3",
                 "content": "Made by hand, in small runs",
+                "desktopSize": "5xl",
+                "mobileSize": "3xl",
+                "size": "custom",
                 "type": "heading"
               },
               {
                 "alignment": "left",
                 "content": "Show the process. Each step swaps the image as shoppers scroll.",
+                "textSize": "lg",
                 "type": "paragraph"
               }
             ],
@@ -8388,15 +8396,19 @@
                 "alignment": "left",
                 "as": "h3",
                 "content": "Built to be repaired",
+                "desktopSize": "5xl",
+                "mobileSize": "3xl",
+                "size": "custom",
                 "type": "heading"
               },
               {
                 "alignment": "left",
                 "content": "Finish with what happens after the purchase: care, repairs and guarantees.",
+                "textSize": "lg",
                 "type": "paragraph"
               },
               {
-                "content": "Shop the collection",
+                "text": "Shop the collection",
                 "type": "button"
               }
             ],
@@ -8442,11 +8454,15 @@
             "alignment": "left",
             "as": "h3",
             "content": "Tell one part of the story",
+            "desktopSize": "5xl",
+            "mobileSize": "3xl",
+            "size": "custom",
             "type": "heading"
           },
           {
             "alignment": "left",
             "content": "The image beside this text shows while it is on screen.",
+            "textSize": "lg",
             "type": "paragraph"
           }
         ],
