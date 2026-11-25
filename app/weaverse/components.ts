@@ -77,6 +77,8 @@ import * as RelatedProducts from "~/sections/related-products";
 import * as RelatedProductsItems from "~/sections/related-products/items";
 import * as Scrollytelling from "~/sections/scrollytelling";
 import * as ScrollytellingStep from "~/sections/scrollytelling/step";
+import * as ShoppableVideo from "~/sections/shoppable-video";
+import * as ShoppableVideoItem from "~/sections/shoppable-video/item";
 import * as SingleProduct from "~/sections/single-product";
 import * as SlideShow from "~/sections/slideshow";
 import * as SlideShowSlide from "~/sections/slideshow/slide";
@@ -132,6 +134,8 @@ export const components: WeaverseComponent[] = [
   ScrollytellingStep,
   HorizontalLookbook,
   HorizontalLookbookItem,
+  ShoppableVideo,
+  ShoppableVideoItem,
   ImageGallery,
   ImageGalleryItems,
   ImageGalleryItem,
