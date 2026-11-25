@@ -26,6 +26,8 @@ import * as HeroImage from "~/sections/hero-image";
 import * as HeroVideo from "~/sections/hero-video";
 import * as Hotspots from "~/sections/hotspots";
 import * as HotspotsItem from "~/sections/hotspots/item";
+import * as HorizontalLookbook from "~/sections/horizontal-lookbook";
+import * as HorizontalLookbookItem from "~/sections/horizontal-lookbook/item";
 import * as ImageGallery from "~/sections/image-gallery";
 import * as ImageGalleryItem from "~/sections/image-gallery/image";
 import * as ImageGalleryItems from "~/sections/image-gallery/items";
@@ -128,6 +130,8 @@ export const components: WeaverseComponent[] = [
   TextMarquee,
   Scrollytelling,
   ScrollytellingStep,
+  HorizontalLookbook,
+  HorizontalLookbookItem,
   ImageGallery,
   ImageGalleryItems,
   ImageGalleryItem,

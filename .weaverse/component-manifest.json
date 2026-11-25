@@ -3001,6 +3001,140 @@
       }
     },
     {
+      "type": "horizontal-lookbook",
+      "title": "Horizontal lookbook",
+      "hasLoader": false,
+      "childTypes": [
+        "horizontal-lookbook--item",
+        "spacer"
+      ],
+      "settings": [
+        {
+          "group": "Content",
+          "inputs": [
+            {
+              "type": "text",
+              "name": "heading",
+              "label": "Heading",
+              "defaultValue": "The lookbook"
+            },
+            {
+              "type": "textarea",
+              "name": "description",
+              "label": "Description",
+              "defaultValue": "Scroll through the season, one look at a time."
+            },
+            {
+              "type": "color",
+              "name": "backgroundColor",
+              "label": "Background color"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "children": [
+          {
+            "caption": "Look 01",
+            "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-hats-1024x1024.svg",
+            "type": "horizontal-lookbook--item"
+          },
+          {
+            "aspectRatio": "4/3",
+            "caption": "Look 02",
+            "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-lifestyle-1-1800x900.svg",
+            "type": "horizontal-lookbook--item"
+          },
+          {
+            "caption": "Look 03",
+            "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-shoes-1024x1024.svg",
+            "type": "horizontal-lookbook--item"
+          },
+          {
+            "aspectRatio": "1/1",
+            "caption": "Look 04",
+            "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-glasses-1024x1024.svg",
+            "type": "horizontal-lookbook--item"
+          },
+          {
+            "aspectRatio": "4/3",
+            "caption": "Look 05",
+            "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-lifestyle-2-1800x900.svg",
+            "type": "horizontal-lookbook--item"
+          }
+        ],
+        "description": "Scroll through the season, one look at a time.",
+        "heading": "The lookbook"
+      }
+    },
+    {
+      "type": "horizontal-lookbook--item",
+      "title": "Look",
+      "hasLoader": false,
+      "settings": [
+        {
+          "group": "Look",
+          "inputs": [
+            {
+              "type": "image",
+              "name": "image",
+              "label": "Image"
+            },
+            {
+              "type": "select",
+              "name": "aspectRatio",
+              "label": "Shape",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Portrait (3:4)",
+                    "value": "3/4"
+                  },
+                  {
+                    "label": "Square (1:1)",
+                    "value": "1/1"
+                  },
+                  {
+                    "label": "Landscape (4:3)",
+                    "value": "4/3"
+                  },
+                  {
+                    "label": "Wide (16:9)",
+                    "value": "16/9"
+                  }
+                ]
+              },
+              "defaultValue": "3/4"
+            },
+            {
+              "type": "text",
+              "name": "caption",
+              "label": "Caption"
+            },
+            {
+              "type": "url",
+              "name": "link",
+              "label": "Link"
+            },
+            {
+              "type": "text",
+              "name": "linkText",
+              "label": "Link text",
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "Shop the look"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "aspectRatio": "3/4",
+        "caption": "New look",
+        "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-hats-1024x1024.svg"
+      }
+    },
+    {
       "type": "hotspots",
       "title": "Hotspots",
       "hasLoader": false,
