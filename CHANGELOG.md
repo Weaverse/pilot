@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- [feat] New "Horizontal lookbook" section: the section is pinned and vertical scroll moves a row of looks sideways, from an intro heading to the last look. Each look has an image, a shape (portrait, square, landscape or wide), a caption and an optional "Shop the look" link. Built on CSS scroll-driven animations; browsers without them and visitors with reduced motion get a row they swipe sideways (#246)
 - [feat] New "Text marquee" section: large statement text scrolling continuously, one phrase per line with a separator between them. Settings for text size, outlined text, colors, loop duration, direction and pause on hover; the loop stops for visitors with reduced motion (#246)
 - [feat] New "Scrollytelling" section: text steps scroll past a pinned image column, and the image of the step in the middle of the screen fades in while the other steps dim. The image sits on the left or right; on mobile each step stacks its image above its text (#246)
 

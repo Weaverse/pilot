@@ -156,3 +156,48 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
     }
   }
 }
+
+/* Horizontal lookbook: the section is pinned and vertical scroll moves its
+ * track sideways, from the first look to the last (`-100% + 100vw` is the
+ * track's overflow). Without scroll-driven animations it is a sideways
+ * scrolling row. */
+@layer components {
+  .lookbook {
+    view-timeline-name: --lookbook;
+    /* Ignore the root's `scroll-padding-top`, which would start the
+     * timeline before the section is pinned. */
+    view-timeline-inset: 0px;
+  }
+  .lookbook-frame {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-block: 3rem;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .lookbook {
+        height: calc(100svh + var(--lookbook-items, 4) * 40svh);
+      }
+      .lookbook-frame {
+        position: sticky;
+        top: 0;
+        display: flex;
+        align-items: center;
+        height: 100svh;
+        overflow: hidden;
+        scroll-snap-type: none;
+        padding-block: 0;
+      }
+      .lookbook-track {
+        animation: lookbook-track linear both;
+        animation-timeline: --lookbook;
+        animation-range: contain 0% contain 100%;
+      }
+    }
+  }
+  @keyframes lookbook-track {
+    to {
+      transform: translateX(calc(-100% + 100vw));
+    }
+  }
+}
