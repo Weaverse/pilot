@@ -92,7 +92,7 @@ export default function FeaturedProductHero(props: FeaturedProductHeroProps) {
         />
       </div>
       <div className={layoutVariants({ cardPosition })}>
-        <div className="flex max-w-xl flex-col gap-4 text-white [&_.paragraph]:mx-[unset]">
+        <div className="flex max-w-2xl flex-col gap-4 text-white [&_.paragraph]:mx-[unset] [&>a]:self-start">
           {children}
         </div>
         {product && (
