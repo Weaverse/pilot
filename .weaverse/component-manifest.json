@@ -6954,6 +6954,7 @@
               "type": "toggle-group",
               "name": "gridSize",
               "label": "Grid size",
+              "helpText": "Bento mixes tile sizes: set each promotion's tile size.",
               "configs": {
                 "options": [
                   {
@@ -6967,6 +6968,10 @@
                   {
                     "label": "4x4",
                     "value": "4x4"
+                  },
+                  {
+                    "label": "Bento",
+                    "value": "bento"
                   }
                 ]
               },
@@ -7232,6 +7237,33 @@
               "name": "contentPosition",
               "label": "Content position",
               "defaultValue": "center center"
+            },
+            {
+              "type": "select",
+              "name": "tileSize",
+              "label": "Tile size",
+              "helpText": "Used by the Bento grid size.",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Small (1x1)",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Wide (2x1)",
+                    "value": "wide"
+                  },
+                  {
+                    "label": "Tall (1x2)",
+                    "value": "tall"
+                  },
+                  {
+                    "label": "Large (2x2)",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "small"
             }
           ]
         },
