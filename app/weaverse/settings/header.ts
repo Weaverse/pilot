@@ -24,6 +24,14 @@ export const headerSettings = {
       helpText: "Header is transparent in home page only.",
     },
     {
+      type: "switch",
+      label: "Hide header on scroll down",
+      name: "hideHeaderOnScroll",
+      defaultValue: false,
+      helpText:
+        "The header slides away while scrolling down and comes back on scroll up.",
+    },
+    {
       type: "image",
       name: "logoData",
       label: "Logo",

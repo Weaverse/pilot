@@ -44,17 +44,19 @@ export default function TestimonialItem(props: TestimonialItemProps) {
           />
         </blockquote>
         <figcaption className="flex items-center space-x-3">
-          <Image
-            className="h-9 w-9 rounded-lg"
-            data={
-              typeof authorImage === "object"
-                ? authorImage
-                : { url: authorImage, altText: authorName }
-            }
-            alt={authorName}
-            width={36}
-            sizes="auto"
-          />
+          {authorImage && (
+            <Image
+              className="h-9 w-9 rounded-lg"
+              data={
+                typeof authorImage === "object"
+                  ? authorImage
+                  : { url: authorImage, altText: authorName }
+              }
+              alt={authorName}
+              width={36}
+              sizes="auto"
+            />
+          )}
           <div className="space-y-0.5">
             <div className="font-medium">{authorName}</div>
             <div className="text-sm text-gray-500">{authorTitle}</div>

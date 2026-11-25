@@ -53,7 +53,7 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
 
   return (
     <ScrollReveal
-      animation="slide-in"
+      animation="clip-up"
       {...rest}
       className={cn(variants({ size, hideOnMobile }))}
     >

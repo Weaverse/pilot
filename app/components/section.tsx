@@ -104,6 +104,9 @@ export function Section(props: SectionProps) {
     }
   };
 
+  // Reduced motion is handled in CSS: `[data-reveal]` renders in place.
+  let shouldReveal = animate && revealElementsOnScroll;
+
   useEffect(() => {
     if (!animate || !revealElementsOnScroll || !internalRef.current) {
       return;
@@ -118,6 +121,8 @@ export function Section(props: SectionProps) {
   style = {
     ...style,
     "--section-bg-color": backgroundColor,
+    // Sections reveal on their own scroll position, never staggered.
+    "--reveal-delay": "0ms",
     "--gap-desktop": `${gap ?? 0}px`,
     "--gap-mobile": (gap ?? 0) <= 20 ? `${gap ?? 0}px` : `${(gap ?? 0) / 2}px`,
   } as React.CSSProperties;
@@ -133,12 +138,9 @@ export function Section(props: SectionProps) {
       className={cn(
         variants({ padding: width, overflow, className }),
         hasBackground && !isBgForContent && "bg-(--section-bg-color)",
-        animate &&
-          revealElementsOnScroll && [
-            "transition-all duration-700",
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-          ],
       )}
+      data-reveal={shouldReveal ? "fade-up" : undefined}
+      data-visible={(shouldReveal && isVisible) || undefined}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div

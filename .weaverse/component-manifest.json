@@ -8071,6 +8071,118 @@
       }
     },
     {
+      "type": "scroll-zoom",
+      "title": "Scroll zoom",
+      "hasLoader": false,
+      "childTypes": [
+        "subheading",
+        "heading",
+        "paragraph",
+        "button",
+        "spacer"
+      ],
+      "settings": [
+        {
+          "group": "Media",
+          "inputs": [
+            {
+              "type": "image",
+              "name": "image",
+              "label": "Image"
+            },
+            {
+              "type": "range",
+              "name": "startSize",
+              "label": "Starting size",
+              "helpText": "How much of the screen the image covers before it grows to full width while scrolling.",
+              "configs": {
+                "max": 90,
+                "min": 30,
+                "step": 5,
+                "unit": "%"
+              },
+              "defaultValue": 60
+            },
+            {
+              "type": "position",
+              "name": "contentPosition",
+              "label": "Content position",
+              "defaultValue": "center center"
+            }
+          ]
+        },
+        {
+          "group": "Overlay",
+          "inputs": [
+            {
+              "type": "switch",
+              "name": "enableOverlay",
+              "label": "Enable overlay",
+              "defaultValue": false
+            },
+            {
+              "type": "color",
+              "name": "overlayColor",
+              "label": "Overlay color",
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "#000000"
+            },
+            {
+              "type": "color",
+              "name": "overlayColorHover",
+              "label": "Overlay color (hover)",
+              "condition": {
+                "dynamic": true
+              }
+            },
+            {
+              "type": "range",
+              "name": "overlayOpacity",
+              "label": "Overlay opacity",
+              "configs": {
+                "max": 100,
+                "min": 0,
+                "step": 1,
+                "unit": "%"
+              },
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": 50
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "children": [
+          {
+            "color": "#ffffff",
+            "content": "Scroll to explore",
+            "type": "subheading"
+          },
+          {
+            "as": "h2",
+            "color": "#ffffff",
+            "content": "Made for the long way round",
+            "size": "default",
+            "type": "heading"
+          },
+          {
+            "color": "#ffffff",
+            "content": "Tell the story behind a collection: the image grows to full width as shoppers scroll, then your message appears.",
+            "type": "paragraph"
+          }
+        ],
+        "contentPosition": "center center",
+        "enableOverlay": true,
+        "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-lifestyle-1-1800x900.svg",
+        "overlayOpacity": 30,
+        "startSize": 60
+      }
+    },
+    {
       "type": "scrollytelling",
       "title": "Scrollytelling",
       "hasLoader": false,

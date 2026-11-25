@@ -5,6 +5,22 @@ import type { ThemeSettings } from "~/types/weaverse";
 
 extend([namesPlugin]);
 
+const MOTION_STYLES: Record<
+  string,
+  { distance: string; duration: string; ease: string }
+> = {
+  subtle: {
+    distance: "20px",
+    duration: "600ms",
+    ease: "cubic-bezier(0.22, 1, 0.36, 1)",
+  },
+  expressive: {
+    distance: "48px",
+    duration: "1000ms",
+    ease: "cubic-bezier(0.16, 1, 0.3, 1)",
+  },
+};
+
 export function GlobalStyle() {
   const settings = useThemeSettings<ThemeSettings>();
   if (settings) {
@@ -47,7 +63,9 @@ export function GlobalStyle() {
       navHeightTablet,
       pageWidth,
       radiusBase,
+      motionStyle,
     } = settings;
+    let motion = MOTION_STYLES[motionStyle] || MOTION_STYLES.subtle;
 
     return (
       <style
@@ -107,6 +125,11 @@ export function GlobalStyle() {
               --h1-base-size: ${h1BaseSize}px;
               --heading-base-spacing: ${headingBaseSpacing};
               --heading-base-line-height: ${headingBaseLineHeight};
+
+              /* Scroll reveal */
+              --reveal-distance: ${motion.distance};
+              --reveal-duration: ${motion.duration};
+              --reveal-ease: ${motion.ease};
             }
 
             @media (min-width: 32em) {

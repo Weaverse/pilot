@@ -79,6 +79,7 @@ import * as RecentlyViewed from "~/sections/recently-viewed";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as RelatedProductsItems from "~/sections/related-products/items";
+import * as ScrollZoom from "~/sections/scroll-zoom";
 import * as Scrollytelling from "~/sections/scrollytelling";
 import * as ScrollytellingStep from "~/sections/scrollytelling/step";
 import * as ShoppableVideo from "~/sections/shoppable-video";
@@ -118,6 +119,7 @@ export const components: WeaverseComponent[] = [
   ColumnsWithImagesItems,
   ColumnWithImageItem,
   HeroVideo,
+  ScrollZoom,
   MapSection,
   PromotionGrid,
   PromotionGridItem,

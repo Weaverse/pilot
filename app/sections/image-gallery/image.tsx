@@ -39,7 +39,7 @@ function ImageGalleryItem(props: ImageGalleryItemProps) {
   const data = typeof src === "object" ? src : { url: src, altText: src };
   return (
     <ScrollReveal
-      animation="slide-in"
+      animation="clip-up"
       {...rest}
       className={clsx(variants({ columnSpan, hideOnMobile }))}
     >
