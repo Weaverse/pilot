@@ -8,6 +8,7 @@ import {
   type ProductFormData,
   useProduct,
 } from "~/components/product/product-form";
+import { cn } from "~/utils/cn";
 
 /**
  * Hydrogen's Shop Pay button in Pilot's buy boxes.
@@ -19,7 +20,11 @@ import {
  * button until it neared the viewport only to postpone that ~860KB script.
  *
  * The wrapper keeps `--shop-pay-button-height` as `min-height` so the buy box
- * layout matches the other buttons.
+ * layout matches the other buttons. The button's shadow styles hard-code a
+ * 12px radius with no CSS variable or `part`, so the wrapper takes over the
+ * shape: the button is stretched to fill it, the wrapper is clipped to the
+ * theme radius and painted the button's own colors (so the inner 12px corners
+ * disappear into it), and it draws the focus ring the clip would cut off.
  *
  * Render it inside the product's `ProductProvider`: like the add-to-cart
  * button, it is disabled when `canAddToCart()` fails or a cart line change is
@@ -33,16 +38,18 @@ export function ProductShopPayButton({
 }: ShopPayButtonProps & { className?: string; product: ProductFormData }) {
   const { options } = useProduct();
   const pending = useCart((state) => state.pending.lines.size > 0);
+  const disabled = !canAddToCart(product, options) || pending;
   return (
     <div
-      className={className}
+      className={cn(
+        "flex overflow-hidden rounded-(--shop-pay-button-border-radius) bg-[#5433eb] transition-colors duration-150 *:flex *:w-full",
+        "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#9c83f8]",
+        disabled ? "opacity-50" : "hover:bg-[#4524db]",
+        className,
+      )}
       style={{ width, minHeight: "var(--shop-pay-button-height)" }}
     >
-      <ShopPayButton
-        width="100%"
-        {...props}
-        disabled={!canAddToCart(product, options) || pending}
-      />
+      <ShopPayButton width="100%" {...props} disabled={disabled} />
     </div>
   );
 }
