@@ -7,19 +7,25 @@ import * as SubHeading from "~/components/subheading";
 import * as AllProducts from "~/sections/all-products";
 import * as AllProductsGrid from "~/sections/all-products/product-grid";
 import * as AllProductsToolbar from "~/sections/all-products/toolbar";
+import * as AnimatedStats from "~/sections/animated-stats";
+import * as AnimatedStatsItem from "~/sections/animated-stats/item";
 import * as BlogPost from "~/sections/blog-post";
 import * as Blogs from "~/sections/blogs";
 import * as CollectionList from "~/sections/collection-list";
 import * as CollectionListItems from "~/sections/collection-list/collections-items";
+import * as CollectionBubbles from "~/sections/collection-bubbles";
+import * as CollectionReveal from "~/sections/collection-reveal";
 import * as ColumnsWithImages from "~/sections/columns-with-images";
 import * as ColumnWithImageItem from "~/sections/columns-with-images/column";
 import * as ColumnsWithImagesItems from "~/sections/columns-with-images/items";
+import * as CompleteTheLook from "~/sections/complete-the-look";
 import * as ContactUs from "~/sections/contact-us";
 import * as MessageUsButton from "~/sections/contact-us/message-us-button";
 import * as Countdown from "~/sections/countdown";
 import * as CountDownTimer from "~/sections/countdown/timer";
 import * as FeaturedCollections from "~/sections/featured-collections";
 import * as FeaturedCollectionItems from "~/sections/featured-collections/collection-items";
+import * as FeaturedProductHero from "~/sections/featured-product-hero";
 import * as FeaturedProducts from "~/sections/featured-products";
 import * as FeaturedProductItems from "~/sections/featured-products/product-items";
 import * as HeroImage from "~/sections/hero-image";
@@ -72,9 +78,11 @@ import * as Page from "~/sections/page";
 import * as PromotionGrid from "~/sections/promotion-grid";
 import * as PromotionGridButtons from "~/sections/promotion-grid/buttons";
 import * as PromotionGridItem from "~/sections/promotion-grid/item";
+import * as RecentlyViewed from "~/sections/recently-viewed";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as RelatedProductsItems from "~/sections/related-products/items";
+import * as ScrollZoom from "~/sections/scroll-zoom";
 import * as Scrollytelling from "~/sections/scrollytelling";
 import * as ScrollytellingStep from "~/sections/scrollytelling/step";
 import * as ShoppableVideo from "~/sections/shoppable-video";
@@ -101,6 +109,9 @@ export const components: WeaverseComponent[] = [
   AllProductsGrid,
   FeaturedCollections,
   FeaturedCollectionItems,
+  CollectionReveal,
+  CollectionBubbles,
+  FeaturedProductHero,
   BlogPost,
   Blogs,
   Page,
@@ -114,6 +125,7 @@ export const components: WeaverseComponent[] = [
   ColumnsWithImagesItems,
   ColumnWithImageItem,
   HeroVideo,
+  ScrollZoom,
   MapSection,
   PromotionGrid,
   PromotionGridItem,
@@ -130,6 +142,8 @@ export const components: WeaverseComponent[] = [
   FeaturedProductItems,
   TabbedProducts,
   TabbedProductsTab,
+  AnimatedStats,
+  AnimatedStatsItem,
   Testimonial,
   TestimonialItems,
   TestimonialItem,
@@ -163,6 +177,8 @@ export const components: WeaverseComponent[] = [
   ProductHighlights,
   ProductHighlightItem,
   RelatedProducts,
+  CompleteTheLook,
+  RecentlyViewed,
   RelatedProductsItems,
   RelatedArticles,
   MainCollection,

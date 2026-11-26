@@ -207,8 +207,21 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
  * with none checked yet, the first tab does. */
 @layer components {
   .tabbed-products > label {
-    border-bottom: 2px solid transparent;
+    position: relative;
     color: var(--color-body-subtle);
+  }
+  /* The active tab's underline grows in from the left; the one it replaces
+   * shrinks away to the right. */
+  .tabbed-products > label::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 400ms var(--reveal-ease, ease-out);
   }
   .tabbed-products > .tab-panel {
     display: none;
@@ -222,16 +235,157 @@ html:has(inbox-online-store-chat[is-open="true"]) .shopify-inbox-launcher {
     + label
     + .tab-panel {
     display: block;
-    animation: fade-in 400ms ease-out;
+    animation: tab-panel-in 500ms var(--reveal-ease, ease-out);
   }
   .tabbed-products > input:checked + label,
   .tabbed-products:not(:has(> input:checked)) > input:first-of-type + label {
     color: var(--color-body);
-    border-color: currentColor;
+  }
+  .tabbed-products > input:checked + label::after,
+  .tabbed-products:not(:has(> input:checked))
+    > input:first-of-type
+    + label::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  @keyframes tab-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .tabbed-products > .tab-panel {
+    .tabbed-products > .tab-panel,
+    .tabbed-products > label::after {
       animation: none;
+      transition: none;
+    }
+  }
+}
+
+/* Scroll reveal: `ScrollReveal` and `Section` set `data-reveal` while an
+ * element waits to enter the viewport, and `data-visible` once it has.
+ * Timing comes from `--reveal-*` on :root (theme setting `motionStyle`). */
+@layer components {
+  [data-reveal] {
+    transition-property: opacity, transform, clip-path;
+    transition-duration: var(--reveal-duration, 600ms);
+    transition-timing-function: var(--reveal-ease, ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal]:not([data-visible]) {
+    opacity: 0;
+  }
+  [data-reveal="fade-up"]:not([data-visible]) {
+    transform: translateY(var(--reveal-distance, 20px));
+  }
+  [data-reveal="slide-in"]:not([data-visible]) {
+    transform: translateX(var(--reveal-distance, 20px));
+  }
+  [data-reveal="zoom-in"]:not([data-visible]) {
+    transform: translateY(var(--reveal-distance, 20px)) scale(0.8);
+  }
+  [data-reveal="clip-up"] {
+    clip-path: inset(0 0 0 0);
+  }
+  [data-reveal="clip-up"]:not([data-visible]) {
+    opacity: 1;
+    clip-path: inset(100% 0 0 0);
+  }
+  /* Images settle from a slight zoom while the wipe runs. */
+  [data-reveal="clip-up"] img {
+    transition: transform var(--reveal-duration, 600ms)
+      var(--reveal-ease, ease-out) var(--reveal-delay, 0ms);
+  }
+  [data-reveal="clip-up"]:not([data-visible]) img {
+    transform: scale(1.12);
+  }
+
+  /* Siblings reveal one after another; ponytail: capped at the 6th item,
+   * later items share its delay. */
+  [data-reveal]:nth-child(2) {
+    --reveal-delay: 80ms;
+  }
+  [data-reveal]:nth-child(3) {
+    --reveal-delay: 160ms;
+  }
+  [data-reveal]:nth-child(4) {
+    --reveal-delay: 240ms;
+  }
+  [data-reveal]:nth-child(5) {
+    --reveal-delay: 320ms;
+  }
+  [data-reveal]:nth-child(n + 6) {
+    --reveal-delay: 400ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal],
+    [data-reveal]:not([data-visible]),
+    [data-reveal="clip-up"] img {
+      transition: none;
+      opacity: 1;
+      transform: none;
+      clip-path: none;
+    }
+  }
+}
+
+/* Scroll zoom section: the section is taller than the screen, its media is
+ * pinned, and the inset image grows to full-bleed while it is pinned. */
+@layer components {
+  .scroll-zoom {
+    view-timeline-name: --scroll-zoom;
+    /* Ignore the root's `scroll-padding-top`, which would start the
+     * timeline before the section is pinned. */
+    view-timeline-inset: 0px;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .scroll-zoom {
+        height: 220svh;
+      }
+      .scroll-zoom-media {
+        animation: scroll-zoom-media linear both;
+        animation-timeline: --scroll-zoom;
+        animation-range: contain 0% contain 55%;
+      }
+      .scroll-zoom-media img {
+        animation: scroll-zoom-image linear both;
+        animation-timeline: --scroll-zoom;
+        animation-range: contain 0% contain 55%;
+      }
+      .scroll-zoom-content {
+        animation: scroll-zoom-content linear both;
+        animation-timeline: --scroll-zoom;
+        animation-range: contain 45% contain 75%;
+      }
+    }
+  }
+  @keyframes scroll-zoom-media {
+    from {
+      clip-path: inset(var(--scroll-zoom-inset) round var(--radius, 0px));
+    }
+    to {
+      clip-path: inset(0 round 0px);
+    }
+  }
+  @keyframes scroll-zoom-image {
+    from {
+      transform: scale(1.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes scroll-zoom-content {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
     }
   }
 }

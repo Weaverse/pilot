@@ -2,12 +2,33 @@
 
 ## Unreleased
 
+- [fix] The Shop Pay button follows the theme border radius instead of its built-in 12px corners
+- [feat] Tabbed products tabs are uppercase and letter-spaced, with an underline that grows into the selected tab and a panel that slides in. A heading sits on the left of the tabs on wider screens; without one, the tabs are centered
+- [fix] The featured product hero button keeps its own width instead of stretching across the text column
+- [fix] Collection reveal uses the heading font on every row by default; alternating fonts is now opt-in
+- [feat] New "Collection reveal" section: collection names set very large, one per row. Hovering a row dims the others and shows that collection's image, which follows the pointer. Rows can alternate the heading and body fonts. On touch screens the images stay hidden and the rows are plain links
+- [feat] New "Collection bubbles" section: a row of round collection thumbnails with labels, centered when it fits and scrolling sideways when it doesn't
+- [feat] New "Featured product hero" section: a full-bleed image with a headline and, on top of it, the featured product's card (quick shop, price, swatches), on the left or right
+- [feat] New "Large wordmark" footer setting: shows the footer logo, or the shop name, across the full width at the bottom of the footer. The shop name is stretched to fit on one line whatever its length. Off by default
+- [fix] Testimonials without an author image no longer show a placeholder image: the author image input has no placeholder default, so a testimonial only shows an avatar when one is picked. The section preset still comes with images
+- [fix] Scrollytelling steps line up their text: the paragraph spans the text column instead of a narrower box pushed to the left, the button keeps its own width instead of stretching across the column, and new steps start left-aligned with a larger heading (5xl on desktop) and paragraph. The preset button shows its label (#246)
+- [feat] New "Recently viewed" section: the products a shopper viewed before, most recent first, without the product on screen. Product pages remember up to 12 products in the browser's storage, and the new `/api/recently-viewed` route returns their cards in the shopper's market. The section hides itself on the storefront until there is a product to show (#246)
+- [feat] New "Complete the look" section for product pages: a row of the products that go with the current one, from Shopify's complementary recommendations (set per product in the Search & Discovery app). The product route streams them like related products; the section hides itself on the storefront when a product has none and shows a setup hint in Studio (#246)
+- [feat] New "Animated stats" section: numbers with an optional prefix, suffix and label that count up from zero the first time they scroll into view. Numbers are formatted for the shopper's market (`12.500` in `/de-de`) and keep the decimals entered; the server renders the final number, so it reads correctly without JavaScript and for visitors with reduced motion (#246)
 - [feat] New "Tabbed products" section: a heading, a row of tabs and the selected tab's product row. Each tab picks its products like Featured products (best sellers, a collection or a manual list). Tabs switch without JavaScript, with the arrow keys too, and the first tab shows until another is picked (#246)
 - [feat] The Promotion grid has a new "Bento" grid size: tiles of mixed sizes packed densely, 4 columns on desktop and 2 on tablets, with a slow image zoom on hover. Each promotion gets a "Tile size" setting (small, wide, tall or large) that the Bento grid uses; the 2x2, 3x3 and 4x4 grids are unchanged (#246)
 - [feat] New "Shoppable video" section: a row of vertical videos, each with a card linking to its product (title, price and image). Videos play muted while on screen and pause when scrolled away or tapped; visitors with reduced motion start them themselves. A short row is centered, a long one scrolls sideways (#246)
 - [feat] New "Horizontal lookbook" section: the section is pinned and vertical scroll moves a row of looks sideways, from an intro heading to the last look. Each look has an image, a shape (portrait, square, landscape or wide), a caption and an optional "Shop the look" link. Built on CSS scroll-driven animations; browsers without them and visitors with reduced motion get a row they swipe sideways (#246)
 - [feat] New "Text marquee" section: large statement text scrolling continuously, one phrase per line with a separator between them. Settings for text size, outlined text, colors, loop duration, direction and pause on hover; the loop stops for visitors with reduced motion (#246)
 - [feat] New "Scrollytelling" section: text steps scroll past a pinned image column, and the image of the step in the middle of the screen fades in while the other steps dim. The image sits on the left or right; on mobile each step stacks its image above its text (#246)
+- [feat] New "Motion style" theme setting: `Subtle` (default) keeps today's scroll reveal with a smoother easing curve; `Expressive` travels further and slower, and section images (image with text, gallery, promotion grid, columns, featured collections) wipe in from the bottom while settling from a slight zoom (#242)
+- [feat] Grid items and stacked text reveal one after another instead of all at once (#242)
+- [feat] New "Hide header on scroll down" header setting: the sticky header slides away while scrolling down and returns on scroll up. Off by default (#242)
+- [feat] New "Scroll zoom" section: an inset image grows to full width while the section is pinned, then its text fades in. Built on CSS scroll-driven animations; browsers without them and visitors with reduced motion see a static full-screen image (#242)
+- [feat] Pilot wordmark with a compass "O" (`public/brand/pilot-wordmark.svg`, plus a reversed version for dark or transparent headers) and a matching compass SVG favicon. The favicon link now points to `favicon.svg`, with `favicon.ico` as the fallback (#242)
+- [fix] Testimonials without an author image no longer render an empty image (#242)
+- [fix] Visitors who turn on reduced motion in their system settings no longer see scroll reveal animations (#242)
+- [breaking] `ScrollReveal` and `Section` mark their reveal state with `data-reveal` / `data-visible` attributes styled in `app/styles/app.css`, instead of Tailwind transform and opacity classes. Forks that restyled the reveal through those classes need to target the attributes (#242)
 
 ## 2026.11.23
 

@@ -186,12 +186,41 @@ function useIsHomeCheck() {
   return delocalizePath(pathname) === "/";
 }
 
+/** True while scrolling down past the first screen of the page. */
+function useHideOnScrollDown(enabled: boolean) {
+  let [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+    let lastY = window.scrollY;
+    function onScroll() {
+      let y = window.scrollY;
+      let delta = y - lastY;
+      // Ignore trackpad jitter; slow scrolls still add up past it.
+      if (Math.abs(delta) < 4) {
+        return;
+      }
+      lastY = y;
+      setHidden(delta > 0 && y > 200);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [enabled]);
+  return enabled && hidden;
+}
+
 export function Header() {
-  const { enableTransparentHeader, headerWidth, showHeaderCountrySelector } =
-    useThemeSettings<ThemeSettings>();
+  const {
+    enableTransparentHeader,
+    hideHeaderOnScroll,
+    headerWidth,
+    showHeaderCountrySelector,
+  } = useThemeSettings<ThemeSettings>();
   const isHome = useIsHomeCheck();
   const { y } = useWindowScroll();
   const routeError = useRouteError();
+  const hidden = useHideOnScrollDown(hideHeaderOnScroll);
 
   const scrolled = y >= 50;
   const enableTransparent = enableTransparentHeader && isHome && !routeError;
@@ -208,6 +237,7 @@ export function Header() {
         "border-b border-gray-200",
         variants({ padding: headerWidth }),
         scrolled ? "shadow-header" : "shadow-none",
+        hidden && "-translate-y-full shadow-none",
         enableTransparent
           ? [
               "group/header fixed w-screen",

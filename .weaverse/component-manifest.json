@@ -115,6 +115,211 @@
       }
     },
     {
+      "type": "animated-stats",
+      "title": "Animated stats",
+      "hasLoader": false,
+      "childTypes": [
+        "heading",
+        "subheading",
+        "paragraph",
+        "animated-stats--item",
+        "spacer"
+      ],
+      "settings": [
+        {
+          "group": "Layout",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "width",
+              "label": "Content width",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Full page",
+                    "value": "full"
+                  },
+                  {
+                    "label": "Stretch",
+                    "value": "stretch"
+                  },
+                  {
+                    "label": "Fixed",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              "defaultValue": "fixed"
+            },
+            {
+              "type": "select",
+              "name": "verticalPadding",
+              "label": "Vertical padding",
+              "configs": {
+                "options": [
+                  {
+                    "label": "None",
+                    "value": "none"
+                  },
+                  {
+                    "label": "Small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "medium"
+            }
+          ]
+        },
+        {
+          "group": "Background",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "backgroundFor",
+              "label": "Background for",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Section",
+                    "value": "section"
+                  },
+                  {
+                    "label": "Content",
+                    "value": "content"
+                  }
+                ]
+              },
+              "defaultValue": "section"
+            },
+            {
+              "type": "color",
+              "name": "backgroundColor",
+              "label": "Background color",
+              "defaultValue": ""
+            },
+            {
+              "type": "image",
+              "name": "backgroundImage",
+              "label": "Background image"
+            },
+            {
+              "type": "select",
+              "name": "backgroundFit",
+              "label": "Background fit",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Fill",
+                    "value": "fill"
+                  },
+                  {
+                    "label": "Cover",
+                    "value": "cover"
+                  },
+                  {
+                    "label": "Contain",
+                    "value": "contain"
+                  }
+                ]
+              },
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "cover"
+            },
+            {
+              "type": "position",
+              "name": "backgroundPosition",
+              "label": "Background position",
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "center center"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "children": [
+          {
+            "content": "Made to be used",
+            "type": "heading"
+          },
+          {
+            "label": "Orders shipped",
+            "suffix": "+",
+            "type": "animated-stats--item",
+            "value": "12500"
+          },
+          {
+            "label": "Average review",
+            "suffix": "/5",
+            "type": "animated-stats--item",
+            "value": "4.9"
+          },
+          {
+            "label": "Countries we ship to",
+            "type": "animated-stats--item",
+            "value": "38"
+          },
+          {
+            "label": "Recycled packaging",
+            "suffix": "%",
+            "type": "animated-stats--item",
+            "value": "100"
+          }
+        ]
+      }
+    },
+    {
+      "type": "animated-stats--item",
+      "title": "Stat",
+      "hasLoader": false,
+      "settings": [
+        {
+          "group": "Stat",
+          "inputs": [
+            {
+              "type": "text",
+              "name": "value",
+              "label": "Number",
+              "helpText": "Digits only, with an optional decimal point (4.9).",
+              "defaultValue": "100"
+            },
+            {
+              "type": "text",
+              "name": "prefix",
+              "label": "Before the number"
+            },
+            {
+              "type": "text",
+              "name": "suffix",
+              "label": "After the number"
+            },
+            {
+              "type": "text",
+              "name": "label",
+              "label": "Label",
+              "defaultValue": "Label"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "label": "Label",
+        "value": "100"
+      }
+    },
+    {
       "type": "ap--product-grid",
       "title": "Products grid",
       "hasLoader": false,
@@ -578,6 +783,80 @@
       ]
     },
     {
+      "type": "collection-bubbles",
+      "title": "Collection bubbles",
+      "hasLoader": true,
+      "settings": [
+        {
+          "group": "Collections",
+          "inputs": [
+            {
+              "type": "collection-list",
+              "name": "collections",
+              "label": "Collections",
+              "shouldRevalidate": true
+            }
+          ]
+        },
+        {
+          "group": "Layout",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "width",
+              "label": "Content width",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Full page",
+                    "value": "full"
+                  },
+                  {
+                    "label": "Stretch",
+                    "value": "stretch"
+                  },
+                  {
+                    "label": "Fixed",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              "defaultValue": "fixed"
+            },
+            {
+              "type": "select",
+              "name": "verticalPadding",
+              "label": "Vertical padding",
+              "configs": {
+                "options": [
+                  {
+                    "label": "None",
+                    "value": "none"
+                  },
+                  {
+                    "label": "Small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "medium"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "verticalPadding": "small"
+      }
+    },
+    {
       "type": "collection-list",
       "title": "Collection list",
       "hasLoader": false,
@@ -678,6 +957,106 @@
           }
         ],
         "gap": 60
+      }
+    },
+    {
+      "type": "collection-reveal",
+      "title": "Collection reveal",
+      "hasLoader": true,
+      "settings": [
+        {
+          "group": "Collections",
+          "inputs": [
+            {
+              "type": "collection-list",
+              "name": "collections",
+              "label": "Collections",
+              "shouldRevalidate": true
+            },
+            {
+              "type": "toggle-group",
+              "name": "textSize",
+              "label": "Text size",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  },
+                  {
+                    "label": "Huge",
+                    "value": "huge"
+                  }
+                ]
+              },
+              "defaultValue": "huge"
+            },
+            {
+              "type": "switch",
+              "name": "alternateFonts",
+              "label": "Alternate heading and body fonts",
+              "defaultValue": false
+            }
+          ]
+        },
+        {
+          "group": "Layout",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "width",
+              "label": "Content width",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Full page",
+                    "value": "full"
+                  },
+                  {
+                    "label": "Stretch",
+                    "value": "stretch"
+                  },
+                  {
+                    "label": "Fixed",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              "defaultValue": "fixed"
+            },
+            {
+              "type": "select",
+              "name": "verticalPadding",
+              "label": "Vertical padding",
+              "configs": {
+                "options": [
+                  {
+                    "label": "None",
+                    "value": "none"
+                  },
+                  {
+                    "label": "Small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "medium"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "alternateFonts": false,
+        "textSize": "huge",
+        "verticalPadding": "medium"
       }
     },
     {
@@ -1206,6 +1585,118 @@
             "type": "column-with-image--item"
           }
         ]
+      }
+    },
+    {
+      "type": "complete-the-look",
+      "title": "Complete the look",
+      "hasLoader": false,
+      "childTypes": [
+        "subheading",
+        "heading",
+        "paragraph",
+        "spacer"
+      ],
+      "limit": 1,
+      "availability": {
+        "enabled": {
+          "dynamic": true
+        }
+      },
+      "settings": [
+        {
+          "group": "Products",
+          "inputs": [
+            {
+              "type": "range",
+              "name": "productsCount",
+              "label": "Products to show",
+              "configs": {
+                "max": 12,
+                "min": 2,
+                "step": 1
+              },
+              "defaultValue": 8
+            }
+          ]
+        },
+        {
+          "group": "Layout",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "width",
+              "label": "Content width",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Full page",
+                    "value": "full"
+                  },
+                  {
+                    "label": "Stretch",
+                    "value": "stretch"
+                  },
+                  {
+                    "label": "Fixed",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              "defaultValue": "fixed"
+            },
+            {
+              "type": "range",
+              "name": "gap",
+              "label": "Items spacing",
+              "configs": {
+                "max": 60,
+                "min": 0,
+                "step": 2,
+                "unit": "px"
+              },
+              "defaultValue": 20
+            },
+            {
+              "type": "select",
+              "name": "verticalPadding",
+              "label": "Vertical padding",
+              "configs": {
+                "options": [
+                  {
+                    "label": "None",
+                    "value": "none"
+                  },
+                  {
+                    "label": "Small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "medium"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "children": [
+          {
+            "as": "h4",
+            "content": "Complete the look",
+            "type": "heading"
+          }
+        ],
+        "gap": 22,
+        "productsCount": 8,
+        "verticalPadding": "small"
       }
     },
     {
@@ -2038,6 +2529,126 @@
           ]
         }
       ]
+    },
+    {
+      "type": "featured-product-hero",
+      "title": "Featured product hero",
+      "hasLoader": true,
+      "childTypes": [
+        "subheading",
+        "heading",
+        "paragraph",
+        "button",
+        "spacer"
+      ],
+      "settings": [
+        {
+          "group": "Content",
+          "inputs": [
+            {
+              "type": "image",
+              "name": "image",
+              "label": "Background image"
+            },
+            {
+              "type": "product",
+              "name": "product",
+              "label": "Featured product",
+              "shouldRevalidate": true
+            },
+            {
+              "type": "toggle-group",
+              "name": "cardPosition",
+              "label": "Product card position",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Left",
+                    "value": "left"
+                  },
+                  {
+                    "label": "Right",
+                    "value": "right"
+                  }
+                ]
+              },
+              "defaultValue": "right"
+            }
+          ]
+        },
+        {
+          "group": "Overlay",
+          "inputs": [
+            {
+              "type": "switch",
+              "name": "enableOverlay",
+              "label": "Enable overlay",
+              "defaultValue": false
+            },
+            {
+              "type": "color",
+              "name": "overlayColor",
+              "label": "Overlay color",
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "#000000"
+            },
+            {
+              "type": "color",
+              "name": "overlayColorHover",
+              "label": "Overlay color (hover)",
+              "condition": {
+                "dynamic": true
+              }
+            },
+            {
+              "type": "range",
+              "name": "overlayOpacity",
+              "label": "Overlay opacity",
+              "configs": {
+                "max": 100,
+                "min": 0,
+                "step": 1,
+                "unit": "%"
+              },
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": 50
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "cardPosition": "right",
+        "children": [
+          {
+            "color": "#ffffff",
+            "content": "Featured product",
+            "type": "subheading"
+          },
+          {
+            "alignment": "left",
+            "as": "h2",
+            "color": "#ffffff",
+            "content": "Light on the shoulders",
+            "type": "heading"
+          },
+          {
+            "backgroundColor": "#ffffff",
+            "backgroundColorHover": "#e9e9e9",
+            "text": "Shop the jacket",
+            "textColor": "#000000",
+            "type": "button",
+            "variant": "custom"
+          }
+        ],
+        "enableOverlay": true,
+        "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-lifestyle-1-1800x900.svg",
+        "overlayColor": "#0c0c0c",
+        "overlayOpacity": 30
+      }
     },
     {
       "type": "featured-products",
@@ -7376,6 +7987,113 @@
       ]
     },
     {
+      "type": "recently-viewed",
+      "title": "Recently viewed",
+      "hasLoader": false,
+      "childTypes": [
+        "subheading",
+        "heading",
+        "paragraph",
+        "spacer"
+      ],
+      "limit": 1,
+      "settings": [
+        {
+          "group": "Products",
+          "inputs": [
+            {
+              "type": "range",
+              "name": "productsCount",
+              "label": "Products to show",
+              "configs": {
+                "max": 12,
+                "min": 2,
+                "step": 1
+              },
+              "defaultValue": 8
+            }
+          ]
+        },
+        {
+          "group": "Layout",
+          "inputs": [
+            {
+              "type": "select",
+              "name": "width",
+              "label": "Content width",
+              "configs": {
+                "options": [
+                  {
+                    "label": "Full page",
+                    "value": "full"
+                  },
+                  {
+                    "label": "Stretch",
+                    "value": "stretch"
+                  },
+                  {
+                    "label": "Fixed",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              "defaultValue": "fixed"
+            },
+            {
+              "type": "range",
+              "name": "gap",
+              "label": "Items spacing",
+              "configs": {
+                "max": 60,
+                "min": 0,
+                "step": 2,
+                "unit": "px"
+              },
+              "defaultValue": 20
+            },
+            {
+              "type": "select",
+              "name": "verticalPadding",
+              "label": "Vertical padding",
+              "configs": {
+                "options": [
+                  {
+                    "label": "None",
+                    "value": "none"
+                  },
+                  {
+                    "label": "Small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Large",
+                    "value": "large"
+                  }
+                ]
+              },
+              "defaultValue": "medium"
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "children": [
+          {
+            "as": "h4",
+            "content": "Recently viewed",
+            "type": "heading"
+          }
+        ],
+        "gap": 22,
+        "productsCount": 8,
+        "verticalPadding": "small"
+      }
+    },
+    {
       "type": "related-articles",
       "title": "Related articles",
       "hasLoader": false,
@@ -7647,6 +8365,118 @@
       }
     },
     {
+      "type": "scroll-zoom",
+      "title": "Scroll zoom",
+      "hasLoader": false,
+      "childTypes": [
+        "subheading",
+        "heading",
+        "paragraph",
+        "button",
+        "spacer"
+      ],
+      "settings": [
+        {
+          "group": "Media",
+          "inputs": [
+            {
+              "type": "image",
+              "name": "image",
+              "label": "Image"
+            },
+            {
+              "type": "range",
+              "name": "startSize",
+              "label": "Starting size",
+              "helpText": "How much of the screen the image covers before it grows to full width while scrolling.",
+              "configs": {
+                "max": 90,
+                "min": 30,
+                "step": 5,
+                "unit": "%"
+              },
+              "defaultValue": 60
+            },
+            {
+              "type": "position",
+              "name": "contentPosition",
+              "label": "Content position",
+              "defaultValue": "center center"
+            }
+          ]
+        },
+        {
+          "group": "Overlay",
+          "inputs": [
+            {
+              "type": "switch",
+              "name": "enableOverlay",
+              "label": "Enable overlay",
+              "defaultValue": false
+            },
+            {
+              "type": "color",
+              "name": "overlayColor",
+              "label": "Overlay color",
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": "#000000"
+            },
+            {
+              "type": "color",
+              "name": "overlayColorHover",
+              "label": "Overlay color (hover)",
+              "condition": {
+                "dynamic": true
+              }
+            },
+            {
+              "type": "range",
+              "name": "overlayOpacity",
+              "label": "Overlay opacity",
+              "configs": {
+                "max": 100,
+                "min": 0,
+                "step": 1,
+                "unit": "%"
+              },
+              "condition": {
+                "dynamic": true
+              },
+              "defaultValue": 50
+            }
+          ]
+        }
+      ],
+      "presets": {
+        "children": [
+          {
+            "color": "#ffffff",
+            "content": "Scroll to explore",
+            "type": "subheading"
+          },
+          {
+            "as": "h2",
+            "color": "#ffffff",
+            "content": "Made for the long way round",
+            "size": "default",
+            "type": "heading"
+          },
+          {
+            "color": "#ffffff",
+            "content": "Tell the story behind a collection: the image grows to full width as shoppers scroll, then your message appears.",
+            "type": "paragraph"
+          }
+        ],
+        "contentPosition": "center center",
+        "enableOverlay": true,
+        "image": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-lifestyle-1-1800x900.svg",
+        "overlayOpacity": 30,
+        "startSize": 60
+      }
+    },
+    {
       "type": "scrollytelling",
       "title": "Scrollytelling",
       "hasLoader": false,
@@ -7800,16 +8630,23 @@
           {
             "children": [
               {
+                "alignment": "left",
                 "content": "01 · Material",
                 "type": "subheading"
               },
               {
+                "alignment": "left",
                 "as": "h3",
                 "content": "Chosen for how it ages",
+                "desktopSize": "5xl",
+                "mobileSize": "3xl",
+                "size": "custom",
                 "type": "heading"
               },
               {
+                "alignment": "left",
                 "content": "Start with the material. Tell shoppers where it comes from and why it gets better with use.",
+                "textSize": "lg",
                 "type": "paragraph"
               }
             ],
@@ -7819,16 +8656,23 @@
           {
             "children": [
               {
+                "alignment": "left",
                 "content": "02 · Craft",
                 "type": "subheading"
               },
               {
+                "alignment": "left",
                 "as": "h3",
                 "content": "Made by hand, in small runs",
+                "desktopSize": "5xl",
+                "mobileSize": "3xl",
+                "size": "custom",
                 "type": "heading"
               },
               {
+                "alignment": "left",
                 "content": "Show the process. Each step swaps the image as shoppers scroll.",
+                "textSize": "lg",
                 "type": "paragraph"
               }
             ],
@@ -7838,20 +8682,27 @@
           {
             "children": [
               {
+                "alignment": "left",
                 "content": "03 · Care",
                 "type": "subheading"
               },
               {
+                "alignment": "left",
                 "as": "h3",
                 "content": "Built to be repaired",
+                "desktopSize": "5xl",
+                "mobileSize": "3xl",
+                "size": "custom",
                 "type": "heading"
               },
               {
+                "alignment": "left",
                 "content": "Finish with what happens after the purchase: care, repairs and guarantees.",
+                "textSize": "lg",
                 "type": "paragraph"
               },
               {
-                "content": "Shop the collection",
+                "text": "Shop the collection",
                 "type": "button"
               }
             ],
@@ -7889,16 +8740,23 @@
       "presets": {
         "children": [
           {
+            "alignment": "left",
             "content": "Step",
             "type": "subheading"
           },
           {
+            "alignment": "left",
             "as": "h3",
             "content": "Tell one part of the story",
+            "desktopSize": "5xl",
+            "mobileSize": "3xl",
+            "size": "custom",
             "type": "heading"
           },
           {
+            "alignment": "left",
             "content": "The image beside this text shows while it is on screen.",
+            "textSize": "lg",
             "type": "paragraph"
           }
         ],
@@ -9192,8 +10050,7 @@
             {
               "type": "image",
               "name": "authorImage",
-              "label": "Author image",
-              "defaultValue": "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-image-1024x1024.svg"
+              "label": "Author image"
             },
             {
               "type": "text",
