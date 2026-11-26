@@ -33,20 +33,107 @@ function getBus() {
   return typeof window === "undefined" ? undefined : window.Shopify?.analytics;
 }
 
-export function ProductView({ products }: { products: ProductPayload[] }) {
-  usePublishOnLocation(
-    () => getBus()?.publish(AnalyticsEvent.PRODUCT_VIEWED, { products }),
-    products.length > 0,
+/**
+ * Shopify's Standard Events module, the one Hydrogen's `<ShopifyScripts>`
+ * imports for `shopify:page:view`. Apps listen for these DOM events on
+ * `document`, not for analytics bus events, so the route views dispatch both.
+ */
+const STANDARD_EVENTS_URL =
+  "https://cdn.shopify.com/storefront/standard-events.js";
+
+type StandardEventName = "ProductViewEvent" | "CollectionViewEvent";
+type StandardEventsModule = Partial<
+  Record<StandardEventName, new (payload: object) => Event>
+>;
+
+let standardEvents: Promise<StandardEventsModule | undefined> | undefined;
+
+function dispatchStandardEvent(name: StandardEventName, payload: object) {
+  standardEvents ??= import(/* @vite-ignore */ STANDARD_EVENTS_URL).catch(
+    () => undefined,
   );
+  void standardEvents.then((events) => {
+    const StandardEvent = events?.[name];
+    if (StandardEvent) document.dispatchEvent(new StandardEvent(payload));
+  });
+}
+
+type SelectedOptions = { name: string; value: string }[];
+
+/** `shopify:product:view` payload (Standard Events' `ProductViewPayload`). */
+export type ProductViewEventPayload = {
+  context: "page";
+  selectedOptions: SelectedOptions;
+  product: {
+    id: string;
+    title: string;
+    handle: string;
+    selectedVariant: {
+      id: string;
+      title: string;
+      availableForSale: boolean;
+      price: { amount: string; currencyCode: string };
+      selectedOptions: SelectedOptions;
+    } | null;
+  };
+};
+
+export function ProductView({
+  products,
+  standardEvent,
+}: {
+  products: ProductPayload[];
+  standardEvent: ProductViewEventPayload;
+}) {
+  usePublishOnLocation(() => {
+    getBus()?.publish(AnalyticsEvent.PRODUCT_VIEWED, { products });
+    dispatchStandardEvent("ProductViewEvent", standardEvent);
+  }, products.length > 0);
   return null;
+}
+
+/**
+ * The collection's product count for `shopify:collection:view`, as Liquid's
+ * `collection.products_count` reports it: products matching the active
+ * filters. The Storefront API has no count field, so it is the sum of the
+ * availability filter's value counts (in stock + out of stock), or only the
+ * active ones when the shopper filters by availability: a facet's counts
+ * don't narrow to its own selection. Without that filter, it falls back to
+ * the products loaded on this page.
+ */
+export function collectionProductsCount(
+  products: {
+    filters: { id: string; values: { count: number; input: unknown }[] }[];
+    nodes: unknown[];
+  },
+  activeFilters: { available?: boolean }[] = [],
+): number {
+  const availability = products.filters.find(
+    (filter) => filter.id === "filter.v.availability",
+  );
+  if (!availability) return products.nodes.length;
+  const active = activeFilters.flatMap((filter) =>
+    filter.available === undefined ? [] : [filter.available],
+  );
+  return availability.values
+    .filter((value) => {
+      if (active.length === 0) return true;
+      const input: { available?: boolean } = JSON.parse(String(value.input));
+      return input.available !== undefined && active.includes(input.available);
+    })
+    .reduce((sum, value) => sum + value.count, 0);
 }
 
 export function CollectionView({
   collection,
-}: Pick<CollectionViewPayload, "collection">) {
-  usePublishOnLocation(() =>
-    getBus()?.publish(AnalyticsEvent.COLLECTION_VIEWED, { collection }),
-  );
+  productsCount,
+}: Pick<CollectionViewPayload, "collection"> & { productsCount: number }) {
+  usePublishOnLocation(() => {
+    getBus()?.publish(AnalyticsEvent.COLLECTION_VIEWED, { collection });
+    dispatchStandardEvent("CollectionViewEvent", {
+      collection: { ...collection, productsCount },
+    });
+  });
   return null;
 }
 

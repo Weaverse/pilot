@@ -167,6 +167,7 @@ function QuickShopContent({
           </AddToCartButton>
           {selectedVariant?.availableForSale && (
             <ProductShopPayButton
+              product={product}
               width="100%"
               variants={[{ id: selectedVariant.id, quantity }]}
               className="-mt-2"

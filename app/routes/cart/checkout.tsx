@@ -14,7 +14,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const requestUrl = new URL(request.url);
   const synced = await syncCartCountry(request, storefront, {
     customerAccessToken: await customerAccount
-      .getAccessToken()
+      .getCartCustomerAccessToken()
       .catch(() => undefined),
   });
   const checkoutUrl =

@@ -26,6 +26,8 @@ import * as HeroImage from "~/sections/hero-image";
 import * as HeroVideo from "~/sections/hero-video";
 import * as Hotspots from "~/sections/hotspots";
 import * as HotspotsItem from "~/sections/hotspots/item";
+import * as HorizontalLookbook from "~/sections/horizontal-lookbook";
+import * as HorizontalLookbookItem from "~/sections/horizontal-lookbook/item";
 import * as ImageGallery from "~/sections/image-gallery";
 import * as ImageGalleryItem from "~/sections/image-gallery/image";
 import * as ImageGalleryItems from "~/sections/image-gallery/items";
@@ -73,12 +75,19 @@ import * as PromotionGridItem from "~/sections/promotion-grid/item";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as RelatedProductsItems from "~/sections/related-products/items";
+import * as Scrollytelling from "~/sections/scrollytelling";
+import * as ScrollytellingStep from "~/sections/scrollytelling/step";
+import * as ShoppableVideo from "~/sections/shoppable-video";
+import * as ShoppableVideoItem from "~/sections/shoppable-video/item";
 import * as SingleProduct from "~/sections/single-product";
 import * as SlideShow from "~/sections/slideshow";
 import * as SlideShowSlide from "~/sections/slideshow/slide";
+import * as TabbedProducts from "~/sections/tabbed-products";
+import * as TabbedProductsTab from "~/sections/tabbed-products/tab";
 import * as Testimonial from "~/sections/testimonials";
 import * as TestimonialItem from "~/sections/testimonials/item";
 import * as TestimonialItems from "~/sections/testimonials/items";
+import * as TextMarquee from "~/sections/text-marquee";
 import * as VideoEmbed from "~/sections/video-embed";
 import * as VideoEmbedItem from "~/sections/video-embed/video";
 
@@ -119,9 +128,18 @@ export const components: WeaverseComponent[] = [
   MessageUsButton,
   FeaturedProducts,
   FeaturedProductItems,
+  TabbedProducts,
+  TabbedProductsTab,
   Testimonial,
   TestimonialItems,
   TestimonialItem,
+  TextMarquee,
+  Scrollytelling,
+  ScrollytellingStep,
+  HorizontalLookbook,
+  HorizontalLookbookItem,
+  ShoppableVideo,
+  ShoppableVideoItem,
   ImageGallery,
   ImageGalleryItems,
   ImageGalleryItem,

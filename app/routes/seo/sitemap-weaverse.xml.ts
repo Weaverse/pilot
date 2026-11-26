@@ -14,7 +14,19 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const baseUrl = `${url.protocol}//${url.host}`;
 
-  const entries = await weaverse.fetchCustomPages();
+  let entries: Awaited<ReturnType<typeof weaverse.fetchCustomPages>>;
+  try {
+    entries = await weaverse.fetchCustomPages();
+  } catch (error) {
+    // A partial or empty 200 would make crawlers drop the missing URLs and
+    // cache that answer. 503 + Retry-After makes them keep the old sitemap
+    // and come back later.
+    console.error("[sitemap-weaverse] Failed to load custom pages", error);
+    return new Response("Sitemap temporarily unavailable", {
+      status: 503,
+      headers: { "Retry-After": "3600", "Cache-Control": "no-store" },
+    });
+  }
 
   const urls = entries.map((entry) => {
     const loc = escapeXml(`${baseUrl}${entry.path}`);

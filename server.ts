@@ -1,9 +1,12 @@
 import { handleShopifyRedirects, handleShopifyRoutes } from "@shopify/hydrogen";
 import { createRequestHandler, RouterContextProvider } from "react-router";
 import * as serverBuild from "virtual:react-router/server-build";
-import { cartHandlers, createPilotCartHandlers } from "~/.server/cart";
+import { createPilotCartHandlers } from "~/.server/cart";
 import { createAppContext } from "~/.server/context";
-import { getCustomerAccountHandlers } from "~/.server/customer-account";
+import {
+  getCartHandlers,
+  getCustomerAccountHandlers,
+} from "~/.server/customer-account";
 import { marketAwareRedirect } from "~/.server/market-redirect";
 import { predictiveSearchHandlers } from "~/.server/predictive-search";
 import { isUnsupportedMarketPath } from "~/utils/locale";
@@ -65,6 +68,7 @@ export default {
         CART_PERMALINK_PATH.test(url.pathname) &&
         !url.searchParams.has("payment");
 
+      const cartHandlers = getCartHandlers(env);
       const shopifyRoute = isPilotCartPermalink
         ? null
         : handleShopifyRoutes({
@@ -77,8 +81,9 @@ export default {
             // cart's market and then delegates to Hydrogen's handler.
             handlers: [
               createPilotCartHandlers({
+                hydrogenCartHandlers: cartHandlers,
                 getCustomerAccessToken:
-                  appContext.customerAccount.getAccessToken,
+                  appContext.customerAccount.getCartCustomerAccessToken,
               }),
               cartHandlers,
               predictiveSearchHandlers,

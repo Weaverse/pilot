@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- [feat] New "Tabbed products" section: a heading, a row of tabs and the selected tab's product row. Each tab picks its products like Featured products (best sellers, a collection or a manual list). Tabs switch without JavaScript, with the arrow keys too, and the first tab shows until another is picked (#246)
+- [feat] The Promotion grid has a new "Bento" grid size: tiles of mixed sizes packed densely, 4 columns on desktop and 2 on tablets, with a slow image zoom on hover. Each promotion gets a "Tile size" setting (small, wide, tall or large) that the Bento grid uses; the 2x2, 3x3 and 4x4 grids are unchanged (#246)
+- [feat] New "Shoppable video" section: a row of vertical videos, each with a card linking to its product (title, price and image). Videos play muted while on screen and pause when scrolled away or tapped; visitors with reduced motion start them themselves. A short row is centered, a long one scrolls sideways (#246)
+- [feat] New "Horizontal lookbook" section: the section is pinned and vertical scroll moves a row of looks sideways, from an intro heading to the last look. Each look has an image, a shape (portrait, square, landscape or wide), a caption and an optional "Shop the look" link. Built on CSS scroll-driven animations; browsers without them and visitors with reduced motion get a row they swipe sideways (#246)
+- [feat] New "Text marquee" section: large statement text scrolling continuously, one phrase per line with a separator between them. Settings for text size, outlined text, colors, loop duration, direction and pause on hover; the loop stops for visitors with reduced motion (#246)
+- [feat] New "Scrollytelling" section: text steps scroll past a pinned image column, and the image of the step in the middle of the screen fades in while the other steps dim. The image sits on the left or right; on mobile each step stacks its image above its text (#246)
+
 ## 2026.11.23
 
 - [fix] Upgrade `@weaverse/hydrogen` to 6.5.1. Pages with no Weaverse page assigned are detected with the SDK's `isFallback` flag instead of matching `"fallback"` in the page id: they answer 404 on the storefront and still render the placeholder in Studio (#237, #239)

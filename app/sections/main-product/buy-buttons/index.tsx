@@ -91,6 +91,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
       </AddToCartButton>
       {showShopPayButton && selectedVariant?.availableForSale && (
         <ProductShopPayButton
+          product={product}
           width="100%"
           variants={[{ id: selectedVariant.id, quantity }]}
         />
