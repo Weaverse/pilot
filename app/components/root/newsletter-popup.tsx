@@ -67,6 +67,7 @@ export function NewsletterPopup() {
     if (fetcher.data?.ok) {
       const timer = setTimeout(() => {
         setOpen(false);
+        setClosedWhileSelected(true);
       }, 2000);
       return () => clearTimeout(timer);
     }
