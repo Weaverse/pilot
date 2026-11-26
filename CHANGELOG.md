@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- [fix] The Shop Pay button follows the theme border radius instead of its built-in 12px corners
 - [feat] Tabbed products tabs are uppercase and letter-spaced, with an underline that grows into the selected tab and a panel that slides in. A heading sits on the left of the tabs on wider screens; without one, the tabs are centered
 - [fix] The featured product hero button keeps its own width instead of stretching across the text column
 - [fix] Collection reveal uses the heading font on every row by default; alternating fonts is now opt-in
