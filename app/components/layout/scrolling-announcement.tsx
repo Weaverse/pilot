@@ -1,3 +1,4 @@
+import { getThemeElementProps } from "@weaverse/schema";
 import { useThemeSettings } from "@weaverse/hydrogen/react-router";
 import { useEffect } from "react";
 import { useLegacyThemeText } from "~/hooks/use-legacy-theme-text";
@@ -58,6 +59,7 @@ export function ScrollingAnnouncement() {
 
   return (
     <div
+      {...getThemeElementProps("Scrolling announcements")}
       id="announcement-bar"
       className="relative flex items-center overflow-hidden text-center whitespace-nowrap"
       style={

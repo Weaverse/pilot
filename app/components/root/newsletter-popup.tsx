@@ -1,6 +1,9 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useThemeSettings } from "@weaverse/hydrogen/react-router";
+import {
+  useStudioSelection,
+  useThemeSettings,
+} from "@weaverse/hydrogen/react-router";
 import { useEffect, useState } from "react";
 import { useFetcher, useLocation } from "react-router";
 import { Banner } from "~/components/banner";
@@ -10,8 +13,10 @@ import { Image } from "~/components/image";
 import { ShopifyInboxOverlayGuard } from "~/components/shopify-inbox";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { ThemeSettings } from "~/types/weaverse";
+import { newsletterSettings } from "~/weaverse/settings/newsletter";
 import { cn } from "~/utils/cn";
 import { delocalizePath } from "~/utils/locale";
+import { getThemeElementProps } from "@weaverse/schema";
 
 const POPUP_SEEN_KEY = "newsletter-popup-dismissed";
 
@@ -19,12 +24,9 @@ export function useShouldRenderNewsletterPopup() {
   const location = useLocation();
   const { newsletterPopupEnabled, newsletterPopupHomeOnly } =
     useThemeSettings<ThemeSettings>();
-  const isDesignMode = useWeaverseStudioCheck();
   const isHomePage = delocalizePath(location.pathname) === "/";
   return (
-    !isDesignMode &&
-    newsletterPopupEnabled &&
-    (newsletterPopupHomeOnly ? isHomePage : true)
+    newsletterPopupEnabled && (newsletterPopupHomeOnly ? isHomePage : true)
   );
 }
 
@@ -44,6 +46,13 @@ export function NewsletterPopup() {
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
   const isDesignMode = useWeaverseStudioCheck();
+  const { selectedThemeGroup } = useStudioSelection();
+  const isSelected = selectedThemeGroup === newsletterSettings.group;
+  // Closing a Studio-opened popup holds until the selection moves away.
+  const [closedWhileSelected, setClosedWhileSelected] = useState(false);
+  if (!isSelected && closedWhileSelected) {
+    setClosedWhileSelected(false);
+  }
   const isModal = newsletterPopupType === "modal";
 
   // Compute message and error from fetcher data
@@ -58,6 +67,7 @@ export function NewsletterPopup() {
     if (fetcher.data?.ok) {
       const timer = setTimeout(() => {
         setOpen(false);
+        setClosedWhileSelected(true);
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -105,7 +115,16 @@ export function NewsletterPopup() {
   }, []);
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen} modal={isModal}>
+    <Dialog.Root
+      open={(isSelected && !closedWhileSelected) || open}
+      onOpenChange={(next) => {
+        if (!next && isSelected) {
+          setClosedWhileSelected(true);
+        }
+        setOpen(next);
+      }}
+      modal={isModal}
+    >
       <Dialog.Portal>
         {isModal && (
           <Dialog.Overlay className="data-[state=open]:animate-fade-in fixed inset-0 z-50 bg-gray-900/50" />
@@ -131,6 +150,7 @@ export function NewsletterPopup() {
         >
           <ShopifyInboxOverlayGuard />
           <div
+            {...getThemeElementProps("Newsletter Popup")}
             className={cn(
               "relative w-full overflow-hidden rounded-lg bg-white",
               isModal
@@ -247,7 +267,14 @@ export function NewsletterPopup() {
                   <button
                     type="button"
                     onClick={() => {
-                      localStorage.setItem(POPUP_SEEN_KEY, "true");
+                      // A Studio preview must not dismiss the popup for the
+                      // storefront in this browser.
+                      if (!isDesignMode) {
+                        localStorage.setItem(POPUP_SEEN_KEY, "true");
+                      }
+                      if (isSelected) {
+                        setClosedWhileSelected(true);
+                      }
                       setOpen(false);
                     }}
                     className="text-body-subtle hover:text-body mt-4 text-sm underline underline-offset-4"
