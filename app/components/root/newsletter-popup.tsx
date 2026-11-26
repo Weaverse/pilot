@@ -16,6 +16,7 @@ import type { ThemeSettings } from "~/types/weaverse";
 import { newsletterSettings } from "~/weaverse/settings/newsletter";
 import { cn } from "~/utils/cn";
 import { delocalizePath } from "~/utils/locale";
+import { getThemeElementProps } from "@weaverse/schema";
 
 const POPUP_SEEN_KEY = "newsletter-popup-dismissed";
 
@@ -148,6 +149,7 @@ export function NewsletterPopup() {
         >
           <ShopifyInboxOverlayGuard />
           <div
+            {...getThemeElementProps("Newsletter Popup")}
             className={cn(
               "relative w-full overflow-hidden rounded-lg bg-white",
               isModal
